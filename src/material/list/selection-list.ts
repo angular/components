@@ -25,6 +25,7 @@ import {
   OnDestroy,
   Output,
   QueryList,
+  Renderer2,
   SimpleChanges,
   ViewEncapsulation,
   forwardRef,
@@ -78,9 +79,11 @@ export class MatSelectionList
 {
   _element = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
+  private _renderer = inject(Renderer2);
 
   private _initialized = false;
   private _keyManager: FocusKeyManager<MatListOption>;
+  private _listenerCleanups: (() => void)[] | undefined;
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
@@ -173,8 +176,10 @@ export class MatSelectionList
     // These events are bound outside the zone, because they don't change
     // any change-detected properties and they can trigger timeouts.
     this._ngZone.runOutsideAngular(() => {
-      this._element.nativeElement.addEventListener('focusin', this._handleFocusin);
-      this._element.nativeElement.addEventListener('focusout', this._handleFocusout);
+      this._listenerCleanups = [
+        this._renderer.listen(this._element.nativeElement, 'focusin', this._handleFocusin),
+        this._renderer.listen(this._element.nativeElement, 'focusout', this._handleFocusout),
+      ];
     });
 
     if (this._value) {
@@ -200,8 +205,7 @@ export class MatSelectionList
 
   ngOnDestroy() {
     this._keyManager?.destroy();
-    this._element.nativeElement.removeEventListener('focusin', this._handleFocusin);
-    this._element.nativeElement.removeEventListener('focusout', this._handleFocusout);
+    this._listenerCleanups?.forEach(current => current());
     this._destroyed.next();
     this._destroyed.complete();
     this._isDestroyed = true;
@@ -375,7 +379,7 @@ export class MatSelectionList
       event.keyCode === A &&
       this.multiple &&
       !this._keyManager.isTyping() &&
-      hasModifierKey(event, 'ctrlKey')
+      hasModifierKey(event, 'ctrlKey', 'metaKey')
     ) {
       const shouldSelect = this.options.some(option => !option.disabled && !option.selected);
       event.preventDefault();

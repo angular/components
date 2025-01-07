@@ -177,7 +177,6 @@ describe('MapMarkerClusterer', () => {
 
 @Component({
   selector: 'test-app',
-  standalone: true,
   imports: [GoogleMapsModule],
   template: `
     <google-map>

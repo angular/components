@@ -23,6 +23,50 @@ const incrementalInputTypes = new Set([
 ]);
 
 /**
+ * Manual mapping of some common characters to their `code` in a keyboard event. Non-exhaustive, see
+ * the tables on MDN for more info: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+ */
+const charsToCodes: Record<string, string> = {
+  ' ': 'Space',
+  '.': 'Period',
+  ',': 'Comma',
+  '`': 'Backquote',
+  '-': 'Minus',
+  '=': 'Equal',
+  '[': 'BracketLeft',
+  ']': 'BracketRight',
+  '\\': 'Backslash',
+  '/': 'Slash',
+  "'": 'Quote',
+  '"': 'Quote',
+  ';': 'Semicolon',
+};
+
+/**
+ * Determines the `KeyboardEvent.key` from a character. See #27034 and
+ * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+ */
+function getKeyboardEventCode(char: string): string {
+  if (char.length !== 1) {
+    return '';
+  }
+
+  const charCode = char.charCodeAt(0);
+
+  // Key is a letter between a and z, uppercase or lowercase.
+  if ((charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode <= 90)) {
+    return `Key${char.toUpperCase()}`;
+  }
+
+  // Digits from 0 to 9.
+  if (48 <= charCode && charCode <= 57) {
+    return `Digit${char}`;
+  }
+
+  return charsToCodes[char] ?? '';
+}
+
+/**
  * Checks whether the given Element is a text input element.
  * @docs-private
  */
@@ -60,7 +104,7 @@ export function typeInElement(
 export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) {
   const first = modifiersAndKeys[0];
   let modifiers: ModifierKeys;
-  let rest: (string | {keyCode?: number; key?: string})[];
+  let rest: (string | {keyCode?: number; key?: string; code?: string})[];
   if (
     first !== undefined &&
     typeof first !== 'string' &&
@@ -75,10 +119,14 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
   }
   const isInput = isTextInput(element);
   const inputType = element.getAttribute('type') || 'text';
-  const keys: {keyCode?: number; key?: string}[] = rest
+  const keys: {keyCode?: number; key?: string; code?: string}[] = rest
     .map(k =>
       typeof k === 'string'
-        ? k.split('').map(c => ({keyCode: c.toUpperCase().charCodeAt(0), key: c}))
+        ? k.split('').map(c => ({
+            keyCode: c.toUpperCase().charCodeAt(0),
+            key: c,
+            code: getKeyboardEventCode(c),
+          }))
         : [k],
     )
     .reduce((arr, k) => arr.concat(k), []);
@@ -109,15 +157,15 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
   }
 
   for (const key of keys) {
-    dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
-    dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers);
+    dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers, key.code);
+    dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers, key.code);
     if (isInput && key.key && key.key.length === 1) {
       if (enterValueIncrementally) {
         (element as HTMLInputElement | HTMLTextAreaElement).value += key.key;
         dispatchFakeEvent(element, 'input');
       }
     }
-    dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers);
+    dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers, key.code);
   }
 
   // Since we weren't dispatching `input` events while sending the keys, we have to do it now.

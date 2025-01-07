@@ -38,11 +38,9 @@ mat-timepicker {
   }
 }
 
-// stylelint-disable material/no-prefixes
-.mat-timepicker-input:read-only {
+.mat-timepicker-input[readonly] {
   cursor: pointer;
 }
-// stylelint-enable material/no-prefixes
 
 @include cdk.high-contrast {
   .mat-timepicker-toggle-default-icon {

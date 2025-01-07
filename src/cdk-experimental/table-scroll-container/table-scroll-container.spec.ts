@@ -293,7 +293,6 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
     </div>
   `,
-  standalone: true,
   imports: [CdkTableModule, CdkTableScrollContainerModule],
   styles: `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {

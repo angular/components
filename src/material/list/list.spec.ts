@@ -434,7 +434,6 @@ class BaseTestList {
       Paprika
     </a>
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithOneAnchorItem extends BaseTestList {
@@ -450,7 +449,6 @@ class ListWithOneAnchorItem extends BaseTestList {
       Paprika
     </a>
   </mat-nav-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class NavListWithOneAnchorItem extends BaseTestList {
@@ -469,7 +467,6 @@ class NavListWithOneAnchorItem extends BaseTestList {
       </a>
     }
   </mat-nav-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class NavListWithActivatedItem extends BaseTestList {
@@ -488,7 +485,6 @@ class NavListWithActivatedItem extends BaseTestList {
       Paprika
     </button>
   </mat-action-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ActionListWithoutType extends BaseTestList {
@@ -504,7 +500,6 @@ class ActionListWithoutType extends BaseTestList {
       Paprika
     </button>
   </mat-action-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ActionListWithType extends BaseTestList {
@@ -518,7 +513,6 @@ class ActionListWithType extends BaseTestList {
       <button mat-list-item>{{item.name}}</button>
     }
   </mat-action-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ActionListWithDisabledList extends BaseTestList {
@@ -532,7 +526,6 @@ class ActionListWithDisabledList extends BaseTestList {
       Paprika
     </button>
   </mat-action-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ActionListWithDisabledItem extends BaseTestList {
@@ -547,7 +540,6 @@ class ActionListWithDisabledItem extends BaseTestList {
       Paprika
     </mat-list-item>
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithOneItem extends BaseTestList {}
@@ -563,7 +555,6 @@ class ListWithOneItem extends BaseTestList {}
       </mat-list-item>
     }
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithTwoLineItem extends BaseTestList {}
@@ -579,7 +570,6 @@ class ListWithTwoLineItem extends BaseTestList {}
       </mat-list-item>
     }
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithThreeLineItem extends BaseTestList {}
@@ -595,7 +585,6 @@ class ListWithThreeLineItem extends BaseTestList {}
       Pepper
     </mat-list-item>
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithAvatar extends BaseTestList {}
@@ -610,7 +599,6 @@ class ListWithAvatar extends BaseTestList {}
       </mat-list-item>
     }
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithItemWithCssClass extends BaseTestList {}
@@ -628,7 +616,6 @@ class ListWithItemWithCssClass extends BaseTestList {}
       </mat-list-item>
     }
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
@@ -640,7 +627,6 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
       <mat-list-item>{{item.name}}</mat-list-item>
     }
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithMultipleItems extends BaseTestList {}
@@ -652,7 +638,6 @@ class ListWithMultipleItems extends BaseTestList {}
     <mat-list-item>Two</mat-list-item>
     <mat-list-item>Three</mat-list-item>
   </mat-list>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class ListWithDisabledItems {
@@ -662,7 +647,6 @@ class ListWithDisabledItems {
 
 @Component({
   template: `<mat-list-item></mat-list-item>`,
-  standalone: true,
   imports: [MatListModule],
 })
 class StandaloneListItem {}

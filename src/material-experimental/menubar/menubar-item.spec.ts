@@ -62,7 +62,6 @@ describe('MatMenuBarItem', () => {
       </div>
     </ng-template>
   `,
-  standalone: true,
   imports: [MatMenuBarModule, CdkMenuModule],
 })
 class SimpleMenuBarItem {

@@ -1,0 +1,91 @@
+<div class="docs-example-viewer-wrapper">
+  @if (view === 'snippet') {
+    <div class="docs-example-viewer-source-compact">
+      <div class="button-bar">
+        <button mat-icon-button type="button" (click)="copySource(snippet())"
+                class="docs-example-source-copy docs-example-button" matTooltip="Copy snippet"
+                title="Copy example source" aria-label="Copy example source to clipboard">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="toggleCompactView()"
+                class="docs-example-compact-toggle docs-example-button" matTooltip="View full example"
+                aria-label="View less">
+          <mat-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
+              <polygon points="13,3 13,5 17.59,5 5,17.59 5,13 3,13 3,21 11,21 11,19 6.41,19 19,6.41 19,11 21,11 21,3"/>
+            </svg>
+          </mat-icon>
+        </button>
+      </div>
+
+      @if (fileUrl) {
+        <code-snippet [source]="fileUrl"/>
+      }
+    </div>
+  }
+
+  @else {
+    <div class="docs-example-viewer-title">
+      <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
+
+      <button
+        mat-icon-button
+        type="button"
+        [attr.aria-label]="'Copy link to ' + exampleData?.title + ' example to the clipboard'"
+        matTooltip="Copy link to example"
+        (click)="_copyLink()">
+        <mat-icon>link</mat-icon>
+      </button>
+
+      @if (showCompactToggle) {
+        <button mat-icon-button
+                (click)="toggleCompactView()"
+                matTooltip="View snippet only"
+                aria-label="View less">
+          <mat-icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
+            <path
+              d="M15.41,10H20v2h-8V4h2v4.59L20.59,2L22,3.41L15.41,10z M4,12v2h4.59L2,20.59L3.41,22L10,15.41V20h2v-8H4z"/>
+          </svg>
+          </mat-icon>
+        </button>
+      }
+
+      <button mat-icon-button type="button" (click)="toggleSourceView()"
+              [matTooltip]="view === 'demo' ? 'View code' : 'Hide code'" aria-label="View source">
+        <mat-icon>code</mat-icon>
+      </button>
+
+      <stack-blitz-button [example]="example"></stack-blitz-button>
+    </div>
+
+    @if (view === 'full') {
+      <div class="docs-example-viewer-source">
+        <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab" mat-stretch-tabs="false">
+          @for (tabName of _getExampleTabNames(); track tabName) {
+            <mat-tab [label]="tabName">
+              <div class="button-bar">
+                <button mat-icon-button type="button" (click)="copySource(snippet(), selectedTab)"
+                        class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
+                        title="Copy example source" aria-label="Copy example source to clipboard">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </div>
+              <code-snippet [source]="exampleTabs[tabName]"></code-snippet>
+            </mat-tab>
+          }
+        </mat-tab-group>
+      </div>
+    }
+  }
+
+  @if (view !== 'snippet') {
+    <div class="docs-example-viewer-body">
+      @if (_exampleComponentType && !example?.includes('harness')) {
+        <ng-template [ngComponentOutlet]="_exampleComponentType"/>
+      } @else {
+        <div>This example contains tests. Open in Stackblitz to run the tests.</div>
+      }
+    </div>
+  }
+</div>

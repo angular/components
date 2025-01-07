@@ -6,6 +6,8 @@ import {
   Component,
   ElementRef,
   Injector,
+  Renderer2,
+  RendererFactory2,
   runInInjectionContext,
 } from '@angular/core';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
@@ -2501,6 +2503,10 @@ describe('FlexibleConnectedPositionStrategy', () => {
             provide: ElementRef,
             useValue: new ElementRef<HTMLElement>(scrollable),
           },
+          {
+            provide: Renderer2,
+            useValue: TestBed.inject(RendererFactory2).createRenderer(null, null),
+          },
         ],
       });
 
@@ -2959,7 +2965,6 @@ function createOverflowContainerElement() {
       class="transform-origin"
       style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
   `,
-  standalone: true,
   imports: [ScrollingModule, OverlayModule, PortalModule],
 })
 class TestOverlay {}

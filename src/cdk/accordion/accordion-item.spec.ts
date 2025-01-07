@@ -238,7 +238,6 @@ describe('CdkAccordionItem', () => {
 
 @Component({
   template: `<cdk-accordion-item #item1></cdk-accordion-item>`,
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 class SingleItem {}
@@ -248,7 +247,6 @@ class SingleItem {}
     <cdk-accordion-item #item1></cdk-accordion-item>
     <cdk-accordion-item #item2></cdk-accordion-item>
   `,
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 class ItemGroupWithoutAccordion {}
@@ -260,7 +258,6 @@ class ItemGroupWithoutAccordion {}
       <cdk-accordion-item #item2></cdk-accordion-item>
     </cdk-accordion>
   `,
-  standalone: true,
   imports: [CdkAccordionModule],
 })
 class ItemGroupWithAccordion {}

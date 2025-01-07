@@ -168,7 +168,6 @@ describe('MapGroundOverlay', () => {
         (mapClick)="handleClick()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapGroundOverlay],
 })
 class TestApp {

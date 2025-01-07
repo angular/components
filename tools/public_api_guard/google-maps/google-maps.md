@@ -17,11 +17,54 @@ import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
+// @public (undocumented)
+interface Algorithm_2 {
+    calculate: ({ markers, map }: AlgorithmInput) => AlgorithmOutput;
+}
+export { Algorithm_2 as Algorithm }
+
+// @public (undocumented)
+export interface AlgorithmInput {
+    map: google.maps.Map;
+    mapCanvasProjection: google.maps.MapCanvasProjection;
+    markers: Marker[];
+}
+
+// @public (undocumented)
+export interface AlgorithmOptions {
+    // (undocumented)
+    maxZoom?: number;
+}
+
+// @public (undocumented)
+export interface AlgorithmOutput {
+    changed?: boolean;
+    clusters: Cluster[];
+}
+
 // @public
 export type AriaLabelFn = (text: string) => string;
 
 // @public
 export type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
+
+// @public (undocumented)
+export class Cluster {
+    constructor({ markers, position }: ClusterOptions);
+    // (undocumented)
+    get bounds(): google.maps.LatLngBounds | undefined;
+    get count(): number;
+    delete(): void;
+    // (undocumented)
+    marker?: Marker;
+    // (undocumented)
+    readonly markers?: Marker[];
+    // (undocumented)
+    get position(): google.maps.LatLng;
+    // (undocumented)
+    protected _position: google.maps.LatLng;
+    push(marker: Marker): void;
+}
 
 // @public
 export interface ClusterIconStyle {
@@ -55,6 +98,36 @@ export interface ClusterIconStyle {
     width: number;
 }
 
+// @public (undocumented)
+export interface ClusterOptions {
+    // (undocumented)
+    markers?: Marker[];
+    // (undocumented)
+    position?: google.maps.LatLng | google.maps.LatLngLiteral;
+}
+
+// @public (undocumented)
+export class ClusterStats {
+    constructor(markers: Marker[], clusters: Cluster[]);
+    // (undocumented)
+    readonly clusters: {
+        count: number;
+        markers: {
+            mean: number;
+            sum: number;
+            min: number;
+            max: number;
+        };
+    };
+    // (undocumented)
+    readonly markers: {
+        sum: number;
+    };
+}
+
+// @public (undocumented)
+export const defaultOnClusterClickHandler: onClusterClickHandler;
+
 // @public @deprecated
 export class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
@@ -70,7 +143,7 @@ export class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, O
     set calculator(calculator: Calculator);
     // (undocumented)
     set clusterClass(clusterClass: string);
-    readonly clusterClick: Observable<Cluster>;
+    readonly clusterClick: Observable<Cluster_2>;
     readonly clusteringbegin: Observable<void>;
     readonly clusteringend: Observable<void>;
     // (undocumented)
@@ -86,7 +159,7 @@ export class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, O
     // (undocumented)
     getClusterClass(): string;
     // (undocumented)
-    getClusters(): Cluster[];
+    getClusters(): Cluster_2[];
     // (undocumented)
     getEnableRetinaIcons(): boolean;
     // (undocumented)
@@ -125,8 +198,8 @@ export class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, O
     set imagePath(imagePath: string);
     // (undocumented)
     set imageSizes(imageSizes: number[]);
-    markerClusterer?: MarkerClusterer;
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
+    markerClusterer?: MarkerClusterer_2;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
     // (undocumented)
     _markers: QueryList<MapMarker>;
     // (undocumented)
@@ -604,11 +677,11 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, 
 // @public
 export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     algorithm: Algorithm_2;
-    readonly clusterClick: EventEmitter<Cluster_2>;
+    readonly clusterClick: EventEmitter<Cluster>;
     readonly clusteringbegin: Observable<void>;
     readonly clusteringend: Observable<void>;
-    markerClusterer?: MarkerClusterer_2;
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
+    markerClusterer?: MarkerClusterer;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
     // (undocumented)
     _markers: QueryList<MarkerDirective>;
     // (undocumented)
@@ -758,6 +831,55 @@ export class MapTransitLayer implements OnInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<MapTransitLayer, never>;
 }
 
+// @public (undocumented)
+export class MarkerClusterer extends google.maps.OverlayView {
+    constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions_2);
+    // (undocumented)
+    addMarker(marker: Marker, noDraw?: boolean): void;
+    // (undocumented)
+    addMarkers(markers: Marker[], noDraw?: boolean): void;
+    // (undocumented)
+    protected algorithm: Algorithm_2;
+    // (undocumented)
+    clearMarkers(noDraw?: boolean): void;
+    // (undocumented)
+    protected clusters: Cluster[];
+    // (undocumented)
+    protected idleListener: google.maps.MapsEventListener;
+    // (undocumented)
+    protected map: google.maps.Map | null;
+    // (undocumented)
+    protected markers: Marker[];
+    // (undocumented)
+    onAdd(): void;
+    // (undocumented)
+    onClusterClick: onClusterClickHandler;
+    // (undocumented)
+    onRemove(): void;
+    // (undocumented)
+    removeMarker(marker: Marker, noDraw?: boolean): boolean;
+    // (undocumented)
+    removeMarkers(markers: Marker[], noDraw?: boolean): boolean;
+    // (undocumented)
+    render(): void;
+    // (undocumented)
+    protected renderClusters(): void;
+    // (undocumented)
+    protected renderer: Renderer;
+    // (undocumented)
+    protected reset(): void;
+}
+
+// @public (undocumented)
+export enum MarkerClustererEvents {
+    // (undocumented)
+    CLUSTER_CLICK = "click",
+    // (undocumented)
+    CLUSTERING_BEGIN = "clusteringbegin",
+    // (undocumented)
+    CLUSTERING_END = "clusteringend"
+}
+
 // @public
 export interface MarkerClustererOptions {
     // (undocumented)
@@ -796,6 +918,14 @@ export interface MarkerClustererOptions {
     zIndex?: number;
     // (undocumented)
     zoomOnClick?: boolean;
+}
+
+// @public (undocumented)
+export type onClusterClickHandler = (event: google.maps.MapMouseEvent, cluster: Cluster, map: google.maps.Map) => void;
+
+// @public (undocumented)
+export interface Renderer {
+    render(cluster: Cluster, stats: ClusterStats, map: google.maps.Map): Marker;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
   ElementRef,
   Input,
   OnChanges,
@@ -27,19 +26,12 @@ import {ControlContainer, NgControl, Validators} from '@angular/forms';
 import {DateAdapter, ThemePalette} from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormFieldControl} from '@angular/material/form-field';
 import {Subject, Subscription, merge} from 'rxjs';
-import {
-  MAT_DATE_RANGE_INPUT_PARENT,
-  MatDateRangeInputParent,
-  MatEndDate,
-  MatStartDate,
-} from './date-range-input-parts';
+import type {MatEndDate, MatStartDate} from './date-range-input-parts';
 import {MatDateRangePickerInput} from './date-range-picker';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn, _MatFormFieldPartial, dateInputsHaveChanged} from './datepicker-input-base';
-
-let nextUniqueId = 0;
 
 @Component({
   selector: 'mat-date-range-input',
@@ -60,17 +52,13 @@ let nextUniqueId = 0;
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [
-    {provide: MatFormFieldControl, useExisting: MatDateRangeInput},
-    {provide: MAT_DATE_RANGE_INPUT_PARENT, useExisting: MatDateRangeInput},
-  ],
+  providers: [{provide: MatFormFieldControl, useExisting: MatDateRangeInput}],
   imports: [CdkMonitorFocus],
 })
 export class MatDateRangeInput<D>
   implements
     MatFormFieldControl<DateRange<D>>,
     MatDatepickerControl<D>,
-    MatDateRangeInputParent<D>,
     MatDateRangePickerInput<D>,
     AfterContentInit,
     OnChanges,
@@ -84,13 +72,16 @@ export class MatDateRangeInput<D>
   private _closedSubscription = Subscription.EMPTY;
   private _openedSubscription = Subscription.EMPTY;
 
+  _startInput: MatStartDate<D>;
+  _endInput: MatEndDate<D>;
+
   /** Current value of the range input. */
   get value() {
     return this._model ? this._model.selection : null;
   }
 
   /** Unique ID for the group. */
-  id = `mat-date-range-input-${nextUniqueId++}`;
+  id: string = inject(_IdGenerator).getId('mat-date-range-input-');
 
   /** Whether the control is focused. */
   focused = false;
@@ -255,9 +246,6 @@ export class MatDateRangeInput<D>
 
   /** End of the comparison range that should be shown in the calendar. */
   @Input() comparisonEnd: D | null = null;
-
-  @ContentChild(MatStartDate) _startInput: MatStartDate<D>;
-  @ContentChild(MatEndDate) _endInput: MatEndDate<D>;
 
   /**
    * Implemented as a part of `MatFormFieldControl`.

@@ -17,12 +17,13 @@ import {
   NgZone,
   booleanAttribute,
   inject,
+  Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {Platform} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {auditTime, takeUntil} from 'rxjs/operators';
-import {fromEvent, Subject} from 'rxjs';
+import {auditTime} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
 /** Directive to automatically resize a textarea to fit its content. */
@@ -41,11 +42,14 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
+  private _renderer = inject(Renderer2);
+  private _resizeEvents = new Subject<void>();
 
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue?: string;
   private _initialHeight: string | undefined;
   private readonly _destroyed = new Subject<void>();
+  private _listenerCleanups: (() => void)[] | undefined;
 
   private _minRows: number;
   private _maxRows: number;
@@ -156,14 +160,12 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       this.resizeToFitContent();
 
       this._ngZone.runOutsideAngular(() => {
-        const window = this._getWindow();
-
-        fromEvent(window, 'resize')
-          .pipe(auditTime(16), takeUntil(this._destroyed))
-          .subscribe(() => this.resizeToFitContent(true));
-
-        this._textareaElement.addEventListener('focus', this._handleFocusEvent);
-        this._textareaElement.addEventListener('blur', this._handleFocusEvent);
+        this._listenerCleanups = [
+          this._renderer.listen('window', 'resize', () => this._resizeEvents.next()),
+          this._renderer.listen(this._textareaElement, 'focus', this._handleFocusEvent),
+          this._renderer.listen(this._textareaElement, 'blur', this._handleFocusEvent),
+        ];
+        this._resizeEvents.pipe(auditTime(16)).subscribe(() => this.resizeToFitContent(true));
       });
 
       this._isViewInited = true;
@@ -172,8 +174,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._textareaElement.removeEventListener('focus', this._handleFocusEvent);
-    this._textareaElement.removeEventListener('blur', this._handleFocusEvent);
+    this._listenerCleanups?.forEach(cleanup => cleanup());
+    this._resizeEvents.complete();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -338,17 +340,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   _noopInputHandler() {
     // no-op handler that ensures we're running change detection on input events.
-  }
-
-  /** Access injected document if available or fallback to global document reference */
-  private _getDocument(): Document {
-    return this._document || document;
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  private _getWindow(): Window {
-    const doc = this._getDocument();
-    return doc.defaultView || window;
   }
 
   /**

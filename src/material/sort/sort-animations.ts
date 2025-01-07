@@ -24,6 +24,8 @@ const SORT_ANIMATION_TRANSITION =
 /**
  * Animations used by MatSort.
  * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
  */
 export const matSortAnimations: {
   readonly indicator: AnimationTriggerMetadata;

@@ -199,7 +199,6 @@ describe('MatCheckboxHarness', () => {
     </mat-checkbox>
     <span id="second-label">Second checkbox</span>
   `,
-  standalone: true,
   imports: [MatCheckboxModule, ReactiveFormsModule],
 })
 class CheckboxHarnessTest {

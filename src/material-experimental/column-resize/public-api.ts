@@ -15,3 +15,5 @@ export * from './resizable-directives/default-enabled-resizable';
 export * from './resizable-directives/resizable';
 export * from './resize-strategy';
 export * from './overlay-handle';
+export type {ColumnResizeOptions} from '@angular/cdk-experimental/column-resize';
+export {COLUMN_RESIZE_OPTIONS, ColumnSizeStore} from '@angular/cdk-experimental/column-resize';

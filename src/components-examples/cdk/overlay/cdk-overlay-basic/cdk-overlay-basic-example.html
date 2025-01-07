@@ -8,6 +8,7 @@
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="isOpen"
+  (detach)="isOpen = false"
 >
   <ul class="example-list">
     <li>Item 1</li>

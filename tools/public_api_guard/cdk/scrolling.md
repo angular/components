@@ -63,8 +63,6 @@ export class CdkScrollable implements OnInit, OnDestroy {
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     elementScrolled(): Observable<Event>;
-    // (undocumented)
-    protected _elementScrolled: Observable<Event>;
     getElementRef(): ElementRef<HTMLElement>;
     measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
     // (undocumented)
@@ -75,6 +73,8 @@ export class CdkScrollable implements OnInit, OnDestroy {
     protected ngZone: NgZone;
     // (undocumented)
     protected scrollDispatcher: ScrollDispatcher;
+    // (undocumented)
+    protected _scrollElement: EventTarget;
     scrollTo(options: ExtendedScrollToOptions): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkScrollable, "[cdk-scrollable], [cdkScrollable]", never, {}, {}, never, never, true, never>;
@@ -157,8 +157,6 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
     constructor(...args: unknown[]);
     // (undocumented)
-    protected _elementScrolled: Observable<Event>;
-    // (undocumented)
     measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkVirtualScrollableWindow, "cdk-virtual-scroll-viewport[scrollWindow]", never, {}, {}, never, never, true, never>;
@@ -200,7 +198,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    get orientation(): 'horizontal' | 'vertical';
+    get orientation(): "horizontal" | "vertical";
     set orientation(orientation: 'horizontal' | 'vertical');
     readonly renderedRangeStream: Observable<ListRange>;
     // (undocumented)
@@ -265,9 +263,7 @@ export class ScrollDispatcher implements OnDestroy {
     constructor(...args: unknown[]);
     ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
     deregister(scrollable: CdkScrollable): void;
-    protected _document: Document;
     getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
-    _globalSubscription: Subscription | null;
     // (undocumented)
     ngOnDestroy(): void;
     register(scrollable: CdkScrollable): void;

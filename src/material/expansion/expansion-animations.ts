@@ -39,6 +39,8 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
  * Angular Bug: https://github.com/angular/angular/issues/18847
  *
  * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
  */
 export const matExpansionAnimations: {
   readonly indicatorRotate: AnimationTriggerMetadata;

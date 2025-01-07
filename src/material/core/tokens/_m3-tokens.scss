@@ -130,7 +130,7 @@ $_cached-token-slots: null;
 @function create-map($keys, $prefix) {
   $result: ();
   @each $key in $keys {
-    $result: map-merge($result, ($key: var(--#{$prefix}-#{$key})));
+    $result: map.merge($result, ($key: var(--#{$prefix}-#{$key})));
   }
   @return $result;
 }
@@ -191,8 +191,8 @@ $_cached-token-slots: null;
             'tertiary-fixed',
             'tertiary-fixed-dim'
     );
-    @return map-merge(create-map($keys, $prefix), (
-            shadow: map.get($mdc-sys-color, shadow)
+    @return map.merge(create-map($keys, $prefix), (
+      shadow: map.get($mdc-sys-color, shadow)
     ));
   }
 

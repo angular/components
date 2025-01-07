@@ -111,7 +111,6 @@ describe('MatTabNavBarHarness', () => {
       Tab content
     </mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabNavBarHarnessTest {

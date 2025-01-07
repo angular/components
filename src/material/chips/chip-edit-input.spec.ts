@@ -42,7 +42,6 @@ describe('MatChipEditInput', () => {
 
 @Component({
   template: `<mat-chip><span matChipEditInput></span></mat-chip>`,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class ChipEditInputContainer {}

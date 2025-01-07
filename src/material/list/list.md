@@ -158,6 +158,28 @@ To add an icon to your list item, use the `matListItemIcon` attribute.
 </mat-list>
 ```
 
+### Lists with meta section icons
+
+To add a meta icon to your list item, use the `matListItemMeta` directive. This allows you to display an icon or any other content in the meta section of the list item.
+
+
+```html
+<mat-list>
+  @for (message of messages; track message) {
+    <mat-list-item>
+      <div matListItemMeta>
+        <mat-icon>folder</mat-icon>
+      </div>
+      <h3 matListItemTitle>{{message.from}}</h3>
+      <p matListItemLine>
+        <span>{{message.subject}}</span>
+        <span class="demo-2"> -- {{message.content}}</span>
+      </p>
+    </mat-list-item>
+  }
+</mat-list>
+```
+
 ### Lists with avatars
 
 To include an avatar image, add an image tag with an `matListItemAvatar` attribute.

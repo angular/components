@@ -1,0 +1,10 @@
+<button mat-button [matMenuTriggerFor]="versionPicker" aria-label="Select a version"
+        matTooltip="Select a version of the documentation">
+  {{materialVersion}}
+  <mat-icon>arrow_drop_down</mat-icon>
+</button>
+<mat-menu #versionPicker="matMenu" xPosition="before" class="docs-version-picker-menu">
+  @for (version of docVersions | async; track version) {
+    <button mat-menu-item (click)="onVersionChanged(version)">{{version.title}}</button>
+  }
+</mat-menu>

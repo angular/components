@@ -836,7 +836,6 @@ describe('MatRipple', () => {
          style="position: relative; width:300px; height:200px;">
     </div>
   `,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class BasicRippleContainer {
@@ -856,7 +855,6 @@ class BasicRippleContainer {
     </div>
     <div class="alternateTrigger"></div>
   `,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleContainerWithInputBindings {
@@ -871,14 +869,12 @@ class RippleContainerWithInputBindings {
 
 @Component({
   template: `<div id="container" #ripple="matRipple" matRipple></div>`,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleContainerWithoutBindings {}
 
 @Component({
   template: `@if (!isDestroyed) {<div id="container" matRipple></div>}`,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleContainerWithNgIf {
@@ -890,7 +886,6 @@ class RippleContainerWithNgIf {
   styles: `* { transition: none !important; }`,
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleCssTransitionNone {}
@@ -899,7 +894,6 @@ class RippleCssTransitionNone {}
   styles: `* { transition-duration: 0ms !important; }`,
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleCssTransitionDurationZero {}
@@ -910,7 +904,6 @@ class RippleCssTransitionDurationZero {}
       <div (click)="show = false" matRipple>Click to remove this element.</div>
     }
   `,
-  standalone: true,
   imports: [MatRippleModule],
 })
 class RippleWithDomRemovalOnClick {

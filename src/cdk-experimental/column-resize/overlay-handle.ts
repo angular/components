@@ -6,12 +6,20 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterViewInit, Directive, ElementRef, OnDestroy, NgZone} from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  NgZone,
+  Renderer2,
+  inject,
+} from '@angular/core';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
-import {fromEvent, Subject, merge} from 'rxjs';
+import {Subject, merge, Observable} from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -37,6 +45,7 @@ import {ResizeRef} from './resize-ref';
  */
 @Directive()
 export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
+  private _renderer = inject(Renderer2);
   protected readonly destroyed = new Subject<void>();
 
   protected abstract readonly columnDef: CdkColumnDef;
@@ -49,6 +58,8 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
   protected abstract readonly resizeRef: ResizeRef;
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
 
+  private _cumulativeDeltaX = 0;
+
   ngAfterViewInit() {
     this._listenForMouseEvents();
   }
@@ -60,11 +71,11 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
 
   private _listenForMouseEvents() {
     this.ngZone.runOutsideAngular(() => {
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseenter')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseenter')
         .pipe(mapTo(this.resizeRef.origin.nativeElement!), takeUntil(this.destroyed))
         .subscribe(cell => this.eventDispatcher.headerCellHovered.next(cell));
 
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseleave')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseleave')
         .pipe(
           map(
             event =>
@@ -74,7 +85,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
         )
         .subscribe(cell => this.eventDispatcher.headerCellHovered.next(cell));
 
-      fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mousedown')
+      this._observableFromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mousedown')
         .pipe(takeUntil(this.destroyed))
         .subscribe(mousedownEvent => {
           this._dragStarted(mousedownEvent);
@@ -88,9 +99,9 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const mouseup = fromEvent<MouseEvent>(this.document, 'mouseup');
-    const mousemove = fromEvent<MouseEvent>(this.document, 'mousemove');
-    const escape = fromEvent<KeyboardEvent>(this.document, 'keyup').pipe(
+    const mouseup = this._observableFromEvent<MouseEvent>(this.document, 'mouseup');
+    const mousemove = this._observableFromEvent<MouseEvent>(this.document, 'mousemove');
+    const escape = this._observableFromEvent<KeyboardEvent>(this.document, 'keyup').pipe(
       filter(event => event.keyCode === ESCAPE),
     );
 
@@ -101,6 +112,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     let originOffset = this._getOriginOffset();
     let size = initialSize;
     let overshot = 0;
+    this._cumulativeDeltaX = 0;
 
     this.updateResizeActive(true);
 
@@ -125,6 +137,14 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       .subscribe(([prevX, currX]) => {
         let deltaX = currX - prevX;
 
+        if (!this.resizeRef.liveUpdates) {
+          this._cumulativeDeltaX += deltaX;
+          const sizeDelta = this._computeNewSize(size, this._cumulativeDeltaX) - size;
+          this._updateOverlayOffset(sizeDelta);
+
+          return;
+        }
+
         // If the mouse moved further than the resize was able to match, limit the
         // movement of the overlay to match the actual size and position of the origin.
         if (overshot !== 0) {
@@ -143,18 +163,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
           }
         }
 
-        let computedNewSize: number = size + (this._isLtr() ? deltaX : -deltaX);
-        computedNewSize = Math.min(
-          Math.max(computedNewSize, this.resizeRef.minWidthPx, 0),
-          this.resizeRef.maxWidthPx,
-        );
-
-        this.resizeNotifier.triggerResize.next({
-          columnId: this.columnDef.name,
-          size: computedNewSize,
-          previousSize: size,
-          isStickyColumn: this.columnDef.sticky || this.columnDef.stickyEnd,
-        });
+        this._triggerResize(size, deltaX);
 
         this.styleScheduler.scheduleEnd(() => {
           const originNewSize = this._getOriginWidth();
@@ -176,6 +185,24 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     this.eventDispatcher.overlayHandleActiveForCell.next(
       active ? this.resizeRef.origin.nativeElement! : null,
     );
+  }
+
+  private _triggerResize(startSize: number, deltaX: number): void {
+    this.resizeNotifier.triggerResize.next({
+      columnId: this.columnDef.name,
+      size: this._computeNewSize(startSize, deltaX),
+      previousSize: startSize,
+      isStickyColumn: this.columnDef.sticky || this.columnDef.stickyEnd,
+    });
+  }
+
+  private _computeNewSize(startSize: number, deltaX: number): number {
+    let computedNewSize: number = startSize + (this._isLtr() ? deltaX : -deltaX);
+    computedNewSize = Math.min(
+      Math.max(computedNewSize, this.resizeRef.minWidthPx, 0),
+      this.resizeRef.maxWidthPx,
+    );
+    return computedNewSize;
   }
 
   private _getOriginWidth(): number {
@@ -200,12 +227,30 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
     this.updateResizeActive(false);
 
     this.ngZone.run(() => {
-      const sizeMessage = {columnId: this.columnDef.name, size};
+      const sizeMessage = {
+        columnId: this.columnDef.name,
+        size: this._computeNewSize(size, this._cumulativeDeltaX),
+      };
       if (completedSuccessfully) {
+        if (!this.resizeRef.liveUpdates) {
+          this._triggerResize(size, this._cumulativeDeltaX);
+        }
+
         this.resizeNotifier.resizeCompleted.next(sizeMessage);
       } else {
         this.resizeNotifier.resizeCanceled.next(sizeMessage);
       }
+    });
+  }
+
+  private _observableFromEvent<T extends Event>(element: Element | Document, name: string) {
+    return new Observable<T>(subscriber => {
+      const handler = (event: T) => subscriber.next(event);
+      const cleanup = this._renderer.listen(element, name, handler);
+      return () => {
+        cleanup();
+        subscriber.complete();
+      };
     });
   }
 }

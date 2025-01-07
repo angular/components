@@ -215,7 +215,6 @@ describe('BlockScrollStrategy', () => {
 /** Simple component that we can attach to the overlay. */
 @Component({
   template: '<p>Focaccia</p>',
-  standalone: true,
   imports: [OverlayModule, PortalModule],
 })
 class FocacciaMsg {}

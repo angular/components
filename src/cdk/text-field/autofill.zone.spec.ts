@@ -50,7 +50,6 @@ describe('AutofillMonitor Zone.js integration', () => {
       <input #input2>
       <input #input3>
     `,
-  standalone: true,
   imports: [TextFieldModule],
 })
 class Inputs {

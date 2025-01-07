@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   ANIMATION_MODULE_TYPE,
@@ -36,6 +36,7 @@ import {
   inject,
   numberAttribute,
   HostAttributeToken,
+  Renderer2,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -46,9 +47,6 @@ import {
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-
-// Increasing integer for generating unique ids for radio components.
-let nextUniqueId = 0;
 
 /** Change event object emitted by radio button and radio group. */
 export class MatRadioChange {
@@ -129,7 +127,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   private _value: any = null;
 
   /** The HTML name attribute applied to radio buttons in this group. */
-  private _name: string = `mat-radio-group-${nextUniqueId++}`;
+  private _name: string = inject(_IdGenerator).getId('mat-radio-group-');
 
   /** The currently selected radio button. Should match value. */
   private _selected: MatRadioButton | null = null;
@@ -422,7 +420,9 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   });
 
   private _ngZone = inject(NgZone);
-  private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
+  private _renderer = inject(Renderer2);
+  private _uniqueId = inject(_IdGenerator).getId('mat-radio-');
+  private _cleanupClick: (() => void) | undefined;
 
   /** The unique ID for the radio button. */
   @Input() id: string = this._uniqueId;
@@ -676,13 +676,16 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // 1. Its logic is completely DOM-related so we can avoid some change detections.
     // 2. There appear to be some internal tests that break when this triggers a change detection.
     this._ngZone.runOutsideAngular(() => {
-      this._inputElement.nativeElement.addEventListener('click', this._onInputClick);
+      this._cleanupClick = this._renderer.listen(
+        this._inputElement.nativeElement,
+        'click',
+        this._onInputClick,
+      );
     });
   }
 
   ngOnDestroy() {
-    // We need to null check in case the button was destroyed before `ngAfterViewInit`.
-    this._inputElement?.nativeElement.removeEventListener('click', this._onInputClick);
+    this._cleanupClick?.();
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._removeUniqueSelectionListener();
   }

@@ -233,7 +233,6 @@ describe('MapMarker', () => {
         (positionChanged)="handlePositionChanged()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapMarker],
 })
 class TestApp {

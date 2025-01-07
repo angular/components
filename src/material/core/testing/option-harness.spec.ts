@@ -112,7 +112,6 @@ describe('MatOptionHarness', () => {
     <mat-option>Plain option</mat-option>
     <mat-option disabled>Disabled option</mat-option>
   `,
-  standalone: true,
   imports: [MatOptionModule],
 })
 class OptionHarnessTest implements MatOptionParentComponent {

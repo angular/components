@@ -9,7 +9,6 @@ module.exports = config => {
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
-      require('karma-sauce-launcher'),
       require('karma-sourcemap-loader'),
       {
         'middleware:fake-url': [
@@ -72,16 +71,6 @@ module.exports = config => {
     reporters: ['dots'],
     autoWatch: false,
 
-    sauceLabs: {
-      testName: 'Angular Material Unit Tests',
-      startConnect: false,
-      recordVideo: false,
-      recordScreenshots: false,
-      idleTimeout: 1000,
-      commandTimeout: 600,
-      maxDuration: 5400,
-    },
-
     browserStack: {
       project: 'Angular Material Unit Tests',
       startTunnel: true,
@@ -134,12 +123,6 @@ module.exports = config => {
     if (testPlatform === 'browserstack') {
       config.browserStack.build = buildIdentifier;
       config.browserStack.tunnelIdentifier = tunnelIdentifier;
-    } else if (testPlatform === 'saucelabs') {
-      config.sauceLabs.build = buildIdentifier;
-      config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
-      // Setup the saucelabs reporter so that we report back to Saucelabs once
-      // our tests finished.
-      config.reporters.push('saucelabs');
     }
 
     // If the test platform is not "local", browsers are launched externally and can take

@@ -220,7 +220,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
           expect(select.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
-          expect(select.getAttribute('aria-describedby')).toMatch(/^mat-mdc-hint-\d+$/);
+          expect(select.getAttribute('aria-describedby')).toMatch(/^mat-mdc-hint-\w+\d+$/);
         });
 
         it('should support user binding to `aria-describedby`', () => {
@@ -3508,7 +3508,7 @@ describe('MatSelect', () => {
       expect(trigger.textContent).not.toContain('None');
     }));
 
-    it('should not mark the reset option as selected ', fakeAsync(() => {
+    it('should not mark the reset option as selected', fakeAsync(() => {
       options[5].click();
       fixture.detectChanges();
       flush();
@@ -3542,6 +3542,102 @@ describe('MatSelect', () => {
       expect(label.classList).not.toContain('mdc-floating-label--float-above');
       expect(trigger.textContent).not.toContain('Null');
       expect(trigger.textContent).not.toContain('Undefined');
+    });
+  });
+
+  describe('allowing selection of nullable options', () => {
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ResetValuesSelect])));
+
+    let fixture: ComponentFixture<ResetValuesSelect>;
+    let trigger: HTMLElement;
+    let formField: HTMLElement;
+    let options: NodeListOf<HTMLElement>;
+    let label: HTMLLabelElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(ResetValuesSelect);
+      fixture.componentInstance.canSelectNullableOptions = true;
+      fixture.detectChanges();
+      trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
+      formField = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
+      label = formField.querySelector('label')!;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      options[0].click();
+      fixture.detectChanges();
+      flush();
+    }));
+
+    it('should select an option with an undefined value', fakeAsync(() => {
+      options[4].click();
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.control.value).toBe(undefined);
+      expect(fixture.componentInstance.select.selected).toBeTruthy();
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+      expect(trigger.textContent).toContain('Undefined');
+    }));
+
+    it('should select an option with a null value', fakeAsync(() => {
+      options[5].click();
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.control.value).toBe(null);
+      expect(fixture.componentInstance.select.selected).toBeTruthy();
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+      expect(trigger.textContent).toContain('Null');
+    }));
+
+    it('should select a blank option', fakeAsync(() => {
+      options[6].click();
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.control.value).toBe(undefined);
+      expect(fixture.componentInstance.select.selected).toBeTruthy();
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+      expect(trigger.textContent).toContain('None');
+    }));
+
+    it('should mark a nullable option as selected', fakeAsync(() => {
+      options[5].click();
+      fixture.detectChanges();
+      flush();
+
+      fixture.componentInstance.select.open();
+      fixture.detectChanges();
+      flush();
+
+      expect(options[5].classList).toContain('mdc-list-item--selected');
+    }));
+
+    it('should not reset when any other falsy option is selected', fakeAsync(() => {
+      options[3].click();
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.control.value).toBe(false);
+      expect(fixture.componentInstance.select.selected).toBeTruthy();
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+      expect(trigger.textContent).toContain('Falsy');
+    }));
+
+    it('should consider the nullable values as selected when resetting the form control', () => {
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+
+      fixture.componentInstance.control.reset();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.control.value).toBe(null);
+      expect(fixture.componentInstance.select.selected).toBeTruthy();
+      expect(label.classList).toContain('mdc-floating-label--float-above');
+      expect(trigger.textContent).toContain('Null');
     });
   });
 
@@ -5057,7 +5153,7 @@ class BasicSelectWithTheming {
   template: `
     <mat-form-field>
       <mat-label>Select a food</mat-label>
-      <mat-select [formControl]="control">
+      <mat-select [formControl]="control" [canSelectNullableOptions]="canSelectNullableOptions">
         @for (food of foods; track food) {
           <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
         }
@@ -5076,7 +5172,8 @@ class ResetValuesSelect {
     {viewValue: 'Undefined'},
     {value: null, viewValue: 'Null'},
   ];
-  control = new FormControl('' as string | boolean | null);
+  control = new FormControl('' as string | boolean | null | undefined);
+  canSelectNullableOptions = false;
 
   @ViewChild(MatSelect) select: MatSelect;
 }

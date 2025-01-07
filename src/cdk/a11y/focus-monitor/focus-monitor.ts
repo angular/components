@@ -98,10 +98,10 @@ export class FocusMonitor implements OnDestroy {
   private _windowFocused = false;
 
   /** The timeout id of the window focus timeout. */
-  private _windowFocusTimeoutId: number;
+  private _windowFocusTimeoutId: ReturnType<typeof setTimeout>;
 
   /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: number;
+  private _originTimeoutId: ReturnType<typeof setTimeout>;
 
   /**
    * Whether the origin was determined via a touch interaction. Necessary as properly attributing
@@ -137,7 +137,7 @@ export class FocusMonitor implements OnDestroy {
     // Make a note of when the window regains focus, so we can
     // restore the origin info for the focused element.
     this._windowFocused = true;
-    this._windowFocusTimeoutId = window.setTimeout(() => (this._windowFocused = false));
+    this._windowFocusTimeoutId = setTimeout(() => (this._windowFocused = false));
   };
 
   /** Used to reference correct document/window */

@@ -461,6 +461,24 @@ describe('MatBottomSheet', () => {
     expect(scrollStrategy.enable).toHaveBeenCalled();
   });
 
+  it('should contain the height style properties on overlay pane', () => {
+    bottomSheet.open(PizzaMsg, {
+      panelClass: 'height--pane',
+      height: '300px',
+      maxHeight: 400, // this is converted into pixels
+      minHeight: 200, // this is converted into pixels
+    });
+
+    viewContainerFixture.detectChanges();
+
+    const paneElement = overlayContainerElement.querySelector('.height--pane') as HTMLElement;
+
+    expect(paneElement).toBeTruthy();
+    expect(paneElement.style.height).toBe('300px');
+    expect(paneElement.style.maxHeight).toBe('400px');
+    expect(paneElement.style.minHeight).toBe('200px');
+  });
+
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       const config = {
@@ -991,7 +1009,6 @@ describe('MatBottomSheet with default options', () => {
 
 @Directive({
   selector: 'dir-with-view-container',
-  standalone: true,
 })
 class DirectiveWithViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -999,7 +1016,6 @@ class DirectiveWithViewContainer {
 
 @Component({
   template: `<dir-with-view-container></dir-with-view-container>`,
-  standalone: true,
   imports: [DirectiveWithViewContainer],
 })
 class ComponentWithChildViewContainer {
@@ -1014,7 +1030,6 @@ class ComponentWithChildViewContainer {
   selector: 'arbitrary-component-with-template-ref',
   template: `<ng-template let-data let-bottomSheetRef="bottomSheetRef">
       Cheese {{localValue}} {{data?.value}}{{setRef(bottomSheetRef)}}</ng-template>`,
-  standalone: true,
 })
 class ComponentWithTemplateRef {
   localValue: string;
@@ -1030,7 +1045,6 @@ class ComponentWithTemplateRef {
 
 @Component({
   template: '<p>Pizza</p> <input> <button>Close</button>',
-  standalone: true,
 })
 class PizzaMsg {
   bottomSheetRef = inject<MatBottomSheetRef<PizzaMsg>>(MatBottomSheetRef);
@@ -1040,7 +1054,6 @@ class PizzaMsg {
 
 @Component({
   template: '<p>Taco</p>',
-  standalone: true,
 })
 class TacoMsg {}
 
@@ -1049,14 +1062,12 @@ class TacoMsg {}
     <h1>This is the title</h1>
     <p>This is the paragraph</p>
   `,
-  standalone: true,
 })
 class ContentElementDialog {}
 
 @Component({
   template: '',
   providers: [MatBottomSheet],
-  standalone: true,
   imports: [MatBottomSheetModule],
 })
 class ComponentThatProvidesMatBottomSheet {
@@ -1065,7 +1076,6 @@ class ComponentThatProvidesMatBottomSheet {
 
 @Component({
   template: '',
-  standalone: true,
 })
 class BottomSheetWithInjectedData {
   data = inject(MAT_BOTTOM_SHEET_DATA);
@@ -1074,6 +1084,5 @@ class BottomSheetWithInjectedData {
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
 })
 class ShadowDomComponent {}

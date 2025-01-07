@@ -171,7 +171,6 @@ describe('MatSnackBarHarness', () => {
       <div matSnackBarActions><button matSnackBarAction>Ok</button></div>
     </ng-template>
   `,
-  standalone: true,
   imports: [MatSnackBarLabel, MatSnackBarActions, MatSnackBarAction],
 })
 class SnackbarHarnessTest {

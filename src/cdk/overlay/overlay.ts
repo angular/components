@@ -17,7 +17,9 @@ import {
   ANIMATION_MODULE_TYPE,
   EnvironmentInjector,
   inject,
+  RendererFactory2,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
@@ -26,9 +28,6 @@ import {_CdkOverlayStyleLoader, OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
 import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
-
-/** Next overlay unique ID. */
-let nextUniqueId = 0;
 
 /**
  * Service to create Overlays. Overlays are dynamically added pieces of floating UI, meant to be
@@ -51,6 +50,8 @@ export class Overlay {
   private _location = inject(Location);
   private _outsideClickDispatcher = inject(OverlayOutsideClickDispatcher);
   private _animationsModuleType = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _idGenerator = inject(_IdGenerator);
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
 
   private _appRef: ApplicationRef;
   private _styleLoader = inject(_CdkPrivateStyleLoader);
@@ -87,6 +88,7 @@ export class Overlay {
       this._outsideClickDispatcher,
       this._animationsModuleType === 'NoopAnimations',
       this._injector.get(EnvironmentInjector),
+      this._renderer,
     );
   }
 
@@ -106,7 +108,7 @@ export class Overlay {
   private _createPaneElement(host: HTMLElement): HTMLElement {
     const pane = this._document.createElement('div');
 
-    pane.id = `cdk-overlay-${nextUniqueId++}`;
+    pane.id = this._idGenerator.getId('cdk-overlay-');
     pane.classList.add('cdk-overlay-pane');
     host.appendChild(pane);
 

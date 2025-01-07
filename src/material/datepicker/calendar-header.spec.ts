@@ -199,7 +199,9 @@ describe('MatCalendarHeader', () => {
       expect(periodButton.hasAttribute('aria-label')).toBe(true);
       expect(periodButton.getAttribute('aria-label')).toMatch(/^[a-z0-9\s]+$/i);
       expect(periodButton.hasAttribute('aria-describedby')).toBe(true);
-      expect(periodButton.getAttribute('aria-describedby')).toMatch(/mat-calendar-header-[0-9]+/i);
+      expect(periodButton.getAttribute('aria-describedby')).toMatch(
+        /mat-calendar-period-label-\w+[0-9]+/i,
+      );
     });
   });
 
@@ -382,7 +384,6 @@ describe('MatCalendarHeader', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class StandardCalendar {
@@ -400,7 +401,6 @@ class StandardCalendar {
       [maxDate]="maxDate">
     </mat-calendar>
   `,
-  standalone: true,
   imports: [MatNativeDateModule, MatDatepickerModule],
 })
 class CalendarWithMinMaxDate {

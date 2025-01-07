@@ -400,7 +400,6 @@ function expectMessage(el: Element, message: string) {
     <div id="description-with-existing-id">Hello</div>
     <div description-without-id>Hey</div>
   `,
-  standalone: true,
   imports: [A11yModule],
 })
 class TestApp {

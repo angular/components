@@ -1,0 +1,18 @@
+<div class="docs-component-viewer">
+  <nav mat-tab-nav-bar mat-stretch-tabs="false" class="docs-component-viewer-tabbed-content"
+       aria-label="Documentation Sections"
+       id="component-viewer"
+       focusOnNavigation
+       [tabPanel]="panel">
+    @for (section of sections; track section) {
+      <a mat-tab-link class="docs-component-viewer-section-tab"
+          [routerLink]="section.toLowerCase()"
+          routerLinkActive #rla="routerLinkActive"
+          [active]="rla.isActive">{{section}}</a>
+    }
+  </nav>
+
+  <mat-tab-nav-panel #panel class="docs-component-viewer-content">
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
+</div>

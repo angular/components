@@ -12,7 +12,6 @@ import {
   HarnessLoader,
   HarnessPredicate,
   TestElement,
-  TestKey,
 } from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters';
@@ -82,7 +81,7 @@ export class MatMenuHarness extends ContentContainerComponentHarness<string> {
   async close(): Promise<void> {
     const panel = await this._getMenuPanel();
     if (panel) {
-      return panel.sendKeys(TestKey.ESCAPE);
+      return panel.click();
     }
   }
 

@@ -1,15 +1,17 @@
 <ng-template>
   <div
-    class="mat-mdc-menu-panel mat-mdc-elevation-specific"
+    class="mat-mdc-menu-panel"
     [id]="panelId"
     [class]="_classList"
-    (keydown)="_handleKeydown($event)"
+    [class.mat-menu-panel-animations-disabled]="_animationsDisabled"
+    [class.mat-menu-panel-exit-animation]="_panelAnimationState === 'void'"
+    [class.mat-menu-panel-animating]="_isAnimating"
     (click)="closed.emit('click')"
-    [@transformMenu]="_panelAnimationState"
-    (@transformMenu.start)="_onAnimationStart($event)"
-    (@transformMenu.done)="_onAnimationDone($event)"
     tabindex="-1"
     role="menu"
+    (animationstart)="_onAnimationStart($event.animationName)"
+    (animationend)="_onAnimationDone($event.animationName)"
+    (animationcancel)="_onAnimationDone($event.animationName)"
     [attr.aria-label]="ariaLabel || null"
     [attr.aria-labelledby]="ariaLabelledby || null"
     [attr.aria-describedby]="ariaDescribedby || null">

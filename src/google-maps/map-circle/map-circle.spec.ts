@@ -166,7 +166,6 @@ describe('MapCircle', () => {
         (circleClick)="handleClick()"
         (circleRightclick)="handleRightclick()" />
     </google-map>`,
-  standalone: true,
   imports: [GoogleMap, MapCircle],
 })
 class TestApp {

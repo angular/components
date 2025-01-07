@@ -2,10 +2,8 @@
  * Browser Configuration for the different jobs in the legacy Karma tests.
  *
  *   - `browserstack`: Launches the browser within BrowserStack
- *   - `saucelabs`: Launches the browser within Saucelabs
  */
 const browserConfig = {
-  'iOS15': {unitTest: {target: 'saucelabs'}},
   'Safari16': {unitTest: {target: 'browserstack'}},
 };
 
@@ -14,7 +12,6 @@ exports.customLaunchers = require('./karma-browsers.json');
 
 /** Exports a map of configured browsers, which should run in the given platform. */
 exports.platformMap = {
-  'saucelabs': buildConfiguration('unitTest', 'saucelabs'),
   'browserstack': buildConfiguration('unitTest', 'browserstack'),
 };
 

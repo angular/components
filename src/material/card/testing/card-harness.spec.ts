@@ -123,7 +123,6 @@ describe('MatCardHarness', () => {
         </mat-card-footer>
       </mat-card>
   `,
-  standalone: true,
   imports: [MatCardModule],
 })
 class CardHarnessTest {}

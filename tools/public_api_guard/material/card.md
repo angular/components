@@ -6,7 +6,6 @@
 
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
-import * as i2 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 
 // @public
@@ -103,7 +102,7 @@ export class MatCardModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatCardModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCardModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i3.MatCard, typeof i3.MatCardActions, typeof i3.MatCardAvatar, typeof i3.MatCardContent, typeof i3.MatCardFooter, typeof i3.MatCardHeader, typeof i3.MatCardImage, typeof i3.MatCardLgImage, typeof i3.MatCardMdImage, typeof i3.MatCardSmImage, typeof i3.MatCardSubtitle, typeof i3.MatCardTitle, typeof i3.MatCardTitleGroup, typeof i3.MatCardXlImage], [typeof i3.MatCard, typeof i3.MatCardActions, typeof i3.MatCardAvatar, typeof i3.MatCardContent, typeof i3.MatCardFooter, typeof i3.MatCardHeader, typeof i3.MatCardImage, typeof i3.MatCardLgImage, typeof i3.MatCardMdImage, typeof i3.MatCardSmImage, typeof i3.MatCardSubtitle, typeof i3.MatCardTitle, typeof i3.MatCardTitleGroup, typeof i3.MatCardXlImage, typeof i1.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatCardModule, never, [typeof i1.MatCommonModule, typeof i2.MatCard, typeof i2.MatCardActions, typeof i2.MatCardAvatar, typeof i2.MatCardContent, typeof i2.MatCardFooter, typeof i2.MatCardHeader, typeof i2.MatCardImage, typeof i2.MatCardLgImage, typeof i2.MatCardMdImage, typeof i2.MatCardSmImage, typeof i2.MatCardSubtitle, typeof i2.MatCardTitle, typeof i2.MatCardTitleGroup, typeof i2.MatCardXlImage], [typeof i2.MatCard, typeof i2.MatCardActions, typeof i2.MatCardAvatar, typeof i2.MatCardContent, typeof i2.MatCardFooter, typeof i2.MatCardHeader, typeof i2.MatCardImage, typeof i2.MatCardLgImage, typeof i2.MatCardMdImage, typeof i2.MatCardSmImage, typeof i2.MatCardSubtitle, typeof i2.MatCardTitle, typeof i2.MatCardTitleGroup, typeof i2.MatCardXlImage, typeof i1.MatCommonModule]>;
 }
 
 // @public

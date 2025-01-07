@@ -2,6 +2,7 @@ import {readFileSync, writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
 import {relative, join, dirname} from 'path';
 import {compileString} from 'sass';
+import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
 
 /** Information extracted for a single token from the theme. */
 interface ExtractedToken {
@@ -31,6 +32,16 @@ interface Token {
   derivedFrom?: string;
 }
 
+/** Information extracted from a theme file. */
+interface ThemeData {
+  /** Name of the theme file. */
+  name: string;
+  /** Name of the `overrides` mixin within the file. */
+  overridesMixin: string;
+  /** Tokens that can be used in the `overrides` mixin. */
+  tokens: Token[];
+}
+
 // Script that extracts the tokens from a specific Bazel target.
 if (require.main === module) {
   const [packagePath, outputPath, ...inputFiles] = process.argv.slice(2);
@@ -52,20 +63,19 @@ if (require.main === module) {
     throw new Error(`Could not find theme files in ${packagePath}`);
   }
 
-  const themes: {name: string; overridesMixin: string; tokens: Token[]}[] = [];
+  const themes: ThemeData[] = [];
 
   themeFiles.forEach(theme => {
-    const tokens = extractTokens(theme.filePath);
     themes.push({
       name: theme.mixinPrefix,
       // This can be derived from the `name` already, but we want the source
       // of truth to be in this repo, instead of whatever page consumes the data.
       overridesMixin: `${theme.mixinPrefix}-overrides`,
-      tokens,
+      tokens: extractTokens(theme.filePath),
     });
   });
 
-  writeFileSync(outputPath, JSON.stringify(themes));
+  writeFileSync(outputPath, JSON.stringify({example: getUsageExample(themes), themes}));
 }
 
 /**
@@ -138,6 +148,41 @@ function extractTokens(themePath: string): Token[] {
 }
 
 /**
+ * Generates a highlighted code snippet that illustrates how an overrides mixin can be used.
+ * @param themes Themes that were extracted from a specific entrypoint. One of these themes will
+ *   be used as an example.
+ */
+function getUsageExample(themes: ThemeData[]): string | null {
+  const mixin = themes.find(theme => theme.tokens.length > 0);
+
+  if (!mixin) {
+    return null;
+  }
+
+  // Pick out a couple of color tokens to show as examples.
+  const firstToken = mixin.tokens.find(token => token.type === 'color');
+  const secondToken = mixin.tokens.find(token => token.type === 'color' && token !== firstToken);
+
+  if (!firstToken) {
+    return null;
+  }
+
+  const lines = [
+    `@use '@angular/material' as mat;`,
+    ``,
+    `// Customize the entire app. Change :root to your selector if you want to scope the styles.`,
+    `:root {`,
+    `  @include mat.${mixin.overridesMixin}((`,
+    `    ${firstToken.overridesName}: orange,`,
+    ...(secondToken ? [`    ${secondToken.overridesName}: red,`] : []),
+    `  ));`,
+    `}`,
+  ];
+
+  return highlightCodeBlock(lines.join('\n'), 'scss');
+}
+
+/**
  * Generates the code that can be added around a theme file in order to extract its tokens.
  * @param srcPath Absolute path to the source root.
  * @param absoluteThemePath Absolute path to the theme.
@@ -159,6 +204,8 @@ function getTokenExtractionCode(
   const stringJoin = '__privateStringJoin';
   const m3Tokens = '___privateM3Tokens';
   const palettes = '___privatePalettes';
+  const sassUtils = '__privateSassUtils';
+  const inferTokenType = '__privateInferFromValue';
   const defineOverrides = '_define-overrides';
   const corePath = relative(dirname(absoluteThemePath), join(srcPath, 'material/core')) || '.';
 
@@ -170,12 +217,12 @@ function getTokenExtractionCode(
     @use 'sass:string' as ${str};
     @use '${join(corePath, 'tokens/m3-tokens')}' as ${m3Tokens};
     @use '${join(corePath, 'theming/palettes')}' as ${palettes};
-    @use '${join(corePath, 'style/sass-utils')}' as __privateSassUtils;
+    @use '${join(corePath, 'style/sass-utils')}' as ${sassUtils};
 
     // The 'generate-*' functions don't have the ability to enable
     // system tokens so we have to do it by setting a variable.
-    __privateSassUtils.$use-system-color-variables: true;
-    __privateSassUtils.$use-system-typography-variables: true;
+    ${sassUtils}.$use-system-color-variables: true;
+    ${sassUtils}.$use-system-typography-variables: true;
   `;
 
   const append = `
@@ -184,8 +231,8 @@ function getTokenExtractionCode(
     }
 
     $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
-      ${palettes}.$azure-palette, ${palettes}.$azure-palette, 'sys');
-    $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'sys');
+      ${palettes}.$azure-palette, ${palettes}.$azure-palette, 'mat-sys');
+    $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'mat-sys');
     $__all-density: ${m3Tokens}.generate-density-tokens(0);
     $__all-base: ${m3Tokens}.generate-base-tokens();
     $__results: ();
@@ -196,12 +243,44 @@ function getTokenExtractionCode(
       @error 'Expected override to be a list but got ' + $__override-type;
     }
 
+    // Joins all the strings in a list with a separator.
     @function ${stringJoin}($value, $separator) {
       $result: '';
       @each $part in $value {
         $result: if($result == '', $part, '#{$result}#{$separator}#{$part}');
       }
       @return $result;
+    }
+
+    // Uses some simple heuristics to determine the type of a token based on its name or value.
+    @function ${inferTokenType}($name, $value) {
+      @if ($value == null) {
+        @return null;
+      }
+
+      $type: ${meta}.type-of($value);
+      $inferred-type: null;
+
+      // Note: Sass' string.index returns a 1-based index or null (if the value can't be found)
+      // so it's safe to just null check it in the conditions below.
+      @if ($type == 'color' or ${str}.index($name, 'shadow') or ${str}.index($name, 'opacity')) {
+        $inferred-type: color;
+      } @else if (
+        ${str}.index($name, 'font') or
+        ${str}.index($name, 'line-height') or
+        ${str}.index($name, 'tracking') or
+        ${str}.index($name, 'weight') or
+        (${str}.index($name, 'text') and ${str}.index($name, 'size')) or
+        (${str}.index($name, 'text') and ${str}.index($name, 'transform'))
+      ) {
+        $inferred-type: typography;
+      } @else if (${str}.index($name, 'width') or ${str}.index($name, 'height')) {
+        $inferred-type: density;
+      } @else if ($type == 'string' or ${str}.index($name, 'shape')) {
+        $inferred-type: base;
+      }
+
+      @return $inferred-type;
     }
 
     @each $map in $__override-tokens {
@@ -213,7 +292,7 @@ function getTokenExtractionCode(
       $typography: ${map}.get($__all-typography, $namespace) or ();
       $density: ${map}.get($__all-density, $namespace) or ();
 
-      @each $name, $_ in $tokens {
+      @each $name, $resolved-value in $tokens {
         $color-value: ${map}.get($color, $name);
         $base-value: ${map}.get($base, $name);
         $typography-value: ${map}.get($typography, $name);
@@ -234,6 +313,19 @@ function getTokenExtractionCode(
         } @else {
           $type: color;
           $value: $color-value;
+        }
+
+        // If the token has a value, but could not be found in the token maps, try to infer its type
+        // from the name and value. This is fairly rare, but can happen for some hardcoded tokens.
+        @if ($value == null and $resolved-value) {
+          $fallback-type: ${inferTokenType}($name, $resolved-value);
+
+          @if ($fallback-type == null) {
+            @error 'Cannot determine type of token "#{$name}". Token extraction script needs to be updated.';
+          }
+
+          $type: $fallback-type;
+          $value: $resolved-value;
         }
 
         @if ($value) {

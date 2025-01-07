@@ -48,7 +48,6 @@ describe('MatCard', () => {
 
 @Component({
   template: '<mat-card [appearance]="appearance()"></mat-card>',
-  standalone: true,
   imports: [MatCard],
 })
 class BasicCard {
@@ -57,7 +56,6 @@ class BasicCard {
 
 @Component({
   template: '<mat-card></mat-card>',
-  standalone: true,
   imports: [MatCard],
 })
 class BasicCardNoAppearance {}

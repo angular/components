@@ -18,11 +18,14 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Optional } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
@@ -97,6 +100,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
     protected ngZone: NgZone;
     orientation: 'horizontal' | 'vertical';
     protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
@@ -200,11 +204,15 @@ export class CdkMenuModule {
 }
 
 // @public
-export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
+export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnDestroy {
     constructor();
     close(): void;
     getMenu(): Menu | undefined;
     _handleClick(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     open(): void;
     _setHasFocus(hasFocus: boolean): void;
     toggle(): void;
@@ -363,8 +371,7 @@ export const PARENT_OR_NEW_MENU_STACK_PROVIDER: {
 
 // @public
 export class PointerFocusTracker<T extends FocusableElement> {
-    constructor(
-    _items: QueryList<T>);
+    constructor(_renderer: Renderer2, _items: QueryList<T>);
     activeElement?: T;
     destroy(): void;
     readonly entered: Observable<T>;

@@ -100,7 +100,6 @@ describe('MenuStack', () => {
       </ng-template>
     </div>
   `,
-  standalone: true,
   imports: [CdkMenuModule],
 })
 class MultiMenuWithSubmenu {

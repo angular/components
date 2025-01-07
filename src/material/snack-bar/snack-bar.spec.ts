@@ -1057,7 +1057,6 @@ describe('MatSnackBar Positioning', () => {
 
 @Directive({
   selector: 'dir-with-view-container',
-  standalone: true,
 })
 class DirectiveWithViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -1066,7 +1065,6 @@ class DirectiveWithViewContainer {
 @Component({
   selector: 'arbitrary-component',
   template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
-  standalone: true,
   imports: [DirectiveWithViewContainer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -1087,7 +1085,6 @@ class ComponentWithChildViewContainer {
       Fries {{localValue}} {{data?.value}}
     </ng-template>
   `,
-  standalone: true,
 })
 class ComponentWithTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
@@ -1097,7 +1094,6 @@ class ComponentWithTemplateRef {
 /** Simple component for testing ComponentPortal. */
 @Component({
   template: '<p>Burritos are on the way.</p>',
-  standalone: true,
 })
 class BurritosNotification {
   snackBarRef = inject<MatSnackBarRef<BurritosNotification>>(MatSnackBarRef);
@@ -1107,7 +1103,6 @@ class BurritosNotification {
 @Component({
   template: '',
   providers: [MatSnackBar],
-  standalone: true,
 })
 class ComponentThatProvidesMatSnackBar {
   snackBar = inject(MatSnackBar);

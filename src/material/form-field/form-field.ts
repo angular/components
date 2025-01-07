@@ -34,8 +34,9 @@ import {
 } from '@angular/core';
 import {AbstractControlDirective} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {map, pairwise, takeUntil, filter, startWith} from 'rxjs/operators';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
   FLOATING_LABEL_PARENT,
@@ -104,8 +105,6 @@ export const MAT_FORM_FIELD = new InjectionToken<MatFormField>('MatFormField');
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDefaultOptions>(
   'MAT_FORM_FIELD_DEFAULT_OPTIONS',
 );
-
-let nextUniqueId = 0;
 
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
@@ -191,6 +190,7 @@ export class MatFormField
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _dir = inject(Directionality);
   private _platform = inject(Platform);
+  private _idGenerator = inject(_IdGenerator);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -305,10 +305,10 @@ export class MatFormField
   _hasTextSuffix = false;
 
   // Unique id for the internal form field label.
-  readonly _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
+  readonly _labelId = this._idGenerator.getId('mat-mdc-form-field-label-');
 
   // Unique id for the hint label.
-  readonly _hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
+  readonly _hintLabelId = this._idGenerator.getId('mat-mdc-hint-');
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
@@ -328,6 +328,7 @@ export class MatFormField
   private _previousControl: MatFormFieldControl<unknown> | null = null;
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
+  private _describedByChanges: Subscription | undefined;
 
   private _injector = inject(Injector);
 
@@ -377,6 +378,7 @@ export class MatFormField
   ngOnDestroy() {
     this._stateChanges?.unsubscribe();
     this._valueChanges?.unsubscribe();
+    this._describedByChanges?.unsubscribe();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -426,9 +428,21 @@ export class MatFormField
     this._stateChanges?.unsubscribe();
     this._stateChanges = control.stateChanges.subscribe(() => {
       this._updateFocusState();
-      this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
     });
+
+    // Updating the `aria-describedby` touches the DOM. Only do it if it actually needs to change.
+    this._describedByChanges?.unsubscribe();
+    this._describedByChanges = control.stateChanges
+      .pipe(
+        startWith([undefined, undefined] as const),
+        map(() => [control.errorState, control.userAriaDescribedBy] as const),
+        pairwise(),
+        filter(([[prevErrorState, prevDescribedBy], [currentErrorState, currentDescribedBy]]) => {
+          return prevErrorState !== currentErrorState || prevDescribedBy !== currentDescribedBy;
+        }),
+      )
+      .subscribe(() => this._syncDescribedByIds());
 
     this._valueChanges?.unsubscribe();
 

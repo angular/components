@@ -7,6 +7,7 @@
  */
 
 import {
+  _IdGenerator,
   ActiveDescendantKeyManager,
   addAriaReferencedId,
   LiveAnnouncer,
@@ -96,8 +97,6 @@ import {
 } from './select-errors';
 import {NgClass} from '@angular/common';
 
-let nextUniqueId = 0;
-
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   'mat-select-scroll-strategy',
@@ -128,7 +127,7 @@ export interface MatSelectConfig {
   /** Class or list of classes to be applied to the menu's overlay panel. */
   overlayPanelClass?: string | string[];
 
-  /** Wheter icon indicators should be hidden for single-selection. */
+  /** Whether icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
 
   /**
@@ -136,6 +135,12 @@ export interface MatSelectConfig {
    * If set to null or an empty string, the panel will grow to match the longest option's text.
    */
   panelWidth?: string | number | null;
+
+  /**
+   * Whether nullable options can be selected by default.
+   * See `MatSelect.canSelectNullableOptions` for more information.
+   */
+  canSelectNullableOptions?: boolean;
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -215,11 +220,12 @@ export class MatSelect
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   readonly _elementRef = inject(ElementRef);
   private _dir = inject(Directionality, {optional: true});
+  private _idGenerator = inject(_IdGenerator);
   protected _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
-
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
+  private _initialized = new Subject();
 
   /** All of the defined select options. */
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
@@ -312,7 +318,7 @@ export class MatSelect
   private _compareWith = (o1: any, o2: any) => o1 === o2;
 
   /** Unique id for this input. */
-  private _uid = `mat-select-${nextUniqueId++}`;
+  private _uid = this._idGenerator.getId('mat-select-');
 
   /** Current `aria-labelledby` value for the select trigger. */
   private _triggerAriaLabelledBy: string | null = null;
@@ -367,7 +373,7 @@ export class MatSelect
   _onTouched = () => {};
 
   /** ID for the DOM node containing the select's value. */
-  _valueId = `mat-select-value-${nextUniqueId++}`;
+  _valueId = this._idGenerator.getId('mat-select-value-');
 
   /** Emits when the panel element is finished transforming in. */
   readonly _panelDoneAnimatingStream = new Subject<string>();
@@ -552,7 +558,14 @@ export class MatSelect
       ? this._defaultOptions.panelWidth
       : 'auto';
 
-  private _initialized = new Subject();
+  /**
+   * By default selecting an option with a `null` or `undefined` value will reset the select's
+   * value. Enable this option if the reset behavior doesn't match your requirements and instead
+   * the nullable options should become selected. The value of this input can be controlled app-wide
+   * using the `MAT_SELECT_CONFIG` injection token.
+   */
+  @Input({transform: booleanAttribute})
+  canSelectNullableOptions: boolean = this._defaultOptions?.canSelectNullableOptions ?? false;
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
@@ -1098,7 +1111,10 @@ export class MatSelect
 
       try {
         // Treat null as a special reset value.
-        return option.value != null && this._compareWith(option.value, value);
+        return (
+          (option.value != null || this.canSelectNullableOptions) &&
+          this._compareWith(option.value, value)
+        );
       } catch (error) {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
           // Notify developers of errors in their comparator.
@@ -1243,7 +1259,7 @@ export class MatSelect
   private _onSelect(option: MatOption, isUserInput: boolean): void {
     const wasSelected = this._selectionModel.isSelected(option);
 
-    if (option.value == null && !this._multiple) {
+    if (!this.canSelectNullableOptions && option.value == null && !this._multiple) {
       option.deselect();
       this._selectionModel.clear();
 

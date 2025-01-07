@@ -61,7 +61,6 @@ interface ExampleDialogResult {
     Data: {{data}}
     <button id="close-btn" (click)="close()">Close</button>
   `,
-  standalone: true,
 })
 class ExampleComponent {
   dialogRef = inject<MatDialogRef<ExampleComponent, ExampleDialogResult>>(MatDialogRef);

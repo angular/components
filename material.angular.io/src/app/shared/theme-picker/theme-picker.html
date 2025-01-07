@@ -1,0 +1,27 @@
+<button mat-icon-button class="docs-theme-picker-trigger" [mat-menu-trigger-for]="themeMenu"
+        aria-label="Select a theme" matTooltip="Select a theme for the documentation">
+  <mat-icon>format_color_fill</mat-icon>
+</button>
+
+<mat-menu #themeMenu="matMenu" xPosition="before" class="docs-theme-picker-menu">
+  @for (theme of themes; track theme) {
+    <button mat-menu-item (click)="selectTheme(theme.name)">
+      <mat-icon [class.docs-theme-selected-icon]="currentTheme === theme"
+                [color]="currentTheme === theme ? 'accent' : undefined">
+        {{currentTheme === theme ? 'radio_button_checked' : 'radio_button_unchecked'}}
+      </mat-icon>
+      <span>{{theme.displayName}}</span>
+      <svg matMenuItemIcon class="theme-example-icon" width="80" height="80" viewBox="0 0 80 80">
+        <path
+          [attr.fill]="theme.background"
+          d="M77.87 0C79.05 0 80 .95 80 2.13v75.74c0 1.17-.95 2.13-2.13 2.13H2.13C.96 80 0 79.04 0 77.87V2.13C0 .95.96 0 2.13 0h75.74z"/>
+        <path
+          [attr.fill]="theme.color"
+          d="M54 40c3.32 0 6 2.69 6 6 0 1.2 0-1.2 0 0 0 3.31-2.68 6-6 6H26c-3.31 0-6-2.69-6-6 0-1.2 0 1.2 0 0 0-3.31 2.69-6 6-6h28z"/>
+        <path
+          [attr.fill]="theme.color"
+          d="M0 0h80v17.24H0V0z"/>
+      </svg>
+    </button>
+  }
+</mat-menu>

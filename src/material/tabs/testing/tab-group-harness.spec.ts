@@ -174,7 +174,6 @@ describe('MatTabGroupHarness', () => {
       </mat-tab>
     </mat-tab-group>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabGroupHarnessTest {

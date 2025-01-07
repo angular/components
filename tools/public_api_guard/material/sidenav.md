@@ -4,10 +4,8 @@
 
 ```ts
 
-import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -32,11 +30,10 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean;
 
 // @public
-export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy {
+export class MatDrawer implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
-    readonly _animationEnd: Subject<AnimationEvent_2>;
-    readonly _animationStarted: Subject<AnimationEvent_2>;
-    _animationState: 'open-instant' | 'open' | 'void';
+    readonly _animationEnd: Subject<unknown>;
+    readonly _animationStarted: Subject<unknown>;
     get autoFocus(): AutoFocusTarget | string | boolean;
     set autoFocus(value: AutoFocusTarget | string | BooleanInput);
     close(): Promise<MatDrawerToggleResult>;
@@ -53,8 +50,6 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
     get mode(): MatDrawerMode;
     set mode(value: MatDrawerMode);
     readonly _modeChanged: Subject<void>;
-    // (undocumented)
-    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -75,7 +70,7 @@ export class MatDrawer implements AfterViewInit, AfterContentChecked, OnDestroy 
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawer, never>;
 }
 
-// @public
+// @public @deprecated
 export const matDrawerAnimations: {
     readonly transformDrawer: AnimationTriggerMetadata;
 };
@@ -120,6 +115,8 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     open(): void;
     get scrollable(): CdkScrollable;
     get start(): MatDrawer | null;
+    // (undocumented)
+    _transitionsEnabled: boolean;
     updateContentMargins(): void;
     // (undocumented)
     _userContent: MatDrawerContent;
@@ -136,6 +133,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     _container: MatDrawerContainer;
     // (undocumented)
     ngAfterContentInit(): void;
+    protected _shouldBeHidden(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawerContent, "mat-drawer-content", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)

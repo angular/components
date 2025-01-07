@@ -182,7 +182,6 @@ describe('MatGridListHarness', () => {
       </mat-grid-tile>
     </mat-grid-list>
   `,
-  standalone: true,
   imports: [MatGridListModule],
 })
 class GridListHarnessTest {

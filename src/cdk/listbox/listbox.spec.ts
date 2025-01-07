@@ -9,7 +9,6 @@ import {
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {CommonModule} from '@angular/common';
 import {Component, Type, signal} from '@angular/core';
 import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -46,10 +45,10 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionIds.size).toBe(options.length);
       for (let i = 0; i < options.length; i++) {
         expect(options[i].id).toBe(optionEls[i].id);
-        expect(options[i].id).toMatch(/cdk-option-\d+/);
+        expect(options[i].id).toMatch(/cdk-option-\w+\d+/);
       }
       expect(listbox.id).toEqual(listboxEl.id);
-      expect(listbox.id).toMatch(/cdk-listbox-\d+/);
+      expect(listbox.id).toMatch(/cdk-listbox-\w+\d+/);
     });
 
     it('should not overwrite user given ids', () => {
@@ -532,7 +531,6 @@ describe('CdkOption and CdkListbox', () => {
     it('should allow custom function to compare option values', () => {
       const {fixture, listbox, options} = setupComponent<ListboxWithObjectValues, {name: string}>(
         ListboxWithObjectValues,
-        [CommonModule],
       );
       listbox.value = [{name: 'Banana'}];
       fixture.detectChanges();

@@ -1,0 +1,15 @@
+
+@for (linkSection of _linkSections; track linkSection) {
+  <div class="docs-toc-container">
+    <div class="docs-toc-heading">{{linkSection?.name}}</div>
+    <nav [attr.aria-label]="linkSection?.name + ' Table of Contents'">
+      @for (link of linkSection?.links; track link) {
+        <a [href]="_rootUrl + '#' + link.id"
+          class="docs-level-{{link.type}} docs-link"
+          [class.docs-active]="link.active">
+          {{link.name}}
+        </a>
+      }
+    </nav>
+  </div>
+}

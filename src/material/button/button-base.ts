@@ -21,6 +21,7 @@ import {
   numberAttribute,
   OnDestroy,
   OnInit,
+  Renderer2,
 } from '@angular/core';
 import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
@@ -215,6 +216,8 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
 /** Shared host configuration for buttons using the `<a>` tag. */
 export const MAT_ANCHOR_HOST = {
+  // Note that this is basically a noop on anchors,
+  // but it appears that some internal apps depend on it.
   '[attr.disabled]': '_getDisabledAttribute()',
   '[class.mat-mdc-button-disabled]': 'disabled',
   '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
@@ -224,7 +227,7 @@ export const MAT_ANCHOR_HOST = {
   // consistency with the `mat-button` applied on native buttons where even
   // though they have an index, they're not tabbable.
   '[attr.tabindex]': 'disabled && !disabledInteractive ? -1 : tabIndex',
-  '[attr.aria-disabled]': '_getDisabledAttribute()',
+  '[attr.aria-disabled]': '_getAriaDisabled()',
   // MDC automatically applies the primary theme color to the button, but we want to support
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
   // select and style this "theme".
@@ -240,6 +243,9 @@ export const MAT_ANCHOR_HOST = {
  */
 @Directive()
 export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
+  private _renderer = inject(Renderer2);
+  private _cleanupClick: () => void;
+
   @Input({
     transform: (value: unknown) => {
       return value == null ? undefined : numberAttribute(value);
@@ -249,13 +255,17 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener('click', this._haltDisabledEvents);
+      this._cleanupClick = this._renderer.listen(
+        this._elementRef.nativeElement,
+        'click',
+        this._haltDisabledEvents,
+      );
     });
   }
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();
-    this._elementRef.nativeElement.removeEventListener('click', this._haltDisabledEvents);
+    this._cleanupClick?.();
   }
 
   _haltDisabledEvents = (event: Event): void => {
@@ -267,6 +277,9 @@ export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
   };
 
   protected override _getAriaDisabled() {
-    return this.ariaDisabled == null ? this.disabled : this.ariaDisabled;
+    if (this.ariaDisabled != null) {
+      return this.ariaDisabled;
+    }
+    return this.disabled || null;
   }
 }

@@ -113,7 +113,6 @@ describe('FullscreenOverlayContainer', () => {
 @Component({
   template: `<ng-template cdk-portal>Cake</ng-template>`,
   providers: [Overlay],
-  standalone: true,
   imports: [TemplatePortalDirective],
 })
 class TestComponentWithTemplatePortals {

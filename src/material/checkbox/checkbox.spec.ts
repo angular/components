@@ -298,7 +298,7 @@ describe('MatCheckbox', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\d+/);
+      expect(checkboxInstance.inputId).toMatch(/mat-mdc-checkbox-\w+\d+/);
       expect(inputElement.id).toBe(checkboxInstance.inputId);
     }));
 
@@ -965,8 +965,8 @@ describe('MatCheckbox', () => {
         .queryAll(By.directive(MatCheckbox))
         .map(debugElement => debugElement.nativeElement.querySelector('input').id);
 
-      expect(firstId).toMatch(/mat-mdc-checkbox-\d+-input/);
-      expect(secondId).toMatch(/mat-mdc-checkbox-\d+-input/);
+      expect(firstId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
+      expect(secondId).toMatch(/mat-mdc-checkbox-\w+\d+-input/);
       expect(firstId).not.toEqual(secondId);
     }));
   });
@@ -1233,7 +1233,6 @@ describe('MatCheckboxDefaultOptions', () => {
       Simple checkbox
     </mat-checkbox>
   </div>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class SingleCheckbox {
@@ -1258,7 +1257,6 @@ class SingleCheckbox {
 @Component({
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
                            [disabled]="isDisabled">Be good</mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModel {
@@ -1270,7 +1268,6 @@ class CheckboxWithNgModel {
 @Component({
   template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</mat-checkbox>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MatCheckbox, FormsModule],
 })
 class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
@@ -1281,7 +1278,6 @@ class CheckboxWithNgModelAndOnPush extends CheckboxWithNgModel {}
     <mat-checkbox>Option 1</mat-checkbox>
     <mat-checkbox>Option 2</mat-checkbox>
   `,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class MultipleCheckboxes {}
@@ -1293,7 +1289,6 @@ class MultipleCheckboxes {}
         [tabIndex]="customTabIndex"
         [disabled]="isDisabled">
     </mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithTabIndex {
@@ -1304,7 +1299,6 @@ class CheckboxWithTabIndex {
 /** Simple test component with an aria-label set. */
 @Component({
   template: `<mat-checkbox aria-label="Super effective"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithAriaLabel {}
@@ -1312,7 +1306,6 @@ class CheckboxWithAriaLabel {}
 /** Simple test component with an aria-label set. */
 @Component({
   template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithAriaLabelledby {}
@@ -1320,7 +1313,6 @@ class CheckboxWithAriaLabelledby {}
 /** Simple test component with an aria-describedby set. */
 @Component({
   template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithAriaDescribedby {}
@@ -1328,7 +1320,6 @@ class CheckboxWithAriaDescribedby {}
 /** Simple test component with an aria-expanded set with true. */
 @Component({
   template: `<mat-checkbox aria-expanded="true"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithPositiveAriaExpanded {}
@@ -1336,7 +1327,6 @@ class CheckboxWithPositiveAriaExpanded {}
 /** Simple test component with an aria-expanded set with false. */
 @Component({
   template: `<mat-checkbox aria-expanded="false"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithNegativeAriaExpanded {}
@@ -1344,7 +1334,6 @@ class CheckboxWithNegativeAriaExpanded {}
 /** Simple test component with an aria-controls set. */
 @Component({
   template: `<mat-checkbox aria-controls="some-id"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithAriaControls {}
@@ -1352,7 +1341,6 @@ class CheckboxWithAriaControls {}
 /** Simple test component with an aria-owns set. */
 @Component({
   template: `<mat-checkbox aria-owns="some-id"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithAriaOwns {}
@@ -1360,7 +1348,6 @@ class CheckboxWithAriaOwns {}
 /** Simple test component with name attribute */
 @Component({
   template: `<mat-checkbox name="test-name"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithNameAttribute {}
@@ -1368,7 +1355,6 @@ class CheckboxWithNameAttribute {}
 /** Simple test component with change event */
 @Component({
   template: `<mat-checkbox (change)="lastEvent = $event"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithChangeEvent {
@@ -1378,7 +1364,6 @@ class CheckboxWithChangeEvent {
 /** Test component with reactive forms */
 @Component({
   template: `<mat-checkbox [formControl]="formControl"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox, ReactiveFormsModule],
 })
 class CheckboxWithFormControl {
@@ -1388,7 +1373,6 @@ class CheckboxWithFormControl {
 /** Test component without label */
 @Component({
   template: `<mat-checkbox>{{ label }}</mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithoutLabel {
@@ -1398,14 +1382,12 @@ class CheckboxWithoutLabel {
 /** Test component with the native tabindex attribute. */
 @Component({
   template: `<mat-checkbox tabindex="5"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithTabindexAttr {}
 
 @Component({
   template: `<mat-checkbox aria-label="Checkbox" aria-labelledby="something"></mat-checkbox>`,
-  standalone: true,
   imports: [MatCheckbox],
 })
 class CheckboxWithStaticAriaAttributes {}

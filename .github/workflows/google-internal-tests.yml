@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
-      - uses: angular/dev-infra/github-actions/google-internal-tests@89624a6442b75b5cda33c5e9b5c8c4f87ca4f13d
+      - uses: angular/dev-infra/github-actions/google-internal-tests@359350bbc10aab1bac85d0eec61a53377078ab82
         with:
           run-tests-guide-url: http://go/angular-material-presubmit
           github-token: ${{ secrets.GITHUB_TOKEN }}

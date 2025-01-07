@@ -357,6 +357,28 @@ describe('MatTabNavBar', () => {
     expect(tabLinks[1].classList.contains('mdc-tab--active')).toBe(true);
   });
 
+  it('should re-show the ink bar if the same tab is cleared and re-activated', fakeAsync(() => {
+    const getInkBars = () =>
+      fixture.nativeElement.querySelectorAll('.mdc-tab-indicator--active').length;
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.componentInstance.activeIndex = 0;
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(1);
+
+    fixture.componentInstance.activeIndex = -1;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(0);
+
+    fixture.componentInstance.activeIndex = 0;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(20);
+    expect(getInkBars()).toBe(1);
+  }));
+
   describe('ripples', () => {
     let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
 
@@ -551,7 +573,6 @@ describe('MatTabNavBar with enabled animations', () => {
     </nav>
     <mat-tab-nav-panel #tabPanel id="tab-panel">Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class SimpleTabNavBarTestApp {
@@ -577,7 +598,6 @@ class SimpleTabNavBarTestApp {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabLinkWithNgIf {
@@ -593,7 +613,6 @@ class TabLinkWithNgIf {
     </nav>
     <mat-tab-nav-panel #tabPanel>Tab panel</mat-tab-nav-panel>
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabBarWithInactiveTabsOnInit {
@@ -609,7 +628,6 @@ class TabBarWithInactiveTabsOnInit {
   </nav>
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>,
   `,
-  standalone: true,
   imports: [MatTabsModule],
 })
 class TabsWithCustomAnimationDuration {

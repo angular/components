@@ -75,6 +75,7 @@
   $app-tokens: tokens-mat-app.get-token-slots();
   $ripple-tokens: tokens-mat-ripple.get-token-slots();
   $option-tokens: tokens-mat-option.get-token-slots();
+  $optgroup-tokens: tokens-mat-optgroup.get-token-slots();
   $full-pseudo-checkbox-tokens: tokens-mat-full-pseudo-checkbox.get-token-slots();
   $minimal-pseudo-checkbox-tokens: tokens-mat-minimal-pseudo-checkbox.get-token-slots();
 
@@ -82,6 +83,7 @@
     (namespace: tokens-mat-app.$prefix, tokens: $app-tokens, prefix: 'app-'),
     (namespace: tokens-mat-ripple.$prefix, tokens: $ripple-tokens, prefix: 'ripple-'),
     (namespace: tokens-mat-option.$prefix, tokens: $option-tokens, prefix: 'option-'),
+    (namespace: tokens-mat-optgroup.$prefix, tokens: $optgroup-tokens, prefix: 'optgroup-'),
     (
       namespace: tokens-mat-full-pseudo-checkbox.$prefix,
       tokens: $full-pseudo-checkbox-tokens,

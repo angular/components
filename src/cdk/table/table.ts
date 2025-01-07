@@ -48,7 +48,6 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
-  afterNextRender,
   Injector,
   HostAttributeToken,
 } from '@angular/core';
@@ -459,11 +458,12 @@ export class CdkTable<T>
 
   /** Aria role to apply to the table's cells based on the table's own role. */
   _getCellRole(): string | null {
+    // Perform this lazily in case the table's role was updated by a directive after construction.
     if (this._cellRoleInternal === undefined) {
-      // Perform this lazily in case the table's role was updated by a directive after construction.
-      const role = this._elementRef.nativeElement.getAttribute('role');
-      const cellRole = role === 'grid' || role === 'treegrid' ? 'gridcell' : 'cell';
-      this._cellRoleInternal = this._isNativeHtmlTable && cellRole === 'cell' ? null : cellRole;
+      // Note that we set `role="cell"` even on native `td` elements,
+      // because some browsers seem to require it. See #29784.
+      const tableRole = this._elementRef.nativeElement.getAttribute('role');
+      return tableRole === 'grid' || tableRole === 'treegrid' ? 'gridcell' : 'cell';
     }
 
     return this._cellRoleInternal;
@@ -653,6 +653,8 @@ export class CdkTable<T>
   }
 
   ngOnDestroy() {
+    this._stickyStyler?.destroy();
+
     [
       this._rowOutlet?.viewContainer,
       this._headerRowOutlet?.viewContainer,
@@ -726,14 +728,8 @@ export class CdkTable<T>
 
     this._updateNoDataRow();
 
-    afterNextRender(
-      () => {
-        this.updateStickyColumnStyles();
-      },
-      {injector: this._injector},
-    );
-
     this.contentChanged.next();
+    this.updateStickyColumnStyles();
   }
 
   /** Adds a column definition that was not included as part of the content children. */
@@ -1084,7 +1080,12 @@ export class CdkTable<T>
    * re-render that section.
    */
   private _renderUpdatedColumns(): boolean {
-    const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
+    const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => {
+      // The differ should be run for every column, even if `acc` is already
+      // true (see #29922)
+      const diff = !!def.getColumnsDiff();
+      return acc || diff;
+    };
 
     // Force re-render data rows if the list of column definitions have changed.
     const dataColumnsChanged = this._rowDefs.reduce(columnsDiffReducer, false);
@@ -1195,7 +1196,7 @@ export class CdkTable<T>
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
   private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
-    const columnDefs = Array.from(rowDef.columns || []).map(columnName => {
+    const columnDefs = Array.from(rowDef?.columns || []).map(columnName => {
       const columnDef = this._columnDefsByName.get(columnName);
       if (!columnDef && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw getTableUnknownColumnError(columnName);
@@ -1390,6 +1391,7 @@ export class CdkTable<T>
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
       this._stickyPositioningListener,
+      this._injector,
     );
     (this._dir ? this._dir.change : observableOf<Direction>())
       .pipe(takeUntil(this._onDestroy))

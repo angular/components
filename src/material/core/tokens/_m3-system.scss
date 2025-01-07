@@ -1,5 +1,6 @@
 @use '../style/elevation';
 @use '../style/sass-utils';
+@use '../theming/config-validation';
 @use '../theming/definition';
 @use './m3/definitions';
 @use 'sass:map';
@@ -7,22 +8,15 @@
 @use 'sass:list';
 @use './m3-tokens';
 
-// Prefix used for component token fallback variables, e.g.
-// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
-$_system-fallback-prefix: mat-sys;
-
-// Default system level prefix to use when directly calling the `system-level-*` mixins
-$_system-level-prefix: sys;
-
 /// Emits necessary CSS variables for Material's system level values for the values defined in the
 /// config map. The config map can have values color, typography, and/or density.
 ///
 /// If the config map's color value is an Angular Material color palette, it will be used as the
-/// primary and tertiary colors with a light theme type. Otherwise if the color value is a map,
-/// it must have a `primary` value containing an Angular Material color palette, and optionally
-/// a different `tertiary` palette (defaults to primary palette) and `theme-type` that is either
-/// `light` or `dark` (defaults to light). Color variable definitions will not be emitted if there
-/// are no color values in the config.
+/// primary and tertiary colors with a `color-scheme` theme type. Otherwise if the color value is a
+/// map, it must have a `primary` value containing an Angular Material color palette, and
+/// optionally a different `tertiary` palette (defaults to primary palette) and `theme-type` that
+/// is either `light`, `dark`, or 'color-scheme` (defaults to `color-scheme`). Color variable
+/// definitions will not be emitted if there are no color values in the config.
 ///
 /// If the config map's typography value is a font family string, it will be used as the
 /// plain and brand font family with default bold, medium, and regular weights of 700, 500, and 400,
@@ -44,11 +38,19 @@ $_system-level-prefix: sys;
   $color: map.get($config, color);
   $color-config: null;
   @if ($color) {
-    $color-config: if(meta.type-of($color) == 'map',
-      definition.define-colors($color),
-      definition.define-colors((primary: $color)));
-    @include system-level-colors($color-config, $overrides, $_system-fallback-prefix);
-    @include system-level-elevation($color-config, $overrides, $_system-fallback-prefix);
+    // validate-palette returns null if it is a valid M3 palette
+    $is-palette: config-validation.validate-palette($color) == null;
+
+    // Default to "color-scheme" theme type if the config's color does not provide one.
+    @if (not $is-palette and not map.has-key($color, theme-type)) {
+      $color: map.set($color, theme-type, color-scheme);
+    }
+
+    $color-config: if($is-palette,
+            definition.define-colors((primary: $color, theme-type: color-scheme)),
+            definition.define-colors($color));
+    @include system-level-colors($color-config, $overrides, definition.$system-fallback-prefix);
+    @include system-level-elevation($color-config, $overrides, definition.$system-fallback-prefix);
   }
 
   $typography: map.get($config, typography);
@@ -57,7 +59,8 @@ $_system-level-prefix: sys;
     $typography-config: if(meta.type-of($typography) == 'map',
       definition.define-typography($typography),
       definition.define-typography((plain-family: $typography)));
-    @include system-level-typography($typography-config, $overrides, $_system-fallback-prefix);
+    @include system-level-typography(
+        $typography-config, $overrides, definition.$system-fallback-prefix);
   }
 
   $density: map.get($config, density);
@@ -79,14 +82,13 @@ $_system-level-prefix: sys;
     }
   }
 
-  @include system-level-shape($overrides: $overrides, $prefix: $_system-fallback-prefix);
-  @include system-level-motion($overrides:$overrides, $prefix: $_system-fallback-prefix);
-  @include system-level-state($overrides: $overrides, $prefix: $_system-fallback-prefix);
+  @include system-level-shape($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
+  @include system-level-state($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
 }
 
 /// Emits the system-level CSS variables for each of the provided override values. E.g. to
 /// change the primary color to red, use `mat.theme-overrides((primary: red));`
-@mixin theme-overrides($overrides, $prefix: $_system-fallback-prefix) {
+@mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
   $sys-names: map-merge-all(
       definitions.md-sys-color-values-light(),
       definitions.md-sys-typescale-values(),
@@ -119,16 +121,14 @@ $_system-level-prefix: sys;
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
-        color-system-variables-prefix) or $_system-level-prefix;
+        color-system-variables-prefix) or definition.$system-level-prefix;
   }
 
   $ref: (
     md-ref-palette: m3-tokens.generate-ref-palette-tokens($primary, $tertiary, $error)
   );
 
-  $sys-colors: if($type == dark,
-    definitions.md-sys-color-values-dark($ref),
-    definitions.md-sys-color-values-light($ref));
+  $sys-colors: _generate-sys-colors($ref, $type);
 
   // Manually insert a subset of palette values that are used directly by components
   // instead of system variables.
@@ -144,6 +144,30 @@ $_system-level-prefix: sys;
   }
 }
 
+@function _generate-sys-colors($ref, $type) {
+  $light-sys-colors: definitions.md-sys-color-values-light($ref);
+  @if ($type == light) {
+    @return $light-sys-colors;
+  }
+
+  $dark-sys-colors: definitions.md-sys-color-values-dark($ref);
+  @if ($type == dark) {
+    @return $dark-sys-colors;
+  }
+
+  @if ($type == color-scheme) {
+    $light-dark-sys-colors: ();
+    @each $name, $light-value in $light-sys-colors {
+      $dark-value: map.get($dark-sys-colors, $name);
+      $light-dark-sys-colors:
+          map.set($light-dark-sys-colors, $name, light-dark($light-value, $dark-value));
+    }
+    @return $light-dark-sys-colors;
+  }
+
+  @error 'Unknown theme-type provided: #{$type}';
+}
+
 @mixin system-level-typography($theme, $overrides: (), $prefix: null) {
   $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
   $brand: map.get($font-definition, brand);
@@ -157,7 +181,7 @@ $_system-level-prefix: sys;
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
-        typography-system-variables-prefix) or $_system-level-prefix;
+        typography-system-variables-prefix) or definition.$system-level-prefix;
   }
 
   & {
@@ -167,7 +191,7 @@ $_system-level-prefix: sys;
   }
 }
 
-@mixin system-level-elevation($theme, $overrides: (), $prefix: $_system-level-prefix) {
+@mixin system-level-elevation($theme, $overrides: (), $prefix: definition.$system-level-prefix) {
   $shadow-color: map.get(
       $theme, _mat-theming-internals-do-not-access, color-tokens, (mdc, theme), shadow);
 
@@ -180,7 +204,7 @@ $_system-level-prefix: sys;
   }
 }
 
-@mixin system-level-shape($theme: (), $overrides: (), $prefix: $_system-level-prefix) {
+@mixin system-level-shape($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   & {
     @each $name, $value in definitions.md-sys-shape-values() {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
@@ -188,17 +212,9 @@ $_system-level-prefix: sys;
   }
 }
 
-@mixin system-level-state($theme: (), $overrides: (), $prefix: $_system-level-prefix) {
+@mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   & {
     @each $name, $value in definitions.md-sys-state-values() {
-      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
-    }
-  }
-}
-
-@mixin system-level-motion($theme: (), $overrides: (), $prefix: $_system-level-prefix) {
-  & {
-    @each $name, $value in definitions.md-sys-motion-values() {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -210,7 +226,7 @@ $_system-level-prefix: sys;
 @function _create-system-app-vars-map($map) {
   $new-map: ();
   @each $key, $value in $map {
-    $new-map: map.set($new-map, $key, --#{$_system-fallback-prefix}-#{$key});
+    $new-map: map.set($new-map, $key, --#{definition.$system-fallback-prefix}-#{$key});
   }
   @return $new-map;
 }

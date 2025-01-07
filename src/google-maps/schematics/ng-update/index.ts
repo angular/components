@@ -26,10 +26,14 @@ const DEPRECATED_CLASS_NAME = 'DeprecatedMapMarkerClusterer';
 export function updateToV19(): Rule {
   return tree => {
     tree.visit(path => {
-      if (path.endsWith('.html')) {
-        const content = tree.readText(path);
+      if (path.includes('node_modules')) {
+        return;
+      }
 
-        if (content.includes('<' + TAG_NAME)) {
+      if (path.endsWith('.html')) {
+        const content = tree.read(path)?.toString();
+
+        if (content && content.includes('<' + TAG_NAME)) {
           tree.overwrite(path, migrateHtml(content));
         }
       } else if (path.endsWith('.ts') && !path.endsWith('.d.ts')) {
@@ -48,13 +52,14 @@ function migrateHtml(content: string): string {
 
 /** Migrates a TypeScript file from the old tag and class names to the new ones. */
 function migrateTypeScript(path: Path, tree: Tree) {
-  const content = tree.readText(path);
+  const content = tree.read(path)?.toString();
 
   // Exit early if none of the symbols we're looking for are mentioned.
   if (
-    !content.includes('<' + TAG_NAME) &&
-    !content.includes(MODULE_NAME) &&
-    !content.includes(CLASS_NAME)
+    !content ||
+    (!content.includes('<' + TAG_NAME) &&
+      !content.includes(MODULE_NAME) &&
+      !content.includes(CLASS_NAME))
   ) {
     return;
   }

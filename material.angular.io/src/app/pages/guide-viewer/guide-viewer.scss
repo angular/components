@@ -1,0 +1,59 @@
+@use '../../../styles/constants';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.docs-guide-wrapper {
+  padding: 20px constants.$content-padding-guides-side 0;
+  display: block;
+  text-align: center;
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    padding-left: constants.$content-padding-side-xs;
+    padding-right: constants.$content-padding-side-xs;
+  }
+}
+
+.docs-guide-toc-and-content {
+  display: flex;
+  align-items: flex-start;
+
+  text-align: left;
+  max-width: 940px;
+  margin: 0 auto;
+
+  // Ensures that the footer is pushed to the bottom and prevents
+  // the page from jumping around while something is loading.
+  min-height: 100vh;
+
+  @media (max-width: constants.$extra-small-breakpoint-width) {
+    flex-direction: column;
+  }
+}
+
+.docs-guide-content {
+  flex-grow: 1;
+  width: 75%;
+
+  @media (max-width: constants.$extra-small-breakpoint-width) {
+    width: 100%;
+  }
+}
+
+table-of-contents {
+  top: 35px;
+  position: sticky;
+
+  // Reposition on top of content on small screens and remove
+  // sticky positioning
+  @media (max-width: constants.$extra-small-breakpoint-width) {
+    order: -1;
+    position: relative;
+    width: auto;
+    padding-left: 0;
+    max-height: none;
+  }
+}

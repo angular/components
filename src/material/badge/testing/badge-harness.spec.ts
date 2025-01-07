@@ -136,7 +136,6 @@ describe('MatBadgeHarness', () => {
       matBadge="Disabled badge"
       [matBadgeDisabled]="disabled">Disabled</button>
   `,
-  standalone: true,
   imports: [MatBadgeModule],
 })
 class BadgeHarnessTest {

@@ -137,7 +137,6 @@ describe('MatPaginatorHarness', () => {
       [pageIndex]="pageIndex()">
     </mat-paginator>
   `,
-  standalone: true,
   imports: [MatPaginatorModule],
 })
 class PaginatorHarnessTest {

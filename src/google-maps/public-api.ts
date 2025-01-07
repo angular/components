@@ -24,6 +24,7 @@ export {MapMarker} from './map-marker/map-marker';
 export {MapAdvancedMarker} from './map-advanced-marker/map-advanced-marker';
 export {DeprecatedMapMarkerClusterer} from './deprecated-map-marker-clusterer/deprecated-map-marker-clusterer';
 export {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
+export * from './map-marker-clusterer/map-marker-clusterer-types';
 export {MapPolygon} from './map-polygon/map-polygon';
 export {MapPolyline} from './map-polyline/map-polyline';
 export {MapRectangle} from './map-rectangle/map-rectangle';

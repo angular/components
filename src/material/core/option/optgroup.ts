@@ -15,6 +15,7 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
 
 // Notes on the accessibility pattern used for `mat-optgroup`.
@@ -36,9 +37,6 @@ import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-pa
 //    won't read out the description at all.
 // 3. `<mat-option aria-labelledby="optionLabel groupLabel"` - This works on Chrome, but Safari
 //     doesn't read out the text at all. Furthermore, on
-
-// Counter for unique group ids.
-let _uniqueOptgroupIdCounter = 0;
 
 /**
  * Injection token that can be used to reference instances of `MatOptgroup`. It serves as
@@ -73,7 +71,7 @@ export class MatOptgroup {
   @Input({transform: booleanAttribute}) disabled: boolean = false;
 
   /** Unique id for the underlying label. */
-  _labelId: string = `mat-optgroup-label-${_uniqueOptgroupIdCounter++}`;
+  _labelId: string = inject(_IdGenerator).getId('mat-optgroup-label-');
 
   /** Whether the group is in inert a11y mode. */
   _inert: boolean;

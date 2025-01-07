@@ -1,5 +1,4 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {Component, ElementRef, ViewChild, ViewEncapsulation, signal} from '@angular/core';
 import {MatProgressSpinnerModule} from './module';
@@ -10,7 +9,6 @@ describe('MatProgressSpinner', () => {
     TestBed.configureTestingModule({
       imports: [
         MatProgressSpinnerModule,
-        CommonModule,
         BasicProgressSpinner,
         IndeterminateProgressSpinner,
         ProgressSpinnerWithValueAndBoundMode,
@@ -397,15 +395,13 @@ describe('MatProgressSpinner', () => {
 
 @Component({
   template: '<mat-progress-spinner></mat-progress-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class BasicProgressSpinner {}
 
 @Component({
   template: '<mat-progress-spinner [strokeWidth]="strokeWidth"></mat-progress-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerCustomStrokeWidth {
   strokeWidth: number;
@@ -413,8 +409,7 @@ class ProgressSpinnerCustomStrokeWidth {
 
 @Component({
   template: '<mat-progress-spinner [diameter]="diameter"></mat-progress-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerCustomDiameter {
   diameter: number;
@@ -422,15 +417,13 @@ class ProgressSpinnerCustomDiameter {
 
 @Component({
   template: '<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class IndeterminateProgressSpinner {}
 
 @Component({
   template: '<mat-progress-spinner [value]="value()" [mode]="mode()"></mat-progress-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerWithValueAndBoundMode {
   mode = signal('indeterminate');
@@ -440,8 +433,7 @@ class ProgressSpinnerWithValueAndBoundMode {
 @Component({
   template: `
     <mat-spinner [color]="color()"></mat-spinner>`,
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class SpinnerWithColor {
   color = signal('primary');
@@ -450,8 +442,7 @@ class SpinnerWithColor {
 @Component({
   template: `
     <mat-progress-spinner value="50" [color]="color()"></mat-progress-spinner>`,
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerWithColor {
   color = signal('primary');
@@ -461,8 +452,7 @@ class ProgressSpinnerWithColor {
   template: `
     <mat-progress-spinner value="25" diameter="37" strokeWidth="11"></mat-progress-spinner>
   `,
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class ProgressSpinnerWithStringValues {}
 
@@ -471,8 +461,7 @@ class ProgressSpinnerWithStringValues {}
     <mat-progress-spinner mode="indeterminate" [diameter]="diameter"></mat-progress-spinner>
   `,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class IndeterminateSpinnerInShadowDom {
   diameter: number;
@@ -487,8 +476,7 @@ class IndeterminateSpinnerInShadowDom {
     }
   `,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class IndeterminateSpinnerInShadowDomWithNgIf {
   @ViewChild(MatProgressSpinner, {read: ElementRef})
@@ -499,7 +487,6 @@ class IndeterminateSpinnerInShadowDomWithNgIf {
 
 @Component({
   template: '<mat-spinner mode="determinate"></mat-spinner>',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule],
+  imports: [MatProgressSpinnerModule],
 })
 class SpinnerWithMode {}

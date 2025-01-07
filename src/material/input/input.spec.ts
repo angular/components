@@ -607,7 +607,7 @@ describe('MatMdcInput without forms', () => {
     fixture.componentInstance.formControl.markAsTouched();
     fixture.componentInstance.formControl.setErrors({invalid: true});
     fixture.detectChanges();
-    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-mdc-error-\d+$/);
+    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-mdc-error-\w+\d+$/);
 
     fixture.componentInstance.label = '';
     fixture.componentInstance.userDescribedByValue = '';
@@ -641,6 +641,18 @@ describe('MatMdcInput without forms', () => {
     let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
 
     expect(input.getAttribute('aria-describedby')).toBe('start end');
+  }));
+
+  it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+    const fixture = createComponent(MatInputHintLabel2TestController);
+    const input = fixture.nativeElement.querySelector('input');
+    input.setAttribute('aria-describedby', 'custom');
+    fixture.componentInstance.label = 'label';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const hint = fixture.nativeElement.querySelector('.mat-mdc-form-field-hint');
+
+    expect(input.getAttribute('aria-describedby')).toBe(`${hint.getAttribute('id')} custom`);
   }));
 
   it('should set a class on the hint element based on its alignment', fakeAsync(() => {

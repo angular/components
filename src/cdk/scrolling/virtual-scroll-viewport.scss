@@ -39,7 +39,6 @@ cdk-virtual-scroll-viewport {
   overflow: auto;
   will-change: scroll-position;
   contain: strict;
-  -webkit-overflow-scrolling: touch;
 }
 
 // Wrapper element for the rendered content. This element will be transformed to push the rendered

@@ -2,7 +2,7 @@
 @use './tokens/token-utils';
 @use './style/elevation';
 
-// Mixin that renders all of the core styles that are not theme-dependent.
+/// @deprecated This mixin is a no-op and is going to be removed in v21.
 @mixin core() {}
 
 // Emits the mat-app-background CSS class. This predefined class sets the

@@ -204,15 +204,15 @@ export function crossEnvironmentSpecs(
     });
 
     it('should send enter key', async () => {
-      const specialKey = await harness.specaialKey();
+      const specialKey = await harness.specialKey();
       await harness.sendEnter();
-      expect(await specialKey.text()).toBe('enter');
+      expect(await specialKey.text()).toBe('Enter|Enter');
     });
 
     it('should send alt+j key', async () => {
-      const specialKey = await harness.specaialKey();
+      const specialKey = await harness.specialKey();
       await harness.sendAltJ();
-      expect(await specialKey.text()).toBe('alt-j');
+      expect(await specialKey.text()).toBe('alt-j|KeyJ');
     });
 
     it('should load required harness with ancestor selector restriction', async () => {

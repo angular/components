@@ -16,6 +16,7 @@ import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -150,7 +151,7 @@ export interface CdkDragExit<T = any, I = T> {
 }
 
 // @public
-export class CdkDragHandle implements OnDestroy {
+export class CdkDragHandle implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -158,6 +159,8 @@ export class CdkDragHandle implements OnDestroy {
     element: ElementRef<HTMLElement>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly _stateChanges: Subject<CdkDragHandle>;
@@ -351,13 +354,16 @@ export class DragDropModule {
 // @public
 export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     constructor(...args: unknown[]);
+    getDragDirectiveForNode(node: Node): CdkDrag | null;
     isDragging(drag: DragRef): boolean;
     // (undocumented)
     ngOnDestroy(): void;
     readonly pointerMove: Subject<TouchEvent | MouseEvent>;
     readonly pointerUp: Subject<TouchEvent | MouseEvent>;
+    registerDirectiveNode(node: Node, dragRef: CdkDrag): void;
     registerDragItem(drag: DragRef): void;
     registerDropContainer(drop: DropListRef): void;
+    removeDirectiveNode(node: Node): void;
     removeDragItem(drag: DragRef): void;
     removeDropContainer(drop: DropListRef): void;
     // @deprecated
@@ -373,7 +379,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
 
 // @public
 export class DragRef<T = any> {
-    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry);
+    constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry, _renderer: Renderer2);
     readonly beforeStarted: Subject<void>;
     constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
     data: T;

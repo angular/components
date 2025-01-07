@@ -323,9 +323,17 @@ export class CdkTree<T, K = T>
    * This will be called by the first node that's rendered in order for the tree
    * to determine what data transformations are required.
    */
-  _setNodeTypeIfUnset(nodeType: 'flat' | 'nested') {
-    if (this._nodeType.value === null) {
-      this._nodeType.next(nodeType);
+  _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
+    const currentType = this._nodeType.value;
+
+    if (currentType === null) {
+      this._nodeType.next(newType);
+    } else if ((typeof ngDevMode === 'undefined' || ngDevMode) && currentType !== newType) {
+      console.warn(
+        `Tree is using conflicting node types which can cause unexpected behavior. ` +
+          `Please use tree nodes of the same type (e.g. only flat or only nested). ` +
+          `Current node type: "${currentType}", new node type "${newType}".`,
+      );
     }
   }
 
@@ -708,10 +716,7 @@ export class CdkTree<T, K = T>
     if (this.treeControl) {
       this.treeControl.expandAll();
     } else if (this._expansionModel) {
-      const expansionModel = this._expansionModel;
-      expansionModel.select(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      this._forEachExpansionKey(keys => this._expansionModel?.select(...keys));
     }
   }
 
@@ -720,10 +725,7 @@ export class CdkTree<T, K = T>
     if (this.treeControl) {
       this.treeControl.collapseAll();
     } else if (this._expansionModel) {
-      const expansionModel = this._expansionModel;
-      expansionModel.deselect(
-        ...this._flattenedNodes.value.map(child => this._getExpansionKey(child)),
-      );
+      this._forEachExpansionKey(keys => this._expansionModel?.deselect(...keys));
     }
   }
 
@@ -768,13 +770,7 @@ export class CdkTree<T, K = T>
           if (!expanded) {
             return [];
           }
-          return this._findChildrenByLevel(
-            levelAccessor,
-            flattenedNodes,
-
-            dataNode,
-            1,
-          );
+          return this._findChildrenByLevel(levelAccessor, flattenedNodes, dataNode, 1);
         }),
       );
     }
@@ -1145,6 +1141,28 @@ export class CdkTree<T, K = T>
       this._ariaSets.set(parentKey, group);
     }
   }
+
+  /** Invokes a callback with all node expansion keys. */
+  private _forEachExpansionKey(callback: (keys: K[]) => void) {
+    const toToggle: K[] = [];
+    const observables: Observable<T[]>[] = [];
+
+    this._nodes.value.forEach(node => {
+      toToggle.push(this._getExpansionKey(node.data));
+      observables.push(this._getDescendants(node.data));
+    });
+
+    if (observables.length > 0) {
+      combineLatest(observables)
+        .pipe(take(1), takeUntil(this._onDestroy))
+        .subscribe(results => {
+          results.forEach(inner => inner.forEach(r => toToggle.push(this._getExpansionKey(r))));
+          callback(toToggle);
+        });
+    } else {
+      callback(toToggle);
+    }
+  }
 }
 
 /**
@@ -1169,6 +1187,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _tree = inject<CdkTree<T, K>>(CdkTree);
   protected _tabindex: number | null = -1;
+  protected readonly _type: 'flat' | 'nested' = 'flat';
 
   /**
    * The role of the tree node.
@@ -1368,10 +1387,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
         map(() => this.isExpanded),
         distinctUntilChanged(),
       )
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
-    this._tree._setNodeTypeIfUnset('flat');
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+    this._tree._setNodeTypeIfUnset(this._type);
     this._tree._registerNode(this);
   }
 

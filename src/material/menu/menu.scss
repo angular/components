@@ -31,14 +31,38 @@ mat-menu {
   }
 }
 
+@keyframes _mat-menu-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes _mat-menu-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 .mat-mdc-menu-panel {
   @include menu-common.base;
   box-sizing: border-box;
   outline: 0;
+  animation: _mat-menu-enter 120ms cubic-bezier(0, 0, 0.2, 1);
 
   @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
     @include token-utils.create-token-slot(border-radius, container-shape);
     @include token-utils.create-token-slot(background-color, container-color);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
   }
 
   // TODO(crisbeto): we don't need this for anything, but it was there when
@@ -47,6 +71,14 @@ mat-menu {
   // We should clean it up eventually and re-approve all the screenshots.
   will-change: transform, opacity;
 
+  &.mat-menu-panel-exit-animation {
+    animation: _mat-menu-exit 100ms 25ms linear forwards;
+  }
+
+  &.mat-menu-panel-animations-disabled {
+    animation: none;
+  }
+
   // Prevent users from interacting with the panel while it's animating. Note that
   // people won't be able to click through it, because the overlay pane will catch the click.
   // This fixes the following issues:
@@ -54,7 +86,7 @@ mat-menu {
   //  * Users accidentally tapping on content inside the sub-menu on touch devices, if the
   //    sub-menu overlaps the trigger. The issue is due to touch devices emulating the
   //    `mouseenter` event by dispatching it on tap.
-  &.ng-animating {
+  &.mat-menu-panel-animating {
     pointer-events: none;
 
     // If the same menu is assigned to multiple triggers and the user moves quickly between them

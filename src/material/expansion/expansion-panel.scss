@@ -10,8 +10,11 @@
   display: block;
   margin: 0;
   overflow: hidden;
-  transition: margin 225ms variables.$fast-out-slow-in-timing-function,
-      elevation.private-transition-property-value();
+
+  &.mat-expansion-panel-animations-enabled {
+    transition: margin 225ms variables.$fast-out-slow-in-timing-function,
+        elevation.private-transition-property-value();
+  }
 
   // Required so that the `box-shadow` works after the
   // focus indicator relatively positions the header.
@@ -48,18 +51,58 @@
   @include cdk.high-contrast {
     outline: solid 1px;
   }
+}
 
-  &.ng-animate-disabled,
-  .ng-animate-disabled &,
-  &._mat-animation-noopable {
-    transition: none;
+.mat-expansion-panel-content-wrapper {
+  // Note: we can't use `overflow: hidden` here, because it can clip content with
+  // ripples or box shadows. Instead we transition the `visibility` below.
+  // Based on https://css-tricks.com/css-grid-can-do-auto-height-transitions.
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+
+  .mat-expansion-panel-animations-enabled & {
+    transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  .mat-expansion-panel.mat-expanded > & {
+    grid-template-rows: 1fr;
+  }
+
+  // All the browsers we support have support for `grid` as well, but
+  // given that these styles are load-bearing for the expansion panel,
+  // we have a fallback to `height` which doesn't animate, just in case.
+  // stylelint-disable material/no-prefixes
+  @supports not (grid-template-rows: 0fr) {
+    height: 0;
+
+    .mat-expansion-panel.mat-expanded > & {
+      height: auto;
+    }
+  }
+  // stylelint-enable material/no-prefixes
 }
 
 .mat-expansion-panel-content {
   display: flex;
   flex-direction: column;
   overflow: visible;
+  min-height: 0;
+
+  // The visibility here serves two purposes:
+  // 1. Hiding content from assistive technology.
+  // 2. Hiding any content that might be overflowing.
+  visibility: hidden;
+
+  .mat-expansion-panel-animations-enabled & {
+    // The duration here is slightly lower so the content
+    // goes away quicker than the collapse transition.
+    transition: visibility 190ms linear;
+  }
+
+  .mat-expansion-panel.mat-expanded > .mat-expansion-panel-content-wrapper > & {
+    visibility: visible;
+  }
 
   @include token-utils.use-tokens(
     tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
@@ -68,16 +111,6 @@
     @include token-utils.create-token-slot(font-weight, container-text-weight);
     @include token-utils.create-token-slot(line-height, container-text-line-height);
     @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
-  }
-
-  // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
-  // entering the collapsed content, but children with their own `visibility` can override it.
-  // In other components we set a `display: none` at the root to stop focus from reaching the
-  // elements, however we can't do that here, because the content can determine the width
-  // of an expansion panel. The most practical fallback is to use `!important` to override
-  // any custom visibility.
-  &[style*='visibility: hidden'] * {
-    visibility: hidden !important;
   }
 }
 

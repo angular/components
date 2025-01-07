@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
+import {
+  _IdGenerator,
+  ActiveDescendantKeyManager,
+  Highlightable,
+  ListKeyManagerOption,
+} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceArray} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -37,13 +42,12 @@ import {
   OnDestroy,
   Output,
   QueryList,
+  Renderer2,
+  signal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {defer, fromEvent, merge, Observable, Subject} from 'rxjs';
+import {defer, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
-
-/** The next id to use for creating unique DOM IDs. */
-let nextId = 0;
 
 /**
  * An implementation of SelectionModel that internally always represents the selection as a
@@ -104,7 +108,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     this._id = value;
   }
   private _id: string;
-  private _generatedId = `cdk-option-${nextId++}`;
+  private _generatedId = inject(_IdGenerator).getId('cdk-option-');
 
   /** The value of this option. */
   @Input('cdkOption') value: T;
@@ -118,24 +122,24 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   /** Whether this option is disabled. */
   @Input({alias: 'cdkOptionDisabled', transform: booleanAttribute})
   get disabled(): boolean {
-    return this.listbox.disabled || this._disabled;
+    return this.listbox.disabled || this._disabled();
   }
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled.set(value);
   }
-  private _disabled: boolean = false;
+  private _disabled = signal(false);
 
   /** The tabindex of the option when it is enabled. */
   @Input('tabindex')
   get enabledTabIndex() {
-    return this._enabledTabIndex === undefined
+    return this._enabledTabIndex() === undefined
       ? this.listbox.enabledTabIndex
-      : this._enabledTabIndex;
+      : this._enabledTabIndex();
   }
   set enabledTabIndex(value) {
-    this._enabledTabIndex = value;
+    this._enabledTabIndex.set(value);
   }
-  private _enabledTabIndex?: number | null;
+  private _enabledTabIndex = signal<number | null | undefined>(undefined);
 
   /** The option's host element */
   readonly element: HTMLElement = inject(ElementRef).nativeElement;
@@ -253,6 +257,8 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   ],
 })
 export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, ControlValueAccessor {
+  private _cleanupWindowBlur: (() => void) | undefined;
+
   /** The id of the option's host element. */
   @Input()
   get id() {
@@ -262,17 +268,17 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     this._id = value;
   }
   private _id: string;
-  private _generatedId = `cdk-listbox-${nextId++}`;
+  private _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
 
   /** The tabindex to use when the listbox is enabled. */
   @Input('tabindex')
   get enabledTabIndex() {
-    return this._enabledTabIndex === undefined ? 0 : this._enabledTabIndex;
+    return this._enabledTabIndex() === undefined ? 0 : this._enabledTabIndex();
   }
   set enabledTabIndex(value) {
-    this._enabledTabIndex = value;
+    this._enabledTabIndex.set(value);
   }
-  private _enabledTabIndex?: number | null;
+  private _enabledTabIndex = signal<number | null | undefined>(undefined);
 
   /** The value selected in the listbox, represented as an array of option values. */
   @Input('cdkListboxValue')
@@ -301,11 +307,23 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Whether the listbox is disabled. */
   @Input({alias: 'cdkListboxDisabled', transform: booleanAttribute})
-  disabled: boolean = false;
+  get disabled() {
+    return this._disabled();
+  }
+  set disabled(value: boolean) {
+    this._disabled.set(value);
+  }
+  private _disabled = signal(false);
 
   /** Whether the listbox will use active descendant or will move focus onto the options. */
   @Input({alias: 'cdkListboxUseActiveDescendant', transform: booleanAttribute})
-  useActiveDescendant: boolean = false;
+  get useActiveDescendant() {
+    return this._useActiveDescendant();
+  }
+  set useActiveDescendant(value: boolean) {
+    this._useActiveDescendant.set(value);
+  }
+  private _useActiveDescendant = signal(false);
 
   /** The orientation of the listbox. Only affects keyboard interaction, not visual layout. */
   @Input('cdkListboxOrientation')
@@ -424,7 +442,16 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   constructor() {
     if (this._isBrowser) {
-      this._setPreviousActiveOptionAsActiveOptionOnWindowBlur();
+      const renderer = inject(Renderer2);
+
+      this._cleanupWindowBlur = this.ngZone.runOutsideAngular(() => {
+        return renderer.listen('window', 'blur', () => {
+          if (this.element.contains(document.activeElement) && this._previousActiveOption) {
+            this._setActiveOption(this._previousActiveOption);
+            this._previousActiveOption = null;
+          }
+        });
+      });
     }
   }
 
@@ -450,6 +477,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
 
   ngOnDestroy() {
+    this._cleanupWindowBlur?.();
     this.listKeyManager?.destroy();
     this.destroyed.next();
     this.destroyed.complete();
@@ -1019,23 +1047,6 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   private _getLastTriggeredIndex() {
     const index = this.options.toArray().indexOf(this._lastTriggered!);
     return index === -1 ? null : index;
-  }
-
-  /**
-   * Set previous active option as active option on window blur.
-   * This ensures that the `activeOption` matches the actual focused element when the user returns to the document.
-   */
-  private _setPreviousActiveOptionAsActiveOptionOnWindowBlur() {
-    this.ngZone.runOutsideAngular(() => {
-      fromEvent(window, 'blur')
-        .pipe(takeUntil(this.destroyed))
-        .subscribe(() => {
-          if (this.element.contains(document.activeElement) && this._previousActiveOption) {
-            this._setActiveOption(this._previousActiveOption);
-            this._previousActiveOption = null;
-          }
-        });
-    });
   }
 }
 

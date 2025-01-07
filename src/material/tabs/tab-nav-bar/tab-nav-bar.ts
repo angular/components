@@ -36,7 +36,7 @@ import {
   ThemePalette,
   _StructuralStylesLoader,
 } from '@angular/material/core';
-import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
+import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
@@ -48,9 +48,6 @@ import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-
-// Increasing integer for generating unique ids for tab nav components.
-let nextUniqueId = 0;
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -329,7 +326,7 @@ export class MatTabLink
   }
 
   /** Unique id for the tab. */
-  @Input() id = `mat-tab-link-${nextUniqueId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-tab-link-');
 
   constructor(...args: unknown[]);
 
@@ -444,7 +441,7 @@ export class MatTabLink
 })
 export class MatTabNavPanel {
   /** Unique id for the tab panel. */
-  @Input() id = `mat-tab-nav-panel-${nextUniqueId++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-tab-nav-panel-');
 
   /** Id of the active tab in the nav bar. */
   _activeTabId?: string;

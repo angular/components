@@ -136,7 +136,6 @@ describe('MapDirectionsRenderer', () => {
         (directionsChanged)="handleDirectionsChanged()" />
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapDirectionsRenderer],
 })
 class TestApp {

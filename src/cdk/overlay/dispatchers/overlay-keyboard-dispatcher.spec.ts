@@ -138,15 +138,18 @@ describe('OverlayKeyboardDispatcher', () => {
   it('should dispose of the global keyboard event handler correctly', () => {
     const overlayRef = overlay.create();
     const body = document.body;
-
     spyOn(body, 'addEventListener');
     spyOn(body, 'removeEventListener');
 
     keyboardDispatcher.add(overlayRef);
-    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function));
+    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), undefined);
 
     overlayRef.dispose();
-    expect(body.removeEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function));
+    expect(document.body.removeEventListener).toHaveBeenCalledWith(
+      'keydown',
+      jasmine.any(Function),
+      undefined,
+    );
   });
 
   it('should skip overlays that do not have keydown event subscriptions', () => {
@@ -197,7 +200,6 @@ describe('OverlayKeyboardDispatcher', () => {
 
 @Component({
   template: 'Hello',
-  standalone: true,
   imports: [OverlayModule],
 })
 class TestComponent {}

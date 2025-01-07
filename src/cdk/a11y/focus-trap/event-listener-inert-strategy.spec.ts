@@ -85,7 +85,6 @@ function createComponent<T>(
       <button #secondFocusable>SAVE</button>
     </div>
   `,
-  standalone: true,
 })
 class SimpleFocusTrap implements AfterViewInit {
   private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);

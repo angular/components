@@ -14,6 +14,7 @@ import {
   EmbeddedViewRef,
   EnvironmentInjector,
   NgZone,
+  Renderer2,
   afterNextRender,
   afterRender,
   untracked,
@@ -46,10 +47,8 @@ export class OverlayRef implements PortalOutlet {
   private _positionStrategy: PositionStrategy | undefined;
   private _scrollStrategy: ScrollStrategy | undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
-  private _backdropClickHandler = (event: MouseEvent) => this._backdropClick.next(event);
-  private _backdropTransitionendHandler = (event: TransitionEvent) => {
-    this._disposeBackdrop(event.target as HTMLElement | null);
-  };
+  private _cleanupBackdropClick: (() => void) | undefined;
+  private _cleanupBackdropTransitionEnd: (() => void) | undefined;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
@@ -82,6 +81,7 @@ export class OverlayRef implements PortalOutlet {
     private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
     private _animationsDisabled = false,
     private _injector: EnvironmentInjector,
+    private _renderer: Renderer2,
   ) {
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
@@ -449,7 +449,12 @@ export class OverlayRef implements PortalOutlet {
 
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
-    this._backdropElement.addEventListener('click', this._backdropClickHandler);
+    this._cleanupBackdropClick?.();
+    this._cleanupBackdropClick = this._renderer.listen(
+      this._backdropElement,
+      'click',
+      (event: MouseEvent) => this._backdropClick.next(event),
+    );
 
     // Add class to fade-in the backdrop after one frame.
     if (!this._animationsDisabled && typeof requestAnimationFrame !== 'undefined') {
@@ -494,7 +499,14 @@ export class OverlayRef implements PortalOutlet {
     backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
 
     this._ngZone.runOutsideAngular(() => {
-      backdropToDetach!.addEventListener('transitionend', this._backdropTransitionendHandler);
+      this._cleanupBackdropTransitionEnd?.();
+      this._cleanupBackdropTransitionEnd = this._renderer.listen(
+        backdropToDetach,
+        'transitionend',
+        (event: TransitionEvent) => {
+          this._disposeBackdrop(event.target as HTMLElement | null);
+        },
+      );
     });
 
     // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
@@ -565,9 +577,10 @@ export class OverlayRef implements PortalOutlet {
 
   /** Removes a backdrop element from the DOM. */
   private _disposeBackdrop(backdrop: HTMLElement | null) {
+    this._cleanupBackdropClick?.();
+    this._cleanupBackdropTransitionEnd?.();
+
     if (backdrop) {
-      backdrop.removeEventListener('click', this._backdropClickHandler);
-      backdrop.removeEventListener('transitionend', this._backdropTransitionendHandler);
       backdrop.remove();
 
       // It is possible that a new portal has been attached to this overlay since we started

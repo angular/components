@@ -225,36 +225,20 @@ describe('MatExpansionPanel', () => {
     });
   });
 
-  it('should not be able to focus content while closed', fakeAsync(() => {
+  it('should not be able to focus content while closed', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
+    const wrapper = fixture.nativeElement.querySelector('.mat-expansion-panel-content-wrapper');
+    expect(wrapper.hasAttribute('inert')).toBe(false);
 
-    const button = fixture.debugElement.query(By.css('button'))!.nativeElement;
-
-    button.focus();
-    expect(document.activeElement)
-      .withContext('Expected button to start off focusable.')
-      .toBe(button);
-
-    button.blur();
     fixture.componentInstance.expanded = false;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
 
-    // Enforce a style recalculation as otherwise browsers like Safari on iOS 14 require
-    // us to wait until the next tick using actual async/await. Not retrieving the computed
-    // styles would result in the `visibility: hidden` on the expansion content to not apply.
-    getComputedStyle(button).getPropertyValue('visibility');
-
-    button.focus();
-    expect(document.activeElement)
-      .not.withContext('Expected button to no longer be focusable.')
-      .toBe(button);
-  }));
+    expect(wrapper.hasAttribute('inert')).toBe(true);
+  });
 
   it('should restore focus to header if focused element is inside panel on close', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -346,26 +330,6 @@ describe('MatExpansionPanel', () => {
       .toBeFalsy();
     expect(content.classList).toContain('mat-content-hide-toggle');
   });
-
-  it('should update the indicator rotation when the expanded state is toggled programmatically', fakeAsync(() => {
-    const fixture = TestBed.createComponent(PanelWithContent);
-
-    fixture.detectChanges();
-    tick(250);
-
-    const arrow = fixture.debugElement.query(By.css('.mat-expansion-indicator'))!.nativeElement;
-
-    expect(arrow.style.transform).withContext('Expected no rotation.').toBe('rotate(0deg)');
-
-    fixture.componentInstance.expanded = true;
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    tick(250);
-
-    expect(arrow.style.transform)
-      .withContext('Expected 180 degree rotation.')
-      .toBe('rotate(180deg)');
-  }));
 
   it('should make sure accordion item runs ngOnDestroy when expansion panel is destroyed', () => {
     const fixture = TestBed.createComponent(PanelWithContentInNgIf);
@@ -597,7 +561,6 @@ describe('MatExpansionPanel', () => {
     <p>Some content</p>
     <button>I am a button</button>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithContent {
@@ -619,7 +582,6 @@ class PanelWithContent {
       </div>
     }
   `,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithContentInNgIf {
@@ -636,7 +598,6 @@ class PanelWithContentInNgIf {
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores officia, aliquam dicta
     corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithCustomMargin {
@@ -653,7 +614,6 @@ class PanelWithCustomMargin {
       <button>I am a button</button>
     </ng-template>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class LazyPanelWithContent {
@@ -669,7 +629,6 @@ class LazyPanelWithContent {
       <p>Some content</p>
     </ng-template>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class LazyPanelOpenOnLoad {}
@@ -679,7 +638,6 @@ class LazyPanelOpenOnLoad {}
   <mat-expansion-panel [(expanded)]="expanded">
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithTwoWayBinding {
@@ -691,7 +649,6 @@ class PanelWithTwoWayBinding {
   <mat-expansion-panel>
     <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class PanelWithHeaderTabindex {}
@@ -706,7 +663,6 @@ class PanelWithHeaderTabindex {}
       </mat-expansion-panel>
     </mat-expansion-panel>
   `,
-  standalone: true,
   imports: [MatExpansionModule],
 })
 class NestedLazyPanelWithContent {

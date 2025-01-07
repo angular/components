@@ -23,7 +23,6 @@ export class MatBadge implements OnInit, OnDestroy {
     disabled: boolean;
     getBadgeElement(): HTMLElement | undefined;
     hidden: boolean;
-    _id: number;
     isAbove(): boolean;
     isAfter(): boolean;
     // (undocumented)

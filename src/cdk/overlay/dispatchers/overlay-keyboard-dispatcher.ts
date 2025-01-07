@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 
@@ -17,7 +17,9 @@ import type {OverlayRef} from '../overlay-ref';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-  private _ngZone = inject(NgZone, {optional: true});
+  private _ngZone = inject(NgZone);
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _cleanupKeydown: (() => void) | undefined;
 
   /** Add a new overlay to the list of attached overlay refs. */
   override add(overlayRef: OverlayRef): void {
@@ -25,14 +27,10 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
 
     // Lazily start dispatcher once first overlay is added
     if (!this._isAttached) {
-      /** @breaking-change 14.0.0 _ngZone will be required. */
-      if (this._ngZone) {
-        this._ngZone.runOutsideAngular(() =>
-          this._document.body.addEventListener('keydown', this._keydownListener),
-        );
-      } else {
-        this._document.body.addEventListener('keydown', this._keydownListener);
-      }
+      this._ngZone.runOutsideAngular(() => {
+        this._cleanupKeydown = this._renderer.listen('body', 'keydown', this._keydownListener);
+      });
+
       this._isAttached = true;
     }
   }
@@ -40,7 +38,7 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
   /** Detaches the global keyboard event listener. */
   protected detach() {
     if (this._isAttached) {
-      this._document.body.removeEventListener('keydown', this._keydownListener);
+      this._cleanupKeydown?.();
       this._isAttached = false;
     }
   }
@@ -57,13 +55,7 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
       // because we don't want overlays that don't handle keyboard events to block the ones below
       // them that do.
       if (overlays[i]._keydownEvents.observers.length > 0) {
-        const keydownEvents = overlays[i]._keydownEvents;
-        /** @breaking-change 14.0.0 _ngZone will be required. */
-        if (this._ngZone) {
-          this._ngZone.run(() => keydownEvents.next(event));
-        } else {
-          keydownEvents.next(event);
-        }
+        this._ngZone.run(() => overlays[i]._keydownEvents.next(event));
         break;
       }
     }

@@ -1,4 +1,12 @@
-import {Component, QueryList, ElementRef, ViewChildren, AfterViewInit, inject} from '@angular/core';
+import {
+  Component,
+  QueryList,
+  ElementRef,
+  ViewChildren,
+  AfterViewInit,
+  inject,
+  Renderer2,
+} from '@angular/core';
 import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
 import {Observable} from 'rxjs';
@@ -99,7 +107,6 @@ describe('FocusMouseManger', () => {
 @Component({
   selector: 'wrapper',
   template: `<ng-content></ng-content>`,
-  standalone: true,
 })
 class MockWrapper implements FocusableElement {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -115,10 +122,11 @@ class MockWrapper implements FocusableElement {
       }
     </div>
   `,
-  standalone: true,
   imports: [MockWrapper],
 })
 class MultiElementWithConditionalComponent implements AfterViewInit {
+  private _renderer = inject(Renderer2);
+
   /** Whether the third element should be displayed. */
   showThird = false;
 
@@ -129,6 +137,6 @@ class MultiElementWithConditionalComponent implements AfterViewInit {
   focusTracker: PointerFocusTracker<MockWrapper>;
 
   ngAfterViewInit() {
-    this.focusTracker = new PointerFocusTracker(this._allItems);
+    this.focusTracker = new PointerFocusTracker(this._renderer, this._allItems);
   }
 }

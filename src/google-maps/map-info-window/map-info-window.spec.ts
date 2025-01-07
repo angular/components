@@ -258,7 +258,6 @@ describe('MapInfoWindow', () => {
       </map-info-window>
     </google-map>
   `,
-  standalone: true,
   imports: [GoogleMap, MapInfoWindow],
 })
 class TestApp {

@@ -11,7 +11,6 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
 import {ChangeDetectorRef, Component, ViewChild, inject} from '@angular/core';
 import {
   ComponentFixture,
@@ -37,7 +36,6 @@ describe('MatTabHeader', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        CommonModule,
         PortalModule,
         MatRippleModule,
         ScrollingModule,
@@ -756,7 +754,6 @@ interface Tab {
       width: 130px;
     }
   `,
-  standalone: true,
   imports: [Dir, MatTabHeader, MatTabLabelWrapper],
 })
 class SimpleTabHeaderApp {

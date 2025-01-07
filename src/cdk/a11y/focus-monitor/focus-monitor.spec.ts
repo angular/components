@@ -901,14 +901,12 @@ describe('FocusMonitor input label detection', () => {
 
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class PlainButton {}
 
 @Component({
   template: `<button cdkMonitorElementFocus (cdkFocusChange)="focusChanged($event)"></button>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class ButtonWithFocusClasses {
@@ -917,28 +915,24 @@ class ButtonWithFocusClasses {
 
 @Component({
   template: `<div tabindex="0" cdkMonitorElementFocus><button></button></div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class ComplexComponentWithMonitorElementFocus {}
 
 @Component({
   template: `<div tabindex="0" cdkMonitorSubtreeFocus><button></button></div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class ComplexComponentWithMonitorSubtreeFocus {}
 
 @Component({
   template: `<div cdkMonitorSubtreeFocus><button cdkMonitorElementFocus></button></div>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus {}
 
 @Component({
   template: `<ng-container cdkMonitorElementFocus></ng-container>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class FocusMonitorOnCommentNode {}
@@ -948,14 +942,12 @@ class FocusMonitorOnCommentNode {}
     <label for="test-checkbox">Check me</label>
     <input id="test-checkbox" type="checkbox">
   `,
-  standalone: true,
   imports: [A11yModule],
 })
 class CheckboxWithLabel {}
 
 @Component({
   template: `<button cdkMonitorElementFocus #exportedDir="cdkMonitorFocus"></button>`,
-  standalone: true,
   imports: [A11yModule],
 })
 class ExportedFocusMonitor {

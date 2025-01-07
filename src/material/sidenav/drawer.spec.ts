@@ -7,7 +7,6 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {CommonModule} from '@angular/common';
 import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
@@ -29,7 +28,6 @@ describe('MatDrawer', () => {
         MatSidenavModule,
         A11yModule,
         NoopAnimationsModule,
-        CommonModule,
         BasicTestApp,
         DrawerContainerNoDrawerTestApp,
         DrawerSetToOpenedFalse,
@@ -1209,8 +1207,7 @@ describe('MatDrawerContainer', () => {
 /** Test component that contains an MatDrawerContainer but no MatDrawer. */
 @Component({
   template: `<mat-drawer-container></mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerNoDrawerTestApp {}
 
@@ -1221,7 +1218,6 @@ class DrawerContainerNoDrawerTestApp {}
       <mat-drawer position="start"></mat-drawer>
       <mat-drawer position="end"></mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerTwoDrawerTestApp {
@@ -1250,8 +1246,7 @@ class DrawerContainerTwoDrawerTestApp {
         <circle cx="50" cy="50" r="50"/>
       </svg>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class BasicTestApp {
   openCount = 0;
@@ -1296,8 +1291,7 @@ class BasicTestApp {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerSetToOpenedFalse {}
 
@@ -1308,8 +1302,7 @@ class DrawerSetToOpenedFalse {}
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerSetToOpenedTrue {
   openCallback = jasmine.createSpy('open callback');
@@ -1322,8 +1315,7 @@ class DrawerSetToOpenedTrue {
         Closed Drawer.
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerOpenBinding {
   isOpen = false;
@@ -1335,8 +1327,7 @@ class DrawerOpenBinding {
       <mat-drawer #drawer1 [position]="drawer1Position"></mat-drawer>
       <mat-drawer #drawer2 [position]="drawer2Position"></mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDynamicPosition {
   drawer1Position = 'start';
@@ -1353,8 +1344,7 @@ class DrawerDynamicPosition {
       </mat-drawer>
       <input type="text" class="input2"/>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerWithFocusableElements {
   mode: string = 'over';
@@ -1368,8 +1358,7 @@ class DrawerWithFocusableElements {
         <button disabled>Not focusable</button>
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class DrawerWithoutFocusableElements {}
 
@@ -1381,7 +1370,6 @@ class DrawerWithoutFocusableElements {}
       }
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerDelayed {
@@ -1396,7 +1384,6 @@ class DrawerDelayed {
         <mat-drawer [mode]="mode" style="width:100px"></mat-drawer>
       }
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerStateChangesTestApp {
@@ -1416,7 +1403,6 @@ class DrawerContainerStateChangesTestApp {
         <div [style.width.px]="fillerWidth" style="height: 200px; background: red;"></div>
       </mat-drawer>
     </mat-drawer-container>`,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class AutosizeDrawer {
@@ -1432,7 +1418,6 @@ class AutosizeDrawer {
       <mat-drawer-content>Content</mat-drawer-content>
     </mat-drawer-container>
   `,
-  standalone: true,
   imports: [MatSidenavModule, A11yModule],
 })
 class DrawerContainerWithContent {
@@ -1448,8 +1433,7 @@ class DrawerContainerWithContent {
         <mat-drawer #drawer>Drawer</mat-drawer>
       }
     </mat-drawer-container>`,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class IndirectDescendantDrawer {
   @ViewChild('container') container: MatDrawerContainer;
@@ -1467,8 +1451,7 @@ class IndirectDescendantDrawer {
       </mat-drawer-content>
     </mat-drawer-container>
   `,
-  standalone: true,
-  imports: [MatSidenavModule, A11yModule, CommonModule],
+  imports: [MatSidenavModule, A11yModule],
 })
 class NestedDrawerContainers {
   @ViewChild('outerContainer') outerContainer: MatDrawerContainer;

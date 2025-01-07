@@ -1,672 +1,469 @@
-# Theming Angular Material
+# Theming
 
-## What is theming?
+Angular Material lets you customize the appearance of your components by
+defining a custom theme. Angular Material’s theming system is inspired by
+Google’s [Material Design](https://m3.material.io/styles).
 
-Angular Material's theming system lets you customize base, color, typography, and density styles for components in your application. The theming system is based on Google's
-[Material Design 3][material-design-theming] specification which is the latest
-iteration of Google's open-source design system, Material Design.
+This guide describes how to set up theming for your application using
+Sass APIs introduced in Angular Material v19. 
 
-**For Material 2 specific documentation and how to update to Material 3, see the
-[Material 2 guide][material-2].**
+If your application depends on a version before v19, or if your application's
+theme is applied using a theme config created with `mat.define-theme`, 
+`mat.define-light-theme`, or `mat.define-dark-theme`,
+then you can refer to the theming guides at 
+[v18.material.angular.io/guides](https://v18.material.angular.io/guides).
 
-This document describes the concepts and APIs for customizing colors. For typography customization,
-see [Angular Material Typography][mat-typography]. For guidance on building components to be
-customizable with this system, see [Theming your own components][theme-your-own].
+## Getting Started
 
-[material-design-theming]: https://m3.material.io/
-[material-2]: https://material.angular.io/guide/material-2-theming
-[mat-typography]: https://material.angular.io/guide/typography
-[theme-your-own]: https://material.angular.io/guide/theming-your-components
+Your application needs to have a [Sass](https://sass-lang.com) **theme file**
+that includes Angular Material’s `mat.theme` mixin.
 
-### Sass
+The `mat.theme` mixin takes a map that defines color, typography, and density
+values and outputs a set of CSS variables that control the component appearance
+and layout. These variables are based on
+[Design Tokens](https://m3.material.io/foundations/design-tokens/overview).
 
-Angular Material's theming APIs are built with [Sass](https://sass-lang.com). This document assumes
-familiarity with CSS and Sass basics, including variables, functions, and mixins.
+The color variables are defined using the CSS color function
+[light-dark](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark)
+so that your theme can switch between light and dark mode using the CSS property
+[color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme).
 
-### Custom themes with Sass
+The following example theme file applies a violet color palette, Roboto font,
+and standard density to the application’s Angular Material components. It
+targets the `html` selector to ensure the CSS variables are applied across the
+entire application. The `color-scheme` is explicitly set to `light dark` so that
+the end user's system preferences are used to determine whether the application
+appears in light or dark mode.
 
-A **theme file** is a Sass file that calls Angular Material Sass mixins to output color,
-typography, and density CSS styles.
-
-#### The `core` mixin
-
-Angular Material defines a mixin named `core` that includes prerequisite styles for common
-features used by multiple components, such as ripples. The `core` mixin must be included exactly
-once for your application, even if you define multiple themes. Including the `core` mixin multiple
-times will result in duplicate CSS in your application.
-
-```scss
+```
 @use '@angular/material' as mat;
 
-@include mat.core();
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
+}
 ```
 
-#### Defining a theme
+You can use the following styles to apply the theme’s surface background and
+on-surface text colors as a default across your application:
 
-Angular Material represents a theme as a Sass map that contains your color, typography, and density
-choices, as well as some base design system settings.
+```
+body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+```
 
-The simplest usage of the API, `$theme: mat.define-theme()` defines a theme with default values.
-However, `define-theme` allows you to configure the appearance of your
-Angular Material app along three theming dimensions: color, typography, and density, by passing a
-theme configuration object. The configuration object may have the following properties.
+The `mat.theme` mixin will only declare CSS variables for the categories
+included in the input. For example, if `typography` is not defined, then
+typography CSS variables will not be included in the output.
 
-| Property     | Description                                                                                                     |
-| ------------ | --------------------------------------------------------------------------------------------------------------- |
-| `color`      | [Optional] A map of color options. See [customizing your colors](#customizing-your-colors) for details.         |
-| `typography` | [Optional] A map of typography options. See [customizing your typography](#customizing-your-typography) for details. |
-| `density`    | [Optional] A map of density options. See [customizing your density](#customizing-your-density) for details.     |
+### **Color**
 
-<!-- TODO(mmalerba): Upgrade to embedded example -->
+The `theme`‘s color determines the component color styles, such as the fill
+color of checkboxes or ripple color of buttons. It depends on color palettes of
+varying tones to build a color scheme. Check out the
+[Palettes](#prebuilt-color-palettes)
+section to learn about available prebuilt palettes, or how to create custom
+palettes.
 
-```scss
+You can set the color in one of two ways: as a single color palette, or as a
+color map.
+
+#### *Single Color Palette*
+
+If you provide a single color palette, Angular Material uses its values for the
+theme’s primary, secondary, and tertiary colors. The CSS color values will be
+defined using `light-dark` CSS color function. Your application styles should
+define an explicit value declaration for the `color-scheme` CSS property.
+
+#### *Color Map*
+
+If you provide a color map, then the tertiary color palette can be configured
+separately from the primary palette. The tertiary palette can be used to add a
+distinct accent color to some components.
+
+You can also set the `theme-type` to determine the color values are defined:
+
+*   `color-scheme` \- include both light and dark colors using the `light-dark`
+    CSS color function
+*   `light` \- only define the light color values
+*   `dark` \- only define the dark color values
+
+The `light-dark` CSS color function is
+[widely available](https://caniuse.com/?search=light-dark) for all major
+browsers. However, if your application must support older browser versions or
+non-major browsers, you should explicitly set the `theme-type` to either `light`
+or `dark`.
+
+The following example theme file applies a violet primary color and orange
+tertiary color. The theme-type is set to `light` which means that only the light
+color values will be set for the application. The typography is set to Roboto
+with a standard density setting.
+
+```
 @use '@angular/material' as mat;
 
-$theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$violet-palette,
-  ),
-  typography: (
-    brand-family: 'Comic Sans',
-    bold-weight: 900
-  ),
-  density: (
-    scale: -1
-  )
-));
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$violet-palette,
+      tertiary: mat.$orange-palette,
+      theme-type: light,
+    ),
+    typography: Roboto,
+    density: 0
+  ));
+}
 ```
 
-#### Customizing your colors
+### **Typography**
 
-The following aspects of your app's colors can be customized via the `color` property of the theme
-configuration object (see the [M3 color spec](https://m3.material.io/styles/color/roles) to learn
-more about these terms):
+The `mat.theme` ‘s typography determines the text styles used in components,
+such as the font for dialog titles or menu list items.
 
-| Color Property | Description                                                                                                                                                                                                                                                              |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `theme-type`   | [Optional] Specifies the type of theme, `light` or `dark`. The choice of a light versus a dark theme determines the background and foreground colors used throughout the components.                                                                                                                                                                                                               |
-| `primary`      | [Optional] Specifies the palette to use for the app's primary color palette. (Note: the secondary, neutral, and neutral-variant palettes described in the M3 spec will be automatically chosen based on your primary palette, to ensure a harmonious color combination). |
-| `tertiary`     | [Optional] Specifies the palette to use for the app's tertiary color palette.                                                                                                                                                                                            |
+You can set the typography in one of two ways: as a single font family value, or
+as a typography map.
 
-##### Pre-built themes
+#### *Single Font Family Value*
 
-Angular Material includes several pre-built theme CSS files, each with different palettes selected.
-You can use one of these pre-built themes if you don't want to define a custom theme with Sass.
+If you provide a font family, Angular Material uses it for all the text in its
+components. The font weights used in components are set to 700 for bold text,
+500 for medium text, and 400 for regular text.
 
-| Theme                  | Light or dark? | Specification                    |
-|------------------------|----------------|----------------------------------|
-| `azure-blue.css`       | Light          | Material Design 3                |
-| `rose-red.css`         | Light          | Material Design 3                |
-| `cyan-orange.css`      | Dark           | Material Design 3                |
-| `magenta-violet.css`   | Dark           | Material Design 3                |
-| `deeppurple-amber.css` | Light          | Material Design 2                |
-| `indigo-pink.css`      | Light          | Material Design 2                |
-| `pink-bluegrey.css`    | Dark           | Material Design 2                |
-| `purple-green.css`     | Dark           | Material Design 2                |
+#### *Typography Map*
 
-These files include the CSS for every component in the library. To include only the CSS for a subset
-of components, you must use the Sass API detailed in [Defining a theme](#defining-a-theme) above.
-You can [reference the source code for these pre-built themes](https://github.com/angular/components/blob/main/src/material/core/theming/prebuilt) to see examples of complete theme definitions.
+If you provide a typography map, then distinct font families are set for plain
+and brand text. The plain font family is typically used for most of the
+application’s text, while the brand font family is typically used for headings
+and titles.
 
-##### Pre-defined palettes
+The typography map also sets specific weights for bold, medium, and regular
+text.
 
-The pre-built themes are based on a set of pre-defined palettes that can be used with the `primary`
-and `tertiary` options:
+The following example theme file applies the Roboto font family to plain text
+and the Open Sans font family to brand text. It specifies that bold weight is
+900, medium weight is 500, and regular weight is 300\. The color scheme uses the
+violet color palette with a standard density.
 
-- `$red-palette`
-- `$green-palette`
-- `$blue-palette`
-- `$yellow-palette`
-- `$cyan-palette`
-- `$magenta-palette`
-- `$orange-palette`
-- `$chartreuse-palette`
-- `$spring-green-palette`
-- `$azure-palette`
-- `$violet-palette`
-- `$rose-palette`
+```
+@use '@angular/material' as mat;
 
-##### Custom theme
-Alternatively, custom palettes can be generated with a custom color with the following schematic:
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: (
+      plain-family: Roboto,
+      brand-family: Open Sans,
+      bold-weight: 900,
+      medium-weight: 500,
+      regular-weight: 300,
+    ),
+    density: 0,
+  ));
+}
+```
 
-```shell
+### **Density**
+
+The `mat.theme` ‘s density value determines the spacing within components, such
+as how much padding is used around a button’s text or the height of form fields.
+
+The density value accepts integers from 0 to \-5, where 0 is the default spacing
+and \-5 is the most dense and compact layout. Each whole number step down (-1,
+\-2, etc.) reduces the affected sizes by 4px, down to the minimum size necessary
+for a component to render itself coherently.
+
+The following example theme file has a density setting of \-2 which causes most
+components to include less whitespace in their layout. The color scheme uses the
+violet color palette and applies Roboto as the font-family.
+
+```
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: -2,
+  ));
+}
+```
+
+Setting the density below 0 can reduce accessibility and make navigation harder
+for users of assistive technology.
+
+Density customizations do not affect components that appear in task-based or
+pop-up contexts, such as the date picker. The Material Design density guidance
+explicitly discourages changes to density for such interactions because they
+don't compete for space in the application's layout.
+
+## **Color Palettes**
+
+A color palette is a set of similar colors with different hues ranging from
+light to dark. The Angular Material theme uses color palettes to create a color
+scheme to communicate an application’s hierarchy, state, and brand.
+
+### **Prebuilt Color Palettes**
+
+Angular Material provides twelve prebuilt color palettes that can be used for
+your application’s theme:
+
+*   `$red-palette`
+*   `$green-palette`
+*   `$blue-palette`
+*   `$yellow-palette`
+*   `$cyan-palette`
+*   `$magenta-palette`
+*   `$orange-palette`
+*   `$chartreuse-palette`
+*   `$spring-green-palette`
+*   `$azure-palette`
+*   `$violet-palette`
+*   `$rose-palette`
+
+### **Custom Color Palettes**
+
+The Angular Material
+[palette generation schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md)
+builds custom color palettes based on a single color input for the primary
+color, and optionally color inputs to further customize secondary, tertiary, and
+neutral palettes:
+
+```
 ng generate @angular/material:theme-color
 ```
 
-This schematic integrates with [Material Color Utilities](https://github.com/material-foundation/material-color-utilities) to build palettes based on a single color. Optionally you can provide
-additional custom colors for the secondary, tertiary, and neutral palettes.
+## **Loading Fonts**
 
-The output of the schematic is a new Sass file that exports the palettes that can be provided to
-a theme definition.
+You can use Google Fonts as one option to load fonts in your application. For
+example, the following code in an application’s `<head>` loads the font family
+Roboto with the font weights 700, 500, and 400:
 
-```scss
+```
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+```
+
+Learn more about using fonts with
+[Google Fonts](https://developers.google.com/fonts/docs/getting_started). By
+default, projects created with the Angular CLI are
+[configured](https://angular.dev/reference/configs/workspace-config#fonts-optimization-options)
+to inline assets from Google Fonts to reduce render-blocking requests.
+
+## **Supporting Light and Dark Mode**
+
+By default, the `mat.theme` mixin defines colors using the CSS color function
+`light-dark` to make it easy for your application to switch between light and
+dark mode. The `light-dark` function depends on the value of `color-scheme`
+declared in your application’s global styles. If your application does not
+define a value for `color-scheme`, then the light colors will always be applied.
+
+You can define `color-scheme: light` or `color-scheme: dark` to explicitly
+define your application’s mode. To set the mode depending on the user’s system
+preferences, use `color-scheme: light-dark` as shown in the following example:
+
+```
 @use '@angular/material' as mat;
-@use './path/to/my-theme'; // location of generated file
 
 html {
-  @include mat.theme(
-    color: (
-      primary: my-theme.$primary-palette,
-      tertiary: my-theme.$tertiary-palette,
-    ),
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
+}
+```
+
+You can also use the strategy of defining `color-scheme` under a CSS selector so
+that the mode depends on whether that class has been applied. In the following
+example, the application always displays the light mode theme unless the class
+“dark-mode” is added to the HTML body.
+
+```
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
+}
+
+body.dark-mode {
+  color-scheme: dark;
+}
+```
+
+Angular Material does not automatically apply different styles or themes based
+on user preference media queries, such as `color-scheme`, `prefers-color-scheme`
+or `prefers-contrast`. Instead, Angular Material gives you the flexibility to
+define your own queries to apply the styles that make sense for your users. This
+may mean relying on `color-scheme: light dark`, defining custom media queries,
+or reading a saved user preference to apply styles.
+
+## **Multiple Themes**
+
+You can call the `mat.theme` mixin more than once to apply multiple different
+color schemes in your application.
+
+### **Context-specific Themes**
+
+The following example theme file customizes the theme for components in
+different contexts. In this case, a cyan-based palette is applied to a container
+of information about deleting data, causing buttons and other components to have
+a unique and attention-grabbing style applied:
+
+```
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
     typography: Roboto,
     density: 0,
-  )
+  ));
+}
+
+.example-bright-container {
+  @include mat.theme((
+    color: mat.$cyan-palette,
+  ));
 }
 ```
 
-You can also optionally generate high contrast override mixins for your custom theme that allows for
-a better accessibility experience. Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md).
+## **Using Theme Styles**
 
-<!-- TODO(mmalerba): Illustrate palettes with example. -->
+An application’s custom components can use the CSS variables defined by
+`mat.theme` to apply the theme’s colors and typography.
 
-#### Customizing your typography
+The color variables are useful for emphasizing important text and actions,
+providing stronger application branding, and ensuring strong contrast ratios
+between surface and on-surface elements.
 
-The following aspects of your app's typography can be customized via the `typography` property of
-the theme configuration object.
+The typography variables are useful for creating clear information hierarchy and
+text consistency through the application.
 
-| Typography Property | Description                                                          |
-| ------------------- | -------------------------------------------------------------------- |
-| `plain-family`      | [Optional] The font family to use for plain text, such as body text. |
-| `brand-family`      | [Optional] The font family to use for brand text, such as headlines. |
-| `bold-weight`       | [Optional] The font weight to use for bold text.                     |
-| `medium-weight`     | [Optional] The font weight to use for medium text.                   |
-| `regular-weight`    | [Optional] The font weight to use for regular text.                  |
+The following example styles demonstrate a component using the color and
+typography variables to create an application-wide banner presenting important
+information to the user:
 
-See the [typography guide](https://material.angular.io/guide/typography) for more
-information.
-
-#### Customizing your density
-
-The following aspects of your app's density can be customized via the `density` property of the
-theme configuration object:
-
-| Density Property | Description                                                                                                      |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `scale`          | [Optional] The level of compactness of the components in your app, from `0` (most space) to `-5` (most compact). |
-
-
-#### Applying a theme to components
-
-The `core-theme` Sass mixin emits prerequisite styles for common features used by multiple
-components, such as ripples. This mixin must be included once per theme.
-
-Each Angular Material component has a mixin for each [theming dimension](#theming-dimensions): base,
-color, typography, and density. For example, `MatButton` declares `button-base`, `button-color`,
-`button-typography`, and `button-density`. Each mixin emits only the styles corresponding to that
-dimension of customization.
-
-Additionally, each component has a "theme" mixin that emits all styles that depend on the theme
-config. This theme mixin only emits color, typography, or density styles if you provided a
-corresponding configuration to `define-theme`, and it always emits the base styles.
-
-Once you've created your theme, you can apply it using the same `-theme`, `-color`, `-typography`, `-density`, and `-base` mixins.
-
-For M3 themes, these mixins make some guarantees about the emitted styles.
-
-- The mixins emit properties under the exact selector you specify. They will _not_ add to the
-  selector or increase the specificity of the rule.
-- The mixins only emit
-  [CSS custom property declarations](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
-  (e.g. `--some-prop: xyz`). They do _not_ emit any standard CSS properties such as `color`,
-  `width`, etc.
-
-Apply the styles for each of the components used in your application by including each of their
-theme Sass mixins.
-
-```scss
-@use '@angular/material' as mat;
-
-@include mat.core();
-
-$my-theme: mat.define-theme((
- color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-));
-
-html {
-  // Emit theme-dependent styles for common features used across multiple components.
-  @include mat.core-theme($my-theme);
-
-  // Emit styles for MatButton based on `$my-theme`. Because the configuration
-  // passed to `define-theme` omits typography, `button-theme` will not
-  // emit any typography styles.
-  @include mat.button-theme($my-theme);
-
-  // Include the theme mixins for other components you use here.
+```
+:host {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  font: var(--mat-sys-body-large);
 }
 ```
 
-As an alternative to listing every component that your application uses, Angular Material offers
-Sass mixins that includes styles for all components in the library: `all-component-bases`,
-`all-component-colors`, `all-component-typographies`, `all-component-densities`, and
-`all-component-themes`. These mixins behave the same as individual component mixins, except they
-emit styles for `core-theme` and _all_ 35+ components in Angular Material. Unless your application
-uses every single component, this will produce unnecessary CSS.
+See the [Theme Variables](https://material.angular.io/guide/system-variables) guide for a
+comprehensive list of these variables, examples of where they are used, and how
+components can depend on them.
 
-```scss
-@use '@angular/material' as mat;
+## **Customizing Tokens**
 
-@include mat.core();
+Angular Material components also allow for narrowly targeted customization of
+specific tokens through the `overrides` mixins. This enables fine-grained
+adjustments to specific system-level theme CSS variables as well as individual
+component tokens, such as a component’s border-color or title font size.
 
-$my-theme: mat.define-theme((
- color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-));
+The `overrides` API validates that the customized tokens are correctly spelled
+and can be used to ensure backwards compatibility if tokens are added, moved, or
+renamed in future versions.
 
-html {
-  @include mat.all-component-themes($my-theme);
-}
+### **System Tokens**
+
+System-level tokens can be changed to different values through the
+`mat.theme-overrides` mixin, which will redefine CSS variables that are used in
+the application.
+
+The following example applies a violet color palette for the application, but
+alters the `primary-container` token to a specific shade of blue.
+
 ```
-
-To include the emitted styles in your application, [add your theme file to the `styles` array of
-your project's `angular.json` file][adding-styles].
-
-[adding-styles]: https://angular.dev/reference/configs/workspace-config#styles-and-scripts-configuration
-
-#### Theming dimensions
-
-Angular Material themes are divided along four dimensions: base, color, typography, and density.
-
-##### Base
-
-Common base styles for the design system. These styles don't change based on your configured
-colors, typography, or density, so they only need to be included once per application. These
-mixins include structural styles such as border-radius, border-width, etc. All components have a base
-mixin that can be used to include its base styles. (For example,
-`@include mat.checkbox-base($theme)`)
-
-##### Color
-
-Styles related to the colors in your application. These style should be included at least once in
-your application. Depending on your needs, you may need to include these styles multiple times
-with different configurations. (For example, if your app supports light and dark theme colors.)
-All components have a color mixin that can be used to include its color styles. (For example,
-`@include mat.checkbox-color($theme)`)
-
-##### Typography
-
-Styles related to the fonts used in your application, including the font family, size, weight,
-line-height, and letter-spacing. These style should be included at least once in your application.
-Depending on your needs, you may need to include these styles multiple times with different
-configurations. (For example, if your app supports reading content in either a serif or sans-serif
-font.) All components  have a typography mixin that can be used to include its typography
-styles. (For example, `@include mat.checkbox-typography($theme)`)
-
-##### Density
-
-Styles related to the size and spacing of elements in your application. These style should be
-included at least once in your application. Depending on your needs, you may need to include these
-styles multiple times with different configurations. (For example, if your app supports both a
-normal and compact mode). All components have a density mixin that can be used to include its
-density styles. (For example, `@include mat.checkbox-density($theme)`)
-
-##### Theme mixin
-
-All components also support a theme mixin that can be used to include the component's styles for all
-theme dimensions at once. (For example, `@include mat.checkbox-theme($theme)`).
-
-**The recommended approach is to rely on the `theme` mixins to lay down your base styles, and if
-needed use the single dimension mixins to override particular aspects for parts of your app (see the
-section on [Multiple themes in one file](#multiple-themes-in-one-file).)**
-
-### Defining multiple themes
-
-Using the Sass API described in [Defining a theme](#defining-a-theme), you can also define
-_multiple_ themes by repeating the API calls multiple times. You can do this either in the same
-theme file or in separate theme files.
-
-#### Multiple themes in one file
-
-Defining multiple themes in a single file allows you to support multiple themes without having to
-manage loading of multiple CSS assets. The downside, however, is that your CSS will include more
-styles than necessary.
-
-To control which theme applies when, `@include` the mixins only within a context specified via
-CSS rule declaration. See the [documentation for Sass mixins][sass-mixins] for further background.
-
-[sass-mixins]: https://sass-lang.com/documentation/at-rules/mixin
-
-```scss
 @use '@angular/material' as mat;
 
-@include mat.core();
-
-// Define a dark theme
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$violet-palette,
-  ),
-));
-
-// Define a light theme
-$light-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-));
-
 html {
-  // Apply the dark theme by default
-  @include mat.core-theme($dark-theme);
-  @include mat.button-theme($dark-theme);
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
 
-  // Apply the light theme only when the user prefers light themes.
-  @media (prefers-color-scheme: light) {
-    // Use the `-color` mixins to only apply color styles without reapplying the same
-    // typography and density styles.
-    @include mat.core-color($light-theme);
-    @include mat.button-color($light-theme);
+  .example-orange-primary-container {
+    @include mat.theme-overrides((
+      primary-container: #84ffff
+    ));
   }
 }
 ```
 
-#### Multiple themes across separate files
+Alternatively, an optional override map can be provided in the `mat.theme` mixin
+to replace values applied by the mixin:
 
-You can define multiple themes in separate files by creating multiple theme files per
-[Defining a theme](#defining-a-theme), adding each of the files to the `styles` of your
-`angular.json`. However, you must additionally set the `inject` option for each of these files to
-`false` in order to prevent all the theme files from being loaded at the same time. When setting
-this property to `false`, your application becomes responsible for manually loading the desired
-file. The approach for this loading depends on your application.
-
-### Application background color
-
-By default, Angular Material does not apply any styles to your DOM outside
-its own components. If you want to set your application's background color
-to match the components' theme, you can either:
-1. Put your application's main content inside `mat-sidenav-container`, assuming you're using
-   `MatSidenav`, or
-2. Apply the `mat-app-background` CSS class to your main content root element (typically `body`).
-
-### Granular customizations with CSS custom properties
-
-The CSS custom properties emitted by the theme mixins are derived from
-[M3's design tokens](https://m3.material.io/foundations/design-tokens/overview). To further
-customize your UI beyond the `define-theme` API, you can manually set these custom properties in
-your styles.
-
-The guarantees made by the theme mixins mean that you do not need to target internal selectors of
-components or use excessive specificity to override any of these tokenized properties. Always apply
-your base theme to your application's root element (typically `html` or `body`) and apply any
-overrides on the highest-level selector where they apply.
-
-<!-- TODO(mmalerba): Upgrade to embedded example -->
-
-```html
-<mat-sidenav-container>
-  Some content...
-  <mat-sidenav>
-    Some sidenav content...
-    <mat-checkbox class="danger">Enable admin mode</mat-checkbox>
-  </mat-sidenav>
-</mat-sidenav-container>
 ```
-
-```scss
 @use '@angular/material' as mat;
-
-$light-theme: mat.define-theme();
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark
-  )
-));
 
 html {
-  // Apply the base theme at the root, so it will be inherited by the whole app.
-  @include mat.all-component-themes($light-theme);
-}
-
-mat-sidenav {
-  // Override the colors to create a dark sidenav.
-  @include mat.all-component-colors($dark-theme);
-}
-
-.danger {
-  // Override the checkbox hover state to indicate that this is a dangerous setting. No need to
-  // target the internal selectors for the elements that use these variables.
-  --mdc-checkbox-unselected-hover-state-layer-color: red;
-  --mdc-checkbox-unselected-hover-icon-color: red;
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ), $overrides: (
+    primary-container: orange,
+  );
 }
 ```
 
-## Customizing density
+### **Component Tokens**
 
-Angular Material's density customization is based on the
-[Material Design density guidelines][material-density]. This system defines a scale where zero
-represents the default density. You can decrement the number for _more density_ and increment the
-number for _less density_.
+Each Angular Material component defines an `overrides` mixin that can be used to
+customize tokenized styles for their color, typography, and density.
 
-The density system is based on a *density scale*. The scale starts with the
-default density of `0`. Each whole number step down (`-1`, `-2`, etc.) reduces
-the affected sizes by `4dp`, down to the minimum size necessary for a component to render
-coherently.
+More information for each component’s override API, including their list of
+available customizable tokens, can be found on their respective documentation
+page under the Styling tab.
 
-Components that appear in task-based or pop-up contexts, such as `MatDatepicker`, don't change their
-size via the density system. The [Material Design density guidance][material-density] explicitly
-discourages increasing density for such interactions because they don't compete for space in the
-application's layout.
+The following example demonstrates the Card’s `overrides` API to change the
+background color to red, increase the corner border radius, and specify a larger
+title font size.
 
-You can apply custom density setting to the entire library or to individual components using their
-density Sass mixins.
-
-```scss
-// You can set a density setting in your theme to apply to all components.
-$dark-theme: mat.define-theme((
-  color: ...,
-  typography: ...,
-  density: (
-    scale: -2
-  ),
-));
-
-// Or you can selectively apply the Sass mixin to affect only specific parts of your application.
-.the-dense-zone {
-  @include mat.button-density(-1);
-}
 ```
-
-[material-density]: https://m3.material.io/foundations/layout/understanding-layout/spacing
-
-## Strong focus indicators
-
-By default, most components indicate browser focus by changing their background color as described
-by the Material Design specification. This behavior, however, can fall short of accessibility
-requirements, such as [WCAG][], which require a stronger indication of browser focus.
-
-Angular Material supports rendering highly visible outlines on focused elements. Applications can
-enable these strong focus indicators via two Sass mixins:
-`strong-focus-indicators` and `strong-focus-indicators-theme`.
-
-The `strong-focus-indicators` mixin emits structural indicator styles for all components. This mixin
-should be included exactly once in an application, similar to the `core` mixin described above.
-
-The `strong-focus-indicators-theme` mixin emits only the indicator's color styles. This mixin should
-be included once per theme, similar to the theme mixins described above. Additionally, you can use
-this mixin to change the color of the focus indicators in situations in which the default color
-would not contrast sufficiently with the background color.
-
-The following example includes strong focus indicator styles in an application alongside the rest of
-the custom theme API.
-
-```scss
-@use '@angular/material' as mat;
-
-@include mat.core();
-@include mat.strong-focus-indicators();
-
-$my-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-));
-
 html {
-  @include mat.all-component-themes($my-theme);
-  @include mat.strong-focus-indicators-theme($my-theme);
+  @include mat.card-overrides((
+    elevated-container-color: red,
+    elevated-container-shape: 32px,
+    title-text-size: 2rem,
+  ));
 }
 ```
 
-### Customizing strong focus indicators
+### **Direct Style Overrides**
 
-You can pass a configuration map to `strong-focus-indicators` to customize the appearance of the
-indicators. This configuration includes `border-style`, `border-width`, and `border-radius`.
+Angular Material supports customizing color, typography, and density as outlined
+in this document. Angular strongly discourages, and does not directly support,
+overriding component CSS outside the theming APIs described above. Component DOM
+structure and CSS classes are considered private implementation details that may
+change at any time. CSS variables used by the Angular Material components should
+be defined through the `overrides` API instead of defined explicitly.
 
-You also can customize the color of indicators with `strong-focus-indicators-theme`. This mixin
-accepts either a theme, as described earlier in this guide, or a CSS color value. When providing a
-theme, the indicators will use the default hue of the primary palette.
+## **Shadow DOM**
 
-The following example includes strong focus indicator styles with custom settings alongside the rest
-of the custom theme API.
-
-```scss
-@use '@angular/material' as mat;
-
-@include mat.core();
-@include mat.strong-focus-indicators((
-  border-style: dotted,
-  border-width: 4px,
-  border-radius: 2px,
-));
-
-$my-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$violet-palette,
-  ),
-));
-
-html {
-  @include mat.all-component-themes($my-theme);
-  @include mat.strong-focus-indicators-theme(purple);
-}
-```
-
-[WCAG]: https://www.w3.org/WAI/standards-guidelines/wcag/glance/
-
-## Theming and style encapsulation
-
-Angular Material assumes that, by default, all theme styles are loaded as global CSS. If you want
-to use [Shadow DOM][shadow-dom] in your application, you must load the theme styles within each
-shadow root that contains an Angular Material component. You can accomplish this by manually loading
-the CSS in each shadow root, or by using [Constructable Stylesheets][constructable-css].
-
-[shadow-dom]: https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM
-[constructable-css]: https://developers.google.com/web/updates/2019/02/constructable-stylesheets
-
-## User preference media queries
-
-Angular Material does not apply styles based on user preference media queries, such as
-`prefers-color-scheme` or `prefers-contrast`. Instead, Angular Material's Sass mixins give you the
-flexibility to apply theme styles to based on the conditions that make the most sense for your
-users. This may mean using media queries directly or reading a saved user preference.
-
-## Using component color variants
-
-A number of components have a `color` input property that allows developers to apply different color
-variants of the component. When using an M3 theme, this input still adds a CSS class to the
-component (e.g. `.mat-accent`). However, there are no built-in styles targeting these classes. You
-can instead apply color variants by passing the `$color-variant` option to a component's `-theme` or
-`-color` mixins.
-
-<!-- TODO(mmalerba): Upgrade to embedded example -->
-
-```html
-<mat-checkbox class="tertiary-checkbox" />
-<section class="tertiary-checkbox">
-  <mat-checkbox />
-</section>
-```
-
-```scss
-@use '@angular/material' as mat;
-
-$theme: mat.define-theme();
-
-.tertiary-checkbox {
-  @include mat.checkbox-color($theme, $color-variant: tertiary);
-}
-```
-
-This API is more flexible, and produces less CSS. For example, the `.tertiary-checkbox` class shown
-above can be applied to any checkbox _or_ any element that contains checkboxes, to change the color
-of all checkboxes within that element.
-
-While you should prefer applying the mixins with color variants explicitly, if migrating from M2 to
-M3 you can alternatively use [the provided backwards compatibility mixins](https://material.angular.io/guide/material-2-theming#how-to-migrate-an-app-from-material-2-to-material-3)
-that apply styles directly to the existing CSS classes (`mat-primary`, `mat-accent`, and
-`mat-warn`).
-
-The table below shows the supported `$color-variant` values for each component. (Unlisted components
-do not support any color variants.)
-
-| Component        | Supported `$color-variant` values                      | Default     |
-| ---------------- | ------------------------------------------------------ | ----------- |
-| Badge            | `primary`, `secondary`, `tertiary`, `error`            | `error`     |
-| Button           | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Button-toggle    | `primary`, `secondary`, `tertiary`, `error`            | `secondary` |
-| Checkbox         | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Chips            | `primary`, `secondary`, `tertiary`, `error`            | `secondary` |
-| Datepicker       | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Fab              | `primary`, `secondary`, `tertiary`                     | `primary`   |
-| Form-field       | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Icon             | `surface`, `primary`, `secondary`, `tertiary`, `error` | `surface`   |
-| Option           | `primary`, `secondary`, `tertiary`, `error`            | `secondary` |
-| Progress-bar     | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Progress-spinner | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Pseudo-checkbox  | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Radio            | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Select           | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Slide-toggle     | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Slider           | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Stepper          | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-| Tabs             | `primary`, `secondary`, `tertiary`, `error`            | `primary`   |
-
-## Style customization outside the theming system
-
-Angular Material supports customizing color, typography, and density as outlined in this document.
-Angular strongly discourages, and does not directly support, overriding component CSS outside the
-theming APIs described above. Component DOM structure and CSS classes are considered private
-implementation details that may change at any time.
-
-<!-- TODO(amysorto): Move this section into theming your components guide and
-move M2 specific details to the material 2 guide -->
-## Theme your own components using a Material 3 theme
-
-The same utility functions for reading properties of M2 themes (described in
-[our guide for theming your components](https://material.angular.io/guide/theming-your-components))
-can be used to read properties from M3 themes. However, the named palettes, typography
-levels, etc. available are different for M3 themes, in accordance with the spec.
-
-The structure of the theme object is considered an implementation detail. Code should not depend on
-directly reading properties off of it, e.g. using `map.get`. Always use the utility functions
-provided by Angular Material to access properties of the theme.
-
-<!-- TODO(mmalerba): Upgrade to embedded example -->
-
-```scss
-@use '@angular/material' as mat;
-
-@mixin my-comp-theme($theme) {
-  .my-comp {
-    font: mat.get-theme-typography($theme, body-large, font);
-    letter-spacing: mat.get-theme-typography($theme, body-large, letter-spacing);
-    background: mat.get-theme-color($theme, surface);
-    @if mat.get-theme-type($theme) == dark {
-      color: mat.get-theme-color($theme, primary, 20);
-    } @else {
-      color: mat.get-theme-color($theme, primary, 80);
-    }
-    padding: 48px + (2px * mat.get-theme-density($theme));
-  }
-}
-```
+Angular Material assumes that, by default, all theme styles are loaded as global
+CSS. If you want to use
+[Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM)
+in your application, you must load the theme styles within each shadow root that
+contains an Angular Material component. You can accomplish this by manually
+loading the CSS in each shadow root, or by using
+[Constructable Stylesheets](https://developers.google.com/web/updates/2019/02/constructable-stylesheets).

@@ -18,12 +18,17 @@ import {ColumnResize} from './column-resize';
  * The details of how resizing works for tables for flex mat-tables are quite different.
  */
 @Injectable()
-export abstract class ResizeStrategy {
+export abstract class ResizeStrategy implements OnDestroy {
   protected abstract readonly columnResize: ColumnResize;
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
   protected abstract readonly table: CdkTable<unknown>;
 
   private _pendingResizeDelta: number | null = null;
+  private _tableObserved = false;
+  private _elemSizeCache = new WeakMap<HTMLElement, {width: number; height: number}>();
+  private _resizeObserver = globalThis?.ResizeObserver
+    ? new globalThis.ResizeObserver(entries => this._updateCachedSizes(entries))
+    : null;
 
   /** Updates the width of the specified column. */
   abstract applyColumnSize(
@@ -51,7 +56,7 @@ export abstract class ResizeStrategy {
   protected updateTableWidthAndStickyColumns(delta: number): void {
     if (this._pendingResizeDelta === null) {
       const tableElement = this.columnResize.elementRef.nativeElement;
-      const tableWidth = getElementWidth(tableElement);
+      const tableWidth = this.getElementWidth(tableElement);
 
       this.styleScheduler.schedule(() => {
         tableElement.style.width = coerceCssPixelValue(tableWidth + this._pendingResizeDelta!);
@@ -65,6 +70,48 @@ export abstract class ResizeStrategy {
     }
 
     this._pendingResizeDelta = (this._pendingResizeDelta ?? 0) + delta;
+  }
+
+  /** Gets the style.width pixels on the specified element if present, otherwise its offsetWidth. */
+  protected getElementWidth(element: HTMLElement) {
+    // Optimization: Check style.width first as we probably set it already before reading
+    // offsetWidth which triggers layout.
+    return (
+      coercePixelsFromCssValue(element.style.width) ||
+      this._elemSizeCache.get(element)?.width ||
+      element.offsetWidth
+    );
+  }
+
+  /** Informs the ResizeStrategy instance of a column that may be resized in the future. */
+  registerColumn(column: HTMLElement) {
+    if (!this._tableObserved) {
+      this._tableObserved = true;
+      this._resizeObserver?.observe(this.columnResize.elementRef.nativeElement, {
+        box: 'border-box',
+      });
+    }
+    this._resizeObserver?.observe(column, {box: 'border-box'});
+  }
+
+  ngOnDestroy(): void {
+    this._resizeObserver?.disconnect();
+  }
+
+  private _updateCachedSizes(entries: ResizeObserverEntry[]) {
+    for (const entry of entries) {
+      const newEntry = entry.borderBoxSize?.length
+        ? {
+            width: entry.borderBoxSize[0].inlineSize,
+            height: entry.borderBoxSize[0].blockSize,
+          }
+        : {
+            width: entry.contentRect.width,
+            height: entry.contentRect.height,
+          };
+
+      this._elemSizeCache.set(entry.target as HTMLElement, newEntry);
+    }
   }
 }
 
@@ -87,7 +134,7 @@ export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
     sizeInPx: number,
     previousSizeInPx?: number,
   ): void {
-    const delta = sizeInPx - (previousSizeInPx ?? getElementWidth(columnHeader));
+    const delta = sizeInPx - (previousSizeInPx ?? this.getElementWidth(columnHeader));
 
     if (delta === 0) {
       return;
@@ -101,14 +148,14 @@ export class TableLayoutFixedResizeStrategy extends ResizeStrategy {
   }
 
   applyMinColumnSize(_: string, columnHeader: HTMLElement, sizeInPx: number): void {
-    const currentWidth = getElementWidth(columnHeader);
+    const currentWidth = this.getElementWidth(columnHeader);
     const newWidth = Math.max(currentWidth, sizeInPx);
 
     this.applyColumnSize(_, columnHeader, newWidth, currentWidth);
   }
 
   applyMaxColumnSize(_: string, columnHeader: HTMLElement, sizeInPx: number): void {
-    const currentWidth = getElementWidth(columnHeader);
+    const currentWidth = this.getElementWidth(columnHeader);
     const newWidth = Math.min(currentWidth, sizeInPx);
 
     this.applyColumnSize(_, columnHeader, newWidth, currentWidth);
@@ -189,7 +236,8 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
     return `cdk-column-${cssFriendlyColumnName}`;
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
     this._styleElement?.remove();
     this._styleElement = undefined;
   }
@@ -275,13 +323,6 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
 /** Converts CSS pixel values to numbers, eg "123px" to 123. Returns NaN for non pixel values. */
 function coercePixelsFromCssValue(cssValue: string): number {
   return Number(cssValue.match(/(\d+)px/)?.[1]);
-}
-
-/** Gets the style.width pixels on the specified element if present, otherwise its offsetWidth. */
-function getElementWidth(element: HTMLElement) {
-  // Optimization: Check style.width first as we probably set it already before reading
-  // offsetWidth which triggers layout.
-  return coercePixelsFromCssValue(element.style.width) || element.offsetWidth;
 }
 
 /**

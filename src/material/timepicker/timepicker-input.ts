@@ -20,6 +20,7 @@ import {
   ModelSignal,
   OnDestroy,
   OutputRefSubscription,
+  Renderer2,
   Signal,
   signal,
 } from '@angular/core';
@@ -89,11 +90,12 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   private _onChange: ((value: any) => void) | undefined;
   private _onTouched: (() => void) | undefined;
   private _validatorOnChange: (() => void) | undefined;
+  private _cleanupClick: () => void;
   private _accessorDisabled = signal(false);
   private _localeSubscription: Subscription;
   private _timepickerSubscription: OutputRefSubscription | undefined;
   private _validator: ValidatorFn;
-  private _lastValueValid = false;
+  private _lastValueValid = true;
   private _lastValidDate: D | null = null;
 
   /** Value of the `aria-activedescendant` attribute. */
@@ -144,8 +146,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     () => this.disabledInput() || this._accessorDisabled(),
   );
 
-  /** Whether the input should be disabled through the template. */
-  protected readonly disabledInput: InputSignalWithTransform<boolean, unknown> = input(false, {
+  /**
+   * Whether the input should be disabled through the template.
+   * @docs-private
+   */
+  readonly disabledInput: InputSignalWithTransform<boolean, unknown> = input(false, {
     transform: booleanAttribute,
     alias: 'disabled',
   });
@@ -155,6 +160,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       validateAdapter(this._dateAdapter, this._dateFormats);
     }
 
+    const renderer = inject(Renderer2);
     this._validator = this._getValidator();
     this._respondToValueChanges();
     this._respondToMinMaxChanges();
@@ -167,7 +173,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
     // Bind the click listener manually to the overlay origin, because we want the entire
     // form field to be clickable, if the timepicker is used in `mat-form-field`.
-    this.getOverlayOrigin().nativeElement.addEventListener('click', this._handleClick);
+    this._cleanupClick = renderer.listen(
+      this.getOverlayOrigin().nativeElement,
+      'click',
+      this._handleClick,
+    );
   }
 
   /**
@@ -175,7 +185,11 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
    * @docs-private
    */
   writeValue(value: any): void {
-    this.value.set(this._dateAdapter.getValidDateOrNull(value));
+    // Note that we need to deserialize here, rather than depend on the value change effect,
+    // because `getValidDateOrNull` will clobber the value if it's parseable, but not created by
+    // the current adapter (see #30140).
+    const deserialized = this._dateAdapter.deserialize(value);
+    this.value.set(this._dateAdapter.getValidDateOrNull(deserialized));
   }
 
   /**
@@ -229,7 +243,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   }
 
   ngOnDestroy(): void {
-    this.getOverlayOrigin().nativeElement.removeEventListener('click', this._handleClick);
+    this._cleanupClick();
     this._timepickerSubscription?.unsubscribe();
     this._localeSubscription.unsubscribe();
   }
@@ -241,7 +255,9 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /** Handles clicks on the input or the containing form field. */
   private _handleClick = (): void => {
-    this.timepicker().open();
+    if (!this.disabled()) {
+      this.timepicker().open();
+    }
   };
 
   /** Handles the `input` event. */
@@ -269,13 +285,15 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       this._formatValue(value);
     }
 
-    this._onTouched?.();
+    if (!this.timepicker().isOpen()) {
+      this._onTouched?.();
+    }
   }
 
   /** Handles the `keydown` event. */
   protected _handleKeydown(event: KeyboardEvent) {
     // All keyboard events while open are handled through the timepicker.
-    if (this.timepicker().isOpen()) {
+    if (this.timepicker().isOpen() || this.disabled()) {
       return;
     }
 
@@ -283,7 +301,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
       event.preventDefault();
       this.value.set(null);
       this._formatValue(null);
-    } else if ((event.keyCode === DOWN_ARROW || event.keyCode === UP_ARROW) && !this.disabled()) {
+    } else if (event.keyCode === DOWN_ARROW || event.keyCode === UP_ARROW) {
       event.preventDefault();
       this.timepicker().open();
     }

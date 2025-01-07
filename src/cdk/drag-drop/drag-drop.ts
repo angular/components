@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, ElementRef, inject} from '@angular/core';
+import {Injectable, NgZone, ElementRef, inject, RendererFactory2} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DragRef, DragRefConfig} from './drag-ref';
@@ -28,6 +28,7 @@ export class DragDrop {
   private _ngZone = inject(NgZone);
   private _viewportRuler = inject(ViewportRuler);
   private _dragDropRegistry = inject(DragDropRegistry);
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -48,6 +49,7 @@ export class DragDrop {
       this._ngZone,
       this._viewportRuler,
       this._dragDropRegistry,
+      this._renderer,
     );
   }
 

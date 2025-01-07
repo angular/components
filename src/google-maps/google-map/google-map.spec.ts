@@ -444,7 +444,6 @@ describe('GoogleMap', () => {
       (mapRightclick)="handleRightclick($event)"
       (mapInitialized)="mapInitializedSpy($event)" />
   `,
-  standalone: true,
   imports: [GoogleMap],
 })
 class TestApp {

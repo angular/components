@@ -96,8 +96,8 @@ describe('theming definition api', () => {
       expect(vars['color-tokens']).toBe('true');
       expect(vars['typography-tokens']).toBe('true');
       expect(vars['density-tokens']).toBe('true');
-      expect(vars['typography-system-variables-prefix']).toBe('sys');
-      expect(vars['color-system-variables-prefix']).toBe('sys');
+      expect(vars['typography-system-variables-prefix']).toBe('mat-sys');
+      expect(vars['color-system-variables-prefix']).toBe('mat-sys');
     });
 
     it('should customize colors', () => {

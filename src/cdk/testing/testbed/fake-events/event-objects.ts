@@ -133,18 +133,20 @@ export function createKeyboardEvent(
   keyCode: number = 0,
   key: string = '',
   modifiers: ModifierKeys = {},
+  code: string = '',
 ) {
   return new KeyboardEvent(type, {
     bubbles: true,
     cancelable: true,
     composed: true, // Required for shadow DOM events.
     view: window,
-    keyCode: keyCode,
-    key: key,
+    keyCode,
+    key,
     shiftKey: modifiers.shift,
     metaKey: modifiers.meta,
     altKey: modifiers.alt,
     ctrlKey: modifiers.control,
+    code,
   });
 }
 

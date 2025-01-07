@@ -6,17 +6,15 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/common';
-import * as i2 from '@angular/material/core';
-import * as i3 from '@angular/cdk/overlay';
-import * as i8 from '@angular/cdk/scrolling';
+import * as i1 from '@angular/material/core';
+import * as i2 from '@angular/cdk/overlay';
+import * as i7 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -55,7 +53,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // (undocumented)
     addItem(_item: MatMenuItem): void;
     _allItems: QueryList<MatMenuItem>;
-    readonly _animationDone: Subject<AnimationEvent_2>;
+    readonly _animationDone: Subject<"void" | "enter">;
+    protected _animationsDisabled: boolean;
     ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string;
@@ -89,9 +88,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    _onAnimationDone(event: AnimationEvent_2): void;
+    protected _onAnimationDone(state: string): void;
     // (undocumented)
-    _onAnimationStart(event: AnimationEvent_2): void;
+    protected _onAnimationStart(state: string): void;
     overlapTrigger: boolean;
     overlayPanelClass: string | string[];
     _panelAnimationState: 'void' | 'enter';
@@ -102,10 +101,11 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // @deprecated
     removeItem(_item: MatMenuItem): void;
     resetActiveItem(): void;
-    _resetAnimation(): void;
-    setElevation(depth: number): void;
+    // @deprecated (undocumented)
+    setElevation(_depth: number): void;
+    // (undocumented)
+    _setIsOpen(isOpen: boolean): void;
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
-    _startAnimation(): void;
     templateRef: TemplateRef<any>;
     get xPosition(): MenuPositionX;
     set xPosition(value: MenuPositionX);
@@ -117,7 +117,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenu, never>;
 }
 
-// @public
+// @public @deprecated
 export const matMenuAnimations: {
     readonly transformMenu: AnimationTriggerMetadata;
     readonly fadeInItems: AnimationTriggerMetadata;
@@ -192,7 +192,7 @@ export class MatMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof i1.CommonModule, typeof i2.MatRippleModule, typeof i2.MatCommonModule, typeof i3.OverlayModule, typeof i4.MatMenu, typeof i5.MatMenuItem, typeof i6.MatMenuContent, typeof i7.MatMenuTrigger], [typeof i8.CdkScrollableModule, typeof i4.MatMenu, typeof i2.MatCommonModule, typeof i5.MatMenuItem, typeof i6.MatMenuContent, typeof i7.MatMenuTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof i1.MatRippleModule, typeof i1.MatCommonModule, typeof i2.OverlayModule, typeof i3.MatMenu, typeof i4.MatMenuItem, typeof i5.MatMenuContent, typeof i6.MatMenuTrigger], [typeof i7.CdkScrollableModule, typeof i3.MatMenu, typeof i1.MatCommonModule, typeof i4.MatMenuItem, typeof i5.MatMenuContent, typeof i6.MatMenuTrigger]>;
 }
 
 // @public
@@ -223,7 +223,7 @@ export interface MatMenuPanel<T = any> {
     removeItem?: (item: T) => void;
     // (undocumented)
     resetActiveItem: () => void;
-    // (undocumented)
+    // @deprecated (undocumented)
     setElevation?(depth: number): void;
     // (undocumented)
     setPositionClasses?: (x: MenuPositionX, y: MenuPositionY) => void;

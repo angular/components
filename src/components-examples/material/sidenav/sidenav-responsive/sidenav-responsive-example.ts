@@ -1,24 +1,30 @@
 import {MediaMatcher} from '@angular/cdk/layout';
-import {ChangeDetectorRef, Component, OnDestroy, inject} from '@angular/core';
+import {Component, OnDestroy, inject, signal} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {RouterLink} from '@angular/router';
 
 /** @title Responsive sidenav */
 @Component({
   selector: 'sidenav-responsive-example',
   templateUrl: 'sidenav-responsive-example.html',
   styleUrl: 'sidenav-responsive-example.css',
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    RouterLink,
+  ],
 })
 export class SidenavResponsiveExample implements OnDestroy {
-  mobileQuery: MediaQueryList;
+  protected readonly fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
-  fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
-
-  fillerContent = Array.from(
+  protected readonly fillerContent = Array.from(
     {length: 50},
     () =>
       `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -28,20 +34,25 @@ export class SidenavResponsiveExample implements OnDestroy {
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   );
 
-  private _mobileQueryListener: () => void;
+  protected readonly isMobile = signal(true);
+
+  private readonly _mobileQuery: MediaQueryList;
+  private readonly _mobileQueryListener: () => void;
 
   constructor() {
-    const changeDetectorRef = inject(ChangeDetectorRef);
     const media = inject(MediaMatcher);
 
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this._mobileQuery = media.matchMedia('(max-width: 600px)');
+    this.isMobile.set(this._mobileQuery.matches);
+    this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
+    this._mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
   ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+    this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 
-  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
+  protected readonly shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(
+    window.location.host,
+  );
 }

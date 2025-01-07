@@ -16,7 +16,6 @@ import {
   TabGroupDynamicHeightExample,
   TabGroupHeaderBelowExample,
   TabGroupInkBarExample,
-  TabGroupInvertedExample,
   TabGroupLazyLoadedExample,
   TabGroupPaginatedExample,
   TabGroupStretchedExample,
@@ -30,7 +29,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   templateUrl: 'tabs-demo.html',
   imports: [
     TabGroupInkBarExample,
-    TabGroupInvertedExample,
     TabGroupPaginatedExample,
     TabNavBarBasicExample,
     TabGroupStretchedExample,

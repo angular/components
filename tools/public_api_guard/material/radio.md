@@ -13,7 +13,6 @@ import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
-import * as i2 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -57,7 +56,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // (undocumented)
     _isRippleDisabled(): boolean;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(value: 'before' | 'after');
+    set labelPosition(value: "before" | "after");
     _markForCheck(): void;
     name: string;
     // (undocumented)
@@ -126,7 +125,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
     set disabledInteractive(value: boolean);
     _emitChangeEvent(): void;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(v: 'before' | 'after');
+    set labelPosition(v: "before" | "after");
     // (undocumented)
     _markRadiosForCheck(): void;
     get name(): string;
@@ -166,7 +165,7 @@ export class MatRadioModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRadioModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof i1.MatCommonModule, typeof i2.CommonModule, typeof i1.MatRippleModule, typeof i3.MatRadioGroup, typeof i3.MatRadioButton], [typeof i1.MatCommonModule, typeof i3.MatRadioGroup, typeof i3.MatRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatRadioGroup, typeof i2.MatRadioButton], [typeof i1.MatCommonModule, typeof i2.MatRadioGroup, typeof i2.MatRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

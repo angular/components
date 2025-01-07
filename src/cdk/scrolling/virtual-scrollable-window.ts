@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef} from '@angular/core';
-import {fromEvent, Observable, Observer} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Directive, ElementRef, inject} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /**
@@ -19,18 +18,13 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
   providers: [{provide: VIRTUAL_SCROLLABLE, useExisting: CdkVirtualScrollableWindow}],
 })
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
-  protected override _elementScrolled: Observable<Event> = new Observable(
-    (observer: Observer<Event>) =>
-      this.ngZone.runOutsideAngular(() =>
-        fromEvent(document, 'scroll').pipe(takeUntil(this._destroyed)).subscribe(observer),
-      ),
-  );
-
   constructor(...args: unknown[]);
 
   constructor() {
     super();
+    const document = inject(DOCUMENT);
     this.elementRef = new ElementRef(document.documentElement);
+    this._scrollElement = document;
   }
 
   override measureBoundingClientRectWithScrollOffset(

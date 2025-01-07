@@ -31,37 +31,37 @@ import {
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
 const keyMap = {
-  [TestKey.BACKSPACE]: {keyCode: keyCodes.BACKSPACE, key: 'Backspace'},
-  [TestKey.TAB]: {keyCode: keyCodes.TAB, key: 'Tab'},
-  [TestKey.ENTER]: {keyCode: keyCodes.ENTER, key: 'Enter'},
-  [TestKey.SHIFT]: {keyCode: keyCodes.SHIFT, key: 'Shift'},
-  [TestKey.CONTROL]: {keyCode: keyCodes.CONTROL, key: 'Control'},
-  [TestKey.ALT]: {keyCode: keyCodes.ALT, key: 'Alt'},
-  [TestKey.ESCAPE]: {keyCode: keyCodes.ESCAPE, key: 'Escape'},
-  [TestKey.PAGE_UP]: {keyCode: keyCodes.PAGE_UP, key: 'PageUp'},
-  [TestKey.PAGE_DOWN]: {keyCode: keyCodes.PAGE_DOWN, key: 'PageDown'},
-  [TestKey.END]: {keyCode: keyCodes.END, key: 'End'},
-  [TestKey.HOME]: {keyCode: keyCodes.HOME, key: 'Home'},
-  [TestKey.LEFT_ARROW]: {keyCode: keyCodes.LEFT_ARROW, key: 'ArrowLeft'},
-  [TestKey.UP_ARROW]: {keyCode: keyCodes.UP_ARROW, key: 'ArrowUp'},
-  [TestKey.RIGHT_ARROW]: {keyCode: keyCodes.RIGHT_ARROW, key: 'ArrowRight'},
-  [TestKey.DOWN_ARROW]: {keyCode: keyCodes.DOWN_ARROW, key: 'ArrowDown'},
-  [TestKey.INSERT]: {keyCode: keyCodes.INSERT, key: 'Insert'},
-  [TestKey.DELETE]: {keyCode: keyCodes.DELETE, key: 'Delete'},
-  [TestKey.F1]: {keyCode: keyCodes.F1, key: 'F1'},
-  [TestKey.F2]: {keyCode: keyCodes.F2, key: 'F2'},
-  [TestKey.F3]: {keyCode: keyCodes.F3, key: 'F3'},
-  [TestKey.F4]: {keyCode: keyCodes.F4, key: 'F4'},
-  [TestKey.F5]: {keyCode: keyCodes.F5, key: 'F5'},
-  [TestKey.F6]: {keyCode: keyCodes.F6, key: 'F6'},
-  [TestKey.F7]: {keyCode: keyCodes.F7, key: 'F7'},
-  [TestKey.F8]: {keyCode: keyCodes.F8, key: 'F8'},
-  [TestKey.F9]: {keyCode: keyCodes.F9, key: 'F9'},
-  [TestKey.F10]: {keyCode: keyCodes.F10, key: 'F10'},
-  [TestKey.F11]: {keyCode: keyCodes.F11, key: 'F11'},
-  [TestKey.F12]: {keyCode: keyCodes.F12, key: 'F12'},
-  [TestKey.META]: {keyCode: keyCodes.META, key: 'Meta'},
-  [TestKey.COMMA]: {keyCode: keyCodes.COMMA, key: ','},
+  [TestKey.BACKSPACE]: {keyCode: keyCodes.BACKSPACE, key: 'Backspace', code: 'Backspace'},
+  [TestKey.TAB]: {keyCode: keyCodes.TAB, key: 'Tab', code: 'Tab'},
+  [TestKey.ENTER]: {keyCode: keyCodes.ENTER, key: 'Enter', code: 'Enter'},
+  [TestKey.SHIFT]: {keyCode: keyCodes.SHIFT, key: 'Shift', code: 'ShiftLeft'},
+  [TestKey.CONTROL]: {keyCode: keyCodes.CONTROL, key: 'Control', code: 'ControlLeft'},
+  [TestKey.ALT]: {keyCode: keyCodes.ALT, key: 'Alt', code: 'AltLeft'},
+  [TestKey.ESCAPE]: {keyCode: keyCodes.ESCAPE, key: 'Escape', code: 'Escape'},
+  [TestKey.PAGE_UP]: {keyCode: keyCodes.PAGE_UP, key: 'PageUp', code: 'PageUp'},
+  [TestKey.PAGE_DOWN]: {keyCode: keyCodes.PAGE_DOWN, key: 'PageDown', code: 'PageDown'},
+  [TestKey.END]: {keyCode: keyCodes.END, key: 'End', code: 'End'},
+  [TestKey.HOME]: {keyCode: keyCodes.HOME, key: 'Home', code: 'Home'},
+  [TestKey.LEFT_ARROW]: {keyCode: keyCodes.LEFT_ARROW, key: 'ArrowLeft', code: 'ArrowLeft'},
+  [TestKey.UP_ARROW]: {keyCode: keyCodes.UP_ARROW, key: 'ArrowUp', code: 'ArrowUp'},
+  [TestKey.RIGHT_ARROW]: {keyCode: keyCodes.RIGHT_ARROW, key: 'ArrowRight', code: 'ArrowRight'},
+  [TestKey.DOWN_ARROW]: {keyCode: keyCodes.DOWN_ARROW, key: 'ArrowDown', code: 'ArrowDown'},
+  [TestKey.INSERT]: {keyCode: keyCodes.INSERT, key: 'Insert', code: 'Insert'},
+  [TestKey.DELETE]: {keyCode: keyCodes.DELETE, key: 'Delete', code: 'Delete'},
+  [TestKey.F1]: {keyCode: keyCodes.F1, key: 'F1', code: 'F1'},
+  [TestKey.F2]: {keyCode: keyCodes.F2, key: 'F2', code: 'F2'},
+  [TestKey.F3]: {keyCode: keyCodes.F3, key: 'F3', code: 'F3'},
+  [TestKey.F4]: {keyCode: keyCodes.F4, key: 'F4', code: 'F4'},
+  [TestKey.F5]: {keyCode: keyCodes.F5, key: 'F5', code: 'F5'},
+  [TestKey.F6]: {keyCode: keyCodes.F6, key: 'F6', code: 'F6'},
+  [TestKey.F7]: {keyCode: keyCodes.F7, key: 'F7', code: 'F7'},
+  [TestKey.F8]: {keyCode: keyCodes.F8, key: 'F8', code: 'F8'},
+  [TestKey.F9]: {keyCode: keyCodes.F9, key: 'F9', code: 'F9'},
+  [TestKey.F10]: {keyCode: keyCodes.F10, key: 'F10', code: 'F10'},
+  [TestKey.F11]: {keyCode: keyCodes.F11, key: 'F11', code: 'F11'},
+  [TestKey.F12]: {keyCode: keyCodes.F12, key: 'F12', code: 'F12'},
+  [TestKey.META]: {keyCode: keyCodes.META, key: 'Meta', code: 'MetaLeft'},
+  [TestKey.COMMA]: {keyCode: keyCodes.COMMA, key: ',', code: 'Comma'},
 };
 
 /** A `TestElement` implementation for unit tests. */
@@ -196,7 +196,11 @@ export class UnitTestElement implements TestElement {
   async setContenteditableValue(value: string): Promise<void> {
     const contenteditableAttr = await this.getAttribute('contenteditable');
 
-    if (contenteditableAttr !== '' && contenteditableAttr !== 'true') {
+    if (
+      contenteditableAttr !== '' &&
+      contenteditableAttr !== 'true' &&
+      contenteditableAttr !== 'plaintext-only'
+    ) {
       throw new Error('setContenteditableValue can only be called on a `contenteditable` element.');
     }
 

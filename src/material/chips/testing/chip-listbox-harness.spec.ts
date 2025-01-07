@@ -125,7 +125,6 @@ describe('MatChipListboxHarness', () => {
       }
     </mat-chip-listbox>
   `,
-  standalone: true,
   imports: [MatChipsModule],
 })
 class ChipListboxHarnessTest {

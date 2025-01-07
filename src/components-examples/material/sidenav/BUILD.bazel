@@ -27,6 +27,7 @@ ng_module(
         "//src/material/toolbar",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
         "@npm//@types/jasmine",
     ],
 )
