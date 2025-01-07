@@ -3,6 +3,7 @@
   type="button"
   aria-haspopup="listbox"
   [attr.aria-label]="ariaLabel()"
+  [attr.aria-labelledby]="ariaLabelledby()"
   [attr.aria-expanded]="timepicker().isOpen()"
   [attr.tabindex]="_isDisabled() ? -1 : tabIndex()"
   [disabled]="_isDisabled()"

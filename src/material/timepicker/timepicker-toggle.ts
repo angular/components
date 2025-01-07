@@ -62,6 +62,11 @@ export class MatTimepickerToggle<D> {
     alias: 'aria-label',
   });
 
+  /** Screen-reader labelled by id for the button. */
+  readonly ariaLabelledby = input<string | undefined>(undefined, {
+    alias: 'aria-labelledby',
+  });
+
   /** Whether the toggle button is disabled. */
   readonly disabled: InputSignalWithTransform<boolean, unknown> = input(false, {
     transform: booleanAttribute,
