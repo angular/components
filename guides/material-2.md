@@ -1103,7 +1103,7 @@ the APIs for both are largely the same. However, there are a few differences to 
   mixins should be wrapped in a selector. If your app includes such an `@include` at the root level,
   we recommend wrapping it in `html { ... }`
 - M3 has a different API for setting the color variant of a component (see
-  [using component color variants](https://material.angular.io/guide/theming#using-component-color-variants)
+  [using component color variants](#optional-add-backwards-compatibility-styles-for-color-variants)
   for more).
 - The `backgroundColor` property of `<mat-tab-group>` is not supported, and should not be used with
   M3 themes.
