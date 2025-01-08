@@ -68,7 +68,7 @@ export class MatTimepickerToggle<D> {
   });
 
   /** Default aria-label for the toggle if none is provided. */
-  private readonly defaultAriaLabel = 'Open timepicker options';
+  private readonly _defaultAriaLabel = 'Open timepicker options';
 
   /** Whether the toggle button is disabled. */
   readonly disabled: InputSignalWithTransform<boolean, unknown> = input(false, {
@@ -99,6 +99,6 @@ export class MatTimepickerToggle<D> {
    * otherwise returns the default aria-label using the timepicker's panelId.
    */
   getAriaLabel(): string {
-    return this.ariaLabel() || this.defaultAriaLabel;
+    return this.ariaLabel() || this._defaultAriaLabel;
   }
 }
