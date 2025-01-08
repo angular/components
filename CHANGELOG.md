@@ -1,3 +1,26 @@
+<a name="19.0.5"></a>
+# 19.0.5 "silk-sky" (2025-01-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [64d8df8bd](https://github.com/angular/components/commit/64d8df8bddaae4a046291bf86168d15d7cc7e885) | fix | **menu:** avoid re-opening the menu on enter ([#30263](https://github.com/angular/components/pull/30263)) |
+| [5b04e1733](https://github.com/angular/components/commit/5b04e1733712d51670595e288a7f5ca13745ecf5) | fix | **tree:** expandAll not expanding all nodes ([#30226](https://github.com/angular/components/pull/30226)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85c6e54a5](https://github.com/angular/components/commit/85c6e54a559e2be0c778aa6b2a7f4c4aa36b569a) | fix | **datepicker:** simplify DI setup ([#30247](https://github.com/angular/components/pull/30247)) |
+| [1eb6cabcc](https://github.com/angular/components/commit/1eb6cabcc0735643f73180a49017f63b3335b6ad) | fix | **sidenav:** remove deprecated API usage ([#30268](https://github.com/angular/components/pull/30268)) |
+| [4618b5b7c](https://github.com/angular/components/commit/4618b5b7cc9700216a037a1fd33853b0eaa2736f) | fix | **sidenav:** switch away from animations module ([#30235](https://github.com/angular/components/pull/30235)) |
+| [10e752a52](https://github.com/angular/components/commit/10e752a52400c2bbdb1fc840522366f12973a09d) | fix | **sort:** show arrow on focus ([#30217](https://github.com/angular/components/pull/30217)) |
+| [e8a099179](https://github.com/angular/components/commit/e8a099179855ae873c3c2e49fbc102508e5d015b) | fix | **timepicker:** don't mark as touched when blurred while dropdown is open ([#30228](https://github.com/angular/components/pull/30228)) |
+| [f9f8df348](https://github.com/angular/components/commit/f9f8df348045094d1e26ae1abe0aad174f2db4ab) | perf | **tooltip:** Tiny but measurable optimization to MatTooltip construction. Defer hooking up to directionality changes until overlay is created. ([#30214](https://github.com/angular/components/pull/30214)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4a040cb9f](https://github.com/angular/components/commit/4a040cb9f87be9f41e1900ec6b2f912b2814e880) | perf | **column-resize:** Use ResizeObserver to avoid layout thrashing ([#30215](https://github.com/angular/components/pull/30215)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.4"></a>
 # 19.0.4 "linen-lampshade" (2024-12-18)
 ### cdk
