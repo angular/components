@@ -11,7 +11,7 @@
           [matTimepickerMax]="maxControl.value"
           [formControl]="control">
         <mat-timepicker [interval]="intervalControl.value" #basicPicker/>
-        <mat-timepicker-toggle [for]="basicPicker" aria-labelledby="mat-mdc-form-field-label-0" matSuffix/>
+        <mat-timepicker-toggle [for]="basicPicker" matSuffix/>
       </mat-form-field>
 
       <p>Value: {{control.value}}</p>
