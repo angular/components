@@ -1,3 +1,32 @@
+<a name="19.1.0-rc.0"></a>
+# 19.1.0-rc.0 "paper-plane" (2025-01-08)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [52758beab0](https://github.com/angular/components/commit/52758beab0997341afd651b339e2f4825e99409d) | fix | **menu:** avoid re-opening the menu on enter ([#30263](https://github.com/angular/components/pull/30263)) |
+| [2be0afcfb5](https://github.com/angular/components/commit/2be0afcfb54b16dd426e5ad65f6aa52301dc2d45) | fix | **menu:** avoid resetting the scroll position when using the mouse ([#30249](https://github.com/angular/components/pull/30249)) |
+| [e421765d8d](https://github.com/angular/components/commit/e421765d8d05806be46ff53ce92ed43e4a82dbf9) | fix | **menu:** not responding to position changes ([#30234](https://github.com/angular/components/pull/30234)) |
+| [5c75bbecb2](https://github.com/angular/components/commit/5c75bbecb24f49779baf86203a7e626d34e39f8c) | fix | **scrolling:** avoid SSR error in CdkVirtualScrollableWindow ([#30259](https://github.com/angular/components/pull/30259)) |
+| [0f053ff685](https://github.com/angular/components/commit/0f053ff6858b57aa4d1816cfa927f7e7284813af) | fix | **tree:** expandAll not expanding all nodes ([#30226](https://github.com/angular/components/pull/30226)) |
+| [d721f0c2bc](https://github.com/angular/components/commit/d721f0c2bcfb4bdfe4cc0655d61ca0537a6e4bf5) | perf | **table:** Use afterNextRender for sticky styling. Fixes a performance regression dating back to [#28393](https://github.com/angular/components/pull/28393) and removes need for coalesced sticky styler. ([#30242](https://github.com/angular/components/pull/30242)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4e04540792](https://github.com/angular/components/commit/4e04540792b7742e6ef63dc7b16b6a3a8b909c54) | fix | **datepicker:** simplify DI setup ([#30247](https://github.com/angular/components/pull/30247)) |
+| [66741b8132](https://github.com/angular/components/commit/66741b81321e6a70a16af2622fa6daf13732af80) | fix | **sidenav:** remove deprecated API usage ([#30268](https://github.com/angular/components/pull/30268)) |
+| [31896c8a35](https://github.com/angular/components/commit/31896c8a357ab06708f3224b4ce537f996cd3000) | fix | **sidenav:** switch away from animations module ([#30235](https://github.com/angular/components/pull/30235)) |
+| [0c099ff024](https://github.com/angular/components/commit/0c099ff02436b9c3d6fd2440df4cc1c4e70278ca) | fix | **sort:** avoid center align for sort header |
+| [1c1ebfd87b](https://github.com/angular/components/commit/1c1ebfd87be2cbbc56970b782c5d2b528002be02) | fix | **sort:** show arrow on focus ([#30217](https://github.com/angular/components/pull/30217)) |
+| [2219b1198f](https://github.com/angular/components/commit/2219b1198fa763ffd4ff7cb0656356745369d4f2) | fix | **timepicker:** don't mark as touched when blurred while dropdown is open ([#30228](https://github.com/angular/components/pull/30228)) |
+| [af29a92c01](https://github.com/angular/components/commit/af29a92c01fd425537a8f28fc71b24aeb027b0ab) | perf | **tooltip:** Tiny but measurable optimization to MatTooltip construction. Defer hooking up to directionality changes until overlay is created. ([#30214](https://github.com/angular/components/pull/30214)) |
+| [980f9ba7bb](https://github.com/angular/components/commit/980f9ba7bb4fab8dfe4f3a4f30bb224ec635a626) | perf | **tooltip:** Use afterNextRender to invoke aria describer to align layout updates with other components using afterNextRender. ([#30265](https://github.com/angular/components/pull/30265)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9f73fed470](https://github.com/angular/components/commit/9f73fed4702f79a6461fd2cf86ecb311c9530a78) | perf | **column-resize:** Use ResizeObserver to avoid layout thrashing ([#30215](https://github.com/angular/components/pull/30215)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.0.5"></a>
 # 19.0.5 "silk-sky" (2025-01-08)
 ### cdk
