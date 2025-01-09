@@ -282,9 +282,15 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   display: flex;
   height: 100%;
   justify-content: space-between;
-  padding: 0 2px;
+  padding: 0 4px;
   position: absolute;
   width: 100%;
+}
+
+.mdc-slider__tick-mark--active,
+.mdc-slider__tick-mark--inactive {
+  flex-shrink: 0;
+  margin: -2px;
 }
 
 .mdc-slider__tick-mark--active,
