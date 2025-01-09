@@ -258,7 +258,8 @@ describe('LuxonDateAdapter', () => {
   });
 
   it('should get first day of week', () => {
-    expect(adapter.getFirstDayOfWeek()).toBe(0);
+    adapter.setLocale('bg-BG');
+    expect(adapter.getFirstDayOfWeek()).toBe(1);
   });
 
   it('should create Luxon date', () => {
