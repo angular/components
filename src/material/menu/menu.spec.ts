@@ -473,13 +473,16 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
 
     const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel')!;
-    const event = dispatchKeyboardEvent(panel, 'keydown', ESCAPE);
+    const event = createKeyboardEvent('keydown', ESCAPE);
+    spyOn(event, 'stopPropagation').and.callThrough();
 
+    dispatchEvent(panel, event);
     fixture.detectChanges();
     tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
     expect(event.defaultPrevented).toBe(true);
+    expect(event.stopPropagation).toHaveBeenCalled();
   }));
 
   it('should not close the menu when pressing ESCAPE with a modifier', fakeAsync(() => {

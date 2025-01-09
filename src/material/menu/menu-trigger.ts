@@ -407,11 +407,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         config.positionStrategy as FlexibleConnectedPositionStrategy,
       );
       this._overlayRef = this._overlay.create(config);
-      this._overlayRef.keydownEvents().subscribe(event => {
-        if (this.menu instanceof MatMenu) {
-          this.menu._handleKeydown(event);
-        }
-      });
+
+      // Consume the `keydownEvents` in order to prevent them from going to another overlay.
+      // Ideally we'd also have our keyboard event logic in here, however doing so will
+      // break anybody that may have implemented the `MatMenuPanel` themselves.
+      this._overlayRef.keydownEvents().subscribe();
     }
 
     return this._overlayRef;
