@@ -40,7 +40,7 @@ import {
 } from '@angular/core';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
-import {filter, take, takeUntil} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 import {MatMenu, MenuCloseReason} from './menu';
 import {throwMatMenuRecursiveError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
@@ -115,7 +115,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
-  private _pendingRemoval: Subscription | undefined;
 
   /**
    * We're specifically looking for a `MatMenu` here since the generic `MatMenuPanel`
@@ -248,7 +247,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       passiveEventListenerOptions,
     );
 
-    this._pendingRemoval?.unsubscribe();
     this._menuCloseSubscription.unsubscribe();
     this._closingActionsSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
@@ -287,16 +285,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       return;
     }
 
-    this._pendingRemoval?.unsubscribe();
-    const previousTrigger = PANELS_TO_TRIGGERS.get(menu);
-    PANELS_TO_TRIGGERS.set(menu, this);
-
-    // If the same menu is currently attached to another trigger,
-    // we need to close it so it doesn't end up in a broken state.
-    if (previousTrigger && previousTrigger !== this) {
-      previousTrigger.closeMenu();
-    }
-
     const overlayRef = this._createOverlay(menu);
     const overlayConfig = overlayRef.getConfig();
     const positionStrategy = overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy;
@@ -304,22 +292,17 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._setPosition(menu, positionStrategy);
     overlayConfig.hasBackdrop =
       menu.hasBackdrop == null ? !this.triggersSubmenu() : menu.hasBackdrop;
+    overlayRef.attach(this._getPortal(menu));
 
-    // We need the `hasAttached` check for the case where the user kicked off a removal animation,
-    // but re-entered the menu. Re-attaching the same portal will trigger an error otherwise.
-    if (!overlayRef.hasAttached()) {
-      overlayRef.attach(this._getPortal(menu));
-      menu.lazyContent?.attach(this.menuData);
+    if (menu.lazyContent) {
+      menu.lazyContent.attach(this.menuData);
     }
 
     this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
-    menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
-    menu.direction = this.dir;
-    menu.focusFirstItem(this._openedBy || 'program');
-    this._setIsMenuOpen(true);
+    this._initMenu(menu);
 
     if (menu instanceof MatMenu) {
-      menu._setIsOpen(true);
+      menu._startAnimation();
       menu._directDescendantItems.changes.pipe(takeUntil(menu.close)).subscribe(() => {
         // Re-adjust the position without locking when the amount of items
         // changes so that the overlay is allowed to pick a new optimal position.
@@ -355,28 +338,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Closes the menu and does the necessary cleanup. */
   private _destroyMenu(reason: MenuCloseReason) {
-    const overlayRef = this._overlayRef;
-    const menu = this._menu;
-
-    if (!overlayRef || !this.menuOpen) {
+    if (!this._overlayRef || !this.menuOpen) {
       return;
     }
 
     this._closingActionsSubscription.unsubscribe();
-    this._pendingRemoval?.unsubscribe();
-
-    // Note that we don't wait for the animation to finish if another trigger took
-    // over the menu, because the panel will end up empty which looks glitchy.
-    if (menu instanceof MatMenu && this._ownsMenu(menu)) {
-      this._pendingRemoval = menu._animationDone.pipe(take(1)).subscribe(() => overlayRef.detach());
-      menu._setIsOpen(false);
-    } else {
-      overlayRef.detach();
-    }
-
-    if (menu && this._ownsMenu(menu)) {
-      PANELS_TO_TRIGGERS.delete(menu);
-    }
+    this._overlayRef.detach();
 
     // Always restore focus if the user is navigating using the keyboard or the menu was opened
     // programmatically. We don't restore for non-root triggers, because it can prevent focus
@@ -388,6 +355,30 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     this._openedBy = undefined;
     this._setIsMenuOpen(false);
+
+    if (this.menu && this._ownsMenu(this.menu)) {
+      PANELS_TO_TRIGGERS.delete(this.menu);
+    }
+  }
+
+  /**
+   * This method sets the menu state to open and focuses the first item if
+   * the menu was opened via the keyboard.
+   */
+  private _initMenu(menu: MatMenuPanel): void {
+    const previousTrigger = PANELS_TO_TRIGGERS.get(menu);
+
+    // If the same menu is currently attached to another trigger,
+    // we need to close it so it doesn't end up in a broken state.
+    if (previousTrigger && previousTrigger !== this) {
+      previousTrigger.closeMenu();
+    }
+
+    PANELS_TO_TRIGGERS.set(menu, this);
+    menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
+    menu.direction = this.dir;
+    menu.focusFirstItem(this._openedBy || 'program');
+    this._setIsMenuOpen(true);
   }
 
   // set state rather than toggle to support triggers sharing a menu
