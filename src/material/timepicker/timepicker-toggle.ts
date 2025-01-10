@@ -94,11 +94,10 @@ export class MatTimepickerToggle<D> {
   }
 
   /**
-   * Gets the aria-label to use for the toggle button.
-   * Returns the user-provided aria-label if one exists,
-   * otherwise returns the default aria-label using the timepicker's panelId.
+   * Checks for ariaLabelledby and if empty uses custom
+   * aria-label or defaultAriaLabel if neither is provided.
    */
-  getAriaLabel(): string {
-    return this.ariaLabel() || this._defaultAriaLabel;
+  getAriaLabel(): string | null {
+    return this.ariaLabelledby() ? null : this.ariaLabel() || this._defaultAriaLabel;
   }
 }

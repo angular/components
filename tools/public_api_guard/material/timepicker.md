@@ -127,7 +127,7 @@ export class MatTimepickerToggle<D> {
     readonly ariaLabelledby: InputSignal<string | undefined>;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
-    getAriaLabel(): string;
+    getAriaLabel(): string | null;
     // (undocumented)
     protected _isDisabled: Signal<boolean>;
     protected _open(event: Event): void;
