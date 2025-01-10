@@ -368,10 +368,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     // Note that we don't wait for the animation to finish if another trigger took
     // over the menu, because the panel will end up empty which looks glitchy.
     if (menu instanceof MatMenu && this._ownsMenu(menu)) {
-      this._pendingRemoval = menu._animationDone.pipe(take(1)).subscribe(() => overlayRef.detach());
+      this._pendingRemoval = menu._animationDone.pipe(take(1)).subscribe(() => {
+        overlayRef.detach();
+        menu.lazyContent?.detach();
+      });
       menu._setIsOpen(false);
     } else {
       overlayRef.detach();
+      menu?.lazyContent?.detach();
     }
 
     if (menu && this._ownsMenu(menu)) {
