@@ -113,7 +113,7 @@
     @include token-utils.create-token-slot(letter-spacing, row-item-label-text-tracking);
     line-height: inherit;
 
-    .mdc-data-table__row:last-child & {
+    .mdc-data-table__row:last-child > & {
       border-bottom: none;
     }
   }
