@@ -27,19 +27,33 @@
 .mat-mdc-tab-body-content {
   height: 100%;
   overflow: auto;
+  transform: none;
+  visibility: hidden;
+
+  .mat-tab-body-animating > &,
+  .mat-mdc-tab-body-active > & {
+    visibility: visible;
+  }
 
   .mat-mdc-tab-group-dynamic-height & {
     overflow: hidden;
   }
+}
 
-  // Usually the `visibility: hidden` added by the animation is enough to prevent focus from
-  // entering the collapsed content, but children with their own `visibility` can override it.
-  // This is a fallback that completely hides the content when the element becomes hidden.
-  // Note that we can't do this in the animation definition, because the style gets recomputed too
-  // late, breaking the animation because Angular didn't have time to figure out the target height.
-  // This can also be achieved with JS, but it has issues when starting an animation before
-  // the previous one has finished.
-  &[style*='visibility: hidden'] {
-    display: none;
+.mat-tab-body-content-can-animate {
+  // Note: there's a 1ms delay so that transition events
+  // still fire even if the duration is set to zero.
+  transition: transform var(--mat-tab-animation-duration) 1ms cubic-bezier(0.35, 0, 0.25, 1);
+
+  .mat-mdc-tab-body-wrapper._mat-animation-noopable & {
+    transition: none;
   }
+}
+
+.mat-tab-body-content-left {
+  transform: translate3d(-100%, 0, 0);
+}
+
+.mat-tab-body-content-right {
+  transform: translate3d(100%, 0, 0);
 }
