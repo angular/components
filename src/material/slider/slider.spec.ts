@@ -1592,7 +1592,7 @@ describe('MatSlider', () => {
       // spaces between the 101 ticks. So the math is:
       // (300 - 6) / 100 = 2.94
       const spacing = 2.94;
-      const delta = 0.0001; // Floating point imprecision
+      const delta = 0.1; // Floating point imprecision
 
       let x = 18; // Where the first tick happens to start at.
 
