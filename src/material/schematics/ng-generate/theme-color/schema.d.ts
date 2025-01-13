@@ -24,6 +24,14 @@ export interface Schema {
    */
   neutralColor?: string;
   /**
+   * Color to override the neutral variant color palette.
+   */
+  neutralVariantColor?: string;
+  /**
+   * Color to override the error color palette.
+   */
+  errorColor?: string;
+  /**
    * Whether to create high contrast override theme mixins.
    */
   includeHighContrast?: boolean;
