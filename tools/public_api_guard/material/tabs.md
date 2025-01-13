@@ -442,7 +442,7 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
 }
 
 // @public
-export class MatTabNav extends MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, OnDestroy, AfterViewInit {
+export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
     constructor(...args: unknown[]);
     // (undocumented)
     get animationDuration(): string;

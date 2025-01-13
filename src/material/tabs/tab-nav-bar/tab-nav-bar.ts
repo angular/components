@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {
-  AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
   booleanAttribute,
@@ -75,10 +74,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [MatRipple, CdkObserveContent],
 })
-export class MatTabNav
-  extends MatPaginatedTabHeader
-  implements AfterContentChecked, AfterContentInit, OnDestroy, AfterViewInit
-{
+export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
@@ -194,9 +190,9 @@ export class MatTabNav
     this._inkBar = new MatInkBar(this._items);
     // We need this to run before the `changes` subscription in parent to ensure that the
     // selectedIndex is up-to-date by the time the super class starts looking for it.
-    this._items.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      this.updateActiveLink();
-    });
+    this._items.changes
+      .pipe(startWith(null), takeUntil(this._destroyed))
+      .subscribe(() => this.updateActiveLink());
 
     super.ngAfterContentInit();
   }
@@ -229,9 +225,7 @@ export class MatTabNav
       }
     }
 
-    // The ink bar should hide itself if no items are active.
     this.selectedIndex = -1;
-    this._inkBar.hide();
   }
 
   _getRole(): string | null {
