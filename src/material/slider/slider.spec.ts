@@ -1544,6 +1544,75 @@ describe('MatSlider', () => {
       expect(endInput.value).toBe(80);
     }));
   });
+
+  describe('slider with tick marks', () => {
+    let fixture: ComponentFixture<SliderWithTickMarks>;
+    let slider: MatSlider;
+    let sliderEl: HTMLElement;
+
+    function getTickMarkEls() {
+      const activeClass = '.mdc-slider__tick-mark--active';
+      const inactiveClass = '.mdc-slider__tick-mark--inactive';
+      const active = sliderEl.querySelectorAll(activeClass);
+      const inactive = sliderEl.querySelectorAll(inactiveClass);
+      const ticks = sliderEl.querySelectorAll(`${activeClass},${inactiveClass}`);
+      return {ticks, active, inactive};
+    }
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithTickMarks);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      sliderEl = sliderDebugElement.nativeElement;
+    }));
+
+    it('should have tick marks', () => {
+      expect(slider._tickMarks.length).toBeTruthy();
+    });
+
+    it('should have the correct number of ticks', () => {
+      expect(slider._tickMarks.length).toBe(101);
+
+      slider.max = 10;
+      expect(slider._tickMarks.length).toBe(11);
+
+      slider.step = 2;
+      expect(slider._tickMarks.length).toBe(6);
+
+      slider.min = 8;
+      expect(slider._tickMarks.length).toBe(2);
+    });
+
+    it('should position the tick marks correctly', () => {
+      const {ticks} = getTickMarkEls();
+
+      // 2.94 because the slider is 300px, there is 3px padding
+      // on each side of the tick mark track, and there are 100
+      // spaces between the 101 ticks. So the math is:
+      // (300 - 6) / 100 = 2.94
+      const spacing = 2.94;
+      const delta = 0.1; // Floating point imprecision
+
+      let x = 18; // Where the first tick happens to start at.
+
+      for (let i = 0; i < ticks.length; i++) {
+        const tickX = ticks[i].getBoundingClientRect().x;
+        expect(tickX).toBeGreaterThan(x - delta);
+        expect(tickX).toBeLessThan(x + delta);
+        x = tickX + spacing;
+      }
+    });
+
+    // TODO(wagnermaciel): Add this test once this is fixed.
+    // it('should render the correct number of active & inactive ticks', () => {});
+
+    // TODO(wagnermaciel): Add this test once this is fixed.
+    // it('should position the tick marks correctly with a misaligned step', () => {});
+
+    // TODO(wagnermaciel): Add this test once this is fixed.
+    // it('should position the tick marks correctly with a misaligned step (rtl)', () => {});
+  });
 });
 
 const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
@@ -1833,6 +1902,19 @@ class RangeSliderWithTwoWayBinding {
   @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
   startValue = 0;
   endValue = 100;
+}
+
+@Component({
+  template: `
+  <mat-slider [showTickMarks]="true">
+    <input matSliderThumb>
+  </mat-slider>
+  `,
+  styles: SLIDER_STYLES,
+  standalone: false,
+})
+class SliderWithTickMarks {
+  @ViewChild(MatSlider) slider: MatSlider;
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
