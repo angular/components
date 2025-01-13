@@ -1549,7 +1549,6 @@ describe('MatSlider', () => {
     let fixture: ComponentFixture<SliderWithTickMarks>;
     let slider: MatSlider;
     let sliderEl: HTMLElement;
-    let input: MatSliderThumb;
 
     function getTickMarkEls() {
       const activeClass = '.mdc-slider__tick-mark--active';
@@ -1566,7 +1565,6 @@ describe('MatSlider', () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       sliderEl = sliderDebugElement.nativeElement;
-      input = slider._getInput(_MatThumb.END) as MatSliderThumb;
     }));
 
     it('should have tick marks', () => {
