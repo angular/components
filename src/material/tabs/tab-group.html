@@ -67,21 +67,19 @@
   class="mat-mdc-tab-body-wrapper"
   [class._mat-animation-noopable]="_animationMode === 'NoopAnimations'"
   #tabBodyWrapper>
-  @for (tab of _tabs; track tab; let i = $index) {
+  @for (tab of _tabs; track tab;) {
     <mat-tab-body role="tabpanel"
-                 [id]="_getTabContentId(i)"
-                 [attr.tabindex]="(contentTabIndex != null && selectedIndex === i) ? contentTabIndex : null"
-                 [attr.aria-labelledby]="_getTabLabelId(i)"
-                 [attr.aria-hidden]="selectedIndex !== i"
-                 [class.mat-mdc-tab-body-active]="selectedIndex === i"
+                 [id]="_getTabContentId($index)"
+                 [attr.tabindex]="(contentTabIndex != null && selectedIndex === $index) ? contentTabIndex : null"
+                 [attr.aria-labelledby]="_getTabLabelId($index)"
+                 [attr.aria-hidden]="selectedIndex !== $index"
                  [class]="tab.bodyClass"
                  [content]="tab.content!"
                  [position]="tab.position!"
-                 [origin]="tab.origin"
                  [animationDuration]="animationDuration"
                  [preserveContent]="preserveContent"
                  (_onCentered)="_removeTabBodyWrapperHeight()"
-                 (_onCentering)="_setTabBodyWrapperHeight($event)">
-    </mat-tab-body>
+                 (_onCentering)="_setTabBodyWrapperHeight($event)"
+                 (_beforeCentering)="_bodyCentered($event)"/>
   }
 </div>

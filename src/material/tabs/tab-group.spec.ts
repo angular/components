@@ -557,41 +557,6 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
     }));
 
-    it('should be able to add a new tab, select it, and have correct origin position', fakeAsync(() => {
-      const component: MatTabGroup = fixture.debugElement.query(
-        By.css('mat-tab-group'),
-      ).componentInstance;
-
-      let tabs: MatTab[] = component._tabs.toArray();
-      expect(tabs[0].origin).toBe(null);
-      expect(tabs[1].origin).toBe(0);
-      expect(tabs[2].origin).toBe(null);
-
-      // Add a new tab on the right and select it, expect an origin >= than 0 (animate right)
-      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to right of index'});
-      fixture.componentInstance.selectedIndex = 4;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-      tick();
-
-      tabs = component._tabs.toArray();
-      expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
-
-      // Add a new tab in the beginning and select it, expect an origin < than 0 (animate left)
-      fixture.componentInstance.selectedIndex = 0;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-      tick();
-
-      fixture.componentInstance.tabs.push({label: 'New tab', content: 'to left of index'});
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-      tick();
-
-      tabs = component._tabs.toArray();
-      expect(tabs[0].origin).toBeLessThan(0);
-    }));
-
     it('should update selected index if the last tab removed while selected', fakeAsync(() => {
       const component: MatTabGroup = fixture.debugElement.query(
         By.css('mat-tab-group'),
@@ -828,37 +793,22 @@ describe('MatTabGroup', () => {
       const contentElements: HTMLElement[] = Array.from(
         fixture.nativeElement.querySelectorAll('.mat-mdc-tab-body-content'),
       );
+      const getVisibilities = () =>
+        contentElements.map(element => getComputedStyle(element).visibility);
 
-      expect(contentElements.map(element => element.style.visibility)).toEqual([
-        'visible',
-        'hidden',
-        'hidden',
-        'hidden',
-      ]);
+      expect(getVisibilities()).toEqual(['visible', 'hidden', 'hidden', 'hidden']);
 
       tabGroup.selectedIndex = 2;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
-
-      expect(contentElements.map(element => element.style.visibility)).toEqual([
-        'hidden',
-        'hidden',
-        'visible',
-        'hidden',
-      ]);
+      expect(getVisibilities()).toEqual(['hidden', 'hidden', 'visible', 'hidden']);
 
       tabGroup.selectedIndex = 1;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
-
-      expect(contentElements.map(element => element.style.visibility)).toEqual([
-        'hidden',
-        'visible',
-        'hidden',
-        'hidden',
-      ]);
+      expect(getVisibilities()).toEqual(['hidden', 'visible', 'hidden', 'hidden']);
     }));
   });
 

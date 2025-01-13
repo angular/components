@@ -25,6 +25,9 @@ import {
   inject,
   numberAttribute,
   ANIMATION_MODULE_TYPE,
+  ViewChildren,
+  AfterViewInit,
+  NgZone,
 } from '@angular/core';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
@@ -88,9 +91,16 @@ const ENABLE_BACKGROUND_INPUT = true;
     MatTabBody,
   ],
 })
-export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class MatTabGroup
+  implements AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy
+{
   readonly _elementRef = inject(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _ngZone = inject(NgZone);
+  private _tabsSubscription = Subscription.EMPTY;
+  private _tabLabelSubscription = Subscription.EMPTY;
+  private _tabBodySubscription = Subscription.EMPTY;
+
   _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   /**
@@ -98,6 +108,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
    */
   @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
+  @ViewChildren(MatTabBody) _tabBodies: QueryList<MatTabBody> | undefined;
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
 
@@ -112,12 +123,6 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
 
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
-
-  /** Subscription to tabs being added/removed. */
-  private _tabsSubscription = Subscription.EMPTY;
-
-  /** Subscription to changes in the tab labels. */
-  private _tabLabelSubscription = Subscription.EMPTY;
 
   /**
    * Theme color of the tab group. This API is supported in M2 themes only, it
@@ -396,6 +401,10 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     });
   }
 
+  ngAfterViewInit() {
+    this._tabBodySubscription = this._tabBodies!.changes.subscribe(() => this._bodyCentered(true));
+  }
+
   /** Listens to changes in all of the tabs. */
   private _subscribeToAllTabChanges() {
     // Since we use a query with `descendants: true` to pick up the tabs, we may end up catching
@@ -415,6 +424,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     this._tabs.destroy();
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
+    this._tabBodySubscription.unsubscribe();
   }
 
   /** Re-aligns the ink bar to the selected tab element. */
@@ -503,6 +513,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
    */
   _setTabBodyWrapperHeight(tabHeight: number): void {
     if (!this.dynamicHeight || !this._tabBodyWrapperHeight) {
+      this._tabBodyWrapperHeight = tabHeight;
       return;
     }
 
@@ -522,7 +533,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     const wrapper = this._tabBodyWrapper.nativeElement;
     this._tabBodyWrapperHeight = wrapper.clientHeight;
     wrapper.style.height = '';
-    this.animationDone.emit();
+    this._ngZone.run(() => this.animationDone.emit());
   }
 
   /** Handle click events, setting new selected index if appropriate. */
@@ -548,6 +559,23 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     // such cases anyway, because it will be done when the tab becomes selected.
     if (focusOrigin && focusOrigin !== 'mouse' && focusOrigin !== 'touch') {
       this._tabHeader.focusIndex = index;
+    }
+  }
+
+  /**
+   * Callback invoked when the centered state of a tab body changes.
+   * @param isCenter Whether the tab will be in the center.
+   */
+  protected _bodyCentered(isCenter: boolean) {
+    // Marks all the existing tabs as inactive and the center tab as active. Note that this can
+    // be achieved much easier by using a class binding on each body. The problem with
+    // doing so is that we can't control the timing of when the class is removed from the
+    // previously-active element and added to the newly-active one. If there's a tick between
+    // removing the class and adding the new one, the content will jump in a very jarring way.
+    // We go through the trouble of setting the classes ourselves to guarantee that they're
+    // swapped out at the same time.
+    if (isCenter) {
+      this._tabBodies?.forEach((body, i) => body._setActiveClass(i === this._selectedIndex));
     }
   }
 }

@@ -17,6 +17,8 @@ import {
 /**
  * Animations used by the Material tabs.
  * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0.
  */
 export const matTabsAnimations: {
   readonly translateTab: AnimationTriggerMetadata;

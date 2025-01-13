@@ -7,7 +7,6 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkPortal } from '@angular/cdk/portal';
@@ -188,28 +187,28 @@ export class MatTabBody implements OnInit, OnDestroy {
     animationDuration: string;
     readonly _beforeCentering: EventEmitter<boolean>;
     _content: TemplatePortal;
+    _contentElement: ElementRef<HTMLElement> | undefined;
     _getLayoutDirection(): Direction;
-    _isCenterPosition(position: MatTabBodyPositionState | string): boolean;
+    _isCenterPosition(): boolean;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
     ngOnInit(): void;
     readonly _onCentered: EventEmitter<void>;
     readonly _onCentering: EventEmitter<number>;
-    // (undocumented)
-    _onTranslateTabStarted(event: AnimationEvent_2): void;
-    origin: number | null;
-    _portalHost: CdkPortalOutlet;
+    _portalHost: MatTabBodyPortal;
     set position(position: number);
     _position: MatTabBodyPositionState;
     preserveContent: boolean;
-    readonly _translateTabComplete: Subject<AnimationEvent_2>;
+    protected _previousPosition: MatTabBodyPositionState | undefined;
+    _setActiveClass(isActive: boolean): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabBody, "mat-tab-body", never, { "_content": { "alias": "content"; "required": false; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTabBody, "mat-tab-body", never, { "_content": { "alias": "content"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "preserveContent": { "alias": "preserveContent"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_onCentered": "_onCentered"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBody, never>;
 }
 
-// @public
+// @public @deprecated
 export type MatTabBodyOriginState = 'left' | 'right';
 
 // @public
@@ -223,8 +222,8 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabBodyPortal, never>;
 }
 
-// @public
-export type MatTabBodyPositionState = 'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
+// @public @deprecated
+export type MatTabBodyPositionState = 'left' | 'center' | 'right';
 
 // @public
 export class MatTabChangeEvent {
@@ -244,7 +243,7 @@ export class MatTabContent {
 }
 
 // @public
-export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy {
     constructor(...args: unknown[]);
     alignTabs: string | null;
     _allTabs: QueryList<MatTab>;
@@ -258,6 +257,7 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
+    protected _bodyCentered(isCenter: boolean): void;
     color: ThemePalette;
     get contentTabIndex(): number | null;
     set contentTabIndex(value: number);
@@ -298,6 +298,8 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     preserveContent: boolean;
     realignInkBar(): void;
@@ -308,6 +310,8 @@ export class MatTabGroup implements AfterContentInit, AfterContentChecked, OnDes
     readonly selectedTabChange: EventEmitter<MatTabChangeEvent>;
     _setTabBodyWrapperHeight(tabHeight: number): void;
     stretchTabs: boolean;
+    // (undocumented)
+    _tabBodies: QueryList<MatTabBody> | undefined;
     // (undocumented)
     _tabBodyWrapper: ElementRef;
     _tabFocusChanged(focusOrigin: FocusOrigin, index: number): void;
@@ -501,7 +505,7 @@ export class MatTabNavPanel {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNavPanel, never>;
 }
 
-// @public
+// @public @deprecated
 export const matTabsAnimations: {
     readonly translateTab: AnimationTriggerMetadata;
 };

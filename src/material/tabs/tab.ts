@@ -116,6 +116,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    */
   position: number | null = null;
 
+  // TODO(crisbeto): we no longer use this, but some internal apps appear to rely on it.
   /**
    * The initial relatively index origin of the tab if it was created and selected after there
    * was already a selected tab. Provides context of what position the tab should originate from.
