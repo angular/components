@@ -402,6 +402,17 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     if (!this._isValidIndex(this._selectedIndex)) {
       this._selectedIndex = 0;
     }
+
+    // For linear step and selected index is greater than zero,
+    // set all the previous steps to interacted so that we can navigate to previous steps.
+    if (this.linear && this._selectedIndex > 0) {
+      this.steps
+        .toArray()
+        .slice(0, this._selectedIndex)
+        .map(step => {
+          step._markAsInteracted();
+        });
+    }
   }
 
   ngOnDestroy() {

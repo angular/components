@@ -917,6 +917,27 @@ describe('MatStepper', () => {
     });
   });
 
+  describe('linear stepper with form already filled and on to the last step', () => {
+    let fixture: ComponentFixture<LinearMatVerticalStepperAppForAlreadyFilledForm>;
+    let stepper: MatStepper;
+
+    beforeEach(() => {
+      fixture = createComponent(LinearMatVerticalStepperAppForAlreadyFilledForm);
+      fixture.detectChanges();
+      stepper = fixture.debugElement.query(By.directive(MatStepper))!.componentInstance;
+    });
+
+    it('should navigate to previous steps', () => {
+      expect(stepper.selectedIndex).toBe(2);
+
+      stepper.previous();
+      expect(stepper.selectedIndex).toBe(1);
+
+      stepper.previous();
+      expect(stepper.selectedIndex).toBe(0);
+    });
+  });
+
   describe('linear stepper with no `stepControl`', () => {
     let noStepControlFixture: ComponentFixture<SimpleStepperWithoutStepControl>;
     beforeEach(() => {
@@ -1987,6 +2008,61 @@ class LinearMatVerticalStepperApp {
 })
 class SimplePreselectedMatHorizontalStepperApp {
   index = 0;
+}
+
+@Component({
+  template: `
+    <mat-stepper linear [selectedIndex]="selectedIndex()">
+      <mat-step [stepControl]="oneGroup">
+        <form [formGroup]="oneGroup">
+          <ng-template matStepLabel>Step one</ng-template>
+          <input formControlName="oneCtrl" required>
+          <div>
+            <button matStepperPrevious>Back</button>
+            <button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="twoGroup">
+        <form [formGroup]="twoGroup">
+          <ng-template matStepLabel>Step two</ng-template>
+          <input formControlName="twoCtrl" required>
+          <div>
+            <button matStepperPrevious>Back</button>
+            <button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="threeGroup" optional>
+        <form [formGroup]="threeGroup">
+          <ng-template matStepLabel>Step two</ng-template>
+          <input formControlName="threeCtrl">
+          <div>
+            <button matStepperPrevious>Back</button>
+            <button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        Done
+      </mat-step>
+    </mat-stepper>
+  `,
+  imports: [ReactiveFormsModule, MatStepperModule],
+  standalone: false,
+})
+class LinearMatVerticalStepperAppForAlreadyFilledForm {
+  selectedIndex = signal(2);
+
+  oneGroup = new FormGroup({
+    oneCtrl: new FormControl('test 1', Validators.required),
+  });
+  twoGroup = new FormGroup({
+    twoCtrl: new FormControl('test 2', Validators.required),
+  });
+  threeGroup = new FormGroup({
+    threeCtrl: new FormControl('test 3', Validators.required),
+  });
 }
 
 @Component({
