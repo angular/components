@@ -1,10 +1,10 @@
-name: CI
+name: 'CI (material.angular.io)'
 
 on:
-  push:
-    branches:
-      - main
-      - '[0-9]+.[0-9]+.x'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'material.angular.io/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,6 +15,7 @@ permissions: {}
 defaults:
   run:
     shell: bash
+    working-directory: material.angular.io
 
 env:
   # TODO: Remove when pnpm is exclusively used.
@@ -54,13 +55,14 @@ jobs:
         run: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
       - name: Store Test Logs
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        if: always()
         with:
           name: test-logs
-          path: bazel-testlogs/
+          path: material.angular.io/bazel-testlogs/
           retention-days: 14
 
   lighthouse:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Note, fails on Ubuntu 24.04. see https://github.com/actions/runner-images/issues/10636
     steps:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
@@ -70,7 +72,8 @@ jobs:
         run: yarn bazel test --test_tag_filters=audit //...
       - name: Store Audit Logs
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        if: always()
         with:
           name: lighthouse-logs
-          path: bazel-testlogs/
+          path: material.angular.io/bazel-testlogs/
           retention-days: 14
