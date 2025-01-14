@@ -1549,6 +1549,7 @@ describe('MatSlider', () => {
     let fixture: ComponentFixture<SliderWithTickMarks>;
     let slider: MatSlider;
     let sliderEl: HTMLElement;
+    let input: MatSliderThumb;
 
     function getTickMarkEls() {
       const activeClass = '.mdc-slider__tick-mark--active';
@@ -1565,6 +1566,7 @@ describe('MatSlider', () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       sliderEl = sliderDebugElement.nativeElement;
+      input = slider._getInput(_MatThumb.END) as MatSliderThumb;
     }));
 
     it('should have tick marks', () => {
@@ -1604,14 +1606,79 @@ describe('MatSlider', () => {
       }
     });
 
-    // TODO(wagnermaciel): Add this test once this is fixed.
-    // it('should render the correct number of active & inactive ticks', () => {});
+    it('should render the correct number of active & inactive ticks', () => {
+      let tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(1);
+      expect(tickEls.inactive.length).toBe(100);
+
+      input.value = 50;
+      tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(51);
+      expect(tickEls.inactive.length).toBe(50);
+
+      input.value = 100;
+      tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(101);
+      expect(tickEls.inactive.length).toBe(0);
+    });
 
     // TODO(wagnermaciel): Add this test once this is fixed.
     // it('should position the tick marks correctly with a misaligned step', () => {});
 
     // TODO(wagnermaciel): Add this test once this is fixed.
     // it('should position the tick marks correctly with a misaligned step (rtl)', () => {});
+  });
+
+  describe('range slider with tick marks', () => {
+    let fixture: ComponentFixture<RangeSliderWithTickMarks>;
+    let slider: MatSlider;
+    let sliderEl: HTMLElement;
+    let endInput: MatSliderRangeThumb;
+    let startInput: MatSliderRangeThumb;
+
+    function getTickMarkEls() {
+      const activeClass = '.mdc-slider__tick-mark--active';
+      const inactiveClass = '.mdc-slider__tick-mark--inactive';
+      const active = sliderEl.querySelectorAll(activeClass);
+      const inactive = sliderEl.querySelectorAll(inactiveClass);
+      const ticks = sliderEl.querySelectorAll(`${activeClass},${inactiveClass}`);
+      return {ticks, active, inactive};
+    }
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithTickMarks);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      slider = sliderDebugElement.componentInstance;
+      sliderEl = sliderDebugElement.nativeElement;
+      endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
+      startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
+    }));
+
+    it('should render the correct number of active & inactive ticks', () => {
+      startInput.value = 0;
+      endInput.value = 100;
+
+      let tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(101);
+      expect(tickEls.inactive.length).toBe(0);
+
+      startInput.value = 25;
+      tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(76);
+      expect(tickEls.inactive.length).toBe(25);
+
+      endInput.value = 75;
+      tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(51);
+      expect(tickEls.inactive.length).toBe(50);
+
+      startInput.value = 50;
+      endInput.value = 50;
+      tickEls = getTickMarkEls();
+      expect(tickEls.active.length).toBe(1);
+      expect(tickEls.inactive.length).toBe(100);
+    });
   });
 });
 
@@ -1914,6 +1981,20 @@ class RangeSliderWithTwoWayBinding {
   standalone: false,
 })
 class SliderWithTickMarks {
+  @ViewChild(MatSlider) slider: MatSlider;
+}
+
+@Component({
+  template: `
+  <mat-slider [showTickMarks]="true">
+    <input matSliderStartThumb>
+    <input matSliderEndThumb>
+  </mat-slider>
+  `,
+  styles: SLIDER_STYLES,
+  standalone: false,
+})
+class RangeSliderWithTickMarks {
   @ViewChild(MatSlider) slider: MatSlider;
 }
 
