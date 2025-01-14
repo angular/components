@@ -13,8 +13,8 @@ optimized to have enough contrast to be more accessible. See [Science of Color D
 for more information about Material's color design.
 
 For more customization, custom colors can be also be provided for the
-secondary, tertiary, and neutral palette colors. It is recommended to choose colors that
-are contrastful. Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/accessible-design/patterns).
+secondary, tertiary, neutral, neutral variant, and error palette colors. It is recommended to choose
+colors that are contrastful. Material has more detailed guidance for [accessible design](https://m3.material.io/foundations/accessible-design/patterns).
 
 ## Options
 
@@ -30,6 +30,10 @@ secondary color generated from Material based on the primary.
 tertiary color generated from Material based on the primary.
 * `neutralColor` - Color to use for app's neutral color palette. Defaults to
 neutral color generated from Material based on the primary.
+* `neutralVariantColor` - Color to use for app's neutral variant color palette. Defaults to
+neutral variant color generated from Material based on the primary.
+* `errorColor` - Color to use for app's error color palette. Defaults to
+error color generated from Material based on the other palettes.
 * `includeHighContrast` - Whether to define high contrast values for the custom colors in the
 generated file. For Sass files a mixin is defined, see the [high contrast override mixins section](#high-contrast-override-mixins)
 for more information. Defaults to false.

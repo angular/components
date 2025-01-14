@@ -201,6 +201,64 @@ describe('material-theme-color-schematic', () => {
       expect(transpileTheme(generatedSCSS)).toBe(transpileTheme(testSCSS));
     });
 
+    it('should generate themes when provided a primary, secondary, tertiary, neutral, and neutral variant colors', async () => {
+      const tree = await runM3ThemeSchematic(runner, {
+        primaryColor: '#984061',
+        secondaryColor: '#984061',
+        tertiaryColor: '#984061',
+        neutralColor: '#984061',
+        neutralVariantColor: '#984061',
+      });
+
+      const generatedSCSS = tree.readText('_theme-colors.scss');
+
+      // Change test theme palette so that secondary, tertiary, and neutral are
+      // the same source color as primary to match schematic inputs
+      let testPalettes = testM3ColorPalettes;
+      testPalettes.secondary = testPalettes.primary;
+      testPalettes.tertiary = testPalettes.primary;
+      testPalettes.neutral = testPalettes.primary;
+      testPalettes.neutralVariant = testPalettes.primary;
+
+      const testSCSS = generateSCSSTheme(
+        testPalettes,
+        'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061, neutral: #984061, neutral variant: #984061',
+      );
+
+      expect(generatedSCSS).toBe(testSCSS);
+      expect(transpileTheme(generatedSCSS)).toBe(transpileTheme(testSCSS));
+    });
+
+    it('should generate themes when provided a primary, secondary, tertiary, neutral, neutral variant, and error colors', async () => {
+      const tree = await runM3ThemeSchematic(runner, {
+        primaryColor: '#984061',
+        secondaryColor: '#984061',
+        tertiaryColor: '#984061',
+        neutralColor: '#984061',
+        neutralVariantColor: '#984061',
+        errorColor: '#984061',
+      });
+
+      const generatedSCSS = tree.readText('_theme-colors.scss');
+
+      // Change test theme palette so that secondary, tertiary, and neutral are
+      // the same source color as primary to match schematic inputs
+      let testPalettes = testM3ColorPalettes;
+      testPalettes.secondary = testPalettes.primary;
+      testPalettes.tertiary = testPalettes.primary;
+      testPalettes.neutral = testPalettes.primary;
+      testPalettes.neutralVariant = testPalettes.primary;
+      testPalettes.error = testPalettes.primary;
+
+      const testSCSS = generateSCSSTheme(
+        testPalettes,
+        'Color palettes are generated from primary: #984061, secondary: #984061, tertiary: #984061, neutral: #984061, neutral variant: #984061, error: #984061',
+      );
+
+      expect(generatedSCSS).toBe(testSCSS);
+      expect(transpileTheme(generatedSCSS)).toBe(transpileTheme(testSCSS));
+    });
+
     describe('and with high contrast overrides', () => {
       it('should be able to generate high contrast overrides mixin', async () => {
         const tree = await runM3ThemeSchematic(runner, {
@@ -299,6 +357,63 @@ describe('material-theme-color-schematic', () => {
         expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
         expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffebef`);
         expect(generatedCSS).toContain(`--mat-sys-surface-bright: #4f5051`);
+      });
+
+      it('should be able to generate high contrast themes overrides when provided primary, secondary, tertiary, neutral, and neutral variant color', async () => {
+        const tree = await runM3ThemeSchematic(runner, {
+          primaryColor: '#984061',
+          secondaryColor: '#984061',
+          tertiaryColor: '#984061',
+          neutralColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          neutralVariantColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          includeHighContrast: true,
+        });
+
+        const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
+
+        // Check a system variable from each color palette for their high contrast light theme value
+        expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: #f9f9f9`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: #e2e2e2`);
+
+        // Check a system variable from each color palette for their high contrast dark theme value
+        expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: #4f5051`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: #454747`);
+      });
+
+      it('should be able to generate high contrast themes overrides when provided primary, secondary, tertiary, neutral, neutral variant, and error color', async () => {
+        const tree = await runM3ThemeSchematic(runner, {
+          primaryColor: '#984061',
+          secondaryColor: '#984061',
+          tertiaryColor: '#984061',
+          neutralColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          neutralVariantColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          errorColor: '#984061',
+          includeHighContrast: true,
+        });
+
+        const generatedCSS = transpileTheme(tree.readText('_theme-colors.scss'));
+
+        // Check a system variable from each color palette for their high contrast light theme value
+        expect(generatedCSS).toContain(`--mat-sys-primary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: #580b2f`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: #f9f9f9`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: #e2e2e2`);
+        expect(generatedCSS).toContain(`--mat-sys-error: #580b2f`);
+
+        // Check a system variable from each color palette for their high contrast dark theme value
+        expect(generatedCSS).toContain(`--mat-sys-primary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: #ffebef`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: #4f5051`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: #454747`);
+        expect(generatedCSS).toContain(`--mat-sys-error: #ffebef`);
       });
     });
   });
@@ -405,6 +520,49 @@ describe('material-theme-color-schematic', () => {
       expect(generatedCSS).toContain(`--mat-sys-surface-variant: light-dark(#f6dce2, #534247)`);
     });
 
+    it('should generate CSS system variables when provided a primary, secondary, tertiary, neutral, and neutral variant colors', async () => {
+      const tree = await runM3ThemeSchematic(runner, {
+        primaryColor: '#984061',
+        secondaryColor: '#984061',
+        tertiaryColor: '#984061',
+        neutralColor: '#984061',
+        neutralVariantColor: '#984061',
+        isScss: false,
+      });
+
+      const generatedCSS = tree.readText('theme.css');
+
+      // Check a system variable from each color palette for their light dark value
+      expect(generatedCSS).toContain(`--mat-sys-primary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-secondary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-tertiary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-error: light-dark(#ba1a1a, #ffb4ab)`);
+      expect(generatedCSS).toContain(`--mat-sys-surface: light-dark(#fff8f8, #2f0015);`);
+      expect(generatedCSS).toContain(`--mat-sys-surface-variant: light-dark(#ffd9e2, #7b2949)`);
+    });
+
+    it('should generate CSS system variables when provided a primary, secondary, tertiary, neutral, neutral variant, and error colors', async () => {
+      const tree = await runM3ThemeSchematic(runner, {
+        primaryColor: '#984061',
+        secondaryColor: '#984061',
+        tertiaryColor: '#984061',
+        neutralColor: '#984061',
+        neutralVariantColor: '#984061',
+        errorColor: '#984061',
+        isScss: false,
+      });
+
+      const generatedCSS = tree.readText('theme.css');
+
+      // Check a system variable from each color palette for their light dark value
+      expect(generatedCSS).toContain(`--mat-sys-primary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-secondary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-tertiary: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-error: light-dark(#984061, #ffb0c8)`);
+      expect(generatedCSS).toContain(`--mat-sys-surface: light-dark(#fff8f8, #2f0015);`);
+      expect(generatedCSS).toContain(`--mat-sys-surface-variant: light-dark(#ffd9e2, #7b2949)`);
+    });
+
     describe('and with high contrast overrides', () => {
       it('should generate high contrast system variables', async () => {
         const tree = await runM3ThemeSchematic(runner, {
@@ -484,6 +642,50 @@ describe('material-theme-color-schematic', () => {
         expect(generatedCSS).toContain(`--mat-sys-secondary: light-dark(#580b2f, #ffebef)`);
         expect(generatedCSS).toContain(`--mat-sys-tertiary: light-dark(#580b2f, #ffebef)`);
         expect(generatedCSS).toContain(`--mat-sys-surface-bright: light-dark(#f9f9f9, #4f5051)`);
+      });
+
+      it('should generate high contrast system variables when provided primary, secondary, tertiary, neutral, and neutral variant color', async () => {
+        const tree = await runM3ThemeSchematic(runner, {
+          primaryColor: '#984061',
+          secondaryColor: '#984061',
+          tertiaryColor: '#984061',
+          neutralColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          neutralVariantColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          isScss: false,
+          includeHighContrast: true,
+        });
+
+        const generatedCSS = tree.readText('theme.css');
+
+        // Check a system variable from each color palette for their high contrast light dark value
+        expect(generatedCSS).toContain(`--mat-sys-primary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: light-dark(#f9f9f9, #4f5051)`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: light-dark(#e2e2e2, #454747);`);
+      });
+
+      it('should generate high contrast system variables when provided primary, secondary, tertiary, neutral, neutral variant, and error color', async () => {
+        const tree = await runM3ThemeSchematic(runner, {
+          primaryColor: '#984061',
+          secondaryColor: '#984061',
+          tertiaryColor: '#984061',
+          neutralColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          neutralVariantColor: '#dfdfdf', // Different color since #984061 does not change the tonal palette
+          errorColor: '#984061',
+          isScss: false,
+          includeHighContrast: true,
+        });
+
+        const generatedCSS = tree.readText('theme.css');
+
+        // Check a system variable from each color palette for their high contrast light dark value
+        expect(generatedCSS).toContain(`--mat-sys-primary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-secondary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-tertiary: light-dark(#580b2f, #ffebef)`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-bright: light-dark(#f9f9f9, #4f5051)`);
+        expect(generatedCSS).toContain(`--mat-sys-surface-variant: light-dark(#e2e2e2, #454747);`);
+        expect(generatedCSS).toContain(`--mat-sys-error: light-dark(#580b2f, #ffebef)`);
       });
     });
   });
