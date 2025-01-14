@@ -93,20 +93,6 @@ describe('CdkAccordion', () => {
 
     expect(item.expanded).toBe(false);
   });
-
-  it('should complete the accordion observables on destroy', () => {
-    const fixture = TestBed.createComponent(SetOfItems);
-    fixture.detectChanges();
-    const stateSpy = jasmine.createSpy('stateChanges complete spy');
-    const openCloseSpy = jasmine.createSpy('openCloseAllActions complete spy');
-
-    fixture.componentInstance.accordion._stateChanges.subscribe({complete: stateSpy});
-    fixture.componentInstance.accordion._openCloseAllActions.subscribe({complete: openCloseSpy});
-    fixture.destroy();
-
-    expect(stateSpy).toHaveBeenCalled();
-    expect(openCloseSpy).toHaveBeenCalled();
-  });
 });
 
 @Component({
