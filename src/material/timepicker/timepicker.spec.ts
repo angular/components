@@ -1133,11 +1133,11 @@ describe('MatTimepicker', () => {
       expect(toggle.getAttribute('aria-expanded')).toBe('true');
     });
 
-    it('should be able to set aria-label on the button', () => {
+    it('should be able to set custom aria-label on the button', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       const toggle = getToggle(fixture);
       fixture.detectChanges();
-      expect(toggle.hasAttribute('aria-label')).toBe(false);
+      expect(toggle.hasAttribute('aria-label')).toBe(true);
 
       fixture.componentInstance.toggleAriaLabel.set('Toggle the timepicker');
       fixture.detectChanges();
