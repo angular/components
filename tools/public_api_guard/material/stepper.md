@@ -7,7 +7,6 @@
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkStep } from '@angular/cdk/stepper';
 import { CdkStepHeader } from '@angular/cdk/stepper';
@@ -15,6 +14,7 @@ import { CdkStepLabel } from '@angular/cdk/stepper';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { CdkStepperNext } from '@angular/cdk/stepper';
 import { CdkStepperPrevious } from '@angular/cdk/stepper';
+import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -34,6 +34,7 @@ import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const MAT_STEPPER_INTL_PROVIDER: {
@@ -116,10 +117,10 @@ export class MatStepLabel extends CdkStepLabel {
 }
 
 // @public (undocumented)
-export class MatStepper extends CdkStepper implements AfterContentInit {
+export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
     constructor(...args: unknown[]);
+    _animatedContainers: QueryList<ElementRef>;
     readonly animationDone: EventEmitter<void>;
-    readonly _animationDone: Subject<AnimationEvent_2>;
     get animationDuration(): string;
     set animationDuration(value: string);
     color: ThemePalette;
@@ -129,10 +130,16 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     headerPosition: 'top' | 'bottom';
     _iconOverrides: Record<string, TemplateRef<MatStepperIconContext>>;
     _icons: QueryList<MatStepperIcon>;
+    // (undocumented)
+    protected _isAnimating: WritableSignal<boolean>;
     protected _isServer: boolean;
     labelPosition: 'bottom' | 'end';
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     _stepHeader: QueryList<MatStepHeader>;
     // (undocumented)
     _stepIsNavigable(index: number, step: MatStep): boolean;
@@ -144,7 +151,7 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
 
-// @public
+// @public @deprecated
 export const matStepperAnimations: {
     readonly horizontalStepTransition: AnimationTriggerMetadata;
     readonly verticalStepTransition: AnimationTriggerMetadata;

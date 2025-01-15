@@ -255,7 +255,7 @@ export class CdkStep implements OnChanges {
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _dir = inject(Directionality, {optional: true});
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** Emits when the component is destroyed. */
   protected readonly _destroyed = new Subject<void>();
