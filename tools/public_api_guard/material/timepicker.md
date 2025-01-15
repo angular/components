@@ -124,15 +124,17 @@ export interface MatTimepickerSelected<D> {
 // @public
 export class MatTimepickerToggle<D> {
     readonly ariaLabel: InputSignal<string | undefined>;
+    readonly ariaLabelledby: InputSignal<string | undefined>;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     readonly disableRipple: InputSignalWithTransform<boolean, unknown>;
+    getAriaLabel(): string | null;
     // (undocumented)
     protected _isDisabled: Signal<boolean>;
     protected _open(event: Event): void;
     readonly tabIndex: InputSignal<number | null>;
     readonly timepicker: InputSignal<MatTimepicker<D>>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepickerToggle<any>, "mat-timepicker-toggle", ["matTimepickerToggle"], { "timepicker": { "alias": "for"; "required": true; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; }, {}, never, ["[matTimepickerToggleIcon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTimepickerToggle<any>, "mat-timepicker-toggle", ["matTimepickerToggle"], { "timepicker": { "alias": "for"; "required": true; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disableRipple": { "alias": "disableRipple"; "required": false; "isSignal": true; }; }, {}, never, ["[matTimepickerToggleIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerToggle<any>, never>;
 }

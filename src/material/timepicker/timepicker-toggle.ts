@@ -62,6 +62,14 @@ export class MatTimepickerToggle<D> {
     alias: 'aria-label',
   });
 
+  /** Screen-reader labelled by id for the button. */
+  readonly ariaLabelledby = input<string | undefined>(undefined, {
+    alias: 'aria-labelledby',
+  });
+
+  /** Default aria-label for the toggle if none is provided. */
+  private readonly _defaultAriaLabel = 'Open timepicker options';
+
   /** Whether the toggle button is disabled. */
   readonly disabled: InputSignalWithTransform<boolean, unknown> = input(false, {
     transform: booleanAttribute,
@@ -83,5 +91,13 @@ export class MatTimepickerToggle<D> {
       this.timepicker().open();
       event.stopPropagation();
     }
+  }
+
+  /**
+   * Checks for ariaLabelledby and if empty uses custom
+   * aria-label or defaultAriaLabel if neither is provided.
+   */
+  getAriaLabel(): string | null {
+    return this.ariaLabelledby() ? null : this.ariaLabel() || this._defaultAriaLabel;
   }
 }
