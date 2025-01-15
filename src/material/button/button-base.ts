@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ANIMATION_MODULE_TYPE,
@@ -91,7 +90,6 @@ const HOST_SELECTOR_MDC_CLASS_PAIR: {attribute: string; mdcClasses: string[]}[] 
 @Directive()
 export class MatButtonBase implements AfterViewInit, OnDestroy {
   _elementRef = inject(ElementRef);
-  _platform = inject(Platform);
   _ngZone = inject(NgZone);
   _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
