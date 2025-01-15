@@ -26,7 +26,6 @@ ng_module(
         ":icon-button_scss",
     ] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/platform",
         "//src/material/core",
     ],
 )
