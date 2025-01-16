@@ -95,6 +95,8 @@ export class CdkStepLabel {
 export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     protected readonly _destroyed: Subject<void>;
+    // (undocumented)
+    protected _elementRef: ElementRef<HTMLElement>;
     _getAnimationDirection(index: number): StepContentPositionState;
     _getFocusIndex(): number | null;
     _getIndicatorType(index: number, state?: StepState): StepState;

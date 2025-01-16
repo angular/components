@@ -34,7 +34,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -364,7 +364,7 @@ describe('MatStepper', () => {
       expect(stepperComponent._getIndicatorType(0)).toBe('done');
     });
 
-    it('should emit an event when the enter animation is done', fakeAsync(() => {
+    it('should emit an event when the enter animation is done', () => {
       const stepper = fixture.debugElement.query(By.directive(MatStepper))!.componentInstance;
       const selectionChangeSpy = jasmine.createSpy('selectionChange spy');
       const animationDoneSpy = jasmine.createSpy('animationDone spy');
@@ -375,16 +375,11 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-      expect(animationDoneSpy).not.toHaveBeenCalled();
-
-      flush();
-
-      expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
       expect(animationDoneSpy).toHaveBeenCalledTimes(1);
 
       selectionChangeSubscription.unsubscribe();
       animationDoneSubscription.unsubscribe();
-    }));
+    });
 
     it('should set the correct aria-posinset and aria-setsize', () => {
       const headers = Array.from<HTMLElement>(
