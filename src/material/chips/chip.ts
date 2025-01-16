@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
+import {FocusMonitor, _IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {DOCUMENT} from '@angular/common';
 import {
   ANIMATION_MODULE_TYPE,
@@ -30,21 +31,19 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  afterNextRender,
   booleanAttribute,
   inject,
 } from '@angular/core';
 import {
-  _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRippleLoader,
   RippleGlobalOptions,
+  _StructuralStylesLoader,
 } from '@angular/material/core';
 import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
@@ -391,11 +390,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
         } else {
           // When animations are enabled, Angular may end up removing the chip from the DOM a little
           // earlier than usual, causing it to be blurred and throwing off the logic in the chip list
-          // that moves focus not the next item. To work around the issue, we defer marking the chip
+          // that moves focus to the next item. To work around the issue, we defer marking the chip
           // as not focused until after the next render.
-          afterNextRender(() => this._ngZone.run(() => this._onBlur.next({chip: this})), {
-            injector: this._injector,
-          });
+          this._changeDetectorRef.markForCheck();
+          setTimeout(() => this._ngZone.run(() => this._onBlur.next({chip: this})));
         }
       }
     });
