@@ -1,3 +1,15 @@
+<a name="19.2.0-next.0"></a>
+# 19.2.0-next.0 "bronze-baguette" (2025-01-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [44c7320653](https://github.com/angular/components/commit/44c732065319522351f2f17d1294639b149f81c5) | feat | **schematics:** Add option to customize colors for neutral variant and error palettes ([#30321](https://github.com/angular/components/pull/30321)) |
+| [1e5663636e](https://github.com/angular/components/commit/1e5663636eb38d5556f500840dd7e00dd9950b70) | fix | **stepper:** switch away from animations module ([#30314](https://github.com/angular/components/pull/30314)) |
+| [0eb9012777](https://github.com/angular/components/commit/0eb901277742e23a0528342252051b8e007a7615) | fix | **tabs:** switch away from animations module ([#30281](https://github.com/angular/components/pull/30281)) |
+| [e5c3ddfb0b](https://github.com/angular/components/commit/e5c3ddfb0b14afab3eb7da1b593fed1c699ef1bb) | fix | **timepicker:** adds default aria-label to timepicker toggle ([#30284](https://github.com/angular/components/pull/30284)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.0"></a>
 # 19.1.0 "denim-firefly" (2025-01-16)
 ### cdk
