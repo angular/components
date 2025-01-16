@@ -107,8 +107,9 @@
 }
 
 // Checkbox components have to set `border-radius: 50%` in order to support density scaling
-// which will clip a square focus indicator so we have to turn it into a circle.
-.mat-mdc-checkbox-ripple::before {
+// which will clip a square focus indicator so we have to turn it into a circle. Needs extra
+// specificity in case the ripple styles are loaded later which can override the shape.
+.mat-mdc-checkbox .mat-mdc-checkbox-ripple::before {
   border-radius: 50%;
 }
 
