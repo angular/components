@@ -1,29 +1,401 @@
-<a name="19.1.0-rc.0"></a>
-# 19.1.0-rc.0 "paper-plane" (2025-01-08)
+<a name="19.1.0"></a>
+# 19.1.0 "denim-firefly" (2025-01-16)
 ### cdk
 | Commit | Type | Description |
 | -- | -- | -- |
-| [52758beab0](https://github.com/angular/components/commit/52758beab0997341afd651b339e2f4825e99409d) | fix | **menu:** avoid re-opening the menu on enter ([#30263](https://github.com/angular/components/pull/30263)) |
+| [62a672af0d](https://github.com/angular/components/commit/62a672af0d6cb2195633a1cbf6c39472104767f9) | feat | **dialog:** expose cdk dialog docs ([#1144](https://github.com/angular/components/pull/1144)) |
+| [a0a16fc70e](https://github.com/angular/components/commit/a0a16fc70e1fed7fbb9177c83cf3f670022a321a) | feat | **menu:** expose cdk menu docs ([#1142](https://github.com/angular/components/pull/1142)) |
 | [2be0afcfb5](https://github.com/angular/components/commit/2be0afcfb54b16dd426e5ad65f6aa52301dc2d45) | fix | **menu:** avoid resetting the scroll position when using the mouse ([#30249](https://github.com/angular/components/pull/30249)) |
 | [e421765d8d](https://github.com/angular/components/commit/e421765d8d05806be46ff53ce92ed43e4a82dbf9) | fix | **menu:** not responding to position changes ([#30234](https://github.com/angular/components/pull/30234)) |
 | [5c75bbecb2](https://github.com/angular/components/commit/5c75bbecb24f49779baf86203a7e626d34e39f8c) | fix | **scrolling:** avoid SSR error in CdkVirtualScrollableWindow ([#30259](https://github.com/angular/components/pull/30259)) |
-| [0f053ff685](https://github.com/angular/components/commit/0f053ff6858b57aa4d1816cfa927f7e7284813af) | fix | **tree:** expandAll not expanding all nodes ([#30226](https://github.com/angular/components/pull/30226)) |
 | [d721f0c2bc](https://github.com/angular/components/commit/d721f0c2bcfb4bdfe4cc0655d61ca0537a6e4bf5) | perf | **table:** Use afterNextRender for sticky styling. Fixes a performance regression dating back to [#28393](https://github.com/angular/components/pull/28393) and removes need for coalesced sticky styler. ([#30242](https://github.com/angular/components/pull/30242)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
-| [4e04540792](https://github.com/angular/components/commit/4e04540792b7742e6ef63dc7b16b6a3a8b909c54) | fix | **datepicker:** simplify DI setup ([#30247](https://github.com/angular/components/pull/30247)) |
-| [66741b8132](https://github.com/angular/components/commit/66741b81321e6a70a16af2622fa6daf13732af80) | fix | **sidenav:** remove deprecated API usage ([#30268](https://github.com/angular/components/pull/30268)) |
-| [31896c8a35](https://github.com/angular/components/commit/31896c8a357ab06708f3224b4ce537f996cd3000) | fix | **sidenav:** switch away from animations module ([#30235](https://github.com/angular/components/pull/30235)) |
+| [f47f5f9a1e](https://github.com/angular/components/commit/f47f5f9a1ed294ecd8d1dac5dee3019a80a932d6) | feat | **schematics:** Add CSS output to custom theme schematic ([#30004](https://github.com/angular/components/pull/30004)) |
+| [057ed370aa](https://github.com/angular/components/commit/057ed370aa1e5ec5c5ffde535d536a19c327e8ef) | fix | **api-theme:** fix nav items hover/focus contrast ([#1004](https://github.com/angular/components/pull/1004)) |
+| [5138fe7b38](https://github.com/angular/components/commit/5138fe7b385b9e7314d2b0935a82e3a635d78542) | fix | **checkbox:** ensure focus indicator has the correct shape ([#30332](https://github.com/angular/components/pull/30332)) |
+| [3163040850](https://github.com/angular/components/commit/3163040850fbb23959dd3ef97de2242e779d5de3) | fix | **docs:** change twitter logo ([#1245](https://github.com/angular/components/pull/1245)) |
+| [781e91e798](https://github.com/angular/components/commit/781e91e798f8b9bbb92acfa4de4ef05309203539) | fix | **menu:** lazy content not detached after animation ([#30301](https://github.com/angular/components/pull/30301)) |
+| [a3d9e4b45d](https://github.com/angular/components/commit/a3d9e4b45dedbcb3e13dd087a519a4098f02ee48) | fix | **select:** match disabled placeholder color with label ([#29870](https://github.com/angular/components/pull/29870)) |
+| [027c3ad267](https://github.com/angular/components/commit/027c3ad26751d3e0546c943fefcb957fe3bc8d34) | fix | **select:** remove color transition w/ no animations module ([#30304](https://github.com/angular/components/pull/30304)) |
+| [4f676d4030](https://github.com/angular/components/commit/4f676d4030689463ba05959dfd3fac2cecb5a20e) | fix | **slider:** active vs inactive tick mark count ([#30319](https://github.com/angular/components/pull/30319)) |
+| [eae073032c](https://github.com/angular/components/commit/eae073032ca2309d2c024efc6c41dd5fad925477) | fix | **slider:** tick mark positioning ([#30329](https://github.com/angular/components/pull/30329)) |
 | [0c099ff024](https://github.com/angular/components/commit/0c099ff02436b9c3d6fd2440df4cc1c4e70278ca) | fix | **sort:** avoid center align for sort header |
-| [1c1ebfd87b](https://github.com/angular/components/commit/1c1ebfd87be2cbbc56970b782c5d2b528002be02) | fix | **sort:** show arrow on focus ([#30217](https://github.com/angular/components/pull/30217)) |
-| [2219b1198f](https://github.com/angular/components/commit/2219b1198fa763ffd4ff7cb0656356745369d4f2) | fix | **timepicker:** don't mark as touched when blurred while dropdown is open ([#30228](https://github.com/angular/components/pull/30228)) |
-| [af29a92c01](https://github.com/angular/components/commit/af29a92c01fd425537a8f28fc71b24aeb027b0ab) | perf | **tooltip:** Tiny but measurable optimization to MatTooltip construction. Defer hooking up to directionality changes until overlay is created. ([#30214](https://github.com/angular/components/pull/30214)) |
+| [6ca21fd740](https://github.com/angular/components/commit/6ca21fd74080c460b58b6915d2e5b771d0db7848) | fix | **tabs:** tab nav bar animation not working when navigating forwards ([#30313](https://github.com/angular/components/pull/30313)) |
+| [a0b5546111](https://github.com/angular/components/commit/a0b5546111a2d28e45e1bc031c0a1b1edc109c23) | fix | **theme:** unselected theme picker |
+| [884740d605](https://github.com/angular/components/commit/884740d605893b537ed23ad5e632ae8dac97514f) | fix | **tooltip:** deprecate matTooltipAnimations ([#30310](https://github.com/angular/components/pull/30310)) |
+| [ab497c44e7](https://github.com/angular/components/commit/ab497c44e781ae516420045becd1516550afb924) | perf | **button:** Remove unused inject. ([#30320](https://github.com/angular/components/pull/30320)) |
+| [ab44d45c56](https://github.com/angular/components/commit/ab44d45c56a6643d2ee0b2e442c9199f6e955638) | perf | **table:** Optimize expensive css selector ([#30305](https://github.com/angular/components/pull/30305)) |
 | [980f9ba7bb](https://github.com/angular/components/commit/980f9ba7bb4fab8dfe4f3a4f30bb224ec635a626) | perf | **tooltip:** Use afterNextRender to invoke aria describer to align layout updates with other components using afterNextRender. ([#30265](https://github.com/angular/components/pull/30265)) |
 ### cdk-experimental
 | Commit | Type | Description |
 | -- | -- | -- |
-| [9f73fed470](https://github.com/angular/components/commit/9f73fed4702f79a6461fd2cf86ecb311c9530a78) | perf | **column-resize:** Use ResizeObserver to avoid layout thrashing ([#30215](https://github.com/angular/components/pull/30215)) |
+| [75c8aa8767](https://github.com/angular/components/commit/75c8aa8767d1bb5e2e5f29ea0434a5876a2c5a21) | feat | **column-resize:** Support column size persistance hooks ([#30136](https://github.com/angular/components/pull/30136)) |
+| [50d906b3e3](https://github.com/angular/components/commit/50d906b3e3bb841917bafc05bc65ae7c01a57705) | fix | **column-resize:** Previous size was being sent for persistance rather than newly updated size in non-live resize mode. ([#30161](https://github.com/angular/components/pull/30161)) |
+### material-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8685c01a92](https://github.com/angular/components/commit/8685c01a92e057b20d502e5163561391dcc7fb21) | feat | **column-resize:** Add support for "lazy" rather than live updating during resizing. ([#30120](https://github.com/angular/components/pull/30120)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e52a369a1b](https://github.com/angular/components/commit/e52a369a1bef46cacfb7055f9c21585790228a30) | fix | infer first day of week from locale ([#30285](https://github.com/angular/components/pull/30285)) |
+### 
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f5abaa31a1](https://github.com/angular/components/commit/f5abaa31a173d075fe116fe6800c51958329e42f) | feat | add 404 page ([#902](https://github.com/angular/components/pull/902)) |
+| [5c5903e82c](https://github.com/angular/components/commit/5c5903e82c5464964264e616f5c052f3822e7ece) | feat | add button to copy link to example ([#922](https://github.com/angular/components/pull/922)) |
+| [76f9d98d22](https://github.com/angular/components/commit/76f9d98d2225ec840a619fa54928fa299e0186b2) | feat | add cdk/testing docs ([#678](https://github.com/angular/components/pull/678)) |
+| [39ab48f4be](https://github.com/angular/components/commit/39ab48f4bed86af1622546864b63920355ef9a65) | feat | add cookie popup ([#988](https://github.com/angular/components/pull/988)) |
+| [cfdc032c09](https://github.com/angular/components/commit/cfdc032c09d4394b3bc8e7f4ce9fe1089c420a5f) | feat | add CSP and recommended security headers to site |
+| [663d7948fe](https://github.com/angular/components/commit/663d7948fe32b13f1d50459256babae2fd63f72f) | feat | add help/support section ([#915](https://github.com/angular/components/pull/915)) |
+| [38b0fbf469](https://github.com/angular/components/commit/38b0fbf469e04a04c8734f3ce8a041fff836399e) | feat | Add material 3 guide ([#1236](https://github.com/angular/components/pull/1236)) |
+| [c1f9e98b91](https://github.com/angular/components/commit/c1f9e98b91ec9c59be47e7bcdb62f5fe39d6d2f9) | feat | add ripples to documentation items ([#489](https://github.com/angular/components/pull/489)) |
+| [d2b05aec10](https://github.com/angular/components/commit/d2b05aec1017c75aa93afeb70840abedacc05c33) | feat | add ripples to documentation items ([#494](https://github.com/angular/components/pull/494)) |
+| [a429d1bc6a](https://github.com/angular/components/commit/a429d1bc6ae9b7e421426ecf6e6556885fcc6b83) | feat | Add separate guide for M2 specific theming |
+| [cd8b7ab2cf](https://github.com/angular/components/commit/cd8b7ab2cf55ae1a44c7500b80e7b6a07fed735e) | feat | add summaries to all menu items and category pages ([#512](https://github.com/angular/components/pull/512)) |
+| [856a03ff4f](https://github.com/angular/components/commit/856a03ff4f7cd8985f9bb7f14c785e8bad859c95) | feat | add support for reduced motion ([#1095](https://github.com/angular/components/pull/1095)) |
+| [52388a8271](https://github.com/angular/components/commit/52388a82711471f4f281193a5aed163f2e66de2b) | feat | add the ability to link to the site with a particular theme ([#549](https://github.com/angular/components/pull/549)) |
+| [390961e3e9](https://github.com/angular/components/commit/390961e3e9b075916e3f310eed6d89cc5adb0d2f) | feat | add version and version picker ([#406](https://github.com/angular/components/pull/406)) |
+| [a041c423c1](https://github.com/angular/components/commit/a041c423c1bdc7685f55649adc00b94715a0f8c6) | feat | added ability to keep pathname and hash on version change |
+| [06386a7870](https://github.com/angular/components/commit/06386a787076fe282deb5d79b1908b08d862e3a2) | feat | angular 4 compatibility ([#135](https://github.com/angular/components/pull/135)) |
+| [d0a84cf2d3](https://github.com/angular/components/commit/d0a84cf2d39399d81583cc8c4bfaccff9183ddbe) | feat | change navbar, toolbar and landing page coloring to denote when looking at docs on next ([#540](https://github.com/angular/components/pull/540)) |
+| [cffcadce16](https://github.com/angular/components/commit/cffcadce162ffd12852736a79e8cc43b0c0792f3) | feat | compact view for example components to replace static code snippets ([#756](https://github.com/angular/components/pull/756)) |
+| [95753b77e1](https://github.com/angular/components/commit/95753b77e10c504f435061906587904333ca96c7) | feat | convert to standalone ([#1200](https://github.com/angular/components/pull/1200)) |
+| [e592ba19e0](https://github.com/angular/components/commit/e592ba19e066d16be5f5df2ba6a4a79dfd94f3cd) | feat | create a version.json file for all version of the docs sites to load version info from ([#539](https://github.com/angular/components/pull/539)) |
+| [60eb965856](https://github.com/angular/components/commit/60eb9658569a7a10fbc60e4c9b7ffeda20c18431) | feat | expose CDK accordion docs ([#1005](https://github.com/angular/components/pull/1005)) |
+| [8f2fa288b5](https://github.com/angular/components/commit/8f2fa288b52adee11f22534f088aaa0c245005a7) | feat | expose coercion and collections docs ([#994](https://github.com/angular/components/pull/994)) |
+| [84b31396ec](https://github.com/angular/components/commit/84b31396ec34b54e3fde7f48df05082fb301c07b) | feat | more flexible carousels and fix homepage alignment |
+| [98049435a7](https://github.com/angular/components/commit/98049435a7838472ade0c971cd6617f95c443ba6) | feat | show deprecated related information in `material/tooltip` |
+| [f9c59da021](https://github.com/angular/components/commit/f9c59da0213eabb920de6ab83bd705869bf41a88) | feat | simplify stackblitz examples using standalone ([#1211](https://github.com/angular/components/pull/1211)) |
+| [bcfb36864a](https://github.com/angular/components/commit/bcfb36864a29766b2f23ec8c1652daf6926dd8b3) | feat | switch to MDC components ([#1174](https://github.com/angular/components/pull/1174)) |
+| [eac6e2ab03](https://github.com/angular/components/commit/eac6e2ab039bacdf297378f58e899666a6550a00) | feat | switch to sass modules ([#952](https://github.com/angular/components/pull/952)) |
+| [3ffb237849](https://github.com/angular/components/commit/3ffb2378494d16c0e79f554fbeed2821d3a5cccf) | feat | update to 9.0.0-next.x and enable Ivy rendering engine ([#645](https://github.com/angular/components/pull/645)) |
+| [3e758dd254](https://github.com/angular/components/commit/3e758dd25479065b8b60621cbbf49317ed4a9bcf) | fix | accessibility, SEO, typos, styling ([#649](https://github.com/angular/components/pull/649)) |
+| [8866616f2d](https://github.com/angular/components/commit/8866616f2dbb5768f99e53636e3d3cc1cccb59f2) | fix | account for new token data format |
+| [ebaa6e3ea4](https://github.com/angular/components/commit/ebaa6e3ea445251ebdd021740a164b93f18271a9) | fix | add back accidentally deleted deployment check |
+| [8e86c817d8](https://github.com/angular/components/commit/8e86c817d8823a92bf013ec9615ec762893c96f8) | fix | add box shadow to cookie popup |
+| [d3a56e5d06](https://github.com/angular/components/commit/d3a56e5d06851145ebff4e76de2fbcec74a5621a) | fix | add dynamic copyright ([#1169](https://github.com/angular/components/pull/1169)) |
+| [ff0b4d99ab](https://github.com/angular/components/commit/ff0b4d99ab03d6c05364529acc45a0c28047d7d1) | fix | add header background if links wrap |
+| [baef33766c](https://github.com/angular/components/commit/baef33766c58361ba8c62c656b438f00be869bae) | fix | add material-moment-adapter to stackblitz dependencies ([#1156](https://github.com/angular/components/pull/1156)) |
+| [615dfe185c](https://github.com/angular/components/commit/615dfe185c7f9a107fed7f402a1afaf1bee5ea31) | fix | add missing drag-drop examples ([#616](https://github.com/angular/components/pull/616)) |
+| [d350fc1b0a](https://github.com/angular/components/commit/d350fc1b0a6651c7557cd3d584d4d482ab6bbb83) | fix | add missing test harnesses ([#860](https://github.com/angular/components/pull/860)) |
+| [2996086742](https://github.com/angular/components/commit/299608674231b98f5b3875800f1386cd57c2c1c5) | fix | add postinstall script back to make component examples work |
+| [dcf45d3d3d](https://github.com/angular/components/commit/dcf45d3d3db7fe5880548557777b1708814da9dc) | fix | add ripples to clickable cards |
+| [2272750245](https://github.com/angular/components/commit/2272750245083ec869af32e0dec5a9a960555a07) | fix | add styling for markdown tables ([#921](https://github.com/angular/components/pull/921)) |
+| [51ce514bf8](https://github.com/angular/components/commit/51ce514bf895f990b46f8e33a4aab93fd8af2798) | fix | align and clean up table design ([#1003](https://github.com/angular/components/pull/1003)) |
+| [b584257e6e](https://github.com/angular/components/commit/b584257e6e9c0673a6b4bca1278eb8e0ea3eb32b) | fix | allow table of contents to scroll |
+| [98aaf74dd0](https://github.com/angular/components/commit/98aaf74dd0ec980bbffbed8c7340af2e7faeae0c) | fix | anchor links not scrolling into view ([#519](https://github.com/angular/components/pull/519)) |
+| [c88475f8a5](https://github.com/angular/components/commit/c88475f8a53e19bc4cf808e427542bc74fa08aa2) | fix | angular material footer logo |
+| [8635a57bcf](https://github.com/angular/components/commit/8635a57bcf40087fa84e34e48ec3551da8c892e3) | fix | avoid breaking page if there's a broken example ([#855](https://github.com/angular/components/pull/855)) |
+| [bc2343484c](https://github.com/angular/components/commit/bc2343484c8e00e5d08d914c1dd4155e44765d20) | fix | bump angular version to resolve query issue ([#1105](https://github.com/angular/components/pull/1105)) |
+| [90cf5f3aeb](https://github.com/angular/components/commit/90cf5f3aeb0c0e16ada86f19ad2c7cc02b6712f7) | fix | cache fetched docs ([#1001](https://github.com/angular/components/pull/1001)) |
+| [733b8eb527](https://github.com/angular/components/commit/733b8eb527d16b489b1bfb91650d419bfe661904) | fix | capitalization on component list ([#114](https://github.com/angular/components/pull/114)) |
+| [de7d03291e](https://github.com/angular/components/commit/de7d03291e200faf1ee38a3ff9f6f0592dfc8ff5) | fix | cdk test harness API document not found ([#716](https://github.com/angular/components/pull/716)) |
+| [e13014e33e](https://github.com/angular/components/commit/e13014e33e9dd857b23a445415eebf3931d51de9) | fix | center guide viewer ([#274](https://github.com/angular/components/pull/274)) |
+| [8a85bb88bf](https://github.com/angular/components/commit/8a85bb88bf9a165a243123bcf1eb00b94366ef90) | fix | clean up tilde imports ([#1082](https://github.com/angular/components/pull/1082)) |
+| [ad940e6248](https://github.com/angular/components/commit/ad940e62480cbec30daf84cc6b09ba17de5b6609) | fix | components with multiple API docs do not display correctly ([#717](https://github.com/angular/components/pull/717)) |
+| [e3d6968e3c](https://github.com/angular/components/commit/e3d6968e3c5c6bc2ef1b961adb4aa004a30e35a0) | fix | consistent toc positioning ([#316](https://github.com/angular/components/pull/316)) |
+| [71133d7982](https://github.com/angular/components/commit/71133d7982ffd144bb7328f335669546e0b71505) | fix | cookies dialog button contrast ([#1010](https://github.com/angular/components/pull/1010)) |
+| [d870c0b049](https://github.com/angular/components/commit/d870c0b04970e7ebc8e24dde8349fe0c0220879d) | fix | copy to clipboard button always copying content of first tab ([#821](https://github.com/angular/components/pull/821)) |
+| [476622a81a](https://github.com/angular/components/commit/476622a81ab3b2fee596bb72ee026b837b738b02) | fix | correct links in doc-viewer markdown files to have the proper base value ([#554](https://github.com/angular/components/pull/554)) |
+| [ac205ece69](https://github.com/angular/components/commit/ac205ece691c29a623c06d9feec75f0f79bb58a7) | fix | create proper fragment urls ([#329](https://github.com/angular/components/pull/329)) |
+| [4e67c59318](https://github.com/angular/components/commit/4e67c59318eeb36d9471ae9c924502045f79dc39) | fix | declare duplicate theming guide ([#923](https://github.com/angular/components/pull/923)) |
+| [d04156ab0d](https://github.com/angular/components/commit/d04156ab0d2de872cd2d3a04daf12dc7208858ec) | fix | directly check if the hostname is the expected hostname instead of just starting with the hostname ([#1223](https://github.com/angular/components/pull/1223)) |
+| [aa2dd2552b](https://github.com/angular/components/commit/aa2dd2552b805eb063f2fca5f4492a8cbbc93e2f) | fix | doc titles anchor links accessible ([#891](https://github.com/angular/components/pull/891)) |
+| [103fc7963c](https://github.com/angular/components/commit/103fc7963cedc7eb23e930ca91d1df9ec843b4c7) | fix | double scroll bars on guides page |
+| [defdbe6310](https://github.com/angular/components/commit/defdbe6310df86578b774b423ec515e38a2b2aa1) | fix | ensure that menu items are always sorted ([#1058](https://github.com/angular/components/pull/1058)) |
+| [b54869ef0b](https://github.com/angular/components/commit/b54869ef0b372b61874018f6c9411d8a4b5994c8) | fix | errors in plunkr template ([#54](https://github.com/angular/components/pull/54)) |
+| [b124bb49aa](https://github.com/angular/components/commit/b124bb49aa06efa4c4ce5528d195087d4f9baa4e) | fix | errors when reading optional queries |
+| [c2b92c3f32](https://github.com/angular/components/commit/c2b92c3f32999036875e1b86f4381eba8641fc71) | fix | example-viewer icons and animation ([#52](https://github.com/angular/components/pull/52)) |
+| [677d07cec9](https://github.com/angular/components/commit/677d07cec9f4978c502af4db0b3233efec260a83) | fix | explicitly set an index for each API docs section ([#732](https://github.com/angular/components/pull/732)) |
+| [0e72906469](https://github.com/angular/components/commit/0e72906469715bfb74895c402f2a09c8bf3738e4) | fix | expose component testing modules ([#757](https://github.com/angular/components/pull/757)) |
+| [776973db64](https://github.com/angular/components/commit/776973db640fe0674018abaea43788c6425c2f1c) | fix | expose timepicker |
+| [29715e6ec1](https://github.com/angular/components/commit/29715e6ec183ce3e139a2c6e2011bfed495f1c00) | fix | external links with hash are updated incorrectly ([#355](https://github.com/angular/components/pull/355)) |
+| [3c93065881](https://github.com/angular/components/commit/3c93065881a0a0b479f9ee3d02a16d70c86b0ca3) | fix | failing test ([#1281](https://github.com/angular/components/pull/1281)) |
+| [937c222807](https://github.com/angular/components/commit/937c2228079f2a83713cd7216ce03d9b3118ea7f) | fix | fix 'reporters' key name in karma.conf ([#433](https://github.com/angular/components/pull/433)) |
+| [6601ada892](https://github.com/angular/components/commit/6601ada892fde46f5e74ec0d722bd59d86bef056) | fix | fix ts compiler error |
+| [cab14c68c9](https://github.com/angular/components/commit/cab14c68c9b7b2e3eb1ddb106248983159f87cf4) | fix | footer jumping up while guide is loading ([#834](https://github.com/angular/components/pull/834)) |
+| [93d74135fd](https://github.com/angular/components/commit/93d74135fd1ab1a852423a78ca917c0613762f6c) | fix | footer not being pushed to the bottom of the page in guides ([#839](https://github.com/angular/components/pull/839)) |
+| [e6179b6f92](https://github.com/angular/components/commit/e6179b6f92b04b368622406deb11833cd3953fd3) | fix | footer not sticking to bottom of the page on IE ([#451](https://github.com/angular/components/pull/451)) |
+| [9cf54bcd30](https://github.com/angular/components/commit/9cf54bcd3046e868fa318a22fadcf1fb61053fe7) | fix | generated Stackblitz examples not working when forked to a repo ([#901](https://github.com/angular/components/pull/901)) |
+| [195f99205c](https://github.com/angular/components/commit/195f99205cb62d30a60a854bcac10ca3d4f30096) | fix | github icon was not centered on mobile ([#1067](https://github.com/angular/components/pull/1067)) |
+| [fa88118c4d](https://github.com/angular/components/commit/fa88118c4d9f09605fe3e598b8326118b4786975) | fix | guides overlapping footer on narrow screens ([#1007](https://github.com/angular/components/pull/1007)) |
+| [1f695d197a](https://github.com/angular/components/commit/1f695d197a4f6bb5df9363fca204801eea6cf926) | fix | harnesses not working on Stackblitz ([#1193](https://github.com/angular/components/pull/1193)) |
+| [65f1ec699a](https://github.com/angular/components/commit/65f1ec699aa2fd9cc6366445996c22a493d6ccae) | fix | hide ripple styling page |
+| [9ad15a52fb](https://github.com/angular/components/commit/9ad15a52fbe5128afe2cd8a31d44a639472e0cc8) | fix | home page in mobile view ([#832](https://github.com/angular/components/pull/832)) |
+| [e604f5bb07](https://github.com/angular/components/commit/e604f5bb07a3526ea43b1c8d5a303b41d0f04688) | fix | homepage not using native accelerated scrolling on touch devices ([#827](https://github.com/angular/components/pull/827)) |
+| [7c9e931a09](https://github.com/angular/components/commit/7c9e931a09be48d5d17ee2006c0574acb1cc5b29) | fix | horizontal scrollbar always visible on Windows in code samples ([#500](https://github.com/angular/components/pull/500)) |
+| [fe06a376bb](https://github.com/angular/components/commit/fe06a376bb009daee72589ffd24a41e4d3bed4de) | fix | improve the docs typography |
+| [61161c522e](https://github.com/angular/components/commit/61161c522e59195d08ccf9eebd0a42096bb54cca) | fix | include all menu examples under examples tab ([#428](https://github.com/angular/components/pull/428)) |
+| [2ec3c381b4](https://github.com/angular/components/commit/2ec3c381b4cfdd7067a5b55bd6956e99f59eb19c) | fix | include cdkAccordionModule in material-module for accordion stackblitz demo ([#1060](https://github.com/angular/components/pull/1060)) |
+| [c3a2e49f43](https://github.com/angular/components/commit/c3a2e49f43f843235bc691d54806b7b6de56098e) | fix | include date range picker examples ([#899](https://github.com/angular/components/pull/899)) |
+| [4f635ed2fa](https://github.com/angular/components/commit/4f635ed2faab5f2f7b3e857e66a3876d634697b6) | fix | include proper font and web animations polyfill ([#209](https://github.com/angular/components/pull/209)) |
+| [a9c2135fc8](https://github.com/angular/components/commit/a9c2135fc8526380eccad04327ea09ec84449dab) | fix | incorrect link to Material source code |
+| [d398abfe4b](https://github.com/angular/components/commit/d398abfe4b1758f76eb6ed3ecaf14c96f1e45d0e) | fix | incorrect scenes |
+| [e76343b9c8](https://github.com/angular/components/commit/e76343b9c876602007e3026986a1928bed5f08a0) | fix | lighthouse check failing in v15 ([#1164](https://github.com/angular/components/pull/1164)) |
+| [23239561fd](https://github.com/angular/components/commit/23239561fda56034f4d6b3c2e450a46da915398f) | fix | menu icons example not rendering ([#449](https://github.com/angular/components/pull/449)) |
+| [51c3777cb8](https://github.com/angular/components/commit/51c3777cb8843741732de8e65f95746b992debb4) | fix | missing import for `PortalModule` ([#582](https://github.com/angular/components/pull/582)) |
+| [06798e2c71](https://github.com/angular/components/commit/06798e2c713c8bd25101a48dae1652b82b4a8c93) | fix | missing import for a11y module ([#571](https://github.com/angular/components/pull/571)) |
+| [48da87118d](https://github.com/angular/components/commit/48da87118d7a40112fbd1b53397b911f428f3bf5) | fix | missing roboto font weights ([#349](https://github.com/angular/components/pull/349)) |
+| [d5daeab711](https://github.com/angular/components/commit/d5daeab7112ea038a56535a12db5ed1470afad29) | fix | normalize card height ([#115](https://github.com/angular/components/pull/115)) |
+| [29879c0002](https://github.com/angular/components/commit/29879c0002578e1485d27da89dbb28a6c1b6d8c9) | fix | numerous responsive issues on screens from 360px to 960px ([#705](https://github.com/angular/components/pull/705)) |
+| [8b4515d8b0](https://github.com/angular/components/commit/8b4515d8b0834acef53f9093238f04fff3745bce) | fix | overflow on devices ([#471](https://github.com/angular/components/pull/471)) |
+| [1abc4afba2](https://github.com/angular/components/commit/1abc4afba28526be89900abb9e77b7626389c310) | fix | plunkers not including source files ([#199](https://github.com/angular/components/pull/199)) |
+| [b14539b4c3](https://github.com/angular/components/commit/b14539b4c3723284b6188af2c81299729caf2f75) | fix | prepare for enabling Ivy ([#642](https://github.com/angular/components/pull/642)) |
+| [cd7117fdf4](https://github.com/angular/components/commit/cd7117fdf490abbb7d40dd16c58338ea6d0a06b9) | fix | prevent user-select on method modifier marker ([#1182](https://github.com/angular/components/pull/1182)) |
+| [45e159bffb](https://github.com/angular/components/commit/45e159bffb13b5abbfbd3a62ef9a73bd14debe90) | fix | prevent users from selecting link icon text ([#1034](https://github.com/angular/components/pull/1034)) |
+| [0531cc66e2](https://github.com/angular/components/commit/0531cc66e26be8e1e670ddafb6c2dc2ba7e446d7) | fix | remove `-example` suffix from tree examples in documentation items ([#444](https://github.com/angular/components/pull/444)) |
+| [ee4e3a346a](https://github.com/angular/components/commit/ee4e3a346a8bcfd2a423d90a426be96ad33de79b) | fix | remove ComponentFactoryResolver usage from scenes |
+| [603e5a7253](https://github.com/angular/components/commit/603e5a72534604801a3d3e39bed2eb38971e2ca9) | fix | remove elevation from nav bar |
+| [dafdc6a028](https://github.com/angular/components/commit/dafdc6a028a5805f49f1fe4fe646cf7c7a4d3bb8) | fix | remove extension from Stackblitz examples ([#841](https://github.com/angular/components/pull/841)) |
+| [bcc6a0db14](https://github.com/angular/components/commit/bcc6a0db146e2f0a56da65fece5a4374292680d9) | fix | remove google groups link |
+| [ab385ed7fc](https://github.com/angular/components/commit/ab385ed7fc6db2e3ad4155eda4950c7711b915d6) | fix | remove imports from top-level package ([#604](https://github.com/angular/components/pull/604)) |
+| [07518e135c](https://github.com/angular/components/commit/07518e135c8be22dece422dd396dfc149f6f8dcd) | fix | remove MDC migration guide |
+| [daa09dec81](https://github.com/angular/components/commit/daa09dec81b544352f64ada8bb1cf08a3a761dbb) | fix | remove service worker ([#503](https://github.com/angular/components/pull/503)) |
+| [c94ea2f845](https://github.com/angular/components/commit/c94ea2f845f8d5c6bac6d5d89d3ffd81c44cfdc3) | fix | remove unnecessary components bundle ([#74](https://github.com/angular/components/pull/74)) |
+| [2509a91f26](https://github.com/angular/components/commit/2509a91f261c28041df1caa87bbb967ad3cdae5b) | fix | remove workarounds for async pipe type narrowing bug |
+| [86cfbd6c0a](https://github.com/angular/components/commit/86cfbd6c0a91460b16873433ea8cb409237f4c5d) | fix | replace use of turbo with yarn ([#1213](https://github.com/angular/components/pull/1213)) |
+| [f5c4f7a154](https://github.com/angular/components/commit/f5c4f7a15468f0f9987b9ab3568228e11ac527fc) | fix | resolve breaking changes from upgrading to beta.2 ([#102](https://github.com/angular/components/pull/102)) |
+| [d0d71a6166](https://github.com/angular/components/commit/d0d71a6166dea433e9d03de92725284fd34b3ae6) | fix | ripple overview not loading ([#734](https://github.com/angular/components/pull/734)) |
+| [1f5004d9aa](https://github.com/angular/components/commit/1f5004d9aabce9e74fe3eb9dfa2c6d37a4a2c2df) | fix | router outlet should not allow overflow ([#856](https://github.com/angular/components/pull/856)) |
+| [085c794319](https://github.com/angular/components/commit/085c7943194140ef702b3c68b0076f47f149d918) | fix | routing path for `cdk/testing` |
+| [be830baaa3](https://github.com/angular/components/commit/be830baaa333a09c14c16620378e4e822fac21c4) | fix | scss deprecation warnings and wrong example name ([#462](https://github.com/angular/components/pull/462)) |
+| [05c716418a](https://github.com/angular/components/commit/05c716418a06290f6affc9366cb2c1b01d653b81) | fix | set rootUrl during construction of table of contents ([#445](https://github.com/angular/components/pull/445)) |
+| [8fce89ac4e](https://github.com/angular/components/commit/8fce89ac4e2936fc0b26d2d88346b24f3f2b365f) | fix | set up scene for timepicker |
+| [b14a475f15](https://github.com/angular/components/commit/b14a475f15c8b98cdcde41a9eb1e70bf8a6665fb) | fix | sidenav spacing |
+| [08782a1e86](https://github.com/angular/components/commit/08782a1e866cd06af82f2ed01744f290e12bb863) | fix | site crashing on browsers with limited localStorage access ([#203](https://github.com/angular/components/pull/203)) |
+| [7cb133b744](https://github.com/angular/components/commit/7cb133b7449862968c3a37765970b3681506830c) | fix | some testing entry points referring to wrong module ([#854](https://github.com/angular/components/pull/854)) |
+| [6d28826406](https://github.com/angular/components/commit/6d28826406c03d931d25b88935933c53e97dac33) | fix | sort links alphabetically ([#996](https://github.com/angular/components/pull/996)) |
+| [3ff854d47b](https://github.com/angular/components/commit/3ff854d47b34822824e66794708361bfb0122b17) | fix | sticky table example not loading ([#553](https://github.com/angular/components/pull/553)) |
+| [0e675d410e](https://github.com/angular/components/commit/0e675d410e859422265f59913bb21fdb124d2bd2) | fix | switch Stackblitz back to npm |
+| [0e2c7f9f37](https://github.com/angular/components/commit/0e2c7f9f374141409b6b1df003cbbc8bdfed6c3f) | fix | table of contents not working within cdk ([#545](https://github.com/angular/components/pull/545)) |
+| [be7b959eca](https://github.com/angular/components/commit/be7b959ecabd08c78f6fe29fbaac38aff81e70d9) | fix | temporarily disable Ivy on Stackblitz ([#1050](https://github.com/angular/components/pull/1050)) |
+| [502b1a9aeb](https://github.com/angular/components/commit/502b1a9aeb5e84c6f96c9f300731b2bef422cd25) | fix | update angular & angular material to `next` version ([#1171](https://github.com/angular/components/pull/1171)) |
+| [053b27ca22](https://github.com/angular/components/commit/053b27ca2202b856ad701cf6210ceaa2d6154b37) | fix | update component categories screenshots to M3 |
+| [e621cbc132](https://github.com/angular/components/commit/e621cbc1325e499e791422b0dde097e21d75cd28) | fix | update stackblitz to correct angular framework version ([#1178](https://github.com/angular/components/pull/1178)) |
+| [72ef9806c0](https://github.com/angular/components/commit/72ef9806c09eee56e5641cfe83250dec6ae744c9) | fix | update title background [#398](https://github.com/angular/components/pull/398) ([#399](https://github.com/angular/components/pull/399)) |
+| [82ee7fe3e8](https://github.com/angular/components/commit/82ee7fe3e85c0dad725904a44aa1357903d20e29) | fix | update to rxjs 7 ([#1280](https://github.com/angular/components/pull/1280)) |
+| [b0984ec2f2](https://github.com/angular/components/commit/b0984ec2f200cca45e52281acade15bd2ed5b5b4) | fix | update yarn.lock and fix package.json ([#1074](https://github.com/angular/components/pull/1074)) |
+| [1ee6973083](https://github.com/angular/components/commit/1ee6973083a7aedafd953caa039c41259ce70f22) | fix | use more lenient version when generating stackblitz ([#1075](https://github.com/angular/components/pull/1075)) |
+| [06eb0abf0a](https://github.com/angular/components/commit/06eb0abf0a26fda057351b40760d19c205ae27cc) | fix | use new control flow syntax |
+| [24aab79aa7](https://github.com/angular/components/commit/24aab79aa7329b9d7907cead149907753c996aec) | fix | use new Google Fonts snippet ([#900](https://github.com/angular/components/pull/900)) |
+| [7d090a610f](https://github.com/angular/components/commit/7d090a610f3a86feaa45cd486bcc126842ff0d4f) | fix | use theme color for link inside the API reference ([#990](https://github.com/angular/components/pull/990)) |
+| [be57a6ba61](https://github.com/angular/components/commit/be57a6ba61906e6e3c45a5e3c7df0d8c54dbd165) | fix | use yarn when forking to stackblitz ([#1194](https://github.com/angular/components/pull/1194)) |
+| [d12a8bb6ec](https://github.com/angular/components/commit/d12a8bb6ecf62156c8f7cdf6ef9763e535e49a22) | fix | window.location.href changed to its origin ([#1234](https://github.com/angular/components/pull/1234)) |
+| [7b7901c3da](https://github.com/angular/components/commit/7b7901c3da0fb6bb9caa8ac9e4e90d0c0a73db53) | fix | workaround issues with ngIf template vars in Angular 9.0.0-rc.5 |
+| [4eeb2bdd31](https://github.com/angular/components/commit/4eeb2bdd31747ac042d8787c6a7b3fb23315c624) | fix | wrong import path ([#1140](https://github.com/angular/components/pull/1140)) |
+| [355eb6477d](https://github.com/angular/components/commit/355eb6477d0280786e8ac9c8192b2ffa3b4d1e58) | perf | avoid triggering change detection on scroll ([#1033](https://github.com/angular/components/pull/1033)) |
+| [46bcb208e6](https://github.com/angular/components/commit/46bcb208e69a78ace480036f19766dbc7f128c4c) | perf | example rendering performance improvements ([#961](https://github.com/angular/components/pull/961)) |
+### a11y
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6a91be8a5e](https://github.com/angular/components/commit/6a91be8a5e6c8c4e294537de1f67c1e4f42049d3) | fix | fix example to use standard filter ([#123](https://github.com/angular/components/pull/123)) |
+| [14a7612502](https://github.com/angular/components/commit/14a761250235523fc305793d43e6792bd6938588) | fix | improve contrast of accent in pink-bluegrey theme ([#637](https://github.com/angular/components/pull/637)) |
+| [1e13ab004b](https://github.com/angular/components/commit/1e13ab004b6333c32bc7deeb5cc7484ad541aba2) | fix | various issues with contrast ratios ([#635](https://github.com/angular/components/pull/635)) |
+### api
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dc2358191f](https://github.com/angular/components/commit/dc2358191f9bb57bc9c55e011a6461954af6e217) | feat | add table-of-contents to api page ([#291](https://github.com/angular/components/pull/291)) |
+### button
+| Commit | Type | Description |
+| -- | -- | -- |
+| [421dd12859](https://github.com/angular/components/commit/421dd1285980633d79e3dcea249cad7344be14fb) | fix | fix color of mat-button links ([#876](https://github.com/angular/components/pull/876)) |
+### categories
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e9a709739f](https://github.com/angular/components/commit/e9a709739f1d07ec75e52d013d260a44240804c5) | fix | make list items anchors like component list items ([#224](https://github.com/angular/components/pull/224)) |
+### category-list
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c29ae29d2c](https://github.com/angular/components/commit/c29ae29d2cb12765a0c048117bfe232a10d501dc) | fix | bad routerLink path with relativeLinkResolution ([#663](https://github.com/angular/components/pull/663)) |
+### ci
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8ec736f810](https://github.com/angular/components/commit/8ec736f810a102483b2892d2308d07d74c94f0dd) | fix | hammerjs not loaded causes warnings and flaky failures ([#548](https://github.com/angular/components/pull/548)) |
+### compatibility
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d13f8f1782](https://github.com/angular/components/commit/d13f8f1782afb5bba6b99745f1e4ce7a6785f1a6) | fix | remove reference to md- in styles ([#113](https://github.com/angular/components/pull/113)) |
+### component-category-list
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6415b7fc0b](https://github.com/angular/components/commit/6415b7fc0b90e1e23bafef5358601419789aad2e) | fix | links fail a11y contrast checks in dark mode |
+### component-sidenav,component-viewer
+| Commit | Type | Description |
+| -- | -- | -- |
+| [96e2848fbb](https://github.com/angular/components/commit/96e2848fbb0475e908b25c44b7a010ff2f215a75) | fix | fix sticky TOC ([#917](https://github.com/angular/components/pull/917)) |
+### component-viewer
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a215e7b675](https://github.com/angular/components/commit/a215e7b6755d9cea70fe0c5a35632a7e22768a78) | fix | can't navigate to CDK after visiting component ([#410](https://github.com/angular/components/pull/410)) |
+| [ebdb66d967](https://github.com/angular/components/commit/ebdb66d9677d9a20588da23bce04e15d4451632e) | fix | Loading document... getting wrapped ([#912](https://github.com/angular/components/pull/912)) |
+### csp
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5513093def](https://github.com/angular/components/commit/5513093def27352e06b505c8275e63717783dd8e) | fix | allow img-src of 'self' |
+### doc-viewer
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4004a1c959](https://github.com/angular/components/commit/4004a1c9596c2a9561fb07e36ee6a6914d7fdf1f) | feat | add doc-viewer component ([#17](https://github.com/angular/components/pull/17)) |
+| [8cd4c25dba](https://github.com/angular/components/commit/8cd4c25dba122a336db8663b72c4619ba3371898) | fix | cancel previous pending requests when changing url ([#235](https://github.com/angular/components/pull/235)) |
+### docs
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f6c3702d3b](https://github.com/angular/components/commit/f6c3702d3b13ccecfade0d46ebfd812ec8fd2618) | feat | add page titles to doc pages [#189](https://github.com/angular/components/pull/189) ([#220](https://github.com/angular/components/pull/220)) |
+| [d7fc560140](https://github.com/angular/components/commit/d7fc5601405f83e5418121382b7647d4dcc7793c) | fix | add example for adding icon in meta section using matListI… ([#30068](https://github.com/angular/components/pull/30068)) |
+| [802148e5f3](https://github.com/angular/components/commit/802148e5f34dff6e263ba316ba4ad9f577270695) | fix | correct overflow cdk pages |
+### example-viewer
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d888d64272](https://github.com/angular/components/commit/d888d6427209abcc4865b956c7d19125f338cf8a) | feat | add copy source button ([#262](https://github.com/angular/components/pull/262)) |
+| [dcdf7fa23f](https://github.com/angular/components/commit/dcdf7fa23ff40ac23da3e0e4525c91a51159cfc0) | feat | support rendering additional files ([#516](https://github.com/angular/components/pull/516)) |
+| [e26a9fc135](https://github.com/angular/components/commit/e26a9fc13532f30f567196584c91f6d350fe0ea1) | fix | don't wrap code samples ([#289](https://github.com/angular/components/pull/289)) |
+### examples
+| Commit | Type | Description |
+| -- | -- | -- |
+| [03e8704ffc](https://github.com/angular/components/commit/03e8704ffc53da1dd0dfc4ad895c91a79336ddd5) | fix | add correct relative path to background-url ([#112](https://github.com/angular/components/pull/112)) |
+### footer
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f1d0fad7fa](https://github.com/angular/components/commit/f1d0fad7fa65504eacfb84a82ddc0adccce64ddb) | fix | extra w in www.angular.io ([#217](https://github.com/angular/components/pull/217)) |
+### ga
+| Commit | Type | Description |
+| -- | -- | -- |
+| [eb320996a0](https://github.com/angular/components/commit/eb320996a031b34d9da708c1e83d3fa3a37e2d49) | fix | remove extra '/' ([#418](https://github.com/angular/components/pull/418)) |
+| [3f508c748f](https://github.com/angular/components/commit/3f508c748f457141e4ec5dc94c855d1b2508ee67) | fix | set analytics for mat and ng separately. ([#417](https://github.com/angular/components/pull/417)) |
+### guide
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ddcaf81ab4](https://github.com/angular/components/commit/ddcaf81ab40d2ce3f735cf8059c285e591705e4b) | fix | add ReactiveFormsModule to GuideViewerModule ([#719](https://github.com/angular/components/pull/719)) |
+### guides
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c7839ebff0](https://github.com/angular/components/commit/c7839ebff0c6ff6eba84b8feb47f3fb8cbd6a7b7) | fix | fix the positioning of the footer on the guides page ([#803](https://github.com/angular/components/pull/803)) |
+### homepage
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b9856a1dd3](https://github.com/angular/components/commit/b9856a1dd38a6c1d0c9085b1ca9f9986651d8a51) | feat | Use static content in homepage ([#16](https://github.com/angular/components/pull/16)) |
+| [bc652363ff](https://github.com/angular/components/commit/bc652363ff18df867efde11d96bf93d36d356705) | fix | fix splash svg on homepage ([#179](https://github.com/angular/components/pull/179)) |
+### icons
+| Commit | Type | Description |
+| -- | -- | -- |
+| [16907d6339](https://github.com/angular/components/commit/16907d6339dabcd72f5517a3f3b3cc19a0aaac91) | fix | fix snackbar icon name ([#183](https://github.com/angular/components/pull/183)) |
+| [cee28b6d9a](https://github.com/angular/components/commit/cee28b6d9a18beb7e3b1348f461d5a0d0bb4618a) | fix | set width and height of icons ([#187](https://github.com/angular/components/pull/187)) |
+### index.html
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ce5a4ef5a6](https://github.com/angular/components/commit/ce5a4ef5a67e98f44c34db04b26bba3d7b729864) | fix | remove duplicated meta tag ([#1065](https://github.com/angular/components/pull/1065)) |
+### main
+| Commit | Type | Description |
+| -- | -- | -- |
+| [107d4b9dea](https://github.com/angular/components/commit/107d4b9dea48c9abab95f2aff8ce9f84860f9610) | fix | don't load hammerjs twice ([#555](https://github.com/angular/components/pull/555)) |
+### manifest.json
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bcf32e9a0c](https://github.com/angular/components/commit/bcf32e9a0c7f2e0c80a9eca1be67e1e880c24829) | fix | use rel paths, remove density |
+### material-docs-app
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6bbc07c44e](https://github.com/angular/components/commit/6bbc07c44ee7e30d69bafa8d45e2c304d8448a98) | fix | remove absolute positioning of all content ([#840](https://github.com/angular/components/pull/840)) |
+### module
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2ca566ad3e](https://github.com/angular/components/commit/2ca566ad3e5b5006ac9dc19d9e1d338618751453) | fix | remove deprecated forRoot and update ts ([#151](https://github.com/angular/components/pull/151)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3a7724e958](https://github.com/angular/components/commit/3a7724e9580c64dd4a9f4d3eb7b3cad2182cea2f) | fix | remove webkit-overflow-scrolling ([#30003](https://github.com/angular/components/pull/30003)) |
+### nav
+| Commit | Type | Description |
+| -- | -- | -- |
+| [094c5f29cf](https://github.com/angular/components/commit/094c5f29cf0d92f45c6befc10ae68704119612a3) | feat | new sidenav UX ([#300](https://github.com/angular/components/pull/300)) |
+### navbar
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7c3016108](https://github.com/angular/components/commit/e7c3016108e36f9f9bd645e90547a38b399ff483) | feat | Add themepicker component with lazy loaded themes ([#136](https://github.com/angular/components/pull/136)) |
+### plunker
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5d39a2be73](https://github.com/angular/components/commit/5d39a2be73ac4f2ec64139cc1a345ff43d3e26f2) | fix | attach form to document before submitting ([#93](https://github.com/angular/components/pull/93)) |
+| [0e1818fae4](https://github.com/angular/components/commit/0e1818fae415df50c932c030fdadea854298f736) | fix | make calls to plunker synchronous to avoid popup block ([#83](https://github.com/angular/components/pull/83)) |
+### PWA
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e25ed73e69](https://github.com/angular/components/commit/e25ed73e694870e9954f38f5ef3b595104ad280a) | feat | add service worker [#175](https://github.com/angular/components/pull/175) ([#223](https://github.com/angular/components/pull/223)) |
+### readability
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3e21e46b60](https://github.com/angular/components/commit/3e21e46b6080b8ab5d27dade333d88954431d477) | fix | changed text opacity from .54 to .87 according the spec ([#91](https://github.com/angular/components/pull/91)) |
+### scrolling
+| Commit | Type | Description |
+| -- | -- | -- |
+| [27d0d781a0](https://github.com/angular/components/commit/27d0d781a0d27972c73d33e01f55dbbca8320249) | fix | add ScrollingModule ([#547](https://github.com/angular/components/pull/547)) |
+| [db78ef8bb1](https://github.com/angular/components/commit/db78ef8bb12660f317c34aa90bbe0fff791bdb4c) | fix | enable scrolling on safari ([#82](https://github.com/angular/components/pull/82)) |
+### sidenav
+| Commit | Type | Description |
+| -- | -- | -- |
+| [05f72f8d6d](https://github.com/angular/components/commit/05f72f8d6d9d1869745fd45dcfb781ae1507c978) | fix | unable to scroll sidenav as expected ([#978](https://github.com/angular/components/pull/978)) |
+### spinner
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a7edc2f7e2](https://github.com/angular/components/commit/a7edc2f7e2a0d3238423149c0620838219d4c4b3) | fix | fixed binding the the radio buttons model ([#99](https://github.com/angular/components/pull/99)) |
+### stack-blitz
+| Commit | Type | Description |
+| -- | -- | -- |
+| [485a463718](https://github.com/angular/components/commit/485a463718b4dd2015a3fdde1165eaeea462ec31) | fix | default to form-field fill appearance ([#712](https://github.com/angular/components/pull/712)) |
+### stack-blitz-button
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8d0bcc1a53](https://github.com/angular/components/commit/8d0bcc1a53c855532f6047b2064e33e2570d3c21) | fix | use open_in_new icon ([#667](https://github.com/angular/components/pull/667)) |
+### stack-blitz-tests
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fb725829ed](https://github.com/angular/components/commit/fb725829ed6bd104af839f0d37139be480d5f349) | fix | revert enabling Ivy as it broke harness examples ([#1009](https://github.com/angular/components/pull/1009)) |
+### stackblitz
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b36e2d1a9d](https://github.com/angular/components/commit/b36e2d1a9d0e30b6c38ea477076165a332e7edee) | feat | add new stackblitz template to run harness test examples ([#872](https://github.com/angular/components/pull/872)) |
+| [eef58652e3](https://github.com/angular/components/commit/eef58652e32b3b1561b08cbdd261f29720495da4) | feat | start sb on index [#373](https://github.com/angular/components/pull/373) ([#390](https://github.com/angular/components/pull/390)) |
+| [8aa0c470ec](https://github.com/angular/components/commit/8aa0c470ecfd4487f55ce862ef1578ab691d7a7e) | fix | drag and drop examples not working ([#522](https://github.com/angular/components/pull/522)) |
+| [dd9bae60c7](https://github.com/angular/components/commit/dd9bae60c7ffcdf102841f33b09e524458948bba) | fix | fix dialogs not working [#5899](https://github.com/angular/components/pull/5899) [#228](https://github.com/angular/components/pull/228) [#8750](https://github.com/angular/components/pull/8750) ([#356](https://github.com/angular/components/pull/356)) |
+| [b429de4469](https://github.com/angular/components/commit/b429de4469f327194c82455b0e562ed89babbf0a) | fix | fix svg path getting extra /app ([#400](https://github.com/angular/components/pull/400)) |
+| [39284a20e7](https://github.com/angular/components/commit/39284a20e72ba7e5576a19ddd5a6f777944c816c) | fix | update angular dependencies for stackblitz to latest ([#386](https://github.com/angular/components/pull/386)) |
+### styling
+| Commit | Type | Description |
+| -- | -- | -- |
+| [08082232dd](https://github.com/angular/components/commit/08082232ddea9c0abfc5c6c354621cfe32a6a187) | fix | example tabs should not be styled ([#126](https://github.com/angular/components/pull/126)) |
+### svg
+| Commit | Type | Description |
+| -- | -- | -- |
+| [55e601763a](https://github.com/angular/components/commit/55e601763aa9afd26b9b0c6500ad01be1021b7c3) | fix | add missed spaces |
+| [d624c2043c](https://github.com/angular/components/commit/d624c2043c8a1e38c10aca0010cee902ea1485bb) | fix | add stroke class |
+| [ae0ce75975](https://github.com/angular/components/commit/ae0ce7597535526bdef4900d014683c0249e6cd9) | fix | combine multiple classes in one node |
+### sw
+| Commit | Type | Description |
+| -- | -- | -- |
+| [824919f0d7](https://github.com/angular/components/commit/824919f0d7957b8a561bb6a08a5812da93dbdaa5) | feat | adds ngsw config ([#350](https://github.com/angular/components/pull/350)) |
+### table
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0a75308bcf](https://github.com/angular/components/commit/0a75308bcf3fc3aafa4ca4c592faf2345650ad34) | fix | http example needs httpclientmodule ([#352](https://github.com/angular/components/pull/352)) |
+### tests
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c9d7e6f7ea](https://github.com/angular/components/commit/c9d7e6f7ea323f57a42741cf8a29d6d36a97244f) | fix | fix units tests throughout app ([#411](https://github.com/angular/components/pull/411)) |
+| [5a1750fee4](https://github.com/angular/components/commit/5a1750fee4c1447d1f15acbb89ce4098dd583847) | fix | remove hammerjs from tests |
+### toc
+| Commit | Type | Description |
+| -- | -- | -- |
+| [69c5224a4f](https://github.com/angular/components/commit/69c5224a4fb73579103294f6fe5d739f8bd104be) | feat | add table of contents to overview and guides ([#230](https://github.com/angular/components/pull/230)) |
+| [250fcc47b1](https://github.com/angular/components/commit/250fcc47b163f4fef8dd66b41f987ba809bcf184) | fix | highlight wrong item on jump [#256](https://github.com/angular/components/pull/256) ([#258](https://github.com/angular/components/pull/258)) |
+| [27c26d7d06](https://github.com/angular/components/commit/27c26d7d0692736fa3ec701001864a8df4824e40) | fix | quickly switching to API tab can throw exceptions ([#913](https://github.com/angular/components/pull/913)) |
+| [d2db6d7eb6](https://github.com/angular/components/commit/d2db6d7eb63c22c68069b63b367ad6da55a363f8) | fix | visibility on resizing |
+### tree
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a1844e2c6f](https://github.com/angular/components/commit/a1844e2c6f59429e5798be1fa7931211aa8079e1) | fix | add CdkTreeModule to demo module ([#466](https://github.com/angular/components/pull/466)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -50,57 +422,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="19.1.0-next.3"></a>
-# 19.1.0-next.3 "cotton-curtains" (2024-12-18)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [62a672af0d](https://github.com/angular/components/commit/62a672af0d6cb2195633a1cbf6c39472104767f9) | feat | **dialog:** expose cdk dialog docs ([#1144](https://github.com/angular/components/pull/1144)) |
-| [a0a16fc70e](https://github.com/angular/components/commit/a0a16fc70e1fed7fbb9177c83cf3f670022a321a) | feat | **menu:** expose cdk menu docs ([#1142](https://github.com/angular/components/pull/1142)) |
-| [a141c22e99](https://github.com/angular/components/commit/a141c22e99467174225f74b6ccac730df92c46c8) | fix | **drag-drop:** resolve projected handles |
-| [454d9f9c09](https://github.com/angular/components/commit/454d9f9c0937e9e70d018be13a7f452bec776620) | fix | **drag-drop:** stop dragging on touchcancel ([#30184](https://github.com/angular/components/pull/30184)) |
-| [d34d2a2ca3](https://github.com/angular/components/commit/d34d2a2ca33834a18ca169040f2d81e353c355c5) | fix | **testing:** add code to keyboard events ([#30188](https://github.com/angular/components/pull/30188)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [057ed370aa](https://github.com/angular/components/commit/057ed370aa1e5ec5c5ffde535d536a19c327e8ef) | fix | **api-theme:** fix nav items hover/focus contrast ([#1004](https://github.com/angular/components/pull/1004)) |
-| [3163040850](https://github.com/angular/components/commit/3163040850fbb23959dd3ef97de2242e779d5de3) | fix | **docs:** change twitter logo ([#1245](https://github.com/angular/components/pull/1245)) |
-| [4697d8e180](https://github.com/angular/components/commit/4697d8e18046540ed7b632bc8c94c74d980d7e02) | fix | **list:** enable MacOS select all with command+a ([#30183](https://github.com/angular/components/pull/30183)) |
-| [4620df14f7](https://github.com/angular/components/commit/4620df14f77d807fe444a11045e61e8de28b4c9b) | fix | **menu:** remove dependency on animations module ([#30163](https://github.com/angular/components/pull/30163)) |
-| [c12b73ee66](https://github.com/angular/components/commit/c12b73ee6648723fb900607ff8c8095163957e92) | fix | **table:** improve filter predicate efficiency ([#30172](https://github.com/angular/components/pull/30172)) |
-| [04a7652dca](https://github.com/angular/components/commit/04a7652dcaeffa36d27cb9f61d04bd9772fcab09) | fix | **table:** set border none for header cells on last row ([#30193](https://github.com/angular/components/pull/30193)) |
-| [a0b5546111](https://github.com/angular/components/commit/a0b5546111a2d28e45e1bc031c0a1b1edc109c23) | fix | **theme:** unselected theme picker |
-| [b924e869c5](https://github.com/angular/components/commit/b924e869c548850caf9d511a5fa56ab402d435bb) | fix | **theming:** fix not found error in the guide duplicate theming styles document ([#30108](https://github.com/angular/components/pull/30108)) |
-| [c04f84fd3b](https://github.com/angular/components/commit/c04f84fd3b81dbf5e1e76304845f51d16f365ab3) | fix | **tooltip:** body line height affecting gap ([#30164](https://github.com/angular/components/pull/30164)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [50d906b3e3](https://github.com/angular/components/commit/50d906b3e3bb841917bafc05bc65ae7c01a57705) | fix | **column-resize:** Previous size was being sent for persistance rather than newly updated size in non-live resize mode. ([#30161](https://github.com/angular/components/pull/30161)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="19.1.0-next.2"></a>
-# 19.1.0-next.2 "rhodium-rhubarb" (2024-12-11)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [aafa151e78](https://github.com/angular/components/commit/aafa151e78994a70d7e4509e49e040412fd5adf3) | fix | **expansion:** switch away from animations module ([#30119](https://github.com/angular/components/pull/30119)) |
-| [77393153fd](https://github.com/angular/components/commit/77393153fd4f6acad65fad6b8f0eefeb8dcd4b06) | fix | **menu:** decouple menu lifecycle from animations ([#30148](https://github.com/angular/components/pull/30148)) |
-| [8d3bca5eb0](https://github.com/angular/components/commit/8d3bca5eb0cc304075c85aa56ecdd6785e7e2a2d) | fix | **paginator:** ignore clicks on disabled buttons ([#30138](https://github.com/angular/components/pull/30138)) |
-| [02967137f3](https://github.com/angular/components/commit/02967137f3aba759811e81bc7be5acc6cc6ebc6d) | fix | **select:** add opt-in input that allows selection of nullable options ([#30142](https://github.com/angular/components/pull/30142)) |
-| [f7d787b1e8](https://github.com/angular/components/commit/f7d787b1e8b770f571621d35d31889d1bc7892d3) | fix | **timepicker:** deserialize ControlValueAccessor values correctly ([#30149](https://github.com/angular/components/pull/30149)) |
-| [db8f6c0a9f](https://github.com/angular/components/commit/db8f6c0a9f3102056eead1197a6926a34cb89cbd) | fix | **timepicker:** disable toggle if timepicker is disabled ([#30137](https://github.com/angular/components/pull/30137)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [75c8aa8767](https://github.com/angular/components/commit/75c8aa8767d1bb5e2e5f29ea0434a5876a2c5a21) | feat | **column-resize:** Support column size persistance hooks ([#30136](https://github.com/angular/components/pull/30136)) |
-### material-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8685c01a92](https://github.com/angular/components/commit/8685c01a92e057b20d502e5163561391dcc7fb21) | feat | **column-resize:** Add support for "lazy" rather than live updating during resizing. ([#30120](https://github.com/angular/components/pull/30120)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="19.0.3"></a>
 # 19.0.3 "polonium-popsicle" (2024-12-11)
 ### material
@@ -112,33 +433,6 @@
 | [fbaf286f9c](https://github.com/angular/components/commit/fbaf286f9cde16fb5cecf5994eb28555b03ea32a) | fix | **select:** add opt-in input that allows selection of nullable options ([#30142](https://github.com/angular/components/pull/30142)) |
 | [600a8b04f9](https://github.com/angular/components/commit/600a8b04f9c5cc8dc06b6f5d5d4ddc5a13287692) | fix | **timepicker:** deserialize ControlValueAccessor values correctly ([#30149](https://github.com/angular/components/pull/30149)) |
 | [4b69162998](https://github.com/angular/components/commit/4b6916299826101c4c8a12c9c4aa77ae0e49db71) | fix | **timepicker:** disable toggle if timepicker is disabled ([#30137](https://github.com/angular/components/pull/30137)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="19.1.0-next.1"></a>
-# 19.1.0-next.1 "plastic-monkey" (2024-12-04)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [de6c491892](https://github.com/angular/components/commit/de6c49189254289ebe5a1a51c7cb1f432c2e77c5) | fix | **accordion:** improve accessibility in example code ([#30087](https://github.com/angular/components/pull/30087)) |
-| [85d26391e4](https://github.com/angular/components/commit/85d26391e4a3ea7228b7d5104c697ac9ab4d40d8) | fix | **menu:** disable flexible dimensions ([#30086](https://github.com/angular/components/pull/30086)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [f0a767ca0f](https://github.com/angular/components/commit/f0a767ca0f5497670d61f5f0bd28159333840a1e) | fix | **button-toggle:** unable to tab into ngModel-based group on first render ([#30103](https://github.com/angular/components/pull/30103)) |
-| [6962c85837](https://github.com/angular/components/commit/6962c858378b52e0a90f7e2cada0f71c297840ed) | fix | **core:** optgroup label color not inferred correctly ([#30085](https://github.com/angular/components/pull/30085)) |
-| [4ef3baaf08](https://github.com/angular/components/commit/4ef3baaf088420f5eef9961c9df75bd4f24c04d4) | fix | **schematics:** avoid parsing stylesheets that don't include Material |
-| [c89192639c](https://github.com/angular/components/commit/c89192639c7917f560d06024c702debc4af1d2cf) | fix | **schematics:** error if stylesheet contains syntax errors |
-| [a08eeebf6b](https://github.com/angular/components/commit/a08eeebf6b334e00a491496829e3838d0616258a) | fix | **sort:** simplify animations ([#30057](https://github.com/angular/components/pull/30057)) |
-| [a028b5d842](https://github.com/angular/components/commit/a028b5d8421f1e0094381f30c37f8ec3c02e2c46) | fix | **tabs:** ink bar not showing when same tab is re-selected ([#30121](https://github.com/angular/components/pull/30121)) |
-### youtube-player
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8a55d9a09e](https://github.com/angular/components/commit/8a55d9a09e35130f07bf63f9dbdff440434a1f33) | fix | update to latest typings ([#30126](https://github.com/angular/components/pull/30126)) |
-### docs
-| Commit | Type | Description |
-| -- | -- | -- |
-| [d7fc560140](https://github.com/angular/components/commit/d7fc5601405f83e5418121382b7647d4dcc7793c) | fix | add example for adding icon in meta section using matListI… ([#30068](https://github.com/angular/components/pull/30068)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -162,19 +456,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [1d3905a208](https://github.com/angular/components/commit/1d3905a2086954cbeec2b17aa8b11378d48311f3) | fix | update to latest typings ([#30126](https://github.com/angular/components/pull/30126)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="19.1.0-next.0"></a>
-# 19.1.0-next.0 "hassium-ham" (2024-11-27)
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [f47f5f9a1](https://github.com/angular/components/commit/f47f5f9a1ed294ecd8d1dac5dee3019a80a932d6) | feat | **schematics:** Add CSS output to custom theme schematic ([#30004](https://github.com/angular/components/pull/30004)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3a7724e95](https://github.com/angular/components/commit/3a7724e9580c64dd4a9f4d3eb7b3cad2182cea2f) | fix | remove webkit-overflow-scrolling ([#30003](https://github.com/angular/components/pull/30003)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
