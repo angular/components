@@ -1119,9 +1119,11 @@ describe('MatSlider', () => {
   describe('slider with direction', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
+    let sliderEl: HTMLElement;
+    let fixture: ComponentFixture<StandardRangeSlider>;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardSlider, [
+      fixture = createComponent(StandardSlider, [
         {
           provide: Directionality,
           useValue: {value: 'rtl', change: of()},
@@ -1130,6 +1132,7 @@ describe('MatSlider', () => {
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
+      sliderEl = sliderDebugElement.nativeElement;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
     }));
 
@@ -1137,6 +1140,23 @@ describe('MatSlider', () => {
       setValueByClick(slider, input, 25, true);
       checkInput(input, {min: 0, max: 100, value: 75, translateX: 75});
     }));
+
+    it('should position the tick marks correctly with a misaligned step (rtl)', () => {
+      slider.showTickMarks = true;
+      slider.min = 0;
+      slider.max = 10;
+      slider.step = 9;
+
+      fixture.detectChanges();
+
+      const activeClass = '.mdc-slider__tick-mark--active';
+      const inactiveClass = '.mdc-slider__tick-mark--inactive';
+      const ticks = sliderEl.querySelectorAll(`${activeClass},${inactiveClass}`);
+
+      expect(ticks.length).toBe(2);
+      expect(ticks[0].getBoundingClientRect().x).toBe(312);
+      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(47.4, 2);
+    });
   });
 
   describe('range slider with direction', () => {
@@ -1622,11 +1642,17 @@ describe('MatSlider', () => {
       expect(tickEls.inactive.length).toBe(0);
     });
 
-    // TODO(wagnermaciel): Add this test once this is fixed.
-    // it('should position the tick marks correctly with a misaligned step', () => {});
+    it('should position the tick marks correctly with a misaligned step', () => {
+      slider.max = 10;
+      slider.step = 9;
+      fixture.detectChanges();
 
-    // TODO(wagnermaciel): Add this test once this is fixed.
-    // it('should position the tick marks correctly with a misaligned step (rtl)', () => {});
+      const {ticks} = getTickMarkEls();
+      expect(ticks.length).toBe(2);
+
+      expect(ticks[0].getBoundingClientRect().x).toBe(18);
+      expect(ticks[1].getBoundingClientRect().x).toBeCloseTo(282.6, 2);
+    });
   });
 
   describe('range slider with tick marks', () => {
