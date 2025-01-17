@@ -28,8 +28,8 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
+  EnvironmentInjector,
   InjectionToken,
-  Injector,
   Input,
   NgZone,
   OnChanges,
@@ -131,7 +131,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export class MatAutocompleteTrigger
   implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy
 {
-  private _injector = inject(Injector);
+  private _environmentInjector = inject(EnvironmentInjector);
   private _element = inject<ElementRef<HTMLInputElement>>(ElementRef);
   private _overlay = inject(Overlay);
   private _viewContainerRef = inject(ViewContainerRef);
@@ -609,7 +609,7 @@ export class MatAutocompleteTrigger
         () => {
           subscriber.next();
         },
-        {injector: this._injector},
+        {injector: this._environmentInjector},
       );
     });
     const optionChanges = this.autocomplete.options.changes.pipe(
