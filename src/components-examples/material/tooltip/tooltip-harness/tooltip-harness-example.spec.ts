@@ -1,28 +1,19 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTooltipHarness} from '@angular/material/tooltip/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {TooltipHarnessExample} from './tooltip-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 describe('TooltipHarnessExample', () => {
   let fixture: ComponentFixture<TooltipHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MatTooltipModule, NoopAnimationsModule],
-      declarations: [TooltipHarnessExample]
-    }).compileComponents();
+    });
     fixture = TestBed.createComponent(TooltipHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

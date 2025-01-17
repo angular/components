@@ -3,26 +3,39 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {TabNavBarHarnessFilters, TabLinkHarnessFilters} from './tab-harness-filters';
+import {
+  ComponentHarness,
+  ComponentHarnessConstructor,
+  HarnessPredicate,
+  parallel,
+} from '@angular/cdk/testing';
+import {
+  TabNavBarHarnessFilters,
+  TabNavPanelHarnessFilters,
+  TabLinkHarnessFilters,
+} from './tab-harness-filters';
 import {MatTabLinkHarness} from './tab-link-harness';
+import {MatTabNavPanelHarness} from './tab-nav-panel-harness';
 
-/** Harness for interacting with a standard mat-tab-nav-bar in tests. */
+/** Harness for interacting with a mat-tab-nav-bar in tests. */
 export class MatTabNavBarHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTabNavBar` instance. */
-  static hostSelector = '.mat-tab-nav-bar';
+  static hostSelector = '.mat-mdc-tab-nav-bar';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatTabNavBar` that meets
-   * certain criteria.
+   * Gets a `HarnessPredicate` that can be used to search for a tab nav bar with specific
+   * attributes.
    * @param options Options for filtering which tab nav bar instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: TabNavBarHarnessFilters = {}): HarnessPredicate<MatTabNavBarHarness> {
-    return new HarnessPredicate(MatTabNavBarHarness, options);
+  static with<T extends MatTabNavBarHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: TabNavBarHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options);
   }
 
   /**
@@ -56,5 +69,18 @@ export class MatTabNavBarHarness extends ComponentHarness {
       throw Error(`Cannot find mat-tab-link matching filter ${JSON.stringify(filter)}`);
     }
     await tabs[0].click();
+  }
+
+  /** Gets the panel associated with the nav bar. */
+  async getPanel(): Promise<MatTabNavPanelHarness> {
+    const link = await this.getActiveLink();
+    const host = await link.host();
+    const panelId = await host.getAttribute('aria-controls');
+    if (!panelId) {
+      throw Error('No panel is controlled by the nav bar.');
+    }
+
+    const filter: TabNavPanelHarnessFilters = {selector: `#${panelId}`};
+    return await this.documentRootLocatorFactory().locatorFor(MatTabNavPanelHarness.with(filter))();
   }
 }

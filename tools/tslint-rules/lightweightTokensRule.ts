@@ -1,7 +1,6 @@
-import * as minimatch from 'minimatch';
-import * as path from 'path';
+import ts from 'typescript';
+import minimatch from 'minimatch';
 import * as Lint from 'tslint';
-import * as ts from 'typescript';
 
 /** Arguments this rule supports. */
 type RuleArguments = [
@@ -15,7 +14,8 @@ type RuleArguments = [
 type Context = Lint.WalkContext<RuleArguments>;
 
 /** Failure message that is used when a heavy token is optionally used. */
-const failureMessage = `Use a lightweight token for optionally injecting. This is necessary as ` +
+const failureMessage =
+  `Use a lightweight token for optionally injecting. This is necessary as ` +
   `otherwise the injected symbol is always retained even though it might not be used. ` +
   `Read more about it: https://next.angular.io/guide/lightweight-injection-tokens`;
 
@@ -27,21 +27,21 @@ const failureMessage = `Use a lightweight token for optionally injecting. This i
  */
 export class Rule extends Lint.Rules.TypedRule {
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, checkSourceFileForLightweightTokens,
-        this.getOptions().ruleArguments as RuleArguments, program.getTypeChecker());
+    return this.applyWithFunction(
+      sourceFile,
+      checkSourceFileForLightweightTokens,
+      this.getOptions().ruleArguments as RuleArguments,
+      program.getTypeChecker(),
+    );
   }
 }
-
 
 /**
  * Checks whether the given source file has classes with DI constructor parameters
  * for which lightweight tokens are suitable (for optimized tree shaking).
  */
 function checkSourceFileForLightweightTokens(ctx: Context, typeChecker: ts.TypeChecker): void {
-  // Relative path for the current TypeScript source file. This allows for
-  // relative globs being used in the rule options.
-  const relativeFilePath = path.relative(process.cwd(), ctx.sourceFile.fileName);
-  const [enabledFilesGlobs] = ctx.options;
+  const [disabledFileGlobs] = ctx.options;
   const visitNode = (node: ts.Node) => {
     if (ts.isClassDeclaration(node)) {
       checkClassDeclarationForLightweightToken(node, ctx, typeChecker);
@@ -50,7 +50,7 @@ function checkSourceFileForLightweightTokens(ctx: Context, typeChecker: ts.TypeC
     }
   };
 
-  if (enabledFilesGlobs.some(g => minimatch(relativeFilePath, g))) {
+  if (!disabledFileGlobs.some(g => minimatch(ctx.sourceFile.fileName, g))) {
     ts.forEachChild(ctx.sourceFile, visitNode);
   }
 }
@@ -60,11 +60,14 @@ function checkSourceFileForLightweightTokens(ctx: Context, typeChecker: ts.TypeC
  * for which lightweight tokens are suitable (for optimized tree shaking).
  */
 function checkClassDeclarationForLightweightToken(
-    node: ts.ClassDeclaration, ctx: Context, typeChecker: ts.TypeChecker) {
+  node: ts.ClassDeclaration,
+  ctx: Context,
+  typeChecker: ts.TypeChecker,
+) {
   // If a class has any decorator, it is assumed to be an Angular decorator.
   // There are no other decorators available and we do not want to complicate
   // this lint rule.
-  if (!node.decorators || node.decorators.length === 0) {
+  if (!ts.getDecorators(node)?.length) {
     return;
   }
 
@@ -80,7 +83,10 @@ function checkClassDeclarationForLightweightToken(
  * token is suitable.
  */
 function checkConstructorForLightweightTokens(
-    node: ts.ConstructorDeclaration, ctx: Context, typeChecker: ts.TypeChecker) {
+  node: ts.ConstructorDeclaration,
+  ctx: Context,
+  typeChecker: ts.TypeChecker,
+) {
   for (const param of node.parameters) {
     // Skip parameters without an explicit type. This should never happen in this
     // repository but we handle it silently if there are such instances.
@@ -136,7 +142,7 @@ function checkConstructorForLightweightTokens(
 }
 
 /** Gets an identifier that represents the given type node's resolved value. */
-function getInjectionType(type: ts.TypeNode): ts.Identifier|null {
+function getInjectionType(type: ts.TypeNode): ts.Identifier | null {
   // Unwraps union types with `null`. This is supported in Angular when
   // `@Optional` is used. The `null` union type is ignored.
   if (ts.isUnionTypeNode(type)) {
@@ -159,14 +165,19 @@ function getInjectionType(type: ts.TypeNode): ts.Identifier|null {
  * Analyzes the decorators of the given parameter. Returns whether it has
  * an `@Inject` or `@Optional` decorator applied.
  */
-function analyzeDecorators(param: ts.ParameterDeclaration):
-    {hasInject: boolean, isOptional: boolean} {
-  if (!param.decorators) {
+function analyzeDecorators(param: ts.ParameterDeclaration): {
+  hasInject: boolean;
+  isOptional: boolean;
+} {
+  const decorators = ts.getDecorators(param);
+
+  if (!decorators) {
     return {hasInject: false, isOptional: false};
   }
+
   let hasInject = false;
   let isOptional = false;
-  for (const decorator of param.decorators) {
+  for (const decorator of decorators) {
     const expr = decorator.expression;
     if (!ts.isCallExpression(expr) || !ts.isIdentifier(expr.expression)) {
       continue;

@@ -1,5 +1,10 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {
+  MatSlideToggleModule,
+  _MatSlideToggleRequiredValidatorModule,
+} from '@angular/material/slide-toggle';
 
 /**
  * @title Slide-toggle with forms
@@ -7,20 +12,25 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'slide-toggle-forms-example',
   templateUrl: './slide-toggle-forms-example.html',
-  styleUrls: ['./slide-toggle-forms-example.css'],
+  styleUrl: './slide-toggle-forms-example.css',
+  imports: [
+    MatSlideToggleModule,
+    FormsModule,
+    _MatSlideToggleRequiredValidatorModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+  ],
 })
 export class SlideToggleFormsExample {
+  private _formBuilder = inject(FormBuilder);
+
   isChecked = true;
-  formGroup: FormGroup;
+  formGroup = this._formBuilder.group({
+    enableWifi: '',
+    acceptTerms: ['', Validators.requiredTrue],
+  });
 
-  constructor(formBuilder: FormBuilder) {
-    this.formGroup = formBuilder.group({
-      enableWifi: '',
-      acceptTerms: ['', Validators.requiredTrue]
-    });
-  }
-
-  onFormSubmit() {
-    alert(JSON.stringify(this.formGroup.value, null, 2));
+  alertFormValues(formGroup: FormGroup) {
+    alert(JSON.stringify(formGroup.value, null, 2));
   }
 }

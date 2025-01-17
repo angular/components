@@ -1,8 +1,7 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -23,14 +22,16 @@ ng_module(
         ":tab-header.css",
         ":tab-group.css",
         ":tab-nav-bar/tab-nav-bar.css",
+        ":tab-nav-bar/tab-link.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/tabs",
     deps = [
+        "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
+        "//src/cdk/observers/private",
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/scrolling",
@@ -38,7 +39,6 @@ ng_module(
         "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
-        "@npm//rxjs",
     ],
 )
 
@@ -46,7 +46,6 @@ sass_library(
     name = "tabs_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -54,16 +53,15 @@ sass_library(
 sass_binary(
     name = "tab_body_scss",
     src = "tab-body.scss",
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "tab_header_scss",
     src = "tab-header.scss",
-    deps = [
-        ":tabs_scss_lib",
-        "//src/material/core:core_scss_lib",
-    ],
+    deps = [":tabs_scss_lib"],
 )
 
 sass_binary(
@@ -71,33 +69,38 @@ sass_binary(
     src = "tab-group.scss",
     deps = [
         ":tabs_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
 sass_binary(
     name = "tab_nav_bar_scss",
     src = "tab-nav-bar/tab-nav-bar.scss",
+    deps = [":tabs_scss_lib"],
+)
+
+sass_binary(
+    name = "tab_link_scss",
+    src = "tab-nav-bar/tab-link.scss",
     deps = [
         ":tabs_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "tabs_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":tabs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
+        "//src/cdk/observers/private",
         "//src/cdk/portal",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "//src/cdk/testing/testbed",
         "//src/material/core",
         "@npm//@angular/common",
         "@npm//@angular/platform-browser",
@@ -107,28 +110,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
-        "//src/cdk/testing/private/e2e",
-    ],
-)
-
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
+        ":tabs_tests_lib",
     ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":tabs.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":tabs_scss_lib"],
 )
 
 filegroup(

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/firebase-config.json",
+  "hosting": {
+    "target": "mat-aio",
+    "public": "dist/material-angular-io",
+    "cleanUrls": true,
+    "rewrites": [
+      {
+        "source": "**/!(*.*)",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/!(*.*)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            // The `index.html` file (or when loaded as SPA), should never be cached. Older
+            // JavaScript sources and assets would be loaded that might no longer be available.
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/**(*.@(css|js|json|html|svg))",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          }
+        ]
+      },
+      {
+        "source": "/**",
+        "headers": [
+          {
+            "key": "X-XSS-Protection",
+            "value": "1"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "Content-Security-Policy",
+            // Keep in sync with `angular.json`.
+            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://material.angular.io https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
+          }
+        ]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            // Images and SVGs are not hashed but are also expected to change rarely.
+            // There are a lot of SVGs in our docs app, and we want to cache them longer.
+            "value": "public, max-age=8640000" // 100 days.
+          }
+        ]
+      },
+      {
+        "source": "/assets/versions.json",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Cache-Control",
+            // The versions file should not be cached as it may change
+            // at any time and otherwise old versions would be rendered.
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/assets/stack-blitz/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            // StackBlitz assets are not hashed and should not be cached.
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/*.ico",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            // Icons and the favicon are expected to change rarely. We cache it, but not for too long.
+            "value": "public, max-age=2592000" // 30 days.
+          }
+        ]
+      },
+      {
+        "source": "/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            // JS ans CSS files are hashed and can be cached indefinitely.
+            "value": "public, max-age=31536000" // 365 days.
+          }
+        ]
+      }
+    ],
+    "ignore": ["firebase.json", "**/node_modules/**", "tmp", "deploy"]
+  },
+  "emulators": {
+    "hosting": {
+      "port": 4200
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4202
+    }
+  }
+}

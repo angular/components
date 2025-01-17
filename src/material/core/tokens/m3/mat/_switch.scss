@@ -1,0 +1,56 @@
+@use 'sass:map';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, switch);
+
+/// Generates custom tokens for the mat-slide-toggle.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-slide-toggle
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    disabled-selected-handle-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    disabled-unselected-handle-opacity: token-definition.hardcode(0.38, $exclude-hardcoded),
+    unselected-handle-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    selected-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+    with-icon-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+    pressed-handle-size: token-definition.hardcode(28px, $exclude-hardcoded),
+    selected-handle-horizontal-margin: token-definition.hardcode(0 24px, $exclude-hardcoded),
+    selected-with-icon-handle-horizontal-margin:
+        token-definition.hardcode(0 24px, $exclude-hardcoded),
+    selected-pressed-handle-horizontal-margin:
+        token-definition.hardcode(0 22px, $exclude-hardcoded),
+    unselected-handle-horizontal-margin: token-definition.hardcode(0 8px, $exclude-hardcoded),
+    unselected-with-icon-handle-horizontal-margin:
+        token-definition.hardcode(0 4px, $exclude-hardcoded),
+    unselected-pressed-handle-horizontal-margin:
+        token-definition.hardcode(0 2px, $exclude-hardcoded),
+    // The hidden and visible track represent whichever track is visible or
+    // hidden in the ui. This could be the .mdc-switch__track :before or
+    // :after depending on whether the switch is selected or unselected.
+    //
+    // The m2 slide-toggle uses transforms to hide & show the tracks while
+    // the m3 slide-toggle uses opacity.
+    visible-track-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    hidden-track-opacity: token-definition.hardcode(0, $exclude-hardcoded),
+    visible-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
+    hidden-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
+    track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
+    track-outline-color: map.get($systems, md-sys-color, outline),
+    selected-track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
+    selected-track-outline-color: token-definition.hardcode(transparent, $exclude-hardcoded),
+    disabled-unselected-track-outline-width:
+        token-definition.hardcode(2px, $exclude-hardcoded),
+    disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
+    label-text-color: map.get($systems, md-sys-color, on-surface),
+    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

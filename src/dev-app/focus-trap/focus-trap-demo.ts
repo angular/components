@@ -3,36 +3,53 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkTrapFocus} from '@angular/cdk/a11y';
+import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewChildren,
   QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @Component({
   selector: 'shadow-dom-demo',
   template: '<ng-content></ng-content>',
-  host:     {'class': 'demo-focus-trap-shadow-root'},
-  encapsulation: ViewEncapsulation.ShadowDom
+  host: {'class': 'demo-focus-trap-shadow-root'},
+  encapsulation: ViewEncapsulation.ShadowDom,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapShadowDomDemo {}
 
 @Component({
   selector: 'focus-trap-demo',
   templateUrl: 'focus-trap-demo.html',
-  styleUrls: ['focus-trap-demo.css'],
+  styleUrl: 'focus-trap-demo.css',
+  imports: [A11yModule, MatButtonModule, MatCardModule, MatToolbarModule, FocusTrapShadowDomDemo],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDemo implements AfterViewInit {
+  dialog = inject(MatDialog);
+
   @ViewChild('newElements')
   private _newElements: ElementRef<HTMLElement>;
 
@@ -41,13 +58,14 @@ export class FocusTrapDemo implements AfterViewInit {
 
   _supportsShadowDom = _supportsShadowDom();
 
-  constructor(public dialog: MatDialog) {}
+  readonly cdr = inject(ChangeDetectorRef);
 
   ngAfterViewInit() {
     // We want all the traps to be disabled by default, but doing so while using the value in
     // the view will result in "changed after checked" errors so we defer it to the next tick.
     setTimeout(() => {
-      this._focusTraps.forEach(trap => trap.enabled = false);
+      this._focusTraps.forEach(trap => (trap.enabled = false));
+      this.cdr.markForCheck();
     });
   }
 
@@ -73,12 +91,15 @@ let dialogCount = 0;
 
 @Component({
   selector: 'focus-trap-dialog-demo',
-  styleUrls: ['focus-trap-dialog-demo.css'],
+  styleUrl: 'focus-trap-dialog-demo.css',
   templateUrl: 'focus-trap-dialog-demo.html',
+  imports: [MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusTrapDialogDemo {
+  dialog = inject(MatDialog);
+
   id = dialogCount++;
-  constructor(public dialog: MatDialog) {}
 
   openAnotherDialog() {
     this.dialog.open(FocusTrapDialogDemo);

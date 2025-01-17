@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as ts from 'typescript';
@@ -35,11 +35,11 @@ export class PropertyNamesMigration extends Migration<UpgradeData> {
 
     if (hostType) {
       if (hostType.isIntersection()) {
-         hostType.types.forEach(type => {
-           if (type.symbol) {
-             typeNames.push(type.symbol.getName());
-           }
-         });
+        hostType.types.forEach(type => {
+          if (type.symbol) {
+            typeNames.push(type.symbol.getName());
+          }
+        });
       } else if (hostType.symbol) {
         typeNames.push(hostType.symbol.getName());
       }
@@ -51,7 +51,8 @@ export class PropertyNamesMigration extends Migration<UpgradeData> {
       }
 
       if (!data.limitedTo || typeNames.some(type => data.limitedTo.classes.includes(type))) {
-        this.fileSystem.edit(this.fileSystem.resolve(node.getSourceFile().fileName))
+        this.fileSystem
+          .edit(this.fileSystem.resolve(node.getSourceFile().fileName))
           .remove(node.name.getStart(), node.name.getWidth())
           .insertRight(node.name.getStart(), data.replaceWith);
       }

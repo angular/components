@@ -1,5 +1,8 @@
 import {SelectionChange} from '@angular/cdk-experimental/selection';
 import {Component} from '@angular/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {AsyncPipe} from '@angular/common';
+import {MatSelectionModule} from '@angular/material-experimental/selection';
 
 /**
  * @title Mat Selection on a simple list.
@@ -7,6 +10,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'mat-selection-list-example',
   templateUrl: 'mat-selection-list-example.html',
+  imports: [MatSelectionModule, MatCheckboxModule, AsyncPipe],
 })
 export class MatSelectionListExample {
   data = ELEMENT_NAMES;
@@ -16,7 +20,7 @@ export class MatSelectionListExample {
   selected4: string[] = [];
 
   getCurrentSelected(event: SelectionChange<string>) {
-    return event.after.map((select) => select.value);
+    return event.after.map(select => select.value);
   }
 
   trackByFn(index: number, value: string) {
@@ -33,12 +37,47 @@ export class MatSelectionListExample {
 }
 
 const ELEMENT_NAMES = [
-  'Hydrogen',   'Helium',   'Lithium',  'Beryllium', 'Boron',     'Carbon',   'Nitrogen',
-  'Oxygen',     'Fluorine', 'Neon',     'Sodium',    'Magnesium', 'Aluminum', 'Silicon',
-  'Phosphorus', 'Sulfur',   'Chlorine', 'Argon',     'Potassium', 'Calcium',
+  'Hydrogen',
+  'Helium',
+  'Lithium',
+  'Beryllium',
+  'Boron',
+  'Carbon',
+  'Nitrogen',
+  'Oxygen',
+  'Fluorine',
+  'Neon',
+  'Sodium',
+  'Magnesium',
+  'Aluminum',
+  'Silicon',
+  'Phosphorus',
+  'Sulfur',
+  'Chlorine',
+  'Argon',
+  'Potassium',
+  'Calcium',
 ];
 
 const ELEMENT_SYMBOLS = [
-  'H',  'He', 'Li', 'Be', 'B', 'C', 'N',  'O',  'F', 'Ne',
-  'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca'
+  'H',
+  'He',
+  'Li',
+  'Be',
+  'B',
+  'C',
+  'N',
+  'O',
+  'F',
+  'Ne',
+  'Na',
+  'Mg',
+  'Al',
+  'Si',
+  'P',
+  'S',
+  'Cl',
+  'Ar',
+  'K',
+  'Ca',
 ];

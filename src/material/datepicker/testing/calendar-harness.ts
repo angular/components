@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessPredicate, ComponentHarness} from '@angular/cdk/testing';
@@ -11,7 +11,11 @@ import {CalendarHarnessFilters, CalendarCellHarnessFilters} from './datepicker-h
 import {MatCalendarCellHarness} from './calendar-cell-harness';
 
 /** Possible views of a `MatCalendarHarness`. */
-export const enum CalendarView {MONTH, YEAR, MULTI_YEAR}
+export enum CalendarView {
+  MONTH,
+  YEAR,
+  MULTI_YEAR,
+}
 
 /** Harness for interacting with a standard Material calendar in tests. */
 export class MatCalendarHarness extends ComponentHarness {

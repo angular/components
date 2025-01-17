@@ -1,12 +1,16 @@
-@use '../core/style/private';
-@use '../../cdk/a11y';
+@use 'sass:math';
+@use '@angular/cdk';
+
+@use '../core/style/button-common';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
 
 $calendar-body-label-padding-start: 5% !default;
 // We don't want the label to jump around when we switch between month and year views, so we use
 // the same amount of padding regardless of the number of columns. We align the header label with
 // the one third mark of the first cell, this was chosen somewhat arbitrarily to make it look
 // roughly like the mock. Half way is too far since the cell text is center aligned.
-$calendar-body-label-side-padding: private.private-div(33%, 7) !default;
+$calendar-body-label-side-padding: math.div(33%, 7) !default;
 $calendar-body-cell-min-size: 32px !default;
 $calendar-body-cell-content-margin: 5% !default;
 $calendar-body-cell-content-border-width: 1px !default;
@@ -19,25 +23,81 @@ $calendar-body-cell-content-size: 100% - $calendar-body-cell-content-margin * 2 
 $calendar-range-end-body-cell-size:
     $calendar-body-cell-content-size + $calendar-body-cell-content-margin !default;
 
+$_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots());
+
+// Styles for a highlighted calendar cell (e.g. hovered or focused).
+@mixin _highlighted-cell($token-name) {
+  & > .mat-calendar-body-cell-content {
+    @include _unselected-cell {
+      @include token-utils.create-token-slot(background-color, $token-name);
+    }
+  }
+}
+
+// Utility mixin to target cells that aren't selected. Used to make selector easier to follow.
+@mixin _unselected-cell {
+  &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    @content;
+  }
+}
+
 .mat-calendar-body {
   min-width: $calendar-body-min-size;
+}
+
+.mat-calendar-body-today {
+  @include _unselected-cell {
+    @include token-utils.use-tokens($_tokens...) {
+      @include token-utils.create-token-slot(border-color,
+        calendar-date-today-outline-color);
+    }
+  }
 }
 
 .mat-calendar-body-label {
   height: 0;
   line-height: 0;
-  text-align: left;
+  text-align: start;
   padding-left: $calendar-body-label-side-padding;
   padding-right: $calendar-body-label-side-padding;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-size, calendar-body-label-text-size);
+    @include token-utils.create-token-slot(font-weight, calendar-body-label-text-weight);
+    @include token-utils.create-token-slot(color, calendar-body-label-text-color);
+  }
 }
 
-.mat-calendar-body-cell {
+// Label that is not rendered and removed from the accessibility tree.
+.mat-calendar-body-hidden-label {
+  display: none;
+}
+
+.mat-calendar-body-cell-container {
   position: relative;
   height: 0;
   line-height: 0;
+}
+
+.mat-calendar-body-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
   text-align: center;
   outline: none;
-  cursor: pointer;
+  font-family: inherit;
+  margin: 0;
+
+  // Needs to be repeated here in order to override the user agent styles.
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(font-family, calendar-text-font);
+    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  }
+
+  @include button-common.reset();
 }
 
 // We use ::before to apply a background to the body cell, because we need to apply a border
@@ -58,6 +118,7 @@ $calendar-range-end-body-cell-size:
   left: 0;
   z-index: 0;
   box-sizing: border-box;
+  display: block;
 
   // We want the range background to be slightly shorter than the cell so
   // that there's a gap when the range goes across multiple rows.
@@ -126,9 +187,15 @@ $calendar-range-end-body-cell-size:
   }
 }
 
-.mat-calendar-body-in-preview .mat-calendar-body-cell-preview {
-  border-top: $calendar-body-preview-cell-border;
-  border-bottom: $calendar-body-preview-cell-border;
+.mat-calendar-body-in-preview {
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, calendar-date-preview-state-outline-color);
+  }
+
+  .mat-calendar-body-cell-preview {
+    border-top: $calendar-body-preview-cell-border;
+    border-bottom: $calendar-body-preview-cell-border;
+  }
 }
 
 .mat-calendar-body-preview-start .mat-calendar-body-cell-preview {
@@ -152,10 +219,25 @@ $calendar-range-end-body-cell-size:
 .mat-calendar-body-disabled {
   cursor: default;
 
+  @include token-utils.use-tokens($_tokens...) {
+    & > .mat-calendar-body-cell-content {
+      @include _unselected-cell {
+        @include token-utils.create-token-slot(color, calendar-date-disabled-state-text-color);
+      }
+    }
+
+    & > .mat-calendar-body-today {
+      @include _unselected-cell {
+        @include token-utils.create-token-slot(border-color,
+          calendar-date-today-disabled-state-outline-color);
+      }
+    }
+  }
+
   // Fade out the disabled cells so that they can be distinguished from the enabled ones. Note that
   // ideally we'd use `color: GreyText` here which is what the browser uses for disabled buttons,
   // but we can't because Firefox doesn't recognize it.
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast {
     opacity: 0.5;
   }
 }
@@ -182,18 +264,104 @@ $calendar-range-end-body-cell-size:
   // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
   border-radius: $calendar-body-cell-radius;
 
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, calendar-date-text-color);
+    @include token-utils.create-token-slot(border-color,
+      calendar-date-outline-color);
+  }
+
   // Increase specificity because focus indicator styles are part of the `mat-core` mixin and can
   // potentially overwrite the absolute position of the container.
   &.mat-focus-indicator {
     position: absolute;
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast {
     border: none;
   }
 }
 
-@include a11y.high-contrast(active, off) {
+.mat-calendar-body-active {
+  @include token-utils.use-tokens($_tokens...) {
+    .cdk-keyboard-focused &, .cdk-program-focused & {
+      @include _highlighted-cell(calendar-date-focus-state-background-color);
+    }
+  }
+}
+
+@media (hover: hover) {
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
+    @include token-utils.use-tokens($_tokens...) {
+        @include _highlighted-cell(calendar-date-hover-state-background-color);
+    }
+  }
+}
+
+.mat-calendar-body-selected {
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(background-color,
+      calendar-date-selected-state-background-color);
+    @include token-utils.create-token-slot(color, calendar-date-selected-state-text-color);
+
+    .mat-calendar-body-disabled > & {
+      @include token-utils.create-token-slot(background-color,
+        calendar-date-selected-disabled-state-background-color);
+    }
+
+    &.mat-calendar-body-today {
+      $shadow: token-utils.get-token-variable(calendar-date-today-selected-state-outline-color);
+      box-shadow: inset 0 0 0 1px #{$shadow};
+    }
+  }
+}
+
+@include token-utils.use-tokens($_tokens...) {
+  $range-color:
+    token-utils.get-token-variable(calendar-date-in-range-state-background-color);
+  $comparison-color:
+    token-utils.get-token-variable(calendar-date-in-comparison-range-state-background-color);
+
+  .mat-calendar-body-in-range::before {
+    @include token-utils.create-token-slot(background,
+      calendar-date-in-range-state-background-color);
+  }
+
+  .mat-calendar-body-comparison-identical,
+  .mat-calendar-body-in-comparison-range::before {
+    @include token-utils.create-token-slot(background,
+      calendar-date-in-comparison-range-state-background-color);
+  }
+
+  .mat-calendar-body-comparison-identical,
+  .mat-calendar-body-in-comparison-range::before {
+    @include token-utils.create-token-slot(background,
+      calendar-date-in-comparison-range-state-background-color);
+  }
+
+  .mat-calendar-body-comparison-bridge-start::before,
+  [dir='rtl'] .mat-calendar-body-comparison-bridge-end::before {
+    background: linear-gradient(to right, $range-color 50%, $comparison-color 50%);
+  }
+
+  .mat-calendar-body-comparison-bridge-end::before,
+  [dir='rtl'] .mat-calendar-body-comparison-bridge-start::before {
+    background: linear-gradient(to left, $range-color 50%, $comparison-color 50%);
+  }
+
+  .mat-calendar-body-in-range > .mat-calendar-body-comparison-identical,
+  .mat-calendar-body-in-comparison-range.mat-calendar-body-in-range::after {
+    @include token-utils.create-token-slot(background,
+      calendar-date-in-overlap-range-state-background-color);
+  }
+
+  .mat-calendar-body-comparison-identical.mat-calendar-body-selected,
+  .mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
+    @include token-utils.create-token-slot(background,
+      calendar-date-in-overlap-range-selected-state-background-color);
+  }
+}
+
+@include cdk.high-contrast {
   $main-range-border: solid 1px;
   $comparison-range-border: dashed 1px;
 
@@ -204,13 +372,6 @@ $calendar-range-end-body-cell-size:
 
   .mat-calendar-body-today {
     outline: dotted 1px;
-  }
-
-  .cdk-keyboard-focused .mat-calendar-body-active,
-  .cdk-program-focused .mat-calendar-body-active {
-    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
-      outline: dotted 2px;
-    }
   }
 
   // These backgrounds need to be removed, because they'll block the date ranges.
@@ -265,23 +426,6 @@ $calendar-range-end-body-cell-size:
     [dir='rtl'] & {
       border-right: 0;
       border-left: $comparison-range-border;
-    }
-  }
-}
-
-[dir='rtl'] {
-  .mat-calendar-body-label {
-    text-align: right;
-  }
-}
-
-// Disable the hover styles on non-hover devices. Since this is more of a progressive
-// enhancement and not all desktop browsers support this kind of media query, we can't
-// use something like `@media (hover)`.
-@media (hover: none) {
-  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
-      background-color: transparent;
     }
   }
 }

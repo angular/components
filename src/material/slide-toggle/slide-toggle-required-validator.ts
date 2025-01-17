@@ -3,23 +3,20 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Directive,
-  forwardRef,
-  Provider,
-} from '@angular/core';
-import {
-  CheckboxRequiredValidator,
-  NG_VALIDATORS,
-} from '@angular/forms';
+import {Directive, forwardRef, Provider} from '@angular/core';
+import {CheckboxRequiredValidator, NG_VALIDATORS} from '@angular/forms';
 
+/**
+ * @deprecated No longer used, `MatCheckbox` implements required validation directly.
+ * @breaking-change 19.0.0
+ */
 export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatSlideToggleRequiredValidator),
-  multi: true
+  multi: true,
 };
 
 /**
@@ -29,6 +26,9 @@ export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider = {
  * where the value is always defined.
  *
  * Required slide-toggle form controls are valid when checked.
+ *
+ * @deprecated No longer used, `MatCheckbox` implements required validation directly.
+ * @breaking-change 19.0.0
  */
 @Directive({
   selector: `mat-slide-toggle[required][formControlName],

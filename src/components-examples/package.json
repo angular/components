@@ -13,6 +13,11 @@
     "material design",
     "components"
   ],
+  "exports": {
+    "./fesm2022": {
+      "default": "./fesm2022"
+    }
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/angular/components/issues"
@@ -25,7 +30,9 @@
     "@angular/common": "0.0.0-NG",
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/material-experimental": "0.0.0-PLACEHOLDER",
-    "@angular/material-moment-adapter": "0.0.0-PLACEHOLDER"
+    "@angular/material-moment-adapter": "0.0.0-PLACEHOLDER",
+    "@angular/material-luxon-adapter": "0.0.0-PLACEHOLDER",
+    "@angular/material-date-fns-adapter": "0.0.0-PLACEHOLDER"
   },
   "dependencies": {
     "tslib": "0.0.0-TSLIB"

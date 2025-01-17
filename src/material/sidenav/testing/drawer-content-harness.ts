@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
@@ -20,8 +20,9 @@ export class MatDrawerContentHarness extends ContentContainerComponentHarness<st
    * @param options Options for filtering which drawer content instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: DrawerContentHarnessFilters = {}):
-    HarnessPredicate<MatDrawerContentHarness> {
+  static with(
+    options: DrawerContentHarnessFilters = {},
+  ): HarnessPredicate<MatDrawerContentHarness> {
     return new HarnessPredicate(MatDrawerContentHarness, options);
   }
 }

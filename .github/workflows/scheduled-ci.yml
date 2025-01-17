@@ -1,0 +1,85 @@
+name: Scheduled CI
+
+on:
+  schedule:
+    - cron: '0 0/4 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  browsers_snapshot_test:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setting up Angular snapshot builds
+        # Angular snapshots must be set up first so that the yarn install properly
+        # updates the yarn.lock as expected with the changes
+        run: node ./scripts/circleci/setup-angular-snapshots.js main
+      - name: Install node modules
+        run: yarn install
+      - name: Run Browser tests
+        run: yarn bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Browser snapshot test'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  linker_snapshot_tests:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setting up Angular snapshot builds
+        # Angular snapshots must be set up first so that the yarn install properly
+        # updates the yarn.lock as expected with the changes
+        run: node ./scripts/circleci/setup-angular-snapshots.js main
+      - name: Install node modules
+        run: yarn install
+      - name: Run linker tests using AOT
+        run: yarn test-linker-aot
+      - name: Run linker tests using JIT
+        run: yarn test-linker-jit
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Linker snapshot test'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+
+  monitor-docs-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Check Docs Site
+        run: yarn ci-docs-monitor-test
+      - uses: ./.github/actions/slack
+        if: ${{ failure() && github.event_name == 'push' }}
+        with:
+          JOB_NAME: 'Docs site monitoring'
+          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}

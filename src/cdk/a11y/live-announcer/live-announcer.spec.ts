@@ -1,38 +1,36 @@
 import {MutationObserverFactory} from '@angular/cdk/observers';
-import {Component, Input} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {Overlay} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {Component, inject} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {A11yModule, AriaLivePoliteness} from '../index';
+import {A11yModule} from '../index';
 import {LiveAnnouncer} from './live-announcer';
 import {
-  LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
+  LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LiveAnnouncerDefaultOptions,
 } from './live-announcer-tokens';
 
-
 describe('LiveAnnouncer', () => {
   let announcer: LiveAnnouncer;
+  let overlay: Overlay;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
   describe('with default element', () => {
-    beforeEach(() => TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [TestApp],
-    }));
+    beforeEach(() =>
+      TestBed.configureTestingModule({
+        imports: [A11yModule, TestApp, TestModal],
+      }),
+    );
 
-    beforeEach(fakeAsync(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
+    beforeEach(fakeAsync(() => {
+      overlay = TestBed.inject(Overlay);
+      announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
       fixture = TestBed.createComponent(TestApp);
-    })));
-
-    afterEach(() => {
-      // In our tests we always remove the current live element, in
-      // order to avoid having multiple announcer elements in the DOM.
-      announcer.ngOnDestroy();
-    });
+    }));
 
     it('should correctly update the announce text', fakeAsync(() => {
       let buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
@@ -102,7 +100,8 @@ describe('LiveAnnouncer', () => {
       announcer.ngOnDestroy();
 
       expect(document.body.querySelector('.cdk-live-announcer-element'))
-          .toBeFalsy('Expected that the aria-live element was remove from the DOM.');
+        .withContext('Expected that the aria-live element was remove from the DOM.')
+        .toBeFalsy();
     }));
 
     it('should return a promise that resolves after the text has been announced', fakeAsync(() => {
@@ -114,34 +113,37 @@ describe('LiveAnnouncer', () => {
       expect(spy).toHaveBeenCalled();
     }));
 
+    it('should resolve the returned promise if another announcement is made before the timeout has expired', fakeAsync(() => {
+      const spy = jasmine.createSpy('announce spy');
+      announcer.announce('something').then(spy);
+      tick(10);
+      announcer.announce('something').then(spy);
+      tick(100);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    }));
+
     it('should ensure that there is only one live element at a time', fakeAsync(() => {
-      announcer.ngOnDestroy();
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
         imports: [A11yModule],
-        declarations: [TestApp],
       });
 
       const extraElement = document.createElement('div');
       extraElement.classList.add('cdk-live-announcer-element');
       document.body.appendChild(extraElement);
-
-      inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-        announcer = la;
-        ariaLiveElement = getLiveElement();
-        fixture = TestBed.createComponent(TestApp);
-      })();
+      announcer = TestBed.inject(LiveAnnouncer);
+      ariaLiveElement = getLiveElement();
+      fixture = TestBed.createComponent(TestApp);
 
       announcer.announce('Hey Google');
       tick(100);
 
       expect(document.body.querySelectorAll('.cdk-live-announcer-element').length)
-          .toBe(1, 'Expected only one live announcer element in the DOM.');
-
-      if (extraElement.parentNode) {
-        extraElement.parentNode.removeChild(extraElement);
-      }
+        .withContext('Expected only one live announcer element in the DOM.')
+        .toBe(1);
+      extraElement.remove();
     }));
 
     it('should clear any previous timers when a new one is started', fakeAsync(() => {
@@ -168,6 +170,48 @@ describe('LiveAnnouncer', () => {
       // assertions here. `fakeAsync` will fail the test if a timer was left over.
     }));
 
+    it('should add aria-owns to open aria-modal elements', fakeAsync(() => {
+      const portal = new ComponentPortal(TestModal);
+      const overlayRef = overlay.create();
+      const componentRef = overlayRef.attach(portal);
+      const modal = componentRef.location.nativeElement;
+      fixture.detectChanges();
+
+      expect(ariaLiveElement.id).toBeTruthy();
+      expect(modal.hasAttribute('aria-owns')).toBe(false);
+
+      announcer.announce('Hey Google', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(ariaLiveElement.id);
+
+      // Verify that the ID isn't duplicated.
+      announcer.announce('Hey Google again', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(ariaLiveElement.id);
+    }));
+
+    it('should expand aria-owns of open aria-modal elements', fakeAsync(() => {
+      const portal = new ComponentPortal(TestModal);
+      const overlayRef = overlay.create();
+      const componentRef = overlayRef.attach(portal);
+      const modal = componentRef.location.nativeElement;
+      fixture.detectChanges();
+
+      componentRef.instance.ariaOwns = 'foo bar';
+      componentRef.changeDetectorRef.detectChanges();
+
+      expect(ariaLiveElement.id).toBeTruthy();
+      expect(modal.getAttribute('aria-owns')).toBe('foo bar');
+
+      announcer.announce('Hey Google', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(`foo bar ${ariaLiveElement.id}`);
+
+      // Verify that the ID isn't duplicated.
+      announcer.announce('Hey Google again', 'assertive');
+      tick(100);
+      expect(modal.getAttribute('aria-owns')).toBe(`foo bar ${ariaLiveElement.id}`);
+    }));
   });
 
   describe('with a custom element', () => {
@@ -177,16 +221,15 @@ describe('LiveAnnouncer', () => {
       customLiveElement = document.createElement('div');
 
       return TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp],
+        imports: [A11yModule, TestApp],
         providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
 
-    beforeEach(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
+    beforeEach(() => {
+      announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
-    }));
+    });
 
     it('should allow to use a custom live element', fakeAsync(() => {
       announcer.announce('Custom Element');
@@ -201,22 +244,23 @@ describe('LiveAnnouncer', () => {
   describe('with a default options', () => {
     beforeEach(() => {
       return TestBed.configureTestingModule({
-        imports: [A11yModule],
-        declarations: [TestApp],
-        providers: [{
-          provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
-          useValue: {
-            politeness: 'assertive',
-            duration: 1337
-          } as LiveAnnouncerDefaultOptions
-        }],
+        imports: [A11yModule, TestApp],
+        providers: [
+          {
+            provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
+            useValue: {
+              politeness: 'assertive',
+              duration: 1337,
+            } as LiveAnnouncerDefaultOptions,
+          },
+        ],
       });
     });
 
-    beforeEach(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-      announcer = la;
+    beforeEach(() => {
+      announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
-    }));
+    });
 
     it('should pick up the default politeness from the injection token', fakeAsync(() => {
       announcer.announce('Hello');
@@ -235,9 +279,7 @@ describe('LiveAnnouncer', () => {
       tick(1337);
       expect(ariaLiveElement.textContent).toBeFalsy();
     }));
-
   });
-
 });
 
 describe('CdkAriaLive', () => {
@@ -246,62 +288,59 @@ describe('CdkAriaLive', () => {
   let announcerSpy: jasmine.Spy;
   let fixture: ComponentFixture<DivWithCdkAriaLive>;
 
-  const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb());
+  const invokeMutationCallbacks = () => mutationCallbacks.forEach(cb => cb([{type: 'fake'}]));
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [DivWithCdkAriaLive],
-      providers: [{
-        provide: MutationObserverFactory,
-        useValue: {
-          create: (callback: Function) => {
-            mutationCallbacks.push(callback);
-
-            return {
-              observe: () => {},
-              disconnect: () => {}
-            };
-          }
-        }
-      }]
+      imports: [A11yModule, DivWithCdkAriaLive],
+      providers: [
+        {
+          provide: MutationObserverFactory,
+          useValue: {
+            create: (callback: Function) => {
+              mutationCallbacks.push(callback);
+              return {
+                observe: () => {},
+                disconnect: () => {},
+              };
+            },
+          },
+        },
+      ],
     });
   }));
 
-  beforeEach(fakeAsync(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
-    announcer = la;
-    announcerSpy = spyOn(la, 'announce').and.callThrough();
+  beforeEach(fakeAsync(() => {
+    announcer = TestBed.inject(LiveAnnouncer);
+    announcerSpy = spyOn(announcer, 'announce').and.callThrough();
     fixture = TestBed.createComponent(DivWithCdkAriaLive);
     fixture.detectChanges();
     flush();
-  })));
-
-  afterEach(fakeAsync(() => {
-    // In our tests we always remove the current live element, in
-    // order to avoid having multiple announcer elements in the DOM.
-    announcer.ngOnDestroy();
   }));
 
   it('should default politeness to polite', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite');
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', undefined);
   }));
 
   it('should dynamically update the politeness', fakeAsync(() => {
     fixture.componentInstance.content = 'New content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite');
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', undefined);
 
     announcerSpy.calls.reset();
     fixture.componentInstance.politeness = 'off';
     fixture.componentInstance.content = 'Newer content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -311,15 +350,17 @@ describe('CdkAriaLive', () => {
     announcerSpy.calls.reset();
     fixture.componentInstance.politeness = 'assertive';
     fixture.componentInstance.content = 'Newest content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
 
-    expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive');
+    expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive', undefined);
   }));
 
   it('should not announce the same text multiple times', fakeAsync(() => {
     fixture.componentInstance.content = 'Content';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     invokeMutationCallbacks();
     flush();
@@ -333,24 +374,52 @@ describe('CdkAriaLive', () => {
     expect(announcer.announce).toHaveBeenCalledTimes(1);
   }));
 
-});
+  it('should be able to pass in a duration', fakeAsync(() => {
+    fixture.componentInstance.content = 'New content';
+    fixture.componentInstance.duration = 1337;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
 
+    expect(announcer.announce).toHaveBeenCalledWith('New content', 'polite', 1337);
+  }));
+});
 
 function getLiveElement(): Element {
   return document.body.querySelector('.cdk-live-announcer-element')!;
 }
 
-@Component({template: `<button (click)="announceText('Test')">Announce</button>`})
+@Component({
+  template: `<button (click)="announceText('Test')">Announce</button>`,
+  imports: [A11yModule],
+})
 class TestApp {
-  constructor(public live: LiveAnnouncer) { }
+  live = inject(LiveAnnouncer);
 
   announceText(message: string) {
     this.live.announce(message);
   }
 }
 
-@Component({template: `<div [cdkAriaLive]="politeness ? politeness : null">{{content}}</div>`})
+@Component({
+  template: '',
+  host: {'[attr.aria-owns]': 'ariaOwns', 'aria-modal': 'true'},
+  imports: [A11yModule],
+})
+class TestModal {
+  ariaOwns: string | null = null;
+}
+
+@Component({
+  template: `
+    <div
+      [cdkAriaLive]="politeness ? politeness : null"
+      [cdkAriaLiveDuration]="duration">{{content}}</div>`,
+  imports: [A11yModule],
+})
 class DivWithCdkAriaLive {
-  @Input() politeness: AriaLivePoliteness;
-  @Input() content = 'Initial content';
+  politeness = 'polite';
+  content = 'Initial content';
+  duration: number;
 }

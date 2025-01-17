@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop horizontal sorting
@@ -7,7 +7,8 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'cdk-drag-drop-horizontal-sorting-example',
   templateUrl: 'cdk-drag-drop-horizontal-sorting-example.html',
-  styleUrls: ['cdk-drag-drop-horizontal-sorting-example.css'],
+  styleUrl: 'cdk-drag-drop-horizontal-sorting-example.css',
+  imports: [CdkDropList, CdkDrag],
 })
 export class CdkDragDropHorizontalSortingExample {
   timePeriods = [
@@ -15,7 +16,7 @@ export class CdkDragDropHorizontalSortingExample {
     'Iron age',
     'Middle ages',
     'Early modern period',
-    'Long nineteenth century'
+    'Long nineteenth century',
   ];
 
   drop(event: CdkDragDrop<string[]>) {

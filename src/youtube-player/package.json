@@ -15,9 +15,9 @@
   "bugs": {
     "url": "https://github.com/angular/components/issues"
   },
-  "homepage": "https://github.com/angular/components/tree/master/src/youtube-player#readme",
+  "homepage": "https://github.com/angular/components/tree/main/src/youtube-player#readme",
   "dependencies": {
-    "@types/youtube": "^0.0.42",
+    "@types/youtube": "^0.1.0",
     "tslib": "0.0.0-TSLIB"
   },
   "peerDependencies": {
@@ -26,8 +26,6 @@
     "rxjs": "0.0.0-RXJS"
   },
   "sideEffects": false,
-  "publishConfig":{
-    "registry":"https://wombat-dressing-room.appspot.com"
-  },
+  "schematics": "./schematics/collection.json",
   "ng-update": {}
 }

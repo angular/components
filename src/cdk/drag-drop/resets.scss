@@ -1,0 +1,19 @@
+@layer cdk-resets {
+  .cdk-drag-preview {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+
+    // Chrome sets a user agent style of `inset: 0` which combined
+    // with `align-self` can break the positioning (see #29809).
+    inset: auto;
+  }
+}
+
+// These elements get `pointer-events: none` when they're created, but any descendants might
+// override it back to `auto`. Reset them here since they can affect the pointer position detection.
+.cdk-drag-placeholder *,
+.cdk-drag-preview * {
+  pointer-events: none !important;
+}

@@ -3,12 +3,16 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 export * from './aria-describer/aria-describer';
+export * from './aria-describer/aria-reference';
 export * from './key-manager/activedescendant-key-manager';
 export * from './key-manager/focus-key-manager';
 export * from './key-manager/list-key-manager';
+export * from './key-manager/noop-tree-key-manager';
+export * from './key-manager/tree-key-manager';
+export * from './key-manager/tree-key-manager-strategy';
 export * from './focus-trap/configurable-focus-trap';
 export * from './focus-trap/configurable-focus-trap-config';
 export * from './focus-trap/configurable-focus-trap-factory';
@@ -32,3 +36,4 @@ export {
   HighContrastModeDetector,
   HighContrastMode,
 } from './high-contrast-mode/high-contrast-mode-detector';
+export {_IdGenerator} from './id-generator';

@@ -1,4 +1,7 @@
 import {Component} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 /**
  * @title Basic toolbar
@@ -6,6 +9,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'toolbar-basic-example',
   templateUrl: 'toolbar-basic-example.html',
-  styleUrls: ['toolbar-basic-example.css'],
+  styleUrl: 'toolbar-basic-example.css',
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule],
 })
 export class ToolbarBasicExample {}

@@ -3,15 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgZone} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
-import {OverlayReference} from '../overlay-reference';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {isElementScrolledOutsideView} from '../position/scroll-clip';
+import type {OverlayRef} from '../overlay-ref';
 
 /**
  * Config options for the RepositionScrollStrategy.
@@ -28,17 +28,18 @@ export interface RepositionScrollStrategyConfig {
  * Strategy that will update the element position as the user is scrolling.
  */
 export class RepositionScrollStrategy implements ScrollStrategy {
-  private _scrollSubscription: Subscription|null = null;
-  private _overlayRef: OverlayReference;
+  private _scrollSubscription: Subscription | null = null;
+  private _overlayRef: OverlayRef;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,
     private _viewportRuler: ViewportRuler,
     private _ngZone: NgZone,
-    private _config?: RepositionScrollStrategyConfig) { }
+    private _config?: RepositionScrollStrategyConfig,
+  ) {}
 
   /** Attaches this scroll strategy to an overlay. */
-  attach(overlayRef: OverlayReference) {
+  attach(overlayRef: OverlayRef) {
     if (this._overlayRef && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMatScrollStrategyAlreadyAttachedError();
     }

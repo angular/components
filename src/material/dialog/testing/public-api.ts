@@ -3,8 +3,9 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './dialog-harness';
-export * from './dialog-harness-filters';
+export {DialogHarnessFilters} from './dialog-harness-filters';
+export {MatDialogHarness, MatDialogSection} from './dialog-harness';
+export * from './dialog-opener';

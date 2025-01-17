@@ -3,14 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
-import {OverlayReference} from '../overlay-reference';
-import {Platform} from '@angular/cdk/platform';
+import {Injectable, NgZone, inject} from '@angular/core';
+import {Platform, _getEventTarget} from '@angular/cdk/platform';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
+import type {OverlayRef} from '../overlay-ref';
 
 /**
  * Service for dispatching mouse click events that land on the body to appropriate overlay ref,
@@ -19,15 +18,15 @@ import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
+  private _platform = inject(Platform);
+  private _ngZone = inject(NgZone, {optional: true});
+
   private _cursorOriginalValue: string;
   private _cursorStyleIsSet = false;
-
-  constructor(@Inject(DOCUMENT) document: any, private _platform: Platform) {
-    super(document);
-  }
+  private _pointerDownEventTarget: HTMLElement | null;
 
   /** Add a new overlay to the list of attached overlay refs. */
-  override add(overlayRef: OverlayReference): void {
+  override add(overlayRef: OverlayRef): void {
     super.add(overlayRef);
 
     // Safari on iOS does not generate click events for non-interactive
@@ -38,9 +37,13 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     // https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html
     if (!this._isAttached) {
       const body = this._document.body;
-      body.addEventListener('click', this._clickListener, true);
-      body.addEventListener('auxclick', this._clickListener, true);
-      body.addEventListener('contextmenu', this._clickListener, true);
+
+      /** @breaking-change 14.0.0 _ngZone will be required. */
+      if (this._ngZone) {
+        this._ngZone.runOutsideAngular(() => this._addEventListeners(body));
+      } else {
+        this._addEventListeners(body);
+      }
 
       // click event is not fired on iOS. To make element "clickable" we are
       // setting the cursor to pointer
@@ -58,6 +61,7 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
   protected detach() {
     if (this._isAttached) {
       const body = this._document.body;
+      body.removeEventListener('pointerdown', this._pointerDownListener, true);
       body.removeEventListener('click', this._clickListener, true);
       body.removeEventListener('auxclick', this._clickListener, true);
       body.removeEventListener('contextmenu', this._clickListener, true);
@@ -69,10 +73,35 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     }
   }
 
+  private _addEventListeners(body: HTMLElement): void {
+    body.addEventListener('pointerdown', this._pointerDownListener, true);
+    body.addEventListener('click', this._clickListener, true);
+    body.addEventListener('auxclick', this._clickListener, true);
+    body.addEventListener('contextmenu', this._clickListener, true);
+  }
+
+  /** Store pointerdown event target to track origin of click. */
+  private _pointerDownListener = (event: PointerEvent) => {
+    this._pointerDownEventTarget = _getEventTarget<HTMLElement>(event);
+  };
+
   /** Click event listener that will be attached to the body propagate phase. */
   private _clickListener = (event: MouseEvent) => {
-    // Get the target through the `composedPath` if possible to account for shadow DOM.
-    const target = event.composedPath ? event.composedPath()[0] : event.target;
+    const target = _getEventTarget<HTMLElement>(event);
+    // In case of a click event, we want to check the origin of the click
+    // (e.g. in case where a user starts a click inside the overlay and
+    // releases the click outside of it).
+    // This is done by using the event target of the preceding pointerdown event.
+    // Every click event caused by a pointer device has a preceding pointerdown
+    // event, unless the click was programmatically triggered (e.g. in a unit test).
+    const origin =
+      event.type === 'click' && this._pointerDownEventTarget
+        ? this._pointerDownEventTarget
+        : target;
+    // Reset the stored pointerdown event target, to avoid having it interfere
+    // in subsequent events.
+    this._pointerDownEventTarget = null;
+
     // We copy the array because the original may be modified asynchronously if the
     // outsidePointerEvents listener decides to detach overlays resulting in index errors inside
     // the for loop.
@@ -89,12 +118,39 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
       }
 
       // If it's a click inside the overlay, just break - we should do nothing
-      // If it's an outside click dispatch the mouse event, and proceed with the next overlay
-      if (overlayRef.overlayElement.contains(target as Node)) {
+      // If it's an outside click (both origin and target of the click) dispatch the mouse event,
+      // and proceed with the next overlay
+      if (
+        containsPierceShadowDom(overlayRef.overlayElement, target) ||
+        containsPierceShadowDom(overlayRef.overlayElement, origin)
+      ) {
         break;
       }
 
-      overlayRef._outsidePointerEvents.next(event);
+      const outsidePointerEvents = overlayRef._outsidePointerEvents;
+      /** @breaking-change 14.0.0 _ngZone will be required. */
+      if (this._ngZone) {
+        this._ngZone.run(() => outsidePointerEvents.next(event));
+      } else {
+        outsidePointerEvents.next(event);
+      }
     }
+  };
+}
+
+/** Version of `Element.contains` that transcends shadow DOM boundaries. */
+function containsPierceShadowDom(parent: HTMLElement, child: HTMLElement | null): boolean {
+  const supportsShadowRoot = typeof ShadowRoot !== 'undefined' && ShadowRoot;
+  let current: Node | null = child;
+
+  while (current) {
+    if (current === parent) {
+      return true;
+    }
+
+    current =
+      supportsShadowRoot && current instanceof ShadowRoot ? current.host : current.parentNode;
   }
+
+  return false;
 }

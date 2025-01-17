@@ -1,11 +1,18 @@
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Input & change events</mat-label>
-  <input matInput [matDatepicker]="picker"
-         (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)">
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <input
+    matInput
+    [matDatepicker]="picker"
+    (dateInput)="addEvent('input', $event)"
+    (dateChange)="addEvent('change', $event)"
+  />
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>
 
 <div class="example-events">
-  <div *ngFor="let e of events">{{e}}</div>
+  @for (e of events(); track e) {
+    <div>{{e}}</div>
+  }
 </div>

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
@@ -29,7 +29,7 @@ export class MatSortHarness extends ComponentHarness {
   }
 
   /** Gets the selected header in the `mat-sort`. */
-  async getActiveHeader(): Promise<MatSortHeaderHarness|null> {
+  async getActiveHeader(): Promise<MatSortHeaderHarness | null> {
     const headers = await this.getSortHeaders();
     for (let i = 0; i < headers.length; i++) {
       if (await headers[i].isActive()) {

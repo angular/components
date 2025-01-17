@@ -7,10 +7,12 @@ The `MapRectangle` component wraps the [`google.maps.Rectangle` class](https://d
 ```typescript
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapRectangle} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  imports: [GoogleMap, MapRectangle],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -27,10 +29,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-rectangle [bounds]="bounds"></map-rectangle>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-rectangle [bounds]="bounds" />
 </google-map>
 ```

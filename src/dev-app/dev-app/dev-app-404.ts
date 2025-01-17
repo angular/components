@@ -3,10 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {RouterModule} from '@angular/router';
 
 @Component({
   template: `
@@ -15,6 +17,7 @@ import {Component} from '@angular/core';
     <a mat-raised-button routerLink="/">Go back to the home page</a>
   `,
   host: {'class': 'mat-typography'},
+  imports: [MatButtonModule, RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DevApp404 {
-}
+export class DevApp404 {}

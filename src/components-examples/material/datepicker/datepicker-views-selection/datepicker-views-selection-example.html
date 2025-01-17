@@ -1,11 +1,11 @@
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Month and Year</mat-label>
   <input matInput [matDatepicker]="dp" [formControl]="date">
-  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+  <mat-hint>MM/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
   <mat-datepicker #dp
                   startView="multi-year"
-                  (yearSelected)="chosenYearHandler($event)"
-                  (monthSelected)="chosenMonthHandler($event, dp)"
+                  (monthSelected)="setMonthAndYear($event, dp)"
                   panelClass="example-month-picker">
   </mat-datepicker>
 </mat-form-field>

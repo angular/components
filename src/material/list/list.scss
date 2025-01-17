@@ -1,359 +1,191 @@
-@use '../core/style/list-common';
 @use '../core/style/layout-common';
-@use '../divider/divider-offset';
-@use '../../cdk/a11y';
+@use '../core/tokens/m2/mat/list' as tokens-mat-list;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
+@use '../core/tokens/token-utils';
+@use './list-item-hcm-indicator';
+@use './list-inherited-structure';
 
+@include list-inherited-structure.private-list-inherited-structural-styles;
 
-$side-padding: 16px;
-$icon-padding: 4px;
-$avatar-size: 40px;
+// Add additional slots for the MDC list tokens, needed in Angular Material.
+@include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
+  // MDC allows focus and hover colors to take precedence over disabled color. We add the disabled
+  // color here with higher specificity so that the disabled color takes precedence.
+  // TODO(mmalerba): Dicuss with MDC whether to change this in their code.
+  .mdc-list-item.mdc-list-item--disabled .mdc-list-item__primary-text {
+    @include token-utils.create-token-slot(color, list-item-disabled-label-text-color);
+  }
 
-// Normal list variables
-$top-padding: 8px;
-// height for single-line lists
-$base-height: 48px;
-// height for single-line lists with avatars
-$avatar-height: 56px;
-// spec requires two- and three-line lists be taller
-$two-line-height: 72px;
-$three-line-height: 88px;
-$multi-line-padding: 16px;
-$icon-size: 24px;
+  // We don't use MDC's state layer since it's tied in with their ripple. Instead we emit slots
+  // for our own state layer.
+  // TODO(mmalerba): Consider using MDC's ripple & state layer.
+  .mdc-list-item:hover::before {
+    @include token-utils.create-token-slot(background-color, list-item-hover-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-hover-state-layer-opacity);
+  }
+  .mdc-list-item.mdc-list-item--disabled::before {
+    @include token-utils.create-token-slot(background-color, list-item-disabled-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-disabled-state-layer-opacity);
+  }
+  .mdc-list-item:focus::before {
+    @include token-utils.create-token-slot(background-color, list-item-focus-state-layer-color);
+    @include token-utils.create-token-slot(opacity, list-item-focus-state-layer-opacity);
+  }
 
-// Dense list variables
-$dense-top-padding: 4px;
-$dense-base-height: 40px;
-$dense-avatar-height: 48px;
-$dense-two-line-height: 60px;
-$dense-three-line-height: 76px;
-$dense-multi-line-padding: 16px;
-$dense-list-icon-size: 20px;
-$dense-avatar-size: 36px;
+  // Apply the disabled opacity to the checkbox/radio indicators.
+  // TODO(mmalerba): We should probably stop doing this and allow the checkbox/radio to decide
+  //  what their disabled state looks like. This is done for now to avoid screenshot diffs.
+  .mdc-list-item--disabled {
+    .mdc-radio,
+    .mdc-checkbox {
+      @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
+    }
+  }
 
-$item-inset-divider-offset: 72px;
+  // In Angular Material we put the avatar class directly on the .mdc-list-item__start element,
+  // rather than nested inside it, so we need to emit avatar slots ourselves.
+  // TODO(mmalerba): We should try to change MDC's recommended DOM or change ours to match their
+  //  recommendation.
+  .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
+    @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
+    @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
+  }
 
-// This mixin provides all list-item styles, changing font size and height
-// based on whether the list is in dense mode.
-@mixin item-base($base-height, $height-with-avatar, $two-line-height,
-  $three-line-height, $multi-line-padding, $icon-size, $avatar-size) {
+  // Set font-size of leading icon to same value as its width and height. Ensure icon scales to
+  // "list-item-leading-icon-size" token. In Angular Material, the icon is on the same element as
+  // ".mdc-list-item__start", rather than a child of ".mdc-list-item__start".
+  .mat-mdc-list-item-icon {
+    @include token-utils.create-token-slot(font-size, list-item-leading-icon-size);
+  }
+}
 
-  // Prevents the wrapper `mat-list-item-content` from collapsing due to it
-  // being `inline` by default.
+a.mdc-list-item--activated {
+  // Improve accessibility for Window High Contrast Mode (HCM) by adding an idicator on active
+  // links.
+  @include list-item-hcm-indicator.private-high-contrast-list-item-indicator();
+}
+
+// MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
+// explicitly set `display: block`
+.mat-mdc-list-base {
   display: block;
-  height: $base-height;
+
+  // MDC sets `pointer-events: none` on these elements,
+  // even though we allowed interactive content in them.
+  .mdc-list-item__start,
+  .mdc-list-item__end,
+  .mdc-list-item__content {
+    pointer-events: auto;
+  }
+}
+
+.mat-mdc-list-item,
+.mat-mdc-list-option {
+  // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
+  // cases, we need to make sure it expands to fill the available width.
+  width: 100%;
+  box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 
-  // Override the user agent styling if the list item is a button.
-  width: 100%;
-  padding: 0;
-
-  .mat-list-item-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 0 $side-padding;
-    position: relative;
-    height: inherit;
+  &:not(.mat-mdc-list-item-interactive) {
+    cursor: default;
   }
 
-  .mat-list-item-content-reverse {
-    display: flex;
-    align-items: center;
-    padding: 0 $side-padding;
-    flex-direction: row-reverse;
-    justify-content: space-around;
+  // MDC doesn't have list dividers, so we use mat-divider and style appropriately.
+  // TODO(devversion): check if we can use the MDC dividers.
+  .mat-divider-inset {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
-  .mat-list-item-ripple {
-    @include layout-common.fill;
+  .mat-mdc-list-item-avatar ~ .mat-divider-inset {
+    margin-left: 72px;
 
-    // Disable pointer events for the ripple container because the container will overlay the
-    // user content and we don't want to disable mouse events on the user content.
-    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    [dir='rtl'] & {
+      margin-right: 72px;
+    }
+  }
+}
+
+// MDC's hover and focus state styles are included with their ripple which we don't use.
+// Instead we add the focus, hover and selected styles ourselves using this pseudo-element
+.mat-mdc-list-item-interactive::before {
+  @include layout-common.fill();
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+
+  // This comes up in some internal implementations.
+  border-radius: inherit;
+}
+
+// The MDC-based list items already use the `::before` pseudo element for the standard
+// focus/selected/hover state. Hence, we need to have a separate list-item spanning
+// element that can be used for strong focus indicators.
+.mat-mdc-list-item {
+  > .mat-focus-indicator {
+    @include layout-common.fill();
     pointer-events: none;
   }
 
-  &.mat-list-item-with-avatar {
-    height: $height-with-avatar;
-  }
-
-  &.mat-2-line {
-    height: $two-line-height;
-  }
-
-
-  &.mat-3-line {
-    height: $three-line-height;
-  }
-
-  // list items with more than 3 lines should expand to match
-  // the height of its contained text
-  &.mat-multi-line {
-    height: auto;
-
-    .mat-list-item-content {
-      padding-top: $multi-line-padding;
-      padding-bottom: $multi-line-padding;
-    }
-  }
-
-  .mat-list-text {
-    @include list-common.wrapper-base();
-
-    // By default, there will be no padding for the list item text because the padding is already
-    // set on the `mat-list-item-content` element. Later, if the list-item detects that there are
-    // secondary items (avatar, checkbox), a padding on the proper side will be added.
-    padding: 0;
-  }
-
-  &.mat-list-item-with-avatar,
-  &.mat-list-option {
-    .mat-list-item-content .mat-list-text {
-      padding-right: 0;
-      padding-left: $side-padding;
-
-      [dir='rtl'] & {
-        padding-right: $side-padding;
-        padding-left: 0;
-      }
-    }
-
-    // Reversed content is mainly used by the MatSelectionList for displaying the checkbox at the
-    // end of the list option. Since there is a secondary item (checkbox) at the end of the
-    // option, there needs to be a padding for the mat-list-text on the end-side.
-    .mat-list-item-content-reverse .mat-list-text {
-      padding-left: 0;
-      padding-right: $side-padding;
-
-      [dir='rtl'] & {
-        padding-right: 0;
-        padding-left: $side-padding;
-      }
-    }
-   }
-
-  &.mat-list-item-with-avatar.mat-list-option {
-    .mat-list-item-content-reverse .mat-list-text,
-    .mat-list-item-content .mat-list-text {
-      padding-right: $side-padding;
-      padding-left: $side-padding;
-    }
-  }
-
-  .mat-list-avatar {
-    flex-shrink: 0;
-    width: $avatar-size;
-    height: $avatar-size;
-    border-radius: 50%;
-
-    // Not supported in IE11, but we're using this as a
-    // progressive enhancement to get better image scaling.
-    object-fit: cover;
-
-    ~ .mat-divider-inset {
-      @include divider-offset.inset-divider-offset($avatar-size, $side-padding);
-    }
-  }
-
-  .mat-list-icon {
-    flex-shrink: 0;
-    width: $icon-size;
-    height: $icon-size;
-    font-size: $icon-size;
-    box-sizing: content-box;
-    border-radius: 50%;
-    padding: $icon-padding;
-
-    ~ .mat-divider-inset {
-      @include divider-offset.inset-divider-offset($icon-size + (2 * $icon-padding),
-              $side-padding);
-    }
-  }
-
-  .mat-divider {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-
-    [dir='rtl'] & {
-      margin-left: auto;
-      margin-right: 0;
-    }
-
-    &.mat-divider-inset {
-      position: absolute; // necessary to override card styles
-    }
-  }
-}
-
-.mat-subheader {
-  display: flex;
-  box-sizing: border-box;
-  padding: $side-padding;
-  align-items: center;
-
-  // This needs slightly more specificity, because it
-  // can be overwritten by the typography styles.
-  .mat-list-base & {
-    margin: 0;
-  }
-}
-
-// This mixin adjusts the heights and padding based on whether the list is in dense mode.
-@mixin subheader-spacing($top-padding, $base-height) {
-  height: $base-height;
-  line-height: $base-height - $side-padding * 2;
-
-  &:first-child {
-    margin-top: -$top-padding;
-  }
-}
-
-.mat-list-base {
-  padding-top: $top-padding;
-  display: block;
-  -webkit-tap-highlight-color: transparent;
-
-  .mat-subheader {
-    @include subheader-spacing($top-padding, $base-height);
-  }
-
-  .mat-list-item, .mat-list-option {
-    @include item-base(
-      $base-height,
-      $avatar-height,
-      $two-line-height,
-      $three-line-height,
-      $multi-line-padding,
-      $icon-size,
-      $avatar-size
-    );
-  }
-}
-
-
-.mat-list-base[dense] {
-  padding-top: $dense-top-padding;
-  display: block;
-
-  .mat-subheader {
-    @include subheader-spacing($dense-top-padding, $dense-base-height);
-  }
-
-  .mat-list-item, .mat-list-option {
-    @include item-base(
-      $dense-base-height,
-      $dense-avatar-height,
-      $dense-two-line-height,
-      $dense-three-line-height,
-      $dense-multi-line-padding,
-      $dense-list-icon-size,
-      $dense-avatar-size
-    );
-  }
-}
-
-.mat-nav-list {
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .mat-list-item {
-    cursor: pointer;
-    outline: none;
-  }
-}
-
-mat-action-list {
-  // Remove the native button look and make it look like a list item
-  button {
-    background: none;
-    color: inherit;
-    border: none;
-    font: inherit;
-    outline: inherit;
-    -webkit-tap-highlight-color: transparent;
-    text-align: left;
-
-    [dir='rtl'] & {
-      text-align: right;
-    }
-
-    &::-moz-focus-inner {
-      border: 0;
-    }
-  }
-
-  .mat-list-item {
-    cursor: pointer;
-    outline: inherit;
-  }
-}
-
-.mat-list-option:not(.mat-list-item-disabled) {
-  cursor: pointer;
-  outline: none;
-}
-
-.mat-list-item-disabled {
-  pointer-events: none;
-
-  // Since we can't use a color to indicate that the list
-  // item is disabled, we have to use opacity instead.
-  @include a11y.high-contrast {
-    opacity: 0.5;
-  }
-}
-
-@include a11y.high-contrast(active, off) {
-  .mat-selection-list:focus {
-    outline-style: dotted;
-  }
-
-  .mat-list-option,
-  .mat-nav-list .mat-list-item,
-  mat-action-list .mat-list-item {
-    &:hover, &:focus {
-      outline: dotted 1px;
-    }
-  }
-
-  // In single selection mode, the selected option is indicated by changing its
-  // background color, but that doesn't work in high contrast mode. We add an
-  // alternate indication by rendering out a circle.
-  .mat-list-single-selected-option::after {
-    $size: 10px;
+  // For list items, render the focus indicator when the parent
+  // listem item is focused.
+  &:focus > .mat-focus-indicator::before {
     content: '';
-    position: absolute;
-    top: 50%;
-    right: $side-padding;
-    transform: translateY(-50%);
-    width: $size;
-    height: 0;
-    border-bottom: solid $size;
-    border-radius: $size;
-  }
-
-  [dir='rtl'] .mat-list-single-selected-option::after {
-    right: auto;
-    left: $side-padding;
   }
 }
 
+.mat-mdc-list-item.mdc-list-item--with-three-lines {
+  .mat-mdc-list-item-line.mdc-list-item__secondary-text {
+    white-space: nowrap;
+    line-height: normal;
+  }
 
-// Disable the hover styles on non-hover devices. Since this is more of a progressive
-// enhancement and not all desktop browsers support this kind of media query, we can't
-// use something like `@media (hover)`.
-@media (hover: none) {
-  .mat-list-option:not(.mat-list-single-selected-option),
-  .mat-nav-list .mat-list-item,
-  .mat-action-list .mat-list-item {
-    &:not(.mat-list-item-disabled):hover {
-      background: none;
+  // Unscoped content can wrap if the list item has acquired three lines. MDC implements
+  // this functionality for secondary text but there is no proper text ellipsis when
+  // text overflows the third line. These styles ensure the overflow is handled properly.
+  // TODO: Move this to the MDC list once it drops IE11 support.
+  .mat-mdc-list-item-unscoped-content.mdc-list-item__secondary-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+// MDC doesn't account for button being used as a list item. We override some of
+// the default button styles here so that they look right when used as a list
+// item.
+mat-action-list button {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
+  -webkit-tap-highlight-color: transparent;
+  text-align: start;
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+}
+
+@include token-utils.use-tokens(tokens-mat-list.$prefix, tokens-mat-list.get-token-slots()) {
+  .mdc-list-item--with-leading-icon .mdc-list-item__start {
+    @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
+    @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);
+  }
+
+  .mat-mdc-nav-list .mat-mdc-list-item {
+    @include token-utils.create-token-slot(border-radius, active-indicator-shape);
+    @include token-utils.create-token-slot(
+      --mat-focus-indicator-border-radius,
+      active-indicator-shape
+    );
+
+    &.mdc-list-item--activated {
+      @include token-utils.create-token-slot(background-color, active-indicator-color);
     }
   }
 }

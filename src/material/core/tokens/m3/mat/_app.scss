@@ -1,0 +1,31 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../../style/elevation';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, app);
+
+/// Generates custom tokens for the app.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the app
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $shadow-color: map.get($systems, md-sys-color, shadow);
+  $tokens: (
+    background-color: map.get($systems, md-sys-color, background),
+    text-color: map.get($systems, md-sys-color, on-background),
+  );
+
+  // If the shadow-color is an actual color, convert it to a box-shadow value. Otherwise
+  // use the token value as itself (e,g. as a CSS var name).
+  @if (meta.type-of($shadow-color) == color) {
+    @for $zValue from 0 through 24 {
+      $shadow: elevation.get-box-shadow($zValue, $shadow-color);
+      $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
+    }
+  }
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

@@ -3,22 +3,20 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ContentChild,
   Directive,
   ElementRef,
   Input,
   TemplateRef,
-  Inject,
-  Optional,
+  booleanAttribute,
+  inject,
 } from '@angular/core';
-import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
+import {CanStick} from './can-stick';
 import {CDK_TABLE} from './tokens';
-
 
 /** Base interface for a cell definition. Captures a column's cell template definition. */
 export interface CellDef {
@@ -29,34 +27,46 @@ export interface CellDef {
  * Cell definition for a CDK table.
  * Captures the template of a column's data row cell as well as cell-specific properties.
  */
-@Directive({selector: '[cdkCellDef]'})
+@Directive({
+  selector: '[cdkCellDef]',
+})
 export class CdkCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
  * Header cell definition for a CDK table.
  * Captures the template of a column's header cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkHeaderCellDef]'})
+@Directive({
+  selector: '[cdkHeaderCellDef]',
+})
 export class CdkHeaderCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
  * Footer cell definition for a CDK table.
  * Captures the template of a column's footer cell and as well as cell-specific properties.
  */
-@Directive({selector: '[cdkFooterCellDef]'})
+@Directive({
+  selector: '[cdkFooterCellDef]',
+})
 export class CdkFooterCellDef implements CellDef {
-  constructor(/** @docs-private */ public template: TemplateRef<any>) {}
-}
+  /** @docs-private */
+  template = inject<TemplateRef<any>>(TemplateRef);
 
-// Boilerplate for applying mixins to CdkColumnDef.
-/** @docs-private */
-class CdkColumnDefBase {}
-const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
-    mixinHasStickyInput(CdkColumnDefBase);
+  constructor(...args: unknown[]);
+  constructor() {}
+}
 
 /**
  * Column definition for the CDK table.
@@ -64,29 +74,50 @@ const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
  */
 @Directive({
   selector: '[cdkColumnDef]',
-  inputs: ['sticky'],
   providers: [{provide: 'MAT_SORT_HEADER_COLUMN_DEF', useExisting: CdkColumnDef}],
 })
-export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
+export class CdkColumnDef implements CanStick {
+  _table? = inject(CDK_TABLE, {optional: true});
+
+  private _hasStickyChanged = false;
+
   /** Unique name for this column. */
   @Input('cdkColumnDef')
-  get name(): string { return this._name; }
-  set name(name: string) { this._setNameInput(name); }
+  get name(): string {
+    return this._name;
+  }
+  set name(name: string) {
+    this._setNameInput(name);
+  }
   protected _name: string;
+
+  /** Whether the cell is sticky. */
+  @Input({transform: booleanAttribute})
+  get sticky(): boolean {
+    return this._sticky;
+  }
+  set sticky(value: boolean) {
+    if (value !== this._sticky) {
+      this._sticky = value;
+      this._hasStickyChanged = true;
+    }
+  }
+  private _sticky = false;
 
   /**
    * Whether this column should be sticky positioned on the end of the row. Should make sure
    * that it mimics the `CanStick` mixin such that `_hasStickyChanged` is set to true if the value
    * has been changed.
    */
-  @Input('stickyEnd')
+  @Input({transform: booleanAttribute})
   get stickyEnd(): boolean {
     return this._stickyEnd;
   }
-  set stickyEnd(v: boolean) {
-    const prevValue = this._stickyEnd;
-    this._stickyEnd = coerceBooleanProperty(v);
-    this._hasStickyChanged = prevValue !== this._stickyEnd;
+  set stickyEnd(value: boolean) {
+    if (value !== this._stickyEnd) {
+      this._stickyEnd = value;
+      this._hasStickyChanged = true;
+    }
   }
   _stickyEnd: boolean = false;
 
@@ -112,8 +143,19 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
    */
   _columnCssClassName: string[];
 
-  constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {
-    super();
+  constructor(...args: unknown[]);
+  constructor() {}
+
+  /** Whether the sticky state has changed. */
+  hasStickyChanged(): boolean {
+    const hasStickyChanged = this._hasStickyChanged;
+    this.resetStickyChanged();
+    return hasStickyChanged;
+  }
+
+  /** Resets the sticky changed state. */
+  resetStickyChanged(): void {
+    this._hasStickyChanged = false;
   }
 
   /**
@@ -138,24 +180,16 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     // trigger with an empty string and should not overwrite the programmatically set value.
     if (value) {
       this._name = value;
-      this.cssClassFriendlyName = value.replace(/[^a-z0-9_-]/ig, '-');
+      this.cssClassFriendlyName = value.replace(/[^a-z0-9_-]/gi, '-');
       this._updateColumnCssClassName();
     }
   }
-
-  static ngAcceptInputType_sticky: BooleanInput;
-  static ngAcceptInputType_stickyEnd: BooleanInput;
 }
 
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */
 export class BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    // If IE 11 is dropped before we switch to setting a single class name, change to multi param
-    // with destructuring.
-    const classList = elementRef.nativeElement.classList;
-    for (const className of columnDef._columnCssClassName) {
-      classList.add(className);
-    }
+    elementRef.nativeElement.classList.add(...columnDef._columnCssClassName);
   }
 }
 
@@ -168,8 +202,10 @@ export class BaseCdkCell {
   },
 })
 export class CdkHeaderCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    super(columnDef, elementRef);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super(inject(CdkColumnDef), inject(ElementRef));
   }
 }
 
@@ -178,12 +214,21 @@ export class CdkHeaderCell extends BaseCdkCell {
   selector: 'cdk-footer-cell, td[cdk-footer-cell]',
   host: {
     'class': 'cdk-footer-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkFooterCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const columnDef = inject(CdkColumnDef);
+    const elementRef = inject(ElementRef);
+
     super(columnDef, elementRef);
+
+    const role = columnDef._table?._getCellRole();
+    if (role) {
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }
 
@@ -192,11 +237,20 @@ export class CdkFooterCell extends BaseCdkCell {
   selector: 'cdk-cell, td[cdk-cell]',
   host: {
     'class': 'cdk-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const columnDef = inject(CdkColumnDef);
+    const elementRef = inject(ElementRef);
+
     super(columnDef, elementRef);
+
+    const role = columnDef._table?._getCellRole();
+    if (role) {
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }

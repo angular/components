@@ -3,40 +3,45 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  HarnessPredicate,
-  parallel,
-  ComponentHarness,
-  BaseHarnessFilters,
-  ComponentHarnessConstructor,
-} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
+import {ComponentHarnessConstructor, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {
   MatOptionHarness,
   MatOptgroupHarness,
   OptionHarnessFilters,
   OptgroupHarnessFilters,
 } from '@angular/material/core/testing';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {SelectHarnessFilters} from './select-harness-filters';
 
-export abstract class _MatSelectHarnessBase<
-    OptionType extends (ComponentHarnessConstructor<Option> & {
-      with: (options?: OptionFilters) => HarnessPredicate<Option>}),
-    Option extends ComponentHarness & {click(): Promise<void>},
-    OptionFilters extends BaseHarnessFilters,
-    OptionGroupType extends (ComponentHarnessConstructor<OptionGroup> & {
-      with: (options?: OptionGroupFilters) => HarnessPredicate<OptionGroup>}),
-    OptionGroup extends ComponentHarness,
-    OptionGroupFilters extends BaseHarnessFilters
-> extends MatFormFieldControlHarness {
-  protected abstract _prefix: string;
-  protected abstract _optionClass: OptionType;
-  protected abstract _optionGroupClass: OptionGroupType;
+/** Harness for interacting with a mat-select in tests. */
+export class MatSelectHarness extends MatFormFieldControlHarness {
+  static hostSelector = '.mat-mdc-select';
+  private _prefix = 'mat-mdc';
+  private _optionClass = MatOptionHarness;
+  private _optionGroupClass = MatOptgroupHarness;
   private _documentRootLocator = this.documentRootLocatorFactory();
   private _backdrop = this._documentRootLocator.locatorFor('.cdk-overlay-backdrop');
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a select with specific attributes.
+   * @param options Options for filtering which select instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
+   */
+  static with<T extends MatSelectHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: SelectHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options).addOption(
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      },
+    );
+  }
 
   /** Gets a boolean promise indicating if the select is disabled. */
   async isDisabled(): Promise<boolean> {
@@ -85,29 +90,35 @@ export abstract class _MatSelectHarnessBase<
   }
 
   /** Gets the options inside the select panel. */
-  async getOptions(filter?: Omit<OptionFilters, 'ancestor'>): Promise<Option[]> {
-    return this._documentRootLocator.locatorForAll(this._optionClass.with({
-      ...(filter || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionFilters))();
+  async getOptions(filter?: Omit<OptionHarnessFilters, 'ancestor'>): Promise<MatOptionHarness[]> {
+    return this._documentRootLocator.locatorForAll(
+      this._optionClass.with({
+        ...(filter || {}),
+        ancestor: await this._getPanelSelector(),
+      } as OptionHarnessFilters),
+    )();
   }
 
   /** Gets the groups of options inside the panel. */
-  async getOptionGroups(filter?: Omit<OptionGroupFilters, 'ancestor'>): Promise<OptionGroup[]> {
-    return this._documentRootLocator.locatorForAll(this._optionGroupClass.with({
-      ...(filter || {}),
-      ancestor: await this._getPanelSelector()
-    } as OptionGroupFilters))() as Promise<OptionGroup[]>;
+  async getOptionGroups(
+    filter?: Omit<OptgroupHarnessFilters, 'ancestor'>,
+  ): Promise<MatOptgroupHarness[]> {
+    return this._documentRootLocator.locatorForAll(
+      this._optionGroupClass.with({
+        ...(filter || {}),
+        ancestor: await this._getPanelSelector(),
+      } as OptgroupHarnessFilters),
+    )() as Promise<MatOptgroupHarness[]>;
   }
 
   /** Gets whether the select is open. */
   async isOpen(): Promise<boolean> {
-    return !!await this._documentRootLocator.locatorForOptional(await this._getPanelSelector())();
+    return !!(await this._documentRootLocator.locatorForOptional(await this._getPanelSelector())());
   }
 
   /** Opens the select's panel. */
   async open(): Promise<void> {
-    if (!await this.isOpen()) {
+    if (!(await this.isOpen())) {
       const trigger = await this.locatorFor(`.${this._prefix}-select-trigger`)();
       return trigger.click();
     }
@@ -117,11 +128,13 @@ export abstract class _MatSelectHarnessBase<
    * Clicks the options that match the passed-in filter. If the select is in multi-selection
    * mode all options will be clicked, otherwise the harness will pick the first matching option.
    */
-  async clickOptions(filter?: OptionFilters): Promise<void> {
+  async clickOptions(filter?: OptionHarnessFilters): Promise<void> {
     await this.open();
 
-    const [isMultiple, options] =
-      await parallel(() => [this.isMultiple(), this.getOptions(filter)]);
+    const [isMultiple, options] = await parallel(() => [
+      this.isMultiple(),
+      this.getOptions(filter),
+    ]);
 
     if (options.length === 0) {
       throw Error('Select does not have options matching the specified filter');
@@ -148,26 +161,5 @@ export abstract class _MatSelectHarnessBase<
   private async _getPanelSelector(): Promise<string> {
     const id = await (await this.host()).getAttribute('id');
     return `#${id}-panel`;
-  }
-}
-
-/** Harness for interacting with a standard mat-select in tests. */
-export class MatSelectHarness extends  _MatSelectHarnessBase<
-  typeof MatOptionHarness, MatOptionHarness, OptionHarnessFilters,
-  typeof MatOptgroupHarness, MatOptgroupHarness, OptgroupHarnessFilters
-> {
-  static hostSelector = '.mat-select';
-  protected _prefix = 'mat';
-  protected _optionClass = MatOptionHarness;
-  protected _optionGroupClass = MatOptgroupHarness;
-
-  /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatSelectHarness` that meets
-   * certain criteria.
-   * @param options Options for filtering which select instances are considered a match.
-   * @return a `HarnessPredicate` configured with the given options.
-   */
-  static with(options: SelectHarnessFilters = {}): HarnessPredicate<MatSelectHarness> {
-    return new HarnessPredicate(MatSelectHarness, options);
   }
 }

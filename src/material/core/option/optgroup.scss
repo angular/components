@@ -1,8 +1,47 @@
-@use '../style/menu-common';
-@use '../style/vendor-prefixes';
+@use '../tokens/m2/mat/optgroup' as tokens-mat-optgroup;
+@use '../tokens/token-utils';
 
-.mat-optgroup-label {
-  @include menu-common.item-base();
-  @include vendor-prefixes.user-select(none);
-  cursor: default;
+.mat-mdc-optgroup {
+  // These tokens are set on the root option group to make them easier to override.
+  @include token-utils.use-tokens(
+    tokens-mat-optgroup.$prefix, tokens-mat-optgroup.get-token-slots()) {
+    @include token-utils.create-token-slot(color, label-text-color);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(line-height, label-text-line-height);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+  }
+}
+
+.mat-mdc-optgroup-label {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  min-height: 48px;
+  padding: 0 16px;
+  outline: none;
+
+  &.mdc-list-item--disabled {
+    opacity: 0.38;
+  }
+
+  // Needs to be overwritten explicitly, because the style can
+  // leak in from the list and cause the text to truncate.
+  .mdc-list-item__primary-text {
+    // MDC assigns the typography to this element, rather than the element itself, which will break
+    // existing overrides. Set all of the typography-related properties to `inherit` so that any
+    // styles set on the host can propagate down.
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    text-decoration: inherit;
+    text-transform: inherit;
+    white-space: normal;
+    color: inherit;
+  }
 }

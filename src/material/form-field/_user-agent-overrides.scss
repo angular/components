@@ -1,0 +1,24 @@
+// Mixin that resets user agent styles to make the form field behave consistently.
+@mixin private-form-field-user-agent-overrides() {
+  .mat-mdc-form-field-input-control {
+    // Due to the native input masking these inputs can be slightly taller than
+    // the plain text inputs. We normalize it by resetting the line height.
+    &[type='date'],
+    &[type='datetime'],
+    &[type='datetime-local'],
+    &[type='month'],
+    &[type='week'],
+    &[type='time'] {
+      line-height: 1;
+    }
+
+    // Native datetime inputs have an element in the shadow DOM that makes them taller than
+    // other inputs. These changes reset the user agent styles to make them consistent.
+    // via https://8yd.no/article/date-input-height-in-safari
+    &::-webkit-datetime-edit {
+      line-height: 1;
+      padding: 0;
+      margin-bottom: -2px;
+    }
+  }
+}

@@ -3,16 +3,18 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   AfterViewInit,
   Directive,
   ElementRef,
+  inject,
   Injector,
   NgZone,
   OnDestroy,
+  OnInit,
   Type,
   ViewContainerRef,
   ChangeDetectorRef,
@@ -22,7 +24,7 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
 import {merge, Subject} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
@@ -30,6 +32,7 @@ import {HEADER_ROW_SELECTOR} from './selectors';
 import {ResizeOverlayHandle} from './overlay-handle';
 import {ColumnResize} from './column-resize';
 import {ColumnSizeAction, ColumnResizeNotifierSource} from './column-resize-notifier';
+import {ColumnSizeStore} from './column-size-store';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
 import {ResizeStrategy} from './resize-strategy';
@@ -42,7 +45,8 @@ const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
  */
 @Directive()
 export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
-    implements AfterViewInit, OnDestroy {
+  implements AfterViewInit, OnDestroy, OnInit
+{
   protected minWidthPxInternal: number = 0;
   protected maxWidthPxInternal: number = Number.MAX_SAFE_INTEGER;
 
@@ -65,7 +69,10 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly viewContainerRef: ViewContainerRef;
   protected abstract readonly changeDetectorRef: ChangeDetectorRef;
 
+  protected readonly columnSizeStore = inject(ColumnSizeStore, {optional: true});
+
   private _viewInitialized = false;
+  private _isDestroyed = false;
 
   /** The minimum width to allow the column to be sized to. */
   get minWidthPx(): number {
@@ -93,29 +100,38 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     }
   }
 
+  ngOnInit() {
+    this.resizeStrategy.registerColumn(this.elementRef.nativeElement);
+  }
+
   ngAfterViewInit() {
     this._listenForRowHoverEvents();
     this._listenForResizeEvents();
     this._appendInlineHandle();
 
     this.styleScheduler.scheduleEnd(() => {
+      if (this._isDestroyed) return;
       this._viewInitialized = true;
       this._applyMinWidthPx();
       this._applyMaxWidthPx();
+      this.columnSizeStore
+        ?.getSize(this.columnResize.getTableId(), this.columnDef.name)
+        ?.pipe(take(1), takeUntil(this.destroyed))
+        .subscribe(size => {
+          if (size == null) {
+            return;
+          }
+          this._applySize(size);
+        });
     });
   }
 
   ngOnDestroy(): void {
+    this._isDestroyed = true;
     this.destroyed.next();
     this.destroyed.complete();
-
-    if (this.inlineHandle) {
-      this.elementRef.nativeElement!.removeChild(this.inlineHandle);
-    }
-
-    if (this.overlayRef) {
-      this.overlayRef.dispose();
-    }
+    this.inlineHandle?.remove();
+    this.overlayRef?.dispose();
   }
 
   protected abstract getInlineHandleCssClassName(): string;
@@ -128,18 +144,21 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     // over both cells and extending it down the table as needed.
 
     const isRtl = this.directionality.value === 'rtl';
-    const positionStrategy = this.overlay.position()
-        .flexibleConnectedTo(this.elementRef.nativeElement!)
-        .withFlexibleDimensions(false)
-        .withGrowAfterOpen(false)
-        .withPush(false)
-        .withDefaultOffsetX(isRtl ? 1 : 0)
-        .withPositions([{
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(this.elementRef.nativeElement!)
+      .withFlexibleDimensions(false)
+      .withGrowAfterOpen(false)
+      .withPush(false)
+      .withDefaultOffsetX(isRtl ? 1 : 0)
+      .withPositions([
+        {
           originX: isRtl ? 'start' : 'end',
           originY: 'top',
           overlayX: 'center',
           overlayY: 'top',
-        }]);
+        },
+      ]);
 
     return this.overlay.create({
       // Always position the overlay based on left-indexed coordinates.
@@ -155,46 +174,59 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     const element = this.elementRef.nativeElement!;
     const takeUntilDestroyed = takeUntil<boolean>(this.destroyed);
 
+    this.eventDispatcher
+      .resizeOverlayVisibleForHeaderRow(_closest(element, HEADER_ROW_SELECTOR)!)
+      .pipe(takeUntilDestroyed)
+      .subscribe(hoveringRow => {
+        if (hoveringRow) {
+          if (!this.overlayRef) {
+            this.overlayRef = this._createOverlayForHandle();
+          }
 
-    this.eventDispatcher.resizeOverlayVisibleForHeaderRow(_closest(element, HEADER_ROW_SELECTOR)!)
-        .pipe(takeUntilDestroyed).subscribe(hoveringRow => {
-      if (hoveringRow) {
-        if (!this.overlayRef) {
-          this.overlayRef = this._createOverlayForHandle();
+          this._showHandleOverlay();
+        } else if (this.overlayRef) {
+          // todo - can't detach during an active resize - need to work that out
+          this.overlayRef.detach();
         }
-
-        this._showHandleOverlay();
-      } else if (this.overlayRef) {
-        // todo - can't detach during an active resize - need to work that out
-        this.overlayRef.detach();
-      }
-    });
+      });
   }
 
   private _listenForResizeEvents() {
     const takeUntilDestroyed = takeUntil<ColumnSizeAction>(this.destroyed);
 
-    merge(
-        this.resizeNotifier.resizeCanceled,
-        this.resizeNotifier.triggerResize,
-    ).pipe(
+    merge(this.resizeNotifier.resizeCanceled, this.resizeNotifier.triggerResize)
+      .pipe(
         takeUntilDestroyed,
         filter(columnSize => columnSize.columnId === this.columnDef.name),
-    ).subscribe(({size, previousSize, completeImmediately}) => {
-      this.elementRef.nativeElement!.classList.add(OVERLAY_ACTIVE_CLASS);
-      this._applySize(size, previousSize);
+      )
+      .subscribe(({size, previousSize, completeImmediately}) => {
+        this.elementRef.nativeElement!.classList.add(OVERLAY_ACTIVE_CLASS);
+        this._applySize(size, previousSize);
 
-      if (completeImmediately) {
-        this._completeResizeOperation();
-      }
-    });
+        if (completeImmediately) {
+          this._completeResizeOperation();
+        }
+      });
 
-    merge(
-        this.resizeNotifier.resizeCanceled,
-        this.resizeNotifier.resizeCompleted,
-    ).pipe(takeUntilDestroyed).subscribe(columnSize => {
-      this._cleanUpAfterResize(columnSize);
-    });
+    merge(this.resizeNotifier.resizeCanceled, this.resizeNotifier.resizeCompleted)
+      .pipe(takeUntilDestroyed)
+      .subscribe(columnSize => {
+        this._cleanUpAfterResize(columnSize);
+      });
+
+    this.resizeNotifier.resizeCompleted
+      .pipe(
+        filter(sizeUpdate => sizeUpdate.columnId === this.columnDef.name),
+        distinctUntilChanged((a, b) => a.size === b.size),
+        takeUntil(this.destroyed),
+      )
+      .subscribe(sizeUpdate => {
+        this.columnSizeStore?.setSize(
+          this.columnResize.getTableId(),
+          this.columnDef.name,
+          sizeUpdate.size,
+        );
+      });
   }
 
   private _completeResizeOperation(): void {
@@ -222,14 +254,25 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   private _createHandlePortal(): ComponentPortal<HandleComponent> {
     const injector = Injector.create({
       parent: this.injector,
-      providers: [{
-        provide: ResizeRef,
-        useValue: new ResizeRef(this.elementRef, this.overlayRef!, this.minWidthPx, this.maxWidthPx)
-      }]
+      providers: [
+        {
+          provide: ResizeRef,
+          useValue: new ResizeRef(
+            this.elementRef,
+            this.overlayRef!,
+            this.minWidthPx,
+            this.maxWidthPx,
+            this.columnResize.liveResizeUpdates,
+          ),
+        },
+      ],
     });
 
-    return new ComponentPortal(this.getOverlayHandleComponentType(),
-        this.viewContainerRef, injector);
+    return new ComponentPortal(
+      this.getOverlayHandleComponentType(),
+      this.viewContainerRef,
+      injector,
+    );
   }
 
   private _showHandleOverlay(): void {
@@ -247,29 +290,38 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   private _applySize(sizeInPixels: number, previousSize?: number): void {
     const sizeToApply = Math.min(Math.max(sizeInPixels, this.minWidthPx, 0), this.maxWidthPx);
 
-    this.resizeStrategy.applyColumnSize(this.columnDef.cssClassFriendlyName,
-        this.elementRef.nativeElement!, sizeToApply, previousSize);
+    this.resizeStrategy.applyColumnSize(
+      this.columnDef.cssClassFriendlyName,
+      this.elementRef.nativeElement!,
+      sizeToApply,
+      previousSize,
+    );
   }
 
   private _applyMinWidthPx(): void {
-    this.resizeStrategy.applyMinColumnSize(this.columnDef.cssClassFriendlyName,
-        this.elementRef.nativeElement, this.minWidthPx);
+    this.resizeStrategy.applyMinColumnSize(
+      this.columnDef.cssClassFriendlyName,
+      this.elementRef.nativeElement,
+      this.minWidthPx,
+    );
   }
 
   private _applyMaxWidthPx(): void {
-    this.resizeStrategy.applyMaxColumnSize(this.columnDef.cssClassFriendlyName,
-        this.elementRef.nativeElement, this.maxWidthPx);
+    this.resizeStrategy.applyMaxColumnSize(
+      this.columnDef.cssClassFriendlyName,
+      this.elementRef.nativeElement,
+      this.maxWidthPx,
+    );
   }
 
   private _appendInlineHandle(): void {
-    this.styleScheduler.schedule(() => {
-      this.inlineHandle = this.document.createElement('div');
-      this.inlineHandle.tabIndex = 0;
-      this.inlineHandle.className = this.getInlineHandleCssClassName();
+    this.inlineHandle = this.document.createElement('div');
+    // TODO: re-apply tab index once this element has behavior.
+    // this.inlineHandle.tabIndex = 0;
+    this.inlineHandle.className = this.getInlineHandleCssClassName();
 
-      // TODO: Apply correct aria role (probably slider) after a11y spec questions resolved.
+    // TODO: Apply correct aria role (probably slider) after a11y spec questions resolved.
 
-      this.elementRef.nativeElement!.appendChild(this.inlineHandle);
-    });
+    this.elementRef.nativeElement!.appendChild(this.inlineHandle);
   }
 }

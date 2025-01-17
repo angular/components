@@ -1,0 +1,21 @@
+@use 'sass:map';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, grid-list);
+
+/// Generates custom tokens for the mat-grid-list.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-grid-list
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    tile-header-primary-text-size: map.get($systems, md-sys-typescale, body-large),
+    tile-header-secondary-text-size: map.get($systems, md-sys-typescale, body-medium),
+    tile-footer-primary-text-size: map.get($systems, md-sys-typescale, body-large),
+    tile-footer-secondary-text-size: map.get($systems, md-sys-typescale, body-medium),
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

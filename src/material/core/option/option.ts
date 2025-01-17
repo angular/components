@@ -3,86 +3,146 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {_IdGenerator, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  Optional,
-  Output,
-  QueryList,
   ViewEncapsulation,
-  Directive,
+  ChangeDetectionStrategy,
+  ElementRef,
+  ChangeDetectorRef,
+  AfterViewChecked,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+  QueryList,
+  ViewChild,
+  booleanAttribute,
+  inject,
+  isSignal,
+  Signal,
 } from '@angular/core';
-import {FocusOptions, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
-import {MatOptgroup, _MatOptgroupBase, MAT_OPTGROUP} from './optgroup';
+import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
 import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
-
-/**
- * Option IDs need to be unique across components, so this counter exists outside of
- * the component definition.
- */
-let _uniqueIdCounter = 0;
+import {MatRipple} from '../ripple/ripple';
+import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
+import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Event object emitted by MatOption when selected or deselected. */
-export class MatOptionSelectionChange {
+export class MatOptionSelectionChange<T = any> {
   constructor(
     /** Reference to the option that emitted the event. */
-    public source: _MatOptionBase,
+    public source: MatOption<T>,
     /** Whether the change in the option's value was a result of a user action. */
-    public isUserInput = false) { }
+    public isUserInput = false,
+  ) {}
 }
 
-@Directive()
-export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDestroy {
+/**
+ * Single option inside of a `<mat-select>` element.
+ */
+@Component({
+  selector: 'mat-option',
+  exportAs: 'matOption',
+  host: {
+    'role': 'option',
+    '[class.mdc-list-item--selected]': 'selected',
+    '[class.mat-mdc-option-multiple]': 'multiple',
+    '[class.mat-mdc-option-active]': 'active',
+    '[class.mdc-list-item--disabled]': 'disabled',
+    '[id]': 'id',
+    // Set aria-selected to false for non-selected items and true for selected items. Conform to
+    // [WAI ARIA Listbox authoring practices guide](
+    //  https://www.w3.org/WAI/ARIA/apg/patterns/listbox/), "If any options are selected, each
+    // selected option has either aria-selected or aria-checked  set to true. All options that are
+    // selectable but not selected have either aria-selected or aria-checked set to false." Align
+    // aria-selected implementation of Chips and List components.
+    //
+    // Set `aria-selected="false"` on not-selected listbox options to fix VoiceOver announcing
+    // every option as "selected" (#21491).
+    '[attr.aria-selected]': 'selected',
+    '[attr.aria-disabled]': 'disabled.toString()',
+    '(click)': '_selectViaInteraction()',
+    '(keydown)': '_handleKeydown($event)',
+    'class': 'mat-mdc-option mdc-list-item',
+  },
+  styleUrl: 'option.css',
+  templateUrl: 'option.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatPseudoCheckbox, MatRipple],
+})
+export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  _changeDetectorRef = inject(ChangeDetectorRef);
+  private _parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});
+  group = inject<MatOptgroup>(MAT_OPTGROUP, {optional: true});
+
+  private _signalDisableRipple = false;
   private _selected = false;
   private _active = false;
   private _disabled = false;
   private _mostRecentViewValue = '';
 
   /** Whether the wrapping component is in multiple selection mode. */
-  get multiple() { return this._parent && this._parent.multiple; }
+  get multiple() {
+    return this._parent && this._parent.multiple;
+  }
 
   /** Whether or not the option is currently selected. */
-  get selected(): boolean { return this._selected; }
+  get selected(): boolean {
+    return this._selected;
+  }
 
   /** The form value of the option. */
-  @Input() value: any;
+  @Input() value: T;
 
   /** The unique ID of the option. */
-  @Input() id: string = `mat-option-${_uniqueIdCounter++}`;
+  @Input() id: string = inject(_IdGenerator).getId('mat-option-');
 
   /** Whether the option is disabled. */
-  @Input()
-  get disabled() { return (this.group && this.group.disabled) || this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
+    return (this.group && this.group.disabled) || this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = value;
+  }
 
   /** Whether ripples for the option are disabled. */
-  get disableRipple() { return this._parent && this._parent.disableRipple; }
+  get disableRipple(): boolean {
+    return this._signalDisableRipple
+      ? (this._parent!.disableRipple as Signal<boolean>)()
+      : !!this._parent?.disableRipple;
+  }
+
+  /** Whether to display checkmark for single-selection. */
+  get hideSingleSelectionIndicator(): boolean {
+    return !!(this._parent && this._parent.hideSingleSelectionIndicator);
+  }
 
   /** Event emitted when the option is selected or deselected. */
   // tslint:disable-next-line:no-output-on-prefix
-  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange>();
+  @Output() readonly onSelectionChange = new EventEmitter<MatOptionSelectionChange<T>>();
+
+  /** Element containing the option's text. */
+  @ViewChild('text', {static: true}) _text: ElementRef<HTMLElement> | undefined;
 
   /** Emits when the state of the option changes and any parents have to be notified. */
   readonly _stateChanges = new Subject<void>();
 
-  constructor(
-    private _element: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _parent: MatOptionParentComponent,
-    readonly group: _MatOptgroupBase) {}
+  constructor(...args: unknown[]);
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+    this._signalDisableRipple = !!this._parent && isSignal(this._parent.disableRipple);
+  }
 
   /**
    * Whether or not the option is currently active and ready to be selected.
@@ -100,24 +160,30 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
    */
   get viewValue(): string {
     // TODO(kara): Add input property alternative for node envs.
-    return (this._getHostElement().textContent || '').trim();
+    return (this._text?.nativeElement.textContent || '').trim();
   }
 
   /** Selects the option. */
-  select(): void {
+  select(emitEvent = true): void {
     if (!this._selected) {
       this._selected = true;
       this._changeDetectorRef.markForCheck();
-      this._emitSelectionChangeEvent();
+
+      if (emitEvent) {
+        this._emitSelectionChangeEvent();
+      }
     }
   }
 
   /** Deselects the option. */
-  deselect(): void {
+  deselect(emitEvent = true): void {
     if (this._selected) {
       this._selected = false;
       this._changeDetectorRef.markForCheck();
-      this._emitSelectionChangeEvent();
+
+      if (emitEvent) {
+        this._emitSelectionChangeEvent();
+      }
     }
   }
 
@@ -183,17 +249,10 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     }
   }
 
-  /**
-   * Gets the `aria-selected` value for the option. We explicitly omit the `aria-selected`
-   * attribute from single-selection, unselected options. Including the `aria-selected="false"`
-   * attributes adds a significant amount of noise to screen-reader users without providing useful
-   * information.
-   */
-  _getAriaSelected(): boolean|null {
-    return this.selected || (this.multiple ? false : null);
-  }
-
   /** Returns the correct tabindex for the option depending on disabled state. */
+  // This method is only used by `MatLegacyOption`. Keeping it here to avoid breaking the types.
+  // That's because `MatLegacyOption` use `MatOption` type in a few places such as
+  // `MatOptionSelectionChange`. It is safe to delete this when `MatLegacyOption` is deleted.
   _getTabIndex(): string {
     return this.disabled ? '-1' : '0';
   }
@@ -213,8 +272,11 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
       const viewValue = this.viewValue;
 
       if (viewValue !== this._mostRecentViewValue) {
+        if (this._mostRecentViewValue) {
+          this._stateChanges.next();
+        }
+
         this._mostRecentViewValue = viewValue;
-        this._stateChanges.next();
       }
     }
   }
@@ -225,44 +287,7 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
 
   /** Emits the selection change event. */
   private _emitSelectionChangeEvent(isUserInput = false): void {
-    this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
-  }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-}
-
-/**
- * Single option inside of a `<mat-select>` element.
- */
-@Component({
-  selector: 'mat-option',
-  exportAs: 'matOption',
-  host: {
-    'role': 'option',
-    '[attr.tabindex]': '_getTabIndex()',
-    '[class.mat-selected]': 'selected',
-    '[class.mat-option-multiple]': 'multiple',
-    '[class.mat-active]': 'active',
-    '[id]': 'id',
-    '[attr.aria-selected]': '_getAriaSelected()',
-    '[attr.aria-disabled]': 'disabled.toString()',
-    '[class.mat-option-disabled]': 'disabled',
-    '(click)': '_selectViaInteraction()',
-    '(keydown)': '_handleKeydown($event)',
-    'class': 'mat-option mat-focus-indicator',
-  },
-  styleUrls: ['option.css'],
-  templateUrl: 'option.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatOption extends _MatOptionBase {
-  constructor(
-    element: ElementRef<HTMLElement>,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_OPTION_PARENT_COMPONENT) parent: MatOptionParentComponent,
-    @Optional() @Inject(MAT_OPTGROUP) group: MatOptgroup) {
-    super(element, changeDetectorRef, parent, group);
+    this.onSelectionChange.emit(new MatOptionSelectionChange<T>(this, isUserInput));
   }
 }
 
@@ -273,9 +298,11 @@ export class MatOption extends _MatOptionBase {
  * @param optionGroups Flat list of all of the option groups.
  * @docs-private
  */
-export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>,
-  optionGroups: QueryList<MatOptgroup>): number {
-
+export function _countGroupLabelsBeforeOption(
+  optionIndex: number,
+  options: QueryList<MatOption>,
+  optionGroups: QueryList<MatOptgroup>,
+): number {
   if (optionGroups.length) {
     let optionsArray = options.toArray();
     let groups = optionGroups.toArray();
@@ -301,8 +328,12 @@ export function _countGroupLabelsBeforeOption(optionIndex: number, options: Quer
  * @param panelHeight Height of the panel.
  * @docs-private
  */
-export function _getOptionScrollPosition(optionOffset: number, optionHeight: number,
-    currentScrollPosition: number, panelHeight: number): number {
+export function _getOptionScrollPosition(
+  optionOffset: number,
+  optionHeight: number,
+  currentScrollPosition: number,
+  panelHeight: number,
+): number {
   if (optionOffset < currentScrollPosition) {
     return optionOffset;
   }
@@ -313,4 +344,3 @@ export function _getOptionScrollPosition(optionOffset: number, optionHeight: num
 
   return currentScrollPosition;
 }
-

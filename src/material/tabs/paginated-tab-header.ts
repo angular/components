@@ -3,38 +3,43 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
+import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {SharedResizeObserver} from '@angular/cdk/observers/private';
+import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
+import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  ChangeDetectorRef,
-  ElementRef,
-  NgZone,
-  Optional,
-  QueryList,
-  EventEmitter,
+  ANIMATION_MODULE_TYPE,
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  OnDestroy,
+  ChangeDetectorRef,
   Directive,
-  Inject,
+  ElementRef,
+  EventEmitter,
+  Injector,
   Input,
+  NgZone,
+  OnDestroy,
+  Output,
+  QueryList,
+  Renderer2,
+  afterNextRender,
+  booleanAttribute,
+  inject,
+  numberAttribute,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
-import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-
+import {EMPTY, Observable, Observer, Subject, merge, of as observableOf, timer} from 'rxjs';
+import {debounceTime, filter, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
 
 /** Config used to bind passive event listeners */
-const passiveEventListenerOptions =
-    normalizePassiveListenerOptions({passive: true}) as EventListenerOptions;
+const passiveEventListenerOptions = {
+  passive: true,
+};
 
 /**
  * The directions that scrolling can go in when the header's tabs exceed the header width. 'After'
@@ -42,12 +47,6 @@ const passiveEventListenerOptions =
  * beginning of the list.
  */
 export type ScrollDirection = 'after' | 'before';
-
-/**
- * The distance in pixels that will be overshot when scrolling a tab label into view. This helps
- * provide a small affordance to the label next to it.
- */
-const EXAGGERATED_OVERSCROLL = 60;
 
 /**
  * Amount of milliseconds to wait before starting to scroll the header automatically.
@@ -69,12 +68,26 @@ export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRe
  * @docs-private
  */
 @Directive()
-export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit,
-  AfterViewInit, OnDestroy {
+export abstract class MatPaginatedTabHeader
+  implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
+{
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _changeDetectorRef = inject(ChangeDetectorRef);
+  private _viewportRuler = inject(ViewportRuler);
+  private _dir = inject(Directionality, {optional: true});
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
+  private _sharedResizeObserver = inject(SharedResizeObserver);
+  private _injector = inject(Injector);
+  private _renderer = inject(Renderer2);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _eventCleanups: (() => void)[];
+
   abstract _items: QueryList<MatPaginatedTabHeaderItem>;
-  abstract _inkBar: {hide: () => void, alignToElement: (element: HTMLElement) => void};
+  abstract _inkBar: {hide: () => void; alignToElement: (element: HTMLElement) => void};
   abstract _tabListContainer: ElementRef<HTMLElement>;
   abstract _tabList: ElementRef<HTMLElement>;
+  abstract _tabListInner: ElementRef<HTMLElement>;
   abstract _nextPaginator: ElementRef<HTMLElement>;
   abstract _previousPaginator: ElementRef<HTMLElement>;
 
@@ -118,13 +131,16 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * Whether pagination should be disabled. This can be used to avoid unnecessary
    * layout recalculations if it's known that pagination won't be required.
    */
-  @Input()
+  @Input({transform: booleanAttribute})
   disablePagination: boolean = false;
 
   /** The index of the active tab. */
-  get selectedIndex(): number { return this._selectedIndex; }
-  set selectedIndex(value: number) {
-    value = coerceNumberProperty(value);
+  @Input({transform: numberAttribute})
+  get selectedIndex(): number {
+    return this._selectedIndex;
+  }
+  set selectedIndex(v: number) {
+    const value = isNaN(v) ? 0 : v;
 
     if (this._selectedIndex != value) {
       this._selectedIndexChanged = true;
@@ -138,27 +154,20 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
-  readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   /** Event emitted when a label is focused. */
-  readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>,
-              protected _changeDetectorRef: ChangeDetectorRef,
-              private _viewportRuler: ViewportRuler,
-              @Optional() private _dir: Directionality,
-              private _ngZone: NgZone,
-              private _platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+  constructor(...args: unknown[]);
 
+  constructor() {
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
-    _ngZone.runOutsideAngular(() => {
-      fromEvent(_elementRef.nativeElement, 'mouseleave')
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => {
-          this._stopInterval();
-        });
-    });
+    this._eventCleanups = this._ngZone.runOutsideAngular(() => [
+      this._renderer.listen(this._elementRef.nativeElement, 'mouseleave', () =>
+        this._stopInterval(),
+      ),
+    ]);
   }
 
   /** Called when the user has selected an item via the keyboard. */
@@ -166,22 +175,39 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
   ngAfterViewInit() {
     // We need to handle these events manually, because we want to bind passive event listeners.
-    fromEvent(this._previousPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
-        this._handlePaginatorPress('before');
-      });
 
-    fromEvent(this._nextPaginator.nativeElement, 'touchstart', passiveEventListenerOptions)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => {
-        this._handlePaginatorPress('after');
-      });
+    this._eventCleanups.push(
+      _bindEventWithOptions(
+        this._renderer,
+        this._previousPaginator.nativeElement,
+        'touchstart',
+        () => this._handlePaginatorPress('before'),
+        passiveEventListenerOptions,
+      ),
+      _bindEventWithOptions(
+        this._renderer,
+        this._nextPaginator.nativeElement,
+        'touchstart',
+        () => this._handlePaginatorPress('after'),
+        passiveEventListenerOptions,
+      ),
+    );
   }
 
   ngAfterContentInit() {
     const dirChange = this._dir ? this._dir.change : observableOf('ltr');
-    const resize = this._viewportRuler.change(150);
+    // We need to debounce resize events because the alignment logic is expensive.
+    // If someone animates the width of tabs, we don't want to realign on every animation frame.
+    // Once we haven't seen any more resize events in the last 32ms (~2 animaion frames) we can
+    // re-align.
+    const resize = this._sharedResizeObserver
+      .observe(this._elementRef.nativeElement)
+      .pipe(debounceTime(32), takeUntil(this._destroyed));
+    // Note: We do not actually need to watch these events for proper functioning of the tabs,
+    // the resize events above should capture any viewport resize that we care about. However,
+    // removing this is fairly breaking for screenshot tests, so we're leaving it here for now.
+    const viewportResize = this._viewportRuler.change(150).pipe(takeUntil(this._destroyed));
+
     const realign = () => {
       this.updatePagination();
       this._alignInkBarToSelectedTab();
@@ -190,31 +216,74 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     this._keyManager = new FocusKeyManager<MatPaginatedTabHeaderItem>(this._items)
       .withHorizontalOrientation(this._getLayoutDirection())
       .withHomeAndEnd()
-      .withWrap();
+      .withWrap()
+      // Allow focus to land on disabled tabs, as per https://w3c.github.io/aria-practices/#kbd_disabled_controls
+      .skipPredicate(() => false);
 
     this._keyManager.updateActiveItem(this._selectedIndex);
 
-    // Defer the first call in order to allow for slower browsers to lay out the elements.
-    // This helps in cases where the user lands directly on a page with paginated tabs.
-    typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
+    // Note: We do not need to realign after the first render for proper functioning of the tabs
+    // the resize events above should fire when we first start observing the element. However,
+    // removing this is fairly breaking for screenshot tests, so we're leaving it here for now.
+    afterNextRender(realign, {injector: this._injector});
 
-    // On dir change or window resize, realign the ink bar and update the orientation of
+    // On dir change or resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
-    merge(dirChange, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
-      // We need to defer this to give the browser some time to recalculate
-      // the element dimensions. The call has to be wrapped in `NgZone.run`,
-      // because the viewport change handler runs outside of Angular.
-      this._ngZone.run(() => Promise.resolve().then(realign));
-      this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
-    });
+    merge(dirChange, viewportResize, resize, this._items.changes, this._itemsResized())
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => {
+        // We need to defer this to give the browser some time to recalculate
+        // the element dimensions. The call has to be wrapped in `NgZone.run`,
+        // because the viewport change handler runs outside of Angular.
+        this._ngZone.run(() => {
+          Promise.resolve().then(() => {
+            // Clamp the scroll distance, because it can change with the number of tabs.
+            this._scrollDistance = Math.max(
+              0,
+              Math.min(this._getMaxScrollDistance(), this._scrollDistance),
+            );
+            realign();
+          });
+        });
+        this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
+      });
 
     // If there is a change in the focus key manager we need to emit the `indexFocused`
     // event in order to provide a public event that notifies about focus changes. Also we realign
     // the tabs container by scrolling the new focused tab into the visible section.
-    this._keyManager.change.pipe(takeUntil(this._destroyed)).subscribe(newFocusIndex => {
+    this._keyManager.change.subscribe(newFocusIndex => {
       this.indexFocused.emit(newFocusIndex);
       this._setTabFocus(newFocusIndex);
     });
+  }
+
+  /** Sends any changes that could affect the layout of the items. */
+  private _itemsResized(): Observable<ResizeObserverEntry[]> {
+    if (typeof ResizeObserver !== 'function') {
+      return EMPTY;
+    }
+
+    return this._items.changes.pipe(
+      startWith(this._items),
+      switchMap(
+        (tabItems: QueryList<MatPaginatedTabHeaderItem>) =>
+          new Observable((observer: Observer<ResizeObserverEntry[]>) =>
+            this._ngZone.runOutsideAngular(() => {
+              const resizeObserver = new ResizeObserver(entries => observer.next(entries));
+              tabItems.forEach(item => resizeObserver.observe(item.elementRef.nativeElement));
+              return () => {
+                resizeObserver.disconnect();
+              };
+            }),
+          ),
+      ),
+      // Skip the first emit since the resize observer emits when an item
+      // is observed for new items when the tab is already inserted
+      skip(1),
+      // Skip emissions where all the elements are invisible since we don't want
+      // the header to try and re-render with invalid measurements. See #25574.
+      filter(entries => entries.some(e => e.contentRect.width > 0 && e.contentRect.height > 0)),
+    );
   }
 
   ngAfterContentChecked(): void {
@@ -245,6 +314,8 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   }
 
   ngOnDestroy() {
+    this._eventCleanups.forEach(cleanup => cleanup());
+    this._keyManager?.destroy();
     this._destroyed.next();
     this._destroyed.complete();
     this._stopScrolling.complete();
@@ -261,8 +332,12 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
       case ENTER:
       case SPACE:
         if (this.focusIndex !== this.selectedIndex) {
-          this.selectFocusedIndex.emit(this.focusIndex);
-          this._itemSelected(event);
+          const item = this._items.get(this.focusIndex);
+
+          if (item && !item.disabled) {
+            this.selectFocusedIndex.emit(this.focusIndex);
+            this._itemSelected(event);
+          }
         }
         break;
       default:
@@ -324,10 +399,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * providing a valid index and return true.
    */
   _isValidIndex(index: number): boolean {
-    if (!this._items) { return true; }
-
-    const tab = this._items ? this._items.toArray()[index] : null;
-    return !!tab && !tab.disabled;
+    return this._items ? !!this._items.toArray()[index] : true;
   }
 
   /**
@@ -388,7 +460,9 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */
-  get scrollDistance(): number { return this._scrollDistance; }
+  get scrollDistance(): number {
+    return this._scrollDistance;
+  }
   set scrollDistance(value: number) {
     this._scrollTo(value);
   }
@@ -405,7 +479,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
 
     // Move the scroll distance one-third the length of the tab list's viewport.
-    const scrollAmount = (direction == 'before' ? -1 : 1) * viewLength / 3;
+    const scrollAmount = ((direction == 'before' ? -1 : 1) * viewLength) / 3;
 
     return this._scrollTo(this._scrollDistance + scrollAmount);
   }
@@ -442,7 +516,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
       labelBeforePos = offsetLeft;
       labelAfterPos = labelBeforePos + offsetWidth;
     } else {
-      labelAfterPos = this._tabList.nativeElement.offsetWidth - offsetLeft;
+      labelAfterPos = this._tabListInner.nativeElement.offsetWidth - offsetLeft;
       labelBeforePos = labelAfterPos - offsetWidth;
     }
 
@@ -451,10 +525,13 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     if (labelBeforePos < beforeVisiblePos) {
       // Scroll header to move label to the before direction
-      this.scrollDistance -= beforeVisiblePos - labelBeforePos + EXAGGERATED_OVERSCROLL;
+      this.scrollDistance -= beforeVisiblePos - labelBeforePos;
     } else if (labelAfterPos > afterVisiblePos) {
       // Scroll header to move label to the after direction
-      this.scrollDistance += labelAfterPos - afterVisiblePos + EXAGGERATED_OVERSCROLL;
+      this.scrollDistance += Math.min(
+        labelAfterPos - afterVisiblePos,
+        labelBeforePos - beforeVisiblePos,
+      );
     }
   }
 
@@ -470,18 +547,27 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     if (this.disablePagination) {
       this._showPaginationControls = false;
     } else {
-      const isEnabled =
-          this._tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
+      const scrollWidth = this._tabListInner.nativeElement.scrollWidth;
+      const containerWidth = this._elementRef.nativeElement.offsetWidth;
+
+      // Usually checking that the scroll width is greater than the container width should be
+      // enough, but on Safari at specific widths the browser ends up rounding up when there's
+      // no pagination and rounding down once the pagination is added. This can throw the component
+      // into an infinite loop where the pagination shows up and disappears constantly. We work
+      // around it by adding a threshold to the calculation. From manual testing the threshold
+      // can be lowered to 2px and still resolve the issue, but we set a higher one to be safe.
+      // This shouldn't cause any content to be clipped, because tabs have a 24px horizontal
+      // padding. See b/316395154 for more information.
+      const isEnabled = scrollWidth - containerWidth >= 5;
 
       if (!isEnabled) {
         this.scrollDistance = 0;
       }
 
       if (isEnabled !== this._showPaginationControls) {
+        this._showPaginationControls = isEnabled;
         this._changeDetectorRef.markForCheck();
       }
-
-      this._showPaginationControls = isEnabled;
     }
   }
 
@@ -513,15 +599,15 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * should be called sparingly.
    */
   _getMaxScrollDistance(): number {
-    const lengthOfTabList = this._tabList.nativeElement.scrollWidth;
+    const lengthOfTabList = this._tabListInner.nativeElement.scrollWidth;
     const viewLength = this._tabListContainer.nativeElement.offsetWidth;
-    return (lengthOfTabList - viewLength) || 0;
+    return lengthOfTabList - viewLength || 0;
   }
 
   /** Tells the ink-bar to align itself to the current label wrapper */
   _alignInkBarToSelectedTab(): void {
-    const selectedItem = this._items && this._items.length ?
-        this._items.toArray()[this.selectedIndex] : null;
+    const selectedItem =
+      this._items && this._items.length ? this._items.toArray()[this.selectedIndex] : null;
     const selectedLabelWrapper = selectedItem ? selectedItem.elementRef.nativeElement : null;
 
     if (selectedLabelWrapper) {
@@ -585,6 +671,4 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     return {maxScrollDistance, distance: this._scrollDistance};
   }
-
-  static ngAcceptInputType_selectedIndex: NumberInput;
 }

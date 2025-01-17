@@ -1,124 +1,151 @@
-@use 'sass:map';
-@use '../core/style/private';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '../core/density/private/compatibility';
-@use './button-toggle-variables';
+@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
+@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-  $divider-color: theming.get-color-from-palette($foreground, divider);
-
-  .mat-button-toggle-standalone,
-  .mat-button-toggle-group {
-    @include private.private-theme-elevation(2, $config);
-  }
-
-  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-  .mat-button-toggle-group-appearance-standard {
-    box-shadow: none;
-  }
-
-  .mat-button-toggle {
-    color: theming.get-color-from-palette($foreground, hint-text);
-
-    .mat-button-toggle-focus-overlay {
-      background-color: theming.get-color-from-palette($background, focused-button);
-    }
-  }
-
-  .mat-button-toggle-appearance-standard {
-    color: theming.get-color-from-palette($foreground, text);
-    background: theming.get-color-from-palette($background, card);
-
-    .mat-button-toggle-focus-overlay {
-      background-color: theming.get-color-from-palette($background, focused-button, 1);
-    }
-  }
-
-  .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
-    border-left: solid 1px $divider-color;
-  }
-
-  [dir='rtl'] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
-    border-left: none;
-    border-right: solid 1px $divider-color;
-  }
-
-  .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical {
-    .mat-button-toggle + .mat-button-toggle {
-      border-left: none;
-      border-right: none;
-      border-top: solid 1px $divider-color;
-    }
-  }
-
-  .mat-button-toggle-checked {
-    background-color: theming.get-color-from-palette($background, selected-button);
-    color: theming.get-color-from-palette($foreground, secondary-text);
-
-    &.mat-button-toggle-appearance-standard {
-      color: theming.get-color-from-palette($foreground, text);
-    }
-  }
-
-  .mat-button-toggle-disabled {
-    color: theming.get-color-from-palette($foreground, disabled-button);
-    background-color: theming.get-color-from-palette($background, disabled-button-toggle);
-
-    &.mat-button-toggle-appearance-standard {
-      background: theming.get-color-from-palette($background, card);
-    }
-
-    &.mat-button-toggle-checked {
-      background-color: theming.get-color-from-palette($background, selected-disabled-button);
-    }
-  }
-
-  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-  .mat-button-toggle-group-appearance-standard {
-    border: solid 1px $divider-color;
-  }
-}
-
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-button-toggle {
-    font-family: typography-utils.font-family($config);
-  }
-}
-
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $standard-height: compatibility.private-density-prop-value(
-      button-toggle-variables.$standard-density-config, $density-scale, height);
-
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-      line-height: $standard-height;
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-button-toggle.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-legacy-button-toggle.$prefix,
+        tokens-mat-legacy-button-toggle.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-standard-button-toggle.$prefix,
+        tokens-mat-standard-button-toggle.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+/// Outputs color theme styles for the mat-button-toggle.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button toggle: primary, secondary, tertiary,
+///      or error (If not specified, default secondary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-legacy-button-toggle.$prefix,
+        tokens-mat-legacy-button-toggle.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-standard-button-toggle.$prefix,
+        tokens-mat-standard-button-toggle.get-color-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Outputs typography theme styles for the mat-button-toggle.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-legacy-button-toggle.$prefix,
+        tokens-mat-legacy-button-toggle.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-standard-button-toggle.$prefix,
+        tokens-mat-standard-button-toggle.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Outputs density theme styles for the mat-button-toggle.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-legacy-button-toggle.$prefix,
+        tokens-mat-legacy-button-toggle.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-standard-button-toggle.$prefix,
+        tokens-mat-standard-button-toggle.get-density-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  $legacy-tokens: tokens-mat-legacy-button-toggle.get-token-slots();
+  $standard-tokens: tokens-mat-standard-button-toggle.get-token-slots();
+
+  @return (
+    (
+      namespace: tokens-mat-legacy-button-toggle.$prefix,
+      tokens: $legacy-tokens,
+      prefix: 'legacy-',
+    ),
+    (
+      namespace: tokens-mat-standard-button-toggle.$prefix,
+      tokens: $standard-tokens,
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-button-toggle.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button toggle: primary, secondary, tertiary,
+///      or error (If not specified, default secondary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mat-standard-button-toggle-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-standard-button-toggle.$prefix,
+    $options...
+  );
+  @include token-utils.create-token-values(
+    tokens-mat-standard-button-toggle.$prefix,
+    $mat-standard-button-toggle-tokens
+  );
 }

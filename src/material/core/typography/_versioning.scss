@@ -1,0 +1,91 @@
+@use 'sass:map';
+@use '../m2/typography' as m2-typography;
+
+// Whether a config is for the Material Design 2018 typography system.
+@function private-typography-is-2018-config($config) {
+  @return map.get($config, headline-1) != null;
+}
+
+// Whether a config is for the Material Design 2014 typography system.
+@function private-typography-is-2014-config($config) {
+  @return map.get($config, headline) != null;
+}
+
+// Given a config for either the 2014 or 2018 Material Design typography system,
+// produces a normalized typography config for the 2014 Material Design typography system.
+// 2014 - https://material.io/archive/guidelines/style/typography.html#typography-styles
+// 2018 - https://material.io/design/typography/the-type-system.html#type-scale
+//
+// Components using this function should be migrated to normalize to the 2018 style config instead.
+// New components should not use this function.
+@function private-typography-to-2014-config($config) {
+  @if $config == null {
+    @return null;
+  }
+  @if not private-typography-is-2014-config($config) {
+    $args: (
+      display-4: map.get($config, headline-1),
+      display-3: map.get($config, headline-2),
+      display-2: map.get($config, headline-3),
+      display-1: map.get($config, headline-4),
+      headline: map.get($config, headline-5),
+      title: map.get($config, headline-6),
+      subheading-2: map.get($config, subtitle-1),
+      subheading-1: map.get($config, subtitle-2),
+      body-2: map.get($config, body-1),
+      body-1: map.get($config, body-2),
+      button: map.get($config, button),
+      caption: map.get($config, caption),
+      font-family: map.get($config, font-family),
+    );
+    $non-null-args: ();
+    @each $key, $value in $args {
+      @if $value != null {
+        $non-null-args: map.merge($non-null-args, ($key: $value));
+      }
+    }
+    @return m2-typography.define-legacy-typography-config($non-null-args...);
+  }
+  @return $config;
+}
+
+// Given a config for either the 2014 or 2018 Material Design typography system,
+// produces a normalized typography config for the 2018 Material Design typography system.
+// 2014 - https://material.io/archive/guidelines/style/typography.html#typography-styles
+// 2018 - https://material.io/design/typography/the-type-system.html#type-scale
+//
+// The $force option is used to allow components to specify that they want to re-map the keys, even
+// if the 2018 keys are already present. This allows those components to preserve the (incorrect)
+// behavior they had previously, when they called `private-typography-to-2014-config`. Eventually we
+// should clean this up, remove the $force option, and reconcile any screen diffs.
+@function private-typography-to-2018-config($config, $force: false) {
+  @if $config == null {
+    @return null;
+  }
+  @if $force or not private-typography-is-2018-config($config) {
+    @return (
+      headline-1: map.get($config, display-4),
+      headline-2: map.get($config, display-3),
+      headline-3: map.get($config, display-2),
+      headline-4: map.get($config, display-1),
+      headline-5: map.get($config, headline),
+      headline-6: map.get($config, title),
+      subtitle-1: map.get($config, subheading-2),
+      font-family: map.get($config, font-family),
+
+      // These mappings are odd, but body-2 in the 2014 system actually looks closer to subtitle-2
+      // in the 2018 system, and subeading-1 in the 2014 system looks more like body-1 in the 2018
+      // system.
+      subtitle-2: map.get($config, body-2),
+      body-1: map.get($config, subheading-1),
+
+      body-2: map.get($config, body-1),
+      button: map.get($config, button),
+      caption: map.get($config, caption),
+      overline: if(map.get($config, overline), map.get($config, overline),
+        m2-typography.define-typography-level(12px, 32px, 500)
+      )
+    );
+  }
+  @return $config;
+}

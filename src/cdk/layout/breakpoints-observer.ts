@@ -3,15 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {coerceArray} from '@angular/cdk/coercion';
-import {Injectable, NgZone, OnDestroy} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, inject} from '@angular/core';
 import {combineLatest, concat, Observable, Observer, Subject} from 'rxjs';
 import {debounceTime, map, skip, startWith, take, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from './media-matcher';
-
 
 /** The current state of a layout breakpoint. */
 export interface BreakpointState {
@@ -39,15 +38,19 @@ interface Query {
   mql: MediaQueryList;
 }
 
-/** Utility for checking the matching state of @media queries. */
+/** Utility for checking the matching state of `@media` queries. */
 @Injectable({providedIn: 'root'})
 export class BreakpointObserver implements OnDestroy {
+  private _mediaMatcher = inject(MediaMatcher);
+  private _zone = inject(NgZone);
+
   /**  A map of all media queries currently being listened for. */
   private _queries = new Map<string, Query>();
   /** A subject for all other observables to takeUntil based on. */
   private readonly _destroySubject = new Subject<void>();
 
-  constructor(private _mediaMatcher: MediaMatcher, private _zone: NgZone) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {
@@ -79,18 +82,21 @@ export class BreakpointObserver implements OnDestroy {
     // Emit the first state immediately, and then debounce the subsequent emissions.
     stateObservable = concat(
       stateObservable.pipe(take(1)),
-      stateObservable.pipe(skip(1), debounceTime(0)));
-    return stateObservable.pipe(map(breakpointStates => {
-      const response: BreakpointState = {
-        matches: false,
-        breakpoints: {},
-      };
-      breakpointStates.forEach(({matches, query}) => {
-        response.matches = response.matches || matches;
-        response.breakpoints[query] = matches;
-      });
-      return response;
-    }));
+      stateObservable.pipe(skip(1), debounceTime(0)),
+    );
+    return stateObservable.pipe(
+      map(breakpointStates => {
+        const response: BreakpointState = {
+          matches: false,
+          breakpoints: {},
+        };
+        breakpointStates.forEach(({matches, query}) => {
+          response.matches = response.matches || matches;
+          response.breakpoints[query] = matches;
+        });
+        return response;
+      }),
+    );
   }
 
   /** Registers a specific query to be listened for. */
@@ -103,13 +109,13 @@ export class BreakpointObserver implements OnDestroy {
     const mql = this._mediaMatcher.matchMedia(query);
 
     // Create callback for match changes and add it is as a listener.
-    const queryObservable = new Observable((observer: Observer<MediaQueryList>) => {
+    const queryObservable = new Observable((observer: Observer<MediaQueryListEvent>) => {
       // Listener callback methods are wrapped to be placed back in ngZone. Callbacks must be placed
       // back into the zone because matchMedia is only included in Zone.js by loading the
       // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
       // have MediaQueryList inherit from EventTarget, which causes inconsistencies in how Zone.js
       // patches it.
-      const handler = (e: any) => this._zone.run(() => observer.next(e));
+      const handler = (e: MediaQueryListEvent): void => this._zone.run(() => observer.next(e));
       mql.addListener(handler);
 
       return () => {
@@ -118,7 +124,7 @@ export class BreakpointObserver implements OnDestroy {
     }).pipe(
       startWith(mql),
       map(({matches}) => ({query, matches})),
-      takeUntil(this._destroySubject)
+      takeUntil(this._destroySubject),
     );
 
     // Add the MediaQueryList to the set of queries.
@@ -133,7 +139,8 @@ export class BreakpointObserver implements OnDestroy {
  * separated.
  */
 function splitQueries(queries: readonly string[]): readonly string[] {
-  return queries.map(query => query.split(','))
-                .reduce((a1, a2) => a1.concat(a2))
-                .map(query => query.trim());
+  return queries
+    .map(query => query.split(','))
+    .reduce((a1, a2) => a1.concat(a2))
+    .map(query => query.trim());
 }

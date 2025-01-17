@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 export interface Tile {
   color: string;
@@ -13,6 +14,7 @@ export interface Tile {
 @Component({
   selector: 'grid-list-dynamic-example',
   templateUrl: 'grid-list-dynamic-example.html',
+  imports: [MatGridListModule],
 })
 export class GridListDynamicExample {
   tiles: Tile[] = [

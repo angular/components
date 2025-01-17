@@ -1,12 +1,19 @@
-import {ComponentPortal, DomPortal, Portal, TemplatePortal} from '@angular/cdk/portal';
 import {
   AfterViewInit,
   Component,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
-  ElementRef
+  ElementRef,
+  inject,
 } from '@angular/core';
+import {
+  ComponentPortal,
+  DomPortal,
+  Portal,
+  TemplatePortal,
+  PortalModule,
+} from '@angular/cdk/portal';
 
 /**
  * @title Portal overview
@@ -14,9 +21,12 @@ import {
 @Component({
   selector: 'cdk-portal-overview-example',
   templateUrl: 'cdk-portal-overview-example.html',
-  styleUrls: ['cdk-portal-overview-example.css'],
+  styleUrl: 'cdk-portal-overview-example.css',
+  imports: [PortalModule],
 })
 export class CdkPortalOverviewExample implements AfterViewInit {
+  private _viewContainerRef = inject(ViewContainerRef);
+
   @ViewChild('templatePortalContent') templatePortalContent: TemplateRef<unknown>;
   @ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
 
@@ -25,20 +35,15 @@ export class CdkPortalOverviewExample implements AfterViewInit {
   templatePortal: TemplatePortal<any>;
   domPortal: DomPortal<any>;
 
-  constructor(private _viewContainerRef: ViewContainerRef) { }
-
   ngAfterViewInit() {
     this.componentPortal = new ComponentPortal(ComponentPortalExample);
-    this.templatePortal = new TemplatePortal(
-      this.templatePortalContent,
-      this._viewContainerRef
-    );
+    this.templatePortal = new TemplatePortal(this.templatePortalContent, this._viewContainerRef);
     this.domPortal = new DomPortal(this.domPortalContent);
   }
 }
 
 @Component({
   selector: 'component-portal-example',
-  template: 'Hello, this is a component portal'
+  template: 'Hello, this is a component portal',
 })
-export class ComponentPortalExample { }
+export class ComponentPortalExample {}

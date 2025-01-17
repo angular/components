@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {
   animate,
   AnimationTriggerMetadata,
-  keyframes,
   state,
   style,
   transition,
@@ -18,19 +17,19 @@ import {
 /**
  * Animations used by MatTooltip.
  * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
  */
 export const matTooltipAnimations: {
   readonly tooltipState: AnimationTriggerMetadata;
 } = {
   /** Animation that transitions a tooltip in and out. */
   tooltipState: trigger('state', [
-    state('initial, void, hidden', style({opacity: 0, transform: 'scale(0)'})),
+    // TODO(crisbeto): these values are based on MDC's CSS.
+    // We should be able to use their styles directly once we land #19432.
+    state('initial, void, hidden', style({opacity: 0, transform: 'scale(0.8)'})),
     state('visible', style({transform: 'scale(1)'})),
-    transition('* => visible', animate('200ms cubic-bezier(0, 0, 0.2, 1)', keyframes([
-      style({opacity: 0, transform: 'scale(0)', offset: 0}),
-      style({opacity: 0.5, transform: 'scale(0.99)', offset: 0.5}),
-      style({opacity: 1, transform: 'scale(1)', offset: 1})
-    ]))),
-    transition('* => hidden', animate('100ms cubic-bezier(0, 0, 0.2, 1)', style({opacity: 0}))),
-  ])
+    transition('* => visible', animate('150ms cubic-bezier(0, 0, 0.2, 1)')),
+    transition('* => hidden', animate('75ms cubic-bezier(0.4, 0, 1, 1)')),
+  ]),
 };

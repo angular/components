@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness} from '../../component-harness';
@@ -40,6 +40,7 @@ export class MainComponentHarness extends ComponentHarness {
   readonly numberInput = this.locatorFor('#number-input');
   readonly numberInputValue = this.locatorFor('#number-input-value');
   readonly contextmenuTestResult = this.locatorFor('.contextmenu-test-result');
+  readonly contenteditable = this.locatorFor('#contenteditable');
   // Allow null for element
   readonly nullItem = this.locatorForOptional('wrong locator');
   // Allow null for component harness
@@ -59,50 +60,70 @@ export class MainComponentHarness extends ComponentHarness {
 
   readonly fourItemLists = this.locatorForAll(SubComponentHarness.with({itemCount: 4}));
   readonly toolsLists = this.locatorForAll(SubComponentHarness.with({title: 'List of test tools'}));
-  readonly fourItemToolsLists =
-      this.locatorForAll(SubComponentHarness.with({title: 'List of test tools', itemCount: 4}));
+  readonly fourItemToolsLists = this.locatorForAll(
+    SubComponentHarness.with({title: 'List of test tools', itemCount: 4}),
+  );
   readonly testLists = this.locatorForAll(SubComponentHarness.with({title: /test/}));
-  readonly requiredFourIteamToolsLists =
-      this.locatorFor(SubComponentHarness.with({title: 'List of test tools', itemCount: 4}));
+  readonly requiredFourIteamToolsLists = this.locatorFor(
+    SubComponentHarness.with({title: 'List of test tools', itemCount: 4}),
+  );
   readonly lastList = this.locatorFor(SubComponentHarness.with({selector: ':last-child'}));
-  readonly specaialKey = this.locatorFor('.special-key');
+  readonly specialKey = this.locatorFor('.special-key');
 
-  readonly requiredAncestorRestrictedSubcomponent =
-      this.locatorFor(SubComponentHarness.with({ancestor: '.other'}));
-  readonly optionalAncestorRestrictedSubcomponent =
-      this.locatorForOptional(SubComponentHarness.with({ancestor: '.other'}));
-  readonly allAncestorRestrictedSubcomponent =
-      this.locatorForAll(SubComponentHarness.with({ancestor: '.other'}));
-  readonly requiredAncestorRestrictedMissingSubcomponent =
-      this.locatorFor(SubComponentHarness.with({ancestor: '.not-found'}));
-  readonly optionalAncestorRestrictedMissingSubcomponent =
-      this.locatorForOptional(SubComponentHarness.with({ancestor: '.not-found'}));
-  readonly allAncestorRestrictedMissingSubcomponent =
-      this.locatorForAll(SubComponentHarness.with({ancestor: '.not-found'}));
-  readonly multipleAncestorSelectorsSubcomponent =
-      this.locatorForAll(SubComponentHarness.with({ancestor: '.other, .subcomponents'}));
-  readonly directAncestorSelectorSubcomponent =
-      this.locatorForAll(SubComponentHarness.with({ancestor: '.other >'}));
-  readonly compoundSelectorWithAncestor =
-      this.locatorForAll(CompoundSelectorHarness.with({ancestor: '.parent'}));
-  readonly quotedContentSelectorWithAncestor =
-      this.locatorFor(QuotedCommaSelectorHarness.with({ancestor: '.quoted-comma-parent'}));
+  readonly requiredAncestorRestrictedSubcomponent = this.locatorFor(
+    SubComponentHarness.with({ancestor: '.other'}),
+  );
+  readonly optionalAncestorRestrictedSubcomponent = this.locatorForOptional(
+    SubComponentHarness.with({ancestor: '.other'}),
+  );
+  readonly allAncestorRestrictedSubcomponent = this.locatorForAll(
+    SubComponentHarness.with({ancestor: '.other'}),
+  );
+  readonly requiredAncestorRestrictedMissingSubcomponent = this.locatorFor(
+    SubComponentHarness.with({ancestor: '.not-found'}),
+  );
+  readonly optionalAncestorRestrictedMissingSubcomponent = this.locatorForOptional(
+    SubComponentHarness.with({ancestor: '.not-found'}),
+  );
+  readonly allAncestorRestrictedMissingSubcomponent = this.locatorForAll(
+    SubComponentHarness.with({ancestor: '.not-found'}),
+  );
+  readonly multipleAncestorSelectorsSubcomponent = this.locatorForAll(
+    SubComponentHarness.with({ancestor: '.other, .subcomponents'}),
+  );
+  readonly directAncestorSelectorSubcomponent = this.locatorForAll(
+    SubComponentHarness.with({ancestor: '.other >'}),
+  );
+  readonly compoundSelectorWithAncestor = this.locatorForAll(
+    CompoundSelectorHarness.with({ancestor: '.parent'}),
+  );
+  readonly quotedContentSelectorWithAncestor = this.locatorFor(
+    QuotedCommaSelectorHarness.with({ancestor: '.quoted-comma-parent'}),
+  );
 
-  readonly subcomponentHarnessesAndElements =
-      this.locatorForAll('#counter', SubComponentHarness);
-  readonly subcomponentHarnessAndElementsRedundant =
-      this.locatorForAll(
-          SubComponentHarness.with({title: /test/}), 'test-sub', SubComponentHarness, 'test-sub');
-  readonly subcomponentAndSpecialHarnesses =
-      this.locatorForAll(SubComponentHarness, SubComponentSpecialHarness);
-  readonly missingElementsAndHarnesses =
-      this.locatorFor('.not-found', SubComponentHarness.with({title: /not found/}));
+  readonly subcomponentHarnessesAndElements = this.locatorForAll('#counter', SubComponentHarness);
+  readonly subcomponentHarnessAndElementsRedundant = this.locatorForAll(
+    SubComponentHarness.with({title: /test/}),
+    'test-sub',
+    SubComponentHarness,
+    'test-sub',
+  );
+  readonly subcomponentAndSpecialHarnesses = this.locatorForAll(
+    SubComponentHarness,
+    SubComponentSpecialHarness,
+  );
+  readonly missingElementsAndHarnesses = this.locatorFor(
+    '.not-found',
+    SubComponentHarness.with({title: /not found/}),
+  );
   readonly shadows = this.locatorForAll('.in-the-shadows');
   readonly deepShadow = this.locatorFor(
-      'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
+    'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows',
+  );
   readonly hoverTest = this.locatorFor('#hover-box');
   readonly customEventBasic = this.locatorFor('#custom-event-basic');
   readonly customEventObject = this.locatorFor('#custom-event-object');
+  readonly hidden = this.locatorFor('.hidden-element');
 
   private _testTools = this.locatorFor(SubComponentHarness);
 

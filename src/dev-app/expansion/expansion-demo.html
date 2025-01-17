@@ -33,7 +33,9 @@
 
 <p>Expansion Panel Animation Events</p>
 <code class="demo-expansion-code">
-  <pre *ngFor="let event of events">{{event}}</pre>
+  @for (event of events; track event) {
+    <pre>{{event}}</pre>
+  }
 </code>
 
 <h1>matAccordion</h1>
@@ -78,14 +80,18 @@
     <mat-expansion-panel-header>Section 2</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
   </mat-expansion-panel>
-  <mat-expansion-panel #panel3 *ngIf="showPanel3">
-    <mat-expansion-panel-header>Section 3</mat-expansion-panel-header>
-    <mat-checkbox #showButtons>Reveal Buttons Below</mat-checkbox>
-    <mat-action-row *ngIf="showButtons.checked">
-      <button mat-button (click)="panel2.expanded = true">OPEN SECTION 2</button>
-      <button mat-button (click)="panel3.expanded = false">CLOSE</button>
-    </mat-action-row>
-  </mat-expansion-panel>
+  @if (showPanel3) {
+    <mat-expansion-panel #panel3>
+      <mat-expansion-panel-header>Section 3</mat-expansion-panel-header>
+      <mat-checkbox #showButtons>Reveal Buttons Below</mat-checkbox>
+      @if (showButtons.checked) {
+        <mat-action-row>
+          <button mat-button (click)="panel2.expanded = true">OPEN SECTION 2</button>
+          <button mat-button (click)="panel3.expanded = false">CLOSE</button>
+        </mat-action-row>
+      }
+    </mat-expansion-panel>
+  }
 </mat-accordion>
 
 <h1>cdkAccordion</h1>
@@ -102,7 +108,9 @@
       <button mat-button (click)="item1.expanded = true">Expand</button>
       <button mat-button (click)="item1.expanded = false">Collapse</button>
     </p>
-    <p *ngIf="item1.expanded">I only show if item 1 is expanded</p>
+    @if (item1.expanded) {
+      <p>I only show if item 1 is expanded</p>
+    }
   </cdk-accordion-item>
   <cdk-accordion-item #item2="cdkAccordionItem">
     <p>
@@ -110,7 +118,9 @@
       <button mat-button (click)="item2.expanded = true">Expand</button>
       <button mat-button (click)="item2.expanded = false">Collapse</button>
     </p>
-    <p *ngIf="item2.expanded">I only show if item 2 is expanded</p>
+    @if (item2.expanded) {
+      <p>I only show if item 2 is expanded</p>
+    }
   </cdk-accordion-item>
   <cdk-accordion-item #item3="cdkAccordionItem">
     <p>
@@ -118,7 +128,9 @@
       <button mat-button (click)="item3.expanded = true">Expand</button>
       <button mat-button (click)="item3.expanded = false">Collapse</button>
     </p>
-    <p *ngIf="item3.expanded">I only show if item 3 is expanded</p>
+    @if (item3.expanded) {
+      <p>I only show if item 3 is expanded</p>
+    }
   </cdk-accordion-item>
 </cdk-accordion>
 

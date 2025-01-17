@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkDrag} from '@angular/cdk/drag-drop';
 
 /**
  * @title Drag&Drop position locking
@@ -6,6 +7,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'cdk-drag-drop-axis-lock-example',
   templateUrl: 'cdk-drag-drop-axis-lock-example.html',
-  styleUrls: ['cdk-drag-drop-axis-lock-example.css'],
+  styleUrl: 'cdk-drag-drop-axis-lock-example.css',
+  imports: [CdkDrag],
 })
 export class CdkDragDropAxisLockExample {}

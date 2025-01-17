@@ -1,5 +1,5 @@
-import {waitForAsync, fakeAsync, TestBed} from '@angular/core/testing';
-import {Component, ViewChild} from '@angular/core';
+import {waitForAsync, fakeAsync, TestBed, flush} from '@angular/core/testing';
+import {Component, ViewChild, signal, inject} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
 
@@ -10,15 +10,15 @@ describe('Directionality', () => {
     fakeDocument = {body: {}, documentElement: {}};
 
     TestBed.configureTestingModule({
-      imports: [BidiModule],
-      declarations: [
+      imports: [
+        BidiModule,
         ElementWithDir,
         ElementWithPredefinedAutoDir,
         InjectsDirectionality,
         ElementWithPredefinedUppercaseDir,
       ],
       providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDocument}],
-    }).compileComponents();
+    });
   }));
 
   describe('Service', () => {
@@ -51,8 +51,11 @@ describe('Directionality', () => {
     it('should complete the `change` stream on destroy', () => {
       const fixture = TestBed.createComponent(InjectsDirectionality);
       const spy = jasmine.createSpy('complete spy');
-      const subscription =
-          fixture.componentInstance.dir.change.subscribe(undefined, undefined, spy);
+      const subscription = fixture.componentInstance.dir.change.subscribe(
+        undefined,
+        undefined,
+        spy,
+      );
 
       fixture.componentInstance.dir.ngOnDestroy();
       expect(spy).toHaveBeenCalled();
@@ -68,14 +71,14 @@ describe('Directionality', () => {
 
       expect(testComponent.dir.value).toBe('ltr');
     });
-
   });
 
   describe('Dir directive', () => {
     it('should provide itself as Directionality', () => {
       const fixture = TestBed.createComponent(ElementWithDir);
-      const injectedDirectionality =
-        fixture.debugElement.query(By.directive(InjectsDirectionality))!.componentInstance.dir;
+      const injectedDirectionality = fixture.debugElement.query(
+        By.directive(InjectsDirectionality),
+      )!.componentInstance.dir;
 
       fixture.detectChanges();
 
@@ -84,19 +87,22 @@ describe('Directionality', () => {
 
     it('should emit a change event when the value changes', fakeAsync(() => {
       const fixture = TestBed.createComponent(ElementWithDir);
-      const injectedDirectionality =
-        fixture.debugElement.query(By.directive(InjectsDirectionality))!.componentInstance.dir;
+      const injectedDirectionality = fixture.debugElement.query(
+        By.directive(InjectsDirectionality),
+      )!.componentInstance.dir;
 
       fixture.detectChanges();
 
       let direction = injectedDirectionality.value;
-      injectedDirectionality.change.subscribe((dir: Direction) => { direction = dir; });
+      injectedDirectionality.change.subscribe((dir: Direction) => {
+        direction = dir;
+      });
 
       expect(direction).toBe('rtl');
       expect(injectedDirectionality.value).toBe('rtl');
       expect(fixture.componentInstance.changeCount).toBe(0);
 
-      fixture.componentInstance.direction = 'ltr';
+      fixture.componentInstance.direction.set('ltr');
 
       fixture.detectChanges();
 
@@ -107,14 +113,15 @@ describe('Directionality', () => {
 
     it('should complete the change stream on destroy', fakeAsync(() => {
       const fixture = TestBed.createComponent(ElementWithDir);
-      const dir =
-        fixture.debugElement.query(By.directive(InjectsDirectionality))!.componentInstance.dir;
+      const dir = fixture.debugElement.query(By.directive(InjectsDirectionality))!.componentInstance
+        .dir;
       const spy = jasmine.createSpy('complete spy');
       const subscription = dir.change.subscribe(undefined, undefined, spy);
 
       fixture.destroy();
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
+      flush();
     }));
 
     it('should default to ltr if an invalid value is passed in', () => {
@@ -123,13 +130,15 @@ describe('Directionality', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('rtl');
 
-      fixture.componentInstance.direction = 'not-valid';
+      fixture.componentInstance.direction.set('not-valid');
       fixture.detectChanges();
       expect(fixture.componentInstance.dir.value).toBe('ltr');
     });
 
-    it('should preserve the consumer-provided `dir` attribute while ' +
-      'normalizing the directive value', () => {
+    it(
+      'should preserve the consumer-provided `dir` attribute while ' +
+        'normalizing the directive value',
+      () => {
         const fixture = TestBed.createComponent(ElementWithPredefinedAutoDir);
         fixture.detectChanges();
 
@@ -137,7 +146,8 @@ describe('Directionality', () => {
 
         expect(element.getAttribute('dir')).toBe('auto');
         expect(fixture.componentInstance.dir.value).toBe('ltr');
-      });
+      },
+    );
 
     it('should be case-insensitive', () => {
       const fixture = TestBed.createComponent(ElementWithPredefinedUppercaseDir);
@@ -145,46 +155,47 @@ describe('Directionality', () => {
 
       expect(fixture.componentInstance.dir.value).toBe('rtl');
     });
-
   });
 });
 
+/** Test component with Dir directive. */
+@Component({
+  selector: 'injects-directionality',
+  template: `<div></div>`,
+  imports: [BidiModule],
+})
+class InjectsDirectionality {
+  dir = inject(Directionality);
+}
 
 @Component({
   template: `
-    <div [dir]="direction" (dirChange)="changeCount = changeCount + 1">
+    <div [dir]="direction()" (dirChange)="changeCount = changeCount + 1">
       <injects-directionality></injects-directionality>
     </div>
-  `
+  `,
+  imports: [Dir, InjectsDirectionality],
 })
 class ElementWithDir {
   @ViewChild(Dir) dir: Dir;
-  direction = 'rtl';
+  direction = signal('rtl');
   changeCount = 0;
 }
 
 @Component({
-  template: '<div dir="auto"></div>'
+  template: '<div dir="auto"></div>',
+  imports: [Dir],
 })
 class ElementWithPredefinedAutoDir {
   @ViewChild(Dir) dir: Dir;
 }
 
 @Component({
-  template: '<div dir="RTL"></div>'
+  template: '<div dir="RTL"></div>',
+  imports: [Dir],
 })
 class ElementWithPredefinedUppercaseDir {
   @ViewChild(Dir) dir: Dir;
-}
-
-
-/** Test component with Dir directive. */
-@Component({
-  selector: 'injects-directionality',
-  template: `<div></div>`
-})
-class InjectsDirectionality {
-  constructor(public dir: Directionality) { }
 }
 
 interface FakeDocument {

@@ -1,23 +1,18 @@
-@use 'sass:map';
-@use 'sass:math';
-@use 'sass:meta';
-@use 'sass:list';
 @use './elevation';
+@use '../theming/inspection';
 
-@mixin private-theme-elevation($zValue, $config, $opacity: elevation.$opacity) {
-  $foreground: map.get($config, foreground);
-  $elevation-color: map.get($foreground, elevation);
+@mixin private-theme-elevation($zValue, $theme) {
+  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
   $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
 
-  @include elevation.elevation($zValue, $elevation-color-or-default, $opacity);
+  @include elevation.elevation($zValue, $elevation-color-or-default);
 }
 
-@mixin private-theme-overridable-elevation($zValue, $config, $opacity: elevation.$opacity) {
-  $foreground: map.get($config, foreground);
-  $elevation-color: map.get($foreground, elevation);
+@mixin private-theme-overridable-elevation($zValue, $theme) {
+  $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
   $elevation-color-or-default: if($elevation-color == null, elevation.$color, $elevation-color);
 
-  @include elevation.overridable-elevation($zValue, $elevation-color-or-default, $opacity);
+  @include elevation.overridable-elevation($zValue, $elevation-color-or-default);
 }
 
 // If the mat-animation-noop class is present on the components root element,
@@ -25,44 +20,11 @@
 // NOTE: Currently this mixin should only be used with components that do not
 // have any projected content.
 @mixin private-animation-noop() {
-  // @at-root is used to steps outside of the hierarchy of the scss rules. This is
-  // done to allow a class to be added to be added to base of the scss nesting
-  // context.
-  // For example:
-  // .my-root {
-  //   .my-subclass {
-  //      @include mat-private-animation-noop();
-  //    }
-  // }
-  // results in:
-  // ._mat-animation-noopable.my-root .my-subclass { ... }
-  @at-root ._mat-animation-noopable#{&} {
-    transition: none;
-    animation: none;
+  &._mat-animation-noopable {
+    // Use !important here since we don't know what context this mixin will
+    // be included in and MDC can have some really specific selectors.
+    transition: none !important;
+    animation: none !important;
     @content;
-  }
-}
-
-// Private polyfill for the `math.div` function from Sass to be used until we can update the
-// minimum required Sass version to 1.34.0 or above.
-// TODO(crisbeto): replace with `math.div` eventually.
-@function private-div($a, $b) {
-  @if (meta.function-exists('div', 'math')) {
-    @return math.div($a, $b);
-  }
-  @else {
-    @return $a / $b;
-  }
-}
-
-// Private polyfill for the `list.slash` function from Sass to be used until we can update the
-// minimum required Sass version to 1.34.0 or above.
-// TODO(crisbeto): replace with `list.slash` eventually.
-@function private-slash($a, $b) {
-  @if (meta.function-exists('slash', 'list')) {
-    @return list.slash($a, $b);
-  }
-  @else {
-    @return #{$a}#{' / '}#{$b};
   }
 }

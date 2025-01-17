@@ -1,0 +1,15 @@
+<ng-template #panelTemplate>
+  <div
+    role="listbox"
+    class="mat-timepicker-panel"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-labelledby]="_getAriaLabelledby()"
+    [id]="panelId"
+    @panel>
+    @for (option of _timeOptions; track option.value) {
+      <mat-option
+        [value]="option.value"
+        (onSelectionChange)="_selectValue(option.value)">{{option.label}}</mat-option>
+    }
+  </div>
+</ng-template>

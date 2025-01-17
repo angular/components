@@ -23,7 +23,11 @@ const packagesDir = join(__dirname, '../src');
  */
 const excludeGlobs = [
   'cdk/testing/private',
+  'cdk/private',
   '*/schematics/**',
+  // The protractor testing entry-point is no longer publicly available,
+  // but exists in the repository until it can be removed in g3.
+  'cdk/testing/protractor',
 ];
 
 /** List of detected entry-points which are not properly configured. */
@@ -34,15 +38,21 @@ const nonConfigured = [];
 globSync('*/*/**/public-api.ts', {cwd: packagesDir}).forEach(filePath => {
   const entryPointName = dirname(filePath);
 
-  if (!excludeGlobs.some(pattern => minimatch(entryPointName, pattern)) &&
-      !entryPoints.includes(entryPointName)) {
+  if (
+    !excludeGlobs.some(pattern => minimatch(entryPointName, pattern)) &&
+    !entryPoints.includes(entryPointName)
+  ) {
     nonConfigured.push(entryPointName);
   }
 });
 
 if (nonConfigured.length) {
-  console.error(chalk.red('Found entry-points which are not configured. Add the following ' +
-      'entry-points to the package-specific "config.bzl" file:\n'));
+  console.error(
+    chalk.red(
+      'Found entry-points which are not configured. Add the following ' +
+        'entry-points to the package-specific "config.bzl" file:\n',
+    ),
+  );
   nonConfigured.forEach(e => console.warn(chalk.yellow(`  - ${e}`)));
   process.exit(1);
 } else {

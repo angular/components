@@ -1,8 +1,59 @@
-.mat-tab-body-content {
+@use '../core/style/layout-common';
+
+// Wraps each tab body. We need to add these styles ourselves,
+// because MDC only provides styling for the tab header.
+.mat-mdc-tab-body {
+  @include layout-common.fill();
+  display: block;
+  overflow: hidden;
+  outline: 0;
+
+  // Fix for auto content wrapping in IE11
+  flex-basis: 100%;
+
+  &.mat-mdc-tab-body-active {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1;
+    flex-grow: 1;
+  }
+
+  .mat-mdc-tab-group.mat-mdc-tab-group-dynamic-height &.mat-mdc-tab-body-active {
+    overflow-y: hidden;
+  }
+}
+
+.mat-mdc-tab-body-content {
   height: 100%;
   overflow: auto;
+  transform: none;
+  visibility: hidden;
 
-  .mat-tab-group-dynamic-height & {
+  .mat-tab-body-animating > &,
+  .mat-mdc-tab-body-active > & {
+    visibility: visible;
+  }
+
+  .mat-mdc-tab-group-dynamic-height & {
     overflow: hidden;
   }
+}
+
+.mat-tab-body-content-can-animate {
+  // Note: there's a 1ms delay so that transition events
+  // still fire even if the duration is set to zero.
+  transition: transform var(--mat-tab-animation-duration) 1ms cubic-bezier(0.35, 0, 0.25, 1);
+
+  .mat-mdc-tab-body-wrapper._mat-animation-noopable & {
+    transition: none;
+  }
+}
+
+.mat-tab-body-content-left {
+  transform: translate3d(-100%, 0, 0);
+}
+
+.mat-tab-body-content-right {
+  transform: translate3d(100%, 0, 0);
 }

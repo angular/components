@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ContentContainerComponentHarness, HarnessPredicate, TestKey} from '@angular/cdk/testing';
@@ -26,7 +26,7 @@ export class MatBottomSheetHarness extends ContentContainerComponentHarness<stri
   }
 
   /** Gets the value of the bottom sheet's "aria-label" attribute. */
-  async getAriaLabel(): Promise<string|null> {
+  async getAriaLabel(): Promise<string | null> {
     return (await this.host()).getAttribute('aria-label');
   }
 

@@ -1,8 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {GoogleMapsModule} from '../google-maps-module';
 import {createMapConstructorSpy, createMapSpy} from '../testing/fake-google-map-utils';
 import {DEFAULT_HEIGHT, DEFAULT_OPTIONS, DEFAULT_WIDTH, GoogleMap} from './google-map';
 
@@ -24,19 +23,6 @@ describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        GoogleMapsModule,
-      ],
-      declarations: [TestApp],
-    });
-  }));
-
-  beforeEach(() => {
-    TestBed.compileComponents();
-  });
-
   afterEach(() => {
     (window.google as any) = undefined;
     (window as any).gm_authFailure = undefined;
@@ -46,12 +32,14 @@ describe('GoogleMap', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
     createMapConstructorSpy(mapSpy, false);
 
-    expect(() => TestBed.createComponent(TestApp))
-        .toThrow(new Error(
-            'Namespace google not found, cannot construct embedded google ' +
-            'map. Please install the Google Maps JavaScript API: ' +
-            'https://developers.google.com/maps/documentation/javascript/' +
-            'tutorial#Loading_the_Maps_API'));
+    expect(() => TestBed.createComponent(TestApp)).toThrow(
+      new Error(
+        'Namespace google not found, cannot construct embedded google ' +
+          'map. Please install the Google Maps JavaScript API: ' +
+          'https://developers.google.com/maps/documentation/javascript/' +
+          'tutorial#Loading_the_Maps_API',
+      ),
+    );
   });
 
   it('initializes a Google map', () => {
@@ -64,7 +52,10 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe(DEFAULT_HEIGHT);
     expect(container.nativeElement.style.width).toBe(DEFAULT_WIDTH);
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapId: undefined,
+    });
   });
 
   it('sets height and width of the map', () => {
@@ -74,15 +65,20 @@ describe('GoogleMap', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.height = '750px';
     fixture.componentInstance.width = '400px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe('750px');
     expect(container.nativeElement.style.width).toBe('400px');
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapId: undefined,
+    });
 
     fixture.componentInstance.height = '650px';
     fixture.componentInstance.width = '350px';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(container.nativeElement.style.height).toBe('650px');
@@ -97,6 +93,7 @@ describe('GoogleMap', () => {
     const instance = fixture.componentInstance;
     instance.height = 750;
     instance.width = 400;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!.nativeElement;
@@ -105,6 +102,7 @@ describe('GoogleMap', () => {
 
     instance.height = '500';
     instance.width = '600';
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(container.style.height).toBe('500px');
@@ -126,13 +124,19 @@ describe('GoogleMap', () => {
   });
 
   it('sets center and zoom of the map', () => {
-    const options = {center: {lat: 3, lng: 5}, zoom: 7, mapTypeId: DEFAULT_OPTIONS.mapTypeId};
+    const options = {
+      center: {lat: 3, lng: 5},
+      zoom: 7,
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: undefined,
+    };
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.center = options.center;
     fixture.componentInstance.zoom = options.zoom;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
@@ -140,6 +144,7 @@ describe('GoogleMap', () => {
 
     fixture.componentInstance.center = {lat: 8, lng: 9};
     fixture.componentInstance.zoom = 12;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setCenter).toHaveBeenCalledWith({lat: 8, lng: 9});
@@ -151,19 +156,22 @@ describe('GoogleMap', () => {
       center: {lat: 3, lng: 5},
       zoom: 7,
       draggable: false,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: '123',
     };
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, options);
 
     fixture.componentInstance.options = {...options, heading: 170};
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setOptions).toHaveBeenCalledWith({...options, heading: 170});
@@ -172,10 +180,11 @@ describe('GoogleMap', () => {
   it('should set a default center if the custom options do not provide one', () => {
     const options = {zoom: 7};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].center).toBeTruthy();
@@ -184,10 +193,11 @@ describe('GoogleMap', () => {
   it('should set a default zoom level if the custom options do not provide one', () => {
     const options = {};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(DEFAULT_OPTIONS.zoom);
@@ -196,22 +206,24 @@ describe('GoogleMap', () => {
   it('should not set a default zoom level if the custom options provide "zoom: 0"', () => {
     const options = {zoom: 0};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(0);
   });
 
   it('gives precedence to center and zoom over options', () => {
-    const inputOptions = {center: {lat: 3, lng: 5}, zoom: 7, heading: 170};
+    const inputOptions = {center: {lat: 3, lng: 5}, zoom: 7, heading: 170, mapId: '123'};
     const correctedOptions = {
       center: {lat: 12, lng: 15},
       zoom: 5,
       heading: 170,
-      mapTypeId: DEFAULT_OPTIONS.mapTypeId
+      mapTypeId: DEFAULT_OPTIONS.mapTypeId,
+      mapId: '123',
     };
     mapSpy = createMapSpy(correctedOptions);
     mapConstructorSpy = createMapConstructorSpy(mapSpy);
@@ -220,6 +232,7 @@ describe('GoogleMap', () => {
     fixture.componentInstance.center = correctedOptions.center;
     fixture.componentInstance.zoom = correctedOptions.zoom;
     fixture.componentInstance.options = inputOptions;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('div'))!;
@@ -228,7 +241,7 @@ describe('GoogleMap', () => {
 
   it('exposes methods that change the configuration of the Google Map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
@@ -250,14 +263,14 @@ describe('GoogleMap', () => {
 
   it('exposes methods that get information about the Google Map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
 
     const component = fixture.debugElement.query(By.directive(GoogleMap)).componentInstance;
 
-    mapSpy.getBounds.and.returnValue(null);
+    mapSpy.getBounds.and.returnValue(undefined);
     expect(component.getBounds()).toBe(null);
 
     component.getCenter();
@@ -272,7 +285,7 @@ describe('GoogleMap', () => {
     component.getMapTypeId();
     expect(mapSpy.getMapTypeId).toHaveBeenCalled();
 
-    mapSpy.getProjection.and.returnValue(null);
+    mapSpy.getProjection.and.returnValue(undefined);
     expect(component.getProjection()).toBe(null);
 
     component.getStreetView();
@@ -287,7 +300,7 @@ describe('GoogleMap', () => {
 
   it('initializes event handlers that are set on the map', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const addSpy = mapSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
@@ -315,7 +328,7 @@ describe('GoogleMap', () => {
 
   it('should be able to add an event listener after init', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    createMapConstructorSpy(mapSpy).and.callThrough();
+    createMapConstructorSpy(mapSpy);
 
     const addSpy = mapSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
@@ -333,30 +346,62 @@ describe('GoogleMap', () => {
 
   it('should set the map type', () => {
     mapSpy = createMapSpy(DEFAULT_OPTIONS);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.mapTypeId = 'terrain' as unknown as google.maps.MapTypeId;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
-    expect(mapConstructorSpy).toHaveBeenCalledWith(jasmine.any(HTMLElement),
-      jasmine.objectContaining({mapTypeId: 'terrain'}));
+    expect(mapConstructorSpy).toHaveBeenCalledWith(
+      jasmine.any(HTMLElement),
+      jasmine.objectContaining({mapTypeId: 'terrain'}),
+    );
 
     fixture.componentInstance.mapTypeId = 'roadmap' as unknown as google.maps.MapTypeId;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapSpy.setMapTypeId).toHaveBeenCalledWith('roadmap');
   });
 
+  it('should set the map ID', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.componentInstance.mapId = '123';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(mapConstructorSpy).toHaveBeenCalledWith(
+      jasmine.any(HTMLElement),
+      jasmine.objectContaining({mapId: '123'}),
+    );
+  });
+
   it('sets mapTypeId through the options', () => {
     const options = {mapTypeId: 'satellite'};
     mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(mapConstructorSpy.calls.mostRecent()?.args[1].mapTypeId).toBe('satellite');
+  });
+
+  it('should emit mapInitialized event when the map is initialized', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.mapInitializedSpy).toHaveBeenCalledOnceWith(
+      fixture.componentInstance.map.googleMap,
+    );
   });
 
   it('should emit authFailure event when window.gm_authFailure is called', () => {
@@ -385,16 +430,21 @@ describe('GoogleMap', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map [height]="height"
-                         [width]="width"
-                         [center]="center"
-                         [zoom]="zoom"
-                         [options]="options"
-                         [mapTypeId]="mapTypeId"
-                         (mapClick)="handleClick($event)"
-                         (centerChanged)="handleCenterChanged()"
-                         (mapRightclick)="handleRightclick($event)">
-            </google-map>`,
+  template: `
+    <google-map
+      [height]="height"
+      [width]="width"
+      [center]="center"
+      [zoom]="zoom"
+      [options]="options"
+      [mapTypeId]="mapTypeId"
+      [mapId]="mapId"
+      (mapClick)="handleClick($event)"
+      (centerChanged)="handleCenterChanged()"
+      (mapRightclick)="handleRightclick($event)"
+      (mapInitialized)="mapInitializedSpy($event)" />
+  `,
+  imports: [GoogleMap],
 })
 class TestApp {
   @ViewChild(GoogleMap) map: GoogleMap;
@@ -404,8 +454,10 @@ class TestApp {
   zoom?: number;
   options?: google.maps.MapOptions;
   mapTypeId?: google.maps.MapTypeId;
+  mapId?: string;
 
   handleClick(event: google.maps.MapMouseEvent) {}
   handleCenterChanged() {}
   handleRightclick(event: google.maps.MapMouseEvent) {}
+  mapInitializedSpy = jasmine.createSpy('mapInitialized');
 }

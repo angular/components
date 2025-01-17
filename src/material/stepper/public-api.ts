@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 export {StepperOrientation, StepState} from '@angular/cdk/stepper';
@@ -13,6 +13,6 @@ export * from './stepper';
 export * from './stepper-button';
 export * from './step-header';
 export * from './stepper-intl';
-export * from './stepper-animations';
+export {matStepperAnimations} from './stepper-animations';
 export * from './stepper-icon';
 export * from './step-content';

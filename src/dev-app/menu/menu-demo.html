@@ -9,9 +9,11 @@
     </mat-toolbar>
 
     <mat-menu #menu="matMenu">
-      <button mat-menu-item *ngFor="let item of items" (click)="select(item.text)" [disabled]="item.disabled">
-        {{ item.text }}
-      </button>
+      @for (item of items; track item) {
+        <button mat-menu-item (click)="select(item.text)" [disabled]="item.disabled">
+          {{ item.text }}
+        </button>
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -24,12 +26,12 @@
     </mat-toolbar>
 
     <mat-menu #divider="matMenu">
-      <ng-container *ngFor="let item of items; last as last">
-        <button mat-menu-item [disabled]="item.disabled">
-          {{ item.text }}
-        </button>
-        <mat-divider *ngIf="!last"></mat-divider>
-      </ng-container>
+      @for (item of items; track item) {
+        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+        @if (!$last) {
+          <mat-divider></mat-divider>
+        }
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -95,9 +97,11 @@
     </mat-toolbar>
 
     <mat-menu #anchorMenu="matMenu">
-      <a mat-menu-item *ngFor="let item of items" href="http://www.google.com" [disabled]="item.disabled">
-        {{ item.text }}
-      </a>
+      @for (item of items; track item) {
+        <a mat-menu-item href="https://www.google.com" [disabled]="item.disabled">
+          {{ item.text }}
+        </a>
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -111,10 +115,12 @@
     </mat-toolbar>
 
     <mat-menu xPosition="before" #posXMenu="matMenu">
-      <button mat-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        {{ item.text }}
-      </button>
+      @for (item of iconItems; track item) {
+        <button mat-menu-item [disabled]="item.disabled">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          {{ item.text }}
+        </button>
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -128,9 +134,9 @@
     </mat-toolbar>
 
     <mat-menu yPosition="above" #posYMenu="matMenu">
-      <button mat-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
-      </button>
+      @for (item of items; track item) {
+        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+      }
     </mat-menu>
   </div>
 </div>
@@ -146,9 +152,9 @@
     </mat-toolbar>
 
     <mat-menu [overlapTrigger]="true" #menuOverlay="matMenu">
-      <button mat-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
-      </button>
+      @for (item of items; track item) {
+        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -162,10 +168,12 @@
     </mat-toolbar>
 
     <mat-menu xPosition="before" [overlapTrigger]="true" #posXMenuOverlay="matMenu">
-      <button mat-menu-item *ngFor="let item of iconItems" [disabled]="item.disabled">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        {{ item.text }}
-      </button>
+      @for (item of iconItems; track item) {
+        <button mat-menu-item [disabled]="item.disabled">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          {{ item.text }}
+        </button>
+      }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
@@ -179,9 +187,9 @@
     </mat-toolbar>
 
     <mat-menu yPosition="above" [overlapTrigger]="true" #posYMenuOverlay="matMenu">
-      <button mat-menu-item *ngFor="let item of items" [disabled]="item.disabled">
-        {{ item.text }}
-      </button>
+      @for (item of items; track item) {
+        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+      }
     </mat-menu>
   </div>
 </div>

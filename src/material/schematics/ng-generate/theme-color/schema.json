@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "SchematicsMaterialM3Theme",
+  "title": "Material 3 Theme Color Schema",
+  "type": "object",
+  "properties": {
+    "primaryColor": {
+      "type": "string",
+      "description": "Color for primary color palette",
+      "x-prompt": "What HEX color should be used to generate the M3 theme? It will represent your primary color palette. (ex. #ffffff)"
+    },
+    "secondaryColor": {
+      "type": "string",
+      "description": "Color for secondary color palette",
+      "x-prompt": "What HEX color should be used represent the secondary color palette? (Leave blank to use generated colors from Material)"
+    },
+    "tertiaryColor": {
+      "type": "string",
+      "description": "Color for tertiary color palette",
+      "x-prompt": "What HEX color should be used represent the tertiary color palette? (Leave blank to use generated colors from Material)"
+    },
+    "neutralColor": {
+      "type": "string",
+      "description": "Color for neutral color palette",
+      "x-prompt": "What HEX color should be used represent the neutral color palette? (Leave blank to use generated colors from Material)"
+    },
+    "includeHighContrast": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to create high contrast override theme mixins",
+      "x-prompt": "Do you want to generate high contrast value override mixins for your themes?. Providing a high contrast version of your theme when a user specifies helps increase the accesibility of your application."
+    },
+    "directory": {
+      "type": "string",
+      "description": "Workspace-relative path to a directory where generated theme file will be created",
+      "x-prompt": "What is the directory you want to place the generated theme file in? (Enter the relative path such as 'src/app/styles/' or leave blank to generate at your project root)"
+    },
+    "isScss": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to generate output file in scss or CSS",
+      "x-prompt": "Do you want to generated file to be a scss file? This is the recommended way of setting up theming in your application. If not, a CSS file will be generated with all the system variables defined. (Leave blank to generate a scss file)"
+    }
+  }
+}

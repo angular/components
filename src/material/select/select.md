@@ -14,7 +14,7 @@ and usability advantages. See [the documentation for
 form-field](https://material.angular.io/components/form-field) for more information.
 
 To use a native select inside `<mat-form-field>`, import `MatInputModule` and add the
-`matNativeControl` attribute to the `<select>` element. 
+`matNativeControl` attribute to the `<select>` element.
 
 <!-- example(select-overview) -->
 
@@ -29,7 +29,7 @@ Both`<mat-select>` and `<select>` support all of the form directives from the co
 `ReactiveFormsModule` (`FormControl`, `FormGroup`, etc.) As with native `<select>`, `<mat-select>`
 also supports a `compareWith` function. (Additional information about using a custom `compareWith`
 function can be found in the
-[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).
 
 <!-- example(select-form) -->
 
@@ -54,6 +54,9 @@ In some cases that `<mat-form-field>` may use the placeholder as the label (see 
 
 It is possible to disable the entire select or individual options in the select by using the
 disabled property on the `<select>` or `<mat-select>` and the `<option>` or `<mat-option>` elements respectively.
+When working with Reactive Forms, the select component can be disabled/enabled via form controls.
+This can be accomplished by creating a `FormControl` with the disabled property
+`FormControl({value: '', disabled: true})` or using `FormControl.enable()`, `FormControl.disable()`.
 
 <!-- example(select-disabled) -->
 
@@ -62,6 +65,15 @@ disabled property on the `<select>` or `<mat-select>` and the `<option>` or `<ma
 If you want one of your options to reset the select's value, you can omit specifying its value.
 
 <!-- example(select-reset) -->
+
+### Allowing nullable options to be selected
+
+By default any options with a `null` or `undefined` value will reset the select's value. If instead
+you want the nullable options to be selectable, you can enable the `canSelectNullableOptions` input.
+The default value for the input can be controlled application-wide through the `MAT_SELECT_CONFIG`
+injection token.
+
+<!-- example(select-selectable-null) -->
 
 ### Creating groups of options
 
@@ -135,19 +147,37 @@ globally cause input errors to show when the input is dirty and invalid.
 ```
 
 ### Keyboard interaction
-
-- <kbd>DOWN_ARROW</kbd>: Focus next option
-- <kbd>UP_ARROW</kbd>: Focus previous option
-- <kbd>ENTER</kbd> or <kbd>SPACE</kbd>: Select focused item
+| Keyboard shortcut                      | Action                                                                |
+|----------------------------------------|-----------------------------------------------------------------------|
+| <kbd>Down Arrow</kbd>                  | Navigate to the next option.                                          |
+| <kbd>Up Arrow</kbd>                    | Navigate to the previous option.                                      |
+| <kbd>Enter</kbd>                       | If closed, open the select panel. If open, selects the active option. |
+| <kbd>Escape</kbd>                      | Close the select panel.                                               |
+| <kbd>Alt</kbd> + <kbd>Up Arrow</kbd>   | Close the select panel.                                               |
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the select panel if there are any matching options.              |
 
 ### Accessibility
+When possible, prefer a native `<select>` element over `MatSelect`. The native control
+provides the most accessible experience across the widest range of platforms.
 
-The `<mat-select>` component without text or label should be given a meaningful label via
-`aria-label` or `aria-labelledby`.
+`MatSelect` implements the combobox pattern detailed in the [1.2 version of the ARIA
+specification](https://www.w3.org/TR/wai-aria-1.2). The combobox trigger controls a `role="listbox"`
+element opened in a pop-up. Previous versions of the ARIA specification
+required that `role="combobox"` apply to a text input control, but the 1.2 version of the
+specification supports a wider variety of interaction patterns. This newer usage of ARIA works
+in all browser and screen-reader combinations supported by Angular Material.
 
-The `<mat-select>` component has `role="combobox"`, the dropdown panel has `role="listbox"` and options inside select panel have `role="option"`.
+Because the pop-up uses the `role="listbox"` pattern, you should _not_ put other interactive
+controls, such as buttons or checkboxes, inside a select option. Nesting interactive controls like
+this interferes with most assistive technology.
 
-The native `<select>` offers the best accessibility because it is supported directly by screen-readers.
+Always provide an accessible label for the select. This can be done by adding a `<mat-label>`
+inside of `<mat-form-field>`, the `aria-label` attribute, or the `aria-labelledby` attribute.
+
+By default, `MatSelect` displays a checkmark to identify selected items. While you can hide the
+checkmark indicator for single-selection via `hideSingleSelectionIndicator`, this makes the
+component less accessible by making it harder or impossible for users to visually identify selected
+items.
 
 ### Troubleshooting
 
@@ -155,15 +185,18 @@ The native `<select>` offers the best accessibility because it is supported dire
 
 This error is thrown if you attempt to bind the `multiple` property on `<mat-select>` to a dynamic
 value. (e.g. `[multiple]="isMultiple"` where the value of `isMultiple` changes over the course of
-the component's lifetime). If you need to change this dynamically, use `ngIf` or `ngSwitch` instead:
+the component's lifetime). If you need to change this dynamically, use `@if` or `@switch` instead:
 
 ```html
-<mat-select *ngIf="isMultiple" multiple>
-  ...
-</mat-select>
-<mat-select *ngIf="!isMultiple">
-  ...
-</mat-select>
+@if (isMultiple) {
+  <mat-select multiple>
+    ...
+  </mat-select>
+} @else {
+  <mat-select>
+    ...
+  </mat-select>
+}
 ```
 
 #### Error: Value must be an array in multiple-selection mode
@@ -176,4 +209,4 @@ meant to do was `mySelect.value = ['option1']`.
 
 This error occurs if you attempt to assign something other than a function to the `compareWith`
 property. For more information on proper usage of `compareWith` see the
-[Angular forms documentation](https://angular.io/api/forms/SelectControlValueAccessor#caveat-option-selection)).
+[Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).

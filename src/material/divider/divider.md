@@ -38,18 +38,29 @@ in a list, because it will overlap with the section divider.
 ```html
 <mat-list>
    <h3 mat-subheader>Folders</h3>
-   <mat-list-item *ngFor="let folder of folders; last as last">
-      <mat-icon mat-list-icon>folder</mat-icon>
-      <h4 mat-line>{{folder.name}}</h4>
-      <p mat-line class="demo-2"> {{folder.updated}} </p>
-      <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
-   </mat-list-item>
+   @for (folder of folders; track folder) {
+      <mat-list-item>
+         <mat-icon mat-list-icon>folder</mat-icon>
+         <h4 mat-line>{{folder.name}}</h4>
+         <p mat-line class="demo-2">{{folder.updated}}</p>
+         @if (!$last) {
+            <mat-divider [inset]="true"></mat-divider>
+         }
+      </mat-list-item>
+   }
    <mat-divider></mat-divider>
    <h3 mat-subheader>Notes</h3>
-   <mat-list-item *ngFor="let note of notes">
-      <mat-icon mat-list-icon>note</mat-icon>
-      <h4 mat-line>{{note.name}}</h4>
-      <p mat-line class="demo-2"> {{note.updated}} </p>
-   </mat-list-item>
+   @for (note of notes; track node) {
+      <mat-list-item>
+         <mat-icon mat-list-icon>note</mat-icon>
+         <h4 mat-line>{{note.name}}</h4>
+         <p mat-line class="demo-2"> {{note.updated}} </p>
+      </mat-list-item>
+   }
 </mat-list>
 ```
+
+### Accessibility
+
+`MatDivider` applies the ARIA `role="separator"` attribute, exclusively implementing the
+non-focusable style of separator that distinguishes sections of content.

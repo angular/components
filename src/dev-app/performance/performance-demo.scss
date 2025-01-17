@@ -1,0 +1,23 @@
+.demo-table-and-paginator-container {
+  margin-bottom: 22px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.demo-table-container {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.demo-disclaimer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 32px;
+
+  mat-icon {
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+}

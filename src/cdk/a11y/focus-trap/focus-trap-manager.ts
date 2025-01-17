@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Injectable} from '@angular/core';
@@ -31,7 +31,7 @@ export class FocusTrapManager {
    */
   register(focusTrap: ManagedFocusTrap): void {
     // Dedupe focusTraps that register multiple times.
-    this._focusTrapStack = this._focusTrapStack.filter((ft) => ft !== focusTrap);
+    this._focusTrapStack = this._focusTrapStack.filter(ft => ft !== focusTrap);
 
     let stack = this._focusTrapStack;
 

@@ -3,39 +3,37 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {DOCUMENT} from '@angular/common';
-import {
-  Inject,
-  Injectable,
-  Optional,
-  NgZone,
-} from '@angular/core';
+import {Injectable, Injector, NgZone, inject} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {ConfigurableFocusTrap} from './configurable-focus-trap';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
-import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {EventListenerFocusTrapInertStrategy} from './event-listener-inert-strategy';
+import {FOCUS_TRAP_INERT_STRATEGY, FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
 @Injectable({providedIn: 'root'})
 export class ConfigurableFocusTrapFactory {
-  private _document: Document;
+  private _checker = inject(InteractivityChecker);
+  private _ngZone = inject(NgZone);
+  private _focusTrapManager = inject(FocusTrapManager);
+
+  private _document = inject(DOCUMENT);
   private _inertStrategy: FocusTrapInertStrategy;
 
-  constructor(
-      private _checker: InteractivityChecker,
-      private _ngZone: NgZone,
-      private _focusTrapManager: FocusTrapManager,
-      @Inject(DOCUMENT) _document: any,
-      @Optional() @Inject(FOCUS_TRAP_INERT_STRATEGY) _inertStrategy?: FocusTrapInertStrategy) {
+  private readonly _injector = inject(Injector);
 
-    this._document = _document;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const inertStrategy = inject(FOCUS_TRAP_INERT_STRATEGY, {optional: true});
+
     // TODO split up the strategies into different modules, similar to DateAdapter.
-    this._inertStrategy = _inertStrategy || new EventListenerFocusTrapInertStrategy();
+    this._inertStrategy = inertStrategy || new EventListenerFocusTrapInertStrategy();
   }
 
   /**
@@ -52,8 +50,10 @@ export class ConfigurableFocusTrapFactory {
    */
   create(element: HTMLElement, deferCaptureElements: boolean): ConfigurableFocusTrap;
 
-  create(element: HTMLElement, config: ConfigurableFocusTrapConfig|boolean = {defer: false}):
-      ConfigurableFocusTrap {
+  create(
+    element: HTMLElement,
+    config: ConfigurableFocusTrapConfig | boolean = {defer: false},
+  ): ConfigurableFocusTrap {
     let configObject: ConfigurableFocusTrapConfig;
     if (typeof config === 'boolean') {
       configObject = {defer: config};
@@ -61,7 +61,14 @@ export class ConfigurableFocusTrapFactory {
       configObject = config;
     }
     return new ConfigurableFocusTrap(
-        element, this._checker, this._ngZone, this._document, this._focusTrapManager,
-        this._inertStrategy, configObject);
+      element,
+      this._checker,
+      this._ngZone,
+      this._document,
+      this._focusTrapManager,
+      this._inertStrategy,
+      configObject,
+      this._injector,
+    );
   }
 }

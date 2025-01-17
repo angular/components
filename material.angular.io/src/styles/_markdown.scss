@@ -1,0 +1,114 @@
+// Styles for overview and guide docs generated via `marked` from the material2 repo.
+
+.docs-markdown {
+  max-width: 100%;
+
+  a:not(.mat-mdc-button-base) {
+    color: var(--mat-sys-primary);
+  }
+
+  h1 {
+    display: inline-block;
+    font-size: 32px;
+    font-weight: 400;
+    margin: 32px 0 16px;
+  }
+
+  h2 {
+    font-size: 28px;
+    margin: 32px 0 16px;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 24px;
+    margin: 32px 0 16px;
+    font-weight: 400;
+  }
+
+  h4 {
+    font-size: 22px;
+    margin: 24px 0 12px;
+    font-weight: 400;
+  }
+
+  h3 .material-icons,
+  h4 .material-icons {
+    color: var(--mat-sys-on-surface);
+  }
+
+  h5 {
+    font-size: 18px;
+    margin: 20px 0 10px;
+    font-weight: 400;
+  }
+
+  p, ul, ol {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  p {
+    margin: 0 0 1em;
+
+    // In case the docs generator produces an empty paragraph.
+    &:empty {
+      display: none;
+    }
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  pre {
+    display: block;
+    margin: 24px auto;
+    overflow-x: auto;
+    padding: 20px;
+    white-space: pre-wrap;
+
+    border: solid 1px var(--mat-sys-outline-variant);
+    border-radius: 12px;
+
+    code {
+      background: transparent;
+      padding: 0;
+      font-size: 100%;
+    }
+  }
+
+  code {
+    background: color-mix(in srgb, var(--mat-sys-primary-container) 25%, transparent);
+    padding: 3px;
+  }
+}
+
+.docs-header-link {
+  header-link {
+    // deduct -30px so the anchor icon will be positioned outside the content
+    margin-left: -30px;
+    // Slight margin to try and center the icon better.
+    margin-top: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+
+    a {
+      display: inline-flex;
+      text-decoration: none;
+    }
+  }
+
+  .material-icons {
+    visibility: hidden;
+  }
+
+  &:hover .material-icons {
+    visibility: visible;
+  }
+}

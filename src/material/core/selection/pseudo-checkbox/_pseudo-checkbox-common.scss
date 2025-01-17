@@ -1,0 +1,86 @@
+@use 'sass:math';
+@use '../../style/checkbox-common';
+
+// Padding inside of a pseudo checkbox.
+$padding: checkbox-common.$border-width * 2;
+
+// Center a checkmark indicator inside the checkbox.
+//
+// `$box-size`: size of the checkbox
+// `$mark-size`: size of the checkmark indicator
+@mixin _checkbox-checked-styles-with-size($box-size, $mark-size) {
+  // Center a checkmark. `$checkbox-cmmon.$border-width` is the width of the line of the checkmark.
+  $width: $mark-size;
+  $height: math.div($mark-size - checkbox-common.$border-width, 2);
+
+  // The rendered length of the short-side of the checkmark graphic when rendered. Add length of
+  // the border-width since this element is content-box.
+  $short-side: $height + checkbox-common.$border-width;
+
+  width: $width;
+  height: $height;
+
+  // Rotate on the center of the element. This makes it easier to center the checkmark graphic.
+  transform-origin: center;
+
+  // Take negative one times the distance from the top corner of the checkmark graphic to the top
+  // of the element in its rotated position. This accounts for the top corner of the elemant being
+  // blank since we only use the left and bottom borders to draw the checkmark graphic.
+  top: -1 * math.div($short-side - checkbox-common.$border-width, math.sqrt(2));
+
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  // center the checkmark graphic with margin auto
+  margin: auto;
+}
+
+// Center a horizontal line placed in the vertical and horizontal center of the checkbox. It does
+// not touch the border of the checkbox.
+//
+// `$box-size`: size of the checkbox.
+// `$border-size`: size of the checkbox's border.
+@mixin _checkbox-indeterminate-styles-with-size($box-size, $border-size) {
+  // Center the line in the checkbox. `$checkbox-common.$border-width` is the width of the line.
+  top: math.div($box-size - checkbox-common.$border-width, 2) - $border-size;
+  width: $box-size - checkbox-common.$border-width - (2 * $border-size);
+}
+
+/// Applies the styles that set the size of the pseudo checkbox
+@mixin size($box-size) {
+
+  .mat-pseudo-checkbox {
+    width: $box-size;
+    height: $box-size;
+  }
+
+  .mat-pseudo-checkbox-minimal {
+    $mark-size: $box-size - $padding;
+    $border-size: 0; // Minimal appearance does not have a border.
+
+    &.mat-pseudo-checkbox-checked::after {
+      @include _checkbox-checked-styles-with-size($box-size, $mark-size);
+    }
+    &.mat-pseudo-checkbox-indeterminate::after {
+      @include _checkbox-indeterminate-styles-with-size($box-size, $border-size);
+    }
+  }
+
+  .mat-pseudo-checkbox-full {
+    $mark-size: $box-size - (2 * $padding); // Apply a smaller mark to account for the border.
+    $border-size: checkbox-common.$border-width;
+
+    &.mat-pseudo-checkbox-checked::after {
+      @include _checkbox-checked-styles-with-size($box-size, $mark-size);
+    }
+    &.mat-pseudo-checkbox-indeterminate::after {
+      @include _checkbox-indeterminate-styles-with-size($box-size, $border-size);
+    }
+  }
+}
+
+/// Applies the legacy size styles to the pseudo-checkbox
+@mixin legacy-size() {
+  @include size(checkbox-common.$legacy-size);
+}

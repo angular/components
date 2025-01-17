@@ -1,10 +1,9 @@
-<div class="mat-tab-body-content" #content
-     [@translateTab]="{
-        value: _position,
-        params: {animationDuration: animationDuration}
-     }"
-     (@translateTab.start)="_onTranslateTabStarted($event)"
-     (@translateTab.done)="_translateTabComplete.next($event)"
-     cdkScrollable>
+<div
+   class="mat-mdc-tab-body-content"
+   #content
+   cdkScrollable
+   [class.mat-tab-body-content-left]="_position === 'left'"
+   [class.mat-tab-body-content-right]="_position === 'right'"
+   [class.mat-tab-body-content-can-animate]="_position === 'center' || _previousPosition === 'center'">
   <ng-template matTabBodyHost></ng-template>
 </div>

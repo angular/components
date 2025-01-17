@@ -1,13 +1,29 @@
 <button #button class="mat-button-toggle-button mat-focus-indicator"
         type="button"
         [id]="buttonId"
-        [attr.tabindex]="disabled ? -1 : tabIndex"
-        [attr.aria-pressed]="checked"
-        [disabled]="disabled || null"
-        [attr.name]="name || null"
+        [attr.role]="isSingleSelector() ? 'radio' : 'button'"
+        [attr.tabindex]="disabled && !disabledInteractive ? -1 : tabIndex"
+        [attr.aria-pressed]="!isSingleSelector() ? checked : null"
+        [attr.aria-checked]="isSingleSelector() ? checked : null"
+        [disabled]="(disabled && !disabledInteractive) || null"
+        [attr.name]="_getButtonName()"
         [attr.aria-label]="ariaLabel"
         [attr.aria-labelledby]="ariaLabelledby"
+        [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
         (click)="_onButtonClick()">
+  @if (buttonToggleGroup && (
+    !buttonToggleGroup.multiple && !buttonToggleGroup.hideSingleSelectionIndicator ||
+    buttonToggleGroup.multiple && !buttonToggleGroup.hideMultipleSelectionIndicator)
+  ) {
+    <div class="mat-button-toggle-checkbox-wrapper">
+      <mat-pseudo-checkbox
+        [disabled]="disabled"
+        state="checked"
+        aria-hidden="true"
+        appearance="minimal"/>
+    </div>
+  }
+
   <span class="mat-button-toggle-label-content">
     <ng-content></ng-content>
   </span>

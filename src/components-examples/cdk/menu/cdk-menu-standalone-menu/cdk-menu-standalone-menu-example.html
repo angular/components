@@ -1,0 +1,12 @@
+<!-- #docregion trigger -->
+<button [cdkMenuTriggerFor]="menu" class="example-standalone-trigger">Click me!</button>
+<!-- #enddocregion trigger -->
+
+<ng-template #menu>
+  <div class="example-menu" cdkMenu>
+    <button class="example-menu-item" cdkMenuItem>Refresh</button>
+    <button class="example-menu-item" cdkMenuItem>Settings</button>
+    <button class="example-menu-item" cdkMenuItem>Help</button>
+    <button class="example-menu-item" cdkMenuItem>Sign out</button>
+  </div>
+</ng-template>

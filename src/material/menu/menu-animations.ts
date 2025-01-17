@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import{
+import {
   trigger,
   state,
   style,
@@ -20,6 +20,8 @@ import{
  * Animation duration and timing values are based on:
  * https://material.io/guidelines/components/menus.html#menus-usage
  * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
  */
 export const matMenuAnimations: {
   readonly transformMenu: AnimationTriggerMetadata;
@@ -34,17 +36,25 @@ export const matMenuAnimations: {
    * delay to display the ripple.
    */
   transformMenu: trigger('transformMenu', [
-    state('void', style({
-      opacity: 0,
-      transform: 'scale(0.8)'
-    })),
-    transition('void => enter', animate('120ms cubic-bezier(0, 0, 0.2, 1)', style({
-      opacity: 1,
-      transform: 'scale(1)'
-    }))),
-    transition('* => void', animate('100ms 25ms linear', style({opacity: 0})))
+    state(
+      'void',
+      style({
+        opacity: 0,
+        transform: 'scale(0.8)',
+      }),
+    ),
+    transition(
+      'void => enter',
+      animate(
+        '120ms cubic-bezier(0, 0, 0.2, 1)',
+        style({
+          opacity: 1,
+          transform: 'scale(1)',
+        }),
+      ),
+    ),
+    transition('* => void', animate('100ms 25ms linear', style({opacity: 0}))),
   ]),
-
 
   /**
    * This animation fades in the background color and content of the menu panel
@@ -56,9 +66,9 @@ export const matMenuAnimations: {
     state('showing', style({opacity: 1})),
     transition('void => *', [
       style({opacity: 0}),
-      animate('400ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)')
-    ])
-  ])
+      animate('400ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2)'),
+    ]),
+  ]),
 };
 
 /**

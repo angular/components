@@ -1,8 +1,7 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -16,49 +15,47 @@ ng_module(
     name = "slide-toggle",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "harness/**",
+        ],
     ),
-    assets = [":slide-toggle.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/slide-toggle",
+    assets = [":slide_toggle_scss"] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/a11y",
-        "//src/cdk/coercion",
-        "//src/cdk/observers",
         "//src/material/core",
         "@npm//@angular/animations",
         "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
     ],
 )
 
 sass_library(
     name = "slide_toggle_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "slide_toggle_scss",
     src = "slide-toggle.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "slide_toggle_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":slide-toggle",
         "//src/cdk/a11y",
-        "//src/cdk/observers",
+        "//src/cdk/bidi",
         "//src/cdk/testing/private",
-        "//src/material/testing",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
     ],
@@ -66,28 +63,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
-        "//src/cdk/testing/private/e2e",
-    ],
-)
-
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
+        ":slide_toggle_tests_lib",
     ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":slide-toggle.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":slide_toggle_scss_lib"],
 )
 
 filegroup(

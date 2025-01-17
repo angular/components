@@ -1,8 +1,6 @@
 // stylelint-disable material/no-prefixes
 @mixin user-select($value) {
   -webkit-user-select: $value;
-  -moz-user-select: $value;
-  -ms-user-select: $value;
   user-select: $value;
 }
 
@@ -19,19 +17,11 @@
     @content;
   }
 
+  // Note: this isn't necessary anymore since we don't support
+  // IE, but it caused some presubmit failures in #23416.
   &:-ms-input-placeholder {
     @content;
   }
-}
-
-@mixin cursor-grab {
-  cursor: -webkit-grab;
-  cursor: grab;
-}
-
-@mixin cursor-grabbing {
-  cursor: -webkit-grabbing;
-  cursor: grabbing;
 }
 
 @mixin backface-visibility($value) {
@@ -39,12 +29,7 @@
   backface-visibility: $value;
 }
 
-@mixin position-sticky($important: false) {
-  position: -webkit-sticky #{if($important, '!important', '')};
-  position: sticky #{if($important, '!important', '')};
-}
-
-@mixin private-color-adjust($value) {
+@mixin color-adjust($value) {
   -webkit-print-color-adjust: $value;
   color-adjust: $value;
 }
@@ -52,5 +37,20 @@
 @mixin private-background-clip($value) {
   -webkit-background-clip: $value;
   background-clip: $value;
+}
+
+@mixin clip-path($value) {
+  -webkit-clip-path: $value;
+  clip-path: $value;
+}
+
+@mixin smooth-font {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+@mixin mask-image($value) {
+  -webkit-mask-image: $value;
+  mask-image: $value;
 }
 // stylelint-enable

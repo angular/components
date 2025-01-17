@@ -1,8 +1,8 @@
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Different locale</mat-label>
-  <input matInput [matDatepicker]="dp">
-  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+  <input matInput [matDatepicker]="dp" />
+  <mat-hint>{{dateFormatString()}}</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
   <mat-datepicker #dp></mat-datepicker>
 </mat-form-field>
-
 <button mat-button (click)="french()">Dynamically switch to French</button>

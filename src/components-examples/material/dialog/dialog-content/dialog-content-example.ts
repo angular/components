@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 /**
  * @title Dialog with header, scrollable content and actions
@@ -7,9 +8,11 @@ import {MatDialog} from '@angular/material/dialog';
 @Component({
   selector: 'dialog-content-example',
   templateUrl: 'dialog-content-example.html',
+  imports: [MatButtonModule, MatDialogModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogContentExample {
-  constructor(public dialog: MatDialog) {}
+  readonly dialog = inject(MatDialog);
 
   openDialog() {
     const dialogRef = this.dialog.open(DialogContentExampleDialog);
@@ -23,5 +26,7 @@ export class DialogContentExample {
 @Component({
   selector: 'dialog-content-example-dialog',
   templateUrl: 'dialog-content-example-dialog.html',
+  imports: [MatDialogModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogContentExampleDialog {}

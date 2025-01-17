@@ -1,16 +1,44 @@
 <div #demoYouTubePlayer class="demo-youtube-player">
-  <h1>Basic Example</h1>
+  <h2>Basic Example</h2>
   <section>
     <div class="demo-video-selection">
       <label>Pick the video:</label>
       <mat-radio-group aria-label="Select a video" [(ngModel)]="selectedVideo">
-        <mat-radio-button *ngFor="let video of videos" [value]="video">
-          {{video.name}}
-        </mat-radio-button>
+        @for (video of videos; track video) {
+          <mat-radio-button [value]="video">{{video.name}}</mat-radio-button>
+        }
         <mat-radio-button [value]="undefined">Unset</mat-radio-button>
       </mat-radio-group>
     </div>
-    <youtube-player [videoId]="selectedVideo && selectedVideo.id"
-                    [width]="videoWidth" [height]="videoHeight"></youtube-player>
+    <div class="demo-video-selection">
+      <mat-checkbox [(ngModel)]="disableCookies">Disable cookies</mat-checkbox>
+      <mat-checkbox [(ngModel)]="disablePlaceholder">Disable placeholder</mat-checkbox>
+      <mat-checkbox [(ngModel)]="startAt30s">Start at 30s</mat-checkbox>
+    </div>
+    <youtube-player [videoId]="selectedVideoId"
+                    [playerVars]="playerVars"
+                    [startSeconds]="startAt30s ? 30 : 0"
+                    [width]="videoWidth"
+                    [height]="videoHeight"
+                    [disableCookies]="disableCookies"
+                    [disablePlaceholder]="disablePlaceholder"
+                    [placeholderImageQuality]="placeholderQuality"></youtube-player>
   </section>
+
+  <h2>Placeholder quality comparison (high to low)</h2>
+  <youtube-player
+    [videoId]="selectedVideoId"
+    [width]="videoWidth"
+    [height]="videoHeight"
+    placeholderImageQuality="high"/>
+  <youtube-player
+    [videoId]="selectedVideoId"
+    [width]="videoWidth"
+    [height]="videoHeight"
+    placeholderImageQuality="standard"/>
+  <youtube-player
+    [videoId]="selectedVideoId"
+    [width]="videoWidth"
+    [height]="videoHeight"
+    placeholderImageQuality="low"/>
 </div>

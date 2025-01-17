@@ -3,23 +3,24 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   Directive,
+  ElementRef,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
-  Optional,
   SimpleChanges,
-  ElementRef,
+  inject,
 } from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+
 import {MatDialog} from './dialog';
 import {_closeDialogVia, MatDialogRef} from './dialog-ref';
-
-/** Counter used to generate unique IDs for dialog elements. */
-let dialogElementUid = 0;
 
 /**
  * Button that will close the current dialog.
@@ -31,10 +32,14 @@ let dialogElementUid = 0;
     '(click)': '_onButtonClick($event)',
     '[attr.aria-label]': 'ariaLabel || null',
     '[attr.type]': 'type',
-  }
+  },
 })
 export class MatDialogClose implements OnInit, OnChanges {
-  /** Screenreader label for the button. */
+  dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dialog = inject(MatDialog);
+
+  /** Screen-reader label for the button. */
   @Input('aria-label') ariaLabel: string;
 
   /** Default to "button" to prevents accidental form submits. */
@@ -45,18 +50,8 @@ export class MatDialogClose implements OnInit, OnChanges {
 
   @Input('matDialogClose') _matDialogClose: any;
 
-  constructor(
-
-    /**
-     * Reference to the containing dialog.
-     * @deprecated `dialogRef` property to become private.
-     * @breaking-change 13.0.0
-     */
-    // The dialog title directive is always used in combination with a `MatDialogRef`.
-    // tslint:disable-next-line: lightweight-tokens
-    @Optional() public dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (!this.dialogRef) {
@@ -82,8 +77,49 @@ export class MatDialogClose implements OnInit, OnChanges {
     // result in incorrect origins. Most of the time, close buttons will be auto focused in the
     // dialog, and therefore clicking the button won't result in a focus change. This means that
     // the FocusMonitor won't detect any origin change, and will always output `program`.
-    _closeDialogVia(this.dialogRef,
-        event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
+    _closeDialogVia(
+      this.dialogRef,
+      event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse',
+      this.dialogResult,
+    );
+  }
+}
+
+@Directive()
+export abstract class MatDialogLayoutSection implements OnInit, OnDestroy {
+  protected _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, {optional: true})!;
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dialog = inject(MatDialog);
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
+
+  protected abstract _onAdd(): void;
+  protected abstract _onRemove(): void;
+
+  ngOnInit() {
+    if (!this._dialogRef) {
+      this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
+    }
+
+    if (this._dialogRef) {
+      Promise.resolve().then(() => {
+        this._onAdd();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    // Note: we null check because there are some internal
+    // tests that are mocking out `MatDialogRef` incorrectly.
+    const instance = this._dialogRef?._containerInstance;
+
+    if (instance) {
+      Promise.resolve().then(() => {
+        this._onRemove();
+      });
+    }
   }
 }
 
@@ -94,48 +130,33 @@ export class MatDialogClose implements OnInit, OnChanges {
   selector: '[mat-dialog-title], [matDialogTitle]',
   exportAs: 'matDialogTitle',
   host: {
-    'class': 'mat-dialog-title',
+    'class': 'mat-mdc-dialog-title mdc-dialog__title',
     '[id]': 'id',
   },
 })
-export class MatDialogTitle implements OnInit {
-  /** Unique id for the dialog title. If none is supplied, it will be auto-generated. */
-  @Input() id: string = `mat-dialog-title-${dialogElementUid++}`;
+export class MatDialogTitle extends MatDialogLayoutSection {
+  @Input() id: string = inject(_IdGenerator).getId('mat-mdc-dialog-title-');
 
-  constructor(
-      // The dialog title directive is always used in combination with a `MatDialogRef`.
-      // tslint:disable-next-line: lightweight-tokens
-      @Optional() private _dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _dialog: MatDialog) {}
+  protected _onAdd() {
+    // Note: we null check the queue, because there are some internal
+    // tests that are mocking out `MatDialogRef` incorrectly.
+    this._dialogRef._containerInstance?._addAriaLabelledBy?.(this.id);
+  }
 
-  ngOnInit() {
-    if (!this._dialogRef) {
-      this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
-    }
-
-    if (this._dialogRef) {
-      Promise.resolve().then(() => {
-        const container = this._dialogRef._containerInstance;
-
-        if (container && !container._ariaLabelledBy) {
-          container._ariaLabelledBy = this.id;
-        }
-      });
-    }
+  protected override _onRemove(): void {
+    this._dialogRef?._containerInstance?._removeAriaLabelledBy?.(this.id);
   }
 }
-
 
 /**
  * Scrollable content container of a dialog.
  */
 @Directive({
   selector: `[mat-dialog-content], mat-dialog-content, [matDialogContent]`,
-  host: {'class': 'mat-dialog-content'}
+  host: {'class': 'mat-mdc-dialog-content mdc-dialog__content'},
+  hostDirectives: [CdkScrollable],
 })
 export class MatDialogContent {}
-
 
 /**
  * Container for the bottom action buttons in a dialog.
@@ -143,10 +164,27 @@ export class MatDialogContent {}
  */
 @Directive({
   selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
-  host: {'class': 'mat-dialog-actions'}
+  host: {
+    'class': 'mat-mdc-dialog-actions mdc-dialog__actions',
+    '[class.mat-mdc-dialog-actions-align-start]': 'align === "start"',
+    '[class.mat-mdc-dialog-actions-align-center]': 'align === "center"',
+    '[class.mat-mdc-dialog-actions-align-end]': 'align === "end"',
+  },
 })
-export class MatDialogActions {}
+export class MatDialogActions extends MatDialogLayoutSection {
+  /**
+   * Horizontal alignment of action buttons.
+   */
+  @Input() align?: 'start' | 'center' | 'end';
 
+  protected _onAdd() {
+    this._dialogRef._containerInstance?._updateActionSectionCount?.(1);
+  }
+
+  protected override _onRemove(): void {
+    this._dialogRef._containerInstance?._updateActionSectionCount?.(-1);
+  }
+}
 
 /**
  * Finds the closest MatDialogRef to an element by looking at the DOM.
@@ -156,7 +194,7 @@ export class MatDialogActions {}
 function getClosestDialog(element: ElementRef<HTMLElement>, openDialogs: MatDialogRef<any>[]) {
   let parent: HTMLElement | null = element.nativeElement.parentElement;
 
-  while (parent && !parent.classList.contains('mat-dialog-container')) {
+  while (parent && !parent.classList.contains('mat-mdc-dialog-container')) {
     parent = parent.parentElement;
   }
 

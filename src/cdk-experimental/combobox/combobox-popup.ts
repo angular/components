@@ -3,22 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Directive,
-  ElementRef,
-  Inject,
-  InjectionToken,
-  Input,
-  OnInit,
-  Optional} from '@angular/core';
-import {AriaHasPopupValue, CdkComboboxPanel} from './combobox-panel';
-
-export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
-
-let nextId = 0;
+import {Directive, ElementRef, Input, OnInit, inject} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {AriaHasPopupValue, CDK_COMBOBOX, CdkCombobox} from './combobox';
 
 @Directive({
   selector: '[cdkComboboxPopup]',
@@ -28,10 +18,13 @@ let nextId = 0;
     '[attr.role]': 'role',
     '[id]': 'id',
     'tabindex': '-1',
-    '(focus)': 'focusFirstElement()'
-  }
+    '(focus)': 'focusFirstElement()',
+  },
 })
 export class CdkComboboxPopup<T = unknown> implements OnInit {
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _combobox = inject<CdkCombobox>(CDK_COMBOBOX);
+
   @Input()
   get role(): AriaHasPopupValue {
     return this._role;
@@ -50,25 +43,14 @@ export class CdkComboboxPopup<T = unknown> implements OnInit {
   }
   private _firstFocusElement: HTMLElement;
 
-  @Input() id = `cdk-combobox-popup-${nextId++}`;
-
-  @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
-
-  constructor(
-    private readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
-  ) { }
+  @Input() id: string = inject(_IdGenerator).getId('cdk-combobox-popup-');
 
   ngOnInit() {
     this.registerWithPanel();
   }
 
   registerWithPanel(): void {
-    if (this._parentPanel === null || this._parentPanel === undefined) {
-      this._explicitPanel._registerContent(this.id, this._role);
-    } else {
-      this._parentPanel._registerContent(this.id, this._role);
-    }
+    this._combobox._registerContent(this.id, this._role);
   }
 
   focusFirstElement() {

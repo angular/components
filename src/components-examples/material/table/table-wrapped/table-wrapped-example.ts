@@ -3,21 +3,24 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
-  Input,
   AfterViewInit,
   QueryList,
   ViewChild,
   ContentChild,
+  forwardRef,
+  input,
 } from '@angular/core';
-import {MatSort} from '@angular/material/sort';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 import {
   MatColumnDef,
   MatHeaderRowDef,
   MatNoDataRow,
   MatRowDef,
   MatTable,
-  MatTableDataSource
+  MatTableDataSource,
+  MatTableModule,
 } from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 export interface PeriodicElement {
   name: string;
@@ -44,8 +47,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-wrapped-example',
-  styleUrls: ['table-wrapped-example.css'],
+  styleUrl: 'table-wrapped-example.css',
   templateUrl: 'table-wrapped-example.html',
+  imports: [MatButtonModule, forwardRef(() => WrapperTable), MatSortModule, MatTableModule],
 })
 export class TableWrappedExample implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -73,11 +77,12 @@ export class TableWrappedExample implements AfterViewInit {
 @Component({
   selector: 'wrapper-table',
   templateUrl: 'wrapper-table.html',
-  styles: [`
+  styles: `
     table {
       width: 100%;
     }
-  `]
+  `,
+  imports: [MatTableModule, MatSortModule],
 })
 export class WrapperTable<T> implements AfterContentInit {
   @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
@@ -87,9 +92,8 @@ export class WrapperTable<T> implements AfterContentInit {
 
   @ViewChild(MatTable, {static: true}) table: MatTable<T>;
 
-  @Input() columns: string[];
-
-  @Input() dataSource: DataSource<T>;
+  readonly columns = input.required<string[]>();
+  readonly dataSource = input.required<DataSource<T>>();
 
   ngAfterContentInit() {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));

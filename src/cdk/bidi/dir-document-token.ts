@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {DOCUMENT} from '@angular/common';
 import {inject, InjectionToken} from '@angular/core';
-
 
 /**
  * Injection token used to inject the document into Directionality.
@@ -17,7 +16,7 @@ import {inject, InjectionToken} from '@angular/core';
  * We can't use the real document in tests because changing the real `dir` causes geometry-based
  * tests in Safari to fail.
  *
- * We also can't re-provide the DOCUMENT token from platform-brower because the unit tests
+ * We also can't re-provide the DOCUMENT token from platform-browser because the unit tests
  * themselves use things like `querySelector` in test code.
  *
  * This token is defined in a separate file from Directionality as a workaround for

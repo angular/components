@@ -1,19 +1,20 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {MatSidenav, MatSidenavModule, MatSidenavContainer} from './index';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CommonModule} from '@angular/common';
-
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
 describe('MatSidenav', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatSidenavModule, NoopAnimationsModule, CommonModule],
-      declarations: [SidenavWithFixedPosition, IndirectDescendantSidenav, NestedSidenavContainers],
+      imports: [
+        MatSidenavModule,
+        NoopAnimationsModule,
+        SidenavWithFixedPosition,
+        IndirectDescendantSidenav,
+        NestedSidenavContainers,
+      ],
     });
-
-    TestBed.compileComponents();
   }));
 
   it('should be fixed position when in fixed mode', () => {
@@ -24,6 +25,7 @@ describe('MatSidenav', () => {
     expect(sidenavEl.classList).toContain('mat-sidenav-fixed');
 
     fixture.componentInstance.fixed = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(sidenavEl.classList).not.toContain('mat-sidenav-fixed');
@@ -38,6 +40,7 @@ describe('MatSidenav', () => {
     expect(sidenavEl.style.bottom).toBe('30px');
 
     fixture.componentInstance.fixed = false;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(sidenavEl.style.top).toBeFalsy();
@@ -82,9 +85,7 @@ describe('MatSidenav', () => {
     expect(instance.outerSidenav.opened).toBe(true);
     expect(instance.innerSidenav.opened).toBe(true);
   }));
-
 });
-
 
 @Component({
   template: `
@@ -100,6 +101,7 @@ describe('MatSidenav', () => {
         Some content.
       </mat-sidenav-content>
     </mat-sidenav-container>`,
+  imports: [MatSidenavModule],
 })
 class SidenavWithFixedPosition {
   fixed = true;
@@ -107,17 +109,17 @@ class SidenavWithFixedPosition {
   fixedBottom = 30;
 }
 
-
 @Component({
-  // Note that we need the `ng-container` with the `ngSwitch` so that
-  // there's a directive between the container and the sidenav.
+  // Note that we need the `@if` so that there's an embedded
+  // view between the container and the sidenav.
   template: `
     <mat-sidenav-container #container>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-sidenav #sidenav>Sidenav.</mat-sidenav>
-      </ng-container>
+      }
       <mat-sidenav-content>Some content.</mat-sidenav-content>
     </mat-sidenav-container>`,
+  imports: [MatSidenavModule],
 })
 class IndirectDescendantSidenav {
   @ViewChild('container') container: MatSidenavContainer;
@@ -135,6 +137,7 @@ class IndirectDescendantSidenav {
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,
+  imports: [MatSidenavModule],
 })
 class NestedSidenavContainers {
   @ViewChild('outerContainer') outerContainer: MatSidenavContainer;

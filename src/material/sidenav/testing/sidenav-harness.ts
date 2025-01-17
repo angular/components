@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
@@ -22,9 +22,11 @@ export class MatSidenavHarness extends MatDrawerHarnessBase {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DrawerHarnessFilters = {}): HarnessPredicate<MatSidenavHarness> {
-    return new HarnessPredicate(MatSidenavHarness, options)
-        .addOption('position', options.position,
-            async (harness, position) => (await harness.getPosition()) === position);
+    return new HarnessPredicate(MatSidenavHarness, options).addOption(
+      'position',
+      options.position,
+      async (harness, position) => (await harness.getPosition()) === position,
+    );
   }
 
   /** Whether the sidenav is fixed in the viewport. */

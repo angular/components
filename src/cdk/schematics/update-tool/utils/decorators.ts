@@ -3,14 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as ts from 'typescript';
 
 import {getImportOfIdentifier, Import} from './imports';
 
-export type CallExpressionDecorator = ts.Decorator&{
+export type CallExpressionDecorator = ts.Decorator & {
   expression: ts.CallExpression;
 };
 
@@ -24,21 +24,27 @@ export interface NgDecorator {
  * (e.g. "@angular/core") from a list of decorators.
  */
 export function getAngularDecorators(
-    typeChecker: ts.TypeChecker, decorators: readonly ts.Decorator[]): readonly NgDecorator[] {
-  return decorators.map(node => ({node, importData: getCallDecoratorImport(typeChecker, node)}))
-      .filter(({importData}) => importData && importData.moduleName.startsWith('@angular/'))
-      .map(
-          ({node, importData}) =>
-              ({node: node as CallExpressionDecorator, name: importData!.symbolName}));
+  typeChecker: ts.TypeChecker,
+  decorators: readonly ts.Decorator[],
+): readonly NgDecorator[] {
+  return decorators
+    .map(node => ({node, importData: getCallDecoratorImport(typeChecker, node)}))
+    .filter(({importData}) => importData && importData.moduleName.startsWith('@angular/'))
+    .map(({node, importData}) => ({
+      node: node as CallExpressionDecorator,
+      name: importData!.symbolName,
+    }));
 }
 
 export function getCallDecoratorImport(
-    typeChecker: ts.TypeChecker, decorator: ts.Decorator): Import|null {
+  typeChecker: ts.TypeChecker,
+  decorator: ts.Decorator,
+): Import | null {
   if (!ts.isCallExpression(decorator.expression)) {
     return null;
   }
   const valueExpr = decorator.expression.expression;
-  let identifier: ts.Identifier|null = null;
+  let identifier: ts.Identifier | null = null;
   if (ts.isIdentifier(valueExpr)) {
     identifier = valueExpr;
   } else if (ts.isPropertyAccessExpression(valueExpr) && ts.isIdentifier(valueExpr.name)) {

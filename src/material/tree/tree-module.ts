@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -23,12 +23,11 @@ const MAT_TREE_DIRECTIVES = [
   MatTreeNodeToggle,
   MatTree,
   MatTreeNode,
-  MatTreeNodeOutlet
+  MatTreeNodeOutlet,
 ];
 
 @NgModule({
-  imports: [CdkTreeModule, MatCommonModule],
+  imports: [CdkTreeModule, MatCommonModule, ...MAT_TREE_DIRECTIVES],
   exports: [MatCommonModule, MAT_TREE_DIRECTIVES],
-  declarations: MAT_TREE_DIRECTIVES,
 })
 export class MatTreeModule {}

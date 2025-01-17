@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -13,7 +13,7 @@ import {
   HarnessEnvironment,
   HarnessLoader,
   stopHandlingAutoChangeDetectionStatus,
-  TestElement
+  TestElement,
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
 import {Observable} from 'rxjs';
@@ -29,7 +29,7 @@ export interface TestbedHarnessEnvironmentOptions {
 
 /** The default environment options. */
 const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
-  queryFn: (selector: string, root: Element) => root.querySelectorAll(selector)
+  queryFn: (selector: string, root: Element) => root.querySelectorAll(selector),
 };
 
 /** Whether auto change detection is currently disabled. */
@@ -69,7 +69,7 @@ function uninstallAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unk
 
 /** Whether we are currently in the fake async zone. */
 function isInFakeAsyncZone() {
-  return Zone!.current.get('FakeAsyncTestZoneSpec') != null;
+  return typeof Zone !== 'undefined' && Zone!.current.get('FakeAsyncTestZoneSpec') != null;
 }
 
 /**
@@ -91,16 +91,25 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   private _destroyed = false;
 
   /** Observable that emits whenever the test task state changes. */
-  private _taskState: Observable<TaskState>;
+  private _taskState?: Observable<TaskState>;
 
   /** The options for this environment. */
   private _options: TestbedHarnessEnvironmentOptions;
 
-  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
-      options?: TestbedHarnessEnvironmentOptions) {
+  /** Environment stabilization callback passed to the created test elements. */
+  private _stabilizeCallback: () => Promise<void>;
+
+  protected constructor(
+    rawRootElement: Element,
+    private _fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
-    this._taskState = TaskStateZoneInterceptor.setup();
+    if (typeof Zone !== 'undefined') {
+      this._taskState = TaskStateZoneInterceptor.setup();
+    }
+    this._stabilizeCallback = () => this.forceStabilize();
     installAutoChangeDetectionStatusHandler(_fixture);
     _fixture.componentRef.onDestroy(() => {
       uninstallAutoChangeDetectionStatusHandler(_fixture);
@@ -109,8 +118,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions):
-      HarnessLoader {
+  static loader(
+    fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): HarnessLoader {
     return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
   }
 
@@ -118,8 +129,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * Creates a `HarnessLoader` at the document root. This can be used if harnesses are
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
-  static documentRootLoader(fixture: ComponentFixture<unknown>,
-      options?: TestbedHarnessEnvironmentOptions): HarnessLoader {
+  static documentRootLoader(
+    fixture: ComponentFixture<unknown>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): HarnessLoader {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
@@ -138,8 +151,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * of the fixture.
    */
   static async harnessForFixture<T extends ComponentHarness>(
-      fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>,
-      options?: TestbedHarnessEnvironmentOptions): Promise<T> {
+    fixture: ComponentFixture<unknown>,
+    harnessType: ComponentHarnessConstructor<T>,
+    options?: TestbedHarnessEnvironmentOptions,
+  ): Promise<T> {
     const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
     await environment.forceStabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
@@ -179,7 +194,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     // we cannot rely on "fixture.whenStable" since it does not catch tasks scheduled
     // outside of the Angular zone. For test harnesses, we want to ensure that the
     // app is fully stabilized and therefore need to use our own zone interceptor.
-    await this._taskState.pipe(takeWhile(state => !state.stable)).toPromise();
+    await this._taskState?.pipe(takeWhile(state => !state.stable)).toPromise();
   }
 
   /** Gets the root element for the document. */
@@ -189,7 +204,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
 
   /** Creates a `TestElement` from a raw element. */
   protected createTestElement(element: Element): TestElement {
-    return new UnitTestElement(element, () => this.forceStabilize());
+    return new UnitTestElement(element, this._stabilizeCallback);
   }
 
   /** Creates a `HarnessLoader` rooted at the given raw element. */

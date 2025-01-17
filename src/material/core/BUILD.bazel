@@ -1,6 +1,7 @@
 load("//src/material:config.bzl", "MATERIAL_SCSS_LIBS")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -23,8 +24,10 @@ ng_module(
         ":selection/pseudo-checkbox/pseudo-checkbox.css",
         ":option/option.css",
         ":option/optgroup.css",
+        ":internal-form-field/internal-form-field.css",
+        ":ripple/ripple-structure.css",
+        ":focus-indicators/structural-styles.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/core",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk",
@@ -33,8 +36,8 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
+        "//src/cdk/private",
         "@npm//@angular/animations",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
@@ -47,32 +50,34 @@ ALL_THEMING_FILES = [
     # on the `_all-typography` file.
     "_core.scss",
     "color/_all-color.scss",
-    "color/_all-color.import.scss",
     "density/private/_all-density.scss",
-    "density/private/_all-density.import.scss",
     "theming/_all-theme.scss",
-    "theming/_all-theme.import.scss",
     "typography/_all-typography.scss",
-    "typography/_all-typography.import.scss",
 ]
 
 sass_library(
     name = "core_scss_lib",
     srcs = glob(
         ["**/_*.scss"],
-        exclude = ALL_THEMING_FILES,
+        exclude = ALL_THEMING_FILES + ["./tokens/m3/definitions/unused/**/*_.scss"],
     ),
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
-        "//src/cdk/overlay:overlay_scss_lib",
-        "//src/cdk/text-field:text_field_scss_lib",
+        "//src/cdk:sass_lib",
     ],
 )
 
 sass_library(
     name = "theming_scss_lib",
     srcs = ALL_THEMING_FILES,
-    deps = MATERIAL_SCSS_LIBS,
+    deps = MATERIAL_SCSS_LIBS + [
+        "//src/cdk:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "structural_styles_scss",
+    src = "focus-indicators/structural-styles.scss",
+    deps = [":core_scss_lib"],
 )
 
 sass_binary(
@@ -93,6 +98,56 @@ sass_binary(
     deps = [":core_scss_lib"],
 )
 
+sass_binary(
+    name = "internal_form_field_scss",
+    src = "internal-form-field/internal-form-field.scss",
+    deps = [":core_scss_lib"],
+)
+
+sass_binary(
+    name = "ripple_structure_scss",
+    src = "ripple/ripple-structure.scss",
+    deps = [":core_scss_lib"],
+)
+
+# M3 themes
+sass_binary(
+    name = "azure_blue_prebuilt",
+    src = "theming/prebuilt/azure-blue.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "rose_red_prebuilt",
+    src = "theming/prebuilt/rose-red.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "cyan_orange_prebuilt",
+    src = "theming/prebuilt/cyan-orange.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "magenta_violet_prebuilt",
+    src = "theming/prebuilt/magenta-violet.scss",
+    deps = [
+        ":theming_scss_lib",
+        "//src/material-experimental:sass_lib",
+    ],
+)
+
+# Legacy M2 themes
 sass_binary(
     name = "indigo_pink_prebuilt",
     src = "theming/prebuilt/indigo-pink.scss",
@@ -148,6 +203,11 @@ markdown_to_html(
         "core.md",
         "ripple/ripple.md",
     ],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":core_scss_lib"],
 )
 
 filegroup(

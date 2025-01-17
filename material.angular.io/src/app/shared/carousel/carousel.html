@@ -1,0 +1,20 @@
+@if (showPrevArrow) {
+  <button (click)="previous()" aria-hidden="true" tabindex="-1"
+          class="docs-carousel-nav docs-carousel-nav-prev" mat-icon-button aria-label="previous">
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+}
+
+<div #contentWrapper (keyup)="onKeydown($event)"
+     class="docs-carousel-content-wrapper" role="region">
+  <div class="docs-carousel-content" role="list" tabindex="0" #list>
+    <ng-content></ng-content>
+  </div>
+</div>
+
+@if (showNextArrow) {
+  <button (click)="next()" aria-hidden="true" tabindex="-1"
+          class="docs-carousel-nav docs-carousel-nav-next" mat-icon-button aria-label="next">
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+}

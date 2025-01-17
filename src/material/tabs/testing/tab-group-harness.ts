@@ -3,30 +3,40 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
+import {
+  ComponentHarness,
+  ComponentHarnessConstructor,
+  HarnessPredicate,
+  parallel,
+} from '@angular/cdk/testing';
 import {TabGroupHarnessFilters, TabHarnessFilters} from './tab-harness-filters';
 import {MatTabHarness} from './tab-harness';
 
-/** Harness for interacting with a standard mat-tab-group in tests. */
+/** Harness for interacting with a mat-tab-group in tests. */
 export class MatTabGroupHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTabGroup` instance. */
-  static hostSelector = '.mat-tab-group';
+  static hostSelector = '.mat-mdc-tab-group';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatTabGroupHarness` that meets
-   * certain criteria.
+   * Gets a `HarnessPredicate` that can be used to search for a tab group with specific attributes.
    * @param options Options for filtering which tab group instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: TabGroupHarnessFilters = {}): HarnessPredicate<MatTabGroupHarness> {
-    return new HarnessPredicate(MatTabGroupHarness, options)
-        .addOption('selectedTabLabel', options.selectedTabLabel, async (harness, label) => {
-          const selectedTab = await harness.getSelectedTab();
-          return HarnessPredicate.stringMatches(await selectedTab.getLabel(), label);
-        });
+  static with<T extends MatTabGroupHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: TabGroupHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options).addOption(
+      'selectedTabLabel',
+      options.selectedTabLabel,
+      async (harness, label) => {
+        const selectedTab = await harness.getSelectedTab();
+        return HarnessPredicate.stringMatches(await selectedTab.getLabel(), label);
+      },
+    );
   }
 
   /**

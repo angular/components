@@ -1,8 +1,7 @@
-import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MatDatepicker} from '@angular/material/datepicker';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import {MatDatepicker, MatDatepickerModule} from '@angular/material/datepicker';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -11,6 +10,8 @@ import {MatDatepicker} from '@angular/material/datepicker';
 import * as _moment from 'moment';
 // tslint:disable-next-line:no-duplicate-imports
 import {default as _rollupMoment, Moment} from 'moment';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 const moment = _rollupMoment || _moment;
 
@@ -32,32 +33,30 @@ export const MY_FORMATS = {
 @Component({
   selector: 'datepicker-views-selection-example',
   templateUrl: 'datepicker-views-selection-example.html',
-  styleUrls: ['datepicker-views-selection-example.css'],
+  styleUrl: 'datepicker-views-selection-example.css',
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // to your app config. We provide it at the component level here, due to limitations
+    // of our example generation script.
+    provideMomentDateAdapter(MY_FORMATS),
   ],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerViewsSelectionExample {
-  date = new FormControl(moment());
+  readonly date = new FormControl(moment());
 
-  chosenYearHandler(normalizedYear: Moment) {
-    const ctrlValue = this.date.value;
-    ctrlValue.year(normalizedYear.year());
-    this.date.setValue(ctrlValue);
-  }
-
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.date.value;
-    ctrlValue.month(normalizedMonth.month());
+  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value ?? moment();
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
     this.date.setValue(ctrlValue);
     datepicker.close();
   }

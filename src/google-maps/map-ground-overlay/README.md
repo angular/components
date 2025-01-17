@@ -7,10 +7,12 @@ The `MapGroundOverlay` component wraps the [`google.maps.GroundOverlay` class](h
 ```typescript
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapGroundOverlay} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  imports: [GoogleMap, MapGroundOverlay],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -28,11 +30,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-ground-overlay [url]="imageUrl"
-                      [bounds]="imageBounds"></map-ground-overlay>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-ground-overlay [url]="imageUrl" [bounds]="imageBounds" />
 </google-map>
 ```

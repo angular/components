@@ -3,35 +3,36 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   CDK_TREE_NODE_OUTLET_NODE,
   CdkNestedTreeNode,
-  CdkTree,
   CdkTreeNode,
   CdkTreeNodeDef,
 } from '@angular/cdk/tree';
 import {
   AfterContentInit,
-  Attribute,
   Directive,
-  DoCheck,
-  ElementRef,
   Input,
-  IterableDiffers,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
+  booleanAttribute,
+  numberAttribute,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
-import {
-  CanDisable,
-  HasTabIndex,
-  mixinDisabled,
-  mixinTabIndex,
-} from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {NoopTreeKeyManager, TreeKeyManagerItem, TreeKeyManagerStrategy} from '@angular/cdk/a11y';
 
-const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
+/**
+ * Determinte if argument TreeKeyManager is the NoopTreeKeyManager. This function is safe to use with SSR.
+ */
+function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
+  keyManager: TreeKeyManagerStrategy<T>,
+): keyManager is NoopTreeKeyManager<T> {
+  return !!(keyManager as any)._isNoopTreeKeyManager;
+}
 
 /**
  * Wrapper for the CdkTree node with Material design styles.
@@ -39,24 +40,78 @@ const _MatTreeNodeBase = mixinTabIndex(mixinDisabled(CdkTreeNode));
 @Directive({
   selector: 'mat-tree-node',
   exportAs: 'matTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
-  providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
+  outputs: ['activation', 'expandedChange'],
+  providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}],
+  host: {
+    'class': 'mat-tree-node',
+    '[attr.aria-expanded]': '_getAriaExpanded()',
+    '[attr.aria-level]': 'level + 1',
+    '[attr.aria-posinset]': '_getPositionInSet()',
+    '[attr.aria-setsize]': '_getSetSize()',
+    '(click)': '_focusItem()',
+    '[tabindex]': '_getTabindexAttribute()',
+  },
 })
-export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
-    implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
+export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
+  /**
+   * The tabindex of the tree node.
+   *
+   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+   *   an unexpected state. Tabindex to be removed in a future version.
+   * @breaking-change 21.0.0 Remove this attribute.
+   */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+    alias: 'tabIndex',
+  })
+  get tabIndexInputBinding(): number {
+    return this._tabIndexInputBinding;
+  }
+  set tabIndexInputBinding(value: number) {
+    // If the specified tabIndex value is null or undefined, fall back to the default value.
+    this._tabIndexInputBinding = value;
+  }
+  private _tabIndexInputBinding: number;
 
+  /**
+   * The default tabindex of the tree node.
+   *
+   * @deprecated By default MatTreeNode manages focus using TreeKeyManager instead of tabIndex.
+   *   Recommend to avoid setting tabIndex directly to prevent TreeKeyManager form getting into
+   *   an unexpected state. Tabindex to be removed in a future version.
+   * @breaking-change 21.0.0 Remove this attribute.
+   */
+  defaultTabIndex = 0;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              @Attribute('tabindex') tabIndex: string) {
-    super(elementRef, tree);
+  protected _getTabindexAttribute() {
+    if (isNoopTreeKeyManager(this._tree._keyManager)) {
+      return this.tabIndexInputBinding;
+    }
+    return this._tabindex;
+  }
 
-    this.tabIndex = Number(tabIndex) || 0;
-    // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
-    // it is not set by the time it's children nodes try to read the class from it.
-    // TODO: move to host after View Engine deprecation
-    elementRef.nativeElement.classList.add('mat-tree-node');
+  /**
+   * Whether the component is disabled.
+   *
+   * @deprecated This is an alias for `isDisabled`.
+   * @breaking-change 21.0.0 Remove this input
+   */
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
+    return this.isDisabled;
+  }
+  set disabled(value: boolean) {
+    this.isDisabled = value;
+  }
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    this.tabIndexInputBinding = Number(tabIndex) || this.defaultTabIndex;
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091
@@ -65,16 +120,9 @@ export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
     super.ngOnInit();
   }
 
-  override ngDoCheck() {
-    super.ngDoCheck();
-  }
-
   override ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 /**
@@ -83,10 +131,8 @@ export class MatTreeNode<T, K = T> extends _MatTreeNodeBase<T, K>
  */
 @Directive({
   selector: '[matTreeNodeDef]',
-  inputs: [
-    'when: matTreeNodeDefWhen'
-  ],
-  providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
+  inputs: [{name: 'when', alias: 'matTreeNodeDefWhen'}],
+  providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}],
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
@@ -98,54 +144,54 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 @Directive({
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
+  outputs: ['activation', 'expandedChange'],
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
     {provide: CdkTreeNode, useExisting: MatNestedTreeNode},
-    {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode}
-  ]
+    {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode},
+  ],
+  host: {
+    'class': 'mat-nested-tree-node',
+  },
 })
-export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
-    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export class MatNestedTreeNode<T, K = T>
+  extends CdkNestedTreeNode<T, K>
+  implements AfterContentInit, OnDestroy, OnInit
+{
   @Input('matNestedTreeNode') node: T;
 
-  /** Whether the node is disabled. */
-  @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-  private _disabled = false;
+  /**
+   * Whether the node is disabled.
+   *
+   * @deprecated This is an alias for `isDisabled`.
+   * @breaking-change 21.0.0 Remove this input
+   */
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
+    return this.isDisabled;
+  }
+  set disabled(value: boolean) {
+    this.isDisabled = value;
+  }
 
-  /** Tabindex for the node. */
-  @Input()
-  get tabIndex(): number { return this.disabled ? -1 : this._tabIndex; }
+  /** Tabindex of the node. */
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  get tabIndex(): number {
+    return this.isDisabled ? -1 : this._tabIndex;
+  }
   set tabIndex(value: number) {
     // If the specified tabIndex value is null or undefined, fall back to the default value.
-    this._tabIndex = value != null ? value : 0;
+    this._tabIndex = value;
   }
   private _tabIndex: number;
-
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              differs: IterableDiffers,
-              @Attribute('tabindex') tabIndex: string) {
-    super(elementRef, tree, differs);
-    this.tabIndex = Number(tabIndex) || 0;
-    // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
-    // it is not set by the time it's children nodes try to read the class from it.
-    // TODO: move to host after View Engine deprecation
-    elementRef.nativeElement.classList.add('mat-nested-tree-node');
-  }
 
   // This is a workaround for https://github.com/angular/angular/issues/19145
   // In aot mode, the lifecycle hooks from parent class are not called.
   // TODO(tinayuangao): Remove when the angular issue #19145 is fixed
   override ngOnInit() {
     super.ngOnInit();
-  }
-
-  override ngDoCheck() {
-    super.ngDoCheck();
   }
 
   override ngAfterContentInit() {
@@ -155,6 +201,4 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
   override ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

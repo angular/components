@@ -1,18 +1,25 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {
+  createKeyboardEvent,
+  dispatchKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
-import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
-import {MatChipInput, MatChipInputEvent} from './chip-input';
-import {MatChipList} from './chip-list';
-import {MatChipsModule} from './index';
-
+import {
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent,
+  MatChipsDefaultOptions,
+  MatChipsModule,
+} from './index';
 
 describe('MatChipInput', () => {
   let fixture: ComponentFixture<any>;
@@ -20,23 +27,24 @@ describe('MatChipInput', () => {
   let inputDebugElement: DebugElement;
   let inputNativeElement: HTMLElement;
   let chipInputDirective: MatChipInput;
-  const dir = 'ltr';
+  let dir = 'ltr';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [PlatformModule, MatChipsModule, MatFormFieldModule, NoopAnimationsModule],
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => {
+            return {
+              value: dir.toLowerCase(),
+              change: new Subject(),
+            };
+          },
+        },
+      ],
       declarations: [TestChipInput],
-      providers: [{
-        provide: Directionality, useFactory: () => {
-          return {
-            value: dir.toLowerCase(),
-            change: new Subject()
-          };
-        }
-      }]
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(waitForAsync(() => {
@@ -65,85 +73,70 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.hasAttribute('placeholder')).toBe(false);
 
       testChipInput.placeholder = 'bound placeholder';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
-    });
-
-    it('should propagate the dynamic `placeholder` value to the form field', () => {
-      fixture.componentInstance.placeholder = 'add a chip';
-      fixture.detectChanges();
-
-      const label: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field-label');
-
-      expect(label).toBeTruthy();
-      expect(label.textContent).toContain('add a chip');
-
-      fixture.componentInstance.placeholder = 'or don\'t';
-      fixture.detectChanges();
-
-      expect(label.textContent).toContain('or don\'t');
     });
 
     it('should become disabled if the list is disabled', () => {
       expect(inputNativeElement.hasAttribute('disabled')).toBe(false);
       expect(chipInputDirective.disabled).toBe(false);
 
-      fixture.componentInstance.chipListInstance.disabled = true;
+      fixture.componentInstance.chipGridInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('disabled')).toBe('true');
       expect(chipInputDirective.disabled).toBe(true);
     });
 
-    it('should allow focus to escape when tabbing forwards', fakeAsync(() => {
-      const listElement: HTMLElement = fixture.nativeElement.querySelector('.mat-chip-list');
-
-      expect(listElement.getAttribute('tabindex')).toBe('0');
-
-      dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB);
-      fixture.detectChanges();
-
-      expect(listElement.getAttribute('tabindex'))
-        .toBe('-1', 'Expected tabIndex to be set to -1 temporarily.');
-
-      tick();
-      fixture.detectChanges();
-
-      expect(listElement.getAttribute('tabindex'))
-        .toBe('0', 'Expected tabIndex to be reset back to 0');
-    }));
-
-    it('should not allow focus to escape when tabbing backwards', fakeAsync(() => {
-      const listElement: HTMLElement = fixture.nativeElement.querySelector('.mat-chip-list');
-
-      expect(listElement.getAttribute('tabindex')).toBe('0');
-
-      dispatchKeyboardEvent(inputNativeElement, 'keydown', TAB, undefined, {shift: true});
-      fixture.detectChanges();
-
-      expect(listElement.getAttribute('tabindex')).toBe('0', 'Expected tabindex to remain 0');
-
-      tick();
-      fixture.detectChanges();
-
-      expect(listElement.getAttribute('tabindex')).toBe('0', 'Expected tabindex to remain 0');
-    }));
-
     it('should be aria-required if the list is required', () => {
       expect(inputNativeElement.hasAttribute('aria-required')).toBe(false);
 
       fixture.componentInstance.required = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(inputNativeElement.getAttribute('aria-required')).toBe('true');
     });
 
-    it('should set input styling classes', () => {
-      expect(inputNativeElement.classList).toContain('mat-input-element');
-      expect(inputNativeElement.classList).toContain('mat-chip-input');
+    it('should be required if the list is required', () => {
+      expect(inputNativeElement.hasAttribute('required')).toBe(false);
+
+      fixture.componentInstance.required = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('required')).toBe('true');
     });
 
+    it('should allow focus to escape when tabbing forwards', fakeAsync(() => {
+      const gridElement: HTMLElement = fixture.nativeElement.querySelector('mat-chip-grid');
+
+      expect(gridElement.getAttribute('tabindex')).toBe('0');
+
+      dispatchKeyboardEvent(gridElement, 'keydown', TAB);
+      fixture.detectChanges();
+
+      expect(gridElement.getAttribute('tabindex'))
+        .withContext('Expected tabIndex to be set to -1 temporarily.')
+        .toBe('-1');
+
+      flush();
+      fixture.detectChanges();
+
+      expect(gridElement.getAttribute('tabindex'))
+        .withContext('Expected tabIndex to be reset back to 0')
+        .toBe('0');
+    }));
+
+    it('should set input styling classes', () => {
+      expect(inputNativeElement.classList).toContain('mat-mdc-input-element');
+      expect(inputNativeElement.classList).toContain('mat-mdc-form-field-input-control');
+      expect(inputNativeElement.classList).toContain('mat-mdc-chip-input');
+      expect(inputNativeElement.classList).toContain('mdc-text-field__input');
+    });
   });
 
   describe('[addOnBlur]', () => {
@@ -151,6 +144,7 @@ describe('MatChipInput', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       chipInputDirective._blur();
@@ -161,6 +155,7 @@ describe('MatChipInput', () => {
       spyOn(testChipInput, 'add');
 
       testChipInput.addOnBlur = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       chipInputDirective._blur();
@@ -202,17 +197,16 @@ describe('MatChipInput', () => {
     it('emits (chipEnd) when the separator keys are configured globally', () => {
       fixture.destroy();
 
-      TestBed
-        .resetTestingModule()
-        .configureTestingModule({
-          imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
-          declarations: [TestChipInput],
-          providers: [{
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
+        declarations: [TestChipInput],
+        providers: [
+          {
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
-            useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
-          }]
-        })
-        .compileComponents();
+            useValue: {separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions,
+          },
+        ],
+      });
 
       fixture = TestBed.createComponent(TestChipInput);
       testChipInput = fixture.debugElement.componentInstance;
@@ -239,28 +233,61 @@ describe('MatChipInput', () => {
       expect(testChipInput.add).not.toHaveBeenCalled();
     });
 
+    it('should set aria-describedby correctly when a non-empty list of ids is passed to setDescribedByIds', fakeAsync(() => {
+      const ids = ['a', 'b', 'c'];
+
+      testChipInput.chipGridInstance.setDescribedByIds(ids);
+      flush();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('aria-describedby')).toEqual('a b c');
+    }));
+
+    it('should set aria-describedby correctly when an empty list of ids is passed to setDescribedByIds', fakeAsync(() => {
+      const ids: string[] = [];
+
+      testChipInput.chipGridInstance.setDescribedByIds(ids);
+      flush();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('aria-describedby')).toBeNull();
+    }));
+
+    it('should not emit chipEnd if the key is repeated', () => {
+      spyOn(testChipInput, 'add');
+
+      chipInputDirective.separatorKeyCodes = [COMMA];
+      fixture.detectChanges();
+
+      const event = createKeyboardEvent('keydown', COMMA);
+      Object.defineProperty(event, 'repeat', {get: () => true});
+      dispatchEvent(inputNativeElement, event);
+      fixture.detectChanges();
+
+      expect(testChipInput.add).not.toHaveBeenCalled();
+    });
   });
 });
 
 @Component({
   template: `
     <mat-form-field>
-      <mat-chip-list #chipList [required]="required">
-        <mat-chip>Hello</mat-chip>
-        <input [matChipInputFor]="chipList"
+      <mat-chip-grid #chipGrid [required]="required">
+        <mat-chip-row>Hello</mat-chip-row>
+        <input [matChipInputFor]="chipGrid"
                   [matChipInputAddOnBlur]="addOnBlur"
                   (matChipInputTokenEnd)="add($event)"
                   [placeholder]="placeholder" />
-      </mat-chip-list>
+      </mat-chip-grid>
     </mat-form-field>
-  `
+  `,
+  standalone: false,
 })
 class TestChipInput {
-  @ViewChild(MatChipList) chipListInstance: MatChipList;
-  addOnBlur = false;
-  required = false;
+  @ViewChild(MatChipGrid) chipGridInstance: MatChipGrid;
+  addOnBlur: boolean = false;
   placeholder = '';
+  required = false;
 
-  add(_: MatChipInputEvent) {
-  }
+  add(_: MatChipInputEvent) {}
 }

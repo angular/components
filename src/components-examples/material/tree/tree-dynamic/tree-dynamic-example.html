@@ -3,7 +3,8 @@
     <button mat-icon-button disabled></button>
     {{node.item}}
   </mat-tree-node>
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
+                [cdkTreeNodeTypeaheadLabel]="node.item">
     <button mat-icon-button
             [attr.aria-label]="'Toggle ' + node.item" matTreeNodeToggle>
       <mat-icon class="mat-icon-rtl-mirror">
@@ -11,8 +12,10 @@
       </mat-icon>
     </button>
     {{node.item}}
-    <mat-progress-bar *ngIf="node.isLoading"
-                      mode="indeterminate"
-                      class="example-tree-progress-bar"></mat-progress-bar>
+    @if (node.isLoading()) {
+      <mat-progress-bar
+          mode="indeterminate"
+          class="example-tree-progress-bar"></mat-progress-bar>
+    }
   </mat-tree-node>
 </mat-tree>

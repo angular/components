@@ -1,22 +1,36 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatInputModule} from '@angular/material/input';
 
 /** @title Fixed sidenav */
 @Component({
   selector: 'sidenav-fixed-example',
   templateUrl: 'sidenav-fixed-example.html',
-  styleUrls: ['sidenav-fixed-example.css'],
+  styleUrl: 'sidenav-fixed-example.css',
+  imports: [
+    MatToolbarModule,
+    MatSidenavModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+  ],
 })
 export class SidenavFixedExample {
-  options: FormGroup;
+  private _formBuilder = inject(FormBuilder);
 
-  constructor(fb: FormBuilder) {
-    this.options = fb.group({
-      bottom: 0,
-      fixed: false,
-      top: 0
-    });
-  }
+  options = this._formBuilder.group({
+    bottom: 0,
+    fixed: false,
+    top: 0,
+  });
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
+  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

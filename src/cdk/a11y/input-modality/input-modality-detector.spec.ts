@@ -8,7 +8,7 @@ import {
   dispatchTouchEvent,
   dispatchEvent,
   createTouchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../testing/private';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {
   InputModality,
@@ -26,16 +26,11 @@ describe('InputModalityDetector', () => {
       providers: [
         {provide: Platform, useValue: {isBrowser}},
         {provide: INPUT_MODALITY_DETECTOR_OPTIONS, useValue: options},
-      ]
+      ],
     });
 
     detector = TestBed.inject(InputModalityDetector);
   }
-
-  afterEach(() => {
-    detector?.ngOnDestroy();
-    detector = undefined!;
-  });
 
   it('should do nothing on non-browser platforms', () => {
     setupTest(false);
@@ -138,12 +133,23 @@ describe('InputModalityDetector', () => {
     expect(emitted).toEqual(['keyboard', 'mouse', 'touch', 'keyboard']);
   });
 
-  it('should detect fake screen reader mouse events as keyboard input modality', () => {
+  it('should detect fake screen reader mouse events as keyboard input modality on Chrome', () => {
     setupTest();
 
     // Create a fake screen-reader mouse event.
     const event = createMouseEvent('mousedown');
-    Object.defineProperty(event, 'buttons', {get: () => 0});
+    Object.defineProperties(event, {detail: {get: () => 0}});
+    dispatchEvent(document, event);
+
+    expect(detector.mostRecentModality).toBe('keyboard');
+  });
+
+  it('should detect fake screen reader mouse events as keyboard input modality on Firefox', () => {
+    setupTest();
+
+    // Create a fake screen-reader mouse event.
+    const event = createMouseEvent('mousedown');
+    Object.defineProperties(event, {buttons: {get: () => 0}});
     dispatchEvent(document, event);
 
     expect(detector.mostRecentModality).toBe('keyboard');
@@ -199,4 +205,19 @@ describe('InputModalityDetector', () => {
     dispatchMouseEvent(document, 'mousedown');
     expect(detector.mostRecentModality).toBe('mouse');
   }));
+
+  it('should complete the various observables on destroy', () => {
+    setupTest();
+
+    const modalityDetectedSpy = jasmine.createSpy('modalityDetected complete spy');
+    const modalityChangedSpy = jasmine.createSpy('modalityChanged complete spy');
+
+    detector.modalityDetected.subscribe({complete: modalityDetectedSpy});
+    detector.modalityChanged.subscribe({complete: modalityChangedSpy});
+
+    detector.ngOnDestroy();
+
+    expect(modalityDetectedSpy).toHaveBeenCalled();
+    expect(modalityChangedSpy).toHaveBeenCalled();
+  });
 });

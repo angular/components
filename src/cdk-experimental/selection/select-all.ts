@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, Inject, OnDestroy, OnInit, Optional, Self} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Directive, OnDestroy, OnInit, inject} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {switchMap, takeUntil} from 'rxjs/operators';
 
@@ -28,22 +28,21 @@ import {CdkSelection} from './selection';
   exportAs: 'cdkSelectAll',
 })
 export class CdkSelectAll<T> implements OnDestroy, OnInit {
+  private readonly _selection = inject<CdkSelection<T>>(CdkSelection, {optional: true})!;
+  private readonly _controlValueAccessor = inject(NG_VALUE_ACCESSOR, {optional: true, self: true});
+
   /**
    * The checked state of the toggle.
    * Resolves to `true` if all the values are selected, `false` if no value is selected.
    */
-  readonly checked: Observable<boolean> = this._selection.change.pipe(
-      switchMap(() => observableOf(this._selection.isAllSelected())),
-  );
+  readonly checked: Observable<boolean>;
 
   /**
    * The indeterminate state of the toggle.
    * Resolves to `true` if part (not all) of the values are selected, `false` if all values or no
    * value at all are selected.
    */
-  readonly indeterminate: Observable<boolean> = this._selection.change.pipe(
-      switchMap(() => observableOf(this._selection.isPartialSelected())),
-  );
+  readonly indeterminate: Observable<boolean>;
 
   /**
    * Toggles the select-all state.
@@ -66,10 +65,17 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
 
   private readonly _destroyed = new Subject<void>();
 
-  constructor(
-      @Optional() @Inject(CdkSelection) private readonly _selection: CdkSelection<T>,
-      @Optional() @Self() @Inject(NG_VALUE_ACCESSOR) private readonly _controlValueAccessor:
-          ControlValueAccessor[]) {}
+  constructor() {
+    const _selection = this._selection;
+
+    this.checked = _selection.change.pipe(
+      switchMap(() => observableOf(_selection.isAllSelected())),
+    );
+
+    this.indeterminate = _selection.change.pipe(
+      switchMap(() => observableOf(_selection.isPartialSelected())),
+    );
+  }
 
   ngOnInit() {
     this._assertValidParentSelection();
@@ -83,8 +89,8 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
           this.toggle();
         }
       });
-      this.checked.pipe(takeUntil(this._destroyed)).subscribe((state) => {
-        this._controlValueAccessor[0].writeValue(state);
+      this.checked.pipe(takeUntil(this._destroyed)).subscribe(state => {
+        this._controlValueAccessor![0].writeValue(state);
       });
     }
   }

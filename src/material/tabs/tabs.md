@@ -46,13 +46,14 @@ provides a tab-like UI for navigating between routes.
                "file": "tab-nav-bar-basic-example.html",
                "region": "mat-tab-nav"}) -->
 
-The `tab-nav-bar` is not tied to any particular router; it works with normal `<a>` elements and uses
-the `active` property to determine which tab is currently active. The corresponding
-`<router-outlet>` can be placed anywhere in the view.
+The `mat-tab-nav-bar` is not tied to any particular router; it works with normal `<a>` elements and
+uses the `active` property to determine which tab is currently active. The corresponding
+`<router-outlet>` must be wrapped in an `<mat-tab-nav-panel>` component and should typically be
+placed relatively close to the `mat-tab-nav-bar` (see [Accessibility](#accessibility)).
 
 ### Lazy Loading
 By default, the tab contents are eagerly loaded. Eagerly loaded tabs
-will initalize the child components but not inject them into the DOM
+will initialize the child components but not inject them into the DOM
 until the tab is activated.
 
 
@@ -84,18 +85,35 @@ duration can be configured globally using the `MAT_TABS_CONFIG` injection token.
                "file": "tab-group-animations-example.html",
                "region": "slow-animation-duration"}) -->
 
+### Keeping the tab content inside the DOM while it's off-screen
+By default the `<mat-tab-group>` will remove the content of off-screen tabs from the DOM until they
+come into the view. This is optimal for most cases since it keeps the DOM size smaller, but it
+isn't great for others like when a tab has an `<audio>` or `<video>` element, because the content
+will be re-initialized whenever the user navigates to the tab. If you want to keep the content of
+off-screen tabs in the DOM, you can set the `preserveContent` input to `true`.
+
+<!-- example(tab-group-preserve-content) -->
+
 ### Accessibility
-`<mat-tab-group>` and `<mat-nav-tab-bar>` use different interaction patterns. The
-`<mat-tab-group>` component combines `tablist`, `tab`, and `tabpanel` into a single component with
-the appropriate keyboard shortcuts. The `<mat-nav-tab-bar>`, however, use a _navigation_ interaction
-pattern by using a `<nav>` element with anchor elements as the "tabs". The difference
-between these two patterns comes from the fact one updates the page URL while the other does not.
+`MatTabGroup` and `MatTabNavBar` both implement the
+[ARIA Tabs design pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel). Both components
+compose `tablist`, `tab`, and `tabpanel` elements with handling for keyboard inputs and focus
+management.
+
+When using `MatTabNavBar`, you should place the `<mat-tab-nav-panel>` component relatively close to
+if not immediately adjacent to the `<nav mat-tab-nav-bar>` component so that it's easy for screen
+reader users to identify the association.
 
 #### Labels
-Tabs without text or labels should be given a meaningful label via `aria-label` or
-`aria-labelledby`. For `MatTabNav`, the `<nav>` element should have a label as well.
+
+Always provide an accessible label via `aria-label` or `aria-describedby` for tabs without
+descriptive text content.
+
+When using `MatTabNavGroup`, always specify a label for the `<nav>` element.
 
 #### Keyboard interaction
+
+`MatTabGroup` and `MatTabNavBar` both implement the following keyboard interactions:
 
 | Shortcut             | Action                     |
 |----------------------|----------------------------|

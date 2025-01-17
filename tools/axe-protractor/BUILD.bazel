@@ -1,9 +1,0 @@
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "axe-protractor",
-    srcs = [
-        "build-message.js",
-        "index.js",
-    ],
-)

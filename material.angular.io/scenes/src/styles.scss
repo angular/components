@@ -1,0 +1,19 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+html {
+  font-family: 'Roboto';
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$red-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // The margin can throw off positioning since the overlay container is within the body.
+  margin: 0;
+}

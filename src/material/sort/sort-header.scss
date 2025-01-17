@@ -1,11 +1,6 @@
-@use '../../cdk/a11y';
-
-$header-arrow-margin: 6px;
-$header-arrow-container-size: 12px;
-$header-arrow-stem-size: 10px;
-$header-arrow-pointer-length: 6px;
-$header-arrow-thickness: 2px;
-$header-arrow-hint-opacity: 0.38;
+@use '../core/tokens/m2/mat/sort' as tokens-mat-sort;
+@use '../core/tokens/token-utils';
+@use '../core/focus-indicators/private';
 
 .mat-sort-header-container {
   display: flex;
@@ -27,10 +22,17 @@ $header-arrow-hint-opacity: 0.38;
   .mat-sort-header-disabled & {
     cursor: default;
   }
+
+  // For the sort-header element, default inset/offset values are necessary to ensure that
+  // the focus indicator is sufficiently contrastive and renders appropriately.
+  &::before {
+    $border-width: var(--mat-focus-indicator-border-width, #{private.$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
 }
 
 .mat-sort-header-content {
-  text-align: center;
   display: flex;
   align-items: center;
 }
@@ -39,89 +41,98 @@ $header-arrow-hint-opacity: 0.38;
   flex-direction: row-reverse;
 }
 
-.mat-sort-header-arrow {
-  height: $header-arrow-container-size;
-  width: $header-arrow-container-size;
-  min-width: $header-arrow-container-size;
-  position: relative;
-  display: flex;
+@keyframes _mat-sort-header-recently-cleared-ascending {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
 
-  // Start off at 0 since the arrow may become visible while parent are animating.
-  // This will be overwritten when the arrow animations kick in. See #11819.
+  to {
+    transform: translateY(-25%);
+    opacity: 0;
+  }
+}
+
+@keyframes _mat-sort-header-recently-cleared-descending {
+  from {
+    transform: translateY(0) rotate(180deg);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(25%) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.mat-sort-header-arrow {
+  $timing: 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 12px;
+  width: 12px;
+  position: relative;
+  transition: transform $timing, opacity $timing;
   opacity: 0;
+  overflow: visible;
+
+  @include token-utils.use-tokens(tokens-mat-sort.$prefix, tokens-mat-sort.get-token-slots()) {
+    @include token-utils.create-token-slot(color, arrow-color);
+  }
+
+  .mat-sort-header.cdk-keyboard-focused &,
+  .mat-sort-header.cdk-program-focused &,
+  .mat-sort-header:hover & {
+    opacity: 0.54;
+  }
+
+  .mat-sort-header .mat-sort-header-sorted & {
+    opacity: 1;
+  }
+
+  .mat-sort-header-descending & {
+    transform: rotate(180deg);
+  }
+
+  .mat-sort-header-recently-cleared-ascending & {
+    transform: translateY(-25%);
+  }
+
+  .mat-sort-header-recently-cleared-ascending & {
+    transition: none; // Without this the animation looks glitchy on Safari.
+    animation: _mat-sort-header-recently-cleared-ascending $timing forwards;
+  }
+
+  .mat-sort-header-recently-cleared-descending & {
+    transition: none; // Without this the animation looks glitchy on Safari.
+    animation: _mat-sort-header-recently-cleared-descending $timing forwards;
+  }
+
+  // Set the durations to 0, but keep the actual animation, since we still want it to play.
+  .mat-sort-header-animations-disabled & {
+    transition-duration: 0ms;
+    animation-duration: 0ms;
+  }
+
+  svg {
+    // Even though this is 24x24, the actual `path` inside ends up being 12x12.
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+
+    // Without this transform the element twitches at the end of the transition on Safari.
+    transform: translateZ(0);
+  }
 
   &,
   [dir='rtl'] .mat-sort-header-position-before & {
-    margin: 0 0 0 $header-arrow-margin;
+    margin: 0 0 0 6px;
   }
 
   .mat-sort-header-position-before &,
   [dir='rtl'] & {
-    margin: 0 $header-arrow-margin 0 0;
+    margin: 0 6px 0 0;
   }
-}
-
-.mat-sort-header-stem {
-  background: currentColor;
-  height: $header-arrow-stem-size;
-  width: $header-arrow-thickness;
-  margin: auto;
-  display: flex;
-  align-items: center;
-
-  @include a11y.high-contrast(active, off) {
-    width: 0;
-    border-left: solid $header-arrow-thickness;
-  }
-}
-
-.mat-sort-header-indicator {
-  width: 100%;
-  height: $header-arrow-thickness;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.mat-sort-header-pointer-middle {
-  margin: auto;
-  height: $header-arrow-thickness;
-  width: $header-arrow-thickness;
-  background: currentColor;
-  transform: rotate(45deg);
-
-  @include a11y.high-contrast(active, off) {
-    width: 0;
-    height: 0;
-    border-top: solid $header-arrow-thickness;
-    border-left: solid $header-arrow-thickness;
-  }
-}
-
-.mat-sort-header-pointer-left,
-.mat-sort-header-pointer-right {
-  background: currentColor;
-  width: $header-arrow-pointer-length;
-  height: $header-arrow-thickness;
-  position: absolute;
-  top: 0;
-
-  @include a11y.high-contrast(active, off) {
-    width: 0;
-    height: 0;
-    border-left: solid $header-arrow-pointer-length;
-    border-top: solid $header-arrow-thickness;
-  }
-}
-
-.mat-sort-header-pointer-left {
-  transform-origin: right;
-  left: 0;
-}
-
-.mat-sort-header-pointer-right {
-  transform-origin: left;
-  right: 0;
 }

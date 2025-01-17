@@ -1,0 +1,272 @@
+@use '../style/elevation';
+@use '../style/sass-utils';
+@use '../theming/config-validation';
+@use '../theming/definition';
+@use './m3/definitions';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:list';
+@use './m3-tokens';
+
+/// Emits necessary CSS variables for Material's system level values for the values defined in the
+/// config map. The config map can have values color, typography, and/or density.
+///
+/// If the config map's color value is an Angular Material color palette, it will be used as the
+/// primary and tertiary colors with a `color-scheme` theme type. Otherwise if the color value is a
+/// map, it must have a `primary` value containing an Angular Material color palette, and
+/// optionally a different `tertiary` palette (defaults to primary palette) and `theme-type` that
+/// is either `light`, `dark`, or 'color-scheme` (defaults to `color-scheme`). Color variable
+/// definitions will not be emitted if there are no color values in the config.
+///
+/// If the config map's typography value is a font family string, it will be used as the
+/// plain and brand font family with default bold, medium, and regular weights of 700, 500, and 400,
+/// respectfully. Otherwise if the typography value is a map, it must have a `plain-family` font
+/// family value, and optionally a different `brand-family` font family (defaults to the plain
+/// value) and weights for `bold-weight` (default: 700), `bold-weight` (default: 500), and
+/// `bold-weight` (default: 400). Typography variable definitions will not be emitted if there are
+/// no typography values in the config.
+///
+/// If the config map's density value is a number, it will be used as the density scale. Otherwise
+/// if the density value is a map, it must have a `scale` value. Density variable definitions will
+/// not be emitted if there are no density values in the config.
+///
+/// The application variables emitted use the namespace prefix "--mat-sys".
+/// e.g. --mat-sys-surface: #E5E5E5
+///
+/// @param {Map} $config The color configuration with optional keys color, typography, or density.
+@mixin theme($config, $overrides: ()) {
+  $color: map.get($config, color);
+  $color-config: null;
+  @if ($color) {
+    // validate-palette returns null if it is a valid M3 palette
+    $is-palette: config-validation.validate-palette($color) == null;
+
+    // Default to "color-scheme" theme type if the config's color does not provide one.
+    @if (not $is-palette and not map.has-key($color, theme-type)) {
+      $color: map.set($color, theme-type, color-scheme);
+    }
+
+    $color-config: if($is-palette,
+            definition.define-colors((primary: $color, theme-type: color-scheme)),
+            definition.define-colors($color));
+    @include system-level-colors($color-config, $overrides, definition.$system-fallback-prefix);
+    @include system-level-elevation($color-config, $overrides, definition.$system-fallback-prefix);
+  }
+
+  $typography: map.get($config, typography);
+  $typography-config: null;
+  @if ($typography) {
+    $typography-config: if(meta.type-of($typography) == 'map',
+      definition.define-typography($typography),
+      definition.define-typography((plain-family: $typography)));
+    @include system-level-typography(
+        $typography-config, $overrides, definition.$system-fallback-prefix);
+  }
+
+  $density: map.get($config, density);
+  $density-config: null;
+  @if ($density) {
+    $density-config: if(meta.type-of($density) == 'map',
+      definition.define-density($density),
+      definition.define-density((scale: $density)));
+    $scale: map.get($density-config, _mat-theming-internals-do-not-access, density-scale);
+    @if ($scale != 0) {
+      $all-tokens: m3-tokens.generate-density-tokens($scale);
+      @each $component-tokens in $all-tokens {
+        $namespace: list.nth($component-tokens, 1);
+        @each $tokens in list.nth($component-tokens, 2) {
+          --#{list.nth($namespace, 1)}-#{list.nth($namespace, 2)}-#{
+              list.nth($tokens, 1)}: #{list.nth($tokens, 2)};
+        }
+      }
+    }
+  }
+
+  @include system-level-shape($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
+  @include system-level-state($overrides: $overrides, $prefix: definition.$system-fallback-prefix);
+}
+
+/// Emits the system-level CSS variables for each of the provided override values. E.g. to
+/// change the primary color to red, use `mat.theme-overrides((primary: red));`
+@mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
+  $sys-names: map-merge-all(
+      definitions.md-sys-color-values-light(),
+      definitions.md-sys-typescale-values(),
+      definitions.md-sys-elevation-values(),
+      definitions.md-sys-shape-values(),
+      definitions.md-sys-state-values());
+
+  & {
+    @each $name, $value in $overrides {
+      @if (map.has-key($sys-names, $name)) {
+        --#{$prefix}-#{$name}: #{map.get($overrides, $name)};
+      }
+    }
+  }
+}
+
+@mixin system-level-colors($theme, $overrides: (), $prefix: null) {
+  $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
+  $base-palettes: (
+    neutral: map.get($palettes, neutral),
+    neutral-variant: map.get($palettes, neutral-variant),
+    secondary: map.get($palettes, secondary),
+    error: map.get($palettes, error),
+  );
+
+  $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
+  $primary: map.merge(map.get($palettes, primary), $base-palettes);
+  $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
+  $error: map.get($palettes, error);
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, _mat-theming-internals-do-not-access,
+        color-system-variables-prefix) or definition.$system-level-prefix;
+  }
+
+  $ref: (
+    md-ref-palette: m3-tokens.generate-ref-palette-tokens($primary, $tertiary, $error)
+  );
+
+  $sys-colors: _generate-sys-colors($ref, $type);
+
+  // Manually insert a subset of palette values that are used directly by components
+  // instead of system variables.
+  $sys-colors: map.set($sys-colors,
+    'neutral-variant20', map.get($ref, md-ref-palette, neutral-variant20));
+  $sys-colors: map.set($sys-colors,
+    'neutral10', map.get($ref, md-ref-palette, neutral10));
+
+  & {
+    @each $name, $value in $sys-colors {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@function _generate-sys-colors($ref, $type) {
+  $light-sys-colors: definitions.md-sys-color-values-light($ref);
+  @if ($type == light) {
+    @return $light-sys-colors;
+  }
+
+  $dark-sys-colors: definitions.md-sys-color-values-dark($ref);
+  @if ($type == dark) {
+    @return $dark-sys-colors;
+  }
+
+  @if ($type == color-scheme) {
+    $light-dark-sys-colors: ();
+    @each $name, $light-value in $light-sys-colors {
+      $dark-value: map.get($dark-sys-colors, $name);
+      $light-dark-sys-colors:
+          map.set($light-dark-sys-colors, $name, light-dark($light-value, $dark-value));
+    }
+    @return $light-dark-sys-colors;
+  }
+
+  @error 'Unknown theme-type provided: #{$type}';
+}
+
+@mixin system-level-typography($theme, $overrides: (), $prefix: null) {
+  $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
+  $brand: map.get($font-definition, brand);
+  $plain: map.get($font-definition, plain);
+  $bold: map.get($font-definition, bold);
+  $medium: map.get($font-definition, medium);
+  $regular: map.get($font-definition, regular);
+  $ref: (md-ref-typeface:
+      m3-tokens.generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+
+  @if (not $prefix) {
+    $prefix: map.get($theme, _mat-theming-internals-do-not-access,
+        typography-system-variables-prefix) or definition.$system-level-prefix;
+  }
+
+  & {
+    @each $name, $value in definitions.md-sys-typescale-values($ref) {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-elevation($theme, $overrides: (), $prefix: definition.$system-level-prefix) {
+  $shadow-color: map.get(
+      $theme, _mat-theming-internals-do-not-access, color-tokens, (mdc, theme), shadow);
+
+  @each $name, $value in definitions.md-sys-elevation-values() {
+    $level: map.get($overrides, $name) or $value;
+    $value: elevation.get-box-shadow($level, $shadow-color);
+    & {
+      --#{$prefix}-#{$name}: #{$value};
+    }
+  }
+}
+
+@mixin system-level-shape($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
+  & {
+    @each $name, $value in definitions.md-sys-shape-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+@mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
+  & {
+    @each $name, $value in definitions.md-sys-state-values() {
+      --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+    }
+  }
+}
+
+// Return a new map where the values are the same as the provided map's
+// keys, prefixed with "--mat-sys-". For example:
+// (key1: '', key2: '') --> (key1: --mat-sys-key1, key2: --mat-sys-key2)
+@function _create-system-app-vars-map($map) {
+  $new-map: ();
+  @each $key, $value in $map {
+    $new-map: map.set($new-map, $key, --#{definition.$system-fallback-prefix}-#{$key});
+  }
+  @return $new-map;
+}
+
+// Create a components tokens map where values are based on
+// system fallback variables referencing Material's system keys.
+// Includes density token fallbacks where density is 0.
+@function create-system-fallbacks() {
+  $app-vars: (
+    'md-sys-color':
+        _create-system-app-vars-map(definitions.md-sys-color-values-light()),
+    'md-sys-typescale':
+        _create-system-app-vars-map(definitions.md-sys-typescale-values()),
+    'md-sys-elevation':
+        _create-system-app-vars-map(definitions.md-sys-elevation-values()),
+    'md-sys-state':
+        _create-system-app-vars-map(definitions.md-sys-state-values()),
+    'md-sys-shape':
+        _create-system-app-vars-map(definitions.md-sys-shape-values()),
+    // Add a subset of palette-specific colors used by components instead of system values
+    'md-ref-palette':
+        _create-system-app-vars-map(
+          (
+            neutral10: '', // Form field native select option text color
+            neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
+          )
+        ),
+  );
+
+  @return sass-utils.deep-merge-all(
+      m3-tokens.generate-tokens($app-vars, true, true),
+      m3-tokens.generate-density-tokens(0)
+  );
+}
+
+/// Creates a single merged map from the provided variable-length map arguments
+@function map-merge-all($maps...) {
+  $result: ();
+  @each $map in $maps {
+    $result: map.merge($result, $map);
+  }
+  @return $result;
+}

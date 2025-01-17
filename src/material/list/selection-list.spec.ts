@@ -1,39 +1,42 @@
-import {DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END, A, D, TAB} from '@angular/cdk/keycodes';
+import {A, D, DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
-  dispatchFakeEvent,
   dispatchEvent,
+  dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
-  ChangeDetectionStrategy,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import {
-  waitForAsync,
   ComponentFixture,
-  fakeAsync,
   TestBed,
-  tick,
+  fakeAsync,
   flush,
-  inject,
+  tick,
+  waitForAsync,
 } from '@angular/core/testing';
-import {MatRipple, defaultRippleAnimationConfig, ThemePalette} from '@angular/material/core';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
+  MAT_LIST_CONFIG,
+  MatListConfig,
   MatListModule,
   MatListOption,
+  MatListOptionTogglePosition,
   MatSelectionList,
-  MatSelectionListChange
+  MatSelectionListChange,
 } from './index';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {FocusMonitor} from '@angular/cdk/a11y';
 
 describe('MatSelectionList without forms', () => {
+  const typeaheadInterval = 200;
+
   describe('with list option', () => {
     let fixture: ComponentFixture<SelectionListWithListOptions>;
     let listOptions: DebugElement[];
@@ -41,21 +44,17 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
           SelectionListWithOnlyOneOption,
           SelectionListWithIndirectChildOptions,
           SelectionListWithSelectedOptionAndValue,
-          SelectionListWithIndirectDescendantLines,
         ],
       });
-
-      TestBed.compileComponents();
     }));
-
 
     beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithListOptions);
@@ -64,6 +63,10 @@ describe('MatSelectionList without forms', () => {
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
     }));
+
+    function getFocusIndex() {
+      return listOptions.findIndex(o => document.activeElement === o.nativeElement);
+    }
 
     it('should be able to set a value on a list option', () => {
       const optionValues = ['inbox', 'starred', 'sent-mail', 'archive', 'drafts'];
@@ -89,7 +92,7 @@ describe('MatSelectionList without forms', () => {
 
       expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
 
-      dispatchFakeEvent(listOptions[2].nativeElement, 'click');
+      dispatchMouseEvent(listOptions[2].nativeElement, 'click');
       fixture.detectChanges();
 
       expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(1);
@@ -98,7 +101,7 @@ describe('MatSelectionList without forms', () => {
     it('should be able to dispatch one selected item', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
@@ -115,7 +118,7 @@ describe('MatSelectionList without forms', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let testListItem2 = listOptions[1].injector.get<MatListOption>(MatListOption);
       let selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
@@ -137,41 +140,49 @@ describe('MatSelectionList without forms', () => {
     it('should be able to specify a color for list options', () => {
       const optionNativeElements = listOptions.map(option => option.nativeElement);
 
-      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary')))
-        .toBe(true);
-      expect(optionNativeElements.every(option => !option.classList.contains('mat-warn')))
-        .toBe(true);
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary'))).toBe(
+        true,
+      );
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-warn'))).toBe(
+        true,
+      );
 
       // All options will be set to the "warn" color.
       fixture.componentInstance.selectionListColor = 'warn';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary')))
-        .toBe(true);
-      expect(optionNativeElements.every(option => option.classList.contains('mat-warn')))
-        .toBe(true);
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary'))).toBe(
+        true,
+      );
+      expect(optionNativeElements.every(option => option.classList.contains('mat-warn'))).toBe(
+        true,
+      );
 
       // Color will be set explicitly for an option and should take precedence.
       fixture.componentInstance.firstOptionColor = 'primary';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(optionNativeElements[0].classList).toContain('mat-primary');
+      expect(optionNativeElements[0].classList).not.toContain('mat-accent');
       expect(optionNativeElements[0].classList).not.toContain('mat-warn');
-      expect(optionNativeElements.slice(1).every(option => option.classList.contains('mat-warn')))
-        .toBe(true);
+      expect(
+        optionNativeElements.slice(1).every(option => option.classList.contains('mat-warn')),
+      ).toBe(true);
     });
 
     it('should explicitly set the `accent` color', () => {
       const classList = listOptions[0].nativeElement.classList;
 
       fixture.componentInstance.firstOptionColor = 'primary';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(classList).toContain('mat-primary');
       expect(classList).not.toContain('mat-accent');
       expect(classList).not.toContain('mat-warn');
 
       fixture.componentInstance.firstOptionColor = 'accent';
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(classList).not.toContain('mat-primary');
@@ -182,7 +193,7 @@ describe('MatSelectionList without forms', () => {
     it('should be able to deselect an option', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
@@ -197,28 +208,29 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
     });
 
-    it('should not add the mat-list-single-selected-option class (in multiple mode)', () => {
+    it('should not add the mdc-list-item--selected class (in multiple mode)', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
 
-      testListItem._handleClick();
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
-      expect(listOptions[2].nativeElement.classList.contains('mat-list-single-selected-option'))
-          .toBe(false);
+      expect(listOptions[2].nativeElement.classList.contains('mdc-list-item--selected')).toBe(
+        false,
+      );
     });
 
     it('should not allow selection of disabled items', () => {
       let testListItem = listOptions[0].injector.get<MatListOption>(MatListOption);
       let selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
-      expect(selectList.selected.length).toBe(0);
+      expect(selectList.selected.length).withContext('before click').toBe(0);
       expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
-      testListItem._handleClick();
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
-      expect(selectList.selected.length).toBe(0);
+      expect(selectList.selected.length).withContext('after click').toBe(0);
     });
 
     it('should be able to un-disable disabled items', () => {
@@ -227,6 +239,7 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       testListItem.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('false');
@@ -234,53 +247,34 @@ describe('MatSelectionList without forms', () => {
 
     it('should be able to use keyboard select with SPACE', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
       const selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
 
-      dispatchFakeEvent(testListItem, 'focus');
-      selectionList.componentInstance._keydown(SPACE_EVENT);
+      testListItem.focus();
+      expect(getFocusIndex()).toBe(1);
 
+      const event = dispatchKeyboardEvent(testListItem, 'keydown', SPACE);
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(1);
-      expect(SPACE_EVENT.defaultPrevented).toBe(true);
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should be able to select an item using ENTER', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const ENTER_EVENT = createKeyboardEvent('keydown', ENTER);
       const selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
 
-      dispatchFakeEvent(testListItem, 'focus');
-      selectionList.componentInstance._keydown(ENTER_EVENT);
+      testListItem.focus();
+      expect(getFocusIndex()).toBe(1);
 
+      const event = dispatchKeyboardEvent(testListItem, 'keydown', ENTER);
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(1);
-      expect(ENTER_EVENT.defaultPrevented).toBe(true);
-    });
-
-    it('should not be able to toggle an item when pressing a modifier key', () => {
-      const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
-
-      expect(selectList.selected.length).toBe(0);
-
-      [ENTER, SPACE].forEach(key => {
-        const event = createKeyboardEvent('keydown', key, undefined, {control: true});
-
-        dispatchFakeEvent(testListItem, 'focus');
-        selectionList.componentInstance._keydown(event);
-        fixture.detectChanges();
-        expect(event.defaultPrevented).toBe(false);
-      });
-
-      expect(selectList.selected.length).toBe(0);
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should not be able to toggle a disabled option using SPACE', () => {
@@ -290,277 +284,171 @@ describe('MatSelectionList without forms', () => {
       expect(selectionModel.selected.length).toBe(0);
 
       listOptions[1].componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-      dispatchFakeEvent(testListItem, 'focus');
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE));
+      testListItem.focus();
+      expect(getFocusIndex()).toBe(1);
+
+      dispatchKeyboardEvent(testListItem, 'keydown', SPACE);
       fixture.detectChanges();
 
       expect(selectionModel.selected.length).toBe(0);
     });
 
     it('should focus the first option when the list takes focus for the first time', () => {
-      spyOn(listOptions[0].componentInstance, 'focus').and.callThrough();
-
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
-
-      dispatchFakeEvent(selectionList.nativeElement, 'focus');
-      fixture.detectChanges();
-
-      expect(manager.activeItemIndex).toBe(0);
-      expect(listOptions[0].componentInstance.focus).toHaveBeenCalled();
+      expect(listOptions[0].nativeElement.tabIndex).toBe(0);
+      expect(listOptions.slice(1).every(o => o.nativeElement.tabIndex === -1)).toBe(true);
     });
 
-    it('should not move focus to the first item if focus originated from a mouse interaction',
-      fakeAsync(inject([FocusMonitor], (focusMonitor: FocusMonitor) => {
-        spyOn(listOptions[0].componentInstance, 'focus').and.callThrough();
-
-        const manager = selectionList.componentInstance._keyManager;
-        expect(manager.activeItemIndex).toBe(-1);
-
-        focusMonitor.focusVia(selectionList.nativeElement, 'mouse');
-        fixture.detectChanges();
-        flush();
-
-        expect(manager.activeItemIndex).toBe(-1);
-        expect(listOptions[0].componentInstance.focus).not.toHaveBeenCalled();
-      })));
-
-    it('should focus the previously focused option when the list takes focus a second time', () => {
-      spyOn(listOptions[1].componentInstance, 'focus').and.callThrough();
-
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
-
-      // Focus and blur the option to move the active item index. This option is now the previously
-      // focused option.
-      listOptions[1].componentInstance._handleFocus();
-      listOptions[1].componentInstance._handleBlur();
-
-      dispatchFakeEvent(selectionList.nativeElement, 'focus');
+    it('should focus the first selected option when list receives focus', fakeAsync(() => {
+      dispatchMouseEvent(listOptions[2].nativeElement, 'click');
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toBe(1);
-      expect(listOptions[1].componentInstance.focus).toHaveBeenCalled();
-    });
+      expect(listOptions.map(o => o.nativeElement.tabIndex)).toEqual([-1, -1, 0, -1, -1]);
 
-    it('should allow focus to escape when tabbing away', fakeAsync(() => {
-      selectionList.componentInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+      dispatchMouseEvent(listOptions[1].nativeElement, 'click');
+      fixture.detectChanges();
 
-      expect(selectionList.componentInstance._tabIndex)
-          .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
+      expect(listOptions.map(o => o.nativeElement.tabIndex)).toEqual([-1, 0, -1, -1, -1]);
 
-      tick();
+      // De-select both options to ensure that the first item in the list-item
+      // becomes the designated option for focus.
+      dispatchMouseEvent(listOptions[1].nativeElement, 'click');
+      dispatchMouseEvent(listOptions[2].nativeElement, 'click');
+      fixture.detectChanges();
 
-      expect(selectionList.componentInstance._tabIndex)
-          .toBe(0, 'Expected tabIndex to be reset back to 0');
+      expect(listOptions.map(o => o.nativeElement.tabIndex)).toEqual([0, -1, -1, -1, -1]);
     }));
 
-    it('should restore focus if active option is destroyed', () => {
-      const manager = selectionList.componentInstance._keyManager;
-
-      spyOn(listOptions[3].componentInstance, 'focus').and.callThrough();
-      listOptions[4].componentInstance._handleFocus();
-
-      expect(manager.activeItemIndex).toBe(4);
-
-      fixture.componentInstance.showLastOption = false;
-      fixture.detectChanges();
-
-      expect(manager.activeItemIndex).toBe(3);
-      expect(listOptions[3].componentInstance.focus).toHaveBeenCalled();
-    });
-
-    it('should not attempt to focus the next option when the destroyed option was not focused',
-      () => {
-        const manager = selectionList.componentInstance._keyManager;
-
-        // Focus and blur the option to move the active item index.
-        listOptions[4].componentInstance._handleFocus();
-        listOptions[4].componentInstance._handleBlur();
-
-        spyOn(listOptions[3].componentInstance, 'focus').and.callThrough();
-
-        expect(manager.activeItemIndex).toBe(4);
-
-        fixture.componentInstance.showLastOption = false;
-        fixture.detectChanges();
-
-        expect(manager.activeItemIndex).toBe(3);
-        expect(listOptions[3].componentInstance.focus).not.toHaveBeenCalled();
-      });
-
     it('should focus previous item when press UP ARROW', () => {
-      let UP_EVENT = createKeyboardEvent('keydown', UP_ARROW);
-      let manager = selectionList.componentInstance._keyManager;
+      listOptions[2].nativeElement.focus();
+      expect(getFocusIndex()).toEqual(2);
 
-      dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
-      expect(manager.activeItemIndex).toEqual(2);
-
-      selectionList.componentInstance._keydown(UP_EVENT);
-
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', UP_ARROW);
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toEqual(1);
-    });
-
-    it('should focus and toggle the next item when pressing SHIFT + UP_ARROW', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
-
-      dispatchFakeEvent(listOptions[3].nativeElement, 'focus');
-      expect(manager.activeItemIndex).toBe(3);
-
-      expect(listOptions[1].componentInstance.selected).toBe(false);
-      expect(listOptions[2].componentInstance.selected).toBe(false);
-
-      selectionList.componentInstance._keydown(upKeyEvent);
-      fixture.detectChanges();
-
-      expect(listOptions[1].componentInstance.selected).toBe(false);
-      expect(listOptions[2].componentInstance.selected).toBe(true);
-
-      selectionList.componentInstance._keydown(upKeyEvent);
-      fixture.detectChanges();
-
-      expect(listOptions[1].componentInstance.selected).toBe(true);
-      expect(listOptions[2].componentInstance.selected).toBe(true);
+      expect(getFocusIndex()).toEqual(1);
     });
 
     it('should focus next item when press DOWN ARROW', () => {
-      const manager = selectionList.componentInstance._keyManager;
+      listOptions[2].nativeElement.focus();
+      expect(getFocusIndex()).toEqual(2);
 
-      dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
-      expect(manager.activeItemIndex).toEqual(2);
-
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', DOWN_ARROW));
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', DOWN_ARROW);
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toEqual(3);
-    });
-
-    it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
-
-      dispatchFakeEvent(listOptions[0].nativeElement, 'focus');
-      expect(manager.activeItemIndex).toBe(0);
-
-      expect(listOptions[1].componentInstance.selected).toBe(false);
-      expect(listOptions[2].componentInstance.selected).toBe(false);
-
-      selectionList.componentInstance._keydown(downKeyEvent);
-      fixture.detectChanges();
-
-      expect(listOptions[1].componentInstance.selected).toBe(true);
-      expect(listOptions[2].componentInstance.selected).toBe(false);
-
-      selectionList.componentInstance._keydown(downKeyEvent);
-      fixture.detectChanges();
-
-      expect(listOptions[1].componentInstance.selected).toBe(true);
-      expect(listOptions[2].componentInstance.selected).toBe(true);
+      expect(getFocusIndex()).toEqual(3);
     });
 
     it('should be able to focus the first item when pressing HOME', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
+      listOptions[2].nativeElement.focus();
+      expect(getFocusIndex()).toBe(2);
 
-      const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', HOME);
+      const event = dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', HOME);
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toBe(0);
+      expect(getFocusIndex()).toBe(0);
       expect(event.defaultPrevented).toBe(true);
-    });
-
-    it('should not change focus when pressing HOME with a modifier key', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
-
-      const event = createKeyboardEvent('keydown', HOME, undefined, {alt: true});
-
-      dispatchEvent(selectionList.nativeElement, event);
-      fixture.detectChanges();
-
-      expect(manager.activeItemIndex).toBe(-1);
-      expect(event.defaultPrevented).toBe(false);
     });
 
     it('should focus the last item when pressing END', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
+      listOptions[2].nativeElement.focus();
+      expect(getFocusIndex()).toBe(2);
 
-      const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', END);
+      const event = dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', END);
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toBe(4);
+      expect(getFocusIndex()).toBe(4);
       expect(event.defaultPrevented).toBe(true);
     });
 
-    it('should not change focus when pressing END with a modifier key', () => {
-      const manager = selectionList.componentInstance._keyManager;
-      expect(manager.activeItemIndex).toBe(-1);
-
-      const event = createKeyboardEvent('keydown', END, undefined, {alt: true});
-
-      dispatchEvent(selectionList.nativeElement, event);
+    it('should select and deselect all items using ctrl + a', () => {
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-
-      expect(manager.activeItemIndex).toBe(-1);
-      expect(event.defaultPrevented).toBe(false);
-    });
-
-    it('should select all items using ctrl + a', () => {
-      listOptions.forEach(option => option.componentInstance.disabled = false);
-      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
 
       expect(listOptions.some(option => option.componentInstance.selected)).toBe(false);
 
-      dispatchEvent(selectionList.nativeElement, event);
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
+    });
+
+    it('should select and deselect all items using meta + a', () => {
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(listOptions.some(option => option.componentInstance.selected)).toBe(false);
+
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {meta: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {meta: true});
+      fixture.detectChanges();
+
+      expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
     });
 
     it('should not select disabled items when pressing ctrl + a', () => {
-      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
-
-      listOptions.slice(0, 2).forEach(option => option.componentInstance.disabled = true);
+      listOptions.slice(0, 2).forEach(option => (option.componentInstance.disabled = true));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(listOptions.map(option => option.componentInstance.selected))
-          .toEqual([false, false, false, false, false]);
+      expect(listOptions.map(option => option.componentInstance.selected)).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+      ]);
 
-      dispatchEvent(selectionList.nativeElement, event);
+      listOptions[3].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[3].nativeElement, 'keydown', A, 'A', {control: true});
       fixture.detectChanges();
 
-      expect(listOptions.map(option => option.componentInstance.selected))
-          .toEqual([false, false, true, true, true]);
+      expect(listOptions.map(option => option.componentInstance.selected)).toEqual([
+        false,
+        false,
+        true,
+        true,
+        true,
+      ]);
     });
 
     it('should select all items using ctrl + a if some items are selected', () => {
-      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
-
-      listOptions.slice(0, 2).forEach(option => option.componentInstance.selected = true);
+      listOptions.slice(0, 2).forEach(option => (option.componentInstance.selected = true));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listOptions.some(option => option.componentInstance.selected)).toBe(true);
 
-      dispatchEvent(selectionList.nativeElement, event);
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
     });
 
     it('should deselect all with ctrl + a if all options are selected', () => {
-      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
-
-      listOptions.forEach(option => option.componentInstance.selected = true);
+      listOptions.forEach(option => (option.componentInstance.selected = true));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
 
-      dispatchEvent(selectionList.nativeElement, event);
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
@@ -568,85 +456,87 @@ describe('MatSelectionList without forms', () => {
 
     it('should dispatch the selectionChange event when selecting via ctrl + a', () => {
       const spy = spyOn(fixture.componentInstance, 'onSelectionChange');
-      listOptions.forEach(option => option.componentInstance.disabled = false);
-      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
+      listOptions.forEach(option => (option.componentInstance.disabled = false));
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-      dispatchEvent(selectionList.nativeElement, event);
+      listOptions[2].nativeElement.focus();
+      dispatchKeyboardEvent(listOptions[2].nativeElement, 'keydown', A, 'A', {control: true});
       fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
-        options: listOptions.map(option => option.componentInstance)
-      }));
+      expect(spy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          options: listOptions.map(option => option.componentInstance),
+        }),
+      );
     });
 
     it('should be able to jump focus down to an item by typing', fakeAsync(() => {
-      const listEl = selectionList.nativeElement;
-      const manager = selectionList.componentInstance._keyManager;
+      const firstOption = listOptions[0].nativeElement;
 
-      expect(manager.activeItemIndex).toBe(-1);
+      firstOption.focus();
+      expect(getFocusIndex()).toBe(0);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 83, 's'));
+      dispatchEvent(firstOption, createKeyboardEvent('keydown', 83, 's'));
       fixture.detectChanges();
-      tick(200);
+      tick(typeaheadInterval);
 
-      expect(manager.activeItemIndex).toBe(1);
+      expect(getFocusIndex()).toBe(1);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 68, 'd'));
+      dispatchEvent(firstOption, createKeyboardEvent('keydown', 68, 'd'));
       fixture.detectChanges();
-      tick(200);
+      tick(typeaheadInterval);
 
-      expect(manager.activeItemIndex).toBe(4);
+      expect(getFocusIndex()).toBe(4);
     }));
 
     it('should be able to skip to an item by typing', fakeAsync(() => {
-      const manager = selectionList.componentInstance._keyManager;
+      listOptions[0].nativeElement.focus();
+      expect(getFocusIndex()).toBe(0);
 
-      expect(manager.activeItemIndex).not.toBe(4);
-
-      const event = createKeyboardEvent('keydown', D, 'd');
-      selectionList.componentInstance._keydown(event);
+      dispatchKeyboardEvent(listOptions[0].nativeElement, 'keydown', D, 'd');
       fixture.detectChanges();
-      tick(200);
+      tick(typeaheadInterval);
 
-      expect(manager.activeItemIndex).toBe(4);
+      expect(getFocusIndex()).toBe(4);
     }));
 
-    // Test for "A" specifically, because it's a special case that can be used to select all values.
+    // Test for "A" specifically, because it's a special case that can be used
+    // to select all values.
     it('should be able to skip to an item by typing the letter "A"', fakeAsync(() => {
-      const manager = selectionList.componentInstance._keyManager;
+      listOptions[0].nativeElement.focus();
+      expect(getFocusIndex()).toBe(0);
 
-      expect(manager.activeItemIndex).not.toBe(3);
-
-      const event = createKeyboardEvent('keydown', A, 'a');
-      selectionList.componentInstance._keydown(event);
+      dispatchKeyboardEvent(listOptions[0].nativeElement, 'keydown', A, 'a');
       fixture.detectChanges();
-      tick(200);
+      tick(typeaheadInterval);
 
-      expect(manager.activeItemIndex).toBe(3);
+      expect(getFocusIndex()).toBe(3);
     }));
 
     it('should not select items while using the typeahead', fakeAsync(() => {
-      const manager = selectionList.componentInstance._keyManager;
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const model =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+      const model = selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
+      testListItem.focus();
       dispatchFakeEvent(testListItem, 'focus');
       fixture.detectChanges();
 
-      expect(manager.activeItemIndex).toBe(1);
+      expect(getFocusIndex()).toBe(1);
       expect(model.isEmpty()).toBe(true);
 
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', D, 'd'));
+      dispatchKeyboardEvent(testListItem, 'keydown', D, 'd');
       fixture.detectChanges();
-      tick(100); // Tick only half the typeahead timeout.
+      tick(typeaheadInterval / 2); // Tick only half the typeahead timeout.
 
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE));
+      dispatchKeyboardEvent(testListItem, 'keydown', SPACE);
       fixture.detectChanges();
-      tick(100); // Tick the rest of the timeout.
+      // Tick the buffer timeout again as a new key has been pressed that resets
+      // the buffer timeout.
+      tick(typeaheadInterval);
 
-      expect(manager.activeItemIndex).toBe(4);
+      expect(getFocusIndex()).toBe(4);
       expect(model.isEmpty()).toBe(true);
     }));
 
@@ -665,7 +555,8 @@ describe('MatSelectionList without forms', () => {
     it('should be able to select all options, even if they are disabled', () => {
       const list: MatSelectionList = selectionList.componentInstance;
 
-      list.options.forEach(option => option.disabled = true);
+      list.options.forEach(option => (option.disabled = true));
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(list.options.toArray().every(option => option.selected)).toBe(false);
@@ -695,7 +586,7 @@ describe('MatSelectionList without forms', () => {
       list.options.forEach(option => option.toggle());
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
 
-      list.options.forEach(option => option.disabled = true);
+      list.options.forEach(option => (option.disabled = true));
       fixture.detectChanges();
 
       list.deselectAll();
@@ -711,6 +602,7 @@ describe('MatSelectionList without forms', () => {
 
       listOptions[0].componentInstance.selected = true;
       listOptions[2].componentInstance.selected = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(list.selectedOptions.isEmpty()).toBe(false);
@@ -749,33 +641,38 @@ describe('MatSelectionList without forms', () => {
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
     });
 
-    it('should disable list item ripples when the ripples on the list have been disabled',
-      fakeAsync(() => {
-        const rippleTarget = fixture.nativeElement
-            .querySelector('.mat-list-option:not(.mat-list-item-disabled) .mat-list-item-content');
-        const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
+    it('should disable list item ripples when the ripples on the list have been disabled', fakeAsync(() => {
+      const rippleTarget = fixture.nativeElement.querySelector(
+        '.mat-mdc-list-option:not(.mdc-list-item--disabled)',
+      );
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
 
-        dispatchMouseEvent(rippleTarget, 'mousedown');
-        dispatchMouseEvent(rippleTarget, 'mouseup');
+      // Flush the ripple enter animation.
+      dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
 
-        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-            .toBe(1, 'Expected ripples to be enabled by default.');
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+        .withContext('Expected ripples to be enabled by default.')
+        .toBe(1);
 
-        // Wait for the ripples to go away.
-        tick(enterDuration + exitDuration);
-        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-            .toBe(0, 'Expected ripples to go away.');
+      // Flush the ripple exit animation.
+      dispatchFakeEvent(rippleTarget.querySelector('.mat-ripple-element')!, 'transitionend');
 
-        fixture.componentInstance.listRippleDisabled = true;
-        fixture.detectChanges();
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+        .withContext('Expected ripples to go away.')
+        .toBe(0);
 
-        dispatchMouseEvent(rippleTarget, 'mousedown');
-        dispatchMouseEvent(rippleTarget, 'mouseup');
-        flush();
+      fixture.componentInstance.listRippleDisabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
-            .toBe(0, 'Expected no ripples after list ripples are disabled.');
-      }));
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+        .withContext('Expected no ripples after list ripples are disabled.')
+        .toBe(0);
+    }));
 
     it('can bind both selected and value at the same time', () => {
       const componentFixture = TestBed.createComponent(SelectionListWithSelectedOptionAndValue);
@@ -785,81 +682,125 @@ describe('MatSelectionList without forms', () => {
       expect(listItemEl.componentInstance.value).toBe(componentFixture.componentInstance.itemValue);
     });
 
-    it('should pick up indirect descendant lines', () => {
-      const componentFixture = TestBed.createComponent(SelectionListWithIndirectDescendantLines);
-      componentFixture.detectChanges();
+    it('should have a focus indicator', () => {
+      const optionNativeElements = listOptions.map(option => option.nativeElement as HTMLElement);
 
-      const option = componentFixture.nativeElement.querySelector('mat-list-option');
-      expect(option.classList).toContain('mat-2-line');
+      expect(
+        optionNativeElements.every(
+          element => element.querySelector('.mat-focus-indicator') !== null,
+        ),
+      ).toBe(true);
     });
 
-    it('should have a focus indicator', () => {
-      const optionNativeElements = listOptions.map(option => option.nativeElement);
-
-      expect(optionNativeElements
-          .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+    it('should hide the internal SVG', () => {
+      listOptions.forEach(option => {
+        const svg = option.nativeElement.querySelector('.mdc-checkbox svg');
+        expect(svg.getAttribute('aria-hidden')).toBe('true');
       });
-
+    });
   });
 
-  describe('with list option selected', () => {
+  describe('multiple-selection with list option selected', () => {
     let fixture: ComponentFixture<SelectionListWithSelectedOption>;
-    let listItemEl: DebugElement;
+    let listOptionElements: DebugElement[];
     let selectionList: DebugElement;
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithSelectedOption],
+        imports: [MatListModule, SelectionListWithSelectedOption],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithSelectedOption);
-      listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
       fixture.detectChanges();
     }));
 
     it('should set its initial selected state in the selectedOptions', () => {
-      let optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
+      let options = listOptionElements.map(optionEl =>
+        optionEl.injector.get<MatListOption>(MatListOption),
+      );
       let selectedOptions = selectionList.componentInstance.selectedOptions;
-      expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
+      expect(selectedOptions.isSelected(options[0])).toBeFalse();
+      expect(selectedOptions.isSelected(options[1])).toBeTrue();
+      expect(selectedOptions.isSelected(options[2])).toBeTrue();
+      expect(selectedOptions.isSelected(options[3])).toBeFalse();
     });
+
+    it('should focus the first selected option on first focus if an item is pre-selected', fakeAsync(() => {
+      // MDC manages the focus through setting a `tabindex` on the designated list item. We
+      // assert that the proper tabindex is set on the pre-selected option at index 1, and
+      // ensure that other options are not reachable through tab.
+      expect(listOptionElements.map(el => el.nativeElement.tabIndex)).toEqual([-1, 0, -1, -1]);
+    }));
   });
 
-  describe('with changing option value', () => {
-    let fixture: ComponentFixture<SelectionListWithChangingOptionValue>;
-    let selectionList: MatSelectionList;
-    let listOption: MatListOption;
+  describe('single-selection with list option selected', () => {
+    let fixture: ComponentFixture<SingleSelectionListWithSelectedOption>;
+    let listOptionElements: DebugElement[];
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithChangingOptionValue],
+        imports: [MatListModule, SingleSelectionListWithSelectedOption],
       });
-
-      TestBed.compileComponents();
     }));
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SelectionListWithChangingOptionValue);
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SingleSelectionListWithSelectedOption);
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
       fixture.detectChanges();
+    }));
 
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!.componentInstance;
-      listOption = fixture.debugElement.query(By.directive(MatListOption))!.componentInstance;
+    it('displays radio indicators by default', () => {
+      expect(
+        listOptionElements[0].nativeElement.querySelector('input[type="radio"]'),
+      ).not.toBeNull();
+      expect(
+        listOptionElements[1].nativeElement.querySelector('input[type="radio"]'),
+      ).not.toBeNull();
+
+      expect(listOptionElements[0].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
+      expect(listOptionElements[1].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
     });
+  });
 
-    it('should use `compareWith` function when updating option selection state', () => {
-      expect(selectionList.selectedOptions.isSelected(listOption)).toBeTrue();
-      fixture.componentInstance.value = {id: 1};
+  describe('with token to hide radio indicators', () => {
+    let fixture: ComponentFixture<SingleSelectionListWithSelectedOption>;
+    let listOptionElements: DebugElement[];
+
+    beforeEach(waitForAsync(() => {
+      const matListConfig: MatListConfig = {hideSingleSelectionIndicator: true};
+
+      TestBed.configureTestingModule({
+        imports: [MatListModule, SingleSelectionListWithSelectedOption],
+        providers: [{provide: MAT_LIST_CONFIG, useValue: matListConfig}],
+      });
+    }));
+
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(SingleSelectionListWithSelectedOption);
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
       fixture.detectChanges();
-      expect(selectionList.selectedOptions.isSelected(listOption)).toBeTrue();
-      fixture.componentInstance.value = {id: 2};
-      fixture.detectChanges();
-      expect(selectionList.selectedOptions.isSelected(listOption)).toBeFalse();
+    }));
+
+    it('does not display radio indicators', () => {
+      expect(listOptionElements[0].nativeElement.querySelector('input[type="radio"]')).toBeNull();
+      expect(listOptionElements[1].nativeElement.querySelector('input[type="radio"]')).toBeNull();
+
+      expect(listOptionElements[0].nativeElement.classList).not.toContain(
+        'mdc-list-item--selected',
+      );
+
+      expect(listOptionElements[1].nativeElement.getAttribute('aria-selected'))
+        .withContext('Expected second option to be selected')
+        .toBe('true');
+      expect(listOptionElements[1].nativeElement.classList).toContain('mdc-list-item--selected');
     });
   });
 
@@ -870,11 +811,8 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithDisabledOption]
+        imports: [MatListModule, SelectionListWithDisabledOption],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -889,23 +827,27 @@ describe('MatSelectionList without forms', () => {
     }));
 
     it('should disable ripples for disabled option', () => {
-      expect(listOption._isRippleDisabled())
-        .toBe(false, 'Expected ripples to be enabled by default');
+      expect(listOption.rippleDisabled)
+        .withContext('Expected ripples to be enabled by default')
+        .toBe(false);
 
       fixture.componentInstance.disableItem = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(listOption._isRippleDisabled())
-        .toBe(true, 'Expected ripples to be disabled if option is disabled');
+      expect(listOption.rippleDisabled)
+        .withContext('Expected ripples to be disabled if option is disabled')
+        .toBe(true);
     });
 
     it('should apply the "mat-list-item-disabled" class properly', () => {
-      expect(listOptionEl.classList).not.toContain('mat-list-item-disabled');
+      expect(listOptionEl.classList).not.toContain('mdc-list-item--disabled');
 
       fixture.componentInstance.disableItem = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(listOptionEl.classList).toContain('mat-list-item-disabled');
+      expect(listOptionEl.classList).toContain('mdc-list-item--disabled');
     });
   });
 
@@ -916,16 +858,14 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
+          SelectionListWithOnlyOneOption,
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -938,32 +878,77 @@ describe('MatSelectionList without forms', () => {
     it('should not allow selection on disabled selection-list', () => {
       let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
       let selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
-      testListItem._handleClick();
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
     });
 
     it('should update state of options if list state has changed', () => {
-      // To verify that the template of the list options has been re-rendered after the disabled
-      // property of the selection list has been updated, the ripple directive can be used.
-      // Inspecting the host classes of the options doesn't work because those update as part
-      // of the parent template (of the selection-list).
-      const listOptionRipple = listOption[2].query(By.directive(MatRipple))!
-          .injector.get<MatRipple>(MatRipple);
+      const testOption = listOption[2].componentInstance as MatListOption;
 
-      expect(listOptionRipple.disabled)
-        .toBe(true, 'Expected ripples of list option to be disabled');
+      expect(testOption.rippleDisabled)
+        .withContext('Expected ripples of list option to be disabled')
+        .toBe(true);
 
       fixture.componentInstance.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(listOptionRipple.disabled)
-        .toBe(false, 'Expected ripples of list option to be enabled');
+      expect(testOption.rippleDisabled)
+        .withContext('Expected ripples of list option to be enabled')
+        .toBe(false);
+    });
+
+    // when the entire list is disabled, its listitems should always have tabindex="-1"
+    it('should remove all listitems from the tab order when disabled state is enabled', () => {
+      fixture.componentInstance.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      let testListItem = listOption[2].injector.get<MatListOption>(MatListOption);
+      testListItem.focus();
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') === '0').length,
+      )
+        .withContext('Expected at least one list option to be in the tab order')
+        .toBeGreaterThanOrEqual(1);
+
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') !== '-1').length,
+      )
+        .withContext('Expected all list options to be excluded from the tab order')
+        .toBe(0);
+    });
+
+    it('should not allow focusin event to change the tabindex', () => {
+      fixture.componentInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') !== '-1').length,
+      )
+        .withContext('Expected all list options to be excluded from the tab order')
+        .toBe(0);
+
+      listOption[1].triggerEventHandler('focusin', {target: listOption[1].nativeElement});
+      fixture.detectChanges();
+
+      expect(
+        listOption.filter(option => option.nativeElement.getAttribute('tabindex') !== '-1').length,
+      )
+        .withContext('Expected all list options to be excluded from the tab order')
+        .toBe(0);
     });
   });
 
@@ -972,16 +957,14 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
+        imports: [
+          MatListModule,
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
+          SelectionListWithOnlyOneOption,
         ],
       });
-
-      TestBed.compileComponents();
     }));
 
     beforeEach(waitForAsync(() => {
@@ -990,36 +973,140 @@ describe('MatSelectionList without forms', () => {
     }));
 
     it('should be able to customize checkbox position', () => {
-      let listItemContent = fixture.debugElement.query(By.css('.mat-list-item-content'))!;
-      expect(listItemContent.nativeElement.classList).toContain('mat-list-item-content-reverse');
+      expect(fixture.nativeElement.querySelector('.mdc-list-item__end .mdc-checkbox'))
+        .withContext('Expected checkbox to show up after content.')
+        .toBeTruthy();
+      expect(fixture.nativeElement.querySelector('.mdc-list-item__start .mdc-checkbox'))
+        .withContext('Expected no checkbox to show up before content.')
+        .toBeFalsy();
     });
   });
 
   describe('with list item elements', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          SelectionListWithAvatar,
-          SelectionListWithIcon,
-        ],
-      }).compileComponents();
+        imports: [MatListModule, SelectionListWithAvatar, SelectionListWithIcon],
+      });
     }));
 
+    function expectCheckboxAtPosition(
+      listItemElement: HTMLElement,
+      position: MatListOptionTogglePosition,
+    ) {
+      const containerSelector =
+        position === 'before' ? '.mdc-list-item__start' : 'mdc-list-item__end';
+      const checkboxPositionClass =
+        position === 'before'
+          ? 'mdc-list-item--with-leading-checkbox'
+          : 'mdc-list-item--with-trailing-checkbox';
+      expect(listItemElement.querySelector(`${containerSelector} .mdc-checkbox`))
+        .withContext(`Expected checkbox to be aligned ${position}`)
+        .toBeDefined();
+      expect(listItemElement.classList).toContain(checkboxPositionClass);
+    }
+
+    /**
+     * Expects an icon to be shown at the given position. Also
+     * ensures no avatar is shown at the specified position.
+     */
+    function expectIconAt(item: HTMLElement, position: 'before' | 'after') {
+      const icon = item.querySelector('.mat-mdc-list-item-icon')!;
+
+      expect(item.classList).not.toContain('mdc-list-item--with-leading-avatar');
+      expect(item.classList).not.toContain('mat-mdc-list-option-with-trailing-avatar');
+
+      if (position === 'before') {
+        expect(icon.classList).toContain('mdc-list-item__start');
+        expect(item.classList).toContain('mdc-list-item--with-leading-icon');
+        expect(item.classList).not.toContain('mdc-list-item--with-trailing-icon');
+      } else {
+        expect(icon.classList).toContain('mdc-list-item__end');
+        expect(item.classList).toContain('mdc-list-item--with-trailing-icon');
+        expect(item.classList).not.toContain('mdc-list-item--with-leading-icon');
+      }
+    }
+
+    /**
+     * Expects an avatar to be shown at the given position. Also
+     * ensures that no icon is shown at the specified position.
+     */
+    function expectAvatarAt(item: HTMLElement, position: 'before' | 'after') {
+      const avatar = item.querySelector('.mat-mdc-list-item-avatar')!;
+
+      expect(item.classList).not.toContain('mdc-list-item--with-leading-icon');
+      expect(item.classList).not.toContain('mdc-list-item--with-trailing-icon');
+
+      if (position === 'before') {
+        expect(avatar.classList).toContain('mdc-list-item__start');
+        expect(item.classList).toContain('mdc-list-item--with-leading-avatar');
+        expect(item.classList).not.toContain('mat-mdc-list-option-with-trailing-avatar');
+      } else {
+        expect(avatar.classList).toContain('mdc-list-item__end');
+        expect(item.classList).toContain('mat-mdc-list-option-with-trailing-avatar');
+        expect(item.classList).not.toContain('mdc-list-item--with-leading-avatar');
+      }
+    }
+
     it('should add a class to reflect that it has an avatar', () => {
-      const fixture = TestBed.createComponent(SelectionListWithIcon);
+      const fixture = TestBed.createComponent(SelectionListWithAvatar);
       fixture.detectChanges();
 
-      const listOption = fixture.nativeElement.querySelector('.mat-list-option');
-      expect(listOption.classList).toContain('mat-list-item-with-avatar');
+      const listOption = fixture.nativeElement.querySelector('.mat-mdc-list-option');
+      expect(listOption.classList).toContain('mdc-list-item--with-leading-avatar');
     });
 
     it('should add a class to reflect that it has an icon', () => {
       const fixture = TestBed.createComponent(SelectionListWithIcon);
       fixture.detectChanges();
 
-      const listOption = fixture.nativeElement.querySelector('.mat-list-option');
-      expect(listOption.classList).toContain('mat-list-item-with-avatar');
+      const listOption = fixture.nativeElement.querySelector('.mat-mdc-list-option');
+      expect(listOption.classList).toContain('mdc-list-item--with-leading-icon');
+    });
+
+    it('should align icons properly together with checkbox', () => {
+      const fixture = TestBed.createComponent(SelectionListWithIcon);
+      fixture.detectChanges();
+      const listOption = fixture.nativeElement.querySelector(
+        '.mat-mdc-list-option',
+      )! as HTMLElement;
+
+      expectCheckboxAtPosition(listOption, 'after');
+      expectIconAt(listOption, 'before');
+
+      fixture.componentInstance.togglePosition = 'before';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'before');
+      expectIconAt(listOption, 'after');
+
+      fixture.componentInstance.togglePosition = 'after';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'after');
+      expectIconAt(listOption, 'before');
+    });
+
+    it('should align avatars properly together with checkbox', () => {
+      const fixture = TestBed.createComponent(SelectionListWithAvatar);
+      fixture.detectChanges();
+      const listOption = fixture.nativeElement.querySelector(
+        '.mat-mdc-list-option',
+      )! as HTMLElement;
+
+      expectCheckboxAtPosition(listOption, 'after');
+      expectAvatarAt(listOption, 'before');
+
+      fixture.componentInstance.togglePosition = 'before';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'before');
+      expectAvatarAt(listOption, 'after');
+
+      fixture.componentInstance.togglePosition = 'after';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'after');
+      expectAvatarAt(listOption, 'before');
     });
   });
 
@@ -1030,42 +1117,41 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [
-          SelectionListWithListOptions,
-        ],
-      }).compileComponents();
+        imports: [MatListModule, SelectionListWithListOptions],
+      });
 
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.componentInstance.multiple = false;
+      fixture.changeDetectorRef.markForCheck();
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
       fixture.detectChanges();
     }));
 
+    function getFocusIndex() {
+      return listOptions.findIndex(o => document.activeElement === o.nativeElement);
+    }
+
     it('should select one option at a time', () => {
       const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
       const testListItem2 = listOptions[2].injector.get<MatListOption>(MatListOption);
       const selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
-      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
-      expect(listOptions[1].nativeElement.classList.contains('mat-list-single-selected-option'))
-          .toBe(true);
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
 
-      dispatchFakeEvent(testListItem2._getHostElement(), 'click');
+      dispatchMouseEvent(testListItem2._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem2]);
-      expect(listOptions[1].nativeElement.classList.contains('mat-list-single-selected-option'))
-          .toBe(false);
-      expect(listOptions[2].nativeElement.classList.contains('mat-list-single-selected-option'))
-          .toBe(true);
+      expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
     });
 
     it('should not show check boxes', () => {
@@ -1075,16 +1161,16 @@ describe('MatSelectionList without forms', () => {
     it('should not deselect the target option on click', () => {
       const testListItem1 = listOptions[1].injector.get<MatListOption>(MatListOption);
       const selectList =
-          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+        selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
       expect(selectList.selected.length).toBe(0);
 
-      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
 
-      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
@@ -1092,8 +1178,10 @@ describe('MatSelectionList without forms', () => {
 
     it('throws an exception when toggling single/multiple mode after bootstrap', () => {
       fixture.componentInstance.multiple = true;
-      expect(() => fixture.detectChanges()).toThrow(new Error(
-          'Cannot change `multiple` mode of mat-selection-list after initialization.'));
+      fixture.changeDetectorRef.markForCheck();
+      expect(() => fixture.detectChanges()).toThrow(
+        new Error('Cannot change `multiple` mode of mat-selection-list after initialization.'),
+      );
     });
 
     it('should do nothing when pressing ctrl + a', () => {
@@ -1107,61 +1195,100 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions.every(option => !option.componentInstance.selected)).toBe(true);
     });
 
-    it('should focus, but not toggle, the next item when pressing SHIFT + UP_ARROW in single ' +
-      'selection mode', () => {
-        const manager = selectionList.componentInstance._keyManager;
-        const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
-
-        dispatchFakeEvent(listOptions[3].nativeElement, 'focus');
-        expect(manager.activeItemIndex).toBe(3);
+    it(
+      'should focus, but not toggle, the next item when pressing SHIFT + UP_ARROW in single ' +
+        'selection mode',
+      () => {
+        listOptions[3].nativeElement.focus();
+        expect(getFocusIndex()).toBe(3);
 
         expect(listOptions[1].componentInstance.selected).toBe(false);
         expect(listOptions[2].componentInstance.selected).toBe(false);
 
-        selectionList.componentInstance._keydown(upKeyEvent);
+        dispatchKeyboardEvent(listOptions[3].nativeElement, 'keydown', UP_ARROW, undefined, {
+          shift: true,
+        });
         fixture.detectChanges();
 
         expect(listOptions[1].componentInstance.selected).toBe(false);
         expect(listOptions[2].componentInstance.selected).toBe(false);
-      });
+      },
+    );
 
-    it('should focus, but not toggle, the next item when pressing SHIFT + DOWN_ARROW ' +
-      'in single selection mode', () => {
-        const manager = selectionList.componentInstance._keyManager;
-        const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
-
-        dispatchFakeEvent(listOptions[0].nativeElement, 'focus');
-        expect(manager.activeItemIndex).toBe(0);
+    it(
+      'should focus, but not toggle, the next item when pressing SHIFT + DOWN_ARROW ' +
+        'in single selection mode',
+      () => {
+        listOptions[3].nativeElement.focus();
+        expect(getFocusIndex()).toBe(3);
 
         expect(listOptions[1].componentInstance.selected).toBe(false);
         expect(listOptions[2].componentInstance.selected).toBe(false);
 
-        selectionList.componentInstance._keydown(downKeyEvent);
+        dispatchKeyboardEvent(listOptions[3].nativeElement, 'keydown', DOWN_ARROW, undefined, {
+          shift: true,
+        });
         fixture.detectChanges();
 
         expect(listOptions[1].componentInstance.selected).toBe(false);
         expect(listOptions[2].componentInstance.selected).toBe(false);
+      },
+    );
+  });
+
+  describe('with single selection', () => {
+    let fixture: ComponentFixture<ListOptionWithTwoWayBinding>;
+    let optionElement: HTMLElement;
+    let option: MatListOption;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule, ListOptionWithTwoWayBinding],
       });
 
+      fixture = TestBed.createComponent(ListOptionWithTwoWayBinding);
+      fixture.detectChanges();
+      const optionDebug = fixture.debugElement.query(By.directive(MatListOption));
+      option = optionDebug.componentInstance;
+      optionElement = optionDebug.nativeElement;
+    }));
+
+    it('should sync the value from the view to the option', () => {
+      expect(option.selected).toBe(false);
+
+      fixture.componentInstance.selected = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(option.selected).toBe(true);
+    });
+
+    it('should sync the value from the option to the view', () => {
+      expect(fixture.componentInstance.selected).toBe(false);
+
+      optionElement.click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.selected).toBe(true);
+    });
   });
 });
 
 describe('MatSelectionList with forms', () => {
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatListModule, FormsModule, ReactiveFormsModule],
-      declarations: [
+      imports: [
+        MatListModule,
+        FormsModule,
+        ReactiveFormsModule,
         SelectionListWithModel,
         SelectionListWithFormControl,
         SelectionListWithPreselectedOption,
         SelectionListWithPreselectedOptionAndModel,
         SelectionListWithPreselectedFormControlOnPush,
         SelectionListWithCustomComparator,
-      ]
+      ],
     });
-
-    TestBed.compileComponents();
   }));
 
   describe('and ngModel', () => {
@@ -1176,13 +1303,15 @@ describe('MatSelectionList with forms', () => {
 
       selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList))!;
       ngModel = selectionListDebug.injector.get<NgModel>(NgModel);
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
     });
 
     it('should update the model if an option got selected programmatically', fakeAsync(() => {
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(0, 'Expected no options to be selected by default');
+        .withContext('Expected no options to be selected by default')
+        .toBe(0);
 
       listOptions[0].toggle();
       fixture.detectChanges();
@@ -1190,66 +1319,96 @@ describe('MatSelectionList with forms', () => {
       tick();
 
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(1, 'Expected first list option to be selected');
+        .withContext('Expected first list option to be selected')
+        .toBe(1);
     }));
 
     it('should update the model if an option got clicked', fakeAsync(() => {
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(0, 'Expected no options to be selected by default');
+        .withContext('Expected no options to be selected by default')
+        .toBe(0);
 
-      dispatchFakeEvent(listOptions[0]._getHostElement(), 'click');
+      dispatchMouseEvent(listOptions[0]._hostElement, 'click');
       fixture.detectChanges();
 
       tick();
 
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(1, 'Expected first list option to be selected');
+        .withContext('Expected first list option to be selected')
+        .toBe(1);
     }));
 
     it('should update the options if a model value is set', fakeAsync(() => {
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(0, 'Expected no options to be selected by default');
+        .withContext('Expected no options to be selected by default')
+        .toBe(0);
 
       fixture.componentInstance.selectedOptions = ['opt3'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       tick();
 
       expect(fixture.componentInstance.selectedOptions.length)
-        .toBe(1, 'Expected first list option to be selected');
+        .withContext('Expected first list option to be selected')
+        .toBe(1);
+    }));
+
+    it('should focus the first option when the list items are changed', fakeAsync(() => {
+      fixture.componentInstance.options = ['first option', 'second option'];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      tick();
+
+      const listElements = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.nativeElement);
+
+      expect(listElements.length).toBe(2);
+      expect(listElements[0].tabIndex).toBe(0);
+      expect(listElements[1].tabIndex).toBe(-1);
     }));
 
     it('should not mark the model as touched when the list is blurred', fakeAsync(() => {
       expect(ngModel.touched)
-        .toBe(false, 'Expected the selection-list to be untouched by default.');
+        .withContext('Expected the selection-list to be untouched by default.')
+        .toBe(false);
 
       dispatchFakeEvent(selectionListDebug.nativeElement, 'blur');
       fixture.detectChanges();
       tick();
 
-      expect(ngModel.touched).toBe(false, 'Expected the selection-list to remain untouched.');
+      expect(ngModel.touched)
+        .withContext('Expected the selection-list to remain untouched.')
+        .toBe(false);
     }));
 
     it('should mark the model as touched when a list item is blurred', fakeAsync(() => {
       expect(ngModel.touched)
-        .toBe(false, 'Expected the selection-list to be untouched by default.');
+        .withContext('Expected the selection-list to be untouched by default.')
+        .toBe(false);
 
-      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-list-option'), 'blur');
+      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-mdc-list-option'), 'blur');
       fixture.detectChanges();
       tick();
 
       expect(ngModel.touched)
-        .toBe(true, 'Expected the selection-list to be touched after an item is blurred.');
+        .withContext('Expected the selection-list to be touched after an item is blurred.')
+        .toBe(true);
     }));
 
     it('should be pristine by default', fakeAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithModel);
       fixture.componentInstance.selectedOptions = ['opt2'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      ngModel =
-        fixture.debugElement.query(By.directive(MatSelectionList))!.injector.get<NgModel>(NgModel);
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+      ngModel = fixture.debugElement
+        .query(By.directive(MatSelectionList))!
+        .injector.get<NgModel>(NgModel);
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
 
       // Flush the initial tick to ensure that every action from the ControlValueAccessor
@@ -1257,7 +1416,8 @@ describe('MatSelectionList with forms', () => {
       tick();
 
       expect(ngModel.pristine)
-        .toBe(true, 'Expected the selection-list to be pristine by default.');
+        .withContext('Expected the selection-list to be pristine by default.')
+        .toBe(true);
 
       listOptions[1].toggle();
       fixture.detectChanges();
@@ -1265,7 +1425,8 @@ describe('MatSelectionList with forms', () => {
       tick();
 
       expect(ngModel.pristine)
-        .toBe(false, 'Expected the selection-list to be dirty after state change.');
+        .withContext('Expected the selection-list to be dirty after state change.')
+        .toBe(false);
     }));
 
     it('should remove a selected option from the value on destroy', fakeAsync(() => {
@@ -1318,56 +1479,49 @@ describe('MatSelectionList with forms', () => {
 
     it('should be able to programmatically set an array with duplicate values', fakeAsync(() => {
       fixture.componentInstance.options = ['one', 'two', 'two', 'two', 'three'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
-          .map(optionDebugEl => optionDebugEl.componentInstance);
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.componentInstance);
 
       fixture.componentInstance.selectedOptions = ['one', 'two', 'two'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
       expect(listOptions.map(option => option.selected)).toEqual([true, true, true, false, false]);
     }));
 
-    it('should only be in the tab order if it has options', () => {
-      expect(selectionListDebug.componentInstance.options.length > 0).toBe(true);
-      expect(selectionListDebug.nativeElement.tabIndex).toBe(0);
-
-      fixture.componentInstance.options = [];
+    it('should dispatch one change event per change when updating a single-selection list', fakeAsync(() => {
+      fixture.destroy();
+      fixture = TestBed.createComponent(SelectionListWithModel);
+      fixture.componentInstance.multiple = false;
+      fixture.componentInstance.selectedOptions = ['opt3'];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      const options = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.nativeElement);
 
-      expect(selectionListDebug.nativeElement.tabIndex).toBe(-1);
-    });
+      expect(fixture.componentInstance.modelChangeSpy).not.toHaveBeenCalled();
 
-    it('should dispatch one change event per change when updating a single-selection list',
-      fakeAsync(() => {
-        fixture.destroy();
-        fixture = TestBed.createComponent(SelectionListWithModel);
-        fixture.componentInstance.multiple = false;
-        fixture.componentInstance.selectedOptions = ['opt3'];
-        fixture.detectChanges();
-        const options = fixture.debugElement.queryAll(By.directive(MatListOption))
-          .map(optionDebugEl => optionDebugEl.nativeElement);
+      options[0].click();
+      fixture.detectChanges();
+      tick();
 
-        expect(fixture.componentInstance.modelChangeSpy).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.modelChangeSpy).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
 
-        options[0].click();
-        fixture.detectChanges();
-        tick();
+      options[1].click();
+      fixture.detectChanges();
+      tick();
 
-        expect(fixture.componentInstance.modelChangeSpy).toHaveBeenCalledTimes(1);
-        expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
-
-        options[1].click();
-        fixture.detectChanges();
-        tick();
-
-        expect(fixture.componentInstance.modelChangeSpy).toHaveBeenCalledTimes(2);
-        expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
-      }));
-
+      expect(fixture.componentInstance.modelChangeSpy).toHaveBeenCalledTimes(2);
+      expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
+    }));
   });
 
   describe('and formControl', () => {
@@ -1380,61 +1534,91 @@ describe('MatSelectionList with forms', () => {
       fixture.detectChanges();
 
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!.componentInstance;
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
     });
 
     it('should be able to disable options from the control', () => {
+      selectionList.focus();
       expect(selectionList.disabled)
-        .toBe(false, 'Expected the selection list to be enabled.');
+        .withContext('Expected the selection list to be enabled.')
+        .toBe(false);
       expect(listOptions.every(option => !option.disabled))
-        .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
+      expect(
+        listOptions.some(
+          option => option._elementRef.nativeElement.getAttribute('tabindex') === '0',
+        ),
+      )
+        .withContext('Expected one list item to be in the tab order')
+        .toBe(true);
 
       fixture.componentInstance.formControl.disable();
       fixture.detectChanges();
 
       expect(selectionList.disabled)
-        .toBe(true, 'Expected the selection list to be disabled.');
+        .withContext('Expected the selection list to be disabled.')
+        .toBe(true);
       expect(listOptions.every(option => option.disabled))
-        .toBe(true, 'Expected every list option to be disabled.');
+        .withContext('Expected every list option to be disabled.')
+        .toBe(true);
+      expect(
+        listOptions.every(
+          option => option._elementRef.nativeElement.getAttribute('tabindex') === '-1',
+        ),
+      )
+        .withContext('Expected every list option to be removed from the tab order')
+        .toBe(true);
     });
 
     it('should be able to update the disabled property after form control disabling', () => {
       expect(listOptions.every(option => !option.disabled))
-        .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
 
       fixture.componentInstance.formControl.disable();
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.disabled))
-        .toBe(true, 'Expected every list option to be disabled.');
+        .withContext('Expected every list option to be disabled.')
+        .toBe(true);
 
       // Previously the selection list has been disabled through FormControl#disable. Now we
       // want to verify that we can still change the disabled state through updating the disabled
       // property. Calling FormControl#disable should not lock the disabled property.
       // See: https://github.com/angular/material2/issues/12107
       selectionList.disabled = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(listOptions.every(option => !option.disabled))
-        .toBe(true, 'Expected every list option to be enabled.');
+        .withContext('Expected every list option to be enabled.')
+        .toBe(true);
     });
 
     it('should be able to set the value through the form control', () => {
       expect(listOptions.every(option => !option.selected))
-        .toBe(true, 'Expected every list option to be unselected.');
+        .withContext('Expected every list option to be unselected.')
+        .toBe(true);
 
       fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
       fixture.detectChanges();
 
-      expect(listOptions[1].selected).toBe(true, 'Expected second option to be selected.');
-      expect(listOptions[2].selected).toBe(true, 'Expected third option to be selected.');
+      expect(listOptions[1].selected)
+        .withContext('Expected second option to be selected.')
+        .toBe(true);
+      expect(listOptions[2].selected)
+        .withContext('Expected third option to be selected.')
+        .toBe(true);
 
       fixture.componentInstance.formControl.setValue(null);
       fixture.detectChanges();
 
       expect(listOptions.every(option => !option.selected))
-        .toBe(true, 'Expected every list option to be unselected.');
+        .withContext('Expected every list option to be unselected.')
+        .toBe(true);
     });
 
     it('should deselect option whose value no longer matches', () => {
@@ -1443,12 +1627,12 @@ describe('MatSelectionList with forms', () => {
       fixture.componentInstance.formControl.setValue(['opt2']);
       fixture.detectChanges();
 
-      expect(option.selected).toBe(true, 'Expected option to be selected.');
+      expect(option.selected).withContext('Expected option to be selected.').toBe(true);
 
       option.value = 'something-different';
       fixture.detectChanges();
 
-      expect(option.selected).toBe(false, 'Expected option not to be selected.');
+      expect(option.selected).withContext('Expected option not to be selected.').toBe(false);
       expect(fixture.componentInstance.formControl.value).toEqual([]);
     });
 
@@ -1459,11 +1643,16 @@ describe('MatSelectionList with forms', () => {
       fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
       fixture.detectChanges();
 
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
 
-      expect(listOptions[1].selected).toBe(true, 'Expected second option to be selected.');
-      expect(listOptions[2].selected).toBe(true, 'Expected third option to be selected.');
+      expect(listOptions[1].selected)
+        .withContext('Expected second option to be selected.')
+        .toBe(true);
+      expect(listOptions[2].selected)
+        .withContext('Expected third option to be selected.')
+        .toBe(true);
     });
 
     it('should not clear the form control when the list is destroyed', fakeAsync(() => {
@@ -1475,6 +1664,7 @@ describe('MatSelectionList with forms', () => {
       expect(fixture.componentInstance.formControl.value).toEqual(['opt2']);
 
       fixture.componentInstance.renderList = false;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
       fixture.detectChanges();
@@ -1487,22 +1677,24 @@ describe('MatSelectionList with forms', () => {
       fixture.detectChanges();
 
       fixture.componentInstance.renderExtraOption = true;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+      listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
 
       expect(listOptions.length).toBe(4);
       expect(listOptions[3].selected).toBe(true);
     });
-
   });
 
   describe('preselected values', () => {
     it('should add preselected options to the model value', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectionListWithPreselectedOption);
-      const listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
-          .map(optionDebugEl => optionDebugEl.componentInstance);
+      const listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.componentInstance);
 
       fixture.detectChanges();
       tick();
@@ -1513,8 +1705,9 @@ describe('MatSelectionList with forms', () => {
 
     it('should handle preselected option both through the model and the view', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectionListWithPreselectedOptionAndModel);
-      const listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
-          .map(optionDebugEl => optionDebugEl.componentInstance);
+      const listOptions = fixture.debugElement
+        .queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.componentInstance);
 
       fixture.detectChanges();
       tick();
@@ -1529,15 +1722,17 @@ describe('MatSelectionList with forms', () => {
       fixture.detectChanges();
 
       const option = fixture.debugElement.queryAll(By.directive(MatListOption))[1];
+      const checkbox = option.nativeElement.querySelector(
+        '.mdc-checkbox__native-control',
+      ) as HTMLInputElement;
 
       fixture.detectChanges();
       flush();
       fixture.detectChanges();
 
       expect(option.componentInstance.selected).toBe(true);
-      expect(option.nativeElement.querySelector('.mat-pseudo-checkbox-checked')).toBeTruthy();
+      expect(checkbox.checked).toBe(true);
     }));
-
   });
 
   describe('with custom compare function', () => {
@@ -1545,11 +1740,14 @@ describe('MatSelectionList with forms', () => {
       const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
       const testComponent = fixture.componentInstance;
 
-      testComponent.compareWith = jasmine.createSpy('comparator', (o1: any, o2: any) => {
-        return o1 && o2 && o1.id === o2.id;
-      }).and.callThrough();
+      testComponent.compareWith = jasmine
+        .createSpy('comparator', (o1: any, o2: any) => {
+          return o1 && o2 && o1.id === o2.id;
+        })
+        .and.callThrough();
 
       testComponent.selectedOptions = [{id: 2, label: 'Two'}];
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       tick();
 
@@ -1559,32 +1757,36 @@ describe('MatSelectionList with forms', () => {
   });
 });
 
-
-@Component({template: `
+@Component({
+  template: `
   <mat-selection-list
     id="selection-list-1"
     (selectionChange)="onSelectionChange($event)"
     [disableRipple]="listRippleDisabled"
     [color]="selectionListColor"
     [multiple]="multiple">
-    <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
+    <mat-list-option togglePosition="before" disabled="true" value="inbox"
                      [color]="firstOptionColor">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
+    <mat-list-option id="testSelect" togglePosition="before" class="test-native-focus"
                     value="starred">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="sent-mail">
+    <mat-list-option togglePosition="before" value="sent-mail">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="archive">
+    <mat-list-option togglePosition="before" value="archive">
       Archive
     </mat-list-option>
-    <mat-list-option checkboxPosition="before" value="drafts" *ngIf="showLastOption">
-      Drafts
-    </mat-list-option>
-  </mat-selection-list>`})
+    @if (showLastOption) {
+      <mat-list-option togglePosition="before" value="drafts">
+        Drafts
+      </mat-list-option>
+    }
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
 class SelectionListWithListOptions {
   showLastOption = true;
   listRippleDisabled = false;
@@ -1595,77 +1797,103 @@ class SelectionListWithListOptions {
   onSelectionChange(_change: MatSelectionListChange) {}
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-selection-list id="selection-list-2">
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="after">
+    <mat-list-option id="testSelect" togglePosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Drafts
     </mat-list-option>
-  </mat-selection-list>`})
-class SelectionListWithCheckboxPositionAfter {
-}
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
+class SelectionListWithCheckboxPositionAfter {}
 
-@Component({template: `
+@Component({
+  template: `
   <mat-selection-list id="selection-list-3" [disabled]="disabled">
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Inbox (disabled selection-option)
     </mat-list-option>
-    <mat-list-option id="testSelect" checkboxPosition="after">
+    <mat-list-option id="testSelect" togglePosition="after">
       Starred
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Sent Mail
     </mat-list-option>
-    <mat-list-option checkboxPosition="after">
+    <mat-list-option togglePosition="after">
       Drafts
     </mat-list-option>
-  </mat-selection-list>`})
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
 class SelectionListWithListDisabled {
   disabled: boolean = true;
-}
-
-@Component({template: `
-  <mat-selection-list>
-    <mat-list-option [disabled]="disableItem">Item</mat-list-option>
-  </mat-selection-list>
-  `})
-class SelectionListWithDisabledOption {
-  disableItem: boolean = false;
-}
-
-@Component({template: `
-  <mat-selection-list>
-    <mat-list-option [selected]="true">Item</mat-list-option>
-  </mat-selection-list>`})
-class SelectionListWithSelectedOption {
 }
 
 @Component({
   template: `
   <mat-selection-list>
+    <mat-list-option [disabled]="disableItem">Item</mat-list-option>
+  </mat-selection-list>
+  `,
+  imports: [MatListModule],
+})
+class SelectionListWithDisabledOption {
+  disableItem: boolean = false;
+}
+
+@Component({
+  template: `
+  <mat-selection-list>
+    <mat-list-option>Not selected - Item #1</mat-list-option>
+    <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
+    <mat-list-option [selected]="true">Pre-selected - Item #3</mat-list-option>
+    <mat-list-option>Not selected - Item #4</mat-list-option>
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
+class SelectionListWithSelectedOption {}
+
+@Component({
+  template: `
+  <mat-selection-list [multiple]="false">
+    <mat-list-option>Not selected - Item #1</mat-list-option>
+    <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
+class SingleSelectionListWithSelectedOption {}
+
+@Component({
+  template: `
+  <mat-selection-list>
     <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
-  </mat-selection-list>`
+  </mat-selection-list>`,
+  imports: [MatListModule],
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
 }
 
-@Component({template: `
+@Component({
+  template: `
   <mat-selection-list id="selection-list-4">
-    <mat-list-option checkboxPosition="after" class="test-focus" id="123">
+    <mat-list-option togglePosition="after" class="test-focus" id="123">
       Inbox
     </mat-list-option>
-  </mat-selection-list>`})
-class SelectionListWithOnlyOneOption {
-}
+  </mat-selection-list>`,
+  imports: [MatListModule],
+})
+class SelectionListWithOnlyOneOption {}
 
 @Component({
   template: `
@@ -1673,8 +1901,11 @@ class SelectionListWithOnlyOneOption {
       [(ngModel)]="selectedOptions"
       (ngModelChange)="modelChangeSpy()"
       [multiple]="multiple">
-      <mat-list-option *ngFor="let option of options" [value]="option">{{option}}</mat-list-option>
-    </mat-selection-list>`
+      @for (option of options; track option) {
+        <mat-list-option [value]="option">{{option}}</mat-list-option>
+      }
+    </mat-selection-list>`,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
@@ -1685,145 +1916,138 @@ class SelectionListWithModel {
 
 @Component({
   template: `
-    <mat-selection-list [formControl]="formControl" *ngIf="renderList">
-      <mat-list-option value="opt1">Option 1</mat-list-option>
-      <mat-list-option value="opt2">Option 2</mat-list-option>
-      <mat-list-option value="opt3">Option 3</mat-list-option>
-      <mat-list-option value="opt4" *ngIf="renderExtraOption">Option 4</mat-list-option>
-    </mat-selection-list>
-  `
+    @if (renderList) {
+      <mat-selection-list [formControl]="formControl">
+        <mat-list-option value="opt1">Option 1</mat-list-option>
+        <mat-list-option value="opt2">Option 2</mat-list-option>
+        <mat-list-option value="opt3">Option 3</mat-list-option>
+        @if (renderExtraOption) {
+          <mat-list-option value="opt4">Option 4</mat-list-option>
+        }
+      </mat-selection-list>
+    }
+  `,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithFormControl {
-  formControl = new FormControl();
+  formControl = new FormControl([] as string[]);
   renderList = true;
   renderExtraOption = false;
 }
-
 
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions">
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
-    </mat-selection-list>`
+    </mat-selection-list>`,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOption {
   selectedOptions: string[];
 }
 
-
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions">
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2" selected>Option 2</mat-list-option>
-    </mat-selection-list>`
+    </mat-selection-list>`,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedOptionAndModel {
   selectedOptions = ['opt1'];
 }
 
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-selection-list [formControl]="formControl">
-      <mat-list-option *ngFor="let opt of opts" [value]="opt">{{opt}}</mat-list-option>
+      @for (opt of opts; track opt) {
+        <mat-list-option [value]="opt">{{opt}}</mat-list-option>
+      }
     </mat-selection-list>
-  `
+  `,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithPreselectedFormControlOnPush {
   opts = ['opt1', 'opt2', 'opt3'];
   formControl = new FormControl(['opt2']);
 }
 
-
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
-      <mat-list-option *ngFor="let option of options" [value]="option">
-        {{option.label}}
-      </mat-list-option>
-    </mat-selection-list>`
+      @for (option of options; track option) {
+        <mat-list-option [value]="option">{{option.label}}</mat-list-option>
+      }
+    </mat-selection-list>`,
+  imports: [MatListModule, FormsModule, ReactiveFormsModule],
 })
 class SelectionListWithCustomComparator {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
-  selectedOptions: {id: number, label: string}[] = [];
+  selectedOptions: {id: number; label: string}[] = [];
   compareWith?: (o1: any, o2: any) => boolean;
   options = [
     {id: 1, label: 'One'},
     {id: 2, label: 'Two'},
-    {id: 3, label: 'Three'}
+    {id: 3, label: 'Three'},
   ];
 }
 
-
-@Component({
-  template: `
-    <mat-selection-list [compareWith]="compareWith">
-      <mat-list-option [value]="value" [selected]="value.id === 1">
-        One
-      </mat-list-option>
-    </mat-selection-list>`
-})
-class SelectionListWithChangingOptionValue {
-  compareWith = (o1: any, o2: any) => o1 && o2 && o1.id === o2.id;
-  value = {id: 1};
-}
-
-
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option>
-        <div mat-list-avatar>I</div>
+      <mat-list-option [togglePosition]="togglePosition">
+        <div matListItemAvatar>I</div>
         Inbox
       </mat-list-option>
     </mat-selection-list>
-  `
+  `,
+  imports: [MatListModule],
 })
 class SelectionListWithAvatar {
+  togglePosition: MatListOptionTogglePosition | undefined;
 }
 
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option>
-        <div mat-list-icon>I</div>
+      <mat-list-option [togglePosition]="togglePosition">
+        <div matListItemIcon>I</div>
         Inbox
       </mat-list-option>
     </mat-selection-list>
-  `
+  `,
+  imports: [MatListModule],
 })
 class SelectionListWithIcon {
+  togglePosition: MatListOptionTogglePosition | undefined;
 }
 
-
 @Component({
-  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  // Note the blank `@if` which we need in order to hit the bug that we're testing.
   template: `
     <mat-selection-list>
-      <ng-container [ngSwitch]="true">
+      @if (true) {
         <mat-list-option [value]="1">One</mat-list-option>
         <mat-list-option [value]="2">Two</mat-list-option>
-      </ng-container>
-    </mat-selection-list>`
+      }
+    </mat-selection-list>`,
+  imports: [MatListModule],
 })
 class SelectionListWithIndirectChildOptions {
   @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
 }
 
-// Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
 @Component({
   template: `
   <mat-selection-list>
-    <mat-list-option>
-      <ng-container [ngSwitch]="true">
-        <h3 mat-line>Item</h3>
-        <p mat-line>Item description</p>
-      </ng-container>
-    </mat-list-option>
-  </mat-selection-list>`
+    <mat-list-option [(selected)]="selected">Item</mat-list-option>
+  </mat-selection-list>
+`,
+  imports: [MatListModule],
 })
-class SelectionListWithIndirectDescendantLines {
+class ListOptionWithTwoWayBinding {
+  selected = false;
 }

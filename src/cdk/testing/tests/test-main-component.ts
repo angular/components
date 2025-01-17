@@ -3,12 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,16 +17,23 @@ import {
   NgZone,
   OnDestroy,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  inject,
 } from '@angular/core';
+import {TestShadowBoundary} from './test-shadow-boundary';
+import {TestSubComponent} from './test-sub-component';
 
 @Component({
   selector: 'test-main',
   templateUrl: 'test-main-component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TestShadowBoundary, TestSubComponent, FormsModule, ReactiveFormsModule],
 })
 export class TestMainComponent implements OnDestroy {
+  private _cdr = inject(ChangeDetectorRef);
+  private _zone = inject(NgZone);
+
   username: string;
   counter: number;
   asyncCounter: number;
@@ -35,6 +42,7 @@ export class TestMainComponent implements OnDestroy {
   testTools: string[];
   testMethods: string[];
   isHovering = false;
+  isPointerOver = false;
   specialKey = '';
   modifiers: string;
   singleSelect: string;
@@ -46,14 +54,14 @@ export class TestMainComponent implements OnDestroy {
   _shadowDomSupported = _supportsShadowDom();
   clickResult = {x: -1, y: -1};
   rightClickResult = {x: -1, y: -1, button: -1};
-  numberControl = new FormControl();
+  numberControl = new FormControl<number | null>(null);
 
   @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
   @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
 
   private _fakeOverlayElement: HTMLElement;
 
-  constructor(private _cdr: ChangeDetectorRef, private _zone: NgZone) {
+  constructor() {
     this.username = 'Yi';
     this.counter = 0;
     this.asyncCounter = 0;
@@ -72,7 +80,7 @@ export class TestMainComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    document.body.removeChild(this._fakeOverlayElement);
+    this._fakeOverlayElement.remove();
   }
 
   click() {
@@ -85,10 +93,10 @@ export class TestMainComponent implements OnDestroy {
 
   onKeyDown(event: KeyboardEvent) {
     if (event.keyCode === ENTER && event.key === 'Enter') {
-      this.specialKey = 'enter';
+      this.specialKey = `Enter|${event.code}`;
     }
     if (event.key === 'j' && event.altKey) {
-      this.specialKey = 'alt-j';
+      this.specialKey = `alt-j|${event.code}`;
     }
   }
 
@@ -96,7 +104,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.clickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-      .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+      .map(key => (event.getModifierState(key) ? key.toLowerCase() : ''))
+      .join('-');
   }
 
   onRightClick(event: MouseEvent) {
@@ -104,7 +113,8 @@ export class TestMainComponent implements OnDestroy {
     this._assignRelativeCoordinates(event, this.rightClickResult);
 
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
-    .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
+      .map(key => (event.getModifierState(key) ? key.toLowerCase() : ''))
+      .join('-');
   }
 
   onCustomEvent(event: any) {
@@ -112,14 +122,15 @@ export class TestMainComponent implements OnDestroy {
   }
 
   runTaskOutsideZone() {
-    this._zone.runOutsideAngular(() => setTimeout(() => {
-      this.taskStateResultElement.nativeElement.textContent = 'result';
-    }, 100));
+    this._zone.runOutsideAngular(() =>
+      setTimeout(() => {
+        this.taskStateResultElement.nativeElement.textContent = 'result';
+      }, 100),
+    );
   }
 
-  private _assignRelativeCoordinates(event: MouseEvent, obj: {x: number, y: number}) {
-    const {top, left} = this.clickTestElement.nativeElement.getBoundingClientRect();
-    obj.x = Math.round(event.clientX - left);
-    obj.y = Math.round(event.clientY - top);
+  private _assignRelativeCoordinates(event: MouseEvent, obj: {x: number; y: number}) {
+    obj.x = Math.round(event.offsetX);
+    obj.y = Math.round(event.offsetY);
   }
 }

@@ -1,86 +1,114 @@
-<div class="mat-paginator-outer-container">
-  <div class="mat-paginator-container">
-    <div class="mat-paginator-page-size" *ngIf="!hidePageSize">
-      <div class="mat-paginator-page-size-label">
-        {{_intl.itemsPerPageLabel}}
+<div class="mat-mdc-paginator-outer-container">
+  <div class="mat-mdc-paginator-container">
+    @if (!hidePageSize) {
+      <div class="mat-mdc-paginator-page-size">
+        <div class="mat-mdc-paginator-page-size-label" [attr.id]="_pageSizeLabelId">
+          {{_intl.itemsPerPageLabel}}
+        </div>
+
+        @if (_displayedPageSizeOptions.length > 1) {
+          <mat-form-field
+            [appearance]="_formFieldAppearance!"
+            [color]="color"
+            class="mat-mdc-paginator-page-size-select">
+            <mat-select
+              #selectRef
+              [value]="pageSize"
+              [disabled]="disabled"
+              [aria-labelledby]="_pageSizeLabelId"
+              [panelClass]="selectConfig.panelClass || ''"
+              [disableOptionCentering]="selectConfig.disableOptionCentering"
+              (selectionChange)="_changePageSize($event.value)"
+              hideSingleSelectionIndicator>
+              @for (pageSizeOption of _displayedPageSizeOptions; track pageSizeOption) {
+                <mat-option [value]="pageSizeOption">
+                  {{pageSizeOption}}
+                </mat-option>
+              }
+            </mat-select>
+          <div class="mat-mdc-paginator-touch-target" (click)="selectRef.open()"></div>
+          </mat-form-field>
+        }
+
+        @if (_displayedPageSizeOptions.length <= 1) {
+          <div class="mat-mdc-paginator-page-size-value">{{pageSize}}</div>
+        }
       </div>
+    }
 
-      <mat-form-field
-        *ngIf="_displayedPageSizeOptions.length > 1"
-        [appearance]="_formFieldAppearance!"
-        [color]="color"
-        class="mat-paginator-page-size-select">
-        <mat-select
-          [value]="pageSize"
-          [disabled]="disabled"
-          [aria-label]="_intl.itemsPerPageLabel"
-          (selectionChange)="_changePageSize($event.value)">
-          <mat-option *ngFor="let pageSizeOption of _displayedPageSizeOptions" [value]="pageSizeOption">
-            {{pageSizeOption}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div
-        class="mat-paginator-page-size-value"
-        *ngIf="_displayedPageSizeOptions.length <= 1">{{pageSize}}</div>
-    </div>
-
-    <div class="mat-paginator-range-actions">
-      <div class="mat-paginator-range-label">
+    <div class="mat-mdc-paginator-range-actions">
+      <div class="mat-mdc-paginator-range-label" aria-live="polite">
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
       </div>
 
+      @if (showFirstLastButtons) {
+        <button mat-icon-button type="button"
+                class="mat-mdc-paginator-navigation-first"
+                (click)="_buttonClicked(0, _previousButtonsDisabled())"
+                [attr.aria-label]="_intl.firstPageLabel"
+                [matTooltip]="_intl.firstPageLabel"
+                [matTooltipDisabled]="_previousButtonsDisabled()"
+                matTooltipPosition="above"
+                [disabled]="_previousButtonsDisabled()"
+                disabledInteractive>
+          <svg class="mat-mdc-paginator-icon"
+              viewBox="0 0 24 24"
+              focusable="false"
+              aria-hidden="true">
+            <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"/>
+          </svg>
+        </button>
+      }
       <button mat-icon-button type="button"
-              class="mat-paginator-navigation-first"
-              (click)="firstPage()"
-              [attr.aria-label]="_intl.firstPageLabel"
-              [matTooltip]="_intl.firstPageLabel"
-              [matTooltipDisabled]="_previousButtonsDisabled()"
-              [matTooltipPosition]="'above'"
-              [disabled]="_previousButtonsDisabled()"
-              *ngIf="showFirstLastButtons">
-        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
-          <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"/>
-        </svg>
-      </button>
-      <button mat-icon-button type="button"
-              class="mat-paginator-navigation-previous"
-              (click)="previousPage()"
+              class="mat-mdc-paginator-navigation-previous"
+              (click)="_buttonClicked(pageIndex - 1, _previousButtonsDisabled())"
               [attr.aria-label]="_intl.previousPageLabel"
               [matTooltip]="_intl.previousPageLabel"
               [matTooltipDisabled]="_previousButtonsDisabled()"
-              [matTooltipPosition]="'above'"
-              [disabled]="_previousButtonsDisabled()">
-        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
+              matTooltipPosition="above"
+              [disabled]="_previousButtonsDisabled()"
+              disabledInteractive>
+        <svg class="mat-mdc-paginator-icon"
+             viewBox="0 0 24 24"
+             focusable="false"
+             aria-hidden="true">
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
         </svg>
       </button>
       <button mat-icon-button type="button"
-              class="mat-paginator-navigation-next"
-              (click)="nextPage()"
+              class="mat-mdc-paginator-navigation-next"
+              (click)="_buttonClicked(pageIndex + 1, _nextButtonsDisabled())"
               [attr.aria-label]="_intl.nextPageLabel"
               [matTooltip]="_intl.nextPageLabel"
               [matTooltipDisabled]="_nextButtonsDisabled()"
-              [matTooltipPosition]="'above'"
-              [disabled]="_nextButtonsDisabled()">
-        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
+              matTooltipPosition="above"
+              [disabled]="_nextButtonsDisabled()"
+              disabledInteractive>
+        <svg class="mat-mdc-paginator-icon"
+             viewBox="0 0 24 24"
+             focusable="false"
+             aria-hidden="true">
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
         </svg>
       </button>
-      <button mat-icon-button type="button"
-              class="mat-paginator-navigation-last"
-              (click)="lastPage()"
-              [attr.aria-label]="_intl.lastPageLabel"
-              [matTooltip]="_intl.lastPageLabel"
-              [matTooltipDisabled]="_nextButtonsDisabled()"
-              [matTooltipPosition]="'above'"
-              [disabled]="_nextButtonsDisabled()"
-              *ngIf="showFirstLastButtons">
-        <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
-          <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/>
-        </svg>
-      </button>
+      @if (showFirstLastButtons) {
+        <button mat-icon-button type="button"
+                class="mat-mdc-paginator-navigation-last"
+                (click)="_buttonClicked(getNumberOfPages() - 1, _nextButtonsDisabled())"
+                [attr.aria-label]="_intl.lastPageLabel"
+                [matTooltip]="_intl.lastPageLabel"
+                [matTooltipDisabled]="_nextButtonsDisabled()"
+                matTooltipPosition="above"
+                [disabled]="_nextButtonsDisabled()"
+                disabledInteractive>
+          <svg class="mat-mdc-paginator-icon"
+              viewBox="0 0 24 24"
+              focusable="false"
+              aria-hidden="true">
+            <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/>
+          </svg>
+        </button>
+      }
     </div>
   </div>
 </div>

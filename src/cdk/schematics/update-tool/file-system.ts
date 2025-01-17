@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {UpdateRecorder} from './update-recorder';
@@ -18,13 +18,13 @@ import {UpdateRecorder} from './update-recorder';
  * like `/package.json` could actually refer to the `package.json` file in `my-project`.
  * Note that in the real file system this would not match though.
  *
- * One wonder why another type has been declared for such paths, when there already
- * is the `Path` type provided by the devkit. We do this for a couple of reasons:
+ * One might wonder why another type has been declared for such paths, when there
+ * already is the `Path` type provided by the devkit. We do this for a couple of reasons:
  *
  *   1. The update-tool cannot have a dependency on the Angular devkit as that one
  *      is not synced into g3. We want to be able to run migrations in g3 if needed.
  */
-export type WorkspacePath = string&{
+export type WorkspacePath = string & {
   // Brand signature matches the devkit paths so that existing path
   // utilities from the Angular devkit can be conveniently used.
   __PRIVATE_DEVKIT_PATH: void;
@@ -48,7 +48,7 @@ export abstract class FileSystem {
   /** Checks whether the given directory exists. */
   abstract directoryExists(path: WorkspacePath): boolean;
   /** Gets the contents of the given file. */
-  abstract read(filePath: WorkspacePath): string|null;
+  abstract read(filePath: WorkspacePath): string | null;
   /** Reads the given directory to retrieve children. */
   abstract readDirectory(dirPath: WorkspacePath): DirectoryEntry;
   /**

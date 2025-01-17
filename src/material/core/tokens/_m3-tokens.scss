@@ -1,0 +1,366 @@
+@use 'sass:map';
+@use '../style/sass-utils';
+@use '../m2' as m2-theming;
+@use './m3';
+@use './m3/definitions' as m3-token-definitions;
+@use '../tokens/m2' as m2-tokens;
+@use './density';
+@use './format-tokens';
+
+/// Generates tokens for the given palette with the given prefix.
+/// @param {Map} $palette The palette to generate tokens for
+/// @param {String} $prefix The key prefix used to name the tokens
+/// @return {Map} A set of tokens for the given palette
+@function _generate-palette-tokens($palette, $prefix) {
+  $palette: map.remove($palette, neutral, neutral-variant);
+  $result: ();
+  @each $hue, $value in $palette {
+    $result: map.set($result, '#{$prefix}#{$hue}', $value);
+  }
+  @return $result;
+}
+
+/// Creates a set of `md-ref-palette` tokens from the given palettes. (See
+/// ./m3/definitions/_md-ref-palette.scss)
+/// @param {Map} $primary The primary palette
+/// @param {Map} $secondary The secondary palette
+/// @param {Map} $tertiary The tertiary palette
+/// @param {Map} $error The error palette
+/// @return {Map} A set of `md-ref-palette` tokens
+@function generate-ref-palette-tokens($primary, $tertiary, $error) {
+  @return sass-utils.merge-all(
+      (black: #000, white: #fff),
+      _generate-palette-tokens($primary, primary),
+      _generate-palette-tokens(map.get($primary, secondary), secondary),
+      _generate-palette-tokens($tertiary, tertiary),
+      _generate-palette-tokens(map.get($primary, neutral), neutral),
+      _generate-palette-tokens(map.get($primary, neutral-variant), neutral-variant),
+      _generate-palette-tokens($error, error),
+  );
+}
+
+/// Creates a set of `md-ref-typeface` tokens from the given palettes. (See
+/// ./m3/definitions/_md-ref-typeface.scss)
+/// @param {List|String} $brand The font-family to use for brand text
+/// @param {List|String} $plain The font-family to use for plain text
+/// @param {String} $bold The font-weight to use for bold text
+/// @param {String} $medium The font-weight to use for medium text
+/// @param {String} $regular The font-weight to use for regular text
+/// @return {Map} A set of `md-ref-typeface` tokens
+@function generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular) {
+  @return (
+    brand: $brand,
+    plain: $plain,
+    weight-bold: $bold,
+    weight-medium: $medium,
+    weight-regular: $regular,
+  );
+}
+
+$_cached-token-slots: null;
+
+/// Determines the token slots for all components.
+@function _get-token-slots() {
+  // Cache the slots since they're constant and calculating
+  // them appears to be expensive (see #29009).
+  @if ($_cached-token-slots) {
+    @return $_cached-token-slots;
+  }
+
+  // TODO(mmalerba): Refactor this to not depend on the legacy theme when moving out of
+  //  material-experimental. This is a hack for now because there is no good way to get the token
+  //  slots in material-experimental without exposing them all from material.
+  $fake-theme: m2-theming.define-light-theme((
+    color: (
+      primary: m2-theming.define-palette(m2-theming.$red-palette),
+      accent: m2-theming.define-palette(m2-theming.$red-palette),
+      warn: m2-theming.define-palette(m2-theming.$red-palette),
+    ),
+    typography: m2-theming.define-typography-config(),
+    density: 0
+  ));
+  $_cached-token-slots: m2-tokens.m2-tokens-from-theme($fake-theme) !global;
+  @return $_cached-token-slots;
+}
+
+/// Generates a set of namespaced tokens for all components.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
+/// @param {Boolean} $include-density Whether to include density tokens
+/// @return {Map} A map of namespaced tokens
+@function generate-tokens($systems, $include-non-systemized: false, $include-density: false) {
+  $systems: map.merge((
+    md-sys-color: (),
+    md-sys-elevation: (),
+    md-sys-motion: (),
+    md-sys-shape: (),
+    md-sys-state: (),
+    md-sys-typescale: ()
+  ), $systems);
+  $exclude-hardcoded: not $include-non-systemized;
+
+  // DO NOT REMOVE
+  // This function is used internally.
+  $systems: format-tokens.private-format-tokens($systems);
+  $token-slots: _get-token-slots();
+
+  // TODO(mmalerba): Fill in remaining tokens.
+  $result: sass-utils.deep-merge-all(
+    // Add the system color & typography tokens (so we can give users access via an API).
+    (
+      (mdc, theme): map.get($systems, md-sys-color),
+      (mdc, typography): map.get($systems, md-sys-typescale),
+    ),
+    m3.get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
+  );
+
+  // Strip out tokens that are systemized by our made up density system.
+  @each $namespace, $tokens in $result {
+    @each $token, $value in $tokens {
+      @if density.is-systemized($namespace, $token) and not $include-density {
+        $tokens: map.remove($tokens, $token);
+      }
+    }
+    $result: map.set($result, $namespace, $tokens);
+  }
+
+  @return $result;
+}
+
+@function create-map($keys, $prefix) {
+  $result: ();
+  @each $key in $keys {
+    $result: map.merge($result, ($key: var(--#{$prefix}-#{$key})));
+  }
+  @return $result;
+}
+
+@function _get-sys-color($type, $ref, $prefix) {
+  $mdc-sys-color: if($type == dark,
+    m3-token-definitions.md-sys-color-values-dark($ref),
+    m3-token-definitions.md-sys-color-values-light($ref));
+
+  @if (sass-utils.$use-system-color-variables) {
+    $keys: (
+            'background',
+            'error',
+            'error-container',
+            'inverse-on-surface',
+            'inverse-primary',
+            'inverse-surface',
+            'on-background',
+            'on-error',
+            'on-error-container',
+            'on-primary',
+            'on-primary-container',
+            'on-primary-fixed',
+            'on-primary-fixed-variant',
+            'on-secondary',
+            'on-secondary-container',
+            'on-secondary-fixed',
+            'on-secondary-fixed-variant',
+            'on-surface',
+            'on-surface-variant',
+            'on-tertiary',
+            'on-tertiary-container',
+            'on-tertiary-fixed',
+            'on-tertiary-fixed-variant',
+            'outline',
+            'outline-variant',
+            'primary',
+            'primary-container',
+            'primary-fixed',
+            'primary-fixed-dim',
+            'scrim',
+            'secondary',
+            'secondary-container',
+            'secondary-fixed',
+            'secondary-fixed-dim',
+            'surface',
+            'surface-bright',
+            'surface-container',
+            'surface-container-high',
+            'surface-container-highest',
+            'surface-container-low',
+            'surface-container-lowest',
+            'surface-dim',
+            'surface-tint',
+            'surface-variant',
+            'tertiary',
+            'tertiary-container',
+            'tertiary-fixed',
+            'tertiary-fixed-dim'
+    );
+    @return map.merge(create-map($keys, $prefix), (
+      shadow: map.get($mdc-sys-color, shadow)
+    ));
+  }
+
+  @return $mdc-sys-color;
+}
+
+@function _get-sys-typeface($ref, $prefix) {
+  @if (sass-utils.$use-system-typography-variables) {
+    $keys: (
+            'body-large',
+            'body-large-font',
+            'body-large-line-height',
+            'body-large-size',
+            'body-large-tracking',
+            'body-large-weight',
+            'body-medium',
+            'body-medium-font',
+            'body-medium-line-height',
+            'body-medium-size',
+            'body-medium-tracking',
+            'body-medium-weight',
+            'body-small',
+            'body-small-font',
+            'body-small-line-height',
+            'body-small-size',
+            'body-small-tracking',
+            'body-small-weight',
+            'display-large',
+            'display-large-font',
+            'display-large-line-height',
+            'display-large-size',
+            'display-large-tracking',
+            'display-large-weight',
+            'display-medium',
+            'display-medium-font',
+            'display-medium-line-height',
+            'display-medium-size',
+            'display-medium-tracking',
+            'display-medium-weight',
+            'display-small',
+            'display-small-font',
+            'display-small-line-height',
+            'display-small-size',
+            'display-small-tracking',
+            'display-small-weight',
+            'headline-large',
+            'headline-large-font',
+            'headline-large-line-height',
+            'headline-large-size',
+            'headline-large-tracking',
+            'headline-large-weight',
+            'headline-medium',
+            'headline-medium-font',
+            'headline-medium-line-height',
+            'headline-medium-size',
+            'headline-medium-tracking',
+            'headline-medium-weight',
+            'headline-small',
+            'headline-small-font',
+            'headline-small-line-height',
+            'headline-small-size',
+            'headline-small-tracking',
+            'headline-small-weight',
+            'label-large',
+            'label-large-font',
+            'label-large-line-height',
+            'label-large-size',
+            'label-large-tracking',
+            'label-large-weight',
+            'label-large-weight-prominent',
+            'label-medium',
+            'label-medium-font',
+            'label-medium-line-height',
+            'label-medium-size',
+            'label-medium-tracking',
+            'label-medium-weight',
+            'label-medium-weight-prominent',
+            'label-small',
+            'label-small-font',
+            'label-small-line-height',
+            'label-small-size',
+            'label-small-tracking',
+            'label-small-weight',
+            'title-large',
+            'title-large-font',
+            'title-large-line-height',
+            'title-large-size',
+            'title-large-tracking',
+            'title-large-weight',
+            'title-medium',
+            'title-medium-font',
+            'title-medium-line-height',
+            'title-medium-size',
+            'title-medium-tracking',
+            'title-medium-weight',
+            'title-small',
+            'title-small-font',
+            'title-small-line-height',
+            'title-small-size',
+            'title-small-tracking',
+            'title-small-weight'
+    );
+
+    @return create-map($keys, $prefix);
+  }
+  @return m3-token-definitions.md-sys-typescale-values($ref);
+}
+
+/// Generates a set of namespaced color tokens for all components.
+/// @param {String} $type The type of theme system (light or dark)
+/// @param {Map} $primary The primary palette
+/// @param {Map} $tertiary The tertiary palette
+/// @param {Map} $error The error palette
+/// @param {String} $system-variables-prefix The prefix of system tokens
+/// @return {Map} A map of namespaced color tokens
+@function generate-color-tokens($type, $primary, $tertiary, $error, $system-variables-prefix) {
+  $ref: (
+    md-ref-palette: generate-ref-palette-tokens($primary, $tertiary, $error)
+  );
+
+  $sys-color: _get-sys-color($type, $ref, $system-variables-prefix);
+
+  @return generate-tokens(map.merge($ref, (
+    md-sys-color: $sys-color,
+    // Because the elevation values are always combined with color values to create the box shadow,
+    // elevation needs to be part of the color dimension.
+    md-sys-elevation: m3-token-definitions.md-sys-elevation-values(),
+    // Because the state values are sometimes combined with color values to create rgba colors,
+    // state needs to be part of color dimension.
+    // TODO(mmalerba): If at some point we remove the need for these combined values, we can move
+    //  state to the base dimension.
+    md-sys-state: m3-token-definitions.md-sys-state-values(),
+  )));
+}
+
+/// Generates a set of namespaced color tokens for all components.
+/// @param {String|List} $brand The brand font-family
+/// @param {String|List} $plain The plain fort-family
+/// @param {String|Number} $bold The bold font-weight
+/// @param {String|Number} $medium The medium font-weight
+/// @param {String|Number} $regular The regular font-weight
+/// @param {String} $system-variables-prefix The prefix of system tokens
+/// @return {Map} A map of namespaced typography tokens
+@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular,
+$system-variables-prefix) {
+  $ref: (
+    md-ref-typeface: generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+  $sys-typeface: _get-sys-typeface($ref, $system-variables-prefix);
+  @return generate-tokens((
+    md-sys-typescale: $sys-typeface
+  ));
+}
+
+/// Generates a set of namespaced density tokens for all components.
+/// @param {String|Number} $scale The regular font-weight
+/// @return {Map} A map of namespaced density tokens
+@function generate-density-tokens($scale) {
+  @return density.get-tokens-for-scale($scale);
+}
+
+/// Generates a set of namespaced tokens not related to color, typography, or density for all
+/// components.
+/// @return {Map} A map of namespaced tokens not related to color, typography, or density
+@function generate-base-tokens() {
+  // TODO(mmalerba): Exclude density tokens once implemented.
+  @return generate-tokens((
+    md-sys-motion: m3-token-definitions.md-sys-motion-values(),
+    md-sys-shape: m3-token-definitions.md-sys-shape-values(),
+  ), $include-non-systemized: true);
+}

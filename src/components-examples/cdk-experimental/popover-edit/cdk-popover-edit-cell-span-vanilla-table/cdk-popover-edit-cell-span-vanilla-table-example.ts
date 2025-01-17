@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
+import {CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
 
 export interface Person {
   id: number;
@@ -25,8 +26,9 @@ const PERSON_DATA: Person[] = [
  */
 @Component({
   selector: 'cdk-popover-edit-cell-span-vanilla-table-example',
-  styleUrls: ['cdk-popover-edit-cell-span-vanilla-table-example.css'],
+  styleUrl: 'cdk-popover-edit-cell-span-vanilla-table-example.css',
   templateUrl: 'cdk-popover-edit-cell-span-vanilla-table-example.html',
+  imports: [CdkPopoverEditModule, FormsModule],
 })
 export class CdkPopoverEditCellSpanVanillaTableExample {
   readonly preservedValues = new WeakMap<Person, any>();

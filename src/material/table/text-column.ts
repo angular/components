@@ -3,11 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {CdkTextColumn} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell} from './cell';
 
 /**
  * Column that simply shows text content for the header and row cells. Assumes that the table
@@ -38,6 +39,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  imports: [MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell],
 })
-export class MatTextColumn<T> extends CdkTextColumn<T> {
-}
+export class MatTextColumn<T> extends CdkTextColumn<T> {}

@@ -1,5 +1,22 @@
+@use '../core/tokens/m2/mat/tree' as tokens-mat-tree;
+@use '../core/tokens/token-utils';
+
 .mat-tree {
   display: block;
+
+  @include token-utils.use-tokens(tokens-mat-tree.$prefix, tokens-mat-tree.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, container-background-color);
+  }
+}
+
+.mat-tree-node,
+.mat-nested-tree-node {
+  @include token-utils.use-tokens(tokens-mat-tree.$prefix, tokens-mat-tree.get-token-slots()) {
+    @include token-utils.create-token-slot(color, node-text-color);
+    @include token-utils.create-token-slot(font-family, node-text-font);
+    @include token-utils.create-token-slot(font-size, node-text-size);
+    @include token-utils.create-token-slot(font-weight, node-text-weight);
+  }
 }
 
 .mat-tree-node {
@@ -7,6 +24,12 @@
   align-items: center;
   flex: 1;
   word-wrap: break-word;
+
+  @include token-utils.use-tokens(tokens-mat-tree.$prefix, tokens-mat-tree.get-token-slots()) {
+    // TODO: before tokens were introduced, the `min-height` only applied to the
+    // non-nested tree node. Should it apply to the nested one as well?
+    @include token-utils.create-token-slot(min-height, node-min-height);
+  }
 }
 
 .mat-nested-tree-node {

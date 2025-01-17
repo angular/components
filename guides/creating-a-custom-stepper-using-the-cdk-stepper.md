@@ -14,9 +14,9 @@ Now we are ready to create our custom stepper component. Therefore, we need to c
 
 ```ts
 @Component({
-  selector: "app-custom-stepper",
-  templateUrl: "./custom-stepper.component.html",
-  styleUrls: ["./custom-stepper.component.css"],
+  selector: 'app-custom-stepper',
+  templateUrl: './custom-stepper.component.html',
+  styleUrl: './custom-stepper.component.css',
   // This custom stepper provides itself as CdkStepper so that it can be recognized
   // by other components.
   providers: [{ provide: CdkStepper, useExisting: CustomStepperComponent }]
@@ -45,14 +45,11 @@ This is the HTML template of our custom stepper component:
 
   <footer class="step-navigation-bar">
     <button class="nav-button" cdkStepperPrevious>&larr;</button>
-    <button
-      class="step"
-      *ngFor="let step of steps; let i = index;"
-      [ngClass]="{'active': selectedIndex === i}"
-      (click)="onClick(i)"
-    >
-      Step {{i + 1}}
-    </button>
+    @for (step of steps; track step) {
+      <button class="step" [class.active]="selectedIndex === $index" (click)="onClick(i)">
+        Step {{i + 1}}
+      </button>
+    }
     <button class="nav-button" cdkStepperNext>&rarr;</button>
   </footer>
 </section>
@@ -117,9 +114,11 @@ If you want to iterate over your steps and use your own custom component you can
 
 ```html
 <app-custom-stepper>
-  <cdk-step *ngFor="let step of mySteps; let stepIndex = index">
-    <my-step-component [step]="step"></my-step-component>
-  </cdk-step>
+  @for (step of mySteps; track step) {
+    <cdk-step>
+      <my-step-component [step]="$index"></my-step-component>
+    </cdk-step>
+  }
 </app-custom-stepper>
 ```
 

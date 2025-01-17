@@ -1,6 +1,7 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {AfterViewInit, Component, ViewChild, inject} from '@angular/core';
+import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -8,7 +9,6 @@ export interface PeriodicElement {
   weight: number;
   symbol: string;
 }
-
 const ELEMENT_DATA: PeriodicElement[] = [
   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
@@ -21,16 +21,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
-
 /**
  * @title Table with sorting
  */
 @Component({
   selector: 'table-sorting-example',
-  styleUrls: ['table-sorting-example.css'],
+  styleUrl: 'table-sorting-example.css',
   templateUrl: 'table-sorting-example.html',
+  imports: [MatTableModule, MatSortModule],
 })
 export class TableSortingExample implements AfterViewInit {
+  private _liveAnnouncer = inject(LiveAnnouncer);
+
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
@@ -38,5 +40,18 @@ export class TableSortingExample implements AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  /** Announce the change in sort state for assistive technology. */
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 }

@@ -1,27 +1,14 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonToggleGroupHarness} from '@angular/material/button-toggle/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {ButtonToggleHarnessExample} from './button-toggle-harness-example';
 
 describe('ButtonToggleHarnessExample', () => {
   let fixture: ComponentFixture<ButtonToggleHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatButtonToggleModule],
-      declarations: [ButtonToggleHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(ButtonToggleHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -41,14 +28,14 @@ describe('ButtonToggleHarnessExample', () => {
   it('should get whether the group is disabled', async () => {
     const group = await loader.getHarness(MatButtonToggleGroupHarness);
     expect(await group.isDisabled()).toBe(false);
-    fixture.componentInstance.disabled = true;
+    fixture.componentInstance.disabled.set(true);
     expect(await group.isDisabled()).toBe(true);
   });
 
   it('should get the group appearance', async () => {
     const group = await loader.getHarness(MatButtonToggleGroupHarness);
     expect(await group.getAppearance()).toBe('standard');
-    fixture.componentInstance.appearance = 'legacy';
+    fixture.componentInstance.appearance.set('legacy');
     expect(await group.getAppearance()).toBe('legacy');
   });
 });

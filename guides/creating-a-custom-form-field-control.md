@@ -219,7 +219,7 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, ControlValueAcces
 }
 ```
 
-For additional information about `ControlValueAccessor` see the [API docs](https://angular.io/api/forms/ControlValueAccessor).
+For additional information about `ControlValueAccessor` see the [API docs](https://angular.dev/api/forms/ControlValueAccessor).
 
 
 #### `focused`
@@ -300,7 +300,7 @@ change detection if the required state changes.
 get required() {
   return this._required;
 }
-set required(req) {
+set required(req: BooleanInput) {
   this._required = coerceBooleanProperty(req);
   this.stateChanges.next();
 }
@@ -316,7 +316,7 @@ make up our component.
 ```ts
 @Input()
 get disabled(): boolean { return this._disabled; }
-set disabled(value: boolean) {
+set disabled(value: BooleanInput) {
   this._disabled = coerceBooleanProperty(value);
   this._disabled ? this.parts.disable() : this.parts.enable();
   this.stateChanges.next();
@@ -326,14 +326,50 @@ private _disabled = false;
 
 #### `errorState`
 
-This property indicates whether the associated `NgControl` is in an error state. In this example,
-we show an error if the input is invalid and our component has been touched.
+This property indicates whether the associated `NgControl` is in an error state. For example,
+we can show an error if the input is invalid and our component has been touched.
 
 ```ts
 get errorState(): boolean {
   return this.parts.invalid && this.touched;
 }
 ```
+
+However, there are some error triggers that we can't subscribe to (e.g. parent form submissions),
+to handle such cases we should re-evaluate `errorState` on every change detection cycle.
+
+```ts
+/** Whether the component is in an error state. */
+errorState: boolean = false;
+
+constructor(
+  ...,
+  @Optional() private _parentForm: NgForm,
+  @Optional() private _parentFormGroup: FormGroupDirective
+) {
+...
+}
+
+ngDoCheck() {
+  if (this.ngControl) {
+    this.updateErrorState();
+  }
+}
+
+private updateErrorState() {
+  const parentSubmitted = this._parentFormGroup?.submitted || this._parentForm?.submitted;
+  const touchedOrParentSubmitted = this.touched || parentSubmitted;
+
+  const newState = (this.ngControl?.invalid || this.parts.invalid) && touchedOrParentSubmitted;
+
+  if (this.errorState !== newState) {
+    this.errorState = newState;
+    this.stateChanges.next(); // Notify listeners of state changes.
+  }
+}
+```
+
+Keep in mind that `updateErrorState()` must have minimal logic to avoid performance issues.
 
 #### `controlType`
 
@@ -388,7 +424,7 @@ click. In our case we'll just focus the first `<input>` if the user isn't about 
 ```ts
 onContainerClick(event: MouseEvent) {
   if ((event.target as Element).tagName.toLowerCase() != 'input') {
-    this.elRef.nativeElement.querySelector('input').focus();
+    this._elementRef.nativeElement.querySelector('input').focus();
   }
 }
 ```

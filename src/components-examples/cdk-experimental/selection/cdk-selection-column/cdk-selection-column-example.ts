@@ -1,5 +1,6 @@
-import {SelectionChange} from '@angular/cdk-experimental/selection';
+import {SelectionChange, CdkSelectionModule} from '@angular/cdk-experimental/selection';
 import {Component} from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
 
 /**
  * @title CDK Selection Column on a CDK table.
@@ -7,7 +8,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'cdk-selection-column-example',
   templateUrl: 'cdk-selection-column-example.html',
-  styleUrls: ['cdk-selection-column-example.css'],
+  styleUrl: 'cdk-selection-column-example.css',
+  imports: [CdkTableModule, CdkSelectionModule],
 })
 export class CdkSelectionColumnExample {
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
@@ -15,7 +17,7 @@ export class CdkSelectionColumnExample {
   selected: string[] = [];
 
   selectionChanged(event: SelectionChange<PeriodicElement>) {
-    this.selected = event.after.map((select) => select.value.name);
+    this.selected = event.after.map(select => select.value.name);
   }
 }
 

@@ -46,7 +46,9 @@ will be connected to all other lists automatically.
 ```html
 <div cdkDropListGroup>
   <!-- All lists in here will be connected. -->
-  <div cdkDropList *ngFor="let list of lists"></div>
+  @for (list of lists; track list) {
+    <div cdkDropList></div>
+  }
 </div>
 ```
 
@@ -58,9 +60,13 @@ or `cdkDropListData`, respectively. Events fired from both directives include th
 you to easily identify the origin of the drag or drop interaction.
 
 ```html
-<div cdkDropList [cdkDropListData]="list" *ngFor="let list of lists" (cdkDropListDropped)="drop($event)">
-  <div cdkDrag [cdkDragData]="item" *ngFor="let item of list"></div>
-</div>
+@for (list of lists; track list) {
+  <div cdkDropList [cdkDropListData]="list" (cdkDropListDropped)="drop($event)">
+    @for (item of list; track item) {
+      <div cdkDrag [cdkDragData]="item"></div>
+    }
+  </div>
+}
 ```
 
 ### Styling
@@ -132,7 +138,7 @@ to be applied.
 By default, the preview of a `cdkDrag` will be inserted into the `<body>` of the page in order to
 avoid issues with `z-index` and `overflow: hidden`. This may not be desireable in some cases,
 because the preview won't retain its inherited styles. You can control where the preview is inserted
-using the `cdkDrawPreviewContainer` input. The possible values are:
+using the `cdkDragPreviewContainer` input on `cdkDrag`. The possible values are:
 
 | Value             | Description             | Advantages             | Disadvantages             |
 |-------------------|-------------------------|------------------------|---------------------------|
@@ -151,9 +157,21 @@ directive:
 
 ### List orientation
 The `cdkDropList` directive assumes that lists are vertical by default. This can be
-changed by setting the `orientation` property to `"horizontal".
+changed by setting the `cdkDropListOrientation` property to `horizontal`.
 
 <!-- example(cdk-drag-drop-horizontal-sorting) -->
+
+### List wrapping
+By default the `cdkDropList` sorts the items by moving them around using a CSS `transform`. This
+allows for the sorting to be animated which provides a better user experience, but comes with the
+drawback that it works only one direction: vertically or horizontally.
+
+If you have a sortable list that needs to wrap, you can set `cdkDropListOrientation="mixed"` which
+will use a different strategy of sorting the elements that works by moving them in the DOM. It has
+the advantage of allowing the items to wrap to the next line, but it **cannot** animate the
+sorting action.
+
+<!-- example(cdk-drag-drop-mixed-sorting) -->
 
 ### Restricting movement within an element
 
@@ -232,3 +250,14 @@ whenever an item is about to be moved into a new index. If the predicate returns
 item will be moved into the new index, otherwise it will keep its current position.
 
 <!-- example(cdk-drag-drop-sort-predicate) -->
+
+### Integrations with Angular Material
+The CDK's drag&drop functionality can be integrated with different parts of Angular Material.
+
+#### Sortable table
+This example shows how you can set up a table which supports re-ordering of tabs.
+<!-- example(cdk-drag-drop-table) -->
+
+#### Sortable tabs
+Example of how to add sorting support to a `mat-tab-group`.
+<!-- example(cdk-drag-drop-tabs) -->

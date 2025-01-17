@@ -1,27 +1,14 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatBadgeHarness} from '@angular/material/badge/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatBadgeModule} from '@angular/material/badge';
 import {BadgeHarnessExample} from './badge-harness-example';
 
 describe('BadgeHarnessExample', () => {
   let fixture: ComponentFixture<BadgeHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatBadgeModule],
-      declarations: [BadgeHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(BadgeHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -36,7 +23,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#simple'}));
 
     expect(await badge.getText()).toBe('S');
-    fixture.componentInstance.simpleContent = 'Changed';
+    fixture.componentInstance.simpleContent.set('Changed');
     expect(await badge.getText()).toBe('Changed');
   });
 
@@ -44,7 +31,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#overlapping'}));
 
     expect(await badge.isOverlapping()).toBe(true);
-    fixture.componentInstance.overlap = false;
+    fixture.componentInstance.overlap.set(false);
     expect(await badge.isOverlapping()).toBe(false);
   });
 
@@ -52,7 +39,7 @@ describe('BadgeHarnessExample', () => {
     const badge = await loader.getHarness(MatBadgeHarness.with({selector: '#disabled'}));
 
     expect(await badge.isDisabled()).toBe(true);
-    fixture.componentInstance.disabled = false;
+    fixture.componentInstance.disabled.set(false);
     expect(await badge.isDisabled()).toBe(false);
   });
 });

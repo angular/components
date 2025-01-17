@@ -5,23 +5,24 @@
 
 <section class="example-section">
   <span class="example-list-section">
-    <mat-checkbox class="example-margin"
-                  [checked]="allComplete"
-                  [color]="task.color"
-                  [indeterminate]="someComplete()"
-                  (change)="setAll($event.checked)">
-      {{task.name}}
+    <mat-checkbox
+      class="example-margin"
+      [checked]="task().completed"
+      [indeterminate]="partiallyComplete()"
+      (change)="update($event.checked)"
+    >
+      {{task().name}}
     </mat-checkbox>
   </span>
   <span class="example-list-section">
     <ul>
-      <li *ngFor="let subtask of task.subtasks">
-        <mat-checkbox [(ngModel)]="subtask.completed"
-                      [color]="subtask.color"
-                      (ngModelChange)="updateAllComplete()">
-          {{subtask.name}}
-        </mat-checkbox>
-      </li>
+      @for (subtask of task().subtasks; track subtask; let i = $index) {
+        <li>
+          <mat-checkbox [checked]="subtask.completed" (change)="update($event.checked, i)">
+            {{subtask.name}}
+          </mat-checkbox>
+        </li>
+      }
     </ul>
   </span>
 </section>

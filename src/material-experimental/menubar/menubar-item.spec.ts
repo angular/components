@@ -1,26 +1,23 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, waitForAsync, TestBed} from '@angular/core/testing';
-import {CdkMenuItem, CdkMenuModule, CdkMenu} from '@angular/cdk-experimental/menu';
+import {CdkMenuItem, CdkMenuModule, CdkMenu} from '@angular/cdk/menu';
 import {MatMenuBarItem} from './menubar-item';
 import {MatMenuBarModule} from './menubar-module';
 
 describe('MatMenuBarItem', () => {
   let fixture: ComponentFixture<SimpleMenuBarItem>;
-  let menubarItem: MatMenuBarItem;
   let nativeMenubarItem: HTMLElement;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuBarModule, CdkMenuModule],
-      declarations: [SimpleMenuBarItem],
-    }).compileComponents();
+      imports: [MatMenuBarModule, CdkMenuModule, SimpleMenuBarItem],
+    });
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMenuBarItem);
     fixture.detectChanges();
 
-    menubarItem = fixture.componentInstance.menubarItem;
     nativeMenubarItem = fixture.componentInstance.nativeMenubarItem.nativeElement;
   });
 
@@ -34,13 +31,6 @@ describe('MatMenuBarItem', () => {
 
   it('should not set the aria-disabled attribute when false', () => {
     expect(nativeMenubarItem.hasAttribute('aria.disabled')).toBeFalse();
-  });
-
-  it('should coerce and set aria-disabled attribute', () => {
-    (menubarItem.disabled as any) = '';
-    fixture.detectChanges();
-
-    expect(nativeMenubarItem.getAttribute('aria-disabled')).toBe('true');
   });
 
   it('should have cdk and material classes set', () => {
@@ -66,12 +56,13 @@ describe('MatMenuBarItem', () => {
       <mat-menubar-item [cdkMenuTriggerFor]="sub">File</mat-menubar-item>
     </mat-menubar>
 
-    <ng-template cdkMenuPanel #sub="cdkMenuPanel">
-      <div #menu cdkMenu [cdkMenuPanel]="sub">
+    <ng-template #sub>
+      <div #menu cdkMenu>
         <button cdkMenuItem></button>
       </div>
     </ng-template>
   `,
+  imports: [MatMenuBarModule, CdkMenuModule],
 })
 class SimpleMenuBarItem {
   @ViewChild(CdkMenuItem) menubarItem: MatMenuBarItem;

@@ -1,28 +1,25 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {RIGHT_ARROW} from '@angular/cdk/keycodes';
-import {CdkMenuBar} from '@angular/cdk-experimental/menu';
+import {CdkMenuBar} from '@angular/cdk/menu';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {MatMenuBarModule} from './menubar-module';
 import {MatMenuBar} from './menubar';
 
 describe('MatMenuBar', () => {
   let fixture: ComponentFixture<SimpleMatMenuBar>;
-  let matMenubar: MatMenuBar;
   let nativeMatMenubar: HTMLElement;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuBarModule],
-      declarations: [SimpleMatMenuBar],
-    }).compileComponents();
+      imports: [MatMenuBarModule, SimpleMatMenuBar],
+    });
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SimpleMatMenuBar);
     fixture.detectChanges();
 
-    matMenubar = fixture.componentInstance.matMenubar;
     nativeMatMenubar = fixture.componentInstance.nativeMatMenubar.nativeElement;
   });
 
@@ -39,24 +36,15 @@ describe('MatMenuBar', () => {
     expect(nativeMatMenubar.getAttribute('tabindex')).toBe('0');
   });
 
-  it('should toggle aria-orientation attribute', () => {
-    expect(nativeMatMenubar.getAttribute('aria-orientation')).toBe('horizontal');
-
-    matMenubar.orientation = 'vertical';
-    fixture.detectChanges();
-
-    expect(nativeMatMenubar.getAttribute('aria-orientation')).toBe('vertical');
-  });
-
   it('should toggle focused items on left/right click', () => {
     nativeMatMenubar.focus();
 
-    expect(document.querySelector(':focus')!.id).toBe('first');
+    expect(document.activeElement!.id).toBe('first');
 
     dispatchKeyboardEvent(nativeMatMenubar, 'keydown', RIGHT_ARROW);
     fixture.detectChanges();
 
-    expect(document.querySelector(':focus')!.id).toBe('second');
+    expect(document.activeElement!.id).toBe('second');
   });
 });
 
@@ -67,6 +55,7 @@ describe('MatMenuBar', () => {
       <mat-menubar-item id="second"></mat-menubar-item>
     </mat-menubar>
   `,
+  imports: [MatMenuBarModule],
 })
 class SimpleMatMenuBar {
   @ViewChild(CdkMenuBar) matMenubar: MatMenuBar;

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 let shadowDomIsSupported: boolean;
@@ -38,8 +38,10 @@ export function _getShadowRoot(element: HTMLElement): ShadowRoot | null {
  * also piercing through Shadow DOM boundaries.
  */
 export function _getFocusedElementPierceShadowDom(): HTMLElement | null {
-  let activeElement = typeof document !== 'undefined' && document ?
-    document.activeElement as HTMLElement | null : null;
+  let activeElement =
+    typeof document !== 'undefined' && document
+      ? (document.activeElement as HTMLElement | null)
+      : null;
 
   while (activeElement && activeElement.shadowRoot) {
     const newActiveElement = activeElement.shadowRoot.activeElement as HTMLElement | null;
@@ -51,4 +53,11 @@ export function _getFocusedElementPierceShadowDom(): HTMLElement | null {
   }
 
   return activeElement;
+}
+
+/** Gets the target of an event while accounting for Shadow DOM. */
+export function _getEventTarget<T extends EventTarget>(event: Event): T | null {
+  // If an event is bound outside the Shadow DOM, the `event.target` will
+  // point to the shadow root so we have to use `composedPath` instead.
+  return (event.composedPath ? event.composedPath()[0] : event.target) as T | null;
 }

@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, Input, TemplateRef} from '@angular/core';
+import {Directive, Input, TemplateRef, inject} from '@angular/core';
 import {StepState} from '@angular/cdk/stepper';
 
 /** Template context available to an attached `matStepperIcon`. */
@@ -26,8 +26,11 @@ export interface MatStepperIconContext {
   selector: 'ng-template[matStepperIcon]',
 })
 export class MatStepperIcon {
+  templateRef = inject<TemplateRef<MatStepperIconContext>>(TemplateRef);
+
   /** Name of the icon to be overridden. */
   @Input('matStepperIcon') name: StepState;
 
-  constructor(public templateRef: TemplateRef<MatStepperIconContext>) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 }

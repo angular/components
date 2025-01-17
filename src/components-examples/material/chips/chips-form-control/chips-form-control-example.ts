@@ -1,6 +1,10 @@
-import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
 
 /**
  * @title Chips with form control
@@ -8,20 +12,45 @@ import {MatChipInputEvent} from '@angular/material/chips';
 @Component({
   selector: 'chips-form-control-example',
   templateUrl: 'chips-form-control-example.html',
-  styleUrls: ['chips-form-control-example.css'],
+  styleUrl: 'chips-form-control-example.css',
+  imports: [
+    MatButtonModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsFormControlExample {
-  keywords = new Set(['angular', 'how-to', 'tutorial']);
-  formControl = new FormControl(['angular']);
+  readonly keywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
+  readonly formControl = new FormControl(['angular']);
 
-  addKeywordFromInput(event: MatChipInputEvent) {
-    if (event.value) {
-      this.keywords.add(event.value);
-      event.chipInput!.clear();
-    }
-  }
+  announcer = inject(LiveAnnouncer);
 
   removeKeyword(keyword: string) {
-    this.keywords.delete(keyword);
+    this.keywords.update(keywords => {
+      const index = keywords.indexOf(keyword);
+      if (index < 0) {
+        return keywords;
+      }
+
+      keywords.splice(index, 1);
+      this.announcer.announce(`removed ${keyword}`);
+      return [...keywords];
+    });
+  }
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our keyword
+    if (value) {
+      this.keywords.update(keywords => [...keywords, value]);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
   }
 }

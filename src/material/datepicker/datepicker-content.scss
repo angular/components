@@ -1,3 +1,6 @@
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
+
 $calendar-padding: 8px;
 $non-touch-calendar-cell-size: 40px;
 $non-touch-calendar-width:
@@ -26,9 +29,24 @@ $touch-max-height: 788px;
   display: block;
   border-radius: 4px;
 
+  @include token-utils.use-tokens(
+    tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, calendar-container-background-color);
+    @include token-utils.create-token-slot(color, calendar-container-text-color);
+    @include token-utils.create-token-slot(box-shadow, calendar-container-elevation-shadow);
+    @include token-utils.create-token-slot(border-radius, calendar-container-shape);
+  }
+
   .mat-calendar {
     width: $non-touch-calendar-width;
     height: $non-touch-calendar-height;
+  }
+
+  // Override mat-calendar's height when custom header is provided
+  // Height should be auto, when the custom header is provided.
+  // This will prevent the content from overflowing.
+  .mat-datepicker-content-container-with-custom-header .mat-calendar {
+    height: auto;
   }
 
   // Note that this selector doesn't technically have to be nested, but we want the slightly
@@ -58,6 +76,12 @@ $touch-max-height: 788px;
 .mat-datepicker-content-touch {
   display: block;
   max-height: 80vh;
+
+  @include token-utils.use-tokens(
+      tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
+    @include token-utils.create-token-slot(box-shadow, calendar-container-touch-elevation-shadow);
+    @include token-utils.create-token-slot(border-radius, calendar-container-touch-shape);
+  }
 
   // Allows for the screen reader close button to be seen in touch UI mode.
   position: relative;

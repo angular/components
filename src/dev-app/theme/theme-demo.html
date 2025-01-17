@@ -1,0 +1,239 @@
+<p class="demo-warn">
+  This page uses an experimental prototype version of a
+  <span class="demo-surface-variable">material.theme</span> API.
+  To enable it, click the <mat-icon>public</mat-icon> icon in the header.
+</p>
+
+<p>
+  Angular Material components depend on CSS variables defined by the
+  <span class="demo-surface-variable">material.theme</span>
+  Sass mixin. This page provides guidance and documentation for using these variables to
+  customize components.
+</p>
+
+<h1>Colors</h1>
+
+<p>
+  Material Design uses color to create accessible, personal color schemes
+  that communicate your product's hierarchy, state, and brand. See Material
+  Design's <a href="https://m3.material.io/styles/color/system/overview">Color System</a>
+  page to learn more about its use and purpose.
+</p>
+<p>
+  The following colors are the most often used in Angular Material components. Use these
+  colors and follow their uses to add theme colors to your application's custom components.
+</p>
+<p>
+  Note that variables starting with "--mat-sys-on-*" are designed to be used for text or icons
+  placed on top of its paired parent color. For example, <span class="demo-surface-variable">--mat-sys-on-primary</span>
+  is used for text and icons in elements filled with the <span class="demo-surface-variable">--mat-sys-primary</span> color.
+</p>
+
+<div class="demo-group">
+  <div class="demo-color-container">
+    <div class="demo-heading"
+         [style.background-color]="'var(--mat-sys-primary)'"
+         [style.color]="'var(--mat-sys-on-primary)'">
+      <div class="demo-name"> Primary</div>
+      <div class="demo-variable demo-code"> --mat-sys-primary</div>
+    </div>
+    <div class="demo-description">
+      <p>
+        The most common color used by Angular Material components to
+        participate in the application theme.
+      </p>
+      <p>
+        Examples include the background color
+        of filled buttons, the icon color of selected radio buttons, and the
+        outline color of form fields.
+      </p>
+      <p>
+        Use the color <span class="demo-surface-variable">--mat-sys-on-primary</span> for
+        icons, text, and other visual elements placed on a primary background. This
+        color is calculated to be optimal for accessibility and legibility.
+      </p>
+    </div>
+  </div>
+
+  <div class="demo-color-container">
+    <div class="demo-heading"
+         [style.background-color]="'var(--mat-sys-surface)'"
+         [style.color]="'var(--mat-sys-on-surface)'">
+      <div class="demo-name"> Surface</div>
+      <div class="demo-variable code"> --mat-sys-surface</div>
+    </div>
+    <div class="demo-description">
+      <p>
+        A low-emphasis background color that provides a clear contrast for
+        both light and dark themes and their varied theme colors.
+      </p>
+      <p>
+        Examples include the background color of the application and most
+        components such as the dialog, card, table, and more.
+      </p>
+      <p>
+        Use the color <span class="demo-surface-variable">--mat-sys-on-surface</span> for
+        icons, text, and other visual elements placed on a surface background. This
+        color is calculated to be optimal for accessibility and legibility.
+      </p>
+    </div>
+  </div>
+
+  <div class="demo-color-container">
+    <div class="demo-heading"
+         [style.background-color]="'var(--mat-sys-error)'"
+         [style.color]="'var(--mat-sys-on-error)'">
+      <div class="demo-name"> Error</div>
+      <div class="demo-variable demo-code"> --mat-sys-error</div>
+    </div>
+    <div class="demo-description">
+      <p>
+        High-contrast color meant to alert the user to attract immediate attention.
+      </p>
+      <p>
+        Examples include the background color of the badge and the text color of invalid
+        form fields inputs.
+      </p>
+      <p>
+        Use the color <span class="demo-surface-variable">--mat-sys-on-error</span> for
+        icons, text, and other visual elements placed on an error background. This
+        color is calculated to be optimal for accessibility and legibility.
+      </p>
+    </div>
+  </div>
+
+  <div class="demo-color-container">
+    <div class="demo-heading"
+         [style.background-color]="'var(--mat-sys-outline)'"
+         [style.color]="'var(--mat-sys-surface)'">
+      <div class="demo-name"> Outline</div>
+      <div class="demo-variable demo-code"> --mat-sys-outline </div>
+    </div>
+    <div class="demo-description">
+      <p>
+        Used for borders and dividers to help provide visual separation between
+        and around elements.
+      </p>
+      <p>
+        Examples include the color of the divider and border color of an outlined
+        form field.
+      </p>
+      <p>
+        Use the color <span class="demo-surface-variable">--mat-sys-outline-variant</span> for a less
+        prominent outline.
+      </p>
+    </div>
+  </div>
+</div>
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>Other available colors</mat-expansion-panel-header>
+
+  <p>
+    These colors are less commonly used in Angular Material components but
+    are available for adding color variety and creating additional emphasis
+    to components.
+  </p>
+  <p>
+    Colors may be paired with a <span class="demo-surface-variable">--mat-sys-on-</span> variable
+    that should be used for text and icons placed within a filled container.
+  </p>
+
+  <h2>Alternative Theme Colors</h2>
+
+  <theme-demo-colors [colors]="alternativeThemeColors"></theme-demo-colors>
+
+  <h2>Surface Colors</h2>
+
+  <p>
+    The following colors should be used for backgrounds and large,
+    low-emphasis areas of the screen.
+  </p>
+
+  <p>
+    Containers filled with a surface color should apply the
+    <span class="demo-surface-variable">--mat-sys-on-surface</span> color to text
+    and icons placed within.
+  </p>
+
+  <theme-demo-colors [colors]="surfaceColors"></theme-demo-colors>
+
+  <h2>Fixed Colors</h2>
+
+  <p>
+    These colors are the same for both light and dark themes. They are unused
+    by any Angular Material components.
+  </p>
+
+  <theme-demo-colors [colors]="fixedColors"></theme-demo-colors>
+
+</mat-expansion-panel>
+
+<h1>Typography</h1>
+
+<p>
+  There are five categories of font types defined by Material Design: body, display, headline,
+  label, and title. Each category has three sizes: small, medium, and large.
+</p>
+<p>
+  Learn more about how these categories and their sizes should be used in your application by
+  visiting Material Design's
+  <a href="https://m3.material.io/styles/typography/overview">Typography</a> documentation.
+</p>
+
+
+@for (category of ['body', 'display', 'headline', 'label', 'title']; track $index) {
+  <div class="demo-typography-group">
+    <div class="demo-typography-title">{{category}}</div>
+    @for (size of ['small', 'medium', 'large']; track $index) {
+      <div class="demo-typography-example">
+        <div class="demo-typography-variable">
+          <div class="demo-surface-variable">--mat-sys-{{category}}-{{size}}</div>
+        </div>
+        <div class="demo-typography-text" [style.font]="'var(--mat-sys-' + category + '-' + size + ')'">Lorem ipsum dolor</div>
+      </div>
+    }
+  </div>
+}
+
+<p>
+  Each variable can be applied to the `font` CSS style. Additionally, the parts of the variable definition
+  can be accessed individually by appending the keywords "font", "line-height", "size", "tracking", and "weight".
+</p>
+<p>
+  For example, the values for medium body text may be defined as follows:
+</p>
+<pre class="demo-code-block">
+--mat-sys-body-medium: 400 0.875rem / 1.25rem Roboto, sans-serif;
+--mat-sys-body-medium-font: Roboto, sans-serif;
+--mat-sys-body-medium-line-height: 1.25rem;
+--mat-sys-body-medium-size: 0.875rem;
+--mat-sys-body-medium-tracking: 0.016rem;
+--mat-sys-body-medium-weight: 400;
+</pre>
+
+<h1>Elevation</h1>
+
+<p>
+  Material Design provides six levels of elevation that can be used to provide
+  a sense of depth and organization to an application's UI. Learn more at Material Design's
+  <a href="https://m3.material.io/styles/elevation/overview">Elevation</a> guide.
+</p>
+
+<p>
+  These levels are defined as CSS box-shadow values that can be styled to an element.
+</p>
+
+@for (level of [0, 1, 2, 3, 4, 5]; track $index) {
+<div class="demo-elevation code" [style.box-shadow]="'var(--mat-sys-level' + level + ')'">
+box-shadow: var(--mat-sys-level{{level}})
+</div>
+}
+
+<h1>Overrides</h1>
+
+<div class="demo-overrides">
+  This container has several system variables applied and includes the
+  <span class="demo-surface-variable">mat.theme-overrides</span> mixin
+  to change their values from the existing theme.
+</div>

@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, InjectionToken} from '@angular/core';
+import {Directive, InjectionToken, inject} from '@angular/core';
 import {CdkPortal} from '@angular/cdk/portal';
 
 /**
@@ -16,9 +16,17 @@ import {CdkPortal} from '@angular/cdk/portal';
  */
 export const MAT_TAB_LABEL = new InjectionToken<MatTabLabel>('MatTabLabel');
 
+/**
+ * Used to provide a tab label to a tab without causing a circular dependency.
+ * @docs-private
+ */
+export const MAT_TAB = new InjectionToken<any>('MAT_TAB');
+
 /** Used to flag tab labels for use with the portal directive */
 @Directive({
   selector: '[mat-tab-label], [matTabLabel]',
   providers: [{provide: MAT_TAB_LABEL, useExisting: MatTabLabel}],
 })
-export class MatTabLabel extends CdkPortal {}
+export class MatTabLabel extends CdkPortal {
+  _closestTab = inject(MAT_TAB, {optional: true});
+}

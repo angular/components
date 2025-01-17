@@ -1,14 +1,10 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {
-  Component,
-  Type,
-  ViewChild,
-} from '@angular/core';
-import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {Platform} from '@angular/cdk/platform';
+import {CdkTable, CdkTableModule} from '@angular/cdk/table';
+import {Component, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {CdkTable, CdkTableModule} from '@angular/cdk/table';
-import {Platform} from '@angular/cdk/platform';
 
 import {CdkTableScrollContainerModule} from './index';
 
@@ -23,11 +19,12 @@ describe('CdkTableScrollContainer', () => {
   let footerRows: HTMLElement[];
 
   function createComponent<T>(
-      componentType: Type<T>, declarations: any[] = []): ComponentFixture<T> {
+    componentType: Type<T>,
+    declarations: any[] = [],
+  ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [CdkTableModule, CdkTableScrollContainerModule],
-      declarations: [componentType, ...declarations],
-    }).compileComponents();
+      imports: [CdkTableModule, CdkTableScrollContainerModule, componentType, ...declarations],
+    });
 
     return TestBed.createComponent<T>(componentType);
   }
@@ -41,6 +38,15 @@ describe('CdkTableScrollContainer', () => {
     scrollerElement = fixture.nativeElement.querySelector('.cdk-table-scroll-container');
   }
 
+  async function waitForLayout(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve));
+
+    // In newer versions of Chrome (change was noticed between 114 and 124), the computed
+    // style of `::-webkit-scrollbar-track` doesn't update until the styles of the container
+    // have changed. Toggle between a couple of states so that tests get accurate measurements.
+    scrollerElement.style.color = scrollerElement.style.color ? '' : '#000';
+  }
+
   beforeEach(() => {
     setupTableTestApp(StickyNativeLayoutCdkTableApp);
 
@@ -51,27 +57,27 @@ describe('CdkTableScrollContainer', () => {
     dataRows = getRows(tableElement);
   });
 
-  it('sets scrollbar track margin for sticky headers', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky headers', waitForAsync(async () => {
     component.stickyHeaders = ['header-1', 'header-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
       return;
     }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top'))
-        .toBe(`${headerRows[0].offsetHeight}px`);
+    const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+    expect(scrollerStyle.getPropertyValue('margin-top')).toBe(`${headerRows[0].offsetHeight}px`);
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyHeaders = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -79,27 +85,27 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky footers', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky footers', waitForAsync(async () => {
     component.stickyFooters = ['footer-1', 'footer-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
       return;
     }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+    const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-bottom'))
-        .toBe(`${footerRows[2].offsetHeight}px`);
+    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe(`${footerRows[2].offsetHeight}px`);
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyFooters = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -107,27 +113,29 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky start columns', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky start columns', waitForAsync(async () => {
     component.stickyStartColumns = ['column-1', 'column-3'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
       return;
     }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+    const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-left'))
-        .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
+    expect(scrollerStyle.getPropertyValue('margin-left')).toBe(
+      `${getCells(dataRows[0])[0].offsetWidth}px`,
+    );
 
     component.stickyStartColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -135,27 +143,29 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for sticky end columns', fakeAsync(() => {
+  it('sets scrollbar track margin for sticky end columns', waitForAsync(async () => {
     component.stickyEndColumns = ['column-4', 'column-6'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
       return;
     }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+    const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
-    expect(scrollerStyle.getPropertyValue('margin-right'))
-        .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
+    expect(scrollerStyle.getPropertyValue('margin-right')).toBe(
+      `${getCells(dataRows[0])[5].offsetWidth}px`,
+    );
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
 
     component.stickyEndColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -163,36 +173,37 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
   }));
 
-  it('sets scrollbar track margin for a combination of sticky rows and columns', fakeAsync(() => {
+  it('sets scrollbar track margin for a combination of sticky rows and columns', waitForAsync(async () => {
     component.stickyHeaders = ['header-1'];
     component.stickyFooters = ['footer-3'];
     component.stickyStartColumns = ['column-1'];
     component.stickyEndColumns = ['column-6'];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     if (platform.FIREFOX) {
       // ::-webkit-scrollbar-track is not recognized by Firefox.
       return;
     }
 
-    const scrollerStyle =
-        window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
-    expect(scrollerStyle.getPropertyValue('margin-top'))
-        .toBe(`${headerRows[0].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-right'))
-        .toBe(`${getCells(dataRows[0])[5].offsetWidth}px`);
-    expect(scrollerStyle.getPropertyValue('margin-bottom'))
-        .toBe(`${footerRows[2].offsetHeight}px`);
-    expect(scrollerStyle.getPropertyValue('margin-left'))
-        .toBe(`${getCells(dataRows[0])[0].offsetWidth}px`);
+    const scrollerStyle = window.getComputedStyle(scrollerElement, '::-webkit-scrollbar-track');
+    expect(scrollerStyle.getPropertyValue('margin-top')).toBe(`${headerRows[0].offsetHeight}px`);
+    expect(scrollerStyle.getPropertyValue('margin-right')).toBe(
+      `${getCells(dataRows[0])[5].offsetWidth}px`,
+    );
+    expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe(`${footerRows[2].offsetHeight}px`);
+    expect(scrollerStyle.getPropertyValue('margin-left')).toBe(
+      `${getCells(dataRows[0])[0].offsetWidth}px`,
+    );
 
     component.stickyHeaders = [];
     component.stickyFooters = [];
     component.stickyStartColumns = [];
     component.stickyEndColumns = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flushMicrotasks();
+    await waitForLayout();
 
     expect(scrollerStyle.getPropertyValue('margin-top')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
@@ -227,8 +238,9 @@ class FakeDataSource extends DataSource<TestData> {
 
   connect(collectionViewer: CollectionViewer) {
     this.isConnected = true;
-    return combineLatest([this._dataChange, collectionViewer.viewChange])
-      .pipe(map(data => data[0]));
+    return combineLatest([this._dataChange, collectionViewer.viewChange]).pipe(
+      map(data => data[0]),
+    );
   }
 
   disconnect() {
@@ -242,7 +254,7 @@ class FakeDataSource extends DataSource<TestData> {
     copiedData.push({
       a: `a_${nextIndex}`,
       b: `b_${nextIndex}`,
-      c: `c_${nextIndex}`
+      c: `c_${nextIndex}`,
     });
 
     this.data = copiedData;
@@ -253,13 +265,15 @@ class FakeDataSource extends DataSource<TestData> {
   template: `
     <div cdkTableScrollContainer>
     <table cdk-table [dataSource]="dataSource">
-      <ng-container [cdkColumnDef]="column" *ngFor="let column of columns"
-                    [sticky]="isStuck(stickyStartColumns, column)"
-                    [stickyEnd]="isStuck(stickyEndColumns, column)">
-        <th cdk-header-cell *cdkHeaderCellDef> Header {{column}} </th>
-        <td cdk-cell *cdkCellDef="let row"> {{column}} </td>
-        <td cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </td>
-      </ng-container>
+      @for (column of columns; track column) {
+        <ng-container [cdkColumnDef]="column"
+                      [sticky]="isStuck(stickyStartColumns, column)"
+                      [stickyEnd]="isStuck(stickyEndColumns, column)">
+          <th cdk-header-cell *cdkHeaderCellDef> Header {{column}} </th>
+          <td cdk-cell *cdkCellDef="let row"> {{column}} </td>
+          <td cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </td>
+        </ng-container>
+      }
 
       <tr cdk-header-row *cdkHeaderRowDef="columns; sticky: isStuck(stickyHeaders, 'header-1')">
       </tr>
@@ -279,13 +293,14 @@ class FakeDataSource extends DataSource<TestData> {
     </table>
     </div>
   `,
-  styles: [`
+  imports: [CdkTableModule, CdkTableScrollContainerModule],
+  styles: `
     .cdk-header-cell, .cdk-cell, .cdk-footer-cell {
       display: block;
       width: 20px;
       box-sizing: border-box;
     }
-  `]
+  `,
 })
 class StickyNativeLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();

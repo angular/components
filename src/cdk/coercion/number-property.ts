@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /**
@@ -16,7 +16,10 @@ export type NumberInput = string | number | null | undefined;
 export function coerceNumberProperty(value: any): number;
 export function coerceNumberProperty<D>(value: any, fallback: D): number | D;
 export function coerceNumberProperty(value: any, fallbackValue = 0) {
-  return _isNumberValue(value) ? Number(value) : fallbackValue;
+  if (_isNumberValue(value)) {
+    return Number(value);
+  }
+  return arguments.length === 2 ? fallbackValue : 0;
 }
 
 /**

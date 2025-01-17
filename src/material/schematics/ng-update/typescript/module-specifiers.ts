@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {getExportDeclaration, getImportDeclaration} from '@angular/cdk/schematics';
@@ -26,12 +26,14 @@ export function isMaterialExportDeclaration(node: ts.Node) {
 }
 
 /** Whether the declaration is part of Angular Material. */
-function isMaterialDeclaration(declaration: ts.ImportDeclaration|ts.ExportDeclaration) {
+function isMaterialDeclaration(declaration: ts.ImportDeclaration | ts.ExportDeclaration) {
   if (!declaration.moduleSpecifier) {
     return false;
   }
 
   const moduleSpecifier = declaration.moduleSpecifier.getText();
-  return moduleSpecifier.indexOf(materialModuleSpecifier) !== -1 ||
-      moduleSpecifier.indexOf(cdkModuleSpecifier) !== -1;
+  return (
+    moduleSpecifier.indexOf(materialModuleSpecifier) !== -1 ||
+    moduleSpecifier.indexOf(cdkModuleSpecifier) !== -1
+  );
 }

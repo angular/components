@@ -1,4 +1,9 @@
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
+@use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
+@use '../core/tokens/m2/mdc/outlined-button' as tokens-mdc-outlined-button;
+@use '../core/style/variables';
 
 $row-padding: 16px !default;
 
@@ -7,8 +12,63 @@ $row-padding: 16px !default;
 $height-mobile-portrait: 56px !default;
 
 .mat-toolbar {
-  @include a11y.high-contrast(active, off) {
+  @include token-utils.use-tokens(
+    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
+    @include token-utils.create-token-slot(background, container-background-color);
+    @include token-utils.create-token-slot(color, container-text-color);
+
+    &, h1, h2, h3, h4, h5, h6 {
+      @include token-utils.create-token-slot(font-family, title-text-font);
+      @include token-utils.create-token-slot(font-size, title-text-size);
+      @include token-utils.create-token-slot(line-height, title-text-line-height);
+      @include token-utils.create-token-slot(font-weight, title-text-weight);
+      @include token-utils.create-token-slot(letter-spacing, title-text-tracking);
+      margin: 0;
+    }
+  }
+
+  @include cdk.high-contrast {
     outline: solid 1px;
+  }
+
+  // Overrides so that components projected into the toolbar are visible.
+  .mat-form-field-underline,
+  .mat-form-field-ripple,
+  .mat-focused .mat-form-field-ripple {
+    background-color: currentColor;
+  }
+
+  .mat-form-field-label,
+  .mat-focused .mat-form-field-label,
+  .mat-select-value,
+  .mat-select-arrow,
+  .mat-form-field.mat-focused .mat-select-arrow {
+    color: inherit;
+  }
+
+  .mat-input-element {
+    caret-color: currentColor;
+  }
+
+  .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
+    $color-token: null;
+
+    @include token-utils.use-tokens(
+      tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
+      $color-token: token-utils.get-token-variable(container-text-color);
+    }
+
+    @include token-utils.use-tokens(
+      tokens-mdc-text-button.$prefix, tokens-mdc-text-button.get-token-slots()) {
+      $token: token-utils.get-token-variable-name(label-text-color);
+      #{$token}: #{$color-token};
+    }
+
+    @include token-utils.use-tokens(
+      tokens-mdc-outlined-button.$prefix, tokens-mdc-outlined-button.get-token-slots()) {
+      $token: token-utils.get-token-variable-name(label-text-color);
+      #{$token}: #{$color-token};
+    }
   }
 }
 
@@ -26,6 +86,15 @@ $height-mobile-portrait: 56px !default;
   // Per Material specs a toolbar cannot have multiple lines inside of a single row.
   // Disable text wrapping inside of the toolbar. Developers are still able to overwrite it.
   white-space: nowrap;
+
+  @include token-utils.use-tokens(
+    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
+    @include token-utils.create-token-slot(height, standard-height);
+
+    @media (variables.$xsmall) {
+      @include token-utils.create-token-slot(height, mobile-height);
+    }
+  }
 }
 
 .mat-toolbar-multiple-rows {
@@ -33,4 +102,16 @@ $height-mobile-portrait: 56px !default;
   box-sizing: border-box;
   flex-direction: column;
   width: 100%;
+
+  @include token-utils.use-tokens(
+    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
+    @include token-utils.create-token-slot(min-height, standard-height);
+
+    // As per specs, toolbars should have a different height in mobile devices. This has been
+    // specified in the old guidelines and is still observable in the new specifications by
+    // looking at the spec images. See: https://material.io/design/components/app-bars-top.html#anatomy
+    @media (variables.$xsmall) {
+      @include token-utils.create-token-slot(min-height, mobile-height);
+    }
+  }
 }

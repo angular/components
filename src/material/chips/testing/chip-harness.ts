@@ -3,87 +3,63 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate, TestKey} from '@angular/cdk/testing';
-import {ChipHarnessFilters, ChipRemoveHarnessFilters} from './chip-harness-filters';
+import {
+  ComponentHarnessConstructor,
+  ContentContainerComponentHarness,
+  HarnessPredicate,
+  TestKey,
+} from '@angular/cdk/testing';
+import {MatChipAvatarHarness} from './chip-avatar-harness';
+import {
+  ChipAvatarHarnessFilters,
+  ChipHarnessFilters,
+  ChipRemoveHarnessFilters,
+} from './chip-harness-filters';
 import {MatChipRemoveHarness} from './chip-remove-harness';
 
-/** Harness for interacting with a standard selectable Angular Material chip in tests. */
-export class MatChipHarness extends ComponentHarness {
-  /** The selector for the host element of a `MatChip` instance. */
-  static hostSelector = '.mat-chip';
+/** Harness for interacting with a mat-chip in tests. */
+export class MatChipHarness extends ContentContainerComponentHarness {
+  protected _primaryAction = this.locatorFor('.mdc-evolution-chip__action--primary');
+
+  static hostSelector = '.mat-mdc-basic-chip, .mat-mdc-chip';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatChipHarness` that meets
-   * certain criteria.
-   * @param options Options for filtering which chip instances are considered a match.
+   * Gets a `HarnessPredicate` that can be used to search for a chip with specific attributes.
+   * @param options Options for narrowing the search.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: ChipHarnessFilters = {}): HarnessPredicate<MatChipHarness> {
-    return new HarnessPredicate(MatChipHarness, options)
-        .addOption('text', options.text,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getText(), label))
-        .addOption('selected', options.selected,
-            async (harness, selected) => (await harness.isSelected()) === selected);
+  static with<T extends MatChipHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: ChipHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options)
+      .addOption('text', options.text, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getText(), label);
+      })
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
-  /** Gets the text of the chip. */
+  /** Gets a promise for the text content the option. */
   async getText(): Promise<string> {
     return (await this.host()).text({
-      exclude: '.mat-chip-avatar, .mat-chip-trailing-icon, .mat-icon'
+      exclude: '.mat-mdc-chip-avatar, .mat-mdc-chip-trailing-icon, .mat-icon',
     });
-  }
-
-  /**
-   * Whether the chip is selected.
-   * @deprecated Use `MatChipOptionHarness.isSelected` instead.
-   * @breaking-change 12.0.0
-   */
-  async isSelected(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-chip-selected');
   }
 
   /** Whether the chip is disabled. */
   async isDisabled(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-chip-disabled');
+    return (await this.host()).hasClass('mat-mdc-chip-disabled');
   }
 
-  /**
-   * Selects the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.select` instead.
-   * @breaking-change 12.0.0
-   */
-  async select(): Promise<void> {
-    if (!(await this.isSelected())) {
-      await this.toggle();
-    }
-  }
-
-  /**
-   * Deselects the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.deselect` instead.
-   * @breaking-change 12.0.0
-   */
-  async deselect(): Promise<void> {
-    if (await this.isSelected()) {
-      await this.toggle();
-    }
-  }
-
-  /**
-   * Toggles the selected state of the given chip. Only applies if it's selectable.
-   * @deprecated Use `MatChipOptionHarness.toggle` instead.
-   * @breaking-change 12.0.0
-   */
-  async toggle(): Promise<void> {
-    return (await this.host()).sendKeys(' ');
-  }
-
-  /** Removes the given chip. Only applies if it's removable. */
+  /** Delete a chip from the set. */
   async remove(): Promise<void> {
-    await (await this.host()).sendKeys(TestKey.DELETE);
+    const hostEl = await this.host();
+    await hostEl.sendKeys(TestKey.DELETE);
   }
 
   /**
@@ -92,5 +68,13 @@ export class MatChipHarness extends ComponentHarness {
    */
   async getRemoveButton(filter: ChipRemoveHarnessFilters = {}): Promise<MatChipRemoveHarness> {
     return this.locatorFor(MatChipRemoveHarness.with(filter))();
+  }
+
+  /**
+   * Gets the avatar inside a chip.
+   * @param filter Optionally filters which avatars are included.
+   */
+  async getAvatar(filter: ChipAvatarHarnessFilters = {}): Promise<MatChipAvatarHarness | null> {
+    return this.locatorForOptional(MatChipAvatarHarness.with(filter))();
   }
 }

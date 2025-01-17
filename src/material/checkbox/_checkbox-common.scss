@@ -1,0 +1,571 @@
+@use 'sass:math';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/token-utils';
+@use '../core/style/vendor-prefixes';
+
+$_path-length: 29.7833385;
+$_transition-duration: 90ms;
+$_icon-size: 18px;
+$_mark-stroke-size: math.div(2, 15) * $_icon-size;
+$_indeterminate-checked-curve: cubic-bezier(0.14, 0, 0, 1);
+$_indeterminate-change-duration: 500ms;
+$_enter-curve: cubic-bezier(0, 0, 0.2, 1);
+$_exit-curve: cubic-bezier(0.4, 0, 0.6, 1);
+$_fallback-size: 40px;
+
+// Structural styles for a checkbox. Shared with the selection list.
+@mixin checkbox-structure($include-state-layer-styles) {
+  $prefix: tokens-mdc-checkbox.$prefix;
+  $slots: tokens-mdc-checkbox.get-token-slots();
+
+  .mdc-checkbox {
+    display: inline-block;
+    position: relative;
+    flex: 0 0 $_icon-size;
+    box-sizing: content-box;
+    width: $_icon-size;
+    height: $_icon-size;
+    line-height: 0;
+    white-space: nowrap;
+    cursor: pointer;
+    vertical-align: bottom;
+
+    @include token-utils.use-tokens($prefix, $slots) {
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
+      margin: calc((#{$layer-size} - #{$layer-size}) / 2);
+
+      @if ($include-state-layer-styles) {
+        @include _state-layer-styles;
+      }
+    }
+
+    // These styles have to be nested in order to override overly-broad
+    // user selectors like `input[type='checkbox']`.
+    .mdc-checkbox__native-control {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: inherit;
+
+      @include token-utils.use-tokens($prefix, $slots) {
+        $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+        $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
+        width: $layer-size;
+        height: $layer-size;
+        top: $offset;
+        right: $offset;
+        left: $offset;
+      }
+    }
+  }
+
+  .mdc-checkbox--disabled {
+    cursor: default;
+    pointer-events: none;
+
+    @include cdk.high-contrast {
+      opacity: 0.5;
+    }
+  }
+
+  .mdc-checkbox__background {
+    display: inline-flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: $_icon-size;
+    height: $_icon-size;
+    border: 2px solid currentColor;
+    border-radius: 2px;
+    background-color: transparent;
+    pointer-events: none;
+    will-change: background-color, border-color;
+    transition: background-color $_transition-duration $_exit-curve,
+                border-color $_transition-duration $_exit-curve;
+
+    // Force browser to show background-color when using the print function
+    @include vendor-prefixes.color-adjust(exact);
+
+    @include token-utils.use-tokens($prefix, $slots) {
+      $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
+      $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
+
+      @include token-utils.create-token-slot(border-color, unselected-icon-color);
+      top: $offset;
+      left: $offset;
+    }
+  }
+
+  // These can't be under `.mdc-checkbox__background` because
+  // the selectors will break when the mixin is nested.
+  @include token-utils.use-tokens($prefix, $slots) {
+    .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, selected-icon-color);
+      @include token-utils.create-token-slot(background-color, selected-icon-color);
+    }
+
+    .mdc-checkbox--disabled .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
+    }
+
+    .mdc-checkbox__native-control:disabled:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox__native-control:disabled:indeterminate ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(background-color, disabled-selected-icon-color);
+      border-color: transparent;
+    }
+
+    .mdc-checkbox:hover .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background,
+    .mdc-checkbox:hover
+      .mdc-checkbox__native-control:not(:indeterminate) ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, unselected-hover-icon-color);
+      background-color: transparent;
+    }
+
+    .mdc-checkbox:hover .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox:hover .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, selected-hover-icon-color);
+      @include token-utils.create-token-slot(background-color, selected-hover-icon-color);
+    }
+
+    // Note: this must be more specific than the hover styles above.
+    // Double :focus is added for increased specificity.
+    .mdc-checkbox__native-control:focus:focus:not(:checked) ~ .mdc-checkbox__background,
+    .mdc-checkbox__native-control:focus:focus:not(:indeterminate) ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, unselected-focus-icon-color);
+    }
+
+    .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+      @include token-utils.create-token-slot(border-color, selected-focus-icon-color);
+      @include token-utils.create-token-slot(background-color, selected-focus-icon-color);
+    }
+
+    // Needs extra specificity to override the focus, hover, active states.
+    .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive {
+      .mdc-checkbox:hover .mdc-checkbox__native-control ~ .mdc-checkbox__background,
+      .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background,
+      .mdc-checkbox__background {
+        @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
+      }
+
+      .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+      .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+        @include token-utils.create-token-slot(background-color, disabled-selected-icon-color);
+        border-color: transparent;
+      }
+    }
+  }
+
+  .mdc-checkbox__checkmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transition: opacity $_transition-duration * 2 $_exit-curve;
+
+    @include token-utils.use-tokens($prefix, $slots) {
+      // Always apply the color since the element becomes `opacity: 0`
+      // when unchecked. This makes the animation look better.
+      @include token-utils.create-token-slot(color, selected-checkmark-color);
+    }
+
+    @include cdk.high-contrast {
+      color: CanvasText;
+    }
+  }
+
+  @include token-utils.use-tokens($prefix, $slots) {
+    .mdc-checkbox--disabled {
+      &, &.mat-mdc-checkbox-disabled-interactive {
+        .mdc-checkbox__checkmark {
+          @include token-utils.create-token-slot(color, disabled-selected-checkmark-color);
+
+          @include cdk.high-contrast {
+            color: CanvasText;
+          }
+        }
+      }
+    }
+  }
+
+  .mdc-checkbox__checkmark-path {
+    transition: stroke-dashoffset $_transition-duration * 2 $_exit-curve;
+    stroke: currentColor;
+    stroke-width: $_mark-stroke-size * 1.3;
+    stroke-dashoffset: $_path-length;
+    stroke-dasharray: $_path-length;
+  }
+
+  .mdc-checkbox__mixedmark {
+    width: 100%;
+    height: 0;
+    transform: scaleX(0) rotate(0deg);
+    border-width: math.div(math.floor($_mark-stroke-size), 2);
+    border-style: solid;
+    opacity: 0;
+    transition: opacity $_transition-duration $_exit-curve,
+                transform $_transition-duration $_exit-curve;
+
+    @include token-utils.use-tokens($prefix, $slots) {
+      // Always apply the color since the element becomes `opacity: 0`
+      // when unchecked. This makes the animation look better.
+      @include token-utils.create-token-slot(border-color, selected-checkmark-color);
+    }
+
+    @include cdk.high-contrast {
+      margin: 0 1px;
+    }
+  }
+
+  @include token-utils.use-tokens($prefix, $slots) {
+    .mdc-checkbox--disabled {
+      &, &.mat-mdc-checkbox-disabled-interactive {
+        .mdc-checkbox__mixedmark {
+          @include token-utils.create-token-slot(border-color, disabled-selected-checkmark-color);
+        }
+      }
+    }
+  }
+
+  .mdc-checkbox--anim-unchecked-checked,
+  .mdc-checkbox--anim-unchecked-indeterminate,
+  .mdc-checkbox--anim-checked-unchecked,
+  .mdc-checkbox--anim-indeterminate-unchecked {
+    .mdc-checkbox__background {
+      animation-duration: $_transition-duration * 2;
+      animation-timing-function: linear;
+    }
+  }
+
+  .mdc-checkbox--anim-unchecked-checked {
+    .mdc-checkbox__checkmark-path {
+      animation: mdc-checkbox-unchecked-checked-checkmark-path
+        $_transition-duration * 2 linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox--anim-unchecked-indeterminate {
+    .mdc-checkbox__mixedmark {
+      animation: mdc-checkbox-unchecked-indeterminate-mixedmark $_transition-duration linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox--anim-checked-unchecked {
+    .mdc-checkbox__checkmark-path {
+      animation: mdc-checkbox-checked-unchecked-checkmark-path $_transition-duration linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox--anim-checked-indeterminate {
+    .mdc-checkbox__checkmark {
+      animation: mdc-checkbox-checked-indeterminate-checkmark $_transition-duration linear;
+      transition: none;
+    }
+
+    .mdc-checkbox__mixedmark {
+      animation: mdc-checkbox-checked-indeterminate-mixedmark $_transition-duration linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox--anim-indeterminate-checked {
+    .mdc-checkbox__checkmark {
+      animation: mdc-checkbox-indeterminate-checked-checkmark
+        $_indeterminate-change-duration linear;
+      transition: none;
+    }
+
+    .mdc-checkbox__mixedmark {
+      animation: mdc-checkbox-indeterminate-checked-mixedmark
+        $_indeterminate-change-duration linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox--anim-indeterminate-unchecked {
+    .mdc-checkbox__mixedmark {
+      animation: mdc-checkbox-indeterminate-unchecked-mixedmark
+        $_indeterminate-change-duration * 0.6 linear;
+      transition: none;
+    }
+  }
+
+  .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    transition: border-color $_transition-duration $_enter-curve,
+                background-color $_transition-duration $_enter-curve;
+
+    .mdc-checkbox__checkmark-path {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
+    .mdc-checkbox__checkmark {
+      transition: opacity $_transition-duration * 2 $_enter-curve,
+                  transform $_transition-duration * 2 $_enter-curve;
+      opacity: 1;
+    }
+
+    .mdc-checkbox__mixedmark {
+      transform: scaleX(1) rotate(-45deg);
+    }
+  }
+  .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    .mdc-checkbox__checkmark {
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity $_transition-duration $_exit-curve,
+                  transform $_transition-duration $_exit-curve;
+    }
+
+    .mdc-checkbox__mixedmark {
+      transform: scaleX(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes mdc-checkbox-unchecked-checked-checkmark-path {
+    0%, 50% {
+      stroke-dashoffset: $_path-length;
+    }
+
+    50% {
+      animation-timing-function: $_enter-curve;
+    }
+
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes mdc-checkbox-unchecked-indeterminate-mixedmark {
+    0%, 68.2% {
+      transform: scaleX(0);
+    }
+
+    68.2% {
+      animation-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+
+    100% {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes mdc-checkbox-checked-unchecked-checkmark-path {
+    from {
+      animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+
+    to {
+      opacity: 0;
+      stroke-dashoffset: $_path-length * -1;
+    }
+  }
+
+  @keyframes mdc-checkbox-checked-indeterminate-checkmark {
+    from {
+      animation-timing-function: $_enter-curve;
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+
+    to {
+      transform: rotate(45deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes mdc-checkbox-indeterminate-checked-checkmark {
+    from {
+      animation-timing-function: $_indeterminate-checked-curve;
+      transform: rotate(45deg);
+      opacity: 0;
+    }
+
+    to {
+      transform: rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes mdc-checkbox-checked-indeterminate-mixedmark {
+    from {
+      animation-timing-function: $_enter-curve;
+      transform: rotate(-45deg);
+      opacity: 0;
+    }
+
+    to {
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes mdc-checkbox-indeterminate-checked-mixedmark {
+    from {
+      animation-timing-function: $_indeterminate-checked-curve;
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+
+    to {
+      transform: rotate(315deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes mdc-checkbox-indeterminate-unchecked-mixedmark {
+    0% {
+      animation-timing-function: linear;
+      transform: scaleX(1);
+      opacity: 1;
+    }
+
+    32.8%, 100% {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+  }
+}
+
+// Conditionally disables the animations of the checkbox.
+@mixin checkbox-noop-animations() {
+  &._mat-animation-noopable .mdc-checkbox {
+    *, *::before {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@mixin _state-layer-styles() {
+  // MDC expects `.mdc-checkbox__ripple::before` to be the state layer, but we use
+  // `.mdc-checkbox__ripple` instead, so we emit the state layer slots ourselves.
+  &:hover {
+    .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, unselected-hover-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-hover-state-layer-color
+      );
+    }
+
+    .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-hover-state-layer-color
+      );
+    }
+  }
+
+  .mdc-checkbox__native-control:focus {
+    & ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, unselected-focus-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-focus-state-layer-color
+      );
+    }
+
+    & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-focus-state-layer-color
+      );
+    }
+  }
+
+  &:active .mdc-checkbox__native-control {
+    & ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, unselected-pressed-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-pressed-state-layer-color
+      );
+    }
+
+    & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-pressed-state-layer-color
+      );
+    }
+  }
+
+  &:hover .mdc-checkbox__native-control:checked {
+    & ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-hover-state-layer-color
+      );
+    }
+
+    & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-hover-state-layer-color
+      );
+    }
+  }
+
+  .mdc-checkbox__native-control:focus:checked {
+    & ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-focus-state-layer-color
+      );
+    }
+
+    & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-focus-state-layer-color
+      );
+    }
+  }
+
+  &:active .mdc-checkbox__native-control:checked {
+    & ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(opacity, selected-pressed-state-layer-opacity);
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-pressed-state-layer-color
+      );
+    }
+
+    & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
+      @include token-utils.create-token-slot(
+        background-color,
+        selected-pressed-state-layer-color
+      );
+    }
+  }
+
+  // Needs extra specificity to override the focus, hover, active states.
+  .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive & {
+    .mdc-checkbox__native-control ~ .mat-mdc-checkbox-ripple .mat-ripple-element,
+    .mdc-checkbox__native-control ~ .mdc-checkbox__ripple {
+      @include token-utils.create-token-slot(
+        background-color,
+        unselected-hover-state-layer-color
+      );
+    }
+  }
+}

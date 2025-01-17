@@ -1,5 +1,8 @@
 {
+  "customSyntax": "postcss-scss",
   "defaultSeverity": "error",
+  "reportNeedlessDisables": true,
+  "reportInvalidScopeDisables": true,
   "plugins": [
     "./tools/stylelint/loader-rule.js",
     "./tools/stylelint/no-prefixes/index.ts",
@@ -8,35 +11,55 @@
     "./tools/stylelint/no-nested-mixin.ts",
     "./tools/stylelint/no-concrete-rules.ts",
     "./tools/stylelint/no-top-level-ampersand-in-mixin.ts",
-    "./tools/stylelint/theme-mixin-api.ts",
     "./tools/stylelint/no-import.ts",
     "./tools/stylelint/single-line-comment-only.ts",
-    "./tools/stylelint/no-unused-import.ts"
+    "./tools/stylelint/no-unused-import.ts",
+    "./tools/stylelint/cross-package-import-validation.ts"
   ],
   "rules": {
-    "material/no-prefixes": [true, {
-      "browsers": ["last 2 versions", "not dead", "not and_qq > 0", "not OperaMini all"],
-      "filePattern": "**/!(*-example.css)"
-    }],
-    "material/theme-mixin-api": true,
+    "material/cross-package-import-validation": [true],
+    "material/no-prefixes": [
+      true,
+      {
+        "browsers": [
+          "last 2 versions",
+          "not dead",
+          "not and_qq > 0",
+          "not OperaMini all",
+          "not ie > 0",
+          "not edge < 78"
+        ],
+        "filePattern": "**/!(*-example.css)"
+      }
+    ],
     "material/selector-no-deep": true,
     "material/no-nested-mixin": true,
     "material/no-unused-import": true,
-    "material/single-line-comment-only": [true, {
-      "filePattern": "\\.scss$"
-    }],
-    "material/no-import": [true, {
-      "exclude": "\\.import\\.scss$"
-    }],
-    "material/no-ampersand-beyond-selector-start": [true, {
-      "filePattern": "-theme\\.scss$"
-    }],
-    "material/no-concrete-rules": [true, {
-      "filePattern": "^_.*\\.scss$"
-    }],
-    "material/no-top-level-ampersand-in-mixin": [true, {
-      "filePattern": "-theme\\.scss$"
-    }],
+    "material/single-line-comment-only": [
+      true,
+      {
+        "filePattern": "\\.scss$"
+      }
+    ],
+    "material/no-import": true,
+    "material/no-ampersand-beyond-selector-start": [
+      true,
+      {
+        "filePattern": "-theme\\.scss$"
+      }
+    ],
+    "material/no-concrete-rules": [
+      true,
+      {
+        "filePattern": "^_.*\\.scss$"
+      }
+    ],
+    "material/no-top-level-ampersand-in-mixin": [
+      true,
+      {
+        "filePattern": "-theme\\.scss$"
+      }
+    ],
 
     "color-hex-case": "lower",
     "color-no-invalid-hex": true,
@@ -58,7 +81,7 @@
 
     "unit-case": "lower",
     "unit-no-unknown": true,
-    "unit-allowed-list": ["px", "%", "deg", "s", "ms", "em", "vh", "vw", "vmin"],
+    "unit-allowed-list": ["px", "%", "deg", "s", "ms", "em", "rem", "vh", "vw", "vmin", "fr"],
 
     "value-list-comma-space-after": "always-single-line",
     "value-list-comma-space-before": "never",
@@ -68,9 +91,12 @@
     "property-case": "lower",
     "no-duplicate-at-import-rules": true,
 
-    "declaration-block-no-duplicate-properties": [true, {
-      "ignore": ["consecutive-duplicates-with-different-values"]
-    }],
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": ["consecutive-duplicates-with-different-values"]
+      }
+    ],
     "declaration-block-trailing-semicolon": "always",
     "declaration-block-single-line-max-declarations": 1,
     "declaration-block-semicolon-space-before": "never",
@@ -78,12 +104,13 @@
     "declaration-block-semicolon-newline-before": "never-multi-line",
     "declaration-block-semicolon-newline-after": "always-multi-line",
     "declaration-colon-space-after": "always-single-line",
-    "declaration-property-value-disallowed-list": [
-      {"/.*/": ["initial"]},
-      {"message": "The `initial` value is not supported in IE."}
-    ],
 
-    "block-closing-brace-newline-after": "always",
+    "block-closing-brace-newline-after": [
+      "always",
+      {
+        "ignoreAtRules": ["if", "else"]
+      }
+    ],
     "block-closing-brace-newline-before": "always-multi-line",
     "block-opening-brace-newline-after": "always-multi-line",
     "block-opening-brace-space-before": "always-multi-line",
@@ -102,12 +129,18 @@
     "selector-max-id": 0,
     "no-missing-end-of-source-newline": true,
     "no-eol-whitespace": true,
-    "max-line-length": [100, {
-      "ignorePattern": "/https?://.*/"
-    }],
+    "max-line-length": [
+      100,
+      {
+        "ignorePattern": "/https?://.*/"
+      }
+    ],
     "linebreaks": "unix",
-    "selector-class-pattern": ["^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-|test-)", {
-      "resolveNestedSelectors": true
-    }]
+    "selector-class-pattern": [
+      "^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-|test-|youtube-player-)",
+      {
+        "resolveNestedSelectors": true
+      }
+    ]
   }
 }

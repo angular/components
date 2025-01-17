@@ -1,123 +1,124 @@
 @use 'sass:map';
-@use '../core/density/private/compatibility';
-@use '../core/style/variables';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use './toolbar-variables';
+@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
+@use '../core/tokens/token-utils';
+@use '../core/style/sass-utils';
 
-@mixin _height($height) {
-  .mat-toolbar-multiple-rows {
-    min-height: $height;
-  }
-  .mat-toolbar-row, .mat-toolbar-single-row {
-    height: $height;
-  }
+@mixin _palette-styles($theme, $palette-name) {
+  @include token-utils.create-token-values(
+    tokens-mat-toolbar.$prefix,
+    tokens-mat-toolbar.private-get-color-palette-color-tokens(
+      $background-color: inspection.get-theme-color($theme, $palette-name),
+      $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
+    )
+  );
 }
 
-@mixin _palette-styles($palette) {
-  background: theming.get-color-from-palette($palette);
-  color: theming.get-color-from-palette($palette, default-contrast);
+@mixin base($theme) {
 }
 
-@mixin _form-field-overrides {
-  .mat-form-field-underline,
-  .mat-form-field-ripple,
-  .mat-focused .mat-form-field-ripple {
-    background-color: currentColor;
-  }
-
-  .mat-form-field-label,
-  .mat-focused .mat-form-field-label,
-  .mat-select-value,
-  .mat-select-arrow,
-  .mat-form-field.mat-focused .mat-select-arrow {
-    color: inherit;
-  }
-
-  .mat-input-element {
-    caret-color: currentColor;
-  }
-}
-
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
-  .mat-toolbar {
-    background: theming.get-color-from-palette($background, app-bar);
-    color: theming.get-color-from-palette($foreground, text);
-
-    &.mat-primary {
-      @include _palette-styles($primary);
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-toolbar.$prefix,
+        tokens-mat-toolbar.get-color-tokens($theme)
+      );
     }
 
-    &.mat-accent {
-      @include _palette-styles($accent);
-    }
+    .mat-toolbar {
+      &.mat-primary {
+        @include _palette-styles($theme, primary);
+      }
 
-    &.mat-warn {
-      @include _palette-styles($warn);
-    }
+      &.mat-accent {
+        @include _palette-styles($theme, accent);
+      }
 
-    @include _form-field-overrides;
-  }
-}
-
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-toolbar,
-  .mat-toolbar h1,
-  .mat-toolbar h2,
-  .mat-toolbar h3,
-  .mat-toolbar h4,
-  .mat-toolbar h5,
-  .mat-toolbar h6 {
-    @include typography-utils.typography-level($config, title);
-    margin: 0;
-  }
-}
-
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $height-desktop: compatibility.private-density-prop-value(
-      toolbar-variables.$desktop-density-config, $density-scale, height);
-  $height-mobile: compatibility.private-density-prop-value(
-      toolbar-variables.$mobile-density-config, $density-scale, height);
-
-  @include compatibility.private-density-legacy-compatibility() {
-    // Set the default height for the toolbar.
-    @include _height($height-desktop);
-
-    // As per specs, toolbars should have a different height in mobile devices. This has been
-    // specified in the old guidelines and is still observable in the new specifications by
-    // looking at the spec images. See: https://material.io/design/components/app-bars-top.html#anatomy
-    @media (variables.$xsmall) {
-      @include _height($height-mobile);
+      &.mat-warn {
+        @include _palette-styles($theme, warn);
+      }
     }
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
+    $theme: inspection.private-get-typography-back-compat-theme($theme);
+
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-toolbar.$prefix,
+        tokens-mat-toolbar.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-toolbar.$prefix,
+        tokens-mat-toolbar.get-density-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-toolbar.$prefix,
+      tokens: tokens-mat-toolbar.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-toolbar') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-toolbar.$prefix,
+      map.get($tokens, tokens-mat-toolbar.$prefix)
+    );
   }
 }

@@ -1,0 +1,80 @@
+@use '../../../styles/constants';
+
+guide-viewer,
+app-component-viewer {
+  color: var(--mat-sys-on-surface);
+}
+
+app-component-viewer {
+  font-weight: 400;
+  width: calc(100% - #{constants.$sidenav-width + 1} - #{constants.$content-padding-sidenav * 2});
+
+  // spacing for the component viewer
+  padding: 20px constants.$content-padding-sidenav;
+
+  // Sidenav is hidden
+  @media (max-width: constants.$small-breakpoint-width) {
+    width: calc(100% - #{constants.$content-padding-sidenav * 2});
+  }
+  @media (max-width: 599px) {
+    width: calc(100% - #{constants.$content-padding-side-xs * 2});
+    padding-left: constants.$content-padding-side-xs;
+    padding-right: constants.$content-padding-side-xs;
+  }
+
+  .docs-component-viewer-section-tab {
+    min-width: 160px;
+    text-transform: uppercase;
+  }
+}
+
+.docs-component-viewer-tabbed-content {
+  margin-bottom: 25px;
+}
+
+.docs-component-viewer-content {
+  position: relative;
+  min-height: 500px;
+
+  // Display outlet components with toc as flex and switch to
+  // vertical direction on small screens
+  component-overview, component-api {
+    display: flex;
+    align-items: flex-start;
+    overflow: visible;
+
+    @media (max-width: constants.$small-breakpoint-width) {
+      flex-direction: column;
+    }
+  }
+
+  table-of-contents {
+    top: 35px;
+    position: sticky;
+
+    // Reposition on top of content on small screens and remove
+    // sticky positioning
+    @media (max-width: constants.$small-breakpoint-width) {
+      order: -1;
+      position: relative;
+      width: auto;
+      padding-left: 0;
+      max-height: none;
+    }
+  }
+}
+
+.docs-component-view-text-content {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.docs-component-api,
+.docs-component-overview {
+  width: 75%;
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    width: 100%;
+    margin-right: 0;
+  }
+}

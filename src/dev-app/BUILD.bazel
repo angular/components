@@ -1,8 +1,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:create-system-config.bzl", "create_system_config")
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
-load("//tools:es5-module-output.bzl", "es5_module_output")
-load("//tools/dev-server:index.bzl", "dev_server")
+load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary")
+load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
+load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,7 +10,7 @@ ng_module(
     srcs = [
         "dev-app.ts",
         "main.ts",
-        "main-module.ts",
+        "routes.ts",
     ],
     deps = [
         "//src/cdk/bidi",
@@ -23,9 +22,10 @@ ng_module(
         "//src/dev-app/button",
         "//src/dev-app/button-toggle",
         "//src/dev-app/card",
+        "//src/dev-app/cdk-dialog",
         "//src/dev-app/cdk-experimental-combobox",
-        "//src/dev-app/cdk-experimental-listbox",
-        "//src/dev-app/cdk-experimental-menu",
+        "//src/dev-app/cdk-listbox",
+        "//src/dev-app/cdk-menu",
         "//src/dev-app/checkbox",
         "//src/dev-app/chips",
         "//src/dev-app/clipboard",
@@ -49,30 +49,10 @@ ng_module(
         "//src/dev-app/layout",
         "//src/dev-app/list",
         "//src/dev-app/live-announcer",
-        "//src/dev-app/mdc-autocomplete",
-        "//src/dev-app/mdc-button",
-        "//src/dev-app/mdc-card",
-        "//src/dev-app/mdc-checkbox",
-        "//src/dev-app/mdc-chips",
-        "//src/dev-app/mdc-dialog",
-        "//src/dev-app/mdc-input",
-        "//src/dev-app/mdc-list",
-        "//src/dev-app/mdc-menu",
-        "//src/dev-app/mdc-paginator",
-        "//src/dev-app/mdc-progress-bar",
-        "//src/dev-app/mdc-progress-spinner",
-        "//src/dev-app/mdc-radio",
-        "//src/dev-app/mdc-select",
-        "//src/dev-app/mdc-sidenav",
-        "//src/dev-app/mdc-slide-toggle",
-        "//src/dev-app/mdc-slider",
-        "//src/dev-app/mdc-snack-bar",
-        "//src/dev-app/mdc-table",
-        "//src/dev-app/mdc-tabs",
-        "//src/dev-app/mdc-tooltip",
         "//src/dev-app/menu",
         "//src/dev-app/menubar",
         "//src/dev-app/paginator",
+        "//src/dev-app/performance",
         "//src/dev-app/platform",
         "//src/dev-app/popover-edit",
         "//src/dev-app/portal",
@@ -91,6 +71,8 @@ ng_module(
         "//src/dev-app/table",
         "//src/dev-app/table-scroll-container",
         "//src/dev-app/tabs",
+        "//src/dev-app/theme",
+        "//src/dev-app/timepicker",
         "//src/dev-app/toolbar",
         "//src/dev-app/tooltip",
         "//src/dev-app/tree",
@@ -98,27 +80,49 @@ ng_module(
         "//src/dev-app/virtual-scroll",
         "//src/dev-app/youtube-player",
         "//src/material/core",
+        "@npm//@angular/compiler",
         "@npm//@angular/localize",
         "@npm//@angular/router",
+    ],
+)
+
+esbuild_config(
+    name = "esbuild_config",
+    config_file = "esbuild.config.mjs",
+)
+
+devmode_esbuild(
+    name = "bundles",
+    config = ":esbuild_config",
+    entry_points = [":main.ts"] + ["%s:index.ts" % e for e in ALL_EXAMPLES],
+    platform = "browser",
+    splitting = True,
+    # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
+    # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
+    target = "es2016",
+    # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
+    # map all framework packages to their linker-processed bundles from `tools/angular`.
+    deps = LINKER_PROCESSED_FW_PACKAGES + [
+        ":dev-app",
     ],
 )
 
 sass_binary(
     name = "theme",
     src = "theme.scss",
-    include_paths = [
-        "external/npm/node_modules",
-    ],
     deps = [
-        "//src/material:theming_bundle",
-        "//src/material-experimental:theming_bundle",
-        "//src/material/core:theming_scss_lib",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
     ],
 )
 
-create_system_config(
-    name = "system-config",
-    output_name = "system-config.js",
+sass_binary(
+    name = "theme_m3",
+    src = "theme-m3.scss",
+    deps = [
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
 )
 
 # Variables that are going to be inlined into the dev app index.html.
@@ -137,53 +141,17 @@ filegroup(
     srcs = [
         "favicon.ico",
         "index.html",
-        ":system-config",
         ":theme",
+        ":theme_m3",
         ":variables",
         "//src/dev-app/icon:icon_demo_assets",
-        "//tools:system-rxjs-operators.js",
-        "@npm//:node_modules/@material/animation/dist/mdc.animation.js",
-        "@npm//:node_modules/@material/auto-init/dist/mdc.autoInit.js",
-        "@npm//:node_modules/@material/base/dist/mdc.base.js",
-        "@npm//:node_modules/@material/checkbox/dist/mdc.checkbox.js",
-        "@npm//:node_modules/@material/chips/dist/mdc.chips.js",
-        "@npm//:node_modules/@material/circular-progress/dist/mdc.circularProgress.js",
-        "@npm//:node_modules/@material/data-table/dist/mdc.dataTable.js",
-        "@npm//:node_modules/@material/dialog/dist/mdc.dialog.js",
-        "@npm//:node_modules/@material/dom/dist/mdc.dom.js",
-        "@npm//:node_modules/@material/drawer/dist/mdc.drawer.js",
-        "@npm//:node_modules/@material/floating-label/dist/mdc.floatingLabel.js",
-        "@npm//:node_modules/@material/form-field/dist/mdc.formField.js",
-        "@npm//:node_modules/@material/icon-button/dist/mdc.iconButton.js",
-        "@npm//:node_modules/@material/line-ripple/dist/mdc.lineRipple.js",
-        "@npm//:node_modules/@material/linear-progress/dist/mdc.linearProgress.js",
-        "@npm//:node_modules/@material/list/dist/mdc.list.js",
-        "@npm//:node_modules/@material/menu-surface/dist/mdc.menuSurface.js",
-        "@npm//:node_modules/@material/menu/dist/mdc.menu.js",
-        "@npm//:node_modules/@material/notched-outline/dist/mdc.notchedOutline.js",
-        "@npm//:node_modules/@material/radio/dist/mdc.radio.js",
-        "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-        "@npm//:node_modules/@material/select/dist/mdc.select.js",
-        "@npm//:node_modules/@material/slider/dist/mdc.slider.js",
-        "@npm//:node_modules/@material/snackbar/dist/mdc.snackbar.js",
-        "@npm//:node_modules/@material/switch/dist/mdc.switch.js",
-        "@npm//:node_modules/@material/tab-bar/dist/mdc.tabBar.js",
-        "@npm//:node_modules/@material/tab-indicator/dist/mdc.tabIndicator.js",
-        "@npm//:node_modules/@material/tab-scroller/dist/mdc.tabScroller.js",
-        "@npm//:node_modules/@material/tab/dist/mdc.tab.js",
-        "@npm//:node_modules/@material/textfield/dist/mdc.textfield.js",
-        "@npm//:node_modules/@material/tooltip/dist/mdc.tooltip.js",
-        "@npm//:node_modules/@material/top-app-bar/dist/mdc.topAppBar.js",
-        "@npm//:node_modules/core-js-bundle/index.js",
         "@npm//:node_modules/moment/min/moment-with-locales.min.js",
         "@npm//:node_modules/rxjs/bundles/rxjs.umd.min.js",
-        "@npm//:node_modules/systemjs/dist/system.js",
-        "@npm//:node_modules/tslib/tslib.js",
-        "@npm//:node_modules/zone.js/dist/zone.js",
+        "@npm//:node_modules/zone.js/bundles/zone.umd.js",
     ],
 )
 
-dev_server(
+http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
@@ -192,18 +160,17 @@ dev_server(
         # artifact output as workspace root.
         "angular_material",
     ],
+    enable_dev_ui = True,
+    # List of environment variables that will be made available as `window.<NAME>` in the
+    # served `index.html` throuhg an injected script. Useful for allowing developers to
+    # configure API keys without requiring secrets to be committed.
+    environment_variables = [
+        "GOOGLE_MAPS_KEY",
+    ],
     tags = ["manual"],
     deps = [
-        ":dev-app",
+        ":bundles",
     ],
-)
-
-# Collects all ES5 JavaScript files which are required to serve the dev-app. By default,
-# ts_library and ng_module targets only expose the type definition files as outputs.
-es5_module_output(
-    name = "dev_app_js_sources",
-    tags = ["manual"],
-    deps = [":dev-app"],
 )
 
 # Target that builds a static web package of the dev-app. The web package can be
@@ -211,7 +178,7 @@ es5_module_output(
 pkg_web(
     name = "web_package",
     srcs = [
-        ":dev_app_js_sources",
+        ":bundles",
         ":dev_app_static_files",
     ],
     additional_root_paths = [

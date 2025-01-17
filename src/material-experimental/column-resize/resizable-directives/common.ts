@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Type} from '@angular/core';
@@ -27,6 +27,6 @@ export const RESIZABLE_HOST_BINDINGS = {
 };
 
 export const RESIZABLE_INPUTS = [
-  'minWidthPx: matResizableMinWidthPx',
-  'maxWidthPx: matResizableMaxWidthPx',
+  {name: 'minWidthPx', alias: 'matResizableMinWidthPx'},
+  {name: 'maxWidthPx', alias: 'matResizableMaxWidthPx'},
 ];

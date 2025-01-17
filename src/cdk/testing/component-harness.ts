@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {parallel} from './change-detection';
@@ -23,7 +23,8 @@ export type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise<boolean
  * a `HarnessPredicate`.
  */
 export type HarnessQuery<T extends ComponentHarness> =
-    ComponentHarnessConstructor<T> | HarnessPredicate<T>;
+  | ComponentHarnessConstructor<T>
+  | HarnessPredicate<T>;
 
 /**
  * The result type obtained when searching using a particular list of queries. This type depends on
@@ -48,17 +49,17 @@ export type HarnessQuery<T extends ComponentHarness> =
  * `MyHarness | MyOtherHarness | TestElement`.
  */
 export type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = {
-  [I in keyof T]:
-      // Map `ComponentHarnessConstructor<C>` to `C`.
-      T[I] extends new (...args: any[]) => infer C ? C :
-      // Map `HarnessPredicate<C>` to `C`.
-      T[I] extends { harnessType: new (...args: any[]) => infer C } ? C :
-      // Map `string` to `TestElement`.
-      T[I] extends string ? TestElement :
-      // Map everything else to `never` (should not happen due to the type constraint on `T`).
-      never;
+  [I in keyof T]: T[I] extends new (...args: any[]) => infer C // Map `ComponentHarnessConstructor<C>` to `C`.
+    ? C
+    : // Map `HarnessPredicate<C>` to `C`.
+      T[I] extends {harnessType: new (...args: any[]) => infer C}
+      ? C
+      : // Map `string` to `TestElement`.
+        T[I] extends string
+        ? TestElement
+        : // Map everything else to `never` (should not happen due to the type constraint on `T`).
+          never;
 }[number];
-
 
 /**
  * Interface used to load ComponentHarness objects. This interface is used by test authors to
@@ -96,12 +97,30 @@ export interface HarnessLoader {
   getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
 
   /**
+   * Searches for an instance of the component corresponding to the given harness type under the
+   * `HarnessLoader`'s root element, and returns a `ComponentHarness` for that instance. If multiple
+   * matching components are found, a harness for the first one is returned. If no matching
+   * component is found, null is returned.
+   * @param query A query for a harness to create
+   * @return An instance of the given harness type (or null if not found).
+   */
+  getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
+
+  /**
    * Searches for all instances of the component corresponding to the given harness type under the
    * `HarnessLoader`'s root element, and returns a list `ComponentHarness` for each instance.
    * @param query A query for a harness to create
    * @return A list instances of the given harness type.
    */
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+
+  /**
+   * Searches for an instance of the component corresponding to the given harness type under the
+   * `HarnessLoader`'s root element, and returns a boolean indicating if any were found.
+   * @param query A query for a harness to create
+   * @return A boolean indicating if an instance was found.
+   */
+  hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean>;
 }
 
 /**
@@ -137,8 +156,9 @@ export interface LocatorFactory {
    * - `await lf.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>>;
+  locatorFor<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T>>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
@@ -161,8 +181,9 @@ export interface LocatorFactory {
    * - `await lf.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorForOptional('span')()` gets `null`.
    */
-  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null>;
+  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T> | null>;
 
   /**
    * Creates an asynchronous locator function that can be used to find `ComponentHarness` instances
@@ -200,8 +221,9 @@ export interface LocatorFactory {
    *   ]`
    * - `await lf.locatorForAll('span')()` gets `[]`.
    */
-  locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>[]>;
+  locatorForAll<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T>[]>;
 
   /** @return A `HarnessLoader` rooted at the root element of this `LocatorFactory`. */
   rootHarnessLoader(): Promise<HarnessLoader>;
@@ -286,8 +308,9 @@ export abstract class ComponentHarness {
    * - `await ch.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>> {
+  protected locatorFor<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T>> {
     return this.locatorFactory.locatorFor(...queries);
   }
 
@@ -312,8 +335,9 @@ export abstract class ComponentHarness {
    * - `await ch.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorForOptional('span')()` gets `null`.
    */
-  protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null> {
+  protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T> | null> {
     return this.locatorFactory.locatorForOptional(...queries);
   }
 
@@ -353,8 +377,9 @@ export abstract class ComponentHarness {
    *   ]`
    * - `await ch.locatorForAll('span')()` gets `[]`.
    */
-  protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>[]> {
+  protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(
+    ...queries: T
+  ): AsyncFactoryFn<LocatorFnResult<T>[]> {
     return this.locatorFactory.locatorForAll(...queries);
   }
 
@@ -376,14 +401,14 @@ export abstract class ComponentHarness {
   }
 }
 
-
 /**
  * Base class for component harnesses that authors should extend if they anticipate that consumers
  * of the harness may want to access other harnesses within the `<ng-content>` of the component.
  */
 export abstract class ContentContainerComponentHarness<S extends string = string>
-  extends ComponentHarness implements HarnessLoader {
-
+  extends ComponentHarness
+  implements HarnessLoader
+{
   async getChildLoader(selector: S): Promise<HarnessLoader> {
     return (await this.getRootHarnessLoader()).getChildLoader(selector);
   }
@@ -396,8 +421,16 @@ export abstract class ContentContainerComponentHarness<S extends string = string
     return (await this.getRootHarnessLoader()).getHarness(query);
   }
 
+  async getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null> {
+    return (await this.getRootHarnessLoader()).getHarnessOrNull(query);
+  }
+
   async getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
     return (await this.getRootHarnessLoader()).getAllHarnesses(query);
+  }
+
+  async hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean> {
+    return (await this.getRootHarnessLoader()).hasHarness(query);
   }
 
   /**
@@ -411,7 +444,7 @@ export abstract class ContentContainerComponentHarness<S extends string = string
 
 /** Constructor for a ComponentHarness subclass. */
 export interface ComponentHarnessConstructor<T extends ComponentHarness> {
-  new(locatorFactory: LocatorFactory): T;
+  new (locatorFactory: LocatorFactory): T;
 
   /**
    * `ComponentHarness` subclasses must specify a static `hostSelector` property that is used to
@@ -438,7 +471,10 @@ export class HarnessPredicate<T extends ComponentHarness> {
   private _descriptions: string[] = [];
   private _ancestor: string;
 
-  constructor(public harnessType: ComponentHarnessConstructor<T>, options: BaseHarnessFilters) {
+  constructor(
+    public harnessType: ComponentHarnessConstructor<T>,
+    options: BaseHarnessFilters,
+  ) {
     this._addBaseOptions(options);
   }
 
@@ -451,8 +487,10 @@ export class HarnessPredicate<T extends ComponentHarness> {
    *   allowed. If `pattern` is `null`, the value is expected to be `null`.
    * @return Whether the value matches the pattern.
    */
-  static async stringMatches(value: string | null | Promise<string | null>,
-                             pattern: string | RegExp | null): Promise<boolean> {
+  static async stringMatches(
+    value: string | null | Promise<string | null>,
+    pattern: string | RegExp | null,
+  ): Promise<boolean> {
     value = await value;
     if (pattern === null) {
       return value === null;
@@ -526,8 +564,9 @@ export class HarnessPredicate<T extends ComponentHarness> {
     }
 
     const [ancestors, ancestorPlaceholders] = _splitAndEscapeSelector(this._ancestor);
-    const [selectors, selectorPlaceholders] =
-      _splitAndEscapeSelector(this.harnessType.hostSelector || '');
+    const [selectors, selectorPlaceholders] = _splitAndEscapeSelector(
+      this.harnessType.hostSelector || '',
+    );
     const result: string[] = [];
 
     // We have to add the ancestor to each part of the host compound selector, otherwise we can get
@@ -535,7 +574,8 @@ export class HarnessPredicate<T extends ComponentHarness> {
     ancestors.forEach(escapedAncestor => {
       const ancestor = _restoreSelector(escapedAncestor, ancestorPlaceholders);
       return selectors.forEach(escapedSelector =>
-        result.push(`${ancestor} ${_restoreSelector(escapedSelector, selectorPlaceholders)}`));
+        result.push(`${ancestor} ${_restoreSelector(escapedSelector, selectorPlaceholders)}`),
+      );
     });
 
     return result.join(', ');
@@ -561,15 +601,21 @@ function _valueAsString(value: unknown) {
   if (value === undefined) {
     return 'undefined';
   }
-  // `JSON.stringify` doesn't handle RegExp properly, so we need a custom replacer.
   try {
-    return JSON.stringify(value, (_, v) => {
-      if (v instanceof RegExp) {
-        return `/${v.toString()}/`;
-      }
-
-      return typeof v === 'string' ? v.replace('/\//g', '\\/') : v;
-    }).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
+    // `JSON.stringify` doesn't handle RegExp properly, so we need a custom replacer.
+    // Use a character that is unlikely to appear in real strings to denote the start and end of
+    // the regex. This allows us to strip out the extra quotes around the value added by
+    // `JSON.stringify`. Also do custom escaping on `"` characters to prevent `JSON.stringify`
+    // from escaping them as if they were part of a string.
+    const stringifiedValue = JSON.stringify(value, (_, v) =>
+      v instanceof RegExp
+        ? `◬MAT_RE_ESCAPE◬${v.toString().replace(/"/g, '◬MAT_RE_ESCAPE◬')}◬MAT_RE_ESCAPE◬`
+        : v,
+    );
+    // Strip out the extra quotes around regexes and put back the manually escaped `"` characters.
+    return stringifiedValue
+      .replace(/"◬MAT_RE_ESCAPE◬|◬MAT_RE_ESCAPE◬"/g, '')
+      .replace(/◬MAT_RE_ESCAPE◬/g, '"');
   } catch {
     // `JSON.stringify` will throw if the object is cyclical,
     // in this case the best we can do is report the value as `{...}`.

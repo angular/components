@@ -1,15 +1,21 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
-import {CommonModule} from '@angular/common';
-import {AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
+import {
+  AfterViewInit,
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  inject,
+  signal,
+} from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatRippleModule} from '@angular/material/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {By} from '@angular/platform-browser';
-import {ScrollingModule, CdkScrollable} from '@angular/cdk/scrolling';
-import {MatTabBody, MatTabBodyPortal} from './tab-body';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
-
+import {MatTabBody, MatTabBodyPortal} from './tab-body';
 
 describe('MatTabBody', () => {
   let dir: Direction = 'ltr';
@@ -18,89 +24,24 @@ describe('MatTabBody', () => {
   beforeEach(waitForAsync(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule],
-      declarations: [
+      imports: [
+        PortalModule,
+        MatRippleModule,
+        NoopAnimationsModule,
         MatTabBody,
         MatTabBodyPortal,
         SimpleTabBodyApp,
       ],
-      providers: [
-        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}
-      ]
+      providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
     });
-
-    TestBed.compileComponents();
   }));
 
-  describe('when initialized as center', () => {
-    let fixture: ComponentFixture<SimpleTabBodyApp>;
+  it('should be center position if origin is unchanged', () => {
+    const fixture = TestBed.createComponent(SimpleTabBodyApp);
+    fixture.componentInstance.position = 0;
+    fixture.detectChanges();
 
-    it('should be center position if origin is unchanged', () => {
-      fixture = TestBed.createComponent(SimpleTabBodyApp);
-      fixture.componentInstance.position = 0;
-      fixture.detectChanges();
-
-      expect(fixture.componentInstance.tabBody._position).toBe('center');
-    });
-
-    it('should be center position if origin is explicitly set to null', () => {
-      fixture = TestBed.createComponent(SimpleTabBodyApp);
-      fixture.componentInstance.position = 0;
-
-      // It can happen that the `origin` is explicitly set to null through the Angular input
-      // binding. This test should ensure that the body does properly such origin value.
-      // The `MatTab` class sets the origin by default to null. See related issue: #12455
-      fixture.componentInstance.origin = null;
-      fixture.detectChanges();
-
-      expect(fixture.componentInstance.tabBody._position).toBe('center');
-    });
-
-    describe('in LTR direction', () => {
-
-      beforeEach(() => {
-        dir = 'ltr';
-        fixture = TestBed.createComponent(SimpleTabBodyApp);
-      });
-      it('should be left-origin-center position with negative or zero origin', () => {
-        fixture.componentInstance.position = 0;
-        fixture.componentInstance.origin = 0;
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.tabBody._position).toBe('left-origin-center');
-      });
-
-      it('should be right-origin-center position with positive nonzero origin', () => {
-        fixture.componentInstance.position = 0;
-        fixture.componentInstance.origin = 1;
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.tabBody._position).toBe('right-origin-center');
-      });
-    });
-
-    describe('in RTL direction', () => {
-      beforeEach(() => {
-        dir = 'rtl';
-        fixture = TestBed.createComponent(SimpleTabBodyApp);
-      });
-
-      it('should be right-origin-center position with negative or zero origin', () => {
-        fixture.componentInstance.position = 0;
-        fixture.componentInstance.origin = 0;
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.tabBody._position).toBe('right-origin-center');
-      });
-
-      it('should be left-origin-center position with positive nonzero origin', () => {
-        fixture.componentInstance.position = 0;
-        fixture.componentInstance.origin = 1;
-        fixture.detectChanges();
-
-        expect(fixture.componentInstance.tabBody._position).toBe('left-origin-center');
-      });
-    });
+    expect(fixture.componentInstance.tabBody._position).toBe('center');
   });
 
   describe('should properly set the position in LTR', () => {
@@ -114,6 +55,7 @@ describe('MatTabBody', () => {
 
     it('to be left position with negative position', () => {
       fixture.componentInstance.position = -1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('left');
@@ -121,6 +63,7 @@ describe('MatTabBody', () => {
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('center');
@@ -128,6 +71,7 @@ describe('MatTabBody', () => {
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('right');
@@ -145,6 +89,7 @@ describe('MatTabBody', () => {
 
     it('to be right position with negative position', () => {
       fixture.componentInstance.position = -1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('right');
@@ -152,6 +97,7 @@ describe('MatTabBody', () => {
 
     it('to be center position with zero position', () => {
       fixture.componentInstance.position = 0;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('center');
@@ -159,6 +105,7 @@ describe('MatTabBody', () => {
 
     it('to be left position with positive position', () => {
       fixture.componentInstance.position = 1;
+      fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.tabBody._position).toBe('left');
@@ -182,26 +129,18 @@ describe('MatTabBody', () => {
   });
 
   it('should mark the tab body content as a scrollable container', () => {
-    TestBed
-      .resetTestingModule()
-      .configureTestingModule({
-        imports: [
-          CommonModule,
-          PortalModule,
-          MatRippleModule,
-          NoopAnimationsModule,
-          ScrollingModule
-        ],
-        declarations: [
-          MatTabBody,
-          MatTabBodyPortal,
-          SimpleTabBodyApp,
-        ]
-      })
-      .compileComponents();
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [
+        PortalModule,
+        MatRippleModule,
+        NoopAnimationsModule,
+        ScrollingModule,
+        SimpleTabBodyApp,
+      ],
+    });
 
     const fixture = TestBed.createComponent(SimpleTabBodyApp);
-    const tabBodyContent = fixture.nativeElement.querySelector('.mat-tab-body-content');
+    const tabBodyContent = fixture.nativeElement.querySelector('.mat-mdc-tab-body-content');
     const scrollable = fixture.debugElement.query(By.directive(CdkScrollable));
 
     expect(scrollable).toBeTruthy();
@@ -209,24 +148,23 @@ describe('MatTabBody', () => {
   });
 });
 
-
 @Component({
   template: `
     <ng-template>Tab Body Content</ng-template>
-    <mat-tab-body [content]="content" [position]="position" [origin]="origin"></mat-tab-body>
-  `
+    <mat-tab-body [content]="content()" [position]="position"></mat-tab-body>
+  `,
+  imports: [PortalModule, MatRippleModule, MatTabBody],
 })
-class SimpleTabBodyApp implements AfterContentInit {
-  content: TemplatePortal;
+class SimpleTabBodyApp implements AfterViewInit {
+  content = signal<TemplatePortal | undefined>(undefined);
   position: number;
-  origin: number | null;
 
   @ViewChild(MatTabBody) tabBody: MatTabBody;
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(private _viewContainerRef: ViewContainerRef) { }
+  private readonly _viewContainerRef = inject(ViewContainerRef);
 
-  ngAfterContentInit() {
-    this.content = new TemplatePortal(this.template, this._viewContainerRef);
+  ngAfterViewInit() {
+    this.content.set(new TemplatePortal(this.template, this._viewContainerRef));
   }
 }

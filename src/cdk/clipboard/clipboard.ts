@@ -3,24 +3,22 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {PendingCopy} from './pending-copy';
-
 
 /**
  * A service for copying text to the clipboard.
  */
 @Injectable({providedIn: 'root'})
 export class Clipboard {
-  private readonly _document: Document;
+  private readonly _document = inject(DOCUMENT);
 
-  constructor(@Inject(DOCUMENT) document: any) {
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Copies the provided text into the user's clipboard.

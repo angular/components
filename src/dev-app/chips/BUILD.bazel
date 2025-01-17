@@ -14,10 +14,10 @@ ng_module(
         "//src/material/card",
         "//src/material/checkbox",
         "//src/material/chips",
+        "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
         "//src/material/toolbar",
-        "@npm//@angular/router",
     ],
 )
 

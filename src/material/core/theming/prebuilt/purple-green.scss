@@ -1,22 +1,25 @@
 @use '../all-theme';
 @use '../../core';
-@use '../palette';
-@use '../theming';
+@use '../../m2';
+@use '../../typography/typography';
 
-
-// Include non-theme styles for core.
-@include core.core();
+@include core.app-background();
+@include core.elevation-classes();
 
 // Define a theme.
-$primary: theming.define-palette(palette.$purple-palette, 700, 500, 800);
-$accent:  theming.define-palette(palette.$green-palette, A200, A100, A400);
+$primary: m2.define-palette(m2.$purple-palette, 700, 500, 800);
+$accent:  m2.define-palette(m2.$green-palette, A200, A100, A400);
 
-$theme: theming.define-dark-theme((
+$theme: m2.define-dark-theme((
   color: (
     primary: $primary,
     accent: $accent
-  )
+  ),
+  typography: m2.define-typography-config(),
+  density: 0,
 ));
 
 // Include all theme styles for the components.
 @include all-theme.all-component-themes($theme);
+
+@include typography.typography-hierarchy($theme);

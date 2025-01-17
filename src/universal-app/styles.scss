@@ -1,0 +1,36 @@
+@use '@angular/material' as mat;
+
+@include mat.app-background();
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+html {
+  @include mat.all-component-themes($theme);
+}
+
+@include mat.typography-hierarchy($theme);
+
+body.test-automated {
+  // Make sure bottom sheet doesn't obscure components.
+  padding-bottom: 80px;
+
+  // Hide the overlay so hover styles can be tested,
+  // but show a message so we can see that the overlay is there.
+  .cdk-overlay-backdrop {
+    bottom: 100vh !important;
+  }
+
+  .cdk-overlay-backdrop::after {
+    content: 'OVERLAY ACTIVE';
+    background: lime;
+  }
+}

@@ -1,17 +1,17 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 import {basename} from 'path';
 
 const ruleName = 'material/single-line-comment-only';
 const messages = utils.ruleMessages(ruleName, {
-  expected: () => 'Multi-line comments are not allowed (e.g. /* */). ' +
-                  'Use single-line comments instead (//).',
+  expected: () =>
+    'Multi-line comments are not allowed (e.g. /* */). ' + 'Use single-line comments instead (//).',
 });
 
 /**
  * Stylelint plugin that doesn't allow multi-line comments to
  * be used, because they'll show up in the user's output.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {filePattern?: string}) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
@@ -24,20 +24,20 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, options?: {filePatter
     }
 
     root.walkComments(comment => {
-      // The `raws.inline` property isn't in the typing so we need to cast to any. Also allow
-      // comments starting with `!` since they're used to tell minifiers to preserve the comment.
-      if (!(comment.raws as any).inline && !comment.text.startsWith('!')) {
+      // Allow comments starting with `!` since they're used to tell minifiers to preserve the comment.
+      if (!comment.raws.inline && !comment.text.startsWith('!')) {
         utils.report({
           result,
           ruleName,
           message: messages.expected(),
-          node: comment
+          node: comment,
         });
       }
     });
   };
-});
+};
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

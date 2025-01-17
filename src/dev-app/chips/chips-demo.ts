@@ -3,13 +3,21 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component} from '@angular/core';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {ThemePalette} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 export interface Person {
   name: string;
@@ -23,16 +31,44 @@ export interface DemoColor {
 @Component({
   selector: 'chips-demo',
   templateUrl: 'chips-demo.html',
-  styleUrls: ['chips-demo.css']
+  styleUrl: 'chips-demo.css',
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatToolbarModule,
+    ReactiveFormsModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsDemo {
-  tabIndex = 0;
   visible = true;
-  color: ThemePalette;
   selectable = true;
   removable = true;
   addOnBlur = true;
+  disabledListboxes = false;
+  listboxesWithAvatar = false;
+  disableInputs = false;
+  editable = false;
   message = '';
+
+  shirtSizes = [
+    {label: 'Extra Small', avatar: 'XS', disabled: false},
+    {label: 'Small', avatar: 'S', disabled: false},
+    {label: 'Medium', avatar: 'M', disabled: true},
+    {label: 'Large', avatar: 'L', disabled: false},
+  ];
+
+  restaurantHints = [
+    {label: 'Open Now', avatar: 'O', selected: true},
+    {label: 'Takes Reservations', avatar: 'R', selected: false},
+    {label: 'Pet Friendly', avatar: 'P', selected: true},
+    {label: 'Good for Brunch', avatar: 'B', selected: false},
+  ];
 
   // Enter, comma, semi-colon
   separatorKeysCodes = [ENTER, COMMA, 186];
@@ -45,15 +81,17 @@ export class ChipsDemo {
     {name: 'Topher'},
     {name: 'Elad'},
     {name: 'Kristiyan'},
-    {name: 'Paul'}
+    {name: 'Paul'},
   ];
 
   availableColors: DemoColor[] = [
     {name: 'none', color: undefined},
     {name: 'Primary', color: 'primary'},
     {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}
+    {name: 'Warn', color: 'warn'},
   ];
+
+  announcer = inject(LiveAnnouncer);
 
   displayMessage(message: string): void {
     this.message = message;
@@ -64,7 +102,7 @@ export class ChipsDemo {
 
     // Add our person
     if (value) {
-      this.people.push({ name: value });
+      this.people.push({name: value});
     }
 
     // Clear the input value
@@ -76,26 +114,26 @@ export class ChipsDemo {
 
     if (index >= 0) {
       this.people.splice(index, 1);
+      this.announcer.announce(`Removed ${person.name}`);
     }
   }
 
-  removeColor(color: DemoColor) {
-    let index = this.availableColors.indexOf(color);
-
-    if (index >= 0) {
-      this.availableColors.splice(index, 1);
+  edit(person: Person, event: MatChipEditedEvent): void {
+    if (!event.value.trim().length) {
+      this.remove(person);
+      return;
     }
 
-    index = this.selectedColors.indexOf(color.name);
-
-    if (index >= 0) {
-      this.selectedColors.splice(index, 1);
-    }
+    const index = this.people.indexOf(person);
+    const newPeople = this.people.slice();
+    newPeople[index] = {...newPeople[index], name: event.value};
+    this.people = newPeople;
   }
 
   toggleVisible(): void {
     this.visible = false;
   }
+
   selectedColors: string[] = ['Primary', 'Warn'];
   selectedColor = 'Accent';
 }

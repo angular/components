@@ -3,10 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
+import {MatDefaultEnabledColumnResizeModule} from '@angular/material-experimental/column-resize';
 
 export interface PeriodicElement {
   name: string;
@@ -44,7 +46,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'default-enabled-column-resize-example',
   templateUrl: 'default-enabled-column-resize-example.html',
-  styleUrls: ['default-enabled-column-resize-example.css'],
+  styleUrl: 'default-enabled-column-resize-example.css',
+  imports: [MatDefaultEnabledColumnResizeModule, MatTableModule],
 })
 export class DefaultEnabledColumnResizeExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

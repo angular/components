@@ -1,91 +1,146 @@
-// Theming APIs
-@forward './core/theming/theming' show define-light-theme, define-dark-theme,
-  define-palette, get-contrast-color-from-palette, get-color-from-palette,
-  get-color-config, get-typography-config, get-density-config,
-  $theme-ignore-duplication-warnings;
-@forward './core/theming/palette' show $red-palette, $pink-palette, $indigo-palette,
-  $purple-palette, $deep-purple-palette, $blue-palette, $light-blue-palette, $cyan-palette,
-  $teal-palette, $green-palette, $light-green-palette, $lime-palette, $yellow-palette,
-  $amber-palette, $orange-palette, $deep-orange-palette, $brown-palette, $grey-palette,
-  $gray-palette, $blue-grey-palette, $blue-gray-palette, $light-theme-background-palette,
-  $dark-theme-background-palette, $light-theme-foreground-palette, $dark-theme-foreground-palette;
-@forward './core/typography/typography' show define-typography-level, define-typography-config,
-  typography-hierarchy;
-@forward './core/typography/typography-utils' show typography-level,
-  font-size, line-height, font-weight, letter-spacing, font-family, font-shorthand;
+// Expose the M2 APIs under an `m2-` prefix in order to distinguish them from the M3 APIs.
+@forward './core/m2' as m2-*;
+
+// New theming APIs
+@forward './core/theming/inspection' show get-theme-version, get-theme-type, get-theme-color,
+  get-theme-typography, get-theme-density, theme-has, theme-remove;
+@forward './core/theming/definition' show define-theme, define-colors, define-typography,
+  define-density;
+@forward './core/theming/palettes' show $red-palette, $green-palette, $blue-palette,
+  $yellow-palette, $cyan-palette, $magenta-palette, $orange-palette,
+  $chartreuse-palette, $spring-green-palette, $azure-palette, $violet-palette, $rose-palette;
+@forward './core/theming/color-api-backwards-compatibility' show
+  color-variants-backwards-compatibility;
+
+@forward './core/theming/theming' show $theme-ignore-duplication-warnings,
+  $theme-legacy-inspection-api-compatibility;
+@forward './core/theming/theming' as private-* show private-clamp-density;
+@forward './core/typography/typography' show typography-hierarchy;
+@forward './core/typography/typography-utils' show font-shorthand;
+@forward './core/tokens/m2' show m2-tokens-from-theme;
+@forward './core/tokens/m3-system' show system-level-colors,
+    system-level-typography, system-level-elevation, system-level-shape,
+    system-level-motion, system-level-state, theme, theme-overrides;
+
+// Private/Internal
+@forward './core/density/private/all-density' show all-component-densities;
+@forward './core/theming/theming' show private-check-duplicate-theme-styles,
+  private-legacy-get-theme, private-is-theme-object;
+@forward './core/style/private' show private-theme-elevation;
+@forward './core/style/vendor-prefixes' as private-* show private-user-select;
+@forward './core/style/variables' as private-* show $private-swift-ease-in-duration,
+  $private-swift-ease-in-timing-function, $private-swift-ease-out-timing-function,
+  $private-ease-in-out-curve-function, $private-swift-ease-out-duration, $private-xsmall;
+@forward './core/style/sass-utils' as private-*;
+@forward './core/style/validation' as private-*;
 
 // Structural
-@forward './core/core' show core;
+@forward './core/core' show core, app-background, elevation-classes;
 @forward './core/ripple/ripple' show ripple;
-@forward './core/focus-indicators/focus-indicators' show strong-focus-indicators;
+@forward './core/focus-indicators/private' show strong-focus-indicators,
+  strong-focus-indicators-color, strong-focus-indicators-theme;
 @forward './core/style/elevation' show elevation, overridable-elevation, elevation-transition;
 
 // Theme bundles
-@forward './core/theming/all-theme' show all-component-themes;
+@forward './core/theming/all-theme' show all-component-themes, all-component-bases;
 @forward './core/color/all-color' show all-component-colors;
 @forward './core/typography/all-typography' show all-component-typographies;
 
 // Component themes
-@forward './core/core-theme' as core-* show core-color, core-theme;
-@forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme;
+@forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density,
+  core-base, core-overrides;
+@forward './core/ripple/ripple-theme' as ripple-* show ripple-color, ripple-theme, ripple-base,
+  ripple-overrides;
 @forward './core/option/option-theme' as option-* show option-color, option-typography,
-  option-theme;
+  option-theme, option-density, option-base, option-overrides;
 @forward './core/option/optgroup-theme' as optgroup-* show optgroup-color, optgroup-typography,
-  optgroup-theme;
+  optgroup-theme, optgroup-density, optgroup-base, optgroup-overrides;
 @forward './core/selection/pseudo-checkbox/pseudo-checkbox-theme' as pseudo-checkbox-* show
-  pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme;
-@forward './core/focus-indicators/focus-indicators-theme' as strong-focus-indicators-* show
-  strong-focus-indicators-color, strong-focus-indicators-theme;
+  pseudo-checkbox-color, pseudo-checkbox-typography, pseudo-checkbox-theme, pseudo-checkbox-density,
+  pseudo-checkbox-base, pseudo-checkbox-overrides;
+@forward './core/selection/pseudo-checkbox/pseudo-checkbox-common' as pseudo-checkbox-* show
+  pseudo-checkbox-legacy-size;
 @forward './autocomplete/autocomplete-theme' as autocomplete-* show autocomplete-theme,
-  autocomplete-color, autocomplete-typography;
-@forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography;
+  autocomplete-color, autocomplete-typography, autocomplete-density, autocomplete-base,
+  autocomplete-overrides;
+@forward './badge/badge-theme' as badge-* show badge-theme, badge-color, badge-typography,
+  badge-density, badge-base, badge-overrides;
 @forward './bottom-sheet/bottom-sheet-theme' as bottom-sheet-* show bottom-sheet-theme,
-  bottom-sheet-color, bottom-sheet-typography;
-@forward './button/button-theme' as button-* show button-theme, button-color, button-typography;
+  bottom-sheet-color, bottom-sheet-typography, bottom-sheet-density, bottom-sheet-base,
+  bottom-sheet-overrides;
+@forward './button/button-theme' as button-* show button-theme, button-color, button-typography,
+  button-density, button-base, button-overrides;
+@forward './button/fab-theme' as fab-* show fab-color, fab-typography,
+  fab-density, fab-theme, fab-base, fab-overrides;
+@forward './button/icon-button-theme' as icon-button-* show icon-button-color,
+  icon-button-typography, icon-button-density, icon-button-theme, icon-button-base,
+  icon-button-overrides;
 @forward './button-toggle/button-toggle-theme' as button-toggle-* show button-toggle-theme,
-  button-toggle-color, button-toggle-typography;
-@forward './card/card-theme' as card-* show card-theme, card-color, card-typography;
+  button-toggle-color, button-toggle-typography, button-toggle-density, button-toggle-base,
+  button-toggle-overrides;
+@forward './card/card-theme' as card-* show card-theme, card-color, card-typography, card-density,
+  card-base, card-overrides;
 @forward './checkbox/checkbox-theme' as checkbox-* show checkbox-theme, checkbox-color,
-  checkbox-typography;
-@forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography;
+  checkbox-typography, checkbox-density, checkbox-base, checkbox-overrides;
+@forward './chips/chips-theme' as chips-* show chips-theme, chips-color, chips-typography,
+  chips-density, chips-base, chips-overrides;
 @forward './datepicker/datepicker-theme' as datepicker-* show datepicker-theme, datepicker-color,
-  datepicker-typography;
-@forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography;
+  datepicker-typography, datepicker-date-range-colors, datepicker-density, datepicker-base,
+  datepicker-overrides;
+@forward './dialog/dialog-theme' as dialog-* show dialog-theme, dialog-color, dialog-typography,
+  dialog-density, dialog-base, dialog-overrides;
+@forward './dialog/dialog-legacy-padding' as dialog-* show dialog-legacy-padding;
 @forward './divider/divider-theme' as divider-* show divider-theme, divider-color,
-  divider-typography;
+  divider-typography, divider-density, divider-base, divider-overrides;
 @forward './expansion/expansion-theme' as expansion-* show expansion-theme, expansion-color,
-  expansion-typography;
-@forward './form-field/form-field-theme' as form-field-* show form-field-theme, form-field-color,
-  form-field-typography;
+  expansion-typography, expansion-density, expansion-base, expansion-overrides;
+@forward './form-field/form-field-theme' as form-field-* show form-field-theme,
+  form-field-color, form-field-typography, form-field-density, form-field-base,
+  form-field-overrides;
 @forward './grid-list/grid-list-theme' as grid-list-* show grid-list-theme, grid-list-color,
-  grid-list-typography;
-@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography;
-@forward './input/input-theme' as input-* show input-theme, input-color, input-typography;
-@forward './list/list-theme' as list-* show list-theme, list-color, list-typography;
-@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography;
+  grid-list-typography, grid-list-density, grid-list-base, grid-list-overrides;
+@forward './icon/icon-theme' as icon-* show icon-theme, icon-color, icon-typography, icon-density,
+  icon-base, icon-overrides;
+@forward './input/input-theme' as input-* show input-theme, input-color, input-typography,
+  input-density, input-base, input-overrides;
+@forward './list/list-theme' as list-* show list-theme, list-color, list-typography,
+  list-density, list-base, list-overrides;
+@forward './menu/menu-theme' as menu-* show menu-theme, menu-color, menu-typography, menu-density,
+  menu-base, menu-overrides;
 @forward './paginator/paginator-theme' as paginator-* show paginator-theme, paginator-color,
-  paginator-typography;
-@forward './progress-bar/progress-bar-theme' as progress-bar-* show progress-bar-theme,
-  progress-bar-color, progress-bar-typography;
+  paginator-typography, paginator-density, paginator-base, paginator-overrides;
+@forward './progress-bar/progress-bar-theme' as progress-bar-* show
+  progress-bar-theme, progress-bar-color, progress-bar-typography,
+  progress-bar-density, progress-bar-base, progress-bar-overrides;
 @forward './progress-spinner/progress-spinner-theme' as progress-spinner-* show
-  progress-spinner-theme, progress-spinner-color, progress-spinner-typography;
-@forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography;
-@forward './select/select-theme' as select-* show select-theme, select-color, select-typography;
+  progress-spinner-theme, progress-spinner-color, progress-spinner-typography,
+  progress-spinner-density, progress-spinner-base, progress-spinner-overrides;
+@forward './radio/radio-theme' as radio-* show radio-theme, radio-color, radio-typography,
+  radio-density, radio-base, radio-overrides;
+@forward './select/select-theme' as select-* show select-theme, select-color, select-typography,
+  select-density, select-base, select-overrides;
 @forward './sidenav/sidenav-theme' as sidenav-* show sidenav-theme, sidenav-color,
-  sidenav-typography;
-@forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show slide-toggle-theme,
-  slide-toggle-color, slide-toggle-typography;
-@forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography;
+  sidenav-typography, sidenav-density, sidenav-base, sidenav-overrides;
+@forward './slide-toggle/slide-toggle-theme' as slide-toggle-* show
+  slide-toggle-theme, slide-toggle-color, slide-toggle-typography, slide-toggle-density,
+  slide-toggle-base, slide-toggle-overrides;
+@forward './slider/slider-theme' as slider-* show slider-theme, slider-color, slider-typography,
+  slider-density, slider-base, slider-overrides;
 @forward './snack-bar/snack-bar-theme' as snack-bar-* show snack-bar-theme, snack-bar-color,
-  snack-bar-typography;
-@forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography;
+  snack-bar-typography, snack-bar-density, snack-bar-base, snack-bar-overrides;
+@forward './sort/sort-theme' as sort-* show sort-theme, sort-color, sort-typography, sort-density,
+  sort-base, sort-overrides;
 @forward './stepper/stepper-theme' as stepper-* show stepper-theme, stepper-color,
-  stepper-typography;
-@forward './table/table-theme' as table-* show table-theme, table-color, table-typography;
-@forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography;
+  stepper-typography, stepper-density, stepper-base, stepper-overrides;
+@forward './table/table-theme' as table-* show table-theme, table-color, table-typography,
+  table-density, table-base, table-overrides;
+@forward './tabs/tabs-theme' as tabs-* show tabs-theme, tabs-color, tabs-typography, tabs-density,
+  tabs-base, tabs-overrides;
 @forward './toolbar/toolbar-theme' as toolbar-* show toolbar-theme, toolbar-color,
-  toolbar-typography;
+  toolbar-typography, toolbar-density, toolbar-base, toolbar-overrides;
 @forward './tooltip/tooltip-theme' as tooltip-* show tooltip-theme, tooltip-color,
-  tooltip-typography;
-@forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography;
-
+  tooltip-typography, tooltip-density, tooltip-base, tooltip-overrides;
+@forward './tree/tree-theme' as tree-* show tree-theme, tree-color, tree-typography, tree-density,
+  tree-base, tree-overrides;
+@forward './timepicker/timepicker-theme' as timepicker-* show timepicker-theme, timepicker-color,
+  timepicker-typography, timepicker-density, timepicker-base, timepicker-overrides;

@@ -1,7 +1,6 @@
-import * as path from 'path';
 import * as Lint from 'tslint';
-import * as ts from 'typescript';
-import * as minimatch from 'minimatch';
+import ts from 'typescript';
+import minimatch from 'minimatch';
 
 const hooks = new Set([
   'ngOnChanges',
@@ -12,7 +11,7 @@ const hooks = new Set([
   'ngAfterViewInit',
   'ngAfterViewChecked',
   'ngOnDestroy',
-  'ngDoBootstrap'
+  'ngDoBootstrap',
 ]);
 
 /** Rule that prevents direct calls of the Angular lifecycle hooks */
@@ -28,16 +27,19 @@ class Walker extends Lint.RuleWalker {
 
   constructor(sourceFile: ts.SourceFile, options: Lint.IOptions) {
     super(sourceFile, options);
-    const fileGlobs = options.ruleArguments;
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
-    this._enabled = fileGlobs.some(p => minimatch(relativeFilePath, p));
+    const fileGlobs: string[] = options.ruleArguments[0];
+    this._enabled = !fileGlobs.some(p => minimatch(sourceFile.fileName, p));
   }
 
   override visitPropertyAccessExpression(node: ts.PropertyAccessExpression) {
     // Flag any accesses of the lifecycle hooks that are
     // inside function call and don't match the allowed criteria.
-    if (this._enabled && ts.isCallExpression(node.parent) && hooks.has(node.name.text) &&
-        !this._isAllowedAccessor(node)) {
+    if (
+      this._enabled &&
+      ts.isCallExpression(node.parent) &&
+      hooks.has(node.name.text) &&
+      !this._isAllowedAccessor(node)
+    ) {
       this.addFailureAtNode(node, 'Manually invoking Angular lifecycle hooks is not allowed.');
     }
 

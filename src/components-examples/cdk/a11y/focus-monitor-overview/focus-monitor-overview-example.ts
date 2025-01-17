@@ -1,4 +1,3 @@
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -6,37 +5,41 @@ import {
   ElementRef,
   NgZone,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  inject,
 } from '@angular/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 /** @title Monitoring focus with FocusMonitor */
 @Component({
   selector: 'focus-monitor-overview-example',
   templateUrl: 'focus-monitor-overview-example.html',
-  styleUrls: ['focus-monitor-overview-example.css']
+  styleUrl: 'focus-monitor-overview-example.css',
 })
 export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
+  private _focusMonitor = inject(FocusMonitor);
+  private _cdr = inject(ChangeDetectorRef);
+  private _ngZone = inject(NgZone);
+
   @ViewChild('element') element: ElementRef<HTMLElement>;
   @ViewChild('subtree') subtree: ElementRef<HTMLElement>;
 
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);
 
-  constructor(private _focusMonitor: FocusMonitor,
-              private _cdr: ChangeDetectorRef,
-              private _ngZone: NgZone) {}
-
   ngAfterViewInit() {
-    this._focusMonitor.monitor(this.element)
-        .subscribe(origin => this._ngZone.run(() => {
-          this.elementOrigin = this.formatOrigin(origin);
-          this._cdr.markForCheck();
-        }));
-    this._focusMonitor.monitor(this.subtree, true)
-        .subscribe(origin => this._ngZone.run(() => {
-          this.subtreeOrigin = this.formatOrigin(origin);
-          this._cdr.markForCheck();
-        }));
+    this._focusMonitor.monitor(this.element).subscribe(origin =>
+      this._ngZone.run(() => {
+        this.elementOrigin = this.formatOrigin(origin);
+        this._cdr.markForCheck();
+      }),
+    );
+    this._focusMonitor.monitor(this.subtree, true).subscribe(origin =>
+      this._ngZone.run(() => {
+        this.subtreeOrigin = this.formatOrigin(origin);
+        this._cdr.markForCheck();
+      }),
+    );
   }
 
   ngOnDestroy() {

@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {Sort} from '@angular/material/sort';
+import {Component, signal} from '@angular/core';
+import {Sort, MatSortModule} from '@angular/material/sort';
 
 /**
  * @title Testing with MatSortHarness
@@ -7,9 +7,10 @@ import {Sort} from '@angular/material/sort';
 @Component({
   selector: 'sort-harness-example',
   templateUrl: 'sort-harness-example.html',
+  imports: [MatSortModule],
 })
 export class SortHarnessExample {
-  disableThirdHeader = false;
+  disableThirdHeader = signal(false);
   desserts = [
     {name: 'Frozen yogurt', calories: 159, fat: 6, carbs: 24, protein: 4},
     {name: 'Ice cream sandwich', calories: 237, fat: 9, carbs: 37, protein: 4},

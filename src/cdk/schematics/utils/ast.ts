@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
@@ -11,10 +11,11 @@ import {Schema as ComponentOptions} from '@schematics/angular/component/schema';
 import {InsertChange} from '@schematics/angular/utility/change';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {addImportToModule} from '@schematics/angular/utility/ast-utils';
+import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
+import {workspaces} from '@angular-devkit/core';
 import * as ts from 'typescript';
 import {getProjectMainFile} from './project-main-file';
-import {addImportToModule, getAppModulePath} from './vendored-ast-utils';
 
 /** Reads file given path and returns TypeScript source file. */
 export function parseSourceFile(host: Tree, path: string): ts.SourceFile {
@@ -26,8 +27,12 @@ export function parseSourceFile(host: Tree, path: string): ts.SourceFile {
 }
 
 /** Import and add module to root app module. */
-export function addModuleImportToRootModule(host: Tree, moduleName: string, src: string,
-                                            project: ProjectDefinition) {
+export function addModuleImportToRootModule(
+  host: Tree,
+  moduleName: string,
+  src: string,
+  project: workspaces.ProjectDefinition,
+) {
   const modulePath = getAppModulePath(host, getProjectMainFile(project));
   addModuleImportToModule(host, modulePath, moduleName, src);
 }
@@ -39,9 +44,12 @@ export function addModuleImportToRootModule(host: Tree, moduleName: string, src:
  * @param moduleName name of module to import
  * @param src src location to import
  */
-export function addModuleImportToModule(host: Tree, modulePath: string, moduleName: string,
-                                        src: string) {
-
+export function addModuleImportToModule(
+  host: Tree,
+  modulePath: string,
+  moduleName: string,
+  src: string,
+) {
   const moduleSource = parseSourceFile(host, modulePath);
 
   if (!moduleSource) {
@@ -61,8 +69,10 @@ export function addModuleImportToModule(host: Tree, modulePath: string, moduleNa
 }
 
 /** Wraps the internal find module from options with undefined path handling  */
-export async function findModuleFromOptions(host: Tree, options: ComponentOptions):
-  Promise<string | undefined> {
+export async function findModuleFromOptions(
+  host: Tree,
+  options: ComponentOptions,
+): Promise<string | undefined> {
   const workspace = await getWorkspace(host);
 
   if (!options.project) {

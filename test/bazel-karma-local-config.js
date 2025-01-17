@@ -3,8 +3,6 @@
  * want to launch any browser and just enable manual browser debugging.
  */
 
-const bazelKarma = require('@bazel/concatjs');
-
 module.exports = config => {
   const overwrites = {};
 
@@ -15,7 +13,7 @@ module.exports = config => {
   Object.defineProperty(overwrites, 'browsers', {
     get: () => [],
     set: () => {},
-    enumerable: true
+    enumerable: true,
   });
 
   // Ensures that tests start executing once browsers have been manually connected. We need
@@ -30,8 +28,19 @@ module.exports = config => {
   // relies on ibazel to write to the `stdin` interface. When running without ibazel, the
   // watcher will kill concatjs since there is no data written to the `stdin` interface.
   if (process.env['IBAZEL_NOTIFY_CHANGES'] !== 'y') {
-    delete bazelKarma['watcher'];
+    // We pre-define a plugins array that captures registration of Karma plugins
+    // and unsets the watcher definitions so that no watcher can be configured.
+    overwrites.plugins = new KarmaPluginArrayWithoutWatchers();
   }
 
   config.set(overwrites);
 };
+
+class KarmaPluginArrayWithoutWatchers extends Array {
+  // The Bazel Karma rules only register new plugins using `.push`.
+  push(...plugins) {
+    plugins.filter(p => typeof p === 'object').forEach(p => delete p.watcher);
+
+    super.push(...plugins);
+  }
+}

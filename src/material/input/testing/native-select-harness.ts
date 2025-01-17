@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
@@ -13,7 +13,6 @@ import {
   NativeOptionHarnessFilters,
   NativeSelectHarnessFilters,
 } from './native-select-harness-filters';
-
 
 /** Harness for interacting with a native `select` in tests. */
 export class MatNativeSelectHarness extends MatFormFieldControlHarness {
@@ -31,29 +30,29 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
 
   /** Gets a boolean promise indicating if the select is disabled. */
   async isDisabled(): Promise<boolean> {
-    return (await this.host()).getProperty('disabled');
+    return (await this.host()).getProperty<boolean>('disabled');
   }
 
   /** Gets a boolean promise indicating if the select is required. */
   async isRequired(): Promise<boolean> {
-    return (await this.host()).getProperty('required');
+    return (await this.host()).getProperty<boolean>('required');
   }
 
   /** Gets a boolean promise indicating if the select is in multi-selection mode. */
   async isMultiple(): Promise<boolean> {
-    return (await this.host()).getProperty('multiple');
+    return (await this.host()).getProperty<boolean>('multiple');
   }
 
   /** Gets the name of the select. */
   async getName(): Promise<string> {
     // The "name" property of the native select is never undefined.
-    return (await (await this.host()).getProperty('name'))!;
+    return await (await this.host()).getProperty<string>('name');
   }
 
   /** Gets the id of the select. */
   async getId(): Promise<string> {
     // We're guaranteed to have an id, because the `matNativeControl` always assigns one.
-    return (await (await this.host()).getProperty('id'))!;
+    return await (await this.host()).getProperty<string>('id');
   }
 
   /** Focuses the select and returns a void promise that indicates when the action is complete. */
@@ -72,8 +71,7 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
   }
 
   /** Gets the options inside the select panel. */
-  async getOptions(filter: NativeOptionHarnessFilters = {}):
-    Promise<MatNativeOptionHarness[]> {
+  async getOptions(filter: NativeOptionHarnessFilters = {}): Promise<MatNativeOptionHarness[]> {
     return this.locatorForAll(MatNativeOptionHarness.with(filter))();
   }
 
@@ -92,7 +90,7 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
 
     const [host, optionIndexes] = await parallel(() => [
       this.host(),
-      parallel(() => options.slice(0, isMultiple ? undefined : 1).map(option => option.getIndex()))
+      parallel(() => options.slice(0, isMultiple ? undefined : 1).map(option => option.getIndex())),
     ]);
 
     await host.selectOptions(...optionIndexes);

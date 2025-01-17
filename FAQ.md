@@ -47,18 +47,13 @@ more help.
 
 Our team is focused on UI components and has decided to be agnostic to how those components are
 laid out. We suggest looking at existing layout systems in the front-end ecosystem, as well as
-using native CSS Flexbox and CSS Grid. For an Angular-oriented layout library,
-[`angular/flex-layout`][flex-layout] is a community-maintained project under the Angular umbrella.
+using native CSS Flexbox and CSS Grid.
 
 ## What's your relationship to [MDC Web][]?
 
-MDC Web and Angular Material were created independently by two different teams inside Google.
-The Angular team is now working with the MDC team to share more code to reduce duplication. To that
-end, we are developing new, API-compatible versions of the Angular Material components backed by
-MDC Web. [See @jelbourn's 2019 ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891) for more details.
+Read more about the [current state of our relationship with MDC Web on our blog](https://blog.angular.dev/the-future-of-material-support-in-angular-7fa0662ecc4b).
 
 
-[flex-layout]: https://github.com/angular/flex-layout/
 [StackOverflow]: https://stackoverflow.com
 [Gitter]: https://gitter.im/angular/material2
 [labels]: https://github.com/angular/components/labels

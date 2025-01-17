@@ -3,26 +3,24 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {QueryList} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
 import {
-  UP_ARROW,
   DOWN_ARROW,
+  END,
+  HOME,
   LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
   RIGHT_ARROW,
   TAB,
-  A,
-  Z,
-  ZERO,
-  NINE,
+  UP_ARROW,
   hasModifierKey,
-  HOME,
-  END,
 } from '@angular/cdk/keycodes';
-import {debounceTime, filter, map, tap} from 'rxjs/operators';
+import {EffectRef, Injector, QueryList, Signal, effect, isSignal, signal} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
+import {Typeahead} from './typeahead';
 
 /** This interface is for items that can be passed to a ListKeyManager. */
 export interface ListKeyManagerOption {
@@ -42,14 +40,17 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
-  private _activeItem: T | null = null;
+  private _activeItem = signal<T | null>(null);
   private _wrap = false;
-  private readonly _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
+  private _itemChangesSubscription?: Subscription;
   private _vertical = true;
   private _horizontal: 'ltr' | 'rtl' | null;
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
   private _homeAndEnd = false;
+  private _pageUpAndDown = {enabled: false, delta: 10};
+  private _effectRef: EffectRef | undefined;
+  private _typeahead?: Typeahead<T>;
 
   /**
    * Predicate function that can be used to check whether an item should be skipped
@@ -57,24 +58,25 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   private _skipPredicateFn = (item: T) => item.disabled;
 
-  // Buffer for the letters that the user has pressed when the typeahead option is turned on.
-  private _pressedLetters: string[] = [];
-
-  constructor(private _items: QueryList<T> | T[]) {
+  constructor(items: QueryList<T> | T[] | readonly T[]);
+  constructor(items: Signal<T[]> | Signal<readonly T[]>, injector: Injector);
+  constructor(
+    private _items: QueryList<T> | T[] | readonly T[] | Signal<T[]> | Signal<readonly T[]>,
+    injector?: Injector,
+  ) {
     // We allow for the items to be an array because, in some cases, the consumer may
     // not have access to a QueryList of the items they want to manage (e.g. when the
     // items aren't being collected via `ViewChildren` or `ContentChildren`).
     if (_items instanceof QueryList) {
-      _items.changes.subscribe((newItems: QueryList<T>) => {
-        if (this._activeItem) {
-          const itemArray = newItems.toArray();
-          const newIndex = itemArray.indexOf(this._activeItem);
+      this._itemChangesSubscription = _items.changes.subscribe((newItems: QueryList<T>) =>
+        this._itemsChanged(newItems.toArray()),
+      );
+    } else if (isSignal(_items)) {
+      if (!injector && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        throw new Error('ListKeyManager constructed with a signal must receive an injector');
+      }
 
-          if (newIndex > -1 && newIndex !== this._activeItemIndex) {
-            this._activeItemIndex = newIndex;
-          }
-        }
-      });
+      this._effectRef = effect(() => this._itemsChanged(_items()), {injector});
     }
   }
 
@@ -140,41 +142,31 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
   withTypeAhead(debounceInterval: number = 200): this {
-    if ((typeof ngDevMode === 'undefined' || ngDevMode) && (this._items.length &&
-        this._items.some(item => typeof item.getLabel !== 'function'))) {
-      throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      const items = this._getItemsArray();
+      if (items.length > 0 && items.some(item => typeof item.getLabel !== 'function')) {
+        throw Error('ListKeyManager items in typeahead mode must implement the `getLabel` method.');
+      }
     }
 
     this._typeaheadSubscription.unsubscribe();
 
-    // Debounce the presses of non-navigational keys, collect the ones that correspond to letters
-    // and convert those letters back into a string. Afterwards find the first item that starts
-    // with that string and select it.
-    this._typeaheadSubscription = this._letterKeyStream.pipe(
-      tap(letter => this._pressedLetters.push(letter)),
-      debounceTime(debounceInterval),
-      filter(() => this._pressedLetters.length > 0),
-      map(() => this._pressedLetters.join(''))
-    ).subscribe(inputString => {
-      const items = this._getItemsArray();
-
-      // Start at 1 because we want to start searching at the item immediately
-      // following the current active item.
-      for (let i = 1; i < items.length + 1; i++) {
-        const index = (this._activeItemIndex + i) % items.length;
-        const item = items[index];
-
-        if (!this._skipPredicateFn(item) &&
-            item.getLabel!().toUpperCase().trim().indexOf(inputString) === 0) {
-
-          this.setActiveItem(index);
-          break;
-        }
-      }
-
-      this._pressedLetters = [];
+    const items = this._getItemsArray();
+    this._typeahead = new Typeahead(items, {
+      debounceInterval: typeof debounceInterval === 'number' ? debounceInterval : undefined,
+      skipPredicate: item => this._skipPredicateFn(item),
     });
 
+    this._typeaheadSubscription = this._typeahead.selectedItem.subscribe(item => {
+      this.setActiveItem(item);
+    });
+
+    return this;
+  }
+
+  /** Cancels the current typeahead sequence. */
+  cancelTypeahead(): this {
+    this._typeahead?.reset();
     return this;
   }
 
@@ -185,6 +177,17 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   withHomeAndEnd(enabled: boolean = true): this {
     this._homeAndEnd = enabled;
+    return this;
+  }
+
+  /**
+   * Configures the key manager to activate every 10th, configured or first/last element in up/down direction
+   * respectively when the Page-Up or Page-Down key is pressed.
+   * @param enabled Whether pressing the Page-Up or Page-Down key activates the first/last item.
+   * @param delta Whether pressing the Home or End key activates the first/last item.
+   */
+  withPageUpDown(enabled: boolean = true, delta: number = 10): this {
+    this._pageUpAndDown = {enabled, delta};
     return this;
   }
 
@@ -201,11 +204,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   setActiveItem(item: T): void;
 
   setActiveItem(item: any): void {
-    const previousActiveItem = this._activeItem;
+    const previousActiveItem = this._activeItem();
 
     this.updateActiveItem(item);
 
-    if (this._activeItem !== previousActiveItem) {
+    if (this._activeItem() !== previousActiveItem) {
       this.change.next(this._activeItemIndex);
     }
   }
@@ -274,15 +277,28 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
           return;
         }
 
+      case PAGE_UP:
+        if (this._pageUpAndDown.enabled && isModifierAllowed) {
+          const targetIndex = this._activeItemIndex - this._pageUpAndDown.delta;
+          this._setActiveItemByIndex(targetIndex > 0 ? targetIndex : 0, 1);
+          break;
+        } else {
+          return;
+        }
+
+      case PAGE_DOWN:
+        if (this._pageUpAndDown.enabled && isModifierAllowed) {
+          const targetIndex = this._activeItemIndex + this._pageUpAndDown.delta;
+          const itemsLength = this._getItemsArray().length;
+          this._setActiveItemByIndex(targetIndex < itemsLength ? targetIndex : itemsLength - 1, -1);
+          break;
+        } else {
+          return;
+        }
+
       default:
-      if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
-          // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-          // otherwise fall back to resolving alphanumeric characters via the keyCode.
-          if (event.key && event.key.length === 1) {
-            this._letterKeyStream.next(event.key.toLocaleUpperCase());
-          } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-            this._letterKeyStream.next(String.fromCharCode(keyCode));
-          }
+        if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
+          this._typeahead?.handleKey(event);
         }
 
         // Note that we return here, in order to avoid preventing
@@ -290,7 +306,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return;
     }
 
-    this._pressedLetters = [];
+    this._typeahead?.reset();
     event.preventDefault();
   }
 
@@ -301,12 +317,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** The active item. */
   get activeItem(): T | null {
-    return this._activeItem;
+    return this._activeItem();
   }
 
   /** Gets whether the user is currently typing into the manager using the typeahead feature. */
   isTyping(): boolean {
-    return this._pressedLetters.length > 0;
+    return !!this._typeahead && this._typeahead.isTyping();
   }
 
   /** Sets the active item to the first enabled item in the list. */
@@ -316,7 +332,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Sets the active item to the last enabled item in the list. */
   setLastItemActive(): void {
-    this._setActiveItemByIndex(this._items.length - 1, -1);
+    this._setActiveItemByIndex(this._getItemsArray().length - 1, -1);
   }
 
   /** Sets the active item to the next enabled item in the list. */
@@ -326,8 +342,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Sets the active item to a previous enabled item in the list. */
   setPreviousItemActive(): void {
-    this._activeItemIndex < 0 && this._wrap ? this.setLastItemActive()
-                                            : this._setActiveItemByDelta(-1);
+    this._activeItemIndex < 0 && this._wrap
+      ? this.setLastItemActive()
+      : this._setActiveItemByDelta(-1);
   }
 
   /**
@@ -348,8 +365,19 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     const activeItem = itemArray[index];
 
     // Explicitly check for `null` and `undefined` because other falsy values are valid.
-    this._activeItem = activeItem == null ? null : activeItem;
+    this._activeItem.set(activeItem == null ? null : activeItem);
     this._activeItemIndex = index;
+    this._typeahead?.setCurrentSelectedItemIndex(index);
+  }
+
+  /** Cleans up the key manager. */
+  destroy() {
+    this._typeaheadSubscription.unsubscribe();
+    this._itemChangesSubscription?.unsubscribe();
+    this._effectRef?.destroy();
+    this._typeahead?.destroy();
+    this.tabOut.complete();
+    this.change.complete();
   }
 
   /**
@@ -370,7 +398,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     const items = this._getItemsArray();
 
     for (let i = 1; i <= items.length; i++) {
-      const index = (this._activeItemIndex + (delta * i) + items.length) % items.length;
+      const index = (this._activeItemIndex + delta * i + items.length) % items.length;
       const item = items[index];
 
       if (!this._skipPredicateFn(item)) {
@@ -413,7 +441,25 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /** Returns the items as an array. */
-  private _getItemsArray(): T[] {
+  private _getItemsArray(): T[] | readonly T[] {
+    if (isSignal(this._items)) {
+      return this._items();
+    }
+
     return this._items instanceof QueryList ? this._items.toArray() : this._items;
+  }
+
+  /** Callback for when the items have changed. */
+  private _itemsChanged(newItems: T[] | readonly T[]) {
+    this._typeahead?.setItems(newItems);
+    const activeItem = this._activeItem();
+    if (activeItem) {
+      const newIndex = newItems.indexOf(activeItem);
+
+      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+        this._activeItemIndex = newIndex;
+        this._typeahead?.setCurrentSelectedItemIndex(newIndex);
+      }
+    }
   }
 }

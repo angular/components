@@ -1,8 +1,0 @@
-## Compiled JavaScript files
-**/*.js
-**/*.js.map
-
-node_modules/
-
-firebase-debug.log
-ui-debug.log

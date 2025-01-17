@@ -1,11 +1,12 @@
 # Developer guide: getting your environment set up
-
 1. Make sure you have both `node` and `yarn` installed.
    We recommend using `nvm` to manage your node versions.
 2. angular/components uses Bazel which requires certain Bash and UNIX tools.
-   - On Windows: Follow the [instructions](https://docs.bazel.build/versions/master/install-windows.html#installing-compilers-and-language-runtimes)
+   - On Windows: Follow the [instructions](https://bazel.build/install/windows#installing-compilers-and-language-runtimes)
    to install [`MSYS2`](https://www.msys2.org/) and the listed "Common MSYS2 packages".
-   Afterwards add `C:\msys64\usr\bin` to the `PATH` environment variable.
+   Afterwards create an environment variable `BAZEL_SH` and its value to be `C:\msys64\usr\bin\bash.exe`.
+   Alternatively, you can also use [Chocolately](https://bazel.build/install/windows#chocolately) which will install latest available version of Bazel and its dependencies.
+   - On Ubuntu: Make sure `gcc` is installed, you can check if `gcc` is installed on your machine by running `which gcc`, if the command returns a path then the compiler is installed, otherwise can be installed with `sudo apt-get install build-essential`.
 3. Fork the `angular/components` repo on GitHub.
 4. Clone your fork to your machine with `git clone`.
    Recommendation: name your git remotes `upstream` for `angular/components`
@@ -19,10 +20,12 @@ To bring up a local server, run `yarn dev-app`. This will automatically watch fo
 and rebuild. The browser should refresh automatically when changes are made.
 
 ### Running tests
-
 To run unit tests, run `yarn test <target>`. The `target` can be either a short name (e.g. `yarn test button`) or an explicit path `yarn test src/cdk/stepper`.
 To run the e2e tests, run `yarn e2e`.
 To run lint, run `yarn lint`.
+
+You can debug unit tests by running `yarn test` with the `--debug` option. This will allow you to
+manually connect a browser to the Karma server.
 
 ### Getting Packages from Build Artifacts
 Each CI run for a Pull Request stores the built Angular packages as
@@ -64,3 +67,34 @@ packages locally and test them by either of the following ways:
 If you're making changes to a public API, they need to be propagated to our public API golden files.
 To save the changes you can run `yarn approve-api <target>` and to review the changes, you can look
 at the file under `tools/public_api_guard/<target>.d.ts`.
+
+
+### Disabling Git hooks
+If your development workflow does not intend the commit message validation to run automatically
+when commits are being created, or if you do not want to run the formatter upon `git commit`, you
+can disable any installed Git hooks by setting `HUSKY=0` in your shell environment. e.g.
+
+```bash
+# .zshrc
+export HUSKY=0
+
+# .bashrc
+export HUSKY=0
+```
+
+### Injecting variables into the dev app
+
+A set of environment variables is made available within the dev-app. Such variables
+will be injected into the dev-app, so that e.g. API keys can be used for development
+without requiring secrets to be committed. 
+
+The following variables are currently used in the dev-app:
+
+* `GOOGLE_MAPS_KEY` - Optional key for the Google Maps API.
+
+For example, you can store a personal development Google Maps API key for the
+dev-app within your `.bashrc` or `.zshrc` file.
+
+```bash
+export GOOGLE_MAPS_KEY=<api-key>
+```

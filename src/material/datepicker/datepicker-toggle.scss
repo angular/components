@@ -1,30 +1,26 @@
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
 
-.mat-form-field-appearance-legacy {
-  .mat-form-field-prefix,
-  .mat-form-field-suffix {
-    .mat-datepicker-toggle-default-icon {
-      width: 1em;
-    }
+$_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots());
+
+// We support the case where the form field is disabled, but the datepicker is not.
+// MDC sets `pointer-events: none` on disabled form fields which prevents clicks on the toggle.
+.mat-datepicker-toggle {
+  pointer-events: auto;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, toggle-icon-color);
   }
 }
 
-.mat-form-field:not(.mat-form-field-appearance-legacy) {
-  .mat-form-field-prefix,
-  .mat-form-field-suffix {
-    .mat-datepicker-toggle-default-icon {
-      display: block;
-      width: 1.5em;
-      height: 1.5em;
-    }
-
-    .mat-icon-button .mat-datepicker-toggle-default-icon {
-      margin: auto;
-    }
+.mat-datepicker-toggle-active {
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, toggle-active-state-icon-color);
   }
 }
 
-@include a11y.high-contrast(active, off) {
+@include cdk.high-contrast {
   .mat-datepicker-toggle-default-icon {
     // On Chromium-based browsers the icon doesn't appear to inherit the text color in high
     // contrast mode so we have to set it explicitly. This is a no-op on IE and Firefox.

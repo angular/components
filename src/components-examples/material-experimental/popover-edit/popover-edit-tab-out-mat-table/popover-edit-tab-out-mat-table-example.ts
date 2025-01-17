@@ -1,7 +1,12 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -38,9 +43,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'popover-edit-tab-out-mat-table-example',
-  styleUrls: ['popover-edit-tab-out-mat-table-example.css'],
+  styleUrl: 'popover-edit-tab-out-mat-table-example.css',
   templateUrl: 'popover-edit-tab-out-mat-table-example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatTableModule,
+    FormsModule,
+    MatPopoverEditModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+  ],
 })
 export class PopoverEditTabOutMatTableExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -50,13 +63,17 @@ export class PopoverEditTabOutMatTableExample {
   readonly preservedWeightValues = new WeakMap<PeriodicElement, any>();
 
   onSubmitName(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.name = f.value.name;
   }
 
   onSubmitWeight(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.weight = f.value.weight;
   }

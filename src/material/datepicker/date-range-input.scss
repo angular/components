@@ -1,14 +1,18 @@
+@use 'sass:math';
+@use '@angular/cdk';
+
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
-@use '../core/style/private';
-@use '../../cdk/a11y';
+@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use '../core/tokens/token-utils';
 
 $date-range-input-separator-spacing: 4px;
 $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spacing});
+$_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
 
 @mixin _placeholder-transition($property) {
   transition: #{$property} variables.$swift-ease-out-duration
-    private.private-div(variables.$swift-ease-out-duration, 3)
+    math.div(variables.$swift-ease-out-duration, 3)
     variables.$swift-ease-out-timing-function;
 }
 
@@ -28,6 +32,18 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 .mat-date-range-input-separator {
   @include _placeholder-transition(opacity);
   margin: 0 $date-range-input-separator-spacing;
+
+  @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.create-token-slot(color, range-input-separator-color);
+
+    .mat-form-field-disabled & {
+      @include token-utils.create-token-slot(color, range-input-disabled-state-separator-color);
+    }
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
 }
 
 .mat-date-range-input-separator-hidden {
@@ -40,8 +56,24 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   transition: none;
 }
 
+// Wrapper around the inner inputs. Used to facilitate the auto-resizing input.
+.mat-date-range-input-wrapper {
+  position: relative;
+  overflow: hidden;
+  max-width: $date-range-input-part-max-width;
+}
+
+.mat-date-range-input-end-wrapper {
+  // Allow the end input to fill the rest of the available space.
+  flex-grow: 1;
+}
+
 // Underlying input inside the range input.
 .mat-date-range-input-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+
   // Reset the input so it's just a transparent rectangle.
   font: inherit;
   background: transparent;
@@ -55,11 +87,9 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   -webkit-appearance: none;
   width: 100%;
 
-  // Remove IE's default clear and reveal icons.
-  &::-ms-clear,
-  &::-ms-reveal {
-    display: none;
-  }
+  // Does nothing on Chrome, but necessary for the text
+  // to align in some cases on Safari and Firefox.
+  height: 100%;
 
   // Undo the red box-shadow glow added by Firefox on invalid inputs.
   // See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-ui-invalid
@@ -69,6 +99,13 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 
   @include vendor-prefixes.input-placeholder {
     @include _placeholder-transition(color);
+  }
+
+  @include token-utils.use-tokens($_tokens...) {
+
+    &[disabled] {
+      @include token-utils.create-token-slot(color, range-input-disabled-state-text-color);
+    }
   }
 
   .mat-form-field-hide-placeholder &,
@@ -84,11 +121,17 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
       -webkit-text-fill-color: transparent;
       transition: none;
 
-      @include a11y.high-contrast(active, off) {
+      @include cdk.high-contrast {
         // In high contrast mode the browser will render the
         // placeholder despite the `color: transparent` above.
         opacity: 0;
       }
+    }
+  }
+
+  ._mat-animation-noopable & {
+    @include vendor-prefixes.input-placeholder {
+      transition: none;
     }
   }
 }
@@ -96,7 +139,7 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
 // We want the start input to be flush against the separator, no matter how much text it has, but
 // the problem is that inputs have a fixed width. We work around the issue by implementing an
 // auto-resizing input that stretches based on its text, up to a point. It works by having
-// a relatively-positioned wrapper (`.mat-date-range-input-start-wrapper` below) and an absolutely-
+// a relatively-positioned wrapper (`.mat-date-range-input-wrapper` below) and an absolutely-
 // positioned `input`, as well as a `span` inside the wrapper which mirrors the input's value and
 // placeholder. As the user is typing, the value gets mirrored in the span which causes the wrapper
 // to stretch and the input with it.
@@ -117,26 +160,7 @@ $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spaci
   min-width: 2px;
 }
 
-// Wrapper around the start input. Used to facilitate the auto-resizing input.
-.mat-date-range-input-start-wrapper {
-  position: relative;
-  overflow: hidden;
-  max-width: $date-range-input-part-max-width;
-
-  .mat-date-range-input-inner {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-}
-
-// Wrapper around the end input that makes sure that it has the proper size.
-.mat-date-range-input-end-wrapper {
-  flex-grow: 1;
-  max-width: $date-range-input-part-max-width;
-}
-
-.mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+.mat-mdc-form-field-type-mat-date-range-input .mat-mdc-form-field-infix {
   // Bump the default width slightly since it's somewhat cramped with two inputs and a separator.
   width: 200px;
 }

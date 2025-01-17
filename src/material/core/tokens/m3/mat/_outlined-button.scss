@@ -1,0 +1,54 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, outlined-button);
+
+/// Generates custom tokens for the mat-outlined-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-outlined-button
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    horizontal-padding: token-definition.hardcode(24px, $exclude-hardcoded),
+    icon-spacing: token-definition.hardcode(8px, $exclude-hardcoded),
+    icon-offset: token-definition.hardcode(-8px, $exclude-hardcoded),
+    state-layer-color: map.get($systems, md-sys-color, primary),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, primary),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  ), (
+    // Color variants:
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      state-layer-color: map.get($systems, md-sys-color, secondary),
+      ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, secondary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      state-layer-color: map.get($systems, md-sys-color, tertiary),
+      ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, tertiary),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    error: (
+      state-layer-color: map.get($systems, md-sys-color, error),
+      ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, error),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

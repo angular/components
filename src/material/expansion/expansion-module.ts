@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {PortalModule} from '@angular/cdk/portal';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
 import {MatAccordion} from './accordion';
@@ -20,10 +19,11 @@ import {
   MatExpansionPanelTitle,
 } from './expansion-panel-header';
 
-
 @NgModule({
-  imports: [CommonModule, MatCommonModule, CdkAccordionModule, PortalModule],
-  exports: [
+  imports: [
+    MatCommonModule,
+    CdkAccordionModule,
+    PortalModule,
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelActionRow,
@@ -32,7 +32,7 @@ import {
     MatExpansionPanelDescription,
     MatExpansionPanelContent,
   ],
-  declarations: [
+  exports: [
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelActionRow,

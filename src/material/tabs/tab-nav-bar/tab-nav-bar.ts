@@ -3,95 +3,183 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
-import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
-  Directive,
   ElementRef,
   forwardRef,
-  Inject,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
-  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
+  inject,
+  HostAttributeToken,
 } from '@angular/core';
 import {
-  CanDisable,
-  CanDisableRipple,
-  HasTabIndex,
   MAT_RIPPLE_GLOBAL_OPTIONS,
-  mixinDisabled,
-  mixinDisableRipple,
-  mixinTabIndex, RippleConfig,
+  MatRipple,
+  RippleConfig,
   RippleGlobalOptions,
-  RippleRenderer,
   RippleTarget,
   ThemePalette,
+  _StructuralStylesLoader,
 } from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {Platform} from '@angular/cdk/platform';
+import {MatInkBar, InkBarItem} from '../ink-bar';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
-import {MatInkBar} from '../ink-bar';
-import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
+import {MatPaginatedTabHeader} from '../paginated-tab-header';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
- * Base class with all of the `MatTabNav` functionality.
- * @docs-private
+ * Navigation component matching the styles of the tab group header.
+ * Provides anchored navigation with animated ink bar.
  */
-@Directive()
-export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements AfterContentChecked,
-  AfterContentInit, OnDestroy {
+@Component({
+  selector: '[mat-tab-nav-bar]',
+  exportAs: 'matTabNavBar, matTabNav',
+  templateUrl: 'tab-nav-bar.html',
+  styleUrl: 'tab-nav-bar.css',
+  host: {
+    '[attr.role]': '_getRole()',
+    'class': 'mat-mdc-tab-nav-bar mat-mdc-tab-header',
+    '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',
+    '[class.mat-mdc-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
+    '[class.mat-mdc-tab-nav-bar-stretch-tabs]': 'stretchTabs',
+    '[class.mat-primary]': 'color !== "warn" && color !== "accent"',
+    '[class.mat-accent]': 'color === "accent"',
+    '[class.mat-warn]': 'color === "warn"',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[style.--mat-tab-animation-duration]': 'animationDuration',
+  },
+  encapsulation: ViewEncapsulation.None,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [MatRipple, CdkObserveContent],
+})
+export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
+  /** Whether the ink bar should fit its width to the size of the tab label content. */
+  @Input({transform: booleanAttribute})
+  get fitInkBarToContent(): boolean {
+    return this._fitInkBarToContent.value;
+  }
+  set fitInkBarToContent(value: boolean) {
+    this._fitInkBarToContent.next(value);
+    this._changeDetectorRef.markForCheck();
+  }
+  _fitInkBarToContent = new BehaviorSubject(false);
+
+  /** Whether tabs should be stretched to fill the header. */
+  @Input({alias: 'mat-stretch-tabs', transform: booleanAttribute})
+  stretchTabs: boolean = true;
+
+  @Input()
+  get animationDuration(): string {
+    return this._animationDuration;
+  }
+
+  set animationDuration(value: string | number) {
+    const stringValue = value + '';
+    this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
+  }
+
+  private _animationDuration: string;
 
   /** Query list of all tab links of the tab navigation. */
-  abstract override _items: QueryList<MatPaginatedTabHeaderItem & {active: boolean}>;
+  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
 
-  /** Background color of the tab nav. */
+  /**
+   * Theme color of the background of the tab nav. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
   @Input()
-  get backgroundColor(): ThemePalette { return this._backgroundColor; }
+  get backgroundColor(): ThemePalette {
+    return this._backgroundColor;
+  }
+
   set backgroundColor(value: ThemePalette) {
     const classList = this._elementRef.nativeElement.classList;
-    classList.remove(`mat-background-${this.backgroundColor}`);
+    classList.remove('mat-tabs-with-background', `mat-background-${this.backgroundColor}`);
 
     if (value) {
-      classList.add(`mat-background-${value}`);
+      classList.add('mat-tabs-with-background', `mat-background-${value}`);
     }
 
     this._backgroundColor = value;
   }
+
   private _backgroundColor: ThemePalette;
 
   /** Whether the ripple effect is disabled or not. */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: any) { this._disableRipple = coerceBooleanProperty(value); }
-  private _disableRipple: boolean = false;
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
 
-  /** Theme color of the nav bar. */
+  /**
+   * Theme color of the nav bar. This API is supported in M2 themes only, it has
+   * no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
   @Input() color: ThemePalette = 'primary';
 
-  constructor(elementRef: ElementRef,
-              @Optional() dir: Directionality,
-              ngZone: NgZone,
-              changeDetectorRef: ChangeDetectorRef,
-              viewportRuler: ViewportRuler,
-              platform: Platform,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  /**
+   * Associated tab panel controlled by the nav bar. If not provided, then the nav bar
+   * follows the ARIA link / navigation landmark pattern. If provided, it follows the
+   * ARIA tabs design pattern.
+   */
+  @Input() tabPanel?: MatTabNavPanel;
+
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
+  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
+  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
+  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
+  _inkBar: MatInkBar;
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const elementRef = inject(ElementRef);
+    const dir = inject(Directionality, {optional: true});
+    const ngZone = inject(NgZone);
+    const changeDetectorRef = inject(ChangeDetectorRef);
+    const viewportRuler = inject(ViewportRuler);
+    const platform = inject(Platform);
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
+
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
+    this.disablePagination =
+      defaultConfig && defaultConfig.disablePagination != null
+        ? defaultConfig.disablePagination
+        : false;
+    this.fitInkBarToContent =
+      defaultConfig && defaultConfig.fitInkBarToContent != null
+        ? defaultConfig.fitInkBarToContent
+        : false;
+    this.stretchTabs =
+      defaultConfig && defaultConfig.stretchTabs != null ? defaultConfig.stretchTabs : true;
   }
 
   protected _itemSelected() {
@@ -99,13 +187,21 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
   }
 
   override ngAfterContentInit() {
+    this._inkBar = new MatInkBar(this._items);
     // We need this to run before the `changes` subscription in parent to ensure that the
     // selectedIndex is up-to-date by the time the super class starts looking for it.
-    this._items.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      this.updateActiveLink();
-    });
+    this._items.changes
+      .pipe(startWith(null), takeUntil(this._destroyed))
+      .subscribe(() => this.updateActiveLink());
 
     super.ngAfterContentInit();
+  }
+
+  override ngAfterViewInit() {
+    if (!this.tabPanel && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      throw new Error('A mat-tab-nav-panel must be specified via [tabPanel].');
+    }
+    super.ngAfterViewInit();
   }
 
   /** Notifies the component that the active link has been changed. */
@@ -120,82 +216,87 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
       if (items[i].active) {
         this.selectedIndex = i;
         this._changeDetectorRef.markForCheck();
+
+        if (this.tabPanel) {
+          this.tabPanel._activeTabId = items[i].id;
+        }
+
         return;
       }
     }
 
-    // The ink bar should hide itself if no items are active.
     this.selectedIndex = -1;
-    this._inkBar.hide();
+  }
+
+  _getRole(): string | null {
+    return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
   }
 }
-
 
 /**
- * Navigation component matching the styles of the tab group header.
- * Provides anchored navigation with animated ink bar.
+ * Link inside a `mat-tab-nav-bar`.
  */
 @Component({
-  selector: '[mat-tab-nav-bar]',
-  exportAs: 'matTabNavBar, matTabNav',
-  inputs: ['color'],
-  templateUrl: 'tab-nav-bar.html',
-  styleUrls: ['tab-nav-bar.css'],
-  host: {
-    'class': 'mat-tab-nav-bar mat-tab-header',
-    '[class.mat-tab-header-pagination-controls-enabled]': '_showPaginationControls',
-    '[class.mat-tab-header-rtl]': "_getLayoutDirection() == 'rtl'",
-    '[class.mat-primary]': 'color !== "warn" && color !== "accent"',
-    '[class.mat-accent]': 'color === "accent"',
-    '[class.mat-warn]': 'color === "warn"',
-  },
+  selector: '[mat-tab-link], [matTabLink]',
+  exportAs: 'matTabLink',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  templateUrl: 'tab-link.html',
+  styleUrl: 'tab-link.css',
+  host: {
+    'class': 'mdc-tab mat-mdc-tab-link mat-focus-indicator',
+    '[attr.aria-controls]': '_getAriaControls()',
+    '[attr.aria-current]': '_getAriaCurrent()',
+    '[attr.aria-disabled]': 'disabled',
+    '[attr.aria-selected]': '_getAriaSelected()',
+    '[attr.id]': 'id',
+    '[attr.tabIndex]': '_getTabIndex()',
+    '[attr.role]': '_getRole()',
+    '[class.mat-mdc-tab-disabled]': 'disabled',
+    '[class.mdc-tab--active]': 'active',
+    '(focus)': '_handleFocus()',
+    '(keydown)': '_handleKeydown($event)',
+  },
+  imports: [MatRipple],
 })
-export class MatTabNav extends _MatTabNavBase {
-  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
-  @ViewChild(MatInkBar, {static: true}) _inkBar: MatInkBar;
-  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
-  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
-  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
-  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
+export class MatTabLink
+  extends InkBarItem
+  implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption
+{
+  private _tabNavBar = inject(MatTabNav);
+  elementRef = inject(ElementRef);
+  private _focusMonitor = inject(FocusMonitor);
 
-  constructor(elementRef: ElementRef,
-    @Optional() dir: Directionality,
-    ngZone: NgZone,
-    changeDetectorRef: ChangeDetectorRef,
-    viewportRuler: ViewportRuler,
-    platform: Platform,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
-    super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
-  }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
-}
-
-// Boilerplate for applying mixins to MatTabLink.
-const _MatTabLinkMixinBase = mixinTabIndex(mixinDisableRipple(mixinDisabled(class {})));
-
-/** Base class with all of the `MatTabLink` functionality. */
-@Directive()
-export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewInit, OnDestroy,
-  CanDisable, CanDisableRipple, HasTabIndex, RippleTarget, FocusableOption {
+  private readonly _destroyed = new Subject<void>();
 
   /** Whether the tab link is active or not. */
   protected _isActive: boolean = false;
 
   /** Whether the link is active. */
-  @Input()
-  get active(): boolean { return this._isActive; }
-  set active(value: boolean) {
-    const newValue = coerceBooleanProperty(value);
+  @Input({transform: booleanAttribute})
+  get active(): boolean {
+    return this._isActive;
+  }
 
-    if (newValue !== this._isActive) {
+  set active(value: boolean) {
+    if (value !== this._isActive) {
       this._isActive = value;
       this._tabNavBar.updateActiveLink();
     }
   }
+
+  /** Whether the tab link is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
+
+  /** Whether ripples are disabled on the tab link. */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
+
+  @Input({
+    transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),
+  })
+  tabIndex: number = 0;
 
   /**
    * Ripple configuration for ripples that are launched on pointer down. The ripple config
@@ -210,24 +311,41 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
    * @docs-private
    */
   get rippleDisabled(): boolean {
-    return this.disabled || this.disableRipple || this._tabNavBar.disableRipple ||
-      !!this.rippleConfig.disabled;
+    return (
+      this.disabled ||
+      this.disableRipple ||
+      this._tabNavBar.disableRipple ||
+      !!this.rippleConfig.disabled
+    );
   }
 
-  constructor(
-      private _tabNavBar: _MatTabNavBase,
-      /** @docs-private */ public elementRef: ElementRef,
-      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
-      @Attribute('tabindex') tabIndex: string, private _focusMonitor: FocusMonitor,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  /** Unique id for the tab. */
+  @Input() id: string = inject(_IdGenerator).getId('mat-tab-link-');
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
 
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+    const globalRippleOptions = inject<RippleGlobalOptions | null>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+      optional: true,
+    });
+    const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.rippleConfig = globalRippleOptions || {};
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
 
     if (animationMode === 'NoopAnimations') {
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
     }
+
+    this._tabNavBar._fitInkBarToContent
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(fitInkBarToContent => {
+        this.fitInkBarToContent = fitInkBarToContent;
+      });
   }
 
   /** Focuses the tab link. */
@@ -239,7 +357,10 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
     this._focusMonitor.monitor(this.elementRef);
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+    super.ngOnDestroy();
     this._focusMonitor.stopMonitoring(this.elementRef);
   }
 
@@ -249,47 +370,73 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
     this._tabNavBar.focusIndex = this._tabNavBar._items.toArray().indexOf(this);
   }
 
-  static ngAcceptInputType_active: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
+  _handleKeydown(event: KeyboardEvent) {
+    if (event.keyCode === SPACE || event.keyCode === ENTER) {
+      if (this.disabled) {
+        event.preventDefault();
+      } else if (this._tabNavBar.tabPanel) {
+        // Only prevent the default action on space since it can scroll the page.
+        // Don't prevent enter since it can break link navigation.
+        if (event.keyCode === SPACE) {
+          event.preventDefault();
+        }
+
+        this.elementRef.nativeElement.click();
+      }
+    }
+  }
+
+  _getAriaControls(): string | null {
+    return this._tabNavBar.tabPanel
+      ? this._tabNavBar.tabPanel?.id
+      : this.elementRef.nativeElement.getAttribute('aria-controls');
+  }
+
+  _getAriaSelected(): string | null {
+    if (this._tabNavBar.tabPanel) {
+      return this.active ? 'true' : 'false';
+    } else {
+      return this.elementRef.nativeElement.getAttribute('aria-selected');
+    }
+  }
+
+  _getAriaCurrent(): string | null {
+    return this.active && !this._tabNavBar.tabPanel ? 'page' : null;
+  }
+
+  _getRole(): string | null {
+    return this._tabNavBar.tabPanel ? 'tab' : this.elementRef.nativeElement.getAttribute('role');
+  }
+
+  _getTabIndex(): number {
+    if (this._tabNavBar.tabPanel) {
+      return this._isActive && !this.disabled ? 0 : -1;
+    } else {
+      return this.disabled ? -1 : this.tabIndex;
+    }
+  }
 }
 
-
 /**
- * Link inside of a `mat-tab-nav-bar`.
+ * Tab panel component associated with MatTabNav.
  */
-@Directive({
-  selector: '[mat-tab-link], [matTabLink]',
-  exportAs: 'matTabLink',
-  inputs: ['disabled', 'disableRipple', 'tabIndex'],
+@Component({
+  selector: 'mat-tab-nav-panel',
+  exportAs: 'matTabNavPanel',
+  template: '<ng-content></ng-content>',
   host: {
-    'class': 'mat-tab-link mat-focus-indicator',
-    '[attr.aria-current]': 'active ? "page" : null',
-    '[attr.aria-disabled]': 'disabled',
-    '[attr.tabIndex]': 'tabIndex',
-    '[class.mat-tab-disabled]': 'disabled',
-    '[class.mat-tab-label-active]': 'active',
-    '(focus)': '_handleFocus()'
-  }
+    '[attr.aria-labelledby]': '_activeTabId',
+    '[attr.id]': 'id',
+    'class': 'mat-mdc-tab-nav-panel',
+    'role': 'tabpanel',
+  },
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatTabLink extends _MatTabLinkBase implements OnDestroy {
-  /** Reference to the RippleRenderer for the tab-link. */
-  private _tabLinkRipple: RippleRenderer;
+export class MatTabNavPanel {
+  /** Unique id for the tab panel. */
+  @Input() id: string = inject(_IdGenerator).getId('mat-tab-nav-panel-');
 
-  constructor(
-    tabNavBar: MatTabNav, elementRef: ElementRef, ngZone: NgZone,
-    platform: Platform,
-    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
-    @Attribute('tabindex') tabIndex: string, focusMonitor: FocusMonitor,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
-    super(tabNavBar, elementRef, globalRippleOptions, tabIndex, focusMonitor, animationMode);
-    this._tabLinkRipple = new RippleRenderer(this, ngZone, elementRef, platform);
-    this._tabLinkRipple.setupTriggerEvents(elementRef.nativeElement);
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-    this._tabLinkRipple._removeTriggerEvents();
-  }
+  /** Id of the active tab in the nav bar. */
+  _activeTabId?: string;
 }

@@ -1,16 +1,17 @@
+@use '@angular/cdk';
+
+@use '../core/tokens/m2/mat/sidenav' as tokens-mat-sidenav;
+@use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/layout-common';
-@use '../../cdk/a11y';
 
 $drawer-content-z-index: 1;
 $drawer-side-drawer-z-index: 2;
 $drawer-backdrop-z-index: 3;
 $drawer-over-drawer-z-index: 4;
 
-// stylelint-disable max-line-length
 // Mixin that creates a new stacking context.
 // see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
-// stylelint-enable
 @mixin drawer-stacking-context($z-index: 1) {
   position: relative;
 
@@ -26,8 +27,15 @@ $drawer-over-drawer-z-index: 4;
   // the application content does not get messed up with our own CSS.
   @include drawer-stacking-context();
 
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(color, content-text-color);
+    @include token-utils.create-token-slot(background-color, content-background-color);
+  }
+
   box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
 
   // Need this to take up space in the layout.
   display: block;
@@ -51,8 +59,10 @@ $drawer-over-drawer-z-index: 4;
   }
 
   // Note that the `NoopAnimationsModule` is being handled inside of the component code.
-  &.ng-animate-disabled, .ng-animate-disabled & {
-    .mat-drawer-backdrop, .mat-drawer-content {
+  &.ng-animate-disabled,
+  .ng-animate-disabled & {
+    .mat-drawer-backdrop,
+    .mat-drawer-content {
       transition: none;
     }
   }
@@ -75,6 +85,13 @@ $drawer-over-drawer-z-index: 4;
 
   &.mat-drawer-shown {
     visibility: visible;
+
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(background-color, scrim-color);
+    }
   }
 
   .mat-drawer-transition & {
@@ -85,7 +102,7 @@ $drawer-over-drawer-z-index: 4;
     }
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast {
     opacity: 0.5;
   }
 }
@@ -96,6 +113,10 @@ $drawer-over-drawer-z-index: 4;
   display: block;
   height: 100%;
   overflow: auto;
+
+  &.mat-drawer-content-hidden {
+    opacity: 0;
+  }
 
   .mat-drawer-transition & {
     transition: {
@@ -111,6 +132,18 @@ $drawer-over-drawer-z-index: 4;
 
   @include drawer-stacking-context($drawer-over-drawer-z-index);
 
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+    @include token-utils.create-token-slot(background-color, container-background-color);
+    @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+    @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+    @include token-utils.create-token-slot(width, container-width);
+  }
+
   display: block;
   position: absolute;
   top: 0;
@@ -121,14 +154,16 @@ $drawer-over-drawer-z-index: 4;
   overflow-y: auto; // TODO(kara): revisit scrolling behavior for drawers
   transform: translate3d(-100%, 0, 0);
 
-  &, [dir='rtl'] &.mat-drawer-end {
-    @include a11y.high-contrast(active, off) {
+  &,
+  [dir='rtl'] &.mat-drawer-end {
+    @include cdk.high-contrast {
       border-right: $high-contrast-border;
     }
   }
 
-  [dir='rtl'] &, &.mat-drawer-end {
-    @include a11y.high-contrast(active, off) {
+  [dir='rtl'] &,
+  &.mat-drawer-end {
+    @include cdk.high-contrast {
       border-left: $high-contrast-border;
       border-right: none;
     }
@@ -141,15 +176,95 @@ $drawer-over-drawer-z-index: 4;
   &.mat-drawer-end {
     right: 0;
     transform: translate3d(100%, 0, 0);
+
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   [dir='rtl'] & {
-    transform: translate3d(100%, 0, 0);
+    @include token-utils.use-tokens(
+      tokens-mat-sidenav.$prefix,
+      tokens-mat-sidenav.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      transform: translate3d(100%, 0, 0);
+
+      &.mat-drawer-end {
+        @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        left: 0;
+        right: auto;
+        transform: translate3d(-100%, 0, 0);
+      }
+    }
+  }
+
+  .mat-drawer-transition & {
+    transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  &:not(.mat-drawer-opened):not(.mat-drawer-animating) {
+    // Stops the sidenav from poking out (e.g. with the box shadow) while it's off-screen.
+    // We can't use `display` because it interrupts the transition and `transition-behavior`
+    // isn't available in all browsers.
+    visibility: hidden;
+    box-shadow: none;
+
+    // The `visibility` above should prevent focus from entering the sidenav, but if a child
+    // element has `visibility`, it'll override the inherited value. This guarantees that the
+    // content won't be focusable.
+    .mat-drawer-inner-container {
+      display: none;
+    }
+  }
+
+  &.mat-drawer-opened {
+    transform: none;
+  }
+}
+
+.mat-drawer-side {
+  box-shadow: none;
+
+  @include token-utils.use-tokens(
+    tokens-mat-sidenav.$prefix,
+    tokens-mat-sidenav.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(border-right-color, container-divider-color);
+    border-right-width: 1px;
+    border-right-style: solid;
 
     &.mat-drawer-end {
-      left: 0;
-      right: auto;
-      transform: translate3d(-100%, 0, 0);
+      @include token-utils.create-token-slot(border-left-color, container-divider-color);
+      border-left-width: 1px;
+      border-left-style: solid;
+      border-right: none;
+    }
+
+    [dir='rtl'] & {
+      @include token-utils.create-token-slot(border-left-color, container-divider-color);
+      border-left-width: 1px;
+      border-left-style: solid;
+      border-right: none; // Clears the default LTR border.
+
+      &.mat-drawer-end {
+        @include token-utils.create-token-slot(border-right-color, container-divider-color);
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-left: none;
+      }
     }
   }
 }
@@ -162,7 +277,6 @@ $drawer-over-drawer-z-index: 4;
   width: 100%;
   height: 100%;
   overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .mat-sidenav-fixed {

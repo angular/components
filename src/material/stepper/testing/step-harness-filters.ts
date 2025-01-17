@@ -3,12 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** Possible orientations for a stepper. */
-export const enum StepperOrientation {HORIZONTAL, VERTICAL}
+export enum StepperOrientation {
+  HORIZONTAL,
+  VERTICAL,
+}
 
 /** A set of criteria that can be used to filter a list of `MatStepHarness` instances. */
 export interface StepHarnessFilters extends BaseHarnessFilters {
@@ -36,4 +39,3 @@ export interface StepperButtonHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
   text?: string | RegExp;
 }
-

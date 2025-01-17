@@ -6,95 +6,32 @@ File any bugs against the [angular/components repo](https://github.com/angular/c
 
 ## Installation
 
-To install, run `npm install @angular/google-maps`.
+To install, run `ng add @angular/google-maps`.
+
+## Getting the API Key
+
+Follow [these steps](https://developers.google.com/maps/gmp-get-started) to get an API key that can be used to load Google Maps.
 
 ## Loading the API
 
-- First follow [these steps](https://developers.google.com/maps/gmp-get-started) to get an API key that can be used to load Google Maps.
-- Load the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API).
-- The Google Maps JavaScript API must be loaded before the `GoogleMap` component.
+Include the [Dynamic Library Import script](https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import) in the `index.html` of your app. When a Google Map is being rendered, it'll use the Dynamic Import API to load the necessary JavaScript automatically.
 
 ```html
 <!-- index.html -->
-<!doctype html>
-<head>
+<!DOCTYPE html>
+<body>
   ...
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-</head>
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      v: "weekly",
+      key: YOUR_API_KEY_GOES_HERE
+    });
+  </script>
+</body>
+</html>
 ```
 
-**Note:**
-If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization`
-library when loading the Google Maps API. To do so, you can add `&libraries=visualization` to the
-script URL:
-
-```html
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
-```
-
-## Lazy Loading the API
-
-The API can be loaded when the component is actually used by using the Angular HttpClient jsonp
-method to make sure that the component doesn't load until after the API has loaded.
-
-```typescript
-// google-maps-demo.module.ts
-
-import { NgModule } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-
-import { GoogleMapsDemoComponent } from './google-maps-demo.component';
-
-@NgModule({
-  declarations: [
-    GoogleMapsDemoComponent,
-  ],
-  imports: [
-    CommonModule,
-    GoogleMapsModule,
-    HttpClientModule,
-    HttpClientJsonpModule,
-  ],
-  exports: [
-    GoogleMapsDemoComponent,
-  ],
-})
-export class GoogleMapsDemoModule {}
-
-
-// google-maps-demo.component.ts
-
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-@Component({
-  selector: 'google-maps-demo',
-  templateUrl: './google-maps-demo.component.html',
-})
-export class GoogleMapsDemoComponent {
-  apiLoaded: Observable<boolean>;
-
-  constructor(httpClient: HttpClient) {
-    this.apiLoaded = httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE', 'callback')
-        .pipe(
-          map(() => true),
-          catchError(() => of(false)),
-        );
-  }
-}
-```
-
-```html
-<!-- google-maps-demo.component.html -->
-
-<div *ngIf="apiLoaded | async">
-  <google-map></google-map>
-</div>
-```
+**Note:** the component also supports loading the API using the [legacy script tag](https://developers.google.com/maps/documentation/javascript/load-maps-js-api#use-legacy-tag), however it isn't recommended because it requires all of the Google Maps JavaScript to be loaded up-front, even if it isn't used.
 
 ## Components
 
@@ -126,7 +63,7 @@ of the most common options. For example, the Google Maps component could have it
 in with a google.maps.MapOptions object:
 
 ```html
-<google-map [options]="options"></google-map>
+<google-map [options]="options" />
 ```
 
 ```typescript
@@ -139,8 +76,7 @@ options: google.maps.MapOptions = {
 It can also have individual options set for some of the most common options:
 
 ```html
-<google-map [center]="center"
-            [zoom]="zoom"></google-map>
+<google-map [center]="center" [zoom]="zoom" />
 ```
 
 ```typescript

@@ -6,6 +6,7 @@
   <div>
     <div>Position in page: </div>
     <mat-form-field>
+      <mat-label>Horizontal</mat-label>
       <mat-select [(ngModel)]="horizontalPosition">
         <mat-option value="start">Start</mat-option>
         <mat-option value="end">End</mat-option>
@@ -15,6 +16,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Vertical</mat-label>
       <mat-select [(ngModel)]="verticalPosition">
         <mat-option value="top">Top</mat-option>
         <mat-option value="bottom">Bottom</mat-option>
@@ -23,24 +25,30 @@
   </div>
   <div>
     <mat-checkbox [(ngModel)]="action">
-      <p *ngIf="!action">Show button on snack bar</p>
-      <mat-form-field *ngIf="action">
-        <mat-label>Snack bar action label</mat-label>
-        <input matInput
-               type="text"
-               [(ngModel)]="actionButtonLabel">
-      </mat-form-field>
+      @if (action) {
+        <mat-form-field>
+          <mat-label>Snack bar action label</mat-label>
+          <input matInput
+                type="text"
+                [(ngModel)]="actionButtonLabel">
+        </mat-form-field>
+      } @else {
+        <p>Show button on snack bar</p>
+      }
     </mat-checkbox>
   </div>
   <div>
     <mat-checkbox [(ngModel)]="setAutoHide">
-      <p *ngIf="!setAutoHide">Auto hide after duration</p>
-      <mat-form-field *ngIf="setAutoHide">
-        <mat-label>Auto hide duration in ms</mat-label>
-        <input matInput
-               type="number"
-               [(ngModel)]="autoHide">
-      </mat-form-field>
+      @if (setAutoHide) {
+        <mat-form-field>
+          <mat-label>Auto hide duration in ms</mat-label>
+          <input matInput
+                type="number"
+                [(ngModel)]="autoHide">
+        </mat-form-field>
+      } @else {
+        <p>Auto hide after duration</p>
+      }
     </mat-checkbox>
   </div>
   <p>

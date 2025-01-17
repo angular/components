@@ -1,0 +1,193 @@
+@use 'sass:list';
+@use 'sass:map';
+@use '../theming/theming';
+
+/// Maps namespaced tokens to per-density-scale values.
+/// This is used as a temporary solution for density, since Material Design currently does not have
+/// systemized density.
+/// Format:
+/// (
+///   (mdc, comp): (
+///     token: (<scale 0 value>, <scale -1 value>, <scale -2 value>, ...),
+///     ...
+///   ),
+///   ...
+/// )
+// TODO(mmalerba): Add density tokens for remaining components.
+$_density-tokens: (
+  // MDC tokens
+  (mdc, checkbox): (
+    state-layer-size: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, chip): (
+    container-height: (32px, 28px, 24px),
+  ),
+  (mdc, circular-progress): (),
+  (mdc, dialog): (),
+  (mdc, elevated-card): (),
+  (mdc, extended-fab): (),
+  (mdc, fab): (),
+  (mdc, fab-small): (),
+  (mdc, filled-text-field): (),
+  (mdc, text-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, protected-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, filled-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, outlined-button): (
+    container-height: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, icon-button): (
+    // The size caps out at 24px, because anything lower will be smaller than the icon.
+    state-layer-size: (40px, 36px, 32px, 28px, 24px, 24px),
+  ),
+  (mdc, linear-progress): (),
+  (mdc, list): (
+    list-item-one-line-container-height: (48px, 44px, 40px, 36px, 32px, 24px),
+    list-item-two-line-container-height: (64px, 60px, 56px, 52px, 48px, 48px),
+    list-item-three-line-container-height: (88px, 84px, 80px, 76px, 72px, 56px),
+  ),
+  (mdc, outlined-card): (),
+  (mdc, outlined-text-field): (),
+  (mdc, plain-tooltip): (),
+  (mdc, radio): (
+    state-layer-size: (40px, 36px, 32px, 28px),
+  ),
+  (mdc, slider): (),
+  (mdc, snackbar): (),
+  (mdc, switch): (),
+  (mdc, secondary-navigation-tab): (
+    container-height: (48px, 44px, 40px, 36px, 32px)
+  ),
+  (mdc, tab-indicator): (),
+
+  // Custom Angular Material tokens
+  (mat, autocomplete): (),
+  (mat, badge): (),
+  (mat, bottom-sheet): (),
+  (mat, card): (),
+  (mat, checkbox): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, dialog): (),
+  (mat, datepicker): (),
+  (mat, divider): (),
+  (mat, expansion): (
+    header-collapsed-state-height: (48px, 44px, 40px, 36px),
+    header-expanded-state-height: (64px, 60px, 56px, 48px),
+  ),
+  (mat, fab): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, form-field): (
+    container-height: (56px, 52px, 48px, 44px, 40px, 36px),
+    filled-label-display: (block, block, none, none, none, none),
+    container-vertical-padding: (16px, 14px, 12px, 10px, 8px, 6px),
+    filled-with-label-container-padding-top: (24px, 22px, 12px, 10px, 8px, 6px),
+    filled-with-label-container-padding-bottom: (8px, 6px, 12px, 10px, 8px, 6px),
+  ),
+  (mat, grid-list): (),
+  (mat, icon): (),
+  (mat, icon-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, list): (
+    list-item-leading-icon-start-space: (16px, 12px, 8px, 4px),
+    list-item-leading-icon-end-space: (16px, 12px, 8px, 4px),
+  ),
+  (mat, text-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, protected-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, filled-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, outlined-button): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, menu): (),
+  (mat, optgroup): (),
+  (mat, option): (),
+  (mat, full-pseudo-checkbox): (),
+  (mat, minimal-pseudo-checkbox): (),
+  (mat, paginator): (
+    container-size: (56px, 52px, 48px, 40px),
+    form-field-container-height: (40px, 40px, 40px, 40px, 40px, 36px),
+    form-field-container-vertical-padding: (8px, 8px, 8px, 8px, 8px, 6px),
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, radio): (
+    touch-target-display: (block, block, none, none),
+  ),
+  (mat, ripple): (),
+  (mat, select): (
+    arrow-transform: (
+      translateY(-8px),
+      translateY(-8px),
+      none,
+    ),
+  ),
+  (mat, sidenav): (),
+  (mat, slide-toggle): (),
+  (mat, slider): (),
+  (mat, snack-bar): (),
+  (mat, sort): (),
+  (mat, timepicker): (),
+  (mat, standard-button-toggle): (
+    height: (40px, 40px, 40px, 36px, 24px),
+  ),
+  (mat, stepper): (
+    header-height: (72px, 68px, 64px, 60px, 42px),
+  ),
+  (mat, tab-header): (),
+  (mat, table): (
+    header-container-height: (56px, 52px, 48px, 44px, 40px),
+    footer-container-height: (52px, 48px, 44px, 40px, 36px),
+    row-item-container-height: (52px, 48px, 44px, 40px, 36px),
+  ),
+  (mat, toolbar): (
+    standard-height: (64px, 60px, 56px, 52px),
+    mobile-height: (56px, 52px, 48px, 44px),
+  ),
+  (mat, tree): (
+    node-min-height: (48px, 44px, 40px, 36px, 28px),
+  ),
+);
+
+/// Gets the value for the given density scale from the given set of density values.
+/// @param {List} $density-values The list of values for each density scale.
+/// @param {Number} $scale The density scale to get the value for.
+/// @return {*} The value for the given scale.
+@function _get-value-for-scale($density-values, $scale) {
+  $scale: theming.clamp-density($scale, -1 * list.length($density-values) + 1);
+  $index: -$scale + 1;
+  @return list.nth($density-values, $index);
+}
+
+/// Gets a map of all density tokens for the given scale
+/// @param {Number} $scale The density scale
+/// @return {Map} Map of all fully qualified density tokens for the given scale.
+@function get-tokens-for-scale($scale) {
+  $result: ();
+  @each $namespace, $tokens in $_density-tokens {
+    @each $token, $density-values in $tokens {
+      $tokens: map.set($tokens, $token, _get-value-for-scale($density-values, $scale));
+    }
+    $result: map.set($result, $namespace, $tokens);
+  }
+  @return $result;
+}
+
+/// Checks whether the given token is systemized by Angular Material's made up density system.
+/// @param {List} $namespace The namespace of the token
+/// @param {String} $token The name of the token
+/// @return {Boolean} Whether the token is systemized by the density system
+@function is-systemized($namespace, $token) {
+  @return map.get($_density-tokens, $namespace, $token) != null;
+}

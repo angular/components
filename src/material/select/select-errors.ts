@@ -3,8 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
+
+// Note that these have been copied over verbatim from
+// `material/select` so that we don't have to expose them publicly.
 
 /**
  * Returns an exception to be thrown when attempting to change a select's `multiple` option

@@ -1,33 +1,28 @@
-@use '../core/style/private';
+@use '@angular/cdk';
 @use './tabs-common';
-@use '../core/style/variables';
 
 @include tabs-common.paginated-tab-header;
 
-.mat-ink-bar {
-  @include tabs-common.ink-bar;
+.mat-mdc-tab-label-container {
+  @include tabs-common.paginated-tab-header-container('.mat-mdc-tab-group-inverted-header');
 }
 
-.mat-tab-labels {
-  @include tabs-common.paginated-tab-header-item-wrapper('.mat-tab-header');
+.mat-mdc-tab-labels {
+  @include tabs-common.paginated-tab-header-item-wrapper('.mat-mdc-tab-header');
 }
 
-.mat-tab-label-container {
-  @include tabs-common.paginated-tab-header-container;
-}
+.mat-mdc-tab {
+  // For the tab element, default inset/offset values are necessary to ensure that
+  // the focus indicator is sufficiently contrastive and renders appropriately.
+  &::before {
+    margin: 5px;
+  }
 
-.mat-tab-list {
-  @include private.private-animation-noop();
-}
-
-// Wraps each tab label
-.mat-tab-label {
-  @include tabs-common.tab-label;
-  position: relative;
-}
-
-@media (variables.$xsmall) {
-  .mat-tab-label {
-    min-width: 72px;
+  @include cdk.high-contrast {
+    // When a tab is disabled in high contrast mode, set the text color to the disabled
+    // color, which is (unintuitively) named "GrayText".
+    &[aria-disabled='true'] {
+      color: GrayText;
+    }
   }
 }

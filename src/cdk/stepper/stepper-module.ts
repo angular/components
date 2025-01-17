@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -14,8 +14,8 @@ import {CdkStepHeader} from './step-header';
 import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
-  imports: [BidiModule],
-  exports: [
+  imports: [
+    BidiModule,
     CdkStep,
     CdkStepper,
     CdkStepHeader,
@@ -23,13 +23,6 @@ import {BidiModule} from '@angular/cdk/bidi';
     CdkStepperNext,
     CdkStepperPrevious,
   ],
-  declarations: [
-    CdkStep,
-    CdkStepper,
-    CdkStepHeader,
-    CdkStepLabel,
-    CdkStepperNext,
-    CdkStepperPrevious,
-  ]
+  exports: [CdkStep, CdkStepper, CdkStepHeader, CdkStepLabel, CdkStepperNext, CdkStepperPrevious],
 })
 export class CdkStepperModule {}

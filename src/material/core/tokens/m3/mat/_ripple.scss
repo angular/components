@@ -1,0 +1,19 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, ripple);
+
+/// Generates custom tokens for the mat-ripple.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-ripple
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.1),
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

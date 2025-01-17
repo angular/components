@@ -1,10 +1,14 @@
 <div
   cdkTrapFocus
+  role="dialog"
+  [attr.aria-modal]="true"
+  [attr.aria-labelledby]="_dialogLabelId ?? undefined"
   class="mat-datepicker-content-container"
+  [class.mat-datepicker-content-container-with-custom-header]="datepicker.calendarHeaderComponent"
   [class.mat-datepicker-content-container-with-actions]="_actionsPortal">
   <mat-calendar
     [id]="datepicker.id"
-    [ngClass]="datepicker.panelClass"
+    [class]="datepicker.panelClass"
     [startAt]="datepicker.startAt"
     [startView]="datepicker.startView"
     [minDate]="datepicker._getMinDate()"
@@ -16,10 +20,13 @@
     [comparisonStart]="comparisonStart"
     [comparisonEnd]="comparisonEnd"
     [@fadeInCalendar]="'enter'"
+    [startDateAccessibleName]="startDateAccessibleName"
+    [endDateAccessibleName]="endDateAccessibleName"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
     (viewChanged)="datepicker._viewChanged($event)"
-    (_userSelection)="_handleUserSelection($event)"></mat-calendar>
+    (_userSelection)="_handleUserSelection($event)"
+    (_userDragDrop)="_handleUserDragDrop($event)"></mat-calendar>
 
   <ng-template [cdkPortalOutlet]="_actionsPortal"></ng-template>
 

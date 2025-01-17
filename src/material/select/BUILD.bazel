@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -14,15 +15,15 @@ ng_module(
     name = "select",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
     ),
-    assets = [":select.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/select",
+    assets = [":select_scss"] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
-        "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
@@ -40,23 +41,24 @@ ng_module(
 sass_library(
     name = "select_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "select_scss",
     src = "select.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
-        "//src/material/core:core_scss_lib",
+        "//src/cdk:sass_lib",
+        "//src/material:sass_lib",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "select_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":select",
@@ -64,7 +66,6 @@ ng_test_library(
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
-        "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/material/core",
@@ -77,12 +78,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [
+        ":select_tests_lib",
+    ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":select.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":select_scss_lib"],
 )
 
 filegroup(

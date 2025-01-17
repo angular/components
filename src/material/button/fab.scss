@@ -1,0 +1,216 @@
+@use './button-base';
+@use '../core/tokens/token-utils';
+@use '../core/style/private' as style-private;
+@use '../core/style/vendor-prefixes';
+@use '../core/focus-indicators/private' as focus-indicators-private;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
+@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
+@use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
+
+.mat-mdc-fab-base {
+  @include vendor-prefixes.user-select(none);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  fill: currentColor;
+  text-decoration: none;
+  cursor: pointer;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  overflow: visible;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms,
+    transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
+  flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
+
+  @include button-base.mat-private-button-interactive();
+  @include style-private.private-animation-noop();
+
+  &::before {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+
+  // MDC used to include this and it seems like a lot of apps depend on it.
+  &[hidden] {
+    display: none;
+  }
+
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
+
+  &:active, &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  & > svg {
+    width: 100%;
+  }
+
+  // MDC expects the fab icon to contain this HTML content:
+  // ```html
+  //   <span class="mdc-fab__icon material-icons">favorite</span>
+  // ```
+  // However, Angular Material expects a `mat-icon` instead. The following
+  // mixin will style the icons appropriately.
+  // stylelint-disable-next-line selector-class-pattern
+  .mat-icon, .material-icons {
+    transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
+    fill: currentColor;
+    will-change: transform;
+  }
+
+  .mat-focus-indicator::before {
+    $default-border-width: focus-indicators-private.$default-border-width;
+    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
+    $offset: calc(#{$border-width} + 2px);
+    margin: calc(#{$offset} * -1);
+  }
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+@mixin _fab-elevation($mdc-tokens) {
+  @include token-utils.use-tokens($mdc-tokens...) {
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+
+    &:hover {
+      @include token-utils.create-token-slot(box-shadow, hover-container-elevation-shadow);
+    }
+
+    &:focus {
+      @include token-utils.create-token-slot(box-shadow, focus-container-elevation-shadow);
+    }
+
+    &:active, &:focus:active {
+      @include token-utils.create-token-slot(box-shadow, pressed-container-elevation-shadow);
+    }
+  }
+}
+
+@mixin _fab-structure($mdc-tokens, $mat-tokens) {
+  @include token-utils.use-tokens($mdc-tokens...) {
+    @include token-utils.create-token-slot(background-color, container-color);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+  }
+
+  @include token-utils.use-tokens($mat-tokens...) {
+    @include token-utils.create-token-slot(color, foreground-color, inherit);
+  }
+
+  @include _fab-elevation($mdc-tokens);
+
+  @include button-base.mat-private-button-disabled {
+    @include token-utils.use-tokens($mat-tokens...) {
+      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
+      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
+    }
+  }
+
+  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
+  @include button-base.mat-private-button-ripple($mat-tokens...);
+}
+
+.mat-mdc-fab {
+  @include _fab-structure(
+    (tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()),
+    (tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()),
+  );
+}
+
+.mat-mdc-mini-fab {
+  width: 40px;
+  height: 40px;
+
+  @include _fab-structure(
+    (tokens-mdc-fab-small.$prefix, tokens-mdc-fab-small.get-token-slots()),
+    (tokens-mat-fab-small.$prefix, tokens-mat-fab-small.get-token-slots()),
+  );
+}
+
+.mat-mdc-extended-fab {
+  $mdc-tokens: (tokens-mdc-extended-fab.$prefix, tokens-mdc-extended-fab.get-token-slots());
+
+  // Before tokens MDC included the font smoothing automatically, but with
+  // tokens it doesn't. We add it since it can cause tiny differences in
+  // screenshot tests and it generally looks better.
+  @include vendor-prefixes.smooth-font();
+  border-radius: 24px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: auto;
+  max-width: 100%;
+  line-height: normal;
+
+  @include token-utils.use-tokens($mdc-tokens...) {
+    @include token-utils.create-token-slot(height, container-height);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(font-family, label-text-font);
+    @include token-utils.create-token-slot(font-size, label-text-size);
+    @include token-utils.create-token-slot(font-weight, label-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+  }
+
+  @include _fab-elevation($mdc-tokens);
+
+  @include button-base.mat-private-button-disabled {
+    // Necessary for interactive disabled buttons.
+    &, &:focus {
+      box-shadow: none;
+    }
+  }
+
+  // stylelint-disable selector-class-pattern
+  // For Extended FAB with text label followed by icon.
+  // We are checking for the a button class because white this is a FAB it
+  // uses the same template as button.
+  [dir='rtl'] & .mdc-button__label + .mat-icon,
+  [dir='rtl'] & .mdc-button__label + .material-icons,
+  > .mat-icon,
+  > .material-icons {
+    margin-left: -8px;
+    margin-right: 12px;
+  }
+
+  .mdc-button__label + .mat-icon,
+  .mdc-button__label + .material-icons,
+  [dir='rtl'] & > .mat-icon,
+  [dir='rtl'] & > .material-icons {
+    margin-left: 12px;
+    margin-right: -8px;
+  }
+  // stylelint-enable selector-class-pattern
+
+  // All FABs are square except the extended ones so we
+  // need to set the touch target back to full-width.
+  .mat-mdc-button-touch-target {
+    width: 100%;
+  }
+}
+

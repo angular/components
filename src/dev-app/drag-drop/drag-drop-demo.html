@@ -1,16 +1,17 @@
 <div cdkDropListGroup>
   <div class="demo-list">
-
     <h2>To do</h2>
     <div
       cdkDropList
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="todo">
-      <div *ngFor="let item of todo" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      @for (item of todo; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 
@@ -21,10 +22,12 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="done">
-      <div *ngFor="let item of done" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      @for (item of done; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 </div>
@@ -38,10 +41,12 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="ages">
-      <div *ngFor="let item of ages" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      @for (item of ages; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 
@@ -53,17 +58,103 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="preferredAges">
-      <div *ngFor="let item of preferredAges" cdkDrag>
-        {{item}}
-        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
-      </div>
+      @for (item of preferredAges; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<h2>Mixed orientation</h2>
+
+<p>
+  <mat-checkbox [(ngModel)]="mixedWrap">Wrap list</mat-checkbox>
+</p>
+
+<div cdkDropListGroup>
+  <div
+    class="demo-list"
+    [class.demo-list-wrapping]="mixedWrap"
+    [class.demo-list-horizontal]="mixedWrap">
+    <div
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="mixedTodo">
+      @for (item of mixedTodo; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div
+    class="demo-list"
+    [class.demo-list-wrapping]="mixedWrap"
+    [class.demo-list-horizontal]="mixedWrap">
+    <div
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="mixedDone">
+      @for (item of mixedDone; track item) {
+        <div cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      }
     </div>
   </div>
 </div>
 
 <div class="demo-list">
   <h2>Free dragging</h2>
-  <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock" [cdkDragStartDelay]="dragStartDelay">Drag me around</div>
+  <div
+    cdkDrag
+    class="demo-free-draggable"
+    [cdkDragLockAxis]="axisLock"
+    [cdkDragStartDelay]="dragStartDelay"
+  >
+    Drag me around
+  </div>
+</div>
+
+<div>
+  <h2>Drag with box boundary</h2>
+  <div class="demo-constrain-box" id="constrain-box-1">
+    <div
+      cdkDrag
+      class="demo-free-draggable"
+      [cdkDragLockAxis]="axisLock"
+      [cdkDragStartDelay]="dragStartDelay"
+      cdkDragBoundary="#constrain-box-1"
+    >
+      Drag me around
+    </div>
+  </div>
+</div>
+
+<div>
+  <h2>Drag with box boundary and custom constrain</h2>
+  <div class="demo-constrain-box" id="constrain-box-2">
+    <div
+      cdkDrag
+      class="demo-free-draggable"
+      [cdkDragLockAxis]="axisLock"
+      [cdkDragStartDelay]="dragStartDelay"
+      cdkDragBoundary="#constrain-box-2"
+      [cdkDragConstrainPosition]="constrainPosition"
+    >
+      Drag me around
+    </div>
+  </div>
 </div>
 
 <div>
@@ -90,6 +181,6 @@
   <h2>Drag start delay</h2>
 
   <mat-form-field>
-    <input matInput placeholder="Drag start delay" value="0" [(ngModel)]="dragStartDelay">
+    <input matInput placeholder="Drag start delay" value="0" [(ngModel)]="dragStartDelay" />
   </mat-form-field>
 </div>

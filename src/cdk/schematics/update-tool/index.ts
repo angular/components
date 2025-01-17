@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as ts from 'typescript';
@@ -24,32 +24,45 @@ import {createFileSystemCompilerHost} from './utils/virtual-host';
  * the context can provide the necessary specifics to the migrations in a type-safe way.
  */
 export class UpdateProject<Context> {
-  private readonly _typeChecker: ts.TypeChecker = this._program.getTypeChecker();
+  private readonly _typeChecker: ts.TypeChecker;
 
-  constructor(/** Context provided to all migrations. */
-              private _context: Context,
-              /** TypeScript program using workspace paths. */
-              private _program: ts.Program,
-              /** File system used for reading, writing and editing files. */
-              private _fileSystem: FileSystem,
-              /**
-               * Set of analyzed files. Used for avoiding multiple migration runs if
-               * files overlap between targets.
-               */
-              private _analyzedFiles: Set<WorkspacePath> = new Set(),
-              /** Logger used for printing messages. */
-              private _logger: UpdateLogger = defaultLogger) {}
+  constructor(
+    /** Context provided to all migrations. */
+    private _context: Context,
+    /** TypeScript program using workspace paths. */
+    private _program: ts.Program,
+    /** File system used for reading, writing and editing files. */
+    private _fileSystem: FileSystem,
+    /**
+     * Set of analyzed files. Used for avoiding multiple migration runs if
+     * files overlap between targets.
+     */
+    private _analyzedFiles: Set<WorkspacePath> = new Set(),
+    /** Logger used for printing messages. */
+    private _logger: UpdateLogger = defaultLogger,
+  ) {
+    this._typeChecker = this._program.getTypeChecker();
+  }
 
   /**
    * Migrates the project to the specified target version.
    * @param migrationTypes Migrations that should be run.
-   * @param target Version the project should be updated to.
+   * @param target Version the project should be updated to. Can be `null` if the set of
+   *   specified migrations runs regardless of a target version.
    * @param data Upgrade data that is passed to all migration rules.
    * @param additionalStylesheetPaths Additional stylesheets that should be migrated, if not
    *   referenced in an Angular component. This is helpful for global stylesheets in a project.
+   * @param limitToDirectory If specified, changes will be limited to the given directory.
    */
-  migrate<Data>(migrationTypes: MigrationCtor<Data, Context>[], target: TargetVersion, data: Data,
-      additionalStylesheetPaths?: string[]): {hasFailures: boolean} {
+  migrate<Data>(
+    migrationTypes: MigrationCtor<Data, Context>[],
+    target: TargetVersion | null,
+    data: Data,
+    additionalStylesheetPaths?: string[],
+    limitToDirectory?: string,
+  ): {hasFailures: boolean} {
+    limitToDirectory &&= this._fileSystem.resolve(limitToDirectory);
+
     // Create instances of the specified migrations.
     const migrations = this._createMigrations(migrationTypes, target, data);
     // Creates the component resource collector. The collector can visit arbitrary
@@ -58,8 +71,14 @@ export class UpdateProject<Context> {
     const resourceCollector = new ComponentResourceCollector(this._typeChecker, this._fileSystem);
     // Collect all of the TypeScript source files we want to migrate. We don't
     // migrate type definition files, or source files from external libraries.
-    const sourceFiles = this._program.getSourceFiles().filter(
-      f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
+    const sourceFiles = this._program.getSourceFiles().filter(f => {
+      return (
+        !f.isDeclarationFile &&
+        (limitToDirectory == null ||
+          this._fileSystem.resolve(f.fileName).startsWith(limitToDirectory)) &&
+        !this._program.isSourceFileFromExternalLibrary(f)
+      );
+    });
 
     // Helper function that visits a given TypeScript node and collects all referenced
     // component resources (i.e. stylesheets or templates). Additionally, the helper
@@ -113,11 +132,13 @@ export class UpdateProject<Context> {
     if (additionalStylesheetPaths) {
       additionalStylesheetPaths.forEach(filePath => {
         const resolvedPath = this._fileSystem.resolve(filePath);
-        const stylesheet = resourceCollector.resolveExternalStylesheet(resolvedPath, null);
-        // Do not visit stylesheets which have been referenced from a component.
-        if (!this._analyzedFiles.has(resolvedPath) && stylesheet) {
-          migrations.forEach(r => r.visitStylesheet(stylesheet));
-          this._analyzedFiles.add(resolvedPath);
+        if (limitToDirectory == null || resolvedPath.startsWith(limitToDirectory)) {
+          const stylesheet = resourceCollector.resolveExternalStylesheet(resolvedPath, null);
+          // Do not visit stylesheets which have been referenced from a component.
+          if (!this._analyzedFiles.has(resolvedPath) && stylesheet) {
+            migrations.forEach(r => r.visitStylesheet(stylesheet));
+            this._analyzedFiles.add(resolvedPath);
+          }
         }
       });
     }
@@ -126,8 +147,10 @@ export class UpdateProject<Context> {
     migrations.forEach(r => r.postAnalysis());
 
     // Collect all failures reported by individual migrations.
-    const failures = migrations.reduce((res, m) =>
-        res.concat(m.failures), [] as MigrationFailure[]);
+    const failures = migrations.reduce(
+      (res, m) => res.concat(m.failures),
+      [] as MigrationFailure[],
+    );
 
     // In case there are failures, print these to the CLI logger as warnings.
     if (failures.length) {
@@ -146,12 +169,22 @@ export class UpdateProject<Context> {
    * Creates instances of the given migrations with the specified target
    * version and data.
    */
-  private _createMigrations<Data>(types: MigrationCtor<Data, Context>[], target: TargetVersion,
-                                  data: Data): Migration<Data, Context>[] {
+  private _createMigrations<Data>(
+    types: MigrationCtor<Data, Context>[],
+    target: TargetVersion | null,
+    data: Data,
+  ): Migration<Data, Context>[] {
     const result: Migration<Data, Context>[] = [];
     for (const ctor of types) {
-      const instance = new ctor(this._program, this._typeChecker, target, this._context,
-        data, this._fileSystem, this._logger);
+      const instance = new ctor(
+        this._program,
+        this._typeChecker,
+        target,
+        this._context,
+        data,
+        this._fileSystem,
+        this._logger,
+      );
       instance.init();
       if (instance.enabled) {
         result.push(instance);
@@ -161,8 +194,10 @@ export class UpdateProject<Context> {
   }
 
   /**
-   * Creates a program form the specified tsconfig and patches the host
+   * Creates a program from the specified tsconfig and patches the host
    * to read files and directories through the given file system.
+   *
+   * @throws {TsconfigParseError} If the tsconfig could not be parsed.
    */
   static createProgramFromTsconfig(tsconfigPath: WorkspacePath, fs: FileSystem): ts.Program {
     const parsed = parseTsconfigFile(fs.resolve(tsconfigPath), fs);

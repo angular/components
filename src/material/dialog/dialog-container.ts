@@ -3,295 +3,287 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AnimationEvent} from '@angular/animations';
-import {FocusMonitor, FocusOrigin, FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
-import {
-  BasePortalOutlet,
-  CdkPortalOutlet,
-  ComponentPortal,
-  DomPortal,
-  TemplatePortal
-} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ComponentRef,
-  Directive,
-  ElementRef,
-  EmbeddedViewRef,
   EventEmitter,
-  Inject,
-  Optional,
-  ViewChild,
+  OnDestroy,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
-import {matDialogAnimations} from './dialog-animations';
 import {MatDialogConfig} from './dialog-config';
+import {CdkDialogContainer} from '@angular/cdk/dialog';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
 
 /** Event that captures the state of dialog container animations. */
-interface DialogAnimationEvent {
+interface LegacyDialogAnimationEvent {
   state: 'opened' | 'opening' | 'closing' | 'closed';
   totalTime: number;
 }
 
-/**
- * Throws an exception for the case when a ComponentPortal is
- * attached to a DomPortalOutlet without an origin.
- * @docs-private
- */
-export function throwMatDialogContentAlreadyAttachedError() {
-  throw Error('Attempting to attach dialog content after content is already attached');
-}
+/** Class added when the dialog is open. */
+const OPEN_CLASS = 'mdc-dialog--open';
 
-/**
- * Base class for the `MatDialogContainer`. The base class does not implement
- * animations as these are left to implementers of the dialog container.
- */
-@Directive()
-export abstract class _MatDialogContainerBase extends BasePortalOutlet {
-  protected _document: Document;
+/** Class added while the dialog is opening. */
+const OPENING_CLASS = 'mdc-dialog--opening';
 
-  /** The portal outlet inside of this container into which the dialog content will be loaded. */
-  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+/** Class added while the dialog is closing. */
+const CLOSING_CLASS = 'mdc-dialog--closing';
 
-  /** The class that traps and manages focus within the dialog. */
-  private _focusTrap: FocusTrap;
+/** Duration of the opening animation in milliseconds. */
+export const OPEN_ANIMATION_DURATION = 150;
 
-  /** Emits when an animation state changes. */
-  _animationStateChanged = new EventEmitter<DialogAnimationEvent>();
+/** Duration of the closing animation in milliseconds. */
+export const CLOSE_ANIMATION_DURATION = 75;
 
-  /** Element that was focused before the dialog was opened. Save this to restore upon close. */
-  private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
-
-  /**
-   * Type of interaction that led to the dialog being closed. This is used to determine
-   * whether the focus style will be applied when returning focus to its original location
-   * after the dialog is closed.
-   */
-  _closeInteractionType: FocusOrigin|null = null;
-
-  /** ID of the element that should be considered as the dialog's label. */
-  _ariaLabelledBy: string | null;
-
-  /** ID for the container DOM element. */
-  _id: string;
-
-  constructor(
-    protected _elementRef: ElementRef,
-    protected _focusTrapFactory: FocusTrapFactory,
-    protected _changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(DOCUMENT) _document: any,
-    /** The dialog configuration. */
-    public _config: MatDialogConfig,
-    private _focusMonitor?: FocusMonitor) {
-
-    super();
-    this._ariaLabelledBy = _config.ariaLabelledBy || null;
-    this._document = _document;
-  }
-
-  /** Starts the dialog exit animation. */
-  abstract _startExitAnimation(): void;
-
-  /** Initializes the dialog container with the attached content. */
-  _initializeWithAttachedContent() {
-    this._setupFocusTrap();
-    // Save the previously focused element. This element will be re-focused
-    // when the dialog closes.
-    this._capturePreviouslyFocusedElement();
-    // Move focus onto the dialog immediately in order to prevent the user
-    // from accidentally opening multiple dialogs at the same time.
-    this._focusDialogContainer();
-  }
-
-  /**
-   * Attach a ComponentPortal as content to this dialog container.
-   * @param portal Portal to be attached as the dialog content.
-   */
-  attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throwMatDialogContentAlreadyAttachedError();
-    }
-
-    return this._portalOutlet.attachComponentPortal(portal);
-  }
-
-  /**
-   * Attach a TemplatePortal as content to this dialog container.
-   * @param portal Portal to be attached as the dialog content.
-   */
-  attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
-    if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throwMatDialogContentAlreadyAttachedError();
-    }
-
-    return this._portalOutlet.attachTemplatePortal(portal);
-  }
-
-  /**
-   * Attaches a DOM portal to the dialog container.
-   * @param portal Portal to be attached.
-   * @deprecated To be turned into a method.
-   * @breaking-change 10.0.0
-   */
-  override attachDomPortal = (portal: DomPortal) => {
-    if (this._portalOutlet.hasAttached() && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throwMatDialogContentAlreadyAttachedError();
-    }
-
-    return this._portalOutlet.attachDomPortal(portal);
-  }
-
-  /** Moves focus back into the dialog if it was moved out. */
-  _recaptureFocus() {
-    if (!this._containsFocus()) {
-      const focusContainer = !this._config.autoFocus || !this._focusTrap.focusInitialElement();
-
-      if (focusContainer) {
-        this._elementRef.nativeElement.focus();
-      }
-    }
-  }
-
-  /** Moves the focus inside the focus trap. */
-  protected _trapFocus() {
-    // If we were to attempt to focus immediately, then the content of the dialog would not yet be
-    // ready in instances where change detection has to run first. To deal with this, we simply
-    // wait for the microtask queue to be empty.
-    if (this._config.autoFocus) {
-      this._focusTrap.focusInitialElementWhenReady();
-    } else if (!this._containsFocus()) {
-      // Otherwise ensure that focus is on the dialog container. It's possible that a different
-      // component tried to move focus while the open animation was running. See:
-      // https://github.com/angular/components/issues/16215. Note that we only want to do this
-      // if the focus isn't inside the dialog already, because it's possible that the consumer
-      // turned off `autoFocus` in order to move focus themselves.
-      this._elementRef.nativeElement.focus();
-    }
-  }
-
-  /** Restores focus to the element that was focused before the dialog opened. */
-  protected _restoreFocus() {
-    const previousElement = this._elementFocusedBeforeDialogWasOpened;
-
-    // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    if (this._config.restoreFocus && previousElement &&
-        typeof previousElement.focus === 'function') {
-      const activeElement = _getFocusedElementPierceShadowDom();
-      const element = this._elementRef.nativeElement;
-
-      // Make sure that focus is still inside the dialog or is on the body (usually because a
-      // non-focusable element like the backdrop was clicked) before moving it. It's possible that
-      // the consumer moved it themselves before the animation was done, in which case we shouldn't
-      // do anything.
-      if (!activeElement || activeElement === this._document.body || activeElement === element ||
-          element.contains(activeElement)) {
-        if (this._focusMonitor) {
-          this._focusMonitor.focusVia(previousElement, this._closeInteractionType);
-          this._closeInteractionType = null;
-        } else {
-          previousElement.focus();
-        }
-      }
-    }
-
-    if (this._focusTrap) {
-      this._focusTrap.destroy();
-    }
-  }
-
-  /** Sets up the focus trap. */
-  private _setupFocusTrap() {
-    this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
-  }
-
-  /** Captures the element that was focused before the dialog was opened. */
-  private _capturePreviouslyFocusedElement() {
-    if (this._document) {
-      this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
-    }
-  }
-
-  /** Focuses the dialog container. */
-  private _focusDialogContainer() {
-    // Note that there is no focus method when rendering on the server.
-    if (this._elementRef.nativeElement.focus) {
-      this._elementRef.nativeElement.focus();
-    }
-  }
-
-  /** Returns whether focus is inside the dialog. */
-  private _containsFocus() {
-    const element = this._elementRef.nativeElement;
-    const activeElement = _getFocusedElementPierceShadowDom();
-    return element === activeElement || element.contains(activeElement);
-  }
-}
-
-/**
- * Internal component that wraps user-provided dialog content.
- * Animation is based on https://material.io/guidelines/motion/choreography.html.
- * @docs-private
- */
 @Component({
   selector: 'mat-dialog-container',
   templateUrl: 'dialog-container.html',
-  styleUrls: ['dialog.css'],
+  styleUrl: 'dialog.css',
   encapsulation: ViewEncapsulation.None,
-  // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
+  // Disabled for consistency with the non-MDC dialog container.
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  animations: [matDialogAnimations.dialogContainer],
+  imports: [CdkPortalOutlet],
   host: {
-    'class': 'mat-dialog-container',
+    'class': 'mat-mdc-dialog-container mdc-dialog',
     'tabindex': '-1',
-    'aria-modal': 'true',
-    '[id]': '_id',
+    '[attr.aria-modal]': '_config.ariaModal',
+    '[id]': '_config.id',
     '[attr.role]': '_config.role',
-    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledBy',
+    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledByQueue[0]',
     '[attr.aria-label]': '_config.ariaLabel',
     '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
-    '[@dialogContainer]': '_state',
-    '(@dialogContainer.start)': '_onAnimationStart($event)',
-    '(@dialogContainer.done)': '_onAnimationDone($event)',
+    '[class._mat-animation-noopable]': '!_animationsEnabled',
+    '[class.mat-mdc-dialog-container-with-actions]': '_actionSectionCount > 0',
   },
 })
-export class MatDialogContainer extends _MatDialogContainerBase {
-  /** State of the dialog animation. */
-  _state: 'void' | 'enter' | 'exit' = 'enter';
+export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
-  /** Callback, invoked whenever an animation on the host completes. */
-  _onAnimationDone({toState, totalTime}: AnimationEvent) {
-    if (toState === 'enter') {
-      this._trapFocus();
-      this._animationStateChanged.next({state: 'opened', totalTime});
-    } else if (toState === 'exit') {
-      this._restoreFocus();
-      this._animationStateChanged.next({state: 'closed', totalTime});
+  /** Emits when an animation state changes. */
+  _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
+
+  /** Whether animations are enabled. */
+  _animationsEnabled: boolean = this._animationMode !== 'NoopAnimations';
+
+  /** Number of actions projected in the dialog. */
+  protected _actionSectionCount = 0;
+
+  /** Host element of the dialog container component. */
+  private _hostElement: HTMLElement = this._elementRef.nativeElement;
+  /** Duration of the dialog open animation. */
+  private _enterAnimationDuration = this._animationsEnabled
+    ? parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION
+    : 0;
+  /** Duration of the dialog close animation. */
+  private _exitAnimationDuration = this._animationsEnabled
+    ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
+    : 0;
+  /** Current timer for dialog animations. */
+  private _animationTimer: ReturnType<typeof setTimeout> | null = null;
+
+  protected override _contentAttached(): void {
+    // Delegate to the original dialog-container initialization (i.e. saving the
+    // previous element, setting up the focus trap and moving focus to the container).
+    super._contentAttached();
+
+    // Note: Usually we would be able to use the MDC dialog foundation here to handle
+    // the dialog animation for us, but there are a few reasons why we just leverage
+    // their styles and not use the runtime foundation code:
+    //   1. Foundation does not allow us to disable animations.
+    //   2. Foundation contains unnecessary features we don't need and aren't
+    //      tree-shakeable. e.g. background scrim, keyboard event handlers for ESC button.
+    this._startOpenAnimation();
+  }
+
+  /** Starts the dialog open animation if enabled. */
+  private _startOpenAnimation() {
+    this._animationStateChanged.emit({state: 'opening', totalTime: this._enterAnimationDuration});
+
+    if (this._animationsEnabled) {
+      this._hostElement.style.setProperty(
+        TRANSITION_DURATION_PROPERTY,
+        `${this._enterAnimationDuration}ms`,
+      );
+
+      // We need to give the `setProperty` call from above some time to be applied.
+      // One would expect that the open class is added once the animation finished, but MDC
+      // uses the open class in combination with the opening class to start the animation.
+      this._requestAnimationFrame(() => this._hostElement.classList.add(OPENING_CLASS, OPEN_CLASS));
+      this._waitForAnimationToComplete(this._enterAnimationDuration, this._finishDialogOpen);
+    } else {
+      this._hostElement.classList.add(OPEN_CLASS);
+      // Note: We could immediately finish the dialog opening here with noop animations,
+      // but we defer until next tick so that consumers can subscribe to `afterOpened`.
+      // Executing this immediately would mean that `afterOpened` emits synchronously
+      // on `dialog.open` before the consumer had a change to subscribe to `afterOpened`.
+      Promise.resolve().then(() => this._finishDialogOpen());
     }
   }
 
-  /** Callback, invoked when an animation on the host starts. */
-  _onAnimationStart({toState, totalTime}: AnimationEvent) {
-    if (toState === 'enter') {
-      this._animationStateChanged.next({state: 'opening', totalTime});
-    } else if (toState === 'exit' || toState === 'void') {
-      this._animationStateChanged.next({state: 'closing', totalTime});
-    }
-  }
-
-  /** Starts the dialog exit animation. */
+  /**
+   * Starts the exit animation of the dialog if enabled. This method is
+   * called by the dialog ref.
+   */
   _startExitAnimation(): void {
-    this._state = 'exit';
+    this._animationStateChanged.emit({state: 'closing', totalTime: this._exitAnimationDuration});
+    this._hostElement.classList.remove(OPEN_CLASS);
 
-    // Mark the container for check so it can react if the
-    // view container is using OnPush change detection.
+    if (this._animationsEnabled) {
+      this._hostElement.style.setProperty(
+        TRANSITION_DURATION_PROPERTY,
+        `${this._exitAnimationDuration}ms`,
+      );
+
+      // We need to give the `setProperty` call from above some time to be applied.
+      this._requestAnimationFrame(() => this._hostElement.classList.add(CLOSING_CLASS));
+      this._waitForAnimationToComplete(this._exitAnimationDuration, this._finishDialogClose);
+    } else {
+      // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
+      // set up before any user can subscribe to the backdrop click. The subscription triggers
+      // the dialog close and this method synchronously. If we'd synchronously emit the `CLOSED`
+      // animation state event if animations are disabled, the overlay would be disposed
+      // immediately and all other subscriptions to `DialogRef#backdropClick` would be silently
+      // skipped. We work around this by waiting with the dialog close until the next tick when
+      // all subscriptions have been fired as expected. This is not an ideal solution, but
+      // there doesn't seem to be any other good way. Alternatives that have been considered:
+      //   1. Deferring `DialogRef.close`. This could be a breaking change due to a new microtask.
+      //      Also this issue is specific to the MDC implementation where the dialog could
+      //      technically be closed synchronously. In the non-MDC one, Angular animations are used
+      //      and closing always takes at least a tick.
+      //   2. Ensuring that user subscriptions to `backdropClick`, `keydownEvents` in the dialog
+      //      ref are first. This would solve the issue, but has the risk of memory leaks and also
+      //      doesn't solve the case where consumers call `DialogRef.close` in their subscriptions.
+      // Based on the fact that this is specific to the MDC-based implementation of the dialog
+      // animations, the defer is applied here.
+      Promise.resolve().then(() => this._finishDialogClose());
+    }
+  }
+
+  /**
+   * Updates the number action sections.
+   * @param delta Increase/decrease in the number of sections.
+   */
+  _updateActionSectionCount(delta: number) {
+    this._actionSectionCount += delta;
     this._changeDetectorRef.markForCheck();
   }
+
+  /**
+   * Completes the dialog open by clearing potential animation classes, trapping
+   * focus and emitting an opened event.
+   */
+  private _finishDialogOpen = () => {
+    this._clearAnimationClasses();
+    this._openAnimationDone(this._enterAnimationDuration);
+  };
+
+  /**
+   * Completes the dialog close by clearing potential animation classes, restoring
+   * focus and emitting a closed event.
+   */
+  private _finishDialogClose = () => {
+    this._clearAnimationClasses();
+    this._animationStateChanged.emit({state: 'closed', totalTime: this._exitAnimationDuration});
+  };
+
+  /** Clears all dialog animation classes. */
+  private _clearAnimationClasses() {
+    this._hostElement.classList.remove(OPENING_CLASS, CLOSING_CLASS);
+  }
+
+  private _waitForAnimationToComplete(duration: number, callback: () => void) {
+    if (this._animationTimer !== null) {
+      clearTimeout(this._animationTimer);
+    }
+
+    // Note that we want this timer to run inside the NgZone, because we want
+    // the related events like `afterClosed` to be inside the zone as well.
+    this._animationTimer = setTimeout(callback, duration);
+  }
+
+  /** Runs a callback in `requestAnimationFrame`, if available. */
+  private _requestAnimationFrame(callback: () => void) {
+    this._ngZone.runOutsideAngular(() => {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(callback);
+      } else {
+        callback();
+      }
+    });
+  }
+
+  protected override _captureInitialFocus(): void {
+    if (!this._config.delayFocusTrap) {
+      this._trapFocus();
+    }
+  }
+
+  /**
+   * Callback for when the open dialog animation has finished. Intended to
+   * be called by sub-classes that use different animation implementations.
+   */
+  protected _openAnimationDone(totalTime: number) {
+    if (this._config.delayFocusTrap) {
+      this._trapFocus();
+    }
+
+    this._animationStateChanged.next({state: 'opened', totalTime});
+  }
+
+  override ngOnDestroy() {
+    super.ngOnDestroy();
+
+    if (this._animationTimer !== null) {
+      clearTimeout(this._animationTimer);
+    }
+  }
+
+  override attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
+    // When a component is passed into the dialog, the host element interrupts
+    // the `display:flex` from affecting the dialog title, content, and
+    // actions. To fix this, we make the component host `display: contents` by
+    // marking its host with the `mat-mdc-dialog-component-host` class.
+    //
+    // Note that this problem does not exist when a template ref is used since
+    // the title, contents, and actions are then nested directly under the
+    // dialog surface.
+    const ref = super.attachComponentPortal(portal);
+    ref.location.nativeElement.classList.add('mat-mdc-dialog-component-host');
+    return ref;
+  }
+}
+
+const TRANSITION_DURATION_PROPERTY = '--mat-dialog-transition-duration';
+
+// TODO(mmalerba): Remove this function after animation durations are required
+//  to be numbers.
+/**
+ * Converts a CSS time string to a number in ms. If the given time is already a
+ * number, it is assumed to be in ms.
+ */
+function parseCssTime(time: string | number | undefined): number | null {
+  if (time == null) {
+    return null;
+  }
+  if (typeof time === 'number') {
+    return time;
+  }
+  if (time.endsWith('ms')) {
+    return coerceNumberProperty(time.substring(0, time.length - 2));
+  }
+  if (time.endsWith('s')) {
+    return coerceNumberProperty(time.substring(0, time.length - 1)) * 1000;
+  }
+  if (time === '0') {
+    return 0;
+  }
+  return null; // anything else is invalid.
 }

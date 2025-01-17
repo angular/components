@@ -3,26 +3,22 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {
   AfterContentInit,
   ContentChildren,
   Directive,
-  DoCheck,
-  ElementRef,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
-  OnInit,
   QueryList,
+  inject,
 } from '@angular/core';
-import {isObservable} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {CDK_TREE_NODE_OUTLET_NODE, CdkTreeNodeOutlet} from './outlet';
-import {CdkTree, CdkTreeNode} from './tree';
-import {getTreeControlFunctionsMissingError} from './tree-errors';
+import {CdkTreeNode} from './tree';
 
 /**
  * Nested node is a child of `<cdk-tree>`. It works with nested tree.
@@ -33,14 +29,21 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
 @Directive({
   selector: 'cdk-nested-tree-node',
   exportAs: 'cdkNestedTreeNode',
-  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [
     {provide: CdkTreeNode, useExisting: CdkNestedTreeNode},
-    {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
-  ]
+    {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode},
+  ],
+  host: {
+    'class': 'cdk-nested-tree-node',
+  },
 })
-export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
-    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export class CdkNestedTreeNode<T, K = T>
+  extends CdkTreeNode<T, K>
+  implements AfterContentInit, OnDestroy
+{
+  protected override _type: 'flat' | 'nested' = 'nested';
+  protected _differs = inject(IterableDiffers);
+
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
@@ -51,45 +54,25 @@ export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
   @ContentChildren(CdkTreeNodeOutlet, {
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
-    descendants: true
+    descendants: true,
   })
   nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              tree: CdkTree<T, K>,
-              protected _differs: IterableDiffers) {
-    super(elementRef, tree);
-    // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
-    // it is not set by the time it's children nodes try to read the class from it.
-    // TODO: move to host after View Engine deprecation
-    elementRef.nativeElement.classList.add('cdk-nested-tree-node');
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
   }
 
   ngAfterContentInit() {
     this._dataDiffer = this._differs.find([]).create(this._tree.trackBy);
-    if (!this._tree.treeControl.getChildren && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw getTreeControlFunctionsMissingError();
-    }
-    const childrenNodes = this._tree.treeControl.getChildren(this.data);
-    if (Array.isArray(childrenNodes)) {
-      this.updateChildrenNodes(childrenNodes as T[]);
-    } else if (isObservable(childrenNodes)) {
-      childrenNodes.pipe(takeUntil(this._destroyed))
-        .subscribe(result => this.updateChildrenNodes(result));
-    }
-    this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
-        .subscribe(() => this.updateChildrenNodes());
-  }
-
-  // This is a workaround for https://github.com/angular/angular/issues/23091
-  // In aot mode, the lifecycle hooks from parent class are not called.
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngDoCheck() {
-    super.ngDoCheck();
+    this._tree
+      ._getDirectChildren(this.data)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(result => this.updateChildrenNodes(result));
+    this.nodeOutlet.changes
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(() => this.updateChildrenNodes());
   }
 
   override ngOnDestroy() {

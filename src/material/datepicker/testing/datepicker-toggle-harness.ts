@@ -3,14 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DatepickerToggleHarnessFilters} from './datepicker-harness-filters';
 import {DatepickerTriggerHarnessBase} from './datepicker-trigger-harness-base';
-
 
 /** Harness for interacting with a standard Material datepicker toggle in tests. */
 export class MatDatepickerToggleHarness extends DatepickerTriggerHarnessBase {
@@ -25,8 +24,9 @@ export class MatDatepickerToggleHarness extends DatepickerTriggerHarnessBase {
    * @param options Options for filtering which datepicker toggle instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: DatepickerToggleHarnessFilters = {}):
-    HarnessPredicate<MatDatepickerToggleHarness> {
+  static with(
+    options: DatepickerToggleHarnessFilters = {},
+  ): HarnessPredicate<MatDatepickerToggleHarness> {
     return new HarnessPredicate(MatDatepickerToggleHarness, options);
   }
 

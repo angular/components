@@ -3,14 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, Inject, OnDestroy} from '@angular/core';
+import {inject, Injectable, OnDestroy, RendererFactory2} from '@angular/core';
 import {OverlayContainer} from './overlay-container';
-import {DOCUMENT} from '@angular/common';
-import {Platform} from '@angular/cdk/platform';
-
 
 /**
  * Alternative to OverlayContainer that supports correct displaying of overlay elements in
@@ -21,47 +18,39 @@ import {Platform} from '@angular/cdk/platform';
  */
 @Injectable({providedIn: 'root'})
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _fullScreenEventName: string | undefined;
-  private _fullScreenListener: () => void;
+  private _cleanupFullScreenListener: (() => void) | undefined;
 
-  constructor(@Inject(DOCUMENT) _document: any, platform: Platform) {
-    super(_document, platform);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
   }
 
   override ngOnDestroy() {
     super.ngOnDestroy();
-
-    if (this._fullScreenEventName && this._fullScreenListener) {
-      this._document.removeEventListener(this._fullScreenEventName, this._fullScreenListener);
-    }
+    this._cleanupFullScreenListener?.();
   }
 
   protected override _createContainer(): void {
+    const eventName = this._getEventName();
     super._createContainer();
     this._adjustParentForFullscreenChange();
-    this._addFullscreenChangeListener(() => this._adjustParentForFullscreenChange());
+
+    if (eventName) {
+      this._cleanupFullScreenListener?.();
+      this._cleanupFullScreenListener = this._renderer.listen('document', eventName, () => {
+        this._adjustParentForFullscreenChange();
+      });
+    }
   }
 
   private _adjustParentForFullscreenChange(): void {
-    if (!this._containerElement) {
-      return;
-    }
-
-    const fullscreenElement = this.getFullscreenElement();
-    const parent = fullscreenElement || this._document.body;
-    parent.appendChild(this._containerElement);
-  }
-
-  private _addFullscreenChangeListener(fn: () => void) {
-    const eventName = this._getEventName();
-
-    if (eventName) {
-      if (this._fullScreenListener) {
-        this._document.removeEventListener(eventName, this._fullScreenListener);
-      }
-
-      this._document.addEventListener(eventName, fn);
-      this._fullScreenListener = fn;
+    if (this._containerElement) {
+      const fullscreenElement = this.getFullscreenElement();
+      const parent = fullscreenElement || this._document.body;
+      parent.appendChild(this._containerElement);
     }
   }
 
@@ -90,10 +79,12 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   getFullscreenElement(): Element {
     const _document = this._document as any;
 
-    return _document.fullscreenElement ||
-           _document.webkitFullscreenElement ||
-           _document.mozFullScreenElement ||
-           _document.msFullscreenElement ||
-           null;
+    return (
+      _document.fullscreenElement ||
+      _document.webkitFullscreenElement ||
+      _document.mozFullScreenElement ||
+      _document.msFullscreenElement ||
+      null
+    );
   }
 }

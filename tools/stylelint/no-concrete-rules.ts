@@ -1,31 +1,27 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, utils, Rule} from 'stylelint';
 import {basename} from 'path';
 
 const ruleName = 'material/no-concrete-rules';
 const messages = utils.ruleMessages(ruleName, {
-  expected: pattern => `CSS rules must be placed inside a mixin for files matching '${pattern}'.`
+  expectedWithPattern: pattern =>
+    `CSS rules must be placed inside a mixin for files matching '${pattern}'.`,
+  expectedAllFiles: () => `CSS rules must be placed inside a mixin for all files.`,
 });
-
-/** Config options for the rule. */
-interface RuleOptions {
-  filePattern: string;
-}
 
 /**
  * Stylelint plugin that will log a warning for all top-level CSS rules.
  * Can be used in theme files to ensure that everything is inside a mixin.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options) => {
+const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
     }
 
-    const options = _options as RuleOptions;
-    const filePattern = new RegExp(options.filePattern);
+    const filePattern = options.filePattern ? new RegExp(options.filePattern) : null;
     const fileName = basename(root.source!.input.file!);
 
-    if (!filePattern.test(fileName) || !root.nodes) {
+    if ((filePattern !== null && !filePattern.test(fileName)) || !root.nodes) {
       return;
     }
 
@@ -38,13 +34,17 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options) => {
           result,
           ruleName,
           node,
-          message: messages.expected(filePattern)
+          message:
+            filePattern !== null
+              ? messages.expectedWithPattern(filePattern)
+              : messages.expectedAllFiles(),
         });
       }
     });
   };
-});
+};
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

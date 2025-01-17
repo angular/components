@@ -1,36 +1,9 @@
 {
-  "ChromeHeadlessCI": {
-    "base": "ChromeHeadless",
-    "flags": [
-      "--window-size=1024,768",
-      "--no-sandbox"
-    ]
-  },
-  "ChromeLocalDebug": {
-    "base": "Chrome",
-    "flags": [
-      "--window-size=1024,768"
-    ]
-  },
-  "SAUCELABS_IOS13": {
-    "base": "SauceLabs",
-    "browserName": "Safari",
-    "platformVersion": "13.2",
-    "platformName": "iOS",
-    "deviceName": "iPhone XS Simulator"
-  },
-  "BROWSERSTACK_EDGE87": {
-    "base": "BrowserStack",
-    "browser": "Edge",
-    "browser_version": "87.0",
-    "os": "Windows",
-    "os_version": "10"
-  },
-  "BROWSERSTACK_SAFARI13": {
+  "BROWSERSTACK_SAFARI16": {
     "base": "BrowserStack",
     "browser": "Safari",
-    "browser_version": "13.1",
+    "browser_version": "16.0",
     "os": "OS X",
-    "os_version": "Catalina"
+    "os_version": "Ventura"
   }
 }

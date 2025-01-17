@@ -3,38 +3,49 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
-  Attribute,
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   ErrorHandler,
   inject,
-  Inject,
   InjectionToken,
   Input,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
+  HostAttributeToken,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
+import {ThemePalette} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 import {MatIconRegistry} from './icon-registry';
 
+/** Default options for `mat-icon`.  */
+export interface MatIconDefaultOptions {
+  /**
+   * Theme color of the icon. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/icon/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
+  color?: ThemePalette;
+  /** Font set that the icon is a part of. */
+  fontSet?: string;
+}
 
-// Boilerplate for applying mixins to MatIcon.
-/** @docs-private */
-const _MatIconBase = mixinColor(class {
-  constructor(public _elementRef: ElementRef) {}
-});
+/** Injection token to be used to override the default options for `mat-icon`. */
+export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions>(
+  'MAT_ICON_DEFAULT_OPTIONS',
+);
 
 /**
  * Injection token used to provide the current location to `MatIcon`.
@@ -43,7 +54,7 @@ const _MatIconBase = mixinColor(class {
  */
 export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
   providedIn: 'root',
-  factory: MAT_ICON_LOCATION_FACTORY
+  factory: MAT_ICON_LOCATION_FACTORY,
 });
 
 /**
@@ -62,10 +73,9 @@ export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
   return {
     // Note that this needs to be a function, rather than a property, because Angular
     // will only resolve it once, but we want the current path on each call.
-    getPathname: () => _location ? (_location.pathname + _location.search) : ''
+    getPathname: () => (_location ? _location.pathname + _location.search : ''),
   };
 }
-
 
 /** SVG attributes that accept a FuncIRI (e.g. `url(<something>)`). */
 const funcIriAttributes = [
@@ -80,7 +90,7 @@ const funcIriAttributes = [
   'marker-mid',
   'marker-end',
   'mask',
-  'stroke'
+  'stroke',
 ];
 
 /** Selector that can be used to find all elements that are using a `FuncIRI`. */
@@ -100,19 +110,24 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
  *     `<mat-icon svgIcon="left-arrow"></mat-icon>
  *     <mat-icon svgIcon="animals:cat"></mat-icon>`
  *
- * - Use a font ligature as an icon by putting the ligature text in the content of the `<mat-icon>`
- *   component. By default the Material icons font is used as described at
+ * - Use a font ligature as an icon by putting the ligature text in the `fontIcon` attribute or the
+ *   content of the `<mat-icon>` component. If you register a custom font class, don't forget to also
+ *   include the special class `mat-ligature-font`. It is recommended to use the attribute alternative
+ *   to prevent the ligature text to be selectable and to appear in search engine results.
+ *   By default, the Material icons font is used as described at
  *   http://google.github.io/material-design-icons/#icon-font-for-the-web. You can specify an
  *   alternate font by setting the fontSet input to either the CSS class to apply to use the
  *   desired font, or to an alias previously registered with MatIconRegistry.registerFontClassAlias.
  *   Examples:
- *     `<mat-icon>home</mat-icon>
+ *     `<mat-icon fontIcon="home"></mat-icon>
+ *     <mat-icon>home</mat-icon>
+ *     <mat-icon fontSet="myfont" fontIcon="sun"></mat-icon>
  *     <mat-icon fontSet="myfont">sun</mat-icon>`
  *
  * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
  *   font, and the fontIcon input to specify the icon. Typically the fontIcon will specify a
  *   CSS class which causes the glyph to be displayed via a :before selector, as in
- *   https://fortawesome.github.io/Font-Awesome/examples/
+ *   https://fontawesome-v4.github.io/examples/
  *   Example:
  *     `<mat-icon fontSet="fa" fontIcon="alarm"></mat-icon>`
  */
@@ -120,37 +135,56 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   template: '<ng-content></ng-content>',
   selector: 'mat-icon',
   exportAs: 'matIcon',
-  styleUrls: ['icon.css'],
-  inputs: ['color'],
+  styleUrl: 'icon.css',
   host: {
     'role': 'img',
     'class': 'mat-icon notranslate',
+    '[class]': 'color ? "mat-" + color : ""',
     '[attr.data-mat-icon-type]': '_usingFontIcon() ? "font" : "svg"',
     '[attr.data-mat-icon-name]': '_svgName || fontIcon',
     '[attr.data-mat-icon-namespace]': '_svgNamespace || fontSet',
+    '[attr.fontIcon]': '_usingFontIcon() ? fontIcon : null',
     '[class.mat-icon-inline]': 'inline',
     '[class.mat-icon-no-color]': 'color !== "primary" && color !== "accent" && color !== "warn"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, CanColor, OnDestroy {
+export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _iconRegistry = inject(MatIconRegistry);
+  private _location = inject<MatIconLocation>(MAT_ICON_LOCATION);
+  private readonly _errorHandler = inject(ErrorHandler);
+  private _defaultColor: ThemePalette;
+
+  /**
+   * Theme color of the icon. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/icon/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
+  @Input()
+  get color() {
+    return this._color || this._defaultColor;
+  }
+  set color(value: string | null | undefined) {
+    this._color = value;
+  }
+  private _color: string | null | undefined;
+
   /**
    * Whether the icon should be inlined, automatically sizing the icon to match the font size of
    * the element the icon is contained in.
    */
-  @Input()
-  get inline(): boolean {
-    return this._inline;
-  }
-  set inline(inline: boolean) {
-    this._inline = coerceBooleanProperty(inline);
-  }
-  private _inline: boolean = false;
+  @Input({transform: booleanAttribute})
+  inline: boolean = false;
 
   /** Name of the icon in the SVG icon set. */
   @Input()
-  get svgIcon(): string { return this._svgIcon; }
+  get svgIcon(): string {
+    return this._svgIcon;
+  }
   set svgIcon(value: string) {
     if (value !== this._svgIcon) {
       if (value) {
@@ -165,7 +199,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Font set that the icon is a part of. */
   @Input()
-  get fontSet(): string { return this._fontSet; }
+  get fontSet(): string {
+    return this._fontSet;
+  }
   set fontSet(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -178,7 +214,9 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
 
   /** Name of an icon within a font set. */
   @Input()
-  get fontIcon(): string { return this._fontIcon; }
+  get fontIcon(): string {
+    return this._fontIcon;
+  }
   set fontIcon(value: string) {
     const newValue = this._cleanupFontValue(value);
 
@@ -189,7 +227,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   }
   private _fontIcon: string;
 
-  private _previousFontSetClass: string;
+  private _previousFontSetClass: string[] = [];
   private _previousFontIconClass: string;
 
   _svgName: string | null;
@@ -199,22 +237,31 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _previousPath?: string;
 
   /** Keeps track of the elements and attributes that we've prefixed with the current path. */
-  private _elementsWithExternalReferences?: Map<Element, {name: string, value: string}[]>;
+  private _elementsWithExternalReferences?: Map<Element, {name: string; value: string}[]>;
 
   /** Subscription to the current in-progress SVG icon request. */
   private _currentIconFetch = Subscription.EMPTY;
 
-  constructor(
-      elementRef: ElementRef<HTMLElement>, private _iconRegistry: MatIconRegistry,
-      @Attribute('aria-hidden') ariaHidden: string,
-      @Inject(MAT_ICON_LOCATION) private _location: MatIconLocation,
-      private readonly _errorHandler: ErrorHandler) {
-    super(elementRef);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ariaHidden = inject(new HostAttributeToken('aria-hidden'), {optional: true});
+    const defaults = inject<MatIconDefaultOptions>(MAT_ICON_DEFAULT_OPTIONS, {optional: true});
+
+    if (defaults) {
+      if (defaults.color) {
+        this.color = this._defaultColor = defaults.color;
+      }
+
+      if (defaults.fontSet) {
+        this.fontSet = defaults.fontSet;
+      }
+    }
 
     // If the user has not explicitly set aria-hidden, mark the icon as hidden, as this is
     // the right thing to do for the majority of icon use-cases.
     if (!ariaHidden) {
-      elementRef.nativeElement.setAttribute('aria-hidden', 'true');
+      this._elementRef.nativeElement.setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -237,9 +284,12 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
     const parts = iconName.split(':');
     switch (parts.length) {
-      case 1: return ['', parts[0]]; // Use default namespace.
-      case 2: return <[string, string]>parts;
-      default: throw Error(`Invalid icon name: "${iconName}"`); // TODO: add an ngDevMode check
+      case 1:
+        return ['', parts[0]]; // Use default namespace.
+      case 2:
+        return <[string, string]>parts;
+      default:
+        throw Error(`Invalid icon name: "${iconName}"`); // TODO: add an ngDevMode check
     }
   }
 
@@ -283,15 +333,6 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   private _setSvgElement(svg: SVGElement) {
     this._clearSvgElement();
 
-    // Workaround for IE11 and Edge ignoring `style` tags inside dynamically-created SVGs.
-    // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10898469/
-    // Do this before inserting the element into the DOM, in order to avoid a style recalculation.
-    const styleTags = svg.querySelectorAll('style') as NodeListOf<HTMLStyleElement>;
-
-    for (let i = 0; i < styleTags.length; i++) {
-      styleTags[i].textContent += ' ';
-    }
-
     // Note: we do this fix here, rather than the icon registry, because the
     // references have to point to the URL at the time that the icon was created.
     const path = this._location.getPathname();
@@ -317,7 +358,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
       // 1 corresponds to Node.ELEMENT_NODE. We remove all non-element nodes in order to get rid
       // of any loose text nodes, as well as any SVG elements in order to remove any old icons.
       if (child.nodeType !== 1 || child.nodeName.toLowerCase() === 'svg') {
-        layoutElement.removeChild(child);
+        child.remove();
       }
     }
   }
@@ -328,21 +369,20 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
     }
 
     const elem: HTMLElement = this._elementRef.nativeElement;
-    const fontSetClass = this.fontSet ?
-        this._iconRegistry.classNameForFontAlias(this.fontSet) :
-        this._iconRegistry.getDefaultFontSetClass();
+    const fontSetClasses = (
+      this.fontSet
+        ? this._iconRegistry.classNameForFontAlias(this.fontSet).split(/ +/)
+        : this._iconRegistry.getDefaultFontSetClass()
+    ).filter(className => className.length > 0);
 
-    if (fontSetClass != this._previousFontSetClass) {
-      if (this._previousFontSetClass) {
-        elem.classList.remove(this._previousFontSetClass);
-      }
-      if (fontSetClass) {
-        elem.classList.add(fontSetClass);
-      }
-      this._previousFontSetClass = fontSetClass;
-    }
+    this._previousFontSetClass.forEach(className => elem.classList.remove(className));
+    fontSetClasses.forEach(className => elem.classList.add(className));
+    this._previousFontSetClass = fontSetClasses;
 
-    if (this.fontIcon != this._previousFontIconClass) {
+    if (
+      this.fontIcon !== this._previousFontIconClass &&
+      !fontSetClasses.includes('mat-ligature-font')
+    ) {
       if (this._previousFontIconClass) {
         elem.classList.remove(this._previousFontIconClass);
       }
@@ -385,8 +425,8 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
    */
   private _cacheChildrenWithExternalReferences(element: SVGElement) {
     const elementsWithFuncIri = element.querySelectorAll(funcIriAttributeSelector);
-    const elements = this._elementsWithExternalReferences =
-        this._elementsWithExternalReferences || new Map();
+    const elements = (this._elementsWithExternalReferences =
+      this._elementsWithExternalReferences || new Map());
 
     for (let i = 0; i < elementsWithFuncIri.length; i++) {
       funcIriAttributes.forEach(attr => {
@@ -409,7 +449,7 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
   }
 
   /** Sets a new SVG icon with a particular name. */
-  private _updateSvgIcon(rawName: string|undefined) {
+  private _updateSvgIcon(rawName: string | undefined) {
     this._svgNamespace = null;
     this._svgName = null;
     this._currentIconFetch.unsubscribe();
@@ -425,14 +465,16 @@ export class MatIcon extends _MatIconBase implements OnInit, AfterViewChecked, C
         this._svgName = iconName;
       }
 
-      this._currentIconFetch = this._iconRegistry.getNamedSvgIcon(iconName, namespace)
-          .pipe(take(1))
-          .subscribe(svg => this._setSvgElement(svg), (err: Error) => {
+      this._currentIconFetch = this._iconRegistry
+        .getNamedSvgIcon(iconName, namespace)
+        .pipe(take(1))
+        .subscribe(
+          svg => this._setSvgElement(svg),
+          (err: Error) => {
             const errorMessage = `Error retrieving icon ${namespace}:${iconName}! ${err.message}`;
             this._errorHandler.handleError(new Error(errorMessage));
-          });
+          },
+        );
     }
   }
-
-  static ngAcceptInputType_inline: BooleanInput;
 }

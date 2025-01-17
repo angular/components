@@ -1,0 +1,296 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:color';
+@use '../theming/theming';
+@use './palette';
+
+/// Extracts a color from a palette or throws an error if it doesn't exist.
+/// @param {Map} $palette The palette from which to extract a color.
+/// @param {String | Number} $hue The hue for which to get the color.
+@function _get-color-from-palette($palette, $hue) {
+  @if map.has-key($palette, $hue) {
+    @return map.get($palette, $hue);
+  }
+
+  @error 'Hue "' + $hue + '" does not exist in palette. Available hues are: ' + map.keys($palette);
+}
+
+/// For a given hue in a palette, return the contrast color from the map of contrast palettes.
+/// @param {Map} $palette The palette from which to extract a color.
+/// @param {String | Number} $hue The hue for which to get a contrast color.
+/// @returns {Color} The contrast color for the given palette and hue.
+@function get-contrast-color-from-palette($palette, $hue) {
+  @return map.get(map.get($palette, contrast), $hue);
+}
+
+
+/// Creates a map of hues to colors for a theme. This is used to define a theme palette in terms
+/// of the Material Design hues.
+/// @param {Map} $base-palette Map of hue keys to color values for the basis for this palette.
+/// @param {String | Number} $default Default hue for this palette.
+/// @param {String | Number} $lighter "lighter" hue for this palette.
+/// @param {String | Number} $darker "darker" hue for this palette.
+/// @param {String | Number} $text "text" hue for this palette.
+/// @returns {Map} A complete Angular Material theming palette.
+@function define-palette($base-palette, $default: 500, $lighter: 100, $darker: 700,
+  $text: $default) {
+  $result: map.merge($base-palette, (
+    default: _get-color-from-palette($base-palette, $default),
+    lighter: _get-color-from-palette($base-palette, $lighter),
+    darker: _get-color-from-palette($base-palette, $darker),
+    text: _get-color-from-palette($base-palette, $text),
+    default-contrast: get-contrast-color-from-palette($base-palette, $default),
+    lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
+    darker-contrast: get-contrast-color-from-palette($base-palette, $darker)
+  ));
+
+  // For each hue in the palette, add a "-contrast" color to the map.
+  @each $hue, $color in $base-palette {
+    $result: map.merge($result, (
+      '#{$hue}-contrast': get-contrast-color-from-palette($base-palette, $hue)
+    ));
+  }
+
+  @return $result;
+}
+
+
+/// Gets a color from a theme palette (the output of mat-palette).
+/// The hue can be one of the standard values (500, A400, etc.), one of the three preconfigured
+/// hues (default, lighter, darker), or any of the aforementioned suffixed with "-contrast".
+///
+/// @param {Map} $palette The palette from which to extract a color.
+/// @param {String | Number} $hue The hue from the palette to use. If this is a value between 0
+//     and 1, it will be treated as opacity.
+/// @param {Number} $opacity The alpha channel value for the color.
+/// @returns {Color} The color for the given palette, hue, and opacity.
+@function get-color-from-palette($palette, $hue: default, $opacity: null) {
+  // If hueKey is a number between zero and one, then it actually contains an
+  // opacity value, so recall this function with the default hue and that given opacity.
+  @if meta.type-of($hue) == number and $hue >= 0 and $hue <= 1 {
+    @return get-color-from-palette($palette, default, $hue);
+  }
+
+  // We cast the $hue to a string, because some hues starting with a number, like `700-contrast`,
+  // might be inferred as numbers by Sass. Casting them to string fixes the map lookup.
+  $color: if(map.has-key($palette, $hue), map.get($palette, $hue), map.get($palette, $hue + ''));
+
+  @if (meta.type-of($color) != color) {
+    // If the $color resolved to something different from a color (e.g. a CSS variable),
+    // we can't apply the opacity anyway so we return the value as is, otherwise Sass can
+    // throw an error or output something invalid.
+    @return $color;
+  }
+
+  @return rgba($color, if($opacity == null, color.opacity($color), $opacity));
+}
+
+// Validates the specified theme by ensuring that the optional color config defines
+// a primary, accent and warn palette. Returns the theme if no failures were found.
+@function _mat-validate-theme($theme) {
+  @if map.get($theme, color) {
+    $color: map.get($theme, color);
+    @if not map.get($color, primary) {
+      @error 'Theme does not define a valid "primary" palette.';
+    }
+    @else if not map.get($color, accent) {
+      @error 'Theme does not define a valid "accent" palette.';
+    }
+    @else if not map.get($color, warn) {
+      @error 'Theme does not define a valid "warn" palette.';
+    }
+  }
+  @return $theme;
+}
+
+// Creates a light-themed color configuration from the specified
+// primary, accent and warn palettes.
+@function _mat-create-light-color-config($primary, $accent, $warn: null) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+    is-dark: false,
+    foreground: palette.$light-theme-foreground-palette,
+    background: palette.$light-theme-background-palette,
+  );
+}
+
+// Creates a dark-themed color configuration from the specified
+// primary, accent and warn palettes.
+@function _mat-create-dark-color-config($primary, $accent, $warn: null) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+    is-dark: true,
+    foreground: palette.$dark-theme-foreground-palette,
+    background: palette.$dark-theme-background-palette,
+  );
+}
+
+// TODO: Remove legacy API and rename `$primary` below to `$config`. Currently it cannot be renamed
+// as it would break existing apps that set the parameter by name.
+
+/// Creates a container object for a light theme to be given to individual component theme mixins.
+/// @param {Map} $primary The theme configuration object.
+/// @returns {Map} A complete Angular Material theme map.
+@function define-light-theme($primary, $accent: null, $warn: define-palette(palette.$red-palette)) {
+  // This function creates a container object for the individual component theme mixins. Consumers
+  // can construct such an object by calling this function, or by building the object manually.
+  // There are two possible ways to invoke this function in order to create such an object:
+  //
+  //    (1) Passing in a map that holds optional configurations for individual parts of the
+  //        theming system. For `color` configurations, the function only expects the palettes
+  //        for `primary` and `accent` (and optionally `warn`). The function will expand the
+  //        shorthand into an actual configuration that can be consumed in `-color` mixins.
+  //    (2) Legacy pattern: Passing in the palettes as parameters. This is not as flexible
+  //        as passing in a configuration map because only the `color` system can be configured.
+  //
+  // If the legacy pattern is used, we generate a container object only with a light-themed
+  // configuration for the `color` theming part.
+  @if $accent != null {
+    @warn theming.$private-legacy-theme-warning;
+    $theme: _mat-validate-theme((
+      _is-legacy-theme: true,
+      color: _mat-create-light-color-config($primary, $accent, $warn),
+    ));
+
+    @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
+  }
+  // If the map pattern is used (1), we just pass-through the configurations for individual
+  // parts of the theming system, but update the `color` configuration if set. As explained
+  // above, the color shorthand will be expanded to an actual light-themed color configuration.
+  $result: $primary;
+  @if map.get($primary, color) {
+    $color-settings: map.get($primary, color);
+    $primary: map.get($color-settings, primary);
+    $accent: map.get($color-settings, accent);
+    $warn: map.get($color-settings, warn);
+    $result: map.merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
+  }
+  @return _internalize-theme(
+      theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
+}
+
+// TODO: Remove legacy API and rename below `$primary` to `$config`. Currently it cannot be renamed
+// as it would break existing apps that set the parameter by name.
+
+/// Creates a container object for a dark theme to be given to individual component theme mixins.
+/// @param {Map} $primary The theme configuration object.
+/// @returns {Map} A complete Angular Material theme map.
+@function define-dark-theme($primary, $accent: null, $warn: define-palette(palette.$red-palette)) {
+  // This function creates a container object for the individual component theme mixins. Consumers
+  // can construct such an object by calling this function, or by building the object manually.
+  // There are two possible ways to invoke this function in order to create such an object:
+  //
+  //    (1) Passing in a map that holds optional configurations for individual parts of the
+  //        theming system. For `color` configurations, the function only expects the palettes
+  //        for `primary` and `accent` (and optionally `warn`). The function will expand the
+  //        shorthand into an actual configuration that can be consumed in `-color` mixins.
+  //    (2) Legacy pattern: Passing in the palettes as parameters. This is not as flexible
+  //        as passing in a configuration map because only the `color` system can be configured.
+  //
+  // If the legacy pattern is used, we generate a container object only with a dark-themed
+  // configuration for the `color` theming part.
+  @if $accent != null {
+    @warn theming.$private-legacy-theme-warning;
+    $theme: _mat-validate-theme((
+      _is-legacy-theme: true,
+      color: _mat-create-dark-color-config($primary, $accent, $warn),
+    ));
+    @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
+  }
+  // If the map pattern is used (1), we just pass-through the configurations for individual
+  // parts of the theming system, but update the `color` configuration if set. As explained
+  // above, the color shorthand will be expanded to an actual dark-themed color configuration.
+  $result: $primary;
+  @if map.get($primary, color) {
+    $color-settings: map.get($primary, color);
+    $primary: map.get($color-settings, primary);
+    $accent: map.get($color-settings, accent);
+    $warn: map.get($color-settings, warn);
+    $result: map.merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
+  }
+  @return _internalize-theme(
+      theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
+}
+
+/// Gets the color configuration from the given theme or configuration.
+/// @param {Map} $theme The theme map returned from `define-light-theme` or `define-dark-theme`.
+/// @param {Map} $default The default value returned if the given `$theme` does not include a
+///     `color` configuration.
+/// @returns {Map} Color configuration for a theme.
+@function get-color-config($theme, $default: null) {
+  @return theming.private-get-color-config($theme, $default);
+}
+
+/// Gets the density configuration from the given theme or configuration.
+/// @param {Map} $theme-or-config  The theme map returned from `define-light-theme` or
+///     `define-dark-theme`.
+/// @param {Map} $default The default value returned if the given `$theme` does not include a
+///     `density` configuration.
+/// @returns {Map} Density configuration for a theme.
+@function get-density-config($theme-or-config, $default: 0) {
+  @return theming.private-get-density-config($theme-or-config, $default);
+}
+
+/// Gets the typography configuration from the given theme or configuration.
+/// For backwards compatibility, typography is not included by default.
+/// @param {Map} $theme-or-config  The theme map returned from `define-light-theme` or
+///     `define-dark-theme`.
+/// @param {Map} $default The default value returned if the given `$theme` does not include a
+///     `typography` configuration.
+/// @returns {Map} Typography configuration for a theme.
+@function get-typography-config($theme-or-config, $default: null) {
+  @return theming.private-get-typography-config($theme-or-config, $default);
+}
+
+/// Copies the given theme object and nests it within itself under a secret key and replaces the
+/// original map keys with error values. This allows the inspection API which is aware of the secret
+/// key to access the real values, but attempts to directly access the map will result in errors.
+/// @param {Map} $theme The theme map.
+@function _internalize-theme($theme) {
+  @if map.has-key($theme, theming.$private-internal-name) {
+    @return $theme;
+  }
+  $internalized-theme: (
+    theming.$private-internal-name: (
+      theme-version: 0,
+      m2-config: $theme
+    )
+  );
+  @if (theming.$theme-legacy-inspection-api-compatibility) {
+    @return map.merge($theme, $internalized-theme);
+  }
+  $error-theme:
+    _replace-values-with-errors($theme, 'Theme may only be accessed via theme inspection API');
+  @return map.merge($error-theme, $internalized-theme);
+}
+
+/// Replaces concrete CSS values with errors in a theme object.
+/// Errors are represented as a map `(ERROR: <message>)`. Because maps are not valid CSS values,
+/// the Sass will not compile if the user tries to use any of the error theme values in their CSS.
+/// Users will see a message about `(ERROR: <message>)` not being a valid CSS value. Using the
+/// message, that winds up getting shown, we can help explain to users why they're getting the
+/// error.
+/// @param {*} $value The theme value to replace with errors.
+/// @param {String} $message The error message to sow users.
+/// @return {Map} A version of $value where concrete CSS values have been replaced with errors
+@function _replace-values-with-errors($value, $message) {
+  $value-type: meta.type-of($value);
+  @if $value-type == 'map' {
+    @each $k, $v in $value {
+      $value: map.set($value, $k, _replace-values-with-errors($v, $message));
+    }
+    @return $value;
+  }
+  @else if $value-type == 'list' and list.length($value) > 0 {
+    @for $i from 1 through list.length() {
+      $value: list.set-nth($value, $i, _replace-values-with-errors(list.nth($value, $i), $message));
+    }
+    @return $value;
+  }
+  @return (ERROR: $message);
+}

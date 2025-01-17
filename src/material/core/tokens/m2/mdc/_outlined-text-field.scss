@@ -1,0 +1,163 @@
+@use 'sass:map';
+@use '../../../theming/inspection';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, outlined-text-field);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+@function get-unthemable-tokens() {
+  @return (
+    outline-width: 1px,
+    focus-outline-width: 2px,
+    container-shape: 4px,
+
+    // =============================================================================================
+    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
+    // =============================================================================================
+    error-focus-caret-color: null,
+    error-hover-caret-color: null,
+    focus-caret-color: null,
+    hover-caret-color: null,
+    disabled-outline-opacity: null,
+    hover-outline-width: null,
+    disabled-outline-width: null,
+    label-text-type: null,
+    label-text-populated-line-height: null,
+    label-text-populated-size: null,
+    disabled-label-text-opacity: null,
+    disabled-supporting-text-color: null,
+    disabled-supporting-text-opacity: null,
+    error-focus-supporting-text-color: null,
+    error-hover-supporting-text-color: null,
+    error-supporting-text-color: null,
+    focus-supporting-text-color: null,
+    hover-supporting-text-color: null,
+    supporting-text-color: null,
+    supporting-text-font: null,
+    supporting-text-line-height: null,
+    supporting-text-size: null,
+    supporting-text-tracking: null,
+    supporting-text-type: null,
+    supporting-text-weight: null,
+    leading-icon-size: null,
+    trailing-icon-size: null,
+    leading-icon-color: null,
+    disabled-leading-icon-color: null,
+    disabled-leading-icon-opacity: null,
+    error-focus-leading-icon-color: null,
+    error-hover-leading-icon-color: null,
+    error-leading-icon-color: null,
+    focus-leading-icon-color: null,
+    hover-leading-icon-color: null,
+    trailing-icon-color: null,
+    disabled-trailing-icon-color: null,
+    disabled-trailing-icon-opacity: null,
+    error-focus-trailing-icon-color: null,
+    error-hover-trailing-icon-color: null,
+    error-trailing-icon-color: null,
+    focus-trailing-icon-color: null,
+    hover-trailing-icon-color: null,
+    input-text-prefix-color: null,
+    input-text-type: null,
+    container-height: null,
+    input-text-suffix-color: null,
+    input-text-font: null,
+    input-text-line-height: null,
+    input-text-size: null,
+    input-text-tracking: null,
+    input-text-weight: null,
+    disabled-input-text-opacity: null,
+    error-focus-input-text-color: null,
+    error-hover-input-text-color: null,
+    error-input-text-color: null,
+    focus-input-text-color: null,
+    hover-input-text-color: null,
+    label-text-line-height: null, // We override the line height to `normal` so don't emit a slot.
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $warn-color: inspection.get-theme-color($theme, warn);
+  $color-tokens: private-get-color-palette-color-tokens($theme, primary);
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $on-surface: if($is-dark, #fff, #000);
+  $text-color-base: if(token-definition.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, text, 1));
+  $disabled-text-color-base: if(token-definition.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, disabled-text, 1));
+  $divider-base: if(token-definition.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, divider, 1));
+
+  @return map.merge($color-tokens, (
+    label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    disabled-label-text-color:
+      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+
+    input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    disabled-input-text-color:
+      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    input-text-placeholder-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+
+    error-caret-color: $warn-color,
+    error-focus-label-text-color: $warn-color,
+    error-label-text-color: $warn-color,
+    error-hover-label-text-color: $warn-color,
+
+    // Outline tokens
+    outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
+    disabled-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    hover-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+    error-focus-outline-color: $warn-color,
+    error-hover-outline-color: $warn-color,
+    error-outline-color: $warn-color,
+  ));
+}
+
+// Generates the mapping for the properties that change based on the text field color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
+
+  @return (
+    caret-color: $palette-color,
+    focus-outline-color: $palette-color,
+    focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  @return ();
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+      get-unthemable-tokens(),
+      get-color-tokens(token-definition.$placeholder-color-config),
+      get-typography-tokens(token-definition.$placeholder-typography-config),
+      get-density-tokens(token-definition.$placeholder-density-config)
+  );
+}

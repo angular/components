@@ -8,6 +8,7 @@ import {AsyncFunctionsProcessor} from './processors/async-functions';
 import {categorizer} from './processors/categorizer';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {EntryPointGrouper} from './processors/entry-point-grouper';
+import {ErrorUnknownJsdocTagsProcessor} from './processors/error-unknown-jsdoc-tags';
 import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {mergeInheritedProperties} from './processors/merge-inherited-properties';
 import {resolveInheritedDocs} from './processors/resolve-inherited-docs';
@@ -51,6 +52,9 @@ apiDocsPackage.processor(mergeInheritedProperties);
 // Processor that filters out symbols that should not be shown in the docs.
 apiDocsPackage.processor(new DocsPrivateFilter());
 
+// Processor that throws an error if API docs with unknown JSDoc tags are discovered.
+apiDocsPackage.processor(new ErrorUnknownJsdocTagsProcessor());
+
 // Processor that appends categorization flags to the docs, e.g. `isDirective`, `isNgModule`, etc.
 apiDocsPackage.processor(categorizer);
 
@@ -62,51 +66,67 @@ apiDocsPackage.processor(new EntryPointGrouper());
 apiDocsPackage.processor(new AsyncFunctionsProcessor());
 
 // Configure the log level of the API docs dgeni package.
-apiDocsPackage.config(function(log: any) {
-  return log.level = 'warning';
+apiDocsPackage.config(function (log: any) {
+  return (log.level = 'warn');
 });
 
 // Configure the processor for reading files from the file system.
-apiDocsPackage.config(function(readFilesProcessor: any) {
+apiDocsPackage.config(function (readFilesProcessor: any) {
   // Disabled since we only use the "readTypeScriptModules" processor
   readFilesProcessor.$enabled = false;
 });
 
 // Patches Dgeni's log service to not print warnings about unresolved mixin base symbols.
-apiDocsPackage.config(function(log: any) {
+apiDocsPackage.config(function (log: any) {
   return patchLogService(log);
 });
 
 // Configure the output path for written files (i.e., file names).
-apiDocsPackage.config(function(computePathsProcessor: any) {
-  computePathsProcessor.pathTemplates = [{
-    docTypes: ['entry-point'],
-    pathTemplate: '${name}',
-    outputPathTemplate: '${name}.html',
-  }];
+apiDocsPackage.config(function (computePathsProcessor: any) {
+  computePathsProcessor.pathTemplates = [
+    {
+      docTypes: ['entry-point'],
+      pathTemplate: '${name}',
+      outputPathTemplate: '${name}.html',
+    },
+  ];
 });
 
 // Configure custom JsDoc tags.
-apiDocsPackage.config(function(parseTagsProcessor: any) {
+apiDocsPackage.config(function (parseTagsProcessor: any) {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
     {name: 'docs-private'},
     {name: 'docs-public'},
     {name: 'docs-primary-export'},
     {name: 'breaking-change'},
+    // Adds support for the `tsdoc` `@template` annotation/tag.
+    // https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#template.
+    {name: 'template', multi: true},
+    //  JSDoc annotations/tags which are not supported by default.
+    {name: 'throws', multi: true},
+
+    // Annotations/tags from external API docs (i.e. from the node modules). These tags are
+    // added so that no errors are reported.
+    // TODO(devversion): remove this once the fix in dgeni-package is available.
+    //   https://github.com/angular/dgeni-packages/commit/19e629c0d156572cbea149af9e0cc7ec02db7cb6.
+    {name: 'usageNotes'},
+    {name: 'publicApi'},
+    {name: 'ngModule', multi: true},
+    {name: 'nodoc'},
   ]);
 });
 
-apiDocsPackage.config(function(checkAnchorLinksProcessor: any) {
+apiDocsPackage.config(function (checkAnchorLinksProcessor: any) {
   // This ensures that Dgeni will fail if we generate links that don't follow this format.
-  checkAnchorLinksProcessor.ignoredLinks.push(/(components|cdk)\/[\w-]+\/api#\w+/);
+  checkAnchorLinksProcessor.ignoredLinks.push(/(components|cdk)\/[\w-]+(\/testing)?\/api#\w+/);
 });
 
 // Configure the processor for understanding TypeScript.
-apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules) {
+apiDocsPackage.config(function (readTypeScriptModules: ReadTypeScriptModules) {
   readTypeScriptModules.hidePrivateMembers = true;
 });
 
-apiDocsPackage.config(function(tsHost: Host) {
+apiDocsPackage.config(function (tsHost: Host) {
   // Disable concatenation of multiple leading comments for a TypeScript node. Since all shipped
   // source files have a license banner at top, the license banner comment would be incorrectly
   // considered as "comment" for the first TypeScript node of a given file. Since there are
@@ -121,7 +141,7 @@ apiDocsPackage.config(function(tsHost: Host) {
 });
 
 // Configure processor for finding nunjucks templates.
-apiDocsPackage.config(function(templateFinder: any, templateEngine: any) {
+apiDocsPackage.config(function (templateFinder: any, templateEngine: any) {
   // Standard patterns for matching docs to templates
   templateFinder.templatePatterns = [
     '${ doc.template }',

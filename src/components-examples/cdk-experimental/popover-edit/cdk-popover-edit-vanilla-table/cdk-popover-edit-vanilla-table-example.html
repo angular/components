@@ -19,51 +19,53 @@
       </form>
     </div>
   </ng-template>
-  
+
   <tr>
     <th> No. </th>
     <th> Name </th>
     <th> Weight </th>
     <th> Symbol </th>
   </tr>
-  
-  <tr *ngFor="let element of elements">
-    <td> {{element.position}} </td>
-    
-    <td [cdkPopoverEdit]="nameEdit">
-      {{element.name}}
-      
-      <!-- This edit is defined in the cell and can implicitly access element -->
-      <ng-template #nameEdit>
-        <div style="background-color: white; width: 100%">
-          <form #f="ngForm"
-              cdkEditControl
-              (ngSubmit)="onSubmitName(element, f)"
-              [cdkEditControlPreservedFormValue]="preservedNameValues.get(element)"
-              (cdkEditControlPreservedFormValueChange)="preservedNameValues.set(element, $event)">
-            Edit a:
-            <input [ngModel]="element.name" name="name" required>
-            <br>
-            <button type="submit">Confirm</button>
-            <button cdkEditRevert>Revert</button>
-            <button cdkEditClose>Close</button>
-          </form>
-        </div>
-      </ng-template>
 
-      <span *cdkRowHoverContent>
-        <button cdkEditOpen>Edit</button>
-      </span>
-    </td>
+  @for (element of elements; track element) {
+    <tr>
+      <td> {{element.position}} </td>
 
-    <td [cdkPopoverEdit]="weightEdit" [cdkPopoverEditContext]="element">
-      {{element.weight}}
-      
-      <span *cdkRowHoverContent>
-        <button cdkEditOpen>Edit</button>
-      </span>
-    </td>
+      <td [cdkPopoverEdit]="nameEdit">
+        {{element.name}}
 
-    <td> {{element.symbol}} </td>
-  </tr>
+        <!-- This edit is defined in the cell and can implicitly access element -->
+        <ng-template #nameEdit>
+          <div style="background-color: white; width: 100%">
+            <form #f="ngForm"
+                cdkEditControl
+                (ngSubmit)="onSubmitName(element, f)"
+                [cdkEditControlPreservedFormValue]="preservedNameValues.get(element)"
+                (cdkEditControlPreservedFormValueChange)="preservedNameValues.set(element, $event)">
+              Edit a:
+              <input [ngModel]="element.name" name="name" required>
+              <br>
+              <button type="submit">Confirm</button>
+              <button cdkEditRevert>Revert</button>
+              <button cdkEditClose>Close</button>
+            </form>
+          </div>
+        </ng-template>
+
+        <span *cdkRowHoverContent>
+          <button cdkEditOpen>Edit</button>
+        </span>
+      </td>
+
+      <td [cdkPopoverEdit]="weightEdit" [cdkPopoverEditContext]="element">
+        {{element.weight}}
+
+        <span *cdkRowHoverContent>
+          <button cdkEditOpen>Edit</button>
+        </span>
+      </td>
+
+      <td> {{element.symbol}} </td>
+    </tr>
+  }
 </table>

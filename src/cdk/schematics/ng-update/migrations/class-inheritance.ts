@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as ts from 'typescript';
@@ -28,9 +28,8 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
 
   override init(): void {
     getVersionUpgradeData(this, 'propertyNames')
-        .filter(data => data.limitedTo && data.limitedTo.classes)
-        .forEach(
-            data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
+      .filter(data => data.limitedTo && data.limitedTo.classes)
+      .forEach(data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
   }
 
   override visitNode(node: ts.Node): void {
@@ -52,11 +51,12 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
 
       if (data) {
         this.createFailureAtNode(
-            node,
-            `Found class "${className}" which extends class ` +
-                `"${typeName}". Please note that the base class property ` +
-                `"${data.replace}" has changed to "${data.replaceWith}". ` +
-                `You may need to update your class as well.`);
+          node,
+          `Found class "${className}" which extends class ` +
+            `"${typeName}". Please note that the base class property ` +
+            `"${data.replace}" has changed to "${data.replaceWith}". ` +
+            `You may need to update your class as well.`,
+        );
       }
     });
   }

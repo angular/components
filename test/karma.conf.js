@@ -7,93 +7,69 @@ module.exports = config => {
     frameworks: ['jasmine'],
     middleware: ['fake-url'],
     plugins: [
-      require('karma-jasmine'), require('karma-browserstack-launcher'),
-      require('karma-sauce-launcher'), require('karma-chrome-launcher'),
-      require('karma-firefox-launcher'), require('karma-sourcemap-loader'), {
+      require('karma-jasmine'),
+      require('karma-browserstack-launcher'),
+      require('karma-sourcemap-loader'),
+      {
         'middleware:fake-url': [
           'factory',
-          function() {
+          function () {
             // Middleware that avoids triggering 404s during tests that need to reference
             // image paths. Assumes that the image path will start with `/$`.
-            return function(request, response, next) {
+            return function (request, response, next) {
               if (request.url.indexOf('/$') === 0) {
                 response.writeHead(200);
                 return response.end();
               }
 
               next();
-            }
-          }
-        ]
-      }
+            };
+          },
+        ],
+      },
     ],
     files: [
-      {pattern: 'node_modules/core-js-bundle/minified.js', included: true, watched: false},
-      {pattern: 'node_modules/core-js-bundle/minified.js.map', included: false, watched: false},
-      {pattern: 'node_modules/tslib/tslib.js', included: false, watched: false},
-      {pattern: 'node_modules/systemjs/dist/system.js', included: true, watched: false},
-      {pattern: 'node_modules/systemjs/dist/system.js.map', included: false, watched: false},
-      {pattern: 'node_modules/zone.js/dist/zone.min.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/proxy.min.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/sync-test.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/jasmine-patch.min.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
+      {pattern: 'node_modules/reflect-metadata/Reflect.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/bundles/zone.umd.min.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/bundles/proxy.umd.min.js', included: true, watched: false},
+      {pattern: 'node_modules/zone.js/bundles/sync-test.umd.js', included: true, watched: false},
+      {
+        pattern: 'node_modules/zone.js/bundles/jasmine-patch.umd.min.js',
+        included: true,
+        watched: false,
+      },
+      {pattern: 'node_modules/zone.js/bundles/async-test.umd.js', included: true, watched: false},
+      {
+        pattern: 'node_modules/zone.js/bundles/fake-async-test.umd.js',
+        included: true,
+        watched: false,
+      },
       {
         pattern: 'node_modules/moment/min/moment-with-locales.min.js',
         included: false,
-        watched: false
+        watched: false,
       },
-      {pattern: 'node_modules/@material/*/dist/*', included: false, watched: false},
+      {pattern: 'node_modules/luxon/build/amd/**/*', included: false, watched: false},
       {pattern: 'node_modules/kagekiri/**', included: false, watched: false},
 
-      // Include all Angular dependencies
-      {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
-      {pattern: 'node_modules/rxjs/**/*', included: false, watched: false},
-
-      // The Karma system configuration is built by Bazel. The built System config
       // is copied into the "dist/" folder so that the Karma config can use it.
-      {pattern: 'dist/karma-system-config.js', included: true, watched: false},
-      {pattern: 'test/karma-test-shim.js', included: true, watched: false},
-
-      // Needed for exposing the RxJS operators through the RxJS UMD bundle. This
-      // is done for performance reasons since fetching individual files is slow.
-      {pattern: 'tools/system-rxjs-operators.js', included: false, watched: false},
+      {pattern: 'dist/legacy-test-bundle.spec.js', included: true, watched: false},
 
       // Include a Material theme in the test suite. Also include the MDC theme as
       // karma runs tests for the MDC prototype components as well.
       {
-        pattern: 'dist/packages/material/core/theming/prebuilt/indigo-pink.css',
+        pattern: 'src/material/core/theming/prebuilt/azure-blue.css',
         included: true,
-        watched: true
+        watched: true,
       },
-      {
-        pattern: 'dist/packages/material-experimental/mdc-theming/prebuilt/indigo-pink.css',
-        included: true,
-        watched: true
-      },
-
-      // Includes all package tests and source files into karma. Those files will be watched.
-      // This pattern also matches all sourcemap files and TypeScript files for debugging.
-      {pattern: 'dist/packages/**/*', included: false, watched: true},
     ],
 
     customLaunchers: customLaunchers,
 
-    preprocessors: {'dist/packages/**/*.js': ['sourcemap']},
+    preprocessors: {'dist/*.js': ['sourcemap']},
 
     reporters: ['dots'],
     autoWatch: false,
-
-    sauceLabs: {
-      testName: 'Angular Material Unit Tests',
-      startConnect: false,
-      recordVideo: false,
-      recordScreenshots: false,
-      idleTimeout: 1000,
-      commandTimeout: 600,
-      maxDuration: 5400,
-    },
 
     browserStack: {
       project: 'Angular Material Unit Tests',
@@ -106,7 +82,7 @@ module.exports = config => {
     browserDisconnectTolerance: 1,
     browserNoActivityTimeout: 300000,
 
-    browsers: ['ChromeLocalDebug'],
+    browsers: [],
     singleRun: false,
 
     // Try Websocket for a faster transmission first. Fallback to polling if necessary.
@@ -117,20 +93,19 @@ module.exports = config => {
     client: {
       jasmine: {
         // TODO(jelbourn): re-enable random test order once we can de-flake existing issues.
-        random: false
-      }
+        random: false,
+      },
     },
   });
 
-  if (process.env['CIRCLECI']) {
-    const containerInstanceIndex = Number(process.env['CIRCLE_NODE_INDEX']);
-    const maxParallelContainerInstances = Number(process.env['CIRCLE_NODE_TOTAL']);
-    const tunnelIdentifier =
-        `angular-material-${process.env['CIRCLE_BUILD_NUM']}-${containerInstanceIndex}`;
-    const buildIdentifier = `circleci-${tunnelIdentifier}`;
+  if (process.env['CI']) {
+    const containerInstanceIndex = Number(process.env['CI_NODE_INDEX']) || 0;
+    const maxParallelContainerInstances = Number(process.env['CI_NODE_TOTAL']) || 1;
+    const tunnelIdentifier = `angular-material-${process.env['CI_RUNNER_NUMBER']}-${containerInstanceIndex}`;
+    const buildIdentifier = `ci-${tunnelIdentifier}`;
     const testPlatform = process.env['TEST_PLATFORM'];
 
-    // This defines how often a given browser should be launched in the same CircleCI
+    // This defines how often a given browser should be launched in the same CI
     // container. This is helpful if we want to shard tests across the same browser.
     const parallelBrowserInstances = Number(process.env['KARMA_PARALLEL_BROWSERS']) || 1;
 
@@ -142,18 +117,12 @@ module.exports = config => {
       config.parallelOptions = {
         executors: parallelBrowserInstances,
         shardStrategy: 'round-robin',
-      }
+      };
     }
 
     if (testPlatform === 'browserstack') {
       config.browserStack.build = buildIdentifier;
       config.browserStack.tunnelIdentifier = tunnelIdentifier;
-    } else if (testPlatform === 'saucelabs') {
-      config.sauceLabs.build = buildIdentifier;
-      config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
-      // Setup the saucelabs reporter so that we report back to Saucelabs once
-      // our tests finished.
-      config.reporters.push('saucelabs');
     }
 
     // If the test platform is not "local", browsers are launched externally and can take
@@ -167,7 +136,9 @@ module.exports = config => {
 
     const platformBrowsers = platformMap[testPlatform];
     const browserInstanceChunks = splitBrowsersIntoInstances(
-        platformBrowsers, maxParallelContainerInstances);
+      platformBrowsers,
+      maxParallelContainerInstances,
+    );
 
     // Configure Karma to launch the browsers that belong to the given test platform and
     // container instance.

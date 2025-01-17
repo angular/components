@@ -3,11 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // TODO(jelbourn): move this to live with the rest of the scrolling code
 // TODO(jelbourn): someday replace this with IntersectionObservers
+
+/** Equivalent of `DOMRect` without some of the properties we don't care about. */
+type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
 
 /**
  * Gets whether an element is scrolled outside of view by any of its parent scrolling containers.
@@ -16,7 +19,7 @@
  * @returns Whether the element is scrolled out of view
  * @docs-private
  */
-export function isElementScrolledOutsideView(element: ClientRect, scrollContainers: ClientRect[]) {
+export function isElementScrolledOutsideView(element: Dimensions, scrollContainers: Dimensions[]) {
   return scrollContainers.some(containerBounds => {
     const outsideAbove = element.bottom < containerBounds.top;
     const outsideBelow = element.top > containerBounds.bottom;
@@ -27,7 +30,6 @@ export function isElementScrolledOutsideView(element: ClientRect, scrollContaine
   });
 }
 
-
 /**
  * Gets whether an element is clipped by any of its scrolling containers.
  * @param element Dimensions of the element (from getBoundingClientRect)
@@ -35,7 +37,7 @@ export function isElementScrolledOutsideView(element: ClientRect, scrollContaine
  * @returns Whether the element is clipped
  * @docs-private
  */
-export function isElementClippedByScrolling(element: ClientRect, scrollContainers: ClientRect[]) {
+export function isElementClippedByScrolling(element: Dimensions, scrollContainers: Dimensions[]) {
   return scrollContainers.some(scrollContainerRect => {
     const clippedAbove = element.top < scrollContainerRect.top;
     const clippedBelow = element.bottom > scrollContainerRect.bottom;

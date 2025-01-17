@@ -1,53 +1,117 @@
+
+@use '@angular/cdk';
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
+@use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/elevation';
-@use '../../cdk/a11y';
 
 .mat-expansion-panel {
-  $border-radius: 4px;
-
   box-sizing: content-box;
   display: block;
   margin: 0;
-  border-radius: $border-radius;
   overflow: hidden;
-  transition: margin 225ms variables.$fast-out-slow-in-timing-function,
-      elevation.private-transition-property-value();
 
-  // Required so that the `box-shadow` works after the focus indicator relatively positions the
-  // header.
+  &.mat-expansion-panel-animations-enabled {
+    transition: margin 225ms variables.$fast-out-slow-in-timing-function,
+        elevation.private-transition-property-value();
+  }
+
+  // Required so that the `box-shadow` works after the
+  // focus indicator relatively positions the header.
   position: relative;
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(background, container-background-color);
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+  }
+
+  @include elevation.overridable-elevation(2);
 
   .mat-accordion & {
     &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {
       border-radius: 0;
     }
 
-    &:first-of-type {
-      border-top-right-radius: $border-radius;
-      border-top-left-radius: $border-radius;
-    }
+    @include token-utils.use-tokens(
+      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+      &:first-of-type {
+        @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+      }
 
-    &:last-of-type {
-      border-bottom-right-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
+      &:last-of-type {
+        @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+        @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      }
     }
   }
 
-  @include a11y.high-contrast(active, off) {
+  @include cdk.high-contrast {
     outline: solid 1px;
   }
+}
 
-  &.ng-animate-disabled,
-  .ng-animate-disabled &,
-  &._mat-animation-noopable {
-    transition: none;
+.mat-expansion-panel-content-wrapper {
+  // Note: we can't use `overflow: hidden` here, because it can clip content with
+  // ripples or box shadows. Instead we transition the `visibility` below.
+  // Based on https://css-tricks.com/css-grid-can-do-auto-height-transitions.
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+
+  .mat-expansion-panel-animations-enabled & {
+    transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  .mat-expansion-panel.mat-expanded > & {
+    grid-template-rows: 1fr;
+  }
+
+  // All the browsers we support have support for `grid` as well, but
+  // given that these styles are load-bearing for the expansion panel,
+  // we have a fallback to `height` which doesn't animate, just in case.
+  // stylelint-disable material/no-prefixes
+  @supports not (grid-template-rows: 0fr) {
+    height: 0;
+
+    .mat-expansion-panel.mat-expanded > & {
+      height: auto;
+    }
+  }
+  // stylelint-enable material/no-prefixes
 }
 
 .mat-expansion-panel-content {
   display: flex;
   flex-direction: column;
   overflow: visible;
+  min-height: 0;
+
+  // The visibility here serves two purposes:
+  // 1. Hiding content from assistive technology.
+  // 2. Hiding any content that might be overflowing.
+  visibility: hidden;
+
+  .mat-expansion-panel-animations-enabled & {
+    // The duration here is slightly lower so the content
+    // goes away quicker than the collapse transition.
+    transition: visibility 190ms linear;
+  }
+
+  .mat-expansion-panel.mat-expanded > .mat-expansion-panel-content-wrapper > & {
+    visibility: visible;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+  }
 }
 
 .mat-expansion-panel-body {
@@ -76,7 +140,12 @@
   justify-content: flex-end;
   padding: 16px 8px 16px 24px;
 
-  button.mat-button-base, button.mat-mdc-button-base {
+  @include token-utils.use-tokens(
+    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-color, actions-divider-color);
+  }
+
+  .mat-button-base, .mat-mdc-button-base {
     margin-left: 8px;
 
     [dir='rtl'] & {

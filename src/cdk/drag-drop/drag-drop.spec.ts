@@ -1,7 +1,7 @@
-import {Component, ElementRef} from '@angular/core';
-import {fakeAsync, TestBed, inject} from '@angular/core/testing';
-import {DragDropModule} from './drag-drop-module';
+import {Component, ElementRef, inject} from '@angular/core';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {DragDrop} from './drag-drop';
+import {DragDropModule} from './drag-drop-module';
 import {DragRef} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
 
@@ -10,15 +10,10 @@ describe('DragDrop', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [DragDropModule],
+      imports: [DragDropModule, TestComponent],
     });
 
-    TestBed.compileComponents();
-  }));
-
-  beforeEach(inject([DragDrop], (d: DragDrop) => {
-    service = d;
+    service = TestBed.inject(DragDrop);
   }));
 
   it('should be able to attach a DragRef to a DOM node', () => {
@@ -38,10 +33,9 @@ describe('DragDrop', () => {
   });
 });
 
-
 @Component({
-  template: '<div></div>'
+  template: '<div></div>',
 })
 class TestComponent {
-  constructor(public elementRef: ElementRef<HTMLElement>) {}
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 }

@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef} from '@angular/core';
+import {Directive, ElementRef, inject} from '@angular/core';
 import {FocusableOption} from '@angular/cdk/a11y';
-
 
 @Directive({
   selector: '[cdkStepHeader]',
@@ -17,7 +16,10 @@ import {FocusableOption} from '@angular/cdk/a11y';
   },
 })
 export class CdkStepHeader implements FocusableOption {
-  constructor(public _elementRef: ElementRef<HTMLElement>) {}
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Focuses the step header. */
   focus() {

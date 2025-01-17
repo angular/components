@@ -15,9 +15,7 @@
   }
 
   .demo-item {
-    -ms-writing-mode: tb-lr;
     -webkit-writing-mode: vertical-lr;
-    // stylelint-disable-next-line material/no-prefixes
     writing-mode: vertical-lr;
   }
 }
@@ -54,4 +52,15 @@
 
 .demo-td {
   border: 1px solid gray;
+}
+
+.demo-resize-example {
+  display: flex;
+  width: 500px;
+  height: 500px;
+}
+
+cdk-virtual-scroll-window-scrolling-example {
+  display: block;
+  width: 500px;
 }

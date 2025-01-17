@@ -3,14 +3,16 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, Directive} from '@angular/core';
-import {MAT_CHECKBOX_DEFAULT_OPTIONS} from '@angular/material/checkbox';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {ThemePalette} from '@angular/material/core';
-
+import {ANIMATION_MODULE_TYPE, ChangeDetectionStrategy, Component, Directive} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material/checkbox';
+import {MatPseudoCheckboxModule, ThemePalette} from '@angular/material/core';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltip} from '@angular/material/tooltip';
 
 export interface Task {
   name: string;
@@ -22,31 +24,30 @@ export interface Task {
   selector: '[clickActionNoop]',
   providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}],
 })
-export class ClickActionNoop {
-}
+export class ClickActionNoop {}
 
 @Directive({
   selector: '[clickActionCheck]',
   providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}],
 })
-export class ClickActionCheck {
-}
+export class ClickActionCheck {}
 
 @Directive({
   selector: '[animationsNoop]',
   providers: [{provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations'}],
 })
-export class AnimationsNoop {
-}
+export class AnimationsNoop {}
 
 @Component({
   selector: 'mat-checkbox-demo-nested-checklist',
-  styles: [`
+  styles: `
     li {
       margin-bottom: 4px;
     }
-  `],
-  templateUrl: './nested-checklist.html',
+  `,
+  templateUrl: 'nested-checklist.html',
+  imports: [MatCheckboxModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCheckboxDemoNestedChecklist {
   tasks: Task[] = [
@@ -56,8 +57,8 @@ export class MatCheckboxDemoNestedChecklist {
       subtasks: [
         {name: 'Cook Dinner', completed: false},
         {name: 'Read the Material Design Spec', completed: false},
-        {name: 'Upgrade Application to Angular', completed: false}
-      ]
+        {name: 'Upgrade Application to Angular', completed: false},
+      ],
     },
     {
       name: 'Groceries',
@@ -65,9 +66,9 @@ export class MatCheckboxDemoNestedChecklist {
       subtasks: [
         {name: 'Organic Eggs', completed: false},
         {name: 'Protein Powder', completed: false},
-        {name: 'Almond Meal Flour', completed: false}
-      ]
-    }
+        {name: 'Almond Meal Flour', completed: false},
+      ],
+    },
   ];
 
   allComplete(task: Task): boolean {
@@ -88,21 +89,36 @@ export class MatCheckboxDemoNestedChecklist {
     if (tasks == null) {
       return;
     }
-    tasks.forEach(t => t.completed = completed);
+    tasks.forEach(t => (t.completed = completed));
   }
 }
 
 @Component({
-  selector: 'mat-checkbox-demo',
+  selector: 'checkbox-demo',
   templateUrl: 'checkbox-demo.html',
-  styleUrls: ['checkbox-demo.css'],
+  styleUrl: 'checkbox-demo.css',
+  imports: [
+    FormsModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatSelectModule,
+    MatPseudoCheckboxModule,
+    ReactiveFormsModule,
+    MatCheckboxDemoNestedChecklist,
+    ClickActionNoop,
+    ClickActionCheck,
+    AnimationsNoop,
+    MatTooltip,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxDemo {
-  isIndeterminate: boolean = false;
-  isChecked: boolean = false;
-  isDisabled: boolean = false;
-  labelPosition: 'after' | 'before' = 'after';
-  useAlternativeColor: boolean = false;
+  isIndeterminate = false;
+  isChecked = false;
+  isDisabled = false;
+  isDisabledInteractive = false;
+  labelPosition: 'before' | 'after' = 'after';
+  useAlternativeColor = false;
 
   demoRequired = false;
   demoLabelAfter = false;

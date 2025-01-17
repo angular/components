@@ -1,9 +1,10 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
+    "ng_test_library",
+    "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
@@ -16,48 +17,51 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":card.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/card",
+    assets = [":card_scss"] + glob(["**/*.html"]),
     deps = [
         "//src/material/core",
-        "@npm//@angular/core",
     ],
 )
 
 sass_library(
     name = "card_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "card_scss",
     src = "card.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
 
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+    ),
     deps = [
-        "//src/cdk/testing/private/e2e",
+        ":card",
     ],
 )
 
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
-    ],
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":card.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":card_scss_lib"],
 )
 
 filegroup(

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {SelectionChange} from '@angular/material-experimental/selection';
+import {SelectionChange, MatSelectionModule} from '@angular/material-experimental/selection';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table that uses `matSelectionColumn` which allows users to select rows.
@@ -7,7 +8,8 @@ import {SelectionChange} from '@angular/material-experimental/selection';
 @Component({
   selector: 'mat-selection-column-example',
   templateUrl: 'mat-selection-column-example.html',
-  styleUrls: ['mat-selection-column-example.css'],
+  styleUrl: 'mat-selection-column-example.css',
+  imports: [MatTableModule, MatSelectionModule],
 })
 export class MatSelectionColumnExample {
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
@@ -15,7 +17,7 @@ export class MatSelectionColumnExample {
   selected: string[] = [];
 
   selectionChanged(event: SelectionChange<PeriodicElement>) {
-    this.selected = event.after.map((select) => select.value.name);
+    this.selected = event.after.map(select => select.value.name);
   }
 }
 

@@ -9,15 +9,12 @@ describe('CdkAccordionItem', () => {
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
-        CdkAccordionModule
-      ],
-      declarations: [
+        CdkAccordionModule,
         SingleItem,
         ItemGroupWithoutAccordion,
-        ItemGroupWithAccordion
+        ItemGroupWithAccordion,
       ],
     });
-    TestBed.compileComponents();
   }));
 
   describe('single item', () => {
@@ -170,7 +167,6 @@ describe('CdkAccordionItem', () => {
 
       subscription.unsubscribe();
     });
-
   });
 
   describe('items without accordion', () => {
@@ -213,7 +209,6 @@ describe('CdkAccordionItem', () => {
     });
   });
 
-
   describe('items in accordion', () => {
     let fixture: ComponentFixture<SingleItem>;
     let firstItem: CdkAccordionItem;
@@ -242,7 +237,8 @@ describe('CdkAccordionItem', () => {
 });
 
 @Component({
-  template: `<cdk-accordion-item #item1></cdk-accordion-item>`
+  template: `<cdk-accordion-item #item1></cdk-accordion-item>`,
+  imports: [CdkAccordionModule],
 })
 class SingleItem {}
 
@@ -250,7 +246,8 @@ class SingleItem {}
   template: `
     <cdk-accordion-item #item1></cdk-accordion-item>
     <cdk-accordion-item #item2></cdk-accordion-item>
-  `
+  `,
+  imports: [CdkAccordionModule],
 })
 class ItemGroupWithoutAccordion {}
 
@@ -260,6 +257,7 @@ class ItemGroupWithoutAccordion {}
       <cdk-accordion-item #item1></cdk-accordion-item>
       <cdk-accordion-item #item2></cdk-accordion-item>
     </cdk-accordion>
-  `
+  `,
+  imports: [CdkAccordionModule],
 })
 class ItemGroupWithAccordion {}

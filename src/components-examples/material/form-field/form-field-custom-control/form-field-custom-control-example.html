@@ -1,8 +1,9 @@
 <div [formGroup]="form">
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Phone number</mat-label>
     <example-tel-input formControlName="tel" required></example-tel-input>
     <mat-icon matSuffix>phone</mat-icon>
     <mat-hint>Include area code</mat-hint>
   </mat-form-field>
+  <p>Entered value: {{form.valueChanges | async | json}}</p>
 </div>

@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * @title Tooltip that can be manually shown/hidden.
@@ -6,6 +8,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'tooltip-manual-example',
   templateUrl: 'tooltip-manual-example.html',
-  styleUrls: ['tooltip-manual-example.css'],
+  styleUrl: 'tooltip-manual-example.css',
+  imports: [MatButtonModule, MatTooltipModule],
 })
 export class TooltipManualExample {}

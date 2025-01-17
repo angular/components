@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -20,7 +20,7 @@ const stateObservableSymbol = Symbol('ProxyZone_PATCHED#stateObservable');
 
 /** Type that describes a potentially patched proxy zone instance. */
 type PatchedProxyZone = ProxyZone & {
-  [stateObservableSymbol]: undefined|Observable<TaskState>;
+  [stateObservableSymbol]: undefined | Observable<TaskState>;
 };
 
 /**
@@ -30,14 +30,19 @@ type PatchedProxyZone = ProxyZone & {
  * This serves as a workaround for https://github.com/angular/angular/issues/32896.
  */
 export class TaskStateZoneInterceptor {
+  private _lastState: HasTaskState | null = null;
+
   /** Subject that can be used to emit a new state change. */
   private readonly _stateSubject = new BehaviorSubject<TaskState>(
-      this._lastState ? this._getTaskStateFromInternalZoneState(this._lastState) : {stable: true});
+    this._lastState ? this._getTaskStateFromInternalZoneState(this._lastState) : {stable: true},
+  );
 
   /** Public observable that emits whenever the task state changes. */
   readonly state: Observable<TaskState> = this._stateSubject;
 
-  constructor(private _lastState: HasTaskState|null) {}
+  constructor(lastState: HasTaskState | null) {
+    this._lastState = lastState;
+  }
 
   /** This will be called whenever the task state changes in the intercepted zone. */
   onHasTask(delegate: ZoneDelegate, current: Zone, target: Zone, hasTaskState: HasTaskState) {
@@ -58,19 +63,22 @@ export class TaskStateZoneInterceptor {
    */
   static setup(): Observable<TaskState> {
     if (Zone === undefined) {
-      throw Error('Could not find ZoneJS. For test harnesses running in TestBed, ' +
-        'ZoneJS needs to be installed.');
+      throw Error(
+        'Could not find ZoneJS. For test harnesses running in TestBed, ' +
+          'ZoneJS needs to be installed.',
+      );
     }
 
     // tslint:disable-next-line:variable-name
-    const ProxyZoneSpec = (Zone as any)['ProxyZoneSpec'] as ProxyZoneStatic|undefined;
+    const ProxyZoneSpec = (Zone as any)['ProxyZoneSpec'] as ProxyZoneStatic | undefined;
 
     // If there is no "ProxyZoneSpec" installed, we throw an error and recommend
     // setting up the proxy zone by pulling in the testing bundle.
     if (!ProxyZoneSpec) {
       throw Error(
         'ProxyZoneSpec is needed for the test harnesses but could not be found. ' +
-        'Please make sure that your environment includes zone.js/dist/zone-testing.js');
+          'Please make sure that your environment includes zone.js/dist/zone-testing.js',
+      );
     }
 
     // Ensure that there is a proxy zone instance set up, and get
@@ -98,11 +106,11 @@ export class TaskStateZoneInterceptor {
     // our interceptor. Since we just intend to monitor the task state of the proxy zone, it is
     // sufficient to just patch the proxy zone. This also avoids that we interfere with the task
     // queue scheduling logic.
-    zoneSpec.onHasTask = function(...args: [ZoneDelegate, Zone, Zone, HasTaskState]) {
+    zoneSpec.onHasTask = function (...args: [ZoneDelegate, Zone, Zone, HasTaskState]) {
       zoneSpecOnHasTask(...args);
       interceptor.onHasTask(...args);
     };
 
-    return zoneSpec[stateObservableSymbol] = interceptor.state;
+    return (zoneSpec[stateObservableSymbol] = interceptor.state);
   }
 }

@@ -1,10 +1,62 @@
 <div>
 
   <div class="demo-badge">
+    <h3>Buttons</h3>
+    <button mat-stroked-button matBadge="7" matBadgeDescription="7 unread messages">
+      Inbox
+    </button>
+
+    <button mat-stroked-button matBadge="7" matBadgePosition="below after"
+        matBadgeDescription="7 unread messages">
+      Inbox
+    </button>
+
+    <button mat-stroked-button matBadge="7" disabled matBadgeDisabled
+        matBadgeDescription="7 unread messages">
+      Inbox
+    </button>
+
+    <button mat-stroked-button matBadge="7" matBadgeColor="accent"
+        matBadgeDescription="7 unread messages">
+      Inbox
+    </button>
+  </div>
+
+  <div class="demo-badge">
+    <h3>Icons</h3>
+    <mat-icon [matBadge]="badgeContent" matBadgeDescription="This is a home indicator">
+      home
+    </mat-icon>
+
+    <mat-icon color="primary" matBadge="22" matBadgePosition="below after" matBadgeColor="accent">
+      home
+    </mat-icon>
+
+    <mat-icon color="primary" matBadge="22" matBadgePosition="above before" matBadgeColor="warn">
+      home
+    </mat-icon>
+
+    <mat-icon color="primary" matBadge="22" matBadgePosition="below before">
+      home
+    </mat-icon>
+  </div>
+
+   <div class="demo-badge">
+    <h3>Size</h3>
+    <mat-icon [matBadge]="badgeContent" matBadgeSize="small">
+      home
+    </mat-icon>
+    <mat-icon [matBadge]="badgeContent" matBadgeSize="large">
+      home
+    </mat-icon>
+
+  </div>
+
+  <div class="demo-badge">
     <h3>Text</h3>
-    <span [matBadge]="badgeContent" matBadgeOverlap="false" *ngIf="visible">
-      Hello
-    </span>
+    @if (visible) {
+      <span [matBadge]="badgeContent" matBadgeOverlap="false">Hello</span>
+    }
 
     <span matBadge="11111" matBadgeOverlap="false">
       Hello
@@ -32,71 +84,6 @@
 
     <input type="text" [(ngModel)]="badgeContent" />
     <button (click)="visible = !visible">Toggle</button>
-  </div>
-
-  <div class="demo-badge">
-    <h3>Buttons</h3>
-    <button mat-raised-button [matBadge]="badgeContent">
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button mat-raised-button matBadge="22" matBadgePosition="below after" color="primary" matBadgeColor="accent">
-      <mat-icon color="accent">home</mat-icon>
-    </button>
-
-    <button mat-raised-button matBadge="22" matBadgePosition="above before">
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button mat-raised-button [matBadge]="badgeContent" matBadgeDisabled>
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button mat-stroked-button [matBadge]="badgeContent">
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button disabled mat-raised-button [matBadge]="badgeContent" matBadgeDisabled>
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button mat-raised-button matBadge="22" matBadgePosition="below before">
-      <mat-icon color="primary">home</mat-icon>
-    </button>
-
-    <button mat-raised-button>
-      <mat-icon matBadge="22" color="accent">home</mat-icon>
-    </button>
-  </div>
-
-  <div class="demo-badge">
-    <h3>Icons</h3>
-    <mat-icon [matBadge]="badgeContent">
-      home
-    </mat-icon>
-
-    <mat-icon color="primary" matBadge="22" matBadgePosition="below after" matBadgeColor="accent">
-      home
-    </mat-icon>
-
-    <mat-icon color="primary" matBadge="22" matBadgePosition="above before" matBadgeColor="warn">
-      home
-    </mat-icon>
-
-    <mat-icon color="primary" matBadge="22" matBadgePosition="below before">
-      home
-    </mat-icon>
-  </div>
-
-   <div class="demo-badge">
-    <h3>Size</h3>
-    <mat-icon [matBadge]="badgeContent" matBadgeSize="small">
-      home
-    </mat-icon>
-    <mat-icon [matBadge]="badgeContent" matBadgeSize="large">
-      home
-    </mat-icon>
-
   </div>
 
 </div>

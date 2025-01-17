@@ -1,0 +1,39 @@
+@use 'sass:map';
+@use '../../../style/elevation';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, fab);
+
+/// Generates the tokens for MDC fab
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC fab
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: token-definition.get-mdc-tokens('fab-primary', $systems, $exclude-hardcoded);
+  $elevation-tokens: (
+    container-elevation,
+    focus-container-elevation,
+    hover-container-elevation,
+    pressed-container-elevation,
+  );
+
+  @each $token in $elevation-tokens {
+    $elevation: map.get($tokens, $token);
+
+    @if ($elevation != null) {
+      $tokens: map.set($tokens, $token + '-shadow', elevation.get-box-shadow($elevation));
+    }
+  }
+
+  $variant-tokens: (
+    // Color variants
+    primary: (), // Default, no overrides needed.
+    secondary: token-definition.get-mdc-tokens('fab-secondary', $systems, $exclude-hardcoded),
+    tertiary: token-definition.get-mdc-tokens('fab-tertiary', $systems, $exclude-hardcoded)
+  );
+
+  @return token-definition.namespace-tokens(
+      $prefix, ($tokens, $variant-tokens), $token-slots);
+}

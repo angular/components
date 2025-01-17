@@ -1,42 +1,36 @@
-import {
-  waitForAsync,
-  fakeAsync,
-  tick,
-  ComponentFixture,
-  inject,
-  TestBed,
-} from '@angular/core/testing';
-import {
-  Component,
-  NgModule,
-  ViewChild,
-  ViewContainerRef,
-  ErrorHandler,
-  Injectable,
-  EventEmitter,
-  NgZone,
-} from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {MockNgZone, dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {
-  ComponentPortal,
-  PortalModule,
-  TemplatePortal,
-  CdkPortal
-} from '@angular/cdk/portal';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
+  Component,
+  ErrorHandler,
+  EventEmitter,
+  Injectable,
+  Type,
+  ViewChild,
+  ViewContainerRef,
+  inject,
+} from '@angular/core';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {dispatchFakeEvent} from '../testing/private';
+import {
   Overlay,
+  OverlayConfig,
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  OverlayConfig,
   PositionStrategy,
   ScrollStrategy,
 } from './index';
-import {OverlayReference} from './overlay-reference';
-
 
 describe('Overlay', () => {
   let overlay: Overlay;
@@ -46,13 +40,12 @@ describe('Overlay', () => {
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
   let dir: Direction;
-  let zone: MockNgZone;
   let mockLocation: SpyLocation;
 
-  beforeEach(waitForAsync(() => {
+  function setup(imports: Type<unknown>[] = []) {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, OverlayTestModule],
+      imports: [OverlayModule, ...imports],
       providers: [
         {
           provide: Directionality,
@@ -60,37 +53,33 @@ describe('Overlay', () => {
             const fakeDirectionality = {};
             Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
             return fakeDirectionality;
-          }
-        },
-        {
-          provide: NgZone,
-          useFactory: () => zone = new MockNgZone()
+          },
         },
         {
           provide: Location,
-          useClass: SpyLocation
+          useClass: SpyLocation,
         },
       ],
-    }).compileComponents();
-  }));
+    });
 
-  beforeEach(inject([Overlay, OverlayContainer, Location],
-    (o: Overlay, oc: OverlayContainer, l: Location) => {
-      overlay = o;
-      overlayContainer = oc;
-      overlayContainerElement = oc.getContainerElement();
+    overlay = TestBed.inject(Overlay);
+    overlayContainer = TestBed.inject(OverlayContainer);
+    overlayContainerElement = overlayContainer.getContainerElement();
 
-      const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
-      fixture.detectChanges();
-      templatePortal = fixture.componentInstance.templatePortal;
-      componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
-      viewContainerFixture = fixture;
-      mockLocation = l as SpyLocation;
-    }));
+    const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
+    fixture.detectChanges();
+    templatePortal = fixture.componentInstance.templatePortal;
+    componentPortal = new ComponentPortal(PizzaMsg, fixture.componentInstance.viewContainerRef);
+    viewContainerFixture = fixture;
+    mockLocation = TestBed.inject(Location) as SpyLocation;
+  }
 
-  afterEach(() => {
+  function cleanup() {
     overlayContainer.ngOnDestroy();
-  });
+  }
+
+  beforeEach(waitForAsync(setup));
+  afterEach(cleanup);
 
   it('should load a component into an overlay', () => {
     let overlayRef = overlay.create();
@@ -123,13 +112,15 @@ describe('Overlay', () => {
 
     expect(paneElement.childNodes.length).not.toBe(0);
     expect(paneElement.style.pointerEvents)
-      .toBe('', 'Expected the overlay pane to enable pointerEvents when attached.');
+      .withContext('Expected the overlay pane to enable pointerEvents when attached.')
+      .toBe('');
 
     overlayRef.detach();
 
     expect(paneElement.childNodes.length).toBe(0);
     expect(paneElement.style.pointerEvents)
-      .toBe('none', 'Expected the overlay pane to disable pointerEvents when detached.');
+      .withContext('Expected the overlay pane to disable pointerEvents when detached.')
+      .toBe('none');
   });
 
   it('should open multiple overlays', () => {
@@ -152,7 +143,7 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   });
 
-  it('should ensure that the most-recently-attached overlay is on top', (() => {
+  it('should ensure that the most-recently-attached overlay is on top', () => {
     let pizzaOverlayRef = overlay.create();
     let cakeOverlayRef = overlay.create();
 
@@ -160,9 +151,11 @@ describe('Overlay', () => {
     cakeOverlayRef.attach(templatePortal);
 
     expect(pizzaOverlayRef.hostElement.nextSibling)
-        .toBeTruthy('Expected pizza to be on the bottom.');
+      .withContext('Expected pizza to be on the bottom.')
+      .toBeTruthy();
     expect(cakeOverlayRef.hostElement.nextSibling)
-        .toBeFalsy('Expected cake to be on top.');
+      .withContext('Expected cake to be on top.')
+      .toBeFalsy();
 
     pizzaOverlayRef.dispose();
     cakeOverlayRef.detach();
@@ -172,10 +165,12 @@ describe('Overlay', () => {
     cakeOverlayRef.attach(templatePortal);
 
     expect(pizzaOverlayRef.hostElement.nextSibling)
-        .toBeTruthy('Expected pizza to still be on the bottom.');
+      .withContext('Expected pizza to still be on the bottom.')
+      .toBeTruthy();
     expect(cakeOverlayRef.hostElement.nextSibling)
-        .toBeFalsy('Expected cake to still be on top.');
-  }));
+      .withContext('Expected cake to still be on top.')
+      .toBeFalsy();
+  });
 
   it('should take the default direction from the global Directionality', () => {
     dir = 'rtl';
@@ -210,10 +205,12 @@ describe('Overlay', () => {
 
     overlayRef.attachments().subscribe(() => {
       expect(overlayContainerElement.querySelector('pizza'))
-          .toBeTruthy('Expected the overlay to have been attached.');
+        .withContext('Expected the overlay to have been attached.')
+        .toBeTruthy();
 
       expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop'))
-          .toBeTruthy('Expected the backdrop to have been attached.');
+        .withContext('Expected the backdrop to have been attached.')
+        .toBeTruthy();
     });
 
     overlayRef.attach(componentPortal);
@@ -255,7 +252,8 @@ describe('Overlay', () => {
 
     overlayRef.detachments().subscribe(() => {
       expect(overlayContainerElement.querySelector('pizza'))
-          .toBeFalsy('Expected the overlay to have been detached.');
+        .withContext('Expected the overlay to have been detached.')
+        .toBeFalsy();
     });
 
     overlayRef.attach(componentPortal);
@@ -306,16 +304,26 @@ describe('Overlay', () => {
     const overlayRef = overlay.create({hasBackdrop: true});
     overlayRef.attach(componentPortal);
 
-    expect(overlayRef.hostElement).toBeTruthy('Expected overlay host to be defined.');
-    expect(overlayRef.overlayElement).toBeTruthy('Expected overlay element to be defined.');
-    expect(overlayRef.backdropElement).toBeTruthy('Expected backdrop element to be defined.');
+    expect(overlayRef.hostElement).withContext('Expected overlay host to be defined.').toBeTruthy();
+    expect(overlayRef.overlayElement)
+      .withContext('Expected overlay element to be defined.')
+      .toBeTruthy();
+    expect(overlayRef.backdropElement)
+      .withContext('Expected backdrop element to be defined.')
+      .toBeTruthy();
 
     overlayRef.dispose();
     tick(500);
 
-    expect(overlayRef.hostElement).toBeFalsy('Expected overlay host not to be referenced.');
-    expect(overlayRef.overlayElement).toBeFalsy('Expected overlay element not to be referenced.');
-    expect(overlayRef.backdropElement).toBeFalsy('Expected backdrop element not to be referenced.');
+    expect(overlayRef.hostElement)
+      .withContext('Expected overlay host not to be referenced.')
+      .toBeFalsy();
+    expect(overlayRef.overlayElement)
+      .withContext('Expected overlay element not to be referenced.')
+      .toBeFalsy();
+    expect(overlayRef.backdropElement)
+      .withContext('Expected backdrop element not to be referenced.')
+      .toBeFalsy();
   }));
 
   it('should clear the backdrop timeout if the transition finishes first', fakeAsync(() => {
@@ -331,11 +339,21 @@ describe('Overlay', () => {
     // `fakeAsync` will throw if we have an unflushed timer.
   }));
 
+  it('should clear the backdrop timeout if the overlay is disposed', fakeAsync(() => {
+    const overlayRef = overlay.create({hasBackdrop: true});
+    overlayRef.attach(componentPortal);
+    overlayRef.detach();
+    overlayRef.dispose();
+
+    // Note: we don't `tick` or `flush` here. The assertion is that
+    // `fakeAsync` will throw if we have an unflushed timer.
+  }));
+
   it('should be able to use the `Overlay` provider during app initialization', () => {
     /** Dummy provider that depends on `Overlay`. */
     @Injectable()
     class CustomErrorHandler extends ErrorHandler {
-      constructor(private _overlay: Overlay) { super(); }
+      private _overlay = inject(Overlay);
 
       override handleError(error: any) {
         const overlayRef = this._overlay.create({hasBackdrop: !!error});
@@ -345,15 +363,10 @@ describe('Overlay', () => {
 
     overlayContainer.ngOnDestroy();
 
-    TestBed
-      .resetTestingModule()
-      .configureTestingModule({
-        imports: [OverlayModule],
-        providers: [
-          CustomErrorHandler,
-          {provide: ErrorHandler, useExisting: CustomErrorHandler}
-        ]
-      });
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [OverlayModule],
+      providers: [CustomErrorHandler, {provide: ErrorHandler, useExisting: CustomErrorHandler}],
+    });
 
     expect(() => TestBed.compileComponents()).not.toThrow();
   });
@@ -374,24 +387,27 @@ describe('Overlay', () => {
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
-        .toBeTruthy('Expected host element to be in the DOM.');
+      .withContext('Expected host element to be in the DOM.')
+      .toBeTruthy();
 
     overlayRef.detach();
 
     expect(overlayRef.hostElement.parentElement)
-        .toBeTruthy('Expected host element not to have been removed immediately.');
+      .withContext('Expected host element not to have been removed immediately.')
+      .toBeTruthy();
 
     viewContainerFixture.detectChanges();
-    zone.simulateZoneExit();
 
     expect(overlayRef.hostElement.parentElement)
-        .toBeFalsy('Expected host element to have been removed once the zone stabilizes.');
+      .withContext('Expected host element to have been removed once the zone stabilizes.')
+      .toBeFalsy();
 
     overlayRef.attach(componentPortal);
     viewContainerFixture.detectChanges();
 
     expect(overlayRef.hostElement.parentElement)
-        .toBeTruthy('Expected host element to be back in the DOM.');
+      .withContext('Expected host element to be back in the DOM.')
+      .toBeTruthy();
   });
 
   it('should be able to dispose an overlay on navigation', () => {
@@ -410,11 +426,13 @@ describe('Overlay', () => {
     overlayRef.attach(componentPortal);
 
     const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-    expect(pane.classList)
-      .not.toContain('custom-class-one', 'Expected class to be initially missing');
+    expect(pane.classList).not.toContain(
+      'custom-class-one',
+      'Expected class to be initially missing',
+    );
 
     overlayRef.addPanelClass('custom-class-one');
-    expect(pane.classList).toContain('custom-class-one', 'Expected class to be added');
+    expect(pane.classList).withContext('Expected class to be added').toContain('custom-class-one');
 
     overlayRef.removePanelClass('custom-class-one');
     expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
@@ -429,9 +447,48 @@ describe('Overlay', () => {
     const overlayRef = overlay.create();
     overlayRef.attach(componentPortal);
 
+    // Empty string
     expect(() => overlayRef.addPanelClass('')).not.toThrow();
     expect(() => overlayRef.removePanelClass('')).not.toThrow();
+
+    // Empty array
+    expect(() => overlayRef.addPanelClass([])).not.toThrow();
+    expect(() => overlayRef.removePanelClass([])).not.toThrow();
+
+    // Array containing only the empty string
+    expect(() => overlayRef.addPanelClass([''])).not.toThrow();
+    expect(() => overlayRef.removePanelClass([''])).not.toThrow();
   });
+
+  it('should detach a component-based overlay when the view is destroyed', fakeAsync(() => {
+    const overlayRef = overlay.create();
+    const paneElement = overlayRef.overlayElement;
+
+    overlayRef.attach(componentPortal);
+    viewContainerFixture.detectChanges();
+
+    expect(paneElement.childNodes.length).not.toBe(0);
+
+    viewContainerFixture.destroy();
+    flush();
+
+    expect(paneElement.childNodes.length).toBe(0);
+  }));
+
+  it('should detach a template-based overlay when the view is destroyed', fakeAsync(() => {
+    const overlayRef = overlay.create();
+    const paneElement = overlayRef.overlayElement;
+
+    overlayRef.attach(templatePortal);
+    viewContainerFixture.detectChanges();
+
+    expect(paneElement.childNodes.length).not.toBe(0);
+
+    viewContainerFixture.destroy();
+    flush();
+
+    expect(paneElement.childNodes.length).toBe(0);
+  }));
 
   describe('positioning', () => {
     let config: OverlayConfig;
@@ -445,7 +502,6 @@ describe('Overlay', () => {
 
       overlay.create(config).attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(overlayContainerElement.querySelectorAll('.fake-positioned').length).toBe(1);
@@ -455,23 +511,27 @@ describe('Overlay', () => {
       let overlayPresentInDom = false;
 
       config.positionStrategy = {
-        attach: (ref: OverlayRef) => overlayPresentInDom = !!ref.hostElement.parentElement,
+        attach: (ref: OverlayRef) => (overlayPresentInDom = !!ref.hostElement.parentElement),
         apply: () => {},
-        dispose: () => {}
+        dispose: () => {},
       };
 
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(overlayPresentInDom).toBeTruthy('Expected host element to be attached to the DOM.');
+      expect(overlayPresentInDom)
+        .withContext('Expected host element to be attached to the DOM.')
+        .toBeTruthy();
 
       overlayRef.detach();
-      zone.simulateZoneExit();
       tick();
 
       overlayRef.attach(componentPortal);
+      tick();
 
-      expect(overlayPresentInDom).toBeTruthy('Expected host element to be attached to the DOM.');
+      expect(overlayPresentInDom)
+        .withContext('Expected host element to be attached to the DOM.')
+        .toBeTruthy();
     }));
 
     it('should not apply the position if it detaches before the zone stabilizes', fakeAsync(() => {
@@ -504,7 +564,6 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
@@ -537,7 +596,6 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
@@ -553,6 +611,27 @@ describe('Overlay', () => {
       expect(strategy.dispose).not.toHaveBeenCalled();
     }));
 
+    it('should not throw when disposing multiple times in a row', () => {
+      const overlayRef = overlay.create();
+      overlayRef.attach(componentPortal);
+
+      expect(overlayContainerElement.textContent).toContain('Pizza');
+
+      expect(() => {
+        overlayRef.dispose();
+        overlayRef.dispose();
+        overlayRef.dispose();
+      }).not.toThrow();
+    });
+
+    it('should not trigger timers when disposing of an overlay', fakeAsync(() => {
+      const overlayRef = overlay.create({hasBackdrop: true});
+      overlayRef.attach(templatePortal);
+      overlayRef.dispose();
+
+      // The assertion here is that `fakeAsync` doesn't flag
+      // any pending timeouts after the test is done.
+    }));
   });
 
   describe('size', () => {
@@ -625,7 +704,6 @@ describe('Overlay', () => {
       expect(overlayRef.overlayElement.style.maxWidth).toBe('200px');
     });
 
-
     it('should apply the max height set in the config', () => {
       config.maxHeight = 500;
 
@@ -668,7 +746,7 @@ describe('Overlay', () => {
         width: '',
         height: '',
         maxWidth: '',
-        maxHeight: ''
+        maxHeight: '',
       });
 
       overlayRef.updatePosition();
@@ -680,7 +758,6 @@ describe('Overlay', () => {
       expect(style.maxWidth).toBeFalsy();
       expect(style.maxHeight).toBeFalsy();
     });
-
   });
 
   describe('backdrop', () => {
@@ -780,7 +857,8 @@ describe('Overlay', () => {
       expect(children.indexOf(backdrop)).toBeGreaterThan(-1);
       expect(children.indexOf(host)).toBeGreaterThan(-1);
       expect(children.indexOf(backdrop))
-        .toBeLessThan(children.indexOf(host), 'Expected backdrop to be before the host in the DOM');
+        .withContext('Expected backdrop to be before the host in the DOM')
+        .toBeLessThan(children.indexOf(host));
     });
 
     it('should remove the event listener from the backdrop', () => {
@@ -800,13 +878,25 @@ describe('Overlay', () => {
 
       overlayRef.detach();
       dispatchFakeEvent(backdrop, 'transitionend');
-      zone.simulateZoneExit();
       viewContainerFixture.detectChanges();
 
       backdrop.click();
       expect(backdropClickHandler).toHaveBeenCalledTimes(1);
     });
 
+    it('should set a class on the backdrop when animations are disabled', () => {
+      cleanup();
+      TestBed.resetTestingModule();
+      setup([NoopAnimationsModule]);
+
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+
+      viewContainerFixture.detectChanges();
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+
+      expect(backdrop.classList).toContain('cdk-overlay-backdrop-noop-animation');
+    });
   });
 
   describe('panelClass', () => {
@@ -840,41 +930,43 @@ describe('Overlay', () => {
       viewContainerFixture.detectChanges();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-      expect(pane.classList).toContain('custom-panel-class', 'Expected class to be added');
+      expect(pane.classList)
+        .withContext('Expected class to be added')
+        .toContain('custom-panel-class');
 
       overlayRef.detach();
-      zone.simulateZoneExit();
       viewContainerFixture.detectChanges();
       expect(pane.classList).not.toContain('custom-panel-class', 'Expected class to be removed');
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      expect(pane.classList).toContain('custom-panel-class', 'Expected class to be re-added');
+      expect(pane.classList)
+        .withContext('Expected class to be re-added')
+        .toContain('custom-panel-class');
     });
 
-    it('should wait for the overlay to be detached before removing the panelClass', () => {
+    it('should wait for the overlay to be detached before removing the panelClass', async () => {
       const config = new OverlayConfig({panelClass: 'custom-panel-class'});
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      viewContainerFixture.detectChanges();
+      await viewContainerFixture.whenStable();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
-      expect(pane.classList).toContain('custom-panel-class', 'Expected class to be added');
+      expect(pane.classList)
+        .withContext('Expected class to be added')
+        .toContain('custom-panel-class');
 
       overlayRef.detach();
-      viewContainerFixture.detectChanges();
+      expect(pane.classList)
+        .withContext('Expected class not to be removed immediately')
+        .toContain('custom-panel-class');
+      await viewContainerFixture.whenStable();
 
       expect(pane.classList)
-          .toContain('custom-panel-class', 'Expected class not to be removed immediately');
-
-      zone.simulateZoneExit();
-
-      expect(pane.classList)
-          .not.toContain('custom-panel-class', 'Expected class to be removed on stable');
+        .not.withContext('Expected class to be removed on stable')
+        .toContain('custom-panel-class');
     });
-
-
   });
 
   describe('scroll strategy', () => {
@@ -883,8 +975,9 @@ describe('Overlay', () => {
       const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
       const overlayRef = overlay.create(config);
 
-      expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
-          'Expected scroll strategy to have been attached to the current overlay ref.');
+      expect(fakeScrollStrategy.overlayRef)
+        .withContext('Expected scroll strategy to have been attached to the current overlay ref.')
+        .toBe(overlayRef);
     });
 
     it('should enable the scroll strategy when the overlay is attached', () => {
@@ -893,7 +986,9 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
+      expect(fakeScrollStrategy.isEnabled)
+        .withContext('Expected scroll strategy to be enabled.')
+        .toBe(true);
     });
 
     it('should disable the scroll strategy once the overlay is detached', () => {
@@ -902,10 +997,14 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
+      expect(fakeScrollStrategy.isEnabled)
+        .withContext('Expected scroll strategy to be enabled.')
+        .toBe(true);
 
       overlayRef.detach();
-      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
+      expect(fakeScrollStrategy.isEnabled)
+        .withContext('Expected scroll strategy to be disabled.')
+        .toBe(false);
     });
 
     it('should disable the scroll strategy when the overlay is destroyed', () => {
@@ -914,7 +1013,9 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.dispose();
-      expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
+      expect(fakeScrollStrategy.isEnabled)
+        .withContext('Expected scroll strategy to be disabled.')
+        .toBe(false);
     });
 
     it('should detach the scroll strategy when the overlay is destroyed', () => {
@@ -944,7 +1045,6 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
@@ -978,7 +1078,6 @@ describe('Overlay', () => {
 
       overlayRef.attach(componentPortal);
       viewContainerFixture.detectChanges();
-      zone.simulateZoneExit();
       tick();
 
       expect(strategy.attach).toHaveBeenCalledTimes(1);
@@ -995,36 +1094,26 @@ describe('Overlay', () => {
       expect(strategy.disable).not.toHaveBeenCalled();
       expect(strategy.detach).not.toHaveBeenCalled();
     }));
-
   });
 });
 
 /** Simple component for testing ComponentPortal. */
 @Component({
   selector: 'pizza',
-  template: '<p>Pizza</p>'
+  template: '<p>Pizza</p>',
 })
-class PizzaMsg { }
-
+class PizzaMsg {}
 
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
-@Component({template: `<ng-template cdk-portal>Cake</ng-template>`})
-class TestComponentWithTemplatePortals {
-  @ViewChild(CdkPortal) templatePortal: CdkPortal;
-
-  constructor(public viewContainerRef: ViewContainerRef) { }
-}
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-const TEST_COMPONENTS = [PizzaMsg, TestComponentWithTemplatePortals];
-@NgModule({
-  imports: [OverlayModule, PortalModule],
-  exports: TEST_COMPONENTS,
-  declarations: TEST_COMPONENTS,
-  entryComponents: TEST_COMPONENTS,
+@Component({
+  template: `<ng-template cdkPortal>Cake</ng-template>`,
+  imports: [CdkPortal],
 })
-class OverlayTestModule { }
+class TestComponentWithTemplatePortals {
+  viewContainerRef = inject(ViewContainerRef);
+
+  @ViewChild(CdkPortal) templatePortal: CdkPortal;
+}
 
 class FakePositionStrategy implements PositionStrategy {
   element: HTMLElement;
@@ -1040,12 +1129,11 @@ class FakePositionStrategy implements PositionStrategy {
   dispose() {}
 }
 
-
 class FakeScrollStrategy implements ScrollStrategy {
   isEnabled = false;
-  overlayRef: OverlayReference;
+  overlayRef: OverlayRef;
 
-  attach(overlayRef: OverlayReference) {
+  attach(overlayRef: OverlayRef) {
     this.overlayRef = overlayRef;
   }
 

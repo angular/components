@@ -1,52 +1,99 @@
-@use 'sass:color';
 @use 'sass:map';
-@use 'sass:meta';
+@use '../core/tokens/m2/mat/sort' as tokens-mat-sort;
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+  }
+}
 
-  .mat-sort-header-arrow {
-    $table-background: theming.get-color-from-palette($background, 'card');
-    $text-color: theming.get-color-from-palette($foreground, secondary-text);
-
-    // Because the arrow is made up of multiple elements that are stacked on top of each other,
-    // we can't use the semi-transparent color from the theme directly. If the value is a color
-    // *type*, we convert it into a solid color by taking the opacity from the rgba value and
-    // using the value to determine the percentage of the background to put into foreground
-    // when mixing the colors together. Otherwise, if it resolves to something different
-    // (e.g. it resolves to a CSS variable), we use the color directly.
-    @if (meta.type-of($table-background) == color and meta.type-of($text-color) == color) {
-      $text-opacity: opacity($text-color);
-      color: color.mix($table-background, rgba($text-color, 1), (1 - $text-opacity) * 100%);
-    }
-    @else {
-      color: $text-color;
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-color-tokens($theme)
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {}
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-typography-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin _density($config-or-theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-sort.$prefix,
+        tokens-mat-sort.get-density-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-sort.$prefix,
+      tokens: tokens-mat-sort.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sort') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-sort.$prefix,
+      map.get($tokens, tokens-mat-sort.$prefix)
+    );
   }
 }

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
@@ -13,7 +13,9 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   template: `
       <h2>List of {{title}}</h2>
       <ul>
-        <li *ngFor="let item of items">{{item}}</li>
+        @for (item of items; track item) {
+          <li>{{item}}</li>
+        }
       </ul>`,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

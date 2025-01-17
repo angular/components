@@ -3,14 +3,25 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-/** Home component that shows both ways to use MatColumnResize. */
-import {Component} from '@angular/core';
+import {
+  DefaultEnabledColumnResizeExample,
+  DefaultEnabledColumnResizeFlexExample,
+  OptInColumnResizeExample,
+} from '@angular/components-examples/material-experimental/column-resize';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   templateUrl: 'column-resize-home.html',
+  imports: [
+    MatExpansionModule,
+    DefaultEnabledColumnResizeExample,
+    DefaultEnabledColumnResizeFlexExample,
+    OptInColumnResizeExample,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnResizeHome {
-}
+export class ColumnResizeHome {}

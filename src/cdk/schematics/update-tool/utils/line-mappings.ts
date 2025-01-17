@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /*
@@ -60,7 +60,11 @@ export function computeLineStartsMap(text: string): number[] {
 
 /** Finds the closest line start for the given position. */
 function findClosestLineStartPosition<T>(
-    linesMap: T[], position: T, low = 0, high = linesMap.length - 1) {
+  linesMap: T[],
+  position: T,
+  low = 0,
+  high = linesMap.length - 1,
+) {
   while (low <= high) {
     const pivotIndex = Math.floor((low + high) / 2);
     const pivotEl = linesMap[pivotIndex];

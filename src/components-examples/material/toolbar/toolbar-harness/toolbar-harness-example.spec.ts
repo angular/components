@@ -1,28 +1,14 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatToolbarHarness} from '@angular/material/toolbar/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatToolbarModule} from '@angular/material/toolbar';
 import {ToolbarHarnessExample} from './toolbar-harness-example';
-import {MatIconModule} from '@angular/material/icon';
 
 describe('ToolbarHarnessExample', () => {
   let fixture: ComponentFixture<ToolbarHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatToolbarModule, MatIconModule],
-      declarations: [ToolbarHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(ToolbarHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -52,9 +38,6 @@ describe('ToolbarHarnessExample', () => {
     const toolbars = await loader.getAllHarnesses(MatToolbarHarness);
 
     expect(await toolbars[0].getRowsAsText()).toEqual(['My App']);
-    expect(await toolbars[1].getRowsAsText()).toEqual([
-      'Row 1',
-      'Row 2 Button 1  Button 2'
-    ]);
+    expect(await toolbars[1].getRowsAsText()).toEqual(['Row 1', 'Row 2 Button 1  Button 2']);
   });
 });

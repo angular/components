@@ -8,12 +8,10 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/cdk/stepper",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
-        "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "@npm//@angular/core",

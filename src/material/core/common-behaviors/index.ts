@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 export {
@@ -12,9 +12,6 @@ export {
   SanityChecks,
   GranularSanityChecks,
 } from './common-module';
-export {CanDisable, CanDisableCtor, mixinDisabled} from './disabled';
-export {CanColor, CanColorCtor, mixinColor, ThemePalette} from './color';
-export {CanDisableRipple, CanDisableRippleCtor, mixinDisableRipple} from './disable-ripple';
-export {HasTabIndex, HasTabIndexCtor, mixinTabIndex} from './tabindex';
-export {CanUpdateErrorState, CanUpdateErrorStateCtor, mixinErrorState} from './error-state';
-export {HasInitialized, HasInitializedCtor, mixinInitialized} from './initialized';
+
+export {ThemePalette} from './palette';
+export {_ErrorStateTracker} from './error-state';

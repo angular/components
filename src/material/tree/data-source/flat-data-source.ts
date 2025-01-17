@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -44,17 +44,20 @@ import {map, take} from 'rxjs/operators';
  *   level: 2
  * }
  * and the output flattened type is `F` with additional information.
+ *
+ * @deprecated Use MatTree#childrenAccessor and MatTreeNode#isExpandable
+ * instead. To be removed in a future version.
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlattener<T, F, K = F> {
+  constructor(
+    public transformFunction: (node: T, level: number) => F,
+    public getLevel: (node: F) => number,
+    public isExpandable: (node: F) => boolean,
+    public getChildren: (node: T) => Observable<T[]> | T[] | undefined | null,
+  ) {}
 
-  constructor(public transformFunction: (node: T, level: number) => F,
-              public getLevel: (node: F) => number,
-              public isExpandable: (node: F) => boolean,
-              public getChildren: (node: T) =>
-                  Observable<T[]> | T[] | undefined | null) {}
-
-  _flattenNode(node: T, level: number,
-               resultNodes: F[], parentMap: boolean[]): F[] {
+  _flattenNode(node: T, level: number, resultNodes: F[], parentMap: boolean[]): F[] {
     const flatNode = this.transformFunction(node, level);
     resultNodes.push(flatNode);
 
@@ -73,8 +76,7 @@ export class MatTreeFlattener<T, F, K = F> {
     return resultNodes;
   }
 
-  _flattenChildren(children: T[], level: number,
-                   resultNodes: F[], parentMap: boolean[]): void {
+  _flattenChildren(children: T[], level: number, resultNodes: F[], parentMap: boolean[]): void {
     children.forEach((child, index) => {
       let childParentMap: boolean[] = parentMap.slice();
       childParentMap.push(index != children.length - 1);
@@ -118,19 +120,24 @@ export class MatTreeFlattener<T, F, K = F> {
   }
 }
 
-
 /**
  * Data source for flat tree.
  * The data source need to handle expansion/collapsion of the tree node and change the data feed
  * to `MatTree`.
  * The nested tree nodes of type `T` are flattened through `MatTreeFlattener`, and converted
  * to type `F` for `MatTree` to consume.
+ *
+ * @deprecated Use one of levelAccessor or childrenAccessor instead. To be removed in a future
+ * version.
+ * @breaking-change 21.0.0
  */
 export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   private readonly _flattenedData = new BehaviorSubject<F[]>([]);
   private readonly _expandedData = new BehaviorSubject<F[]>([]);
 
-  get data() { return this._data.value; }
+  get data() {
+    return this._data.value;
+  }
   set data(value: T[]) {
     this._data.next(value);
     this._flattenedData.next(this._treeFlattener.flattenNodes(this.data));
@@ -138,9 +145,11 @@ export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   }
   private readonly _data = new BehaviorSubject<T[]>([]);
 
-  constructor(private _treeControl: FlatTreeControl<F, K>,
-              private _treeFlattener: MatTreeFlattener<T, F, K>,
-              initialData?: T[]) {
+  constructor(
+    private _treeControl: FlatTreeControl<F, K>,
+    private _treeFlattener: MatTreeFlattener<T, F, K>,
+    initialData?: T[],
+  ) {
     super();
 
     if (initialData) {
@@ -153,12 +162,15 @@ export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
     return merge(
       collectionViewer.viewChange,
       this._treeControl.expansionModel.changed,
-      this._flattenedData
-    ).pipe(map(() => {
-      this._expandedData.next(
-        this._treeFlattener.expandFlattenedNodes(this._flattenedData.value, this._treeControl));
-      return this._expandedData.value;
-    }));
+      this._flattenedData,
+    ).pipe(
+      map(() => {
+        this._expandedData.next(
+          this._treeFlattener.expandFlattenedNodes(this._flattenedData.value, this._treeControl),
+        );
+        return this._expandedData.value;
+      }),
+    );
   }
 
   disconnect() {

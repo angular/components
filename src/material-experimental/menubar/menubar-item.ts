@@ -3,11 +3,18 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
-import {CdkMenuItem} from '@angular/cdk-experimental/menu';
+import {CdkMenuItem} from '@angular/cdk/menu';
+
+/** Removes all icons from within the given element. */
+function removeIcons(element: Element) {
+  for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
+    icon.remove();
+  }
+}
 
 /**
  * A material design MenubarItem adhering to the functionality of CdkMenuItem and
@@ -18,7 +25,7 @@ import {CdkMenuItem} from '@angular/cdk-experimental/menu';
   selector: 'mat-menubar-item',
   exportAs: 'matMenubarItem',
   templateUrl: 'menubar-item.html',
-  styleUrls: ['menubar-item.css'],
+  styleUrl: 'menubar-item.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -30,4 +37,13 @@ import {CdkMenuItem} from '@angular/cdk-experimental/menu';
   },
   providers: [{provide: CdkMenuItem, useExisting: MatMenuBarItem}],
 })
-export class MatMenuBarItem extends CdkMenuItem {}
+export class MatMenuBarItem extends CdkMenuItem {
+  override getLabel(): string {
+    if (this.typeaheadLabel !== undefined) {
+      return this.typeaheadLabel || '';
+    }
+    const clone = this._elementRef.nativeElement.cloneNode(true) as Element;
+    removeIcons(clone);
+    return clone.textContent?.trim() || '';
+  }
+}

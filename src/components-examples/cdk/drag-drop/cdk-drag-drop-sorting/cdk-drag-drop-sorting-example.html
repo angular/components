@@ -1,3 +1,5 @@
 <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-  <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
+  @for (movie of movies; track movie) {
+    <div class="example-box" cdkDrag>{{movie}}</div>
+  }
 </div>

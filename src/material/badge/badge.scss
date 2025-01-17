@@ -1,0 +1,138 @@
+@use 'sass:color';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
+@use '../core/tokens/token-utils';
+
+$default-size: 22px !default;
+$small-size: $default-size - 6;
+$large-size: $default-size + 6;
+
+@mixin _badge-size($size) {
+  @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+    $prefix: if($size == 'medium', '', $size + '-size-');
+    $legacy-size-var-name: 'legacy-#{$prefix}container-size';
+    $size-var-name: '#{$prefix}container-size';
+
+    .mat-badge-content {
+      // The M2 badge is implemented incorrectly because it uses `width` and `height` for its
+      // size which causes the text to be truncated. For M3 we want to fix this by emitting
+      // two declarations:
+      // * `legacy-container-size` token - targets width/height as in M2. In M3 the token is
+      // emitted as `unset`.
+      // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
+      // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
+      // grow with the content.
+      @include token-utils.create-token-slot(width, $legacy-size-var-name);
+      @include token-utils.create-token-slot(height, $legacy-size-var-name);
+      @include token-utils.create-token-slot(min-width, $size-var-name);
+      @include token-utils.create-token-slot(min-height, $size-var-name);
+      @include token-utils.create-token-slot(line-height, '#{$prefix}line-height');
+      @include token-utils.create-token-slot(padding, '#{$prefix}container-padding');
+      @include token-utils.create-token-slot(font-size, '#{$prefix}text-size');
+      @include token-utils.create-token-slot(margin, '#{$prefix}container-offset');
+    }
+
+    &.mat-badge-overlap .mat-badge-content {
+      @include token-utils.create-token-slot(margin, '#{$prefix}container-overlap-offset');
+    }
+  }
+}
+
+.mat-badge {
+  position: relative;
+
+  // The badge should make sure its host is overflow visible so that the badge content
+  // can be rendered outside of the element. Some components such as <mat-icon> explicitly
+  // style `overflow: hidden` so this requires extra specificity so that it does not
+  // depend on style load order.
+  &.mat-badge {
+    overflow: visible;
+  }
+}
+
+.mat-badge-content {
+  position: absolute;
+  text-align: center;
+  display: inline-block;
+  transition: transform 200ms ease-in-out;
+  transform: scale(0.6);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  pointer-events: none;
+
+  @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, background-color);
+    @include token-utils.create-token-slot(color, text-color);
+    @include token-utils.create-token-slot(font-family, text-font);
+    @include token-utils.create-token-slot(font-weight, text-weight);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+
+    .mat-badge-above & {
+      bottom: 100%;
+    }
+
+    .mat-badge-below & {
+      top: 100%;
+    }
+
+    .mat-badge-before & {
+      right: 100%;
+    }
+
+    [dir='rtl'] .mat-badge-before & {
+      right: auto;
+      left: 100%;
+    }
+
+    .mat-badge-after & {
+      left: 100%;
+    }
+
+    [dir='rtl'] .mat-badge-after & {
+      left: auto;
+      right: 100%;
+    }
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+    border-radius: 0;
+  }
+}
+
+.mat-badge-disabled .mat-badge-content {
+  @include token-utils.use-tokens(tokens-mat-badge.$prefix, tokens-mat-badge.get-token-slots()) {
+    @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+    @include token-utils.create-token-slot(color, disabled-state-text-color);
+  }
+}
+
+.mat-badge-hidden .mat-badge-content {
+  display: none;
+}
+
+.ng-animate-disabled .mat-badge-content,
+.mat-badge-content._mat-animation-noopable {
+  transition: none;
+}
+
+// The active class is added after the element is added
+// so it can animate scale to default
+.mat-badge-content.mat-badge-active {
+  // Scale to `none` instead of `1` to avoid blurry text in some browsers.
+  transform: none;
+}
+
+.mat-badge-small {
+  @include _badge-size('small');
+}
+
+.mat-badge-medium {
+  @include _badge-size('medium');
+}
+
+.mat-badge-large {
+  @include _badge-size('large');
+}

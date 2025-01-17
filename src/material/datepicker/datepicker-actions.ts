@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -15,19 +15,24 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
-  ViewEncapsulation
+  ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
 
-
 /** Button that will close the datepicker and assign the current selection to the data model. */
 @Directive({
   selector: '[matDatepickerApply], [matDateRangePickerApply]',
-  host: {'(click)': '_applySelection()'}
+  host: {'(click)': '_applySelection()'},
 })
 export class MatDatepickerApply {
-  constructor(private _datepicker: MatDatepickerBase<MatDatepickerControl<unknown>, unknown>) {}
+  private _datepicker =
+    inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   _applySelection() {
     this._datepicker._applyPendingSelection();
@@ -35,16 +40,17 @@ export class MatDatepickerApply {
   }
 }
 
-
 /** Button that will close the datepicker and discard the current selection. */
 @Directive({
   selector: '[matDatepickerCancel], [matDateRangePickerCancel]',
-  host: {'(click)': '_datepicker.close()'}
+  host: {'(click)': '_datepicker.close()'},
 })
 export class MatDatepickerCancel {
-  constructor(public _datepicker: MatDatepickerBase<MatDatepickerControl<unknown>, unknown>) {}
-}
+  _datepicker = inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
 
+  constructor(...args: unknown[]);
+  constructor() {}
+}
 
 /**
  * Container that can be used to project a row of action buttons
@@ -52,7 +58,7 @@ export class MatDatepickerCancel {
  */
 @Component({
   selector: 'mat-datepicker-actions, mat-date-range-picker-actions',
-  styleUrls: ['datepicker-actions.css'],
+  styleUrl: 'datepicker-actions.css',
   template: `
     <ng-template>
       <div class="mat-datepicker-actions">
@@ -61,15 +67,18 @@ export class MatDatepickerCancel {
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MatDatepickerActions implements AfterViewInit, OnDestroy {
+  private _datepicker =
+    inject<MatDatepickerBase<MatDatepickerControl<any>, unknown>>(MatDatepickerBase);
+  private _viewContainerRef = inject(ViewContainerRef);
+
   @ViewChild(TemplateRef) _template: TemplateRef<unknown>;
   private _portal: TemplatePortal;
 
-  constructor(
-    private _datepicker: MatDatepickerBase<MatDatepickerControl<unknown>, unknown>,
-    private _viewContainerRef: ViewContainerRef) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._template, this._viewContainerRef);

@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -17,13 +17,15 @@ import {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';
 import {MapInfoWindow} from './map-info-window/map-info-window';
 import {MapKmlLayer} from './map-kml-layer/map-kml-layer';
 import {MapMarker} from './map-marker/map-marker';
-import {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
+import {DeprecatedMapMarkerClusterer} from './deprecated-map-marker-clusterer/deprecated-map-marker-clusterer';
 import {MapPolygon} from './map-polygon/map-polygon';
 import {MapPolyline} from './map-polyline/map-polyline';
 import {MapRectangle} from './map-rectangle/map-rectangle';
 import {MapTrafficLayer} from './map-traffic-layer/map-traffic-layer';
 import {MapTransitLayer} from './map-transit-layer/map-transit-layer';
 import {MapHeatmapLayer} from './map-heatmap-layer/map-heatmap-layer';
+import {MapAdvancedMarker} from './map-advanced-marker/map-advanced-marker';
+import {MapMarkerClusterer} from './map-marker-clusterer/map-marker-clusterer';
 
 const COMPONENTS = [
   GoogleMap,
@@ -32,21 +34,22 @@ const COMPONENTS = [
   MapCircle,
   MapDirectionsRenderer,
   MapGroundOverlay,
+  MapHeatmapLayer,
   MapInfoWindow,
   MapKmlLayer,
   MapMarker,
-  MapMarkerClusterer,
+  MapAdvancedMarker,
+  DeprecatedMapMarkerClusterer,
   MapPolygon,
   MapPolyline,
   MapRectangle,
   MapTrafficLayer,
   MapTransitLayer,
-  MapHeatmapLayer,
+  MapMarkerClusterer,
 ];
 
 @NgModule({
-  declarations: COMPONENTS,
+  imports: COMPONENTS,
   exports: COMPONENTS,
 })
-export class GoogleMapsModule {
-}
+export class GoogleMapsModule {}

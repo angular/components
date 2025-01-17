@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Rule, SchematicsException, Tree} from '@angular-devkit/schematics';
@@ -26,15 +26,12 @@ export function addFontsToIndex(options: Schema): Rule {
       throw new SchematicsException('No project index HTML file could be found.');
     }
 
-    const preconnect = `<link rel="preconnect" href="https://fonts.gstatic.com">`;
     const fonts = [
       'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap',
       'https://fonts.googleapis.com/icon?family=Material+Icons',
     ];
 
     projectIndexFiles.forEach(indexFilePath => {
-      appendHtmlElementToHead(host, indexFilePath, preconnect);
-
       fonts.forEach(font => {
         appendHtmlElementToHead(host, indexFilePath, `<link href="${font}" rel="stylesheet">`);
       });

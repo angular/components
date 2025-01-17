@@ -1,0 +1,212 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Checking package externals
+        run: |
+          bazel build //:package_externals
+          yarn check-package-externals $(bazel info bazel-bin)/package_externals.json
+      - name: Checking entry-points configuration
+        run: |
+          bazel build //:entry_points_manifest
+          yarn check-entry-point-setup $(bazel info bazel-bin)/entry_points_manifest.json
+      - name: Check OWNERS file
+        run: yarn ownerslint
+      - name: Check for component id collisions
+        run: yarn detect-component-id-collisions
+      - name: Check style lint
+        run: yarn stylelint
+      - name: Check code lint
+        run: yarn tslint
+      - name: Check for circular dependencies
+        run: yarn -s ts-circular-deps:check
+      - name: Check code format
+        run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+      # Commit message check is last intentionally, because the caretaker can fix it
+      # during merge, while other lint failures have to be resolved by the PR author.
+      - name: Check commit message
+        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+
+  api_golden_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Check API Goldens
+        run: yarn bazel test tools/public_api_guard/...
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run e2e tests
+        run: yarn e2e --flaky_test_attempts=2
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run integration tests
+        run: yarn integration-tests
+      - name: Running size integration tests
+        run: yarn integration-tests:size-test
+        continue-on-error: true
+
+  linker_aot_tests:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run linker AOT tests
+        run: yarn test-linker-aot
+
+  linker_jit_tests:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run linker JIT tests
+        run: yarn test-linker-jit
+
+  test:
+    runs-on: ubuntu-latest-16core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run tests
+        run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+
+  build:
+    runs-on: ubuntu-latest-16core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run tests
+        run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
+
+  upload_package_artifacts:
+    runs-on: ubuntu-latest-4core
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Build and Verify Release Output
+        run: yarn build-and-check-release-output
+      - name: Verify tooling setup
+        run: yarn check-tooling-setup
+      - name: Build and create package artifacts
+        run: ./scripts/create-package-archives.js --suffix "pr${{github.event.number}}-$(git rev-parse --short HEAD)"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # tag=v4.3.1
+        with:
+          name: Package Artifacts
+          path: dist/release-archives
+
+  browserstack:
+    runs-on: ubuntu-latest
+    env:
+      CI_NODE_INDEX: 0
+      CI_NODE_TOTAL: 1
+      CI_RUNNER_NUMBER: ${{ github.run_id }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+          # Checking out the pull request commit is intended here as we need to run the changed code tests.
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Browserstack Variables
+        uses: angular/dev-infra/github-actions/browserstack@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Run tests on Browserstack
+        run: ./scripts/circleci/run-browserstack-tests.sh

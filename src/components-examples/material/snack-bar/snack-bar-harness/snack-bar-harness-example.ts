@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
 
 /**
@@ -9,7 +9,7 @@ import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
   templateUrl: 'snack-bar-harness-example.html',
 })
 export class SnackBarHarnessExample {
-  constructor(readonly snackBar: MatSnackBar) {}
+  readonly snackBar = inject(MatSnackBar);
 
   open(message: string, action = '', config?: MatSnackBarConfig) {
     return this.snackBar.open(message, action, config);

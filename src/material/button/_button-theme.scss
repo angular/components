@@ -1,198 +1,447 @@
-@use 'sass:map';
-@use 'sass:meta';
 @use '../core/theming/theming';
-@use '../core/style/private';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
+@use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
+@use '../core/tokens/m2/mat/filled-button' as tokens-mat-filled-button;
+@use '../core/tokens/m2/mdc/outlined-button' as tokens-mdc-outlined-button;
+@use '../core/tokens/m2/mat/outlined-button' as tokens-mat-outlined-button;
+@use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
+@use '../core/tokens/m2/mat/protected-button' as tokens-mat-protected-button;
+@use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
+@use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
+@use '../core/style/sass-utils';
 
-$_ripple-opacity: 0.1;
+@mixin _text-button-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-text-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-text-button.get-color-tokens($theme)
+  );
 
-// Applies a focus style to an mat-button element for each of the supported palettes.
-@mixin _focus-overlay-color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-text-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-text-button.get-color-tokens($theme)
+  );
 
-  &.mat-primary .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($primary);
-  }
+  @include token-utils.create-token-values(tokens-mdc-text-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, $mat-tokens);
+}
 
-  &.mat-accent .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($accent);
-  }
+@mixin _filled-button-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-filled-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-filled-button.get-color-tokens($theme)
+  );
 
-  &.mat-warn .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($warn);
-  }
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-filled-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-filled-button.get-color-tokens($theme)
+  );
 
-  &.mat-button-disabled .mat-button-focus-overlay {
-    background-color: transparent;
+  @include token-utils.create-token-values(tokens-mdc-filled-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-filled-button.$prefix, $mat-tokens);
+}
+
+@mixin _protected-button-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-protected-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-protected-button.get-color-tokens($theme)
+  );
+
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-protected-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-protected-button.get-color-tokens($theme)
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-protected-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-protected-button.$prefix, $mat-tokens);
+}
+
+@mixin _outlined-button-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-outlined-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-outlined-button.get-color-tokens($theme)
+  );
+
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-outlined-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-outlined-button.get-color-tokens($theme)
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-outlined-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-outlined-button.$prefix, $mat-tokens);
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-text-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-text-button.$prefix,
+    $options...
+  );
+  $mdc-protected-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-protected-button.$prefix,
+    $options...
+  );
+  $mdc-filled-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-filled-button.$prefix,
+    $options...
+  );
+  $mdc-outlined-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-outlined-button.$prefix,
+    $options...
+  );
+  $mat-text-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-text-button.$prefix,
+    $options...
+  );
+  $mat-protected-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-protected-button.$prefix,
+    $options...
+  );
+  $mat-filled-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-filled-button.$prefix,
+    $options...
+  );
+  $mat-outlined-button-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-outlined-button.$prefix,
+    $options...
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-text-button.$prefix, $mdc-text-button-tokens);
+  @include token-utils.create-token-values(
+    tokens-mdc-protected-button.$prefix,
+    $mdc-protected-button-tokens
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-filled-button.$prefix,
+    $mdc-filled-button-tokens
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-outlined-button.$prefix,
+    $mdc-outlined-button-tokens
+  );
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, $mat-text-button-tokens);
+  @include token-utils.create-token-values(
+    tokens-mat-protected-button.$prefix,
+    $mat-protected-button-tokens
+  );
+  @include token-utils.create-token-values(
+    tokens-mat-filled-button.$prefix,
+    $mat-filled-button-tokens
+  );
+  @include token-utils.create-token-values(
+    tokens-mat-outlined-button.$prefix,
+    $mat-outlined-button-tokens
+  );
+}
+
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-button.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-text-button.$prefix,
+        tokens-mdc-text-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-filled-button.$prefix,
+        tokens-mdc-filled-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-protected-button.$prefix,
+        tokens-mdc-protected-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-outlined-button.$prefix,
+        tokens-mdc-outlined-button.get-unthemable-tokens()
+      );
+
+      @include token-utils.create-token-values(
+        tokens-mat-text-button.$prefix,
+        tokens-mat-text-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-filled-button.$prefix,
+        tokens-mat-filled-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-protected-button.$prefix,
+        tokens-mat-protected-button.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-outlined-button.$prefix,
+        tokens-mat-outlined-button.get-unthemable-tokens()
+      );
+    }
   }
 }
 
-// Applies the background color for a ripple. If the value provided is not a Sass color,
-// we assume that we've been given a CSS variable. Since we can't perform alpha-blending
-// on a CSS variable, we instead add the opacity directly to the ripple element.
-@mixin _ripple-background($palette, $hue, $opacity) {
-  $background-color: theming.get-color-from-palette($palette, $hue, $opacity);
-  background-color: $background-color;
-  @if (meta.type-of($background-color) != color) {
-    opacity: $opacity;
-  }
-}
+/// Outputs color theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include _text-button-variant($theme, null);
+      @include _filled-button-variant($theme, null);
+      @include _protected-button-variant($theme, null);
+      @include _outlined-button-variant($theme, null);
+    }
 
-@mixin _ripple-color($theme, $hue, $opacity: $_ripple-opacity) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
+    .mat-mdc-button {
+      &.mat-primary {
+        @include _text-button-variant($theme, primary);
+      }
 
-  &.mat-primary .mat-ripple-element {
-    @include _ripple-background($primary, $hue, $opacity);
-  }
+      &.mat-accent {
+        @include _text-button-variant($theme, accent);
+      }
 
-  &.mat-accent .mat-ripple-element {
-    @include _ripple-background($accent, $hue, $opacity);
-  }
+      &.mat-warn {
+        @include _text-button-variant($theme, warn);
+      }
+    }
 
-  &.mat-warn .mat-ripple-element {
-    @include _ripple-background($warn, $hue, $opacity);
-  }
-}
+    .mat-mdc-unelevated-button {
+      &.mat-primary {
+        @include _filled-button-variant($theme, primary);
+      }
 
-// Applies a property to an mat-button element for each of the supported palettes.
-@mixin _theme-property($theme, $property, $hue) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
-  $background: map.get($theme, background);
-  $foreground: map.get($theme, foreground);
+      &.mat-accent {
+        @include _filled-button-variant($theme, accent);
+      }
 
-  &.mat-primary {
-    #{$property}: theming.get-color-from-palette($primary, $hue);
-  }
-  &.mat-accent {
-    #{$property}: theming.get-color-from-palette($accent, $hue);
-  }
-  &.mat-warn {
-    #{$property}: theming.get-color-from-palette($warn, $hue);
-  }
+      &.mat-warn {
+        @include _filled-button-variant($theme, warn);
+      }
+    }
 
-  &.mat-primary, &.mat-accent, &.mat-warn, &.mat-button-disabled {
-    &.mat-button-disabled {
-      $palette: if($property == 'color', $foreground, $background);
-      #{$property}: theming.get-color-from-palette($palette, disabled-button);
+    .mat-mdc-raised-button {
+      &.mat-primary {
+        @include _protected-button-variant($theme, primary);
+      }
+
+      &.mat-accent {
+        @include _protected-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _protected-button-variant($theme, warn);
+      }
+    }
+
+    .mat-mdc-outlined-button {
+      &.mat-primary {
+        @include _outlined-button-variant($theme, primary);
+      }
+
+      &.mat-accent {
+        @include _outlined-button-variant($theme, accent);
+      }
+
+      &.mat-warn {
+        @include _outlined-button-variant($theme, warn);
+      }
     }
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+/// Outputs typography theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-text-button.$prefix,
+        tokens-mdc-text-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-filled-button.$prefix,
+        tokens-mdc-filled-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-protected-button.$prefix,
+        tokens-mdc-protected-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-outlined-button.$prefix,
+        tokens-mdc-outlined-button.get-typography-tokens($theme)
+      );
 
-  .mat-button, .mat-icon-button, .mat-stroked-button {
-    // Buttons without a background color should inherit the font color. This is necessary to
-    // ensure that the button is readable on custom background colors. It's wrong to always assume
-    // that those buttons are always placed inside of containers with the default background
-    // color of the theme (e.g. themed toolbars).
-    color: inherit;
-    background: transparent;
-
-    @include _theme-property($config, 'color', text);
-    @include _focus-overlay-color($config);
-
-    // Setup the ripple color to be based on the text color. This ensures that the ripples
-    // are matching with the current theme palette and are in contrast to the background color
-    // (e.g in themed toolbars).
-    .mat-ripple-element {
-      opacity: $_ripple-opacity;
-      background-color: currentColor;
-    }
-  }
-
-  .mat-button-focus-overlay {
-    background: map.get($foreground, base);
-  }
-
-  // Note: this needs a bit extra specificity, because we're not guaranteed the inclusion
-  // order of the theme styles and the button reset may end up resetting this as well.
-  .mat-stroked-button:not(.mat-button-disabled) {
-    border-color: theming.get-color-from-palette($foreground, divider);
-  }
-
-  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
-    // Default font and background color when not using any color palette.
-    color: theming.get-color-from-palette($foreground, text);
-    background-color: theming.get-color-from-palette($background, raised-button);
-
-    @include _theme-property($config, 'color', default-contrast);
-    @include _theme-property($config, 'background-color', default);
-    @include _ripple-color($config, default-contrast);
-  }
-
-  .mat-stroked-button, .mat-flat-button {
-    @include private.private-theme-overridable-elevation(0, $config);
-  }
-
-  .mat-raised-button {
-    @include private.private-theme-overridable-elevation(2, $config);
-
-    &:not(.mat-button-disabled):active {
-      @include private.private-theme-overridable-elevation(8, $config);
-    }
-
-    &.mat-button-disabled {
-      @include private.private-theme-overridable-elevation(0, $config);
-    }
-  }
-
-  .mat-fab, .mat-mini-fab {
-    @include private.private-theme-overridable-elevation(6, $config);
-
-    &:not(.mat-button-disabled):active {
-      @include private.private-theme-overridable-elevation(12, $config);
-    }
-
-    &.mat-button-disabled {
-      @include private.private-theme-overridable-elevation(0, $config);
+      @include token-utils.create-token-values(
+        tokens-mat-text-button.$prefix,
+        tokens-mat-text-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-filled-button.$prefix,
+        tokens-mat-filled-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-protected-button.$prefix,
+        tokens-mat-protected-button.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-outlined-button.$prefix,
+        tokens-mat-outlined-button.get-typography-tokens($theme)
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
-  .mat-flat-button, .mat-fab, .mat-mini-fab {
-    font: {
-      family: typography-utils.font-family($config, button);
-      size: typography-utils.font-size($config, button);
-      weight: typography-utils.font-weight($config, button);
+/// Outputs density theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-text-button.$prefix,
+        tokens-mdc-text-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-filled-button.$prefix,
+        tokens-mdc-filled-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-protected-button.$prefix,
+        tokens-mdc-protected-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-outlined-button.$prefix,
+        tokens-mdc-outlined-button.get-density-tokens($theme)
+      );
+
+      @include token-utils.create-token-values(
+        tokens-mat-text-button.$prefix,
+        tokens-mat-text-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-filled-button.$prefix,
+        tokens-mat-filled-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-protected-button.$prefix,
+        tokens-mat-protected-button.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-outlined-button.$prefix,
+        tokens-mat-outlined-button.get-density-tokens($theme)
+      );
     }
   }
 }
 
-@mixin _density($config-or-theme) {}
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  $mdc-filled-button-tokens: tokens-mdc-filled-button.get-token-slots();
+  $mat-filled-button-tokens: tokens-mat-filled-button.get-token-slots();
+  $mdc-outlined-button-tokens: tokens-mdc-outlined-button.get-token-slots();
+  $mat-outlined-button-tokens: tokens-mat-outlined-button.get-token-slots();
+  $mdc-protected-button-tokens: tokens-mdc-protected-button.get-token-slots();
+  $mat-protected-button-tokens: tokens-mat-protected-button.get-token-slots();
+  $mdc-text-button-tokens: tokens-mdc-text-button.get-token-slots();
+  $mat-text-button-tokens: tokens-mat-text-button.get-token-slots();
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+  @return (
+    (
+      namespace: tokens-mdc-filled-button.$prefix,
+      tokens: $mdc-filled-button-tokens,
+      prefix: 'filled-',
+    ),
+    (
+      namespace: tokens-mat-filled-button.$prefix,
+      tokens: $mat-filled-button-tokens,
+      prefix: 'filled-',
+    ),
+    (
+      namespace: tokens-mdc-outlined-button.$prefix,
+      tokens: $mdc-outlined-button-tokens,
+      prefix: 'outlined-',
+    ),
+    (
+      namespace: tokens-mat-outlined-button.$prefix,
+      tokens: $mat-outlined-button-tokens,
+      prefix: 'outlined-',
+    ),
+    (
+      namespace: tokens-mdc-protected-button.$prefix,
+      tokens: $mdc-protected-button-tokens,
+      prefix: 'protected-',
+    ),
+    (
+      namespace: tokens-mat-protected-button.$prefix,
+      tokens: $mat-protected-button-tokens,
+      prefix: 'protected-',
+    ),
+    (
+      namespace: tokens-mdc-text-button.$prefix,
+      tokens: $mdc-text-button-tokens,
+      prefix: 'text-',
+    ),
+    (
+      namespace: tokens-mat-text-button.$prefix,
+      tokens: $mat-text-button-tokens,
+      prefix: 'text-',
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }

@@ -5,11 +5,11 @@ over or longpresses an element.
 
 ### Positioning
 
-The tooltip will be displayed below the element but this can be configured using the
+The tooltip will be displayed below the element by default, but this can be configured using the
 `matTooltipPosition` input.
-The tooltip can be displayed above, below, left, or right of the element. By default the position
-will be below. If the tooltip should switch left/right positions in an RTL layout direction, then
-the positions `before` and `after` should be used instead of `left` and `right`, respectively.
+The tooltip can be displayed above, below, left, or right of the element. If the tooltip should 
+switch left/right positions in an RTL layout direction, then the input values `before` and `after` 
+should be used instead of `left` and `right`, respectively.
 
 | Position  | Description                                                                          |
 |-----------|--------------------------------------------------------------------------------------|
@@ -27,12 +27,18 @@ CSS class that can be used for style (e.g. to add an arrow). The possible classe
 
 <!-- example(tooltip-position) -->
 
+To display the tooltip relative to the mouse or touch that triggered it, use the
+`matTooltipPositionAtOrigin` input.
+With this setting turned on, the tooltip will display relative to the origin of the trigger rather
+than the host element. In cases where the tooltip is not triggered by a touch event or mouse click,
+it will display the same as if this setting was turned off.
+
 ### Showing and hiding
 
 By default, the tooltip will be immediately shown when the user's mouse hovers over the tooltip's
 trigger element and immediately hides when the user's mouse leaves.
 
-On mobile, the tooltip is displayed when the user longpresses the element and hides after a
+On mobile, the tooltip displays when the user longpresses the element and hides after a
 delay of 1500ms.
 
 #### Show and hide delays
@@ -52,7 +58,7 @@ your options using the `MAT_TOOLTIP_DEFAULT_OPTIONS` injection token.
 
 <!-- example(tooltip-modified-defaults) -->
 
-#### Manually calling show() and hide()
+#### Manually showing and hiding the tooltip
 
 To manually cause the tooltip to show or hide, you can call the `show` and `hide` directive methods,
 which both accept a number in milliseconds to delay before applying the display change.
@@ -66,13 +72,12 @@ shown.
 
 ### Accessibility
 
-Elements with the `matTooltip` will add an `aria-describedby` label that provides a reference
-to a visually hidden element containing the tooltip's message. This provides screenreaders the
-information needed to read out the tooltip's contents when the end-user focuses on the element
-triggering the tooltip. The element referenced via `aria-describedby` is not the tooltip itself,
+`MatTooltip` adds an `aria-describedby` description that provides a reference
+to a visually hidden element containing the tooltip's message. This provides screen-readers
+the information needed to read out the tooltip's contents when the user focuses on
+tooltip's trigger. The element referenced by `aria-describedby` is not the tooltip itself,
 but instead an invisible copy of the tooltip content that is always present in the DOM.
 
-If a tooltip will only be shown manually via click, keypress, etc., then extra care should be taken
-such that the action behaves similarly for screen-reader users. One possible approach would be
-to use the `LiveAnnouncer` from the `cdk/a11y` package to announce the tooltip content on such
-an interaction.
+Avoid interactions that exclusively show a tooltip with pointer events like click and mouseenter.
+Always ensure that keyboard users can perform the same set of actions available to mouse and
+touch users.

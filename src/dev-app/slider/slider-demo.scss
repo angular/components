@@ -1,0 +1,56 @@
+.demo-data-table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  margin: 24px;
+}
+
+.demo-value-cell,
+.demo-control-cell,
+.demo-table-header {
+  border: 1px solid #aaa;
+  text-align: left;
+  padding: 8px;
+}
+
+@media (max-width: 600px) {
+  .demo-data-table {
+    font-size: 12px;
+    margin: 24px 0;
+  }
+  .demo-table-header {
+    text-align: center;
+  }
+  .demo-control-cell {
+    max-width: 130px;
+    .demo-slider-control {
+      width: calc(100% - 8px);
+    }
+  }
+}
+
+.demo-value-cell {
+  width: 130px;
+}
+.mat-mdc-slider {
+  width: calc(100% - 48px);
+  margin: 0 24px;
+}
+.demo-native-slider {
+  margin: 0;
+  padding: 16px;
+  width: calc(100% - 16px);
+}
+.mat-mdc-tab-group {
+  border: 1px solid;
+  border-radius: 5px;
+  min-width: 300px;
+  margin-top: 30px;
+}
+
+.demo-dialog-trigger-container {
+  padding: 25px 0;
+  text-align: center;
+}
+.demo-dialog-content {
+  overflow: visible;
+}

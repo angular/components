@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 
 /**
  * Configuration for the isFocusable method.
@@ -24,13 +24,15 @@ export class IsFocusableConfig {
 // supported.
 
 /**
- * Utility for checking the interactivity of an element, such as whether is is focusable or
+ * Utility for checking the interactivity of an element, such as whether it is focusable or
  * tabbable.
  */
 @Injectable({providedIn: 'root'})
 export class InteractivityChecker {
+  private _platform = inject(Platform);
 
-  constructor(private _platform: Platform) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Gets whether an element is disabled.
@@ -145,10 +147,12 @@ export class InteractivityChecker {
   isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean {
     // Perform checks in order of left to most expensive.
     // Again, naive approach that does not capture many edge cases and browser quirks.
-    return isPotentiallyFocusable(element) && !this.isDisabled(element) &&
-      (config?.ignoreVisibility || this.isVisible(element));
+    return (
+      isPotentiallyFocusable(element) &&
+      !this.isDisabled(element) &&
+      (config?.ignoreVisibility || this.isVisible(element))
+    );
   }
-
 }
 
 /**
@@ -168,17 +172,22 @@ function getFrameElement(window: Window) {
 function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
   // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
-  return !!(element.offsetWidth || element.offsetHeight ||
-      (typeof element.getClientRects === 'function' && element.getClientRects().length));
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    (typeof element.getClientRects === 'function' && element.getClientRects().length)
+  );
 }
 
 /** Gets whether an element's  */
 function isNativeFormElement(element: Node) {
   let nodeName = element.nodeName.toLowerCase();
-  return nodeName === 'input' ||
-      nodeName === 'select' ||
-      nodeName === 'button' ||
-      nodeName === 'textarea';
+  return (
+    nodeName === 'input' ||
+    nodeName === 'select' ||
+    nodeName === 'button' ||
+    nodeName === 'textarea'
+  );
 }
 
 /** Gets whether an element is an `<input type="hidden">`. */
@@ -208,12 +217,6 @@ function hasValidTabIndex(element: HTMLElement): boolean {
   }
 
   let tabIndex = element.getAttribute('tabindex');
-
-  // IE11 parses tabindex="" as the value "-32768"
-  if (tabIndex == '-32768') {
-    return false;
-  }
-
   return !!(tabIndex && !isNaN(parseInt(tabIndex, 10)));
 }
 
@@ -237,10 +240,12 @@ function isPotentiallyTabbableIOS(element: HTMLElement): boolean {
   let nodeName = element.nodeName.toLowerCase();
   let inputType = nodeName === 'input' && (element as HTMLInputElement).type;
 
-  return inputType === 'text'
-      || inputType === 'password'
-      || nodeName === 'select'
-      || nodeName === 'textarea';
+  return (
+    inputType === 'text' ||
+    inputType === 'password' ||
+    nodeName === 'select' ||
+    nodeName === 'textarea'
+  );
 }
 
 /**
@@ -253,14 +258,16 @@ function isPotentiallyFocusable(element: HTMLElement): boolean {
     return false;
   }
 
-  return isNativeFormElement(element) ||
-      isAnchorWithHref(element) ||
-      element.hasAttribute('contenteditable') ||
-      hasValidTabIndex(element);
+  return (
+    isNativeFormElement(element) ||
+    isAnchorWithHref(element) ||
+    element.hasAttribute('contenteditable') ||
+    hasValidTabIndex(element)
+  );
 }
 
 /** Gets the parent window of a DOM node with regards of being inside of an iframe. */
 function getWindow(node: HTMLElement): Window {
   // ownerDocument is null if `node` itself *is* a document.
-  return node.ownerDocument && node.ownerDocument.defaultView || window;
+  return (node.ownerDocument && node.ownerDocument.defaultView) || window;
 }

@@ -1,8 +1,9 @@
+import ts from 'typescript';
+import minimatch from 'minimatch';
+
 import {existsSync} from 'fs';
-import * as minimatch from 'minimatch';
-import {dirname, join, normalize, relative, resolve} from 'path';
+import {dirname, join, normalize, resolve} from 'path';
 import * as Lint from 'tslint';
-import * as ts from 'typescript';
 
 const BUILD_BAZEL_FILE = 'BUILD.bazel';
 
@@ -15,7 +16,7 @@ const BUILD_BAZEL_FILE = 'BUILD.bazel';
  */
 export class Rule extends Lint.Rules.AbstractRule {
   apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(sourceFile, checkSourceFile, this.getOptions().ruleArguments);
+    return this.applyWithFunction(sourceFile, checkSourceFile, this.getOptions().ruleArguments[0]);
   }
 }
 
@@ -24,32 +25,36 @@ export class Rule extends Lint.Rules.AbstractRule {
  * with relative cross entry-point references.
  */
 function checkSourceFile(ctx: Lint.WalkContext<string[]>) {
-  const filePath = ctx.sourceFile.fileName;
-  const relativeFilePath = relative(process.cwd(), filePath);
-
-  if (!ctx.options.every(o => minimatch(relativeFilePath, o))) {
+  if (ctx.options.some(o => minimatch(ctx.sourceFile.fileName, o))) {
     return;
   }
 
   (function visitNode(node: ts.Node) {
     if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
-      if (!node.moduleSpecifier || !ts.isStringLiteralLike(node.moduleSpecifier) ||
-          !node.moduleSpecifier.text.startsWith('.')) {
+      if (
+        !node.moduleSpecifier ||
+        !ts.isStringLiteralLike(node.moduleSpecifier) ||
+        !node.moduleSpecifier.text.startsWith('.')
+      ) {
         return;
       }
 
       const modulePath = node.moduleSpecifier.text;
-      const basePath = dirname(filePath);
+      const basePath = dirname(ctx.sourceFile.fileName);
       const currentPackage = findClosestBazelPackage(basePath);
       const resolvedPackage = findClosestBazelPackage(resolve(basePath, modulePath));
 
-      if (currentPackage && resolvedPackage &&
-          normalize(currentPackage) !== normalize(resolvedPackage)) {
+      if (
+        currentPackage &&
+        resolvedPackage &&
+        normalize(currentPackage) !== normalize(resolvedPackage)
+      ) {
         const humanizedType = ts.isImportDeclaration(node) ? 'Import' : 'Export';
         ctx.addFailureAtNode(
-            node,
-            `${humanizedType} resolves to a different Bazel build package through a relative ` +
-                `path. This is not allowed and can be fixed by using the actual module import.`);
+          node,
+          `${humanizedType} resolves to a different Bazel build package through a relative ` +
+            `path. This is not allowed and can be fixed by using the actual module import.`,
+        );
       }
       return;
     }
@@ -58,7 +63,7 @@ function checkSourceFile(ctx: Lint.WalkContext<string[]>) {
 }
 
 /** Finds the closest Bazel build package for the given path. */
-function findClosestBazelPackage(startPath: string): string|null {
+function findClosestBazelPackage(startPath: string): string | null {
   let currentPath = startPath;
   while (!hasBuildFile(currentPath)) {
     const parentPath = dirname(currentPath);

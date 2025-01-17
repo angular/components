@@ -3,10 +3,19 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+
+@Component({
+  selector: 'test-sub-shadow-boundary',
+  template: '<div class="in-the-shadows">Shadow 2</div>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  encapsulation: ViewEncapsulation.ShadowDom,
+})
+export class TestSubShadowBoundary {}
 
 @Component({
   selector: 'test-shadow-boundary',
@@ -17,14 +26,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line:validate-decorators
   encapsulation: ViewEncapsulation.ShadowDom,
+  imports: [TestSubShadowBoundary],
 })
 export class TestShadowBoundary {}
-
-@Component({
-  selector: 'test-sub-shadow-boundary',
-  template: '<div class="in-the-shadows">Shadow 2</div>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // tslint:disable-next-line:validate-decorators
-  encapsulation: ViewEncapsulation.ShadowDom,
-})
-export class TestSubShadowBoundary {}

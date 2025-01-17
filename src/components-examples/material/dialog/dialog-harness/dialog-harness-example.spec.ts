@@ -1,12 +1,7 @@
-import {TestBed, ComponentFixture, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatDialogHarness} from '@angular/material/dialog/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatDialogModule} from '@angular/material/dialog';
 import {DialogHarnessExample} from './dialog-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -14,19 +9,14 @@ describe('DialogHarnessExample', () => {
   let fixture: ComponentFixture<DialogHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(waitForAsync(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatDialogModule, NoopAnimationsModule],
-      declarations: [DialogHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule],
+    });
     fixture = TestBed.createComponent(DialogHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
-  }));
+  });
 
   it('should load harness for dialog', async () => {
     fixture.componentInstance.open();
@@ -51,7 +41,6 @@ describe('DialogHarnessExample', () => {
     expect(await dialogs[0].getRole()).toBe('alertdialog');
     expect(await dialogs[1].getRole()).toBe('dialog');
   });
-
 
   it('should be able to close dialog', async () => {
     fixture.componentInstance.open({disableClose: true});

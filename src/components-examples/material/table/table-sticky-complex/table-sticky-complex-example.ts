@@ -1,13 +1,16 @@
 import {Component} from '@angular/core';
-import {MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {MatButtonToggleGroup, MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * @title Tables with toggle-able sticky headers, footers, and columns
  */
 @Component({
   selector: 'table-sticky-complex-example',
-  styleUrls: ['table-sticky-complex-example.css'],
+  styleUrl: 'table-sticky-complex-example.css',
   templateUrl: 'table-sticky-complex-example.html',
+  imports: [MatButtonModule, MatButtonToggleModule, MatTableModule],
 })
 export class TableStickyComplexExample {
   displayedColumns: string[] = [];

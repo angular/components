@@ -18,6 +18,7 @@ ng_module(
         "//src/material/list",
         "//src/material/sidenav",
         "//src/material/toolbar",
+        "//src/material/tooltip",
         "@npm//@angular/router",
     ],
 )

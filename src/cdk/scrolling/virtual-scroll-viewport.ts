@@ -3,19 +3,22 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
 import {ListRange} from '@angular/cdk/collections';
+import {Platform} from '@angular/cdk/platform';
 import {
+  afterNextRender,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   Inject,
+  Injector,
   Input,
-  NgZone,
   OnDestroy,
   OnInit,
   Optional,
@@ -27,17 +30,16 @@ import {
   animationFrameScheduler,
   asapScheduler,
   Observable,
-  Subject,
   Observer,
+  Subject,
   Subscription,
 } from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
-import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
-import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
+import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /** Checks if the given ranges are equal. */
 function rangesEqual(r1: ListRange, r2: ListRange): boolean {
@@ -50,14 +52,13 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
  * that don't support it (e.g. server-side rendering).
  */
 const SCROLL_SCHEDULER =
-    typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
-
+  typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 /** A viewport that virtualizes its scrolling with the help of `CdkVirtualForOf`. */
 @Component({
   selector: 'cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.html',
-  styleUrls: ['virtual-scroll-viewport.css'],
+  styleUrl: 'virtual-scroll-viewport.css',
   host: {
     'class': 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
@@ -65,12 +66,27 @@ const SCROLL_SCHEDULER =
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: CdkScrollable,
-    useExisting: CdkVirtualScrollViewport,
-  }]
+  providers: [
+    {
+      provide: CdkScrollable,
+      useFactory: (
+        virtualScrollable: CdkVirtualScrollable | null,
+        viewport: CdkVirtualScrollViewport,
+      ) => virtualScrollable || viewport,
+      deps: [[new Optional(), new Inject(VIRTUAL_SCROLLABLE)], CdkVirtualScrollViewport],
+    },
+  ],
 })
-export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, OnDestroy {
+export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
+  override elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _scrollStrategy = inject<VirtualScrollStrategy>(VIRTUAL_SCROLL_STRATEGY, {
+    optional: true,
+  })!;
+  scrollable = inject<CdkVirtualScrollable>(VIRTUAL_SCROLLABLE, {optional: true})!;
+
+  private _platform = inject(Platform);
+
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
   private readonly _detachedSubject = new Subject<void>();
 
@@ -82,6 +98,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   get orientation() {
     return this._orientation;
   }
+
   set orientation(orientation: 'horizontal' | 'vertical') {
     if (this._orientation !== orientation) {
       this._orientation = orientation;
@@ -94,14 +111,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * Whether rendered items should persist in the DOM after scrolling out of view. By default, items
    * will be removed.
    */
-  @Input()
-  get appendOnly(): boolean {
-    return this._appendOnly;
-  }
-  set appendOnly(value: boolean) {
-    this._appendOnly = coerceBooleanProperty(value);
-  }
-  private _appendOnly = false;
+  @Input({transform: booleanAttribute}) appendOnly: boolean = false;
 
   // Note: we don't use the typical EventEmitter here because we need to subscribe to the scroll
   // strategy lazily (i.e. only if the user is actually listening to the events). We do this because
@@ -109,9 +119,11 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   // performance.
   /** Emits when the index of the first element visible in the viewport changes. */
   @Output()
-  readonly scrolledIndexChange: Observable<number> = new Observable(
-      (observer: Observer<number>) => this._scrollStrategy.scrolledIndexChange.subscribe(
-          index => Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
+  readonly scrolledIndexChange: Observable<number> = new Observable((observer: Observer<number>) =>
+    this._scrollStrategy.scrolledIndexChange.subscribe(index =>
+      Promise.resolve().then(() => this.ngZone.run(() => observer.next(index))),
+    ),
+  );
 
   /** The element that wraps the rendered content. */
   @ViewChild('contentWrapper', {static: true}) _contentWrapper: ElementRef<HTMLElement>;
@@ -166,48 +178,68 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** Subscription to changes in the viewport size. */
   private _viewportChanges = Subscription.EMPTY;
 
-  constructor(public override elementRef: ElementRef<HTMLElement>,
-              private _changeDetectorRef: ChangeDetectorRef,
-              ngZone: NgZone,
-              @Optional() @Inject(VIRTUAL_SCROLL_STRATEGY)
-                  private _scrollStrategy: VirtualScrollStrategy,
-              @Optional() dir: Directionality,
-              scrollDispatcher: ScrollDispatcher,
-              viewportRuler: ViewportRuler) {
-    super(elementRef, scrollDispatcher, ngZone, dir);
+  private _injector = inject(Injector);
 
-    if (!_scrollStrategy && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+  private _isDestroyed = false;
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+    const viewportRuler = inject(ViewportRuler);
+
+    if (!this._scrollStrategy && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }
 
     this._viewportChanges = viewportRuler.change().subscribe(() => {
       this.checkViewportSize();
     });
+
+    if (!this.scrollable) {
+      // No scrollable is provided, so the virtual-scroll-viewport needs to become a scrollable
+      this.elementRef.nativeElement.classList.add('cdk-virtual-scrollable');
+      this.scrollable = this;
+    }
   }
 
   override ngOnInit() {
-    super.ngOnInit();
+    // Scrolling depends on the element dimensions which we can't get during SSR.
+    if (!this._platform.isBrowser) {
+      return;
+    }
 
+    if (this.scrollable === this) {
+      super.ngOnInit();
+    }
     // It's still too early to measure the viewport at this point. Deferring with a promise allows
     // the Viewport to be rendered with the correct size before we measure. We run this outside the
     // zone to avoid causing more change detection cycles. We handle the change detection loop
     // ourselves instead.
-    this.ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
-      this._measureViewportSize();
-      this._scrollStrategy.attach(this);
+    this.ngZone.runOutsideAngular(() =>
+      Promise.resolve().then(() => {
+        this._measureViewportSize();
+        this._scrollStrategy.attach(this);
 
-      this.elementScrolled()
+        this.scrollable
+          .elementScrolled()
           .pipe(
-              // Start off with a fake scroll event so we properly detect our initial position.
-              startWith(null),
-              // Collect multiple events into one until the next animation frame. This way if
-              // there are multiple scroll events in the same frame we only need to recheck
-              // our layout once.
-              auditTime(0, SCROLL_SCHEDULER))
+            // Start off with a fake scroll event so we properly detect our initial position.
+            startWith(null),
+            // Collect multiple events into one until the next animation frame. This way if
+            // there are multiple scroll events in the same frame we only need to recheck
+            // our layout once.
+            auditTime(0, SCROLL_SCHEDULER),
+            // Usually `elementScrolled` is completed when the scrollable is destroyed, but
+            // that may not be the case if a `CdkVirtualScrollableElement` is used so we have
+            // to unsubscribe here just in case.
+            takeUntil(this._destroyed),
+          )
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
-      this._markChangeDetectionNeeded();
-    }));
+        this._markChangeDetectionNeeded();
+      }),
+    );
   }
 
   override ngOnDestroy() {
@@ -218,6 +250,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     this._renderedRangeSubject.complete();
     this._detachedSubject.complete();
     this._viewportChanges.unsubscribe();
+
+    this._isDestroyed = true;
 
     super.ngOnDestroy();
   }
@@ -270,6 +304,10 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     return this._renderedRange;
   }
 
+  measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number {
+    return this.getElementRef().nativeElement.getBoundingClientRect()[from];
+  }
+
   /**
    * Sets the total size of all content (in pixels), including content that is not currently
    * rendered.
@@ -288,7 +326,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
       if (this.appendOnly) {
         range = {start: 0, end: Math.max(this._renderedRange.end, range.end)};
       }
-      this._renderedRangeSubject.next(this._renderedRange = range);
+      this._renderedRangeSubject.next((this._renderedRange = range));
       this._markChangeDetectionNeeded(() => this._scrollStrategy.onContentRendered());
     }
   }
@@ -305,6 +343,9 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * (in pixels).
    */
   setRenderedContentOffset(offset: number, to: 'to-start' | 'to-end' = 'to-start') {
+    // In appendOnly, we always start from the top
+    offset = this.appendOnly && to === 'to-start' ? 0 : offset;
+
     // For a horizontal viewport in a right-to-left language we need to translate along the x-axis
     // in the negative direction.
     const isRtl = this.dir && this.dir.value == 'rtl';
@@ -350,7 +391,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     } else {
       options.top = offset;
     }
-    this.scrollTo(options);
+    this.scrollable.scrollTo(options);
   }
 
   /**
@@ -358,20 +399,57 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * @param index The index of the element to scroll to.
    * @param behavior The ScrollBehavior to use when scrolling. Default is behavior is `auto`.
    */
-  scrollToIndex(index: number,  behavior: ScrollBehavior = 'auto') {
+  scrollToIndex(index: number, behavior: ScrollBehavior = 'auto') {
     this._scrollStrategy.scrollToIndex(index, behavior);
   }
 
   /**
-   * Gets the current scroll offset from the start of the viewport (in pixels).
+   * Gets the current scroll offset from the start of the scrollable (in pixels).
    * @param from The edge to measure the offset from. Defaults to 'top' in vertical mode and 'start'
    *     in horizontal mode.
    */
   override measureScrollOffset(
-      from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
-    return from ?
-      super.measureScrollOffset(from) :
-      super.measureScrollOffset(this.orientation === 'horizontal' ? 'start' : 'top');
+    from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end',
+  ): number {
+    // This is to break the call cycle
+    let measureScrollOffset: InstanceType<typeof CdkVirtualScrollable>['measureScrollOffset'];
+    if (this.scrollable == this) {
+      measureScrollOffset = (_from: NonNullable<typeof from>) => super.measureScrollOffset(_from);
+    } else {
+      measureScrollOffset = (_from: NonNullable<typeof from>) =>
+        this.scrollable.measureScrollOffset(_from);
+    }
+
+    return Math.max(
+      0,
+      measureScrollOffset(from ?? (this.orientation === 'horizontal' ? 'start' : 'top')) -
+        this.measureViewportOffset(),
+    );
+  }
+
+  /**
+   * Measures the offset of the viewport from the scrolling container
+   * @param from The edge to measure from.
+   */
+  measureViewportOffset(from?: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end') {
+    let fromRect: 'left' | 'top' | 'right' | 'bottom';
+    const LEFT = 'left';
+    const RIGHT = 'right';
+    const isRtl = this.dir?.value == 'rtl';
+    if (from == 'start') {
+      fromRect = isRtl ? RIGHT : LEFT;
+    } else if (from == 'end') {
+      fromRect = isRtl ? LEFT : RIGHT;
+    } else if (from) {
+      fromRect = from;
+    } else {
+      fromRect = this.orientation === 'horizontal' ? 'left' : 'top';
+    }
+
+    const scrollerClientRect = this.scrollable.measureBoundingClientRectWithScrollOffset(fromRect);
+    const viewportClientRect = this.elementRef.nativeElement.getBoundingClientRect()[fromRect];
+
+    return viewportClientRect - scrollerClientRect;
   }
 
   /** Measure the combined size of all of the rendered items. */
@@ -400,9 +478,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
 
   /** Measure the viewport size. */
   private _measureViewportSize() {
-    const viewportEl = this.elementRef.nativeElement;
-    this._viewportSize = this.orientation === 'horizontal' ?
-        viewportEl.clientWidth : viewportEl.clientHeight;
+    this._viewportSize = this.scrollable.measureViewportSize(this.orientation);
   }
 
   /** Queue up change detection to run. */
@@ -415,40 +491,51 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     // properties sequentially we only have to run `_doChangeDetection` once at the end.
     if (!this._isChangeDetectionPending) {
       this._isChangeDetectionPending = true;
-      this.ngZone.runOutsideAngular(() => Promise.resolve().then(() => {
-        this._doChangeDetection();
-      }));
+      this.ngZone.runOutsideAngular(() =>
+        Promise.resolve().then(() => {
+          this._doChangeDetection();
+        }),
+      );
     }
   }
 
   /** Run change detection. */
   private _doChangeDetection() {
-    this._isChangeDetectionPending = false;
-
-    // Apply the content transform. The transform can't be set via an Angular binding because
-    // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-    // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-    // the `Number` function first to coerce it to a numeric value.
-    this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
-    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
-    // from the root, since the repeated items are content projected in. Calling `detectChanges`
-    // instead does not properly check the projected content.
-    this.ngZone.run(() => this._changeDetectorRef.markForCheck());
-
-    const runAfterChangeDetection = this._runAfterChangeDetection;
-    this._runAfterChangeDetection = [];
-    for (const fn of runAfterChangeDetection) {
-      fn();
+    if (this._isDestroyed) {
+      return;
     }
+
+    this.ngZone.run(() => {
+      // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+      // from the root, since the repeated items are content projected in. Calling `detectChanges`
+      // instead does not properly check the projected content.
+      this._changeDetectorRef.markForCheck();
+
+      // Apply the content transform. The transform can't be set via an Angular binding because
+      // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+      // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+      // the `Number` function first to coerce it to a numeric value.
+      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
+      afterNextRender(
+        () => {
+          this._isChangeDetectionPending = false;
+          const runAfterChangeDetection = this._runAfterChangeDetection;
+          this._runAfterChangeDetection = [];
+          for (const fn of runAfterChangeDetection) {
+            fn();
+          }
+        },
+        {injector: this._injector},
+      );
+    });
   }
 
   /** Calculates the `style.width` and `style.height` for the spacer element. */
   private _calculateSpacerSize() {
     this._totalContentHeight =
-        this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`;
+      this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`;
     this._totalContentWidth =
-        this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '';
+      this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '';
   }
-
-  static ngAcceptInputType_appendOnly: BooleanInput;
 }

@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "sass_binary", "ts_library")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -8,17 +9,21 @@ sass_binary(
     name = "test-css-variables-theme",
     testonly = True,
     src = "test-css-variables-theme.scss",
-    deps = ["//src/material/core:theming_scss_lib"],
+    deps = [
+        "//src/material/core:theming_scss_lib",
+    ],
 )
 
-# Sass binary which is used to ensure that our themes will compile with the legacy and new
-# pattern for configuring themes. For more information on the legacy and new pattern, inspect
+# Sass binary which is used to ensure that our themes will compile with the
+# pattern for configuring themes. For more information, inspect
 # the `mat-light-theme` and `mat-dark-theme` theming functions.
 sass_binary(
     name = "test-theming-api",
     testonly = True,
     src = "test-theming-api.scss",
-    deps = ["//src/material/core:theming_scss_lib"],
+    deps = [
+        "//src/material/core:theming_scss_lib",
+    ],
 )
 
 # Sass binary used to ensure that the theming bundle works as expected.
@@ -26,29 +31,41 @@ sass_binary(
     name = "test-theming-bundle",
     testonly = True,
     src = "test-theming-bundle.scss",
-    deps = ["//src/material:theming_bundle"],
+    deps = ["//src/material:sass_lib"],
 )
 
-# Sass binary which is used to ensure that the legacy theming bundle exposes the necessary
-# mixins and variables for creating themes.
+# Sass binary that asserts that setting the font family for a typography config works as expected.
 sass_binary(
-    name = "test-legacy-theming-bundle",
+    name = "test-typography-font-family",
     testonly = True,
-    src = "test-legacy-theming-bundle.scss",
-    deps = ["//src/material:theming_bundle"],
+    src = "test-typography-font-family.scss",
+    deps = ["//src/material:sass_lib"],
+)
+
+build_test(
+    name = "sass_compile_tests",
+    targets = [
+        ":test-css-variables-theme",
+        ":test-theming-api",
+        ":test-theming-bundle",
+        ":test-typography-font-family",
+    ],
 )
 
 ts_library(
     name = "unit_test_lib",
     testonly = True,
-    srcs = [
-        "theming-api.spec.ts",
-    ],
+    srcs = glob([
+        "*.spec.ts",
+    ]),
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     deps = [
         "//tools/postcss",
+        "//tools/sass:sass_lib",
+        "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/node",
-        "@npm//@types/sass",
         "@npm//postcss",
         "@npm//sass",
     ],
@@ -57,6 +74,9 @@ ts_library(
 jasmine_node_test(
     name = "unit_tests",
     srcs = [":unit_test_lib"],
-    data = ["//src/material/core:theming_scss_lib"],
+    data = [
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
+    ],
     shard_count = 4,
 )

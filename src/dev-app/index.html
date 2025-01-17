@@ -9,41 +9,21 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="theme.css" rel="stylesheet">
 
   <!-- FontAwesome for mat-icon demo. -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
 <body>
   <dev-app>Loading...</dev-app>
-
-  <script src="core-js-bundle/index.js"></script>
-  <script src="zone.js/dist/zone.js"></script>
-  <script src="systemjs/dist/system.js"></script>
-  <script src="system-config.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js"></script>
+  <script src="zone.js/bundles/zone.umd.js"></script>
+  <script src="bundles/dev-app/main.js" type="module"></script>
   <script>
-    (function loadGoogleMaps(key) {
-      var script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?libraries=visualization' +
-        (key ? '&key=' + key : '');
-      document.body.appendChild(script);
-    })(window.DEV_APP_VARIABLES.GOOGLE_MAPS_KEY);
-  </script>
-  <script>
-    System.config({
-      map: {
-        // Maps imports where the AMD module names start with workspace name (commonly done in Bazel).
-        // This is needed for compatibility with dynamic runfile resolution of the devserver and the
-        // static runfile resolution done in the "pkg_web" rule. In the built web package, the output
-        // tree artifact serves as workspace root and root of the current dev-app Bazel package.
-        'angular_material': '',
-        'angular_material/src/dev-app': '',
-      }
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      v: "weekly",
+      key: window.GOOGLE_MAPS_KEY || 'invalid'
     });
-    System.import('main').catch(console.error.bind(console));
   </script>
 </body>
 </html>

@@ -1,50 +1,10 @@
 {
   "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "migration-v6": {
-      "version": "6.0.0",
-      "description": "Updates Angular Material to v6",
-      "factory": "./ng-update/index#updateToV6"
-    },
-    "migration-v7": {
-      "version": "7.0.0",
-      "description": "Updates Angular Material to v7",
-      "factory": "./ng-update/index#updateToV7"
-    },
-    "migration-v8": {
-      "version": "8.0.0",
-      "description": "Updates Angular Material to v8",
-      "factory": "./ng-update/index#updateToV8"
-    },
-    "migration-v9": {
-      "version": "9.0.0-0",
-      "description": "Updates Angular Material to v9",
-      "factory": "./ng-update/index#updateToV9"
-    },
-    "migration-v10": {
-      "version": "10.0.0-0",
-      "description": "Updates Angular Material to v10",
-      "factory": "./ng-update/index#updateToV10"
-    },
-    "migration-v11": {
-      "version": "11.0.0-0",
-      "description": "Updates Angular Material to v11",
-      "factory": "./ng-update/index#updateToV11"
-    },
-    "migration-v12": {
-      "version": "12.0.0-0",
-      "description": "Updates Angular Material to v12",
-      "factory": "./ng-update/index#updateToV12"
-    },
-    "migration-v13": {
-      "version": "13.0.0-0",
-      "description": "Updates Angular Material to v13",
-      "factory": "./ng-update/index#updateToV13"
-    },
-    "ng-post-update": {
-      "description": "Prints out results after ng-update.",
-      "factory": "./ng-update/index#postUpdate",
-      "private": true
+    "migration-v19": {
+      "version": "19.0.0-0",
+      "description": "Updates Angular Material to v19",
+      "factory": "./ng-update/index_bundled#updateToV19"
     }
   }
 }

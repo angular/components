@@ -6,52 +6,65 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <mat-card>
     <mat-card-subtitle>ngModel</mat-card-subtitle>
 
-    <mat-form-field [floatLabel]="floatLabel" [color]="drinksTheme"
-                    [class.demo-drinks-width-large]="drinksWidth === '400px'">
-      <mat-label>Drink</mat-label>
-      <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
-        [disabled]="drinksDisabled" #drinkControl="ngModel">
-        <mat-option>None</mat-option>
-        <mat-option *ngFor="let drink of drinks" [value]="drink.value" [disabled]="drink.disabled">
-          {{ drink.viewValue }}
-        </mat-option>
-      </mat-select>
-      <mat-icon matPrefix class="demo-drink-icon">local_drink</mat-icon>
-      <mat-hint>Pick a drink!</mat-hint>
-      <mat-error>You must make a selection</mat-error>
-    </mat-form-field>
-    <p> Value: {{ currentDrink }} </p>
-    <p> Touched: {{ drinkControl.touched }} </p>
-    <p> Dirty: {{ drinkControl.dirty }} </p>
-    <p> Status: {{ drinkControl.control?.status }} </p>
-    <p>
-      <label for="floating-placeholder">Floating placeholder:</label>
-      <select [(ngModel)]="floatLabel" id="floating-placeholder">
-        <option value="auto">Auto</option>
-        <option value="always">Always</option>
-        <option value="never">Never</option>
-      </select>
-    </p>
-    <p>
-      <label for="drinks-width">Width:</label>
-      <select [(ngModel)]="drinksWidth" id="drinks-width">
-        <option value="default">Default</option>
-        <option value="400px">400px</option>
-      </select>
-    </p>
-    <p>
-      <label for="drinks-theme">Theme:</label>
-      <select [(ngModel)]="drinksTheme" id="drinks-theme">
-        <option *ngFor="let theme of availableThemes" [value]="theme.value">
-          {{theme.name}}
-        </option>
-      </select>
-    </p>
+    <mat-card-content>
+      <mat-form-field [floatLabel]="floatLabel" [color]="drinksTheme"
+                      [class.demo-drinks-width-large]="drinksWidth === '400px'">
+        <mat-label>Drink</mat-label>
+        <mat-select [(ngModel)]="currentDrink" [required]="drinksRequired"
+          [disabled]="drinksDisabled" #drinkControl="ngModel">
+          <mat-option [disabled]="drinksOptionsDisabled === 'all'">None</mat-option>
+          @for (drink of drinks; track drink; let index = $index) {
+            <mat-option [value]="drink.value"
+              [disabled]="isDrinkOptionDisabled(index)">
+              {{ drink.viewValue }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix class="demo-drink-icon">local_drink</mat-icon>
+        <mat-hint>Pick a drink!</mat-hint>
+        <mat-error>You must make a selection</mat-error>
+      </mat-form-field>
+      <p> Value: {{ currentDrink }} </p>
+      <p> Touched: {{ drinkControl.touched }} </p>
+      <p> Dirty: {{ drinkControl.dirty }} </p>
+      <p> Status: {{ drinkControl.status }} </p>
+      <p>
+        <label for="floating-label">Floating label:</label>
+        <select [(ngModel)]="floatLabel" id="floating-label">
+          <option value="auto">Auto</option>
+          <option value="always">Always</option>
+          <option value="never">Never</option>
+        </select>
+      </p>
+      <p>
+        <label for="drinks-width">Width:</label>
+        <select [(ngModel)]="drinksWidth" id="drinks-width">
+          <option value="default">Default</option>
+          <option value="400px">400px</option>
+        </select>
+      </p>
+      <p>
+        <label for="drinks-theme">Theme:</label>
+        <select [(ngModel)]="drinksTheme" id="drinks-theme">
+          @for (theme of availableThemes; track theme) {
+            <option [value]="theme.value">{{theme.name}}</option>
+          }
+        </select>
+      </p>
+      <p>
+        <label for="drinks-disabled-options">Disabled options:</label>
+        <select [(ngModel)]="drinksOptionsDisabled" id="drinks-disabled-options">
+          <option value="none">None</option>
+          <option value="first-middle-last">Disable First, Middle, and Last Options</option>
+          <option value="all">Disable All Options</option>
+        </select>
+      </p>
 
-    <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
-    <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
-    <button mat-button (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
-    <button mat-button (click)="drinkControl.reset()">RESET</button>
+      <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
+      <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
+      <button mat-button (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
+      <button mat-button (click)="drinkControl.reset()">RESET</button>
+    </mat-card-content>
   </mat-card>
 
   <mat-card>
@@ -62,24 +75,29 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         <mat-label>Pokemon</mat-label>
         <mat-select multiple [(ngModel)]="currentPokemon"
           [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
-          <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
-            {{ creature.viewValue }}
-          </mat-option>
+          @for (creature of pokemon; track creature) {
+            <mat-option [value]="creature.value" [disabled]="pokemonOptionsDisabled">
+              {{ creature.viewValue }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <p> Value: {{ currentPokemon }} </p>
       <p> Touched: {{ pokemonControl.touched }} </p>
       <p> Dirty: {{ pokemonControl.dirty }} </p>
-      <p> Status: {{ pokemonControl.control?.status }} </p>
+      <p> Status: {{ pokemonControl.status }} </p>
       <p>
         <label for="pokemon-theme">Theme:</label>
         <select [(ngModel)]="pokemonTheme" id="pokemon-theme">
-          <option *ngFor="let theme of availableThemes" [value]="theme.value">{{ theme.name }}</option>
+          @for (theme of availableThemes; track theme) {
+            <option [value]="theme.value">{{ theme.name }}</option>
+          }
         </select>
       </p>
       <button mat-button (click)="setPokemonValue()">SET VALUE</button>
       <button mat-button (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
+      <button mat-button (click)="pokemonOptionsDisabled=!pokemonOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
       <button mat-button (click)="pokemonControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
@@ -87,20 +105,22 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <mat-card>
     <mat-card-subtitle>Without Angular forms</mat-card-subtitle>
 
-    <mat-form-field>
-      <mat-label>Digimon</mat-label>
-      <mat-select [(value)]="currentDigimon">
-        <mat-option>None</mat-option>
-        <mat-option *ngFor="let creature of digimon" [value]="creature.value">
-          {{ creature.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Digimon</mat-label>
+        <mat-select [(value)]="currentDigimon">
+          <mat-option>None</mat-option>
+          @for (creature of digimon; track creature) {
+            <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <p>Value: {{ currentDigimon }}</p>
+      <p>Value: {{ currentDigimon }}</p>
 
-    <button mat-button (click)="currentDigimon='pajiramon-3'">SET VALUE</button>
-    <button mat-button (click)="currentDigimon=''">RESET</button>
+      <button mat-button (click)="currentDigimon='pajiramon-3'">SET VALUE</button>
+      <button mat-button (click)="currentDigimon=''">RESET</button>
+    </mat-card-content>
   </mat-card>
 
   <mat-card>
@@ -110,12 +130,13 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <mat-form-field>
         <mat-label>Pokemon</mat-label>
         <mat-select [(ngModel)]="currentPokemonFromGroup">
-          <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
-            [disabled]="group.disabled">
-            <mat-option *ngFor="let creature of group.pokemon" [value]="creature.value">
-              {{ creature.viewValue }}
-            </mat-option>
-          </mat-optgroup>
+          @for (group of pokemonGroups; track group) {
+            <mat-optgroup [label]="group.name" [disabled]="group.disabled">
+              @for (creature of group.pokemon; track creature) {
+                <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
+              }
+            </mat-optgroup>
+          }
         </mat-select>
       </mat-form-field>
     </mat-card-content>
@@ -131,15 +152,15 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
                     [required]="drinkObjectRequired"
                     [compareWith]="compareByValue ? compareDrinkObjectsByValue : compareByReference"
                     #drinkObjectControl="ngModel">
-          <mat-option *ngFor="let drink of drinks" [value]="drink" [disabled]="drink.disabled">
-            {{ drink.viewValue }}
-          </mat-option>
+          @for (drink of drinks; track drink) {
+            <mat-option [value]="drink" [disabled]="drink.disabled">{{ drink.viewValue }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <p> Value: {{ currentDrinkObject | json }} </p>
       <p> Touched: {{ drinkObjectControl.touched }} </p>
       <p> Dirty: {{ drinkObjectControl.dirty }} </p>
-      <p> Status: {{ drinkObjectControl.control?.status }} </p>
+      <p> Status: {{ drinkObjectControl.status }} </p>
       <p> Comparison Mode: {{ compareByValue ? 'VALUE' : 'REFERENCE' }} </p>
 
       <button mat-button (click)="reassignDrinkByCopy()"
@@ -156,37 +177,13 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <mat-card-subtitle>Appearance comparison</mat-card-subtitle>
     <mat-card-content>
       <p>
-        <mat-form-field>
-          <mat-label>Legacy</mat-label>
-          <mat-select [(value)]="currentAppearanceValue">
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let creature of digimon" [value]="creature.value">
-              {{ creature.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </p>
-
-      <p>
-        <mat-form-field appearance="standard">
-          <mat-label>Standard</mat-label>
-          <mat-select [(value)]="currentAppearanceValue">
-            <mat-option>None</mat-option>
-            <mat-option *ngFor="let creature of digimon" [value]="creature.value">
-              {{ creature.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </p>
-
-      <p>
         <mat-form-field appearance="fill">
           <mat-label>Fill</mat-label>
           <mat-select [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
-            <mat-option *ngFor="let creature of digimon" [value]="creature.value">
-              {{ creature.viewValue }}
-            </mat-option>
+            @for (creature of digimon; track creature) {
+              <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </p>
@@ -196,9 +193,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <mat-label>Outline</mat-label>
           <mat-select [(value)]="currentAppearanceValue">
             <mat-option>None</mat-option>
-            <mat-option *ngFor="let creature of digimon" [value]="creature.value">
-              {{ creature.viewValue }}
-            </mat-option>
+            @for (creature of digimon; track creature) {
+              <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </p>
@@ -207,72 +204,52 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     </mat-card-content>
   </mat-card>
 
-  <div *ngIf="showSelect">
-    <mat-card>
-      <mat-card-subtitle>formControl</mat-card-subtitle>
+  @if (showSelect) {
+    <div>
+      <mat-card>
+        <mat-card-subtitle>formControl</mat-card-subtitle>
 
-      <mat-card-content>
-        <mat-form-field>
-          <mat-label>Food I would like to eat</mat-label>
-          <mat-select [formControl]="foodControl">
-            <mat-option *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <p> Value: {{ foodControl.value }} </p>
-        <p> Touched: {{ foodControl.touched }} </p>
-        <p> Dirty: {{ foodControl.dirty }} </p>
-        <p> Status: {{ foodControl.status }} </p>
-        <button mat-button (click)="foodControl.setValue('pizza-1')">SET VALUE</button>
-        <button mat-button (click)="toggleDisabled()">TOGGLE DISABLED</button>
-        <button mat-button (click)="foodControl.reset()">RESET</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>Food I would like to eat</mat-label>
+            <mat-select [formControl]="foodControl">
+              @for (food of foods; track food) {
+                <mat-option [value]="food.value">{{ food.viewValue }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <p> Value: {{ foodControl.value }} </p>
+          <p> Touched: {{ foodControl.touched }} </p>
+          <p> Dirty: {{ foodControl.dirty }} </p>
+          <p> Status: {{ foodControl.status }} </p>
+          <button mat-button (click)="foodControl.setValue('pizza-1')">SET VALUE</button>
+          <button mat-button (click)="toggleDisabled()">TOGGLE DISABLED</button>
+          <button mat-button (click)="foodControl.reset()">RESET</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+   }
 
-  <div *ngIf="showSelect">
-    <mat-card>
-      <mat-card-subtitle>Change event</mat-card-subtitle>
+  @if (showSelect) {
+  <div>
+      <mat-card>
+        <mat-card-subtitle>Change event</mat-card-subtitle>
 
-      <mat-card-content>
-        <mat-form-field>
-          <mat-label>Starter pokemon</mat-label>
-          <mat-select (selectionChange)="latestChangeEvent = $event">
-            <mat-option *ngFor="let creature of pokemon" [value]="creature.value">{{ creature.viewValue }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>Starter pokemon</mat-label>
+            <mat-select (selectionChange)="latestChangeEvent = $event">
+              @for (creature of pokemon; track creature) {
+                <mat-option [value]="creature.value">{{ creature.viewValue }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
 
-        <p> Change event value: {{ latestChangeEvent?.value }} </p>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <mat-card>
-    <mat-card-subtitle>MatSelect inside a dialog</mat-card-subtitle>
-    <mat-card-content>
-
-      <button (click)="openDialogWithSelectInside(dialogTemplate)">Open dialog</button>
-
-      <ng-template #dialogTemplate>
-        <mat-form-field>
-          <mat-label>Your name</mat-label>
-          <input matInput>
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Select a topping</mat-label>
-          <mat-select>
-            <mat-option value="cheese">Cheese</mat-option>
-            <mat-option value="onion">Onion</mat-option>
-            <mat-option value="pepper">Pepper</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button>Done</button>
-      </ng-template>
-
-    </mat-card-content>
-  </mat-card>
-
+          <p> Change event value: {{ latestChangeEvent?.value }} </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
 </div>
 
 <mat-card class="demo-card demo-basic">
@@ -337,24 +314,6 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         </select>
       </mat-form-field>
       <h4>Looks</h4>
-      <mat-form-field appearance="legacy">
-        <mat-label>Legacy</mat-label>
-        <select matNativeControl required>
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
-      </mat-form-field>
-      <mat-form-field appearance="standard">
-        <mat-label>Standard</mat-label>
-        <select matNativeControl required>
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
-      </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Fill</mat-label>
         <select matNativeControl required>
@@ -388,16 +347,6 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           </optgroup>
         </select>
       </mat-form-field>
-      <h4>Place holder</h4>
-      <mat-form-field class="demo-full-width">
-        <select matNativeControl placeholder="place holder">
-          <option value="" disabled selected></option>
-          <option value="volvo">Volvo</option>
-          <option value="saab" disabled>Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
-      </mat-form-field>
       <h4>Error message, hint, form sumbit</h4>
       <mat-form-field class="demo-full-width">
         <mat-label>Select your car (required)</mat-label>
@@ -407,9 +356,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
-        <mat-error *ngIf="selectFormControl.hasError('required')">
-          This field is required
-        </mat-error>
+        @if (selectFormControl.hasError('required')) {
+          <mat-error>This field is required</mat-error>
+        }
         <mat-hint>You can pick up your favorite car here</mat-hint>
       </mat-form-field>
 
@@ -422,12 +371,50 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
-        <mat-error *ngIf="selectFormControl.hasError('required')">
-          This field is required
-        </mat-error>
+        @if (selectFormControl.hasError('required')) {
+          <mat-error>This field is required</mat-error>
+        }
         <mat-hint>You can pick up your favorite car here</mat-hint>
       </mat-form-field>
       <button color="primary" mat-raised-button>Submit</button>
     </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="demo-card demo-narrow">
+  <mat-card-subtitle>Narrow</mat-card-subtitle>
+  <mat-card-content>
+    <p class="demo-narrow-sandwich">
+      <mat-form-field>
+        <mat-label>Bread</mat-label>
+        <mat-select [(ngModel)]="sandwichBread"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          @for (bread of breads; track bread) {
+            <mat-option [value]="bread.value">{{ bread.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Meat</mat-label>
+        <mat-select [(ngModel)]="sandwichMeat"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          @for (meat of meats; track meat) {
+            <mat-option [value]="meat.value">{{ meat.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cheese</mat-label>
+        <mat-select [(ngModel)]="sandwichCheese"
+          [hideSingleSelectionIndicator]="sandwichHideSingleSelectionIndicator">
+          @for (cheese of cheeses; track cheese) {
+            <mat-option [value]="cheese.value">{{ cheese.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <mat-checkbox [(ngModel)]="sandwichHideSingleSelectionIndicator">
+      Hide Single-Selection Indicator
+    </mat-checkbox>
   </mat-card-content>
 </mat-card>

@@ -1,4 +1,4 @@
-import {NgZone} from '@angular/core';
+import {type NgZone} from '@angular/core';
 import {MapEventManager} from './map-event-manager';
 
 describe('MapEventManager', () => {
@@ -8,7 +8,7 @@ describe('MapEventManager', () => {
 
   beforeEach(() => {
     dummyZone = {
-      run: jasmine.createSpy('NgZone.run').and.callFake((callback: () => void) => callback())
+      run: jasmine.createSpy('NgZone.run').and.callFake((callback: () => void) => callback()),
     } as unknown as NgZone;
     target = new TestEventTarget();
     manager = new MapEventManager(dummyZone);
@@ -142,14 +142,28 @@ describe('MapEventManager', () => {
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
+  it('should not throw with an invalid target', () => {
+    manager.setTarget({
+      addListener: () => undefined,
+    });
+    const stream = manager.getLazyEmitter('click');
+    const completeSpy = jasmine.createSpy('completeSpy');
+    const errorSpy = jasmine.createSpy('errorSpy');
+    stream.subscribe({complete: completeSpy, error: errorSpy});
+
+    expect(() => manager.destroy()).not.toThrow();
+    expect(completeSpy).toHaveBeenCalled();
+    expect(errorSpy).not.toHaveBeenCalled();
+  });
 });
 
 /** Imitates a Google Maps event target and keeps track of the registered events. */
 class TestEventTarget {
   events = new Map<string, Set<() => void>>();
 
-  addListener = jasmine.createSpy('addListener').and.callFake(
-    (name: string, listener: () => void) => {
+  addListener = jasmine
+    .createSpy('addListener')
+    .and.callFake((name: string, listener: () => void) => {
       if (!this.events.has(name)) {
         this.events.set(name, new Set());
       }

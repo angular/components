@@ -1,0 +1,31 @@
+{
+  "name": "@angular/material-date-fns-adapter",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular Material date-fns Adapter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/components.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/components/issues"
+  },
+  "homepage": "https://github.com/angular/components#readme",
+  "peerDependencies": {
+    "@angular/material": "0.0.0-PLACEHOLDER",
+    "@angular/core": "0.0.0-NG",
+    "date-fns": ">2.20.0 <5.0"
+  },
+  "dependencies": {
+    "tslib": "0.0.0-TSLIB"
+  },
+  "ng-update": {
+    "packageGroup": [
+      "@angular/material",
+      "@angular/cdk",
+      "@angular/material-date-fns-adapter"
+    ]
+  },
+  "schematics": "./schematics/collection.json",
+  "sideEffects": false
+}

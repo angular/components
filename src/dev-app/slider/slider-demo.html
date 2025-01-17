@@ -1,65 +1,189 @@
-<h1>Default Slider</h1>
-Label <mat-slider #slidey aria-label="Basic slider"></mat-slider>
-{{slidey.value}}
+<mat-checkbox [color]="colorModel" [(ngModel)]="discrete">Discrete</mat-checkbox>
+<br>
+<mat-checkbox [color]="colorModel" [(ngModel)]="showTickMarks">Show tick marks</mat-checkbox>
+<br>
+<mat-button-toggle-group [(ngModel)]="colorModel" aria-label="Slider color options">
+  <mat-button-toggle value="primary">Primary</mat-button-toggle>
+  <mat-button-toggle value="accent">Accent</mat-button-toggle>
+  <mat-button-toggle value="warn">Warn</mat-button-toggle>
+</mat-button-toggle-group>
 
-<h1>Colors</h1>
-<mat-slider color="primary" value="50" thumbLabel aria-label="Primary color slider"></mat-slider>
-<mat-slider color="accent" value="50" thumbLabel aria-label="Accent color slider"></mat-slider>
-<mat-slider color="warn" value="50" thumbLabel aria-label="Warn color slider"></mat-slider>
+<mat-tab-group [color]="colorModel">
+  <mat-tab label="Reactive form controls">
+    <table class="demo-data-table">
+      <tr>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Single Slider</th>
+        <th class="demo-table-header">Double Slider</th>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateControlValue($event.target)" /></td>
+        <td class="demo-value-cell">{{nativeSlider1.value}}</td>
+        <td class="demo-value-cell">{{ngThumb1.value}}</td>
+        <td class="demo-value-cell">{{ngStartThumb1.value}} : {{ngEndThumb1.value}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" (input)="updateControlDisabledState($event.target)" /></td>
+        <td class="demo-value-cell">{{nativeSlider1.disabled}}</td>
+        <td class="demo-value-cell">{{ngThumb1.disabled}}</td>
+        <td class="demo-value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td>
+      </tr>
+    </table>
+    
+    <input class="demo-native-slider" type="range" [formControl]="control" #nativeSlider1 />
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
+      <input matSliderThumb [formControl]="control" #ngThumb1 />
+    </mat-slider>
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
+      <input matSliderStartThumb [formControl]="control" #ngStartThumb1 />
+      <input matSliderEndThumb #ngEndThumb1 />
+    </mat-slider>
+  </mat-tab>
 
-<h1>Slider with Min and Max</h1>
-<input [(ngModel)]="min" type="number">
-<mat-slider [min]="min" [max]="max" tickInterval="5" #slider2 aria-label="Min & max slider">
-</mat-slider>
-{{slider2.value}}
-<input [(ngModel)]="max" type="number">
+  <mat-tab label="Template-driven form controls">
+    <table class="demo-data-table">
+      <tr>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="valueModel" /></td>
+        <td class="demo-value-cell">{{nativeSlider2.value}}</td>
+        <td class="demo-value-cell">{{ngThumb2.value}}</td>
+        <td class="demo-value-cell">{{ngStartThumb2.value}} : {{ngEndThumb2.value}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Min</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="minModel" /></td>
+        <td class="demo-value-cell">{{nativeSlider2.min}}</td>
+        <td class="demo-value-cell">{{ngThumb2.min}}</td>
+        <td class="demo-value-cell">{{ngStartThumb2.min}} : {{ngEndThumb2.min}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Max</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="maxModel" /></td>
+        <td class="demo-value-cell">{{nativeSlider2.max}}</td>
+        <td class="demo-value-cell">{{ngThumb2.max}}</td>
+        <td class="demo-value-cell">{{ngStartThumb2.max}} : {{ngEndThumb2.max}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Step</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="stepModel" /></td>
+        <td class="demo-value-cell">{{nativeSlider2.step}}</td>
+        <td class="demo-value-cell">{{ngThumb2.step}}</td>
+        <td class="demo-value-cell">{{ngStartThumb2.step}} : {{ngEndThumb2.step}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" [(ngModel)]="disabledModel" /></td>
+        <td class="demo-value-cell">{{nativeSlider2.disabled}}</td>
+        <td class="demo-value-cell">{{ngThumb2.disabled}}</td>
+        <td class="demo-value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td>
+      </tr>
+    </table>
+    
+    <input class="demo-native-slider" type="range" #nativeSlider2 [(ngModel)]="valueModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel" />
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+      <input matSliderThumb #ngThumb2 [(ngModel)]="valueModel" />
+    </mat-slider>
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
+      <input matSliderStartThumb #ngStartThumb2 [(ngModel)]="valueModel" />
+      <input matSliderEndThumb #ngEndThumb2 />
+    </mat-slider>
+  </mat-tab>
 
-<h1>Disabled Slider</h1>
-<mat-slider disabled [(ngModel)]="disabledValue" [tickInterval]="1" aria-label="Disabled slider">
-</mat-slider>
-<input [(ngModel)]="disabledValue" type="number">
+  <mat-tab label="One-way property bindings">
+    <table class="demo-data-table">
+      <tr>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Native Slider</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateValue($event.target)" [value]="value" /></td>
+        <td class="demo-value-cell">{{nativeSlider3.value}}</td>
+        <td class="demo-value-cell">{{ngThumb3.value}}</td>
+        <td class="demo-value-cell">{{ngStartThumb3.value}} : {{ngEndThumb3.value}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Min</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateMin($event.target)" [value]="min" /></td>
+        <td class="demo-value-cell">{{nativeSlider3.min}}</td>
+        <td class="demo-value-cell">{{ngThumb3.min}}</td>
+        <td class="demo-value-cell">{{ngStartThumb3.min}} : {{ngEndThumb3.min}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Max</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateMax($event.target)" [value]="max" /></td>
+        <td class="demo-value-cell">{{nativeSlider3.max}}</td>
+        <td class="demo-value-cell">{{ngThumb3.max}}</td>
+        <td class="demo-value-cell">{{ngStartThumb3.max}} : {{ngEndThumb3.max}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Step</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" (input)="updateStep($event.target)" [value]="step" /></td>
+        <td class="demo-value-cell">{{nativeSlider3.step}}</td>
+        <td class="demo-value-cell">{{ngThumb3.step}}</td>
+        <td class="demo-value-cell">{{ngStartThumb3.step}} : {{ngEndThumb3.step}}</td>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Disabled</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="checkbox" (input)="updateDisabledState($event.target)" [value]="disabled" /></td>
+        <td class="demo-value-cell">{{nativeSlider3.disabled}}</td>
+        <td class="demo-value-cell">{{ngThumb3.disabled}}</td>
+        <td class="demo-value-cell">{{ngStartThumb3.disabled}} : {{ngEndThumb3.disabled}}</td>
+      </tr>
+    </table>
 
-<h1>Slider with set value</h1>
-<mat-slider value="43" aria-label="Initial value slider"></mat-slider>
+    <input class="demo-native-slider" type="range" #nativeSlider3 [value]="value" [min]="min" [max]="max" [step]="step" [disabled]="disabled" />
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+      <input matSliderThumb #ngThumb3 [value]="value" />
+    </mat-slider>
+    <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="min" [max]="max" [step]="step" [disabled]="disabled">
+      <input matSliderStartThumb #ngStartThumb3 [value]="value" />
+      <input matSliderEndThumb #ngEndThumb3 />
+    </mat-slider>
+  </mat-tab>
 
-<h1>Slider with step defined</h1>
-<mat-slider min="1" max="100" step="20" #slider5 aria-label="Slider with step"></mat-slider>
-{{slider5.value}}
+  <mat-tab label="Two-way property bindings">
+    <table class="demo-data-table">
+      <tr>
+        <th class="demo-table-header">Inputs</th>
+        <th class="demo-table-header">Controls</th>
+        <th class="demo-table-header">Slider</th>
+        <th class="demo-table-header">Range Slider</th>
+      </tr>
+      <tr>
+        <th class="demo-table-header">Value</th>
+        <td class="demo-control-cell"><input class="demo-slider-control" type="number" [(ngModel)]="twoWayValue" /></td>
+        <td class="demo-value-cell">{{ngThumb4.value}}</td>
+        <td class="demo-value-cell">{{ngStartThumb4.value}} : {{ngEndThumb4.value}}</td>
+      </tr>
+    </table>
+    
+      <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
+        <input matSliderThumb #ngThumb4 [(value)]="twoWayValue" />
+      </mat-slider>
+      <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
+        <input matSliderStartThumb #ngStartThumb4 [(value)]="twoWayValue" />
+        <input matSliderEndThumb #ngEndThumb4 />
+      </mat-slider>
+  </mat-tab>
 
-<h1>Slider with set tick interval</h1>
-<mat-slider tickInterval="auto" aria-label="Slider with auto ticks"></mat-slider>
-<mat-slider tickInterval="9" aria-label="Slider with ticks"></mat-slider>
-
-<h1>Slider with Thumb Label</h1>
-<mat-slider thumbLabel aria-label="Slider with thumb label"></mat-slider>
-
-<h1>Slider with one-way binding</h1>
-<mat-slider [value]="val" step="40" aria-label="Slider with value binding"></mat-slider>
-<input [(ngModel)]="val" type="number">
-
-<h1>Slider with two-way binding</h1>
-<mat-slider [(ngModel)]="demo" step="40" aria-label="Slider with ngModel"></mat-slider>
-<input [(ngModel)]="demo" type="number">
-
-<h1>Inverted slider</h1>
-<mat-slider invert value="50" tickInterval="5" aria-label="Inverted slider"></mat-slider>
-
-<h1>Vertical slider</h1>
-<mat-slider vertical thumbLabel tickInterval="auto" value="50" aria-label="Vertical slider">
-</mat-slider>
-
-<h1>Inverted vertical slider</h1>
-<mat-slider vertical invert thumbLabel tickInterval="auto" value="50"
-           aria-label="Inverted vertical slider">
-</mat-slider>
-
-<h1>Set/lost focus to show thumblabel programmatically</h1>
-<mat-slider #demoSlider="matSlider" thumbLabel aria-label="Slider with thumb label"></mat-slider>
-<button (click)="demoSlider.focus()">Focus Slider</button>
-<button (click)="demoSlider.blur()">Blur Slider</button>
-
-<mat-tab-group>
-  <mat-tab label="One">
-    <mat-slider min="1" max="5" value="3" aria-label="Slider in a tab"></mat-slider>
+  <mat-tab label="Slider in a dialog">
+    <div class="demo-dialog-trigger-container">
+      <button mat-raised-button [color]="colorModel" (click)="openDialog()">Open dialog</button>
+    </div>
   </mat-tab>
 </mat-tab-group>

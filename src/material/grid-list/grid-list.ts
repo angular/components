@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -15,8 +15,8 @@ import {
   ContentChildren,
   QueryList,
   ElementRef,
-  Optional,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
@@ -31,7 +31,6 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
-
 // TODO(kara): Conditional (responsive) column count / row size.
 // TODO(kara): Re-layout on window resize / media change (debounced).
 // TODO(kara): gridTileHeader and gridTileFooter.
@@ -42,25 +41,30 @@ const MAT_FIT_MODE = 'fit';
   selector: 'mat-grid-list',
   exportAs: 'matGridList',
   templateUrl: 'grid-list.html',
-  styleUrls: ['grid-list.css'],
+  styleUrl: 'grid-list.css',
   host: {
     'class': 'mat-grid-list',
     // Ensures that the "cols" input value is reflected in the DOM. This is
     // needed for the grid-list harness.
     '[attr.cols]': 'cols',
   },
-  providers: [{
-    provide: MAT_GRID_LIST,
-    useExisting: MatGridList
-  }],
+  providers: [
+    {
+      provide: MAT_GRID_LIST,
+      useExisting: MatGridList,
+    },
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+
   /** Number of columns being rendered. */
   private _cols: number;
 
-  /** Used for determiningthe position of each tile in the grid. */
+  /** Used for determining the position of each tile in the grid. */
   private _tileCoordinator: TileCoordinator;
 
   /**
@@ -80,24 +84,32 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
   /** Query list of tiles that are being rendered. */
   @ContentChildren(MatGridTile, {descendants: true}) _tiles: QueryList<MatGridTile>;
 
-  constructor(private _element: ElementRef<HTMLElement>,
-              @Optional() private _dir: Directionality) {}
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Amount of columns in the grid list. */
   @Input()
-  get cols(): number { return this._cols; }
-  set cols(value: number) {
+  get cols(): number {
+    return this._cols;
+  }
+  set cols(value: NumberInput) {
     this._cols = Math.max(1, Math.round(coerceNumberProperty(value)));
   }
 
   /** Size of the grid list's gutter in pixels. */
   @Input()
-  get gutterSize(): string { return this._gutter; }
-  set gutterSize(value: string) { this._gutter = `${value == null ? '' : value}`; }
+  get gutterSize(): string {
+    return this._gutter;
+  }
+  set gutterSize(value: string) {
+    this._gutter = `${value == null ? '' : value}`;
+  }
 
   /** Set internal representation of row height from the user-provided value. */
   @Input()
-  get rowHeight(): string | number { return this._rowHeight; }
+  get rowHeight(): string | number {
+    return this._rowHeight;
+  }
   set rowHeight(value: string | number) {
     const newValue = `${value == null ? '' : value}`;
 
@@ -123,8 +135,9 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
   /** Throw a friendly error if cols property is missing */
   private _checkCols() {
     if (!this.cols && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error(`mat-grid-list: must pass in number of columns. ` +
-                  `Example: <mat-grid-list cols="3">`);
+      throw Error(
+        `mat-grid-list: must pass in number of columns. ` + `Example: <mat-grid-list cols="3">`,
+      );
     }
   }
 
@@ -156,7 +169,6 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
       this._tileCoordinator = new TileCoordinator();
     }
 
-
     const tracker = this._tileCoordinator;
     const tiles = this._tiles.filter(tile => !tile._gridList || tile._gridList === this);
     const direction = this._dir ? this._dir.value : 'ltr';
@@ -178,6 +190,4 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
       (this._element.nativeElement.style as any)[style[0]] = style[1];
     }
   }
-
-  static ngAcceptInputType_cols: NumberInput;
 }

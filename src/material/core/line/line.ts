@@ -3,18 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  NgModule,
-  Directive,
-  ElementRef,
-  QueryList,
-} from '@angular/core';
+import {NgModule, Directive, ElementRef, QueryList} from '@angular/core';
 import {startWith} from 'rxjs/operators';
 import {MatCommonModule} from '../common-behaviors/common-module';
-
 
 /**
  * Shared directive to count lines inside a text area, such as a list item.
@@ -23,7 +17,7 @@ import {MatCommonModule} from '../common-behaviors/common-module';
  */
 @Directive({
   selector: '[mat-line], [matLine]',
-  host: {'class': 'mat-line'}
+  host: {'class': 'mat-line'},
 })
 export class MatLine {}
 
@@ -31,8 +25,11 @@ export class MatLine {}
  * Helper that takes a query list of lines and sets the correct class on the host.
  * @docs-private
  */
-export function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElement>,
-                         prefix = 'mat') {
+export function setLines(
+  lines: QueryList<unknown>,
+  element: ElementRef<HTMLElement>,
+  prefix = 'mat',
+) {
   // Note: doesn't need to unsubscribe, because `changes`
   // gets completed by Angular when the view is destroyed.
   lines.changes.pipe(startWith(lines)).subscribe(({length}) => {
@@ -50,13 +47,11 @@ export function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElem
 
 /** Adds or removes a class from an element. */
 function setClass(element: ElementRef<HTMLElement>, className: string, isAdd: boolean): void {
-  const classList = element.nativeElement.classList;
-  isAdd ? classList.add(className) : classList.remove(className);
+  element.nativeElement.classList.toggle(className, isAdd);
 }
 
 @NgModule({
-  imports: [MatCommonModule],
+  imports: [MatCommonModule, MatLine],
   exports: [MatLine, MatCommonModule],
-  declarations: [MatLine],
 })
-export class MatLineModule { }
+export class MatLineModule {}

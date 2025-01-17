@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /**
@@ -35,8 +35,10 @@ export function throwPortalOutletAlreadyDisposedError() {
  * @docs-private
  */
 export function throwUnknownPortalTypeError() {
-  throw Error('Attempting to attach an unknown Portal type. BasePortalOutlet accepts either ' +
-              'a ComponentPortal or a TemplatePortal.');
+  throw Error(
+    'Attempting to attach an unknown Portal type. BasePortalOutlet accepts either ' +
+      'a ComponentPortal or a TemplatePortal.',
+  );
 }
 
 /**

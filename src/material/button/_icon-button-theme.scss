@@ -1,0 +1,176 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
+@use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    // Add default values for tokens not related to color, typography, or density.
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-icon-button.$prefix,
+        tokens-mdc-icon-button.get-unthemable-tokens()
+      );
+    }
+  }
+}
+
+@mixin _icon-button-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-icon-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-icon-button.get-color-tokens($theme)
+  );
+
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-icon-button.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-icon-button.get-color-tokens($theme)
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
+}
+
+/// Outputs color theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+/// $color-variant: The color variant to use for the button: primary, secondary, tertiary, or error.
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include _icon-button-variant($theme, null);
+
+      .mat-mdc-icon-button {
+        &.mat-primary {
+          @include _icon-button-variant($theme, primary);
+        }
+
+        &.mat-accent {
+          @include _icon-button-variant($theme, accent);
+        }
+
+        &.mat-warn {
+          @include _icon-button-variant($theme, warn);
+        }
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    $icon-size: 24px;
+    $density-scale: inspection.get-theme-density($theme);
+    $size-map: (
+      0: 48px,
+      -1: 44px,
+      -2: 40px,
+      -3: 36px,
+      -4: 32px,
+      -5: 28px,
+    );
+    $calculated-size: map.get($size-map, $density-scale);
+
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-icon-button.$prefix,
+        tokens-mat-icon-button.get-density-tokens($theme)
+      );
+    }
+
+    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
+    .mat-mdc-icon-button.mat-mdc-button-base {
+      // Match the styles that used to be present. This is necessary for backwards
+      // compat to match the previous implementations selector count (two classes).
+      --mdc-icon-button-state-layer-size: #{$calculated-size};
+
+      // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
+      // Currently fails validation because the variable is "undefined"
+      // in the sass stack.
+      // TODO: Switch icon-size to "var(--mdc-icon-button-icon-size)". Currently
+      // fails validation because the variable is "undefined" in the sass stack.
+      width: var(--mdc-icon-button-state-layer-size);
+      height: var(--mdc-icon-button-state-layer-size);
+      padding: math.div($calculated-size - $icon-size, 2);
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mdc-icon-button.$prefix,
+      tokens: tokens-mdc-icon-button.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mat-icon-button.$prefix,
+      tokens: tokens-mat-icon-button.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-icon-button.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+/// $color-variant: The color variant to use for the button: primary, secondary, tertiary, or error.
+@mixin theme($theme, $options...) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    $mdc-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-icon-button.$prefix, $options...);
+    $mat-tokens: token-utils.get-tokens-for($tokens, tokens-mat-icon-button.$prefix, $options...);
+
+    @include token-utils.create-token-values(tokens-mdc-icon-button.$prefix, $mdc-tokens);
+    @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
+  }
+}

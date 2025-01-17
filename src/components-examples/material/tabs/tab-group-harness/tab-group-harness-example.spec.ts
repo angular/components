@@ -1,12 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTabGroupHarness} from '@angular/material/tabs/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatTabsModule} from '@angular/material/tabs';
 import {TabGroupHarnessExample} from './tab-group-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -14,15 +9,10 @@ describe('TabGroupHarnessExample', () => {
   let fixture: ComponentFixture<TabGroupHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatTabsModule, NoopAnimationsModule],
-      declarations: [TabGroupHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule],
+    });
     fixture = TestBed.createComponent(TabGroupHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -34,9 +24,11 @@ describe('TabGroupHarnessExample', () => {
   });
 
   it('should load harness for tab-group with selected tab label', async () => {
-    const tabGroups = await loader.getAllHarnesses(MatTabGroupHarness.with({
-      selectedTabLabel: 'Profile',
-    }));
+    const tabGroups = await loader.getAllHarnesses(
+      MatTabGroupHarness.with({
+        selectedTabLabel: 'Profile',
+      }),
+    );
     expect(tabGroups.length).toBe(1);
   });
 

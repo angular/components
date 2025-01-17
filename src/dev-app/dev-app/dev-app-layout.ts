@@ -3,42 +3,70 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-
-import {DevAppDirectionality} from './dev-app-directionality';
-import {DevAppRippleOptions} from './ripple-options';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {DOCUMENT} from '@angular/common';
-
-const isDarkThemeKey = 'ANGULAR_COMPONENTS_DEV_APP_DARK_THEME';
-
-export const ANIMATIONS_STORAGE_KEY = 'ANGULAR_COMPONENTS_ANIMATIONS_DISABLED';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgZone,
+  ViewEncapsulation,
+  inject,
+  ɵNoopNgZone,
+} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
+import {RouterModule} from '@angular/router';
+import {getAppState, setAppState} from './dev-app-state';
+import {DevAppRippleOptions} from './ripple-options';
+import {DevAppDirectionality} from './dev-app-directionality';
 
 /** Root component for the dev-app demos. */
 @Component({
   selector: 'dev-app-layout',
   templateUrl: 'dev-app-layout.html',
-  styleUrls: ['dev-app-layout.css'],
+  styleUrl: 'dev-app-layout.css',
   encapsulation: ViewEncapsulation.None,
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    RouterModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DevAppLayout {
-  readonly darkThemeClass = 'demo-unicorn-dark-theme';
-  _isDark = false;
-  strongFocus = false;
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _rippleOptions = inject(DevAppRippleOptions);
+  private _dir = inject(Directionality) as DevAppDirectionality;
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _document = inject(DOCUMENT);
+  private _iconRegistry = inject(MatIconRegistry);
+
+  state = getAppState();
   navItems = [
     {name: 'Examples', route: '/examples'},
+    {name: 'CDK Dialog', route: '/cdk-dialog'},
+    {name: 'CDK Experimental Combobox', route: '/cdk-experimental-combobox'},
+    {name: 'CDK Listbox', route: '/cdk-listbox'},
+    {name: 'CDK Menu', route: '/cdk-menu'},
     {name: 'Autocomplete', route: '/autocomplete'},
     {name: 'Badge', route: '/badge'},
-    {name: 'Bottom sheet', route: '/bottom-sheet'},
+    {name: 'Bottom Sheet', route: '/bottom-sheet'},
     {name: 'Button Toggle', route: '/button-toggle'},
     {name: 'Button', route: '/button'},
     {name: 'Card', route: '/card'},
-    {name: 'Cdk Experimental Combobox', route: '/cdk-experimental-combobox'},
-    {name: 'Cdk Experimental Listbox', route: '/cdk-experimental-listbox'},
-    {name: 'Cdk Experimental Menu', route: '/cdk-experimental-menu'},
     {name: 'Checkbox', route: '/checkbox'},
     {name: 'Chips', route: '/chips'},
     {name: 'Clipboard', route: '/clipboard'},
@@ -46,18 +74,18 @@ export class DevAppLayout {
     {name: 'Connected Overlay', route: '/connected-overlay'},
     {name: 'Datepicker', route: '/datepicker'},
     {name: 'Dialog', route: '/dialog'},
-    {name: 'Drawer', route: '/drawer'},
     {name: 'Drag and Drop', route: '/drag-drop'},
+    {name: 'Drawer', route: '/drawer'},
     {name: 'Expansion Panel', route: '/expansion'},
     {name: 'Focus Origin', route: '/focus-origin'},
     {name: 'Focus Trap', route: '/focus-trap'},
     {name: 'Google Map', route: '/google-map'},
     {name: 'Grid List', route: '/grid-list'},
     {name: 'Icon', route: '/icon'},
-    {name: 'Input', route: '/input'},
     {name: 'Input Modality', route: '/input-modality'},
-    {name: 'List', route: '/list'},
+    {name: 'Input', route: '/input'},
     {name: 'Layout', route: '/layout'},
+    {name: 'List', route: '/list'},
     {name: 'Live Announcer', route: '/live-announcer'},
     {name: 'Menu', route: '/menu'},
     {name: 'Menubar', route: '/menubar'},
@@ -77,137 +105,121 @@ export class DevAppLayout {
     {name: 'Slider', route: '/slider'},
     {name: 'Snack Bar', route: '/snack-bar'},
     {name: 'Stepper', route: '/stepper'},
-    {name: 'Table', route: '/table'},
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
+    {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},
+    {name: 'Theme', route: '/theme'},
+    {name: 'Timepicker', route: '/timepicker'},
     {name: 'Toolbar', route: '/toolbar'},
     {name: 'Tooltip', route: '/tooltip'},
     {name: 'Tree', route: '/tree'},
     {name: 'Typography', route: '/typography'},
     {name: 'Virtual Scrolling', route: '/virtual-scroll'},
     {name: 'YouTube Player', route: '/youtube-player'},
-    {name: 'MDC Autocomplete', route: '/mdc-autocomplete'},
-    {name: 'MDC Button', route: '/mdc-button'},
-    {name: 'MDC Card', route: '/mdc-card'},
-    {name: 'MDC Checkbox', route: '/mdc-checkbox'},
-    {name: 'MDC Chips', route: '/mdc-chips'},
-    {name: 'MDC Dialog', route: '/mdc-dialog'},
-    {name: 'MDC Input', route: '/mdc-input'},
-    {name: 'MDC List', route: '/mdc-list'},
-    {name: 'MDC Menu', route: '/mdc-menu'},
-    {name: 'MDC Radio', route: '/mdc-radio'},
-    {name: 'MDC Paginator', route: '/mdc-paginator'},
-    {name: 'MDC Progress Bar', route: '/mdc-progress-bar'},
-    {name: 'MDC Progress Spinner', route: '/mdc-progress-spinner'},
-    {name: 'MDC Tabs', route: '/mdc-tabs'},
-    {name: 'MDC Tooltip', route: '/mdc-tooltip'},
-    {name: 'MDC Select', route: '/mdc-select'},
-    {name: 'MDC Sidenav', route: '/mdc-sidenav'},
-    {name: 'MDC Slide Toggle', route: '/mdc-slide-toggle'},
-    {name: 'MDC Slider', route: '/mdc-slider'},
-    {name: 'MDC Snack Bar', route: '/mdc-snack-bar'},
-    {name: 'MDC Table', route: '/mdc-table'},
   ];
 
-  /** Currently selected density scale based on the index. */
-  currentDensityIndex = 0;
-
   /** List of possible global density scale values. */
-  densityScales = [0, -1, -2, 'minimum', 'maximum'];
+  private _densityScales = [0, -1, -2, -3, -4, 'minimum', 'maximum'];
 
-  /** Whether animations are disabled. */
-  animationsDisabled = localStorage.getItem(ANIMATIONS_STORAGE_KEY) === 'true';
+  private _ngZone = inject(NgZone);
 
-  constructor(
-      private _element: ElementRef<HTMLElement>, public rippleOptions: DevAppRippleOptions,
-      @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef,
-      @Inject(DOCUMENT) private _document: Document) {
-    dir.change.subscribe(() => cdr.markForCheck());
-    try {
-      const isDark = localStorage.getItem(isDarkThemeKey);
-      if (isDark != null) {
-        // We avoid calling the setter and apply the themes directly here.
-        // This avoids writing the same value, that we just read, back to localStorage.
-        this._isDark = isDark === 'true';
-        this.updateThemeClass(this._isDark);
-      }
-    } catch (error) {
-      console.error(`Failed to read ${isDarkThemeKey} from localStorage: `, error);
-    }
+  readonly isZoneless = this._ngZone instanceof ɵNoopNgZone;
+
+  constructor() {
+    this.toggleTheme(this.state.darkTheme);
+    this.toggleSystemTheme(this.state.systemTheme);
+    this.toggleStrongFocus(this.state.strongFocusEnabled);
+    this.toggleDensity(Math.max(this._densityScales.indexOf(this.state.density), 0));
+    this.toggleRippleDisabled(this.state.rippleDisabled);
+    this.toggleDirection(this.state.direction);
+    this.toggleM3(this.state.m3Enabled);
+    this.toggleColorApiBackCompat(this.state.colorApiBackCompat);
   }
 
-  get isDark(): boolean {
-    return this._isDark;
+  toggleTheme(value = !this.state.darkTheme) {
+    this.state.darkTheme = value;
+    this._document.body.classList.toggle('demo-unicorn-dark-theme', value);
+    setAppState(this.state);
   }
 
-  set isDark(value: boolean) {
-    // Noop if the value is the same as is already set.
-    if (value !== this._isDark) {
-      this._isDark = value;
-      this.updateThemeClass(this._isDark);
-
-      try {
-        localStorage.setItem(isDarkThemeKey, String(value));
-      } catch (error) {
-        console.error(`Failed to write ${isDarkThemeKey} to localStorage: `, error);
-      }
-    }
+  toggleSystemTheme(value = !this.state.systemTheme) {
+    this.state.systemTheme = value;
+    this._document.body.classList.toggle('demo-experimental-theme', value);
+    setAppState(this.state);
   }
 
   toggleFullscreen() {
-    // Cast to `any`, because the typings don't include the browser-prefixed methods.
-    const elem = this._element.nativeElement.querySelector('.demo-content') as any;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullScreen) {
-      elem.webkitRequestFullScreen();
-    } else if (elem.mozRequestFullScreen) {
-      elem.mozRequestFullScreen();
-    } else if (elem.msRequestFullScreen) {
-      elem.msRequestFullScreen();
-    }
+    this._element.nativeElement.querySelector('.demo-content')?.requestFullscreen();
   }
 
-  updateThemeClass(isDark?: boolean) {
-    if (isDark) {
-      this._document.body.classList.add(this.darkThemeClass);
-    } else {
-      this._document.body.classList.remove(this.darkThemeClass);
-    }
+  toggleStrongFocus(value = !this.state.strongFocusEnabled) {
+    this.state.strongFocusEnabled = value;
+    this._document.body.classList.toggle('demo-strong-focus', value);
+    setAppState(this.state);
   }
 
-  toggleStrongFocus() {
-    const strongFocusClass = 'demo-strong-focus';
-
-    this.strongFocus = !this.strongFocus;
-
-    if (this.strongFocus) {
-      this._document.body.classList.add(strongFocusClass);
-    } else {
-      this._document.body.classList.remove(strongFocusClass);
-    }
-  }
-
-  toggleAnimations() {
-    localStorage.setItem(ANIMATIONS_STORAGE_KEY, (!this.animationsDisabled) + '');
+  toggleZoneless(value = !this.isZoneless) {
+    this.state.zoneless = value;
+    setAppState(this.state);
     location.reload();
   }
 
-  /** Gets the index of the next density scale that can be selected. */
-  getNextDensityIndex() {
-    return (this.currentDensityIndex + 1) % this.densityScales.length;
+  toggleAnimations() {
+    this.state.animations = !this.state.animations;
+    setAppState(this.state);
+    location.reload();
   }
 
-  /** Selects the next possible density scale. */
-  selectNextDensity() {
-    this.currentDensityIndex = this.getNextDensityIndex();
+  toggleDensity(index?: number, tooltipInstance?: MatTooltip) {
+    if (index == null) {
+      index = (this._densityScales.indexOf(this.state.density) + 1) % this._densityScales.length;
+    }
+
+    this.state.density = this._densityScales[index];
+    setAppState(this.state);
+
+    // Keep the tooltip open so we can see what the density was changed to. Ideally we'd
+    // always show the density in a badge, but the M2 badge is too large for the toolbar.
+    if (tooltipInstance) {
+      requestAnimationFrame(() => tooltipInstance.show(0));
+    }
   }
 
-  /**
-   * Updates the density classes on the host element. Applies a unique class for
-   * a given density scale, so that the density styles are conditionally applied.
-   */
+  toggleRippleDisabled(value = !this.state.rippleDisabled) {
+    this._rippleOptions.disabled = this.state.rippleDisabled = value;
+    setAppState(this.state);
+  }
+
+  toggleDirection(value: Direction = this.state.direction === 'ltr' ? 'rtl' : 'ltr') {
+    if (value !== this._dir.value) {
+      this._dir.value = this.state.direction = value;
+      this._changeDetectorRef.markForCheck();
+      setAppState(this.state);
+    }
+  }
+
+  toggleM3(value = !this.state.m3Enabled) {
+    // We need to diff this one since it's a bit more expensive to toggle.
+    if (value !== this.state.m3Enabled) {
+      (document.getElementById('theme-styles') as HTMLLinkElement).href = value
+        ? 'theme-m3.css'
+        : 'theme.css';
+    }
+
+    this._iconRegistry.setDefaultFontSetClass(
+      value ? 'material-symbols-outlined' : 'material-icons',
+    );
+    this.state.m3Enabled = value;
+    setAppState(this.state);
+  }
+
+  toggleColorApiBackCompat(value = !this.state.colorApiBackCompat) {
+    this.state.colorApiBackCompat = value;
+    this._document.body.classList.toggle('demo-color-api-back-compat', value);
+    setAppState(this.state);
+  }
+
   getDensityClass() {
-    return `demo-density-${this.densityScales[this.currentDensityIndex]}`;
+    return `demo-density-${this.state.density}`;
   }
 }

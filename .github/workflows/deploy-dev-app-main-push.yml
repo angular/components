@@ -1,0 +1,57 @@
+name: Deploying dev-app to Firebase [main push].
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  deployments: write
+
+env:
+  PREVIEW_PROJECT: ng-dev-previews
+  PREVIEW_SITE: ng-comp-devapp
+  PREVIEW_CHANNEL: live
+
+jobs:
+  deploy-material2-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Setup Bazel RBE
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+
+      - name: Building dev-app
+        run: |
+          yarn -s bazel build //src/dev-app:web_package --symlink_prefix=dist/
+          cp -R dist/bin/src/dev-app/web_package dist/dev-app-web-pkg
+
+      - name: Configure Firebase deploy target
+        run: |
+          # We can use `npx` as the Firebase deploy actions uses it too.
+          npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
+          npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
+
+      - uses: FirebaseExtended/action-hosting-deploy@638d3c162747cead0c1c0d3093208ed59dfd8231 # v0
+        id: deploy
+        with:
+          # Note: No token used here as the action otherwise may attempt to post a comment.
+          repoToken: ''
+          firebaseServiceAccount: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
+          projectId: '${{env.PREVIEW_PROJECT}}'
+          entryPoint: './'
+          channelId: '${{env.PREVIEW_CHANNEL}}'
+
+      - name: Deployment Status
+        uses: zattoo/deploy-status@c8a0267e54a90ea07765fa88f7c7c35171859eec # v1
+        with:
+          token: '${{github.token}}'
+          environment: 'dev'
+          environment_url: 'https://ng-comp-devapp.web.app'
+          state: success

@@ -1,0 +1,187 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../style/sass-utils';
+@use './mat/app' as tokens-mat-app;
+@use './mat/autocomplete' as tokens-mat-autocomplete;
+@use './mat/badge' as tokens-mat-badge;
+@use './mat/text-button' as tokens-mat-text-button;
+@use './mat/protected-button' as tokens-mat-protected-button;
+@use './mat/filled-button' as tokens-mat-filled-button;
+@use './mat/outlined-button' as tokens-mat-outlined-button;
+@use './mat/dialog' as tokens-mat-dialog;
+@use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
+@use './mat/card' as tokens-mat-card;
+@use './mat/chip' as tokens-mat-chip;
+@use './mat/datepicker' as tokens-mat-datepicker;
+@use './mat/divider' as tokens-mat-divider;
+@use './mat/expansion' as tokens-mat-expansion;
+@use './mat/fab' as tokens-mat-fab;
+@use './mat/fab-small' as tokens-mat-fab-small;
+@use './mat/form-field' as tokens-mat-form-field;
+@use './mat/grid-list' as tokens-mat-grid-list;
+@use './mat/icon' as tokens-mat-icon;
+@use './mat/icon-button' as tokens-mat-icon-button;
+@use './mat/list' as tokens-mat-list;
+@use './mat/menu' as tokens-mat-menu;
+@use './mat/option' as tokens-mat-option;
+@use './mat/optgroup' as tokens-mat-optgroup;
+@use './mat/paginator' as tokens-mat-paginator;
+@use './mat/checkbox' as tokens-mat-checkbox;
+@use './mat/full-pseudo-checkbox' as tokens-mat-full-pseudo-checkbox;
+@use './mat/minimal-pseudo-checkbox' as tokens-mat-minimal-pseudo-checkbox;
+@use './mat/radio' as tokens-mat-radio;
+@use './mat/ripple' as tokens-mat-ripple;
+@use './mat/select' as tokens-mat-select;
+@use './mat/sidenav' as tokens-mat-sidenav;
+@use './mat/slider' as tokens-mat-slider;
+@use './mat/switch' as tokens-mat-switch;
+@use './mat/snack-bar' as tokens-mat-snack-bar;
+@use './mat/sort' as tokens-mat-sort;
+@use './mat/standard-button-toggle' as tokens-mat-button-toggle;
+@use './mat/stepper' as tokens-mat-stepper;
+@use './mat/tab-header' as tokens-mat-tab-header;
+@use './mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
+@use './mat/table' as tokens-mat-table;
+@use './mat/toolbar' as tokens-mat-toolbar;
+@use './mat/tree' as tokens-mat-tree;
+@use './mat/timepicker' as tokens-mat-timepicker;
+@use './mdc/checkbox' as tokens-mdc-checkbox;
+@use './mdc/text-button' as tokens-mdc-text-button;
+@use './mdc/protected-button' as tokens-mdc-protected-button;
+@use './mdc/filled-button' as tokens-mdc-filled-button;
+@use './mdc/outlined-button' as tokens-mdc-outlined-button;
+@use './mdc/chip' as tokens-mdc-chip;
+@use './mdc/circular-progress' as tokens-mdc-circular-progress;
+@use './mdc/dialog' as tokens-mdc-dialog;
+@use './mdc/elevated-card' as tokens-mdc-elevated-card;
+@use './mdc/extended-fab' as tokens-mdc-extended-fab;
+@use './mdc/fab' as tokens-mdc-fab;
+@use './mdc/fab-small' as tokens-mdc-fab-small;
+@use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
+@use './mdc/icon-button' as tokens-mdc-icon-button;
+@use './mdc/linear-progress' as tokens-mdc-linear-progress;
+@use './mdc/list' as tokens-mdc-list;
+@use './mdc/outlined-card' as tokens-mdc-outlined-card;
+@use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
+@use './mdc/radio' as tokens-mdc-radio;
+@use './mdc/slider' as tokens-mdc-slider;
+@use './mdc/snack-bar' as tokens-mdc-snack-bar;
+@use './mdc/switch' as tokens-mdc-switch;
+@use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
+@use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../../theming/inspection';
+
+/// Gets the tokens for the given theme, m2 tokens module, and theming system.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @param {String} $module The Sass module containing the token getter functions.
+/// @param {String} $system The theming system to get tokens for. Valid values are: unthemable,
+///     color, typography, density.
+/// @return {Map} The token map by calling the token getter for the given system in the given module
+///    with the given Angular Material theme. Token names are not fully-qualified.
+@function _get-tokens-for-module-and-system($theme, $module, $system) {
+  @if $system == unthemable {
+    @return meta.call(meta.get-function(get-#{$system}-tokens, $module: $module));
+  }
+  @if not inspection.theme-has($theme, $system) {
+    @return ();
+  }
+  @return meta.call(meta.get-function(get-#{$system}-tokens, $module: $module), $theme);
+}
+
+/// Gets the fully qualified tokens map for the given theme and m2 tokens module.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @param {String} $module The Sass module containing the token getter functions.
+/// @return {Map} The token map by calling the token getters in the given module with the given
+///     Angular Material theme. Token names are fully-qualified.
+@function _get-tokens-for-module($theme, $module) {
+  $tokens: sass-utils.deep-merge-all(
+    _get-tokens-for-module-and-system($theme, $module, unthemable),
+    _get-tokens-for-module-and-system($theme, $module, color),
+    _get-tokens-for-module-and-system($theme, $module, typography),
+    _get-tokens-for-module-and-system($theme, $module, density)
+  );
+  @return map.set((), map.get(meta.module-variables($module), prefix), $tokens);
+}
+
+/// Gets the full set of M2 tokens for the given theme object.
+/// @param {Map} $theme The Angular Material theme object to generate token values from.
+/// @return {Map} The token map for the given Angular Material theme. Returned format:
+///     (
+///       (fully, qualified, namespace): (
+///         token: value
+///       )
+///     )
+@function m2-tokens-from-theme($theme) {
+  @return sass-utils.deep-merge-all(
+    _get-tokens-for-module($theme, tokens-mat-app),
+    _get-tokens-for-module($theme, tokens-mat-autocomplete),
+    _get-tokens-for-module($theme, tokens-mat-badge),
+    _get-tokens-for-module($theme, tokens-mat-bottom-sheet),
+    _get-tokens-for-module($theme, tokens-mat-button-toggle),
+    _get-tokens-for-module($theme, tokens-mat-card),
+    _get-tokens-for-module($theme, tokens-mat-chip),
+    _get-tokens-for-module($theme, tokens-mat-datepicker),
+    _get-tokens-for-module($theme, tokens-mat-dialog),
+    _get-tokens-for-module($theme, tokens-mat-divider),
+    _get-tokens-for-module($theme, tokens-mat-expansion),
+    _get-tokens-for-module($theme, tokens-mat-fab),
+    _get-tokens-for-module($theme, tokens-mat-fab-small),
+    _get-tokens-for-module($theme, tokens-mat-filled-button),
+    _get-tokens-for-module($theme, tokens-mat-form-field),
+    _get-tokens-for-module($theme, tokens-mat-grid-list),
+    _get-tokens-for-module($theme, tokens-mat-icon-button),
+    _get-tokens-for-module($theme, tokens-mat-icon),
+    _get-tokens-for-module($theme, tokens-mat-menu),
+    _get-tokens-for-module($theme, tokens-mat-optgroup),
+    _get-tokens-for-module($theme, tokens-mat-option),
+    _get-tokens-for-module($theme, tokens-mat-outlined-button),
+    _get-tokens-for-module($theme, tokens-mat-paginator),
+    _get-tokens-for-module($theme, tokens-mat-checkbox),
+    _get-tokens-for-module($theme, tokens-mat-full-pseudo-checkbox),
+    _get-tokens-for-module($theme, tokens-mat-list),
+    _get-tokens-for-module($theme, tokens-mat-minimal-pseudo-checkbox),
+    _get-tokens-for-module($theme, tokens-mat-protected-button),
+    _get-tokens-for-module($theme, tokens-mat-radio),
+    _get-tokens-for-module($theme, tokens-mat-ripple),
+    _get-tokens-for-module($theme, tokens-mat-select),
+    _get-tokens-for-module($theme, tokens-mat-sidenav),
+    _get-tokens-for-module($theme, tokens-mat-slider),
+    _get-tokens-for-module($theme, tokens-mat-switch),
+    _get-tokens-for-module($theme, tokens-mat-snack-bar),
+    _get-tokens-for-module($theme, tokens-mat-sort),
+    _get-tokens-for-module($theme, tokens-mat-stepper),
+    _get-tokens-for-module($theme, tokens-mat-tab-header-with-background),
+    _get-tokens-for-module($theme, tokens-mat-tab-header),
+    _get-tokens-for-module($theme, tokens-mat-table),
+    _get-tokens-for-module($theme, tokens-mat-text-button),
+    _get-tokens-for-module($theme, tokens-mat-toolbar),
+    _get-tokens-for-module($theme, tokens-mat-tree),
+    _get-tokens-for-module($theme, tokens-mat-timepicker),
+    _get-tokens-for-module($theme, tokens-mdc-checkbox),
+    _get-tokens-for-module($theme, tokens-mdc-chip),
+    _get-tokens-for-module($theme, tokens-mdc-circular-progress),
+    _get-tokens-for-module($theme, tokens-mdc-dialog),
+    _get-tokens-for-module($theme, tokens-mdc-elevated-card),
+    _get-tokens-for-module($theme, tokens-mdc-extended-fab),
+    _get-tokens-for-module($theme, tokens-mdc-fab),
+    _get-tokens-for-module($theme, tokens-mdc-fab-small),
+    _get-tokens-for-module($theme, tokens-mdc-filled-button),
+    _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
+    _get-tokens-for-module($theme, tokens-mdc-icon-button),
+    _get-tokens-for-module($theme, tokens-mdc-linear-progress),
+    _get-tokens-for-module($theme, tokens-mdc-list),
+    _get-tokens-for-module($theme, tokens-mdc-outlined-button),
+    _get-tokens-for-module($theme, tokens-mdc-outlined-card),
+    _get-tokens-for-module($theme, tokens-mdc-outlined-text-field),
+    _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
+    _get-tokens-for-module($theme, tokens-mdc-protected-button),
+    _get-tokens-for-module($theme, tokens-mdc-radio),
+    _get-tokens-for-module($theme, tokens-mdc-slider),
+    _get-tokens-for-module($theme, tokens-mdc-snack-bar),
+    _get-tokens-for-module($theme, tokens-mdc-switch),
+    _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
+    _get-tokens-for-module($theme, tokens-mdc-secondary-navigation-tab),
+    _get-tokens-for-module($theme, tokens-mdc-text-button)
+  );
+}

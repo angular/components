@@ -1,0 +1,97 @@
+@use 'sass:math';
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
+
+// Width of the Material Design form-field select arrow.
+$mat-form-field-select-arrow-width: 10px;
+// Height of the Material Design form-field select arrow.
+$mat-form-field-select-arrow-height: 5px;
+// Horizontal padding that needs to be applied to the native select in a form-field so
+// that the absolute positioned arrow does not overlap the select content.
+$mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-width + 5px;
+
+$_tokens: tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots();
+
+// Mixin that creates styles for native select controls in a form-field.
+@mixin private-form-field-native-select() {
+  // Remove the native select down arrow and ensure that the native appearance
+  // does not conflict with the form-field. e.g. Focus indication of the native
+  // select is undesired since we handle focus as part of the form-field.
+  select.mat-mdc-form-field-input-control {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    display: inline-flex;
+    box-sizing: border-box;
+
+    // By default the cursor does not change when hovering over a select. We want to
+    // change this for non-disabled select elements so that it's more obvious that the
+    // control can be clicked.
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+
+    &:not(.mat-mdc-native-select-inline) {
+      @include token-utils.use-tokens($_tokens...) {
+        option {
+          @include token-utils.create-token-slot(color, select-option-text-color);
+        }
+
+        option:disabled {
+          @include token-utils.create-token-slot(color, select-disabled-option-text-color);
+        }
+      }
+    }
+  }
+
+  // Native select elements with the `matInput` directive should have Material Design
+  // styling. This means that we add an arrow to the form-field that is based on the
+  // Material Design specification. We achieve this by adding a pseudo element to the
+  // form-field infix.
+  .mat-mdc-form-field-type-mat-native-select {
+    .mat-mdc-form-field-infix::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: math.div($mat-form-field-select-arrow-width, 2) solid transparent;
+      border-right: math.div($mat-form-field-select-arrow-width, 2) solid transparent;
+      border-top: $mat-form-field-select-arrow-height solid;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      margin-top: -#{math.div($mat-form-field-select-arrow-height, 2)};
+
+      // Make the arrow non-clickable so the user can click on the form control under it.
+      pointer-events: none;
+
+      @include token-utils.use-tokens($_tokens...) {
+        @include token-utils.create-token-slot(color, enabled-select-arrow-color);
+      }
+
+      [dir='rtl'] & {
+        right: auto;
+        left: 0;
+      }
+    }
+
+    @include token-utils.use-tokens($_tokens...) {
+      &.mat-focused .mat-mdc-form-field-infix::after {
+        @include token-utils.create-token-slot(color, focus-select-arrow-color);
+      }
+
+      &.mat-form-field-disabled .mat-mdc-form-field-infix::after {
+        @include token-utils.create-token-slot(color, disabled-select-arrow-color);
+      }
+    }
+
+    // Add padding on the end of the native select so that the content does not
+    // overlap with the Material Design arrow.
+    .mat-mdc-form-field-input-control {
+      padding-right: $mat-form-field-select-horizontal-end-padding;
+      [dir='rtl'] & {
+        padding-right: 0;
+        padding-left: $mat-form-field-select-horizontal-end-padding;
+      }
+    }
+  }
+}

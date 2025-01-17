@@ -1,0 +1,28 @@
+@if (componentViewer.componentDocItem | async; as docItem) {
+  <span class="cdk-visually-hidden" tabindex="-1">
+    API for {{docItem.id}}
+  </span>
+
+  <!--
+  This container is necessary for the layout to display properly. When
+  a component has multiple API docs, they need to be joined together in the
+  same container so that they display one after another.
+  -->
+  <div class="docs-component-api">
+    <doc-viewer [document]="getApiDocumentUrl(docItem)"
+      class="docs-component-view-text-content"
+      (contentRendered)="updateTableOfContents(docItem.name, $event)">
+    </doc-viewer>
+
+    @for (additionalApiDoc of docItem.additionalApiDocs; track additionalApiDoc) {
+      <doc-viewer
+        document="/docs-content/api-docs/{{additionalApiDoc.path}}"
+        class="docs-component-view-text-content"
+        (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, $index + 1)"/>
+    }
+  </div>
+
+  @if (showToc | async) {
+    <table-of-contents #toc container=".mat-drawer-content"/>
+  }
+}

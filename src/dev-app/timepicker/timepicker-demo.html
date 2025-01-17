@@ -1,0 +1,99 @@
+<div class="demo-row">
+  <div>
+    <div>
+      <h2>Basic timepicker</h2>
+      <mat-form-field>
+        <mat-label>Pick a time</mat-label>
+        <input
+          matInput
+          [matTimepicker]="basicPicker"
+          [matTimepickerMin]="minControl.value"
+          [matTimepickerMax]="maxControl.value"
+          [formControl]="control">
+        <mat-timepicker [interval]="intervalControl.value" #basicPicker/>
+        <mat-timepicker-toggle [for]="basicPicker" matSuffix/>
+      </mat-form-field>
+
+      <p>Value: {{control.value}}</p>
+      <p>Dirty: {{control.dirty}}</p>
+      <p>Touched: {{control.touched}}</p>
+      <p>Errors: {{control.errors | json}}</p>
+      <button mat-button (click)="randomizeValue()">Assign a random value</button>
+    </div>
+
+    <div>
+      <h2>Timepicker and datepicker</h2>
+      <mat-form-field>
+        <mat-label>Pick a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="combinedDatepicker"
+          [(ngModel)]="combinedValue">
+        <mat-datepicker #combinedDatepicker/>
+        <mat-datepicker-toggle [for]="combinedDatepicker" matSuffix/>
+      </mat-form-field>
+
+      <div>
+        <mat-form-field>
+          <mat-label>Pick a time</mat-label>
+          <input
+            matInput
+            [matTimepicker]="combinedTimepicker"
+            [matTimepickerMin]="minControl.value"
+            [matTimepickerMax]="maxControl.value"
+            [(ngModel)]="combinedValue"
+            [ngModelOptions]="{updateOn: 'blur'}">
+          <mat-timepicker [interval]="intervalControl.value" #combinedTimepicker/>
+          <mat-timepicker-toggle [for]="combinedTimepicker" matSuffix/>
+        </mat-form-field>
+      </div>
+
+      <p>Value: {{combinedValue}}</p>
+    </div>
+
+    <div>
+      <h2>Timepicker without form field</h2>
+      <input [matTimepicker]="nonFormFieldPicker">
+      <mat-timepicker aria-label="Standalone timepicker" #nonFormFieldPicker/>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined" class="demo-card">
+    <mat-card-header>
+      <mat-card-title>State</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="demo-form-fields">
+        <mat-form-field>
+          <mat-label>Locale</mat-label>
+          <mat-select [formControl]="localeControl">
+            @for (locale of locales; track $index) {
+              <mat-option [value]="locale">{{locale}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Interval</mat-label>
+          <input matInput [formControl]="intervalControl"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Min time</mat-label>
+          <input matInput [matTimepicker]="minPicker" [formControl]="minControl">
+          <mat-timepicker #minPicker/>
+          <mat-timepicker-toggle [for]="minPicker" matSuffix/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Max time</mat-label>
+          <input matInput [matTimepicker]="maxPicker" [formControl]="maxControl">
+          <mat-timepicker #maxPicker/>
+          <mat-timepicker-toggle [for]="maxPicker" matSuffix/>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

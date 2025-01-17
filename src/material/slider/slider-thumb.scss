@@ -1,0 +1,13 @@
+.mat-mdc-slider-visual-thumb .mat-ripple {
+  height: 100%;
+  width: 100%;
+}
+
+.mat-mdc-slider .mdc-slider__tick-marks {
+  justify-content: start;
+  .mdc-slider__tick-mark--active,
+  .mdc-slider__tick-mark--inactive {
+    position: absolute;
+    left: 2px;
+  }
+}

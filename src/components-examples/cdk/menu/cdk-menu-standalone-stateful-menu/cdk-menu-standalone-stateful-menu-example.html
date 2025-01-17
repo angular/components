@@ -1,0 +1,42 @@
+<button [cdkMenuTriggerFor]="menu" class="example-standalone-item">Click me!</button>
+
+<ng-template #menu>
+  <div class="example-menu" cdkMenu>
+    <!-- #docregion bold-item -->
+    <button
+        cdkMenuItemCheckbox
+        class="example-menu-item"
+        [cdkMenuItemChecked]="bold"
+        (cdkMenuItemTriggered)="bold = !bold">
+      Bold
+    </button>
+    <!-- #enddocregion bold-item -->
+    <button
+        cdkMenuItemCheckbox
+        class="example-menu-item"
+        [cdkMenuItemChecked]="italic"
+        (cdkMenuItemTriggered)="italic = !italic">
+      Italic
+    </button>
+    <hr />
+    <div cdkMenuGroup>
+      <!-- #docregion size-items -->
+      @for (size of sizes; track size) {
+        <button
+            cdkMenuItemRadio
+            class="example-menu-item"
+            [cdkMenuItemChecked]="size === selectedSize"
+            (cdkMenuItemTriggered)="selectedSize = size">
+          {{size}}
+        </button>
+      }
+      <!-- #enddocregion size-items -->
+    </div>
+    <hr />
+    <!-- #docregion reset-item -->
+    <button cdkMenuItem
+            class="example-menu-item"
+            (cdkMenuItemTriggered)="reset()">Reset</button>
+    <!-- #enddocregion reset-item -->
+  </div>
+</ng-template>

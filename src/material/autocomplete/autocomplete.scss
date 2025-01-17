@@ -1,43 +1,52 @@
-@use '../core/style/menu-common';
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/autocomplete' as tokens-mat-autocomplete;
 
-// The max-height of the panel, currently matching mat-select value.
-$panel-max-height: 256px !default;
-$panel-border-radius: 4px !default;
-
-.mat-autocomplete-panel {
-  @include menu-common.base();
-
+// Even though we don't use the MDC styles, we need to keep the classes in the
+// DOM for the Gmat versions to work. We need to bump up the specificity here
+// so that it's higher than MDC's styles.
+div.mat-mdc-autocomplete-panel {
+  width: 100%; // Ensures that the panel matches the overlay width.
+  max-height: 256px; // Prevents lists with a lot of option from growing too high.
   visibility: hidden;
-  max-width: none;
-  max-height: $panel-max-height;
-  position: relative;
-  width: 100%;
-  border-bottom-left-radius: $panel-border-radius;
-  border-bottom-right-radius: $panel-border-radius;
+  transform-origin: center top;
+  overflow: auto;
+  padding: 8px 0;
+  box-sizing: border-box;
 
-  &.mat-autocomplete-visible {
+  // Workaround in case other MDC menu surface styles bleed in.
+  position: static;
+
+  @include token-utils.use-tokens(
+    tokens-mat-autocomplete.$prefix, tokens-mat-autocomplete.get-token-slots()) {
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+    @include token-utils.create-token-slot(background-color, background-color);
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) & {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .mat-mdc-autocomplete-panel-above & {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transform-origin: center bottom;
+  }
+
+  // These classes are used to toggle the panel visibility depending on whether it has any options.
+  &.mat-mdc-autocomplete-visible {
     visibility: visible;
   }
 
-  &.mat-autocomplete-hidden {
+  &.mat-mdc-autocomplete-hidden {
     visibility: hidden;
-  }
-
-  .mat-autocomplete-panel-above & {
-    border-radius: 0;
-    border-top-left-radius: $panel-border-radius;
-    border-top-right-radius: $panel-border-radius;
-  }
-
-  // We need to offset horizontal dividers by their height, because
-  // they throw off the keyboard navigation inside the panel.
-  .mat-divider-horizontal {
-    margin-top: -1px;
-  }
-
-  @include a11y.high-contrast(active, off) {
-    outline: solid 1px;
+    pointer-events: none;
   }
 }
 

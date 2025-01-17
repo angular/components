@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
@@ -27,58 +27,51 @@ export interface ViewportScrollPosition {
  */
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
+  private _platform = inject(Platform);
+  private _listeners: (() => void)[] | undefined;
+
   /** Cached viewport dimensions. */
-  private _viewportSize: {width: number; height: number};
+  private _viewportSize: {width: number; height: number} | null;
 
   /** Stream of viewport change events. */
   private readonly _change = new Subject<Event>();
 
-  /** Event listener that will be used to handle the viewport change events. */
-  private _changeListener = (event: Event) => {
-    this._change.next(event);
-  }
-
   /** Used to reference correct document/window */
-  protected _document: Document;
+  protected _document = inject(DOCUMENT, {optional: true})!;
 
-  constructor(private _platform: Platform,
-              ngZone: NgZone,
-              @Optional() @Inject(DOCUMENT) document: any) {
-    this._document = document;
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
+    const renderer = inject(RendererFactory2).createRenderer(null, null);
 
     ngZone.runOutsideAngular(() => {
-      if (_platform.isBrowser) {
-        const window = this._getWindow();
-
-        // Note that bind the events ourselves, rather than going through something like RxJS's
-        // `fromEvent` so that we can ensure that they're bound outside of the NgZone.
-        window.addEventListener('resize', this._changeListener);
-        window.addEventListener('orientationchange', this._changeListener);
+      if (this._platform.isBrowser) {
+        const changeListener = (event: Event) => this._change.next(event);
+        this._listeners = [
+          renderer.listen('window', 'resize', changeListener),
+          renderer.listen('window', 'orientationchange', changeListener),
+        ];
       }
 
-      // We don't need to keep track of the subscription,
-      // because we complete the `change` stream on destroy.
-      this.change().subscribe(() => this._updateViewportSize());
+      // Clear the cached position so that the viewport is re-measured next time it is required.
+      // We don't need to keep track of the subscription, because it is completed on destroy.
+      this.change().subscribe(() => (this._viewportSize = null));
     });
   }
 
   ngOnDestroy() {
-    if (this._platform.isBrowser) {
-      const window = this._getWindow();
-      window.removeEventListener('resize', this._changeListener);
-      window.removeEventListener('orientationchange', this._changeListener);
-    }
-
+    this._listeners?.forEach(cleanup => cleanup());
     this._change.complete();
   }
 
   /** Returns the viewport's width and height. */
-  getViewportSize(): Readonly<{width: number, height: number}> {
+  getViewportSize(): Readonly<{width: number; height: number}> {
     if (!this._viewportSize) {
       this._updateViewportSize();
     }
 
-    const output = {width: this._viewportSize.width, height: this._viewportSize.height};
+    const output = {width: this._viewportSize!.width, height: this._viewportSize!.height};
 
     // If we're not on a browser, don't cache the size since it'll be mocked out anyway.
     if (!this._platform.isBrowser) {
@@ -88,8 +81,8 @@ export class ViewportRuler implements OnDestroy {
     return output;
   }
 
-  /** Gets a ClientRect for the viewport's bounds. */
-  getViewportRect(): ClientRect {
+  /** Gets a DOMRect for the viewport's bounds. */
+  getViewportRect() {
     // Use the document element's bounding rect rather than the window scroll properties
     // (e.g. pageYOffset, scrollY) due to in issue in Chrome and IE where window scroll
     // properties and client coordinates (boundingClientRect, clientX/Y, etc.) are in different
@@ -131,11 +124,19 @@ export class ViewportRuler implements OnDestroy {
     const documentElement = document.documentElement!;
     const documentRect = documentElement.getBoundingClientRect();
 
-    const top = -documentRect.top || document.body.scrollTop || window.scrollY ||
-                 documentElement.scrollTop || 0;
+    const top =
+      -documentRect.top ||
+      document.body.scrollTop ||
+      window.scrollY ||
+      documentElement.scrollTop ||
+      0;
 
-    const left = -documentRect.left || document.body.scrollLeft || window.scrollX ||
-                  documentElement.scrollLeft || 0;
+    const left =
+      -documentRect.left ||
+      document.body.scrollLeft ||
+      window.scrollX ||
+      documentElement.scrollLeft ||
+      0;
 
     return {top, left};
   }
@@ -157,8 +158,8 @@ export class ViewportRuler implements OnDestroy {
   /** Updates the cached viewport size. */
   private _updateViewportSize() {
     const window = this._getWindow();
-    this._viewportSize = this._platform.isBrowser ?
-        {width: window.innerWidth, height: window.innerHeight} :
-        {width: 0, height: 0};
+    this._viewportSize = this._platform.isBrowser
+      ? {width: window.innerWidth, height: window.innerHeight}
+      : {width: 0, height: 0};
   }
 }

@@ -14,9 +14,8 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/cdk/accordion",
     deps = [
-        "//src/cdk/coercion",
+        "//src/cdk/a11y",
         "//src/cdk/collections",
         "@npm//@angular/core",
         "@npm//rxjs",

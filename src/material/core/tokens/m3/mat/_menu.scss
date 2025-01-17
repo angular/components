@@ -1,0 +1,48 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+@use '../../../style/elevation';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, menu);
+
+/// Generates custom tokens for the mat-menu.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-menu
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: sass-utils.merge-all(
+    token-definition.generate-typography-tokens($systems, item-label-text, label-large),
+    (
+      container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+      divider-color: map.get($systems, md-sys-color, surface-variant),
+      divider-bottom-spacing: token-definition.hardcode(8px, $exclude-hardcoded),
+      divider-top-spacing: token-definition.hardcode(8px, $exclude-hardcoded),
+      item-label-text-color: map.get($systems, md-sys-color, on-surface),
+      item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+      item-icon-size: token-definition.hardcode(24px, $exclude-hardcoded),
+      item-hover-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+      ),
+      item-focus-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+      ),
+      item-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
+      item-leading-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
+      item-trailing-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
+      item-with-icon-leading-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
+      item-with-icon-trailing-spacing: token-definition.hardcode(12px, $exclude-hardcoded),
+      container-color: map.get($systems, md-sys-color, surface-container),
+      container-elevation-shadow: token-definition.hardcode(
+        elevation.get-box-shadow(2), $exclude-hardcoded),
+
+      // Unused
+      base-elevation-level: null,
+    )
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

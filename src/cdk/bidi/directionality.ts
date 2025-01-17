@@ -3,15 +3,28 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EventEmitter, Inject, Injectable, Optional, OnDestroy} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, inject} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
-
 
 export type Direction = 'ltr' | 'rtl';
 
+/** Regex that matches locales with an RTL script. Taken from `goog.i18n.bidi.isRtlLanguage`. */
+const RTL_LOCALE_PATTERN =
+  /^(ar|ckb|dv|he|iw|fa|nqo|ps|sd|ug|ur|yi|.*[-_](Adlm|Arab|Hebr|Nkoo|Rohg|Thaa))(?!.*[-_](Latn|Cyrl)($|-|_))($|-|_)/i;
+
+/** Resolves a string value to a specific direction. */
+export function _resolveDirectionality(rawValue: string): Direction {
+  const value = rawValue?.toLowerCase() || '';
+
+  if (value === 'auto' && typeof navigator !== 'undefined' && navigator?.language) {
+    return RTL_LOCALE_PATTERN.test(navigator.language) ? 'rtl' : 'ltr';
+  }
+
+  return value === 'rtl' ? 'rtl' : 'ltr';
+}
 
 /**
  * The directionality (LTR / RTL) context for the application (or a subtree of it).
@@ -25,16 +38,15 @@ export class Directionality implements OnDestroy {
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
 
-  constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const _document = inject(DIR_DOCUMENT, {optional: true});
+
     if (_document) {
-      // TODO: handle 'auto' value -
-      // We still need to account for dir="auto".
-      // It looks like HTMLElemenet.dir is also "auto" when that's set to the attribute,
-      // but getComputedStyle return either "ltr" or "rtl". avoiding getComputedStyle for now
       const bodyDir = _document.body ? _document.body.dir : null;
       const htmlDir = _document.documentElement ? _document.documentElement.dir : null;
-      const value = bodyDir || htmlDir;
-      this.value = (value === 'ltr' || value === 'rtl') ? value : 'ltr';
+      this.value = _resolveDirectionality(bodyDir || htmlDir || 'ltr');
     }
   }
 

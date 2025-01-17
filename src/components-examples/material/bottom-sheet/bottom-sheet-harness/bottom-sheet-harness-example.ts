@@ -1,5 +1,9 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {MatBottomSheet, MatBottomSheetConfig} from '@angular/material/bottom-sheet';
+import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
+import {
+  MatBottomSheet,
+  MatBottomSheetConfig,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
 
 /**
  * @title Testing with MatBottomSheetHarness
@@ -7,11 +11,12 @@ import {MatBottomSheet, MatBottomSheetConfig} from '@angular/material/bottom-she
 @Component({
   selector: 'bottom-sheet-harness-example',
   templateUrl: 'bottom-sheet-harness-example.html',
+  imports: [MatBottomSheetModule],
 })
 export class BottomSheetHarnessExample {
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  readonly bottomSheet = inject(MatBottomSheet);
 
-  constructor(readonly bottomSheet: MatBottomSheet) {}
+  @ViewChild(TemplateRef) template: TemplateRef<any>;
 
   open(config?: MatBottomSheetConfig) {
     return this.bottomSheet.open(this.template, config);

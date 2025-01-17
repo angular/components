@@ -1,15 +1,26 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "slider",
     srcs = glob(["**/*.ts"]),
-    assets = ["slider-demo.html"],
+    assets = [
+        "slider-demo.html",
+        ":slider_demo_scss",
+    ],
     deps = [
+        "//src/material/button",
+        "//src/material/button-toggle",
+        "//src/material/checkbox",
+        "//src/material/dialog",
         "//src/material/slider",
         "//src/material/tabs",
         "@npm//@angular/forms",
-        "@npm//@angular/router",
     ],
+)
+
+sass_binary(
+    name = "slider_demo_scss",
+    src = "slider-demo.scss",
 )

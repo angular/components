@@ -3,14 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
-
 
 /** Harness for interacting with a standard mat-button-toggle in tests. */
 export class MatButtonToggleHarness extends ComponentHarness {
@@ -28,24 +27,36 @@ export class MatButtonToggleHarness extends ComponentHarness {
    */
   static with(options: ButtonToggleHarnessFilters = {}): HarnessPredicate<MatButtonToggleHarness> {
     return new HarnessPredicate(MatButtonToggleHarness, options)
-        .addOption('text', options.text,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-        .addOption('name', options.name,
-            (harness, name) => HarnessPredicate.stringMatches(harness.getName(), name))
-        .addOption('checked', options.checked,
-            async (harness, checked) => (await harness.isChecked()) === checked);
+      .addOption('text', options.text, (harness, text) =>
+        HarnessPredicate.stringMatches(harness.getText(), text),
+      )
+      .addOption('name', options.name, (harness, name) =>
+        HarnessPredicate.stringMatches(harness.getName(), name),
+      )
+      .addOption(
+        'checked',
+        options.checked,
+        async (harness, checked) => (await harness.isChecked()) === checked,
+      )
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      });
   }
 
   /** Gets a boolean promise indicating if the button toggle is checked. */
   async isChecked(): Promise<boolean> {
-    const checked = (await this._button()).getAttribute('aria-pressed');
-    return coerceBooleanProperty(await checked);
+    const button = await this._button();
+    const [checked, pressed] = await parallel(() => [
+      button.getAttribute('aria-checked'),
+      button.getAttribute('aria-pressed'),
+    ]);
+    return coerceBooleanProperty(checked) || coerceBooleanProperty(pressed);
   }
 
   /** Gets a boolean promise indicating if the button toggle is disabled. */
   async isDisabled(): Promise<boolean> {
-    const disabled = (await this._button()).getAttribute('disabled');
-    return coerceBooleanProperty(await disabled);
+    const host = await this.host();
+    return host.hasClass('mat-button-toggle-disabled');
   }
 
   /** Gets a promise for the button toggle's name. */
@@ -72,7 +83,7 @@ export class MatButtonToggleHarness extends ComponentHarness {
   async getAppearance(): Promise<MatButtonToggleAppearance> {
     const host = await this.host();
     const className = 'mat-button-toggle-appearance-standard';
-    return await host.hasClass(className) ? 'standard' : 'legacy';
+    return (await host.hasClass(className)) ? 'standard' : 'legacy';
   }
 
   /** Focuses the toggle. */

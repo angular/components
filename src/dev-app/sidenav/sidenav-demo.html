@@ -1,9 +1,8 @@
-<button mat-raised-button (click)="isLaunched = true" *ngIf="!isLaunched" color="primary">
-  Launch Fullscreen Sidenav Demo
-</button>
-
-<div class="demo-sidenav-area" *ngIf="isLaunched">
-  <mat-toolbar *ngIf="showHeader && !coverHeader">Header</mat-toolbar>
+@if (isLaunched) {
+<div class="demo-sidenav-area">
+  @if (showHeader && !coverHeader) {
+    <mat-toolbar>Header</mat-toolbar>
+  }
   <mat-sidenav-container [hasBackdrop]="hasBackdrop">
     <mat-sidenav #start (opened)="myinput.focus()" [mode]="mode"
                  [fixedInViewport]="fixed" [fixedTopGap]="fixedTop" [fixedBottomGap]="fixedBottom">
@@ -17,7 +16,9 @@
       <div>Mode: {{start.mode}}</div>
       <br>
       <input #myinput>
-      <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+      @for (c of fillerContent; track c) {
+        <div class="demo-filler-content">Filler Content</div>
+      }
     </mat-sidenav>
 
     <mat-sidenav #end position="end"
@@ -25,11 +26,15 @@
       End Side Sidenav
       <br>
       <button mat-button (click)="end.close()">Close</button>
-      <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+      @for (c of fillerContent; track c) {
+        <div class="demo-filler-content">Filler Content</div>
+      }
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <mat-toolbar *ngIf="showHeader && coverHeader">Header</mat-toolbar>
+      @if (showHeader && coverHeader) {
+        <mat-toolbar>Header</mat-toolbar>
+      }
       <div class="demo-sidenav-content">
         <div>
           <button mat-raised-button (click)="isLaunched = false">
@@ -52,10 +57,21 @@
           <mat-checkbox [(ngModel)]="showFooter">Show footer</mat-checkbox>
         </div>
 
-        <div class="demo-filler-content" *ngFor="let c of fillerContent">Filler Content</div>
+        @for (c of fillerContent; track c) {
+          <div class="demo-filler-content">Filler Content</div>
+        }
       </div>
-      <mat-toolbar *ngIf="showFooter && coverHeader">Footer</mat-toolbar>
+      @if (showFooter && coverHeader) {
+        <mat-toolbar>Footer</mat-toolbar>
+      }
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <mat-toolbar *ngIf="showFooter && !coverHeader">Footer</mat-toolbar>
+  @if (showFooter && !coverHeader) {
+    <mat-toolbar>Footer</mat-toolbar>
+  }
 </div>
+} @else {
+  <button mat-raised-button (click)="isLaunched = true" color="primary">
+    Launch Fullscreen Sidenav Demo
+  </button>
+}

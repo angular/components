@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
@@ -22,12 +22,13 @@ export interface ProtractorHarnessEnvironmentOptions {
 
 /** The default environment options. */
 const defaultEnvironmentOptions: ProtractorHarnessEnvironmentOptions = {
-  queryFn: (selector: string, root: ElementFinder) => root.all(by.css(selector))
+  queryFn: (selector: string, root: ElementFinder) => root.all(by.css(selector)),
 };
 
 /**
  * A `HarnessEnvironment` implementation for Protractor.
- * @deprecated
+ * @deprecated As of v13.0.0, this environment no longer works, as it is not
+ * compatible with the new [Angular Package Format](https://angular.dev/tools/libraries/angular-package-format).
  * @breaking-change 13.0.0
  */
 export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {
@@ -35,7 +36,9 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   private _options: ProtractorHarnessEnvironmentOptions;
 
   protected constructor(
-      rawRootElement: ElementFinder, options?: ProtractorHarnessEnvironmentOptions) {
+    rawRootElement: ElementFinder,
+    options?: ProtractorHarnessEnvironmentOptions,
+  ) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
   }

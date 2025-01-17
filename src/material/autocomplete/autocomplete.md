@@ -7,25 +7,25 @@ defined by a `mat-option` tag. Set each option's value property to whatever you'
 of the text input to be when that option is selected.
 
 <!-- example({"example":"autocomplete-simple",
-              "file":"autocomplete-simple-example.html", 
+              "file":"autocomplete-simple-example.html",
               "region":"mat-autocomplete"}) -->
 
-Next, create the input and set the `matAutocomplete` input to refer to the template reference we assigned 
-to the autocomplete. Let's assume you're using the `formControl` directive from `ReactiveFormsModule` to 
+Next, create the input and set the `matAutocomplete` input to refer to the template reference we assigned
+to the autocomplete. Let's assume you're using the `formControl` directive from `ReactiveFormsModule` to
 track the value of the input.
 
 > Note: It is possible to use template-driven forms instead, if you prefer. We use reactive forms
 in this example because it makes subscribing to changes in the input's value easy. For this
 example, be sure to import `ReactiveFormsModule` from `@angular/forms` into your `NgModule`.
 If you are unfamiliar with using reactive forms, you can read more about the subject in the
-[Angular documentation](https://angular.io/guide/reactive-forms).
+[Angular documentation](https://angular.dev/guide/forms/reactive-forms).
 
 Now we'll need to link the text input to its panel. We can do this by exporting the autocomplete
 panel instance into a local template variable (here we called it "auto"), and binding that variable
 to the input's `matAutocomplete` property.
 
 <!-- example({"example":"autocomplete-simple",
-              "file":"autocomplete-simple-example.html", 
+              "file":"autocomplete-simple-example.html",
               "region":"input"}) -->
 
 ### Adding a custom filter
@@ -61,6 +61,22 @@ desired display value. Then bind it to the autocomplete's `displayWith` property
 
 <!-- example(autocomplete-display) -->
 
+### Require an option to be selected
+
+By default, the autocomplete will accept the value that the user typed into the input field.
+Instead, if you want to instead ensure that an option from the autocomplete was selected, you can
+enable the `requireSelection` input on `mat-autocomplete`. This will change the behavior of
+the autocomplete in the following ways:
+1. If the user opens the autocomplete, changes its value, but doesn't select anything, the
+autocomplete value will be reset back to `null`.
+2. If the user opens and closes the autocomplete without changing the value, the old value will
+be preserved.
+
+This behavior can be configured globally using the `MAT_AUTOCOMPLETE_DEFAULT_OPTIONS`
+injection token.
+
+<!-- example(autocomplete-require-selection) -->
+
 ### Automatically highlighting the first option
 
 If your use case requires for the first autocomplete option to be highlighted when the user opens
@@ -95,25 +111,43 @@ autocomplete is attached to using the `matAutocompleteOrigin` directive together
 </div>
 
 <mat-autocomplete #auto="matAutocomplete">
-  <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+  @for (option of options; track option) {
+    <mat-option [value]="option">{{option}}</mat-option>
+  }
 </mat-autocomplete>
 ```
 
 ### Keyboard interaction
-- <kbd>DOWN_ARROW</kbd>: Next option becomes active
-- <kbd>UP_ARROW</kbd>: Previous option becomes active
-- <kbd>ENTER</kbd>: Selects currently active item
-- <kbd>ESCAPE</kbd>: Closes the autocomplete panel
+| Keyboard shortcut                      | Action                                                         |
+|----------------------------------------|----------------------------------------------------------------|
+| <kbd>Down Arrow</kbd>                  | Navigate to the next option.                                   |
+| <kbd>Up Arrow</kbd>                    | Navigate to the previous option.                               |
+| <kbd>Enter</kbd>                       | Select the active option.                                      |
+| <kbd>Escape</kbd>                      | Close the autocomplete panel.                                  |
+| <kbd>Alt</kbd> + <kbd>Up Arrow</kbd>   | Close the autocomplete panel.                                  |
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the autocomplete panel if there are any matching options. |
 
 ### Option groups
 `mat-option` can be collected into groups using the `mat-optgroup` element:
 <!-- example({"example":"autocomplete-optgroup",
-              "file":"autocomplete-optgroup-example.html", 
+              "file":"autocomplete-optgroup-example.html",
               "region":"mat-autocomplete"}) -->
 
 ### Accessibility
-The input for an autocomplete without text or labels should be given a meaningful label via
-`aria-label` or `aria-labelledby`.
 
-The autocomplete trigger is given `role="combobox"`. The trigger sets `aria-owns` to the
-autocomplete's id, and sets `aria-activedescendant` to the active option's id.
+`MatAutocomplete` implements the ARIA combobox interaction pattern. The text input trigger specifies
+`role="combobox"` while the content of the pop-up applies `role="listbox"`. Because of this listbox
+pattern, you should _not_ put other interactive controls, such as buttons or checkboxes, inside
+an autocomplete option. Nesting interactive controls like this interferes with most assistive
+technology.
+
+Always provide an accessible label for the autocomplete. This can be done by using a
+`<mat-label>` inside of `<mat-form-field>`, a native `<label>` element, the `aria-label`
+attribute, or the `aria-labelledby` attribute.
+
+`MatAutocomplete` preserves focus on the text trigger, using `aria-activedescendant` to support
+navigation though the autocomplete options.
+
+By default, `MatAutocomplete` displays a checkmark to identify the selected item. While you can hide
+the checkmark indicator via `hideSingleSelectionIndicator`, this makes the component less accessible
+by making it harder or impossible for users to visually identify selected items.

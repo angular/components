@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -16,13 +16,23 @@ import {
   NoDataRowOutlet,
 } from './table';
 import {
-  CdkCellOutlet, CdkFooterRow, CdkFooterRowDef, CdkHeaderRow, CdkHeaderRowDef, CdkRow,
+  CdkCellOutlet,
+  CdkFooterRow,
+  CdkFooterRowDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkRow,
   CdkRowDef,
-  CdkNoDataRow
+  CdkNoDataRow,
 } from './row';
 import {
-  CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell, CdkCellDef,
-  CdkFooterCellDef, CdkFooterCell
+  CdkColumnDef,
+  CdkHeaderCellDef,
+  CdkHeaderCell,
+  CdkCell,
+  CdkCellDef,
+  CdkFooterCellDef,
+  CdkFooterCell,
 } from './cell';
 import {CdkTextColumn} from './text-column';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -54,7 +64,6 @@ const EXPORTED_DECLARATIONS = [
 
 @NgModule({
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
-  imports: [ScrollingModule]
+  imports: [ScrollingModule, ...EXPORTED_DECLARATIONS],
 })
-export class CdkTableModule { }
+export class CdkTableModule {}

@@ -1,0 +1,13 @@
+@use '../../../styles/constants';
+
+.docs-component-page-header {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  background: var(--mat-sys-primary-container);
+
+  @media (max-width: constants.$small-breakpoint-width) {
+    display: flex;
+  }
+}

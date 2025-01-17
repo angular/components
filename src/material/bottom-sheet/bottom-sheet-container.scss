@@ -1,4 +1,7 @@
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/style/elevation';
+@use '../core/tokens/m2/mat/bottom-sheet' as tokens-mat-bottom-sheet;
+@use '../core/tokens/token-utils';
 
 // The bottom sheet minimum width on larger screen sizes is based
 // on increments of the toolbar, according to the spec. See:
@@ -8,6 +11,7 @@ $container-vertical-padding: 8px !default;
 $container-horizontal-padding: 16px !default;
 
 .mat-bottom-sheet-container {
+  @include elevation.elevation(16);
   padding: $container-vertical-padding
            $container-horizontal-padding;
   min-width: 100vw;
@@ -17,15 +21,29 @@ $container-horizontal-padding: 16px !default;
   max-height: 80vh;
   overflow: auto;
 
-  @include a11y.high-contrast(active, off) {
+  @include token-utils.use-tokens(
+    tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-token-slots()) {
+    @include token-utils.create-token-slot(background, container-background-color);
+    @include token-utils.create-token-slot(color, container-text-color);
+    @include token-utils.create-token-slot(font-family, container-text-font);
+    @include token-utils.create-token-slot(font-size, container-text-size);
+    @include token-utils.create-token-slot(line-height, container-text-line-height);
+    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+  }
+
+  @include cdk.high-contrast {
     outline: 1px solid;
   }
 }
 
 // Applies a border radius to the bottom sheet. Should only be applied when it's not full-screen.
 %_mat-bottom-sheet-container-border-radius {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  @include token-utils.use-tokens(
+    tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-left-radius, container-shape);
+    @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+  }
 }
 
 .mat-bottom-sheet-container-medium {

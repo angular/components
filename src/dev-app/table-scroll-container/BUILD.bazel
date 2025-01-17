@@ -1,5 +1,4 @@
-load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -12,13 +11,11 @@ ng_module(
     ],
     deps = [
         "//src/cdk-experimental/table-scroll-container",
-        "//src/material-experimental/mdc-button",
-        "//src/material-experimental/mdc-table",
+        "//src/material/button",
         "//src/material/button-toggle",
         "//src/material/table",
         "@npm//@angular/common",
         "@npm//@angular/core",
-        "@npm//@angular/router",
     ],
 )
 

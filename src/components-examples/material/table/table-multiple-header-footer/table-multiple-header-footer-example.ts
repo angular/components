@@ -1,18 +1,20 @@
 import {Component} from '@angular/core';
+import {CurrencyPipe} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 interface Transaction {
   item: string;
   cost: number;
 }
 
-
 /**
  * @title Table with multiple header and footer rows
  */
 @Component({
   selector: 'table-multiple-header-footer-example',
-  styleUrls: ['table-multiple-header-footer-example.css'],
+  styleUrl: 'table-multiple-header-footer-example.css',
   templateUrl: 'table-multiple-header-footer-example.html',
+  imports: [MatTableModule, CurrencyPipe],
 })
 export class TableMultipleHeaderFooterExample {
   displayedColumns: string[] = ['item', 'cost'];

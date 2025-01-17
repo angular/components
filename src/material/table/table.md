@@ -110,17 +110,17 @@ For most real-world applications, providing the table a `DataSource` instance wi
 manage data. The `DataSource` is meant to serve as a place to encapsulate any sorting, filtering,
 pagination, and data retrieval logic specific to the application.
 
-A `DataSource` is simply a class that has at a minimum the following methods: `connect` and 
-`disconnect`. The `connect` method will be called by the table to provide an `Observable` that emits 
+A `DataSource` is simply a class that has at a minimum the following methods: `connect` and
+`disconnect`. The `connect` method will be called by the table to provide an `Observable` that emits
 the data array that should be rendered. The table will call `disconnect` when the table is destroyed,
-which may be the right time to clean up any subscriptions that may have been registered in the 
-`connect` method. 
+which may be the right time to clean up any subscriptions that may have been registered in the
+`connect` method.
 
 Although Angular Material provides a ready-made table `DataSource` class, `MatTableDataSource`, you may
-want to create your own custom `DataSource` class for more complex use cases. This can be done by 
-extending the abstract `DataSource` class with a custom `DataSource` class that then implements the 
-`connect` and `disconnect` methods. For use cases where the custom `DataSource` must also inherit 
-functionality by extending a different base class, the `DataSource` base class can be 
+want to create your own custom `DataSource` class for more complex use cases. This can be done by
+extending the abstract `DataSource` class with a custom `DataSource` class that then implements the
+`connect` and `disconnect` methods. For use cases where the custom `DataSource` must also inherit
+functionality by extending a different base class, the `DataSource` base class can be
 implemented instead (`MyCustomDataSource extends SomeOtherBaseClass implements DataSource`) to
 respect Typescript's restriction to only implement one base class.
 
@@ -200,6 +200,8 @@ Note that if the data properties do not match the column names, or if a more com
 accessor is required, then a custom `sortingDataAccessor` function can be set to override the
 default data accessor on the `MatTableDataSource`.
 
+When updating the data soure asynchronously avoid doing so by recreating the entire `MatTableDataSource` as this could break sorting. Rather update it through the `MatTableDataSource.data` property.
+
 If you are not using the `MatTableDataSource`, but instead implementing custom logic to sort your
 data, listen to the sort's `(matSortChange)` event and re-order your data according to the sort state.
 If you are providing a data array directly to the table, don't forget to call `renderRows()` on the
@@ -258,14 +260,14 @@ this.selection = new SelectionModel<MyDataType>(allowMultiSelect, initialSelecti
 
 ##### 2. Define a selection column
 
-Add a column definition for displaying the row checkboxes, including a master toggle checkbox for
+Add a column definition for displaying the row checkboxes, including a main toggle checkbox for
 the header. The column name should be added to the list of displayed columns provided to the
 header and data row.
 
 ```html
 <ng-container matColumnDef="select">
   <th mat-header-cell *matHeaderCellDef>
-    <mat-checkbox (change)="$event ? masterToggle() : null"
+    <mat-checkbox (change)="$event ? toggleAllRows() : null"
                   [checked]="selection.hasValue() && isAllSelected()"
                   [indeterminate]="selection.hasValue() && !isAllSelected()">
     </mat-checkbox>
@@ -281,7 +283,7 @@ header and data row.
 
 ##### 3. Add event handling logic
 
-Implement the behavior in your component's logic to handle the header's master toggle and checking
+Implement the behavior in your component's logic to handle the header's main toggle and checking
 if all rows are selected.
 
 ```js
@@ -293,7 +295,7 @@ isAllSelected() {
 }
 
 /** Selects all rows if they are not all selected; otherwise clear selection. */
-masterToggle() {
+toggleAllRows() {
   this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
@@ -357,9 +359,6 @@ To do this, add the `sticky` or `stickyEnd` directive to the `ng-container` colu
 
 <!--- example(table-sticky-columns) -->
 
-This feature is supported by Chrome, Firefox, Safari, and Edge. It is not supported in IE, but
-it does fail gracefully so that the rows simply do not stick.
-
 Note that on Safari mobile when using the flex-based table, a cell stuck in more than one direction
 will struggle to stay in the correct position as you scroll. For example, if a header row is stuck
 to the top and the first column is stuck, then the top-left-most cell will appear jittery as you
@@ -375,14 +374,18 @@ to resolve this.
 
 When using the `multiTemplateDataRows` directive to support multiple rows for each data object, the context of `*matRowDef` is the same except that the `index` value is replaced by `dataIndex` and `renderIndex`.
 
+<!--- example(table-multiple-row-template) -->
+
 ### Accessibility
-Tables without text or labels should be given a meaningful label via `aria-label` or
-`aria-labelledby`. The `aria-readonly` defaults to `true` if it's not set.
 
-Table's default role is `grid`, and it can be changed to `treegrid` through `role` attribute.
+By default, `MatTable` applies `role="table"`, assuming the table's contains primarily static
+content. You can change the role by explicitly setting `role="grid"` or `role="treegrid"` on the
+table element. While changing the role will update child element roles, such as changing
+`role="cell"` to `role="gridcell"`, this does _not_ apply additional keyboard input handling or
+focus management to the table.
 
-`mat-table` does not manage any focus/keyboard interaction on its own. Users can add desired
-focus/keyboard interactions in their application.
+Always provide an accessible label for your tables via `aria-label` or `aria-labelledby` on the
+table element.
 
 ### Tables with `display: flex`
 

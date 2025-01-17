@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /**
- * Returns an error to be thrown when attempting to find an unexisting column.
+ * Returns an error to be thrown when attempting to find an nonexistent column.
  * @param id Id whose lookup failed.
  * @docs-private
  */
@@ -36,8 +36,10 @@ export function getTableMultipleDefaultRowDefsError() {
  * @docs-private
  */
 export function getTableMissingMatchingRowDefError(data: any) {
-  return Error(`Could not find a matching row definition for the` +
-      `provided row data: ${JSON.stringify(data)}`);
+  return Error(
+    `Could not find a matching row definition for the` +
+      `provided row data: ${JSON.stringify(data)}`,
+  );
 }
 
 /**
@@ -45,8 +47,10 @@ export function getTableMissingMatchingRowDefError(data: any) {
  * @docs-private
  */
 export function getTableMissingRowDefsError() {
-  return Error('Missing definitions for header, footer, and row; ' +
-      'cannot determine which columns should be rendered.');
+  return Error(
+    'Missing definitions for header, footer, and row; ' +
+      'cannot determine which columns should be rendered.',
+  );
 }
 
 /**

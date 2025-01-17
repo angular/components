@@ -1,0 +1,43 @@
+# This workflow runs whenever the dev-app build workflow has completed. Deployment happens
+# as part of a dedicated second workflow to avoid security issues where the building would
+# otherwise occur in an authorized context where secrets could be leaked.
+#
+# More details can be found here:
+# https://securitylab.github.com/research/github-actions-preventing-pwn-requests/.
+
+name: Deploying dev-app to Firebase previews
+
+on:
+  workflow_run:
+    workflows: ['Build dev-app for deployment']
+    types: [completed]
+
+permissions:
+  # Needed in order to be able to comment on the pull request.
+  pull-requests: write
+
+env:
+  PREVIEW_PROJECT: ng-dev-previews
+  PREVIEW_SITE: ng-dev-previews-comp
+
+jobs:
+  deploy-dev-app:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
+
+      - name: Configure Firebase deploy target
+        run: |
+          # We can use `npx` as the Firebase deploy actions uses it too.
+          npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
+          npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
+
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@359350bbc10aab1bac85d0eec61a53377078ab82
+        with:
+          github-token: '${{secrets.GITHUB_TOKEN}}'
+          workflow-artifact-name: 'dev-app'
+          firebase-config-dir: './'
+          firebase-public-dir: './dist/dev-app-web-pkg'
+          firebase-project-id: '${{env.PREVIEW_PROJECT}}'
+          firebase-service-key: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'

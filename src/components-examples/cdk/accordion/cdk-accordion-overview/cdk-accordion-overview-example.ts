@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 
 /**
  * @title Accordion overview
@@ -6,7 +7,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'cdk-accordion-overview-example',
   templateUrl: 'cdk-accordion-overview-example.html',
-  styleUrls: ['cdk-accordion-overview-example.css'],
+  styleUrl: 'cdk-accordion-overview-example.css',
+  imports: [CdkAccordionModule],
 })
 export class CdkAccordionOverviewExample {
   items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];

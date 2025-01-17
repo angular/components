@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {EventEmitter, TemplateRef, InjectionToken} from '@angular/core';
@@ -27,16 +27,21 @@ export interface MatMenuPanel<T = any> {
   yPosition: MenuPositionY;
   overlapTrigger: boolean;
   templateRef: TemplateRef<any>;
-  readonly close: EventEmitter<void|'click'|'keydown'|'tab'>;
+  readonly close: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
   parentMenu?: MatMenuPanel | undefined;
   direction?: Direction;
   focusFirstItem: (origin?: FocusOrigin) => void;
   resetActiveItem: () => void;
   setPositionClasses?: (x: MenuPositionX, y: MenuPositionY) => void;
+
+  /**
+   * @deprecated No longer used and will be removed.
+   * @breaking-change 21.0.0
+   */
   setElevation?(depth: number): void;
   lazyContent?: MatMenuContent;
   backdropClass?: string;
-  overlayPanelClass?: string|string[];
+  overlayPanelClass?: string | string[];
   hasBackdrop?: boolean;
   readonly panelId?: string;
 

@@ -1,13 +1,4 @@
-import {
-  ArrayLiteralExpression,
-  CallExpression,
-  isCallExpression,
-  NodeArray,
-  ObjectLiteralExpression,
-  PropertyAssignment,
-  StringLiteral,
-  SyntaxKind,
-} from 'typescript';
+import ts from 'typescript';
 import {CategorizedClassDoc} from './dgeni-definitions';
 
 /**
@@ -27,16 +18,21 @@ import {CategorizedClassDoc} from './dgeni-definitions';
  */
 export function getDirectiveMetadata(classDoc: CategorizedClassDoc): Map<string, any> | null {
   const declaration = classDoc.symbol.valueDeclaration;
+  const decorators =
+    declaration && ts.isClassDeclaration(declaration) ? ts.getDecorators(declaration) : null;
 
-  if (!declaration || !declaration.decorators) {
+  if (!decorators?.length) {
     return null;
   }
 
-  const expression = declaration.decorators
-    .filter(decorator => decorator.expression && isCallExpression(decorator.expression))
-    .map(decorator => decorator.expression as CallExpression)
-    .find(callExpression => callExpression.expression.getText() === 'Component' ||
-                            callExpression.expression.getText() === 'Directive');
+  const expression = decorators
+    .filter(decorator => decorator.expression && ts.isCallExpression(decorator.expression))
+    .map(decorator => decorator.expression as ts.CallExpression)
+    .find(
+      callExpression =>
+        callExpression.expression.getText() === 'Component' ||
+        callExpression.expression.getText() === 'Directive',
+    );
 
   if (!expression) {
     return null;
@@ -48,22 +44,41 @@ export function getDirectiveMetadata(classDoc: CategorizedClassDoc): Map<string,
     return null;
   }
 
-  const objectExpression = expression.arguments[0] as ObjectLiteralExpression;
+  const objectExpression = expression.arguments[0] as ts.ObjectLiteralExpression;
   const resultMetadata = new Map<string, any>();
 
-  (objectExpression.properties as NodeArray<PropertyAssignment>).forEach(prop => {
+  (objectExpression.properties as ts.NodeArray<ts.PropertyAssignment>).forEach(prop => {
     // Support ArrayLiteralExpression assignments in the directive metadata.
-    if (prop.initializer.kind === SyntaxKind.ArrayLiteralExpression) {
-      const arrayData = (prop.initializer as ArrayLiteralExpression).elements
-          .map(literal => (literal as StringLiteral).text);
+    if (ts.isArrayLiteralExpression(prop.initializer)) {
+      const arrayData = prop.initializer.elements.map(literal => {
+        if (ts.isStringLiteralLike(literal)) {
+          return literal.text;
+        }
+
+        if (ts.isObjectLiteralExpression(literal)) {
+          return literal.properties.reduce(
+            (result, prop) => {
+              if (ts.isPropertyAssignment(prop)) {
+                result[prop.name.getText()] = ts.isStringLiteralLike(prop.initializer)
+                  ? prop.initializer.text
+                  : prop.initializer.getText();
+              }
+
+              return result;
+            },
+            {} as Record<string, string>,
+          );
+        }
+
+        return literal.getText();
+      });
 
       resultMetadata.set(prop.name.getText(), arrayData);
     }
 
     // Support normal StringLiteral and NoSubstitutionTemplateLiteral assignments
-    if (prop.initializer.kind === SyntaxKind.StringLiteral ||
-        prop.initializer.kind === SyntaxKind.NoSubstitutionTemplateLiteral) {
-      resultMetadata.set(prop.name.getText(), (prop.initializer as StringLiteral).text);
+    if (ts.isStringLiteralLike(prop.initializer)) {
+      resultMetadata.set(prop.name.getText(), prop.initializer.text);
     }
   });
 

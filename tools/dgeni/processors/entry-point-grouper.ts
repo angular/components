@@ -20,27 +20,26 @@ export interface ModuleInfo {
 
 /** Document type for an entry-point. */
 export class EntryPointDoc {
-
   /** Unique document type for Dgeni. */
   docType = 'entry-point';
 
   /** Name of the component group. */
-  name: string;
+  name: string = '';
 
   /** Display name of the entry-point. */
-  displayName: string;
+  displayName: string = '';
 
   /** Module import path for the entry-point. */
-  moduleImportPath: string;
+  moduleImportPath: string = '';
 
   /** Name of the package, either material or cdk */
-  packageName: string;
+  packageName: string = '';
 
   /** Display name of the package. */
-  packageDisplayName: string;
+  packageDisplayName: string = '';
 
   /** Unique id for the entry-point. */
-  id: string;
+  id: string = '';
 
   /** Known aliases for the entry-point. This is only needed for the `computeIdsProcessor`. */
   aliases: string[] = [];
@@ -76,7 +75,7 @@ export class EntryPointDoc {
    * Name of the primary export of the entry-point. This export will be showed
    * in the API docs as export when show-casing the import to the entry-point.
    */
-  primaryExportName: string|null = null;
+  primaryExportName: string | null = null;
 
   constructor(name: string) {
     this.name = name;
@@ -177,7 +176,7 @@ export class EntryPointGrouper implements Processor {
    * Walks through the specified API documents and looks for the best
    * API document that could serve as primary export of an entry-point.
    */
-  private _findBestPrimaryExport(docs: ApiDoc[]): ApiDoc|null {
+  private _findBestPrimaryExport(docs: ApiDoc[]): ApiDoc | null {
     // Usually the first doc that is not deprecated is used, but in case there are
     // only deprecated doc, the last deprecated doc is used. We don't want to always
     // skip deprecated docs as they could be still needed for documentation of a
@@ -225,8 +224,8 @@ export class EntryPointGrouper implements Processor {
   }
 
   /** Finds the matching entry-point of the given file path. */
-  private _findMatchingEntryPoint(relativeFilePath: string): string|null {
-    let foundEntryPoint: string|null = null;
+  private _findMatchingEntryPoint(relativeFilePath: string): string | null {
+    let foundEntryPoint: string | null = null;
     for (let entryPoint of this.entryPoints) {
       if (!relativeFilePath.startsWith(entryPoint)) {
         continue;
@@ -242,5 +241,4 @@ export class EntryPointGrouper implements Processor {
     }
     return foundEntryPoint;
   }
-
 }

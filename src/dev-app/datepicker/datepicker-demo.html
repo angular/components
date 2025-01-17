@@ -15,42 +15,48 @@
   </mat-form-field>
 </p>
 <p>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Min date</mat-label>
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
         [disabled]="inputDisabled" [max]="maxDate">
     <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
-      <mat-datepicker-actions *ngIf="showActions">
-        <button mat-button matDatepickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-      </mat-datepicker-actions>
+      @if (showActions) {
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+        </mat-datepicker-actions>
+      }
     </mat-datepicker>
   </mat-form-field>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Max date</mat-label>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
         [disabled]="inputDisabled" [min]="minDate">
     <mat-datepicker-toggle matSuffix [for]="maxDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
-      <mat-datepicker-actions *ngIf="showActions">
-        <button mat-button matDatepickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-      </mat-datepicker-actions>
+      @if (showActions) {
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+        </mat-datepicker-actions>
+      }
     </mat-datepicker>
   </mat-form-field>
 </p>
 <p>
-  <mat-form-field color="accent">
+  <mat-form-field [color]="color">
     <mat-label>Start at date</mat-label>
     <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
         [disabled]="inputDisabled">
     <mat-datepicker-toggle matSuffix [for]="startAtPicker"></mat-datepicker-toggle>
     <mat-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled">
-      <mat-datepicker-actions *ngIf="showActions">
-        <button mat-button matDatepickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-      </mat-datepicker-actions>
+      @if (showActions) {
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+        </mat-datepicker-actions>
+      }
     </mat-datepicker>
   </mat-form-field>
 </p>
@@ -78,17 +84,27 @@
         [startAt]="startAt"
         [startView]="yearView ? 'year' : 'month'"
         [color]="color">
-      <mat-datepicker-actions *ngIf="showActions">
-        <button mat-button matDatepickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-      </mat-datepicker-actions>
+      @if (showActions) {
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+        </mat-datepicker-actions>
+      }
     </mat-datepicker>
-    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerParse')">
-      "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!
-    </mat-error>
-    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMin')">Too early!</mat-error>
-    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMax')">Too late!</mat-error>
-    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerFilter')">Date unavailable!</mat-error>
+    @if (resultPickerModel.hasError('matDatepickerParse')) {
+      <mat-error>
+        "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!
+      </mat-error>
+    }
+    @if (resultPickerModel.hasError('matDatepickerMin')) {
+      <mat-error>Too early!</mat-error>
+    }
+    @if (resultPickerModel.hasError('matDatepickerMax')) {
+      <mat-error>Too late!</mat-error>
+    }
+    @if (resultPickerModel.hasError('matDatepickerFilter')) {
+      <mat-error>Date unavailable!</mat-error>
+    }
   </mat-form-field>
 </p>
 <p>Last input: {{lastDateInput}}</p>
@@ -110,10 +126,12 @@
       [disabled]="datepickerDisabled"
       [startAt]="startAt"
       [startView]="yearView ? 'year' : 'month'">
-    <mat-datepicker-actions *ngIf="showActions">
-      <button mat-button matDatepickerCancel>Cancel</button>
-      <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-    </mat-datepicker-actions>
+    @if (showActions) {
+      <mat-datepicker-actions>
+        <button mat-button matDatepickerCancel>Cancel</button>
+        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+      </mat-datepicker-actions>
+    }
   </mat-datepicker>
 </p>
 
@@ -215,11 +233,14 @@
     <mat-date-range-picker
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
+      [color]="color"
       #range1Picker>
-      <mat-date-range-picker-actions *ngIf="showActions">
-        <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-      </mat-date-range-picker-actions>
+      @if (showActions) {
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      }
     </mat-date-range-picker>
   </mat-form-field>
   <div>{{range1.value | json}}</div>
@@ -246,10 +267,12 @@
       [disabled]="datepickerDisabled"
       panelClass="demo-custom-range"
       #range2Picker>
-      <mat-date-range-picker-actions *ngIf="showActions">
-        <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-      </mat-date-range-picker-actions>
+      @if (showActions) {
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      }
     </mat-date-range-picker>
   </mat-form-field>
   <div>{{range2.value | json}}</div>
@@ -275,10 +298,12 @@
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
       #range3Picker>
-      <mat-date-range-picker-actions *ngIf="showActions">
-        <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-      </mat-date-range-picker-actions>
+      @if (showActions) {
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      }
     </mat-date-range-picker>
   </mat-form-field>
   <div>{{range3.value | json}}</div>
@@ -295,10 +320,42 @@
     </mat-date-range-input>
     <mat-datepicker-toggle [for]="range4Picker" matSuffix></mat-datepicker-toggle>
     <mat-date-range-picker customRangeStrategy #range4Picker>
-      <mat-date-range-picker-actions *ngIf="showActions">
-        <button mat-button matDateRangePickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-      </mat-date-range-picker-actions>
+      @if (showActions) {
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      }
     </mat-date-range-picker>
   </mat-form-field>
 </div>
+
+<h2>With custom icon</h2>
+<p>
+  <mat-form-field appearance="fill">
+    <mat-label>Custom icon</mat-label>
+    <input matInput [matDatepicker]="ci1">
+    <mat-datepicker-toggle matSuffix [for]="ci1">
+      <mat-icon matDatepickerToggleIcon>add</mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #ci1></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="outline">
+    <mat-label>Custom icon</mat-label>
+    <input matInput [matDatepicker]="ci2">
+    <mat-datepicker-toggle matSuffix [for]="ci2">
+      <mat-icon matDatepickerToggleIcon>add</mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #ci2></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <mat-label>Custom icon</mat-label>
+    <input matInput [matDatepicker]="ci3">
+    <mat-datepicker #ci3></mat-datepicker>
+  </mat-form-field>
+  <mat-datepicker-toggle matSuffix [for]="ci3">
+    <mat-icon matDatepickerToggleIcon>add</mat-icon>
+  </mat-datepicker-toggle>
+</p>

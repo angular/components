@@ -1,0 +1,52 @@
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
+load("//tools:integration.bzl", "CLI_PROJECT_MAPPINGS")
+load("//tools:defaults.bzl", "node_integration_test")
+
+npmPackageMappings = dicts.add(
+    CLI_PROJECT_MAPPINGS,
+    {
+        "//src/cdk:npm_package_archive": "@angular/cdk",
+        "//src/material:npm_package_archive": "@angular/material",
+    },
+)
+
+# Name of the generated app.
+APP_NAME = "ng-add"
+
+node_integration_test(
+    name = "test",
+    srcs = glob(["**/*"]),
+    commands = [
+        # Note: We use a cache folder within the integration test as otherwise
+        # the NPM package mapped archive would be cached in the system.
+        # See: https://github.com/yarnpkg/yarn/issues/2165.
+        # TODO(devversion): determine if a solution/workaround could live in the test runner.
+        "yarn install --cache-folder .yarn_cache_folder/",
+
+        # Generate a new project with the default options.
+        # Skip installation since we installed the dependencies already.
+        "yarn ng new --defaults --skip-install --style=scss --skip-git --name=%s" % APP_NAME,
+        # Delete the package.json that the CLI generated since we want to use the existing one.
+        "rm -f %s/package.json" % APP_NAME,
+        # Delete the Karma config since we need to use a headless browser.
+        "rm -f %s/karma.conf.js" % APP_NAME,
+        # Delete the tsconfig since we have a pre-defined one.
+        "rm -f %s/tsconfig.json" % APP_NAME,
+        # We can't name the checked-in config `angular.json`, because the CLI doesn't allow
+        # `ng new` to run in a directory that has an `angular.json` already.
+        "mv _angular.json angular.json",
+        # Delete the angular.json since we have a specific config for the test.
+        "rm -f %s/angular.json" % APP_NAME,
+        # Move the generated project one level up so it can reuse the package.json and node_modules.
+        "mv %s/* ." % APP_NAME,
+        # Install Material and run the unit tests.
+        "yarn ng add @angular/material",
+        "yarn test",
+    ],
+    npm_packages = npmPackageMappings,
+    setup_chromium = True,
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+    ],
+)

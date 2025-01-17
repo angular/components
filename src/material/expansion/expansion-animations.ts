@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {
   animate,
@@ -23,7 +23,7 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
  *
  * A bug in angular animation's `state` when ViewContainers are moved using ViewContainerRef.move()
  * causes the animation state of moved components to become `void` upon exit, and not update again
- * upon reentry into the DOM.  This can lead a to situation for the expansion panel where the state
+ * upon reentry into the DOM. This can lead a to situation for the expansion panel where the state
  * of the panel is `expanded` or `collapsed` but the animation state is `void`.
  *
  * To correctly handle animating to the next state, we animate between `void` and `collapsed` which
@@ -39,6 +39,8 @@ export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,
  * Angular Bug: https://github.com/angular/angular/issues/18847
  *
  * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
  */
 export const matExpansionAnimations: {
   readonly indicatorRotate: AnimationTriggerMetadata;
@@ -48,14 +50,21 @@ export const matExpansionAnimations: {
   indicatorRotate: trigger('indicatorRotate', [
     state('collapsed, void', style({transform: 'rotate(0deg)'})),
     state('expanded', style({transform: 'rotate(180deg)'})),
-    transition('expanded <=> collapsed, void => collapsed',
-      animate(EXPANSION_PANEL_ANIMATION_TIMING)),
+    transition(
+      'expanded <=> collapsed, void => collapsed',
+      animate(EXPANSION_PANEL_ANIMATION_TIMING),
+    ),
   ]),
   /** Animation that expands and collapses the panel content. */
   bodyExpansion: trigger('bodyExpansion', [
     state('collapsed, void', style({height: '0px', visibility: 'hidden'})),
-    state('expanded', style({height: '*', visibility: 'visible'})),
-    transition('expanded <=> collapsed, void => collapsed',
-      animate(EXPANSION_PANEL_ANIMATION_TIMING)),
-  ])
+    // Clear the `visibility` while open, otherwise the content will be visible when placed in
+    // a parent that's `visibility: hidden`, because `visibility` doesn't apply to descendants
+    // that have a `visibility` of their own (see #27436).
+    state('expanded', style({height: '*', visibility: ''})),
+    transition(
+      'expanded <=> collapsed, void => collapsed',
+      animate(EXPANSION_PANEL_ANIMATION_TIMING),
+    ),
+  ]),
 };

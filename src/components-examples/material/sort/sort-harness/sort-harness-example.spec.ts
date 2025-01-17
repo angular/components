@@ -1,12 +1,7 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSortHarness} from '@angular/material/sort/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatSortModule} from '@angular/material/sort';
 import {SortHarnessExample} from './sort-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -14,15 +9,10 @@ describe('SortHarnessExample', () => {
   let fixture: ComponentFixture<SortHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSortModule, NoopAnimationsModule],
-      declarations: [SortHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule],
+    });
     fixture = TestBed.createComponent(SortHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -58,7 +48,7 @@ describe('SortHarnessExample', () => {
 
     expect(await thirdHeader.isDisabled()).toBe(false);
 
-    fixture.componentInstance.disableThirdHeader = true;
+    fixture.componentInstance.disableThirdHeader.set(true);
     fixture.detectChanges();
 
     expect(await thirdHeader.isDisabled()).toBe(true);

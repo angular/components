@@ -1,0 +1,108 @@
+@use 'sass:string';
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../m2/typography' as m2-typography;
+
+$_font-family: string.unquote('Roboto, sans-serif');
+
+@function assert-font-family($test-name, $obj, $expected) {
+  @each $level-name, $level in $obj {
+    @if (meta.type-of($level) == 'map' and map.get($level, 'font-family') != $expected) {
+      @error '[#{$test-name}]: Incorrect font-family in level "#{$level-name}". ' +
+             'Expected "#{$expected}", but received "#{map.get($level, 'font-family')}".';
+    }
+  }
+  @return $obj;
+}
+
+$no-font-family: assert-font-family(
+  'should take default MDC font family if none is specified',
+  m2-typography.define-typography-config(),
+  $_font-family);
+
+$only-top-level-font-family: assert-font-family(
+  'should take custom font family if specified at top level',
+  m2-typography.define-typography-config($font-family: 'custom-top'),
+  'custom-top');
+
+$individual-levels-without-font-families: assert-font-family(
+  'should set the default MDC font family if all keys are specified, but without a font-family',
+  m2-typography.define-typography-config(
+    $headline-1: m2-typography.define-typography-level($font-size: 1px),
+    $headline-2: m2-typography.define-typography-level($font-size: 1px),
+    $headline-3: m2-typography.define-typography-level($font-size: 1px),
+    $headline-4: m2-typography.define-typography-level($font-size: 1px),
+    $headline-5: m2-typography.define-typography-level($font-size: 1px),
+    $headline-6: m2-typography.define-typography-level($font-size: 1px),
+    $subtitle-1: m2-typography.define-typography-level($font-size: 1px),
+    $subtitle-2: m2-typography.define-typography-level($font-size: 1px),
+    $body-1: m2-typography.define-typography-level($font-size: 1px),
+    $body-2: m2-typography.define-typography-level($font-size: 1px),
+    $caption: m2-typography.define-typography-level($font-size: 1px),
+    $button: m2-typography.define-typography-level($font-size: 1px),
+    $overline: m2-typography.define-typography-level($font-size: 1px),
+  ),
+  $_font-family
+);
+
+$individual-levels-without-font-families-with-top-level-family: assert-font-family(
+  'should set a custom top-level font family if all keys are specified, but without a font-family',
+  m2-typography.define-typography-config(
+    $font-family: 'custom-top',
+    $headline-1: m2-typography.define-typography-level($font-size: 1px),
+    $headline-2: m2-typography.define-typography-level($font-size: 1px),
+    $headline-3: m2-typography.define-typography-level($font-size: 1px),
+    $headline-4: m2-typography.define-typography-level($font-size: 1px),
+    $headline-5: m2-typography.define-typography-level($font-size: 1px),
+    $headline-6: m2-typography.define-typography-level($font-size: 1px),
+    $subtitle-1: m2-typography.define-typography-level($font-size: 1px),
+    $subtitle-2: m2-typography.define-typography-level($font-size: 1px),
+    $body-1: m2-typography.define-typography-level($font-size: 1px),
+    $body-2: m2-typography.define-typography-level($font-size: 1px),
+    $caption: m2-typography.define-typography-level($font-size: 1px),
+    $button: m2-typography.define-typography-level($font-size: 1px),
+    $overline: m2-typography.define-typography-level($font-size: 1px),
+  ),
+  'custom-top'
+);
+
+$individual-levels-with-font-families: assert-font-family(
+  'should use the level font family if one is specified, but there is none at the top level',
+  m2-typography.define-typography-config(
+    $headline-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-3: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-4: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-5: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-6: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $subtitle-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $subtitle-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $body-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $body-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $caption: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $button: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $overline: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+  ),
+  'custom'
+);
+
+$individual-levels-with-font-families-and-top-level-family: assert-font-family(
+  'should use the level font family if a top-level one is specified together with it',
+  m2-typography.define-typography-config(
+    $font-family: 'custom-top',
+    $headline-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-3: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-4: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-5: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $headline-6: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $subtitle-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $subtitle-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $body-1: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $body-2: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $caption: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $button: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+    $overline: m2-typography.define-typography-level($font-size: 1px, $font-family: 'custom'),
+  ),
+  'custom'
+);

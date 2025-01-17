@@ -3,63 +3,65 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
   ViewEncapsulation,
-  Inject,
-  Optional,
   Input,
-  HostListener,
   AfterViewInit,
+  ChangeDetectorRef,
+  booleanAttribute,
+  inject,
 } from '@angular/core';
-import {
-  CanDisable,
-  CanDisableRipple,
-  mixinDisabled,
-  mixinDisableRipple,
-} from '@angular/material/core';
+import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
-import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
-
-// Boilerplate for applying mixins to MatMenuItem.
-/** @docs-private */
-const _MatMenuItemBase = mixinDisableRipple(mixinDisabled(class {}));
+import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
+import {_StructuralStylesLoader, MatRipple} from '@angular/material/core';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
- * Single item inside of a `mat-menu`. Provides the menu item styling and accessibility treatment.
+ * Single item inside a `mat-menu`. Provides the menu item styling and accessibility treatment.
  */
 @Component({
   selector: '[mat-menu-item]',
   exportAs: 'matMenuItem',
-  inputs: ['disabled', 'disableRipple'],
   host: {
     '[attr.role]': 'role',
-    '[class.mat-menu-item]': 'true',
-    '[class.mat-menu-item-highlighted]': '_highlighted',
-    '[class.mat-menu-item-submenu-trigger]': '_triggersSubmenu',
+    'class': 'mat-mdc-menu-item mat-focus-indicator',
+    '[class.mat-mdc-menu-item-highlighted]': '_highlighted',
+    '[class.mat-mdc-menu-item-submenu-trigger]': '_triggersSubmenu',
     '[attr.tabindex]': '_getTabIndex()',
-    '[attr.aria-disabled]': 'disabled.toString()',
+    '[attr.aria-disabled]': 'disabled',
     '[attr.disabled]': 'disabled || null',
-    'class': 'mat-focus-indicator',
+    '(click)': '_checkDisabled($event)',
+    '(mouseenter)': '_handleMouseEnter()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'menu-item.html',
+  imports: [MatRipple],
 })
-export class MatMenuItem extends _MatMenuItemBase
-    implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
+export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _document = inject(DOCUMENT);
+  private _focusMonitor = inject(FocusMonitor);
+  _parentMenu? = inject<MatMenuPanel<MatMenuItem>>(MAT_MENU_PANEL, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
 
   /** ARIA role for the menu item. */
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
+
+  /** Whether the menu item is disabled. */
+  @Input({transform: booleanAttribute}) disabled: boolean = false;
+
+  /** Whether ripples are disabled on the menu item. */
+  @Input({transform: booleanAttribute}) disableRipple: boolean = false;
 
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
@@ -73,22 +75,11 @@ export class MatMenuItem extends _MatMenuItemBase
   /** Whether the menu item acts as a trigger for a sub-menu. */
   _triggersSubmenu: boolean = false;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    /**
-     * @deprecated `_document` parameter is no longer being used and will be removed.
-     * @breaking-change 12.0.0
-     */
-    @Inject(DOCUMENT) _document?: any,
-    private _focusMonitor?: FocusMonitor,
-    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>) {
+  constructor(...args: unknown[]);
 
-    // @breaking-change 8.0.0 make `_focusMonitor` and `document` required params.
-    super();
-
-    if (_parentMenu && _parentMenu.addItem) {
-      _parentMenu.addItem(this);
-    }
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+    this._parentMenu?.addItem?.(this);
   }
 
   /** Focuses the menu item. */
@@ -104,7 +95,7 @@ export class MatMenuItem extends _MatMenuItemBase
 
   ngAfterViewInit() {
     if (this._focusMonitor) {
-      // Start monitoring the element so it gets the appropriate focused classes. We want
+      // Start monitoring the element, so it gets the appropriate focused classes. We want
       // to show the focus style for menu items only when the focus was not caused by a
       // mouse or touch interaction.
       this._focusMonitor.monitor(this._elementRef, false);
@@ -135,12 +126,6 @@ export class MatMenuItem extends _MatMenuItemBase
   }
 
   /** Prevents the default element actions if it is disabled. */
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click', ['$event'])
   _checkDisabled(event: Event): void {
     if (this.disabled) {
       event.preventDefault();
@@ -149,12 +134,6 @@ export class MatMenuItem extends _MatMenuItemBase
   }
 
   /** Emits to the hover stream. */
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('mouseenter')
   _handleMouseEnter() {
     this._hovered.next(this);
   }
@@ -164,15 +143,28 @@ export class MatMenuItem extends _MatMenuItemBase
     const clone = this._elementRef.nativeElement.cloneNode(true) as HTMLElement;
     const icons = clone.querySelectorAll('mat-icon, .material-icons');
 
-    // Strip away icons so they don't show up in the text.
+    // Strip away icons, so they don't show up in the text.
     for (let i = 0; i < icons.length; i++) {
-      const icon = icons[i];
-      icon.parentNode?.removeChild(icon);
+      icons[i].remove();
     }
 
     return clone.textContent?.trim() || '';
   }
 
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
+  _setHighlighted(isHighlighted: boolean) {
+    // We need to mark this for check for the case where the content is coming from a
+    // `matMenuContent` whose change detection tree is at the declaration position,
+    // not the insertion position. See #23175.
+    this._highlighted = isHighlighted;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  _setTriggersSubmenu(triggersSubmenu: boolean) {
+    this._triggersSubmenu = triggersSubmenu;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  _hasFocus(): boolean {
+    return this._document && this._document.activeElement === this._getHostElement();
+  }
 }

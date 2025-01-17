@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Migration} from '../update-tool/migration';
@@ -27,8 +27,11 @@ import {
   OutputNameUpgradeData,
   propertyNames,
   PropertyNameUpgradeData,
+  SymbolRemovalUpgradeData,
+  symbolRemoval,
+  cssTokens,
+  CssTokenUpgradeData,
 } from './data';
-
 
 /** Upgrade data for the Angular CDK. */
 export const cdkUpgradeData: UpgradeData = {
@@ -36,11 +39,13 @@ export const cdkUpgradeData: UpgradeData = {
   classNames,
   constructorChecks,
   cssSelectors,
+  cssTokens,
   elementSelectors,
   inputNames,
   methodCallChecks,
   outputNames,
   propertyNames,
+  symbolRemoval,
 };
 
 /**
@@ -52,11 +57,13 @@ export interface UpgradeData {
   classNames: VersionChanges<ClassNameUpgradeData>;
   constructorChecks: VersionChanges<ConstructorChecksUpgradeData>;
   cssSelectors: VersionChanges<CssSelectorUpgradeData>;
+  cssTokens: VersionChanges<CssTokenUpgradeData>;
   elementSelectors: VersionChanges<ElementSelectorUpgradeData>;
   inputNames: VersionChanges<InputNameUpgradeData>;
   methodCallChecks: VersionChanges<MethodCallUpgradeData>;
   outputNames: VersionChanges<OutputNameUpgradeData>;
   propertyNames: VersionChanges<PropertyNameUpgradeData>;
+  symbolRemoval: VersionChanges<SymbolRemovalUpgradeData>;
 }
 
 /**
@@ -64,10 +71,17 @@ export interface UpgradeData {
  * target version and upgrade data object from the migration and resolves the specified
  * data portion that is specifically tied to the target version.
  */
-export function
-getVersionUpgradeData<T extends keyof UpgradeData, U = ValueOfChanges<UpgradeData[T]>>(
-    migration: Migration<UpgradeData>, dataName: T): U[] {
+export function getVersionUpgradeData<
+  T extends keyof UpgradeData,
+  U = ValueOfChanges<UpgradeData[T]>,
+>(migration: Migration<UpgradeData>, dataName: T): U[] {
+  if (migration.targetVersion === null) {
+    return [];
+  }
+
   // Note that below we need to cast to `unknown` first TS doesn't infer the type of T correctly.
   return getChangesForTarget<U>(
-      migration.targetVersion, migration.upgradeData[dataName] as unknown as VersionChanges<U>);
+    migration.targetVersion,
+    migration.upgradeData[dataName] as unknown as VersionChanges<U>,
+  );
 }

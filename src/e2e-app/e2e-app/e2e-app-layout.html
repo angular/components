@@ -1,9 +1,0 @@
-<button (click)="showLinks = !showLinks">Toggle Navigation Links</button>
-
-<main>
-  <mat-nav-list *ngIf="showLinks">
-    <a mat-list-item *ngFor="let link of navLinks" [routerLink]="[link.path]">{{link.title}}</a>
-  </mat-nav-list>
-
-  <ng-content></ng-content>
-</main>

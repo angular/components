@@ -1,0 +1,13 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'dragged-state-layer-opacity': if($exclude-hardcoded-values, null, 0.16),
+    'focus-state-layer-opacity': if($exclude-hardcoded-values, null, 0.12),
+    'hover-state-layer-opacity': if($exclude-hardcoded-values, null, 0.08),
+    'pressed-state-layer-opacity': if($exclude-hardcoded-values, null, 0.12)
+  );
+}

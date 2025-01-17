@@ -42,7 +42,7 @@ this default `completed` behavior by setting the `completed` attribute as needed
 
 ### Stepper buttons
 There are two button directives to support navigation between different steps:
-`CdkStepperNext` and `CdkStepperPrevious`. When placed inside of a step, these will automatically
+`CdkStepperNext` and `CdkStepperPrevious`. When placed inside a step, these will automatically
 add click handlers to advance or rewind the workflow, respectively.
 
 ### Resetting a stepper
@@ -50,18 +50,19 @@ If you want to reset a stepper to its initial state, you can use the `reset` met
 resetting it will call `reset` on the underlying form control which clears the value.
 
 ### Keyboard interaction
-- <kbd>LEFT_ARROW</kbd>: Focuses the previous step header
-- <kbd>RIGHT_ARROW</kbd>: Focuses the next step header
-- <kbd>ENTER</kbd>, <kbd>SPACE</kbd>: Selects the step that the focus is currently on
-- <kbd>TAB</kbd>: Focuses the next tabbable element
-- <kbd>SHIFT</kbd>+<kbd>TAB</kbd>: Focuses the previous tabbable element
+| Keyboard shortcut      | Action                          |
+|------------------------|---------------------------------|
+| <kbd>Left Arrow</kbd>  | Focus the previous step header. |
+| <kbd>Right Arrow</kbd> | Focus the next step header.     |
+| <kbd>Enter</kbd>       | Select the focused step.        |
+| <kbd>Space</kbd>       | Select the focused step.        |
 
 ### Accessibility
-The CDK stepper is treated as a tabbed view for accessibility purposes, so it is given
-`role="tablist"` by default. The header of step that can be clicked to select the step
-is given `role="tab"`, and the content that can be expanded upon selection is given
-`role="tabpanel"`. `aria-selected` attribute of step header and `aria-expanded` attribute of
-step content is automatically set based on step selection change.
+Apart from the built-in keyboard support, the stepper doesn't apply any treatment. When implementing
+your own component, it is recommended that the stepper is treated as a tabbed view for accessibility
+purposes by giving it a `role="tablist"`. The header of step that can be clicked to select the step
+should be given `role="tab"`, and the content that can be expanded upon selection should be given
+`role="tabpanel"`. Furthermore, the step header should have an `aria-selected` attribute that
+reflects its selected state.
 
-The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
-
+You can refer to the [Angular Material stepper](https://github.com/angular/components/tree/main/src/material/stepper) as an example of an accessible implementation.

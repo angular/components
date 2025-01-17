@@ -1,4 +1,4 @@
-import {Component, Injectable, NgModule} from '@angular/core';
+import {Component, Injectable} from '@angular/core';
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
 
@@ -32,14 +32,7 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
 @Component({
   selector: 'paginator-intl-example',
   templateUrl: 'paginator-intl-example.html',
+  imports: [MatPaginatorModule],
+  providers: [{provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl}],
 })
 export class PaginatorIntlExample {}
-
-@NgModule({
-  imports: [MatPaginatorModule],
-  declarations: [PaginatorIntlExample],
-  providers: [
-    {provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl}
-  ]
-})
-export class PaginatorIntlExampleModule {}

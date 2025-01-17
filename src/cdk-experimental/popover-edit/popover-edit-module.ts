@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -13,16 +13,9 @@ import {
   CdkPopoverEditTabOut,
   CdkRowHoverContent,
   CdkEditable,
-  CdkEditOpen
+  CdkEditOpen,
 } from './table-directives';
-import {CdkEditControl,
-  CdkEditRevert,
-  CdkEditClose
-} from './lens-directives';
-import {
-  DefaultPopoverEditPositionStrategyFactory,
-  PopoverEditPositionStrategyFactory
-} from './popover-edit-position-strategy-factory';
+import {CdkEditControl, CdkEditRevert, CdkEditClose} from './lens-directives';
 
 const EXPORTED_DECLARATIONS = [
   CdkPopoverEdit,
@@ -36,14 +29,7 @@ const EXPORTED_DECLARATIONS = [
 ];
 
 @NgModule({
-  imports: [
-    OverlayModule,
-  ],
+  imports: [OverlayModule, ...EXPORTED_DECLARATIONS],
   exports: EXPORTED_DECLARATIONS,
-  declarations: EXPORTED_DECLARATIONS,
-  providers: [{
-    provide: PopoverEditPositionStrategyFactory,
-    useClass: DefaultPopoverEditPositionStrategyFactory
-  }],
 })
-export class CdkPopoverEditModule { }
+export class CdkPopoverEditModule {}

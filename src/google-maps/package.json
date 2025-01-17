@@ -15,9 +15,9 @@
   "bugs": {
     "url": "https://github.com/angular/components/issues"
   },
-  "homepage": "https://github.com/angular/components/tree/master/src/google-maps#readme",
+  "homepage": "https://github.com/angular/components/tree/main/src/google-maps#readme",
   "dependencies": {
-    "@types/googlemaps": "^3.43.1",
+    "@types/google.maps": "^3.54.10",
     "tslib": "0.0.0-TSLIB"
   },
   "peerDependencies": {
@@ -26,8 +26,11 @@
     "rxjs": "0.0.0-RXJS"
   },
   "sideEffects": false,
-  "publishConfig": {
-    "registry": "https://wombat-dressing-room.appspot.com"
-  },
-  "ng-update": {}
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json",
+    "packageGroup": [
+      "@angular/google-maps"
+    ]
+  }
 }

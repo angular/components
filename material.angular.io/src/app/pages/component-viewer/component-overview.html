@@ -1,0 +1,14 @@
+@if (componentViewer.componentDocItem | async; as docItem) {
+  <h2 class="cdk-visually-hidden" tabindex="-1">
+    Overview for {{docItem.id}}
+  </h2>
+  <doc-viewer [document]="getOverviewDocumentUrl(docItem)"
+      class="docs-component-view-text-content docs-component-overview"
+      (contentRendered)="updateTableOfContents('Overview Content', $event)">
+  </doc-viewer>
+
+  @if (showToc | async) {
+    <table-of-contents #toc container=".mat-drawer-content"/>
+  }
+}
+

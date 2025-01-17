@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
@@ -16,8 +16,10 @@ import {MAT_CALENDAR_RANGE_STRATEGY_PROVIDER} from './date-range-selection-strat
  * @docs-private
  */
 export interface MatDateRangePickerInput<D> extends MatDatepickerControl<D> {
-  comparisonStart: D|null;
-  comparisonEnd: D|null;
+  _getEndDateAccessibleName(): string | null;
+  _getStartDateAccessibleName(): string | null;
+  comparisonStart: D | null;
+  comparisonEnd: D | null;
 }
 
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
@@ -34,10 +36,13 @@ export interface MatDateRangePickerInput<D> extends MatDatepickerControl<D> {
     MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER,
     MAT_CALENDAR_RANGE_STRATEGY_PROVIDER,
     {provide: MatDatepickerBase, useExisting: MatDateRangePicker},
-  ]
+  ],
 })
-export class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRangePickerInput<D>,
-  DateRange<D>, D> {
+export class MatDateRangePicker<D> extends MatDatepickerBase<
+  MatDateRangePickerInput<D>,
+  DateRange<D>,
+  D
+> {
   protected override _forwardContentValues(instance: MatDatepickerContent<DateRange<D>, D>) {
     super._forwardContentValues(instance);
 
@@ -46,6 +51,8 @@ export class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRangePickerI
     if (input) {
       instance.comparisonStart = input.comparisonStart;
       instance.comparisonEnd = input.comparisonEnd;
+      instance.startDateAccessibleName = input._getStartDateAccessibleName();
+      instance.endDateAccessibleName = input._getEndDateAccessibleName();
     }
   }
 }

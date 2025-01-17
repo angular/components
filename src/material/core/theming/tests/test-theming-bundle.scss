@@ -7,20 +7,224 @@
 // the same themes multiple times.
 mat.$theme-ignore-duplication-warnings: true;
 
-@include mat.core();
-
-$theme: mat.define-light-theme((
-  color: (
-    primary: mat.$red-palette,
-    accent: mat.$blue-palette,
-  ),
-  density: -2,
-));
-
-// If one of these mixins is not available, the compilation will fail and the
+// If one of these mixins or function is not available, the compilation will fail and the
 // test will be reported as failing.
+
+// Theme creation functions.
+$theme: mat.m2-define-light-theme((
+    color: (
+        primary: mat.m2-define-palette(mat.$m2-red-palette),
+        accent: mat.m2-define-palette(mat.$m2-blue-palette),
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: -2,
+));
+$dark-theme: mat.m2-define-dark-theme($theme);
+$rem-typography: mat.m2-define-rem-typography-config();
+
+// All-* mixins.
 @include mat.all-component-themes($theme);
-@include mat.all-component-typographies();
 @include mat.all-component-colors($theme);
+@include mat.all-component-typographies($theme);
+@include mat.all-component-densities($theme);
+
+// Core mixins.
+@include mat.strong-focus-indicators();
+@include mat.strong-focus-indicators-theme($theme);
+
+// Component theme mixins.
 @include mat.core-theme($theme);
+@include mat.core-color($theme);
+@include mat.core-typography($theme);
+@include mat.core-density($theme);
+@include mat.option-theme($theme);
+@include mat.option-color($theme);
+@include mat.option-typography($theme);
+@include mat.option-density($theme);
+@include mat.optgroup-theme($theme);
+@include mat.optgroup-color($theme);
+@include mat.optgroup-typography($theme);
+@include mat.optgroup-density($theme);
+
+@include mat.autocomplete-theme($theme);
+@include mat.autocomplete-color($theme);
+@include mat.autocomplete-typography($theme);
+@include mat.autocomplete-density($theme);
+
+@include mat.badge-theme($theme);
+@include mat.badge-color($theme);
+@include mat.badge-typography($theme);
+@include mat.badge-density($theme);
+
+@include mat.bottom-sheet-theme($theme);
+@include mat.bottom-sheet-color($theme);
+@include mat.bottom-sheet-typography($theme);
+@include mat.bottom-sheet-density($theme);
+
 @include mat.button-theme($theme);
+@include mat.button-color($theme);
+@include mat.button-typography($theme);
+@include mat.button-density($theme);
+@include mat.icon-button-theme($theme);
+@include mat.icon-button-color($theme);
+@include mat.icon-button-typography($theme);
+@include mat.icon-button-density($theme);
+@include mat.fab-theme($theme);
+@include mat.fab-color($theme);
+@include mat.fab-typography($theme);
+@include mat.fab-density($theme);
+
+@include mat.button-toggle-theme($theme);
+@include mat.button-toggle-color($theme);
+@include mat.button-toggle-typography($theme);
+@include mat.button-toggle-density($theme);
+
+@include mat.card-theme($theme);
+@include mat.card-color($theme);
+@include mat.card-typography($theme);
+@include mat.card-density($theme);
+
+@include mat.checkbox-theme($theme);
+@include mat.checkbox-color($theme);
+@include mat.checkbox-typography($theme);
+@include mat.checkbox-density($theme);
+
+@include mat.chips-theme($theme);
+@include mat.chips-color($theme);
+@include mat.chips-typography($theme);
+@include mat.chips-density($theme);
+
+@include mat.datepicker-theme($theme);
+@include mat.datepicker-color($theme);
+@include mat.datepicker-typography($theme);
+@include mat.datepicker-density($theme);
+
+@include mat.dialog-theme($theme);
+@include mat.dialog-color($theme);
+@include mat.dialog-typography($theme);
+@include mat.dialog-density($theme);
+
+@include mat.divider-theme($theme);
+@include mat.divider-color($theme);
+@include mat.divider-typography($theme);
+@include mat.divider-density($theme);
+
+@include mat.expansion-theme($theme);
+@include mat.expansion-color($theme);
+@include mat.expansion-typography($theme);
+@include mat.expansion-density($theme);
+
+@include mat.form-field-theme($theme);
+@include mat.form-field-color($theme);
+@include mat.form-field-typography($theme);
+@include mat.form-field-density($theme);
+
+@include mat.grid-list-theme($theme);
+@include mat.grid-list-color($theme);
+@include mat.grid-list-typography($theme);
+@include mat.grid-list-density($theme);
+
+@include mat.icon-theme($theme);
+@include mat.icon-color($theme);
+@include mat.icon-typography($theme);
+@include mat.icon-density($theme);
+
+@include mat.input-theme($theme);
+@include mat.input-color($theme);
+@include mat.input-typography($theme);
+@include mat.input-density($theme);
+
+@include mat.list-theme($theme);
+@include mat.list-color($theme);
+@include mat.list-typography($theme);
+@include mat.list-density($theme);
+
+@include mat.menu-theme($theme);
+@include mat.menu-color($theme);
+@include mat.menu-typography($theme);
+@include mat.menu-density($theme);
+
+@include mat.paginator-theme($theme);
+@include mat.paginator-color($theme);
+@include mat.paginator-typography($theme);
+@include mat.paginator-density($theme);
+
+@include mat.progress-bar-theme($theme);
+@include mat.progress-bar-color($theme);
+@include mat.progress-bar-typography($theme);
+@include mat.progress-bar-density($theme);
+
+@include mat.progress-spinner-theme($theme);
+@include mat.progress-spinner-color($theme);
+@include mat.progress-spinner-typography($theme);
+@include mat.progress-spinner-density($theme);
+
+@include mat.radio-theme($theme);
+@include mat.radio-color($theme);
+@include mat.radio-typography($theme);
+@include mat.radio-density($theme);
+
+@include mat.select-theme($theme);
+@include mat.select-color($theme);
+@include mat.select-typography($theme);
+@include mat.select-density($theme);
+
+@include mat.sidenav-theme($theme);
+@include mat.sidenav-color($theme);
+@include mat.sidenav-typography($theme);
+@include mat.sidenav-density($theme);
+
+@include mat.slide-toggle-theme($theme);
+@include mat.slide-toggle-color($theme);
+@include mat.slide-toggle-typography($theme);
+@include mat.slide-toggle-density($theme);
+
+@include mat.slider-theme($theme);
+@include mat.slider-color($theme);
+@include mat.slider-typography($theme);
+@include mat.slider-density($theme);
+
+@include mat.snack-bar-theme($theme);
+@include mat.snack-bar-color($theme);
+@include mat.snack-bar-typography($theme);
+@include mat.snack-bar-density($theme);
+
+@include mat.sort-theme($theme);
+@include mat.sort-color($theme);
+@include mat.sort-typography($theme);
+@include mat.sort-density($theme);
+
+@include mat.stepper-theme($theme);
+@include mat.stepper-color($theme);
+@include mat.stepper-typography($theme);
+@include mat.stepper-density($theme);
+
+@include mat.table-theme($theme);
+@include mat.table-color($theme);
+@include mat.table-typography($theme);
+@include mat.table-density($theme);
+
+@include mat.tabs-theme($theme);
+@include mat.tabs-color($theme);
+@include mat.tabs-typography($theme);
+@include mat.tabs-density($theme);
+
+@include mat.toolbar-theme($theme);
+@include mat.toolbar-color($theme);
+@include mat.toolbar-typography($theme);
+@include mat.toolbar-density($theme);
+
+@include mat.tooltip-theme($theme);
+@include mat.tooltip-color($theme);
+@include mat.tooltip-typography($theme);
+@include mat.tooltip-density($theme);
+
+@include mat.tree-theme($theme);
+@include mat.tree-color($theme);
+@include mat.tree-typography($theme);
+@include mat.tree-density($theme);
+
+@include mat.timepicker-theme($theme);
+@include mat.timepicker-color($theme);
+@include mat.timepicker-typography($theme);
+@include mat.timepicker-density($theme);

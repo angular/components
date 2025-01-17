@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Injectable, SkipSelf, Optional} from '@angular/core';
@@ -12,8 +12,6 @@ import {Subject} from 'rxjs';
 /**
  * To modify the labels and text displayed, create a new instance of MatSortHeaderIntl and
  * include it in a custom provider.
- * @deprecated No longer being used. To be removed.
- * @breaking-change 13.0.0
  */
 @Injectable({providedIn: 'root'})
 export class MatSortHeaderIntl {
@@ -34,6 +32,5 @@ export const MAT_SORT_HEADER_INTL_PROVIDER = {
   // If there is already an MatSortHeaderIntl available, use that. Otherwise, provide a new one.
   provide: MatSortHeaderIntl,
   deps: [[new Optional(), new SkipSelf(), MatSortHeaderIntl]],
-  useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY
+  useFactory: MAT_SORT_HEADER_INTL_PROVIDER_FACTORY,
 };
-

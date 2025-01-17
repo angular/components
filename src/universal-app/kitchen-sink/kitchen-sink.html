@@ -1,9 +1,18 @@
 <h2>Autocomplete</h2>
-<mat-autocomplete>
-  <mat-option>Grace Hopper</mat-option>
-  <mat-option>Anita Borg</mat-option>
-  <mat-option>Ada Lovelace</mat-option>
+
+<mat-form-field>
+  <mat-label>Computer scientists</mat-label>
+  <input matInput [matAutocomplete]="autocomplete" />
+</mat-form-field>
+
+<mat-autocomplete #autocomplete>
+  <mat-option value="Grace Hopper">Grace Hopper</mat-option>
+  <mat-option value="Anita Borg">Anita Borg</mat-option>
+  <mat-option value="Ada Lovelace">Ada Lovelace</mat-option>
 </mat-autocomplete>
+
+<h2>Bottom sheet</h2>
+<button mat-raised-button (click)="openBottomSheet()">Open bottom sheet</button>
 
 <h2>Button</h2>
 
@@ -40,9 +49,7 @@
 
 <h3>Card</h3>
 
-<mat-card>
-  Simple card
-</mat-card>
+<mat-card> Simple card </mat-card>
 
 <mat-card>
   <mat-card-title>Complicated card</mat-card-title>
@@ -55,45 +62,56 @@
     <button mat-button>LIKE</button>
     <button mat-button>SHARE</button>
   </mat-card-actions>
-  <mat-card-footer>
-    Hurray
-  </mat-card-footer>
+  <mat-card-footer> Hurray </mat-card-footer>
 </mat-card>
 
 <h2>Checkbox</h2>
 
-<mat-checkbox>With a label</mat-checkbox>
-<mat-checkbox></mat-checkbox>Without a label
+<mat-checkbox></mat-checkbox>
+<mat-checkbox checked></mat-checkbox>
+<mat-checkbox checked disabled></mat-checkbox>
+<mat-checkbox indeterminate></mat-checkbox>
+<mat-checkbox>with a label</mat-checkbox>
 
 <h2>Chips</h2>
 
-<mat-chip-list>
-  <mat-chip>Barbeque Cheddar</mat-chip>
-  <mat-chip>Sea Salt and Vinegar</mat-chip>
-  <mat-chip>Manta Ray</mat-chip>
-</mat-chip-list>
+<mat-chip-set>
+  <mat-basic-chip>Basic Chip 1</mat-basic-chip>
+  <mat-basic-chip>Basic Chip 2</mat-basic-chip>
+  <mat-basic-chip>Basic Chip 3</mat-basic-chip>
+</mat-chip-set>
 
-<mat-chip-list>
-  <mat-basic-chip>Tomato</mat-basic-chip>
-  <mat-basic-chip>Scallion</mat-basic-chip>
-  <mat-basic-chip>Cilantro</mat-basic-chip>
-</mat-chip-list>
+<mat-chip-listbox multiple>
+  <mat-chip-option>Extra Small</mat-chip-option>
+  <mat-chip-option selected>Small</mat-chip-option>
+  <mat-chip-option selected disabled>Medium</mat-chip-option>
+  <mat-chip-option>Large</mat-chip-option>
+</mat-chip-listbox>
 
 <h2>Datepicker</h2>
 
 <mat-form-field>
-  <input type="text" matInput [matDatepicker]="birthday" placeholder="Birthday">
+  <input type="text" matInput [matDatepicker]="birthday" placeholder="Birthday" />
   <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
   <mat-datepicker #birthday></mat-datepicker>
 </mat-form-field>
 
-<h2>Disabled datepicker</h2>
+<h3>Disabled datepicker</h3>
 
 <mat-form-field>
-  <input type="text" disabled matInput [matDatepicker]="departureDate" placeholder="Departure date">
+  <input
+    type="text"
+    disabled
+    matInput
+    [matDatepicker]="departureDate"
+    placeholder="Departure date"
+  />
   <mat-datepicker-toggle matSuffix [for]="departureDate"></mat-datepicker-toggle>
   <mat-datepicker #departureDate></mat-datepicker>
 </mat-form-field>
+
+<h2>Dialog</h2>
+<button mat-raised-button (click)="openDialog()">Open dialog</button>
 
 <h2>Grid list</h2>
 
@@ -109,25 +127,59 @@
 
 <h2>Input</h2>
 
-<mat-form-field floatLabel="never">
-  <input matInput placeholder="name" type="text">
+<mat-form-field>
+  <mat-label>Label</mat-label>
+  <input matInput value="Initial value" />
 </mat-form-field>
-
+<mat-form-field>
+  <input matInput placeholder="Placeholder" />
+</mat-form-field>
+<mat-form-field floatLabel="always">
+  <mat-label>Always floating</mat-label>
+  <input matInput />
+</mat-form-field>
 <mat-form-field appearance="outline">
-  <mat-label>Surname</mat-label>
-  <input matInput value="Baggins">
+  <mat-label>Label</mat-label>
+  <input matInput />
+</mat-form-field>
+<mat-form-field>
+  <mat-label>Label</mat-label>
+  <textarea matInput></textarea>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Label</mat-label>
+  <textarea matInput></textarea>
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Label</mat-label>
+  <input matInput value="Initial" />
 </mat-form-field>
 
-<mat-form-field>
-  <textarea matInput placeholder="description"></textarea>
+<h3>Prefix and Suffix</h3>
+<mat-form-field appearance="outline">
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput />
 </mat-form-field>
-
 <mat-form-field>
-  <input type="number" matInput placeholder="amount">
-  <span matPrefix>$&nbsp;</span>
-  <span matSuffix>.00</span>
-  <mat-hint>Dolla dolla bills</mat-hint>
-  <mat-error>Recession</mat-error>
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput />
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <span matPrefix>+123&nbsp;</span>
+  <mat-label>Phone Number</mat-label>
+  <input matInput />
+</mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-icon matPrefix>calendar_today</mat-icon>
+  <mat-label>Name</mat-label>
+  <input matInput />
+</mat-form-field>
+<mat-form-field>
+  <mat-icon matPrefix>calendar_today</mat-icon>
+  <mat-label>Name</mat-label>
+  <input matInput />
 </mat-form-field>
 
 <h2>List</h2>
@@ -150,6 +202,13 @@
   <button mat-list-item>Third action</button>
 </mat-action-list>
 
+<mat-selection-list>
+  <h3 mat-subheader>Groceries</h3>
+  <mat-list-option value="apples">Apples</mat-list-option>
+  <mat-list-option value="bananas">Bananas</mat-list-option>
+  <mat-list-option value="oranges">Oranges</mat-list-option>
+</mat-selection-list>
+
 <h2>Menu</h2>
 
 <button mat-button [matMenuTriggerFor]="menu">Open</button>
@@ -161,15 +220,17 @@
 
 <h2>Progress bar</h2>
 
-<mat-progress-bar value="25"></mat-progress-bar>
-<mat-progress-bar mode="buffer" value="25" [bufferValue]="60"></mat-progress-bar>
+<mat-progress-bar [value]="25"></mat-progress-bar>
+<mat-progress-bar mode="buffer" [value]="25" [bufferValue]="60"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 <mat-progress-bar mode="query"></mat-progress-bar>
 
 <h2>Progress spinner</h2>
 
-<mat-progress-spinner mode="indeterminate" [diameter]="32"></mat-progress-spinner>
-<mat-progress-spinner mode="determinate" [value]="60"></mat-progress-spinner>
+<mat-progress-spinner [value]="25"></mat-progress-spinner>
+<mat-spinner></mat-spinner>
+<mat-progress-spinner mode="indeterminate" [diameter]="37"></mat-progress-spinner>
+<mat-spinner [strokeWidth]="4"></mat-spinner>
 
 <h2>Radio buttons</h2>
 
@@ -197,46 +258,112 @@
 
 <h2>Sidenav</h2>
 <mat-sidenav-container>
-  <mat-sidenav opened>
-    On the side
-    <button>Button for testing focus trapping</button>
+  <!--
+    Place the end sidenav first to test the behavior where we manually change the DOM order.
+  -->
+  <mat-sidenav #endSidenav position="end" mode="push">
+    End sidenav
+    <button (click)="endSidenav.toggle()">Close</button>
+  </mat-sidenav>
+
+  <!--
+    Only attempt to capture focus when automated, otherwise it makes the page jump around.
+   -->
+  <mat-sidenav #startSidenav opened [autoFocus]="isAutomated ? 'first-tabbable' : false">
+    Start sidenav
+    <button (click)="startSidenav.toggle()">Button for testing focus trapping</button>
   </mat-sidenav>
   Main content
-  <button>Click me</button>
+  <button (click)="startSidenav.toggle()">Toggle start</button>
+  <button (click)="endSidenav.toggle()">Toggle end</button>
 </mat-sidenav-container>
 
 <h2>Slide-toggle</h2>
-<mat-slide-toggle>With a label</mat-slide-toggle>
-<mat-slide-toggle></mat-slide-toggle>Without a label
+
+<mat-slide-toggle></mat-slide-toggle>
+<mat-slide-toggle checked></mat-slide-toggle>
+<mat-slide-toggle checked disabled></mat-slide-toggle>
+<mat-slide-toggle>with a label</mat-slide-toggle>
 
 <h2>Slider</h2>
-<mat-slider></mat-slider>
-<mat-slider value="50"></mat-slider>
-<mat-slider tickInterval="1" min="1" max="10" value="5" thumbLabel></mat-slider>
-<mat-slider disabled></mat-slider>
+
+<mat-slider>
+  <input matSliderThumb value="60" />
+</mat-slider>
+<mat-slider>
+  <input matSliderThumb value="50" disabled />
+</mat-slider>
+<mat-slider min="200" max="500" step="100" discrete showTickMarks>
+  <input value="300" matSliderStartThumb />
+  <input value="400" matSliderEndThumb />
+</mat-slider>
+
+<h2>Snack bar</h2>
+<button mat-raised-button (click)="openSnackbar()">Open snackbar</button>
 
 <h2>Tabs</h2>
-<mat-tab-group>
+
+<!--
+  Note that we set the `selectedIndex` here to hit the code path
+  where we might need to do some measurements.
+-->
+<mat-tab-group [selectedIndex]="1">
   <mat-tab label="Overview">
-    The overview
+    <h3>The overview</h3>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque assumenda doloribus, rerum
+      temporibus fugit aliquid adipisci aliquam eaque sint voluptas dolore cumque voluptatibus quam
+      quod. Quasi adipisci officia similique in?
+    </p>
+    <p>
+      Deleniti neque placeat magnam, voluptatibus eligendi illo consectetur dolore minima dolorem
+      nemo suscipit dolorum accusantium? Numquam officia culpa itaque qui repudiandae nulla,
+      laboriosam nihil molestiae ad aut perferendis alias amet.
+    </p>
+    <p>
+      Officia esse temporibus consequatur ipsa! Veritatis alias facere amet reiciendis sint impedit
+      atque iste doloremque dolor? Ullam, aspernatur? Alias, fuga! At dolorum odio molestiae
+      laudantium nihil alias inventore veritatis voluptatum.
+    </p>
+    <button mat-raised-button color="primary">See the overview</button>
   </mat-tab>
   <mat-tab>
-    <ng-template mat-tab-label>
-      API docs
-    </ng-template>
-    The API docs
+    <ng-template mat-tab-label>API docs</ng-template>
+    <h3>The API docs</h3>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum facere quasi natus rerum
+      quae, nisi, quis, voluptate assumenda necessitatibus labore illo. Illum ipsum consequatur,
+      excepturi aspernatur odio veritatis sint perferendis!
+    </p>
+    <p>
+      Dicta ex laborum repudiandae nesciunt. Ea asperiores quo totam velit! Aliquid cum laudantium
+      officiis molestias, excepturi odio, autem magni dignissimos perspiciatis, amet qui! Dolorem
+      molestiae similique necessitatibus cupiditate ipsa aspernatur?
+    </p>
+    <button mat-raised-button color="accent">See the API docs</button>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>Examples</ng-template>
+    <h3>The examples</h3>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi animi saepe, optio sequi
+      accusantium, eos perspiciatis reprehenderit, nobis exercitationem sunt ducimus molestiae
+      laborum inventore itaque incidunt. Neque dolorum adipisci quidem.
+    </p>
+    <button mat-raised-button color="warn">See the examples</button>
   </mat-tab>
 </mat-tab-group>
 
-<nav mat-tab-nav-bar>
- <a mat-tab-link href="https://google.com">Google</a>
- <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  <a mat-tab-link href="https://google.com">Google</a>
+  <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
 </nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 
 <h2>Paginator</h2>
 
-<mat-paginator [length]="100"
-              [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator [length]="100" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
 </mat-paginator>
 
 <h2>Toolbar</h2>
@@ -249,21 +376,25 @@
 <h2>Sort</h2>
 
 <table matSort>
-  <tr>
-    <th mat-sort-header="name">Name</th>
-    <th mat-sort-header="calories">Calories</th>
-    <th mat-sort-header="fat">Fat</th>
-    <th mat-sort-header="carbs">Carbs</th>
-    <th mat-sort-header="protein">Protein</th>
-  </tr>
+  <thead>
+    <tr>
+      <th mat-sort-header="name">Name</th>
+      <th mat-sort-header="calories">Calories</th>
+      <th mat-sort-header="fat">Fat</th>
+      <th mat-sort-header="carbs">Carbs</th>
+      <th mat-sort-header="protein">Protein</th>
+    </tr>
+  </thead>
 
-  <tr>
-    <td>Cupcake</td>
-    <td>305</td>
-    <td>4</td>
-    <td>67</td>
-    <td>4</td>
-  </tr>
+  <tbody>
+    <tr>
+      <td>Cupcake</td>
+      <td>305</td>
+      <td>4</td>
+      <td>67</td>
+      <td>4</td>
+    </tr>
+  </tbody>
 </table>
 
 <h2>Tooltip</h2>
@@ -285,35 +416,83 @@
 
 <h2>CDK Table</h2>
 
-<cdk-table #table [dataSource]="tableDataSource">
-  <ng-container cdkColumnDef="userId">
-    <cdk-header-cell *cdkHeaderCellDef>ID</cdk-header-cell>
-    <cdk-cell *cdkCellDef="let row">{{row.userId}}</cdk-cell>
+<cdk-table class="test-cdk-table" [dataSource]="tableDataSource">
+  <ng-container cdkColumnDef="position">
+    <cdk-header-cell *cdkHeaderCellDef>No.</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let element">{{element.position}}</cdk-cell>
   </ng-container>
 
-  <cdk-header-row *cdkHeaderRowDef="tableColumns" ></cdk-header-row>
-  <cdk-row *cdkRowDef="let row; columns: tableColumns;"></cdk-row>
+  <ng-container cdkColumnDef="name">
+    <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let element">{{element.name}}</cdk-cell>
+  </ng-container>
+
+  <ng-container cdkColumnDef="weight">
+    <cdk-header-cell *cdkHeaderCellDef>Weight</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let element">{{element.weight}}</cdk-cell>
+  </ng-container>
+
+  <ng-container cdkColumnDef="symbol">
+    <cdk-header-cell *cdkHeaderCellDef>Symbol</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let element">{{element.symbol}}</cdk-cell>
+  </ng-container>
+
+  <cdk-header-row *cdkHeaderRowDef="tableColumns" />
+  <cdk-row *cdkRowDef="let row; columns: tableColumns;" />
 </cdk-table>
 
 <h2>Material Table</h2>
 
 <mat-table [dataSource]="tableDataSource">
-  <ng-container matColumnDef="userId">
-    <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.userId}} </mat-cell>
+  <ng-container matColumnDef="position">
+    <mat-header-cell *matHeaderCellDef>No.</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.position}}</mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: tableColumns;"></mat-row>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.name}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="weight">
+    <mat-header-cell *matHeaderCellDef>Weight</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.weight}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="symbol">
+    <mat-header-cell *matHeaderCellDef>Symbol</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.symbol}}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="tableColumns" />
+  <mat-row *matRowDef="let row; columns: tableColumns;" />
 </mat-table>
 
 <h2>Native table with sticky header and footer</h2>
 
 <table mat-table [dataSource]="tableDataSource">
-  <ng-container matColumnDef="userId">
-    <th mat-header-cell *matHeaderCellDef>ID</th>
-    <td mat-cell *matCellDef="let row">{{row.userId}}</td>
-    <td mat-footer-cell *matFooterCellDef>ID</td>
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef>No.</th>
+    <td mat-cell *matCellDef="let element">{{element.position}}</td>
+    <th mat-footer-cell *matFooterCellDef>No.</th>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    <th mat-footer-cell *matFooterCellDef>Name</th>
+  </ng-container>
+
+  <ng-container matColumnDef="weight">
+    <th mat-header-cell *matHeaderCellDef>Weight</th>
+    <td mat-cell *matCellDef="let element">{{element.weight}}</td>
+    <th mat-footer-cell *matFooterCellDef>Weight</th>
+  </ng-container>
+
+  <ng-container matColumnDef="symbol">
+    <th mat-header-cell *matHeaderCellDef>Symbol</th>
+    <td mat-cell *matCellDef="let element">{{element.symbol}}</td>
+    <th mat-footer-cell *matFooterCellDef>Symbol</th>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></tr>
@@ -321,6 +500,15 @@
   <tr mat-footer-row *matFooterRowDef="tableColumns; sticky: true"></tr>
 </table>
 
+<h2>CDK Listbox</h2>
+<div class="test-cdk-listbox">
+  <label>Favorite color</label>
+  <ul cdkListbox>
+    <li cdkOption="red">Red</li>
+    <li cdkOption="green">Green</li>
+    <li cdkOption="blue">Blue</li>
+  </ul>
+</div>
 
 <h2>Selection list</h2>
 <mat-selection-list>
@@ -359,15 +547,13 @@
 
 <h2>Focus trap</h2>
 
-<div cdkTrapFocus cdkTrapFocusAutoCapture>
+<div cdkTrapFocus [cdkTrapFocusAutoCapture]="isAutomated">
   <button>Oh no, I'm trapped!</button>
 </div>
 
 <h2>Badge</h2>
 
-<button mat-raised-button matBadge="99">
-  Clicky thing
-</button>
+<button mat-raised-button matBadge="99">Clicky thing</button>
 
 <h2>Drag and Drop</h2>
 <button cdkDrag>Drag me around</button>
@@ -385,34 +571,53 @@
   </div>
 </cdk-virtual-scroll-viewport>
 
+<cdk-virtual-scroll-viewport autosize class="universal-viewport">
+  <div
+    *cdkVirtualFor="let size of virtualScrollData; let i = index"
+    [style.height.px]="i % 2 == 0 ? 50 : 25"
+  >
+    Item #{{i}}
+  </div>
+</cdk-virtual-scroll-viewport>
+
 <h2>YouTube player</h2>
 <youtube-player videoId="dQw4w9WgXcQ"></youtube-player>
 
 <h2>Google Map</h2>
-<google-map height="400px" width="750px">
+<!-- position: relative prevents the "Map failed to load" element from leaving the container -->
+<google-map height="400px" width="750px" mapId="123" style="position: relative">
   <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
+  <map-advanced-marker [position]="{lat: 12, lng: 12}"></map-advanced-marker>
   <map-info-window>Hello</map-info-window>
-  <map-polyline [options]="{
+  <map-polyline
+    [options]="{
     path: [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}],
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-polyline>
-  <map-polygon [options]="{
+  }"
+  ></map-polyline>
+  <map-polygon
+    [options]="{
     paths: [{lat: 20, lng: 21}, {lat: 22, lng: 23}, {lat: 24, lng: 25}],
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-polygon>
-  <map-rectangle [options]="{
+  }"
+  ></map-polygon>
+  <map-rectangle
+    [options]="{
     bounds: {east: 30, north: 15, west: 10, south: -5},
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-rectangle>
-  <map-circle [options]="{
+  }"
+  ></map-rectangle>
+  <map-circle
+    [options]="{
     center: {lat: 19, lng: 20},
     radius: 500000,
     strokeColor: 'grey',
     strokeOpacity: 0.8
-  }"></map-circle>
+  }"
+  ></map-circle>
   <map-ground-overlay
     url="https://angular.io/assets/images/logos/angular/angular.svg"
     [bounds]="{
@@ -420,21 +625,33 @@
       north: 15,
       west: 10,
       south: -5
-    }"></map-ground-overlay>
-    <map-kml-layer
-      url="https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml"></map-kml-layer>
-    <map-traffic-layer></map-traffic-layer>
-    <map-transit-layer></map-transit-layer>
-    <map-bicycling-layer></map-bicycling-layer>
-    <map-heatmap-layer [data]="[
+    }"
+  ></map-ground-overlay>
+  <map-kml-layer
+    url="https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml"
+  ></map-kml-layer>
+  <map-traffic-layer></map-traffic-layer>
+  <map-transit-layer></map-transit-layer>
+  <map-bicycling-layer></map-bicycling-layer>
+  <map-heatmap-layer
+    [data]="[
       {lat: 37.782, lng: -122.447},
       {lat: 37.782, lng: -122.445},
       {lat: 37.782, lng: -122.443}
-    ]"></map-heatmap-layer>
+    ]"
+  ></map-heatmap-layer>
 
-    <map-marker-clusterer imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m">
-      <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
-      <map-marker [position]="{lat: 12, lng: 24}"></map-marker>
-      <map-marker [position]="{lat: 12, lng: 12}"></map-marker>
-    </map-marker-clusterer>
+  <deprecated-map-marker-clusterer
+    imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m"
+  >
+    <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
+    <map-marker [position]="{lat: 12, lng: 24}"></map-marker>
+    <map-marker [position]="{lat: 12, lng: 12}"></map-marker>
+  </deprecated-map-marker-clusterer>
 </google-map>
+
+<h2>Popover edit</h2>
+<cdk-popover-edit-cdk-table-example></cdk-popover-edit-cdk-table-example>
+
+<!-- Element used to determine when rendering is done. -->
+<div class="render-marker"></div>

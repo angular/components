@@ -1,3 +1,4 @@
+load("@npm//@bazel/esbuild:index.bzl", "esbuild_config")
 load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
@@ -8,9 +9,21 @@ exports_files([
     "index-tmpl.ts",
 ])
 
+esbuild_config(
+    name = "esbuild_config",
+    config_file = "esbuild.config.mjs",
+    deps = [
+        "@npm//@angular/build",
+        "@npm//@angular/compiler-cli",
+        "@npm//@babel/core",
+    ],
+)
+
 ts_library(
     name = "check-size",
     srcs = ["check-size.ts"],
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     deps = [
         "@npm//@bazel/runfiles",
         "@npm//@types/node",

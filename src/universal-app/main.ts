@@ -1,3 +1,14 @@
-export * from './kitchen-sink/kitchen-sink';
-export * from './kitchen-sink-mdc/kitchen-sink-mdc';
-export * from './kitchen-sink-root';
+import {bootstrapApplication, provideClientHydration} from '@angular/platform-browser';
+import {provideAnimations} from '@angular/platform-browser/animations';
+import {AUTOMATED_KITCHEN_SINK, KitchenSink} from './kitchen-sink/kitchen-sink';
+
+bootstrapApplication(KitchenSink, {
+  providers: [
+    provideAnimations(),
+    provideClientHydration(),
+    {
+      provide: AUTOMATED_KITCHEN_SINK,
+      useValue: false,
+    },
+  ],
+});

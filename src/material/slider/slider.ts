@@ -3,102 +3,57 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
+import {Platform} from '@angular/cdk/platform';
 import {
-  BooleanInput,
-  coerceBooleanProperty,
-  coerceNumberProperty,
-  NumberInput
-} from '@angular/cdk/coercion';
-import {
-  DOWN_ARROW,
-  END,
-  HOME,
-  LEFT_ARROW,
-  PAGE_DOWN,
-  PAGE_UP,
-  RIGHT_ARROW,
-  UP_ARROW,
-  hasModifierKey,
-} from '@angular/cdk/keycodes';
-import {
-  Attribute,
+  AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChild,
+  ContentChildren,
   ElementRef,
-  EventEmitter,
-  forwardRef,
-  Inject,
+  inject,
   Input,
-  OnDestroy,
-  Optional,
-  Output,
-  ViewChild,
-  ViewEncapsulation,
   NgZone,
-  AfterViewInit,
+  numberAttribute,
+  OnDestroy,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  CanColor,
-  CanDisable,
-  HasTabIndex,
-  mixinColor,
-  mixinDisabled,
-  mixinTabIndex,
+  _StructuralStylesLoader,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+  ThemePalette,
 } from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
+import {
+  _MatThumb,
+  _MatTickMark,
+  _MatSlider,
+  _MatSliderRangeThumb,
+  _MatSliderThumb,
+  _MatSliderVisualThumb,
+  MAT_SLIDER_RANGE_THUMB,
+  MAT_SLIDER_THUMB,
+  MAT_SLIDER,
+  MAT_SLIDER_VISUAL_THUMB,
+} from './slider-interface';
+import {MatSliderVisualThumb} from './slider-thumb';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
-const activeEventOptions = normalizePassiveListenerOptions({passive: false});
-
-/**
- * Visually, a 30px separation between tick marks looks best. This is very subjective but it is
- * the default separation we chose.
- */
-const MIN_AUTO_TICK_SEPARATION = 30;
-
-/** The thumb gap size for a disabled slider. */
-const DISABLED_THUMB_GAP = 7;
-
-/** The thumb gap size for a non-active slider at its minimum value. */
-const MIN_VALUE_NONACTIVE_THUMB_GAP = 7;
-
-/** The thumb gap size for an active slider at its minimum value. */
-const MIN_VALUE_ACTIVE_THUMB_GAP = 10;
-
-/**
- * Provider Expression that allows mat-slider to register as a ControlValueAccessor.
- * This allows it to support [(ngModel)] and [formControl].
- * @docs-private
- */
-export const MAT_SLIDER_VALUE_ACCESSOR: any = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MatSlider),
-  multi: true
-};
-
-/** A simple change event emitted by the MatSlider component. */
-export class MatSliderChange {
-  /** The MatSlider that changed. */
-  source: MatSlider;
-
-  /** The new value of the source slider. */
-  value: number | null;
-}
-
-// Boilerplate for applying mixins to MatSlider.
-/** @docs-private */
-const _MatSliderBase = mixinTabIndex(mixinColor(mixinDisabled(class {
-  constructor(public _elementRef: ElementRef) {}
-}), 'accent'));
+// TODO(wagnermaciel): maybe handle the following edge case:
+// 1. start dragging discrete slider
+// 2. tab to disable checkbox
+// 3. without ending drag, disable the slider
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -106,873 +61,917 @@ const _MatSliderBase = mixinTabIndex(mixinColor(mixinDisabled(class {
  */
 @Component({
   selector: 'mat-slider',
-  exportAs: 'matSlider',
-  providers: [MAT_SLIDER_VALUE_ACCESSOR],
-  host: {
-    '(focus)': '_onFocus()',
-    '(blur)': '_onBlur()',
-    '(keydown)': '_onKeydown($event)',
-    '(keyup)': '_onKeyup()',
-    '(mouseenter)': '_onMouseenter()',
-
-    // On Safari starting to slide temporarily triggers text selection mode which
-    // show the wrong cursor. We prevent it by stopping the `selectstart` event.
-    '(selectstart)': '$event.preventDefault()',
-    'class': 'mat-slider mat-focus-indicator',
-    'role': 'slider',
-    '[tabIndex]': 'tabIndex',
-    '[attr.aria-disabled]': 'disabled',
-    '[attr.aria-valuemax]': 'max',
-    '[attr.aria-valuemin]': 'min',
-    '[attr.aria-valuenow]': 'value',
-
-    // NVDA and Jaws appear to announce the `aria-valuenow` by calculating its percentage based
-    // on its value between `aria-valuemin` and `aria-valuemax`. Due to how decimals are handled,
-    // it can cause the slider to read out a very long value like 0.20000068 if the current value
-    // is 0.2 with a min of 0 and max of 1. We work around the issue by setting `aria-valuetext`
-    // to the same value that we set on the slider's thumb which will be truncated.
-    '[attr.aria-valuetext]': 'valueText == null ? displayValue : valueText',
-    '[attr.aria-orientation]': 'vertical ? "vertical" : "horizontal"',
-    '[class.mat-slider-disabled]': 'disabled',
-    '[class.mat-slider-has-ticks]': 'tickInterval',
-    '[class.mat-slider-horizontal]': '!vertical',
-    '[class.mat-slider-axis-inverted]': '_shouldInvertAxis()',
-    // Class binding which is only used by the test harness as there is no other
-    // way for the harness to detect if mouse coordinates need to be inverted.
-    '[class.mat-slider-invert-mouse-coords]': '_shouldInvertMouseCoords()',
-    '[class.mat-slider-sliding]': '_isSliding',
-    '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
-    '[class.mat-slider-vertical]': 'vertical',
-    '[class.mat-slider-min-value]': '_isMinValue()',
-    '[class.mat-slider-hide-last-tick]':
-        'disabled || _isMinValue() && _getThumbGap() && _shouldInvertAxis()',
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
-  },
   templateUrl: 'slider.html',
-  styleUrls: ['slider.css'],
-  inputs: ['disabled', 'color', 'tabIndex'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrl: 'slider.css',
+  host: {
+    'class': 'mat-mdc-slider mdc-slider',
+    '[class]': '"mat-" + (color || "primary")',
+    '[class.mdc-slider--range]': '_isRange',
+    '[class.mdc-slider--disabled]': 'disabled',
+    '[class.mdc-slider--discrete]': 'discrete',
+    '[class.mdc-slider--tick-marks]': 'showTickMarks',
+    '[class._mat-animation-noopable]': '_noopAnimations',
+  },
+  exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
+  imports: [MatSliderVisualThumb],
 })
-export class MatSlider extends _MatSliderBase
-    implements ControlValueAccessor, OnDestroy, CanDisable, CanColor, AfterViewInit, HasTabIndex {
-  /** Whether the slider is inverted. */
-  @Input()
-  get invert(): boolean { return this._invert; }
-  set invert(value: boolean) {
-    this._invert = coerceBooleanProperty(value);
-  }
-  private _invert = false;
+export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
+  readonly _ngZone = inject(NgZone);
+  readonly _cdr = inject(ChangeDetectorRef);
+  readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly _dir = inject(Directionality, {optional: true});
+  readonly _globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
+    optional: true,
+  });
 
-  /** The maximum value that the slider can have. */
-  @Input()
-  get max(): number { return this._max; }
-  set max(v: number) {
-    this._max = coerceNumberProperty(v, this._max);
-    this._percent = this._calculatePercentage(this._value);
+  /** The active portion of the slider track. */
+  @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
-    // Since this also modifies the percentage, we need to let the change detection know.
-    this._changeDetectorRef.markForCheck();
+  /** The slider thumb(s). */
+  @ViewChildren(MAT_SLIDER_VISUAL_THUMB) _thumbs: QueryList<_MatSliderVisualThumb>;
+
+  /** The sliders hidden range input(s). */
+  @ContentChild(MAT_SLIDER_THUMB) _input: _MatSliderThumb;
+
+  /** The sliders hidden range input(s). */
+  @ContentChildren(MAT_SLIDER_RANGE_THUMB, {descendants: false})
+  _inputs: QueryList<_MatSliderRangeThumb>;
+
+  /** Whether the slider is disabled. */
+  @Input({transform: booleanAttribute})
+  get disabled(): boolean {
+    return this._disabled;
   }
-  private _max: number = 100;
+  set disabled(v: boolean) {
+    this._disabled = v;
+    const endInput = this._getInput(_MatThumb.END);
+    const startInput = this._getInput(_MatThumb.START);
+
+    if (endInput) {
+      endInput.disabled = this._disabled;
+    }
+    if (startInput) {
+      startInput.disabled = this._disabled;
+    }
+  }
+  private _disabled: boolean = false;
+
+  /** Whether the slider displays a numeric value label upon pressing the thumb. */
+  @Input({transform: booleanAttribute})
+  get discrete(): boolean {
+    return this._discrete;
+  }
+  set discrete(v: boolean) {
+    this._discrete = v;
+    this._updateValueIndicatorUIs();
+  }
+  private _discrete: boolean = false;
+
+  /** Whether the slider displays tick marks along the slider track. */
+  @Input({transform: booleanAttribute})
+  showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
-  @Input()
-  get min(): number { return this._min; }
+  @Input({transform: numberAttribute})
+  get min(): number {
+    return this._min;
+  }
   set min(v: number) {
-    this._min = coerceNumberProperty(v, this._min);
-    this._percent = this._calculatePercentage(this._value);
-
-    // Since this also modifies the percentage, we need to let the change detection know.
-    this._changeDetectorRef.markForCheck();
+    const min = isNaN(v) ? this._min : v;
+    if (this._min !== min) {
+      this._updateMin(min);
+    }
   }
   private _min: number = 0;
 
-  /** The values at which the thumb will snap. */
+  /**
+   * Theme color of the slider. This API is supported in M2 themes only, it
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/slider/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
   @Input()
-  get step(): number { return this._step; }
-  set step(v: number) {
-    this._step = coerceNumberProperty(v, this._step);
+  color: ThemePalette;
 
-    if (this._step % 1 !== 0) {
-      this._roundToDecimal = this._step.toString().split('.').pop()!.length;
+  /** Whether ripples are disabled in the slider. */
+  @Input({transform: booleanAttribute})
+  disableRipple: boolean = false;
+
+  private _updateMin(min: number): void {
+    const prevMin = this._min;
+    this._min = min;
+    this._isRange ? this._updateMinRange({old: prevMin, new: min}) : this._updateMinNonRange(min);
+    this._onMinMaxOrStepChange();
+  }
+
+  private _updateMinRange(min: {old: number; new: number}): void {
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
+
+    const oldEndValue = endInput.value;
+    const oldStartValue = startInput.value;
+
+    startInput.min = min.new;
+    endInput.min = Math.max(min.new, startInput.value);
+    startInput.max = Math.min(endInput.max, endInput.value);
+
+    startInput._updateWidthInactive();
+    endInput._updateWidthInactive();
+
+    min.new < min.old
+      ? this._onTranslateXChangeBySideEffect(endInput, startInput)
+      : this._onTranslateXChangeBySideEffect(startInput, endInput);
+
+    if (oldEndValue !== endInput.value) {
+      this._onValueChange(endInput);
     }
 
-    // Since this could modify the label, we need to notify the change detection.
-    this._changeDetectorRef.markForCheck();
+    if (oldStartValue !== startInput.value) {
+      this._onValueChange(startInput);
+    }
+  }
+
+  private _updateMinNonRange(min: number): void {
+    const input = this._getInput(_MatThumb.END);
+    if (input) {
+      const oldValue = input.value;
+
+      input.min = min;
+      input._updateThumbUIByValue();
+      this._updateTrackUI(input);
+
+      if (oldValue !== input.value) {
+        this._onValueChange(input);
+      }
+    }
+  }
+
+  /** The maximum value that the slider can have. */
+  @Input({transform: numberAttribute})
+  get max(): number {
+    return this._max;
+  }
+  set max(v: number) {
+    const max = isNaN(v) ? this._max : v;
+    if (this._max !== max) {
+      this._updateMax(max);
+    }
+  }
+  private _max: number = 100;
+
+  private _updateMax(max: number): void {
+    const prevMax = this._max;
+    this._max = max;
+    this._isRange ? this._updateMaxRange({old: prevMax, new: max}) : this._updateMaxNonRange(max);
+    this._onMinMaxOrStepChange();
+  }
+
+  private _updateMaxRange(max: {old: number; new: number}): void {
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
+
+    const oldEndValue = endInput.value;
+    const oldStartValue = startInput.value;
+
+    endInput.max = max.new;
+    startInput.max = Math.min(max.new, endInput.value);
+    endInput.min = startInput.value;
+
+    endInput._updateWidthInactive();
+    startInput._updateWidthInactive();
+
+    max.new > max.old
+      ? this._onTranslateXChangeBySideEffect(startInput, endInput)
+      : this._onTranslateXChangeBySideEffect(endInput, startInput);
+
+    if (oldEndValue !== endInput.value) {
+      this._onValueChange(endInput);
+    }
+
+    if (oldStartValue !== startInput.value) {
+      this._onValueChange(startInput);
+    }
+  }
+
+  private _updateMaxNonRange(max: number): void {
+    const input = this._getInput(_MatThumb.END);
+    if (input) {
+      const oldValue = input.value;
+
+      input.max = max;
+      input._updateThumbUIByValue();
+      this._updateTrackUI(input);
+
+      if (oldValue !== input.value) {
+        this._onValueChange(input);
+      }
+    }
+  }
+
+  /** The values at which the thumb will snap. */
+  @Input({transform: numberAttribute})
+  get step(): number {
+    return this._step;
+  }
+  set step(v: number) {
+    const step = isNaN(v) ? this._step : v;
+    if (this._step !== step) {
+      this._updateStep(step);
+    }
   }
   private _step: number = 1;
 
-  /** Whether or not to show the thumb label. */
-  @Input()
-  get thumbLabel(): boolean { return this._thumbLabel; }
-  set thumbLabel(value: boolean) { this._thumbLabel = coerceBooleanProperty(value); }
-  private _thumbLabel: boolean = false;
+  private _updateStep(step: number): void {
+    this._step = step;
+    this._isRange ? this._updateStepRange() : this._updateStepNonRange();
+    this._onMinMaxOrStepChange();
+  }
 
-  /**
-   * How often to show ticks. Relative to the step so that a tick always appears on a step.
-   * Ex: Tick interval of 4 with a step of 3 will draw a tick every 4 steps (every 12 values).
-   */
-  @Input()
-  get tickInterval() { return this._tickInterval; }
-  set tickInterval(value: 'auto' | number) {
-    if (value === 'auto') {
-      this._tickInterval = 'auto';
-    } else if (typeof value === 'number' || typeof value === 'string') {
-      this._tickInterval = coerceNumberProperty(value, this._tickInterval as number);
-    } else {
-      this._tickInterval = 0;
+  private _updateStepRange(): void {
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
+
+    const oldEndValue = endInput.value;
+    const oldStartValue = startInput.value;
+
+    const prevStartValue = startInput.value;
+
+    endInput.min = this._min;
+    startInput.max = this._max;
+
+    endInput.step = this._step;
+    startInput.step = this._step;
+
+    if (this._platform.SAFARI) {
+      endInput.value = endInput.value;
+      startInput.value = startInput.value;
+    }
+
+    endInput.min = Math.max(this._min, startInput.value);
+    startInput.max = Math.min(this._max, endInput.value);
+
+    startInput._updateWidthInactive();
+    endInput._updateWidthInactive();
+
+    endInput.value < prevStartValue
+      ? this._onTranslateXChangeBySideEffect(startInput, endInput)
+      : this._onTranslateXChangeBySideEffect(endInput, startInput);
+
+    if (oldEndValue !== endInput.value) {
+      this._onValueChange(endInput);
+    }
+
+    if (oldStartValue !== startInput.value) {
+      this._onValueChange(startInput);
     }
   }
-  private _tickInterval: 'auto' | number = 0;
 
-  /** Value of the slider. */
-  @Input()
-  get value(): number {
-    // If the value needs to be read and it is still uninitialized, initialize it to the min.
-    if (this._value === null) {
-      this.value = this._min;
-    }
-    return this._value as number;
-  }
-  set value(v: number) {
-    if (v !== this._value) {
-      let value = coerceNumberProperty(v, 0);
+  private _updateStepNonRange(): void {
+    const input = this._getInput(_MatThumb.END);
+    if (input) {
+      const oldValue = input.value;
 
-      // While incrementing by a decimal we can end up with values like 33.300000000000004.
-      // Truncate it to ensure that it matches the label and to make it easier to work with.
-      if (this._roundToDecimal && value !== this.min && value !== this.max) {
-        value = parseFloat(value.toFixed(this._roundToDecimal));
+      input.step = this._step;
+      if (this._platform.SAFARI) {
+        input.value = input.value;
       }
 
-      this._value = value;
-      this._percent = this._calculatePercentage(this._value);
+      input._updateThumbUIByValue();
 
-      // Since this also modifies the percentage, we need to let the change detection know.
-      this._changeDetectorRef.markForCheck();
+      if (oldValue !== input.value) {
+        this._onValueChange(input);
+      }
     }
   }
-  private _value: number | null = null;
 
   /**
    * Function that will be used to format the value before it is displayed
    * in the thumb label. Can be used to format very large number in order
    * for them to fit into the slider thumb.
    */
-  @Input() displayWith: (value: number) => string | number;
+  @Input() displayWith: (value: number) => string = (value: number) => `${value}`;
 
-  /** Text corresponding to the slider's value. Used primarily for improved accessibility. */
-  @Input() valueText: string;
+  /** Used to keep track of & render the active & inactive tick marks on the slider track. */
+  _tickMarks: _MatTickMark[];
 
-  /** Whether the slider is vertical. */
-  @Input()
-  get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) {
-    this._vertical = coerceBooleanProperty(value);
-  }
-  private _vertical = false;
+  /** Whether animations have been disabled. */
+  _noopAnimations: boolean;
 
-  /** Event emitted when the slider value has changed. */
-  @Output() readonly change: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
+  /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
+  private _dirChangeSubscription: Subscription;
 
-  /** Event emitted when the slider thumb moves. */
-  @Output() readonly input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
+  /** Observer used to monitor size changes in the slider. */
+  private _resizeObserver: ResizeObserver | null;
+
+  // Stored dimensions to avoid calling getBoundingClientRect redundantly.
+
+  _cachedWidth: number;
+  _cachedLeft: number;
+
+  _rippleRadius: number = 24;
+
+  // The value indicator tooltip text for the visual slider thumb(s).
+
+  /** @docs-private */
+  protected startValueIndicatorText: string = '';
+
+  /** @docs-private */
+  protected endValueIndicatorText: string = '';
+
+  // Used to control the translateX of the visual slider thumb(s).
+
+  _endThumbTransform: string;
+  _startThumbTransform: string;
+
+  _isRange: boolean = false;
+
+  /** Whether the slider is rtl. */
+  _isRtl: boolean = false;
+
+  private _hasViewInitialized: boolean = false;
 
   /**
-   * Emits when the raw value of the slider changes. This is here primarily
-   * to facilitate the two-way binding for the `value` input.
-   * @docs-private
+   * The width of the tick mark track.
+   * The tick mark track width is different from full track width
    */
-  @Output() readonly valueChange: EventEmitter<number | null> = new EventEmitter<number | null>();
+  _tickMarkTrackWidth: number = 0;
 
-  /** The value to be used for display purposes. */
-  get displayValue(): string | number {
-    if (this.displayWith) {
-      // Value is never null but since setters and getters cannot have
-      // different types, the value getter is also typed to return null.
-      return this.displayWith(this.value!);
+  _hasAnimation: boolean = false;
+
+  private _resizeTimer: null | ReturnType<typeof setTimeout> = null;
+
+  private _platform = inject(Platform);
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    this._noopAnimations = animationMode === 'NoopAnimations';
+
+    if (this._dir) {
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._isRtl = this._dir.value === 'rtl';
+    }
+  }
+
+  /** The radius of the native slider's knob. AFAIK there is no way to avoid hardcoding this. */
+  _knobRadius: number = 8;
+
+  _inputPadding: number;
+
+  ngAfterViewInit(): void {
+    if (this._platform.isBrowser) {
+      this._updateDimensions();
     }
 
-    // Note that this could be improved further by rounding something like 0.999 to 1 or
-    // 0.899 to 0.9, however it is very performance sensitive, because it gets called on
-    // every change detection cycle.
-    if (this._roundToDecimal && this.value && this.value % 1 !== 0) {
-      return this.value.toFixed(this._roundToDecimal);
+    const eInput = this._getInput(_MatThumb.END);
+    const sInput = this._getInput(_MatThumb.START);
+    this._isRange = !!eInput && !!sInput;
+    this._cdr.detectChanges();
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      _validateInputs(
+        this._isRange,
+        this._getInput(_MatThumb.END),
+        this._getInput(_MatThumb.START),
+      );
     }
 
-    return this.value || 0;
+    const thumb = this._getThumb(_MatThumb.END);
+    this._rippleRadius = thumb._ripple.radius;
+    this._inputPadding = this._rippleRadius - this._knobRadius;
+
+    this._isRange
+      ? this._initUIRange(eInput as _MatSliderRangeThumb, sInput as _MatSliderRangeThumb)
+      : this._initUINonRange(eInput!);
+
+    this._updateTrackUI(eInput!);
+    this._updateTickMarkUI();
+    this._updateTickMarkTrackUI();
+
+    this._observeHostResize();
+    this._cdr.detectChanges();
   }
 
-  /** set focus to the host element */
-  focus(options?: FocusOptions) {
-    this._focusHostElement(options);
+  private _initUINonRange(eInput: _MatSliderThumb): void {
+    eInput.initProps();
+    eInput.initUI();
+
+    this._updateValueIndicatorUI(eInput);
+
+    this._hasViewInitialized = true;
+    eInput._updateThumbUIByValue();
   }
 
-  /** blur the host element */
-  blur() {
-    this._blurHostElement();
+  private _initUIRange(eInput: _MatSliderRangeThumb, sInput: _MatSliderRangeThumb): void {
+    eInput.initProps();
+    eInput.initUI();
+
+    sInput.initProps();
+    sInput.initUI();
+
+    eInput._updateMinMax();
+    sInput._updateMinMax();
+
+    eInput._updateStaticStyles();
+    sInput._updateStaticStyles();
+
+    this._updateValueIndicatorUIs();
+
+    this._hasViewInitialized = true;
+
+    eInput._updateThumbUIByValue();
+    sInput._updateThumbUIByValue();
   }
 
-  /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-  onTouched: () => any = () => {};
-
-  /** The percentage of the slider that coincides with the value. */
-  get percent(): number { return this._clamp(this._percent); }
-  private _percent: number = 0;
-
-  /**
-   * Whether or not the thumb is sliding and what the user is using to slide it with.
-   * Used to determine if there should be a transition for the thumb and fill track.
-   */
-  _isSliding: 'keyboard' | 'pointer' | null = null;
-
-  /**
-   * Whether or not the slider is active (clicked or sliding).
-   * Used to shrink and grow the thumb as according to the Material Design spec.
-   */
-  _isActive: boolean = false;
-
-  /**
-   * Whether the axis of the slider is inverted.
-   * (i.e. whether moving the thumb in the positive x or y direction decreases the slider's value).
-   */
-  _shouldInvertAxis() {
-    // Standard non-inverted mode for a vertical slider should be dragging the thumb from bottom to
-    // top. However from a y-axis standpoint this is inverted.
-    return this.vertical ? !this.invert : this.invert;
+  ngOnDestroy(): void {
+    this._dirChangeSubscription.unsubscribe();
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
   }
 
-
-  /** Whether the slider is at its minimum value. */
-  _isMinValue() {
-    return this.percent === 0;
+  /** Handles updating the slider ui after a dir change. */
+  private _onDirChange(): void {
+    this._isRtl = this._dir?.value === 'rtl';
+    this._isRange ? this._onDirChangeRange() : this._onDirChangeNonRange();
+    this._updateTickMarkUI();
   }
 
-  /**
-   * The amount of space to leave between the slider thumb and the track fill & track background
-   * elements.
-   */
-  _getThumbGap() {
-    if (this.disabled) {
-      return DISABLED_THUMB_GAP;
-    }
-    if (this._isMinValue() && !this.thumbLabel) {
-      return this._isActive ? MIN_VALUE_ACTIVE_THUMB_GAP : MIN_VALUE_NONACTIVE_THUMB_GAP;
-    }
-    return 0;
+  private _onDirChangeRange(): void {
+    const endInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+    const startInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
+
+    endInput._setIsLeftThumb();
+    startInput._setIsLeftThumb();
+
+    endInput.translateX = endInput._calcTranslateXByValue();
+    startInput.translateX = startInput._calcTranslateXByValue();
+
+    endInput._updateStaticStyles();
+    startInput._updateStaticStyles();
+
+    endInput._updateWidthInactive();
+    startInput._updateWidthInactive();
+
+    endInput._updateThumbUIByValue();
+    startInput._updateThumbUIByValue();
   }
 
-  /** CSS styles for the track background element. */
-  _getTrackBackgroundStyles(): { [key: string]: string } {
-    const axis = this.vertical ? 'Y' : 'X';
-    const scale = this.vertical ? `1, ${1 - this.percent}, 1` : `${1 - this.percent}, 1, 1`;
-    const sign = this._shouldInvertMouseCoords() ? '-' : '';
-
-    return {
-      // scale3d avoids some rendering issues in Chrome. See #12071.
-      transform: `translate${axis}(${sign}${this._getThumbGap()}px) scale3d(${scale})`
-    };
+  private _onDirChangeNonRange(): void {
+    const input = this._getInput(_MatThumb.END)!;
+    input._updateThumbUIByValue();
   }
 
-  /** CSS styles for the track fill element. */
-  _getTrackFillStyles(): { [key: string]: string } {
-    const percent = this.percent;
-    const axis = this.vertical ? 'Y' : 'X';
-    const scale = this.vertical ? `1, ${percent}, 1` : `${percent}, 1, 1`;
-    const sign = this._shouldInvertMouseCoords() ? '' : '-';
-
-    return {
-      // scale3d avoids some rendering issues in Chrome. See #12071.
-      transform: `translate${axis}(${sign}${this._getThumbGap()}px) scale3d(${scale})`,
-      // iOS Safari has a bug where it won't re-render elements which start of as `scale(0)` until
-      // something forces a style recalculation on it. Since we'll end up with `scale(0)` when
-      // the value of the slider is 0, we can easily get into this situation. We force a
-      // recalculation by changing the element's `display` when it goes from 0 to any other value.
-      display: percent === 0 ? 'none' : ''
-    };
-  }
-
-  /** CSS styles for the ticks container element. */
-  _getTicksContainerStyles(): { [key: string]: string } {
-    let axis = this.vertical ? 'Y' : 'X';
-    // For a horizontal slider in RTL languages we push the ticks container off the left edge
-    // instead of the right edge to avoid causing a horizontal scrollbar to appear.
-    let sign = !this.vertical && this._getDirection() == 'rtl' ? '' : '-';
-    let offset = this._tickIntervalPercent / 2 * 100;
-    return {
-      'transform': `translate${axis}(${sign}${offset}%)`
-    };
-  }
-
-  /** CSS styles for the ticks element. */
-  _getTicksStyles(): { [key: string]: string } {
-    let tickSize = this._tickIntervalPercent * 100;
-    let backgroundSize = this.vertical ? `2px ${tickSize}%` : `${tickSize}% 2px`;
-    let axis = this.vertical ? 'Y' : 'X';
-    // Depending on the direction we pushed the ticks container, push the ticks the opposite
-    // direction to re-center them but clip off the end edge. In RTL languages we need to flip the
-    // ticks 180 degrees so we're really cutting off the end edge abd not the start.
-    let sign = !this.vertical && this._getDirection() == 'rtl' ? '-' : '';
-    let rotate = !this.vertical && this._getDirection() == 'rtl' ? ' rotate(180deg)' : '';
-    let styles: { [key: string]: string } = {
-      'backgroundSize': backgroundSize,
-      // Without translateZ ticks sometimes jitter as the slider moves on Chrome & Firefox.
-      'transform': `translateZ(0) translate${axis}(${sign}${tickSize / 2}%)${rotate}`
-    };
-
-    if (this._isMinValue() && this._getThumbGap()) {
-      const shouldInvertAxis = this._shouldInvertAxis();
-      let side: string;
-
-      if (this.vertical) {
-        side = shouldInvertAxis ? 'Bottom' : 'Top';
-      } else {
-        side = shouldInvertAxis ? 'Right' : 'Left';
-      }
-
-      styles[`padding${side}`] = `${this._getThumbGap()}px`;
+  /** Starts observing and updating the slider if the host changes its size. */
+  private _observeHostResize() {
+    if (typeof ResizeObserver === 'undefined' || !ResizeObserver) {
+      return;
     }
 
-    return styles;
-  }
-
-  _getThumbContainerStyles(): { [key: string]: string } {
-    const shouldInvertAxis = this._shouldInvertAxis();
-    let axis = this.vertical ? 'Y' : 'X';
-    // For a horizontal slider in RTL languages we push the thumb container off the left edge
-    // instead of the right edge to avoid causing a horizontal scrollbar to appear.
-    let invertOffset =
-        (this._getDirection() == 'rtl' && !this.vertical) ? !shouldInvertAxis : shouldInvertAxis;
-    let offset = (invertOffset ? this.percent : 1 - this.percent) * 100;
-    return {
-      'transform': `translate${axis}(-${offset}%)`
-    };
-  }
-
-  /** The size of a tick interval as a percentage of the size of the track. */
-  private _tickIntervalPercent: number = 0;
-
-  /** The dimensions of the slider. */
-  private _sliderDimensions: ClientRect | null = null;
-
-  private _controlValueAccessorChangeFn: (value: any) => void = () => {};
-
-  /** Decimal places to round to, based on the step amount. */
-  private _roundToDecimal: number;
-
-  /** Subscription to the Directionality change EventEmitter. */
-  private _dirChangeSubscription = Subscription.EMPTY;
-
-  /** The value of the slider when the slide start event fires. */
-  private _valueOnSlideStart: number | null;
-
-  /** Reference to the inner slider wrapper element. */
-  @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
-
-  /**
-   * Whether mouse events should be converted to a slider position by calculating their distance
-   * from the right or bottom edge of the slider as opposed to the top or left.
-   */
-  _shouldInvertMouseCoords() {
-    const shouldInvertAxis = this._shouldInvertAxis();
-    return (this._getDirection() == 'rtl' && !this.vertical) ? !shouldInvertAxis : shouldInvertAxis;
-  }
-
-  /** The language direction for this slider element. */
-  private _getDirection() {
-    return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
-  }
-
-  /** Keeps track of the last pointer event that was captured by the slider. */
-  private _lastPointerEvent: MouseEvent | TouchEvent | null;
-
-  /** Used to subscribe to global move and end events */
-  protected _document: Document;
-
-  /**
-   * Identifier used to attribute a touch event to a particular slider.
-   * Will be undefined if one of the following conditions is true:
-   * - The user isn't dragging using a touch device.
-   * - The browser doesn't support `Touch.identifier`.
-   * - Dragging hasn't started yet.
-   */
-  private _touchId: number | undefined;
-
-  constructor(elementRef: ElementRef,
-              private _focusMonitor: FocusMonitor,
-              private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality,
-              @Attribute('tabindex') tabIndex: string,
-              private _ngZone: NgZone,
-              @Inject(DOCUMENT) _document: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
-    super(elementRef);
-    this._document = _document;
-    this.tabIndex = parseInt(tabIndex) || 0;
-
-    _ngZone.runOutsideAngular(() => {
-      const element = elementRef.nativeElement;
-      element.addEventListener('mousedown', this._pointerDown, activeEventOptions);
-      element.addEventListener('touchstart', this._pointerDown, activeEventOptions);
+    this._ngZone.runOutsideAngular(() => {
+      this._resizeObserver = new ResizeObserver(() => {
+        if (this._isActive()) {
+          return;
+        }
+        if (this._resizeTimer) {
+          clearTimeout(this._resizeTimer);
+        }
+        this._onResize();
+      });
+      this._resizeObserver.observe(this._elementRef.nativeElement);
     });
   }
 
-  ngAfterViewInit() {
-    this._focusMonitor
-        .monitor(this._elementRef, true)
-        .subscribe((origin: FocusOrigin) => {
-          this._isActive = !!origin && origin !== 'keyboard';
-          this._changeDetectorRef.detectChanges();
-        });
-    if (this._dir) {
-      this._dirChangeSubscription = this._dir.change.subscribe(() => {
-        this._changeDetectorRef.markForCheck();
+  /** Whether any of the thumbs are currently active. */
+  private _isActive(): boolean {
+    return this._getThumb(_MatThumb.START)._isActive || this._getThumb(_MatThumb.END)._isActive;
+  }
+
+  private _getValue(thumbPosition: _MatThumb = _MatThumb.END): number {
+    const input = this._getInput(thumbPosition);
+    if (!input) {
+      return this.min;
+    }
+    return input.value;
+  }
+
+  private _skipUpdate(): boolean {
+    return !!(
+      this._getInput(_MatThumb.START)?._skipUIUpdate || this._getInput(_MatThumb.END)?._skipUIUpdate
+    );
+  }
+
+  /** Stores the slider dimensions. */
+  _updateDimensions(): void {
+    this._cachedWidth = this._elementRef.nativeElement.offsetWidth;
+    this._cachedLeft = this._elementRef.nativeElement.getBoundingClientRect().left;
+  }
+
+  /** Sets the styles for the active portion of the track. */
+  _setTrackActiveStyles(styles: {
+    left: string;
+    right: string;
+    transform: string;
+    transformOrigin: string;
+  }): void {
+    const trackStyle = this._trackActive.nativeElement.style;
+
+    trackStyle.left = styles.left;
+    trackStyle.right = styles.right;
+    trackStyle.transformOrigin = styles.transformOrigin;
+    trackStyle.transform = styles.transform;
+  }
+
+  /** Returns the translateX positioning for a tick mark based on it's index. */
+  _calcTickMarkTransform(index: number): string {
+    // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
+    const offset = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
+    const translateX = this._isRtl ? this._cachedWidth - 6 - offset : offset;
+    return `translateX(${translateX}px`;
+  }
+
+  // Handlers for updating the slider ui.
+
+  _onTranslateXChange(source: _MatSliderThumb): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
+    this._updateThumbUI(source);
+    this._updateTrackUI(source);
+    this._updateOverlappingThumbUI(source as _MatSliderRangeThumb);
+  }
+
+  _onTranslateXChangeBySideEffect(
+    input1: _MatSliderRangeThumb,
+    input2: _MatSliderRangeThumb,
+  ): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
+    input1._updateThumbUIByValue();
+    input2._updateThumbUIByValue();
+  }
+
+  _onValueChange(source: _MatSliderThumb): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
+    this._updateValueIndicatorUI(source);
+    this._updateTickMarkUI();
+    this._cdr.detectChanges();
+  }
+
+  _onMinMaxOrStepChange(): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
+    this._updateTickMarkUI();
+    this._updateTickMarkTrackUI();
+    this._cdr.markForCheck();
+  }
+
+  _onResize(): void {
+    if (!this._hasViewInitialized) {
+      return;
+    }
+
+    this._updateDimensions();
+    if (this._isRange) {
+      const eInput = this._getInput(_MatThumb.END) as _MatSliderRangeThumb;
+      const sInput = this._getInput(_MatThumb.START) as _MatSliderRangeThumb;
+
+      eInput._updateThumbUIByValue();
+      sInput._updateThumbUIByValue();
+
+      eInput._updateStaticStyles();
+      sInput._updateStaticStyles();
+
+      eInput._updateMinMax();
+      sInput._updateMinMax();
+
+      eInput._updateWidthInactive();
+      sInput._updateWidthInactive();
+    } else {
+      const eInput = this._getInput(_MatThumb.END);
+      if (eInput) {
+        eInput._updateThumbUIByValue();
+      }
+    }
+
+    this._updateTickMarkUI();
+    this._updateTickMarkTrackUI();
+    this._cdr.detectChanges();
+  }
+
+  /** Whether or not the slider thumbs overlap. */
+  private _thumbsOverlap: boolean = false;
+
+  /** Returns true if the slider knobs are overlapping one another. */
+  private _areThumbsOverlapping(): boolean {
+    const startInput = this._getInput(_MatThumb.START);
+    const endInput = this._getInput(_MatThumb.END);
+    if (!startInput || !endInput) {
+      return false;
+    }
+    return endInput.translateX - startInput.translateX < 20;
+  }
+
+  /**
+   * Updates the class names of overlapping slider thumbs so
+   * that the current active thumb is styled to be on "top".
+   */
+  private _updateOverlappingThumbClassNames(source: _MatSliderRangeThumb): void {
+    const sibling = source.getSibling()!;
+    const sourceThumb = this._getThumb(source.thumbPosition);
+    const siblingThumb = this._getThumb(sibling.thumbPosition);
+    siblingThumb._hostElement.classList.remove('mdc-slider__thumb--top');
+    sourceThumb._hostElement.classList.toggle('mdc-slider__thumb--top', this._thumbsOverlap);
+  }
+
+  /** Updates the UI of slider thumbs when they begin or stop overlapping. */
+  private _updateOverlappingThumbUI(source: _MatSliderRangeThumb): void {
+    if (!this._isRange || this._skipUpdate()) {
+      return;
+    }
+    if (this._thumbsOverlap !== this._areThumbsOverlapping()) {
+      this._thumbsOverlap = !this._thumbsOverlap;
+      this._updateOverlappingThumbClassNames(source);
+    }
+  }
+
+  // _MatThumb styles update conditions
+  //
+  // 1. TranslateX, resize, or dir change
+  //    - Reason: The thumb styles need to be updated according to the new translateX.
+  // 2. Min, max, or step
+  //    - Reason: The value may have silently changed.
+
+  /** Updates the translateX of the given thumb. */
+  _updateThumbUI(source: _MatSliderThumb) {
+    if (this._skipUpdate()) {
+      return;
+    }
+    const thumb = this._getThumb(
+      source.thumbPosition === _MatThumb.END ? _MatThumb.END : _MatThumb.START,
+    )!;
+    thumb._hostElement.style.transform = `translateX(${source.translateX}px)`;
+  }
+
+  // Value indicator text update conditions
+  //
+  // 1. Value
+  //    - Reason: The value displayed needs to be updated.
+  // 2. Min, max, or step
+  //    - Reason: The value may have silently changed.
+
+  /** Updates the value indicator tooltip ui for the given thumb. */
+  _updateValueIndicatorUI(source: _MatSliderThumb): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
+    const valuetext = this.displayWith(source.value);
+
+    this._hasViewInitialized
+      ? source._valuetext.set(valuetext)
+      : source._hostElement.setAttribute('aria-valuetext', valuetext);
+
+    if (this.discrete) {
+      source.thumbPosition === _MatThumb.START
+        ? (this.startValueIndicatorText = valuetext)
+        : (this.endValueIndicatorText = valuetext);
+
+      const visualThumb = this._getThumb(source.thumbPosition);
+      valuetext.length < 3
+        ? visualThumb._hostElement.classList.add('mdc-slider__thumb--short-value')
+        : visualThumb._hostElement.classList.remove('mdc-slider__thumb--short-value');
+    }
+  }
+
+  /** Updates all value indicator UIs in the slider. */
+  private _updateValueIndicatorUIs(): void {
+    const eInput = this._getInput(_MatThumb.END);
+    const sInput = this._getInput(_MatThumb.START);
+
+    if (eInput) {
+      this._updateValueIndicatorUI(eInput);
+    }
+    if (sInput) {
+      this._updateValueIndicatorUI(sInput);
+    }
+  }
+
+  // Update Tick Mark Track Width
+  //
+  // 1. Min, max, or step
+  //    - Reason: The maximum reachable value may have changed.
+  //    - Side note: The maximum reachable value is different from the maximum value set by the
+  //      user. For example, a slider with [min: 5, max: 100, step: 10] would have a maximum
+  //      reachable value of 95.
+  // 2. Resize
+  //    - Reason: The position for the maximum reachable value needs to be recalculated.
+
+  /** Updates the width of the tick mark track. */
+  private _updateTickMarkTrackUI(): void {
+    if (!this.showTickMarks || this._skipUpdate()) {
+      return;
+    }
+
+    const step = this._step && this._step > 0 ? this._step : 1;
+    const maxValue = Math.floor(this.max / step) * step;
+    const percentage = (maxValue - this.min) / (this.max - this.min);
+    this._tickMarkTrackWidth = (this._cachedWidth - 6) * percentage;
+  }
+
+  // Track active update conditions
+  //
+  // 1. TranslateX
+  //    - Reason: The track active should line up with the new thumb position.
+  // 2. Min or max
+  //    - Reason #1: The 'active' percentage needs to be recalculated.
+  //    - Reason #2: The value may have silently changed.
+  // 3. Step
+  //    - Reason: The value may have silently changed causing the thumb(s) to shift.
+  // 4. Dir change
+  //    - Reason: The track active will need to be updated according to the new thumb position(s).
+  // 5. Resize
+  //    - Reason: The total width the 'active' tracks translateX is based on has changed.
+
+  /** Updates the scale on the active portion of the track. */
+  _updateTrackUI(source: _MatSliderThumb): void {
+    if (this._skipUpdate()) {
+      return;
+    }
+
+    this._isRange
+      ? this._updateTrackUIRange(source as _MatSliderRangeThumb)
+      : this._updateTrackUINonRange(source as _MatSliderThumb);
+  }
+
+  private _updateTrackUIRange(source: _MatSliderRangeThumb): void {
+    const sibling = source.getSibling();
+    if (!sibling || !this._cachedWidth) {
+      return;
+    }
+
+    const activePercentage = Math.abs(sibling.translateX - source.translateX) / this._cachedWidth;
+
+    if (source._isLeftThumb && this._cachedWidth) {
+      this._setTrackActiveStyles({
+        left: 'auto',
+        right: `${this._cachedWidth - sibling.translateX}px`,
+        transformOrigin: 'right',
+        transform: `scaleX(${activePercentage})`,
+      });
+    } else {
+      this._setTrackActiveStyles({
+        left: `${sibling.translateX}px`,
+        right: 'auto',
+        transformOrigin: 'left',
+        transform: `scaleX(${activePercentage})`,
       });
     }
   }
 
-  ngOnDestroy() {
-    const element = this._elementRef.nativeElement;
-    element.removeEventListener('mousedown', this._pointerDown, activeEventOptions);
-    element.removeEventListener('touchstart', this._pointerDown, activeEventOptions);
-    this._lastPointerEvent = null;
-    this._removeGlobalEvents();
-    this._focusMonitor.stopMonitoring(this._elementRef);
-    this._dirChangeSubscription.unsubscribe();
+  private _updateTrackUINonRange(source: _MatSliderThumb): void {
+    this._isRtl
+      ? this._setTrackActiveStyles({
+          left: 'auto',
+          right: '0px',
+          transformOrigin: 'right',
+          transform: `scaleX(${1 - source.fillPercentage})`,
+        })
+      : this._setTrackActiveStyles({
+          left: '0px',
+          right: 'auto',
+          transformOrigin: 'left',
+          transform: `scaleX(${source.fillPercentage})`,
+        });
   }
 
-  _onMouseenter() {
-    if (this.disabled) {
+  // Tick mark update conditions
+  //
+  // 1. Value
+  //    - Reason: a tick mark which was once active might now be inactive or vice versa.
+  // 2. Min, max, or step
+  //    - Reason #1: the number of tick marks may have changed.
+  //    - Reason #2: The value may have silently changed.
+
+  /** Updates the dots along the slider track. */
+  _updateTickMarkUI(): void {
+    if (
+      !this.showTickMarks ||
+      this.step === undefined ||
+      this.min === undefined ||
+      this.max === undefined
+    ) {
       return;
     }
-
-    // We save the dimensions of the slider here so we can use them to update the spacing of the
-    // ticks and determine where on the slider click and slide events happen.
-    this._sliderDimensions = this._getSliderDimensions();
-    this._updateTickIntervalPercent();
+    const step = this.step > 0 ? this.step : 1;
+    this._isRange ? this._updateTickMarkUIRange(step) : this._updateTickMarkUINonRange(step);
   }
 
-  _onFocus() {
-    // We save the dimensions of the slider here so we can use them to update the spacing of the
-    // ticks and determine where on the slider click and slide events happen.
-    this._sliderDimensions = this._getSliderDimensions();
-    this._updateTickIntervalPercent();
+  private _updateTickMarkUINonRange(step: number): void {
+    const value = this._getValue();
+    let numActive = Math.max(Math.round((value - this.min) / step), 0) + 1;
+    let numInactive = Math.max(Math.round((this.max - value) / step), 0) - 1;
+    this._isRtl ? numActive++ : numInactive++;
+
+    this._tickMarks = Array(numActive)
+      .fill(_MatTickMark.ACTIVE)
+      .concat(Array(numInactive).fill(_MatTickMark.INACTIVE));
   }
 
-  _onBlur() {
-    this.onTouched();
+  private _updateTickMarkUIRange(step: number): void {
+    const endValue = this._getValue();
+    const startValue = this._getValue(_MatThumb.START);
+
+    const numInactiveBeforeStartThumb = Math.max(Math.round((startValue - this.min) / step), 0);
+    const numActive = Math.max(Math.round((endValue - startValue) / step) + 1, 0);
+    const numInactiveAfterEndThumb = Math.max(Math.round((this.max - endValue) / step), 0);
+    this._tickMarks = Array(numInactiveBeforeStartThumb)
+      .fill(_MatTickMark.INACTIVE)
+      .concat(
+        Array(numActive).fill(_MatTickMark.ACTIVE),
+        Array(numInactiveAfterEndThumb).fill(_MatTickMark.INACTIVE),
+      );
   }
 
-  _onKeydown(event: KeyboardEvent) {
-    if (this.disabled || hasModifierKey(event) ||
-        (this._isSliding && this._isSliding !== 'keyboard')) {
-      return;
+  /** Gets the slider thumb input of the given thumb position. */
+  _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined {
+    if (thumbPosition === _MatThumb.END && this._input) {
+      return this._input;
     }
-
-    const oldValue = this.value;
-
-    switch (event.keyCode) {
-      case PAGE_UP:
-        this._increment(10);
-        break;
-      case PAGE_DOWN:
-        this._increment(-10);
-        break;
-      case END:
-        this.value = this.max;
-        break;
-      case HOME:
-        this.value = this.min;
-        break;
-      case LEFT_ARROW:
-        // NOTE: For a sighted user it would make more sense that when they press an arrow key on an
-        // inverted slider the thumb moves in that direction. However for a blind user, nothing
-        // about the slider indicates that it is inverted. They will expect left to be decrement,
-        // regardless of how it appears on the screen. For speakers ofRTL languages, they probably
-        // expect left to mean increment. Therefore we flip the meaning of the side arrow keys for
-        // RTL. For inverted sliders we prefer a good a11y experience to having it "look right" for
-        // sighted users, therefore we do not swap the meaning.
-        this._increment(this._getDirection() == 'rtl' ? 1 : -1);
-        break;
-      case UP_ARROW:
-        this._increment(1);
-        break;
-      case RIGHT_ARROW:
-        // See comment on LEFT_ARROW about the conditions under which we flip the meaning.
-        this._increment(this._getDirection() == 'rtl' ? -1 : 1);
-        break;
-      case DOWN_ARROW:
-        this._increment(-1);
-        break;
-      default:
-        // Return if the key is not one that we explicitly handle to avoid calling preventDefault on
-        // it.
-        return;
+    if (this._inputs?.length) {
+      return thumbPosition === _MatThumb.START ? this._inputs.first : this._inputs.last;
     }
-
-    if (oldValue != this.value) {
-      this._emitInputEvent();
-      this._emitChangeEvent();
-    }
-
-    this._isSliding = 'keyboard';
-    event.preventDefault();
+    return;
   }
 
-  _onKeyup() {
-    if (this._isSliding === 'keyboard') {
-      this._isSliding = null;
-    }
+  /** Gets the slider thumb HTML input element of the given thumb position. */
+  _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb {
+    return thumbPosition === _MatThumb.END ? this._thumbs?.last! : this._thumbs?.first!;
   }
 
-  /** Called when the user has put their pointer down on the slider. */
-  private _pointerDown = (event: TouchEvent | MouseEvent) => {
-    // Don't do anything if the slider is disabled or the
-    // user is using anything other than the main mouse button.
-    if (this.disabled || this._isSliding || (!isTouchEvent(event) && event.button !== 0)) {
-      return;
-    }
-
-    this._ngZone.run(() => {
-      this._touchId = isTouchEvent(event) ?
-          getTouchIdForSlider(event, this._elementRef.nativeElement) : undefined;
-      const pointerPosition = getPointerPositionOnPage(event, this._touchId);
-
-      if (pointerPosition) {
-        const oldValue = this.value;
-        this._isSliding = 'pointer';
-        this._lastPointerEvent = event;
-        event.preventDefault();
-        this._focusHostElement();
-        this._onMouseenter(); // Simulate mouseenter in case this is a mobile device.
-        this._bindGlobalEvents(event);
-        this._focusHostElement();
-        this._updateValueFromPosition(pointerPosition);
-        this._valueOnSlideStart = oldValue;
-
-        // Emit a change and input event if the value changed.
-        if (oldValue != this.value) {
-          this._emitInputEvent();
-        }
-      }
-    });
+  _setTransition(withAnimation: boolean): void {
+    this._hasAnimation = !this._platform.IOS && withAnimation && !this._noopAnimations;
+    this._elementRef.nativeElement.classList.toggle(
+      'mat-mdc-slider-with-animation',
+      this._hasAnimation,
+    );
   }
 
-  /**
-   * Called when the user has moved their pointer after
-   * starting to drag. Bound on the document level.
-   */
-  private _pointerMove = (event: TouchEvent | MouseEvent) => {
-    if (this._isSliding === 'pointer') {
-      const pointerPosition = getPointerPositionOnPage(event, this._touchId);
-
-      if (pointerPosition) {
-        // Prevent the slide from selecting anything else.
-        event.preventDefault();
-        const oldValue = this.value;
-        this._lastPointerEvent = event;
-        this._updateValueFromPosition(pointerPosition);
-
-        // Native range elements always emit `input` events when the value changed while sliding.
-        if (oldValue != this.value) {
-          this._emitInputEvent();
-        }
-      }
-    }
+  /** Whether the given pointer event occurred within the bounds of the slider pointer's DOM Rect. */
+  _isCursorOnSliderThumb(event: PointerEvent, rect: DOMRect) {
+    const radius = rect.width / 2;
+    const centerX = rect.x + radius;
+    const centerY = rect.y + radius;
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    return Math.pow(dx, 2) + Math.pow(dy, 2) < Math.pow(radius, 2);
   }
-
-  /** Called when the user has lifted their pointer. Bound on the document level. */
-  private _pointerUp = (event: TouchEvent | MouseEvent) => {
-    if (this._isSliding === 'pointer') {
-      if (!isTouchEvent(event) || typeof this._touchId !== 'number' ||
-          // Note that we use `changedTouches`, rather than `touches` because it
-          // seems like in most cases `touches` is empty for `touchend` events.
-          findMatchingTouch(event.changedTouches, this._touchId)) {
-        event.preventDefault();
-        this._removeGlobalEvents();
-        this._isSliding = null;
-        this._touchId = undefined;
-
-        if (this._valueOnSlideStart != this.value && !this.disabled) {
-          this._emitChangeEvent();
-        }
-
-        this._valueOnSlideStart = this._lastPointerEvent = null;
-      }
-    }
-  }
-
-  /** Called when the window has lost focus. */
-  private _windowBlur = () => {
-    // If the window is blurred while dragging we need to stop dragging because the
-    // browser won't dispatch the `mouseup` and `touchend` events anymore.
-    if (this._lastPointerEvent) {
-      this._pointerUp(this._lastPointerEvent);
-    }
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  private _getWindow(): Window {
-    return this._document.defaultView || window;
-  }
-
-  /**
-   * Binds our global move and end events. They're bound at the document level and only while
-   * dragging so that the user doesn't have to keep their pointer exactly over the slider
-   * as they're swiping across the screen.
-   */
-  private _bindGlobalEvents(triggerEvent: TouchEvent | MouseEvent) {
-    // Note that we bind the events to the `document`, because it allows us to capture
-    // drag cancel events where the user's pointer is outside the browser window.
-    const document = this._document;
-    const isTouch = isTouchEvent(triggerEvent);
-    const moveEventName = isTouch ? 'touchmove' : 'mousemove';
-    const endEventName = isTouch ? 'touchend' : 'mouseup';
-    document.addEventListener(moveEventName, this._pointerMove, activeEventOptions);
-    document.addEventListener(endEventName, this._pointerUp, activeEventOptions);
-
-    if (isTouch) {
-      document.addEventListener('touchcancel', this._pointerUp, activeEventOptions);
-    }
-
-    const window = this._getWindow();
-
-    if (typeof window !== 'undefined' && window) {
-      window.addEventListener('blur', this._windowBlur);
-    }
-  }
-
-  /** Removes any global event listeners that we may have added. */
-  private _removeGlobalEvents() {
-    const document = this._document;
-    document.removeEventListener('mousemove', this._pointerMove, activeEventOptions);
-    document.removeEventListener('mouseup', this._pointerUp, activeEventOptions);
-    document.removeEventListener('touchmove', this._pointerMove, activeEventOptions);
-    document.removeEventListener('touchend', this._pointerUp, activeEventOptions);
-    document.removeEventListener('touchcancel', this._pointerUp, activeEventOptions);
-
-    const window = this._getWindow();
-
-    if (typeof window !== 'undefined' && window) {
-      window.removeEventListener('blur', this._windowBlur);
-    }
-  }
-
-  /** Increments the slider by the given number of steps (negative number decrements). */
-  private _increment(numSteps: number) {
-    this.value = this._clamp((this.value || 0) + this.step * numSteps, this.min, this.max);
-  }
-
-  /** Calculate the new value from the new physical location. The value will always be snapped. */
-  private _updateValueFromPosition(pos: {x: number, y: number}) {
-    if (!this._sliderDimensions) {
-      return;
-    }
-
-    let offset = this.vertical ? this._sliderDimensions.top : this._sliderDimensions.left;
-    let size = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
-    let posComponent = this.vertical ? pos.y : pos.x;
-
-    // The exact value is calculated from the event and used to find the closest snap value.
-    let percent = this._clamp((posComponent - offset) / size);
-
-    if (this._shouldInvertMouseCoords()) {
-      percent = 1 - percent;
-    }
-
-    // Since the steps may not divide cleanly into the max value, if the user
-    // slid to 0 or 100 percent, we jump to the min/max value. This approach
-    // is slightly more intuitive than using `Math.ceil` below, because it
-    // follows the user's pointer closer.
-    if (percent === 0) {
-      this.value = this.min;
-    } else if (percent === 1) {
-      this.value = this.max;
-    } else {
-      const exactValue = this._calculateValue(percent);
-
-      // This calculation finds the closest step by finding the closest
-      // whole number divisible by the step relative to the min.
-      const closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
-
-      // The value needs to snap to the min and max.
-      this.value = this._clamp(closestValue, this.min, this.max);
-    }
-  }
-
-  /** Emits a change event if the current value is different from the last emitted value. */
-  private _emitChangeEvent() {
-    this._controlValueAccessorChangeFn(this.value);
-    this.valueChange.emit(this.value);
-    this.change.emit(this._createChangeEvent());
-  }
-
-  /** Emits an input event when the current value is different from the last emitted value. */
-  private _emitInputEvent() {
-    this.input.emit(this._createChangeEvent());
-  }
-
-  /** Updates the amount of space between ticks as a percentage of the width of the slider. */
-  private _updateTickIntervalPercent() {
-    if (!this.tickInterval || !this._sliderDimensions) {
-      return;
-    }
-
-    if (this.tickInterval == 'auto') {
-      let trackSize = this.vertical ? this._sliderDimensions.height : this._sliderDimensions.width;
-      let pixelsPerStep = trackSize * this.step / (this.max - this.min);
-      let stepsPerTick = Math.ceil(MIN_AUTO_TICK_SEPARATION / pixelsPerStep);
-      let pixelsPerTick = stepsPerTick * this.step;
-      this._tickIntervalPercent = pixelsPerTick / trackSize;
-    } else {
-      this._tickIntervalPercent = this.tickInterval * this.step / (this.max - this.min);
-    }
-  }
-
-  /** Creates a slider change object from the specified value. */
-  private _createChangeEvent(value = this.value): MatSliderChange {
-    let event = new MatSliderChange();
-
-    event.source = this;
-    event.value = value;
-
-    return event;
-  }
-
-  /** Calculates the percentage of the slider that a value is. */
-  private _calculatePercentage(value: number | null) {
-    return ((value || 0) - this.min) / (this.max - this.min);
-  }
-
-  /** Calculates the value a percentage of the slider corresponds to. */
-  private _calculateValue(percentage: number) {
-    return this.min + percentage * (this.max - this.min);
-  }
-
-  /** Return a number between two numbers. */
-  private _clamp(value: number, min = 0, max = 1) {
-    return Math.max(min, Math.min(value, max));
-  }
-
-  /**
-   * Get the bounding client rect of the slider track element.
-   * The track is used rather than the native element to ignore the extra space that the thumb can
-   * take up.
-   */
-  private _getSliderDimensions() {
-    return this._sliderWrapper ? this._sliderWrapper.nativeElement.getBoundingClientRect() : null;
-  }
-
-  /**
-   * Focuses the native element.
-   * Currently only used to allow a blur event to fire but will be used with keyboard input later.
-   */
-  private _focusHostElement(options?: FocusOptions) {
-    this._elementRef.nativeElement.focus(options);
-  }
-
-  /** Blurs the native element. */
-  private _blurHostElement() {
-    this._elementRef.nativeElement.blur();
-  }
-
-  /**
-   * Sets the model value. Implemented as part of ControlValueAccessor.
-   * @param value
-   */
-  writeValue(value: any) {
-    this.value = value;
-  }
-
-  /**
-   * Registers a callback to be triggered when the value has changed.
-   * Implemented as part of ControlValueAccessor.
-   * @param fn Callback to be registered.
-   */
-  registerOnChange(fn: (value: any) => void) {
-    this._controlValueAccessorChangeFn = fn;
-  }
-
-  /**
-   * Registers a callback to be triggered when the component is touched.
-   * Implemented as part of ControlValueAccessor.
-   * @param fn Callback to be registered.
-   */
-  registerOnTouched(fn: any) {
-    this.onTouched = fn;
-  }
-
-  /**
-   * Sets whether the component should be disabled.
-   * Implemented as part of ControlValueAccessor.
-   * @param isDisabled
-   */
-  setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
-  }
-
-  static ngAcceptInputType_invert: BooleanInput;
-  static ngAcceptInputType_max: NumberInput;
-  static ngAcceptInputType_min: NumberInput;
-  static ngAcceptInputType_step: NumberInput;
-  static ngAcceptInputType_thumbLabel: BooleanInput;
-  static ngAcceptInputType_tickInterval: NumberInput;
-  static ngAcceptInputType_value: NumberInput;
-  static ngAcceptInputType_vertical: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
-/** Returns whether an event is a touch event. */
-function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
-  // This function is called for every pixel that the user has dragged so we need it to be
-  // as fast as possible. Since we only bind mouse events and touch events, we can assume
-  // that if the event's name starts with `t`, it's a touch event.
-  return event.type[0] === 't';
+/** Ensures that there is not an invalid configuration for the slider thumb inputs. */
+function _validateInputs(
+  isRange: boolean,
+  endInputElement: _MatSliderThumb | _MatSliderRangeThumb | undefined,
+  startInputElement: _MatSliderThumb | undefined,
+): void {
+  const startValid =
+    !isRange || startInputElement?._hostElement.hasAttribute('matSliderStartThumb');
+  const endValid = endInputElement?._hostElement.hasAttribute(
+    isRange ? 'matSliderEndThumb' : 'matSliderThumb',
+  );
+
+  if (!startValid || !endValid) {
+    _throwInvalidInputConfigurationError();
+  }
 }
 
-/** Gets the coordinates of a touch or mouse event relative to the viewport. */
-function getPointerPositionOnPage(event: MouseEvent | TouchEvent, id: number|undefined) {
-  let point: {clientX: number, clientY: number}|undefined;
+function _throwInvalidInputConfigurationError(): void {
+  throw Error(`Invalid slider thumb input configuration!
 
-  if (isTouchEvent(event)) {
-    // The `identifier` could be undefined if the browser doesn't support `TouchEvent.identifier`.
-    // If that's the case, attribute the first touch to all active sliders. This should still cover
-    // the most common case while only breaking multi-touch.
-    if (typeof id === 'number') {
-      point = findMatchingTouch(event.touches, id) || findMatchingTouch(event.changedTouches, id);
-    } else {
-      // `touches` will be empty for start/end events so we have to fall back to `changedTouches`.
-      point = event.touches[0] || event.changedTouches[0];
-    }
-  } else {
-    point = event;
-  }
+   Valid configurations are as follows:
 
-  return point ? {x: point.clientX, y: point.clientY} : undefined;
-}
+     <mat-slider>
+       <input matSliderThumb>
+     </mat-slider>
 
-/** Finds a `Touch` with a specific ID in a `TouchList`. */
-function findMatchingTouch(touches: TouchList, id: number): Touch | undefined {
-  for (let i = 0; i < touches.length; i++) {
-    if (touches[i].identifier === id) {
-      return touches[i];
-    }
-  }
+     or
 
-  return undefined;
-}
-
-
-/** Gets the unique ID of a touch that matches a specific slider. */
-function getTouchIdForSlider(event: TouchEvent, sliderHost: HTMLElement): number | undefined {
-  for (let i = 0; i < event.touches.length; i++) {
-    const target = event.touches[i].target as HTMLElement;
-
-    if (sliderHost === target || sliderHost.contains(target)) {
-      return event.touches[i].identifier;
-    }
-  }
-
-  return undefined;
+     <mat-slider>
+       <input matSliderStartThumb>
+       <input matSliderEndThumb>
+     </mat-slider>
+   `);
 }

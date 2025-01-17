@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
   AfterContentInit,
   AfterViewChecked,
@@ -14,22 +14,17 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  forwardRef,
-  Inject,
   Input,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
+  SimpleChange,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatDateFormats,
-} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -39,19 +34,19 @@ import {
   getActiveOffset,
   isSameMultiYearView,
   MatMultiYearView,
-  yearsPerPage
+  yearsPerPage,
 } from './multi-year-view';
 import {MatYearView} from './year-view';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
+import {MatIconButton, MatButton} from '@angular/material/button';
+import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /**
  * Possible views for the calendar.
  * @docs-private
  */
 export type MatCalendarView = 'month' | 'year' | 'multi-year';
-
-/** Counter used to generate unique IDs. */
-let uniqueId = 0;
 
 /** Default header for MatCalendar */
 @Component({
@@ -60,47 +55,57 @@ let uniqueId = 0;
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatButton, MatIconButton],
 })
 export class MatCalendarHeader<D> {
-  _buttonDescriptionId = `mat-calendar-button-${uniqueId++}`;
+  private _intl = inject(MatDatepickerIntl);
+  calendar = inject<MatCalendar<D>>(MatCalendar);
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true})!;
 
-  constructor(private _intl: MatDatepickerIntl,
-              @Inject(forwardRef(() => MatCalendar)) public calendar: MatCalendar<D>,
-              @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              changeDetectorRef: ChangeDetectorRef) {
+  constructor(...args: unknown[]);
 
+  constructor() {
+    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+    const changeDetectorRef = inject(ChangeDetectorRef);
     this.calendar.stateChanges.subscribe(() => changeDetectorRef.markForCheck());
   }
 
-  /** The label for the current calendar view. */
+  /** The display text for the current calendar view. */
   get periodButtonText(): string {
     if (this.calendar.currentView == 'month') {
       return this._dateAdapter
-          .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
-              .toLocaleUpperCase();
+        .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
+        .toLocaleUpperCase();
     }
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
     }
 
-    // The offset from the active year to the "slot" for the starting year is the
-    // *actual* first rendered year in the multi-year view, and the last year is
-    // just yearsPerPage - 1 away.
-    const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
-    const minYearOfPage = activeYear - getActiveOffset(
-      this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
-    const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
-    const minYearName =
-      this._dateAdapter.getYearName(this._dateAdapter.createDate(minYearOfPage, 0, 1));
-    const maxYearName =
-      this._dateAdapter.getYearName(this._dateAdapter.createDate(maxYearOfPage, 0, 1));
-    return this._intl.formatYearRange(minYearName, maxYearName);
+    return this._intl.formatYearRange(...this._formatMinAndMaxYearLabels());
   }
 
+  /** The aria description for the current calendar view. */
+  get periodButtonDescription(): string {
+    if (this.calendar.currentView == 'month') {
+      return this._dateAdapter
+        .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
+        .toLocaleUpperCase();
+    }
+    if (this.calendar.currentView == 'year') {
+      return this._dateAdapter.getYearName(this.calendar.activeDate);
+    }
+
+    // Format a label for the window of years displayed in the multi-year calendar view. Use
+    // `formatYearRangeLabel` because it is TTS friendly.
+    return this._intl.formatYearRangeLabel(...this._formatMinAndMaxYearLabels());
+  }
+
+  /** The `aria-label` for changing the calendar view. */
   get periodButtonLabel(): string {
-    return this.calendar.currentView == 'month' ?
-        this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
+    return this.calendar.currentView == 'month'
+      ? this._intl.switchToMultiYearViewLabel
+      : this._intl.switchToMonthViewLabel;
   }
 
   /** The label for the previous button. */
@@ -108,7 +113,7 @@ export class MatCalendarHeader<D> {
     return {
       'month': this._intl.prevMonthLabel,
       'year': this._intl.prevYearLabel,
-      'multi-year': this._intl.prevMultiYearLabel
+      'multi-year': this._intl.prevMultiYearLabel,
     }[this.calendar.currentView];
   }
 
@@ -117,7 +122,7 @@ export class MatCalendarHeader<D> {
     return {
       'month': this._intl.nextMonthLabel,
       'year': this._intl.nextYearLabel,
-      'multi-year': this._intl.nextMultiYearLabel
+      'multi-year': this._intl.nextMultiYearLabel,
     }[this.calendar.currentView];
   }
 
@@ -128,21 +133,24 @@ export class MatCalendarHeader<D> {
 
   /** Handles user clicks on the previous button. */
   previousClicked(): void {
-    this.calendar.activeDate = this.calendar.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
-            this._dateAdapter.addCalendarYears(
-                this.calendar.activeDate, this.calendar.currentView == 'year' ? -1 : -yearsPerPage
-            );
+    this.calendar.activeDate =
+      this.calendar.currentView == 'month'
+        ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1)
+        : this._dateAdapter.addCalendarYears(
+            this.calendar.activeDate,
+            this.calendar.currentView == 'year' ? -1 : -yearsPerPage,
+          );
   }
 
   /** Handles user clicks on the next button. */
   nextClicked(): void {
-    this.calendar.activeDate = this.calendar.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
-            this._dateAdapter.addCalendarYears(
-                this.calendar.activeDate,
-                    this.calendar.currentView == 'year' ? 1 : yearsPerPage
-            );
+    this.calendar.activeDate =
+      this.calendar.currentView == 'month'
+        ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1)
+        : this._dateAdapter.addCalendarYears(
+            this.calendar.activeDate,
+            this.calendar.currentView == 'year' ? 1 : yearsPerPage,
+          );
   }
 
   /** Whether the previous period button is enabled. */
@@ -150,45 +158,90 @@ export class MatCalendarHeader<D> {
     if (!this.calendar.minDate) {
       return true;
     }
-    return !this.calendar.minDate ||
-        !this._isSameView(this.calendar.activeDate, this.calendar.minDate);
+    return (
+      !this.calendar.minDate || !this._isSameView(this.calendar.activeDate, this.calendar.minDate)
+    );
   }
 
   /** Whether the next period button is enabled. */
   nextEnabled(): boolean {
-    return !this.calendar.maxDate ||
-        !this._isSameView(this.calendar.activeDate, this.calendar.maxDate);
+    return (
+      !this.calendar.maxDate || !this._isSameView(this.calendar.activeDate, this.calendar.maxDate)
+    );
   }
 
   /** Whether the two dates represent the same view in the current view mode (month or year). */
   private _isSameView(date1: D, date2: D): boolean {
     if (this.calendar.currentView == 'month') {
-      return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
-          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
+      return (
+        this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
+        this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2)
+      );
     }
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
     return isSameMultiYearView(
-      this._dateAdapter, date1, date2, this.calendar.minDate, this.calendar.maxDate);
+      this._dateAdapter,
+      date1,
+      date2,
+      this.calendar.minDate,
+      this.calendar.maxDate,
+    );
   }
+
+  /**
+   * Format two individual labels for the minimum year and maximum year available in the multi-year
+   * calendar view. Returns an array of two strings where the first string is the formatted label
+   * for the minimum year, and the second string is the formatted label for the maximum year.
+   */
+  private _formatMinAndMaxYearLabels(): [minYearLabel: string, maxYearLabel: string] {
+    // The offset from the active year to the "slot" for the starting year is the
+    // *actual* first rendered year in the multi-year view, and the last year is
+    // just yearsPerPage - 1 away.
+    const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
+    const minYearOfPage =
+      activeYear -
+      getActiveOffset(
+        this._dateAdapter,
+        this.calendar.activeDate,
+        this.calendar.minDate,
+        this.calendar.maxDate,
+      );
+    const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
+    const minYearLabel = this._dateAdapter.getYearName(
+      this._dateAdapter.createDate(minYearOfPage, 0, 1),
+    );
+    const maxYearLabel = this._dateAdapter.getYearName(
+      this._dateAdapter.createDate(maxYearOfPage, 0, 1),
+    );
+
+    return [minYearLabel, maxYearLabel];
+  }
+
+  _periodButtonLabelId = inject(_IdGenerator).getId('mat-calendar-period-label-');
 }
 
 /** A calendar that is used as part of the datepicker. */
 @Component({
   selector: 'mat-calendar',
   templateUrl: 'calendar.html',
-  styleUrls: ['calendar.css'],
+  styleUrl: 'calendar.css',
   host: {
     'class': 'mat-calendar',
   },
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
+  imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+  private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
+  private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true});
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
@@ -206,7 +259,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
-  get startAt(): D | null { return this._startAt; }
+  get startAt(): D | null {
+    return this._startAt;
+  }
   set startAt(value: D | null) {
     this._startAt = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
@@ -217,7 +272,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The currently selected date. */
   @Input()
-  get selected(): DateRange<D> | D | null { return this._selected; }
+  get selected(): DateRange<D> | D | null {
+    return this._selected;
+  }
   set selected(value: DateRange<D> | D | null) {
     if (value instanceof DateRange) {
       this._selected = value;
@@ -229,7 +286,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The minimum selectable date. */
   @Input()
-  get minDate(): D | null { return this._minDate; }
+  get minDate(): D | null {
+    return this._minDate;
+  }
   set minDate(value: D | null) {
     this._minDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
@@ -237,7 +296,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The maximum selectable date. */
   @Input()
-  get maxDate(): D | null { return this._maxDate; }
+  get maxDate(): D | null {
+    return this._maxDate;
+  }
   set maxDate(value: D | null) {
     this._maxDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
@@ -254,6 +315,12 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** End of the comparison range. */
   @Input() comparisonEnd: D | null;
+
+  /** ARIA Accessible name of the `<input matStartDate/>` */
+  @Input() startDateAccessibleName: string | null;
+
+  /** ARIA Accessible name of the `<input matEndDate/>` */
+  @Input() endDateAccessibleName: string | null;
 
   /** Emits when the currently selected date changes. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -273,12 +340,16 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /**
    * Emits when the current view changes.
    */
-  @Output() readonly viewChanged: EventEmitter<MatCalendarView> =
-    new EventEmitter<MatCalendarView>(true);
+  @Output() readonly viewChanged: EventEmitter<MatCalendarView> = new EventEmitter<MatCalendarView>(
+    true,
+  );
 
   /** Emits when any date is selected. */
   @Output() readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>> =
-      new EventEmitter<MatCalendarUserEvent<D | null>>();
+    new EventEmitter<MatCalendarUserEvent<D | null>>();
+
+  /** Emits a new date range value when the user completes a drag drop operation. */
+  @Output() readonly _userDragDrop = new EventEmitter<MatCalendarUserEvent<DateRange<D>>>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -293,7 +364,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    * The current active date. This determines which time period is shown and which date is
    * highlighted when using keyboard navigation.
    */
-  get activeDate(): D { return this._clampedActiveDate; }
+  get activeDate(): D {
+    return this._clampedActiveDate;
+  }
   set activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
     this.stateChanges.next();
@@ -302,7 +375,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   private _clampedActiveDate: D;
 
   /** Whether the calendar is in month view. */
-  get currentView(): MatCalendarView { return this._currentView; }
+  get currentView(): MatCalendarView {
+    return this._currentView;
+  }
   set currentView(value: MatCalendarView) {
     const viewChangedResult = this._currentView !== value ? value : null;
     this._currentView = value;
@@ -314,16 +389,17 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
   private _currentView: MatCalendarView;
 
+  /** Origin of active drag, or null when dragging is not active. */
+  protected _activeDrag: MatCalendarUserEvent<D> | null = null;
+
   /**
    * Emits whenever there is a state change that the header may need to respond to.
    */
   readonly stateChanges = new Subject<void>();
 
-  constructor(_intl: MatDatepickerIntl,
-              @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(...args: unknown[]);
 
+  constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
         throw createMissingDateImplError('DateAdapter');
@@ -334,8 +410,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       }
     }
 
-    this._intlChanges = _intl.changes.subscribe(() => {
-      _changeDetectorRef.markForCheck();
+    this._intlChanges = inject(MatDatepickerIntl).changes.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
   }
@@ -361,13 +437,30 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const change =
-        changes['minDate'] || changes['maxDate'] || changes['dateFilter'];
+    // Ignore date changes that are at a different time on the same day. This fixes issues where
+    // the calendar re-renders when there is no meaningful change to [minDate] or [maxDate]
+    // (#24435).
+    const minDateChange: SimpleChange | undefined =
+      changes['minDate'] &&
+      !this._dateAdapter.sameDate(changes['minDate'].previousValue, changes['minDate'].currentValue)
+        ? changes['minDate']
+        : undefined;
+    const maxDateChange: SimpleChange | undefined =
+      changes['maxDate'] &&
+      !this._dateAdapter.sameDate(changes['maxDate'].previousValue, changes['maxDate'].currentValue)
+        ? changes['maxDate']
+        : undefined;
 
-    if (change && !change.firstChange) {
+    const changeRequiringRerender = minDateChange || maxDateChange || changes['dateFilter'];
+
+    if (changeRequiringRerender && !changeRequiringRerender.firstChange) {
       const view = this._getCurrentViewComponent();
 
       if (view) {
+        // Schedule focus to be moved to the active date since re-rendering
+        // can blur the active cell. See #29265.
+        this._moveFocusOnNextTick = true;
+
         // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
         // passed down to the view via data bindings which won't be up-to-date when we call `_init`.
         this._changeDetectorRef.detectChanges();
@@ -392,8 +485,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _dateSelected(event: MatCalendarUserEvent<D | null>): void {
     const date = event.value;
 
-    if (this.selected instanceof DateRange ||
-        (date && !this._dateAdapter.sameDate(date, this.selected))) {
+    if (
+      this.selected instanceof DateRange ||
+      (date && !this._dateAdapter.sameDate(date, this.selected))
+    ) {
       this.selectedChange.emit(date);
     }
 
@@ -416,10 +511,29 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this.currentView = view;
   }
 
+  /** Called when the user starts dragging to change a date range. */
+  _dragStarted(event: MatCalendarUserEvent<D>) {
+    this._activeDrag = event;
+  }
+
+  /**
+   * Called when a drag completes. It may end in cancelation or in the selection
+   * of a new range.
+   */
+  _dragEnded(event: MatCalendarUserEvent<DateRange<D> | null>) {
+    if (!this._activeDrag) return;
+
+    if (event.value) {
+      this._userDragDrop.emit(event as MatCalendarUserEvent<DateRange<D>>);
+    }
+
+    this._activeDrag = null;
+  }
+
   /** Returns the component instance that corresponds to the current calendar view. */
   private _getCurrentViewComponent(): MatMonthView<D> | MatYearView<D> | MatMultiYearView<D> {
     // The return type is explicitly written as a union to ensure that the Closure compiler does
-    // not optimize calls to _init(). Without the explict return type, TypeScript narrows it to
+    // not optimize calls to _init(). Without the explicit return type, TypeScript narrows it to
     // only the first component type. See https://github.com/angular/components/issues/22996.
     return this.monthView || this.yearView || this.multiYearView;
   }

@@ -3,76 +3,52 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {
-  Component,
+  ANIMATION_MODULE_TYPE,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Input,
-  Inject,
-  Output,
+  Component,
+  Directive,
+  ElementRef,
   EventEmitter,
+  Injector,
+  Input,
+  NgZone,
   OnDestroy,
   OnInit,
-  ElementRef,
-  Directive,
-  Optional,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ComponentFactoryResolver,
-  ViewContainerRef,
-  forwardRef,
+  Output,
+  Renderer2,
   ViewChild,
+  ViewEncapsulation,
+  afterNextRender,
+  inject,
 } from '@angular/core';
-import {AnimationEvent} from '@angular/animations';
-import {TemplatePortal, CdkPortalOutlet} from '@angular/cdk/portal';
-import {Directionality, Direction} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
-import {Subscription, Subject} from 'rxjs';
-import {matTabsAnimations} from './tabs-animations';
-import {startWith, distinctUntilChanged} from 'rxjs/operators';
-
-/**
- * These position states are used internally as animation states for the tab body. Setting the
- * position state to left, right, or center will transition the tab body from its current
- * position to its respective state. If there is not current position (void, in the case of a new
- * tab body), then there will be no transition animation to its state.
- *
- * In the case of a new tab body that should immediately be centered with an animating transition,
- * then left-origin-center or right-origin-center can be used, which will use left or right as its
- * psuedo-prior state.
- */
-export type MatTabBodyPositionState =
-    'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
-
-/**
- * The origin state is an internally used state that is set on a new tab body indicating if it
- * began to the left or right of the prior selected index. For example, if the selected index was
- * set to 1, and a new tab is created and selected at index 2, then the tab body would have an
- * origin of right because its index was greater than the prior selected index.
- */
-export type MatTabBodyOriginState = 'left' | 'right';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 /**
  * The portal host directive for the contents of the tab.
  * @docs-private
  */
-@Directive({
-  selector: '[matTabBodyHost]'
-})
+@Directive({selector: '[matTabBodyHost]'})
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
+  private _host = inject(MatTabBody);
+
   /** Subscription to events for when the tab body begins centering. */
   private _centeringSub = Subscription.EMPTY;
   /** Subscription to events for when the tab body finishes leaving from center position. */
   private _leavingSub = Subscription.EMPTY;
 
-  constructor(
-    componentFactoryResolver: ComponentFactoryResolver,
-    viewContainerRef: ViewContainerRef,
-    @Inject(forwardRef(() => MatTabBody)) private _host: MatTabBody,
-    @Inject(DOCUMENT) _document: any) {
-    super(componentFactoryResolver, viewContainerRef, _document);
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
   }
 
   /** Set initial visibility or set up subscription for changing visibility. */
@@ -80,15 +56,17 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     super.ngOnInit();
 
     this._centeringSub = this._host._beforeCentering
-      .pipe(startWith(this._host._isCenterPosition(this._host._position)))
+      .pipe(startWith(this._host._isCenterPosition()))
       .subscribe((isCentering: boolean) => {
-        if (isCentering && !this.hasAttached()) {
+        if (this._host._content && isCentering && !this.hasAttached()) {
           this.attach(this._host._content);
         }
       });
 
     this._leavingSub = this._host._afterLeavingCenter.subscribe(() => {
-      this.detach();
+      if (!this._host.preserveContent) {
+        this.detach();
+      }
     });
   }
 
@@ -101,143 +79,30 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 }
 
 /**
- * Base class with all of the `MatTabBody` functionality.
- * @docs-private
+ * These position states are used internally as animation states for the tab body. Setting the
+ * position state to left, right, or center will transition the tab body from its current
+ * position to its respective state. If there is not current position (void, in the case of a new
+ * tab body), then there will be no transition animation to its state.
+ *
+ * In the case of a new tab body that should immediately be centered with an animating transition,
+ * then left-origin-center or right-origin-center can be used, which will use left or right as its
+ * pseudo-prior state.
+ *
+ * @deprecated Will stop being exported.
+ * @breaking-change 21.0.0
  */
-@Directive()
-export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
-  /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-  private _positionIndex: number;
+export type MatTabBodyPositionState = 'left' | 'center' | 'right';
 
-  /** Subscription to the directionality change observable. */
-  private _dirChangeSubscription = Subscription.EMPTY;
-
-  /** Tab body position state. Used by the animation trigger for the current state. */
-  _position: MatTabBodyPositionState;
-
-  /** Emits when an animation on the tab is complete. */
-  readonly _translateTabComplete = new Subject<AnimationEvent>();
-
-  /** Event emitted when the tab begins to animate towards the center as the active tab. */
-  @Output() readonly _onCentering: EventEmitter<number> = new EventEmitter<number>();
-
-  /** Event emitted before the centering of the tab begins. */
-  @Output() readonly _beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  /** Event emitted before the centering of the tab begins. */
-  @Output() readonly _afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
-
-  /** Event emitted when the tab completes its animation towards the center. */
-  @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
-
-   /** The portal host inside of this container into which the tab body content will be loaded. */
-  abstract _portalHost: CdkPortalOutlet;
-
-  /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal;
-
-  /** Position that will be used when the tab is immediately becoming visible after creation. */
-  @Input() origin: number | null;
-
-  // Note that the default value will always be overwritten by `MatTabBody`, but we need one
-  // anyway to prevent the animations module from throwing an error if the body is used on its own.
-  /** Duration for the tab's animation. */
-  @Input() animationDuration: string = '500ms';
-
-  /** The shifted index position of the tab body, where zero represents the active center tab. */
-  @Input()
-  set position(position: number) {
-    this._positionIndex = position;
-    this._computePositionAnimationState();
-  }
-
-  constructor(private _elementRef: ElementRef<HTMLElement>,
-              @Optional() private _dir: Directionality,
-              changeDetectorRef: ChangeDetectorRef) {
-
-    if (_dir) {
-      this._dirChangeSubscription = _dir.change.subscribe((dir: Direction) => {
-        this._computePositionAnimationState(dir);
-        changeDetectorRef.markForCheck();
-      });
-    }
-
-    // Ensure that we get unique animation events, because the `.done` callback can get
-    // invoked twice in some browsers. See https://github.com/angular/angular/issues/24084.
-    this._translateTabComplete.pipe(distinctUntilChanged((x, y) => {
-      return x.fromState === y.fromState && x.toState === y.toState;
-    })).subscribe(event => {
-      // If the transition to the center is complete, emit an event.
-      if (this._isCenterPosition(event.toState) && this._isCenterPosition(this._position)) {
-        this._onCentered.emit();
-      }
-
-      if (this._isCenterPosition(event.fromState) && !this._isCenterPosition(this._position)) {
-        this._afterLeavingCenter.emit();
-      }
-    });
-  }
-
-  /**
-   * After initialized, check if the content is centered and has an origin. If so, set the
-   * special position states that transition the tab from the left or right before centering.
-   */
-  ngOnInit() {
-    if (this._position == 'center' && this.origin != null) {
-      this._position = this._computePositionFromOrigin(this.origin);
-    }
-  }
-
-  ngOnDestroy() {
-    this._dirChangeSubscription.unsubscribe();
-    this._translateTabComplete.complete();
-  }
-
-  _onTranslateTabStarted(event: AnimationEvent): void {
-    const isCentering = this._isCenterPosition(event.toState);
-    this._beforeCentering.emit(isCentering);
-    if (isCentering) {
-      this._onCentering.emit(this._elementRef.nativeElement.clientHeight);
-    }
-  }
-
-  /** The text direction of the containing app. */
-  _getLayoutDirection(): Direction {
-    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
-  }
-
-  /** Whether the provided position state is considered center, regardless of origin. */
-  _isCenterPosition(position: MatTabBodyPositionState|string): boolean {
-    return position == 'center' ||
-        position == 'left-origin-center' ||
-        position == 'right-origin-center';
-  }
-
-  /** Computes the position state that will be used for the tab-body animation trigger. */
-  private _computePositionAnimationState(dir: Direction = this._getLayoutDirection()) {
-    if (this._positionIndex < 0) {
-      this._position = dir == 'ltr' ? 'left' : 'right';
-    } else if (this._positionIndex > 0) {
-      this._position = dir == 'ltr' ? 'right' : 'left';
-    } else {
-      this._position = 'center';
-    }
-  }
-
-  /**
-   * Computes the position state based on the specified origin position. This is used if the
-   * tab is becoming visible immediately after creation.
-   */
-  private _computePositionFromOrigin(origin: number): MatTabBodyPositionState {
-    const dir = this._getLayoutDirection();
-
-    if ((dir == 'ltr' && origin <= 0) || (dir == 'rtl' && origin > 0)) {
-      return 'left-origin-center';
-    }
-
-    return 'right-origin-center';
-  }
-}
+/**
+ * The origin state is an internally used state that is set on a new tab body indicating if it
+ * began to the left or right of the prior selected index. For example, if the selected index was
+ * set to 1, and a new tab is created and selected at index 2, then the tab body would have an
+ * origin of right because its index was greater than the prior selected index.
+ *
+ * @deprecated No longer being used. Will be removed.
+ * @breaking-change 21.0.0
+ */
+export type MatTabBodyOriginState = 'left' | 'right';
 
 /**
  * Wrapper for the contents of a tab.
@@ -246,21 +111,215 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
 @Component({
   selector: 'mat-tab-body',
   templateUrl: 'tab-body.html',
-  styleUrls: ['tab-body.css'],
+  styleUrl: 'tab-body.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
-  animations: [matTabsAnimations.translateTab],
   host: {
-    'class': 'mat-tab-body',
-  }
+    'class': 'mat-mdc-tab-body',
+    // In most cases the `visibility: hidden` that we set on the off-screen content is enough
+    // to stop interactions with it, but if a child element sets its own `visibility`, it'll
+    // override the one from the parent. This ensures that even those elements will be removed
+    // from the accessibility tree.
+    '[attr.inert]': '_position === "center" ? null : ""',
+  },
+  imports: [MatTabBodyPortal, CdkScrollable],
 })
-export class MatTabBody extends _MatTabBodyBase {
-  @ViewChild(CdkPortalOutlet) _portalHost: CdkPortalOutlet;
+export class MatTabBody implements OnInit, OnDestroy {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _dir = inject(Directionality, {optional: true});
+  private _ngZone = inject(NgZone);
+  private _injector = inject(Injector);
+  private _renderer = inject(Renderer2);
+  private _animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _eventCleanups?: (() => void)[];
+  private _initialized: boolean;
+  private _fallbackTimer: ReturnType<typeof setTimeout>;
 
-  constructor(elementRef: ElementRef<HTMLElement>,
-              @Optional() dir: Directionality,
-              changeDetectorRef: ChangeDetectorRef) {
-    super(elementRef, dir, changeDetectorRef);
+  /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
+  private _positionIndex: number;
+
+  /** Subscription to the directionality change observable. */
+  private _dirChangeSubscription = Subscription.EMPTY;
+
+  /** Current position of the body within the tab group. */
+  _position: MatTabBodyPositionState;
+
+  /** Previous position of the body. */
+  protected _previousPosition: MatTabBodyPositionState | undefined;
+
+  /** Event emitted when the tab begins to animate towards the center as the active tab. */
+  @Output() readonly _onCentering: EventEmitter<number> = new EventEmitter<number>();
+
+  /** Event emitted before the centering of the tab begins. */
+  @Output() readonly _beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /** Event emitted before the centering of the tab begins. */
+  readonly _afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event emitted when the tab completes its animation towards the center. */
+  @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
+
+  /** The portal host inside of this container into which the tab body content will be loaded. */
+  @ViewChild(MatTabBodyPortal) _portalHost: MatTabBodyPortal;
+
+  /** Element in which the content is rendered. */
+  @ViewChild('content') _contentElement: ElementRef<HTMLElement> | undefined;
+
+  /** The tab body content to display. */
+  @Input('content') _content: TemplatePortal;
+
+  // Note that the default value will always be overwritten by `MatTabBody`, but we need one
+  // anyway to prevent the animations module from throwing an error if the body is used on its own.
+  /** Duration for the tab's animation. */
+  @Input() animationDuration: string = '500ms';
+
+  /** Whether the tab's content should be kept in the DOM while it's off-screen. */
+  @Input() preserveContent: boolean = false;
+
+  /** The shifted index position of the tab body, where zero represents the active center tab. */
+  @Input()
+  set position(position: number) {
+    this._positionIndex = position;
+    this._computePositionAnimationState();
+  }
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    if (this._dir) {
+      const changeDetectorRef = inject(ChangeDetectorRef);
+      this._dirChangeSubscription = this._dir.change.subscribe((dir: Direction) => {
+        this._computePositionAnimationState(dir);
+        changeDetectorRef.markForCheck();
+      });
+    }
+  }
+
+  ngOnInit() {
+    this._bindTransitionEvents();
+
+    if (this._position === 'center') {
+      this._setActiveClass(true);
+
+      // Allows for the dynamic height to animate properly on the initial run.
+      afterNextRender(() => this._onCentering.emit(this._elementRef.nativeElement.clientHeight), {
+        injector: this._injector,
+      });
+    }
+
+    this._initialized = true;
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this._fallbackTimer);
+    this._eventCleanups?.forEach(cleanup => cleanup());
+    this._dirChangeSubscription.unsubscribe();
+  }
+
+  /** Sets up the transition events. */
+  private _bindTransitionEvents() {
+    this._ngZone.runOutsideAngular(() => {
+      const element = this._elementRef.nativeElement;
+      const transitionDone = (event: TransitionEvent) => {
+        if (event.target === this._contentElement?.nativeElement) {
+          this._elementRef.nativeElement.classList.remove('mat-tab-body-animating');
+
+          // Only fire the actual callback when a transition is fully finished,
+          // otherwise the content can jump around when the next transition starts.
+          if (event.type === 'transitionend') {
+            this._transitionDone();
+          }
+        }
+      };
+
+      this._eventCleanups = [
+        this._renderer.listen(element, 'transitionstart', (event: TransitionEvent) => {
+          if (event.target === this._contentElement?.nativeElement) {
+            this._elementRef.nativeElement.classList.add('mat-tab-body-animating');
+            this._transitionStarted();
+          }
+        }),
+        this._renderer.listen(element, 'transitionend', transitionDone),
+        this._renderer.listen(element, 'transitioncancel', transitionDone),
+      ];
+    });
+  }
+
+  /** Called when a transition has started. */
+  private _transitionStarted() {
+    clearTimeout(this._fallbackTimer);
+    const isCentering = this._position === 'center';
+    this._beforeCentering.emit(isCentering);
+    if (isCentering) {
+      this._onCentering.emit(this._elementRef.nativeElement.clientHeight);
+    }
+  }
+
+  /** Called when a transition is done. */
+  private _transitionDone() {
+    if (this._position === 'center') {
+      this._onCentered.emit();
+    } else if (this._previousPosition === 'center') {
+      this._afterLeavingCenter.emit();
+    }
+  }
+
+  /** Sets the active styling on the tab body based on its current position. */
+  _setActiveClass(isActive: boolean) {
+    this._elementRef.nativeElement.classList.toggle('mat-mdc-tab-body-active', isActive);
+  }
+
+  /** The text direction of the containing app. */
+  _getLayoutDirection(): Direction {
+    return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
+  }
+
+  /** Whether the provided position state is considered center, regardless of origin. */
+  _isCenterPosition(): boolean {
+    return this._positionIndex === 0;
+  }
+
+  /** Computes the position state that will be used for the tab-body animation trigger. */
+  private _computePositionAnimationState(dir: Direction = this._getLayoutDirection()) {
+    this._previousPosition = this._position;
+
+    if (this._positionIndex < 0) {
+      this._position = dir == 'ltr' ? 'left' : 'right';
+    } else if (this._positionIndex > 0) {
+      this._position = dir == 'ltr' ? 'right' : 'left';
+    } else {
+      this._position = 'center';
+    }
+
+    if (this._animationsDisabled()) {
+      this._simulateTransitionEvents();
+    } else if (
+      this._initialized &&
+      (this._position === 'center' || this._previousPosition === 'center')
+    ) {
+      // The transition events are load-bearing and in some cases they might not fire (e.g.
+      // tests setting `* {transition: none}` to disable animations). This timeout will simulate
+      // them if a transition doesn't start within a certain amount of time.
+      clearTimeout(this._fallbackTimer);
+      this._fallbackTimer = this._ngZone.runOutsideAngular(() =>
+        setTimeout(() => this._simulateTransitionEvents(), 100),
+      );
+    }
+  }
+
+  /** Simulates the body's transition events in an environment where they might not fire. */
+  private _simulateTransitionEvents() {
+    this._transitionStarted();
+    afterNextRender(() => this._transitionDone(), {injector: this._injector});
+  }
+
+  /** Whether animations are disabled for the tab group. */
+  private _animationsDisabled() {
+    return (
+      this._animationsModule === 'NoopAnimations' ||
+      this.animationDuration === '0ms' ||
+      this.animationDuration === '0s'
+    );
   }
 }

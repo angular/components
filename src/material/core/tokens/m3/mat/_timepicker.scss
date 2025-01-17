@@ -1,0 +1,22 @@
+@use 'sass:map';
+@use '../../../style/elevation';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, timepicker);
+
+/// Generates custom tokens for the mat-timepicker.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-timepicker
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    container-background-color: map.get($systems, md-sys-color, surface-container),
+    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+    container-elevation-shadow:
+      token-definition.hardcode(elevation.get-box-shadow(2), $exclude-hardcoded),
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

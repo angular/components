@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -24,7 +25,6 @@ ng_module(
         ":calendar-body.css",
         ":calendar.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/datepicker",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
@@ -49,31 +49,41 @@ ng_module(
 sass_library(
     name = "datepicker_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/button:button_scss_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "datepicker_content_scss",
     src = "datepicker-content.scss",
+    deps = ["//src/material/core:core_scss_lib"],
 )
 
 sass_binary(
     name = "datepicker_toggle_scss",
     src = "datepicker-toggle.scss",
-    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "calendar_scss",
     src = "calendar.scss",
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "calendar_body_scss",
     src = "calendar-body.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -81,7 +91,10 @@ sass_binary(
 sass_binary(
     name = "date_range_input_scss",
     src = "date-range-input.scss",
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
@@ -111,7 +124,6 @@ ng_test_library(
         "@npm//@angular/common",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//rxjs",
     ],
 )
@@ -124,6 +136,11 @@ ng_web_test_suite(
 markdown_to_html(
     name = "overview",
     srcs = [":datepicker.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":datepicker_scss_lib"],
 )
 
 filegroup(

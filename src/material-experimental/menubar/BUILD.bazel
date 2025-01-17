@@ -19,9 +19,8 @@ ng_module(
         ":menubar.css",
         ":menubar-item.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material-experimental/menubar",
     deps = [
-        "//src/cdk-experimental/menu",
+        "//src/cdk/menu",
         "@npm//@angular/core",
     ],
 )
@@ -49,8 +48,8 @@ ng_test_library(
     ),
     deps = [
         ":menubar",
-        "//src/cdk-experimental/menu",
         "//src/cdk/keycodes",
+        "//src/cdk/menu",
         "//src/cdk/testing/private",
         "@npm//@angular/platform-browser",
     ],

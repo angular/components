@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {CurrencyPipe} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 export interface Transaction {
   item: string;
@@ -10,8 +12,9 @@ export interface Transaction {
  */
 @Component({
   selector: 'table-sticky-footer-example',
-  styleUrls: ['table-sticky-footer-example.css'],
+  styleUrl: 'table-sticky-footer-example.css',
   templateUrl: 'table-sticky-footer-example.html',
+  imports: [MatTableModule, CurrencyPipe],
 })
 export class TableStickyFooterExample {
   displayedColumns = ['item', 'cost'];

@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -19,11 +20,12 @@ ng_module(
     assets = [
         ":bottom-sheet-container.css",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/bottom-sheet",
     deps = [
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
+        "//src/cdk/coercion",
+        "//src/cdk/dialog",
         "//src/cdk/keycodes",
         "//src/cdk/layout",
         "//src/cdk/overlay",
@@ -45,7 +47,10 @@ sass_library(
 sass_binary(
     name = "bottom_sheet_container_scss",
     src = "bottom-sheet-container.scss",
-    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 ng_test_library(
@@ -75,6 +80,11 @@ ng_web_test_suite(
 markdown_to_html(
     name = "overview",
     srcs = [":bottom-sheet.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":bottom_sheet_scss_lib"],
 )
 
 filegroup(

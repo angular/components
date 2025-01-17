@@ -3,34 +3,42 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  ComponentHarnessConstructor,
+  ContentContainerComponentHarness,
+  HarnessPredicate,
+} from '@angular/cdk/testing';
 import {OptionHarnessFilters} from './option-harness-filters';
 
 /** Harness for interacting with a `mat-option` in tests. */
-export class MatOptionHarness extends ComponentHarness {
+export class MatOptionHarness extends ContentContainerComponentHarness {
   /** Selector used to locate option instances. */
-  static hostSelector = '.mat-option';
+  static hostSelector = '.mat-mdc-option';
 
   /** Element containing the option's text. */
-  private _text = this.locatorFor('.mat-option-text');
+  private _text = this.locatorFor('.mdc-list-item__primary-text');
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatOptionsHarness` that meets
-   * certain criteria.
+   * Gets a `HarnessPredicate` that can be used to search for an option with specific attributes.
    * @param options Options for filtering which option instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: OptionHarnessFilters = {}) {
-    return new HarnessPredicate(MatOptionHarness, options)
-        .addOption('text', options.text,
-            async (harness, title) =>
-                HarnessPredicate.stringMatches(await harness.getText(), title))
-        .addOption('isSelected', options.isSelected,
-            async (harness, isSelected) => await harness.isSelected() === isSelected);
-
+  static with<T extends MatOptionHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: OptionHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options)
+      .addOption('text', options.text, async (harness, title) =>
+        HarnessPredicate.stringMatches(await harness.getText(), title),
+      )
+      .addOption(
+        'isSelected',
+        options.isSelected,
+        async (harness, isSelected) => (await harness.isSelected()) === isSelected,
+      );
   }
 
   /** Clicks the option. */
@@ -45,21 +53,21 @@ export class MatOptionHarness extends ComponentHarness {
 
   /** Gets whether the option is disabled. */
   async isDisabled(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-option-disabled');
+    return (await this.host()).hasClass('mdc-list-item--disabled');
   }
 
   /** Gets whether the option is selected. */
   async isSelected(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-selected');
+    return (await this.host()).hasClass('mdc-list-item--selected');
   }
 
   /** Gets whether the option is active. */
   async isActive(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-active');
+    return (await this.host()).hasClass('mat-mdc-option-active');
   }
 
   /** Gets whether the option is in multiple selection mode. */
   async isMultiple(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-option-multiple');
+    return (await this.host()).hasClass('mat-mdc-option-multiple');
   }
 }

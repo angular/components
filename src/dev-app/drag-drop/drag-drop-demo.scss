@@ -18,13 +18,23 @@
   margin-left: 0;
 }
 
+.demo-list-wrapping {
+  width: 600px;
+  margin-right: 25px;
+
+  .cdk-drop-list {
+    flex-wrap: wrap;
+    min-width: 100px;
+  }
+}
+
 .cdk-drop-list {
   border: solid 1px #ccc;
   min-height: 60px;
   display: block;
 
   .demo-list-horizontal & {
-    padding: 0 24px;
+    padding: 12px;
     display: inline-flex;
     flex-direction: row;
   }
@@ -47,21 +57,17 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 
-  .demo-list-horizontal & {
-    border: none;
-    border-right: solid 1px #ccc;
-    flex: 1 1;
-    white-space: nowrap;
-    background-color: #fff;
-
-    [dir='rtl'] & {
-      border-right: none;
-      border-left: solid 1px #ccc;
-    }
-  }
-
   .cdk-drop-list &:last-child {
     border: none;
+  }
+
+  .demo-list-horizontal & {
+    white-space: nowrap;
+    margin: 8px;
+
+    &, &:last-child {
+      border: solid 1px #ccc;
+    }
   }
 }
 
@@ -80,6 +86,12 @@
 
 .cdk-drag-handle {
   cursor: move;
+  margin-left: 8px;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: 8px;
+  }
 
   svg {
     fill: rgba(0, 0, 0, 0.5);
@@ -98,4 +110,10 @@ pre {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.demo-constrain-box {
+  width: 600px;
+  height: 400px;
+  border: 1px solid black;
 }

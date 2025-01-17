@@ -3,16 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
-import {CdkMenu, CdkMenuItem, CdkMenuGroup, CDK_MENU} from '@angular/cdk-experimental/menu';
-
-@Component({
-  templateUrl: 'mat-menubar-demo.html',
-})
-export class MatMenuBarDemo {}
+import {CDK_MENU, CdkMenu, CdkMenuGroup, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {MatMenuBarModule} from '@angular/material-experimental/menubar';
 
 // TODO: Remove the fake when mat-menu is re-built with CdkMenu directives
 @Component({
@@ -20,18 +16,19 @@ export class MatMenuBarDemo {}
   exportAs: 'demoMenu',
   template: '<ng-content></ng-content>',
   host: {
-    '[tabindex]': '_isInline() ? 0 : null',
+    '[tabindex]': 'isInline ? 0 : null',
     'role': 'menu',
     'class': 'cdk-menu mat-menu mat-menu-panel',
-    '[class.cdk-menu-inline]': '_isInline()',
+    '[class.cdk-menu-inline]': 'isInline',
     '[attr.aria-orientation]': 'orientation',
   },
   providers: [
     {provide: CdkMenuGroup, useExisting: DemoMenu},
     {provide: CDK_MENU, useExisting: DemoMenu},
   ],
-  styleUrls: ['mat-menubar-demo.css'],
+  styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenu extends CdkMenu {}
 
@@ -47,7 +44,15 @@ export class DemoMenu extends CdkMenu {}
     '[attr.aria-disabled]': 'disabled || null',
   },
   template: '<ng-content></ng-content>',
-  styleUrls: ['mat-menubar-demo.css'],
+  styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenuItem extends CdkMenuItem {}
+
+@Component({
+  templateUrl: 'mat-menubar-demo.html',
+  imports: [CdkMenuModule, MatMenuBarModule, DemoMenu, DemoMenuItem],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatMenuBarDemo {}

@@ -111,7 +111,11 @@
 <ng-template #overlay>
   <div class="demo-overlay-connected-overlay">
     <div style="overflow: auto;">
-      <ul><li *ngFor="let item of itemArray; index as i">{{itemText}} {{i}}</li></ul>
+      <ul>
+        @for (item of itemArray; track item; let i = $index) {
+          <li>{{itemText}} {{i}}</li>
+        }
+      </ul>
     </div>
   </div>
 </ng-template>

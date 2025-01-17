@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
@@ -22,7 +22,6 @@ export interface Highlightable extends ListKeyManagerOption {
 }
 
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
-
   /**
    * Sets the active item to the item at the specified index and adds the
    * active styles to the newly active item. Also removes active styles
@@ -48,5 +47,4 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
       this.activeItem.setActiveStyles();
     }
   }
-
 }

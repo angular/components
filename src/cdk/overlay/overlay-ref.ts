@@ -3,23 +3,31 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
+import {
+  AfterRenderRef,
+  ComponentRef,
+  EmbeddedViewRef,
+  EnvironmentInjector,
+  NgZone,
+  Renderer2,
+  afterNextRender,
+  afterRender,
+  untracked,
+} from '@angular/core';
 import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
-import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
-
 
 /** An object where all of its properties cannot be written. */
 export type ImmutableObject<T> = {
@@ -30,15 +38,17 @@ export type ImmutableObject<T> = {
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
  */
-export class OverlayRef implements PortalOutlet, OverlayReference {
+export class OverlayRef implements PortalOutlet {
   private _backdropElement: HTMLElement | null = null;
+  private _backdropTimeout: ReturnType<typeof setTimeout> | undefined;
   private readonly _backdropClick = new Subject<MouseEvent>();
   private readonly _attachments = new Subject<void>();
   private readonly _detachments = new Subject<void>();
   private _positionStrategy: PositionStrategy | undefined;
   private _scrollStrategy: ScrollStrategy | undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
-  private _backdropClickHandler = (event: MouseEvent) => this._backdropClick.next(event);
+  private _cleanupBackdropClick: (() => void) | undefined;
+  private _cleanupBackdropTransitionEnd: (() => void) | undefined;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
@@ -52,23 +62,45 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   /** Stream of mouse outside events dispatched to this overlay. */
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
 
-  constructor(
-      private _portalOutlet: PortalOutlet,
-      private _host: HTMLElement,
-      private _pane: HTMLElement,
-      private _config: ImmutableObject<OverlayConfig>,
-      private _ngZone: NgZone,
-      private _keyboardDispatcher: OverlayKeyboardDispatcher,
-      private _document: Document,
-      private _location: Location,
-      private _outsideClickDispatcher: OverlayOutsideClickDispatcher) {
+  private _renders = new Subject<void>();
 
+  private _afterRenderRef: AfterRenderRef;
+
+  /** Reference to the currently-running `afterNextRender` call. */
+  private _afterNextRenderRef: AfterRenderRef | undefined;
+
+  constructor(
+    private _portalOutlet: PortalOutlet,
+    private _host: HTMLElement,
+    private _pane: HTMLElement,
+    private _config: ImmutableObject<OverlayConfig>,
+    private _ngZone: NgZone,
+    private _keyboardDispatcher: OverlayKeyboardDispatcher,
+    private _document: Document,
+    private _location: Location,
+    private _outsideClickDispatcher: OverlayOutsideClickDispatcher,
+    private _animationsDisabled = false,
+    private _injector: EnvironmentInjector,
+    private _renderer: Renderer2,
+  ) {
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
       this._scrollStrategy.attach(this);
     }
 
     this._positionStrategy = _config.positionStrategy;
+
+    // Users could open the overlay from an `effect`, in which case we need to
+    // run the `afterRender` as `untracked`. We don't recommend that users do
+    // this, but we also don't want to break users who are doing it.
+    this._afterRenderRef = untracked(() =>
+      afterRender(
+        () => {
+          this._renders.next();
+        },
+        {injector: this._injector},
+      ),
+    );
   }
 
   /** The overlay's HTML element */
@@ -102,12 +134,13 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
    * @returns The portal attachment result.
    */
   attach(portal: Portal<any>): any {
-    let attachResult = this._portalOutlet.attach(portal);
-
-    // Update the pane element with the given configuration.
+    // Insert the host into the DOM before attaching the portal, otherwise
+    // the animations module will skip animations on repeat attachments.
     if (!this._host.parentElement && this._previousHostParent) {
       this._previousHostParent.appendChild(this._host);
     }
+
+    const attachResult = this._portalOutlet.attach(portal);
 
     if (this._positionStrategy) {
       this._positionStrategy.attach(this);
@@ -121,17 +154,22 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       this._scrollStrategy.enable();
     }
 
-    // Update the position once the zone is stable so that the overlay will be fully rendered
-    // before attempting to position it, as the position may depend on the size of the rendered
-    // content.
-    this._ngZone.onStable
-      .pipe(take(1))
-      .subscribe(() => {
-        // The overlay could've been detached before the zone has stabilized.
+    // We need to clean this up ourselves, because we're passing in an
+    // `EnvironmentInjector` below which won't ever be destroyed.
+    // Otherwise it causes some callbacks to be retained (see #29696).
+    this._afterNextRenderRef?.destroy();
+
+    // Update the position once the overlay is fully rendered before attempting to position it,
+    // as the position may depend on the size of the rendered content.
+    this._afterNextRenderRef = afterNextRender(
+      () => {
+        // The overlay could've been detached before the callback executed.
         if (this.hasAttached()) {
           this.updatePosition();
         }
-      });
+      },
+      {injector: this._injector},
+    );
 
     // Enable pointer events for the overlay pane element.
     this._togglePointerEvents(true);
@@ -155,6 +193,26 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     this._outsideClickDispatcher.add(this);
+
+    // TODO(crisbeto): the null check is here, because the portal outlet returns `any`.
+    // We should be guaranteed for the result to be `ComponentRef | EmbeddedViewRef`, but
+    // `instanceof EmbeddedViewRef` doesn't appear to work at the moment.
+    if (typeof attachResult?.onDestroy === 'function') {
+      // In most cases we control the portal and we know when it is being detached so that
+      // we can finish the disposal process. The exception is if the user passes in a custom
+      // `ViewContainerRef` that isn't destroyed through the overlay API. Note that we use
+      // `detach` here instead of `dispose`, because we don't know if the user intends to
+      // reattach the overlay at a later point. It also has the advantage of waiting for animations.
+      attachResult.onDestroy(() => {
+        if (this.hasAttached()) {
+          // We have to delay the `detach` call, because detaching immediately prevents
+          // other destroy hooks from running. This is likely a framework bug similar to
+          // https://github.com/angular/angular/issues/46119
+          this._ngZone.runOutsideAngular(() => Promise.resolve().then(() => this.detach()));
+        }
+      });
+    }
+
     return attachResult;
   }
 
@@ -192,7 +250,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     // Keeping the host element in the DOM can cause scroll jank, because it still gets
     // rendered, even though it's transparent and unclickable which is why we remove it.
-    this._detachContentWhenStable();
+    this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
     return detachmentResult;
@@ -207,7 +265,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     this._disposeScrollStrategy();
-    this.detachBackdrop();
+    this._disposeBackdrop(this._backdropElement);
     this._locationChanges.unsubscribe();
     this._keyboardDispatcher.remove(this);
     this._portalOutlet.dispose();
@@ -216,19 +274,18 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._keydownEvents.complete();
     this._outsidePointerEvents.complete();
     this._outsideClickDispatcher.remove(this);
+    this._host?.remove();
+    this._afterNextRenderRef?.destroy();
 
-    if (this._host && this._host.parentNode) {
-      this._host.parentNode.removeChild(this._host);
-      this._host = null!;
-    }
-
-    this._previousHostParent = this._pane = null!;
+    this._previousHostParent = this._pane = this._host = null!;
 
     if (isAttached) {
       this._detachments.next();
     }
 
     this._detachments.complete();
+    this._afterRenderRef.destroy();
+    this._renders.complete();
   }
 
   /** Whether the overlay has attached content. */
@@ -378,6 +435,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._backdropElement = this._document.createElement('div');
     this._backdropElement.classList.add('cdk-overlay-backdrop');
 
+    if (this._animationsDisabled) {
+      this._backdropElement.classList.add('cdk-overlay-backdrop-noop-animation');
+    }
+
     if (this._config.backdropClass) {
       this._toggleClasses(this._backdropElement, this._config.backdropClass, true);
     }
@@ -388,10 +449,15 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
-    this._backdropElement.addEventListener('click', this._backdropClickHandler);
+    this._cleanupBackdropClick?.();
+    this._cleanupBackdropClick = this._renderer.listen(
+      this._backdropElement,
+      'click',
+      (event: MouseEvent) => this._backdropClick.next(event),
+    );
 
     // Add class to fade-in the backdrop after one frame.
-    if (typeof requestAnimationFrame !== 'undefined') {
+    if (!this._animationsDisabled && typeof requestAnimationFrame !== 'undefined') {
       this._ngZone.runOutsideAngular(() => {
         requestAnimationFrame(() => {
           if (this._backdropElement) {
@@ -419,42 +485,28 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
   /** Detaches the backdrop (if any) associated with the overlay. */
   detachBackdrop(): void {
-    let backdropToDetach = this._backdropElement;
+    const backdropToDetach = this._backdropElement;
 
     if (!backdropToDetach) {
       return;
     }
 
-    let timeoutId: number;
-    let finishDetach = () => {
-      // It may not be attached to anything in certain cases (e.g. unit tests).
-      if (backdropToDetach) {
-        backdropToDetach.removeEventListener('click', this._backdropClickHandler);
-        backdropToDetach.removeEventListener('transitionend', finishDetach);
-
-        if (backdropToDetach.parentNode) {
-          backdropToDetach.parentNode.removeChild(backdropToDetach);
-        }
-      }
-
-      // It is possible that a new portal has been attached to this overlay since we started
-      // removing the backdrop. If that is the case, only clear the backdrop reference if it
-      // is still the same instance that we started to remove.
-      if (this._backdropElement == backdropToDetach) {
-        this._backdropElement = null;
-      }
-
-      if (this._config.backdropClass) {
-        this._toggleClasses(backdropToDetach!, this._config.backdropClass, false);
-      }
-
-      clearTimeout(timeoutId);
-    };
+    if (this._animationsDisabled) {
+      this._disposeBackdrop(backdropToDetach);
+      return;
+    }
 
     backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
 
     this._ngZone.runOutsideAngular(() => {
-      backdropToDetach!.addEventListener('transitionend', finishDetach);
+      this._cleanupBackdropTransitionEnd?.();
+      this._cleanupBackdropTransitionEnd = this._renderer.listen(
+        backdropToDetach,
+        'transitionend',
+        (event: TransitionEvent) => {
+          this._disposeBackdrop(event.target as HTMLElement | null);
+        },
+      );
     });
 
     // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
@@ -464,24 +516,24 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Run this outside the Angular zone because there's nothing that Angular cares about.
     // If it were to run inside the Angular zone, every test that used Overlay would have to be
     // either async or fakeAsync.
-    timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
+    this._backdropTimeout = this._ngZone.runOutsideAngular(() =>
+      setTimeout(() => {
+        this._disposeBackdrop(backdropToDetach);
+      }, 500),
+    );
   }
 
   /** Toggles a single CSS class or an array of classes on an element. */
   private _toggleClasses(element: HTMLElement, cssClasses: string | string[], isAdd: boolean) {
-    const classList = element.classList;
+    const classes = coerceArray(cssClasses || []).filter(c => !!c);
 
-    coerceArray(cssClasses).forEach(cssClass => {
-      // We can't do a spread here, because IE doesn't support setting multiple classes.
-      // Also trying to add an empty string to a DOMTokenList will throw.
-      if (cssClass) {
-        isAdd ? classList.add(cssClass) : classList.remove(cssClass);
-      }
-    });
+    if (classes.length) {
+      isAdd ? element.classList.add(...classes) : element.classList.remove(...classes);
+    }
   }
 
   /** Detaches the overlay content next time the zone stabilizes. */
-  private _detachContentWhenStable() {
+  private _detachContentWhenEmpty() {
     // Normally we wouldn't have to explicitly run this outside the `NgZone`, however
     // if the consumer is using `zone-patch-rxjs`, the `Subscription.unsubscribe` call will
     // be patched to run inside the zone, which will throw us into an infinite loop.
@@ -489,7 +541,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       // We can't remove the host here immediately, because the overlay pane's content
       // might still be animating. This stream helps us avoid interrupting the animation
       // by waiting for the pane to become empty.
-      const subscription = this._ngZone.onStable
+      const subscription = this._renders
         .pipe(takeUntil(merge(this._attachments, this._detachments)))
         .subscribe(() => {
           // Needs a couple of checks for the pane and host, because
@@ -501,7 +553,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
             if (this._host && this._host.parentElement) {
               this._previousHostParent = this._host.parentElement;
-              this._previousHostParent.removeChild(this._host);
+              this._host.remove();
             }
 
             subscription.unsubscribe();
@@ -522,8 +574,29 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       }
     }
   }
-}
 
+  /** Removes a backdrop element from the DOM. */
+  private _disposeBackdrop(backdrop: HTMLElement | null) {
+    this._cleanupBackdropClick?.();
+    this._cleanupBackdropTransitionEnd?.();
+
+    if (backdrop) {
+      backdrop.remove();
+
+      // It is possible that a new portal has been attached to this overlay since we started
+      // removing the backdrop. If that is the case, only clear the backdrop reference if it
+      // is still the same instance that we started to remove.
+      if (this._backdropElement === backdrop) {
+        this._backdropElement = null;
+      }
+    }
+
+    if (this._backdropTimeout) {
+      clearTimeout(this._backdropTimeout);
+      this._backdropTimeout = undefined;
+    }
+  }
+}
 
 /** Size properties for an overlay. */
 export interface OverlaySizeConfig {

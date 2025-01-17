@@ -1,0 +1,31 @@
+load("//tools:defaults.bzl", "markdown_to_html", "ng_module", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "private",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":visually-hidden-styles"],
+    deps = [
+        "@npm//@angular/core",
+    ],
+)
+
+sass_binary(
+    name = "visually-hidden-styles",
+    src = ":visually-hidden/visually-hidden.scss",
+    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":private.md"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)

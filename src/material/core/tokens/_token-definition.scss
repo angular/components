@@ -1,0 +1,273 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:math';
+@use '../m2/palette' as m2-palette;
+@use '../m2/theming' as m2-theming;
+@use '../m2/typography' as m2-typography;
+@use '../style/sass-utils';
+@use './m3/definitions' as m3-token-definitions;
+
+// Indicates whether we're building internally. Used for backwards compatibility.
+$private-is-internal-build: false;
+
+$_placeholder-color-palette: m2-theming.define-palette(m2-palette.$red-palette);
+
+// Placeholder color config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-color-config: (
+  primary: $_placeholder-color-palette,
+  accent: $_placeholder-color-palette,
+  warn: $_placeholder-color-palette,
+  is-dark: false,
+  foreground: m2-palette.$light-theme-foreground-palette,
+  background: m2-palette.$light-theme-background-palette,
+);
+
+$_placeholder-typography-level-config: m2-typography.typography-config-level-from-mdc(body1);
+
+// Placeholder typography config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-typography-config: (
+  font-family: 'Roboto, sans-serif',
+  headline-1: $_placeholder-typography-level-config,
+  headline-2: $_placeholder-typography-level-config,
+  headline-3: $_placeholder-typography-level-config,
+  headline-4: $_placeholder-typography-level-config,
+  headline-5: $_placeholder-typography-level-config,
+  headline-6: $_placeholder-typography-level-config,
+  subtitle-1: $_placeholder-typography-level-config,
+  subtitle-2: $_placeholder-typography-level-config,
+  body-1: $_placeholder-typography-level-config,
+  body-2: $_placeholder-typography-level-config,
+  caption: $_placeholder-typography-level-config,
+  button: $_placeholder-typography-level-config,
+  overline: $_placeholder-typography-level-config,
+  subheading-1: $_placeholder-typography-level-config,
+  title: $_placeholder-typography-level-config,
+);
+
+// Placeholder density config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-density-config: 0;
+
+$_tokens: null;
+$_component-prefix: null;
+$_system-fallbacks: null;
+
+/// Gets all the MDC token values for a specific component. This function serves as single
+/// point at which we directly reference a specific version of the MDC tokens.
+/// @param {String} $component Name of the component for which to get the tokens
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @return {List} Map of token names to values
+@function get-mdc-tokens($component, $systems, $exclude-hardcoded) {
+  $full-name: 'md-comp-' + $component + '-values';
+  $fn: meta.get-function($name: $full-name, $module: 'm3-token-definitions');
+  @return meta.call($fn, $systems, $exclude-hardcoded);
+}
+
+/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
+/// @param {List} $prefix The token prefix for the given tokens.
+/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
+///  This param may also be a tuple of maps, the first one representing the default M3 token values,
+//   and the second containing overrides for different color variants.
+//   Single map example:
+//     (token1: green, token2: 2px)
+//   Tuple example:
+//     (
+//       (token1: green, token2: 2px),
+//       (
+//         secondary: (token1: blue),
+//         error: (token1: red),
+//       )
+//     )
+/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @param {String|null} $variant The name of the variant the token values are for.
+/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
+@function namespace-tokens($prefix, $values, $slots, $variant: null) {
+  $result: ();
+  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
+    $variants: list.nth($values, 2);
+    $values: list.nth($values, 1);
+    @each $variant, $overrides in $variants {
+      $result: map.merge($result, namespace-tokens($prefix, $overrides, $slots, $variant));
+    }
+  }
+  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
+  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
+  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
+  @return map.merge($result, ($prefix: $used-m3-tokens));
+}
+
+/// Hardcode the given value, or null if hardcoded values are excluded.
+@function hardcode($value, $exclude-hardcoded) {
+  @return if($exclude-hardcoded, null, $value);
+}
+
+/// Sets all of the standard typography tokens for the given token base name to the given typography
+/// level.
+/// @param {Map} $systems The MDC system tokens
+/// @param {String} $base-name The token base name to get the typography tokens for
+/// @param {String} $typography-level The typography level to base the token values on
+/// @return {Map} A map containing the typography tokens for the given base token name
+@function generate-typography-tokens($systems, $base-name, $typography-level) {
+  $result: ();
+  @each $prop in (font, line-height, size, tracking, weight) {
+    $result: map.set($result, #{$base-name}-#{$prop},
+      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
+  }
+  @return $result;
+}
+
+/// Maps the values in a map to new values using the given mapping function
+/// @param {Map} $map The maps whose values will be mapped to new values.
+/// @param {Function} $fn The value mapping function.
+/// @param {ArgList} $args Additional arguments to pass to the mapping function.
+/// @return {Map} A new map with its values updated using the mapping function.
+@function map-values($map, $fn, $args...) {
+  $result: ();
+  @each $key, $value in $map {
+    $result: map.set($result, $key, meta.call($fn, $value, $args...));
+  }
+  @return $result;
+}
+
+/// Renames the keys in a map
+/// @param {Map} $map The map whose keys should be renamed
+/// @param {Map} $rename-keys A map of original key to renamed key to apply to $map
+/// @return {Map} The result of applying the given key renames to the given map.
+@function rename-map-keys($map, $rename-keys) {
+  $result: $map;
+  @each $old-key-name, $new-key-name in $rename-keys {
+    @if map.has-key($map, $old-key-name) {
+      $result: map.set($result, $new-key-name, map.get($map, $old-key-name));
+    }
+  }
+  @return $result;
+}
+
+/// At the time of writing, some color tokens (e.g. disabled state) are defined as a solid color
+/// token and a separate opacity token. This function applies the opacity to the color and drops the
+/// opacity key from the map. Can be removed once b/213331407 is resolved.
+/// @param {Map} $tokens The map of tokens currently being generated
+/// @param {Map} $all-tokens A map of all tokens, including hardcoded values
+/// @param {List} $pairs Pairs of color token names and their opacities. Should be in the shape of
+/// `((color: 'color-key', opacity: 'opacity-key'))`.
+/// @return {Map} The initial tokens with the combined color values.
+@function combine-color-tokens($tokens, $opacity-lookup, $pairs) {
+  $result: $tokens;
+
+  @each $pair in $pairs {
+    $color-key: map.get($pair, color);
+    $opacity-key: map.get($pair, opacity);
+    $color: map.get($tokens, $color-key);
+
+    @if (sass-utils.is-css-var-name($color)) {
+      $color: var(#{$color});
+    }
+
+    $opacity: map.get($opacity-lookup, $opacity-key);
+
+    @if(meta.type-of($color) == 'color') {
+      $result: map.remove($result, $opacity-key);
+      $result: map.set($result, $color-key, rgba($color, $opacity));
+    }
+    @else if($color != null) {
+      $result: map.remove($result, $opacity-key);
+      $combined-color: #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
+      $result: map.set($result, $color-key, $combined-color);
+    }
+  }
+
+  @return $result;
+}
+
+/// Inherited function from MDC that computes which contrast tone to use on top of a color.
+/// This is used only in a narrow set of use cases when generating M2 button tokens to maintain
+/// backwards compatibility.
+/// @param {Color} $value Color for which we're calculating the contrast tone.
+/// @param {Boolean} $is-dark Whether the current theme is dark.
+/// @return {Map} Either `dark` or `light`.
+@function contrast-tone($value, $is-dark) {
+  @if ($value == 'dark') {
+    @return 'light';
+  }
+
+  @if ($value == 'light') {
+    @return 'dark';
+  }
+
+  // Fallback if the app is using a non-color palette (e.g. CSS variable based).
+  @if (meta.type-of($value) != 'color') {
+    @return if($is-dark, 'light', 'dark');
+  }
+
+  $minimum-contrast: 3.1;
+  $light-contrast: _contrast($value, #fff);
+  $dark-contrast: _contrast($value, rgba(0, 0, 0, 0.87));
+
+  @if ($light-contrast < $minimum-contrast) and ($dark-contrast > $light-contrast) {
+    @return 'dark';
+  }
+
+  @return 'light';
+}
+
+@function _linear-channel-value($channel-value) {
+  $normalized-channel-value: math.div($channel-value, 255);
+
+  @if ($normalized-channel-value < 0.03928) {
+    @return math.div($normalized-channel-value, 12.92);
+  }
+
+  @return math.pow(math.div($normalized-channel-value + 0.055, 1.055), 2.4);
+}
+
+// Calculate the luminance for a color.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _luminance($color) {
+  $red: _linear-channel-value(color.red($color));
+  $green: _linear-channel-value(color.green($color));
+  $blue: _linear-channel-value(color.blue($color));
+
+  @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
+}
+
+// Calculate the contrast ratio between two colors.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _contrast($back, $front) {
+  $back-lum: _luminance($back) + 0.05;
+  $fore-lum: _luminance($front) + 0.05;
+
+  @return math.div(math.max($back-lum, $fore-lum), math.min($back-lum, $fore-lum));
+}
+
+/// Picks a submap containing only the given keys out the given map.
+/// @param {Map} $map The map to pick from.
+/// @param {List} $keys The map keys to pick.
+/// @return {Map} A submap containing only the given keys.
+@function _pick($map, $keys) {
+  $result: ();
+  @each $key in $keys {
+    @if map.has-key($map, $key) {
+      $result: map.set($result, $key, map.get($map, $key));
+    }
+  }
+  @return $result;
+}
+
+
+/// Filters keys with a null value out of the map.
+/// @param {Map} $map The map to filter.
+/// @return {Map} The given map with all of the null keys filtered out.
+@function _filter-nulls($map) {
+  $result: ();
+  @each $key, $val in $map {
+    @if $val != null {
+      $result: map.set($result, $key, $val);
+    }
+  }
+  @return $result;
+}

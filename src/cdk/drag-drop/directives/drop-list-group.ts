@@ -3,19 +3,19 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, OnDestroy, Input, InjectionToken} from '@angular/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Directive, OnDestroy, Input, InjectionToken, booleanAttribute} from '@angular/core';
 
 /**
  * Injection token that can be used to reference instances of `CdkDropListGroup`. It serves as
  * alternative token to the actual `CdkDropListGroup` class which could cause unnecessary
  * retention of the class and its directive metadata.
  */
-export const CDK_DROP_LIST_GROUP =
-    new InjectionToken<CdkDropListGroup<unknown>>('CdkDropListGroup');
+export const CDK_DROP_LIST_GROUP = new InjectionToken<CdkDropListGroup<unknown>>(
+  'CdkDropListGroup',
+);
 
 /**
  * Declaratively connects sibling `cdkDropList` instances together. All of the `cdkDropList`
@@ -33,16 +33,10 @@ export class CdkDropListGroup<T> implements OnDestroy {
   readonly _items = new Set<T>();
 
   /** Whether starting a dragging sequence from inside this group is disabled. */
-  @Input('cdkDropListGroupDisabled')
-  get disabled(): boolean { return this._disabled; }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  private _disabled = false;
+  @Input({alias: 'cdkDropListGroupDisabled', transform: booleanAttribute})
+  disabled: boolean = false;
 
   ngOnDestroy() {
     this._items.clear();
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

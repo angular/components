@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 interface Animal {
   name: string;
@@ -10,9 +13,10 @@ interface Animal {
 @Component({
   selector: 'select-hint-error-example',
   templateUrl: 'select-hint-error-example.html',
+  imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectHintErrorExample {
-  animalControl = new FormControl('', Validators.required);
+  animalControl = new FormControl<Animal | null>(null, Validators.required);
   selectFormControl = new FormControl('', Validators.required);
   animals: Animal[] = [
     {name: 'Dog', sound: 'Woof!'},

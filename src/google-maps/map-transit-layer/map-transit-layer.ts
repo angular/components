@@ -3,15 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" preserve="true" />
 
-import {Directive} from '@angular/core';
+import {Directive, EventEmitter, NgZone, OnDestroy, OnInit, Output, inject} from '@angular/core';
 
-import {MapBaseLayer} from '../map-base-layer';
+import {GoogleMap} from '../google-map/google-map';
 
 /**
  * Angular component that renders a Google Maps Transit Layer via the Google Maps JavaScript API.
@@ -22,7 +22,10 @@ import {MapBaseLayer} from '../map-base-layer';
   selector: 'map-transit-layer',
   exportAs: 'mapTransitLayer',
 })
-export class MapTransitLayer extends MapBaseLayer {
+export class MapTransitLayer implements OnInit, OnDestroy {
+  private _map = inject(GoogleMap);
+  private _zone = inject(NgZone);
+
   /**
    * The underlying google.maps.TransitLayer object.
    *
@@ -30,26 +33,45 @@ export class MapTransitLayer extends MapBaseLayer {
    */
   transitLayer?: google.maps.TransitLayer;
 
-  protected override _initializeObject() {
-    this.transitLayer = new google.maps.TransitLayer();
-  }
+  /** Event emitted when the transit layer is initialized. */
+  @Output() readonly transitLayerInitialized: EventEmitter<google.maps.TransitLayer> =
+    new EventEmitter<google.maps.TransitLayer>();
 
-  protected override _setMap() {
-    this._assertLayerInitialized();
-    this.transitLayer.setMap(this._map.googleMap!);
-  }
-
-  protected override _unsetMap() {
-    if (this.transitLayer) {
-      this.transitLayer.setMap(null);
+  ngOnInit(): void {
+    if (this._map._isBrowser) {
+      if (google.maps.TransitLayer && this._map.googleMap) {
+        this._initialize(this._map.googleMap, google.maps.TransitLayer);
+      } else {
+        this._zone.runOutsideAngular(() => {
+          Promise.all([this._map._resolveMap(), google.maps.importLibrary('maps')]).then(
+            ([map, lib]) => {
+              this._initialize(map, (lib as google.maps.MapsLibrary).TransitLayer);
+            },
+          );
+        });
+      }
     }
+  }
+
+  private _initialize(map: google.maps.Map, layerConstructor: typeof google.maps.TransitLayer) {
+    this._zone.runOutsideAngular(() => {
+      this.transitLayer = new layerConstructor();
+      this.transitLayerInitialized.emit(this.transitLayer);
+      this._assertLayerInitialized();
+      this.transitLayer.setMap(map);
+    });
+  }
+
+  ngOnDestroy() {
+    this.transitLayer?.setMap(null);
   }
 
   private _assertLayerInitialized(): asserts this is {transitLayer: google.maps.TransitLayer} {
     if (!this.transitLayer) {
       throw Error(
-          'Cannot interact with a Google Map Transit Layer before it has been initialized. ' +
-          'Please wait for the Transit Layer to load before trying to interact with it.');
+        'Cannot interact with a Google Map Transit Layer before it has been initialized. ' +
+          'Please wait for the Transit Layer to load before trying to interact with it.',
+      );
     }
   }
 }

@@ -1,6 +1,7 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 export interface PeriodicElement {
   name: string;
@@ -27,8 +28,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-selection-example',
-  styleUrls: ['table-selection-example.css'],
+  styleUrl: 'table-selection-example.css',
   templateUrl: 'table-selection-example.html',
+  imports: [MatTableModule, MatCheckboxModule],
 })
 export class TableSelectionExample {
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
@@ -43,7 +45,7 @@ export class TableSelectionExample {
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
       return;

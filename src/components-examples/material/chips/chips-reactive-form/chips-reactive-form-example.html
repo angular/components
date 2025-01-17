@@ -1,0 +1,21 @@
+<section>
+  <h4>Chips inside of a Reactive form</h4>
+  <mat-form-field class="example-form-field">
+    <mat-label>Video keywords</mat-label>
+    <mat-chip-grid #reactiveChipGrid aria-label="Enter reactive form keywords" [formControl]="formControl">
+    @for (keyword of reactiveKeywords(); track keyword) {
+      <mat-chip-row (removed)="removeReactiveKeyword(keyword)">
+        {{keyword}}
+      <button matChipRemove aria-label="'remove reactive form' + keyword">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      </mat-chip-row>
+    }
+    </mat-chip-grid>
+    <input
+      placeholder="New keyword..."
+      [matChipInputFor]="reactiveChipGrid"
+      (matChipInputTokenEnd)="addReactiveKeyword($event)"
+    />
+  </mat-form-field>
+</section>

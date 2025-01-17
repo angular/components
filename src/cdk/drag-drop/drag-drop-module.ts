@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {NgModule} from '@angular/core';
@@ -16,26 +16,18 @@ import {CdkDragPreview} from './directives/drag-preview';
 import {CdkDragPlaceholder} from './directives/drag-placeholder';
 import {DragDrop} from './drag-drop';
 
+const DRAG_DROP_DIRECTIVES = [
+  CdkDropList,
+  CdkDropListGroup,
+  CdkDrag,
+  CdkDragHandle,
+  CdkDragPreview,
+  CdkDragPlaceholder,
+];
+
 @NgModule({
-  declarations: [
-    CdkDropList,
-    CdkDropListGroup,
-    CdkDrag,
-    CdkDragHandle,
-    CdkDragPreview,
-    CdkDragPlaceholder,
-  ],
-  exports: [
-    CdkScrollableModule,
-    CdkDropList,
-    CdkDropListGroup,
-    CdkDrag,
-    CdkDragHandle,
-    CdkDragPreview,
-    CdkDragPlaceholder,
-  ],
-  providers: [
-    DragDrop,
-  ]
+  imports: DRAG_DROP_DIRECTIVES,
+  exports: [CdkScrollableModule, ...DRAG_DROP_DIRECTIVES],
+  providers: [DragDrop],
 })
 export class DragDropModule {}

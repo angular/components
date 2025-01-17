@@ -1,0 +1,46 @@
+@use 'sass:map';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, chip);
+
+/// Generates custom tokens for the mat-chip.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-chip
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    disabled-container-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    selected-trailing-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+    selected-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
+    trailing-action-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    selected-trailing-action-state-layer-color:
+        map.get($systems, md-sys-color, on-secondary-container),
+    trailing-action-hover-state-layer-opacity:
+        map.get($systems, md-sys-state, hover-state-layer-opacity),
+    trailing-action-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
+    trailing-action-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    trailing-action-focus-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+  ), (
+    primary: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-primary-container),
+    ),
+    secondary: (), // Default, no overrides needed.
+    tertiary: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-tertiary-container),
+    ),
+    error: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-trailing-action-state-layer-color:
+          map.get($systems, md-sys-color, on-error-container),
+    ),
+  ));
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

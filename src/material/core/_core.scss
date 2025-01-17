@@ -1,35 +1,53 @@
-@use '../../cdk/overlay';
-@use '../../cdk/a11y';
-@use '../../cdk/text-field';
+@use './tokens/m2/mat/app' as tokens-mat-app;
+@use './tokens/token-utils';
+@use './style/elevation';
 
-// Core styles that can be used to apply material design treatments to any element.
-@use './ripple/ripple';
-@use './focus-indicators/focus-indicators';
-@use './typography/all-typography';
+/// @deprecated This mixin is a no-op and is going to be removed in v21.
+@mixin core() {}
 
-// Mixin that renders all of the core styles that are not theme-dependent.
-@mixin core($typography-config: null) {
-  @include all-typography.all-component-typographies($typography-config);
-  @include ripple.ripple();
-  @include a11y.a11y-visually-hidden();
-  @include overlay.overlay();
-  @include text-field.text-field-autosize();
-  @include text-field.text-field-autofill();
+// Emits the mat-app-background CSS class. This predefined class sets the
+// background color and text color of an element.
+@mixin app-background() {
+  // TODO: Move ripple styles to be dynamically loaded instead of in core.
+  // This variable is used as a fallback for the ripple element's
+  // background color. However, if it isn't defined anywhere, then MSS
+  // complains in its verification stage.
+  html {
+    --mat-sys-on-surface: initial;
+  }
 
-  @include focus-indicators.private-strong-focus-indicators-positioning();
-  @include _mdc-core();
+  // Wrapper element that provides the theme background when the
+  // user's content isn't inside of a `mat-sidenav-container`.
+  @at-root {
+    // Note: we need to emit fallback values here to avoid errors in internal builds.
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
+      .mat-app-background {
+        @include token-utils.create-token-slot(background-color, background-color, transparent);
+        @include token-utils.create-token-slot(color, text-color, inherit);
+      }
+    }
+  }
 }
 
-// Mixin that renders all of the core MDC styles. Private mixin included with `mat-core`.
-@mixin _mdc-core() {
-  @include _mdc-strong-focus-indicators-positioning();
-}
-
-// Mixin that ensures focus indicator host elements are positioned so that the focus indicator
-// pseudo element within is positioned relative to the host. Private mixin included within
-// `_mat-mdc-core`.
-@mixin _mdc-strong-focus-indicators-positioning() {
-  .mat-mdc-focus-indicator {
-    position: relative;
+// Emits CSS classes for applying elevation. These classes follow the pattern
+// mat-elevation-z#, where # is the elevation number you want, from 0 to 24.
+// These predefined classes use the CSS box-shadow settings defined by the
+// Material Design specification.
+@mixin elevation-classes() {
+  @at-root {
+    @include token-utils.use-tokens(tokens-mat-app.$prefix, tokens-mat-app.get-token-slots()) {
+      // Provides external CSS classes for each elevation value. Each CSS class is formatted as
+      // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
+      // is elevated.
+      @for $z-value from 0 through 24 {
+        $selector: elevation.$prefix + $z-value;
+        // We need the `mat-mdc-elevation-specific`, because some MDC mixins
+        // come with elevation baked in and we don't have a way of removing it.
+        .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
+          @include token-utils.create-token-slot(box-shadow, 'elevation-shadow-level-#{$z-value}',
+            none);
+        }
+      }
+    }
   }
 }

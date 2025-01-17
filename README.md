@@ -18,7 +18,7 @@ own custom components. The team maintains several npm packages.
 [Documentation, demos, and guides][mat-docs] |
 [Frequently Asked Questions](FAQ.md) |
 [Community Google group](https://groups.google.com/forum/#!forum/angular-material2) |
-[Contributing](https://github.com/angular/components/blob/master/CONTRIBUTING.md) |
+[Contributing](https://github.com/angular/components/blob/main/CONTRIBUTING.md) |
 [StackBlitz Template](https://stackblitz.com/fork/components-issue)
 
 ## Getting started
@@ -31,30 +31,15 @@ Material.
 
 If you'd like to contribute, please follow our [contributing guidelines][contributing]. Please see
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
-contribution.
-
-## What we're working on now (Q2 2021):
-* Continuing to create new, API-compatible versions of the Angular Material components backed by
-[MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). Much of our effort
-is dedicated towards rolling out these new versions of the components across Angular apps
-inside Google. This work will payoff with the following benefits:
-  * Dramatically improve consistency with the Material Design spec, which has changed significantly
-    since Angular Material's 2016 inception.
-  * Introduce a new theming API for component density, a top feature request.
-  * Fix a number of longstanding accessibility bugs.
-  * Increase number of people working to continuously improve the components on an on-going basis
-    (both the Angular team and the Material Design team).
-* Continue work on virtual-scroll support for cdk/table.
-* Accessibility - we'll be doing a major pass on outstanding accessibility issues and reviewing all
-of the components for accessibility best practices such as WCAG.
-
+contribution. You can also use the [`good first issue`][good-first-issue] label to find issues
+if you are just starting to contribute to the project.
 
 ## About the team
 The Angular Components team is part of the Angular team at Google. The team includes both Google
 employees and community contributors from around the globe.
 
 Our team has two primary goals:
-* Build high-quality UI components that developers can drop into existing applications 
+* Build high-quality UI components that developers can drop into existing applications
 * Provide tools that help developers build their own custom components with common interaction
 patterns
 
@@ -70,10 +55,10 @@ What do we mean by "high-quality" components?
 
 ## Browser and screen reader support
 The Angular Components team supports the most recent two versions of all major browsers:
-Chrome (including Android), Firefox, Safari (including iOS), and IE11 / Edge.
+Chrome (including Android), Firefox, Safari (including iOS), and  Edge.
 
 We aim for great user experience with the following screen readers:
-* **Windows**: NVDA and JAWS with IE11 / FF / Chrome.
+* **Windows**: NVDA and JAWS with FF / Chrome.
 * **macOS**: VoiceOver with Safari / Chrome.
 * **iOS**: VoiceOver with Safari
 * **Android**: Android Accessibility Suite (formerly TalkBack) with Chrome.
@@ -83,11 +68,11 @@ We aim for great user experience with the following screen readers:
 [Material Design]: https://material.io
 [Google Maps JavaScript API]: https://developers.google.com/maps/documentation/javascript/tutorial
 [YouTube Player API]: https://developers.google.com/youtube/iframe_api_reference
-[MDC Web]: https://github.com/material-components/material-components-web/
 [cdk-docs]: https://material.angular.io/cdk/categories
 [mat-docs]: https://material.angular.io
-[map-docs]: https://github.com/angular/components/blob/master/src/google-maps/README.md
-[ytp-docs]: https://github.com/angular/components/blob/master/src/youtube-player/README.md
+[map-docs]: https://github.com/angular/components/blob/main/src/google-maps/README.md
+[ytp-docs]: https://github.com/angular/components/blob/main/src/youtube-player/README.md
 [getting-started]: https://material.angular.io/guide/getting-started
-[contributing]: https://github.com/angular/components/blob/master/CONTRIBUTING.md
+[contributing]: https://github.com/angular/components/blob/main/CONTRIBUTING.md
 [help-wanted]: https://github.com/angular/components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22
+[good-first-issue]: https://github.com/angular/components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+label%3A%22good+first+issue%22

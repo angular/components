@@ -3,27 +3,30 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /**
  * A pending copy-to-clipboard operation.
  *
  * The implementation of copying text to the clipboard modifies the DOM and
- * forces a relayout. This relayout can take too long if the string is large,
+ * forces a re-layout. This re-layout can take too long if the string is large,
  * causing the execCommand('copy') to happen too long after the user clicked.
  * This results in the browser refusing to copy. This object lets the
- * relayout happen in a separate tick from copying by providing a copy function
+ * re-layout happen in a separate tick from copying by providing a copy function
  * that can be called later.
  *
  * Destroy must be called when no longer in use, regardless of whether `copy` is
  * called.
  */
 export class PendingCopy {
-  private _textarea: HTMLTextAreaElement|undefined;
+  private _textarea: HTMLTextAreaElement | undefined;
 
-  constructor(text: string, private readonly _document: Document) {
-    const textarea = this._textarea = this._document.createElement('textarea');
+  constructor(
+    text: string,
+    private readonly _document: Document,
+  ) {
+    const textarea = (this._textarea = this._document.createElement('textarea'));
     const styles = textarea.style;
 
     // Hide the element for display and accessibility. Set a fixed position so the page layout
@@ -34,7 +37,11 @@ export class PendingCopy {
     styles.left = '-999em';
     textarea.setAttribute('aria-hidden', 'true');
     textarea.value = text;
-    this._document.body.appendChild(textarea);
+    // Making the textarea `readonly` prevents the screen from jumping on iOS Safari (see #25169).
+    textarea.readOnly = true;
+    // The element needs to be inserted into the fullscreen container, if the page
+    // is in fullscreen mode, otherwise the browser won't execute the copy command.
+    (this._document.fullscreenElement || this._document.body).appendChild(textarea);
   }
 
   /** Finishes copying the text. */
@@ -42,7 +49,8 @@ export class PendingCopy {
     const textarea = this._textarea;
     let successful = false;
 
-    try {  // Older browsers could throw if copy is not supported.
+    try {
+      // Older browsers could throw if copy is not supported.
       if (textarea) {
         const currentFocus = this._document.activeElement as HTMLOrSVGElement | null;
 
@@ -67,10 +75,7 @@ export class PendingCopy {
     const textarea = this._textarea;
 
     if (textarea) {
-      if (textarea.parentNode) {
-        textarea.parentNode.removeChild(textarea);
-      }
-
+      textarea.remove();
       this._textarea = undefined;
     }
   }

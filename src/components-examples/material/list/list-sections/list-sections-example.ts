@@ -1,4 +1,8 @@
 import {Component} from '@angular/core';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {DatePipe} from '@angular/common';
+import {MatListModule} from '@angular/material/list';
 
 export interface Section {
   name: string;
@@ -10,8 +14,9 @@ export interface Section {
  */
 @Component({
   selector: 'list-sections-example',
-  styleUrls: ['list-sections-example.css'],
+  styleUrl: 'list-sections-example.css',
   templateUrl: 'list-sections-example.html',
+  imports: [MatListModule, MatIconModule, MatDividerModule, DatePipe],
 })
 export class ListSectionsExample {
   folders: Section[] = [
@@ -26,7 +31,7 @@ export class ListSectionsExample {
     {
       name: 'Work',
       updated: new Date('1/28/16'),
-    }
+    },
   ];
   notes: Section[] = [
     {
@@ -36,6 +41,6 @@ export class ListSectionsExample {
     {
       name: 'Kitchen Remodel',
       updated: new Date('1/18/16'),
-    }
+    },
   ];
 }

@@ -1,17 +1,7 @@
+import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  waitForAsync,
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  TestBed,
-} from '@angular/core/testing';
+import {ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
+import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
 import {CdkSelectionModule} from './selection-module';
@@ -22,14 +12,9 @@ describe('CdkSelection', () => {
   let component: ListWithMultiSelection;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [CdkSelectionModule],
-          declarations: [
-            ListWithMultiSelection,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, ListWithMultiSelection],
+    });
   }));
 
   beforeEach(() => {
@@ -227,15 +212,11 @@ describe('CdkSelection', () => {
       component.clickSelectionToggle(1);
 
       expect(component.selectionChange!.before).toEqual([]);
-      expect(component.selectionChange!.after).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
 
       component.clickSelectionToggle(2);
 
-      expect(component.selectionChange!.before).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.before).toEqual([{value: 'banana', index: 1}]);
       expect(component.selectionChange!.after).toEqual([
         {value: 'banana', index: 1},
         {value: 'cherry', index: 2},
@@ -247,9 +228,7 @@ describe('CdkSelection', () => {
         {value: 'banana', index: 1},
         {value: 'cherry', index: 2},
       ]);
-      expect(component.selectionChange!.after).toEqual([
-        {value: 'banana', index: 1},
-      ]);
+      expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
     }));
   });
 });
@@ -259,14 +238,9 @@ describe('CdkSelection with multiple = false', () => {
   let component: ListWithSingleSelection;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [CdkSelectionModule],
-          declarations: [
-            ListWithSingleSelection,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, ListWithSingleSelection],
+    });
   }));
 
   beforeEach(() => {
@@ -310,24 +284,16 @@ describe('CdkSelection with multiple = false', () => {
     component.clickSelectionToggle(1);
 
     expect(component.selectionChange!.before).toEqual([]);
-    expect(component.selectionChange!.after).toEqual([
-      {value: 'banana', index: 1},
-    ]);
+    expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
 
     component.clickSelectionToggle(2);
 
-    expect(component.selectionChange!.before).toEqual([
-      {value: 'banana', index: 1},
-    ]);
-    expect(component.selectionChange!.after).toEqual([
-      {value: 'cherry', index: 2},
-    ]);
+    expect(component.selectionChange!.before).toEqual([{value: 'banana', index: 1}]);
+    expect(component.selectionChange!.after).toEqual([{value: 'cherry', index: 2}]);
 
     component.clickSelectionToggle(2);
 
-    expect(component.selectionChange!.before).toEqual([
-      {value: 'cherry', index: 2},
-    ]);
+    expect(component.selectionChange!.before).toEqual([{value: 'cherry', index: 2}]);
     expect(component.selectionChange!.after).toEqual([]);
   }));
 });
@@ -337,28 +303,21 @@ describe('cdkSelectionColumn', () => {
   let component: MultiSelectTableWithSelectionColumn;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [
-            CdkSelectionModule,
-            CdkTableModule,
-          ],
-          declarations: [
-            MultiSelectTableWithSelectionColumn,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, CdkTableModule, MultiSelectTableWithSelectionColumn],
+    });
   }));
 
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(MultiSelectTableWithSelectionColumn);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    flush();
+  }));
 
   it('should show check boxes', () => {
     const checkboxes =
-        component.elementRef.nativeElement.querySelectorAll('input[type="checkbox"]');
+      component.elementRef.nativeElement.querySelectorAll('input[type="checkbox"]');
     // Select-all toggle + each toggle per row.
     expect(checkboxes.length).toBe(5);
   });
@@ -439,17 +398,9 @@ describe('cdkSelectionColumn with multiple = false', () => {
   let component: SingleSelectTableWithSelectionColumn;
 
   beforeEach(waitForAsync(() => {
-    TestBed
-        .configureTestingModule({
-          imports: [
-            CdkSelectionModule,
-            CdkTableModule,
-          ],
-          declarations: [
-            SingleSelectTableWithSelectionColumn,
-          ]
-        })
-        .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CdkSelectionModule, CdkTableModule, SingleSelectTableWithSelectionColumn],
+    });
   }));
 
   beforeEach(() => {
@@ -489,27 +440,31 @@ describe('cdkSelectionColumn with multiple = false', () => {
       <button cdkSelectAll #toggleAll="cdkSelectAll" (click)="toggleAll.toggle($event)">
         {{selectAllState(toggleAll.indeterminate | async, toggleAll.checked | async)}}
       </button>
-      <li *ngFor="let item of data; index as i">
-        <button cdkSelectionToggle #toggle="cdkSelectionToggle"
-            [cdkSelectionToggleValue]="item"
-            [cdkSelectionToggleIndex]="i"
-            (click)="toggle.toggle()">
-          {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
-        </button>
-        {{item}}
-      </li>
-    </ul>`
+      @for (item of data; track item; let i = $index) {
+        <li>
+          <button cdkSelectionToggle #toggle="cdkSelectionToggle"
+              [cdkSelectionToggleValue]="item"
+              [cdkSelectionToggleIndex]="i"
+              (click)="toggle.toggle()">
+            {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
+          </button>
+          {{item}}
+        </li>
+      }
+    </ul>`,
+  imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithMultiSelection {
+  private readonly _elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
 
   selectionChange?: SelectionChange<string>;
 
-  constructor(private readonly _elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
-
-  selectAllState(indeterminateState: boolean|null, checkedState: boolean|null): string {
+  selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
       return 'indeterminate';
     } else if (checkedState) {
@@ -549,18 +504,24 @@ class ListWithMultiSelection {
   template: `
     <ul cdkSelection [dataSource]="data" [cdkSelectionMultiple]="false"
         (cdkSelectionChange)="selectionChange = $event" >
-      <li *ngFor="let item of data; index as i">
-        <button cdkSelectionToggle #toggle="cdkSelectionToggle"
-            [cdkSelectionToggleValue]="item"
-            [cdkSelectionToggleIndex]="i"
-            (click)="toggle.toggle()">
-          {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
-        </button>
-        {{item}}
-      </li>
-    </ul>`
+      @for (item of data; track item; let i = $index) {
+        <li>
+          <button cdkSelectionToggle #toggle="cdkSelectionToggle"
+              [cdkSelectionToggleValue]="item"
+              [cdkSelectionToggleIndex]="i"
+              (click)="toggle.toggle()">
+            {{(toggle.checked | async) ? 'checked' : 'unchecked'}}
+          </button>
+          {{item}}
+        </li>
+      }
+    </ul>`,
+  imports: [CdkSelectionModule, AsyncPipe],
 })
 class ListWithSingleSelection {
+  private readonly _elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   data = ['apple', 'banana', 'cherry', 'durian'];
@@ -576,8 +537,6 @@ class ListWithSingleSelection {
     flush();
     this._cdr.detectChanges();
   }
-
-  constructor(private readonly _elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
 
   getSelectionToggle(index: number) {
     return this._elementRef.nativeElement.querySelectorAll('[cdkselectiontoggle]')[index];
@@ -597,15 +556,19 @@ class ListWithSingleSelection {
       <tr cdk-row *cdkRowDef="let row; columns: columns;"
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
-    `
+    `,
+  imports: [CdkSelectionModule, CdkTableModule],
 })
 class MultiSelectTableWithSelectionColumn {
+  readonly elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   columns = ['select', 'name'];
   data = ['apple', 'banana', 'cherry', 'durian'];
 
-  selectAllState(indeterminateState: boolean|null, checkedState: boolean|null): string {
+  selectAllState(indeterminateState: boolean | null, checkedState: boolean | null): string {
     if (indeterminateState) {
       return 'indeterminate';
     } else if (checkedState) {
@@ -619,6 +582,7 @@ class MultiSelectTableWithSelectionColumn {
     this.getSelectAll().click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   clickSelectionToggle(index: number) {
@@ -630,9 +594,8 @@ class MultiSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
-
-  constructor(readonly elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
 
   getSelectAll(): HTMLInputElement {
     return this.elementRef.nativeElement.querySelector('input[cdkselectall]');
@@ -660,9 +623,13 @@ class MultiSelectTableWithSelectionColumn {
       <tr cdk-row *cdkRowDef="let row; columns: columns;"
           cdkRowSelection [cdkRowSelectionValue]="row"></tr>
     </table>
-    `
+    `,
+  imports: [CdkSelectionModule, CdkTableModule],
 })
 class SingleSelectTableWithSelectionColumn {
+  readonly elementRef = inject(ElementRef);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
   @ViewChild(CdkSelection) cdkSelection: CdkSelection<string>;
 
   columns = ['select', 'name'];
@@ -677,9 +644,8 @@ class SingleSelectTableWithSelectionColumn {
     toggle.click();
     flush();
     this._cdr.detectChanges();
+    flush();
   }
-
-  constructor(readonly elementRef: ElementRef, private readonly _cdr: ChangeDetectorRef) {}
 
   getSelectionToggle(index: number): HTMLInputElement {
     return this.elementRef.nativeElement.querySelectorAll('input[cdkselectiontoggle]')[index];

@@ -1,46 +1,99 @@
 @use 'sass:map';
-@use '../core/style/private';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/bottom-sheet' as tokens-mat-bottom-sheet;
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
-  .mat-bottom-sheet-container {
-    @include private.private-theme-elevation(16, $config);
-    background: theming.get-color-from-palette($background, dialog);
-    color: theming.get-color-from-palette($foreground, text);
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-bottom-sheet.$prefix,
+        tokens-mat-bottom-sheet.get-unthemable-tokens()
+      );
+    }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-bottom-sheet-container {
-    @include typography-utils.typography-level($config, body-1);
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-bottom-sheet.$prefix,
+        tokens-mat-bottom-sheet.get-color-tokens($theme)
+      );
+    }
   }
 }
 
-@mixin _density($config-or-theme) {}
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-bottom-sheet.$prefix,
+        tokens-mat-bottom-sheet.get-typography-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-bottom-sheet.$prefix,
+      tokens: tokens-mat-bottom-sheet.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-bottom-sheet') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-bottom-sheet.$prefix,
+      map.get($tokens, tokens-mat-bottom-sheet.$prefix)
+    );
   }
 }

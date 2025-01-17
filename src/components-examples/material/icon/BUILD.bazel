@@ -12,14 +12,12 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/icon",
     deps = [
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/icon",
         "//src/material/icon/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -43,12 +41,10 @@ ng_test_library(
         "//src/material/icon",
         "//src/material/icon/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

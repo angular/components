@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, HostListener, Input} from '@angular/core';
+import {Directive, Input, inject} from '@angular/core';
 
 import {CdkStepper} from './stepper';
 
@@ -15,23 +15,17 @@ import {CdkStepper} from './stepper';
   selector: 'button[cdkStepperNext]',
   host: {
     '[type]': 'type',
-  }
+    '(click)': '_stepper.next()',
+  },
 })
 export class CdkStepperNext {
+  _stepper = inject(CdkStepper);
+
   /** Type of the next button. Defaults to "submit" if not specified. */
   @Input() type: string = 'submit';
 
-  constructor(public _stepper: CdkStepper) {}
-
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click')
-  _handleClick() {
-    this._stepper.next();
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /** Button that moves to the previous step in a stepper workflow. */
@@ -39,21 +33,15 @@ export class CdkStepperNext {
   selector: 'button[cdkStepperPrevious]',
   host: {
     '[type]': 'type',
-  }
+    '(click)': '_stepper.previous()',
+  },
 })
 export class CdkStepperPrevious {
+  _stepper = inject(CdkStepper);
+
   /** Type of the previous button. Defaults to "button" if not specified. */
   @Input() type: string = 'button';
 
-  constructor(public _stepper: CdkStepper) {}
-
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click')
-  _handleClick() {
-    this._stepper.previous();
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 }

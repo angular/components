@@ -3,10 +3,9 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkSelectionToggle} from '@angular/cdk-experimental/selection';
 import {Directive, Input} from '@angular/core';
 
@@ -23,19 +22,10 @@ import {Directive, Input} from '@angular/core';
 @Directive({
   selector: '[matSelectionToggle]',
   exportAs: 'matSelectionToggle',
-  providers: [{provide: CdkSelectionToggle, useExisting: MatSelectionToggle}]
+  inputs: [{name: 'index', alias: 'matSelectionToggleIndex'}],
+  providers: [{provide: CdkSelectionToggle, useExisting: MatSelectionToggle}],
 })
-// tslint:disable-next-line: coercion-types
 export class MatSelectionToggle<T> extends CdkSelectionToggle<T> {
   /** The value that is associated with the toggle */
-  @Input('matSelectionToggleValue') override value: T;
-
-  /** The index of the value in the list. Required when used with `trackBy` */
-  @Input('matSelectionToggleIndex')
-  override get index(): number|undefined { return this._index; }
-  override set index(index: number|undefined) {
-    // TODO: when we remove support for ViewEngine, change this setter to an input
-    // alias in the decorator metadata.
-    this._index = coerceNumberProperty(index);
-  }
+  @Input('matSelectionToggleValue') override value: T = undefined!;
 }

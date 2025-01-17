@@ -1,5 +1,5 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
-the calendar. It is made up of several components, directives and [the date implementation module](#choosing-a-date-implementation-and-date-format-settings) that work together.
+the calendar. It is made up of several components, directives and [the date implementation](#choosing-a-date-implementation-and-date-format-settings) that work together.
 
 <!-- example(datepicker-overview) -->
 
@@ -131,14 +131,6 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 
 <!-- example(datepicker-value) -->
 
-### Changing the datepicker colors
-
-The datepicker popup will automatically inherit the color palette (`primary`, `accent`, or `warn`)
-from the `mat-form-field` it is attached to. If you would like to specify a different palette for
-the popup you can do so by setting the `color` property on `mat-datepicker`.
-
-<!-- example(datepicker-color) -->
-
 ### Date validation
 
 There are three properties that add date validation to the datepicker input. The first two are the
@@ -161,14 +153,14 @@ that point.
 
 <!-- example(datepicker-filter) -->
 
-In this example the user can back past 2005, but all of the dates before then will be unselectable.
-They will not be able to go further back in the calendar than 2000. If they manually type in a date
-that is before the min, after the max, or filtered out, the input will have validation errors.
+In this example the user cannot select any date that falls on a Saturday or Sunday, but all of the
+dates which fall on other days of the week are selectable.
 
 Each validation property has a different error that can be checked:
- * A value that violates the `min` property will have a `matDatepickerMin` error.
- * A value that violates the `max` property will have a `matDatepickerMax` error.
- * A value that violates the `matDatepickerFilter` property will have a `matDatepickerFilter` error.
+
+- A value that violates the `min` property will have a `matDatepickerMin` error.
+- A value that violates the `max` property will have a `matDatepickerMax` error.
+- A value that violates the `matDatepickerFilter` property will have a `matDatepickerFilter` error.
 
 ### Input and change events
 
@@ -224,13 +216,16 @@ If your users need to compare the date range that they're currently selecting wi
 you can provide the comparison range start and end dates to the `mat-date-range-input` using the
 `comparisonStart` and `comparisonEnd` bindings. The comparison range will be rendered statically
 within the calendar, but it will change colors to indicate which dates overlap with the user's
-selected range.
+selected range. The comparison and overlap colors can be customized using the
+`datepicker-date-range-colors` mixin.
 
 <!-- example(date-range-picker-comparison) -->
 
-Note that comparison and overlap colors aren't derived from the current theme, due
-to limitations in the Material Design theming system. They can be customized using the
-`mat-date-range-colors` mixin.
+```scss
+@use '@angular/material' as mat;
+
+@include mat.datepicker-date-range-colors(hotpink, teal, yellow, purple);
+```
 
 ### Customizing the date selection logic
 
@@ -270,10 +265,11 @@ month. If you want to make the calendar larger or smaller, adjust the width rath
 ### Internationalization
 
 Internationalization of the datepicker is configured via four aspects:
- 1. The date locale.
- 2. The date implementation that the datepicker accepts.
- 3. The display and parse formats used by the datepicker.
- 4. The message strings used in the datepicker's UI.
+
+1.  The date locale.
+2.  The date implementation that the datepicker accepts.
+3.  The display and parse formats used by the datepicker.
+4.  The message strings used in the datepicker's UI.
 
 #### Setting the locale code
 
@@ -282,15 +278,17 @@ from `@angular/core`. If you want to override it, you can provide a new value fo
 `MAT_DATE_LOCALE` token:
 
 ```ts
-@NgModule({
-  providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
-  ],
-})
-export class MyApp {}
+bootstapApplication(MyApp, {
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
+});
 ```
 
 It's also possible to set the locale at runtime using the `setLocale` method of the `DateAdapter`.
+
+**Note:** if you're using the `provideDateFnsAdapter`, you have to provide the data object for your
+locale to `MAT_DATE_LOCALE` instead of the locale code, in addition to providing a configuration
+compatible with `date-fns` to `MAT_DATE_FORMATS`. Locale data for `date-fns` can be imported
+from `date-fns/locale`.
 
 <!-- example(datepicker-locale) -->
 
@@ -300,68 +298,113 @@ The datepicker was built to be date implementation agnostic. This means that it 
 with a variety of different date implementations. However it also means that developers need to make
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
 
-The easiest way to ensure this is to import one of the provided date modules:
+The easiest way to ensure this is to import one of the provided date adapters:
 
-`MatNativeDateModule`
-
-<table>
-  <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Date</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td>en-US</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td>None</td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material/core</code></td>
-  </tr>
-  </tbody>
-</table>
-
-`MatMomentDateModule` (installed via `@angular/material-moment-adapter`)
+`provideNativeDateAdapter` or `MatNativeDateModule`
 
 <table>
   <tbody>
-  <tr>
-    <th align="left" scope="row">Date type</th>
-    <td><code>Moment</code></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Supported locales</th>
-    <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Dependencies</th>
-    <td><a href="https://momentjs.com/">Moment.js</a></td>
-  </tr>
-  <tr>
-    <th align="left" scope="row">Import from</th>
-    <td><code>@angular/material-moment-adapter</code></td>
-  </tr>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td>en-US</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material/core</code></td>
+    </tr>
   </tbody>
 </table>
 
-*Please note: `MatNativeDateModule` is based off the functionality available in JavaScript's
+`provideDateFnsAdapter` or `MatDateFnsModule` (installed via `ng add @angular/material-date-fns-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Date</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/date-fns/date-fns/tree/master/src/locale/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://date-fns.org/">date-fns</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-date-fns-adapter</code></td>
+    </tr>
+  </tbody>
+</table>
+
+`provideLuxonDateAdapter` or `MatLuxonDateModule` (installed via `ng add @angular/material-luxon-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>DateTime</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://moment.github.io/luxon/">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://moment.github.io/luxon/">Luxon</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-luxon-adapter</code></td>
+    </tr>
+  </tbody>
+</table>
+
+`provideMomentDateAdapter` or `MatMomentDateModule` (installed via `ng add @angular/material-moment-adapter`)
+
+<table>
+  <tbody>
+    <tr>
+      <th align="left" scope="row">Date type</th>
+      <td><code>Moment</code></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Supported locales</th>
+      <td><a href="https://github.com/moment/moment/tree/develop/src/locale">See project for details</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Dependencies</th>
+      <td><a href="https://momentjs.com/">Moment.js</a></td>
+    </tr>
+    <tr>
+      <th align="left" scope="row">Import from</th>
+      <td><code>@angular/material-moment-adapter</code></td>
+    </tr>
+  </tbody>
+</table>
+
+_Please note: `provideNativeDateAdapter` is based off the functionality available in JavaScript's
 native [`Date` object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date).
 Thus it is not suitable for many locales. One of the biggest shortcomings of the native `Date`
 object is the inability to set the parse format. We strongly recommend using an adapter based on
-a more robust formatting and parsing library. You can use the `MomentDateAdapter`
-or a custom `DateAdapter` that works with the library of your choice.*
+a more robust formatting and parsing library. You can use `provideMomentDateAdapter`
+or a custom `DateAdapter` that works with the library of your choice._
 
-These modules include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
+These APIs include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatNativeDateModule],
-})
-export class MyApp {}
+bootstrapApplication(MyApp, {
+  providers: [provideNativeDateAdapter()]
+});
 ```
 
 Because `DateAdapter` is a generic class, `MatDatepicker` and `MatDatepickerInput` also need to be
@@ -378,49 +421,46 @@ export class MyComponent {
 
 <!-- example(datepicker-moment) -->
 
-By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
+By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change
+the default behaviour to parse dates as UTC by passing `useUtc: true` into `provideMomentDateAdapter`
+or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatMomentDateModule],
-  providers: [
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
-  ]
-})
+bootstrapApplication(MyApp, {
+  providers: [provideMomentDateAdapter(undefined, {useUtc: true})]
+});
 ```
 
 By default the `MomentDateAdapter` will parse dates in a
 [forgiving way](https://momentjs.com/guides/#/parsing/forgiving-mode/). This may result in dates
 being parsed incorrectly. You can change the default behaviour to
-[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by providing
-the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `strict: true`.
+[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by `strict: true` to
+`provideMomentDateAdapter` or by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` injection token.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatMomentDateModule],
-  providers: [
-    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}}
-  ]
-})
+bootstrapApplication(MyApp, {
+  providers: [provideMomentDateAdapter(undefined, {strict: true})]
+});
 ```
 
 It is also possible to create your own `DateAdapter` that works with any date format your app
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
 in your app are formats that can be understood by your date implementation. See
-[_Customizing the parse and display formats_](#customizing-the-parse-and-display-formats)for more
+[_Customizing the parse and display formats_](#customizing-the-parse-and-display-formats) for more
 information about `MAT_DATE_FORMATS`.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule],
+bootstrapApplication(MyApp, {
   providers: [
     {provide: DateAdapter, useClass: MyDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
-  ],
-})
-export class MyApp {}
+  ]
+});
 ```
+
+If you need to work with native `Date` objects, but need custom behavior (for example custom date
+parsing), you can consider subclassing `NativeDateAdapter`.
 
 #### Customizing the parse and display formats
 
@@ -429,51 +469,39 @@ and displaying dates. These formats are passed through to the `DateAdapter` so y
 sure that the format objects you're using are compatible with the `DateAdapter` used in your app.
 
 If you want use one of the `DateAdapters` that ships with Angular Material, but use your own
-`MAT_DATE_FORMATS`, you can import the `NativeDateModule` or `MomentDateModule`. These modules are
-identical to the "Mat"-prefixed versions (`MatNativeDateModule` and `MatMomentDateModule`) except
-they do not include the default formats. For example:
+`MAT_DATE_FORMATS`, you can either pass the formats into the providers function, or provide the
+`MAT_DATE_FORMATS` token yourself. For example:
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, NativeDateModule],
-  providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_NATIVE_DATE_FORMATS},
-  ],
-})
-export class MyApp {}
+bootstrapApplication(MyApp, {
+  providers: [provideNativeDateAdapter(MY_NATIVE_DATE_FORMATS)],
+});
 ```
 
 <!-- example(datepicker-formats) -->
 
-##### MomentDateModule formats
+##### Moment.js formats
 
-To use custom formats with the `MomentDateModule` you can pick from the parse formats documented
-[here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats documented
-[here](https://momentjs.com/docs/#/displaying/format/).
+To use custom formats with the `provideMomentDateAdapter` you can pick from the parse formats
+documented [here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats
+documented [here](https://momentjs.com/docs/#/displaying/format/).
 
 It is also possible to support multiple parse formats. For example:
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MomentDateModule],
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['l', 'LL'],
-        },
-        display: {
-          dateInput: 'L',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
+bootstraApplication(MyApp, {
+  providers: [provideMomentDateAdapter({
+    parse: {
+      dateInput: ['l', 'LL'],
     },
-  ],
-})
-export class MyApp {}
+    display: {
+      dateInput: 'L',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+    },
+  })]
+});
 ```
 
 #### Customizing the calendar header
@@ -494,19 +522,19 @@ detection.
 
 The various text strings used by the datepicker are provided through `MatDatepickerIntl`.
 Localization of these messages can be done by providing a subclass with translated values in your
-application root module.
+app config.
 
 ```ts
-@NgModule({
-  imports: [MatDatepickerModule, MatNativeDateModule],
+bootstrapApplication(MyApp, {
   providers: [
     {provide: MatDatepickerIntl, useClass: MyIntl},
+    provideNativeDateAdapter(),
   ],
-})
-export class MyApp {}
+});
 ```
 
 #### Highlighting specific dates
+
 If you want to apply one or more CSS classes to some dates in the calendar (e.g. to highlight a
 holiday), you can do so with the `dateClass` input. It accepts a function which will be called
 with each of the dates in the calendar and will apply any classes that are returned. The return
@@ -516,80 +544,96 @@ value can be anything that is accepted by `ngClass`.
 
 ### Accessibility
 
-The `MatDatepickerInput` and `MatDatepickerToggle` directives add the `aria-haspopup` attribute to
-the native input and toggle button elements respectively, and they trigger a calendar dialog with
-`role="dialog"`.
+The `MatDatepicker` pop-up uses the `role="dialog"` interaction pattern. This dialog then contains
+multiple controls, the most prominent being the calendar itself. This calendar implements the
+`role="grid"` interaction pattern.
 
-`MatDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
-should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or
+Always enable [_confirmation action buttons_](#confirmation-action-buttons). This allows assistive
+technology users to explicitly confirm their selection before committing a value.
+
+The `MatDatepickerInput` and `MatDatepickerToggle` directives both apply the `aria-haspopup`
+attribute to the native input and button elements, respectively.
+
+`MatDatepickerIntl` includes strings that are used for `aria-label` attributes. Always provide
+the datepicker text input a meaningful label via `<mat-label>`, `aria-label`, `aria-labelledby` or
 `MatDatepickerIntl`.
+
+Always communicate the date format (e.g. 'MM/DD/YYYY'). This can be accomplished using `<mat-hint>`
+or by providing an additional label adjacent to the form field.
+
+`MatDatepickerInput` adds <kbd>>Alt</kbd> + <kbd>Down Arrow</kbd> as a keyboard short to open the
+datepicker pop-up. However, ChromeOS intercepts this key combination at the OS level such that the
+browser only receives a `PageDown` key event. Because of this behavior, you should always include an
+additional means of opening the pop-up, such as `MatDatepickerToggle`.
+
+`MatDatepickerToggle` must be included along with `MatDatepicker` for optimal mobile a11y 
+compatibility. Mobile screen reader users currently do not have a way to trigger the datepicker
+dialog without the icon button present.
 
 #### Keyboard interaction
 
 The datepicker supports the following keyboard shortcuts:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `ALT` + `DOWN_ARROW` | Open the calendar pop-up                  |
-| `ESCAPE`             | Close the calendar pop-up                 |
-
+| Keyboard Shortcut                      | Action                    |
+| -------------------------------------- | ------------------------- |
+| <kbd>Alt</kbd> + <kbd>Down Arrow</kbd> | Open the calendar pop-up  |
+| <kbd>Escape</kbd>                      | Close the calendar pop-up |
 
 In month view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous day                        |
-| `RIGHT_ARROW`        | Go to next day                            |
-| `UP_ARROW`           | Go to same day in the previous week       |
-| `DOWN_ARROW`         | Go to same day in the next week           |
-| `HOME`               | Go to the first day of the month          |
-| `END`                | Go to the last day of the month           |
-| `PAGE_UP`            | Go to the same day in the previous month  |
-| `ALT` + `PAGE_UP`    | Go to the same day in the previous year   |
-| `PAGE_DOWN`          | Go to the same day in the next month      |
-| `ALT` + `PAGE_DOWN`  | Go to the same day in the next year       |
-| `ENTER`              | Select current date                       |
-
+| Shortcut                              | Action                                   |
+| ------------------------------------- | ---------------------------------------- |
+| <kbd>Left Arrow</kbd>                 | Go to previous day                       |
+| <kbd>Right Arrow</kbd>                | Go to next day                           |
+| <kbd>Up Arrow</kbd>                   | Go to same day in the previous week      |
+| <kbd>Down Arrow</kbd>                 | Go to same day in the next week          |
+| <kbd>Home</kbd>                       | Go to the first day of the month         |
+| <kbd>End</kbd>                        | Go to the last day of the month          |
+| <kbd>Page up</kbd>                    | Go to the same day in the previous month |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go to the same day in the previous year  |
+| <kbd>Page Down</kbd>                  | Go to the same day in the next month     |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go to the same day in the next year      |
+| <kbd>Enter</kbd>                      | Select current date                      |
 
 In year view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous month                      |
-| `RIGHT_ARROW`        | Go to next month                          |
-| `UP_ARROW`           | Go up a row (back 4 months)               |
-| `DOWN_ARROW`         | Go down a row (forward 4 months)          |
-| `HOME`               | Go to the first month of the year         |
-| `END`                | Go to the last month of the year          |
-| `PAGE_UP`            | Go to the same month in the previous year |
-| `ALT` + `PAGE_UP`    | Go to the same month 10 years back        |
-| `PAGE_DOWN`          | Go to the same month in the next year     |
-| `ALT` + `PAGE_DOWN`  | Go to the same month 10 years forward     |
-| `ENTER`              | Select current month                      |
+| Shortcut                              | Action                                    |
+| ------------------------------------- | ----------------------------------------- |
+| <kbd>Left Arrow</kbd>                 | Go to previous month                      |
+| <kbd>Right Arrow</kbd>                | Go to next month                          |
+| <kbd>Up Arrow</kbd>                   | Go up a row (back 4 months)               |
+| <kbd>Down Arrow</kbd>                 | Go down a row (forward 4 months)          |
+| <kbd>Home</kbd>                       | Go to the first month of the year         |
+| <kbd>End</kbd>                        | Go to the last month of the year          |
+| <kbd>Page Up</kbd>                    | Go to the same month in the previous year |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go to the same month 10 years back        |
+| <kbd>Page Down</kbd>                  | Go to the same month in the next year     |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go to the same month 10 years forward     |
+| <kbd>Enter</kbd>                      | Select current month                      |
 
 In multi-year view:
 
-| Shortcut             | Action                                    |
-|----------------------|-------------------------------------------|
-| `LEFT_ARROW`         | Go to previous year                       |
-| `RIGHT_ARROW`        | Go to next year                           |
-| `UP_ARROW`           | Go up a row (back 4 years)                |
-| `DOWN_ARROW`         | Go down a row (forward 4 years)           |
-| `HOME`               | Go to the first year in the current range |
-| `END`                | Go to the last year in the current range  |
-| `PAGE_UP`            | Go back 24 years                          |
-| `ALT` + `PAGE_UP`    | Go back 240 years                         |
-| `PAGE_DOWN`          | Go forward 24 years                       |
-| `ALT` + `PAGE_DOWN`  | Go forward 240 years                      |
-| `ENTER`              | Select current year                       |
+| Shortcut                              | Action                                    |
+| ------------------------------------- | ----------------------------------------- |
+| <kbd>Left Arrow</kbd>                 | Go to previous year                       |
+| <kbd>Right Arrow</kbd>                | Go to next year                           |
+| <kbd>Up Arrow</kbd>                   | Go up a row (back 4 years)                |
+| <kbd>Down Arrow</kbd>                 | Go down a row (forward 4 years)           |
+| <kbd>Home</kbd>                       | Go to the first year in the current range |
+| <kbd>End</kbd>                        | Go to the last year in the current range  |
+| <kbd>Page up</kbd>                    | Go back 24 years                          |
+| <kbd>Alt</kbd> + <kbd>Page up</kbd>   | Go back 240 years                         |
+| <kbd>Page Down</kbd>                  | Go forward 24 years                       |
+| <kbd>Alt</kbd> + <kbd>Page Down</kbd> | Go forward 240 years                      |
+| <kbd>Enter</kbd>                      | Select current year                       |
 
 ### Troubleshooting
 
 #### Error: MatDatepicker: No provider found for DateAdapter/MAT_DATE_FORMATS
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
-The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
-your application's root module. See
+The easiest way to resolve this is to add `provideNativeDateAdapter` or `provideMomentDateAdapter`
+to your app config. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
 

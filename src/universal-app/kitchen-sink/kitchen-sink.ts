@@ -1,19 +1,43 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkListboxModule} from '@angular/cdk/listbox';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
-import {Component, ElementRef, NgModule, ErrorHandler} from '@angular/core';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
+import {DOCUMENT} from '@angular/common';
+import {CdkPopoverEditCdkTableExample} from '@angular/components-examples/cdk-experimental/popover-edit';
+import {Component, ElementRef, InjectionToken, inject} from '@angular/core';
+import {
+  GoogleMap,
+  MapBicyclingLayer,
+  MapCircle,
+  MapGroundOverlay,
+  MapHeatmapLayer,
+  MapInfoWindow,
+  MapKmlLayer,
+  MapMarker,
+  DeprecatedMapMarkerClusterer,
+  MapPolygon,
+  MapPolyline,
+  MapRectangle,
+  MapTrafficLayer,
+  MapTransitLayer,
+  MapAdvancedMarker,
+} from '@angular/google-maps';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatBottomSheet, MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
-import {MatTableModule} from '@angular/material/table';
+import {MatRippleModule, provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatDialogModule, MatDialog} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -25,78 +49,100 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSnackBarModule, MatSnackBar} from '@angular/material/snack-bar';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSortModule} from '@angular/material/sort';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatBottomSheetModule, MatBottomSheet} from '@angular/material/bottom-sheet';
-import {MatBadgeModule} from '@angular/material/badge';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSortModule} from '@angular/material/sort';
-import {MatStepperModule} from '@angular/material/stepper';
-import {YouTubePlayerModule} from '@angular/youtube-player';
-import {GoogleMapsModule} from '@angular/google-maps';
+import {YouTubePlayer} from '@angular/youtube-player';
 import {Observable, of as observableOf} from 'rxjs';
 
 export class TableDataSource extends DataSource<any> {
   connect(): Observable<any> {
-    return observableOf([{userId: 1}, {userId: 2}]);
+    return observableOf([
+      {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+      {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+      {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
+      {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
+      {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
+      {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
+      {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
+      {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
+      {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
+      {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+    ]);
   }
 
   disconnect() {}
 }
 
+export const AUTOMATED_KITCHEN_SINK = new InjectionToken<boolean>('AUTOMATED_KITCHEN_SINK');
 
 @Component({
-  template: `<button>Do the thing</button>`
+  template: `<button>Do the thing</button>`,
 })
 export class TestEntryComponent {}
-
 
 @Component({
   selector: 'kitchen-sink',
   templateUrl: './kitchen-sink.html',
-  styles: [`
+  providers: [provideNativeDateAdapter()],
+  styles: `
     .universal-viewport {
       height: 100px;
       border: 1px solid black;
     }
-  `]
-})
-export class KitchenSink {
-  /** List of columns for the CDK and Material table. */
-  tableColumns = ['userId'];
 
-  /** Data source for the CDK and Material table. */
-  tableDataSource = new TableDataSource();
+    .test-cdk-listbox {
+      display: block;
+      width: 100%;
 
-  /** Data used to render a virtual scrolling list. */
-  virtualScrollData = Array(10000).fill(50);
+      > label {
+        display: block;
+        padding: 5px;
+      }
 
-  constructor(
-    snackBar: MatSnackBar,
-    dialog: MatDialog,
-    viewportRuler: ViewportRuler,
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef<HTMLElement>,
-    bottomSheet: MatBottomSheet) {
-    focusMonitor.focusVia(elementRef, 'program');
-    snackBar.open('Hello there');
-    dialog.open(TestEntryComponent);
-    bottomSheet.open(TestEntryComponent);
+      > ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
 
-    // Do a sanity check on the viewport ruler.
-    viewportRuler.getViewportRect();
-    viewportRuler.getViewportSize();
-    viewportRuler.getViewportScrollPosition();
-  }
-}
+        > li {
+          position: relative;
+          padding: 5px 5px 5px 25px;
 
+          &:focus {
+            background: rgba(0, 0, 0, 0.2);
+          }
 
-@NgModule({
+          &[aria-selected='true']::before {
+            content: "✔";
+            position: absolute;
+            left: 2px;
+          }
+        }
+      }
+    }
+
+    .test-cdk-table {
+      display: table;
+      width: 100%;
+    }
+
+    .test-cdk-table .cdk-row,
+    .test-cdk-table .cdk-header-row {
+      display: table-row;
+    }
+
+    .test-cdk-table .cdk-cell,
+    .test-cdk-table .cdk-header-cell {
+      display: table-cell;
+    }
+  `,
   imports: [
     MatAutocompleteModule,
     MatBadgeModule,
@@ -107,7 +153,6 @@ export class KitchenSink {
     MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
-    MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
     MatGridListModule,
@@ -115,7 +160,6 @@ export class KitchenSink {
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatNativeDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
@@ -125,7 +169,6 @@ export class KitchenSink {
     MatSidenavModule,
     MatSliderModule,
     MatSlideToggleModule,
-    MatSnackBarModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -134,29 +177,84 @@ export class KitchenSink {
     MatTableModule,
     MatStepperModule,
     ScrollingModule,
+    ExperimentalScrollingModule,
 
     // CDK Modules
+    CdkListboxModule,
     CdkTableModule,
     DragDropModule,
+    A11yModule,
 
     // Other modules
-    YouTubePlayerModule,
-    GoogleMapsModule,
-  ],
-  declarations: [KitchenSink, TestEntryComponent],
-  exports: [KitchenSink, TestEntryComponent],
-  entryComponents: [TestEntryComponent],
-  providers: [{
-    // If an error is thrown asynchronously during server-side rendering it'll get logged to stderr,
-    // but it won't cause the build to fail. We still want to catch these errors so we provide an
-    // `ErrorHandler` that re-throws the error and causes the process to exit correctly.
-    provide: ErrorHandler,
-    useValue: {handleError: ERROR_HANDLER}
-  }]
-})
-export class KitchenSinkModule {
-}
+    YouTubePlayer,
+    GoogleMap,
+    MapBicyclingLayer,
+    MapCircle,
+    MapGroundOverlay,
+    MapHeatmapLayer,
+    MapInfoWindow,
+    MapKmlLayer,
+    MapMarker,
+    MapAdvancedMarker,
+    DeprecatedMapMarkerClusterer,
+    MapPolygon,
+    MapPolyline,
+    MapRectangle,
+    MapTrafficLayer,
+    MapTransitLayer,
 
-export function ERROR_HANDLER(error: Error) {
-  throw error;
+    // Examples
+    CdkPopoverEditCdkTableExample,
+  ],
+})
+export class KitchenSink {
+  private _snackBar = inject(MatSnackBar);
+  private _dialog = inject(MatDialog);
+  private _bottomSheet = inject(MatBottomSheet);
+
+  /** List of columns for the CDK and Material table. */
+  tableColumns = ['position', 'name', 'weight', 'symbol'];
+
+  /** Data source for the CDK and Material table. */
+  tableDataSource = new TableDataSource();
+
+  /** Data used to render a virtual scrolling list. */
+  virtualScrollData = Array(10000).fill(50);
+
+  /** Whether the kitchen sink is running as a part of an automated test or for local debugging. */
+  isAutomated: boolean;
+
+  constructor() {
+    const viewportRuler = inject(ViewportRuler);
+    const focusMonitor = inject(FocusMonitor);
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    this.isAutomated = inject(AUTOMATED_KITCHEN_SINK, {optional: true}) ?? true;
+    focusMonitor.focusVia(elementRef, 'program');
+
+    // Do a sanity check on the viewport ruler.
+    viewportRuler.getViewportRect();
+    viewportRuler.getViewportSize();
+    viewportRuler.getViewportScrollPosition();
+
+    // Only open overlays when automation is enabled since they can prevent debugging.
+    if (this.isAutomated) {
+      inject(DOCUMENT).body.classList.add('test-automated');
+      this.openSnackbar();
+      this.openDialog();
+      this.openBottomSheet();
+    }
+  }
+
+  openSnackbar() {
+    this._snackBar.open('Hello there');
+  }
+
+  openDialog() {
+    this._dialog.open(TestEntryComponent);
+  }
+
+  openBottomSheet() {
+    this._bottomSheet.open(TestEntryComponent);
+  }
 }

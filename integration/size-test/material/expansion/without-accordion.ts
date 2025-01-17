@@ -6,6 +6,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
  * the module such as `MatAccordion` or `CdkAccordion` should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-expansion-panel>
       <mat-expansion-panel-header>Title</mat-expansion-panel-header>

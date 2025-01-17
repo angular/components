@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automerge": false,
+  "baseBranches": ["main"],
+  "enabledManagers": ["npm", "bazel", "github-actions"],
+  "stopUpdatingLabel": "action: merge",
+  "labels": ["target: patch"],
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "dependencyDashboard": true,
+  "rangeStrategy": "pin",
+  "pinDigests": true,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "behind-base-branch",
+  "semanticCommits": "enabled",
+  "semanticCommitScope": "",
+  "semanticCommitType": "build",
+  "separateMajorMinor": false,
+  "ignorePaths": ["integration/**"],
+  "packageRules": [
+    {
+      "enabled": false,
+      "matchPackageNames": ["*"]
+    },
+    {
+      "matchPackageNames": ["@angular/ng-dev", "@angular/build-tooling", "angular/dev-infra"],
+      "groupName": "angular shared dev-infra code",
+      "enabled": true
+    },
+    {
+      "groupName": "bazel setup",
+      "enabled": true,
+      "matchPackageNames": ["/^@bazel/.*/", "/^build_bazel.*/"]
+    },
+    {
+      "matchFileNames": [".github/workflows/scorecard.yml"],
+      "groupName": "scorecard action dependencies",
+      "groupSlug": "scorecard-action",
+      "matchPackageNames": ["*"]
+    }
+  ]
+}

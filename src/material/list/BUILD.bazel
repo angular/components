@@ -1,8 +1,7 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -16,52 +15,83 @@ ng_module(
     name = "list",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
     ),
-    assets = [":list.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/list",
+    assets = [
+        ":list_scss",
+        ":list_option_scss",
+    ] + glob(["**/*.html"]),
     deps = [
         "//src:dev_mode_types",
-        "//src/cdk/a11y",
         "//src/cdk/coercion",
         "//src/cdk/collections",
-        "//src/cdk/keycodes",
+        "//src/cdk/observers",
+        "//src/cdk/private",
         "//src/material/core",
         "//src/material/divider",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//rxjs",
+    ],
+)
+
+sass_library(
+    name = "hcm_indicator_scss_lib",
+    srcs = ["_list-item-hcm-indicator.scss"],
+)
+
+sass_library(
+    name = "inherited_structure_scss_lib",
+    srcs = ["_list-inherited-structure.scss"],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 
 sass_library(
     name = "list_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        ":hcm_indicator_scss_lib",
+        "//src/material/checkbox:checkbox_scss_lib",
+        "//src/material/core:core_scss_lib",
+        "//src/material/radio:radio_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "list_scss",
     src = "list.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        ":hcm_indicator_scss_lib",
+        ":inherited_structure_scss_lib",
         "//src/material/core:core_scss_lib",
-        "//src/material/divider:divider_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "list_option_scss",
+    src = "list-option.scss",
+    deps = [
+        ":list_scss_lib",
+        "//src/cdk:sass_lib",
+        "//src/material/checkbox:checkbox_scss_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "list_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":list",
-        "//src/cdk/a11y",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
+        "//src/cdk/testing/testbed",
         "//src/material/core",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
@@ -70,28 +100,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
-        "//src/cdk/testing/private/e2e",
-    ],
-)
-
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
+        ":list_tests_lib",
     ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":list.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":list_scss_lib"],
 )
 
 filegroup(

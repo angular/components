@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
@@ -17,9 +17,7 @@ export interface CellHarnessFilters extends BaseHarnessFilters {
 }
 
 /** A set of criteria that can be used to filter a list of row harness instances. */
-export interface RowHarnessFilters extends BaseHarnessFilters {
-}
+export interface RowHarnessFilters extends BaseHarnessFilters {}
 
 /** A set of criteria that can be used to filter a list of table harness instances. */
-export interface TableHarnessFilters extends BaseHarnessFilters {
-}
+export interface TableHarnessFilters extends BaseHarnessFilters {}

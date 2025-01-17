@@ -1,39 +1,88 @@
+@use 'sass:map';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '../core/style/list-common';
+@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
 
-
-// Include this empty mixin for consistency with the other components.
-@mixin color($config-or-theme) {}
-
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-grid-tile-header,
-  .mat-grid-tile-footer {
-    @include list-common.base(typography-utils.font-size($config, caption));
-    font-size: typography-utils.font-size($config, body-1);
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
   }
 }
 
-@mixin _density($config-or-theme) {}
+// Include this empty mixin for consistency with the other components.
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-grid-list.$prefix,
+        tokens-mat-grid-list.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-grid-list.$prefix,
+      tokens: tokens-mat-grid-list.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-grid-list') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-grid-list.$prefix,
+      map.get($tokens, tokens-mat-grid-list.$prefix)
+    );
   }
 }

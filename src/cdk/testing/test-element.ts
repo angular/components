@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ElementDimensions} from './element-dimensions';
@@ -18,7 +18,14 @@ export interface ModifierKeys {
 
 /** Data that can be attached to a custom event dispatched from a `TestElement`. */
 export type EventData =
-    string | number | boolean | undefined | null | EventData[] | {[key: string]: EventData};
+  | string
+  | number
+  | boolean
+  | Function
+  | undefined
+  | null
+  | EventData[]
+  | {[key: string]: EventData};
 
 /** An enum of non-text keys that can be used with the `sendKeys` method. */
 // NOTE: This is a separate enum from `@angular/cdk/keycodes` because we don't necessarily want to
@@ -57,7 +64,8 @@ export enum TestKey {
   F10,
   F11,
   F12,
-  META
+  META,
+  COMMA, // Commas are a common separator key.
 }
 
 /**
@@ -111,13 +119,16 @@ export interface TestElement {
 
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
-   * and attempts to add the string to the Element's value.
+   * and attempts to add the string to the Element's value. Note that some environments cannot
+   * reproduce native browser behavior for keyboard shortcuts such as Tab, Ctrl + A, etc.
+   * @throws An error if no keys have been specified.
    */
   sendKeys(...keys: (string | TestKey)[]): Promise<void>;
 
   /**
-   * Sends the given string to the input as a series of key presses. Also fires input events
-   * and attempts to add the string to the Element's value.
+   * Sends the given string to the input as a series of key presses. Also fires input
+   * events and attempts to add the string to the Element's value.
+   * @throws An error if no keys have been specified.
    */
   sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
 
@@ -126,6 +137,13 @@ export interface TestElement {
    * @param options Options that affect what text is included.
    */
   text(options?: TextOptions): Promise<string>;
+
+  /**
+   * Sets the value of a `contenteditable` element.
+   * @param value Value to be set on the element.
+   * @breaking-change 16.0.0 Will become a required method.
+   */
+  setContenteditableValue?(value: string): Promise<void>;
 
   /** Gets the value for the given attribute from the element. */
   getAttribute(name: string): Promise<string | null>;
@@ -137,7 +155,7 @@ export interface TestElement {
   getDimensions(): Promise<ElementDimensions>;
 
   /** Gets the value of a property of an element. */
-  getProperty(name: string): Promise<any>;
+  getProperty<T = any>(name: string): Promise<T>;
 
   /** Checks whether this element matches the given selector. */
   matchesSelector(selector: string): Promise<boolean>;
@@ -151,7 +169,7 @@ export interface TestElement {
   // Note that ideally here we'd be selecting options based on their value, rather than their
   // index, but we're limited by `@angular/forms` which will modify the option value in some cases.
   // Since the value will be truncated, we can't rely on it to do the lookup in the DOM. See:
-  // https://github.com/angular/angular/blob/master/packages/forms/src/directives/select_control_value_accessor.ts#L19
+  // https://github.com/angular/angular/blob/main/packages/forms/src/directives/select_control_value_accessor.ts#L19
   /** Selects the options at the specified indexes inside of a native `select` element. */
   selectOptions(...optionIndexes: number[]): Promise<void>;
 

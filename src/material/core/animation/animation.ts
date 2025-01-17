@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /** @docs-private */
@@ -13,7 +13,6 @@ export class AnimationCurves {
   static ACCELERATION_CURVE = 'cubic-bezier(0.4,0.0,1,1)';
   static SHARP_CURVE = 'cubic-bezier(0.4,0.0,0.6,1)';
 }
-
 
 /** @docs-private */
 export class AnimationDurations {

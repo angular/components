@@ -11,13 +11,13 @@ ng_module(
         ":checkbox_demo_scss",
     ],
     deps = [
-        "//src/components-examples/material/checkbox",
         "//src/material/checkbox",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/select",
-        "@npm//@angular/router",
+        "//src/material/tooltip",
+        "@npm//@angular/forms",
     ],
 )
 

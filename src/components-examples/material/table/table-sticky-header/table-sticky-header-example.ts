@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
+import {MatTableModule} from '@angular/material/table';
 
 /**
  * @title Table with sticky header
  */
 @Component({
   selector: 'table-sticky-header-example',
-  styleUrls: ['table-sticky-header-example.css'],
+  styleUrl: 'table-sticky-header-example.css',
   templateUrl: 'table-sticky-header-example.html',
+  imports: [MatTableModule],
 })
 export class TableStickyHeaderExample {
   displayedColumns = ['position', 'name', 'weight', 'symbol'];

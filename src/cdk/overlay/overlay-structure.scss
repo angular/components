@@ -1,0 +1,7 @@
+@use './index' as overlay;
+
+// We don't emit the layer internally, because all the breaking changes
+// have been resolved already and the `@layer` seems to break some targets.
+$_is-external-build: true;
+
+@include overlay.private-overlay-structure($_is-external-build);

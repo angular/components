@@ -9,11 +9,13 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/cdk/drag-drop",
     deps = [
         "//src/cdk/drag-drop",
         "//src/cdk/overlay",
         "//src/cdk/portal",
+        "//src/material/icon",
+        "//src/material/table",
+        "//src/material/tabs",
     ],
 )
 

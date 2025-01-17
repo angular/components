@@ -41,22 +41,43 @@
     <span><mat-checkbox [(ngModel)]="isAlignEnd">Align end</mat-checkbox></span>
   </div>
   <mat-radio-group
-    name="my_options"
-    [disabled]="isDisabled"
-    [required]="isRequired"
-    [labelPosition]="isAlignEnd ? 'after' : 'before'">
+      name="my_options"
+      [disabled]="isDisabled"
+      [required]="isRequired"
+      [labelPosition]="isAlignEnd ? 'after' : 'before'">
     <mat-radio-button value="option_1">Option 1</mat-radio-button>
     <mat-radio-button value="option_2">Option 2</mat-radio-button>
     <mat-radio-button value="option_3">Option 3</mat-radio-button>
   </mat-radio-group>
 </section>
+
 <h1>Favorite Season Example</h1>
 <h2>Dynamic Example with two-way data-binding</h2>
 <section class="demo-section">
   <mat-radio-group name="more_options" [(ngModel)]="favoriteSeason">
-    <mat-radio-button *ngFor="let season of seasonOptions" name="more_options" [value]="season">
-      {{season}}
-    </mat-radio-button>
+    @for (season of seasonOptions; track season) {
+      <mat-radio-button name="more_options" [value]="season">
+        {{season}}
+      </mat-radio-button>
+    }
   </mat-radio-group>
   <p>Your favorite season is: {{favoriteSeason}}</p>
+</section>
+
+<h1>Disabled interactive group</h1>
+<section class="demo-section">
+  <mat-radio-group
+    disabled
+    [disabledInteractive]="disabledInteractive"
+    [(ngModel)]="favoriteSeason">
+    @for (season of seasonOptions; track season) {
+      <mat-radio-button [value]="season" matTooltip="This is a tooltip" matTooltipPosition="above">
+        {{season}}
+      </mat-radio-button>
+    }
+  </mat-radio-group>
+
+  <div>
+    <mat-checkbox [(ngModel)]="disabledInteractive">Disabled interactive</mat-checkbox>
+  </div>
 </section>

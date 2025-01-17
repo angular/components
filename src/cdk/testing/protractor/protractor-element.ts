@@ -3,12 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   _getTextWithExcludedElements,
   ElementDimensions,
+  getNoKeysSpecifiedError,
   ModifierKeys,
   TestElement,
   TestKey,
@@ -48,7 +49,8 @@ const keyMap = {
   [TestKey.F10]: Key.F10,
   [TestKey.F11]: Key.F11,
   [TestKey.F12]: Key.F12,
-  [TestKey.META]: Key.META
+  [TestKey.META]: Key.META,
+  [TestKey.COMMA]: ',',
 };
 
 /** Converts a `ModifierKeys` object to a list of Protractor `Key`s. */
@@ -102,8 +104,9 @@ export class ProtractorElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   click(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async click(
+    ...args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?]
+  ): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.LEFT);
   }
 
@@ -114,8 +117,9 @@ export class ProtractorElement implements TestElement {
    * @param modifiers Modifier keys held while clicking
    */
   rightClick(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
-  async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+  async rightClick(
+    ...args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?]
+  ): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.RIGHT);
   }
 
@@ -131,16 +135,18 @@ export class ProtractorElement implements TestElement {
 
   /** Hovers the mouse over the element. */
   async hover(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement())
-        .perform();
+    return browser
+      .actions()
+      .mouseMove(await this.element.getWebElement())
+      .perform();
   }
 
   /** Moves the mouse away from the element. */
   async mouseAway(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement(), {x: -1, y: -1})
-        .perform();
+    return browser
+      .actions()
+      .mouseMove(await this.element.getWebElement(), {x: -1, y: -1})
+      .perform();
   }
 
   /**
@@ -157,7 +163,7 @@ export class ProtractorElement implements TestElement {
     const first = modifiersAndKeys[0];
     let modifiers: ModifierKeys;
     let rest: (string | TestKey)[];
-    if (typeof first !== 'string' && typeof first !== 'number') {
+    if (first !== undefined && typeof first !== 'string' && typeof first !== 'number') {
       modifiers = first;
       rest = modifiersAndKeys.slice(1);
     } else {
@@ -166,11 +172,18 @@ export class ProtractorElement implements TestElement {
     }
 
     const modifierKeys = toProtractorModifierKeys(modifiers);
-    const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
-        .reduce((arr, k) => arr.concat(k), [])
-        // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
-        // so avoid it if no modifier keys are required.
-        .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
+    const keys = rest
+      .map(k => (typeof k === 'string' ? k.split('') : [keyMap[k]]))
+      .reduce((arr, k) => arr.concat(k), [])
+      // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
+      // so avoid it if no modifier keys are required.
+      .map(k => (modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k));
+
+    // Throw an error if no keys have been specified. Calling this function with no
+    // keys should not result in a focus event being dispatched unexpectedly.
+    if (keys.length === 0) {
+      throw getNoKeysSpecifiedError();
+    }
 
     return this.element.sendKeys(...keys);
   }
@@ -183,13 +196,35 @@ export class ProtractorElement implements TestElement {
     if (options?.exclude) {
       return browser.executeScript(_getTextWithExcludedElements, this.element, options.exclude);
     }
-    return this.element.getText();
+    // We don't go through Protractor's `getText`, because it excludes text from hidden elements.
+    return browser.executeScript(`return (arguments[0].textContent || '').trim()`, this.element);
+  }
+
+  /**
+   * Sets the value of a `contenteditable` element.
+   * @param value Value to be set on the element.
+   */
+  async setContenteditableValue(value: string): Promise<void> {
+    const contenteditableAttr = await this.getAttribute('contenteditable');
+
+    if (
+      contenteditableAttr !== '' &&
+      contenteditableAttr !== 'true' &&
+      contenteditableAttr !== 'plaintext-only'
+    ) {
+      throw new Error('setContenteditableValue can only be called on a `contenteditable` element.');
+    }
+
+    return browser.executeScript(`arguments[0].textContent = arguments[1];`, this.element, value);
   }
 
   /** Gets the value for the given attribute from the element. */
-  async getAttribute(name: string): Promise<string|null> {
+  async getAttribute(name: string): Promise<string | null> {
     return browser.executeScript(
-        `return arguments[0].getAttribute(arguments[1])`, this.element, name);
+      `return arguments[0].getAttribute(arguments[1])`,
+      this.element,
+      name,
+    );
   }
 
   /** Checks whether the element has the given class. */
@@ -206,7 +241,7 @@ export class ProtractorElement implements TestElement {
   }
 
   /** Gets the value of a property of an element. */
-  async getProperty(name: string): Promise<any> {
+  async getProperty<T = any>(name: string): Promise<T> {
     return browser.executeScript(`return arguments[0][arguments[1]]`, this.element, name);
   }
 
@@ -239,10 +274,14 @@ export class ProtractorElement implements TestElement {
 
   /** Checks whether this element matches the given selector. */
   async matchesSelector(selector: string): Promise<boolean> {
-      return browser.executeScript(`
+    return browser.executeScript(
+      `
           return (Element.prototype.matches ||
                   Element.prototype.msMatchesSelector).call(arguments[0], arguments[1])
-          `, this.element, selector);
+          `,
+      this.element,
+      selector,
+    );
   }
 
   /** Checks whether the element is focused. */
@@ -260,9 +299,9 @@ export class ProtractorElement implements TestElement {
 
   /** Dispatches all the events that are part of a click event sequence. */
   private async _dispatchClickEventSequence(
-    args: [ModifierKeys?] | ['center', ModifierKeys?] |
-      [number, number, ModifierKeys?],
-    button: string) {
+    args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
+    button: string,
+  ) {
     let modifiers: ModifierKeys = {};
     if (args.length && typeof args[args.length - 1] === 'object') {
       modifiers = args.pop() as ModifierKeys;
@@ -272,11 +311,11 @@ export class ProtractorElement implements TestElement {
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if
     // no args remain after popping the modifiers from the args passed to this function.
-    const offsetArgs = (args.length === 2 ?
-      [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
+    const offsetArgs = (args.length === 2 ? [{x: args[0], y: args[1]}] : []) as [
+      {x: number; y: number},
+    ];
 
-    let actions = browser.actions()
-      .mouseMove(await this.element.getWebElement(), ...offsetArgs);
+    let actions = browser.actions().mouseMove(await this.element.getWebElement(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);

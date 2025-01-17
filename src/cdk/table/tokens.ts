@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {InjectionToken} from '@angular/core';
@@ -27,5 +27,6 @@ export interface TextColumnOptions<T> {
 }
 
 /** Injection token that can be used to specify the text column options. */
-export const TEXT_COLUMN_OPTIONS =
-    new InjectionToken<TextColumnOptions<any>>('text-column-options');
+export const TEXT_COLUMN_OPTIONS = new InjectionToken<TextColumnOptions<any>>(
+  'text-column-options',
+);

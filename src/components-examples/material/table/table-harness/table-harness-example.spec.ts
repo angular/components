@@ -1,27 +1,14 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTableHarness} from '@angular/material/table/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatTableModule} from '@angular/material/table';
 import {TableHarnessExample} from './table-harness-example';
 
 describe('TableHarnessExample', () => {
   let fixture: ComponentFixture<TableHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatTableModule],
-      declarations: [TableHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
     fixture = TestBed.createComponent(TableHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -47,12 +34,13 @@ describe('TableHarnessExample', () => {
     const headerRows = await table.getHeaderRows();
     const footerRows = await table.getFooterRows();
     const rows = await table.getRows();
-    const headerCells = (await parallel(() => headerRows.map(row => row.getCells())))
-      .map(row => row.length);
-    const footerCells = (await parallel(() => footerRows.map(row => row.getCells())))
-      .map(row => row.length);
-    const cells = (await parallel(() => rows.map(row => row.getCells())))
-      .map(row => row.length);
+    const headerCells = (await parallel(() => headerRows.map(row => row.getCells()))).map(
+      row => row.length,
+    );
+    const footerCells = (await parallel(() => footerRows.map(row => row.getCells()))).map(
+      row => row.length,
+    );
+    const cells = (await parallel(() => rows.map(row => row.getCells()))).map(row => row.length);
 
     expect(headerCells).toEqual([4]);
     expect(cells).toEqual([4, 4, 4, 4, 4, 4, 4, 4, 4, 4]);

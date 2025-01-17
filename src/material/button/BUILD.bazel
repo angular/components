@@ -1,8 +1,7 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -16,43 +15,81 @@ ng_module(
     name = "button",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
     ),
-    assets = [":button.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/button",
+    assets = [
+        ":button_high_contrast_scss",
+        ":button_scss",
+        ":fab_scss",
+        ":icon-button_scss",
+    ] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/a11y",
         "//src/material/core",
-        "@npm//@angular/animations",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
     ],
 )
 
 sass_library(
     name = "button_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+sass_library(
+    name = "button_base_scss_lib",
+    srcs = ["_button-base.scss"],
 )
 
 sass_binary(
     name = "button_scss",
     src = "button.scss",
     deps = [
-        ":button_scss_lib",
-        "//src/cdk/a11y:a11y_scss_lib",
+        ":button_base_scss_lib",
+        "//src/material:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "button_high_contrast_scss",
+    src = "button-high-contrast.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "fab_scss",
+    src = "fab.scss",
+    deps = [
+        ":button_base_scss_lib",
+        "//src/material:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "icon-button_scss",
+    src = "icon-button.scss",
+    deps = [
+        ":button_base_scss_lib",
+        "//src/material:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "button_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":button",
+        "//src/cdk/platform",
+        "//src/cdk/testing/private",
         "//src/material/core",
         "@npm//@angular/platform-browser",
     ],
@@ -60,28 +97,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
-        "//src/cdk/testing/private/e2e",
-    ],
-)
-
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
+        ":button_tests_lib",
     ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":button.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":button_scss_lib"],
 )
 
 filegroup(

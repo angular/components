@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
 import {Observable, ReplaySubject} from 'rxjs';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
 
 export interface PeriodicElement {
   name: string;
@@ -27,8 +29,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'table-dynamic-observable-data-example',
-  styleUrls: ['table-dynamic-observable-data-example.css'],
+  styleUrl: 'table-dynamic-observable-data-example.css',
   templateUrl: 'table-dynamic-observable-data-example.html',
+  imports: [MatButtonModule, MatTableModule],
 })
 export class TableDynamicObservableDataExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -38,10 +41,7 @@ export class TableDynamicObservableDataExample {
 
   addData() {
     const randomElementIndex = Math.floor(Math.random() * ELEMENT_DATA.length);
-    this.dataToDisplay = [
-      ...this.dataToDisplay,
-      ELEMENT_DATA[randomElementIndex]
-    ];
+    this.dataToDisplay = [...this.dataToDisplay, ELEMENT_DATA[randomElementIndex]];
     this.dataSource.setData(this.dataToDisplay);
   }
 

@@ -3,12 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {IconHarnessFilters, IconType} from './icon-harness-filters';
-
 
 /** Harness for interacting with a standard mat-icon in tests. */
 export class MatIconHarness extends ComponentHarness {
@@ -23,12 +22,13 @@ export class MatIconHarness extends ComponentHarness {
    */
   static with(options: IconHarnessFilters = {}): HarnessPredicate<MatIconHarness> {
     return new HarnessPredicate(MatIconHarness, options)
-        .addOption('type', options.type,
-            async (harness, type) => (await harness.getType()) === type)
-        .addOption('name', options.name,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getName(), text))
-        .addOption('namespace', options.namespace,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getNamespace(), text));
+      .addOption('type', options.type, async (harness, type) => (await harness.getType()) === type)
+      .addOption('name', options.name, (harness, text) =>
+        HarnessPredicate.stringMatches(harness.getName(), text),
+      )
+      .addOption('namespace', options.namespace, (harness, text) =>
+        HarnessPredicate.stringMatches(harness.getNamespace(), text),
+      );
   }
 
   /** Gets the type of the icon. */
@@ -49,8 +49,14 @@ export class MatIconHarness extends ComponentHarness {
 
     // Some icons support defining the icon as a ligature.
     // As a fallback, try to extract it from the DOM text.
-    if (await this.getType() === IconType.FONT) {
-      return host.text();
+    if ((await this.getType()) === IconType.FONT) {
+      // Other directives may add content to the icon (e.g. `MatBadge`), however only the direct
+      // text nodes affect the name of the icon. Exclude all element descendants from the result.
+      const text = await host.text({exclude: '*'});
+
+      // There are some internal cases where the icon name is wrapped in another node.
+      // Fall back to extracting the entire text if we ended up excluding everything above.
+      return text.length > 0 ? text : host.text();
     }
 
     return null;

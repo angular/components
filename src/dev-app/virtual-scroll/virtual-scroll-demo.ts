@@ -3,26 +3,47 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
+import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {BehaviorSubject} from 'rxjs';
-
+import {
+  CdkVirtualScrollParentScrollingExample,
+  CdkVirtualScrollWindowScrollingExample,
+} from '@angular/components-examples/cdk/scrolling';
 
 type State = {
-  name: string,
-  capital: string
+  name: string;
+  capital: string;
 };
-
 
 @Component({
   selector: 'virtual-scroll-demo',
   templateUrl: 'virtual-scroll-demo.html',
-  styleUrls: ['virtual-scroll-demo.css'],
+  styleUrl: 'virtual-scroll-demo.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AsyncPipe,
+    ExperimentalScrollingModule,
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ScrollingModule,
+    CdkVirtualScrollParentScrollingExample,
+    CdkVirtualScrollWindowScrollingExample,
+  ],
 })
 export class VirtualScrollDemo implements OnDestroy {
   scrollToOffset = 0;
@@ -30,10 +51,15 @@ export class VirtualScrollDemo implements OnDestroy {
   scrollToBehavior: ScrollBehavior = 'auto';
   scrolledIndex = new Map<CdkVirtualScrollViewport, number>();
   fixedSizeData = Array(10000).fill(50);
-  increasingSizeData = Array(10000).fill(0).map((_, i) => (1 + Math.floor(i / 1000)) * 20);
-  decreasingSizeData = Array(10000).fill(0)
-      .map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
-  randomData = Array(10000).fill(0).map(() => Math.round(Math.random() * 100));
+  increasingSizeData = Array(10000)
+    .fill(0)
+    .map((_, i) => (1 + Math.floor(i / 1000)) * 20);
+  decreasingSizeData = Array(10000)
+    .fill(0)
+    .map((_, i) => (1 + Math.floor((10000 - i) / 1000)) * 20);
+  randomData = Array(10000)
+    .fill(0)
+    .map(() => Math.round(Math.random() * 100));
   readonly observableData = new BehaviorSubject<number[]>([]);
   states = [
     {name: 'Alabama', capital: 'Montgomery'},
@@ -105,15 +131,20 @@ export class VirtualScrollDemo implements OnDestroy {
   }
 
   sortBy(prop: 'name' | 'capital') {
-    this.statesObservable.next(this.states.map(s => ({...s})).sort((a, b) => {
-      const aProp = a[prop], bProp = b[prop];
-      if (aProp < bProp) {
-        return -1;
-      } else if (aProp > bProp) {
-        return 1;
-      }
-      return 0;
-    }));
+    this.statesObservable.next(
+      this.states
+        .map(s => ({...s}))
+        .sort((a, b) => {
+          const aProp = a[prop],
+            bProp = b[prop];
+          if (aProp < bProp) {
+            return -1;
+          } else if (aProp > bProp) {
+            return 1;
+          }
+          return 0;
+        }),
+    );
   }
 
   scrolled(viewport: CdkVirtualScrollViewport, index: number) {

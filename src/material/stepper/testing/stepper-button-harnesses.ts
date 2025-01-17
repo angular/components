@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
@@ -34,12 +34,13 @@ export class MatStepperNextHarness extends StepperButtonHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: StepperButtonHarnessFilters = {}): HarnessPredicate<MatStepperNextHarness> {
-    return new HarnessPredicate(MatStepperNextHarness, options)
-        .addOption('text', options.text,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
+    return new HarnessPredicate(MatStepperNextHarness, options).addOption(
+      'text',
+      options.text,
+      (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text),
+    );
   }
 }
-
 
 /** Harness for interacting with a standard Angular Material stepper previous button in tests. */
 export class MatStepperPreviousHarness extends StepperButtonHarness {
@@ -52,10 +53,13 @@ export class MatStepperPreviousHarness extends StepperButtonHarness {
    * @param options Options for filtering which steps are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: StepperButtonHarnessFilters = {}):
-    HarnessPredicate<MatStepperPreviousHarness> {
-    return new HarnessPredicate(MatStepperPreviousHarness, options)
-        .addOption('text', options.text,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
+  static with(
+    options: StepperButtonHarnessFilters = {},
+  ): HarnessPredicate<MatStepperPreviousHarness> {
+    return new HarnessPredicate(MatStepperPreviousHarness, options).addOption(
+      'text',
+      options.text,
+      (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text),
+    );
   }
 }

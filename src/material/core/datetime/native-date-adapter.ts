@@ -3,59 +3,32 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '@angular/cdk/platform';
-import {Inject, Injectable, Optional} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
-
-// TODO(mmalerba): Remove when we no longer support safari 9.
-/** Whether the browser supports the Intl API. */
-let SUPPORTS_INTL_API: boolean;
-
-// We need a try/catch around the reference to `Intl`, because accessing it in some cases can
-// cause IE to throw. These cases are tied to particular versions of Windows and can happen if
-// the consumer is providing a polyfilled `Map`. See:
-// https://github.com/Microsoft/ChakraCore/issues/3189
-// https://github.com/angular/components/issues/15687
-try {
-  SUPPORTS_INTL_API = typeof Intl != 'undefined';
-} catch {
-  SUPPORTS_INTL_API = false;
-}
-
-/** The default month names to use if Intl API is not available. */
-const DEFAULT_MONTH_NAMES = {
-  'long': [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-    'October', 'November', 'December'
-  ],
-  'short': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  'narrow': ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
-};
-
-
-/** The default date names to use if Intl API is not available. */
-const DEFAULT_DATE_NAMES = range(31, i => String(i + 1));
-
-
-/** The default day of the week names to use if Intl API is not available. */
-const DEFAULT_DAY_OF_WEEK_NAMES = {
-  'long': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-  'short': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  'narrow': ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-};
-
 
 /**
  * Matches strings that have the form of a valid RFC 3339 string
  * (https://tools.ietf.org/html/rfc3339). Note that the string may not actually be a valid date
- * because the regex will match strings an with out of bounds month, date, etc.
+ * because the regex will match strings with an out of bounds month, date, etc.
  */
 const ISO_8601_REGEX =
-    /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))?)?$/;
+  /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|(?:(?:\+|-)\d{2}:\d{2}))?)?$/;
 
+/**
+ * Matches a time string. Supported formats:
+ * - {{hours}}:{{minutes}}
+ * - {{hours}}:{{minutes}}:{{seconds}}
+ * - {{hours}}:{{minutes}} AM/PM
+ * - {{hours}}:{{minutes}}:{{seconds}} AM/PM
+ * - {{hours}}.{{minutes}}
+ * - {{hours}}.{{minutes}}.{{seconds}}
+ * - {{hours}}.{{minutes}} AM/PM
+ * - {{hours}}.{{minutes}}.{{seconds}} AM/PM
+ */
+const TIME_REGEX = /^(\d?\d)[:.](\d?\d)(?:[:.](\d?\d))?\s*(AM|PM)?$/i;
 
 /** Creates an array and fills it with values. */
 function range<T>(length: number, valueFunction: (index: number) => T): T[] {
@@ -69,29 +42,27 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
 @Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
-  /** Whether to clamp the date between 1 and 9999 to avoid IE and Edge errors. */
-  private readonly _clampDate: boolean;
-
   /**
-   * Whether to use `timeZone: 'utc'` with `Intl.DateTimeFormat` when formatting dates.
-   * Without this `Intl.DateTimeFormat` sometimes chooses the wrong timeZone, which can throw off
-   * the result. (e.g. in the en-US locale `new Date(1800, 7, 14).toLocaleDateString()`
-   * will produce `'8/13/1800'`.
-   *
-   * TODO(mmalerba): drop this variable. It's not being used in the code right now. We're now
-   * getting the string representation of a Date object from its utc representation. We're keeping
-   * it here for sometime, just for precaution, in case we decide to revert some of these changes
-   * though.
+   * @deprecated No longer being used. To be removed.
+   * @breaking-change 14.0.0
    */
-  useUtcForDisplay: boolean = true;
+  useUtcForDisplay: boolean = false;
 
-  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
+  /** The injected locale. */
+  private readonly _matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+
+  constructor(...args: unknown[]);
+
+  constructor() {
     super();
-    super.setLocale(matDateLocale);
 
-    // IE does its own time zone correction, so we disable this on IE.
-    this.useUtcForDisplay = !platform.TRIDENT;
-    this._clampDate = platform.TRIDENT || platform.EDGE;
+    const matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+
+    if (matDateLocale !== undefined) {
+      this._matDateLocale = matDateLocale;
+    }
+
+    super.setLocale(this._matDateLocale);
   }
 
   getYear(date: Date): number {
@@ -111,48 +82,51 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
-    if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, {month: style, timeZone: 'utc'});
-      return range(12, i =>
-          this._stripDirectionalityCharacters(this._format(dtf, new Date(2017, i, 1))));
-    }
-    return DEFAULT_MONTH_NAMES[style];
+    const dtf = new Intl.DateTimeFormat(this.locale, {month: style, timeZone: 'utc'});
+    return range(12, i => this._format(dtf, new Date(2017, i, 1)));
   }
 
   getDateNames(): string[] {
-    if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, {day: 'numeric', timeZone: 'utc'});
-      return range(31, i => this._stripDirectionalityCharacters(
-          this._format(dtf, new Date(2017, 0, i + 1))));
-    }
-    return DEFAULT_DATE_NAMES;
+    const dtf = new Intl.DateTimeFormat(this.locale, {day: 'numeric', timeZone: 'utc'});
+    return range(31, i => this._format(dtf, new Date(2017, 0, i + 1)));
   }
 
   getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
-    if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, {weekday: style, timeZone: 'utc'});
-      return range(7, i => this._stripDirectionalityCharacters(
-          this._format(dtf, new Date(2017, 0, i + 1))));
-    }
-    return DEFAULT_DAY_OF_WEEK_NAMES[style];
+    const dtf = new Intl.DateTimeFormat(this.locale, {weekday: style, timeZone: 'utc'});
+    return range(7, i => this._format(dtf, new Date(2017, 0, i + 1)));
   }
 
   getYearName(date: Date): string {
-    if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, {year: 'numeric', timeZone: 'utc'});
-      return this._stripDirectionalityCharacters(this._format(dtf, date));
-    }
-    return String(this.getYear(date));
+    const dtf = new Intl.DateTimeFormat(this.locale, {year: 'numeric', timeZone: 'utc'});
+    return this._format(dtf, date);
   }
 
   getFirstDayOfWeek(): number {
-    // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
+    // At the time of writing `Intl.Locale` isn't available
+    // in the internal types so we need to cast to `any`.
+    if (typeof Intl !== 'undefined' && (Intl as any).Locale) {
+      const locale = new (Intl as any).Locale(this.locale) as {
+        getWeekInfo?: () => {firstDay: number};
+        weekInfo?: {firstDay: number};
+      };
+
+      // Some browsers implement a `getWeekInfo` method while others have a `weekInfo` getter.
+      // Note that this isn't supported in all browsers so we need to null check it.
+      const firstDay = (locale.getWeekInfo?.() || locale.weekInfo)?.firstDay ?? 0;
+
+      // `weekInfo.firstDay` is a number between 1 and 7 where, starting from Monday,
+      // whereas our representation is 0 to 6 where 0 is Sunday so we need to normalize it.
+      return firstDay === 7 ? 0 : firstDay;
+    }
+
+    // Default to Sunday if the browser doesn't provide the week information.
     return 0;
   }
 
   getNumDaysInMonth(date: Date): number {
-    return this.getDate(this._createDateWithOverflow(
-        this.getYear(date), this.getMonth(date) + 1, 0));
+    return this.getDate(
+      this._createDateWithOverflow(this.getYear(date), this.getMonth(date) + 1, 0),
+    );
   }
 
   clone(date: Date): Date {
@@ -185,7 +159,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date();
   }
 
-  parse(value: any): Date | null {
+  parse(value: any, parseFormat?: any): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
     if (typeof value == 'number') {
@@ -199,20 +173,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
       throw Error('NativeDateAdapter: Cannot format invalid date.');
     }
 
-    if (SUPPORTS_INTL_API) {
-      // On IE and Edge the i18n API will throw a hard error that can crash the entire app
-      // if we attempt to format a date whose year is less than 1 or greater than 9999.
-      if (this._clampDate && (date.getFullYear() < 1 || date.getFullYear() > 9999)) {
-        date = this.clone(date);
-        date.setFullYear(Math.max(1, Math.min(9999, date.getFullYear())));
-      }
-
-      displayFormat = {...displayFormat, timeZone: 'utc'};
-
-      const dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
-      return this._stripDirectionalityCharacters(this._format(dtf, date));
-    }
-    return this._stripDirectionalityCharacters(date.toDateString());
+    const dtf = new Intl.DateTimeFormat(this.locale, {...displayFormat, timeZone: 'utc'});
+    return this._format(dtf, date);
   }
 
   addCalendarYears(date: Date, years: number): Date {
@@ -221,13 +183,16 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   addCalendarMonths(date: Date, months: number): Date {
     let newDate = this._createDateWithOverflow(
-        this.getYear(date), this.getMonth(date) + months, this.getDate(date));
+      this.getYear(date),
+      this.getMonth(date) + months,
+      this.getDate(date),
+    );
 
     // It's possible to wind up in the wrong month if the original month has more days than the new
     // month. In this case we want to go to the last day of the desired month.
     // Note: the additional + 12 % 12 ensures we end up with a positive number, since JS % doesn't
     // guarantee this.
-    if (this.getMonth(newDate) != ((this.getMonth(date) + months) % 12 + 12) % 12) {
+    if (this.getMonth(newDate) != (((this.getMonth(date) + months) % 12) + 12) % 12) {
       newDate = this._createDateWithOverflow(this.getYear(newDate), this.getMonth(newDate), 0);
     }
 
@@ -236,14 +201,17 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   addCalendarDays(date: Date, days: number): Date {
     return this._createDateWithOverflow(
-        this.getYear(date), this.getMonth(date), this.getDate(date) + days);
+      this.getYear(date),
+      this.getMonth(date),
+      this.getDate(date) + days,
+    );
   }
 
   toIso8601(date: Date): string {
     return [
       date.getUTCFullYear(),
       this._2digit(date.getUTCMonth() + 1),
-      this._2digit(date.getUTCDate())
+      this._2digit(date.getUTCDate()),
     ].join('-');
   }
 
@@ -281,6 +249,69 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return new Date(NaN);
   }
 
+  override setTime(target: Date, hours: number, minutes: number, seconds: number): Date {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!inRange(hours, 0, 23)) {
+        throw Error(`Invalid hours "${hours}". Hours value must be between 0 and 23.`);
+      }
+
+      if (!inRange(minutes, 0, 59)) {
+        throw Error(`Invalid minutes "${minutes}". Minutes value must be between 0 and 59.`);
+      }
+
+      if (!inRange(seconds, 0, 59)) {
+        throw Error(`Invalid seconds "${seconds}". Seconds value must be between 0 and 59.`);
+      }
+    }
+
+    const clone = this.clone(target);
+    clone.setHours(hours, minutes, seconds, 0);
+    return clone;
+  }
+
+  override getHours(date: Date): number {
+    return date.getHours();
+  }
+
+  override getMinutes(date: Date): number {
+    return date.getMinutes();
+  }
+
+  override getSeconds(date: Date): number {
+    return date.getSeconds();
+  }
+
+  override parseTime(userValue: any, parseFormat?: any): Date | null {
+    if (typeof userValue !== 'string') {
+      return userValue instanceof Date ? new Date(userValue.getTime()) : null;
+    }
+
+    const value = userValue.trim();
+
+    if (value.length === 0) {
+      return null;
+    }
+
+    // Attempt to parse the value directly.
+    let result = this._parseTimeString(value);
+
+    // Some locales add extra characters around the time, but are otherwise parseable
+    // (e.g. `00:05 ч.` in bg-BG). Try replacing all non-number and non-colon characters.
+    if (result === null) {
+      const withoutExtras = value.replace(/[^0-9:(AM|PM)]/gi, '').trim();
+
+      if (withoutExtras.length > 0) {
+        result = this._parseTimeString(withoutExtras);
+      }
+    }
+
+    return result || this.invalid();
+  }
+
+  override addSeconds(date: Date, amount: number): Date {
+    return new Date(date.getTime() + amount * 1000);
+  }
+
   /** Creates a date but allows the month and date to overflow. */
   private _createDateWithOverflow(year: number, month: number, date: number) {
     // Passing the year to the constructor causes year numbers <100 to be converted to 19xx.
@@ -301,23 +332,12 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   /**
-   * Strip out unicode LTR and RTL characters. Edge and IE insert these into formatted dates while
-   * other browsers do not. We remove them to make output consistent and because they interfere with
-   * date parsing.
-   * @param str The string to strip direction characters from.
-   * @returns The stripped string.
-   */
-  private _stripDirectionalityCharacters(str: string) {
-    return str.replace(/[\u200e\u200f]/g, '');
-  }
-
-  /**
    * When converting Date object to string, javascript built-in functions may return wrong
    * results because it applies its internal DST rules. The DST rules around the world change
    * very frequently, and the current valid rule is not always valid in previous years though.
    * We work around this problem building a new Date object which has its internal UTC
    * representation with the local date and time.
-   * @param dtf Intl.DateTimeFormat object, containg the desired string format. It must have
+   * @param dtf Intl.DateTimeFormat object, containing the desired string format. It must have
    *    timeZone set to 'utc' to work fine.
    * @param date Date from which we want to get the string representation according to dtf
    * @returns A Date object with its UTC representation based on the passed in date info
@@ -330,4 +350,47 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
   }
+
+  /**
+   * Attempts to parse a time string into a date object. Returns null if it cannot be parsed.
+   * @param value Time string to parse.
+   */
+  private _parseTimeString(value: string): Date | null {
+    // Note: we can technically rely on the browser for the time parsing by generating
+    // an ISO string and appending the string to the end of it. We don't do it, because
+    // browsers aren't consistent in what they support. Some examples:
+    // - Safari doesn't support AM/PM.
+    // - Firefox produces a valid date object if the time string has overflows (e.g. 12:75) while
+    //   other browsers produce an invalid date.
+    // - Safari doesn't allow padded numbers.
+    const parsed = value.toUpperCase().match(TIME_REGEX);
+
+    if (parsed) {
+      let hours = parseInt(parsed[1]);
+      const minutes = parseInt(parsed[2]);
+      let seconds: number | undefined = parsed[3] == null ? undefined : parseInt(parsed[3]);
+      const amPm = parsed[4] as 'AM' | 'PM' | undefined;
+
+      if (hours === 12) {
+        hours = amPm === 'AM' ? 0 : hours;
+      } else if (amPm === 'PM') {
+        hours += 12;
+      }
+
+      if (
+        inRange(hours, 0, 23) &&
+        inRange(minutes, 0, 59) &&
+        (seconds == null || inRange(seconds, 0, 59))
+      ) {
+        return this.setTime(this.today(), hours, minutes, seconds || 0);
+      }
+    }
+
+    return null;
+  }
+}
+
+/** Checks whether a number is within a certain range. */
+function inRange(value: number, min: number, max: number): boolean {
+  return !isNaN(value) && value >= min && value <= max;
 }

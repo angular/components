@@ -3,15 +3,13 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Observable} from 'rxjs';
 
-
 /** Represents a range of numbers with a specified start and end. */
-export type ListRange = {start: number, end: number};
-
+export type ListRange = {start: number; end: number};
 
 /**
  * Interface for any component that provides a view of some data collection and wants to provide

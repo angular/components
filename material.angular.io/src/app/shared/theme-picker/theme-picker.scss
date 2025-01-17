@@ -1,0 +1,21 @@
+button.docs-theme-picker-trigger {
+  color: inherit;
+}
+
+.docs-theme-picker-menu {
+  .mat-mdc-menu-item {
+    .theme-example-icon {
+      margin-right: 0;
+      margin-left: 24px;
+      order: 1;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: solid 1px color-mix(in srgb, var(--mat-sys-outline-variant) 50%, transparent);
+
+      svg {
+        vertical-align: middle;
+      }
+    }
+  }
+}

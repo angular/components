@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
@@ -33,6 +33,11 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
   /** Whether the tree node is expanded. */
   async isExpanded(): Promise<boolean> {
     return coerceBooleanProperty(await (await this.host()).getAttribute('aria-expanded'));
+  }
+
+  /** Whether the tree node is expandable. */
+  async isExpandable(): Promise<boolean> {
+    return (await (await this.host()).getAttribute('aria-expanded')) !== null;
   }
 
   /** Whether the tree node is disabled. */
@@ -75,17 +80,25 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
 
 function getNodePredicate<T extends MatTreeNodeHarness>(
   type: ComponentHarnessConstructor<T>,
-  options: TreeNodeHarnessFilters): HarnessPredicate<T> {
+  options: TreeNodeHarnessFilters,
+): HarnessPredicate<T> {
   return new HarnessPredicate(type, options)
-    .addOption('text', options.text,
-      (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
+    .addOption('text', options.text, (harness, text) =>
+      HarnessPredicate.stringMatches(harness.getText(), text),
+    )
     .addOption(
-      'disabled', options.disabled,
-      async (harness, disabled) => (await harness.isDisabled()) === disabled)
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => (await harness.isDisabled()) === disabled,
+    )
     .addOption(
-      'expanded', options.expanded,
-      async (harness, expanded) => (await harness.isExpanded()) === expanded)
+      'expanded',
+      options.expanded,
+      async (harness, expanded) => (await harness.isExpanded()) === expanded,
+    )
     .addOption(
-      'level', options.level,
-      async (harness, level) => (await harness.getLevel()) === level);
+      'level',
+      options.level,
+      async (harness, level) => (await harness.getLevel()) === level,
+    );
 }

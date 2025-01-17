@@ -3,17 +3,16 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './form-field-module';
-export * from './error';
+export * from './directives/label';
+export * from './directives/error';
+export * from './directives/hint';
+export * from './directives/prefix';
+export * from './directives/suffix';
 export * from './form-field';
-export {MatFormFieldControl} from './form-field-control';
+export * from './module';
+export * from './form-field-control';
 export * from './form-field-errors';
-export * from './hint';
-export * from './placeholder';
-export * from './prefix';
-export * from './suffix';
-export * from './label';
 export * from './form-field-animations';

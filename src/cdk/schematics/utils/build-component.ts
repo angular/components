@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {strings, template as interpolateTemplate} from '@angular-devkit/core';
+import {strings, template as interpolateTemplate, workspaces} from '@angular-devkit/core';
 import {
   apply,
   applyTemplates,
@@ -27,36 +27,31 @@ import {InsertChange} from '@schematics/angular/utility/change';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {buildRelativePath, findModuleFromOptions} from '@schematics/angular/utility/find-module';
 import {parseName} from '@schematics/angular/utility/parse-name';
-import {validateHtmlSelector, validateName} from '@schematics/angular/utility/validation';
+import {validateHtmlSelector} from '@schematics/angular/utility/validation';
 import {ProjectType} from '@schematics/angular/utility/workspace-models';
+import {addDeclarationToModule, addExportToModule} from '@schematics/angular/utility/ast-utils';
 import {readFileSync, statSync} from 'fs';
 import {dirname, join, resolve} from 'path';
 import * as ts from 'typescript';
-import {
-  addDeclarationToModule,
-  addExportToModule,
-} from '../utils/vendored-ast-utils';
 import {getProjectFromWorkspace} from './get-project';
-import {getDefaultComponentOptions} from './schematic-options';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {getDefaultComponentOptions, isStandaloneSchematic} from './schematic-options';
 
 /**
  * Build a default project path for generating.
  * @param project The project to build the path for.
  */
-function buildDefaultPath(project: ProjectDefinition): string {
-  const root = project.sourceRoot
-    ? `/${project.sourceRoot}/`
-    : `/${project.root}/src/`;
+function buildDefaultPath(project: workspaces.ProjectDefinition): string {
+  const root = project.sourceRoot ? `/${project.sourceRoot}/` : `/${project.root}/src/`;
 
-  const projectDirName = project.extensions.projectType === ProjectType.Application ? 'app' : 'lib';
+  const projectDirName =
+    project.extensions['projectType'] === ProjectType.Application ? 'app' : 'lib';
 
   return `${root}${projectDirName}`;
 }
 
 /**
  * List of style extensions which are CSS compatible. All supported CLI style extensions can be
- * found here: angular/angular-cli/master/packages/schematics/angular/ng-new/schema.json#L118-L122
+ * found here: angular/angular-cli/main/packages/schematics/angular/ng-new/schema.json#L118-L122
  */
 const supportedCssExtensions = ['css', 'scss', 'less'];
 
@@ -71,17 +66,18 @@ function readIntoSourceFile(host: Tree, modulePath: string) {
 
 function addDeclarationToNgModule(options: ComponentOptions): Rule {
   return (host: Tree) => {
-    if (options.skipImport || !options.module) {
+    if (options.skipImport || options.standalone || !options.module) {
       return host;
     }
 
     const modulePath = options.module;
     let source = readIntoSourceFile(host, modulePath);
 
-    const componentPath = `/${options.path}/`
-      + (options.flat ? '' : strings.dasherize(options.name) + '/')
-      + strings.dasherize(options.name)
-      + '.component';
+    const componentPath =
+      `/${options.path}/` +
+      (options.flat ? '' : strings.dasherize(options.name) + '/') +
+      strings.dasherize(options.name) +
+      '.component';
     const relativePath = buildRelativePath(modulePath, componentPath);
     const classifiedName = strings.classify(`${options.name}Component`);
 
@@ -89,7 +85,8 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
       source,
       modulePath,
       classifiedName,
-      relativePath);
+      relativePath,
+    );
 
     const declarationRecorder = host.beginUpdate(modulePath);
     for (const change of declarationChanges) {
@@ -108,7 +105,8 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
         source,
         modulePath,
         strings.classify(`${options.name}Component`),
-        relativePath);
+        relativePath,
+      );
 
       for (const change of exportChanges) {
         if (change instanceof InsertChange) {
@@ -121,7 +119,6 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
     return host;
   };
 }
-
 
 function buildSelector(options: ComponentOptions, projectPrefix?: string) {
   let selector = strings.dasherize(options.name);
@@ -153,10 +150,12 @@ function indentTextContent(text: string, numSpaces: number): string {
  * This allows inlining the external template or stylesheet files in EJS without having
  * to manually duplicate the file content.
  */
-export function buildComponent(options: ComponentOptions,
-                               additionalFiles: {[key: string]: string} = {}): Rule {
-
-  return async (host: Tree, context: FileSystemSchematicContext) => {
+export function buildComponent(
+  options: ComponentOptions,
+  additionalFiles: {[key: string]: string} = {},
+): Rule {
+  return async (host, ctx) => {
+    const context = ctx as FileSystemSchematicContext;
     const workspace = await getWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const defaultComponentOptions = getDefaultComponentOptions(project);
@@ -165,9 +164,9 @@ export function buildComponent(options: ComponentOptions,
     // This handles an unreported breaking change from the @angular-devkit/schematics. Previously
     // the description path resolved to the factory file, but starting from 6.2.0, it resolves
     // to the factory directory.
-    const schematicPath = statSync(context.schematic.description.path).isDirectory() ?
-        context.schematic.description.path :
-        dirname(context.schematic.description.path);
+    const schematicPath = statSync(context.schematic.description.path).isDirectory()
+      ? context.schematic.description.path
+      : dirname(context.schematic.description.path);
 
     const schematicFilesUrl = './files';
     const schematicFilesPath = resolve(schematicPath, schematicFilesUrl);
@@ -175,20 +174,27 @@ export function buildComponent(options: ComponentOptions,
     // Add the default component option values to the options if an option is not explicitly
     // specified but a default component option is available.
     Object.keys(options)
-      .filter((optionName: keyof ComponentOptions) => {
-        return options[optionName] == null && defaultComponentOptions[optionName];
-      })
-      .forEach((optionName: keyof ComponentOptions) => {
-        (options as any)[optionName] = (defaultComponentOptions as ComponentOptions)[optionName];
-      });
+      .filter(
+        key =>
+          options[key as keyof ComponentOptions] == null &&
+          defaultComponentOptions[key as keyof ComponentOptions],
+      )
+      .forEach(
+        key =>
+          ((options as any)[key] = (defaultComponentOptions as ComponentOptions)[
+            key as keyof ComponentOptions
+          ]),
+      );
 
     if (options.path === undefined) {
-      // TODO(jelbourn): figure out if the need for this `as any` is a bug due to two different
-      // incompatible `ProjectDefinition` classes in @angular-devkit
-      options.path = buildDefaultPath(project as any);
+      options.path = buildDefaultPath(project);
     }
 
-    options.module = findModuleFromOptions(host, options);
+    options.standalone = await isStandaloneSchematic(host, options);
+
+    if (!options.standalone) {
+      options.module = findModuleFromOptions(host, options);
+    }
 
     const parsedPath = parseName(options.path!, options.name);
 
@@ -196,7 +202,6 @@ export function buildComponent(options: ComponentOptions,
     options.path = parsedPath.path;
     options.selector = options.selector || buildSelector(options, project.prefix);
 
-    validateName(options.name);
     validateHtmlSelector(options.selector!);
 
     // In case the specified style extension is not part of the supported CSS supersets,
@@ -204,15 +209,13 @@ export function buildComponent(options: ComponentOptions,
     // accidentally generate invalid stylesheets (e.g. drag-drop-comp.styl) which will
     // break the Angular CLI project. See: https://github.com/angular/components/issues/15164
     if (!supportedCssExtensions.includes(options.style!)) {
-      // TODO: Cast is necessary as we can't use the Style enum which has been introduced
-      // within CLI v7.3.0-rc.0. This would break the schematic for older CLI versions.
-      options.style = 'css' as Style;
+      options.style = Style.Css;
     }
 
     // Object that will be used as context for the EJS templates.
     const baseTemplateContext = {
       ...strings,
-      'if-flat': (s: string) => options.flat ? '' : s,
+      'if-flat': (s: string) => (options.flat ? '' : s),
       ...options,
     };
 
@@ -241,11 +244,9 @@ export function buildComponent(options: ComponentOptions,
       move(null as any, parsedPath.path),
     ]);
 
-    return () => chain([
-      branchAndMerge(chain([
-        addDeclarationToNgModule(options),
-        mergeWith(templateSource),
-      ])),
-    ])(host, context);
+    return () =>
+      chain([
+        branchAndMerge(chain([addDeclarationToNgModule(options), mergeWith(templateSource)])),
+      ])(host, context);
   };
 }

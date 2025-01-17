@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="googlemaps" />
+/// <reference types="google.maps" preserve="true" />
 
 import {
   Input,
@@ -17,16 +17,19 @@ import {
   Directive,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
+  inject,
 } from '@angular/core';
 
 import {GoogleMap} from '../google-map/google-map';
 
 /** Possible data that can be shown on a heatmap layer. */
 export type HeatmapData =
-  google.maps.MVCArray<
-    google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> |
-  (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
-
+  | google.maps.MVCArray<
+      google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral
+    >
+  | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
 
 /**
  * Angular directive that renders a Google Maps heatmap via the Google Maps JavaScript API.
@@ -38,6 +41,9 @@ export type HeatmapData =
   exportAs: 'mapHeatmapLayer',
 })
 export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
+  private readonly _googleMap = inject(GoogleMap);
+  private _ngZone = inject(NgZone);
+
   /**
    * Data shown on the heatmap.
    * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
@@ -65,28 +71,55 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
    */
   heatmap?: google.maps.visualization.HeatmapLayer;
 
-  constructor(
-    private readonly _googleMap: GoogleMap,
-    private _ngZone: NgZone) {}
+  /** Event emitted when the heatmap is initialized. */
+  @Output() readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer> =
+    new EventEmitter<google.maps.visualization.HeatmapLayer>();
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
-      if (!window.google?.maps?.visualization && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (
+        !window.google?.maps?.visualization &&
+        !window.google?.maps.importLibrary &&
+        (typeof ngDevMode === 'undefined' || ngDevMode)
+      ) {
         throw Error(
-            'Namespace `google.maps.visualization` not found, cannot construct heatmap. ' +
+          'Namespace `google.maps.visualization` not found, cannot construct heatmap. ' +
             'Please install the Google Maps JavaScript API with the "visualization" library: ' +
-            'https://developers.google.com/maps/documentation/javascript/visualization');
+            'https://developers.google.com/maps/documentation/javascript/visualization',
+        );
       }
 
-      // Create the object outside the zone so its events don't trigger change detection.
-      // We'll bring it back in inside the `MapEventManager` only for the events that the
-      // user has subscribed to.
-      this._ngZone.runOutsideAngular(() => {
-        this.heatmap = new google.maps.visualization.HeatmapLayer(this._combineOptions());
-      });
-      this._assertInitialized();
-      this.heatmap.setMap(this._googleMap.googleMap!);
+      if (google.maps.visualization?.HeatmapLayer && this._googleMap.googleMap) {
+        this._initialize(this._googleMap.googleMap, google.maps.visualization.HeatmapLayer);
+      } else {
+        this._ngZone.runOutsideAngular(() => {
+          Promise.all([
+            this._googleMap._resolveMap(),
+            google.maps.importLibrary('visualization'),
+          ]).then(([map, lib]) => {
+            this._initialize(map, (lib as google.maps.VisualizationLibrary).HeatmapLayer);
+          });
+        });
+      }
     }
+  }
+
+  private _initialize(
+    map: google.maps.Map,
+    heatmapConstructor: typeof google.maps.visualization.HeatmapLayer,
+  ) {
+    // Create the object outside the zone so its events don't trigger change detection.
+    // We'll bring it back in inside the `MapEventManager` only for the events that the
+    // user has subscribed to.
+    this._ngZone.runOutsideAngular(() => {
+      this.heatmap = new heatmapConstructor(this._combineOptions());
+      this._assertInitialized();
+      this.heatmap.setMap(map);
+      this.heatmapInitialized.emit(this.heatmap);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -104,9 +137,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.heatmap) {
-      this.heatmap.setMap(null);
-    }
+    this.heatmap?.setMap(null);
   }
 
   /**
@@ -137,7 +168,7 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
    * convert it to a `LatLng` object before passing it off to Google Maps.
    */
   private _normalizeData(data: HeatmapData) {
-    const result: (google.maps.LatLng|google.maps.visualization.WeightedLocation)[] = [];
+    const result: (google.maps.LatLng | google.maps.visualization.WeightedLocation)[] = [];
 
     data.forEach(item => {
       result.push(isLatLngLiteral(item) ? new google.maps.LatLng(item.lat, item.lng) : item);
@@ -149,15 +180,11 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
   /** Asserts that the heatmap object has been initialized. */
   private _assertInitialized(): asserts this is {heatmap: google.maps.visualization.HeatmapLayer} {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-            'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.');
-      }
       if (!this.heatmap) {
         throw Error(
-            'Cannot interact with a Google Map HeatmapLayer before it has been ' +
-            'initialized. Please wait for the heatmap to load before trying to interact with it.');
+          'Cannot interact with a Google Map HeatmapLayer before it has been ' +
+            'initialized. Please wait for the heatmap to load before trying to interact with it.',
+        );
       }
     }
   }

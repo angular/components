@@ -1,36 +1,141 @@
-@use '../../cdk/a11y';
+@use '../core/tokens/m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
+@use '../core/tokens/token-utils';
 
-$horizontal-padding: 8px;
-$max-width: 250px;
-$margin: 14px;
+.mat-mdc-tooltip {
+  // We don't use MDC's positioning so this has to be relative.
+  position: relative;
+  transform: scale(0);
+  display: inline-flex;
 
-$handset-horizontal-padding: 16px;
-$handset-margin: 24px;
+  // Increases the area of the tooltip so the user's pointer can go from the trigger directly to it.
+  &::before {
+    $offset: -8px;
+    content: '';
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    position: absolute;
 
-.mat-tooltip-panel {
-  // The overlay reference updates the pointer-events style property directly on the HTMLElement
-  // depending on the state of the overlay. For tooltips the overlay panel should never enable
-  // pointer events. To overwrite the inline CSS from the overlay reference `!important` is needed.
-  pointer-events: none !important;
-}
+    // Only set the offset on the side closest to the panel so we
+    // don't accidentally cover more content than we need to.
+    .mat-mdc-tooltip-panel-below & {
+      top: $offset;
+    }
 
-.mat-tooltip {
-  color: white;
-  border-radius: 4px;
-  margin: $margin;
-  max-width: $max-width;
-  padding-left: $horizontal-padding;
-  padding-right: $horizontal-padding;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    .mat-mdc-tooltip-panel-above & {
+      bottom: $offset;
+    }
 
-  @include a11y.high-contrast(active, off) {
-    outline: solid 1px;
+    // Note that here we use left/right instead of before/after
+    // so that we don't have to add extra styles for RTL.
+    .mat-mdc-tooltip-panel-right & {
+      left: $offset;
+    }
+
+    .mat-mdc-tooltip-panel-left & {
+      right: $offset;
+    }
+  }
+
+  &._mat-animation-noopable {
+    animation: none;
+    transform: scale(1);
   }
 }
 
-.mat-tooltip-handset {
-  margin: $handset-margin;
-  padding-left: $handset-horizontal-padding;
-  padding-right: $handset-horizontal-padding;
+.mat-mdc-tooltip-surface {
+  word-break: normal;
+  overflow-wrap: anywhere;
+  padding: 4px 8px;
+  min-width: 40px;
+  max-width: 200px;
+  min-height: 24px;
+  max-height: 40vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+
+  // TODO(crisbeto): these styles aren't necessary, but they were present in
+  // MDC and removing them is likely to cause screenshot differences.
+  will-change: transform, opacity;
+
+  @include token-utils.use-tokens(
+    tokens-mdc-plain-tooltip.$prefix,
+    tokens-mdc-plain-tooltip.get-token-slots()
+  ) {
+    @include token-utils.create-token-slot(background-color, container-color);
+    @include token-utils.create-token-slot(color, supporting-text-color);
+    @include token-utils.create-token-slot(border-radius, container-shape);
+    @include token-utils.create-token-slot(font-family, supporting-text-font);
+    @include token-utils.create-token-slot(font-size, supporting-text-size);
+    @include token-utils.create-token-slot(font-weight, supporting-text-weight);
+    @include token-utils.create-token-slot(line-height, supporting-text-line-height);
+    @include token-utils.create-token-slot(letter-spacing, supporting-text-tracking);
+  }
+
+  // Renders an outline in high contrast mode.
+  &::before {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+
+  .mdc-tooltip--multiline & {
+    text-align: left;
+  }
+
+  [dir='rtl'] .mdc-tooltip--multiline & {
+    text-align: right;
+  }
+}
+
+.mat-mdc-tooltip-panel {
+  // The line height inherited from the body can throw off the tooltip gap (see #30132).
+  line-height: normal;
+
+  // We need the additional specificity here, because it can be overridden by `.cdk-overlay-panel`.
+  &.mat-mdc-tooltip-panel-non-interactive {
+    pointer-events: none;
+  }
+}
+
+@keyframes mat-mdc-tooltip-show {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mat-mdc-tooltip-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.mat-mdc-tooltip-show {
+  animation: mat-mdc-tooltip-show 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.mat-mdc-tooltip-hide {
+  animation: mat-mdc-tooltip-hide 75ms cubic-bezier(0.4, 0, 1, 1) forwards;
 }

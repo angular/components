@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {BaseHarnessFilters} from '@angular/cdk/testing';
@@ -14,4 +14,8 @@ export interface CheckboxHarnessFilters extends BaseHarnessFilters {
   label?: string | RegExp;
   /** Only find instances whose name attribute is the given value. */
   name?: string;
+  /** Only find instances with the given checked value. */
+  checked?: boolean;
+  /** Only find instances which match the given disabled state. */
+  disabled?: boolean;
 }

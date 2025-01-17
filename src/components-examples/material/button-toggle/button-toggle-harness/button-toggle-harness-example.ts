@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
  * @title Testing with MatButtonToggleHarness
@@ -7,8 +7,10 @@ import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-harness-example',
   templateUrl: 'button-toggle-harness-example.html',
+  imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleHarnessExample {
-  disabled = false;
-  appearance: MatButtonToggleAppearance = 'standard';
+  disabled = signal(false);
+  appearance = signal<MatButtonToggleAppearance>('standard');
 }

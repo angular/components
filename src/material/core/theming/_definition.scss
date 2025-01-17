@@ -1,0 +1,127 @@
+// This file contains functions used to define Angular Material theme objects.
+
+@use 'sass:map';
+@use '../style/sass-utils';
+@use './palettes';
+@use '../tokens/m3-tokens';
+@use './config-validation';
+
+// Prefix used for component token fallback variables, e.g.
+// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
+$system-fallback-prefix: mat-sys;
+
+// Default system level prefix to use when directly calling the `system-level-*` mixins.
+// Prefix used for component token fallback variables, e.g.
+// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
+// TODO: Remove this variable after internal clients are migrated from "sys"
+$system-level-prefix: mat-sys;
+
+/// Map key used to store internals of theme config.
+$internals: _mat-theming-internals-do-not-access;
+/// The theme version of generated themes.
+$theme-version: 1;
+
+/// Defines an Angular Material theme object with color, typography, and density settings.
+/// @param {Map} $config The theme configuration
+/// @return {Map} A theme object
+@function define-theme($config: ()) {
+  $err: config-validation.validate-theme-config($config);
+  @if $err {
+    @error $err;
+  }
+
+  @return sass-utils.deep-merge-all(
+      define-colors(map.get($config, color) or ()),
+      define-typography(map.get($config, typography) or ()),
+      define-density(map.get($config, density) or ()),
+      ($internals: (base-tokens: m3-tokens.generate-base-tokens())),
+  );
+}
+
+/// Defines an Angular Material theme object with color settings.
+/// @param {Map} $config The color configuration
+/// @return {Map} A theme object
+@function define-colors($config: ()) {
+  $err: config-validation.validate-color-config($config);
+  @if $err {
+    @error $err;
+  }
+
+  $type: map.get($config, theme-type) or light;
+  $primary: map.get($config, primary) or palettes.$violet-palette;
+  $tertiary: map.get($config, tertiary) or $primary;
+  $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
+  sass-utils.$use-system-color-variables: map.get($config, use-system-variables) or false;
+
+  @return (
+    $internals: (
+      theme-version: $theme-version,
+      theme-type: $type,
+      palettes: (
+        primary: map.remove($primary, neutral, neutral-variant, secondary),
+        secondary: map.get($primary, secondary),
+        tertiary: map.remove($tertiary, neutral, neutral-variant, secondary),
+        neutral: map.get($primary, neutral),
+        neutral-variant: map.get($primary, neutral-variant),
+        error: map.get($primary, error),
+      ),
+      color-system-variables-prefix: $system-variables-prefix,
+      color-tokens: m3-tokens.generate-color-tokens(
+          $type, $primary, $tertiary, map.get($primary, error), $system-variables-prefix)
+    )
+  );
+}
+
+/// Defines an Angular Material theme object with typography settings.
+/// @param {Map} $config The typography configuration
+/// @return {Map} A theme object
+@function define-typography($config: ()) {
+  $err: config-validation.validate-typography-config($config);
+  @if $err {
+    @error $err;
+  }
+
+  $plain: map.get($config, plain-family) or (Roboto, sans-serif);
+  $brand: map.get($config, brand-family) or $plain;
+  $bold: map.get($config, bold-weight) or 700;
+  $medium: map.get($config, medium-weight) or 500;
+  $regular: map.get($config, regular-weight) or 400;
+  $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
+  sass-utils.$use-system-typography-variables: map.get($config, use-system-variables) or false;
+
+  @return (
+    $internals: (
+      theme-version: $theme-version,
+      font-definition: (
+        plain: $plain,
+        brand: $brand,
+        bold: $bold,
+        medium: $medium,
+        regular: $regular,
+      ),
+      typography-system-variables-prefix: $system-variables-prefix,
+      typography-tokens: m3-tokens.generate-typography-tokens(
+          $brand, $plain, $bold, $medium, $regular, $system-variables-prefix)
+    )
+  );
+}
+
+/// Defines an Angular Material theme object with density settings.
+/// @param {Map} $config The density configuration
+/// @return {Map} A theme object
+@function define-density($config: ()) {
+  $err: config-validation.validate-density-config($config);
+  @if $err {
+    @error $err;
+  }
+
+  $density-scale: map.get($config, scale) or 0;
+
+  @return (
+    $internals: (
+      theme-version: $theme-version,
+      density-scale: $density-scale,
+      density-tokens: m3-tokens.generate-density-tokens($density-scale)
+    )
+  );
+}

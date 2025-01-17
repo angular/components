@@ -3,18 +3,24 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewChild} from '@angular/core';
-import {FormControl, NgModel} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-
+import {JsonPipe} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject, ViewChild} from '@angular/core';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {ThemePalette} from '@angular/material/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatInputModule} from '@angular/material/input';
 
 export interface State {
   code: string;
   name: string;
+  index: number;
 }
 
 export interface StateGroup {
@@ -22,21 +28,54 @@ export interface StateGroup {
   states: State[];
 }
 
+type DisableStateOption = 'none' | 'first-middle-last' | 'all';
+
 @Component({
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
-  styleUrls: ['autocomplete-demo.css']
+  styleUrl: 'autocomplete-demo.css',
+  imports: [
+    JsonPipe,
+    FormsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDemo {
-  stateCtrl: FormControl;
+  stateCtrl = new FormControl();
   currentState = '';
   currentGroupedState = '';
   topHeightCtrl = new FormControl(0);
 
-  reactiveStates: Observable<State[]>;
+  reactiveStates: State[];
   tdStates: State[];
 
   tdDisabled = false;
+  reactiveStatesTheme: ThemePalette = 'primary';
+  templateStatesTheme: ThemePalette = 'primary';
+
+  availableThemes = [
+    {value: 'primary', name: 'Primary'},
+    {value: 'accent', name: 'Accent'},
+    {value: 'warn', name: 'Warn'},
+  ];
+
+  reactiveRequireSelection = false;
+  templateRequireSelection = false;
+
+  reactiveHideSingleSelectionIndicator = false;
+  templateHideSingleSelectionIndicator = false;
+
+  reactiveAutoActiveFirstOption = false;
+  templateAutoActiveFirstOption = false;
+
+  reactiveDisableStateOption: DisableStateOption = 'none';
+  templateDisableStateOption: DisableStateOption = 'none';
 
   @ViewChild(NgModel) modelDir: NgModel;
 
@@ -93,31 +132,27 @@ export class AutocompleteDemo {
     {code: 'WV', name: 'West Virginia'},
     {code: 'WI', name: 'Wisconsin'},
     {code: 'WY', name: 'Wyoming'},
-  ];
+  ].map((state, index) => ({...state, index}));
 
   constructor() {
-    this.tdStates = this.states;
-    this.stateCtrl = new FormControl({code: 'CA', name: 'California'});
-    this.reactiveStates = this.stateCtrl.valueChanges
-      .pipe(
-        startWith(this.stateCtrl.value),
-        map(val => this.displayFn(val)),
-        map(name => this.filterStates(name))
-      );
+    this.tdStates = this.states.slice();
+    this.reactiveStates = this.states.slice();
 
-    this.filteredGroupedStates = this.groupedStates =
-        this.states.reduce<StateGroup[]>((groups, state) => {
-          let group = groups.find(g => g.letter === state.name[0]);
+    this.filteredGroupedStates = this.groupedStates = this.states.reduce<StateGroup[]>(
+      (groups, state) => {
+        let group = groups.find(g => g.letter === state.name[0]);
 
-          if (!group) {
-            group = { letter: state.name[0], states: [] };
-            groups.push(group);
-          }
+        if (!group) {
+          group = {letter: state.name[0], states: []};
+          groups.push(group);
+        }
 
-          group.states.push({ code: state.code, name: state.name });
+        group.states.push({...state});
 
-          return groups;
-        }, []);
+        return groups;
+      },
+      [],
+    );
   }
 
   displayFn(value: any): string {
@@ -131,7 +166,7 @@ export class AutocompleteDemo {
   filterStateGroups(val: string) {
     if (val) {
       return this.groupedStates
-        .map(group => ({ letter: group.letter, states: this._filter(group.states, val) }))
+        .map(group => ({letter: group.letter, states: this._filter(group.states, val)}))
         .filter(group => group.states.length > 0);
     }
 
@@ -141,5 +176,84 @@ export class AutocompleteDemo {
   private _filter(states: State[], val: string) {
     const filterValue = val.toLowerCase();
     return states.filter(state => state.name.toLowerCase().startsWith(filterValue));
+  }
+
+  reactiveIsStateDisabled(index: number) {
+    return this._isStateDisabled(index, this.reactiveDisableStateOption);
+  }
+
+  templateIsStateDisabled(index: number) {
+    return this._isStateDisabled(index, this.templateDisableStateOption);
+  }
+
+  clearTemplateState() {
+    this.modelDir.reset();
+    this.currentState = '';
+    this.tdStates = this.states.slice();
+  }
+
+  private _isStateDisabled(stateIndex: number, disableStateOption: DisableStateOption) {
+    if (disableStateOption === 'all') {
+      return true;
+    }
+    if (disableStateOption === 'first-middle-last') {
+      return (
+        stateIndex === 0 ||
+        stateIndex === this.states.length - 1 ||
+        stateIndex === Math.floor(this.states.length / 2)
+      );
+    }
+    return false;
+  }
+
+  dialog = inject(MatDialog);
+  dialogRef: MatDialogRef<AutocompleteDemoExampleDialog> | null;
+
+  openDialog() {
+    this.dialogRef = this.dialog.open(AutocompleteDemoExampleDialog, {width: '400px'});
+  }
+}
+
+@Component({
+  selector: 'autocomplete-demo-example-dialog',
+  template: `
+    <form (submit)="close()">
+      <p>Choose a T-shirt size.</p>
+      <mat-form-field>
+        <mat-label>T-Shirt Size</mat-label>
+        <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentSize" name="size">
+        <mat-autocomplete #tdAuto="matAutocomplete">
+          @for (size of sizes; track size) {
+            <mat-option [value]="size">{{size}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button type="submit" mat-button>Close</button>
+    </form>
+  `,
+  styles: `
+    :host {
+      display: block;
+      padding: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  `,
+  imports: [FormsModule, MatAutocompleteModule, MatButtonModule, MatInputModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AutocompleteDemoExampleDialog {
+  dialogRef = inject<MatDialogRef<AutocompleteDemoExampleDialog>>(MatDialogRef);
+
+  currentSize = '';
+  sizes = ['S', 'M', 'L'];
+
+  close() {
+    this.dialogRef.close();
   }
 }

@@ -1,0 +1,79 @@
+name: 'CI (material.angular.io)'
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'material.angular.io/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+    working-directory: material.angular.io
+
+env:
+  # TODO: Remove when pnpm is exclusively used.
+  ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --immutable
+      - name: Execute Linting
+        run: yarn bazel test --test_tag_filters=lint //...
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --immutable
+      - name: Execute Direct Production Build (deploy usage)
+        run: yarn prod-build
+      - name: Execute Build via Bazel
+        run: yarn bazel build //...
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --immutable
+      - name: Execute Tests
+        run: yarn bazel test --test_tag_filters=-lint,-e2e,-audit //...
+      - name: Store Test Logs
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        if: always()
+        with:
+          name: test-logs
+          path: material.angular.io/bazel-testlogs/
+          retention-days: 14
+
+  lighthouse:
+    runs-on: ubuntu-22.04 # Note, fails on Ubuntu 24.04. see https://github.com/actions/runner-images/issues/10636
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@359350bbc10aab1bac85d0eec61a53377078ab82
+      - name: Install node modules
+        run: yarn install --immutable
+      - name: Execute Lighthouse Audit
+        run: yarn bazel test --test_tag_filters=audit //...
+      - name: Store Audit Logs
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        if: always()
+        with:
+          name: lighthouse-logs
+          path: material.angular.io/bazel-testlogs/
+          retention-days: 14

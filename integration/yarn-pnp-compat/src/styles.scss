@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+$primary: mat.m2-define-palette(mat.$m2-blue-palette);
+$accent: mat.m2-define-palette(mat.$m2-grey-palette);
+$theme: mat.m2-define-light-theme((
+  color: (primary: $primary, accent: $accent),
+  typography: mat.m2-define-typography-config(),
+  density: 0
+));
+
+@include mat.all-component-themes($theme);
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

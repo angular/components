@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 export interface UserData {
   id: string;
@@ -12,11 +14,35 @@ export interface UserData {
 
 /** Constants used to fill up our data base. */
 const FRUITS: string[] = [
-  'blueberry', 'lychee', 'kiwi', 'mango', 'peach', 'lime', 'pomegranate', 'pineapple'
+  'blueberry',
+  'lychee',
+  'kiwi',
+  'mango',
+  'peach',
+  'lime',
+  'pomegranate',
+  'pineapple',
 ];
 const NAMES: string[] = [
-  'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-  'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
+  'Maia',
+  'Asher',
+  'Olivia',
+  'Atticus',
+  'Amelia',
+  'Jack',
+  'Charlotte',
+  'Theodore',
+  'Isla',
+  'Oliver',
+  'Isabella',
+  'Jasper',
+  'Cora',
+  'Levi',
+  'Violet',
+  'Arthur',
+  'Mia',
+  'Thomas',
+  'Elizabeth',
 ];
 
 /**
@@ -24,8 +50,9 @@ const NAMES: string[] = [
  */
 @Component({
   selector: 'table-overview-example',
-  styleUrls: ['table-overview-example.css'],
+  styleUrl: 'table-overview-example.css',
   templateUrl: 'table-overview-example.html',
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
 })
 export class TableOverviewExample implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
@@ -59,13 +86,16 @@ export class TableOverviewExample implements AfterViewInit {
 
 /** Builds and returns a new User. */
 function createNewUser(id: number): UserData {
-  const name = NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
+  const name =
+    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
+    ' ' +
+    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
+    '.';
 
   return {
     id: id.toString(),
     name: name,
     progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))]
+    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
   };
 }

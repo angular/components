@@ -1,0 +1,15 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function values($exclude-hardcoded-values: false) {
+  @return (
+    'level0': if($exclude-hardcoded-values, null, 0),
+    'level1': if($exclude-hardcoded-values, null, 1),
+    'level2': if($exclude-hardcoded-values, null, 3),
+    'level3': if($exclude-hardcoded-values, null, 6),
+    'level4': if($exclude-hardcoded-values, null, 8),
+    'level5': if($exclude-hardcoded-values, null, 12)
+  );
+}

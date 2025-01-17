@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Subject} from 'rxjs';
@@ -39,8 +39,9 @@ export class SelectionModel<T> {
   constructor(
     private _multiple = false,
     initiallySelectedValues?: T[],
-    private _emitChanges = true) {
-
+    private _emitChanges = true,
+    public compareWith?: (o1: T, o2: T) => boolean,
+  ) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
       if (_multiple) {
         initiallySelectedValues.forEach(value => this._markSelected(value));
@@ -55,42 +56,82 @@ export class SelectionModel<T> {
 
   /**
    * Selects a value or an array of values.
+   * @param values The values to select
+   * @return Whether the selection changed as a result of this call
+   * @breaking-change 16.0.0 make return type boolean
    */
-  select(...values: T[]): void {
+  select(...values: T[]): boolean | void {
     this._verifyValueAssignment(values);
     values.forEach(value => this._markSelected(value));
+    const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
+    return changed;
   }
 
   /**
    * Deselects a value or an array of values.
+   * @param values The values to deselect
+   * @return Whether the selection changed as a result of this call
+   * @breaking-change 16.0.0 make return type boolean
    */
-  deselect(...values: T[]): void {
+  deselect(...values: T[]): boolean | void {
     this._verifyValueAssignment(values);
     values.forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
     this._emitChangeEvent();
+    return changed;
+  }
+
+  /**
+   * Sets the selected values
+   * @param values The new selected values
+   * @return Whether the selection changed as a result of this call
+   * @breaking-change 16.0.0 make return type boolean
+   */
+  setSelection(...values: T[]): boolean | void {
+    this._verifyValueAssignment(values);
+    const oldValues = this.selected;
+    const newSelectedSet = new Set(values);
+    values.forEach(value => this._markSelected(value));
+    oldValues
+      .filter(value => !newSelectedSet.has(this._getConcreteValue(value, newSelectedSet)))
+      .forEach(value => this._unmarkSelected(value));
+    const changed = this._hasQueuedChanges();
+    this._emitChangeEvent();
+    return changed;
   }
 
   /**
    * Toggles a value between selected and deselected.
+   * @param value The value to toggle
+   * @return Whether the selection changed as a result of this call
+   * @breaking-change 16.0.0 make return type boolean
    */
-  toggle(value: T): void {
-    this.isSelected(value) ? this.deselect(value) : this.select(value);
+  toggle(value: T): boolean | void {
+    return this.isSelected(value) ? this.deselect(value) : this.select(value);
   }
 
   /**
    * Clears all of the selected values.
+   * @param flushEvent Whether to flush the changes in an event.
+   *   If false, the changes to the selection will be flushed along with the next event.
+   * @return Whether the selection changed as a result of this call
+   * @breaking-change 16.0.0 make return type boolean
    */
-  clear(): void {
+  clear(flushEvent = true): boolean | void {
     this._unmarkAll();
-    this._emitChangeEvent();
+    const changed = this._hasQueuedChanges();
+    if (flushEvent) {
+      this._emitChangeEvent();
+    }
+    return changed;
   }
 
   /**
    * Determines whether a value is selected.
    */
   isSelected(value: T): boolean {
-    return this._selection.has(value);
+    return this._selection.has(this._getConcreteValue(value));
   }
 
   /**
@@ -132,7 +173,7 @@ export class SelectionModel<T> {
       this.changed.next({
         source: this,
         added: this._selectedToEmit,
-        removed: this._deselectedToEmit
+        removed: this._deselectedToEmit,
       });
 
       this._deselectedToEmit = [];
@@ -142,12 +183,15 @@ export class SelectionModel<T> {
 
   /** Selects a value. */
   private _markSelected(value: T) {
+    value = this._getConcreteValue(value);
     if (!this.isSelected(value)) {
       if (!this._multiple) {
         this._unmarkAll();
       }
 
-      this._selection.add(value);
+      if (!this.isSelected(value)) {
+        this._selection.add(value);
+      }
 
       if (this._emitChanges) {
         this._selectedToEmit.push(value);
@@ -157,6 +201,7 @@ export class SelectionModel<T> {
 
   /** Deselects a value. */
   private _unmarkSelected(value: T) {
+    value = this._getConcreteValue(value);
     if (this.isSelected(value)) {
       this._selection.delete(value);
 
@@ -180,6 +225,26 @@ export class SelectionModel<T> {
   private _verifyValueAssignment(values: T[]) {
     if (values.length > 1 && !this._multiple && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMultipleValuesInSingleSelectionError();
+    }
+  }
+
+  /** Whether there are queued up change to be emitted. */
+  private _hasQueuedChanges() {
+    return !!(this._deselectedToEmit.length || this._selectedToEmit.length);
+  }
+
+  /** Returns a value that is comparable to inputValue by applying compareWith function, returns the same inputValue otherwise. */
+  private _getConcreteValue(inputValue: T, selection?: Set<T>): T {
+    if (!this.compareWith) {
+      return inputValue;
+    } else {
+      selection = selection ?? this._selection;
+      for (let selectedValue of selection) {
+        if (this.compareWith!(inputValue, selectedValue)) {
+          return selectedValue;
+        }
+      }
+      return inputValue;
     }
   }
 }

@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -17,43 +18,44 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [
-        ":snack-bar-container.css",
-        ":simple-snack-bar.css",
+        ":simple_snack_bar_scss",
+        ":snack_bar_container_scss",
     ] + glob(["**/*.html"]),
-    module_name = "@angular/material/snack-bar",
     deps = [
         "//src:dev_mode_types",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/layout",
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/button",
         "//src/material/core",
-        "@npm//@angular/animations",
-        "@npm//@angular/common",
         "@npm//@angular/core",
-        "@npm//rxjs",
     ],
 )
 
 sass_library(
     name = "snack_bar_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_binary(
-    name = "snack_bar_container_scss",
-    src = "snack-bar-container.scss",
-    deps = ["//src/cdk/a11y:a11y_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "simple_snack_bar_scss",
     src = "simple-snack-bar.scss",
-    deps = ["//src/material/core:core_scss_lib"],
 )
+
+sass_binary(
+    name = "snack_bar_container_scss",
+    src = "snack-bar-container.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+###########
+# Testing
+###########
 
 ng_test_library(
     name = "unit_test_sources",
@@ -73,12 +75,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [
+        ":unit_test_sources",
+    ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":snack-bar.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":snack_bar_scss_lib"],
 )
 
 filegroup(

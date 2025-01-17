@@ -203,7 +203,7 @@ specific error being caught and why it cannot be prevented.
 
 ##### General
 * Prefer writing out words instead of using abbreviations.
-* Prefer *exact* names over short names (within reason). E.g., `labelPosition` is better than
+* Prefer *exact* names to short names (within reason). E.g., `labelPosition` is better than
 `align` because the former much more exactly communicates what the property means.
 * Except for `@Input` properties, use `is` and `has` prefixes for boolean properties / methods.
 
@@ -257,43 +257,24 @@ Avoid using inheritance to apply reusable behaviors to multiple components. This
 behaviors can be composed. Instead, [TypeScript mixins][ts-mixins] can be used to compose multiple
 common behaviors into a single component.
 
-#### MDC checks
-To ensure backwards compatability, we check that tests written for MDC Components include all of
-the same tests that the non-MDC version had. Similarly, we check that the public API of MDC
-Components match that of the non-MDC version.
-
-In the case where old tests no longer make sense and should be omitted or the public API should be
-changed, you can do so in [scripts/check-mdc-tests-config.ts](https://github.com/angular/components/blob/master/scripts/check-mdc-tests-config.ts) and
-[scripts/check-mdc-exports-config.ts](https://github.com/angular/components/blob/master/scripts/check-mdc-exports-config.ts).
-Remember to leave a comment explaining why the change was necessary.
-
 #### Coercion
-Component and directive inputs for boolean and number values must use a setter to coerce values to
-the expected type using cdk/coercion.
+Component and directive inputs for boolean and number values must use an input transform function
+to coerce values to the expected type.
 For example:
 ```ts
-@Input() disabled: boolean;
-get disabled(): boolean { return this._disabled; }
-set disabled(v: boolean) { this._disabled = coerceBooleanProperty(v); }
-private _disabled = false;
+import {Input, booleanAttribute} from '@angular/core';
 
-...
-
-static ngAcceptInputType_value: BooleanInput;
+@Input({transform: booleanAttribute}) disabled: boolean = false;
 ```
 The above code allows users to set `disabled` similar to how it can be set on native inputs:
 ```html
 <component disabled></component>
 ```
-Even though an empty string is technically what is being provided as the value of `disabled`,
-`ngAcceptInputType` allows the mismatched type to be provided and `coerceBooleanProperty`
-interprets the given value (an empty string) to the correct type & value, which in this case would
-be `true`.
 
 #### Expose native inputs
 Native inputs used in components should be exposed to developers through `ng-content`. This allows
 developers to interact directly with the input and allows us to avoid providing custom
-implementations for all of the input's native behaviors.
+implementations for all the input's native behaviors.
 
 For example:
 
@@ -337,13 +318,13 @@ pre-rendering).
 ### CSS
 
 #### Be cautious with use of `display: flex`
-* The [baseline calculation for flex elements](http://www.w3.org/TR/css-flexbox-1/#flex-baselines)
-is different than other display values, making it difficult to align flex elements with standard
+* The [baseline calculation for flex elements](https://www.w3.org/TR/css-flexbox-1/#flex-baselines)
+is different from other display values, making it difficult to align flex elements with standard
 elements like input and button.
 * Component outermost elements are never flex (block or inline-block)
 * Don't use `display: flex` on elements that will contain projected content.
 
-#### Use lowest specificity possible
+#### Use the lowest specificity possible
 Always prioritize lower specificity over other factors. Most style definitions should consist of a
 single element or css selector plus necessary state modifiers. **Avoid SCSS nesting for the sake of
 code organization.** This will allow users to much more easily override styles.
@@ -431,7 +412,7 @@ When it is not super obvious, include a brief description of what a class repres
 
 #### Prefer CSS classes to tag names and attributes for styling
 Targeting tag names can cause conflicts with the MDC version of the component. For this reason, use
-CSS class names defined by us instead of tag names. We also prefer classes over attributes for
+CSS class names defined by us instead of tag names. We also prefer classes to attributes for
 consistency.
 ```scss
 /** Do: */

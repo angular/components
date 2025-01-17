@@ -3,20 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
-import {
-  Directive,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Self
-} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Directive, Input, OnDestroy, OnInit, inject} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {distinctUntilChanged, switchMap, takeUntil} from 'rxjs/operators';
 
@@ -37,20 +29,24 @@ import {CdkSelection} from './selection';
   exportAs: 'cdkSelectionToggle',
 })
 export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
+  private _selection = inject<CdkSelection<T>>(CdkSelection, {optional: true})!;
+  private _controlValueAccessors = inject(NG_VALUE_ACCESSOR, {optional: true, self: true});
+
   /** The value that is associated with the toggle */
   @Input('cdkSelectionToggleValue') value: T;
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('cdkSelectionToggleIndex')
-  get index(): number|undefined { return this._index; }
-  set index(index: number|undefined) { this._index = coerceNumberProperty(index); }
+  get index(): number | undefined {
+    return this._index;
+  }
+  set index(index: NumberInput) {
+    this._index = coerceNumberProperty(index);
+  }
   protected _index?: number;
 
   /** The checked state of the selection toggle */
-  readonly checked: Observable<boolean> = this._selection.change.pipe(
-      switchMap(() => observableOf(this._isSelected())),
-      distinctUntilChanged(),
-  );
+  readonly checked: Observable<boolean>;
 
   /** Toggles the selection */
   toggle() {
@@ -59,11 +55,14 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
 
   private _destroyed = new Subject<void>();
 
-  constructor(
-      @Optional() @Inject(CdkSelection) private _selection: CdkSelection<T>,
-      @Optional() @Self() @Inject(NG_VALUE_ACCESSOR) private _controlValueAccessors:
-          ControlValueAccessor[],
-  ) {}
+  constructor() {
+    const _selection = this._selection;
+
+    this.checked = _selection.change.pipe(
+      switchMap(() => observableOf(this._isSelected())),
+      distinctUntilChanged(),
+    );
+  }
 
   ngOnInit() {
     this._assertValidParentSelection();
@@ -89,8 +88,8 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
         }
       });
 
-      this.checked.pipe(takeUntil(this._destroyed)).subscribe((state) => {
-        this._controlValueAccessors[0].writeValue(state);
+      this.checked.pipe(takeUntil(this._destroyed)).subscribe(state => {
+        this._controlValueAccessors![0].writeValue(state);
       });
     }
   }
@@ -98,6 +97,4 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   private _isSelected(): boolean {
     return this._selection.isSelected(this.value, this.index);
   }
-
-  static ngAcceptInputType_index: NumberInput;
 }

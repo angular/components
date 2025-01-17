@@ -12,6 +12,7 @@ import {NormalizedFunctionParameters} from './normalize-function-parameters';
 export interface DeprecationInfo {
   isDeprecated: boolean;
   breakingChange: string | null;
+  deprecatedMessage: string | null;
 }
 
 /** Interface that describes Dgeni documents that have decorators. */
@@ -49,11 +50,15 @@ export interface CategorizedPropertyMemberDoc extends PropertyMemberDoc, Depreca
 
 /** Extended Dgeni method-member document that simplifies logic for the Dgeni template. */
 export interface CategorizedMethodMemberDoc
-    extends NormalizedFunctionParameters, MethodMemberDoc, DeprecationInfo {}
+  extends NormalizedFunctionParameters,
+    MethodMemberDoc,
+    DeprecationInfo {}
 
 /** Extended Dgeni function export document that simplifies logic for the Dgeni template. */
 export interface CategorizedFunctionExportDoc
-    extends NormalizedFunctionParameters, FunctionExportDoc, DeprecationInfo {}
+  extends NormalizedFunctionParameters,
+    FunctionExportDoc,
+    DeprecationInfo {}
 
 /** Extended Dgeni const export document that simplifies logic for the Dgeni template. */
 export interface CategorizedConstExportDoc extends ConstExportDoc, DeprecationInfo {}

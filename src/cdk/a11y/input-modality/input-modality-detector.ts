@@ -3,12 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
-import {Inject, Injectable, InjectionToken, OnDestroy, Optional, NgZone} from '@angular/core';
-import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {Injectable, InjectionToken, OnDestroy, NgZone, inject} from '@angular/core';
+import {normalizePassiveListenerOptions, Platform, _getEventTarget} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
@@ -32,8 +32,9 @@ export interface InputModalityDetectorOptions {
  * Injectable options for the InputModalityDetector. These are shallowly merged with the default
  * options.
  */
-export const INPUT_MODALITY_DETECTOR_OPTIONS =
-  new InjectionToken<InputModalityDetectorOptions>('cdk-input-modality-detector-options');
+export const INPUT_MODALITY_DETECTOR_OPTIONS = new InjectionToken<InputModalityDetectorOptions>(
+  'cdk-input-modality-detector-options',
+);
 
 /**
  * Default options for the InputModalityDetector.
@@ -87,8 +88,10 @@ const modalityEventListenerOptions = normalizePassiveListenerOptions({
  * update the input modality to keyboard, but in general this service's behavior is largely
  * undefined.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class InputModalityDetector implements OnDestroy {
+  private readonly _platform = inject(Platform);
+
   /** Emits whenever an input modality is detected. */
   readonly modalityDetected: Observable<InputModality>;
 
@@ -125,11 +128,13 @@ export class InputModalityDetector implements OnDestroy {
   private _onKeydown = (event: KeyboardEvent) => {
     // If this is one of the keys we should ignore, then ignore it and don't update the input
     // modality to keyboard.
-    if (this._options?.ignoreKeys?.some(keyCode => keyCode === event.keyCode)) { return; }
+    if (this._options?.ignoreKeys?.some(keyCode => keyCode === event.keyCode)) {
+      return;
+    }
 
     this._modality.next('keyboard');
-    this._mostRecentTarget = getTarget(event);
-  }
+    this._mostRecentTarget = _getEventTarget(event);
+  };
 
   /**
    * Handles mousedown events. Must be an arrow function in order to preserve the context when it
@@ -139,13 +144,15 @@ export class InputModalityDetector implements OnDestroy {
     // Touches trigger both touch and mouse events, so we need to distinguish between mouse events
     // that were triggered via mouse vs touch. To do so, check if the mouse event occurs closely
     // after the previous touch event.
-    if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) { return; }
+    if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) {
+      return;
+    }
 
     // Fake mousedown events are fired by some screen readers when controls are activated by the
     // screen reader. Attribute them to keyboard input modality.
     this._modality.next(isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse');
-    this._mostRecentTarget = getTarget(event);
-  }
+    this._mostRecentTarget = _getEventTarget(event);
+  };
 
   /**
    * Handles touchstart events. Must be an arrow function in order to preserve the context when it
@@ -164,16 +171,16 @@ export class InputModalityDetector implements OnDestroy {
     this._lastTouchMs = Date.now();
 
     this._modality.next('touch');
-    this._mostRecentTarget = getTarget(event);
-  }
+    this._mostRecentTarget = _getEventTarget(event);
+  };
 
-  constructor(
-      private readonly _platform: Platform,
-      ngZone: NgZone,
-      @Inject(DOCUMENT) document: Document,
-      @Optional() @Inject(INPUT_MODALITY_DETECTOR_OPTIONS)
-      options?: InputModalityDetectorOptions,
-  ) {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const ngZone = inject(NgZone);
+    const document = inject<Document>(DOCUMENT);
+    const options = inject(INPUT_MODALITY_DETECTOR_OPTIONS, {optional: true});
+
     this._options = {
       ...INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS,
       ...options,
@@ -185,28 +192,22 @@ export class InputModalityDetector implements OnDestroy {
 
     // If we're not in a browser, this service should do nothing, as there's no relevant input
     // modality to detect.
-    if (!_platform.isBrowser) { return; }
-
-    // Add the event listeners used to detect the user's input modality.
-    ngZone.runOutsideAngular(() => {
-      document.addEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
-      document.addEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
-      document.addEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
-    });
+    if (this._platform.isBrowser) {
+      ngZone.runOutsideAngular(() => {
+        document.addEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
+        document.addEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
+        document.addEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
+      });
+    }
   }
 
   ngOnDestroy() {
-    if (!this._platform.isBrowser) { return; }
+    this._modality.complete();
 
-    document.removeEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
-    document.removeEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
-    document.removeEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
+    if (this._platform.isBrowser) {
+      document.removeEventListener('keydown', this._onKeydown, modalityEventListenerOptions);
+      document.removeEventListener('mousedown', this._onMousedown, modalityEventListenerOptions);
+      document.removeEventListener('touchstart', this._onTouchstart, modalityEventListenerOptions);
+    }
   }
-}
-
-/** Gets the target of an event, accounting for Shadow DOM. */
-export function getTarget(event: Event): HTMLElement|null {
-  // If an event is bound outside the Shadow DOM, the `event.target` will
-  // point to the shadow root so we have to use `composedPath` instead.
-  return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
 }

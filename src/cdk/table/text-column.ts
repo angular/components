@@ -3,28 +3,26 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
+import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell} from './cell';
 import {CdkTable} from './table';
 import {
   getTableTextColumnMissingParentTableError,
   getTableTextColumnMissingNameError,
 } from './table-errors';
 import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
-
 
 /**
  * Column that simply shows text content for the header and row cells. Assumes that the table
@@ -55,8 +53,12 @@ import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
   // an ExpressionChangedAfterItHasBeenCheckedError).
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
+  imports: [CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCellDef, CdkCell],
 })
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
+  private _table = inject<CdkTable<T>>(CdkTable, {optional: true});
+  private _options = inject<TextColumnOptions<T>>(TEXT_COLUMN_OPTIONS, {optional: true})!;
+
   /** Column name that should be used to reference this column. */
   @Input()
   get name(): string {
@@ -86,7 +88,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   @Input() dataAccessor: (data: T, name: string) => string;
 
   /** Alignment of the cell values. */
-  @Input() justify: 'start'|'end' = 'start';
+  @Input() justify: 'start' | 'end' | 'center' = 'start';
 
   /** @docs-private */
   @ViewChild(CdkColumnDef, {static: true}) columnDef: CdkColumnDef;
@@ -109,13 +111,10 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    */
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell: CdkHeaderCellDef;
 
-  constructor(
-      // `CdkTextColumn` is always requiring a table, but we just assert it manually
-      // for better error reporting.
-      // tslint:disable-next-line: lightweight-tokens
-      @Optional() private _table: CdkTable<T>,
-      @Optional() @Inject(TEXT_COLUMN_OPTIONS) private _options: TextColumnOptions<T>) {
-    this._options = _options || {};
+  constructor(...args: unknown[]);
+
+  constructor() {
+    this._options = this._options || {};
   }
 
   ngOnInit() {
@@ -127,7 +126,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
 
     if (!this.dataAccessor) {
       this.dataAccessor =
-          this._options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
+        this._options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
     }
 
     if (this._table) {

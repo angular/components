@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, Observer} from 'rxjs';
+import {MatTabsModule} from '@angular/material/tabs';
+import {AsyncPipe} from '@angular/common';
 
 export interface ExampleTab {
   label: string;
@@ -12,6 +14,7 @@ export interface ExampleTab {
 @Component({
   selector: 'tab-group-async-example',
   templateUrl: 'tab-group-async-example.html',
+  imports: [MatTabsModule, AsyncPipe],
 })
 export class TabGroupAsyncExample {
   asyncTabs: Observable<ExampleTab[]>;

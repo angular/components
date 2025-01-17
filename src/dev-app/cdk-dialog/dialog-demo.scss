@@ -1,0 +1,17 @@
+.demo-container {
+  button, label {
+    margin-right: 8px;
+
+    [dir='rtl'] & {
+      margin-left: 8px;
+      margin-right: 0;
+    }
+  }
+}
+
+.demo-field {
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+  margin-bottom: 8px;
+}

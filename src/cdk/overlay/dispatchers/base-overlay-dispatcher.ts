@@ -3,13 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, OnDestroy} from '@angular/core';
-import {OverlayReference} from '../overlay-reference';
-
+import {Injectable, OnDestroy, inject} from '@angular/core';
+import type {OverlayRef} from '../overlay-ref';
 
 /**
  * Service for dispatching events that land on the body to appropriate overlay ref,
@@ -18,30 +17,29 @@ import {OverlayReference} from '../overlay-reference';
  */
 @Injectable({providedIn: 'root'})
 export abstract class BaseOverlayDispatcher implements OnDestroy {
-
   /** Currently attached overlays in the order they were attached. */
-  _attachedOverlays: OverlayReference[] = [];
+  _attachedOverlays: OverlayRef[] = [];
 
-  protected _document: Document;
+  protected _document = inject(DOCUMENT);
   protected _isAttached: boolean;
 
-  constructor(@Inject(DOCUMENT) document: any) {
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   ngOnDestroy(): void {
     this.detach();
   }
 
   /** Add a new overlay to the list of attached overlay refs. */
-  add(overlayRef: OverlayReference): void {
+  add(overlayRef: OverlayRef): void {
     // Ensure that we don't get the same overlay multiple times.
     this.remove(overlayRef);
     this._attachedOverlays.push(overlayRef);
   }
 
   /** Remove an overlay from the list of attached overlay refs. */
-  remove(overlayRef: OverlayReference): void {
+  remove(overlayRef: OverlayRef): void {
     const index = this._attachedOverlays.indexOf(overlayRef);
 
     if (index > -1) {

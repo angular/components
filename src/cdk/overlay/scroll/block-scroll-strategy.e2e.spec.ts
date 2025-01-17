@@ -1,6 +1,4 @@
 import {browser, Key, element, by} from 'protractor';
-import {getScrollPosition} from '@angular/cdk/testing/private/e2e';
-
 
 describe('scroll blocking', () => {
   beforeEach(() => browser.get('/block-scroll-strategy'));
@@ -48,8 +46,10 @@ describe('scroll blocking', () => {
     await body.sendKeys(Key.ARROW_DOWN);
     await body.sendKeys(Key.ARROW_DOWN);
     await body.sendKeys(Key.ARROW_DOWN);
-    expect((await getScrollPosition()).y)
-        .toBeGreaterThan(100, 'Expected the page to be scrollable again.');
+    expect((await getScrollPosition()).y).toBeGreaterThan(
+      100,
+      'Expected the page to be scrollable again.',
+    );
   });
 
   it('should not be able to scroll via the keyboard along the x axis', async () => {
@@ -68,41 +68,41 @@ describe('scroll blocking', () => {
     await body.sendKeys(Key.ARROW_RIGHT);
     await body.sendKeys(Key.ARROW_RIGHT);
     await body.sendKeys(Key.ARROW_RIGHT);
-    expect((await getScrollPosition()).x)
-        .toBeGreaterThan(100, 'Expected the page to be scrollable again.');
+    expect((await getScrollPosition()).x).toBeGreaterThan(
+      100,
+      'Expected the page to be scrollable again.',
+    );
   });
 
-  it('should not be able to scroll the page after reaching the end of an element along the y axis',
-    async () => {
-      const scroller = element(by.id('scroller'));
+  it('should not be able to scroll the page after reaching the end of an element along the y axis', async () => {
+    const scroller = element(by.id('scroller'));
 
-      await browser.executeScript(`document.getElementById('scroller').scrollTop = 200;`);
-      await scrollPage(0, 100);
-      expect((await getScrollPosition()).y).toBe(100, 'Expected the page to be scrollable.');
+    await browser.executeScript(`document.getElementById('scroller').scrollTop = 200;`);
+    await scrollPage(0, 100);
+    expect((await getScrollPosition()).y).toBe(100, 'Expected the page to be scrollable.');
 
-      await clickOn('enable');
-      await scroller.sendKeys(Key.ARROW_DOWN);
-      await scroller.sendKeys(Key.ARROW_DOWN);
-      await scroller.sendKeys(Key.ARROW_DOWN);
+    await clickOn('enable');
+    await scroller.sendKeys(Key.ARROW_DOWN);
+    await scroller.sendKeys(Key.ARROW_DOWN);
+    await scroller.sendKeys(Key.ARROW_DOWN);
 
-      expect((await getScrollPosition()).y).toBe(100, 'Expected the page not to have scrolled.');
-    });
+    expect((await getScrollPosition()).y).toBe(100, 'Expected the page not to have scrolled.');
+  });
 
-  it('should not be able to scroll the page after reaching the end of an element along the x axis',
-    async () => {
-      const scroller = element(by.id('scroller'));
+  it('should not be able to scroll the page after reaching the end of an element along the x axis', async () => {
+    const scroller = element(by.id('scroller'));
 
-      await browser.executeScript(`document.getElementById('scroller').scrollLeft = 200;`);
-      await scrollPage(100, 0);
-      expect((await getScrollPosition()).x).toBe(100, 'Expected the page to be scrollable.');
+    await browser.executeScript(`document.getElementById('scroller').scrollLeft = 200;`);
+    await scrollPage(100, 0);
+    expect((await getScrollPosition()).x).toBe(100, 'Expected the page to be scrollable.');
 
-      await clickOn('enable');
-      await scroller.sendKeys(Key.ARROW_RIGHT);
-      await scroller.sendKeys(Key.ARROW_RIGHT);
-      await scroller.sendKeys(Key.ARROW_RIGHT);
+    await clickOn('enable');
+    await scroller.sendKeys(Key.ARROW_RIGHT);
+    await scroller.sendKeys(Key.ARROW_RIGHT);
+    await scroller.sendKeys(Key.ARROW_RIGHT);
 
-      expect((await getScrollPosition()).x).toBe(100, 'Expected the page not to have scrolled.');
-    });
+    expect((await getScrollPosition()).x).toBe(100, 'Expected the page not to have scrolled.');
+  });
 });
 
 // Clicks on a button programmatically. Note that we can't use Protractor's `.click`, because
@@ -114,4 +114,21 @@ async function clickOn(id: string) {
 // Scrolls the page to the specified coordinates.
 async function scrollPage(x: number, y: number) {
   await browser.executeScript(`window.scrollTo(${x}, ${y});`);
+}
+
+/**
+ * Determines the current scroll position of the page.
+ */
+async function getScrollPosition(): Promise<{x: number; y: number}> {
+  const snippet = `
+    var documentRect = document.documentElement.getBoundingClientRect();
+    var x = -documentRect.left || document.body.scrollLeft || window.scrollX ||
+             document.documentElement.scrollLeft || 0;
+    var y = -documentRect.top || document.body.scrollTop || window.scrollY ||
+             document.documentElement.scrollTop || 0;
+
+    return {x: x, y: y};
+  `;
+
+  return await browser.executeScript(snippet);
 }

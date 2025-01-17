@@ -1,0 +1,504 @@
+@use '../core/style/vendor-prefixes';
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
+@use '../core/tokens/token-utils';
+
+// Includes the structural styles for the list that were inherited from MDC.
+@mixin private-list-inherited-structural-styles {
+  $tokens: (tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots());
+
+  .mdc-list {
+    margin: 0;
+    padding: 8px 0;
+    list-style-type: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .mdc-list-item {
+    display: flex;
+    position: relative;
+    justify-content: flex-start;
+    overflow: hidden;
+    padding: 0;
+    align-items: stretch;
+    cursor: pointer;
+    padding-left: 16px;
+    padding-right: 16px;
+
+    @include token-utils.use-tokens($tokens...) {
+      @include token-utils.create-token-slot(background-color, list-item-container-color);
+      @include token-utils.create-token-slot(border-radius, list-item-container-shape);
+
+      &.mdc-list-item--selected {
+        @include token-utils.create-token-slot(background-color,
+          list-item-selected-container-color);
+      }
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &.mdc-list-item--disabled {
+      cursor: auto;
+    }
+
+    &.mdc-list-item--with-one-line {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(height, list-item-one-line-container-height);
+      }
+
+      .mdc-list-item__start {
+        align-self: center;
+        margin-top: 0;
+      }
+
+      .mdc-list-item__end {
+        align-self: center;
+        margin-top: 0;
+      }
+    }
+
+    &.mdc-list-item--with-two-lines {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(height, list-item-two-line-container-height);
+      }
+
+      .mdc-list-item__start {
+        align-self: flex-start;
+        margin-top: 16px;
+      }
+
+      .mdc-list-item__end {
+        align-self: center;
+        margin-top: 0;
+      }
+    }
+
+    &.mdc-list-item--with-three-lines {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(height, list-item-three-line-container-height);
+      }
+
+      .mdc-list-item__start {
+        align-self: flex-start;
+        margin-top: 16px;
+      }
+
+      .mdc-list-item__end {
+        align-self: flex-start;
+        margin-top: 16px;
+      }
+    }
+
+    // Not used in Material, but some internal tests seem to depend on it.
+    &.mdc-list-item--selected::before,
+    &.mdc-list-item--selected:focus::before,
+    &:not(.mdc-list-item--selected):focus::before {
+      position: absolute;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      content: '';
+      pointer-events: none;
+    }
+  }
+
+  a.mdc-list-item {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mdc-list-item__start {
+    fill: currentColor;
+    flex-shrink: 0;
+    pointer-events: none;
+
+    @include token-utils.use-tokens($tokens...) {
+      .mdc-list-item--with-leading-icon & {
+        @include token-utils.create-token-slot(color, list-item-leading-icon-color);
+        @include token-utils.create-token-slot(width, list-item-leading-icon-size);
+        @include token-utils.create-token-slot(height, list-item-leading-icon-size);
+        margin-left: 16px;
+        margin-right: 32px;
+      }
+
+      [dir='rtl'] .mdc-list-item--with-leading-icon & {
+        margin-left: 32px;
+        margin-right: 16px;
+      }
+
+      .mdc-list-item--with-leading-icon:hover & {
+        @include token-utils.create-token-slot(color, list-item-hover-leading-icon-color);
+      }
+
+      // This is the same in RTL, but we need the specificity.
+      .mdc-list-item--with-leading-avatar & {
+        @include token-utils.create-token-slot(width, list-item-leading-avatar-size);
+        @include token-utils.create-token-slot(height, list-item-leading-avatar-size);
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: 50%;
+      }
+
+      .mdc-list-item--with-leading-avatar &,
+      [dir='rtl'] .mdc-list-item--with-leading-avatar & {
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .mdc-list-item__end {
+    flex-shrink: 0;
+    pointer-events: none;
+
+    @include token-utils.use-tokens($tokens...) {
+      .mdc-list-item--with-trailing-meta & {
+        @include token-utils.create-token-slot(font-family,
+          list-item-trailing-supporting-text-font);
+        @include token-utils.create-token-slot(line-height,
+          list-item-trailing-supporting-text-line-height);
+        @include token-utils.create-token-slot(font-size,
+          list-item-trailing-supporting-text-size);
+        @include token-utils.create-token-slot(font-weight,
+          list-item-trailing-supporting-text-weight);
+        @include token-utils.create-token-slot(letter-spacing,
+          list-item-trailing-supporting-text-tracking);
+      }
+
+      .mdc-list-item--with-trailing-icon & {
+        @include token-utils.create-token-slot(color, list-item-trailing-icon-color);
+        @include token-utils.create-token-slot(width, list-item-trailing-icon-size);
+        @include token-utils.create-token-slot(height, list-item-trailing-icon-size);
+      }
+
+      .mdc-list-item--with-trailing-icon:hover & {
+        @include token-utils.create-token-slot(color, list-item-hover-trailing-icon-color);
+      }
+
+      // For some reason this has an increased specificity just for the `color`.
+      // Keeping it in place for now to reduce the amount of screenshot diffs.
+      .mdc-list-item.mdc-list-item--with-trailing-meta & {
+        @include token-utils.create-token-slot(color, list-item-trailing-supporting-text-color);
+      }
+
+      .mdc-list-item--selected.mdc-list-item--with-trailing-icon & {
+        @include token-utils.create-token-slot(color, list-item-selected-trailing-icon-color);
+      }
+    }
+  }
+
+  .mdc-list-item__content {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    align-self: center;
+    flex: 1;
+    pointer-events: none;
+
+    .mdc-list-item--with-two-lines &,
+    .mdc-list-item--with-three-lines & {
+      align-self: stretch;
+    }
+  }
+
+  .mdc-list-item__primary-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    @include token-utils.use-tokens($tokens...) {
+      @include token-utils.create-token-slot(color, list-item-label-text-color);
+      @include token-utils.create-token-slot(font-family, list-item-label-text-font);
+      @include token-utils.create-token-slot(line-height, list-item-label-text-line-height);
+      @include token-utils.create-token-slot(font-size, list-item-label-text-size);
+      @include token-utils.create-token-slot(font-weight, list-item-label-text-weight);
+      @include token-utils.create-token-slot(letter-spacing, list-item-label-text-tracking);
+
+      .mdc-list-item:hover & {
+        @include token-utils.create-token-slot(color, list-item-hover-label-text-color);
+      }
+
+      .mdc-list-item:focus & {
+        @include token-utils.create-token-slot(color, list-item-focus-label-text-color);
+      }
+    }
+
+    .mdc-list-item--with-two-lines &,
+    .mdc-list-item--with-three-lines & {
+      display: block;
+      margin-top: 0;
+      line-height: normal;
+      margin-bottom: -20px;
+    }
+
+    .mdc-list-item--with-two-lines &::before,
+    .mdc-list-item--with-three-lines &::before {
+      display: inline-block;
+      width: 0;
+      height: 28px;
+      content: '';
+      vertical-align: 0;
+    }
+
+    .mdc-list-item--with-two-lines &::after,
+    .mdc-list-item--with-three-lines &::after {
+      display: inline-block;
+      width: 0;
+      height: 20px;
+      content: '';
+      vertical-align: -20px;
+    }
+  }
+
+  .mdc-list-item__secondary-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    margin-top: 0;
+
+    @include token-utils.use-tokens($tokens...) {
+      @include token-utils.create-token-slot(color, list-item-supporting-text-color);
+      @include token-utils.create-token-slot(font-family, list-item-supporting-text-font);
+      @include token-utils.create-token-slot(line-height, list-item-supporting-text-line-height);
+      @include token-utils.create-token-slot(font-size, list-item-supporting-text-size);
+      @include token-utils.create-token-slot(font-weight, list-item-supporting-text-weight);
+      @include token-utils.create-token-slot(letter-spacing, list-item-supporting-text-tracking);
+    }
+
+    &::before {
+      display: inline-block;
+      width: 0;
+      height: 20px;
+      content: '';
+      vertical-align: 0;
+    }
+
+    .mdc-list-item--with-three-lines & {
+      white-space: normal;
+      line-height: 20px;
+    }
+
+    .mdc-list-item--with-overline & {
+      white-space: nowrap;
+      line-height: auto;
+    }
+  }
+
+  .mdc-list-item--with-leading-radio,
+  .mdc-list-item--with-leading-checkbox,
+  .mdc-list-item--with-leading-icon,
+  .mdc-list-item--with-leading-avatar {
+    &.mdc-list-item {
+      padding-left: 0;
+      padding-right: 16px;
+
+      [dir='rtl'] & {
+        padding-left: 16px;
+        padding-right: 0;
+      }
+    }
+
+    &.mdc-list-item--with-two-lines {
+      .mdc-list-item__primary-text {
+        display: block;
+        margin-top: 0;
+        line-height: normal;
+        margin-bottom: -20px;
+
+        // This was used by MDC to set the text baseline. We should figure out a way to
+        // remove it, because it can introduce unnecessary whitespace at the beginning
+        // of the element.
+        &::before {
+          display: inline-block;
+          width: 0;
+          height: 32px;
+          content: '';
+          vertical-align: 0;
+        }
+
+        &::after {
+          display: inline-block;
+          width: 0;
+          height: 20px;
+          content: '';
+          vertical-align: -20px;
+        }
+      }
+
+      &.mdc-list-item--with-trailing-meta {
+        .mdc-list-item__end {
+          display: block;
+          margin-top: 0;
+          line-height: normal;
+
+          &::before {
+            display: inline-block;
+            width: 0;
+            height: 32px;
+            content: '';
+            vertical-align: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .mdc-list-item--with-trailing-icon {
+    &.mdc-list-item {
+      // This is the same in RTL, but we need the specificity.
+      &, [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .mdc-list-item__end {
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+  }
+
+  .mdc-list-item--with-trailing-meta {
+    &.mdc-list-item {
+      padding-left: 16px;
+      padding-right: 0;
+
+      [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: 16px;
+      }
+    }
+
+    .mdc-list-item__end {
+      @include vendor-prefixes.user-select(none);
+      margin-left: 28px;
+      margin-right: 16px;
+
+      [dir='rtl'] & {
+        margin-left: 16px;
+        margin-right: 28px;
+      }
+    }
+
+    &.mdc-list-item--with-three-lines .mdc-list-item__end,
+    &.mdc-list-item--with-two-lines .mdc-list-item__end {
+      display: block;
+      line-height: normal;
+      align-self: flex-start;
+      margin-top: 0;
+
+      &::before {
+        display: inline-block;
+        width: 0;
+        height: 28px;
+        content: '';
+        vertical-align: 0;
+      }
+    }
+  }
+
+  .mdc-list-item--with-leading-radio,
+  .mdc-list-item--with-leading-checkbox {
+    .mdc-list-item__start {
+      margin-left: 8px;
+      margin-right: 24px;
+
+      [dir='rtl'] & {
+        margin-left: 24px;
+        margin-right: 8px;
+      }
+    }
+
+    &.mdc-list-item--with-two-lines {
+      .mdc-list-item__start {
+        align-self: flex-start;
+        margin-top: 8px;
+      }
+    }
+  }
+
+  .mdc-list-item--with-trailing-radio,
+  .mdc-list-item--with-trailing-checkbox {
+    &.mdc-list-item {
+      padding-left: 16px;
+      padding-right: 0;
+
+      [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: 16px;
+      }
+    }
+
+    &.mdc-list-item--with-leading-icon,
+    &.mdc-list-item--with-leading-avatar {
+      padding-left: 0;
+
+      [dir='rtl'] & {
+        padding-right: 0;
+      }
+    }
+
+    .mdc-list-item__end {
+      margin-left: 24px;
+      margin-right: 8px;
+
+      [dir='rtl'] & {
+        margin-left: 8px;
+        margin-right: 24px;
+      }
+    }
+
+    &.mdc-list-item--with-three-lines .mdc-list-item__end {
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+  }
+
+  .mdc-list-group__subheader {
+    margin: 0.75rem 16px;
+  }
+
+  .mdc-list-item--disabled {
+    .mdc-list-item__start,
+    .mdc-list-item__content,
+    .mdc-list-item__end {
+      opacity: 1;
+    }
+
+    .mdc-list-item__primary-text,
+    .mdc-list-item__secondary-text {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
+      }
+    }
+
+    &.mdc-list-item--with-leading-icon .mdc-list-item__start {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(color, list-item-disabled-leading-icon-color);
+        @include token-utils.create-token-slot(opacity, list-item-disabled-leading-icon-opacity);
+      }
+    }
+
+    &.mdc-list-item--with-trailing-icon .mdc-list-item__end {
+      @include token-utils.use-tokens($tokens...) {
+        @include token-utils.create-token-slot(color, list-item-disabled-trailing-icon-color);
+        @include token-utils.create-token-slot(opacity, list-item-disabled-trailing-icon-opacity);
+      }
+    }
+  }
+
+  .mat-mdc-list-item.mat-mdc-list-item-both-leading-and-trailing {
+    &, [dir='rtl'] & {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}

@@ -3,16 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /** Horizontal dimension of a connection point on the perimeter of the origin or overlay element. */
-import {Optional} from '@angular/core';
 export type HorizontalConnectionPos = 'start' | 'center' | 'end';
 
 /** Vertical dimension of a connection point on the perimeter of the origin or overlay element. */
 export type VerticalConnectionPos = 'top' | 'center' | 'bottom';
-
 
 /** A connection point on the origin element. */
 export interface OriginConnectionPosition {
@@ -45,8 +43,8 @@ export class ConnectionPositionPair {
     /** Offset along the Y axis. */
     public offsetY?: number,
     /** Class(es) to be applied to the panel while this position is active. */
-    public panelClass?: string | string[]) {
-
+    public panelClass?: string | string[],
+  ) {
     this.originX = origin.originX;
     this.originY = origin.originY;
     this.overlayX = overlay.overlayX;
@@ -89,10 +87,11 @@ export class ScrollingVisibility {
 /** The change event emitted by the strategy when a fallback position is used. */
 export class ConnectedOverlayPositionChange {
   constructor(
-      /** The position used as a result of this change. */
-      public connectionPair: ConnectionPositionPair,
-      /** @docs-private */
-      @Optional() public scrollableViewProperties: ScrollingVisibility) {}
+    /** The position used as a result of this change. */
+    public connectionPair: ConnectionPositionPair,
+    /** @docs-private */
+    public scrollableViewProperties: ScrollingVisibility,
+  ) {}
 }
 
 /**
@@ -103,8 +102,10 @@ export class ConnectedOverlayPositionChange {
  */
 export function validateVerticalPosition(property: string, value: VerticalConnectionPos) {
   if (value !== 'top' && value !== 'bottom' && value !== 'center') {
-    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
-                `Expected "top", "bottom" or "center".`);
+    throw Error(
+      `ConnectedPosition: Invalid ${property} "${value}". ` +
+        `Expected "top", "bottom" or "center".`,
+    );
   }
 }
 
@@ -116,7 +117,9 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
  */
 export function validateHorizontalPosition(property: string, value: HorizontalConnectionPos) {
   if (value !== 'start' && value !== 'end' && value !== 'center') {
-    throw Error(`ConnectedPosition: Invalid ${property} "${value}". ` +
-                `Expected "start", "end" or "center".`);
+    throw Error(
+      `ConnectedPosition: Invalid ${property} "${value}". ` +
+        `Expected "start", "end" or "center".`,
+    );
   }
 }

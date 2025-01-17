@@ -1,29 +1,18 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatStepperHarness, MatStepperNextHarness} from '@angular/material/stepper/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatStepperModule} from '@angular/material/stepper';
 import {StepperHarnessExample} from './stepper-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
 
 describe('StepperHarnessExample', () => {
   let fixture: ComponentFixture<StepperHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule],
-      declarations: [StepperHarnessExample],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule],
+    });
     fixture = TestBed.createComponent(StepperHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -43,9 +32,11 @@ describe('StepperHarnessExample', () => {
   it('should be able to get the template-based label of a step', async () => {
     const stepper = await loader.getHarness(MatStepperHarness);
     const steps = await stepper.getSteps();
-    expect(await parallel(() => {
-      return steps.map(step => step.getLabel());
-    })).toEqual(['One', 'Two', 'Three']);
+    expect(
+      await parallel(() => {
+        return steps.map(step => step.getLabel());
+      }),
+    ).toEqual(['One', 'Two', 'Three']);
   });
 
   it('should go forward when pressing the next button', async () => {
@@ -59,7 +50,7 @@ describe('StepperHarnessExample', () => {
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
       false,
       true,
-      false
+      false,
     ]);
 
     await nextButton.click();
@@ -67,7 +58,7 @@ describe('StepperHarnessExample', () => {
     expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
       false,
       false,
-      true
+      true,
     ]);
   });
 });

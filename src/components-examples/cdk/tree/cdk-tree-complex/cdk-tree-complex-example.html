@@ -1,0 +1,40 @@
+@if (areRootsLoading | async) {
+  <mat-spinner></mat-spinner>
+} @else {
+  <cdk-tree
+      #tree
+      [dataSource]="roots"
+      [childrenAccessor]="getChildren"
+      [trackBy]="trackBy"
+      [expansionKey]="expansionKey">
+    <cdk-tree-node
+        *cdkTreeNodeDef="let node"
+        cdkTreeNodePadding
+        [cdkTreeNodeTypeaheadLabel]="node.raw.name"
+        [isExpandable]="node.isExpandable()"
+        (expandedChange)="onExpand(node, $event)">
+      <!-- Spinner when node is loading children; this replaces the expand button. -->
+      @if (node.areChildrenLoading()) {
+        <mat-spinner diameter="48" mode="indeterminate"></mat-spinner>
+      }
+
+      @if (!node.areChildrenLoading() && node.isExpandable()) {
+        <button
+            mat-icon-button
+            cdkTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + node.raw.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+      }
+
+      <!-- Spacer for leaf nodes -->
+      @if (node.isLeaf()) {
+        <div class="toggle-spacer"></div>
+      }
+
+      <span>{{node.raw.name}}</span>
+    </cdk-tree-node>
+  </cdk-tree>
+}

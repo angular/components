@@ -3,9 +3,8 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
-
 
 /** Interface for a text control that is used to drive interaction with a mat-chip-list. */
 export interface MatChipTextControl {
@@ -22,5 +21,8 @@ export interface MatChipTextControl {
   empty: boolean;
 
   /** Focuses the text control. */
-  focus(options?: FocusOptions): void;
+  focus(): void;
+
+  /** Sets the list of ids the input is described by. */
+  setDescribedByIds(ids: string[]): void;
 }

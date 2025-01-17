@@ -8,6 +8,7 @@ import {MatInputModule} from '@angular/material/input';
  * and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <mat-form-field>
       <input matInput>

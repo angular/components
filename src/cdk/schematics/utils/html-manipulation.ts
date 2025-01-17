@@ -3,12 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
-import {getChildElementIndentation} from './parse5-element';
-import {Element, parse as parseHtml} from 'parse5';
+import {Element, getChildElementIndentation} from './parse5-element';
+import {parse as parseHtml} from 'parse5';
 
 /** Appends the given element HTML fragment to the `<head>` element of the specified HTML file. */
 export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elementHtml: string) {
@@ -32,13 +32,11 @@ export function appendHtmlElementToHead(host: Tree, htmlFilePath: string, elemen
 
   // We always have access to the source code location here because the `getHeadTagElement`
   // function explicitly has the `sourceCodeLocationInfo` option enabled.
-  const endTagOffset = headTag.sourceCodeLocation!.endTag.startOffset;
+  const endTagOffset = headTag.sourceCodeLocation!.endTag!.startOffset;
   const indentationOffset = getChildElementIndentation(headTag);
   const insertion = `${' '.repeat(indentationOffset)}${elementHtml}`;
 
-  const recordedChange = host
-    .beginUpdate(htmlFilePath)
-    .insertRight(endTagOffset, `${insertion}\n`);
+  const recordedChange = host.beginUpdate(htmlFilePath).insertRight(endTagOffset, `${insertion}\n`);
 
   host.commitUpdate(recordedChange);
 }
@@ -66,10 +64,15 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
   const classAttribute = body.attrs.find(attribute => attribute.name === 'class');
 
   if (classAttribute) {
-    const hasClass = classAttribute.value.split(' ').map(part => part.trim()).includes(className);
+    const hasClass = classAttribute.value
+      .split(' ')
+      .map(part => part.trim())
+      .includes(className);
 
     if (!hasClass) {
-      const classAttributeLocation = body.sourceCodeLocation!.attrs.class;
+      // We have source code location info enabled, and we pre-checked that the element
+      // has attributes, specifically the `class` attribute.
+      const classAttributeLocation = body.sourceCodeLocation!.attrs!['class'];
       const recordedChange = host
         .beginUpdate(htmlFilePath)
         .insertRight(classAttributeLocation.endOffset - 1, ` ${className}`);
@@ -78,14 +81,13 @@ export function addBodyClass(host: Tree, htmlFilePath: string, className: string
   } else {
     const recordedChange = host
       .beginUpdate(htmlFilePath)
-      .insertRight(body.sourceCodeLocation!.startTag.endOffset - 1, ` class="${className}"`);
+      .insertRight(body.sourceCodeLocation!.startTag!.endOffset - 1, ` class="${className}"`);
     host.commitUpdate(recordedChange);
   }
 }
 
 /** Finds an element by its tag name. */
-function getElementByTagName(tagName: string, htmlContent: string):
-  Element | null {
+function getElementByTagName(tagName: string, htmlContent: string): Element | null {
   const document = parseHtml(htmlContent, {sourceCodeLocationInfo: true});
   const nodeQueue = [...document.childNodes];
 

@@ -3,12 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /** Possible states for a ripple element. */
-export const enum RippleState {
-  FADING_IN, VISIBLE, FADING_OUT, HIDDEN
+export enum RippleState {
+  FADING_IN,
+  VISIBLE,
+  FADING_OUT,
+  HIDDEN,
 }
 
 export type RippleConfig = {
@@ -35,7 +38,6 @@ export interface RippleAnimationConfig {
  * Reference to a previously launched ripple element.
  */
 export class RippleRef {
-
   /** Current state of the ripple. */
   state: RippleState = RippleState.HIDDEN;
 
@@ -44,8 +46,10 @@ export class RippleRef {
     /** Reference to the ripple HTML element. */
     public element: HTMLElement,
     /** Ripple configuration used for the ripple. */
-    public config: RippleConfig) {
-  }
+    public config: RippleConfig,
+    /* Whether animations are forcibly disabled for ripples through CSS. */
+    public _animationForciblyDisabledThroughCss = false,
+  ) {}
 
   /** Fades out the ripple element. */
   fadeOut() {

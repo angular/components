@@ -8,11 +8,10 @@ import {highlightCodeBlock} from '../../highlight-files/highlight-code-block';
  * specify the language manually as first tag-block argument.
  */
 export class HighlightNunjucksExtension {
-
   /** Tags that will be parsed by this Nunjucks extension. */
   tags = ['highlight'];
 
-  /** Disable autoescaping for content that is rendered within this extension. */
+  /** Disable auto-escaping for content that is rendered within this extension. */
   autoescape = false;
 
   parse(parser: any, nodes: any) {

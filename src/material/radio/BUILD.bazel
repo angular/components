@@ -1,8 +1,7 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -18,67 +17,29 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":radio.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/radio",
+    assets = [":radio_scss"] + glob(["**/*.html"]),
     deps = [
         "//src/cdk/a11y",
-        "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/material/core",
-        "@npm//@angular/animations",
-        "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
     ],
 )
 
 sass_library(
     name = "radio_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "radio_scss",
     src = "radio.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        ":radio_scss_lib",
         "//src/material/core:core_scss_lib",
-    ],
-)
-
-ng_test_library(
-    name = "unit_test_sources",
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
-    ),
-    deps = [
-        ":radio",
-        "//src/cdk/testing/private",
-        "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
-    ],
-)
-
-ng_web_test_suite(
-    name = "unit_tests",
-    deps = [":unit_test_sources"],
-)
-
-ng_e2e_test_library(
-    name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
-    deps = [
-        "//src/cdk/testing/private/e2e",
-    ],
-)
-
-e2e_test_suite(
-    name = "e2e_tests",
-    deps = [
-        ":e2e_test_sources",
-        "//src/cdk/testing/private/e2e",
     ],
 )
 
@@ -87,7 +48,37 @@ markdown_to_html(
     srcs = [":radio.md"],
 )
 
+extract_tokens(
+    name = "tokens",
+    srcs = [":radio_scss_lib"],
+)
+
 filegroup(
     name = "source-files",
     srcs = glob(["**/*.ts"]),
+)
+
+###########
+# Testing
+###########
+
+ng_test_library(
+    name = "radio_tests_lib",
+    srcs = glob(
+        ["**/*.spec.ts"],
+    ),
+    deps = [
+        ":radio",
+        "//src/cdk/testing/private",
+        "@npm//@angular/common",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [
+        ":radio_tests_lib",
+    ],
 )

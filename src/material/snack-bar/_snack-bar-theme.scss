@@ -1,66 +1,111 @@
 @use 'sass:map';
-@use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 @use '../core/theming/theming';
-@use '../core/theming/palette';
-@use '../core/style/private';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/style/sass-utils';
+@use '../core/typography/typography';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $is-dark-theme: map.get($config, is-dark);
-  $accent: map.get($config, accent);
-
-  .mat-snack-bar-container {
-    // Use the primary text on the dark theme, even though the lighter one uses
-    // a secondary, because the contrast on the light primary text is poor.
-    color: if($is-dark-theme, palette.$dark-primary-text, palette.$light-secondary-text);
-    background: if($is-dark-theme, map.get(palette.$grey-palette, 50), #323232);
-
-    @include private.private-theme-elevation(6, $config);
-  }
-
-  .mat-simple-snackbar-action {
-    color: if($is-dark-theme, inherit, theming.get-color-from-palette($accent, text));
-  }
-}
-
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-simple-snackbar {
-    font: {
-      family: typography-utils.font-family($config, body-1);
-      size: typography-utils.font-size($config, body-1);
-    }
-  }
-
-  .mat-simple-snackbar-action {
-    line-height: 1;
-    font: {
-      family: inherit;
-      size: inherit;
-      weight: typography-utils.font-weight($config, button);
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    // Add default values for tokens not related to color, typography, or density.
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin _density($config-or-theme) {}
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-snack-bar.$prefix,
+        tokens-mat-snack-bar.get-color-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+@mixin density($theme) {
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mdc-snack-bar.$prefix,
+      tokens: tokens-mdc-snack-bar.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mat-snack-bar.$prefix,
+      tokens: tokens-mat-snack-bar.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-snack-bar') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mdc-snack-bar.$prefix,
+      map.get($tokens, tokens-mdc-snack-bar.$prefix)
+    );
+    @include token-utils.create-token-values(
+      tokens-mat-snack-bar.$prefix,
+      map.get($tokens, tokens-mat-snack-bar.$prefix)
+    );
   }
 }

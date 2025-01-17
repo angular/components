@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 import {MediaMatcher} from './media-matcher';
 import {inject} from '@angular/core/testing';
@@ -21,17 +21,18 @@ describe('MediaMatcher', () => {
     expect(mediaMatcher.matchMedia('(max-width: 1px)').matches).toBeFalsy();
   });
 
-  it('should add CSS rules for provided queries when the platform is webkit',
-    inject([Platform], (platform: Platform) => {
-      const randomWidth = `${Math.random()}px`;
+  it('should add CSS rules for provided queries when the platform is webkit or blink', inject(
+    [Platform],
+    (platform: Platform) => {
+      const width = '123456px';
 
-      expect(getStyleTagByString(randomWidth)).toBeFalsy();
-      mediaMatcher.matchMedia(`(width: ${randomWidth})`);
+      expect(getStyleTagByString(width)).toBeFalsy();
+      mediaMatcher.matchMedia(`(width: ${width})`);
 
-      if (platform.WEBKIT) {
-        expect(getStyleTagByString(randomWidth)).toBeTruthy();
+      if (platform.WEBKIT || platform.BLINK) {
+        expect(getStyleTagByString(width)).toBeTruthy();
       } else {
-        expect(getStyleTagByString(randomWidth)).toBeFalsy();
+        expect(getStyleTagByString(width)).toBeFalsy();
       }
 
       function getStyleTagByString(str: string): HTMLStyleElement | undefined {
@@ -40,5 +41,6 @@ describe('MediaMatcher', () => {
           return !!rules.find(rule => rule.cssText.includes(str));
         });
       }
-  }));
+    },
+  ));
 });

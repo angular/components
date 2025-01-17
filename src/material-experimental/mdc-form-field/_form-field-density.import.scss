@@ -1,8 +1,0 @@
-@forward '../../material/core/theming/theming.import';
-@forward 'form-field-sizing';
-@forward 'form-field-density' hide private-form-field-density;
-@forward 'form-field-density' as mat-mdc-* hide mat-mdc-infix-vertical-spacing-filled,
-mat-mdc-infix-vertical-spacing-outlined;
-
-@import '../../material/core/theming/theming';
-@import 'form-field-sizing';

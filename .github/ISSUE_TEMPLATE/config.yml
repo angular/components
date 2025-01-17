@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Angular Framework
+    url: https://github.com/angular/angular/issues/new
+    about: Issues and feature requests for Angular Framework
+  - name: StackOverflow
+    url: https://stackoverflow.com/questions/tagged/angular-material2
+    about: Extended community of users can provide troubleshooting help
+  - name: Gitter
+    url: https://gitter.im/angular/material2
+    about: Extended community of users can provide troubleshooting help
+  - name: Google Groups
+    url: https://groups.google.com/forum/#!forum/angular-material2
+    about: Extended community of users can provide troubleshooting help

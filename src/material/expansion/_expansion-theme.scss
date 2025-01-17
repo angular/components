@@ -1,108 +1,108 @@
 @use 'sass:map';
-@use '../core/density/private/compatibility';
 @use '../core/theming/theming';
-@use '../core/style/private';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use './expansion-variables';
-@use './expansion-mixins';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
-  .mat-expansion-panel {
-    @include private.private-theme-overridable-elevation(2, $config);
-    background: theming.get-color-from-palette($background, card);
-    color: theming.get-color-from-palette($foreground, text);
-  }
-
-  .mat-action-row {
-    border-top-color: theming.get-color-from-palette($foreground, divider);
-  }
-
-  @include expansion-mixins.private-expansion-focus {
-    background: theming.get-color-from-palette($background, hover);
-  }
-
-  // Disable the hover on touch devices since it can appear like it is stuck. We can't use
-  // `@media (hover)` above, because the desktop support browser support isn't great.
-  @media (hover: none) {
-    .mat-expansion-panel:not(.mat-expanded):not([aria-disabled='true'])
-      .mat-expansion-panel-header:hover {
-      background: theming.get-color-from-palette($background, card);
-    }
-  }
-
-  .mat-expansion-panel-header-title {
-    color: theming.get-color-from-palette($foreground, text);
-  }
-
-  .mat-expansion-panel-header-description,
-  .mat-expansion-indicator::after {
-    color: theming.get-color-from-palette($foreground, secondary-text);
-  }
-
-  .mat-expansion-panel-header[aria-disabled='true'] {
-    color: theming.get-color-from-palette($foreground, disabled-button);
-
-    .mat-expansion-panel-header-title,
-    .mat-expansion-panel-header-description {
-      color: inherit;
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-expansion.$prefix,
+        tokens-mat-expansion.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-expansion-panel-header {
-    font: {
-      family: typography-utils.font-family($config, subheading-1);
-      size: typography-utils.font-size($config, subheading-1);
-      weight: typography-utils.font-weight($config, subheading-1);
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-expansion.$prefix,
+        tokens-mat-expansion.get-color-tokens($theme)
+      );
     }
-  }
-
-  .mat-expansion-panel-content {
-    @include typography-utils.typography-level($config, body-1);
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $expanded-height: compatibility.private-density-prop-value(
-        expansion-variables.$header-density-config, $density-scale, expanded-height);
-  $collapsed-height: compatibility.private-density-prop-value(
-      expansion-variables.$header-density-config, $density-scale, collapsed-height);
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
+    $theme: inspection.private-get-typography-back-compat-theme($theme);
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-expansion-panel-header {
-      height: $collapsed-height;
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-expansion.$prefix,
+        tokens-mat-expansion.get-typography-tokens($theme)
+      );
+    }
+  }
+}
 
-      &.mat-expanded {
-        height: $expanded-height;
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-expansion.$prefix,
+        tokens-mat-expansion.get-density-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-expansion.$prefix,
+      tokens: tokens-mat-expansion.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-expansion') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
       }
     }
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-expansion') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-expansion.$prefix,
+      map.get($tokens, tokens-mat-expansion.$prefix)
+    );
   }
 }

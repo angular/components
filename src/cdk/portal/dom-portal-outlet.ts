@@ -3,18 +3,18 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
-  ComponentFactoryResolver,
+  ApplicationRef,
   ComponentRef,
   EmbeddedViewRef,
-  ApplicationRef,
   Injector,
+  NgModuleRef,
+  createComponent,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal, DomPortal} from './portal';
-
+import {BasePortalOutlet, ComponentPortal, DomPortal, TemplatePortal} from './portal';
 
 /**
  * A PortalOutlet for attaching portals to an arbitrary DOM element outside of the Angular
@@ -23,30 +23,44 @@ import {BasePortalOutlet, ComponentPortal, TemplatePortal, DomPortal} from './po
 export class DomPortalOutlet extends BasePortalOutlet {
   private _document: Document;
 
+  /**
+   * @param outletElement Element into which the content is projected.
+   * @param _unusedComponentFactoryResolver Used to resolve the component factory.
+   *   Only required when attaching component portals.
+   * @param _appRef Reference to the application. Only used in component portals when there
+   *   is no `ViewContainerRef` available.
+   * @param _defaultInjector Injector to use as a fallback when the portal being attached doesn't
+   *   have one. Only used for component portals.
+   * @param _document Reference to the document. Used when attaching a DOM portal. Will eventually
+   *   become a required parameter.
+   */
   constructor(
-      /** Element into which the content is projected. */
-      public outletElement: Element,
-      private _componentFactoryResolver: ComponentFactoryResolver,
-      private _appRef: ApplicationRef,
-      private _defaultInjector: Injector,
+    /** Element into which the content is projected. */
+    public outletElement: Element,
+    /**
+     * @deprecated No longer in use. To be removed.
+     * @breaking-change 18.0.0
+     */
+    _unusedComponentFactoryResolver?: any,
+    private _appRef?: ApplicationRef,
+    private _defaultInjector?: Injector,
 
-      /**
-       * @deprecated `_document` Parameter to be made required.
-       * @breaking-change 10.0.0
-       */
-      _document?: any) {
+    /**
+     * @deprecated `_document` Parameter to be made required.
+     * @breaking-change 10.0.0
+     */
+    _document?: any,
+  ) {
     super();
     this._document = _document;
   }
 
   /**
-   * Attach the given ComponentPortal to DOM element using the ComponentFactoryResolver.
+   * Attach the given ComponentPortal to DOM element.
    * @param portal Portal to be attached
    * @returns Reference to the created component.
    */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
-    const resolver = portal.componentFactoryResolver || this._componentFactoryResolver;
-    const componentFactory = resolver.resolveComponentFactory(portal.component);
     let componentRef: ComponentRef<T>;
 
     // If the portal specifies a ViewContainerRef, we will use that as the attachment point
@@ -54,17 +68,35 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // When the ViewContainerRef is missing, we use the factory to create the component directly
     // and then manually attach the view to the application.
     if (portal.viewContainerRef) {
-      componentRef = portal.viewContainerRef.createComponent(
-          componentFactory,
-          portal.viewContainerRef.length,
-          portal.injector || portal.viewContainerRef.injector);
+      const injector = portal.injector || portal.viewContainerRef.injector;
+      const ngModuleRef = injector.get(NgModuleRef, null, {optional: true}) || undefined;
+
+      componentRef = portal.viewContainerRef.createComponent(portal.component, {
+        index: portal.viewContainerRef.length,
+        injector,
+        ngModuleRef,
+        projectableNodes: portal.projectableNodes || undefined,
+      });
 
       this.setDisposeFn(() => componentRef.destroy());
     } else {
-      componentRef = componentFactory.create(portal.injector || this._defaultInjector);
-      this._appRef.attachView(componentRef.hostView);
+      if ((typeof ngDevMode === 'undefined' || ngDevMode) && !this._appRef) {
+        throw Error('Cannot attach component portal to outlet without an ApplicationRef.');
+      }
+
+      componentRef = createComponent(portal.component, {
+        elementInjector: portal.injector || this._defaultInjector || Injector.NULL,
+        environmentInjector: this._appRef!.injector,
+        projectableNodes: portal.projectableNodes || undefined,
+      });
+
+      this._appRef!.attachView(componentRef.hostView);
       this.setDisposeFn(() => {
-        this._appRef.detachView(componentRef.hostView);
+        // Verify that the ApplicationRef has registered views before trying to detach a host view.
+        // This check also protects the `detachView` from being called on a destroyed ApplicationRef.
+        if (this._appRef!.viewCount > 0) {
+          this._appRef!.detachView(componentRef.hostView);
+        }
         componentRef.destroy();
       });
     }
@@ -83,7 +115,9 @@ export class DomPortalOutlet extends BasePortalOutlet {
    */
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     let viewContainer = portal.viewContainerRef;
-    let viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context);
+    let viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context, {
+      injector: portal.injector,
+    });
 
     // The method `createEmbeddedView` will add the view as a child of the viewContainer.
     // But for the DomPortalOutlet the view can be added everywhere in the DOM
@@ -96,12 +130,12 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // hook won't be invoked too early.
     viewRef.detectChanges();
 
-    this.setDisposeFn((() => {
+    this.setDisposeFn(() => {
       let index = viewContainer.indexOf(viewRef);
       if (index !== -1) {
         viewContainer.remove(index);
       }
-    }));
+    });
 
     this._attachedPortal = portal;
 
@@ -116,12 +150,6 @@ export class DomPortalOutlet extends BasePortalOutlet {
    * @breaking-change 10.0.0
    */
   override attachDomPortal = (portal: DomPortal) => {
-    // @breaking-change 10.0.0 Remove check and error once the
-    // `_document` constructor parameter is required.
-    if (!this._document && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error('Cannot attach DOM portal without _document constructor parameter');
-    }
-
     const element = portal.element;
     if (!element.parentNode && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('DOM portal content must be attached to a parent node.');
@@ -141,16 +169,14 @@ export class DomPortalOutlet extends BasePortalOutlet {
         anchorNode.parentNode.replaceChild(element, anchorNode);
       }
     });
-  }
+  };
 
   /**
    * Clears out a portal from the DOM.
    */
   override dispose(): void {
     super.dispose();
-    if (this.outletElement.parentNode != null) {
-      this.outletElement.parentNode.removeChild(this.outletElement);
-    }
+    this.outletElement.remove();
   }
 
   /** Gets the root HTMLElement for an instantiated component. */

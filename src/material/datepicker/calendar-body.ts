@@ -3,9 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,28 +19,44 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  AfterViewChecked,
+  inject,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
-import {take} from 'rxjs/operators';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {NgClass} from '@angular/common';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader} from '@angular/material/core';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
 export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
 
 /** Function that can generate the extra classes that should be added to a calendar cell. */
-export type MatCalendarCellClassFunction<D> =
-    (date: D, view: 'month' | 'year' | 'multi-year') => MatCalendarCellCssClasses;
+export type MatCalendarCellClassFunction<D> = (
+  date: D,
+  view: 'month' | 'year' | 'multi-year',
+) => MatCalendarCellCssClasses;
+
+let uniqueIdCounter = 0;
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
 export class MatCalendarCell<D = any> {
-  constructor(public value: number,
-              public displayValue: string,
-              public ariaLabel: string,
-              public enabled: boolean,
-              public cssClasses: MatCalendarCellCssClasses = {},
-              public compareValue = value,
-              public rawValue?: D) {}
+  readonly id = uniqueIdCounter++;
+
+  constructor(
+    public value: number,
+    public displayValue: string,
+    public ariaLabel: string,
+    public enabled: boolean,
+    public cssClasses: MatCalendarCellCssClasses = {},
+    public compareValue = value,
+    public rawValue?: D,
+  ) {}
 }
 
 /** Event emitted when a date inside the calendar is triggered as a result of a user action. */
@@ -48,6 +65,21 @@ export interface MatCalendarUserEvent<D> {
   event: Event;
 }
 
+/** Event options that can be used to bind an active, capturing event. */
+const activeCapturingEventOptions = normalizePassiveListenerOptions({
+  passive: false,
+  capture: true,
+});
+
+/** Event options that can be used to bind a passive, capturing event. */
+const passiveCapturingEventOptions = normalizePassiveListenerOptions({
+  passive: true,
+  capture: true,
+});
+
+/** Event options that can be used to bind a passive, non-capturing event. */
+const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
+
 /**
  * An internal component used to display calendar data in a table.
  * @docs-private
@@ -55,20 +87,31 @@ export interface MatCalendarUserEvent<D> {
 @Component({
   selector: '[mat-calendar-body]',
   templateUrl: 'calendar-body.html',
-  styleUrls: ['calendar-body.css'],
+  styleUrl: 'calendar-body.css',
   host: {
     'class': 'mat-calendar-body',
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgClass],
 })
-export class MatCalendarBody implements OnChanges, OnDestroy {
+export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterViewChecked {
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+  private _platform = inject(Platform);
+  private _intl = inject(MatDatepickerIntl);
+
   /**
    * Used to skip the next focus event when rendering the preview range.
    * We need a flag like this, because some browsers fire focus events asynchronously.
    */
   private _skipNextFocus: boolean;
+
+  /**
+   * Used to focus the active cell after change detection has run.
+   */
+  private _focusActiveCellAfterViewChecked = false;
 
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
@@ -94,6 +137,13 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** The cell number of the active cell in the table. */
   @Input() activeCell: number = 0;
 
+  ngAfterViewChecked() {
+    if (this._focusActiveCellAfterViewChecked) {
+      this._focusActiveCell();
+      this._focusActiveCellAfterViewChecked = false;
+    }
+  }
+
   /** Whether a range is being selected. */
   @Input() isRange: boolean = false;
 
@@ -115,12 +165,27 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** End of the preview range. */
   @Input() previewEnd: number | null = null;
 
+  /** ARIA Accessible name of the `<input matStartDate/>` */
+  @Input() startDateAccessibleName: string | null;
+
+  /** ARIA Accessible name of the `<input matEndDate/>` */
+  @Input() endDateAccessibleName: string | null;
+
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange = new EventEmitter<MatCalendarUserEvent<number>>();
 
   /** Emits when the preview has changed as a result of a user action. */
-  @Output() readonly previewChange =
-    new EventEmitter<MatCalendarUserEvent<MatCalendarCell | null>>();
+  @Output() readonly previewChange = new EventEmitter<
+    MatCalendarUserEvent<MatCalendarCell | null>
+  >();
+
+  @Output() readonly activeDateChange = new EventEmitter<MatCalendarUserEvent<number>>();
+
+  /** Emits the date at the possible start of a drag event. */
+  @Output() readonly dragStarted = new EventEmitter<MatCalendarUserEvent<D>>();
+
+  /** Emits the date at the conclusion of a drag, or null if mouse was not released on a date. */
+  @Output() readonly dragEnded = new EventEmitter<MatCalendarUserEvent<D | null>>();
 
   /** The number of blank cells to put at the beginning for the first row. */
   _firstRowOffset: number;
@@ -131,20 +196,79 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** Width of an individual cell. */
   _cellWidth: string;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
-    _ngZone.runOutsideAngular(() => {
-      const element = _elementRef.nativeElement;
-      element.addEventListener('mouseenter', this._enterHandler, true);
-      element.addEventListener('focus', this._enterHandler, true);
-      element.addEventListener('mouseleave', this._leaveHandler, true);
-      element.addEventListener('blur', this._leaveHandler, true);
+  /** ID for the start date label. */
+  _startDateLabelId: string;
+
+  /** ID for the end date label. */
+  _endDateLabelId: string;
+
+  /** ID for the comparison start date label. */
+  _comparisonStartDateLabelId: string;
+
+  /** ID for the comparison end date label. */
+  _comparisonEndDateLabelId: string;
+
+  private _didDragSinceMouseDown = false;
+
+  private _injector = inject(Injector);
+
+  comparisonDateAccessibleName = this._intl.comparisonDateLabel;
+
+  /**
+   * Tracking function for rows based on their identity. Ideally we would use some sort of
+   * key on the row, but that would require a breaking change for the `rows` input. We don't
+   * use the built-in identity tracking, because it logs warnings.
+   */
+  _trackRow = (row: MatCalendarCell[]) => row;
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    const idGenerator = inject(_IdGenerator);
+    this._startDateLabelId = idGenerator.getId('mat-calendar-body-start-');
+    this._endDateLabelId = idGenerator.getId('mat-calendar-body-end-');
+    this._comparisonStartDateLabelId = idGenerator.getId('mat-calendar-body-comparison-start-');
+    this._comparisonEndDateLabelId = idGenerator.getId('mat-calendar-body-comparison-end-');
+
+    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+
+    this._ngZone.runOutsideAngular(() => {
+      const element = this._elementRef.nativeElement;
+
+      // `touchmove` is active since we need to call `preventDefault`.
+      element.addEventListener('touchmove', this._touchmoveHandler, activeCapturingEventOptions);
+
+      element.addEventListener('mouseenter', this._enterHandler, passiveCapturingEventOptions);
+      element.addEventListener('focus', this._enterHandler, passiveCapturingEventOptions);
+      element.addEventListener('mouseleave', this._leaveHandler, passiveCapturingEventOptions);
+      element.addEventListener('blur', this._leaveHandler, passiveCapturingEventOptions);
+
+      element.addEventListener('mousedown', this._mousedownHandler, passiveEventOptions);
+      element.addEventListener('touchstart', this._mousedownHandler, passiveEventOptions);
+
+      if (this._platform.isBrowser) {
+        window.addEventListener('mouseup', this._mouseupHandler);
+        window.addEventListener('touchend', this._touchendHandler);
+      }
     });
   }
 
   /** Called when a cell is clicked. */
   _cellClicked(cell: MatCalendarCell, event: MouseEvent): void {
+    // Ignore "clicks" that are actually canceled drags (eg the user dragged
+    // off and then went back to this cell to undo).
+    if (this._didDragSinceMouseDown) {
+      return;
+    }
+
     if (cell.enabled) {
       this.selectedValueChange.emit({value: cell.value, event});
+    }
+  }
+
+  _emitActiveDateChange(cell: MatCalendarCell, event: FocusEvent): void {
+    if (cell.enabled) {
+      this.activeDateChange.emit({value: cell.value, event});
     }
   }
 
@@ -162,7 +286,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     }
 
     if (changes['cellAspectRatio'] || columnChanges || !this._cellPadding) {
-      this._cellPadding = `${50 * this.cellAspectRatio / numCols}%`;
+      this._cellPadding = `${(50 * this.cellAspectRatio) / numCols}%`;
     }
 
     if (columnChanges || !this._cellWidth) {
@@ -172,10 +296,21 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   ngOnDestroy() {
     const element = this._elementRef.nativeElement;
-    element.removeEventListener('mouseenter', this._enterHandler, true);
-    element.removeEventListener('focus', this._enterHandler, true);
-    element.removeEventListener('mouseleave', this._leaveHandler, true);
-    element.removeEventListener('blur', this._leaveHandler, true);
+
+    element.removeEventListener('touchmove', this._touchmoveHandler, activeCapturingEventOptions);
+
+    element.removeEventListener('mouseenter', this._enterHandler, passiveCapturingEventOptions);
+    element.removeEventListener('focus', this._enterHandler, passiveCapturingEventOptions);
+    element.removeEventListener('mouseleave', this._leaveHandler, passiveCapturingEventOptions);
+    element.removeEventListener('blur', this._leaveHandler, passiveCapturingEventOptions);
+
+    element.removeEventListener('mousedown', this._mousedownHandler, passiveEventOptions);
+    element.removeEventListener('touchstart', this._mousedownHandler, passiveEventOptions);
+
+    if (this._platform.isBrowser) {
+      window.removeEventListener('mouseup', this._mouseupHandler);
+      window.removeEventListener('touchend', this._touchendHandler);
+    }
   }
 
   /** Returns whether a cell is active. */
@@ -190,22 +325,52 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     return cellNumber == this.activeCell;
   }
 
-  /** Focuses the active cell after the microtask queue is empty. */
+  /**
+   * Focuses the active cell after the microtask queue is empty.
+   *
+   * Adding a 0ms setTimeout seems to fix Voiceover losing focus when pressing PageUp/PageDown
+   * (issue #24330).
+   *
+   * Determined a 0ms by gradually increasing duration from 0 and testing two use cases with screen
+   * reader enabled:
+   *
+   * 1. Pressing PageUp/PageDown repeatedly with pausing between each key press.
+   * 2. Pressing and holding the PageDown key with repeated keys enabled.
+   *
+   * Test 1 worked roughly 95-99% of the time with 0ms and got a little bit better as the duration
+   * increased. Test 2 got slightly better until the duration was long enough to interfere with
+   * repeated keys. If the repeated key speed was faster than the timeout duration, then pressing
+   * and holding pagedown caused the entire page to scroll.
+   *
+   * Since repeated key speed can verify across machines, determined that any duration could
+   * potentially interfere with repeated keys. 0ms would be best because it almost entirely
+   * eliminates the focus being lost in Voiceover (#24330) without causing unintended side effects.
+   * Adding delay also complicates writing tests.
+   */
   _focusActiveCell(movePreview = true) {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.pipe(take(1)).subscribe(() => {
-        const activeCell: HTMLElement | null =
-            this._elementRef.nativeElement.querySelector('.mat-calendar-body-active');
+    afterNextRender(
+      () => {
+        setTimeout(() => {
+          const activeCell: HTMLElement | null = this._elementRef.nativeElement.querySelector(
+            '.mat-calendar-body-active',
+          );
 
-        if (activeCell) {
-          if (!movePreview) {
-            this._skipNextFocus = true;
+          if (activeCell) {
+            if (!movePreview) {
+              this._skipNextFocus = true;
+            }
+
+            activeCell.focus();
           }
+        });
+      },
+      {injector: this._injector},
+    );
+  }
 
-          activeCell.focus();
-        }
-      });
-    });
+  /** Focuses the active cell after change detection has run and the microtask queue is empty. */
+  _scheduleFocusActiveCellAfterViewChecked() {
+    this._focusActiveCellAfterViewChecked = true;
   }
 
   /** Gets whether a value is the start of the main range. */
@@ -301,6 +466,33 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     return isInRange(value, this.previewStart, this.previewEnd, this.isRange);
   }
 
+  /** Gets ids of aria descriptions for the start and end of a date range. */
+  _getDescribedby(value: number): string | null {
+    if (!this.isRange) {
+      return null;
+    }
+
+    if (this.startValue === value && this.endValue === value) {
+      return `${this._startDateLabelId} ${this._endDateLabelId}`;
+    } else if (this.startValue === value) {
+      return this._startDateLabelId;
+    } else if (this.endValue === value) {
+      return this._endDateLabelId;
+    }
+
+    if (this.comparisonStart !== null && this.comparisonEnd !== null) {
+      if (value === this.comparisonStart && value === this.comparisonEnd) {
+        return `${this._comparisonStartDateLabelId} ${this._comparisonEndDateLabelId}`;
+      } else if (value === this.comparisonStart) {
+        return this._comparisonStartDateLabelId;
+      } else if (value === this.comparisonEnd) {
+        return this._comparisonEndDateLabelId;
+      }
+    }
+
+    return null;
+  }
+
   /**
    * Event handler for when the user enters an element
    * inside the calendar body (e.g. by hovering in or focus).
@@ -319,7 +511,26 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
         this._ngZone.run(() => this.previewChange.emit({value: cell.enabled ? cell : null, event}));
       }
     }
-  }
+  };
+
+  private _touchmoveHandler = (event: TouchEvent) => {
+    if (!this.isRange) return;
+
+    const target = getActualTouchTarget(event);
+    const cell = target ? this._getCellFromElement(target as HTMLElement) : null;
+
+    if (target !== event.target) {
+      this._didDragSinceMouseDown = true;
+    }
+
+    // If the initial target of the touch is a date cell, prevent default so
+    // that the move is not handled as a scroll.
+    if (getCellElement(event.target as HTMLElement)) {
+      event.preventDefault();
+    }
+
+    this._ngZone.run(() => this.previewChange.emit({value: cell?.enabled ? cell : null, event}));
+  };
 
   /**
    * Event handler for when the user's pointer leaves an element
@@ -328,24 +539,85 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   private _leaveHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range.
     if (this.previewEnd !== null && this.isRange) {
+      if (event.type !== 'blur') {
+        this._didDragSinceMouseDown = true;
+      }
+
       // Only reset the preview end value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
-      if (event.target && isTableCell(event.target as HTMLElement)) {
+      if (
+        event.target &&
+        this._getCellFromElement(event.target as HTMLElement) &&
+        !(
+          (event as MouseEvent).relatedTarget &&
+          this._getCellFromElement((event as MouseEvent).relatedTarget as HTMLElement)
+        )
+      ) {
         this._ngZone.run(() => this.previewChange.emit({value: null, event}));
       }
     }
-  }
+  };
+
+  /**
+   * Triggered on mousedown or touchstart on a date cell.
+   * Respsonsible for starting a drag sequence.
+   */
+  private _mousedownHandler = (event: Event) => {
+    if (!this.isRange) return;
+
+    this._didDragSinceMouseDown = false;
+    // Begin a drag if a cell within the current range was targeted.
+    const cell = event.target && this._getCellFromElement(event.target as HTMLElement);
+    if (!cell || !this._isInRange(cell.compareValue)) {
+      return;
+    }
+
+    this._ngZone.run(() => {
+      this.dragStarted.emit({
+        value: cell.rawValue,
+        event,
+      });
+    });
+  };
+
+  /** Triggered on mouseup anywhere. Respsonsible for ending a drag sequence. */
+  private _mouseupHandler = (event: Event) => {
+    if (!this.isRange) return;
+
+    const cellElement = getCellElement(event.target as HTMLElement);
+    if (!cellElement) {
+      // Mouseup happened outside of datepicker. Cancel drag.
+      this._ngZone.run(() => {
+        this.dragEnded.emit({value: null, event});
+      });
+      return;
+    }
+
+    if (cellElement.closest('.mat-calendar-body') !== this._elementRef.nativeElement) {
+      // Mouseup happened inside a different month instance.
+      // Allow it to handle the event.
+      return;
+    }
+
+    this._ngZone.run(() => {
+      const cell = this._getCellFromElement(cellElement);
+      this.dragEnded.emit({value: cell?.rawValue ?? null, event});
+    });
+  };
+
+  /** Triggered on touchend anywhere. Respsonsible for ending a drag sequence. */
+  private _touchendHandler = (event: TouchEvent) => {
+    const target = getActualTouchTarget(event);
+
+    if (target) {
+      this._mouseupHandler({target} as unknown as Event);
+    }
+  };
 
   /** Finds the MatCalendarCell that corresponds to a DOM node. */
   private _getCellFromElement(element: HTMLElement): MatCalendarCell | null {
-    let cell: HTMLElement | undefined;
-
-    if (isTableCell(element)) {
-      cell = element;
-    } else if (isTableCell(element.parentNode!)) {
-      cell = element.parentNode as HTMLElement;
-    }
+    const cell = getCellElement(element);
 
     if (cell) {
       const row = cell.getAttribute('data-mat-row');
@@ -358,12 +630,28 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     return null;
   }
-
 }
 
 /** Checks whether a node is a table cell element. */
-function isTableCell(node: Node): node is HTMLTableCellElement {
-  return node.nodeName === 'TD';
+function isTableCell(node: Node | undefined | null): node is HTMLTableCellElement {
+  return node?.nodeName === 'TD';
+}
+
+/**
+ * Gets the date table cell element that is or contains the specified element.
+ * Or returns null if element is not part of a date cell.
+ */
+function getCellElement(element: HTMLElement): HTMLElement | null {
+  let cell: HTMLElement | undefined;
+  if (isTableCell(element)) {
+    cell = element;
+  } else if (isTableCell(element.parentNode)) {
+    cell = element.parentNode as HTMLElement;
+  } else if (isTableCell(element.parentNode?.parentNode)) {
+    cell = element.parentNode!.parentNode as HTMLElement;
+  }
+
+  return cell?.getAttribute('data-mat-row') != null ? cell : null;
 }
 
 /** Checks whether a value is the start of a range. */
@@ -377,10 +665,27 @@ function isEnd(value: number, start: number | null, end: number | null): boolean
 }
 
 /** Checks whether a value is inside of a range. */
-function isInRange(value: number,
-                   start: number | null,
-                   end: number | null,
-                   rangeEnabled: boolean): boolean {
-  return rangeEnabled && start !== null && end !== null && start !== end &&
-         value >= start && value <= end;
+function isInRange(
+  value: number,
+  start: number | null,
+  end: number | null,
+  rangeEnabled: boolean,
+): boolean {
+  return (
+    rangeEnabled &&
+    start !== null &&
+    end !== null &&
+    start !== end &&
+    value >= start &&
+    value <= end
+  );
+}
+
+/**
+ * Extracts the element that actually corresponds to a touch event's location
+ * (rather than the element that initiated the sequence of touch events).
+ */
+function getActualTouchTarget(event: TouchEvent): Element | null {
+  const touchLocation = event.changedTouches[0];
+  return document.elementFromPoint(touchLocation.clientX, touchLocation.clientY);
 }

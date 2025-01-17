@@ -1,16 +1,23 @@
-$width: 1px;
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
+
 $inset-margin: 80px;
 
 .mat-divider {
   display: block;
   margin: 0;
-  border-top-width: $width;
   border-top-style: solid;
+  @include token-utils.use-tokens(
+    tokens-mat-divider.$prefix, tokens-mat-divider.get-token-slots()) {
+    @include token-utils.create-token-slot(border-top-color, color);
+    @include token-utils.create-token-slot(border-top-width, width);
 
-  &.mat-divider-vertical {
-    border-top: 0;
-    border-right-width: $width;
-    border-right-style: solid;
+    &.mat-divider-vertical {
+      border-top: 0;
+      border-right-style: solid;
+      @include token-utils.create-token-slot(border-right-color, color);
+      @include token-utils.create-token-slot(border-right-width, width);
+    }
   }
 
   &.mat-divider-inset {

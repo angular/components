@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {BaseHarnessFilters} from '@angular/cdk/testing';
@@ -14,4 +14,6 @@ export interface FormFieldHarnessFilters extends BaseHarnessFilters {
   floatingLabelText?: string | RegExp;
   /** Filters based on whether the form field has error messages. */
   hasErrors?: boolean;
+  /** Filters based on whether the form field value is valid. */
+  isValid?: boolean;
 }

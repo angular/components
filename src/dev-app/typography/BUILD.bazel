@@ -10,7 +10,8 @@ ng_module(
         ":typography_demo_scss",
     ],
     deps = [
-        "@npm//@angular/router",
+        "//src/material/checkbox",
+        "@npm//@angular/forms",
     ],
 )
 

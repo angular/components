@@ -1,117 +1,252 @@
 @use 'sass:map';
+
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/m2/mat/list' as tokens-mat-list;
+@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '../core/style/list-common';
 
-
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
-  .mat-list-base {
-    .mat-list-item {
-      color: theming.get-color-from-palette($foreground, text);
-    }
-
-    .mat-list-option {
-      color: theming.get-color-from-palette($foreground, text);
-    }
-
-    .mat-subheader {
-      color: theming.get-color-from-palette($foreground, secondary-text);
-    }
-  }
-
-  .mat-list-item-disabled {
-    background-color: theming.get-color-from-palette($background, disabled-list-option);
-  }
-
-  .mat-list-option,
-  .mat-nav-list .mat-list-item,
-  .mat-action-list .mat-list-item {
-    &:hover, &:focus {
-      background: theming.get-color-from-palette($background, 'hover');
-    }
-  }
-
-  .mat-list-single-selected-option {
-    &, &:hover, &:focus {
-      background: theming.get-color-from-palette($background, hover, 0.12);
+@mixin base($theme) {
+  // Add default values for tokens not related to color, typography, or density.
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix,
+        tokens-mdc-list.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-list.$prefix,
+        tokens-mat-list.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  $font-family: typography-utils.font-family($config);
-
-  .mat-list-item {
-    font-family: $font-family;
-  }
-
-  .mat-list-option {
-    font-family: $font-family;
-  }
-
-  // Default list
-  .mat-list-base {
-    .mat-list-item {
-      font-size: typography-utils.font-size($config, subheading-2);
-      @include list-common.base(typography-utils.font-size($config, body-1));
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix,
+        tokens-mdc-list.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-list.$prefix,
+        tokens-mat-list.get-color-tokens($theme)
+      );
     }
 
-    .mat-list-option {
-      font-size: typography-utils.font-size($config, subheading-2);
-      @include list-common.base(typography-utils.font-size($config, body-1));
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include token-utils.create-token-values(
+        tokens-mdc-radio.$prefix,
+        tokens-mdc-radio.get-color-tokens($theme, primary)
+      );
     }
 
-    .mat-subheader {
-      font-family: typography-utils.font-family($config, body-2);
-      font-size: typography-utils.font-size($config, body-2);
-      font-weight: typography-utils.font-weight($config, body-2);
-    }
-  }
-
-  // Dense list
-  .mat-list-base[dense] {
-    .mat-list-item {
-      font-size: typography-utils.font-size($config, caption);
-      @include list-common.base(typography-utils.font-size($config, caption));
+    .mat-accent {
+      .mdc-list-item__start,
+      .mdc-list-item__end {
+        @include token-utils.create-token-values(
+          tokens-mdc-radio.$prefix,
+          tokens-mdc-radio.get-color-tokens($theme, accent)
+        );
+      }
     }
 
-    .mat-list-option {
-      font-size: typography-utils.font-size($config, caption);
-      @include list-common.base(typography-utils.font-size($config, caption));
+    .mat-warn {
+      .mdc-list-item__start,
+      .mdc-list-item__end {
+        @include token-utils.create-token-values(
+          tokens-mdc-radio.$prefix,
+          tokens-mdc-radio.get-color-tokens($theme, warn)
+        );
+      }
     }
 
-    .mat-subheader {
-      font-family: $font-family;
-      font-size: typography-utils.font-size($config, caption);
-      font-weight: typography-utils.font-weight($config, body-2);
+    .mat-mdc-list-option {
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-color-tokens($theme, primary)
+      );
+    }
+    .mat-mdc-list-option.mat-accent {
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-color-tokens($theme, accent)
+      );
+    }
+    .mat-mdc-list-option.mat-warn {
+      @include token-utils.create-token-values(
+        tokens-mdc-checkbox.$prefix,
+        tokens-mdc-checkbox.get-color-tokens($theme, warn)
+      );
+    }
+
+    // There is no token for activated color on nav list.
+    // TODO(mmalerba): Add a token to MDC or make a custom one.
+    .mat-mdc-list-base.mat-mdc-list-base {
+      .mdc-list-item--selected,
+      .mdc-list-item--activated {
+        .mdc-list-item__primary-text,
+        .mdc-list-item__start {
+          color: inspection.get-theme-color($theme, primary);
+        }
+      }
+    }
+
+    // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can
+    //  cause opacity issues, so we need this override for now. We can remove it when all
+    //  Angular Material components stop using the old MDC mixins.
+    .mat-mdc-list-base .mdc-list-item--disabled {
+      .mdc-list-item__start,
+      .mdc-list-item__content,
+      .mdc-list-item__end {
+        opacity: 1;
+      }
     }
   }
 }
 
-@mixin _density($config-or-theme) {}
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    $density-scale: inspection.get-theme-density($theme);
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix,
+        tokens-mdc-list.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-list.$prefix,
+        tokens-mat-list.get-density-tokens($theme)
+      );
+    }
+
+    .mdc-list-item__start,
+    .mdc-list-item__end {
+      @include token-utils.create-token-values(
+        tokens-mdc-radio.$prefix,
+        tokens-mdc-radio.get-density-tokens($theme)
+      );
+    }
+
+    // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
+    //  API, to avoid screenshot diffs. We should remove it in favor of following MDC's current
+    //  style, or add custom tokens for it.
+    .mat-mdc-list-item {
+      &.mdc-list-item--with-leading-avatar,
+      &.mdc-list-item--with-leading-checkbox,
+      &.mdc-list-item--with-leading-icon {
+        &.mdc-list-item--with-one-line {
+          height: map.get(
+            (
+              0: 56px,
+              -1: 52px,
+              -2: 48px,
+              -3: 44px,
+              -4: 40px,
+              -5: 40px,
+            ),
+            $density-scale
+          );
+        }
+
+        &.mdc-list-item--with-two-lines {
+          height: map.get(
+            (
+              0: 72px,
+              -1: 68px,
+              -2: 64px,
+              -3: 60px,
+              -4: 56px,
+              -5: 56px,
+            ),
+            $density-scale
+          );
+        }
+      }
+    }
+  }
+}
+
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-list.$prefix,
+        tokens-mdc-list.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-list.$prefix,
+        tokens-mat-list.get-typography-tokens($theme)
+      );
+    }
+
+    // MDC does not have tokens for the subheader.
+    // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
+    .mdc-list-group__subheader {
+      font: inspection.get-theme-typography($theme, subtitle-1, font);
+      letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-list.$prefix,
+      tokens: tokens-mat-list.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-list.$prefix,
+      tokens: tokens-mdc-list.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
+}
+
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-list-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-list.$prefix);
+  $mat-list-tokens: token-utils.get-tokens-for($tokens, tokens-mat-list.$prefix);
+  @include token-utils.create-token-values(tokens-mdc-list.$prefix, $mdc-list-tokens);
+  @include token-utils.create-token-values(tokens-mat-list.$prefix, $mat-list-tokens);
 }

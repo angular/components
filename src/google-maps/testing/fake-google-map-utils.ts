@@ -3,8 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
+
+import type {MarkerClusterer} from '../map-marker-clusterer/map-marker-clusterer-types';
+import {MarkerClusterer as DeprecatedMarkerClusterer} from '../deprecated-map-marker-clusterer/deprecated-marker-clusterer-types';
 
 // The global `window` variable is typed as an intersection of `Window` and `globalThis`.
 // We re-declare `window` here and omit `globalThis` as it is typed with the actual Google
@@ -33,19 +36,42 @@ export interface TestingWindow extends Window {
       LatLng?: jasmine.Spy;
       visualization?: {
         HeatmapLayer?: jasmine.Spy;
-      }
+      };
+      marker?: {
+        AdvancedMarkerElement?: jasmine.Spy;
+      };
       Geocoder?: jasmine.Spy;
     };
   };
   MarkerClusterer?: jasmine.Spy;
+  markerClusterer?: {
+    MarkerClusterer?: jasmine.Spy;
+    defaultOnClusterClickHandler?: jasmine.Spy;
+  };
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Map. */
 export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<google.maps.Map> {
   const mapSpy = jasmine.createSpyObj('google.maps.Map', [
-    'setOptions', 'setCenter', 'setZoom', 'setMap', 'addListener', 'fitBounds', 'panBy', 'panTo',
-    'panToBounds', 'getBounds', 'getCenter', 'getClickableIcons', 'getHeading', 'getMapTypeId',
-    'getProjection', 'getStreetView', 'getTilt', 'getZoom', 'setMapTypeId'
+    'setOptions',
+    'setCenter',
+    'setZoom',
+    'setMap',
+    'addListener',
+    'fitBounds',
+    'panBy',
+    'panTo',
+    'panToBounds',
+    'getBounds',
+    'getCenter',
+    'getClickableIcons',
+    'getHeading',
+    'getMapTypeId',
+    'getProjection',
+    'getStreetView',
+    'getTilt',
+    'getZoom',
+    'setMapTypeId',
   ]);
   mapSpy.addListener.and.returnValue({remove: () => {}});
   return mapSpy;
@@ -53,41 +79,61 @@ export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<go
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Map. */
 export function createMapConstructorSpy(
-    mapSpy: jasmine.SpyObj<google.maps.Map>, apiLoaded = true): jasmine.Spy {
-  const mapConstructorSpy =
-      jasmine.createSpy('Map constructor', (_el: Element, _options: google.maps.MapOptions) => {
-        return mapSpy;
-      });
+  mapSpy: jasmine.SpyObj<google.maps.Map>,
+  apiLoaded = true,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const mapConstructorSpy = jasmine
+    .createSpy('Map constructor', function () {
+      return mapSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (apiLoaded) {
     testingWindow.google = {
       maps: {
         'Map': mapConstructorSpy,
-      }
+      },
     };
   }
   return mapConstructorSpy;
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Marker */
-export function createMarkerSpy(options: google.maps.MarkerOptions):
-    jasmine.SpyObj<google.maps.Marker> {
+export function createMarkerSpy(
+  options: google.maps.MarkerOptions,
+): jasmine.SpyObj<google.maps.Marker> {
   const markerSpy = jasmine.createSpyObj('google.maps.Marker', [
-    'setOptions', 'setMap', 'addListener', 'getAnimation', 'getClickable', 'getCursor',
-    'getDraggable', 'getIcon', 'getLabel', 'getOpacity', 'getPosition', 'getShape', 'getTitle',
-    'getVisible', 'getZIndex'
+    'setOptions',
+    'setMap',
+    'addListener',
+    'getAnimation',
+    'getClickable',
+    'getCursor',
+    'getDraggable',
+    'getIcon',
+    'getLabel',
+    'getOpacity',
+    'getPosition',
+    'getShape',
+    'getTitle',
+    'getVisible',
+    'getZIndex',
   ]);
   markerSpy.addListener.and.returnValue({remove: () => {}});
   return markerSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Marker */
-export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps.Marker>):
-    jasmine.Spy {
-  const markerConstructorSpy =
-      jasmine.createSpy('Marker constructor', (_options: google.maps.MarkerOptions) => {
-        return markerSpy;
-      });
+export function createMarkerConstructorSpy(
+  markerSpy: jasmine.SpyObj<google.maps.Marker>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const markerConstructorSpy = jasmine
+    .createSpy('Marker constructor', function () {
+      return markerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Marker'] = markerConstructorSpy;
@@ -101,27 +147,78 @@ export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps
   return markerConstructorSpy;
 }
 
+/** Creates a jasmine.SpyObj for a google.maps.marker.AdvancedMarkerElement */
+export function createAdvancedMarkerSpy(
+  options: google.maps.marker.AdvancedMarkerElementOptions,
+): jasmine.SpyObj<google.maps.marker.AdvancedMarkerElement> {
+  const advancedMarkerSpy = jasmine.createSpyObj('google.maps.marker.AdvancedMarkerElement', [
+    'addListener',
+  ]);
+  advancedMarkerSpy.addListener.and.returnValue({remove: () => {}});
+  return advancedMarkerSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.marker.AdvancedMarkerElement */
+export function createAdvancedMarkerConstructorSpy(
+  advancedMarkerSpy: jasmine.SpyObj<google.maps.marker.AdvancedMarkerElement>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const advancedMarkerConstructorSpy = jasmine
+    .createSpy('Advanced Marker constructor', function () {
+      return advancedMarkerSpy;
+    })
+    .and.callThrough();
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps.marker = {
+      'AdvancedMarkerElement': advancedMarkerConstructorSpy,
+    };
+  } else {
+    testingWindow.google = {
+      maps: {
+        marker: {
+          'AdvancedMarkerElement': advancedMarkerConstructorSpy,
+        },
+      },
+    };
+  }
+
+  return advancedMarkerConstructorSpy;
+}
+
 /** Creates a jasmine.SpyObj for a google.maps.InfoWindow */
-export function createInfoWindowSpy(options: google.maps.InfoWindowOptions):
-    jasmine.SpyObj<google.maps.InfoWindow> {
+export function createInfoWindowSpy(
+  options: google.maps.InfoWindowOptions,
+): jasmine.SpyObj<google.maps.InfoWindow> {
   let anchor: any;
-  const infoWindowSpy = jasmine.createSpyObj(
-      'google.maps.InfoWindow',
-      ['addListener', 'close', 'getContent', 'getPosition', 'getZIndex', 'open', 'get']);
+  const infoWindowSpy = jasmine.createSpyObj('google.maps.InfoWindow', [
+    'addListener',
+    'close',
+    'getContent',
+    'getPosition',
+    'getZIndex',
+    'open',
+    'get',
+    'setOptions',
+    'setPosition',
+  ]);
   infoWindowSpy.addListener.and.returnValue({remove: () => {}});
-  infoWindowSpy.open.and.callFake((_map: any, target: any) => anchor = target);
-  infoWindowSpy.close.and.callFake(() => anchor = null);
-  infoWindowSpy.get.and.callFake((key: string) => key === 'anchor' ? anchor : null);
+  infoWindowSpy.open.and.callFake((config: any) => (anchor = config.anchor));
+  infoWindowSpy.close.and.callFake(() => (anchor = null));
+  infoWindowSpy.get.and.callFake((key: string) => (key === 'anchor' ? anchor : null));
   return infoWindowSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.InfoWindow */
 export function createInfoWindowConstructorSpy(
-    infoWindowSpy: jasmine.SpyObj<google.maps.InfoWindow>): jasmine.Spy {
-  const infoWindowConstructorSpy =
-      jasmine.createSpy('InfoWindow constructor', (_options: google.maps.InfoWindowOptions) => {
-        return infoWindowSpy;
-      });
+  infoWindowSpy: jasmine.SpyObj<google.maps.InfoWindow>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const infoWindowConstructorSpy = jasmine
+    .createSpy('InfoWindow constructor', function () {
+      return infoWindowSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['InfoWindow'] = infoWindowConstructorSpy;
@@ -136,23 +233,33 @@ export function createInfoWindowConstructorSpy(
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Polyline */
-export function createPolylineSpy(options: google.maps.PolylineOptions):
-    jasmine.SpyObj<google.maps.Polyline> {
+export function createPolylineSpy(
+  options: google.maps.PolylineOptions,
+): jasmine.SpyObj<google.maps.Polyline> {
   const polylineSpy = jasmine.createSpyObj('google.maps.Polyline', [
-    'addListener', 'getDraggable', 'getEditable', 'getPath', 'getVisible', 'setMap', 'setOptions',
-    'setPath'
+    'addListener',
+    'getDraggable',
+    'getEditable',
+    'getPath',
+    'getVisible',
+    'setMap',
+    'setOptions',
+    'setPath',
   ]);
   polylineSpy.addListener.and.returnValue({remove: () => {}});
   return polylineSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Polyline */
-export function createPolylineConstructorSpy(polylineSpy: jasmine.SpyObj<google.maps.Polyline>):
-    jasmine.Spy {
-  const polylineConstructorSpy =
-      jasmine.createSpy('Polyline constructor', (_options: google.maps.PolylineOptions) => {
-        return polylineSpy;
-      });
+export function createPolylineConstructorSpy(
+  polylineSpy: jasmine.SpyObj<google.maps.Polyline>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const polylineConstructorSpy = jasmine
+    .createSpy('Polyline constructor', function () {
+      return polylineSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Polyline'] = polylineConstructorSpy;
@@ -167,23 +274,35 @@ export function createPolylineConstructorSpy(polylineSpy: jasmine.SpyObj<google.
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Polygon */
-export function createPolygonSpy(options: google.maps.PolygonOptions):
-    jasmine.SpyObj<google.maps.Polygon> {
+export function createPolygonSpy(
+  options: google.maps.PolygonOptions,
+): jasmine.SpyObj<google.maps.Polygon> {
   const polygonSpy = jasmine.createSpyObj('google.maps.Polygon', [
-    'addListener', 'getDraggable', 'getEditable', 'getPath', 'getPaths', 'getVisible', 'setMap',
-    'setOptions', 'setPath'
+    'addListener',
+    'getDraggable',
+    'getEditable',
+    'getPath',
+    'getPaths',
+    'getVisible',
+    'setMap',
+    'setOptions',
+    'setPath',
+    'setPaths',
   ]);
   polygonSpy.addListener.and.returnValue({remove: () => {}});
   return polygonSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Polygon */
-export function createPolygonConstructorSpy(polygonSpy: jasmine.SpyObj<google.maps.Polygon>):
-    jasmine.Spy {
-  const polygonConstructorSpy =
-      jasmine.createSpy('Polygon constructor', (_options: google.maps.PolygonOptions) => {
-        return polygonSpy;
-      });
+export function createPolygonConstructorSpy(
+  polygonSpy: jasmine.SpyObj<google.maps.Polygon>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const polygonConstructorSpy = jasmine
+    .createSpy('Polygon constructor', function () {
+      return polygonSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Polygon'] = polygonConstructorSpy;
@@ -198,23 +317,33 @@ export function createPolygonConstructorSpy(polygonSpy: jasmine.SpyObj<google.ma
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Rectangle */
-export function createRectangleSpy(options: google.maps.RectangleOptions):
-    jasmine.SpyObj<google.maps.Rectangle> {
+export function createRectangleSpy(
+  options: google.maps.RectangleOptions,
+): jasmine.SpyObj<google.maps.Rectangle> {
   const rectangleSpy = jasmine.createSpyObj('google.maps.Rectangle', [
-    'addListener', 'getBounds', 'getDraggable', 'getEditable', 'getVisible', 'setMap', 'setOptions',
-    'setBounds'
+    'addListener',
+    'getBounds',
+    'getDraggable',
+    'getEditable',
+    'getVisible',
+    'setMap',
+    'setOptions',
+    'setBounds',
   ]);
   rectangleSpy.addListener.and.returnValue({remove: () => {}});
   return rectangleSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Rectangle */
-export function createRectangleConstructorSpy(rectangleSpy: jasmine.SpyObj<google.maps.Rectangle>):
-    jasmine.Spy {
-  const rectangleConstructorSpy =
-      jasmine.createSpy('Rectangle constructor', (_options: google.maps.RectangleOptions) => {
-        return rectangleSpy;
-      });
+export function createRectangleConstructorSpy(
+  rectangleSpy: jasmine.SpyObj<google.maps.Rectangle>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const rectangleConstructorSpy = jasmine
+    .createSpy('Rectangle constructor', function () {
+      return rectangleSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Rectangle'] = rectangleConstructorSpy;
@@ -229,23 +358,35 @@ export function createRectangleConstructorSpy(rectangleSpy: jasmine.SpyObj<googl
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Circle */
-export function createCircleSpy(options: google.maps.CircleOptions):
-    jasmine.SpyObj<google.maps.Circle> {
+export function createCircleSpy(
+  options: google.maps.CircleOptions,
+): jasmine.SpyObj<google.maps.Circle> {
   const circleSpy = jasmine.createSpyObj('google.maps.Circle', [
-    'addListener', 'getCenter', 'getRadius', 'getDraggable', 'getEditable', 'getVisible', 'setMap',
-    'setOptions', 'setCenter', 'setRadius'
+    'addListener',
+    'getCenter',
+    'getRadius',
+    'getDraggable',
+    'getEditable',
+    'getVisible',
+    'setMap',
+    'setOptions',
+    'setCenter',
+    'setRadius',
   ]);
   circleSpy.addListener.and.returnValue({remove: () => {}});
   return circleSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Circle */
-export function createCircleConstructorSpy(circleSpy: jasmine.SpyObj<google.maps.Circle>):
-    jasmine.Spy {
-  const circleConstructorSpy =
-      jasmine.createSpy('Circle constructor', (_options: google.maps.CircleOptions) => {
-        return circleSpy;
-      });
+export function createCircleConstructorSpy(
+  circleSpy: jasmine.SpyObj<google.maps.Circle>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const circleConstructorSpy = jasmine
+    .createSpy('Circle constructor', function () {
+      return circleSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Circle'] = circleConstructorSpy;
@@ -261,8 +402,10 @@ export function createCircleConstructorSpy(circleSpy: jasmine.SpyObj<google.maps
 
 /** Creates a jasmine.SpyObj for a google.maps.GroundOverlay */
 export function createGroundOverlaySpy(
-    url: string, bounds: google.maps.LatLngBoundsLiteral,
-    options?: google.maps.GroundOverlayOptions): jasmine.SpyObj<google.maps.GroundOverlay> {
+  url: string,
+  bounds: google.maps.LatLngBoundsLiteral,
+  options?: google.maps.GroundOverlayOptions,
+): jasmine.SpyObj<google.maps.GroundOverlay> {
   const values: {[key: string]: any} = {url};
   const groundOverlaySpy = jasmine.createSpyObj('google.maps.GroundOverlay', [
     'addListener',
@@ -274,19 +417,20 @@ export function createGroundOverlaySpy(
     'set',
   ]);
   groundOverlaySpy.addListener.and.returnValue({remove: () => {}});
-  groundOverlaySpy.set.and.callFake((key: string, value: any) => values[key] = value);
+  groundOverlaySpy.set.and.callFake((key: string, value: any) => (values[key] = value));
   return groundOverlaySpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.GroundOverlay */
 export function createGroundOverlayConstructorSpy(
-    groundOverlaySpy: jasmine.SpyObj<google.maps.GroundOverlay>): jasmine.Spy {
-  const groundOverlayConstructorSpy = jasmine.createSpy(
-      'GroundOverlay constructor',
-      (_url: string, _bounds: google.maps.LatLngBoundsLiteral,
-       _options: google.maps.GroundOverlayOptions) => {
-        return groundOverlaySpy;
-      });
+  groundOverlaySpy: jasmine.SpyObj<google.maps.GroundOverlay>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const groundOverlayConstructorSpy = jasmine
+    .createSpy('GroundOverlay constructor', function () {
+      return groundOverlaySpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['GroundOverlay'] = groundOverlayConstructorSpy;
@@ -301,8 +445,9 @@ export function createGroundOverlayConstructorSpy(
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.KmlLayer */
-export function createKmlLayerSpy(options?: google.maps.KmlLayerOptions):
-    jasmine.SpyObj<google.maps.KmlLayer> {
+export function createKmlLayerSpy(
+  options?: google.maps.KmlLayerOptions,
+): jasmine.SpyObj<google.maps.KmlLayer> {
   const kmlLayerSpy = jasmine.createSpyObj('google.maps.KmlLayer', [
     'addListener',
     'getDefaultViewport',
@@ -319,12 +464,15 @@ export function createKmlLayerSpy(options?: google.maps.KmlLayerOptions):
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.KmlLayer */
-export function createKmlLayerConstructorSpy(kmlLayerSpy: jasmine.SpyObj<google.maps.KmlLayer>):
-    jasmine.Spy {
-  const kmlLayerConstructorSpy =
-      jasmine.createSpy('KmlLayer constructor', (_options: google.maps.KmlLayerOptions) => {
-        return kmlLayerSpy;
-      });
+export function createKmlLayerConstructorSpy(
+  kmlLayerSpy: jasmine.SpyObj<google.maps.KmlLayer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const kmlLayerConstructorSpy = jasmine
+    .createSpy('KmlLayer constructor', function () {
+      return kmlLayerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['KmlLayer'] = kmlLayerConstructorSpy;
@@ -339,8 +487,9 @@ export function createKmlLayerConstructorSpy(kmlLayerSpy: jasmine.SpyObj<google.
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.TrafficLayer */
-export function createTrafficLayerSpy(options?: google.maps.TrafficLayerOptions):
-    jasmine.SpyObj<google.maps.TrafficLayer> {
+export function createTrafficLayerSpy(
+  options?: google.maps.TrafficLayerOptions,
+): jasmine.SpyObj<google.maps.TrafficLayer> {
   const trafficLayerSpy = jasmine.createSpyObj('google.maps.TrafficLayer', [
     'setOptions',
     'setMap',
@@ -350,11 +499,14 @@ export function createTrafficLayerSpy(options?: google.maps.TrafficLayerOptions)
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.TrafficLayer */
 export function createTrafficLayerConstructorSpy(
-    trafficLayerSpy: jasmine.SpyObj<google.maps.TrafficLayer>): jasmine.Spy {
-  const trafficLayerConstructorSpy =
-      jasmine.createSpy('TrafficLayer constructor', (_options: google.maps.TrafficLayerOptions) => {
-        return trafficLayerSpy;
-      });
+  trafficLayerSpy: jasmine.SpyObj<google.maps.TrafficLayer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const trafficLayerConstructorSpy = jasmine
+    .createSpy('TrafficLayer constructor', function () {
+      return trafficLayerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['TrafficLayer'] = trafficLayerConstructorSpy;
@@ -370,18 +522,20 @@ export function createTrafficLayerConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a google.maps.TransitLayer */
 export function createTransitLayerSpy(): jasmine.SpyObj<google.maps.TransitLayer> {
-  const transitLayerSpy = jasmine.createSpyObj('google.maps.TransitLayer', [
-    'setMap',
-  ]);
+  const transitLayerSpy = jasmine.createSpyObj('google.maps.TransitLayer', ['setMap']);
   return transitLayerSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.TransitLayer */
 export function createTransitLayerConstructorSpy(
-    transitLayerSpy: jasmine.SpyObj<google.maps.TransitLayer>): jasmine.Spy {
-  const transitLayerConstructorSpy = jasmine.createSpy('TransitLayer constructor', () => {
-    return transitLayerSpy;
-  });
+  transitLayerSpy: jasmine.SpyObj<google.maps.TransitLayer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const transitLayerConstructorSpy = jasmine
+    .createSpy('TransitLayer constructor', function () {
+      return transitLayerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['TransitLayer'] = transitLayerConstructorSpy;
@@ -397,18 +551,20 @@ export function createTransitLayerConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a google.maps.BicyclingLayer */
 export function createBicyclingLayerSpy(): jasmine.SpyObj<google.maps.BicyclingLayer> {
-  const bicylingLayerSpy = jasmine.createSpyObj('google.maps.BicyclingLayer', [
-    'setMap',
-  ]);
+  const bicylingLayerSpy = jasmine.createSpyObj('google.maps.BicyclingLayer', ['setMap']);
   return bicylingLayerSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.BicyclingLayer */
 export function createBicyclingLayerConstructorSpy(
-    bicylingLayerSpy: jasmine.SpyObj<google.maps.BicyclingLayer>): jasmine.Spy {
-  const bicylingLayerConstructorSpy = jasmine.createSpy('BicyclingLayer constructor', () => {
-    return bicylingLayerSpy;
-  });
+  bicylingLayerSpy: jasmine.SpyObj<google.maps.BicyclingLayer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const bicylingLayerConstructorSpy = jasmine
+    .createSpy('BicyclingLayer constructor', function () {
+      return bicylingLayerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['BicyclingLayer'] = bicylingLayerConstructorSpy;
@@ -424,51 +580,135 @@ export function createBicyclingLayerConstructorSpy(
 
 /** Creates a jasmine.SpyObj for a MarkerClusterer */
 export function createMarkerClustererSpy(): jasmine.SpyObj<MarkerClusterer> {
-  const markerClustererSpy = jasmine.createSpyObj('MarkerClusterer', ['addListener',
-    'addMarkers', 'fitMapToMarkers', 'getAverageCenter', 'getBatchSizeIE',
-    'getCalculator', 'getClusterClass', 'getClusters', 'getEnableRetinaIcons',
-    'getGridSize', 'getIgnoreHidden', 'getImageExtension', 'getImagePath',
-    'getImageSizes', 'getMaxZoom', 'getMinimumClusterSize', 'getStyles',
-    'getTitle', 'getTotalClusters', 'getTotalMarkers', 'getZIndex', 'getZoomOnClick',
-    'removeMarkers', 'repaint', 'setAverageCenter', 'setBatchSizeIE',
-    'setCalculator', 'setClusterClass', 'setEnableRetinaIcons', 'setGridSize',
-    'setIgnoreHidden', 'setImageExtension', 'setImagePath', 'setImageSizes', 'setMap',
-    'setMaxZoom', 'setMinimumClusterSize', 'setStyles', 'setTitle', 'setZIndex',
-    'setZoomOnClick', 'setOptions',
+  return jasmine.createSpyObj('MarkerClusterer', [
+    'addMarker',
+    'addMarkers',
+    'removeMarker',
+    'removeMarkers',
+    'clearMarkers',
+    'render',
+    'onAdd',
+    'onRemove',
   ]);
-  markerClustererSpy.addListener.and.returnValue({remove: () => {}});
-  return markerClustererSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a MarkerClusterer */
 export function createMarkerClustererConstructorSpy(
-  markerClustererSpy: jasmine.SpyObj<MarkerClusterer>): jasmine.Spy {
-  const markerClustererConstructorSpy = jasmine.createSpy('MarkerClusterer constructor',
-      () => {
-    return markerClustererSpy;
-  });
-  const testingWindow: TestingWindow = window;
-  testingWindow['MarkerClusterer'] = markerClustererConstructorSpy;
+  markerClustererSpy: jasmine.SpyObj<MarkerClusterer>,
+  apiLoaded = true,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const markerClustererConstructorSpy = jasmine.createSpy(
+    'MarkerClusterer constructor',
+    function () {
+      return markerClustererSpy;
+    },
+  );
+  if (apiLoaded) {
+    const testingWindow: TestingWindow = window;
+    testingWindow.markerClusterer = {
+      MarkerClusterer: markerClustererConstructorSpy,
+      defaultOnClusterClickHandler: jasmine.createSpy('defaultOnClusterClickHandler'),
+    };
+  }
   return markerClustererConstructorSpy;
 }
 
+/** Creates a jasmine.SpyObj for a MarkerClusterer */
+export function createDeprecatedMarkerClustererSpy(): jasmine.SpyObj<DeprecatedMarkerClusterer> {
+  const deprecatedMarkerClustererSpy = jasmine.createSpyObj('DeprecatedMarkerClusterer', [
+    'addListener',
+    'addMarkers',
+    'fitMapToMarkers',
+    'getAverageCenter',
+    'getBatchSizeIE',
+    'getCalculator',
+    'getClusterClass',
+    'getClusters',
+    'getEnableRetinaIcons',
+    'getGridSize',
+    'getIgnoreHidden',
+    'getImageExtension',
+    'getImagePath',
+    'getImageSizes',
+    'getMaxZoom',
+    'getMinimumClusterSize',
+    'getStyles',
+    'getTitle',
+    'getTotalClusters',
+    'getTotalMarkers',
+    'getZIndex',
+    'getZoomOnClick',
+    'removeMarkers',
+    'repaint',
+    'setAverageCenter',
+    'setBatchSizeIE',
+    'setCalculator',
+    'setClusterClass',
+    'setEnableRetinaIcons',
+    'setGridSize',
+    'setIgnoreHidden',
+    'setImageExtension',
+    'setImagePath',
+    'setImageSizes',
+    'setMap',
+    'setMaxZoom',
+    'setMinimumClusterSize',
+    'setStyles',
+    'setTitle',
+    'setZIndex',
+    'setZoomOnClick',
+    'setOptions',
+  ]);
+  deprecatedMarkerClustererSpy.addListener.and.returnValue({remove: () => {}});
+  return deprecatedMarkerClustererSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a MarkerClusterer */
+export function createDeprecatedMarkerClustererConstructorSpy(
+  deprecatedMarkerClustererSpy: jasmine.SpyObj<DeprecatedMarkerClusterer>,
+  apiLoaded = true,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const deprecatedMarkerClustererConstructorSpy = jasmine
+    .createSpy('DeprecatedMarkerClusterer constructor', function () {
+      return deprecatedMarkerClustererSpy;
+    })
+    .and.callThrough();
+  if (apiLoaded) {
+    const testingWindow: TestingWindow = window;
+    testingWindow['MarkerClusterer'] = deprecatedMarkerClustererConstructorSpy;
+  }
+  return deprecatedMarkerClustererConstructorSpy;
+}
+
 /** Creates a jasmine.SpyObj for DirectionsRenderer */
-export function createDirectionsRendererSpy(options: google.maps.DirectionsRendererOptions):
-    jasmine.SpyObj<google.maps.DirectionsRenderer> {
-  const directionsRendererSpy = jasmine.createSpyObj('google.maps.DirectionsRenderer',
-      ['addListener', 'getDirections', 'getPanel', 'getRouteIndex', 'setDirections', 'setMap',
-      'setOptions']);
-  directionsRendererSpy.addListener.and.returnValue({ remove: () => {} });
+export function createDirectionsRendererSpy(
+  options: google.maps.DirectionsRendererOptions,
+): jasmine.SpyObj<google.maps.DirectionsRenderer> {
+  const directionsRendererSpy = jasmine.createSpyObj('google.maps.DirectionsRenderer', [
+    'addListener',
+    'getDirections',
+    'getPanel',
+    'getRouteIndex',
+    'setDirections',
+    'setMap',
+    'setOptions',
+  ]);
+  directionsRendererSpy.addListener.and.returnValue({remove: () => {}});
   return directionsRendererSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a DirectionsRenderer */
 export function createDirectionsRendererConstructorSpy(
-    directionsRendererSpy: jasmine.SpyObj<google.maps.DirectionsRenderer>): jasmine.Spy {
-  const directionsRendererConstructorSpy = jasmine.createSpy('DirectionsRenderer constructor',
-      (_options: google.maps.DirectionsRendererOptions) => {
-    return directionsRendererSpy;
-  });
+  directionsRendererSpy: jasmine.SpyObj<google.maps.DirectionsRenderer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const directionsRendererConstructorSpy = jasmine
+    .createSpy('DirectionsRenderer constructor', function () {
+      return directionsRendererSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['DirectionsRenderer'] = directionsRendererConstructorSpy;
@@ -490,9 +730,14 @@ export function createDirectionsServiceSpy(): jasmine.SpyObj<google.maps.Directi
 
 /** Creates a jasmine.Spy to watch for the constructor of the DirectionsService */
 export function createDirectionsServiceConstructorSpy(
-    directionsServiceSpy: jasmine.SpyObj<google.maps.DirectionsService>): jasmine.Spy {
-  const directionsServiceConstructorSpy =
-      jasmine.createSpy('DirectionsService constructor', () => directionsServiceSpy);
+  directionsServiceSpy: jasmine.SpyObj<google.maps.DirectionsService>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const directionsServiceConstructorSpy = jasmine
+    .createSpy('DirectionsService constructor', function () {
+      return directionsServiceSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['DirectionsService'] = directionsServiceConstructorSpy;
@@ -509,7 +754,10 @@ export function createDirectionsServiceConstructorSpy(
 /** Creates a jasmine.SpyObj for a `google.maps.visualization.HeatmapLayer`. */
 export function createHeatmapLayerSpy(): jasmine.SpyObj<google.maps.visualization.HeatmapLayer> {
   const heatmapLayerSpy = jasmine.createSpyObj('google.maps.visualization.HeatmapLayer', [
-    'setMap', 'setOptions', 'setData', 'getData'
+    'setMap',
+    'setOptions',
+    'setData',
+    'getData',
   ]);
   return heatmapLayerSpy;
 }
@@ -519,10 +767,14 @@ export function createHeatmapLayerSpy(): jasmine.SpyObj<google.maps.visualizatio
  * of a `google.maps.visualization.HeatmapLayer`.
  */
 export function createHeatmapLayerConstructorSpy(
-    heatmapLayerSpy: jasmine.SpyObj<google.maps.visualization.HeatmapLayer>): jasmine.Spy {
-  const heatmapLayerConstructorSpy = jasmine.createSpy('HeatmapLayer constructor', () => {
-    return heatmapLayerSpy;
-  });
+  heatmapLayerSpy: jasmine.SpyObj<google.maps.visualization.HeatmapLayer>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const heatmapLayerConstructorSpy = jasmine
+    .createSpy('HeatmapLayer constructor', function () {
+      return heatmapLayerSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     if (!testingWindow.google.maps.visualization) {
@@ -534,13 +786,12 @@ export function createHeatmapLayerConstructorSpy(
       maps: {
         visualization: {
           'HeatmapLayer': heatmapLayerConstructorSpy,
-        }
+        },
       },
     };
   }
   return heatmapLayerConstructorSpy;
 }
-
 
 /** Creates a jasmine.SpyObj for a google.maps.LatLng. */
 export function createLatLngSpy(): jasmine.SpyObj<google.maps.LatLng> {
@@ -549,8 +800,14 @@ export function createLatLngSpy(): jasmine.SpyObj<google.maps.LatLng> {
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.LatLng */
 export function createLatLngConstructorSpy(
-  latLngSpy: jasmine.SpyObj<google.maps.LatLng>): jasmine.Spy {
-  const latLngConstructorSpy = jasmine.createSpy('LatLng constructor', () => latLngSpy);
+  latLngSpy: jasmine.SpyObj<google.maps.LatLng>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const latLngConstructorSpy = jasmine
+    .createSpy('LatLng constructor', function () {
+      return latLngSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['LatLng'] = latLngConstructorSpy;
@@ -571,8 +828,14 @@ export function createGeocoderSpy(): jasmine.SpyObj<google.maps.Geocoder> {
 
 /** Creates a jasmine.Spy to watch for the constructor of the Geocoder. */
 export function createGeocoderConstructorSpy(
-    geocoderSpy: jasmine.SpyObj<google.maps.Geocoder>): jasmine.Spy {
-  const geocoderConstructorSpy = jasmine.createSpy('Geocoder constructor', () => geocoderSpy);
+  geocoderSpy: jasmine.SpyObj<google.maps.Geocoder>,
+): jasmine.Spy {
+  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
+  const geocoderConstructorSpy = jasmine
+    .createSpy('Geocoder constructor', function () {
+      return geocoderSpy;
+    })
+    .and.callThrough();
   const testingWindow: TestingWindow = window;
   if (testingWindow.google && testingWindow.google.maps) {
     testingWindow.google.maps['Geocoder'] = geocoderConstructorSpy;

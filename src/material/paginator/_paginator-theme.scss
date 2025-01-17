@@ -1,84 +1,108 @@
 @use 'sass:map';
-@use '../core/theming/theming';
+@use 'sass:meta';
+@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use '../core/style/sass-utils';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
-@use '../core/density/private/compatibility';
-@use './paginator-variables';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $foreground: map.get($config, foreground);
-  $background: map.get($config, background);
-
-  .mat-paginator {
-    background: theming.get-color-from-palette($background, 'card');
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
   }
+}
 
-  .mat-paginator,
-  .mat-paginator-page-size .mat-select-trigger {
-    color: theming.get-color-from-palette($foreground, secondary-text);
-  }
-
-  .mat-paginator-decrement,
-  .mat-paginator-increment {
-    border-top: 2px solid theming.get-color-from-palette($foreground, 'icon');
-    border-right: 2px solid theming.get-color-from-palette($foreground, 'icon');
-  }
-
-  .mat-paginator-first,
-  .mat-paginator-last {
-    border-top: 2px solid theming.get-color-from-palette($foreground, 'icon');
-  }
-
-  .mat-icon-button[disabled] {
-    .mat-paginator-decrement,
-    .mat-paginator-increment,
-    .mat-paginator-first,
-    .mat-paginator-last {
-      border-color: theming.get-color-from-palette($foreground, 'disabled');
+@mixin color($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-paginator.$prefix,
+        tokens-mat-paginator.get-color-tokens($theme)
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-paginator,
-  .mat-paginator-page-size .mat-select-trigger {
-    font: {
-      family: typography-utils.font-family($config, caption);
-      size: typography-utils.font-size($config, caption);
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-paginator.$prefix,
+        tokens-mat-paginator.get-typography-tokens($theme)
+      );
     }
   }
 }
 
-@mixin density($config-or-theme) {
-  $density-scale: theming.get-density-config($config-or-theme);
-  $height: compatibility.private-density-prop-value(paginator-variables.$density-config,
-    $density-scale, height);
+@mixin density($theme) {
+  $density-scale: inspection.get-theme-density($theme);
+  $form-field-density: if(
+    (meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
+      ($density-scale == maximum),
+    -4,
+    $density-scale
+  );
 
-  @include compatibility.private-density-legacy-compatibility() {
-    .mat-paginator-container {
-      min-height: $height;
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-paginator.$prefix,
+        tokens-mat-paginator.get-density-tokens($theme)
+      );
     }
   }
 }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-paginator.$prefix,
+      tokens: tokens-mat-paginator.get-token-slots(),
+    ),
+  );
+}
+
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+@mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-paginator') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
 
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
-    }
+@mixin _theme-from-tokens($tokens) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mat-paginator.$prefix,
+      map.get($tokens, tokens-mat-paginator.$prefix)
+    );
   }
 }

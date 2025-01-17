@@ -7,10 +7,12 @@ The `MapBicyclingLayer` component wraps the [`google.maps.BicyclingLayer` class]
 ```typescript
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapBicyclingLayer} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+  imports: [GoogleMap, MapBicyclingLayer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -20,10 +22,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-bicycling-layer></map-bicycling-layer>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-bicycling-layer />
 </google-map>
 ```

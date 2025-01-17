@@ -1,7 +1,9 @@
 import {DataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {CdkPopoverEditModule} from '@angular/cdk-experimental/popover-edit';
+import {CdkTableModule} from '@angular/cdk/table';
 
 export interface PeriodicElement {
   name: string;
@@ -38,8 +40,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'cdk-popover-edit-cdk-table-example',
-  styleUrls: ['cdk-popover-edit-cdk-table-example.css'],
+  styleUrl: 'cdk-popover-edit-cdk-table-example.css',
   templateUrl: 'cdk-popover-edit-cdk-table-example.html',
+  imports: [CdkTableModule, CdkPopoverEditModule, FormsModule],
 })
 export class CdkPopoverEditCdkTableExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -49,13 +52,17 @@ export class CdkPopoverEditCdkTableExample {
   readonly preservedWeightValues = new WeakMap<PeriodicElement, any>();
 
   onSubmitName(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.name = f.value.name;
   }
 
   onSubmitWeight(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.weight = f.value.weight;
   }

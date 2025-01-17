@@ -1,8 +1,9 @@
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Choose a date</mat-label>
 <!-- #docregion toggle -->
   <input matInput [matDatepicker]="picker">
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 <!-- #enddocregion toggle -->
 </mat-form-field>

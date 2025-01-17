@@ -1,0 +1,174 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use '../style/validation';
+@use './palettes';
+
+/// Creates an error message by finding `$config` in the existing message and appending a suffix to
+/// it.
+/// @param {List|String} $err The error message.
+/// @param {String} $suffix The suffix to add.
+/// @return {List|String} The updated error message.
+@function _create-dollar-config-error-message($err, $suffix) {
+  @if meta.type-of($err) == 'list' {
+    @for $i from 1 through list.length($err) {
+      $err: list.set-nth($err, $i,
+        _create-dollar-config-error-message(list.nth($err, $i), $suffix));
+    }
+  }
+  @else if meta.type-of($err) == 'string' {
+    $start: string.index($err, '$config');
+    @if $start {
+      $err: string.insert($err, $suffix, $start + 7);
+    }
+  }
+  @return $err;
+}
+
+/// Validates that the given object is an M3 palette.
+/// @param {*} $palette The object to test
+/// @return {Boolean|null} null if it is a valid M3 palette, else true.
+@function validate-palette($palette) {
+  @if not meta.type-of($palette) == 'map' {
+    @return true;
+  }
+  $keys: map.keys($palette);
+  $expected-keys: map.keys(palettes.$red-palette);
+  @if validation.validate-allowed-values($keys, $expected-keys...) or
+      validation.validate-required-values($keys, $expected-keys...) {
+    @return true;
+  }
+  $nv-keys: map.keys(map.get($palette, neutral-variant));
+  $expected-nv-keys: map.keys(map.get(palettes.$red-palette, neutral-variant));
+  @if validation.validate-allowed-values($nv-keys, $expected-nv-keys...) or
+      validation.validate-required-values($nv-keys, $expected-nv-keys...) {
+    @return true;
+  }
+  @return null;
+}
+
+/// Validates a theme config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-theme-config($config) {
+  $err: validation.validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config should be a configuration object. Got:'} $config);
+  }
+  $allowed: (color, typography, density);
+  $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
+  @if $err {
+    @return (
+      #{'$config has unexpected properties. Valid properties are'}
+      #{'#{$allowed}.'}
+      #{'Found:'}
+      $err
+    );
+  }
+  $err: validate-color-config(map.get($config, color));
+  @if $err {
+    @return _create-dollar-config-error-message($err, '.color');
+  }
+  $err: validate-typography-config(map.get($config, typography));
+  @if $err {
+    @return _create-dollar-config-error-message($err, '.typography');
+  }
+  $err: validate-density-config(map.get($config, density));
+  @if $err {
+    @return _create-dollar-config-error-message($err, '.density');
+  }
+  @return null;
+}
+
+/// Validates a theme color config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-color-config($config) {
+  $err: validation.validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config should be a color configuration object. Got:'} $config);
+  }
+  $allowed: (theme-type, primary, tertiary, use-system-variables, system-variables-prefix);
+  $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
+  @if $err {
+    @return (
+      #{'$config has unexpected properties. Valid properties are'}
+      #{'#{$allowed}.'}
+      #{'Found:'}
+      $err
+    );
+  }
+  @if $config and map.has-key($config, theme-type) and
+      not list.index((light, dark, color-scheme), map.get($config, theme-type)) {
+    @return (
+      #{'Expected $config.theme-type to be one of: light, dark, color-scheme. Got:'}
+      map.get($config, theme-type)
+    );
+  }
+  @each $palette in (primary, secondary, tertiary) {
+    @if $config and map.has-key($config, $palette) {
+      $err: validate-palette(map.get($config, $palette));
+      @if $err {
+        @return (
+          #{'Expected $config.#{$palette} to be a valid M3 palette. Got:'}
+          map.get($config, $palette)
+        );
+      }
+    }
+  }
+  @return null;
+}
+
+/// Validates a theme typography config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-typography-config($config) {
+  $err: validation.validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config should be a typography configuration object. Got:'} $config);
+  }
+  $allowed: (
+    brand-family,
+    plain-family,
+    bold-weight,
+    medium-weight,
+    regular-weight,
+    use-system-variables,
+    system-variables-prefix
+  );
+  $err: validation.validate-allowed-values(map.keys($config or ()), $allowed...);
+  @if $err {
+    @return (
+      #{'$config has unexpected properties. Valid properties are'}
+      #{'#{$allowed}.'}
+      #{'Found:'}
+      $err
+    );
+  }
+  @return null;
+}
+
+/// Validates a theme density config.
+/// @param {Map} $config The config to test.
+/// @return {List} null if no error, else the error message
+@function validate-density-config($config) {
+  $err: validation.validate-type($config, 'map', 'null');
+  @if $err {
+    @return (#{'$config should be a density configuration object. Got:'} $config);
+  }
+  $err: validation.validate-allowed-values(map.keys($config or ()), scale);
+  @if $err {
+    @return (#{'$config has unexpected properties. Valid properties are: scale. Found:'} $err);
+  }
+  @if $config and map.has-key($config, scale) {
+    $allowed-scales: (0, -1, -2, -3, -4, -5, minimum, maximum);
+    @if validation.validate-allowed-values(map.get($config, scale), $allowed-scales...) {
+      @return (
+        #{'Expected $config.scale to be one of: #{$allowed-scales}. Got:'}
+        map.get($config, scale)
+      );
+    }
+  }
+  @return null;
+}

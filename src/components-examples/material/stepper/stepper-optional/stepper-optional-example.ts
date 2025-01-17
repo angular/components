@@ -1,5 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatButtonModule} from '@angular/material/button';
 
 /**
  * @title Stepper with optional steps
@@ -7,21 +11,24 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'stepper-optional-example',
   templateUrl: 'stepper-optional-example.html',
-  styleUrls: ['stepper-optional-example.css']
+  styleUrl: 'stepper-optional-example.css',
+  imports: [
+    MatButtonModule,
+    MatStepperModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
 })
-export class StepperOptionalExample implements OnInit {
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
+export class StepperOptionalExample {
+  private _formBuilder = inject(FormBuilder);
+
+  firstFormGroup = this._formBuilder.group({
+    firstCtrl: ['', Validators.required],
+  });
+  secondFormGroup = this._formBuilder.group({
+    secondCtrl: '',
+  });
   isOptional = false;
-
-  constructor(private _formBuilder: FormBuilder) {}
-
-  ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ''
-    });
-  }
 }

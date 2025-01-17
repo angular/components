@@ -90,13 +90,30 @@ with a different set of data, depending on the trigger that opened it:
 ```
 
 ### Keyboard interaction
-- <kbd>DOWN_ARROW</kbd>: Focuses the next menu item
-- <kbd>UP_ARROW</kbd>: Focuses previous menu item
-- <kbd>RIGHT_ARROW</kbd>: Opens the menu item's sub-menu
-- <kbd>LEFT_ARROW</kbd>: Closes the current menu, if it is a sub-menu
-- <kbd>ENTER</kbd>: Activates the focused menu item
-- <kbd>ESCAPE</kbd>: Closes the menu
+| Keyboard shortcut      | Action                                      |
+|------------------------|---------------------------------------------|
+| <kbd>Down Arrow</kbd>  | Focus the next menu item.                   |
+| <kbd>Up Arrow</kbd>    | Focus the previous menu item.               |
+| <kbd>Left Arrow</kbd>  | Close the current menu if it is a sub-menu. |
+| <kbd>Right Arrow</kbd> | Opens the current menu item's sub-menu.     |
+| <kbd>Enter</kbd>       | Activate the focused menu item.             |
+| <kbd>Escape</kbd>      | Close all open menus.                       |
 
 ### Accessibility
-Menu triggers or menu items without text or labels should be given a meaningful label via
-`aria-label` or `aria-labelledby`.
+
+Angular Material's menu component consists of two connected parts: the trigger and the pop-up menu.
+
+The menu trigger is a standard button element augmented with `aria-haspopup`, `aria-expanded`, and
+`aria-controls` to create the relationship to the pop-up panel.
+
+The pop-up menu implements the `role="menu"` pattern, handling keyboard interaction and focus
+management. Upon opening, the trigger will focus the first focusable menu item. Upon close, the menu
+will return focus to its trigger. Avoid creating a menu in which all items are disabled, instead
+hiding or disabling the menu trigger. 
+
+Angular Material does not support the `menuitemcheckbox` or `menuitemradio` roles.
+
+Always provide an accessible label via `aria-label` or `aria-labelledby` for any menu
+triggers or menu items without descriptive text content.
+
+MatMenu should not contain any interactive controls aside from MatMenuItem.

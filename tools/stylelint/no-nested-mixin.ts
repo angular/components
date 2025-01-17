@@ -1,4 +1,4 @@
-import {createPlugin, utils} from 'stylelint';
+import {createPlugin, Rule, utils} from 'stylelint';
 
 const ruleName = 'material/no-nested-mixin';
 const messages = utils.ruleMessages(ruleName, {
@@ -8,27 +8,34 @@ const messages = utils.ruleMessages(ruleName, {
 /**
  * Stylelint plugin that prevents nesting Sass mixins.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean) => {
+const ruleFn: Rule<boolean, unknown> = isEnabled => {
   return (root, result) => {
-    if (!isEnabled) { return; }
+    if (!isEnabled) {
+      return;
+    }
 
     root.walkAtRules(rule => {
-      if (rule.name !== 'mixin') { return; }
+      if (rule.name !== 'mixin') {
+        return;
+      }
 
       rule.walkAtRules(childRule => {
-        if (childRule.name !== 'mixin') { return; }
+        if (childRule.name !== 'mixin') {
+          return;
+        }
 
         utils.report({
           result,
           ruleName,
           message: messages.expected(),
-          node: childRule
+          node: childRule,
         });
       });
     });
   };
-});
+};
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
-export default plugin;
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
+
+export default createPlugin(ruleName, ruleFn);

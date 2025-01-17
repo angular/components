@@ -2,11 +2,12 @@ import {DocCollection, Processor} from 'dgeni';
 import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
 import {FunctionExportDoc} from 'dgeni-packages/typescript/api-doc-types/FunctionExportDoc';
 import {MethodMemberDoc} from 'dgeni-packages/typescript/api-doc-types/MethodMemberDoc';
-import * as ts from 'typescript';
+
+import ts from 'typescript';
 
 /** Type describing a function-like API doc (i.e. a function, or a class method member). */
-type FunctionLikeDoc = (FunctionExportDoc|MethodMemberDoc) & {
-  returns?: {description: string},
+type FunctionLikeDoc = (FunctionExportDoc | MethodMemberDoc) & {
+  returns?: {description: string};
   isAsync?: boolean;
 };
 
@@ -46,12 +47,12 @@ export class AsyncFunctionsProcessor implements Processor {
  * Gets the type of the function-like doc. If no explicit type has been specified,
  * the type checker is used to compute a type string based on the function body.
  */
-function getTypeOfFunctionLikeDoc(doc: FunctionLikeDoc): string|null {
+function getTypeOfFunctionLikeDoc(doc: FunctionLikeDoc): string | null {
   if (doc.type) {
     return doc.type;
   }
 
-  const decl = doc.declaration as ts.MethodDeclaration|ts.FunctionDeclaration;
+  const decl = doc.declaration as ts.MethodDeclaration | ts.FunctionDeclaration;
   const signature = doc.typeChecker.getSignatureFromDeclaration(decl);
 
   if (!signature) {

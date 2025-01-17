@@ -1,38 +1,129 @@
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
+@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
+@use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
+@use '../core/tokens/token-utils';
+@use '../core/style/elevation';
 
-$padding: 14px 16px !default;
-$min-height: 48px !default;
-$min-width: 344px !default;
-$max-width: 33vw !default;
-$spacing-margin: 24px !default;
-$spacing-margin-handset: 8px !default;
+$_side-padding: 8px;
 
-
-.mat-snack-bar-container {
-  border-radius: 4px;
+.mat-mdc-snack-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
-  display: block;
-  margin: $spacing-margin;
-  max-width: $max-width;
-  min-width: $min-width;
-  padding: $padding;
-  min-height: $min-height;
-  transform-origin: center;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 8px;
 
-  @include a11y.high-contrast(active, off) {
-    border: solid 1px;
+  .mat-mdc-snack-bar-handset & {
+    width: 100vw;
   }
 }
 
-// The mat-snack-bar-handset class will be applied to the overlay
-// element causing styling to both it and the snack bar container.
-.mat-snack-bar-handset {
-  width: 100%;
+.mat-mdc-snackbar-surface {
+  @include elevation.elevation(6);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: $_side-padding;
 
-  .mat-snack-bar-container {
-    margin: $spacing-margin-handset;
-    max-width: 100%;
-    min-width: 0;
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $_side-padding;
+  }
+
+  .mat-mdc-snack-bar-container & {
+    min-width: 344px;
+    max-width: 672px;
+  }
+
+  // Ensures that the snack bar stretches to full width in handset mode.
+  .mat-mdc-snack-bar-handset & {
     width: 100%;
+    min-width: 0;
+  }
+
+  @include cdk.high-contrast {
+    outline: solid 1px;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
+  ) {
+    .mat-mdc-snack-bar-container & {
+      @include token-utils.create-token-slot(color, supporting-text-color);
+      @include token-utils.create-token-slot(border-radius, container-shape);
+      @include token-utils.create-token-slot(background-color, container-color);
+    }
+  }
+}
+
+.mdc-snackbar__label {
+  width: 100%;
+  flex-grow: 1;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 14px $_side-padding 14px 16px;
+
+  [dir='rtl'] & {
+    padding-left: $_side-padding;
+    padding-right: 16px;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
+  ) {
+    .mat-mdc-snack-bar-container & {
+      @include token-utils.create-token-slot(font-family, supporting-text-font);
+      @include token-utils.create-token-slot(font-size, supporting-text-size);
+      @include token-utils.create-token-slot(font-weight, supporting-text-weight);
+      @include token-utils.create-token-slot(line-height, supporting-text-line-height);
+    }
+  }
+}
+
+.mat-mdc-snack-bar-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+// These elements need to have full width using flex layout.
+.mat-mdc-snack-bar-handset,
+.mat-mdc-snack-bar-container,
+.mat-mdc-snack-bar-label {
+  // Note that we need to include the full `flex` shorthand
+  // declaration so the container doesn't collapse on IE11.
+  flex: 1 1 auto;
+}
+
+// The `mat-mdc-button` and `:not(:disabled)` here are redundant, but we need them to increase
+// the specificity over the button styles that may bleed in from the rest of the app.
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+  &.mat-unthemed {
+    // MDC's `action-label-text-color` should be able to do this, but the button theme has a
+    // higher specificity so it ends up overriding it. Define our own variable that we can
+    // use to control the color instead.
+    @include token-utils.use-tokens(
+      tokens-mat-snack-bar.$prefix,
+      tokens-mat-snack-bar.get-token-slots()
+    ) {
+      @include token-utils.create-token-slot(color, button-color);
+    }
+  }
+
+  // Darken the ripples in the button so they're visible against the dark background.
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, (
+    state-layer-color: currentColor,
+    ripple-color: currentColor,
+  ));
+
+  .mat-ripple-element {
+    opacity: 0.1;
   }
 }

@@ -1,38 +1,32 @@
-import {createPlugin, utils} from 'stylelint';
-import * as minimatch from 'minimatch';
+import {createPlugin, Rule, utils} from 'stylelint';
+import minimatch from 'minimatch';
 import {NeedsPrefix} from './needs-prefix';
 
 const parseSelector = require('stylelint/lib/utils/parseSelector');
 const ruleName = 'material/no-prefixes';
 const messages = utils.ruleMessages(ruleName, {
-  property: (property: string, browsers: string[]) => {
-    return `Unprefixed property "${property}" needs a prefix for browsers ${browsers.join(', ')}.`;
+  property: (property, browsers) => {
+    return `Unprefixed property "${property}" needs a prefix for browsers ${browsers}.`;
   },
   value: (property, value) => `Unprefixed value in "${property}: ${value}".`,
   atRule: name => `Unprefixed @rule "${name}".`,
   mediaFeature: value => `Unprefixed media feature "${value}".`,
-  selector: selector => `Unprefixed selector "${selector}".`
+  selector: selector => `Unprefixed selector "${selector}".`,
 });
-
-/** Config options for the rule. */
-interface RuleOptions {
-  browsers: string[];
-  filePattern: string;
-}
 
 /**
  * Stylelint plugin that warns for unprefixed CSS.
  */
-const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
+const ruleFn: Rule<boolean, string[] | string> = (isEnabled, options) => {
   return (root, result) => {
-    if (!isEnabled) {
-      return;
-    }
+    const browsers = options.browsers as string[] | undefined;
+    const filePattern = options.filePattern as string | undefined;
 
-    const options = _options as RuleOptions;
-    const {browsers, filePattern} = options;
-
-    if (filePattern && !minimatch(root.source!.input.file!, filePattern)) {
+    if (
+      !isEnabled ||
+      !browsers ||
+      (filePattern && !minimatch(root.source!.input.file!, filePattern))
+    ) {
       return;
     }
 
@@ -46,9 +40,9 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
         utils.report({
           result,
           ruleName,
-          message: messages.property(decl.prop, propertyPrefixes),
+          message: messages.property(decl.prop, propertyPrefixes.join(', ')),
           node: decl,
-          index: (decl.raws.before || '').length
+          index: (decl.raws.before || '').length,
         });
       } else if (needsPrefix.value(decl.prop, decl.value)) {
         utils.report({
@@ -56,7 +50,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
           ruleName,
           message: messages.value(decl.prop, decl.value),
           node: decl,
-          index: (decl.raws.before || '').length
+          index: (decl.raws.before || '').length,
         });
       }
     });
@@ -68,14 +62,14 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
           result,
           ruleName,
           message: messages.atRule(rule.name),
-          node: rule
+          node: rule,
         });
       } else if (needsPrefix.mediaFeature(rule.params)) {
         utils.report({
           result,
           ruleName,
           message: messages.mediaFeature(rule.name),
-          node: rule
+          node: rule,
         });
       }
     });
@@ -84,7 +78,7 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
     root.walkRules(rule => {
       // Silence warnings for Sass selectors. Stylelint does this in their own rules as well:
       // https://github.com/stylelint/stylelint/blob/master/lib/utils/isStandardSyntaxSelector.js
-      parseSelector(rule.selector, { warn: () => {} }, rule, (selectorTree: any) => {
+      parseSelector(rule.selector, {warn: () => {}}, rule, (selectorTree: any) => {
         selectorTree.walkPseudos((pseudoNode: any) => {
           if (needsPrefix.selector(pseudoNode.value)) {
             utils.report({
@@ -98,11 +92,10 @@ const plugin = createPlugin(ruleName, (isEnabled: boolean, _options?) => {
         });
       });
     });
-
   };
-});
+};
 
+ruleFn.ruleName = ruleName;
+ruleFn.messages = messages;
 
-plugin.ruleName = ruleName;
-plugin.messages = messages;
-export default plugin;
+export default createPlugin(ruleName, ruleFn);

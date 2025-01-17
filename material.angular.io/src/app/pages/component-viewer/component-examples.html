@@ -1,0 +1,12 @@
+@if (componentViewer.componentDocItem | async; as docItem) {
+  <span class="cdk-visually-hidden" tabindex="-1">
+    Examples for {{docItem.id}}
+  </span>
+
+  @for (example of docItem.examples; track example) {
+    <example-viewer
+      [example]="example"
+      [showCompactToggle]="false"
+      view="demo"/>
+  }
+}

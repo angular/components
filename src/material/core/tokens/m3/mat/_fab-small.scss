@@ -1,0 +1,50 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, fab-small);
+
+/// Generates custom tokens for the mat-mini-fab.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-mini-fab
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: ((
+    foreground-color: map.get($systems, md-sys-color, on-primary-container),
+    state-layer-color: map.get($systems, md-sys-color, on-primary-container),
+    ripple-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-primary-container),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+    disabled-state-container-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
+    disabled-state-foreground-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+  ), (
+    // Color variants
+    primary: (), // Default, no overrides needed.
+    secondary: (
+      foreground-color: map.get($systems, md-sys-color, on-secondary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
+      ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-secondary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    tertiary: (
+      foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-tertiary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  ));
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

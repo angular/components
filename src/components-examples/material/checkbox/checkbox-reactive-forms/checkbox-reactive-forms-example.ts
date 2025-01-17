@@ -1,20 +1,22 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {JsonPipe} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 /** @title Checkboxes with reactive forms */
 @Component({
   selector: 'checkbox-reactive-forms-example',
   templateUrl: 'checkbox-reactive-forms-example.html',
-  styleUrls: ['checkbox-reactive-forms-example.css']
+  styleUrl: 'checkbox-reactive-forms-example.css',
+  imports: [FormsModule, ReactiveFormsModule, MatCheckboxModule, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxReactiveFormsExample {
-  toppings: FormGroup;
+  private readonly _formBuilder = inject(FormBuilder);
 
-  constructor(fb: FormBuilder) {
-    this.toppings = fb.group({
-      pepperoni: false,
-      extracheese: false,
-      mushroom: false
-    });
-  }
+  readonly toppings = this._formBuilder.group({
+    pepperoni: false,
+    extracheese: false,
+    mushroom: false,
+  });
 }

@@ -3,13 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Observable} from 'rxjs';
-import {NgControl} from '@angular/forms';
+import {AbstractControlDirective, NgControl} from '@angular/forms';
 import {Directive} from '@angular/core';
-
 
 /** An interface which allows a control to work inside of a `MatFormField`. */
 @Directive()
@@ -29,8 +28,8 @@ export abstract class MatFormFieldControl<T> {
   /** The placeholder for this control. */
   readonly placeholder: string;
 
-  /** Gets the NgControl for this control. */
-  readonly ngControl: NgControl | null;
+  /** Gets the AbstractControlDirective for this control. */
+  readonly ngControl: NgControl | AbstractControlDirective | null;
 
   /** Whether the control is focused. */
   readonly focused: boolean;
@@ -68,6 +67,13 @@ export abstract class MatFormFieldControl<T> {
    * which are set by the form-field.
    */
   readonly userAriaDescribedBy?: string;
+
+  /**
+   * Whether to automatically assign the ID of the form field as the `for` attribute
+   * on the `<label>` inside the form field. Set this to true to prevent the form
+   * field from associating the label with non-native elements.
+   */
+  readonly disableAutomaticLabeling?: boolean;
 
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;

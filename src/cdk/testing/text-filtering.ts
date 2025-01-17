@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /**
@@ -15,8 +15,7 @@ export function _getTextWithExcludedElements(element: Element, excludeSelector: 
   const clone = element.cloneNode(true) as Element;
   const exclusions = clone.querySelectorAll(excludeSelector);
   for (let i = 0; i < exclusions.length; i++) {
-    let child = exclusions[i];
-    child.parentNode?.removeChild(child);
+    exclusions[i].remove();
   }
   return (clone.textContent || '').trim();
 }

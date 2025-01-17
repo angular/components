@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessPredicate, ComponentHarness} from '@angular/cdk/testing';
@@ -42,10 +42,13 @@ export class MatCalendarCellHarness extends ComponentHarness {
       .addOption('inRange', options.inRange, async (harness, inRange) => {
         return (await harness.isInRange()) === inRange;
       })
-      .addOption('inComparisonRange', options.inComparisonRange,
-          async (harness, inComparisonRange) => {
-            return (await harness.isInComparisonRange()) === inComparisonRange;
-          })
+      .addOption(
+        'inComparisonRange',
+        options.inComparisonRange,
+        async (harness, inComparisonRange) => {
+          return (await harness.isInComparisonRange()) === inComparisonRange;
+        },
+      )
       .addOption('inPreviewRange', options.inPreviewRange, async (harness, inPreviewRange) => {
         return (await harness.isInPreviewRange()) === inPreviewRange;
       });
@@ -66,7 +69,7 @@ export class MatCalendarCellHarness extends ComponentHarness {
   /** Whether the cell is selected. */
   async isSelected(): Promise<boolean> {
     const host = await this.host();
-    return (await host.getAttribute('aria-selected')) === 'true';
+    return (await host.getAttribute('aria-pressed')) === 'true';
   }
 
   /** Whether the cell is disabled. */

@@ -1,5 +1,7 @@
-import {SelectionChange} from '@angular/cdk-experimental/selection';
 import {Component} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
+import {SelectionChange, CdkSelectionModule} from '@angular/cdk-experimental/selection';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 /**
  * @title CDK Selection on a simple list.
@@ -7,6 +9,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'cdk-selection-list-example',
   templateUrl: 'cdk-selection-list-example.html',
+  imports: [CdkSelectionModule, MatCheckboxModule, AsyncPipe],
 })
 export class CdkSelectionListExample {
   data = ELEMENT_NAMES;
@@ -16,7 +19,7 @@ export class CdkSelectionListExample {
   selected4: string[] = [];
 
   getCurrentSelected(event: SelectionChange<string>) {
-    return event.after.map((select) => select.value);
+    return event.after.map(select => select.value);
   }
 
   trackByFn(index: number) {
@@ -33,12 +36,47 @@ export class CdkSelectionListExample {
 }
 
 const ELEMENT_NAMES = [
-  'Hydrogen',   'Helium',   'Lithium',  'Beryllium', 'Boron',     'Carbon',   'Nitrogen',
-  'Oxygen',     'Fluorine', 'Neon',     'Sodium',    'Magnesium', 'Aluminum', 'Silicon',
-  'Phosphorus', 'Sulfur',   'Chlorine', 'Argon',     'Potassium', 'Calcium',
+  'Hydrogen',
+  'Helium',
+  'Lithium',
+  'Beryllium',
+  'Boron',
+  'Carbon',
+  'Nitrogen',
+  'Oxygen',
+  'Fluorine',
+  'Neon',
+  'Sodium',
+  'Magnesium',
+  'Aluminum',
+  'Silicon',
+  'Phosphorus',
+  'Sulfur',
+  'Chlorine',
+  'Argon',
+  'Potassium',
+  'Calcium',
 ];
 
 const ELEMENT_SYMBOLS = [
-  'H',  'He', 'Li', 'Be', 'B', 'C', 'N',  'O',  'F', 'Ne',
-  'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca'
+  'H',
+  'He',
+  'Li',
+  'Be',
+  'B',
+  'C',
+  'N',
+  'O',
+  'F',
+  'Ne',
+  'Na',
+  'Mg',
+  'Al',
+  'Si',
+  'P',
+  'S',
+  'Cl',
+  'Ar',
+  'K',
+  'Ca',
 ];

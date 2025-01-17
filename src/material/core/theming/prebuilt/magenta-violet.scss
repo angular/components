@@ -1,0 +1,14 @@
+@use '../../theming/palettes';
+@use '../../../core/tokens/m3-system';
+
+html {
+  @include m3-system.theme((
+    color: (
+      theme-type: dark,
+      primary: palettes.$magenta-palette,
+      tertiary: palettes.$violet-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}

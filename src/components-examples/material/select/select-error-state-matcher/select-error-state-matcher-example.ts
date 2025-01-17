@@ -1,6 +1,16 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -14,17 +24,12 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'select-error-state-matcher-example',
   templateUrl: 'select-error-state-matcher-example.html',
+  imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectErrorStateMatcherExample {
-  selected = new FormControl('valid', [
-    Validators.required,
-    Validators.pattern('valid'),
-  ]);
+  selected = new FormControl('valid', [Validators.required, Validators.pattern('valid')]);
 
-  selectFormControl = new FormControl('valid', [
-    Validators.required,
-    Validators.pattern('valid'),
-  ]);
+  selectFormControl = new FormControl('valid', [Validators.required, Validators.pattern('valid')]);
 
   nativeSelectFormControl = new FormControl('valid', [
     Validators.required,

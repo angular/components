@@ -1,105 +1,184 @@
-@use 'sass:map';
-@use '../core/style/private';
-@use '../core/theming/palette';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
+@use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
+@use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 
-@mixin _checked-color($palette, $thumb-checked-hue) {
-  &.mat-checked {
-    .mat-slide-toggle-thumb {
-      background-color: theming.get-color-from-palette($palette, $thumb-checked-hue);
-    }
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-slide-toggle.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-unthemable-tokens()
+      );
 
-    .mat-slide-toggle-bar {
-      // Opacity is determined from the specs for the selection controls.
-      // See: https://material.io/design/components/selection-controls.html#specs
-      background-color: theming.get-color-from-palette($palette, $thumb-checked-hue, 0.54);
-    }
-
-    .mat-ripple-element {
-      // Set no opacity for the ripples because the ripple opacity will be adjusted dynamically
-      // based on the type of interaction with the slide-toggle (e.g. for hover, focus)
-      background-color: theming.get-color-from-palette($palette, $thumb-checked-hue);
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-unthemable-tokens()
+        );
+      }
     }
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $is-dark: map.get($config, is-dark);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+/// Outputs color theme styles for the mat-slide-toggle.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slide-toggle: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    $mdc-tokens: tokens-mdc-switch.get-color-tokens($theme);
 
-  // Color hues are based on the specs which briefly show the hues that are applied to a switch.
-  // The 2018 specs no longer describe how dark switches should look like. Due to the lack of
-  // information for dark themed switches, we partially keep the old behavior that is based on
-  // the previous specifications. For the checked color we always use the `default` hue because
-  // that follows MDC and also makes it easier for people to create a custom theme without needing
-  // to specify each hue individually.
-  $thumb-unchecked-hue: if($is-dark, 400, 50);
-  $thumb-checked-hue: default;
+    // Add values for MDC slide toggles tokens
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-color-tokens($theme)
+      );
 
-  $bar-unchecked-color: theming.get-color-from-palette($foreground, disabled);
-  $ripple-unchecked-color: theming.get-color-from-palette($foreground, base);
+      & {
+        // TODO(wagnermaciel): Use our token system to define this css variable.
+        --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+            $theme,
+            foreground,
+            disabled-text
+          )};
+      }
 
-  .mat-slide-toggle {
-    @include _checked-color($accent, $thumb-checked-hue);
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-color-tokens($theme)
+        );
 
-    &.mat-primary {
-      @include _checked-color($primary, $thumb-checked-hue);
+        // Change the color palette related tokens to accent or warn if applicable
+        &.mat-accent {
+          @include token-utils.create-token-values(
+            tokens-mdc-switch.$prefix,
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent)
+          );
+        }
+
+        &.mat-warn {
+          @include token-utils.create-token-values(
+            tokens-mdc-switch.$prefix,
+            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn)
+          );
+        }
+      }
     }
-
-    &.mat-warn {
-      @include _checked-color($warn, $thumb-checked-hue);
-    }
-
-    &:not(.mat-checked) .mat-ripple-element {
-      // Set no opacity for the ripples because the ripple opacity will be adjusted dynamically
-      // based on the type of interaction with the slide-toggle (e.g. for hover, focus)
-      background-color: $ripple-unchecked-color;
-    }
-  }
-
-  .mat-slide-toggle-thumb {
-    @include private.private-theme-elevation(1, $config);
-    background-color: theming.get-color-from-palette(palette.$grey-palette, $thumb-unchecked-hue);
-  }
-
-  .mat-slide-toggle-bar {
-    background-color: $bar-unchecked-color;
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-slide-toggle-content {
-    font-family: typography-utils.font-family($config);
+/// Outputs typography theme styles for the mat-slide-toggle.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-typography-tokens($theme)
+      );
+
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-typography-tokens($theme)
+        );
+      }
+    }
   }
 }
 
-@mixin _density($config-or-theme) {}
+/// Outputs density theme styles for the mat-slide-toggle.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-switch.$prefix,
+        tokens-mdc-switch.get-density-tokens($theme)
+      );
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+      .mat-mdc-slide-toggle {
+        @include token-utils.create-token-values(
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-density-tokens($theme)
+        );
+      }
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-switch.$prefix,
+      tokens: tokens-mat-switch.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-switch.$prefix,
+      tokens: tokens-mdc-switch.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-icon.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slide-toggle: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-slide-toggle') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }
 
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-switch.$prefix, $options...);
+  // Don't pass $options here, since the mat-switch doesn't support color options,
+  // only the mdc-switch does.
+  $mat-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix);
+
+  @include token-utils.create-token-values(tokens-mdc-switch.$prefix, $mdc-switch-tokens);
+  @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-switch-tokens);
+}

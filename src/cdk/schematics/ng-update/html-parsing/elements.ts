@@ -3,10 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChildNode, Element, parseFragment} from 'parse5';
+import {parseFragment} from 'parse5';
+import {ChildNode, Element} from '../../utils';
 
 /**
  * Parses a HTML fragment and traverses all AST nodes in order find elements that
@@ -17,7 +18,9 @@ export function findElementsWithAttribute(html: string, attributeName: string) {
   const elements: Element[] = [];
 
   const visitNodes = (nodes: ChildNode[]) => {
-    nodes.forEach((node: Element) => {
+    nodes.forEach(n => {
+      const node = n as Element;
+
       if (node.childNodes) {
         visitNodes(node.childNodes);
       }
@@ -39,8 +42,8 @@ export function findElementsWithAttribute(html: string, attributeName: string) {
  */
 export function findAttributeOnElementWithTag(html: string, name: string, tagNames: string[]) {
   return findElementsWithAttribute(html, name)
-      .filter(element => tagNames.includes(element.tagName))
-      .map(element => getStartOffsetOfAttribute(element, name));
+    .filter(element => tagNames.includes(element.tagName))
+    .map(element => getStartOffsetOfAttribute(element, name));
 }
 
 /**
@@ -49,15 +52,14 @@ export function findAttributeOnElementWithTag(html: string, name: string, tagNam
  */
 export function findAttributeOnElementWithAttrs(html: string, name: string, attrs: string[]) {
   return findElementsWithAttribute(html, name)
-      .filter(element => attrs.some(attr => hasElementAttribute(element, attr)))
-      .map(element => getStartOffsetOfAttribute(element, name));
+    .filter(element => attrs.some(attr => hasElementAttribute(element, attr)))
+    .map(element => getStartOffsetOfAttribute(element, name));
 }
 
 /** Shorthand function that checks if the specified element contains the given attribute. */
 function hasElementAttribute(element: Element, attributeName: string): boolean {
   return element.attrs && element.attrs.some(attr => attr.name === attributeName.toLowerCase());
 }
-
 
 /** Gets the start offset of the given attribute from a Parse5 element. */
 export function getStartOffsetOfAttribute(element: any, attributeName: string): number {

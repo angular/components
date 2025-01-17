@@ -3,10 +3,9 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {TargetVersion} from '../../update-tool/target-version';
 import {VersionChanges} from '../../update-tool/version-changes';
 
 export interface CssSelectorUpgradeData {
@@ -20,14 +19,12 @@ export interface CssSelectorUpgradeData {
    */
   replaceIn?: {
     /** Replace this name in stylesheet files. */
-    stylesheet?: boolean,
+    stylesheet?: boolean;
     /** Replace this name in HTML files. */
-    html?: boolean,
+    html?: boolean;
     /** Replace this name in TypeScript strings. */
-    tsStringLiterals?: boolean
+    tsStringLiterals?: boolean;
   };
 }
 
-export const cssSelectors: VersionChanges<CssSelectorUpgradeData> = {
-  [TargetVersion.V6]: []
-};
+export const cssSelectors: VersionChanges<CssSelectorUpgradeData> = {};

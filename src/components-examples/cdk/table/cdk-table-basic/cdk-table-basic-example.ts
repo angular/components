@@ -1,5 +1,6 @@
 import {DataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 export interface PeriodicElement {
@@ -27,8 +28,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'cdk-table-basic-example',
-  styleUrls: ['cdk-table-basic-example.css'],
+  styleUrl: 'cdk-table-basic-example.css',
   templateUrl: 'cdk-table-basic-example.html',
+  imports: [CdkTableModule],
 })
 export class CdkTableBasicExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

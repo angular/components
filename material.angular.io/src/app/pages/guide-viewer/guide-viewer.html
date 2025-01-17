@@ -1,0 +1,13 @@
+<div class="docs-guide-wrapper">
+  <div class="docs-guide-toc-and-content">
+    <doc-viewer class="docs-guide-content"
+                (contentRendered)="toc.addHeaders('Guide Content', $event); toc.updateScrollPosition()"
+                [document]="guide?.document"
+                focusOnNavigation
+                id="guide-content"
+                aria-label="Guide content"></doc-viewer>
+    <table-of-contents #toc container="guide-viewer"></table-of-contents>
+  </div>
+</div>
+
+<app-footer></app-footer>

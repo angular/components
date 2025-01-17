@@ -1,5 +1,6 @@
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
     "ng_module",
     "ng_test_library",
@@ -16,32 +17,22 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":table.css"],
-    module_name = "@angular/material/table",
+    assets = [":table_scss"] + glob(["**/*.html"]),
     deps = [
-        "@npm//@angular/core",
-        "@npm//rxjs",
-        "//src/cdk/coercion",
         "//src/cdk/table",
         "//src/material/core",
         "//src/material/paginator",
         "//src/material/sort",
-    ] + glob(["**/*.html"]),
+        "@npm//@angular/core",
+    ],
 )
 
 sass_library(
     name = "table_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_library(
-    name = "table_flex_scss_lib",
-    srcs = [
-        "_table-flex-styles.import.scss",
-        "_table-flex-styles.scss",
+    deps = [
+        "//src/material/core:core_scss_lib",
     ],
-    deps = ["//src/material/core:core_scss_lib"],
 )
 
 sass_binary(
@@ -53,15 +44,26 @@ sass_binary(
     ],
 )
 
+sass_library(
+    name = "table_flex_scss_lib",
+    srcs = [
+        "_table-flex-styles.scss",
+    ],
+    deps = ["//src/material/core:core_scss_lib"],
+)
+
+###########
+# Testing
+###########
+
 ng_test_library(
-    name = "unit_test_sources",
+    name = "table_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":table",
-        "//src/cdk/collections",
+        "//src/cdk/table",
         "//src/material/paginator",
         "//src/material/sort",
         "@npm//@angular/platform-browser",
@@ -71,12 +73,19 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [
+        ":table_tests_lib",
+    ],
 )
 
 markdown_to_html(
     name = "overview",
     srcs = [":table.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":table_scss_lib"],
 )
 
 filegroup(

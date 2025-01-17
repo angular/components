@@ -26,45 +26,47 @@
       </form>
     </div>
   </ng-template>
-  
+
   <tr>
     <th> No. </th>
     <th> First name </th>
     <th> Middle name </th>
     <th> Last name </th>
   </tr>
-  
-  <tr *ngFor="let person of persons">
-    <td> {{person.id}} </td>
 
-    <td [cdkPopoverEdit]="nameEdit"
-        [cdkPopoverEditContext]="{person: person, focus: 'firstName'}"
-        [cdkPopoverEditColspan]="{after: 2}">
-      {{person.firstName}}
-      
-      <span *cdkRowHoverContent>
-        <button cdkEditOpen>Edit</button>
-      </span>
-    </td>
-    
-    <td [cdkPopoverEdit]="nameEdit"
-        [cdkPopoverEditContext]="{person: person, focus: 'middleName'}"
-        [cdkPopoverEditColspan]="{before: 1, after: 1}">
-      {{person.middleName}}
-      
-      <span *cdkRowHoverContent>
-        <button cdkEditOpen>Edit</button>
-      </span>
-    </td>
-    
-    <td [cdkPopoverEdit]="nameEdit"
-        [cdkPopoverEditContext]="{person: person, focus: 'lastName'}"
-        [cdkPopoverEditColspan]="{before: 2}">
-      {{person.lastName}}
-      
-      <span *cdkRowHoverContent>
-        <button cdkEditOpen>Edit</button>
-      </span>
-    </td>
-  </tr>
+  @for (person of persons; track person) {
+    <tr>
+      <td> {{person.id}} </td>
+
+      <td [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditContext]="{person: person, focus: 'firstName'}"
+          [cdkPopoverEditColspan]="{after: 2}">
+        {{person.firstName}}
+
+        <span *cdkRowHoverContent>
+          <button cdkEditOpen>Edit</button>
+        </span>
+      </td>
+
+      <td [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditContext]="{person: person, focus: 'middleName'}"
+          [cdkPopoverEditColspan]="{before: 1, after: 1}">
+        {{person.middleName}}
+
+        <span *cdkRowHoverContent>
+          <button cdkEditOpen>Edit</button>
+        </span>
+      </td>
+
+      <td [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditContext]="{person: person, focus: 'lastName'}"
+          [cdkPopoverEditColspan]="{before: 2}">
+        {{person.lastName}}
+
+        <span *cdkRowHoverContent>
+          <button cdkEditOpen>Edit</button>
+        </span>
+      </td>
+    </tr>
+  }
 </table>

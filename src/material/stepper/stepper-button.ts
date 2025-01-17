@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {CdkStepperNext, CdkStepperPrevious} from '@angular/cdk/stepper';
@@ -16,10 +16,8 @@ import {Directive} from '@angular/core';
     'class': 'mat-stepper-next',
     '[type]': 'type',
   },
-  inputs: ['type']
 })
-export class MatStepperNext extends CdkStepperNext {
-}
+export class MatStepperNext extends CdkStepperNext {}
 
 /** Button that moves to the previous step in a stepper workflow. */
 @Directive({
@@ -28,7 +26,5 @@ export class MatStepperNext extends CdkStepperNext {
     'class': 'mat-stepper-previous',
     '[type]': 'type',
   },
-  inputs: ['type']
 })
-export class MatStepperPrevious extends CdkStepperPrevious {
-}
+export class MatStepperPrevious extends CdkStepperPrevious {}

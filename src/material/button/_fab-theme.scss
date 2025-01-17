@@ -1,0 +1,249 @@
+@use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
+@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
+@use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-fab.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-fab.$prefix,
+        tokens-mdc-fab.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-fab-small.$prefix,
+        tokens-mdc-fab-small.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-unthemable-tokens()
+      );
+    }
+  }
+}
+
+@mixin _fab-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-fab.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-fab.get-color-tokens($theme)
+  );
+
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-fab.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-fab.get-color-tokens($theme)
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-fab.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-tokens);
+}
+
+@mixin _fab-small-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-fab-small.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-fab-small.get-color-tokens($theme)
+  );
+
+  $mat-tokens: if(
+    $palette,
+    tokens-mat-fab-small.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mat-fab-small.get-color-tokens($theme)
+  );
+
+  @include token-utils.create-token-values(tokens-mdc-fab-small.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab-small.$prefix, $mat-tokens);
+}
+
+/// Outputs color theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the fab: primary, secondary, or tertiary
+///     (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include _fab-variant($theme, null);
+      @include _fab-small-variant($theme, null);
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-color-tokens($theme)
+      );
+
+      .mat-mdc-fab {
+        &.mat-primary {
+          @include _fab-variant($theme, primary);
+        }
+
+        &.mat-accent {
+          @include _fab-variant($theme, accent);
+        }
+
+        &.mat-warn {
+          @include _fab-variant($theme, warn);
+        }
+      }
+
+      .mat-mdc-mini-fab {
+        &.mat-primary {
+          @include _fab-small-variant($theme, primary);
+        }
+
+        &.mat-accent {
+          @include _fab-small-variant($theme, accent);
+        }
+
+        &.mat-warn {
+          @include _fab-small-variant($theme, warn);
+        }
+      }
+    }
+  }
+}
+
+/// Outputs typography theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-fab.$prefix,
+        tokens-mat-fab.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-fab-small.$prefix,
+        tokens-mat-fab-small.get-typography-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Outputs density theme styles for the mat-fab.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mat-fab.$prefix,
+        tokens-mat-fab.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-fab-small.$prefix,
+        tokens-mat-fab-small.get-density-tokens($theme)
+      );
+    }
+  }
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mdc-fab.$prefix,
+      tokens: tokens-mdc-fab.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-fab-small.$prefix,
+      tokens: tokens-mdc-fab-small.get-token-slots(),
+      prefix: 'small-',
+    ),
+    (
+      namespace: tokens-mdc-extended-fab.$prefix,
+      tokens: tokens-mdc-extended-fab.get-token-slots(),
+      prefix: 'extended-',
+    ),
+    (
+      namespace: tokens-mat-fab.$prefix,
+      tokens: tokens-mat-fab.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mat-fab-small.$prefix,
+      tokens: tokens-mat-fab-small.get-token-slots(),
+      prefix: 'small-',
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the fab: primary, secondary, or tertiary
+///     (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-extended-fab-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-extended-fab.$prefix,
+    $options...
+  );
+  $mdc-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-fab.$prefix, $options...);
+  $mdc-fab-small-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-fab-small.$prefix,
+    $options...
+  );
+  $mat-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mat-fab.$prefix, $options...);
+  $mat-fab-small-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mat-fab-small.$prefix,
+    $options...
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-extended-fab.$prefix,
+    $mdc-extended-fab-tokens
+  );
+  @include token-utils.create-token-values(tokens-mdc-fab.$prefix, $mdc-fab-tokens);
+  @include token-utils.create-token-values(tokens-mdc-fab-small.$prefix, $mdc-fab-small-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-fab-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab-small.$prefix, $mat-fab-small-tokens);
+}

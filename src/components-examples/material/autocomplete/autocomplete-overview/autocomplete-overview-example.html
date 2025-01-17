@@ -1,16 +1,18 @@
 <form class="example-form">
-  <mat-form-field class="example-full-width" appearance="fill">
+  <mat-form-field class="example-full-width">
     <mat-label>State</mat-label>
     <input matInput
            aria-label="State"
            [matAutocomplete]="auto"
            [formControl]="stateCtrl">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-        <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
-        <span>{{state.name}}</span> |
-        <small>Population: {{state.population}}</small>
-      </mat-option>
+      @for (state of filteredStates | async; track state) {
+        <mat-option [value]="state.name">
+          <img alt="" class="example-option-img" [src]="state.flag" height="25">
+          <span>{{state.name}}</span> |
+          <small>Population: {{state.population}}</small>
+        </mat-option>
+      }
     </mat-autocomplete>
   </mat-form-field>
 

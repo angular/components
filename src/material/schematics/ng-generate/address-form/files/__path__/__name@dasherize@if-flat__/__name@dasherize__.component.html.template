@@ -15,17 +15,17 @@
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="First name" formControlName="firstName">
-            <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
-              First name is <strong>required</strong>
-            </mat-error>
+            @if (addressForm.controls['firstName'].hasError('required')) {
+              <mat-error>First name is <strong>required</strong></mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="Last name" formControlName="lastName">
-            <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
-              Last name is <strong>required</strong>
-            </mat-error>
+            @if (addressForm.controls['lastName'].hasError('required')) {
+              <mat-error>Last name is <strong>required</strong></mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
@@ -33,45 +33,44 @@
         <div class="col">
           <mat-form-field class="full-width">
             <textarea matInput placeholder="Address" formControlName="address"></textarea>
-            <mat-error *ngIf="addressForm.controls['address'].hasError('required')">
-              Address is <strong>required</strong>
-            </mat-error>
+            @if (addressForm.controls['address'].hasError('required')) {
+              <mat-error>Address is <strong>required</strong></mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
-      <div class="row" *ngIf="!hasUnitNumber">
+      <div class="row">
         <div class="col">
-          <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
-            + Add C/O, Apt, Suite, Unit
-          </button>
-        </div>
-      </div>
-      <div class="row" *ngIf="hasUnitNumber">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
-          </mat-form-field>
+          @if (hasUnitNumber) {
+            <mat-form-field class="full-width">
+              <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
+            </mat-form-field>
+          } @else {
+            <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
+              + Add C/O, Apt, Suite, Unit
+            </button>
+          }
         </div>
       </div>
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
             <input matInput placeholder="City" formControlName="city">
-            <mat-error *ngIf="addressForm.controls['city'].hasError('required')">
-              City is <strong>required</strong>
-            </mat-error>
+            @if (addressForm.controls['city'].hasError('required')) {
+              <mat-error>City is <strong>required</strong></mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
             <mat-select placeholder="State" formControlName="state">
-              <mat-option *ngFor="let state of states" [value]="state.abbreviation">
-                {{ state.name }}
-              </mat-option>
+              @for (state of states; track state) {
+                <mat-option [value]="state.abbreviation">{{ state.name }}</mat-option>
+              }
             </mat-select>
-            <mat-error *ngIf="addressForm.controls['state'].hasError('required')">
-              State is <strong>required</strong>
-            </mat-error>
+            @if (addressForm.controls['state'].hasError('required')) {
+              <mat-error>State is <strong>required</strong></mat-error>
+            }
           </mat-form-field>
         </div>
       </div>

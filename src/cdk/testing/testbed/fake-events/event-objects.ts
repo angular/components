@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ModifierKeys} from '@angular/cdk/testing';
@@ -16,10 +16,14 @@ let uniqueIds = 0;
  * @docs-private
  */
 export function createMouseEvent(
-  type: string, clientX = 0, clientY = 0, button = 0, modifiers: ModifierKeys = {}) {
-  const event = document.createEvent('MouseEvent');
-  const originalPreventDefault = event.preventDefault.bind(event);
-
+  type: string,
+  clientX = 0,
+  clientY = 0,
+  offsetX = 0,
+  offsetY = 0,
+  button = 0,
+  modifiers: ModifierKeys = {},
+) {
   // Note: We cannot determine the position of the mouse event based on the screen
   // because the dimensions and position of the browser window are not available
   // To provide reasonable `screenX` and `screenY` coordinates, we simply use the
@@ -27,31 +31,34 @@ export function createMouseEvent(
   const screenX = clientX;
   const screenY = clientY;
 
-  event.initMouseEvent(type,
-    /* canBubble */ true,
-    /* cancelable */ true,
-    /* view */ window,
-    /* detail */ 0,
-    /* screenX */ screenX,
-    /* screenY */ screenY,
-    /* clientX */ clientX,
-    /* clientY */ clientY,
-    /* ctrlKey */ !!modifiers.control,
-    /* altKey */ !!modifiers.alt,
-    /* shiftKey */ !!modifiers.shift,
-    /* metaKey */ !!modifiers.meta,
-    /* button */ button,
-    /* relatedTarget */ null);
+  const event = new MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    composed: true, // Required for shadow DOM events.
+    view: window,
+    detail: 1,
+    relatedTarget: null,
+    screenX,
+    screenY,
+    clientX,
+    clientY,
+    ctrlKey: modifiers.control,
+    altKey: modifiers.alt,
+    shiftKey: modifiers.shift,
+    metaKey: modifiers.meta,
+    button: button,
+    buttons: 1,
+  });
 
-  // `initMouseEvent` doesn't allow us to pass the `buttons` and
-  // defaults it to 0 which looks like a fake event.
-  defineReadonlyEventProperty(event, 'buttons', 1);
+  // The `MouseEvent` constructor doesn't allow us to pass these properties into the constructor.
+  // Override them to `1`, because they're used for fake screen reader event detection.
+  if (offsetX != null) {
+    defineReadonlyEventProperty(event, 'offsetX', offsetX);
+  }
 
-  // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
-  event.preventDefault = function() {
-    defineReadonlyEventProperty(event, 'defaultPrevented', true);
-    return originalPreventDefault();
-  };
+  if (offsetY != null) {
+    defineReadonlyEventProperty(event, 'offsetY', offsetY);
+  }
 
   return event;
 }
@@ -66,16 +73,33 @@ export function createMouseEvent(
  *
  * @docs-private
  */
-export function createPointerEvent(type: string, clientX = 0, clientY = 0,
-                                   options: PointerEventInit = {isPrimary: true}) {
-  return new PointerEvent(type, {
+export function createPointerEvent(
+  type: string,
+  clientX = 0,
+  clientY = 0,
+  offsetX?: number,
+  offsetY?: number,
+  options: PointerEventInit = {isPrimary: true},
+) {
+  const event = new PointerEvent(type, {
     bubbles: true,
     cancelable: true,
+    composed: true, // Required for shadow DOM events.
     view: window,
     clientX,
     clientY,
     ...options,
   });
+
+  if (offsetX != null) {
+    defineReadonlyEventProperty(event, 'offsetX', offsetX);
+  }
+
+  if (offsetY != null) {
+    defineReadonlyEventProperty(event, 'offsetY', offsetY);
+  }
+
+  return event;
 }
 
 /**
@@ -83,10 +107,10 @@ export function createPointerEvent(type: string, clientX = 0, clientY = 0,
  * @docs-private
  */
 export function createTouchEvent(type: string, pageX = 0, pageY = 0, clientX = 0, clientY = 0) {
-  // In favor of creating events that work for most of the browsers, the event is created
-  // as a basic UI Event. The necessary details for the event will be set manually.
+  // We cannot use the `TouchEvent` or `Touch` because Firefox and Safari lack support.
+  // TODO: Switch to the constructor API when it is available for Firefox and Safari.
   const event = document.createEvent('UIEvent');
-  const touchDetails = {pageX, pageY, clientX, clientY, id: uniqueIds++};
+  const touchDetails = {pageX, pageY, clientX, clientY, identifier: uniqueIds++};
 
   // TS3.6 removes the initUIEvent method and suggests porting to "new UIEvent()".
   (event as any).initUIEvent(type, true, true, window, 0);
@@ -104,77 +128,34 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0, clientX = 0
  * Creates a keyboard event with the specified key and modifiers.
  * @docs-private
  */
-export function createKeyboardEvent(type: string, keyCode: number = 0, key: string = '',
-                                    modifiers: ModifierKeys = {}) {
-  const event = document.createEvent('KeyboardEvent');
-  const originalPreventDefault = event.preventDefault.bind(event);
-
-  // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
-  // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/initKeyEvent.
-  if ((event as any).initKeyEvent !== undefined) {
-    (event as any).initKeyEvent(type, true, true, window, modifiers.control, modifiers.alt,
-        modifiers.shift, modifiers.meta, keyCode);
-  } else {
-    // `initKeyboardEvent` expects to receive modifiers as a whitespace-delimited string
-    // See https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/initKeyboardEvent
-    let modifiersList = '';
-
-    if (modifiers.control) {
-      modifiersList += 'Control ';
-    }
-
-    if (modifiers.alt) {
-      modifiersList += 'Alt ';
-    }
-
-    if (modifiers.shift) {
-      modifiersList += 'Shift ';
-    }
-
-    if (modifiers.meta) {
-      modifiersList += 'Meta ';
-    }
-
-    // TS3.6 removed the `initKeyboardEvent` method and suggested porting to
-    // `new KeyboardEvent()` constructor. We cannot use that as we support IE11.
-    // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/initKeyboardEvent.
-    (event as any).initKeyboardEvent(type,
-        true, /* canBubble */
-        true, /* cancelable */
-        window, /* view */
-        0, /* char */
-        key, /* key */
-        0, /* location */
-        modifiersList.trim(), /* modifiersList */
-        false /* repeat */);
-  }
-
-  // Webkit Browsers don't set the keyCode when calling the init function.
-  // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
-  defineReadonlyEventProperty(event, 'keyCode', keyCode);
-  defineReadonlyEventProperty(event, 'key', key);
-  defineReadonlyEventProperty(event, 'ctrlKey', !!modifiers.control);
-  defineReadonlyEventProperty(event, 'altKey', !!modifiers.alt);
-  defineReadonlyEventProperty(event, 'shiftKey', !!modifiers.shift);
-  defineReadonlyEventProperty(event, 'metaKey', !!modifiers.meta);
-
-  // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
-  event.preventDefault = function() {
-    defineReadonlyEventProperty(event, 'defaultPrevented', true);
-    return originalPreventDefault();
-  };
-
-  return event;
+export function createKeyboardEvent(
+  type: string,
+  keyCode: number = 0,
+  key: string = '',
+  modifiers: ModifierKeys = {},
+  code: string = '',
+) {
+  return new KeyboardEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    composed: true, // Required for shadow DOM events.
+    view: window,
+    keyCode,
+    key,
+    shiftKey: modifiers.shift,
+    metaKey: modifiers.meta,
+    altKey: modifiers.alt,
+    ctrlKey: modifiers.control,
+    code,
+  });
 }
 
 /**
  * Creates a fake event object with any desired event type.
  * @docs-private
  */
-export function createFakeEvent(type: string, canBubble = false, cancelable = true) {
-  const event = document.createEvent('Event');
-  event.initEvent(type, canBubble, cancelable);
-  return event;
+export function createFakeEvent(type: string, bubbles = false, cancelable = true, composed = true) {
+  return new Event(type, {bubbles, cancelable, composed});
 }
 
 /**

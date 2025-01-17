@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {TargetVersion} from './target-version';
@@ -13,11 +13,12 @@ export type VersionChanges<T> = {
 };
 
 export type ReadableChange<T> = {
-  pr: string; changes: T[]
+  pr: string;
+  changes: T[];
 };
 
 /** Conditional type that unwraps the value of a version changes type. */
-export type ValueOfChanges<T> = T extends VersionChanges<infer X>? X : null;
+export type ValueOfChanges<T> = T extends VersionChanges<infer X> ? X : null;
 
 /**
  * Gets the changes for a given target version from the specified version changes object.
@@ -43,6 +44,6 @@ export function getChangesForTarget<T>(target: TargetVersion, data: VersionChang
  */
 export function getAllChanges<T>(data: VersionChanges<T>): T[] {
   return Object.keys(data)
-      .map(targetVersion => getChangesForTarget(targetVersion as TargetVersion, data))
-      .reduce((result, versionData) => result.concat(versionData), []);
+    .map(targetVersion => getChangesForTarget(targetVersion as TargetVersion, data))
+    .reduce((result, versionData) => result.concat(versionData), []);
 }

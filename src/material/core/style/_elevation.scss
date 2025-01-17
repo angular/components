@@ -1,8 +1,97 @@
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:meta';
-@use 'variables';
+@use 'sass:string';
+@use './variables';
+@use './sass-utils';
 
+$_umbra-opacity: 0.2;
+$_penumbra-opacity: 0.14;
+$_ambient-opacity: 0.12;
+
+$_umbra-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 2px 1px -1px',
+  2: '0px 3px 1px -2px',
+  3: '0px 3px 3px -2px',
+  4: '0px 2px 4px -1px',
+  5: '0px 3px 5px -1px',
+  6: '0px 3px 5px -1px',
+  7: '0px 4px 5px -2px',
+  8: '0px 5px 5px -3px',
+  9: '0px 5px 6px -3px',
+  10: '0px 6px 6px -3px',
+  11: '0px 6px 7px -4px',
+  12: '0px 7px 8px -4px',
+  13: '0px 7px 8px -4px',
+  14: '0px 7px 9px -4px',
+  15: '0px 8px 9px -5px',
+  16: '0px 8px 10px -5px',
+  17: '0px 8px 11px -5px',
+  18: '0px 9px 11px -5px',
+  19: '0px 9px 12px -6px',
+  20: '0px 10px 13px -6px',
+  21: '0px 10px 13px -6px',
+  22: '0px 10px 14px -6px',
+  23: '0px 11px 14px -7px',
+  24: '0px 11px 15px -7px',
+);
+
+$_penumbra-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 1px 1px 0px',
+  2: '0px 2px 2px 0px',
+  3: '0px 3px 4px 0px',
+  4: '0px 4px 5px 0px',
+  5: '0px 5px 8px 0px',
+  6: '0px 6px 10px 0px',
+  7: '0px 7px 10px 1px',
+  8: '0px 8px 10px 1px',
+  9: '0px 9px 12px 1px',
+  10: '0px 10px 14px 1px',
+  11: '0px 11px 15px 1px',
+  12: '0px 12px 17px 2px',
+  13: '0px 13px 19px 2px',
+  14: '0px 14px 21px 2px',
+  15: '0px 15px 22px 2px',
+  16: '0px 16px 24px 2px',
+  17: '0px 17px 26px 2px',
+  18: '0px 18px 28px 2px',
+  19: '0px 19px 29px 2px',
+  20: '0px 20px 31px 3px',
+  21: '0px 21px 33px 3px',
+  22: '0px 22px 35px 3px',
+  23: '0px 23px 36px 3px',
+  24: '0px 24px 38px 3px',
+);
+
+$_ambient-map: (
+  0: '0px 0px 0px 0px',
+  1: '0px 1px 3px 0px',
+  2: '0px 1px 5px 0px',
+  3: '0px 1px 8px 0px',
+  4: '0px 1px 10px 0px',
+  5: '0px 1px 14px 0px',
+  6: '0px 1px 18px 0px',
+  7: '0px 2px 16px 1px',
+  8: '0px 3px 14px 2px',
+  9: '0px 3px 16px 2px',
+  10: '0px 4px 18px 3px',
+  11: '0px 4px 20px 3px',
+  12: '0px 5px 22px 4px',
+  13: '0px 5px 24px 4px',
+  14: '0px 5px 26px 4px',
+  15: '0px 6px 28px 5px',
+  16: '0px 6px 30px 5px',
+  17: '0px 6px 32px 5px',
+  18: '0px 7px 34px 6px',
+  19: '0px 7px 36px 6px',
+  20: '0px 8px 38px 7px',
+  21: '0px 8px 40px 7px',
+  22: '0px 8px 42px 7px',
+  23: '0px 9px 44px 8px',
+  24: '0px 9px 46px 8px',
+);
 
 // A collection of mixins and CSS classes that can be used to apply elevation to a material
 // element.
@@ -21,114 +110,7 @@
 // <div id="external-card" class="mat-elevation-z2"><p>Some content</p></div>
 //
 // For an explanation of the design behind how elevation is implemented, see the design doc at
-// https://goo.gl/Kq0k9Z.
-
-// Colors for umbra, penumbra, and ambient shadows. As described in the design doc, each elevation
-// level is created using a set of 3 shadow values, one for umbra (the shadow representing the
-// space completely obscured by an object relative to its light source), one for penumbra (the
-// space partially obscured by an object), and one for ambient (the space which contains the object
-// itself). For a further explanation of these terms and their meanings, see
-// https://en.wikipedia.org/wiki/Umbra,_penumbra_and_antumbra.
-
-// Maps for the different shadow sets and their values within each z-space. These values were
-// created by taking a few reference shadow sets created by Google's Designers and interpolating
-// all of the values between them.
-
-@function _get-umbra-map($color, $opacity) {
-  $shadow-color: if(meta.type-of($color) == color, rgba($color, $opacity * 0.2), $color);
-
-  @return (
-    0: '0px 0px 0px 0px #{$shadow-color}',
-    1: '0px 2px 1px -1px #{$shadow-color}',
-    2: '0px 3px 1px -2px #{$shadow-color}',
-    3: '0px 3px 3px -2px #{$shadow-color}',
-    4: '0px 2px 4px -1px #{$shadow-color}',
-    5: '0px 3px 5px -1px #{$shadow-color}',
-    6: '0px 3px 5px -1px #{$shadow-color}',
-    7: '0px 4px 5px -2px #{$shadow-color}',
-    8: '0px 5px 5px -3px #{$shadow-color}',
-    9: '0px 5px 6px -3px #{$shadow-color}',
-    10: '0px 6px 6px -3px #{$shadow-color}',
-    11: '0px 6px 7px -4px #{$shadow-color}',
-    12: '0px 7px 8px -4px #{$shadow-color}',
-    13: '0px 7px 8px -4px #{$shadow-color}',
-    14: '0px 7px 9px -4px #{$shadow-color}',
-    15: '0px 8px 9px -5px #{$shadow-color}',
-    16: '0px 8px 10px -5px #{$shadow-color}',
-    17: '0px 8px 11px -5px #{$shadow-color}',
-    18: '0px 9px 11px -5px #{$shadow-color}',
-    19: '0px 9px 12px -6px #{$shadow-color}',
-    20: '0px 10px 13px -6px #{$shadow-color}',
-    21: '0px 10px 13px -6px #{$shadow-color}',
-    22: '0px 10px 14px -6px #{$shadow-color}',
-    23: '0px 11px 14px -7px #{$shadow-color}',
-    24: '0px 11px 15px -7px #{$shadow-color}'
-  );
-}
-
-@function _get-penumbra-map($color, $opacity) {
-  $shadow-color: if(meta.type-of($color) == color, rgba($color, $opacity * 0.14), $color);
-
-  @return (
-    0: '0px 0px 0px 0px #{$shadow-color}',
-    1: '0px 1px 1px 0px #{$shadow-color}',
-    2: '0px 2px 2px 0px #{$shadow-color}',
-    3: '0px 3px 4px 0px #{$shadow-color}',
-    4: '0px 4px 5px 0px #{$shadow-color}',
-    5: '0px 5px 8px 0px #{$shadow-color}',
-    6: '0px 6px 10px 0px #{$shadow-color}',
-    7: '0px 7px 10px 1px #{$shadow-color}',
-    8: '0px 8px 10px 1px #{$shadow-color}',
-    9: '0px 9px 12px 1px #{$shadow-color}',
-    10: '0px 10px 14px 1px #{$shadow-color}',
-    11: '0px 11px 15px 1px #{$shadow-color}',
-    12: '0px 12px 17px 2px #{$shadow-color}',
-    13: '0px 13px 19px 2px #{$shadow-color}',
-    14: '0px 14px 21px 2px #{$shadow-color}',
-    15: '0px 15px 22px 2px #{$shadow-color}',
-    16: '0px 16px 24px 2px #{$shadow-color}',
-    17: '0px 17px 26px 2px #{$shadow-color}',
-    18: '0px 18px 28px 2px #{$shadow-color}',
-    19: '0px 19px 29px 2px #{$shadow-color}',
-    20: '0px 20px 31px 3px #{$shadow-color}',
-    21: '0px 21px 33px 3px #{$shadow-color}',
-    22: '0px 22px 35px 3px #{$shadow-color}',
-    23: '0px 23px 36px 3px #{$shadow-color}',
-    24: '0px 24px 38px 3px #{$shadow-color}'
-  );
-}
-
-@function _get-ambient-map($color, $opacity) {
-  $shadow-color: if(meta.type-of($color) == color, rgba($color, $opacity * 0.12), $color);
-
-  @return (
-    0: '0px 0px 0px 0px #{$shadow-color}',
-    1: '0px 1px 3px 0px #{$shadow-color}',
-    2: '0px 1px 5px 0px #{$shadow-color}',
-    3: '0px 1px 8px 0px #{$shadow-color}',
-    4: '0px 1px 10px 0px #{$shadow-color}',
-    5: '0px 1px 14px 0px #{$shadow-color}',
-    6: '0px 1px 18px 0px #{$shadow-color}',
-    7: '0px 2px 16px 1px #{$shadow-color}',
-    8: '0px 3px 14px 2px #{$shadow-color}',
-    9: '0px 3px 16px 2px #{$shadow-color}',
-    10: '0px 4px 18px 3px #{$shadow-color}',
-    11: '0px 4px 20px 3px #{$shadow-color}',
-    12: '0px 5px 22px 4px #{$shadow-color}',
-    13: '0px 5px 24px 4px #{$shadow-color}',
-    14: '0px 5px 26px 4px #{$shadow-color}',
-    15: '0px 6px 28px 5px #{$shadow-color}',
-    16: '0px 6px 30px 5px #{$shadow-color}',
-    17: '0px 6px 32px 5px #{$shadow-color}',
-    18: '0px 7px 34px 6px #{$shadow-color}',
-    19: '0px 7px 36px 6px #{$shadow-color}',
-    20: '0px 8px 38px 7px #{$shadow-color}',
-    21: '0px 8px 40px 7px #{$shadow-color}',
-    22: '0px 8px 42px 7px #{$shadow-color}',
-    23: '0px 9px 44px 8px #{$shadow-color}',
-    24: '0px 9px 46px 8px #{$shadow-color}'
-  );
-}
+// https://docs.google.com/document/d/1W3NGSLqDZzjbBBLW2C6y_6NUxtvdZAVaJvg58LY3Q0E/edit
 
 // The default duration value for elevation transitions.
 $transition-duration: 280ms !default;
@@ -139,36 +121,52 @@ $transition-timing-function: variables.$fast-out-slow-in-timing-function;
 // The default color for elevation shadows.
 $color: black !default;
 
-// The default opacity scaling value for elevation shadows.
-$opacity: 1 !default;
-
 // Prefix for elevation-related selectors.
 $prefix: 'mat-elevation-z';
 
 // Applies the correct css rules to an element to give it the elevation specified by $zValue.
 // The $zValue must be between 0 and 24.
-@mixin elevation($zValue, $color: $color, $opacity: $opacity) {
-  @if meta.type-of($zValue) != number or not math.is-unitless($zValue) {
-    @error '$zValue must be a unitless number';
-  }
-  @if $zValue < 0 or $zValue > 24 {
-    @error '$zValue must be between 0 and 24';
-  }
-
-  box-shadow: #{map.get(_get-umbra-map($color, $opacity), $zValue)},
-              #{map.get(_get-penumbra-map($color, $opacity), $zValue)},
-              #{map.get(_get-ambient-map($color, $opacity), $zValue)};
+@mixin elevation($zValue, $color: $color, $opacity: null) {
+  box-shadow: get-box-shadow($zValue, $color, $opacity);
 }
 
 // Applies the elevation to an element in a manner that allows
 // consumers to override it via the Material elevation classes.
-@mixin overridable-elevation(
-    $zValue,
-    $color: $color,
-    $opacity: $opacity) {
+@mixin overridable-elevation($zValue, $color: $color, $opacity: null) {
   &:not([class*='#{$prefix}']) {
     @include elevation($zValue, $color, $opacity);
   }
+}
+
+// Gets the box shadow value for a specific elevation.
+@function get-box-shadow($zValue, $shadow-color: black, $opacity: null) {
+  @if $zValue == null {
+    @return null;
+  }
+
+  @if (sass-utils.is-css-var-name($zValue)) {
+    @return $zValue;
+  }
+
+  @if meta.type-of($zValue) != number or not math.is-unitless($zValue) {
+    @error '$zValue must be a unitless number, but received `#{$zValue}`';
+  }
+
+  @if $zValue < 0 or $zValue > 24 {
+    @error '$zValue must be between 0 and 24, but received `#{$zValue}`';
+  }
+
+  $umbra-z-value: map.get($_umbra-map, $zValue);
+  $penumbra-z-value: map.get($_penumbra-map, $zValue);
+  $ambient-z-value: map.get($_ambient-map, $zValue);
+
+  $color-opacity: if($opacity != null, $opacity, 1);
+  $umbra-color: _compute-color-opacity($shadow-color, $_umbra-opacity * $color-opacity);
+  $penumbra-color: _compute-color-opacity($shadow-color, $_penumbra-opacity * $color-opacity);
+  $ambient-color: _compute-color-opacity($shadow-color, $_ambient-opacity * $color-opacity);
+
+  @return string.unquote('#{$umbra-z-value} #{$umbra-color}, #{$penumbra-z-value} ' +
+          '#{$penumbra-color}, #{$ambient-z-value} #{$ambient-color}');
 }
 
 // Returns a string that can be used as the value for a transition property for elevation.
@@ -194,4 +192,13 @@ $prefix: 'mat-elevation-z';
     $duration: $transition-duration,
     $easing: $transition-timing-function) {
   transition: private-transition-property-value($duration, $easing);
+}
+
+@function _compute-color-opacity($color, $opacity) {
+  @if meta.type-of($color) == color and $opacity != null {
+    @return rgba($color, $opacity);
+  }
+  @else {
+    @return $color;
+  }
 }

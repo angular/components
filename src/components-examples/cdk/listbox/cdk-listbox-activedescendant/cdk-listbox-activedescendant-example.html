@@ -1,0 +1,16 @@
+<div class="example-listbox-container">
+  <!-- #docregion listbox -->
+  <label class="example-listbox-label" id="example-spatula-label">
+    Spatula Features
+  </label>
+  <ul cdkListbox
+      cdkListboxMultiple
+      cdkListboxUseActiveDescendant
+      aria-labelledby="example-spatula-label"
+      class="example-listbox">
+    @for (feature of features; track feature) {
+      <li [cdkOption]="feature" class="example-option">{{feature}}</li>
+    }
+  </ul>
+  <!-- #enddocregion listbox -->
+</div>

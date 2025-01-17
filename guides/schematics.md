@@ -9,7 +9,7 @@ Schematics are included with both `@angular/cdk` and `@angular/material`. Once y
 packages, they will be available through the Angular CLI.
 
 Using the command below will install Angular Material, the [Component Dev Kit](https://material.angular.io/cdk) (CDK),
-and [Angular Animations](https://angular.io/guide/animations) in your project. Then it will run the
+and [Angular Animations](https://angular.dev/guide/animations) in your project. Then it will run the
 installation schematic.
 
 ```
@@ -25,8 +25,8 @@ ng add @angular/cdk
 The Angular Material `ng add` schematic helps you set up an Angular CLI project that uses Material. Running `ng add` will:
 
 - Ensure [project dependencies](./getting-started#step-1-install-angular-material-angular-cdk-and-angular-animations) are placed in `package.json`
-- Enable the [BrowserAnimationsModule](./getting-started#step-2-configure-animations) your app module
-- Add either a [prebuilt theme](./theming#using-a-pre-built-theme) or a [custom theme](./theming#defining-a-custom-theme)
+- Enable the [BrowserAnimationsModule](./getting-started#step-2-configure-animations) in your app module
+- Add either a prebuilt theme or a custom theme
 - Add Roboto fonts to your `index.html`
 - Add the [Material Icon font](./getting-started#step-6-optional-add-material-icons) to your `index.html`
 - Add global styles to
@@ -115,3 +115,15 @@ that uses the CDK drag and drop directives.
 ```
 ng generate @angular/cdk:drag-drop <component-name>
 ```
+
+### Material 3 Theme schematic
+
+The `theme-color` schematic will generate a file with Material 3 palettes from the specified colors
+that can be used in a theme file. It also generates high contrast color override mixins if
+specified.
+
+```
+ng generate @angular/material:theme-color
+```
+
+Learn more about this schematic in its [documentation](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md).

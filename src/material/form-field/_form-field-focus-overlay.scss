@@ -1,0 +1,31 @@
+@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use '../core/tokens/token-utils';
+@use '../core/style/layout-common';
+
+// MDC text-field used to use their ripple in order to show a focus and hover effect for
+// text-fields. This is unnecessary because the ripples bring in a lot of unnecessary
+// styles and runtime code while the actual goal for the text-field is simply showing a
+// focus and hover effect. The ripples will unnecessarily provide CSS selectors and JS
+// runtime code for launching interaction ripples at pointer location. This is not needed
+// for the text-field, so we create our own minimal focus overlay styles. Our focus overlay
+// uses the exact same logic to compute the colors as in the default MDC text-field ripples.
+@mixin private-form-field-focus-overlay() {
+  .mat-mdc-form-field-focus-overlay {
+    @include layout-common.fill;
+    opacity: 0;
+    pointer-events: none; // Make sure we don't block click on the prefix/suffix.
+
+    @include token-utils.use-tokens(
+      tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
+      @include token-utils.create-token-slot(background-color, state-layer-color);
+
+      .mat-mdc-text-field-wrapper:hover & {
+        @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      }
+
+      .mat-mdc-form-field.mat-focused & {
+        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      }
+    }
+  }
+}

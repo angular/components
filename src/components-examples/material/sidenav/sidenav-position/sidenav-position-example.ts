@@ -1,11 +1,13 @@
 import {Component} from '@angular/core';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 /** @title Implicit main content with two sidenavs */
 @Component({
   selector: 'sidenav-position-example',
   templateUrl: 'sidenav-position-example.html',
-  styleUrls: ['sidenav-position-example.css'],
+  styleUrl: 'sidenav-position-example.css',
+  imports: [MatSidenavModule],
 })
 export class SidenavPositionExample {
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
+  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

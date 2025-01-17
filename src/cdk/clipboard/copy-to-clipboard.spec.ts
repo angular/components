@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
 import {ClipboardModule} from './clipboard-module';
@@ -14,6 +14,7 @@ const COPY_CONTENT = 'copy content';
     [cdkCopyToClipboard]="content"
     [cdkCopyToClipboardAttempts]="attempts"
     (cdkCopyToClipboardCopied)="copied($event)"></button>`,
+  imports: [ClipboardModule],
 })
 class CopyToClipboardHost {
   content = '';
@@ -27,11 +28,8 @@ describe('CdkCopyToClipboard', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CopyToClipboardHost],
-      imports: [ClipboardModule],
+      imports: [ClipboardModule, CopyToClipboardHost],
     });
-
-    TestBed.compileComponents();
   }));
 
   beforeEach(() => {
@@ -40,6 +38,7 @@ describe('CdkCopyToClipboard', () => {
     const host = fixture.componentInstance;
     host.content = COPY_CONTENT;
     clipboard = TestBed.inject(Clipboard);
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
   });
 
@@ -69,9 +68,10 @@ describe('CdkCopyToClipboard', () => {
     let attempts = 0;
     spyOn(clipboard, 'beginCopy').and.returnValue({
       copy: () => ++attempts >= maxAttempts,
-      destroy: () => {}
+      destroy: () => {},
     } as PendingCopy);
     fixture.componentInstance.attempts = maxAttempts;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
@@ -91,9 +91,10 @@ describe('CdkCopyToClipboard', () => {
         attempts++;
         return false;
       },
-      destroy: () => {}
+      destroy: () => {},
     } as PendingCopy);
     fixture.componentInstance.attempts = maxAttempts;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button')!.click();
@@ -108,10 +109,11 @@ describe('CdkCopyToClipboard', () => {
   it('should destroy any pending copies when the directive is destroyed', fakeAsync(() => {
     const fakeCopy = {
       copy: jasmine.createSpy('copy spy').and.returnValue(false) as () => boolean,
-      destroy: jasmine.createSpy('destroy spy') as () => void
+      destroy: jasmine.createSpy('destroy spy') as () => void,
     } as PendingCopy;
 
     fixture.componentInstance.attempts = 10;
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     spyOn(clipboard, 'beginCopy').and.returnValue(fakeCopy);
@@ -130,5 +132,4 @@ describe('CdkCopyToClipboard', () => {
     expect(fakeCopy.copy).toHaveBeenCalledTimes(2);
     expect(fakeCopy.destroy).toHaveBeenCalledTimes(1);
   }));
-
 });

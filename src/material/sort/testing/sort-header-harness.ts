@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
@@ -21,11 +21,12 @@ export class MatSortHeaderHarness extends ComponentHarness {
    */
   static with(options: SortHeaderHarnessFilters = {}): HarnessPredicate<MatSortHeaderHarness> {
     return new HarnessPredicate(MatSortHeaderHarness, options)
-        .addOption('label', options.label,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label))
-        .addOption('sortDirection', options.sortDirection, (harness, sortDirection) => {
-          return HarnessPredicate.stringMatches(harness.getSortDirection(), sortDirection);
-        });
+      .addOption('label', options.label, (harness, label) =>
+        HarnessPredicate.stringMatches(harness.getLabel(), label),
+      )
+      .addOption('sortDirection', options.sortDirection, (harness, sortDirection) => {
+        return HarnessPredicate.stringMatches(harness.getSortDirection(), sortDirection);
+      });
   }
 
   /** Gets the label of the sort header. */

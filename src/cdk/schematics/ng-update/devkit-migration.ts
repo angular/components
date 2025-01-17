@@ -3,26 +3,26 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {SchematicContext, Tree} from '@angular-devkit/schematics';
-import {ProjectDefinition} from '@angular-devkit/core/src/workspace';
+import {workspaces} from '@angular-devkit/core';
 import {Constructor, Migration, PostMigrationAction} from '../update-tool/migration';
+import {TargetVersion} from '../update-tool/target-version';
 
 export type DevkitContext = {
   /** Devkit tree for the current migrations. Can be used to insert/remove files. */
-  tree: Tree,
+  tree: Tree;
   /** Name of the project the migrations run against. */
   projectName: string;
   /** Workspace project the migrations run against. */
-  project: ProjectDefinition,
+  project: workspaces.ProjectDefinition;
   /** Whether the migrations run for a test target. */
-  isTestTarget: boolean,
+  isTestTarget: boolean;
 };
 
 export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContext> {
-
   /** Prints an informative message with context on the current target. */
   protected printInfo(text: string) {
     const targetName = this.context.isTestTarget ? 'test' : 'build';
@@ -35,8 +35,13 @@ export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContex
    * migration result of all individual targets. e.g. removing HammerJS if it
    * is not needed in any project target.
    */
-  static globalPostMigration?(tree: Tree, context: SchematicContext): PostMigrationAction;
+  static globalPostMigration?(
+    tree: Tree,
+    targetVersion: TargetVersion,
+    context: SchematicContext,
+  ): PostMigrationAction;
 }
 
-export type DevkitMigrationCtor<Data> = Constructor<DevkitMigration<Data>> &
-    {[m in keyof typeof DevkitMigration]: (typeof DevkitMigration)[m]};
+export type DevkitMigrationCtor<Data> = Constructor<DevkitMigration<Data>> & {
+  [m in keyof typeof DevkitMigration]: (typeof DevkitMigration)[m];
+};

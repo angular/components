@@ -1,0 +1,86 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, outlined-text-field);
+
+/// Generates the tokens for MDC outlined-text-field
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC outlined-text-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-definition.get-mdc-tokens(
+      'outlined-text-field', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-outline-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-outline-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-outline-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return token-definition.namespace-tokens($prefix, (
+    _fix-tokens($mdc-tokens),
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
+  ), $token-slots);
+}
+
+/// Fixes inconsistent values in the outlined text field tokens so that they can produce valid
+/// styles.
+/// @param {Map} $initial-tokens Map of outlined text field tokens currently being generated.
+/// @param {Map} $all-tokens Map of all outlined text field tokens, including hardcoded values.
+/// This is necessary in order to do opacity lookups.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-definition.get-mdc-tokens('outlined-text-field', (), false);
+
+  @return token-definition.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+    (
+      color: disabled-outline-color,
+      opacity: disabled-outline-opacity
+    ),
+    (
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
+    ),
+    (
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
+    ),
+    (
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
+    ),
+    (
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
+    ),
+    (
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
+    ),
+    (
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
+    ),
+    (
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
+    )
+  ));
+}

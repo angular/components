@@ -1,173 +1,231 @@
-<div class="demo-google-map">
-  <google-map height="400px"
-              width="750px"
-              [center]="center"
-              [zoom]="zoom"
-              (authFailure)="authFailure()"
-              (mapClick)="handleClick($event)"
-              (mapMousemove)="handleMove($event)"
-              (mapRightclick)="handleRightclick()"
-              [mapTypeId]="mapTypeId">
-    <map-marker-clusterer [imagePath]="markerClustererImagePath">
-      <map-marker #firstMarker="mapMarker"
-                  [position]="center"
-                  (mapClick)="clickMarker(firstMarker)"></map-marker>
-      <map-marker #marker="mapMarker"
-                  *ngFor="let markerPosition of markerPositions"
-                  [position]="markerPosition"
-                  [options]="markerOptions"
-                  (mapClick)="clickMarker(marker)"></map-marker>
-    </map-marker-clusterer>
-    <map-info-window>Testing 1 2 3</map-info-window>
-    <map-polyline *ngIf="isPolylineDisplayed" [options]="polylineOptions"></map-polyline>
-    <map-polygon *ngIf="isPolygonDisplayed" [options]="polygonOptions"></map-polygon>
-    <map-rectangle *ngIf="isRectangleDisplayed" [options]="rectangleOptions"></map-rectangle>
-    <map-circle *ngIf="isCircleDisplayed" [options]="circleOptions"></map-circle>
-    <map-ground-overlay *ngIf="isGroundOverlayDisplayed"
-                        [url]="groundOverlayUrl"
-                        [bounds]="groundOverlayBounds"></map-ground-overlay>
-    <map-kml-layer *ngIf="isKmlLayerDisplayed"
-                   [url]="demoKml"></map-kml-layer>
-    <map-traffic-layer *ngIf="isTrafficLayerDisplayed"></map-traffic-layer>
-    <map-transit-layer *ngIf="isTransitLayerDisplayed"></map-transit-layer>
-    <map-bicycling-layer *ngIf="isBicyclingLayerDisplayed"></map-bicycling-layer>
-    <map-directions-renderer *ngIf="directionsResult"
-                             [directions]="directionsResult"></map-directions-renderer>
+@if (hasLoaded) {
+  <div class="demo-google-map">
+    <google-map height="400px"
+                width="750px"
+                [center]="center"
+                [zoom]="zoom"
+                (authFailure)="authFailure()"
+                (mapClick)="handleClick($event)"
+                (mapMousemove)="handleMove($event)"
+                (mapRightclick)="handleRightclick()"
+                [mapTypeId]="mapTypeId"
+                [mapId]="mapId">
+      <map-marker-clusterer>
+        <map-advanced-marker
+          #firstMarker="mapAdvancedMarker"
+          [position]="center"
+          (mapClick)="infoWindow.open(firstMarker)"></map-advanced-marker>
+        @for (markerPosition of markerPositions; track markerPosition) {
+          <map-advanced-marker #marker="mapAdvancedMarker"
+            [position]="markerPosition"
+            (mapClick)="infoWindow.open(marker)"></map-advanced-marker>
+        }
+      </map-marker-clusterer>
+      @if (hasCustomContentMarker) {
+        <map-advanced-marker
+          #secondMarker="mapAdvancedMarker"
+          (mapClick)="infoWindow.open(secondMarker)"
+          title="Advanced Marker"
+          [gmpDraggable]="false"
+          [content]="advancedMarkerContent"
+          [position]="mapAdvancedMarkerPosition">
+          <svg #advancedMarkerContent fill="oklch(69.02% .277 332.77)" viewBox="0 0 960 960" width="50px" height="50px" xml:space="preserve">
+            <g>
+              <polygon points="562.6,109.8 804.1,629.5 829.2,233.1"/>
+              <polygon points="624.9,655.9 334.3,655.9 297.2,745.8 479.6,849.8 662,745.8"/>
+              <polygon points="384.1,539.3 575.2,539.3 479.6,307"/>
+              <polygon points="396.6,109.8 130,233.1 155.1,629.5"/>
+            </g>
+          </svg>
+        </map-advanced-marker>
+      }
+      <map-info-window #infoWindow="mapInfoWindow">Testing 1 2 3</map-info-window>
+      @if (isPolylineDisplayed) {
+        <map-polyline [options]="polylineOptions"></map-polyline>
+      }
+      @if (isPolygonDisplayed) {
+        <map-polygon [options]="polygonOptions"></map-polygon>
+      }
+      @if (isRectangleDisplayed) {
+        <map-rectangle [options]="rectangleOptions"></map-rectangle>
+      }
+      @if (isCircleDisplayed) {
+        <map-circle [options]="circleOptions"></map-circle>
+      }
+      @if (isGroundOverlayDisplayed) {
+        <map-ground-overlay
+          [url]="groundOverlayUrl"
+          [bounds]="groundOverlayBounds"></map-ground-overlay>
+      }
+      @if (isKmlLayerDisplayed) {
+        <map-kml-layer [url]="demoKml"></map-kml-layer>
+      }
+      @if (isTrafficLayerDisplayed) {
+        <map-traffic-layer></map-traffic-layer>
+      }
+      @if (isTransitLayerDisplayed) {
+        <map-transit-layer></map-transit-layer>
+      }
+      @if (isBicyclingLayerDisplayed) {
+        <map-bicycling-layer></map-bicycling-layer>
+      }
+      @if (directionsResult) {
+        <map-directions-renderer [directions]="directionsResult"></map-directions-renderer>
+      }
+      @if (isHeatmapDisplayed) {
+        <map-heatmap-layer
+          [data]="heatmapData"
+          [options]="heatmapOptions"></map-heatmap-layer>
+      }
+    </google-map>
 
-    <map-heatmap-layer *ngIf="isHeatmapDisplayed"
-                       [data]="heatmapData"
-                       [options]="heatmapOptions"></map-heatmap-layer>
-  </google-map>
+    <p><label>Latitude:</label> {{display?.lat}}</p>
+    <p><label>Longitude:</label> {{display?.lng}}</p>
 
-  <p><label>Latitude:</label> {{display?.lat}}</p>
-  <p><label>Longitude:</label> {{display?.lng}}</p>
+    <div>
+      <label for="map-type">
+        Select map type
 
-  <div>
-    <label for="map-type">
-      Select map type
+        <select id="map-type" (change)="mapTypeChanged($event)" #mapType>
+          @for (type of mapTypeIds; track type) {
+            <option [value]="type">{{type}}</option>
+          }
+        </select>
+      </label>
+    </div>
 
-      <select id="map-type" (change)="mapTypeChanged($event)" #mapType>
-        <option *ngFor="let type of mapTypeIds" [value]="type">{{type}}</option>
-      </select>
-    </label>
+    <div>
+      <label for="polyline-checkbox">
+        Toggle Polyline
+        <input type="checkbox" [(ngModel)]="isPolylineDisplayed">
+      </label>
+    </div>
+    <div>
+      <label for="editable-polyline-checkbox">
+        Toggle Editable Polyline
+        <input type="checkbox"
+              [disabled]="!isPolylineDisplayed"
+              [ngModel]="polylineOptions.editable"
+              (ngModelChange)="editablePolylineChanged($event)">
+      </label>
+    </div>
+
+    <div>
+      <label for="polygon-checkbox">
+        Toggle Polygon
+        <input type="checkbox" [(ngModel)]="isPolygonDisplayed">
+      </label>
+    </div>
+    <div>
+      <label for="editable-polygon-checkbox">
+        Toggle Editable Polygon
+        <input type="checkbox"
+              [disabled]="!isPolygonDisplayed"
+              [ngModel]="polygonOptions.editable"
+              (ngModelChange)="editablePolygonChanged($event)">
+      </label>
+    </div>
+
+    <div>
+      <label for="rectangle-checkbox">
+        Toggle Rectangle
+        <input type="checkbox" [(ngModel)]="isRectangleDisplayed">
+      </label>
+    </div>
+    <div>
+      <label for="editable-rectangle-checkbox">
+        Toggle Editable Rectangle
+        <input type="checkbox"
+              [disabled]="!isRectangleDisplayed"
+              [ngModel]="rectangleOptions.editable"
+              (ngModelChange)="editableRectangleChanged($event)">
+      </label>
+    </div>
+
+    <div>
+      <label for="circle-checkbox">
+        Toggle Circle
+        <input type="checkbox" [(ngModel)]="isCircleDisplayed">
+      </label>
+    </div>
+    <div>
+      <label for="editable-circle-checkbox">
+        Toggle Editable Circle
+        <input
+          type="checkbox"
+          [disabled]="!isCircleDisplayed"
+          [ngModel]="circleOptions.editable"
+          (ngModelChange)="editableCircleChanged($event)">
+      </label>
+    </div>
+
+    <div>
+      <label for="ground-overlay-checkbox">
+        Toggle Ground Overlay
+        <input type="checkbox" [(ngModel)]="isGroundOverlayDisplayed">
+      </label>
+    </div>
+
+    <div>
+      <label for="ground-overlay-image">
+        Ground Overlay image
+
+        <select id="ground-overlay-image" [(ngModel)]="groundOverlayUrl">
+          @for (image of groundOverlayImages; track image) {
+            <option [value]="image.url">{{image.title}}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div>
+      <label for="kml-layer-checkbox">
+        Toggle KML Layer
+        <input type="checkbox" [(ngModel)]="isKmlLayerDisplayed">
+      </label>
+    </div>
+
+    <div>
+      <label for="traffic-layer-checkbox">
+        Toggle Traffic Layer
+        <input type="checkbox" [(ngModel)]="isTrafficLayerDisplayed">
+      </label>
+    </div>
+
+    <div>
+      <label for="transit-layer-checkbox">
+        Toggle Transit Layer
+        <input type="checkbox" [(ngModel)]="isTransitLayerDisplayed">
+      </label>
+    </div>
+
+    <div>
+      <label for="bicycling-layer-checkbox">
+        Toggle Bicycling Layer
+        <input type="checkbox" [(ngModel)]="isBicyclingLayerDisplayed">
+      </label>
+    </div>
+
+    <div>
+      <label for="heatmap-layer-checkbox">
+        Toggle Heatmap Layer
+        <input type="checkbox" (click)="toggleHeatmapLayerDisplay()">
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Toggle Advanced Marker with custom content
+        <input type="checkbox" [(ngModel)]="hasCustomContentMarker">
+      </label>
+    </div>
+
+    <div>
+      <button mat-button (click)="calculateDirections()">
+        Calculate directions between first two markers
+      </button>
+    </div>
   </div>
-
-  <div>
-    <label for="polyline-checkbox">
-      Toggle Polyline
-      <input type="checkbox" (click)="togglePolylineDisplay()">
-    </label>
-  </div>
-  <div>
-    <label for="editable-polyline-checkbox">
-      Toggle Editable Polyline
-      <input type="checkbox"
-             [disabled]="!isPolylineDisplayed"
-             (click)="toggleEditablePolyline()">
-    </label>
-  </div>
-
-  <div>
-    <label for="polygon-checkbox">
-      Toggle Polygon
-      <input type="checkbox" (click)="togglePolygonDisplay()">
-    </label>
-  </div>
-  <div>
-    <label for="editable-polygon-checkbox">
-      Toggle Editable Polygon
-      <input type="checkbox"
-             [disabled]="!isPolygonDisplayed"
-             (click)="toggleEditablePolygon()">
-    </label>
-  </div>
-
-  <div>
-    <label for="rectangle-checkbox">
-      Toggle Rectangle
-      <input type="checkbox" (click)="toggleRectangleDisplay()">
-    </label>
-  </div>
-  <div>
-    <label for="editable-rectangle-checkbox">
-      Toggle Editable Rectangle
-      <input type="checkbox"
-             [disabled]="!isRectangleDisplayed"
-             (click)="toggleEditableRectangle()">
-    </label>
-  </div>
-
-  <div>
-    <label for="circle-checkbox">
-      Toggle Circle
-      <input type="checkbox" (click)="toggleCircleDisplay()">
-    </label>
-  </div>
-  <div>
-    <label for="editable-circle-checkbox">
-      Toggle Editable Circle
-      <input type="checkbox" [disabled]="!isCircleDisplayed" (click)="toggleEditableCircle()">
-    </label>
-  </div>
-
-  <div>
-    <label for="ground-overlay-checkbox">
-      Toggle Ground Overlay
-      <input type="checkbox" (click)="toggleGroundOverlayDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <label for="ground-overlay-image">
-      Ground Overlay image
-
-      <select id="ground-overlay-image" (change)="groundOverlayUrlChanged($event)">
-        <option
-          *ngFor="let image of groundOverlayImages"
-          [value]="image.url">{{image.title}}</option>
-      </select>
-    </label>
-  </div>
-
-  <div>
-    <label for="kml-layer-checkbox">
-      Toggle KML Layer
-      <input type="checkbox" (click)="toggleKmlLayerDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <label for="traffic-layer-checkbox">
-      Toggle Traffic Layer
-      <input type="checkbox" (click)="toggleTrafficLayerDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <label for="transit-layer-checkbox">
-      Toggle Transit Layer
-      <input type="checkbox" (click)="toggleTransitLayerDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <label for="bicycling-layer-checkbox">
-      Toggle Bicycling Layer
-      <input type="checkbox" (click)="toggleBicyclingLayerDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <label for="heatmap-layer-checkbox">
-      Toggle Heatmap Layer
-      <input type="checkbox" (click)="toggleHeatmapLayerDisplay()">
-    </label>
-  </div>
-
-  <div>
-    <button mat-button (click)="calculateDirections()">
-      Calculate directions between first two markers
-    </button>
-  </div>
-
-</div>
+} @else {
+  <div>Loading Google Maps API...</div>
+}

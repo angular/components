@@ -1,127 +1,178 @@
-@use 'sass:map';
-@use 'sass:meta';
-@use '../core/style/private';
+@use 'sass:color';
+@use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
+@use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
+@use '../core/tokens/token-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
 
-$chip-remove-font-size: 18px;
-
-@mixin _element-color($foreground, $background) {
-  background-color: $background;
-  color: $foreground;
-
-  .mat-chip-remove {
-    color: $foreground;
-    opacity: 0.4;
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-chips.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    .mat-mdc-standard-chip {
+      @include token-utils.create-token-values(
+        tokens-mdc-chip.$prefix,
+        tokens-mdc-chip.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-chip.$prefix,
+        tokens-mat-chip.get-unthemable-tokens()
+      );
+    }
   }
 }
 
+/// Outputs color theme styles for the mat-chips.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the selected chip: primary, secondary, tertiary,
+///      or error (If not specified, default secondary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    .mat-mdc-standard-chip {
+      @include token-utils.create-token-values(
+        tokens-mdc-chip.$prefix,
+        tokens-mdc-chip.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-chip.$prefix,
+        tokens-mat-chip.get-color-tokens($theme)
+      );
 
-// Applies the background color for a ripple element.
-// If the color value provided is not a Sass color,
-// we assume that we've been given a CSS variable.
-// Since we can't perform alpha-blending on a CSS variable,
-// we instead add the opacity directly to the ripple element.
-@mixin _ripple-background($palette, $default-contrast, $opacity) {
-  $background-color: theming.get-color-from-palette($palette, $default-contrast, $opacity);
-  background-color: $background-color;
-  @if (meta.type-of($background-color) != color) {
-    opacity: $opacity;
-  }
-}
+      &.mat-mdc-chip-selected,
+      &.mat-mdc-chip-highlighted {
+        &.mat-primary {
+          @include token-utils.create-token-values(
+            tokens-mdc-chip.$prefix,
+            tokens-mdc-chip.get-color-tokens($theme, primary)
+          );
+          @include token-utils.create-token-values(
+            tokens-mat-chip.$prefix,
+            tokens-mat-chip.get-color-tokens($theme, primary)
+          );
+        }
 
-@mixin _palette-styles($palette) {
-  @include _element-color(theming.get-color-from-palette($palette, default-contrast),
-    theming.get-color-from-palette($palette));
+        &.mat-accent {
+          @include token-utils.create-token-values(
+            tokens-mdc-chip.$prefix,
+            tokens-mdc-chip.get-color-tokens($theme, accent)
+          );
+          @include token-utils.create-token-values(
+            tokens-mat-chip.$prefix,
+            tokens-mat-chip.get-color-tokens($theme, accent)
+          );
+        }
 
-  .mat-ripple-element {
-    @include _ripple-background($palette, default-contrast, 0.1);
-  }
-}
-
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $is-dark-theme: map.get($config, is-dark);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
-
-  $unselected-background: theming.get-color-from-palette($background, unselected-chip);
-  $unselected-foreground: theming.get-color-from-palette($foreground, text);
-
-  .mat-chip.mat-standard-chip {
-    @include _element-color($unselected-foreground, $unselected-background);
-
-    &:not(.mat-chip-disabled) {
-      &:active {
-        @include private.private-theme-elevation(3, $config);
+        &.mat-warn {
+          @include token-utils.create-token-values(
+            tokens-mdc-chip.$prefix,
+            tokens-mdc-chip.get-color-tokens($theme, warn)
+          );
+          @include token-utils.create-token-values(
+            tokens-mat-chip.$prefix,
+            tokens-mat-chip.get-color-tokens($theme, warn)
+          );
+        }
       }
-
-      .mat-chip-remove:hover {
-        opacity: 0.54;
-      }
-    }
-
-    &.mat-chip-disabled {
-      opacity: 0.4;
-    }
-
-    &::after {
-      background: map.get($foreground, base);
-    }
-  }
-
-  .mat-chip.mat-standard-chip.mat-chip-selected {
-    &.mat-primary {
-      @include _palette-styles($primary);
-    }
-
-    &.mat-warn {
-      @include _palette-styles($warn);
-    }
-
-    &.mat-accent {
-      @include _palette-styles($accent);
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-chip {
-    font-size: typography-utils.font-size($config, body-2);
-    font-weight: typography-utils.font-weight($config, body-2);
-
-    .mat-chip-trailing-icon.mat-icon,
-    .mat-chip-remove.mat-icon {
-      font-size: $chip-remove-font-size;
+/// Outputs typography theme styles for the mat-chips.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    .mat-mdc-standard-chip {
+      @include token-utils.create-token-values(
+        tokens-mdc-chip.$prefix,
+        tokens-mdc-chip.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-chip.$prefix,
+        tokens-mat-chip.get-typography-tokens($theme)
+      );
     }
   }
 }
 
-@mixin _density($config-or-theme) {}
+/// Outputs density theme styles for the mat-chips.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    .mat-mdc-chip.mat-mdc-standard-chip {
+      @include token-utils.create-token-values(
+        tokens-mdc-chip.$prefix,
+        tokens-mdc-chip.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-chip.$prefix,
+        tokens-mat-chip.get-density-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mdc-chip.$prefix,
+      tokens: tokens-mdc-chip.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mat-chip.$prefix,
+      tokens: tokens-mat-chip.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-chips.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the selected chip: primary, secondary, tertiary,
+///      or error (If not specified, default secondary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-chips') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
 }
 
-
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-chip-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-chip.$prefix, $options...);
+  $mat-chip-tokens: token-utils.get-tokens-for($tokens, tokens-mat-chip.$prefix, $options...);
+  @include token-utils.create-token-values(tokens-mdc-chip.$prefix, $mdc-chip-tokens);
+  @include token-utils.create-token-values(tokens-mat-chip.$prefix, $mat-chip-tokens);
+}

@@ -1,0 +1,24 @@
+<mat-tree class="scene-tree" [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node class="scene-sub-tree" *matTreeNodeDef="let node" matTreeNodePadding>
+    <mat-icon class="scene-node-icon">
+      {{node.icon}}
+    </mat-icon>
+    {{node.name}}
+  </mat-tree-node>
+
+  <mat-tree-node
+    class="scene-tree-node"
+    *matTreeNodeDef="let node;when: hasChild"
+    matTreeNodePadding
+  >
+    <button mat-icon-button matTreeNodeToggle>
+      <mat-icon>
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <mat-icon class="scene-node-icon">
+      {{node.icon}}
+    </mat-icon>
+    {{node.name}}
+  </mat-tree-node>
+</mat-tree>

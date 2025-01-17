@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 interface ParsedMetadata {
   isPrimary: boolean;
@@ -10,7 +10,7 @@ interface ParsedMetadata {
 }
 
 interface ParsedMetadataResults {
-  primaryComponent: ParsedMetadata;
+  primaryComponent: ParsedMetadata | undefined;
   secondaryComponents: ParsedMetadata[];
 }
 
@@ -21,9 +21,10 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
 
   const visitNode = (node: any): void => {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
-      const meta: any = {
-        componentName: node.name.text
-      };
+      const decorators = ts.getDecorators(node);
+      const meta = {
+        componentName: node.name.text,
+      } as ParsedMetadata;
 
       if (node.jsDoc && node.jsDoc.length) {
         for (const doc of node.jsDoc) {
@@ -40,26 +41,44 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
         }
       }
 
-      if (node.decorators && node.decorators.length) {
-        for (const decorator of node.decorators) {
-          if (decorator.expression.expression.text === 'Component') {
-            for (const arg of decorator.expression.arguments) {
-              for (const prop of arg.properties) {
-                const propName = prop.name.text;
+      if (decorators && decorators.length) {
+        for (const decorator of decorators) {
+          const call = decorator.expression;
 
-                // Since additional files can be also stylesheets, we need to properly parse
-                // the styleUrls metadata property.
-                if (propName === 'styleUrls' && ts.isArrayLiteralExpression(prop.initializer)) {
-                  meta[propName] = prop.initializer.elements
-                    .map((literal: ts.StringLiteral) => literal.text);
-                } else {
-                  meta[propName] = prop.initializer.text;
-                }
-              }
+          if (
+            !ts.isCallExpression(call) ||
+            !ts.isIdentifier(call.expression) ||
+            call.expression.text !== 'Component' ||
+            call.arguments.length === 0 ||
+            !ts.isObjectLiteralExpression(call.arguments[0])
+          ) {
+            continue;
+          }
+
+          for (const prop of call.arguments[0].properties) {
+            if (!ts.isPropertyAssignment(prop) || !prop.name || !ts.isIdentifier(prop.name)) {
+              continue;
             }
 
-            metas.push(meta);
+            const propName = prop.name.text;
+
+            // Since additional files can be also stylesheets, we need to properly parse
+            // the styleUrls metadata property.
+            if (propName === 'styleUrls' && ts.isArrayLiteralExpression(prop.initializer)) {
+              meta[propName] = prop.initializer.elements.map(
+                literal => (literal as ts.StringLiteralLike).text,
+              );
+            } else if (propName === 'styleUrl' && ts.isStringLiteralLike(prop.initializer)) {
+              meta.styleUrls = [prop.initializer.text];
+            } else if (
+              ts.isStringLiteralLike(prop.initializer) ||
+              ts.isIdentifier(prop.initializer)
+            ) {
+              (meta as any)[propName] = prop.initializer.text;
+            }
           }
+
+          metas.push(meta);
         }
       }
     }
@@ -71,6 +90,6 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
 
   return {
     primaryComponent: metas.find(m => m.isPrimary),
-    secondaryComponents: metas.filter(m => !m.isPrimary)
+    secondaryComponents: metas.filter(m => !m.isPrimary),
   };
 }

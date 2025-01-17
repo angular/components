@@ -3,11 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
+import {OverlayRef} from '../overlay-ref';
 import {PositionStrategy} from './position-strategy';
-import {OverlayReference} from '../overlay-reference';
 
 /** Class to be added to the overlay pane wrapper. */
 const wrapperClass = 'cdk-global-overlay-wrapper';
@@ -20,19 +20,18 @@ const wrapperClass = 'cdk-global-overlay-wrapper';
  */
 export class GlobalPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
-  private _cssPosition: string = 'static';
-  private _topOffset: string = '';
-  private _bottomOffset: string = '';
-  private _leftOffset: string = '';
-  private _rightOffset: string = '';
-  private _alignItems: string = '';
-  private _justifyContent: string = '';
-  private _width: string = '';
-  private _height: string = '';
-  private _isDisposed: boolean;
+  private _overlayRef: OverlayRef;
+  private _cssPosition = 'static';
+  private _topOffset = '';
+  private _bottomOffset = '';
+  private _alignItems = '';
+  private _xPosition = '';
+  private _xOffset = '';
+  private _width = '';
+  private _height = '';
+  private _isDisposed = false;
 
-  attach(overlayRef: OverlayReference): void {
+  attach(overlayRef: OverlayRef): void {
     const config = overlayRef.getConfig();
 
     this._overlayRef = overlayRef;
@@ -65,9 +64,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @param value New left offset.
    */
   left(value: string = ''): this {
-    this._rightOffset = '';
-    this._leftOffset = value;
-    this._justifyContent = 'flex-start';
+    this._xOffset = value;
+    this._xPosition = 'left';
     return this;
   }
 
@@ -87,9 +85,30 @@ export class GlobalPositionStrategy implements PositionStrategy {
    * @param value New right offset.
    */
   right(value: string = ''): this {
-    this._leftOffset = '';
-    this._rightOffset = value;
-    this._justifyContent = 'flex-end';
+    this._xOffset = value;
+    this._xPosition = 'right';
+    return this;
+  }
+
+  /**
+   * Sets the overlay to the start of the viewport, depending on the overlay direction.
+   * This will be to the left in LTR layouts and to the right in RTL.
+   * @param offset Offset from the edge of the screen.
+   */
+  start(value: string = ''): this {
+    this._xOffset = value;
+    this._xPosition = 'start';
+    return this;
+  }
+
+  /**
+   * Sets the overlay to the end of the viewport, depending on the overlay direction.
+   * This will be to the right in LTR layouts and to the left in RTL.
+   * @param offset Offset from the edge of the screen.
+   */
+  end(value: string = ''): this {
+    this._xOffset = value;
+    this._xPosition = 'end';
     return this;
   }
 
@@ -133,7 +152,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
    */
   centerHorizontally(offset: string = ''): this {
     this.left(offset);
-    this._justifyContent = 'center';
+    this._xPosition = 'center';
     return this;
   }
 
@@ -165,35 +184,51 @@ export class GlobalPositionStrategy implements PositionStrategy {
     const parentStyles = this._overlayRef.hostElement.style;
     const config = this._overlayRef.getConfig();
     const {width, height, maxWidth, maxHeight} = config;
-    const shouldBeFlushHorizontally = (width === '100%' || width === '100vw') &&
-                                      (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
-    const shouldBeFlushVertically = (height === '100%' || height === '100vh') &&
-                                    (!maxHeight || maxHeight === '100%' || maxHeight === '100vh');
-
-    styles.position = this._cssPosition;
-    styles.marginLeft = shouldBeFlushHorizontally ? '0' : this._leftOffset;
-    styles.marginTop = shouldBeFlushVertically ? '0' : this._topOffset;
-    styles.marginBottom = this._bottomOffset;
-    styles.marginRight = this._rightOffset;
+    const shouldBeFlushHorizontally =
+      (width === '100%' || width === '100vw') &&
+      (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
+    const shouldBeFlushVertically =
+      (height === '100%' || height === '100vh') &&
+      (!maxHeight || maxHeight === '100%' || maxHeight === '100vh');
+    const xPosition = this._xPosition;
+    const xOffset = this._xOffset;
+    const isRtl = this._overlayRef.getConfig().direction === 'rtl';
+    let marginLeft = '';
+    let marginRight = '';
+    let justifyContent = '';
 
     if (shouldBeFlushHorizontally) {
-      parentStyles.justifyContent = 'flex-start';
-    } else if (this._justifyContent === 'center') {
-      parentStyles.justifyContent = 'center';
-    } else if (this._overlayRef.getConfig().direction === 'rtl') {
-      // In RTL the browser will invert `flex-start` and `flex-end` automatically, but we
-      // don't want that because our positioning is explicitly `left` and `right`, hence
-      // why we do another inversion to ensure that the overlay stays in the same position.
-      // TODO: reconsider this if we add `start` and `end` methods.
-      if (this._justifyContent === 'flex-start') {
-        parentStyles.justifyContent = 'flex-end';
-      } else if (this._justifyContent === 'flex-end') {
-        parentStyles.justifyContent = 'flex-start';
+      justifyContent = 'flex-start';
+    } else if (xPosition === 'center') {
+      justifyContent = 'center';
+
+      if (isRtl) {
+        marginRight = xOffset;
+      } else {
+        marginLeft = xOffset;
       }
-    } else {
-      parentStyles.justifyContent = this._justifyContent;
+    } else if (isRtl) {
+      if (xPosition === 'left' || xPosition === 'end') {
+        justifyContent = 'flex-end';
+        marginLeft = xOffset;
+      } else if (xPosition === 'right' || xPosition === 'start') {
+        justifyContent = 'flex-start';
+        marginRight = xOffset;
+      }
+    } else if (xPosition === 'left' || xPosition === 'start') {
+      justifyContent = 'flex-start';
+      marginLeft = xOffset;
+    } else if (xPosition === 'right' || xPosition === 'end') {
+      justifyContent = 'flex-end';
+      marginRight = xOffset;
     }
 
+    styles.position = this._cssPosition;
+    styles.marginLeft = shouldBeFlushHorizontally ? '0' : marginLeft;
+    styles.marginTop = shouldBeFlushVertically ? '0' : this._topOffset;
+    styles.marginBottom = this._bottomOffset;
+    styles.marginRight = shouldBeFlushHorizontally ? '0' : marginRight;
+    parentStyles.justifyContent = justifyContent;
     parentStyles.alignItems = shouldBeFlushVertically ? 'flex-start' : this._alignItems;
   }
 
@@ -211,8 +246,14 @@ export class GlobalPositionStrategy implements PositionStrategy {
     const parentStyles = parent.style;
 
     parent.classList.remove(wrapperClass);
-    parentStyles.justifyContent = parentStyles.alignItems = styles.marginTop =
-      styles.marginBottom = styles.marginLeft = styles.marginRight = styles.position = '';
+    parentStyles.justifyContent =
+      parentStyles.alignItems =
+      styles.marginTop =
+      styles.marginBottom =
+      styles.marginLeft =
+      styles.marginRight =
+      styles.position =
+        '';
 
     this._overlayRef = null!;
     this._isDisposed = true;

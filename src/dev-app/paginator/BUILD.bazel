@@ -10,13 +10,13 @@ ng_module(
         ":paginator_demo_scss",
     ],
     deps = [
+        "//src/components-examples/material/paginator",
         "//src/material/card",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/paginator",
         "//src/material/slide-toggle",
         "@npm//@angular/forms",
-        "@npm//@angular/router",
     ],
 )
 

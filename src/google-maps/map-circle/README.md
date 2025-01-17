@@ -7,10 +7,12 @@ The `MapCircle` component wraps the [`google.maps.Circle` class](https://develop
 ```typescript
 // google-maps-demo.component.ts
 import {Component} from '@angular/core';
+import {GoogleMap, MapCircle} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+    imports: [GoogleMap, MapCircle],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -23,11 +25,7 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-circle [center]="circleCenter"
-              [radius]="radius"></map-circle>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  <map-circle [center]="circleCenter" [radius]="radius" />
 </google-map>
 ```

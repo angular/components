@@ -1,0 +1,91 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, filled-text-field);
+
+/// Generates the tokens for MDC filled-text-field
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC filled-text-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-definition.get-mdc-tokens(
+      'filled-text-field', $systems, $exclude-hardcoded);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-active-indicator-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-active-indicator-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return token-definition.namespace-tokens($prefix, (
+    _fix-tokens($mdc-tokens, $systems),
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens), $systems)
+  ), $token-slots);
+}
+
+
+/// Fixes inconsistent values in the filled text field tokens so that they can produce valid
+/// styles.
+/// @param {Map} $initial-tokens Map of filled text field tokens currently being generated.
+/// @param {Map} $systems The MDC system tokens
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($initial-tokens, $systems) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-definition.get-mdc-tokens('filled-text-field', (), false);
+
+  $tokens: token-definition.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+    (
+      color: disabled-active-indicator-color,
+      opacity: disabled-active-indicator-opacity
+    ),
+    (
+      color: disabled-container-color,
+      opacity: disabled-container-opacity
+    ),
+    (
+      color: disabled-input-text-color,
+      opacity: disabled-input-text-opacity
+    ),
+    (
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity
+    ),
+    (
+      color: disabled-leading-icon-color,
+      opacity: disabled-leading-icon-opacity
+    ),
+    (
+      color: disabled-supporting-text-color,
+      opacity: disabled-supporting-text-opacity
+    ),
+    (
+      color: disabled-trailing-icon-color,
+      opacity: disabled-trailing-icon-opacity
+    )
+  ));
+
+  // The system tokens have this set as `corner-extra-small-top` which assumes that the value will
+  // be set as a `border-radius`, however we set it as `border-top-left-radius` and
+  // `border-top-right-radius`. Changing it at this point will be breaking so instead we remap it.
+  @if (map.get($tokens, container-shape)) {
+    $tokens: map.set($tokens, container-shape, map.get($systems, md-sys-shape, corner-extra-small));
+  }
+
+  @return $tokens;
+}

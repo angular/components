@@ -1,0 +1,305 @@
+@use '../style/elevation';
+@use '../style/sass-utils';
+@use './m3-system';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:string';
+
+$_tokens: null;
+$_component-prefix: null;
+$_system-fallbacks: m3-system.create-system-fallbacks();
+
+// Sets the token prefix and map to use when creating token slots.
+@mixin use-tokens($prefix, $tokens) {
+  $_component-prefix: $prefix !global;
+  $_tokens: $tokens !global;
+
+  @content;
+
+  $_component-prefix: null !global;
+  $_tokens: null !global;
+}
+
+// Combines a prefix and a string to generate a CSS variable name for a token.
+@function _create-var-name($prefix, $token) {
+  @if $prefix == null or $token == null {
+    @error 'Must specify both prefix and name when generating token';
+  }
+
+  $string-prefix: '';
+
+  // Prefixes are lists so we need to combine them.
+  @each $part in $prefix {
+    $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
+  }
+
+  @return string.unquote('--#{$string-prefix}-#{$token}');
+}
+
+// Creates a CSS variable, including the fallback if provided.
+@function _create-var($name, $fallback: null) {
+  @if ($fallback) {
+    @return var($name, $fallback);
+  } @else {
+    @return var($name);
+  }
+}
+
+// Gets the value of the token given the current global context state.
+@function _get-token-value($token, $fallback) {
+  $var-name: _create-var-name($_component-prefix, $token);
+  $fallback: _get-token-fallback($token, $fallback);
+  @return _create-var($var-name, $fallback);
+}
+
+// Assertion mixin that throws an error if the global state has not been set up by wrapping
+// calls with `use-tokens`.
+@function _assert-use-tokens($token) {
+  @if $_component-prefix == null or $_tokens == null {
+    @error 'Function was not called within a wrapping call of `use-tokens`';
+  }
+  @if not map.has-key($_tokens, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
+  }
+
+  @return true;
+}
+
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
+@mixin create-token-slot($property, $token, $fallback: null) {
+  $_assert: _assert-use-tokens($token);
+  @if map.get($_tokens, $token) != null {
+    #{$property}: #{_get-token-value($token, $fallback)};
+  }
+}
+
+// Returns the name of a token including the current prefix. Intended to be used in calculations
+// involving tokens. `create-token-slot` should be used when outputting tokens.
+@function get-token-variable-name($token) {
+  $_assert: _assert-use-tokens($token);
+  @return _create-var-name($_component-prefix, $token);
+}
+
+// Returns a `var()` reference to a specific token. Intended for declarations
+// where the token has to be referenced as a part of a larger expression.
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
+@function get-token-variable($token, $fallback: null) {
+  $_assert: _assert-use-tokens($token);
+  @return _get-token-value($token, $fallback);
+}
+
+// Gets the token's fallback value. Prefers adding a system-level fallback if one exists, otherwise
+// use the provided fallback.
+@function _get-token-fallback($token, $fallback: null) {
+  // If the $fallback is `true`, this is the component's signal to use the current token map value
+  @if ($fallback == true) {
+    $fallback: map.get($_tokens, $token);
+  }
+
+  // Check whether there's a system-level fallback. If not, return the optional
+  // provided fallback (otherwise null).
+  $sys-fallback: map.get($_system-fallbacks, $_component-prefix, $token);
+  @if (not $sys-fallback) {
+    @return $fallback;
+  }
+
+  @if (sass-utils.is-css-var-name($sys-fallback)) {
+    @return _create-var($sys-fallback, $fallback);
+  }
+
+  @return $sys-fallback;
+}
+
+// Outputs a map of tokens under a specific prefix.
+@mixin create-token-values($prefix, $tokens) {
+  @if $tokens != null {
+    // TODO: The `&` adds to the file size of theme, but it's necessary for compatibility
+    // with https://sass-lang.com/documentation/breaking-changes/mixed-decls/. We should
+    // figure out a better way to do this or move all the concrete styles out of the theme.
+    & {
+      @each $key, $value in $tokens {
+        @if $value != null {
+          #{_create-var-name($prefix, $key)}: #{$value};
+        }
+      }
+    }
+  }
+}
+
+// MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
+// the elevation and shadow-color tokens into a full box-shadow and use it as the value for the
+// elevation token.
+@function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
+  $elevation: map.get($tokens, $elevation-token);
+  $shadow-color: map.get($tokens, $shadow-color-token);
+  @return map.merge(
+    $tokens,
+    (
+      $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
+      $shadow-color-token: null,
+    )
+  );
+}
+
+/// Checks whether a list starts wih a given prefix
+/// @param {List} $list The list value to check the prefix of.
+/// @param {List} $prefix The prefix to check.
+/// @return {Boolean} Whether the list starts with the prefix.
+@function _is-prefix($list, $prefix) {
+  @for $i from 1 through list.length($prefix) {
+    @if list.nth($list, $i) != list.nth($prefix, $i) {
+      @return false;
+    }
+  }
+  @return true;
+}
+
+/// Gets the supported color variants in the given token set for the given prefix.
+/// @param {Map} $tokens The full token map.
+/// @param {List} $prefix The component prefix to get color variants for.
+/// @return {List} The supported color variants.
+@function _supported-color-variants($tokens, $prefix) {
+  $result: ();
+  @each $namespace in map.keys($tokens) {
+    @if list.length($prefix) == list.length($namespace) - 1 and _is-prefix($namespace, $prefix) {
+      $result: list.append($result, list.nth($namespace, list.length($namespace)), comma);
+    }
+  }
+  @return $result;
+}
+
+/// Gets the token values for the given components prefix with the given options.
+/// @param {Map} $tokens The full token map.
+/// @param {List} $prefix The component prefix to get the token values for.
+/// @param {ArgList} Any additional options
+///   Currently the additional supported options are:
+//     - $color-variant - The color variant to use for the component
+//     - $emit-overrides-only - Whether to emit *only* the overrides for the
+//                              specific color variant, or all color styles. Defaults to false.
+/// @throws If given options are invalid
+/// @return {Map} The token values for the requested component.
+@function get-tokens-for($tokens, $prefix, $options...) {
+  $options: sass-utils.validate-keyword-args($options, (color-variant, emit-overrides-only));
+  @if $tokens == () {
+    @return ();
+  }
+  $values: map.get($tokens, $prefix);
+  $color-variant: map.get($options, color-variant);
+  $emit-overrides-only: map.get($options, emit-overrides-only);
+  @if $color-variant == null {
+    @return $values;
+  }
+  $overrides: map.get($tokens, list.append($prefix, $color-variant));
+  @if $overrides == null {
+    $variants: _supported-color-variants($tokens, $prefix);
+    $secondary-message: if(
+      $variants == (),
+      'Mixin does not support color variants',
+      'Supported color variants are: #{$variants}'
+    );
+
+    @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
+  }
+  @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
+}
+
+/// Emits new token values for the given token overrides.
+/// Verifies that the overrides passed in are valid tokens.
+/// New token values are emitted under the current selector or root.
+@mixin batch-create-token-values($overrides: (), $namespace-configs...) {
+  @include sass-utils.current-selector-or-root() {
+    $prefixed-name-data: ();
+    $unprefixed-name-data: ();
+    $all-names: ();
+
+    @each $config in $namespace-configs {
+      $namespace: map.get($config, namespace);
+      $prefix: if(map.has-key($config, prefix), map.get($config, prefix), '');
+      $tokens: _filter-nulls(map.get($config, tokens));
+      @each $name, $value in $tokens {
+        $prefixed-name: $prefix + $name;
+        $all-names: list.append($all-names, $prefixed-name, $separator: comma);
+        @if map.has-key($prefixed-name-data, $prefixed-name) {
+          @error #{
+          'Error overriding token: Ambiguous token name `'
+        }#{
+          $prefixed-name
+        }#{
+          '` exists in multiple namespaces: `('
+        }#{
+          list.nth(map.get($prefixed-name-data, $prefixed-name), 1)
+        }#{
+          ')` and `('
+        }#{
+          $namespace
+        }#{
+          ')`'
+        };
+        }
+        $prefixed-name-data: map.set($prefixed-name-data, $prefixed-name, ($namespace, $name));
+        $unprefixed-data: map.has-key($unprefixed-name-data, $name) and
+          map.get($unprefixed-name-data, $name) or
+          ();
+        $unprefixed-data: list.append($unprefixed-data, ($namespace, $prefixed-name));
+        $unprefixed-name-data: map.set($unprefixed-name-data, $name, $unprefixed-data);
+      }
+    }
+
+    @each $name, $value in $overrides {
+      @if map.has-key($prefixed-name-data, $name) {
+        $data: map.get($prefixed-name-data, $name);
+        $namespace: list.nth($data, 1);
+        $name: list.nth($data, 2);
+        @include create-token-values(
+          $namespace,
+          (
+            $name: $value,
+          )
+        );
+      } @else if (map.has-key($unprefixed-name-data, $name)) {
+        $datalist: map.get($unprefixed-name-data, $name);
+        $prefixed-names: ();
+        @each $data in $datalist {
+          $namespace: list.nth($data, 1);
+          $prefixed-names: list.append($prefixed-names, list.nth($data, 2), $separator: comma);
+          @include create-token-values(
+            $namespace,
+            (
+              $name: $value,
+            )
+          );
+        }
+        @warn #{
+        'Token `'
+      }#{
+        $name
+      }#{
+        '` is deprecated. Please use one of the following alternatives: '
+      }#{
+        $prefixed-names
+      };
+      } @else {
+        @error #{'Invalid token name `'}#{$name}#{'`. '}#{'Valid tokens are: '}#{$all-names};
+      }
+    }
+  }
+}
+
+/// Filters keys with a null value out of the map.
+/// @param {Map} $map The map to filter.
+/// @return {Map} The given map with all of the null keys filtered out.
+@function _filter-nulls($map) {
+  $result: ();
+  @each $key, $val in $map {
+    @if $val != null {
+      $result: map.set($result, $key, $val);
+    }
+  }
+  @return $result;
+}

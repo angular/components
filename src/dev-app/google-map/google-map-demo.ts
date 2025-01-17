@@ -3,174 +3,212 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewChild} from '@angular/core';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {
+  GoogleMap,
+  MapAdvancedMarker,
+  MapBicyclingLayer,
   MapCircle,
+  MapDirectionsRenderer,
   MapDirectionsService,
+  MapGroundOverlay,
+  MapHeatmapLayer,
   MapInfoWindow,
-  MapMarker,
+  MapKmlLayer,
   MapPolygon,
   MapPolyline,
-  MapRectangle
+  MapRectangle,
+  MapTrafficLayer,
+  MapTransitLayer,
+  MapMarkerClusterer,
 } from '@angular/google-maps';
 
-const POLYLINE_PATH: google.maps.LatLngLiteral[] =
-    [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}];
+const POLYLINE_PATH: google.maps.LatLngLiteral[] = [
+  {lat: 25, lng: 26},
+  {lat: 26, lng: 27},
+  {lat: 30, lng: 34},
+];
 
-const POLYGON_PATH: google.maps.LatLngLiteral[] =
-    [{lat: 20, lng: 21}, {lat: 22, lng: 23}, {lat: 24, lng: 25}];
+const POLYGON_PATH: google.maps.LatLngLiteral[] = [
+  {lat: 20, lng: 21},
+  {lat: 22, lng: 23},
+  {lat: 24, lng: 25},
+];
 
 const RECTANGLE_BOUNDS: google.maps.LatLngBoundsLiteral = {
   east: 30,
   north: 15,
   west: 10,
-  south: -5
+  south: -5,
 };
 
 const CIRCLE_CENTER: google.maps.LatLngLiteral = {
   lat: 19,
-  lng: 20
+  lng: 20,
 };
 const CIRCLE_RADIUS = 500000;
+
+let apiLoadingPromise: Promise<unknown> | null = null;
 
 /** Demo Component for @angular/google-maps/map */
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
-  styleUrls: ['google-map-demo.css'],
+  styleUrl: 'google-map-demo.css',
+  imports: [
+    GoogleMap,
+    MapBicyclingLayer,
+    MapCircle,
+    MapDirectionsRenderer,
+    MapGroundOverlay,
+    MapHeatmapLayer,
+    MapInfoWindow,
+    MapKmlLayer,
+    MapMarkerClusterer,
+    MapAdvancedMarker,
+    MapPolygon,
+    MapPolyline,
+    MapRectangle,
+    MapTrafficLayer,
+    MapTransitLayer,
+    FormsModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  private readonly _mapDirectionsService = inject(MapDirectionsService);
+
   @ViewChild(MapPolyline) polyline: MapPolyline;
   @ViewChild(MapPolygon) polygon: MapPolygon;
   @ViewChild(MapRectangle) rectangle: MapRectangle;
   @ViewChild(MapCircle) circle: MapCircle;
+  readonly cdr = inject(ChangeDetectorRef);
 
   center = {lat: 24, lng: 12};
-  markerOptions = {draggable: false};
+  mapAdvancedMarkerPosition = {lat: 22, lng: 21};
   markerPositions: google.maps.LatLngLiteral[] = [];
   zoom = 4;
   display?: google.maps.LatLngLiteral;
   isPolylineDisplayed = false;
-  polylineOptions:
-      google.maps.PolylineOptions = {path: POLYLINE_PATH, strokeColor: 'grey', strokeOpacity: 0.8};
+  polylineOptions: google.maps.PolylineOptions = {
+    path: POLYLINE_PATH,
+    strokeColor: 'grey',
+    strokeOpacity: 0.8,
+  };
 
   heatmapData = this._getHeatmapData(5, 1);
   heatmapOptions = {radius: 50};
   isHeatmapDisplayed = false;
 
   isPolygonDisplayed = false;
-  polygonOptions:
-      google.maps.PolygonOptions = {paths: POLYGON_PATH, strokeColor: 'grey', strokeOpacity: 0.8};
+  polygonOptions: google.maps.PolygonOptions = {
+    paths: POLYGON_PATH,
+    strokeColor: 'grey',
+    strokeOpacity: 0.8,
+  };
   isRectangleDisplayed = false;
-  rectangleOptions: google.maps
-      .RectangleOptions = {bounds: RECTANGLE_BOUNDS, strokeColor: 'grey', strokeOpacity: 0.8};
+  rectangleOptions: google.maps.RectangleOptions = {
+    bounds: RECTANGLE_BOUNDS,
+    strokeColor: 'grey',
+    strokeOpacity: 0.8,
+  };
   isCircleDisplayed = false;
-  circleOptions: google.maps.CircleOptions =
-      {center: CIRCLE_CENTER, radius: CIRCLE_RADIUS, strokeColor: 'grey', strokeOpacity: 0.8};
+  circleOptions: google.maps.CircleOptions = {
+    center: CIRCLE_CENTER,
+    radius: CIRCLE_RADIUS,
+    strokeColor: 'grey',
+    strokeOpacity: 0.8,
+  };
 
   isGroundOverlayDisplayed = false;
+  hasLoaded = false;
   groundOverlayImages = [
     {
       title: 'Red logo',
-      url: 'https://angular.io/assets/images/logos/angular/angular.svg'
+      url: 'https://angular.io/assets/images/logos/angular/angular.svg',
     },
     {
       title: 'Black logo',
-      url: 'https://angular.io/assets/images/logos/angular/angular_solidBlack.svg'
-    }
+      url: 'https://angular.io/assets/images/logos/angular/angular_solidBlack.svg',
+    },
   ];
   groundOverlayUrl = this.groundOverlayImages[0].url;
   groundOverlayBounds = RECTANGLE_BOUNDS;
   isKmlLayerDisplayed = false;
   demoKml =
-      'https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml';
+    'https://developers.google.com/maps/documentation/javascript/examples/kml/westcampus.kml';
   isTrafficLayerDisplayed = false;
   isTransitLayerDisplayed = false;
   isBicyclingLayerDisplayed = false;
+  hasCustomContentMarker = false;
+  // This is necessary for testing advanced markers. It seems like any value works locally.
+  mapId = '123';
 
   mapTypeId: google.maps.MapTypeId;
-  mapTypeIds = [
-    google.maps.MapTypeId.HYBRID,
-    google.maps.MapTypeId.ROADMAP,
-    google.maps.MapTypeId.SATELLITE,
-    google.maps.MapTypeId.TERRAIN
-  ];
-
-  markerClustererImagePath =
-      'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
+  mapTypeIds = ['hybrid', 'roadmap', 'satellite', 'terrain'] as google.maps.MapTypeId[];
 
   directionsResult?: google.maps.DirectionsResult;
 
-  constructor(private readonly _mapDirectionsService: MapDirectionsService) {}
+  constructor() {
+    this._loadApi();
+  }
 
   authFailure() {
     console.log('Auth failure event emitted');
   }
 
   handleClick(event: google.maps.MapMouseEvent) {
-    this.markerPositions.push(event.latLng.toJSON());
+    if (event.latLng) {
+      this.markerPositions.push(event.latLng.toJSON());
+    }
   }
 
   handleMove(event: google.maps.MapMouseEvent) {
-    this.display = event.latLng.toJSON();
-  }
-
-  clickMarker(marker: MapMarker) {
-    this.infoWindow.open(marker);
+    this.display = event.latLng?.toJSON();
   }
 
   handleRightclick() {
     this.markerPositions.pop();
   }
 
-  togglePolylineDisplay() {
-    this.isPolylineDisplayed = !this.isPolylineDisplayed;
-  }
-
-  toggleEditablePolyline() {
+  editablePolylineChanged(editable: boolean) {
     this.polylineOptions = {
       ...this.polylineOptions,
-      editable: !this.polylineOptions.editable,
-      path: this.polyline.getPath()
+      editable,
+      path: this.polyline.getPath(),
     };
   }
 
-  togglePolygonDisplay() {
-    this.isPolygonDisplayed = !this.isPolygonDisplayed;
-  }
-
-  toggleEditablePolygon() {
+  editablePolygonChanged(editable: boolean) {
     this.polygonOptions = {
       ...this.polygonOptions,
-      editable: !this.polygonOptions.editable,
-      paths: this.polygon.getPaths()
+      editable,
+      paths: this.polygon.getPaths(),
     };
   }
 
-  toggleRectangleDisplay() {
-    this.isRectangleDisplayed = !this.isRectangleDisplayed;
-  }
-
-  toggleEditableRectangle() {
+  editableRectangleChanged(editable: boolean) {
     this.rectangleOptions = {
       ...this.rectangleOptions,
-      editable: !this.rectangleOptions.editable,
-      bounds: this.rectangle.getBounds()
+      editable,
+      bounds: this.rectangle.getBounds(),
     };
   }
 
-  toggleCircleDisplay() {
-    this.isCircleDisplayed = !this.isCircleDisplayed;
-  }
-
-  toggleEditableCircle() {
+  editableCircleChanged(editable: boolean) {
     this.circleOptions = {
       ...this.circleOptions,
-      editable: !this.circleOptions.editable,
+      editable,
       center: this.circle.getCenter(),
       radius: this.circle.getRadius(),
     };
@@ -178,30 +216,6 @@ export class GoogleMapDemo {
 
   mapTypeChanged(event: Event) {
     this.mapTypeId = (event.target as HTMLSelectElement).value as unknown as google.maps.MapTypeId;
-  }
-
-  toggleGroundOverlayDisplay() {
-    this.isGroundOverlayDisplayed = !this.isGroundOverlayDisplayed;
-  }
-
-  groundOverlayUrlChanged(event: Event) {
-    this.groundOverlayUrl = (event.target as HTMLSelectElement).value;
-  }
-
-  toggleKmlLayerDisplay() {
-    this.isKmlLayerDisplayed = !this.isKmlLayerDisplayed;
-  }
-
-  toggleTrafficLayerDisplay() {
-    this.isTrafficLayerDisplayed = !this.isTrafficLayerDisplayed;
-  }
-
-  toggleTransitLayerDisplay() {
-    this.isTransitLayerDisplayed = !this.isTransitLayerDisplayed;
-  }
-
-  toggleBicyclingLayerDisplay() {
-    this.isBicyclingLayerDisplayed = !this.isBicyclingLayerDisplayed;
   }
 
   calculateDirections() {
@@ -213,6 +227,7 @@ export class GoogleMapDemo {
       };
       this._mapDirectionsService.route(request).subscribe(response => {
         this.directionsResult = response.result;
+        this.cdr.markForCheck();
       });
     }
   }
@@ -231,5 +246,35 @@ export class GoogleMapDemo {
     }
 
     return result;
+  }
+
+  private _loadApi() {
+    if (this.hasLoaded) {
+      return;
+    }
+
+    if (!apiLoadingPromise) {
+      apiLoadingPromise = this._loadScript(
+        'https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js',
+      );
+    }
+
+    apiLoadingPromise.then(
+      () => {
+        this.hasLoaded = true;
+        this.cdr.markForCheck();
+      },
+      error => console.error('Failed to load Google Maps API', error),
+    );
+  }
+
+  private _loadScript(url: string): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.addEventListener('load', resolve);
+      script.addEventListener('error', reject);
+      document.body.appendChild(script);
+    });
   }
 }

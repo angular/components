@@ -3,14 +3,12 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
-import {OverlayReference} from '../overlay-reference';
+import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
-
+import type {OverlayRef} from '../overlay-ref';
 
 /**
  * Service for dispatching keyboard events that land on the body to appropriate overlay ref,
@@ -19,18 +17,20 @@ import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
  */
 @Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
-
-  constructor(@Inject(DOCUMENT) document: any) {
-    super(document);
-  }
+  private _ngZone = inject(NgZone);
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _cleanupKeydown: (() => void) | undefined;
 
   /** Add a new overlay to the list of attached overlay refs. */
-  override add(overlayRef: OverlayReference): void {
+  override add(overlayRef: OverlayRef): void {
     super.add(overlayRef);
 
     // Lazily start dispatcher once first overlay is added
     if (!this._isAttached) {
-      this._document.body.addEventListener('keydown', this._keydownListener);
+      this._ngZone.runOutsideAngular(() => {
+        this._cleanupKeydown = this._renderer.listen('body', 'keydown', this._keydownListener);
+      });
+
       this._isAttached = true;
     }
   }
@@ -38,7 +38,7 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
   /** Detaches the global keyboard event listener. */
   protected detach() {
     if (this._isAttached) {
-      this._document.body.removeEventListener('keydown', this._keydownListener);
+      this._cleanupKeydown?.();
       this._isAttached = false;
     }
   }
@@ -55,9 +55,9 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
       // because we don't want overlays that don't handle keyboard events to block the ones below
       // them that do.
       if (overlays[i]._keydownEvents.observers.length > 0) {
-        overlays[i]._keydownEvents.next(event);
+        this._ngZone.run(() => overlays[i]._keydownEvents.next(event));
         break;
       }
     }
-  }
+  };
 }

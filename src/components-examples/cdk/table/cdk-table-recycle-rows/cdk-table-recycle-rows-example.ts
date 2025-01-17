@@ -1,5 +1,6 @@
 import {DataSource} from '@angular/cdk/collections';
 import {Component} from '@angular/core';
+import {CdkTableModule} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 export interface PeriodicElement {
@@ -27,8 +28,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'cdk-table-recycle-rows-example',
-  styleUrls: ['cdk-table-recycle-rows-example.css'],
+  styleUrl: 'cdk-table-recycle-rows-example.css',
   templateUrl: 'cdk-table-recycle-rows-example.html',
+  imports: [CdkTableModule],
 })
 export class CdkTableRecycleRowsExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

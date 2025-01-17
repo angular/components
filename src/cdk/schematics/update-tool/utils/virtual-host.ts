@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import * as ts from 'typescript';
@@ -22,12 +22,20 @@ declare module 'typescript' {
     readonly directories: readonly string[];
   }
 
-  export const matchFiles: undefined|
-      ((path: string, extensions: readonly string[]|undefined,
-        excludes: readonly string[]|undefined, includes: readonly string[]|undefined,
-        useCaseSensitiveFileNames: boolean, currentDirectory: string, depth: number|undefined,
+  export const matchFiles:
+    | undefined
+    | ((
+        path: string,
+        extensions: readonly string[] | undefined,
+        excludes: readonly string[] | undefined,
+        includes: readonly string[] | undefined,
+        useCaseSensitiveFileNames: boolean,
+        currentDirectory: string,
+        depth: number | undefined,
         getFileSystemEntries: (path: string) => FileSystemEntries,
-        realpath: (path: string) => string) => string[]);
+        realpath: (path: string) => string,
+        directoryExists: (path: string) => boolean,
+      ) => string[]);
 }
 
 /**
@@ -43,7 +51,7 @@ export class FileSystemHost implements ts.ParseConfigHost {
     return this._fileSystem.fileExists(this._fileSystem.resolve(path));
   }
 
-  readFile(path: string): string|undefined {
+  readFile(path: string): string | undefined {
     const content = this._fileSystem.read(this._fileSystem.resolve(path));
     if (content === null) {
       return undefined;
@@ -54,17 +62,31 @@ export class FileSystemHost implements ts.ParseConfigHost {
   }
 
   readDirectory(
-      rootDir: string, extensions: string[], excludes: string[]|undefined, includes: string[],
-      depth?: number): string[] {
+    rootDir: string,
+    extensions: string[],
+    excludes: string[] | undefined,
+    includes: string[],
+    depth?: number,
+  ): string[] {
     if (ts.matchFiles === undefined) {
       throw Error(
-          'Unable to read directory in virtual file system host. This means that ' +
+        'Unable to read directory in virtual file system host. This means that ' +
           'TypeScript changed its file matching internals.\n\nPlease consider downgrading your ' +
-          'TypeScript version, and report an issue in the Angular Components repository.');
+          'TypeScript version, and report an issue in the Angular Components repository.',
+      );
     }
     return ts.matchFiles(
-        rootDir, extensions, extensions, includes, this.useCaseSensitiveFileNames, '/', depth,
-        p => this._getFileSystemEntries(p), p => this._fileSystem.resolve(p));
+      rootDir,
+      extensions,
+      extensions,
+      includes,
+      this.useCaseSensitiveFileNames,
+      '/',
+      depth,
+      p => this._getFileSystemEntries(p),
+      p => this._fileSystem.resolve(p),
+      p => this._fileSystem.directoryExists(this._fileSystem.resolve(p)),
+    );
   }
 
   private _getFileSystemEntries(path: string): ts.FileSystemEntries {
@@ -77,16 +99,27 @@ export class FileSystemHost implements ts.ParseConfigHost {
  * virtual file system. i.e. no interactions with the working directory.
  */
 export function createFileSystemCompilerHost(
-    options: ts.CompilerOptions, fileSystem: FileSystem): ts.CompilerHost {
+  options: ts.CompilerOptions,
+  fileSystem: FileSystem,
+): ts.CompilerHost {
   const host = ts.createCompilerHost(options, true);
   const virtualHost = new FileSystemHost(fileSystem);
 
   host.readFile = virtualHost.readFile.bind(virtualHost);
   host.readDirectory = virtualHost.readDirectory.bind(virtualHost);
   host.fileExists = virtualHost.fileExists.bind(virtualHost);
-  host.directoryExists = (dirPath) => fileSystem.directoryExists(fileSystem.resolve(dirPath));
+  host.directoryExists = dirPath => fileSystem.directoryExists(fileSystem.resolve(dirPath));
   host.getCurrentDirectory = () => '/';
   host.getCanonicalFileName = p => fileSystem.resolve(p);
 
   return host;
+}
+
+/** Creates a format diagnostic host that works with the given file system. */
+export function createFormatDiagnosticHost(fileSystem: FileSystem): ts.FormatDiagnosticsHost {
+  return {
+    getCanonicalFileName: p => fileSystem.resolve(p),
+    getCurrentDirectory: () => '/',
+    getNewLine: () => '\n',
+  };
 }

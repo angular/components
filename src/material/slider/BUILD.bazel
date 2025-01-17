@@ -1,6 +1,9 @@
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "extract_tokens",
     "markdown_to_html",
+    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
@@ -16,41 +19,61 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":slider.css"] + glob(["**/*.html"]),
-    module_name = "@angular/material/slider",
+    assets = [
+        ":slider_scss",
+        ":slider_thumb_scss",
+    ] + glob(["**/*.html"]),
     deps = [
-        "//src/cdk/a11y",
         "//src/cdk/bidi",
-        "//src/cdk/coercion",
-        "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/material/core",
-        "@npm//@angular/animations",
-        "@npm//@angular/common",
-        "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
-        "@npm//rxjs",
     ],
 )
 
 sass_library(
     name = "slider_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
     name = "slider_scss",
     src = "slider.scss",
     deps = [
-        "//src/cdk/a11y:a11y_scss_lib",
+        "//src/cdk:sass_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
 
+sass_binary(
+    name = "slider_thumb_scss",
+    src = "slider-thumb.scss",
+)
+
+markdown_to_html(
+    name = "overview",
+    srcs = [":slider.md"],
+)
+
+extract_tokens(
+    name = "tokens",
+    srcs = [":slider_scss_lib"],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
+
+###########
+# Testing
+###########
+
 ng_test_library(
-    name = "unit_test_sources",
+    name = "slider_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
@@ -59,24 +82,33 @@ ng_test_library(
         ":slider",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
+        "//src/cdk/platform",
         "//src/cdk/testing/private",
-        "//src/material/testing",
+        "//src/material/core",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [
+        ":slider_tests_lib",
+    ],
 )
 
-markdown_to_html(
-    name = "overview",
-    srcs = [":slider.md"],
+ng_e2e_test_library(
+    name = "e2e_test_sources",
+    srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        ":slider",
+    ],
 )
 
-filegroup(
-    name = "source-files",
-    srcs = glob(["**/*.ts"]),
+e2e_test_suite(
+    name = "e2e_tests",
+    deps = [
+        ":e2e_test_sources",
+    ],
 )

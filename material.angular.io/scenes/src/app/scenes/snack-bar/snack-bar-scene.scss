@@ -1,0 +1,19 @@
+// Reduce the margin on the snackbar container so that it fits (centered)
+// within the scene bounds.
+.mat-mdc-snack-bar-container {
+  margin: 8px !important;
+  --mdc-snackbar-container-color: red;
+  color: rgba(white, 0.87) !important;
+
+  button {
+    color: rgba(white, 0.87) !important;
+  }
+}
+
+.docs-scene-snackbar-background {
+  margin-top: -55px;
+  width: 280px;
+  height: 80px;
+  background: pink;
+  border-radius: 4px;
+}

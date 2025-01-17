@@ -1,0 +1,21 @@
+<span class="mat-mdc-chip-focus-overlay"></span>
+
+<span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary">
+  <span matChipAction [isInteractive]="false">
+    @if (leadingIcon) {
+      <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
+        <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
+      </span>
+    }
+    <span class="mdc-evolution-chip__text-label mat-mdc-chip-action-label">
+      <ng-content></ng-content>
+      <span class="mat-mdc-chip-primary-focus-indicator mat-focus-indicator"></span>
+    </span>
+  </span>
+</span>
+
+@if (_hasTrailingIcon()) {
+  <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--trailing">
+    <ng-content select="mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"></ng-content>
+  </span>
+}

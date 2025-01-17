@@ -1,15 +1,15 @@
 <!-- #docregion mat-tab-nav -->
-<nav mat-tab-nav-bar [backgroundColor]="background">
-  <a mat-tab-link *ngFor="let link of links"
-     (click)="activeLink = link"
-     [active]="activeLink == link"> {{link}} </a>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  @for (link of links; track link) {
+    <a mat-tab-link
+      (click)="activeLink = link"
+      [active]="activeLink == link"> {{link}} </a>
+  }
   <a mat-tab-link disabled>Disabled Link</a>
 </nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
 <!-- #enddocregion mat-tab-nav -->
 
-<button mat-raised-button class="example-action-button" (click)="toggleBackground()">
-  Toggle background
-</button>
 <button mat-raised-button class="example-action-button" (click)="addLink()">
   Add link
 </button>

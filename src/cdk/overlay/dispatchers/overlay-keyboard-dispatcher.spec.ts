@@ -1,30 +1,30 @@
-import {TestBed, inject} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {Component, NgModule} from '@angular/core';
-import {OverlayModule, OverlayContainer, Overlay} from '../index';
-import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 import {ComponentPortal} from '@angular/cdk/portal';
-
+import {ApplicationRef, Component} from '@angular/core';
+import {TestBed, inject} from '@angular/core/testing';
+import {dispatchKeyboardEvent} from '../../testing/private';
+import {Overlay, OverlayModule} from '../index';
+import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
 
 describe('OverlayKeyboardDispatcher', () => {
+  let appRef: ApplicationRef;
   let keyboardDispatcher: OverlayKeyboardDispatcher;
   let overlay: Overlay;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponentModule],
+      imports: [OverlayModule, TestComponent],
     });
 
-    inject([OverlayKeyboardDispatcher, Overlay], (kbd: OverlayKeyboardDispatcher, o: Overlay) => {
-      keyboardDispatcher = kbd;
-      overlay = o;
-    })();
+    inject(
+      [ApplicationRef, OverlayKeyboardDispatcher, Overlay],
+      (ar: ApplicationRef, kbd: OverlayKeyboardDispatcher, o: Overlay) => {
+        appRef = ar;
+        keyboardDispatcher = kbd;
+        overlay = o;
+      },
+    )();
   });
-
-  afterEach(inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-    overlayContainer.ngOnDestroy();
-  }));
 
   it('should track overlays in order as they are attached and detached', () => {
     const overlayOne = overlay.create();
@@ -35,18 +35,25 @@ describe('OverlayKeyboardDispatcher', () => {
     keyboardDispatcher.add(overlayTwo);
 
     expect(keyboardDispatcher._attachedOverlays.length)
-        .toBe(2, 'Expected both overlays to be tracked.');
-    expect(keyboardDispatcher._attachedOverlays[0]).toBe(overlayOne, 'Expected one to be first.');
-    expect(keyboardDispatcher._attachedOverlays[1]).toBe(overlayTwo, 'Expected two to be last.');
+      .withContext('Expected both overlays to be tracked.')
+      .toBe(2);
+    expect(keyboardDispatcher._attachedOverlays[0])
+      .withContext('Expected one to be first.')
+      .toBe(overlayOne);
+    expect(keyboardDispatcher._attachedOverlays[1])
+      .withContext('Expected two to be last.')
+      .toBe(overlayTwo);
 
     // Detach first one and re-attach it
     keyboardDispatcher.remove(overlayOne);
     keyboardDispatcher.add(overlayOne);
 
     expect(keyboardDispatcher._attachedOverlays[0])
-        .toBe(overlayTwo, 'Expected two to now be first.');
+      .withContext('Expected two to now be first.')
+      .toBe(overlayTwo);
     expect(keyboardDispatcher._attachedOverlays[1])
-        .toBe(overlayOne, 'Expected one to now be last.');
+      .withContext('Expected one to now be last.')
+      .toBe(overlayOne);
   });
 
   it('should dispatch body keyboard events to the most recently attached overlay', () => {
@@ -82,8 +89,7 @@ describe('OverlayKeyboardDispatcher', () => {
     dispatchKeyboardEvent(button, 'keydown', ESCAPE);
 
     expect(spy).not.toHaveBeenCalled();
-
-    button.parentNode!.removeChild(button);
+    button.remove();
   });
 
   it('should complete the keydown stream on dispose', () => {
@@ -132,15 +138,18 @@ describe('OverlayKeyboardDispatcher', () => {
   it('should dispose of the global keyboard event handler correctly', () => {
     const overlayRef = overlay.create();
     const body = document.body;
-
     spyOn(body, 'addEventListener');
     spyOn(body, 'removeEventListener');
 
     keyboardDispatcher.add(overlayRef);
-    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function));
+    expect(body.addEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function), undefined);
 
     overlayRef.dispose();
-    expect(body.removeEventListener).toHaveBeenCalledWith('keydown', jasmine.any(Function));
+    expect(document.body.removeEventListener).toHaveBeenCalledWith(
+      'keydown',
+      jasmine.any(Function),
+      undefined,
+    );
   });
 
   it('should skip overlays that do not have keydown event subscriptions', () => {
@@ -178,20 +187,19 @@ describe('OverlayKeyboardDispatcher', () => {
     expect(overlayOneSpy).toHaveBeenCalled();
   });
 
+  it('should not run change detection if there are no `keydownEvents` observers', () => {
+    spyOn(appRef, 'tick');
+    const overlayRef = overlay.create();
+    keyboardDispatcher.add(overlayRef);
+
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    expect(appRef.tick).toHaveBeenCalledTimes(0);
+  });
 });
 
-
 @Component({
-  template: 'Hello'
+  template: 'Hello',
+  imports: [OverlayModule],
 })
-class TestComponent { }
-
-
-// Create a real (non-test) NgModule as a workaround for
-// https://github.com/angular/angular/issues/10760
-@NgModule({
-  exports: [TestComponent],
-  declarations: [TestComponent],
-  entryComponents: [TestComponent],
-})
-class TestComponentModule { }
+class TestComponent {}

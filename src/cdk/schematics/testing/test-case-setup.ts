@@ -3,9 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
-import {getSystemPath, JsonParseMode, parseJson, Path} from '@angular-devkit/core';
+
+import {parse} from 'jsonc-parser';
+import {getSystemPath, Path} from '@angular-devkit/core';
 import {HostTree, Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import {readFileSync} from 'fs-extra';
@@ -60,16 +62,18 @@ export async function createFileSystemTestApp(runner: SchematicTestRunner) {
   }
 }
 
-export async function createTestCaseSetup(migrationName: string, collectionPath: string,
-                                   inputFiles: string[]) {
-
+export async function createTestCaseSetup(
+  migrationName: string,
+  collectionPath: string,
+  inputFiles: string[],
+) {
   const runner = new SchematicTestRunner('schematics', collectionPath);
 
   let logOutput = '';
-  runner.logger.subscribe(entry => logOutput += `${entry.message}\n`);
+  runner.logger.subscribe(entry => (logOutput += `${entry.message}\n`));
   const {appTree, writeFile} = await createFileSystemTestApp(runner);
 
-  _patchTypeScriptDefaultLib(appTree);
+  patchDevkitTreeToExposeTypeScript(appTree);
 
   // Write each test-case input to the file-system. This is necessary because otherwise
   // TypeScript compiler API won't be able to pick up the test cases.
@@ -82,10 +86,11 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
   });
 
   const testAppTsconfigPath = 'projects/cdk-testing/tsconfig.app.json';
-  // Parse TypeScript configuration files with JSON5 as they could contain comments or
-  // unquoted properties.
-  const testAppTsconfig =
-      parseJson(appTree.readContent(testAppTsconfigPath), JsonParseMode.Json5) as any;
+  // Parse TypeScript configuration files with JSONC (like the CLI does) as the
+  // config files could contain comments or trailing commas
+  const testAppTsconfig = parse(appTree.readContent(testAppTsconfigPath), [], {
+    allowTrailingComma: true,
+  });
 
   // include all TypeScript files in the project. Otherwise all test input
   // files won't be part of the program and cannot be migrated.
@@ -93,14 +98,14 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
 
   writeFile(testAppTsconfigPath, JSON.stringify(testAppTsconfig, null, 2));
 
-  const runFixers = async function() {
+  const runFixers = async function () {
     // Patch "executePostTasks" to do nothing. This is necessary since
     // we cannot run the node install task in unit tests. Rather we just
     // assert that certain async post tasks are scheduled.
     // TODO(devversion): RxJS version conflicts between angular-devkit and our dev deps.
     runner.engine.executePostTasks = () => EMPTY as any;
 
-    await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+    await runner.runSchematic(migrationName, {}, appTree);
 
     return {logOutput};
   };
@@ -122,8 +127,9 @@ export function findBazelVersionTestCases(basePath: string) {
   // test case files by using "glob" and store them in our result map.
   if (!manifestPath) {
     const runfilesBaseDir = join(runfilesDir!, basePath);
-    const inputFiles = globSync(`**/!(${MISC_FOLDER_NAME})/*${TEST_CASE_INPUT_SUFFIX}`,
-        {cwd: runfilesBaseDir});
+    const inputFiles = globSync(`**/!(${MISC_FOLDER_NAME})/*${TEST_CASE_INPUT_SUFFIX}`, {
+      cwd: runfilesBaseDir,
+    });
 
     inputFiles.forEach(inputFile => {
       // The target version of an input file will be determined from the first
@@ -131,31 +137,36 @@ export function findBazelVersionTestCases(basePath: string) {
       const targetVersion = inputFile.split(sep)[0];
       const resolvedInputPath = join(runfilesBaseDir, inputFile);
 
-      testCasesMap.set(targetVersion,
-        (testCasesMap.get(targetVersion) || []).concat(resolvedInputPath));
+      testCasesMap.set(
+        targetVersion,
+        (testCasesMap.get(targetVersion) || []).concat(resolvedInputPath),
+      );
     });
 
     return testCasesMap;
   }
 
   // In case runfiles are not symlinked (e.g. on Windows), we resolve all test case files using
-  // the Bazel runfiles manifest. Read more about the manifest here: https://git.io/fhIZE
-  readFileSync(manifestPath, 'utf8').split('\n').forEach(line => {
-    const [runfilePath, realPath] = line.split(' ');
+  // the Bazel runfiles manifest. Read more about the manifest here:
+  // https://github.com/bazelbuild/bazel/blob/701913139adc0eba49a7a9963fea4f555fcd844f/src/main/java/com/google/devtools/build/lib/analysis/SourceManifestAction.java#L214-L221
+  readFileSync(manifestPath, 'utf8')
+    .split('\n')
+    .forEach(line => {
+      const [runfilePath, realPath] = line.split(' ');
 
-    // In case the mapped runfile starts with the specified base path and ends with "_input.ts",
-    // we store it in our result map because we assume that this is a test case.
-    if (runfilePath.startsWith(basePath) && runfilePath.endsWith(TEST_CASE_INPUT_SUFFIX)) {
-      const pathSegments = relative(basePath, runfilePath).split(sep);
-      if (pathSegments.includes(MISC_FOLDER_NAME)) {
-        return;
+      // In case the mapped runfile starts with the specified base path and ends with "_input.ts",
+      // we store it in our result map because we assume that this is a test case.
+      if (runfilePath.startsWith(basePath) && runfilePath.endsWith(TEST_CASE_INPUT_SUFFIX)) {
+        const pathSegments = relative(basePath, runfilePath).split(sep);
+        if (pathSegments.includes(MISC_FOLDER_NAME)) {
+          return;
+        }
+        // The target version of an input file will be determined from the first
+        // path segment. (e.g. "v6/my_rule_input.ts" will be for "v6")
+        const targetVersion = pathSegments[0];
+        testCasesMap.set(targetVersion, (testCasesMap.get(targetVersion) || []).concat(realPath));
       }
-      // The target version of an input file will be determined from the first
-      // path segment. (e.g. "v6/my_rule_input.ts" will be for "v6")
-      const targetVersion = pathSegments[0];
-      testCasesMap.set(targetVersion, (testCasesMap.get(targetVersion) || []).concat(realPath));
-    }
-  });
+    });
 
   return testCasesMap;
 }
@@ -164,11 +175,16 @@ export function findBazelVersionTestCases(basePath: string) {
  * Sets up the specified test cases using Jasmine by creating the appropriate jasmine
  * spec definitions. This should be used within a "describe" jasmine closure.
  */
-export function defineJasmineTestCases(versionName: string, collectionFile: string,
-                                inputFiles: string[] | undefined) {
+export function defineJasmineTestCases(
+  versionName: string,
+  collectionFile: string,
+  inputFiles: string[] | undefined,
+) {
   // No test cases for the given version are available. Skip setting up tests for that
   // version.
   if (!inputFiles) {
+    // Jasmine throws an error if there's a `describe` without any tests.
+    it('should pass', () => {});
     return;
   }
 
@@ -176,8 +192,11 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
   let testCasesOutputPath: string;
 
   beforeAll(async () => {
-    const {appTree: _tree, runFixers} =
-      await createTestCaseSetup(`migration-${versionName}`, collectionFile, inputFiles);
+    const {appTree: _tree, runFixers} = await createTestCaseSetup(
+      `migration-${versionName}`,
+      collectionFile,
+      inputFiles,
+    );
 
     await runFixers();
 
@@ -191,8 +210,9 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
     const inputTestName = basename(inputFile, extname(inputFile));
 
     it(`should apply update schematics to test case: ${inputTestName}`, () => {
-      expect(appTree.readContent(join(testCasesOutputPath, `${inputTestName}.ts`)))
-        .toBe(readFileContent(inputFile.replace(TEST_CASE_INPUT_SUFFIX, TEST_CASE_OUTPUT_SUFFIX)));
+      expect(appTree.readContent(join(testCasesOutputPath, `${inputTestName}.ts`))).toBe(
+        readFileContent(inputFile.replace(TEST_CASE_INPUT_SUFFIX, TEST_CASE_OUTPUT_SUFFIX)),
+      );
     });
   });
 }
@@ -202,9 +222,9 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
  * default library typings. These need to be readable in unit tests because otherwise
  * type checking within migration rules is not working as in real applications.
  */
-export function _patchTypeScriptDefaultLib(tree: Tree) {
+export function patchDevkitTreeToExposeTypeScript<T extends Tree>(tree: T): T {
   const _originalRead = tree.read;
-  tree.read = function(filePath: Path) {
+  tree.read = function (filePath: Path) {
     // In case a file within the TypeScript package is requested, we read the file from
     // the real file system. This is necessary because within unit tests, the "typeScript"
     // package from within the Bazel "@npm" repository  is used. The virtual tree can't be
@@ -215,4 +235,5 @@ export function _patchTypeScriptDefaultLib(tree: Tree) {
       return _originalRead.call(this, filePath);
     }
   };
+  return tree;
 }

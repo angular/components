@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
@@ -25,7 +25,7 @@ declare global {
      * (no more pending tasks).
      *
      * For the implementation, see: https://github.com/
-     *  angular/angular/blob/master/packages/platform-browser/src/browser/testability.ts#L30-L49
+     *  angular/angular/blob/main/packages/platform-browser/src/browser/testability.ts#L30-L49
      */
     frameworkStabilizers: FrameworkStabilizer[];
   }
@@ -40,7 +40,7 @@ export interface WebDriverHarnessEnvironmentOptions {
 /** The default environment options. */
 const defaultEnvironmentOptions: WebDriverHarnessEnvironmentOptions = {
   queryFn: async (selector: string, root: () => webdriver.WebElement) =>
-      root().findElements(webdriver.By.css(selector))
+    root().findElements(webdriver.By.css(selector)),
 };
 
 /**
@@ -48,8 +48,9 @@ const defaultEnvironmentOptions: WebDriverHarnessEnvironmentOptions = {
  * and invokes the specified `callback` when the application is stable (no more pending tasks).
  */
 function whenStable(callback: (didWork: boolean[]) => void): void {
-  Promise.all(window.frameworkStabilizers.map(stabilizer => new Promise(stabilizer)))
-      .then(callback);
+  Promise.all(window.frameworkStabilizers.map(stabilizer => new Promise(stabilizer))).then(
+    callback,
+  );
 }
 
 /**
@@ -67,15 +68,22 @@ export async function waitForAngularReady(wd: webdriver.WebDriver) {
 }
 
 /** A `HarnessEnvironment` implementation for WebDriver. */
-export class SeleniumWebDriverHarnessEnvironment extends
-    HarnessEnvironment<() => webdriver.WebElement> {
+export class SeleniumWebDriverHarnessEnvironment extends HarnessEnvironment<
+  () => webdriver.WebElement
+> {
   /** The options for this environment. */
   private _options: WebDriverHarnessEnvironmentOptions;
 
+  /** Environment stabilization callback passed to the created test elements. */
+  private _stabilizeCallback: () => Promise<void>;
+
   protected constructor(
-      rawRootElement: () => webdriver.WebElement, options?: WebDriverHarnessEnvironmentOptions) {
+    rawRootElement: () => webdriver.WebElement,
+    options?: WebDriverHarnessEnvironmentOptions,
+  ) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
+    this._stabilizeCallback = () => this.forceStabilize();
   }
 
   /** Gets the ElementFinder corresponding to the given TestElement. */
@@ -87,10 +95,14 @@ export class SeleniumWebDriverHarnessEnvironment extends
   }
 
   /** Creates a `HarnessLoader` rooted at the document root. */
-  static loader(driver: webdriver.WebDriver, options?: WebDriverHarnessEnvironmentOptions):
-      HarnessLoader {
+  static loader(
+    driver: webdriver.WebDriver,
+    options?: WebDriverHarnessEnvironmentOptions,
+  ): HarnessLoader {
     return new SeleniumWebDriverHarnessEnvironment(
-        () => driver.findElement(webdriver.By.css('body')), options);
+      () => driver.findElement(webdriver.By.css('body')),
+      options,
+    );
   }
 
   /**
@@ -115,12 +127,13 @@ export class SeleniumWebDriverHarnessEnvironment extends
 
   /** Creates a `TestElement` from a raw element. */
   protected createTestElement(element: () => webdriver.WebElement): TestElement {
-    return new SeleniumWebDriverElement(element, () => this.forceStabilize());
+    return new SeleniumWebDriverElement(element, this._stabilizeCallback);
   }
 
   /** Creates a `HarnessLoader` rooted at the given raw element. */
-  protected createEnvironment(element: () => webdriver.WebElement):
-      HarnessEnvironment<() => webdriver.WebElement> {
+  protected createEnvironment(
+    element: () => webdriver.WebElement,
+  ): HarnessEnvironment<() => webdriver.WebElement> {
     return new SeleniumWebDriverHarnessEnvironment(element, this._options);
   }
 

@@ -11,7 +11,7 @@ ng_module(
     ],
     deps = [
         "//src/google-maps",
-        "@npm//@angular/router",
+        "@npm//@angular/forms",
     ],
 )
 

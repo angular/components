@@ -1,15 +1,11 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {
-  MatDrawerHarness,
   MatDrawerContainerHarness,
-  MatDrawerContentHarness} from '@angular/material/sidenav/testing';
+  MatDrawerContentHarness,
+  MatDrawerHarness,
+} from '@angular/material/sidenav/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatSidenavModule} from '@angular/material/sidenav';
 import {SidenavHarnessExample} from './sidenav-harness-example';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -17,15 +13,10 @@ describe('SidenavHarnessExample', () => {
   let fixture: ComponentFixture<SidenavHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatSidenavModule, NoopAnimationsModule],
-      declarations: [SidenavHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [NoopAnimationsModule],
+    });
 
     fixture = TestBed.createComponent(SidenavHarnessExample);
     fixture.detectChanges();

@@ -7,7 +7,7 @@ using the CDK on its own, you'll have to include the styles yourself. You can do
 the prebuilt styles in your global stylesheet:
 
 ```scss
-@import '~@angular/cdk/overlay-prebuilt.css';
+@import '@angular/cdk/overlay-prebuilt.css';
 ```
 
 ### Creating overlays
@@ -74,7 +74,7 @@ the overlay element. There are four scroll strategies available as part of the l
 
 `BlockScrollStrategy` will block page scrolling while the overlay is open. Note that some
 applications may implement special or customized page scrolling; if the `BlockScrollStrategy`
-conflicts with this kind of situation, it can be overriden by re-providing `BlockScrollStrategy`
+conflicts with this kind of situation, it can be overridden by re-providing `BlockScrollStrategy`
 with a custom implementation.
 
 `RepositionScrollStrategy` will re-position the overlay element on scroll. Note that this will have

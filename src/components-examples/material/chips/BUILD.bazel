@@ -12,7 +12,6 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/chips",
     deps = [
         "//src/cdk/drag-drop",
         "//src/cdk/testing",
@@ -25,7 +24,6 @@ ng_module(
         "//src/material/icon",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -49,12 +47,10 @@ ng_test_library(
         "//src/material/chips",
         "//src/material/chips/testing",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

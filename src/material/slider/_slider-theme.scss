@@ -1,202 +1,156 @@
-@use 'sass:map';
-@use 'sass:meta';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/typography/typography-utils';
+@use '../core/style/sass-utils';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mat/slider' as tokens-mat-slider;
+@use '../core/tokens/m2/mdc/slider' as tokens-mdc-slider;
 
-@mixin _inner-content-theme($palette) {
-  .mat-slider-track-fill,
-  .mat-slider-thumb,
-  .mat-slider-thumb-label {
-    background-color: theming.get-color-from-palette($palette);
-  }
-
-  .mat-slider-thumb-label-text {
-    color: theming.get-color-from-palette($palette, default-contrast);
-  }
-
-  .mat-slider-focus-ring {
-    $opacity: 0.2;
-    $color: theming.get-color-from-palette($palette, default, $opacity);
-    background-color: $color;
-
-    // `mat-color` uses `rgba` for the opacity which won't work with
-    // CSS variables so we need to use `opacity` as a fallback.
-    @if (meta.type-of($color) != color) {
-      opacity: $opacity;
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-slider.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-  $background: map.get($config, background);
-  $foreground: map.get($config, foreground);
+/// Outputs color theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
+        tokens-mat-slider.$prefix,
+        tokens-mat-slider.get-color-tokens($theme)
+      );
 
-  $mat-slider-off-color: theming.get-color-from-palette($foreground, slider-off);
-  $mat-slider-off-focused-color: theming.get-color-from-palette($foreground, slider-off-active);
-  $mat-slider-disabled-color: theming.get-color-from-palette($foreground, slider-off);
-  $mat-slider-labeled-min-value-thumb-color:
-    theming.get-color-from-palette($foreground, slider-min);
-  $mat-slider-labeled-min-value-thumb-label-color:
-    theming.get-color-from-palette($foreground, slider-off);
-  $mat-slider-tick-opacity: 0.7;
-  $mat-slider-tick-color:
-    theming.get-color-from-palette($foreground, base, $mat-slider-tick-opacity);
-  $mat-slider-tick-size: 2px;
-
-  .mat-slider-track-background {
-    background-color: $mat-slider-off-color;
-  }
-
-  .mat-primary {
-    @include _inner-content-theme($primary);
-  }
-
-  .mat-accent {
-    @include _inner-content-theme($accent);
-  }
-
-  .mat-warn {
-    @include _inner-content-theme($warn);
-  }
-
-  .mat-slider:hover,
-  .cdk-focused {
-    .mat-slider-track-background {
-      background-color: $mat-slider-off-focused-color;
-    }
-  }
-
-  .mat-slider-disabled {
-    .mat-slider-track-background,
-    .mat-slider-track-fill,
-    .mat-slider-thumb {
-      background-color: $mat-slider-disabled-color;
-    }
-
-    &:hover {
-      .mat-slider-track-background {
-        background-color: $mat-slider-disabled-color;
-      }
-    }
-  }
-
-  .mat-slider-min-value {
-    .mat-slider-focus-ring {
-      $opacity: 0.12;
-      $color: theming.get-color-from-palette($foreground, base, $opacity);
-      background-color: $color;
-
-      // `mat-color` uses `rgba` for the opacity which won't work with
-      // CSS variables so we need to use `opacity` as a fallback.
-      @if (meta.type-of($color) != color) {
-        opacity: $opacity;
-      }
-    }
-
-    &.mat-slider-thumb-label-showing {
-      .mat-slider-thumb,
-      .mat-slider-thumb-label {
-        background-color: $mat-slider-labeled-min-value-thumb-color;
+      .mat-accent {
+        @include token-utils.create-token-values(
+          tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent)
+        );
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent)
+        );
       }
 
-      &.cdk-focused {
-        .mat-slider-thumb,
-        .mat-slider-thumb-label {
-          background-color: $mat-slider-labeled-min-value-thumb-label-color;
-        }
+      .mat-warn {
+        @include token-utils.create-token-values(
+          tokens-mdc-slider.$prefix,
+          tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn)
+        );
+        @include token-utils.create-token-values(
+          tokens-mat-slider.$prefix,
+          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn)
+        );
       }
-    }
-
-    &:not(.mat-slider-thumb-label-showing) {
-      .mat-slider-thumb {
-        border-color: $mat-slider-off-color;
-        background-color: transparent;
-      }
-
-      &:hover,
-      &.cdk-focused {
-        .mat-slider-thumb {
-          border-color: $mat-slider-off-focused-color;
-        }
-
-        &.mat-slider-disabled .mat-slider-thumb {
-          border-color: $mat-slider-disabled-color;
-        }
-      }
-    }
-  }
-
-  .mat-slider-has-ticks .mat-slider-wrapper::after {
-    border-color: $mat-slider-tick-color;
-
-    // `mat-color` uses `rgba` for the opacity which won't work with
-    // CSS variables so we need to use `opacity` as a fallback.
-    @if (meta.type-of($mat-slider-tick-color) != color) {
-      opacity: $mat-slider-tick-opacity;
-    }
-  }
-
-  .mat-slider-horizontal .mat-slider-ticks {
-    background-image: repeating-linear-gradient(to right, $mat-slider-tick-color,
-        $mat-slider-tick-color $mat-slider-tick-size, transparent 0, transparent);
-    // Firefox doesn't draw the gradient correctly with 'to right'
-    // (see https://bugzilla.mozilla.org/show_bug.cgi?id=1314319).
-    background-image: -moz-repeating-linear-gradient(0.0001deg, $mat-slider-tick-color,
-        $mat-slider-tick-color $mat-slider-tick-size, transparent 0, transparent);
-
-    // `mat-color` uses `rgba` for the opacity which won't work with
-    // CSS variables so we need to use `opacity` as a fallback.
-    @if (meta.type-of($mat-slider-tick-color) != color) {
-      opacity: $mat-slider-tick-opacity;
-    }
-  }
-
-  .mat-slider-vertical .mat-slider-ticks {
-    background-image: repeating-linear-gradient(to bottom, $mat-slider-tick-color,
-        $mat-slider-tick-color $mat-slider-tick-size, transparent 0, transparent);
-
-    // `mat-color` uses `rgba` for the opacity which won't work with
-    // CSS variables so we need to use `opacity` as a fallback.
-    @if (meta.type-of($mat-slider-tick-color) != color) {
-      opacity: $mat-slider-tick-opacity;
     }
   }
 }
 
-@mixin typography($config-or-theme) {
-  $config: typography.private-typography-to-2014-config(
-      theming.get-typography-config($config-or-theme));
-  .mat-slider-thumb-label-text {
-    font: {
-      family: typography-utils.font-family($config);
-      size: typography-utils.font-size($config, caption);
-      weight: typography-utils.font-weight($config, body-2);
+/// Outputs typography theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-typography-tokens($theme)
+      );
     }
   }
 }
 
-@mixin _density($config-or-theme) {}
+/// Outputs density theme styles for the mat-slider.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-slider.$prefix,
+        tokens-mdc-slider.get-density-tokens($theme)
+      );
+    }
+  }
+}
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mat-slider.$prefix,
+      tokens: tokens-mat-slider.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-slider.$prefix,
+      tokens: tokens-mdc-slider.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-option.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the slider: primary, secondary, tertiary,
+///     or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-slider') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
     }
   }
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-slider.$prefix, $options...);
+  $mat-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mat-slider.$prefix, $options...);
+  @include token-utils.create-token-values(tokens-mdc-slider.$prefix, $mdc-slider-tokens);
+  @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-slider-tokens);
 }

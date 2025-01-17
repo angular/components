@@ -1,6 +1,5 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "pkg_npm")
-load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "jasmine_node_test", "pkg_npm", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -19,14 +18,12 @@ ts_library(
         exclude = [
             "**/files/**/*.ts",
             "**/*.spec.ts",
-            "ng-update/test-cases/**/*.ts",
             "testing/**/*.ts",
         ],
     ),
-    # Schematics do not need to run in browsers and can use `commonjs`
-    # as format instead the default `umd` format.
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
     devmode_module = "commonjs",
-    module_name = "@angular/cdk/schematics",
     prodmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
@@ -37,7 +34,6 @@ ts_library(
         # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
         "@npm//@types/jasmine",
         "@npm//@types/glob",
-        "@npm//@types/parse5",
         "@npm//@types/node",
         "@npm//glob",
         "@npm//parse5",
@@ -48,7 +44,7 @@ ts_library(
 # This package is intended to be combined into the main @angular/cdk package as a dep.
 pkg_npm(
     name = "npm_package",
-    substitutions = VERSION_PLACEHOLDER_REPLACEMENTS,
+    srcs = ["package.json"],
     deps = [
         ":schematics",
         ":schematics_assets",
@@ -62,7 +58,6 @@ jasmine_node_test(
     srcs = [":unit_test_sources"],
     data = [
         ":schematics_assets",
-        ":schematics_test_cases",
     ],
 )
 
@@ -76,6 +71,10 @@ ts_library(
             "**/files/**/*.spec.ts",
         ],
     ),
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
+    devmode_module = "commonjs",
+    prodmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
         ":schematics",
@@ -83,18 +82,10 @@ ts_library(
         "//src/cdk/schematics/update-tool",
         "//src/cdk/testing/private",
         "@npm//@angular-devkit/schematics",
+        "@npm//@bazel/runfiles",
         "@npm//@schematics/angular",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//typescript",
     ],
-)
-
-filegroup(
-    name = "schematics_test_cases",
-    testonly = True,
-    srcs = glob([
-        "ng-update/test-cases/**/*_input.ts",
-        "ng-update/test-cases/**/*_expected_output.ts",
-    ]) + ["ng-update/test-cases/misc/global-stylesheets-test.scss"],
 )

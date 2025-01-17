@@ -1,7 +1,13 @@
 import {Component} from '@angular/core';
 import {DataSource} from '@angular/cdk/collections';
-import {NgForm} from '@angular/forms';
+import {NgForm, FormsModule} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPopoverEditModule} from '@angular/material-experimental/popover-edit';
+import {MatTableModule} from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;
@@ -38,8 +44,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
  */
 @Component({
   selector: 'popover-edit-mat-table-flex-example',
-  styleUrls: ['popover-edit-mat-table-flex-example.css'],
+  styleUrl: 'popover-edit-mat-table-flex-example.css',
   templateUrl: 'popover-edit-mat-table-flex-example.html',
+  imports: [
+    MatTableModule,
+    FormsModule,
+    MatPopoverEditModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
 })
 export class PopoverEditMatTableFlexExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -49,13 +64,17 @@ export class PopoverEditMatTableFlexExample {
   readonly preservedWeightValues = new WeakMap<PeriodicElement, any>();
 
   onSubmitName(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.name = f.value.name;
   }
 
   onSubmitWeight(element: PeriodicElement, f: NgForm) {
-    if (!f.valid) { return; }
+    if (!f.valid) {
+      return;
+    }
 
     element.weight = f.value.weight;
   }

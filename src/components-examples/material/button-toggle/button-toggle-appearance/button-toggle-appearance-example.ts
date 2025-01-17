@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
  * @title Button toggle appearance
@@ -6,6 +7,8 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'button-toggle-appearance-example',
   templateUrl: 'button-toggle-appearance-example.html',
-  styleUrls: ['button-toggle-appearance-example.css'],
+  styleUrl: 'button-toggle-appearance-example.css',
+  imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleAppearanceExample {}

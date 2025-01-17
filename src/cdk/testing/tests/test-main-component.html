@@ -1,5 +1,6 @@
+<!-- Note that this element is fixed to avoid flakiness if the page has been scrolled down. -->
 <div class="click-test" (click)="onClick($event)" (contextmenu)="onRightClick($event)"
-     style="width: 100px; height: 100px; background: grey"
+     style="width: 100px; height: 100px; background: grey; position: fixed; top: 0; right: 0; z-index: 10;"
      #clickTestElement>
 </div>
 <div class="click-test-result">{{clickResult.x}}-{{clickResult.y}}</div>
@@ -14,6 +15,7 @@
   <label>AsyncCounter:</label>
   <div id="asyncCounter">{{asyncCounter}}</div>
 </div>
+<span id="contenteditable" contenteditable>initial value</span>
 <div class="inputs">
   <input [(ngModel)]="input" id="input" aria-label="input" (keydown)="onKeyDown($event)">
   <span class="special-key">{{specialKey}}</span>
@@ -72,12 +74,18 @@
   </button>
   <span id="task-state-result" #taskStateResult></span>
 </div>
-<test-shadow-boundary *ngIf="_shadowDomSupported"></test-shadow-boundary>
+@if (_shadowDomSupported) {
+  <test-shadow-boundary></test-shadow-boundary>
+}
 
 
 <div
   id="hover-box"
   [class.hovering]="isHovering"
+  [class.pointer-over]="isPointerOver"
   (mouseenter)="isHovering = true"
   (mouseleave)="isHovering = false"
+  (mouseover)="isPointerOver = true"
+  (mouseout)="isPointerOver = false"
   style="width: 50px; height: 50px; background: hotpink;"></div>
+<div class="hidden-element" style="display: none;">Hello</div>

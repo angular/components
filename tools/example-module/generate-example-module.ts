@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {parseExampleFile} from './parse-example-file';
-import {parseExampleModuleFile} from './parse-example-module-file';
 
 interface ExampleMetadata {
   /** Name of the example component. */
@@ -20,15 +19,8 @@ interface ExampleMetadata {
   additionalComponents: string[];
   /** Files for this example. */
   files: string[];
-  /** Reference to the module that declares this example. */
-  module: ExampleModule;
-}
-
-interface ExampleModule {
-  /** Path to the package that the module is defined in. */
-  packagePath: string;
-  /** Name of the module. */
-  name: string;
+  /** Path from which to import the xample. */
+  importPath: string;
 }
 
 interface AnalyzedExamples {
@@ -51,17 +43,29 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
       selector: data.selector,
       additionalComponents: data.additionalComponents,
       primaryFile: path.basename(data.sourcePath),
-      module: {
-        name: data.module.name,
-        importSpecifier: data.module.packagePath,
-      },
+      importPath: data.importPath,
     };
 
     return result;
   }, {} as any);
 
-  return fs.readFileSync(require.resolve('./example-module.template'), 'utf8')
-    .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2));
+  const loadText = [
+    `export async function loadExample(id: string): Promise<any> {`,
+    `  switch (id) {`,
+    ...exampleMetadata.map(
+      data =>
+        `  case '${data.id}':\nreturn import('@angular/components-examples/${data.importPath}');`,
+    ),
+    `    default:\nreturn undefined;`,
+    `  }`,
+    '}',
+  ].join('\n');
+
+  return (
+    fs
+      .readFileSync(require.resolve('./example-module.template'), 'utf8')
+      .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2)) + loadText
+  );
 }
 
 /** Converts a given camel-cased string to a dash-cased string. */
@@ -77,21 +81,11 @@ function convertToDashCase(name: string): string {
  */
 function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExamples {
   const exampleMetadata: ExampleMetadata[] = [];
-  const exampleModules: ExampleModule[] = [];
 
   for (const sourceFile of sourceFiles) {
     const relativePath = path.relative(baseDir, sourceFile).replace(/\\/g, '/');
-    const importPath = relativePath.replace(/\.ts$/, '');
     const packagePath = path.dirname(relativePath);
-
-    // Collect all individual example modules.
-    if (path.basename(sourceFile) === 'index.ts') {
-      exampleModules.push(...parseExampleModuleFile(sourceFile).map(name => ({
-        name,
-        importPath,
-        packagePath,
-      })));
-    }
+    const importPath = path.dirname(packagePath);
 
     // Avoid parsing non-example files.
     if (!path.basename(sourceFile, path.extname(sourceFile)).endsWith('-example')) {
@@ -113,15 +107,17 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
         title: primaryComponent.title.trim(),
         additionalComponents: [],
         files: [],
-        module: null,
+        importPath,
       };
 
       // For consistency, we expect the example component selector to match
       // the id of the example.
       const expectedSelector = `${exampleId}-example`;
       if (primaryComponent.selector !== expectedSelector) {
-        throw Error(`Example ${exampleId} uses selector: ${primaryComponent.selector}, ` +
-            `but expected: ${expectedSelector}`);
+        throw Error(
+          `Example ${exampleId} uses selector: ${primaryComponent.selector}, ` +
+            `but expected: ${expectedSelector}`,
+        );
       }
 
       example.files.push(path.basename(relativePath));
@@ -151,44 +147,26 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
       example.files.forEach(f => assertReferencedExampleFileExists(baseDir, packagePath, f));
       exampleMetadata.push(example);
     } else {
-        throw Error(`Could not find a primary example component in ${sourceFile}. ` +
-                    `Ensure that there's a component with an @title annotation.`);
+      throw Error(
+        `Could not find a primary example component in ${sourceFile}. ` +
+          `Ensure that there's a component with an @title annotation.`,
+      );
     }
   }
-
-  // Walk through all collected examples and find their parent example module. In View Engine,
-  // components cannot be lazy-loaded without the associated module being loaded.
-  exampleMetadata.forEach(example => {
-    const parentModule = exampleModules
-      .find(module => example.sourcePath.startsWith(module.packagePath));
-
-    if (!parentModule) {
-      throw Error(`Could not determine example module for: ${example.id}`);
-    }
-
-    const actualPath = path.dirname(example.sourcePath);
-    const expectedPath = path.posix.join(parentModule.packagePath, example.id);
-
-    // Ensures that example ids match with the directory they are stored in. This is not
-    // necessary for the docs site, but it helps with consistency and makes it easy to
-    // determine an id for an example. We also ensures for consistency that example
-    // folders are direct siblings of the module file.
-    if (actualPath !== expectedPath) {
-      throw Error(`Example is stored in: ${actualPath}, but expected: ${expectedPath}`);
-    }
-
-    example.module = parentModule;
-  });
 
   return {exampleMetadata};
 }
 
 /** Asserts that the given file exists for the specified example. */
-function assertReferencedExampleFileExists(baseDir: string, examplePackagePath: string,
-                                           relativePath: string) {
+function assertReferencedExampleFileExists(
+  baseDir: string,
+  examplePackagePath: string,
+  relativePath: string,
+) {
   if (!fs.existsSync(path.join(baseDir, examplePackagePath, relativePath))) {
     throw Error(
-        `Example "${examplePackagePath}" references "${relativePath}", but file does not exist.`);
+      `Example "${examplePackagePath}" references "${relativePath}", but file does not exist.`,
+    );
   }
 }
 
@@ -196,8 +174,11 @@ function assertReferencedExampleFileExists(baseDir: string, examplePackagePath: 
  * Generates the example module from the given source files and writes it to a specified output
  * file.
  */
-export function generateExampleModule(sourceFiles: string[], outputFile: string,
-                                      baseDir: string = path.dirname(outputFile)) {
+export function generateExampleModule(
+  sourceFiles: string[],
+  outputFile: string,
+  baseDir: string = path.dirname(outputFile),
+) {
   const analysisData = analyzeExamples(sourceFiles, baseDir);
   const generatedModuleFile = inlineExampleModuleTemplate(analysisData);
 

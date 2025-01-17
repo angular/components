@@ -1,267 +1,269 @@
+@use 'sass:list';
 @use 'sass:map';
+@use 'sass:string';
 @use 'typography-utils';
-@use '../theming/theming';
+@use '../theming/inspection';
 
-/// Defines a typography level from the Material Design spec.
-/// @param {String} $font-size The font-size for this level.
-/// @param {String | Number} $line-height The line-height for this level.
-/// @param {String | Number} $font-weight The font-weight for this level.
-/// @param {String} $font-family The font-family for this level.
-/// @param {String} $letter-spacing The letter-spacing for this level.
-/// @returns {Map} A map representing the definition of this typpographic level.
-@function define-typography-level(
-  $font-size,
-  $line-height: $font-size,
-  $font-weight: 400,
-  $font-family: null,
-  $letter-spacing: normal) {
+// Definition and versioning functions live in their own files to avoid circular dependencies, but
+// we re-export them here so that historical imports from this file continue to work without needing
+// to be updated.
+@forward './versioning';
 
-  @return (
-    font-size: $font-size,
-    line-height: $line-height,
-    font-weight: $font-weight,
-    font-family: $font-family,
-    letter-spacing: $letter-spacing
-  );
+@mixin typography-hierarchy($theme, $selector: '.mat-typography', $back-compat: false) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _m3-typography-hierarchy($theme, $selector, $back-compat);
+  }
+  @else {
+    @include _m2-typography-hierarchy($theme, $selector);
+  }
 }
 
-/// Defines a collection of typography levels to configure typography for an application.
-/// Any level not specified defaults to the values defined in the Material Design specification:
-/// https://material.io/guidelines/style/typography.html.
-///
-/// Note that the Material Design specification does not describe explicit letter-spacing values.
-/// The values here come from reverse engineering the Material Design examples.
-/// @param {String} $font-family Default font-family for levels that don't specify font-family.
-/// @param {Map} $display-4 Configuration for the "display-4" typographic level.
-/// @param {Map} $display-3 Configuration for the "display-3" typographic level.
-/// @param {Map} $display-2 Configuration for the "display-2" typographic level.
-/// @param {Map} $display-1 Configuration for the "display-1" typographic level.
-/// @param {Map} $headline Configuration for the "headline" typographic level.
-/// @param {Map} $title Configuration for the "title" typographic level.
-/// @param {Map} $subheading-2 Configuration for the "subheading-2" typographic level.
-/// @param {Map} $subheading-1 Configuration for the "subheading-1" typographic level.
-/// @param {Map} $body-2 Configuration for the "body-2" typographic level.
-/// @param {Map} $body-1 Configuration for the "body-1" typographic level.
-/// @param {Map} $caption Configuration for the "caption" typographic level.
-/// @param {Map} $button Configuration for the "button" typographic level.
-/// @param {Map} $input Configuration for the "input" typographic level.
-/// @returns {Map} A typography config for the application.
-@function define-typography-config(
-  $font-family:   'Roboto, "Helvetica Neue", sans-serif',
-  $display-4:     define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-  $display-3:     define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-  $display-2:     define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
-  $display-1:     define-typography-level(34px, 40px, 400),
-  $headline:      define-typography-level(24px, 32px, 400),
-  $title:         define-typography-level(20px, 32px, 500),
-  $subheading-2:  define-typography-level(16px, 28px, 400),
-  $subheading-1:  define-typography-level(15px, 24px, 400),
-  $body-2:        define-typography-level(14px, 24px, 500),
-  $body-1:        define-typography-level(14px, 20px, 400),
-  $caption:       define-typography-level(12px, 20px, 400),
-  $button:        define-typography-level(14px, 14px, 500),
-  // Line-height must be unit-less fraction of the font-size.
-  $input:         define-typography-level(inherit, 1.125, 400)
-) {
-
-  // Declare an initial map with all of the levels.
-  $config: (
-    display-4:      $display-4,
-    display-3:      $display-3,
-    display-2:      $display-2,
-    display-1:      $display-1,
-    headline:       $headline,
-    title:          $title,
-    subheading-2:   $subheading-2,
-    subheading-1:   $subheading-1,
-    body-2:         $body-2,
-    body-1:         $body-1,
-    caption:        $caption,
-    button:         $button,
-    input:          $input,
-  );
-
-  // Loop through the levels and set the `font-family` of the ones that don't have one to the base.
-  // Note that Sass can't modify maps in place, which means that we need to merge and re-assign.
-  @each $key, $level in $config {
-    @if map.get($level, font-family) == null {
-      $new-level: map.merge($level, (font-family: $font-family));
-      $config: map.merge($config, ($key: $new-level));
+@function _get-selector($selectors, $prefix) {
+  $result: ();
+  @each $selector in $selectors {
+    // Don't add "naked" tag selectors, and don't nest prefix selector.
+    @if string.index($selector, '.') == 1 {
+      $result: list.append($result, $selector, $separator: comma);
+    }
+    // Don't nest the prefix selector in itself.
+    @if $selector != $prefix {
+      $result: list.append($result, '#{$prefix} #{$selector}', $separator: comma);
     }
   }
-
-  // Add the base font family to the config.
-  @return map.merge($config, (font-family: $font-family));
+  @return $result;
 }
 
-// Whether a config is for the Material Design 2018 typography system.
-@function private-typography-is-2018-config($config) {
-  @return map.get($config, headline-1) != null;
-}
-
-// Whether a config is for the Material Design 2014 typography system.
-@function private-typography-is-2014-config($config) {
-  @return map.get($config, headline) != null;
-}
-
-// Given a config for either the 2014 or 2018 Material Design typography system,
-// produces a normalized typography config for the 2014 Material Design typography system.
-// 2014 - https://material.io/archive/guidelines/style/typography.html#typography-styles
-// 2018 - https://material.io/design/typography/the-type-system.html#type-scale
-//
-// Components using this function should be migrated to normalize to the 2018 style config instead.
-// New components should not use this function.
-@function private-typography-to-2014-config($config) {
-  @if $config == null {
-    @return null;
+@mixin _m3-typography-level($theme, $selector-prefix, $level, $selectors, $margin: null) {
+  #{_get-selector($selectors, $selector-prefix)} {
+    // TODO(mmalerba): When we expose system tokens as CSS vars, we should change this to emit token
+    //  slots.
+    font: inspection.get-theme-typography($theme, $level, font);
+    letter-spacing: inspection.get-theme-typography($theme, $level, letter-spacing);
+    @if $margin != null {
+      margin: 0 0 $margin;
+    }
   }
-  @if not private-typography-is-2014-config($config) {
-    $args: (
-        display-4: map.get($config, headline-1),
-        display-3: map.get($config, headline-2),
-        display-2: map.get($config, headline-3),
-        display-1: map.get($config, headline-4),
-        headline: map.get($config, headline-5),
-        title: map.get($config, headline-6),
-        subheading-2: map.get($config, subtitle-1),
-        subheading-1: map.get($config, subtitle-2),
-        body-2: map.get($config, body-1),
-        body-1: map.get($config, body-2),
-        button: map.get($config, button),
-        caption: map.get($config, caption),
-    );
-    $non-null-args: ();
-    @each $key, $value in $args {
-      @if $value != null {
-        $non-null-args: map.merge($non-null-args, ($key: $value));
+}
+
+@mixin _m3-typography-hierarchy($theme, $selector-prefix, $add-m2-selectors) {
+ $levels: (
+   display-large: (
+     selectors: ('.mat-display-large', 'h1'),
+     m2-selectors: ('.mat-h1', '.mat-headline-1'),
+     margin: 0.5em
+   ),
+   display-medium: (
+     selectors: ('.mat-display-medium', 'h2'),
+     m2-selectors: ('.mat-h2', '.mat-headline-2'),
+     margin: 0.5em
+   ),
+   display-small: (
+     selectors: ('.mat-display-small', 'h3'),
+     m2-selectors: ('.mat-h3', '.mat-headline-3'),
+     margin: 0.5em
+   ),
+   headline-large: (
+     selectors: ('.mat-headline-large', 'h4'),
+     m2-selectors: ('.mat-h4', '.mat-headline-4'),
+     margin: 0.5em
+   ),
+   headline-medium: (
+     selectors: ('.mat-headline-medium', 'h5'),
+     m2-selectors: ('.mat-h5', '.mat-headline-5'),
+     margin: 0.5em
+   ),
+   headline-small: (
+     selectors: ('.mat-headline-small', 'h6'),
+     m2-selectors: ('.mat-h6', '.mat-headline-6'),
+     margin: 0.5em
+   ),
+   title-large: (
+     selectors: ('.mat-title-large'),
+     m2-selectors: ('.mat-subtitle-1'),
+   ),
+   title-medium: (
+     selectors: ('.mat-title-medium'),
+     m2-selectors: ('.mat-subtitle-2'),
+   ),
+   title-small: (
+     selectors: ('.mat-title-small')
+   ),
+   body-large: (
+     selectors: ('.mat-body-large', $selector-prefix),
+     m2-selectors: ('.mat-body', '.mat-body-strong', '.mat-body-2'),
+   ),
+   body-medium: (
+     selectors: ('.mat-body-medium')
+   ),
+   body-small: (
+     selectors: ('.mat-body-small')
+   ),
+   label-large: (
+     selectors: ('.mat-label-large')
+   ),
+   label-medium: (
+     selectors: ('.mat-label-medium')
+   ),
+   label-small: (
+     selectors: ('.mat-label-small'),
+     m2-selectors: ('.mat-small', '.mat-caption')
+   ),
+ );
+
+  @each $level, $options in $levels {
+    @if $add-m2-selectors {
+      $options: map.set($options, selectors,
+          list.join(map.get($options, selectors), map.get($options, m2-selectors) or ()));
+    }
+    $options: map.remove($options, m2-selectors);
+
+    // Apply styles for the level.
+    @include _m3-typography-level($theme, $selector-prefix, $level, $options...);
+
+    // Also style <p> inside body-large.
+    @if $level == body-large {
+      #{_get-selector(map.get($options, selectors), $selector-prefix)} {
+        p {
+          margin: 0 0 0.75em;
+        }
       }
     }
-    @return define-typography-config($non-null-args...);
   }
-  @return $config;
 }
-
-// Given a config for either the 2014 or 2018 Material Design typography system,
-// produces a normalized typography config for the 2018 Material Design typography system.
-// 2014 - https://material.io/archive/guidelines/style/typography.html#typography-styles
-// 2018 - https://material.io/design/typography/the-type-system.html#type-scale
-@function private-typography-to-2018-config($config) {
-  @if $config == null {
-    @return null;
-  }
-  @if not private-typography-is-2018-config($config) {
-    @return (
-        headline-1: map.get($config, display-4),
-        headline-2: map.get($config, display-3),
-        headline-3: map.get($config, display-2),
-        headline-4: map.get($config, display-1),
-        headline-5: map.get($config, headline),
-        headline-6: map.get($config, title),
-        subtitle-1: map.get($config, subheading-2),
-        subtitle-2: map.get($config, subheading-1),
-        body-1: map.get($config, body-2),
-        body-2: map.get($config, body-1),
-        button: map.get($config, button),
-        caption: map.get($config, caption),
-        overline: if(map.get($config, overline), map.get($config, overline),
-            define-typography-level(12px, 32px, 500)
-        )
-    );
-  }
-  @return $config;
-}
-
-// stylelint-disable material/theme-mixin-api
 
 /// Emits baseline typographic styles based on a given config.
 /// @param {Map} $config-or-theme A typography config for an entire theme.
 /// @param {String} $selector Ancestor selector under which native elements, such as h1, will
 ///     be styled.
-@mixin typography-hierarchy($config-or-theme, $selector: '.mat-typography') {
-  $config: private-typography-to-2014-config(theming.get-typography-config($config-or-theme));
-
-  .mat-h1, .mat-headline, #{$selector} h1 {
-    @include typography-utils.typography-level($config, headline);
+@mixin _m2-typography-hierarchy($theme, $selector) {
+  // Note that it seems redundant to prefix the class rules with the `$selector`, however it's
+  // necessary if we want to allow people to overwrite the tag selectors. This is due to
+  // selectors like `#{$selector} h1` being more specific than ones like `.mat-title`.
+  .mat-h1,
+  .mat-headline-5,
+  #{$selector} .mat-h1,
+  #{$selector} .mat-headline-5,
+  #{$selector} h1 {
+    font: inspection.get-theme-typography($theme, headline-5, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-5, letter-spacing);
     margin: 0 0 16px;
   }
 
-  .mat-h2, .mat-title, #{$selector} h2 {
-    @include typography-utils.typography-level($config, title);
+  .mat-h2,
+  .mat-headline-6,
+  #{$selector} .mat-h2,
+  #{$selector} .mat-headline-6,
+  #{$selector} h2 {
+    font: inspection.get-theme-typography($theme, headline-6, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-6, letter-spacing);
     margin: 0 0 16px;
   }
 
-  .mat-h3, .mat-subheading-2, #{$selector} h3 {
-    @include typography-utils.typography-level($config, subheading-2);
+  .mat-h3,
+  .mat-subtitle-1,
+  #{$selector} .mat-h3,
+  #{$selector} .mat-subtitle-1,
+  #{$selector} h3 {
+    font: inspection.get-theme-typography($theme, subtitle-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
     margin: 0 0 16px;
   }
 
-  .mat-h4, .mat-subheading-1, #{$selector} h4 {
-    @include typography-utils.typography-level($config, subheading-1);
+  .mat-h4,
+  .mat-body-1,
+  #{$selector} .mat-h4,
+  #{$selector} .mat-body-1,
+  #{$selector} h4 {
+    font: inspection.get-theme-typography($theme, body-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, body-1, letter-spacing);
     margin: 0 0 16px;
   }
 
   // Note: the spec doesn't have anything that would correspond to h5 and h6, but we add these for
   // consistency. The font sizes come from the Chrome user agent styles which have h5 at 0.83em
   // and h6 at 0.67em.
-  .mat-h5, #{$selector} h5 {
+  .mat-h5,
+  #{$selector} .mat-h5,
+  #{$selector} h5 {
     @include typography-utils.font-shorthand(
        // calc is used here to support css variables
-      calc(#{typography-utils.font-size($config, body-1)} * 0.83),
-      typography-utils.font-weight($config, body-1),
-      typography-utils.line-height($config, body-1),
-      typography-utils.font-family($config, body-1)
+      calc(#{inspection.get-theme-typography($theme, body-2, font-size)} * 0.83),
+      inspection.get-theme-typography($theme, body-2, font-weight),
+      inspection.get-theme-typography($theme, body-2, line-height),
+      inspection.get-theme-typography($theme, body-2, font-family)
     );
 
     margin: 0 0 12px;
   }
 
-  .mat-h6, #{$selector} h6 {
+  .mat-h6,
+  #{$selector} .mat-h6,
+  #{$selector} h6 {
     @include typography-utils.font-shorthand(
        // calc is used here to support css variables
-      calc(#{typography-utils.font-size($config, body-1)} * 0.67),
-      typography-utils.font-weight($config, body-1),
-      typography-utils.line-height($config, body-1),
-      typography-utils.font-family($config, body-1)
+      calc(#{inspection.get-theme-typography($theme, body-2, font-size)} * 0.67),
+      inspection.get-theme-typography($theme, body-2, font-weight),
+      inspection.get-theme-typography($theme, body-2, line-height),
+      inspection.get-theme-typography($theme, body-2, font-family)
     );
 
     margin: 0 0 12px;
   }
 
-  .mat-body-strong, .mat-body-2 {
-    @include typography-utils.typography-level($config, body-2);
+  .mat-body-strong,
+  .mat-subtitle-2,
+  #{$selector} .mat-body-strong,
+  #{$selector} .mat-subtitle-2 {
+    font: inspection.get-theme-typography($theme, subtitle-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, subtitle-2, letter-spacing);
   }
 
-  .mat-body, .mat-body-1, #{$selector} {
-    @include typography-utils.typography-level($config, body-1);
+  .mat-body,
+  .mat-body-2,
+  #{$selector} .mat-body,
+  #{$selector} .mat-body-2,
+  #{$selector} {
+    font: inspection.get-theme-typography($theme, body-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, body-2, letter-spacing);
 
     p {
       margin: 0 0 12px;
     }
   }
 
-  .mat-small, .mat-caption {
-    @include typography-utils.typography-level($config, caption);
+  .mat-small,
+  .mat-caption,
+  #{$selector} .mat-small,
+  #{$selector} .mat-caption {
+    font: inspection.get-theme-typography($theme, caption, font);
+    letter-spacing: inspection.get-theme-typography($theme, caption, letter-spacing);
   }
 
-  .mat-display-4, #{$selector} .mat-display-4 {
-    @include typography-utils.typography-level($config, display-4);
+  .mat-headline-1,
+  #{$selector} .mat-headline-1 {
+    font: inspection.get-theme-typography($theme, headline-1, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-1, letter-spacing);
     margin: 0 0 56px;
   }
 
-  .mat-display-3, #{$selector} .mat-display-3 {
-    @include typography-utils.typography-level($config, display-3);
+  .mat-headline-2,
+  #{$selector} .mat-headline-2 {
+    font: inspection.get-theme-typography($theme, headline-2, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-2, letter-spacing);
     margin: 0 0 64px;
   }
 
-  .mat-display-2, #{$selector} .mat-display-2 {
-    @include typography-utils.typography-level($config, display-2);
+  .mat-headline-3,
+  #{$selector} .mat-headline-3 {
+    font: inspection.get-theme-typography($theme, headline-3, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-3, letter-spacing);
     margin: 0 0 64px;
   }
 
-  .mat-display-1, #{$selector} .mat-display-1 {
-    @include typography-utils.typography-level($config, display-1);
+  .mat-headline-4,
+  #{$selector} .mat-headline-4 {
+    font: inspection.get-theme-typography($theme, headline-4, font);
+    letter-spacing: inspection.get-theme-typography($theme, headline-4, letter-spacing);
     margin: 0 0 64px;
   }
 }
-
-// stylelint-enable material/theme-mixin-api

@@ -7,46 +7,29 @@ In this document, "form field" refers to the wrapper component `<mat-form-field>
 (e.g. the input, textarea, select, etc.)
 
 The following Angular Material components are designed to work inside a `<mat-form-field>`:
-* [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.io/components/input/overview)
-* [`<select matNativeControl>`](https://material.angular.io/components/select/overview)
-* [`<mat-select>`](https://material.angular.io/components/select/overview)
-* [`<mat-chip-list>`](https://material.angular.io/components/chips/overview)
+
+- [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.io/components/input/overview)
+- [`<select matNativeControl>`](https://material.angular.io/components/select/overview)
+- [`<mat-select>`](https://material.angular.io/components/select/overview)
+- [`<mat-chip-set>`](https://material.angular.io/components/chips/overview)
 
 <!-- example(form-field-overview) -->
 
 ### Form field appearance variants
-The `mat-form-field` supports 4 different appearance variants which can be set via the `appearance`
-input. The `fill` an `outline` appearances implement the current version of the spec. The `fill`
-appearance displays the form field with a filled background box and an underline, while the
-`outline` appearance shows the form field with a border all the way around.
 
-The `legacy` and `standard` appearances implement an older version of the spec where
-`mat-form-field` was shown with an underline beneath it. We recommend not using these appearances as
-they do not  match the current spec.
-
-There are a couple differences in behavior to be aware of between the different appearances.
-
-We recommend that text prefix and suffixes in the `fill` and `outline` appearances only be used in
-conjunction with the `floatLabel="always"` option. This is because the resting label and the input
-value do not have  the same alignment, and it is therefore impossible to align the prefix or suffix
-in a way that looks good when compared with both. In the `standard` and `legacy` appearances, the 
-resting label and input value align, so this isn't an issue. We plan to improve support for text
-prefix and suffixes in the future so they can be used without `floatLabel="always"`.
-
-The second important difference is that the `standard`, `fill`, and `outline` appearances do not
-promote placeholders to labels. For the `legacy` appearance specifying
-`<input placeholder="placeholder">` will result in a floating label being added to the
-`mat-form-field`. For the newer variants it will just add a normal placeholder to the input. If you
-want a floating label, add a `<mat-label>` to the `mat-form-field` instead.
+`mat-form-field` supports two different appearance variants which can be set via the `appearance`
+input: `fill` and `outline`. The `fill` appearance displays the form field with a filled background
+box and an underline, while the `outline` appearance shows the form field with a border all the way
+around.
 
 Out of the box, if you do not specify an `appearance` for the `<mat-form-field>` it will default to
-`legacy`. However, this can be configured using a global provider to choose a different default
+`fill`. However, this can be configured using a global provider to choose a different default
 appearance for your app.
 
 ```ts
 @NgModule({
   providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ]
 })
 ```
@@ -60,34 +43,19 @@ the control does not contain any text or when `<select matNativeControl>` does n
 text. By default, when text is present the floating label floats above the form field control. The
 label for a form field can be specified by adding a `mat-label` element.
 
-In the legacy version of the `<mat-form-field>` (one that has no `appearance` attribute or has
-`appearance="legacy"`) if a label is not specified, the `placeholder` attribute on the form control
-is promoted to a label. If a label is specified, the `placeholder` will be displayed as a normal
-placeholder. The `placeholder` will never be promoted to a label for `standard`, `fill`, and
-`outline` form fields. If you want to create a legacy form field with a placeholder but no label,
-you will need to specify an empty label to prevent the `placeholder` from being promoted.
-
-```html
-<mat-form-field>
-  <mat-label></mat-label>
-  <input placeholder="Just a placeholder">
-</mat-form-field>
-```
-
 If the form field control is marked with a `required` attribute, an asterisk will be appended to the
 label to indicate the fact that it is a required field. If unwanted, this can be disabled by
 setting the `hideRequiredMarker` property on `<mat-form-field>`
 
 The `floatLabel` property of `<mat-form-field>` can be used to change this default floating
-behavior. It can set to `never` to hide the label instead of float it when text is present in
-the form field control. It can be set to `always` to float the label even when no text is
-present in the form field control. It can also be set to `auto` to restore the default behavior.
+behavior. It can be set to `always` to float the label even when no text is present in the form
+field control, or to `auto` to restore the default behavior.
 
 <!-- example(form-field-label) -->
 
 The floating label behavior can be adjusted globally by providing a value for
 `MAT_FORM_FIELD_DEFAULT_OPTIONS` in your application's root module. Like the `floatLabel` input,
-the option can be either set to `always`, `never`, or `auto`.
+the option can be either set to `always` or `auto`.
 
 ```ts
 @NgModule({
@@ -120,7 +88,7 @@ has interacted with the element or the parent form has been submitted. Since the
 same space as the hints, the hints are hidden when the errors are shown.
 
 If a form field can have more than one error state, it is up to the consumer to toggle which
-messages should be displayed. This can be done with CSS, `ngIf` or `ngSwitch`. Multiple error
+messages should be displayed. This can be done with CSS, `@if` or `@switch`. Multiple error
 messages can be shown at the same time if desired, but the `<mat-form-field>` only reserves enough
 space to display one error message at a time. Ensuring that enough space is available to display
 multiple errors is up to the user.
@@ -135,6 +103,9 @@ included within the visual container that wraps the form control as per the Mate
 Adding the `matPrefix` directive to an element inside the `<mat-form-field>` will designate it as
 the prefix. Similarly, adding `matSuffix` will designate it as the suffix.
 
+If the prefix/suffix content is purely text-based, it is recommended to use the `matTextPrefix` or
+`matTextSuffix` directives which ensure that the text is aligned with the form control.
+
 <!-- example(form-field-prefix-suffix) -->
 
 ### Custom form field controls
@@ -146,38 +117,32 @@ information on this see the guide on
 
 ### Theming
 
-`<mat-form-field>` has a `color` property which can be set to `primary`, `accent`, or `warn`. This
-will set the color of the form field underline and floating label based on the theme colors
-of your app.
-
-`<mat-form-field>` inherits its `font-size` from its parent element. This can be overridden to an
-explicit size using CSS. We recommend a specificity of at least 1 element + 1 class.
-
-```css
-mat-form-field.mat-form-field {
-  font-size: 16px;
-}
-```
-
-<!-- example(form-field-theming) -->
+The color of the form-field can be changed by specifying a `$color-variant` when applying the
+`mat.form-field-theme` or `mat.form-field-color` mixins (see the
+[theming guide](/guide/theming#using-component-color-variants) to learn more.) By default, the
+form-field uses the theme's primary palette. This can be changed to `'secondary'`, `'tertiary'`, or
+`'error'`.
 
 ### Accessibility
+
+By itself, `MatFormField` does not apply any additional accessibility treatment to a control.
+However, several of the form field's optional features interact with the control contained within
+the form field.
+
+When you provide a label via `<mat-label>`, `MatFormField` automatically associates this label with
+the field's control via a native `<label>` element, using the `for` attribute to reference the
+control's ID.
 
 If a floating label is specified, it will be automatically used as the label for the form
 field control. If no floating label is specified, the user should label the form field control
 themselves using `aria-label`, `aria-labelledby` or `<label for=...>`.
 
-Any errors and hints added to the form field are automatically added to the form field control's
-`aria-describedby` set.
+When you provide informational text via `<mat-hint>` or `<mat-error>`, `MatFormField` automatically
+adds these elements' IDs to the control's `aria-describedby` attribute. Additionally, `MatError`
+applies `aria-live="polite"` by default such that assistive technology will announce errors when
+they appear.
 
 ### Troubleshooting
-
-#### Error: Placeholder attribute and child element were both specified
-
-This error occurs when you have specified two conflicting placeholders. Make sure that you haven't
-included both a `placeholder` property on your form field control and a `<mat-placeholder>`
-element. The `<mat-placeholder>` element is deprecated, you should use `placeholder` for
-placeholders and `<mat-label>` for labels.
 
 #### Error: A hint was already declared for align="..."
 

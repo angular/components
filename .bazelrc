@@ -45,20 +45,21 @@ test --test_output=errors
 
 # Configures script to do version stamping.
 # See https://docs.bazel.build/versions/master/user-manual.html#flag--workspace_status_command
-build:release --workspace_status_command="node ./tools/bazel-stamp-vars.js"
+build:release --workspace_status_command="yarn -s ng-dev:stamp --mode=release"
 build:release --stamp
 
-build:snapshot-build --workspace_status_command="node ./tools/bazel-stamp-vars.js --snapshot"
+build:snapshot-build --workspace_status_command="yarn -s ng-dev:stamp --mode=snapshot"
 build:snapshot-build --stamp
 
-################################
-# View Engine / Ivy toggle     #
-################################
-build:view-engine --define=angular_ivy_enabled=False
-build:ivy --define=angular_ivy_enabled=True
+####################################
+# Bazel custom flags               #
+####################################
+build --flag_alias=partial_compilation=@npm//@angular/bazel/src:partial_compilation
 
-# Set Ivy as the default
-build --config=ivy
+##################################
+# Always enable Ivy compilation  #
+##################################
+build --define=angular_ivy_enabled=True
 
 ################################
 # Remote Execution Setup       #
@@ -66,7 +67,6 @@ build --config=ivy
 
 # Use the Angular team internal GCP instance for remote execution.
 build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
-build:remote --project_id=internal-200822
 
 # Needed due to: https://github.com/bazelbuild/bazel/issues/7254
 build:remote --define=EXECUTOR=remote
@@ -76,18 +76,31 @@ build:remote --define=EXECUTOR=remote
 build:remote --cpu=k8
 build:remote --host_cpu=k8
 
+# Bazel detects maximum number of jobs based on host resources.
+# Since we run remotely, we can increase this number significantly.
+common:remote --jobs=200
+
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com
-build:remote --auth_enabled=true
+build:remote --google_default_credentials=true
 
 # Setup the toolchain and platform for the remote build execution. The platform
 # is provided by the shared dev-infra package and targets k8 remote containers.
-build:remote --crosstool_top=@npm//@angular/dev-infra-private/bazel/remote-execution/cpp:cc_toolchain_suite
-build:remote --extra_toolchains=@npm//@angular/dev-infra-private/bazel/remote-execution/cpp:cc_toolchain
-build:remote --extra_execution_platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
-build:remote --host_platform=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
-build:remote --platforms=@npm//@angular/dev-infra-private/bazel/remote-execution:platform
+build:remote --crosstool_top=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain_suite
+build:remote --extra_toolchains=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain
+build:remote --extra_execution_platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
+build:remote --host_platform=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
+build:remote --platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
+
+################################
+#  Sandbox settings            #
+################################
+
+# By default, network access should be disabled unless explicitly granted for certain targets
+# using the `requires-network` tag. https://docs.bazel.build/versions/main/be/common-definitions.html
+build --sandbox_default_allow_network=false
+test --sandbox_default_allow_network=false
 
 ################################
 # --config=build-results       #
@@ -98,6 +111,7 @@ build:remote --platforms=@npm//@angular/dev-infra-private/bazel/remote-execution
 # that could cause builds to fail unnecessarily. If desired, build result uploading
 # can be manually uploaded, but given that the build event service server has been
 # less stable than the remote executors, we do not want to degrade CI stability.
+build:build-results --bes_instance_name=internal-200822
 build:build-results --bes_backend=buildeventservice.googleapis.com
 build:build-results --bes_timeout=60s
 build:build-results --bes_results_url="https://source.cloud.google.com/results/invocations/"

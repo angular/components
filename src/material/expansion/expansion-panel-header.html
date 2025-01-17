@@ -1,7 +1,17 @@
-<span class="mat-content">
+<span class="mat-content" [class.mat-content-hide-toggle]="!_showToggle()">
   <ng-content select="mat-panel-title"></ng-content>
   <ng-content select="mat-panel-description"></ng-content>
   <ng-content></ng-content>
 </span>
-<span [@indicatorRotate]="_getExpandedState()" *ngIf="_showToggle()"
-      class="mat-expansion-indicator"></span>
+
+@if (_showToggle()) {
+  <span class="mat-expansion-indicator">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 -960 960 960"
+      aria-hidden="true"
+      focusable="false">
+      <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>
+    </svg>
+  </span>
+}

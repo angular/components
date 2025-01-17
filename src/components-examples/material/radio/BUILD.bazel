@@ -12,7 +12,6 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/radio",
     deps = [
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
@@ -20,7 +19,6 @@ ng_module(
         "//src/material/radio/testing",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -44,12 +42,10 @@ ng_test_library(
         "//src/material/radio",
         "//src/material/radio/testing",
         "@npm//@angular/forms",
-        "@npm//@angular/platform-browser-dynamic",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

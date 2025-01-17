@@ -7,6 +7,7 @@ import {Component, NgModule} from '@angular/core';
  * `CdkDragHandle` are not used and should be tree-shaken away.
  */
 @Component({
+  standalone: false,
   template: `
     <div cdkDropList>
       <div cdkDrag></div>

@@ -10,12 +10,11 @@ ng_module(
             "**/*.spec.ts",
         ],
     ),
-    module_name = "@angular/google-maps",
     deps = [
         "//src:dev_mode_types",
         "@npm//@angular/common",
         "@npm//@angular/core",
-        "@npm//@types/googlemaps",
+        "@npm//@types/google.maps",
         "@npm//rxjs",
     ],
 )
@@ -24,8 +23,7 @@ ng_module(
 ng_package(
     name = "npm_package",
     srcs = ["package.json"],
-    entry_point = ":public-api.ts",
-    entry_point_name = "google-maps",
+    nested_packages = ["//src/google-maps/schematics:npm_package"],
     tags = ["release-package"],
     deps = [":google-maps"],
 )

@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {CurrencyPipe} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
 
 interface Transaction {
   item: string;
@@ -10,8 +12,9 @@ interface Transaction {
  */
 @Component({
   selector: 'table-footer-row-example',
-  styleUrls: ['table-footer-row-example.css'],
+  styleUrl: 'table-footer-row-example.css',
   templateUrl: 'table-footer-row-example.html',
+  imports: [MatTableModule, CurrencyPipe],
 })
 export class TableFooterRowExample {
   displayedColumns: string[] = ['item', 'cost'];

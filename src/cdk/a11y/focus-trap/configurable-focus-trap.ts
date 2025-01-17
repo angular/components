@@ -3,15 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NgZone} from '@angular/core';
+import {Injector, NgZone} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
-import {FocusTrap} from './focus-trap';
-import {FocusTrapManager, ManagedFocusTrap} from './focus-trap-manager';
-import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
+import {FocusTrap} from './focus-trap';
+import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
+import {FocusTrapManager, ManagedFocusTrap} from './focus-trap-manager';
 
 /**
  * Class that allows for trapping focus within a DOM element.
@@ -21,7 +21,9 @@ import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
  */
 export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
   /** Whether the FocusTrap is enabled. */
-  override get enabled(): boolean { return this._enabled; }
+  override get enabled(): boolean {
+    return this._enabled;
+  }
   override set enabled(value: boolean) {
     this._enabled = value;
     if (this._enabled) {
@@ -38,8 +40,10 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     _document: Document,
     private _focusTrapManager: FocusTrapManager,
     private _inertStrategy: FocusTrapInertStrategy,
-    config: ConfigurableFocusTrapConfig) {
-    super(_element, _checker, _ngZone, _document, config.defer);
+    config: ConfigurableFocusTrapConfig,
+    injector?: Injector,
+  ) {
+    super(_element, _checker, _ngZone, _document, config.defer, injector);
     this._focusTrapManager.register(this);
   }
 

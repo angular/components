@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Platform} from '@angular/cdk/platform';
@@ -15,18 +15,11 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Inject,
+  Input,
   QueryList,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
-import {CanColor, mixinColor} from '@angular/material/core';
-
-
-// Boilerplate for applying mixins to MatToolbar.
-/** @docs-private */
-const _MatToolbarBase = mixinColor(class {
-  constructor(public _elementRef: ElementRef) {}
-});
 
 @Directive({
   selector: 'mat-toolbar-row',
@@ -39,31 +32,36 @@ export class MatToolbarRow {}
   selector: 'mat-toolbar',
   exportAs: 'matToolbar',
   templateUrl: 'toolbar.html',
-  styleUrls: ['toolbar.css'],
-  inputs: ['color'],
+  styleUrl: 'toolbar.css',
   host: {
     'class': 'mat-toolbar',
+    '[class]': 'color ? "mat-" + color : ""',
     '[class.mat-toolbar-multiple-rows]': '_toolbarRows.length > 0',
     '[class.mat-toolbar-single-row]': '_toolbarRows.length === 0',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewInit {
-  private _document: Document;
+export class MatToolbar implements AfterViewInit {
+  protected _elementRef = inject(ElementRef);
+  private _platform = inject(Platform);
+  private _document = inject(DOCUMENT);
+
+  // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
+  /**
+   * Theme color of the toolbar. This API is supported in M2 themes only, it has
+   * no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/toolbar/styling.
+   *
+   * For information on applying color variants in M3, see
+   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   */
+  @Input() color?: string | null;
 
   /** Reference to all toolbar row elements that have been projected. */
   @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
 
-  constructor(
-    elementRef: ElementRef,
-    private _platform: Platform,
-    @Inject(DOCUMENT) document?: any) {
-    super(elementRef);
-
-    // TODO: make the document a required param when doing breaking changes.
-    this._document = document;
-  }
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
@@ -96,7 +94,9 @@ export class MatToolbar extends _MatToolbarBase implements CanColor, AfterViewIn
  * @docs-private
  */
 export function throwToolbarMixedModesError() {
-  throw Error('MatToolbar: Attempting to combine different toolbar modes. ' +
-    'Either specify multiple `<mat-toolbar-row>` elements explicitly or just place content ' +
-    'inside of a `<mat-toolbar>` for a single row.');
+  throw Error(
+    'MatToolbar: Attempting to combine different toolbar modes. ' +
+      'Either specify multiple `<mat-toolbar-row>` elements explicitly or just place content ' +
+      'inside of a `<mat-toolbar>` for a single row.',
+  );
 }

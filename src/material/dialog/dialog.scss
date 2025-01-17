@@ -1,76 +1,306 @@
-@use '../../cdk/a11y';
+@use '@angular/cdk';
+@use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
+@use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
+@use '../core/tokens/token-utils';
+@use '../core/style/variables';
 
+// Dialog content max height. This has been copied from the standard dialog
+// and is needed to make the dialog content scrollable.
+$mat-dialog-content-max-height: 65vh !default;
+// Dialog button horizontal margin. This has been extracted from MDC as they
+// don't expose this value as variable.
+$mat-dialog-button-horizontal-margin: 8px !default;
 
-$padding: 24px !default;
-$border-radius: 4px !default;
-$max-height: 65vh !default;
-$button-margin: 8px !default;
+// Dialog container max height. This has been given a default value so the
+// flex-children can be calculated and not overflow on smaller screens.
+// Fixes b/323588333
+$mat-dialog-container-max-height: 95vh !default;
 
-.mat-dialog-container {
-  display: block;
-  padding: $padding;
-  border-radius: $border-radius;
-  box-sizing: border-box;
-  overflow: auto;
-  outline: 0;
+// Whether to emit fallback values for the structural styles. Previously MDC was emitting
+// paddings in the static styles which meant that users would get them even if they didn't
+// include the `dialog-base`. Eventually we should clean up the usages of this flag.
+$_emit-fallbacks: true;
 
-  // The dialog container should completely fill its parent overlay element.
+@mixin _use-mat-tokens {
+  @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
+    @content;
+  }
+}
+
+@mixin _use-mdc-tokens {
+  @include token-utils.use-tokens(tokens-mdc-dialog.$prefix, tokens-mdc-dialog.get-token-slots()) {
+    @content;
+  }
+}
+
+// Note that we disable fallback declarations, but we don't disable fallback
+// values, because there are a lot of internal apps that don't include a proper
+// theme in their tests.
+.mat-mdc-dialog-container {
   width: 100%;
   height: 100%;
-
-  // Since the dialog won't stretch to fit the parent, if the height
-  // isn't set, we have to inherit the min and max values explicitly.
-  min-height: inherit;
+  display: block;
+  box-sizing: border-box;
   max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
 
-  @include a11y.high-contrast(active, off) {
-    outline: solid 1px;
-  }
+  // The dialog container is focusable. We remove the default outline shown in browsers.
+  outline: 0;
 }
 
-.mat-dialog-content {
-  display: block;
-  margin: 0 $padding * -1;
-  padding: 0 $padding;
-  max-height: $max-height;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
+// This needs extra specificity so it doesn't get overwritten by the CDK structural styles.
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(max-width, container-max-width,
+      $_emit-fallbacks);
+    @include token-utils.create-token-slot(min-width, container-min-width,
+      $_emit-fallbacks);
 
-.mat-dialog-title {
-  margin: 0 0 20px;
-  display: block;
-}
-
-.mat-dialog-actions {
-  padding: 8px 0;
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 52px;
-  align-items: center;
-
-  // Explicitly set a box-sizing since people commonly set `border-box`
-  // on all elements which will break the height of the dialog actions.
-  box-sizing: content-box;
-
-  // Pull the actions down to avoid their padding stacking with the dialog's padding.
-  margin-bottom: -$padding;
-
-  &[align='end'] {
-    justify-content: flex-end;
-  }
-
-  &[align='center'] {
-    justify-content: center;
-  }
-
-  .mat-button-base + .mat-button-base,
-  .mat-mdc-button-base + .mat-mdc-button-base {
-    margin-left: $button-margin;
-
-    [dir='rtl'] & {
-      margin-left: 0;
-      margin-right: $button-margin;
+    @media (variables.$xsmall) {
+      @include token-utils.create-token-slot(max-width, container-small-max-width,
+        $_emit-fallbacks);
     }
   }
 }
+
+.mat-mdc-dialog-inner-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  box-sizing: border-box;
+  height: 100%;
+  opacity: 0;
+  transition: opacity linear var(--mat-dialog-transition-duration, 0ms);
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+
+  .mdc-dialog--closing & {
+    transition: opacity 75ms linear;
+    transform: none;
+  }
+
+  .mdc-dialog--open & {
+    opacity: 1;
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+}
+
+.mat-mdc-dialog-surface {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow-y: auto;
+  outline: 0;
+  transform: scale(0.8);
+  transition: transform var(--mat-dialog-transition-duration, 0ms) cubic-bezier(0, 0, 0.2, 1);
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow,
+      $_emit-fallbacks);
+  }
+
+  @include _use-mdc-tokens {
+    @include token-utils.create-token-slot(border-radius, container-shape, $_emit-fallbacks);
+    @include token-utils.create-token-slot(background-color, container-color, $_emit-fallbacks);
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  .mdc-dialog--open &,
+  .mdc-dialog--closing & {
+    transform: none;
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
+  &::before {
+    // Renders an outline in high contrast mode.
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 2px solid transparent;
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+}
+
+.mat-mdc-dialog-title {
+  display: block;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin: 0 0 1px;
+
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(padding, headline-padding, $_emit-fallbacks);
+  }
+
+  // This was used by MDC to set the text baseline. We should figure out a way to
+  // remove it, because it can introduce unnecessary whitespace at the beginning
+  // of the element.
+  &::before {
+    display: inline-block;
+    width: 0;
+    height: 40px;
+    content: '';
+    vertical-align: 0;
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  // Nested to maintain the old specificity.
+  .mat-mdc-dialog-container & {
+    @include _use-mdc-tokens {
+      @include token-utils.create-token-slot(color, subhead-color, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, subhead-font,
+        if($_emit-fallbacks, inherit, null));
+      @include token-utils.create-token-slot(line-height, subhead-line-height, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-size, subhead-size, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-weight, subhead-weight, $_emit-fallbacks);
+      @include token-utils.create-token-slot(letter-spacing, subhead-tracking, $_emit-fallbacks);
+    }
+  }
+}
+
+.mat-mdc-dialog-content {
+  display: block;
+  flex-grow: 1;
+  box-sizing: border-box;
+  margin: 0;
+  overflow: auto;
+  max-height: $mat-dialog-content-max-height;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  // Nested to maintain the old specificity.
+  .mat-mdc-dialog-container & {
+    @include _use-mdc-tokens {
+      @include token-utils.create-token-slot(color, supporting-text-color, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-family, supporting-text-font,
+        if($_emit-fallbacks, inherit, null));
+      @include token-utils.create-token-slot(line-height, supporting-text-line-height,
+        $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-size, supporting-text-size, $_emit-fallbacks);
+      @include token-utils.create-token-slot(font-weight, supporting-text-weight, $_emit-fallbacks);
+      @include token-utils.create-token-slot(letter-spacing, supporting-text-tracking,
+        $_emit-fallbacks);
+    }
+  }
+
+  @include _use-mat-tokens {
+    // These styles need a bit more specificity.
+    .mat-mdc-dialog-container & {
+      @include token-utils.create-token-slot(padding, content-padding, $_emit-fallbacks);
+    }
+
+    // Note: we can achieve this with a `:has` selector, but it results in an
+    // increased specificity which breaks a lot of internal clients.
+    .mat-mdc-dialog-container-with-actions & {
+      @include token-utils.create-token-slot(padding, with-actions-content-padding,
+        $_emit-fallbacks);
+    }
+  }
+
+  .mat-mdc-dialog-container .mat-mdc-dialog-title + & {
+    padding-top: 0;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  position: relative;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  min-height: 52px;
+  margin: 0;
+  padding: 8px;
+  border-top: 1px solid transparent;
+
+  // For backwards compatibility, actions align at start by default. MDC usually
+  // aligns actions at the end of the container.
+  @include _use-mat-tokens {
+    @include token-utils.create-token-slot(padding, actions-padding, $_emit-fallbacks);
+    @include token-utils.create-token-slot(justify-content, actions-alignment, $_emit-fallbacks);
+  }
+
+  @include cdk.high-contrast {
+    border-top-color: CanvasText;
+  }
+
+  // .mat-mdc-dialog-actions-align-{start|center|end} are set by directive input "align"
+  // [align='start'], [align='center'] and [align='right'] are kept for backwards compability
+  &.mat-mdc-dialog-actions-align-start, &[align='start'] {
+    justify-content: start;
+  }
+
+  &.mat-mdc-dialog-actions-align-center, &[align='center'] {
+    justify-content: center;
+  }
+
+  &.mat-mdc-dialog-actions-align-end, &[align='end'] {
+    justify-content: flex-end;
+  }
+
+  // MDC applies horizontal margin to buttons that have an explicit `mdc-dialog__button`
+  // class applied. We can't set this class for projected buttons that consumers of the
+  // dialog create. To workaround this, we select all Material Design buttons we know and
+  // add the necessary spacing similar to how MDC applies spacing.
+  .mat-button-base + .mat-button-base,
+  .mat-mdc-button-base + .mat-mdc-button-base {
+    margin-left: $mat-dialog-button-horizontal-margin;
+
+    [dir='rtl'] & {
+      margin-left: 0;
+      margin-right: $mat-dialog-button-horizontal-margin;
+    }
+  }
+}
+
+// When a component is passed into the dialog, the host element interrupts
+// the `display:flex` from affecting the dialog title, content, and
+// actions. To fix this, we make the component host `display: contents` by
+// marking its host with the `mat-mdc-dialog-component-host` class.
+//
+// Note that this problem does not exist when a template ref is used since
+// the title, contents, and actions are then nested directly under the
+// dialog surface.
+.mat-mdc-dialog-component-host {
+  display: contents;
+}
+

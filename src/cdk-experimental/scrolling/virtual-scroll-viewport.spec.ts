@@ -1,20 +1,18 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
-
 describe('CdkVirtualScrollViewport', () => {
-  describe ('with AutoSizeVirtualScrollStrategy', () => {
+  describe('with AutoSizeVirtualScrollStrategy', () => {
     let fixture: ComponentFixture<AutoSizeVirtualScroll>;
     let testComponent: AutoSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [ScrollingModule, ExperimentalScrollingModule],
-        declarations: [AutoSizeVirtualScroll],
-      }).compileComponents();
+        imports: [ScrollingModule, ExperimentalScrollingModule, AutoSizeVirtualScroll],
+      });
     }));
 
     beforeEach(() => {
@@ -26,33 +24,42 @@ describe('CdkVirtualScrollViewport', () => {
     it('should render initial state for uniform items', fakeAsync(() => {
       finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
+      const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+        '.cdk-virtual-scroll-content-wrapper',
+      )!;
       expect(contentWrapper.children.length)
-          .toBe(4, 'should render 4 50px items to fill 200px space');
+        .withContext('should render 4 50px items to fill 200px space')
+        .toBe(4);
     }));
 
     it('should render extra content if first item is smaller than average', fakeAsync(() => {
       testComponent.items = [50, 200, 200, 200, 200, 200];
       finishInit(fixture);
 
-      const contentWrapper =
-          viewport.elementRef.nativeElement.querySelector('.cdk-virtual-scroll-content-wrapper')!;
-      expect(contentWrapper.children.length).toBe(4,
-          'should render 4 items to fill 200px space based on 50px estimate from first item');
+      const contentWrapper = viewport.elementRef.nativeElement.querySelector(
+        '.cdk-virtual-scroll-content-wrapper',
+      )!;
+      expect(contentWrapper.children.length)
+        .withContext(
+          'should render 4 items to fill 200px space based on 50px ' + 'estimate from first item',
+        )
+        .toBe(4);
     }));
 
     it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
-      testComponent.minBufferPx = 100;
-      testComponent.maxBufferPx = 99;
-      expect(() => finishInit(fixture)).toThrow();
+      expect(() => {
+        testComponent.minBufferPx = 100;
+        testComponent.maxBufferPx = 99;
+        finishInit(fixture);
+      }).toThrowError(
+        'CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx',
+      );
     }));
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.
   });
 });
-
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -64,7 +71,6 @@ function finishInit(fixture: ComponentFixture<any>) {
   fixture.detectChanges();
   flush();
 }
-
 
 @Component({
   template: `
@@ -78,7 +84,7 @@ function finishInit(fixture: ComponentFixture<any>) {
       </div>
     </cdk-virtual-scroll-viewport>
   `,
-  styles: [`
+  styles: `
     .cdk-virtual-scroll-content-wrapper {
       display: flex;
       flex-direction: column;
@@ -87,8 +93,9 @@ function finishInit(fixture: ComponentFixture<any>) {
     .cdk-virtual-scroll-orientation-horizontal .cdk-virtual-scroll-content-wrapper {
       flex-direction: row;
     }
-  `],
+  `,
   encapsulation: ViewEncapsulation.None,
+  imports: [ScrollingModule, ExperimentalScrollingModule],
 })
 class AutoSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;

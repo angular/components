@@ -3,25 +3,24 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
-    TemplateRef,
-    ViewContainerRef,
-    ElementRef,
-    ComponentRef,
-    EmbeddedViewRef,
-    Injector,
-    ComponentFactoryResolver,
+  TemplateRef,
+  ViewContainerRef,
+  ElementRef,
+  ComponentRef,
+  EmbeddedViewRef,
+  Injector,
 } from '@angular/core';
 import {
-    throwNullPortalOutletError,
-    throwPortalAlreadyAttachedError,
-    throwNoPortalAttachedError,
-    throwNullPortalError,
-    throwPortalOutletAlreadyDisposedError,
-    throwUnknownPortalTypeError
+  throwNullPortalOutletError,
+  throwPortalAlreadyAttachedError,
+  throwNoPortalAttachedError,
+  throwNullPortalError,
+  throwPortalOutletAlreadyDisposedError,
+  throwUnknownPortalTypeError,
 } from './portal-errors';
 
 /** Interface that can be used to generically type a class. */
@@ -49,7 +48,7 @@ export abstract class Portal<T> {
     }
 
     this._attachedHost = host;
-    return <T> host.attach(this);
+    return <T>host.attach(this);
   }
 
   /** Detach this portal from its host */
@@ -78,7 +77,6 @@ export abstract class Portal<T> {
   }
 }
 
-
 /**
  * A `ComponentPortal` is a portal that instantiates some Component upon attachment.
  */
@@ -87,31 +85,42 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   component: ComponentType<T>;
 
   /**
-   * [Optional] Where the attached component should live in Angular's *logical* component tree.
+   * Where the attached component should live in Angular's *logical* component tree.
    * This is different from where the component *renders*, which is determined by the PortalOutlet.
    * The origin is necessary when the host is outside of the Angular application context.
    */
   viewContainerRef?: ViewContainerRef | null;
 
-  /** [Optional] Injector used for the instantiation of the component. */
+  /** Injector used for the instantiation of the component. */
   injector?: Injector | null;
 
   /**
-   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
-   * Defaults to using the resolver from the outlet that the portal is attached to.
+   * @deprecated No longer in use. To be removed.
+   * @breaking-change 18.0.0
    */
-  componentFactoryResolver?: ComponentFactoryResolver | null;
+  componentFactoryResolver?: any;
+
+  /**
+   * List of DOM nodes that should be projected through `<ng-content>` of the attached component.
+   */
+  projectableNodes?: Node[][] | null;
 
   constructor(
-      component: ComponentType<T>,
-      viewContainerRef?: ViewContainerRef | null,
-      injector?: Injector | null,
-      componentFactoryResolver?: ComponentFactoryResolver | null) {
+    component: ComponentType<T>,
+    viewContainerRef?: ViewContainerRef | null,
+    injector?: Injector | null,
+    /**
+     * @deprecated No longer in use. To be removed.
+     * @breaking-change 18.0.0
+     */
+    _componentFactoryResolver?: any,
+    projectableNodes?: Node[][] | null,
+  ) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
     this.injector = injector;
-    this.componentFactoryResolver = componentFactoryResolver;
+    this.projectableNodes = projectableNodes;
   }
 }
 
@@ -119,20 +128,17 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
  * A `TemplatePortal` is a portal that represents some embedded template (TemplateRef).
  */
 export class TemplatePortal<C = any> extends Portal<EmbeddedViewRef<C>> {
-  /** The embedded template that will be used to instantiate an embedded View in the host. */
-  templateRef: TemplateRef<C>;
-
-  /** Reference to the ViewContainer into which the template will be stamped out. */
-  viewContainerRef: ViewContainerRef;
-
-  /** Contextual data to be passed in to the embedded view. */
-  context: C | undefined;
-
-  constructor(template: TemplateRef<C>, viewContainerRef: ViewContainerRef, context?: C) {
+  constructor(
+    /** The embedded template that will be used to instantiate an embedded View in the host. */
+    public templateRef: TemplateRef<C>,
+    /** Reference to the ViewContainer into which the template will be stamped out. */
+    public viewContainerRef: ViewContainerRef,
+    /** Contextual data to be passed in to the embedded view. */
+    public context?: C,
+    /** The injector to use for the embedded view. */
+    public injector?: Injector,
+  ) {
     super();
-    this.templateRef = template;
-    this.viewContainerRef = viewContainerRef;
-    this.context = context;
   }
 
   get origin(): ElementRef {
@@ -170,8 +176,7 @@ export class DomPortal<T = HTMLElement> extends Portal<T> {
   }
 }
 
-
-/** A `PortalOutlet` is an space that can contain a single `Portal`. */
+/** A `PortalOutlet` is a space that can contain a single `Portal`. */
 export interface PortalOutlet {
   /** Attaches a portal to this outlet. */
   attach(portal: Portal<any>): any;

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatTabsModule} from '@angular/material/tabs';
 
 /**
  * @title Tab group with stretched labels
@@ -6,6 +7,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'tab-group-stretched-example',
   templateUrl: 'tab-group-stretched-example.html',
-  styleUrls: ['tab-group-stretched-example.css'],
+  styleUrl: 'tab-group-stretched-example.css',
+  imports: [MatTabsModule],
 })
 export class TabGroupStretchedExample {}

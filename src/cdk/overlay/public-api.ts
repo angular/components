@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 export * from './overlay-config';
@@ -23,9 +23,10 @@ export {OverlayPositionBuilder} from './position/overlay-position-builder';
 // Export pre-defined position strategies and interface to build custom ones.
 export {PositionStrategy} from './position/position-strategy';
 export {GlobalPositionStrategy} from './position/global-position-strategy';
-export {ConnectedPositionStrategy} from './position/connected-position-strategy';
 export {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
+  STANDARD_DROPDOWN_ADJACENT_POSITIONS,
+  STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from './position/flexible-connected-position-strategy';

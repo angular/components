@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 /** Cached result Set of input types support by the current browser. */
@@ -55,10 +55,12 @@ export function getSupportedInputTypes(): Set<string> {
   }
 
   let featureTestInput = document.createElement('input');
-  supportedInputTypes = new Set(candidateInputTypes.filter(value => {
-    featureTestInput.setAttribute('type', value);
-    return featureTestInput.type === value;
-  }));
+  supportedInputTypes = new Set(
+    candidateInputTypes.filter(value => {
+      featureTestInput.setAttribute('type', value);
+      return featureTestInput.type === value;
+    }),
+  );
 
   return supportedInputTypes;
 }

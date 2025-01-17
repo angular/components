@@ -1,0 +1,43 @@
+@use 'sass:list';
+@use 'sass:meta';
+
+/// Validates that the object's type matches any of the expected types.
+/// @param {any} $obj The object to test
+/// @param {List} $types The expected types
+/// @return {String} null if no error, else the unexpected type.
+@function validate-type($obj, $types...) {
+  $result: meta.type-of($obj);
+  // A zero-length list is the same as a zero-length map.
+  @if ($result == list and list.index($types, map) and list.length($obj) == 0) {
+    @return null;
+  }
+  @return if(list.index($types, $result), null, $result);
+}
+
+/// Validates that a list contains only values from the allowed list of values.
+/// @param {List} $list The list to test
+/// @param {List} $allowed The allowed values
+/// @return {List} null if no error, else the list of non-allowed values.
+@function validate-allowed-values($list, $allowed...) {
+  $invalid: ();
+  @each $element in $list {
+    @if not list.index($allowed, $element) {
+      $invalid: list.append($invalid, $element);
+    }
+  }
+  @return if(list.length($invalid) > 0, $invalid, null);
+}
+
+/// Validates that a list contains all values from the required list of values.
+/// @param {List} $list The list to test
+/// @param {List} $required The required values
+/// @return {List} null if no error, else the list of missing values.
+@function validate-required-values($list, $required...) {
+  $invalid: ();
+  @each $element in $required {
+    @if not list.index($list, $element) {
+      $invalid: list.append($invalid, $element);
+    }
+  }
+  @return if(list.length($invalid) > 0, $invalid, null);
+}

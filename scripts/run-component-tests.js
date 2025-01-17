@@ -12,12 +12,12 @@
  *
  * Supported command line flags:
  *
- *   --local    | If specified, no browser will be launched.
- *   --firefox  | Instead of Chrome being used for tests, Firefox will be used.
- *   --no-watch | Watch mode is enabled by default. This flag opts-out to standard Bazel.
+ *   --debug      | If specified, no browser will be launched.
+ *   --firefox    | Instead of Chrome being used for tests, Firefox will be used.
+ *   --no-watch   | Watch mode is enabled by default. This flag opts-out to standard Bazel.
  */
 
-const minimist = require('minimist');
+const yargs = require('yargs');
 const shelljs = require('shelljs');
 const chalk = require('chalk');
 const path = require('path');
@@ -35,26 +35,44 @@ shelljs.set('-e');
 shelljs.cd(projectDir);
 
 // Extracts the supported command line options.
-const {_: components, local, firefox, watch, 'view-engine': viewEngine} = minimist(args, {
-  boolean: ['local', 'firefox', 'watch', 'view-engine'],
-  default: {watch: true, 'view-engine': false},
-});
+const {components, debug, firefox, watch} = yargs(args)
+  .command('* <components..>', 'Run tests for specified components', args =>
+    args.positional('components', {type: 'array'}),
+  )
+  .option('debug', {
+    alias: 'local',
+    type: 'boolean',
+    description: 'Whether test should run in debug mode. You can manually connect a browser then.',
+  })
+  .option('firefox', {
+    type: 'boolean',
+    description: 'Whether browser tests should run within Firefox.',
+  })
+  .option('watch', {
+    type: 'boolean',
+    default: true,
+    description: 'Whether tests should be re-run automatically upon changes.',
+  })
+  .strict()
+  .parseSync();
 
 // Whether tests for all components should be run.
 const all = components.length === 1 && components[0] === 'all';
 
-// We can only run a single target with "--local". Running multiple targets within the
+// We can only run a single target with "--debug". Running multiple targets within the
 // same Karma server is not possible since each test target runs isolated from the others.
-if (local && (components.length > 1 || all)) {
-  console.error(chalk.red(
-      'Unable to run multiple components tests in local mode. ' +
-      'Only one component at a time can be run with "--local"'));
+if (debug && (components.length > 1 || all)) {
+  console.error(
+    chalk.red(
+      'Unable to run multiple components tests in debug mode. ' +
+        'Only one component at a time can be run with "--debug"',
+    ),
+  );
   process.exit(1);
 }
 
 const browserName = firefox ? 'firefox' : 'chromium';
 const bazelBinary = `yarn -s ${watch ? 'ibazel' : 'bazel'}`;
-const configFlag = viewEngine ? '--config=view-engine' : '';
 
 // If `all` has been specified as component, we run tests for all components
 // in the repository. The `--firefox` flag can be still specified.
@@ -67,16 +85,20 @@ if (all) {
     console.warn(chalk.yellow('Tests will be run in non-watch mode..'));
   }
   shelljs.exec(
-      `yarn -s bazel test --test_tag_filters=-e2e,browser:${browserName} ` +
-      `--build_tag_filters=browser:${browserName} --build_tests_only ${configFlag} //src/...`);
+    `yarn -s bazel test --test_tag_filters=-e2e,browser:${browserName} ` +
+      `--build_tag_filters=browser:${browserName} --build_tests_only //src/...`,
+  );
   return;
 }
 
 // Exit if no component has been specified.
 if (!components.length) {
-  console.error(chalk.red(
+  console.error(
+    chalk.red(
       'No component specified. Please either specify individual components, or pass "all" ' +
-      'in order to run tests for all components.'));
+        'in order to run tests for all components.',
+    ),
+  );
   console.info(chalk.yellow('Below are a few examples of how the script can be run:'));
   console.info(chalk.yellow(` - yarn test all`));
   console.info(chalk.yellow(` - yarn test cdk/overlay material/stepper`));
@@ -84,12 +106,11 @@ if (!components.length) {
   process.exit(1);
 }
 
-const bazelAction = local ? 'run' : 'test';
-const testLabels = components
-    .map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
+const bazelAction = debug ? 'run' : 'test';
+const testLabels = components.map(t => `${getBazelPackageOfComponentName(t)}:${getTargetName(t)}`);
 
 // Runs Bazel for the determined test labels.
-shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')} ${configFlag}`);
+shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')}`);
 
 /**
  * Gets the Bazel package label for the specified component name. Throws if
@@ -98,22 +119,27 @@ shelljs.exec(`${bazelBinary} ${bazelAction} ${testLabels.join(' ')} ${configFlag
 function getBazelPackageOfComponentName(name) {
   // Before guessing any Bazel package, we test if the name contains the
   // package name already. If so, we just use that for Bazel package.
-  const targetName = convertPathToBazelLabel(name) ||
-                     convertPathToBazelLabel(path.join(packagesDir, name));
+  const targetName =
+    convertPathToBazelLabel(name) || convertPathToBazelLabel(path.join(packagesDir, name));
   if (targetName !== null) {
     return targetName;
   }
   // If the name does not contain an explicit package name, try to guess it.
   const guess = guessPackageName(name, packagesDir);
-  const guessLabel =
-      guess.result ? convertPathToBazelLabel(path.join(packagesDir, guess.result)) : null;
+  const guessLabel = guess.result
+    ? convertPathToBazelLabel(path.join(packagesDir, guess.result))
+    : null;
 
   if (guessLabel) {
     return guessLabel;
   }
 
-  console.error(chalk.red(`Could not find test target for specified component: ` +
-    `${chalk.yellow(name)}. Looked in packages: \n${guess.attempts.join('\n')}`));
+  console.error(
+    chalk.red(
+      `Could not find test target for specified component: ` +
+        `${chalk.yellow(name)}. Looked in packages: \n${guess.attempts.join('\n')}`,
+    ),
+  );
   process.exit(1);
 }
 
@@ -127,10 +153,10 @@ function convertPathToBazelLabel(name) {
 
 /** Gets the name of the target that should be run. */
 function getTargetName(packageName) {
-  // Schematics don't have _local and browser targets.
+  // Schematics don't have _debug and browser targets.
   if (packageName && packageName.endsWith('schematics')) {
     return 'unit_tests';
   }
 
-  return `unit_tests_${local ? 'local' : browserName}`;
+  return `unit_tests_${debug ? 'debug' : browserName}`;
 }

@@ -9,9 +9,9 @@ set -e
 # Go to the project root directory
 cd $(dirname ${0})/../..
 
-if [ -z ${MATERIAL2_BUILDS_TOKEN} ]; then
+if [ -z ${SNAPSHOT_BUILDS_GITHUB_TOKEN} ]; then
   echo "Error: No access token for GitHub could be found." \
-       "Please set the environment variable 'MATERIAL2_BUILDS_TOKEN'."
+       "Please set the environment variable 'SNAPSHOT_BUILDS_GITHUB_TOKEN'."
   exit 1
 fi
 
@@ -22,6 +22,8 @@ PACKAGES=(
   material
   material-experimental
   material-moment-adapter
+  # material-luxon-adapter TODO(crisbeto): enable this once we have a builds repo
+  # material-date-fns-adapter TODO(crisbeto): enable this once we have a builds repo
   google-maps
   youtube-player
 )
@@ -38,7 +40,7 @@ publishPackage() {
 
   buildDir="$(pwd)/dist/releases/${packageName}"
   buildVersion=$(node -pe "require('./package.json').version")
-  branchName=${CIRCLE_BRANCH:-'master'}
+  branchName=${GITHUB_REF_NAME:-'main'}
 
   commitSha=$(git rev-parse --short HEAD)
   commitAuthorName=$(git --no-pager show -s --format='%an' HEAD)
@@ -53,11 +55,6 @@ publishPackage() {
   repoDir="tmp/${packageRepo}"
 
   echo "Starting publish process of ${packageName} for ${buildVersionName} into ${branchName}.."
-
-  if [[ ! ${COMMAND_ARGS} == *--no-build* ]]; then
-    # Create a release of the current repository.
-    $(npm bin)/gulp ${packageName}:build-release:clean
-  fi
 
   # Prepare cloning the builds repository
   rm -rf ${repoDir}
@@ -101,7 +98,7 @@ publishPackage() {
   git config user.email "${commitAuthorEmail}"
   git config credential.helper "store --file=.git/credentials"
 
-  echo "https://${MATERIAL2_BUILDS_TOKEN}:@github.com" > .git/credentials
+  echo "https://${SNAPSHOT_BUILDS_GITHUB_TOKEN}:@github.com" > .git/credentials
 
   echo "Git configuration has been updated to match the last commit author. Publishing now.."
 

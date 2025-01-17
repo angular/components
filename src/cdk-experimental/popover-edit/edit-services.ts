@@ -3,10 +3,10 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay} from '@angular/cdk/overlay';
@@ -14,7 +14,6 @@ import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 
 import {EditEventDispatcher} from './edit-event-dispatcher';
 import {FocusDispatcher} from './focus-dispatcher';
-import {PopoverEditPositionStrategyFactory} from './popover-edit-position-strategy-factory';
 import {EditRef} from './edit-ref';
 
 /**
@@ -25,11 +24,12 @@ import {EditRef} from './edit-ref';
  */
 @Injectable()
 export class EditServices {
-  constructor(
-      readonly directionality: Directionality,
-      readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
-      readonly focusDispatcher: FocusDispatcher,
-      readonly focusTrapFactory: FocusTrapFactory, readonly ngZone: NgZone,
-      readonly overlay: Overlay, readonly positionFactory: PopoverEditPositionStrategyFactory,
-      readonly scrollDispatcher: ScrollDispatcher, readonly viewportRuler: ViewportRuler) {}
+  readonly directionality = inject(Directionality);
+  readonly editEventDispatcher = inject<EditEventDispatcher<EditRef<unknown>>>(EditEventDispatcher);
+  readonly focusDispatcher = inject(FocusDispatcher);
+  readonly focusTrapFactory = inject(FocusTrapFactory);
+  readonly ngZone = inject(NgZone);
+  readonly overlay = inject(Overlay);
+  readonly scrollDispatcher = inject(ScrollDispatcher);
+  readonly viewportRuler = inject(ViewportRuler);
 }

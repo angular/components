@@ -1,0 +1,22 @@
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+.example-tree-node {
+  display: block;
+  line-height: 40px;
+}
+
+.example-tree-node .example-tree-node {
+  padding-left: 40px;
+}
+
+.example-toggle {
+  vertical-align: middle;
+}

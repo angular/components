@@ -1,11 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatSidenav} from '@angular/material/sidenav';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import {MatButtonModule} from '@angular/material/button';
 
 /** @title Sidenav with custom escape and backdrop click behavior */
 @Component({
   selector: 'sidenav-disable-close-example',
   templateUrl: 'sidenav-disable-close-example.html',
-  styleUrls: ['sidenav-disable-close-example.css'],
+  styleUrl: 'sidenav-disable-close-example.css',
+  imports: [MatSidenavModule, MatButtonModule],
 })
 export class SidenavDisableCloseExample {
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -17,5 +19,5 @@ export class SidenavDisableCloseExample {
     this.sidenav.close();
   }
 
-  shouldRun = [/(^|\.)plnkr\.co$/, /(^|\.)stackblitz\.io$/].some(h => h.test(window.location.host));
+  shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
 }

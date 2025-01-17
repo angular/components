@@ -3,17 +3,11 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
-import {Directive, ElementRef} from '@angular/core';
-import {CanDisable, mixinDisabled} from '@angular/material/core';
-
-
-// Boilerplate for applying mixins to MatTabLabelWrapper.
-/** @docs-private */
-const _MatTabLabelWrapperBase = mixinDisabled(class {});
+import {Directive, ElementRef, Input, booleanAttribute, inject} from '@angular/core';
+import {InkBarItem} from './ink-bar';
 
 /**
  * Used in the `mat-tab-group` view to display tab labels.
@@ -21,16 +15,17 @@ const _MatTabLabelWrapperBase = mixinDisabled(class {});
  */
 @Directive({
   selector: '[matTabLabelWrapper]',
-  inputs: ['disabled'],
   host: {
-    '[class.mat-tab-disabled]': 'disabled',
+    '[class.mat-mdc-tab-disabled]': 'disabled',
     '[attr.aria-disabled]': '!!disabled',
-  }
+  },
 })
-export class MatTabLabelWrapper extends _MatTabLabelWrapperBase implements CanDisable {
-  constructor(public elementRef: ElementRef) {
-    super();
-  }
+export class MatTabLabelWrapper extends InkBarItem {
+  elementRef = inject(ElementRef);
+
+  /** Whether the tab is disabled. */
+  @Input({transform: booleanAttribute})
+  disabled: boolean = false;
 
   /** Sets focus on the wrapper element */
   focus(): void {
@@ -44,6 +39,4 @@ export class MatTabLabelWrapper extends _MatTabLabelWrapperBase implements CanDi
   getOffsetWidth(): number {
     return this.elementRef.nativeElement.offsetWidth;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

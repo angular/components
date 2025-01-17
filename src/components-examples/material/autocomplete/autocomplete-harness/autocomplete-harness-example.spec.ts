@@ -1,37 +1,28 @@
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AutocompleteHarnessExample} from './autocomplete-harness-example';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 describe('AutocompleteHarnessExample', () => {
   let fixture: ComponentFixture<AutocompleteHarnessExample>;
   let loader: HarnessLoader;
 
-  beforeAll(() => {
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatAutocompleteModule],
-      declarations: [AutocompleteHarnessExample]
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MatAutocompleteModule, NoopAnimationsModule],
+    });
     fixture = TestBed.createComponent(AutocompleteHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should load all autocomplete harnesses', async () => {
-      const autocompletes = await loader.getAllHarnesses(MatAutocompleteHarness);
-      expect(autocompletes.length).toBe(2);
-    }
-  );
+    const autocompletes = await loader.getAllHarnesses(MatAutocompleteHarness);
+    expect(autocompletes.length).toBe(2);
+  });
 
   it('should get disabled state', async () => {
     const enabled = await loader.getHarness(MatAutocompleteHarness.with({selector: '#plain'}));

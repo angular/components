@@ -2,6 +2,6 @@
   margin-top: 16px;
 }
 
-.example-tooltip-red {
-  background: #b71c1c;
+.example-tooltip-uppercase {
+  text-transform: uppercase;
 }

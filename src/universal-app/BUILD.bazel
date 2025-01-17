@@ -1,38 +1,52 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package_bin")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
+load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "ng_module", "sass_binary", "ts_library")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary", "ts_library")
+load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "kitchen-sink",
     srcs = [
-        "kitchen-sink-mdc/kitchen-sink-mdc.ts",
-        "kitchen-sink-root.ts",
         "kitchen-sink/kitchen-sink.ts",
     ],
     assets = [
         "kitchen-sink/kitchen-sink.html",
-        "kitchen-sink-mdc/kitchen-sink-mdc.html",
     ],
     deps = [
-        "@npm//@angular/platform-server",
         "//src/google-maps",
         "//src/youtube-player",
-    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS,
+        "@npm//@angular/platform-server",
+    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
 )
 
 ts_library(
-    name = "server",
+    name = "client_lib",
+    srcs = [
+        "main.ts",
+    ],
+    deps = [
+        ":kitchen-sink",
+        "@npm//@angular/platform-browser",
+    ],
+)
+
+ts_library(
+    name = "prerender_lib",
     srcs = [
         "prerender.ts",
     ],
     deps = [
         ":kitchen-sink",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
         "@npm//@angular/platform-server",
+        "@npm//@bazel/runfiles",
         "@npm//@types/node",
         "@npm//reflect-metadata",
         "@npm//zone.js",
@@ -40,30 +54,106 @@ ts_library(
 )
 
 sass_binary(
-    name = "theme_scss",
-    src = "theme.scss",
-    include_paths = [
-        "external/npm/node_modules",
-    ],
+    name = "styles_scss",
+    src = "styles.scss",
     deps = [
-        "//src/material:theming_bundle",
-        "//src/material-experimental/mdc-theming:all_themes",
-        "//src/material-experimental/mdc-typography:all_typography",
-        "//src/material/core:theming_scss_lib",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
     ],
 )
 
-nodejs_test(
-    name = "server_test",
+nodejs_binary(
+    name = "prerender",
     data = [
-        "index.html",
-        ":server",
-        ":theme_scss",
+        "index-source.html",
+        ":prerender_bundle",
+        ":styles_scss",
     ],
-    entry_point = ":prerender.ts",
+    entry_point = ":prerender_bundle.js",
     templated_args = [
         # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
         # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
         "--bazel_patch_module_resolver",
+    ],
+)
+
+devmode_esbuild(
+    name = "client_bundle",
+    entry_points = [":main.ts"],
+    platform = "browser",
+    target = "es2016",
+    deps = LINKER_PROCESSED_FW_PACKAGES + [
+        ":client_lib",
+    ],
+)
+
+devmode_esbuild(
+    name = "prerender_bundle",
+    entry_point = ":prerender.ts",
+    platform = "node",
+    # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
+    # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
+    target = "es2016",
+    # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
+    # map all framework packages to their linker-processed bundles from `tools/angular`.
+    deps = LINKER_PROCESSED_FW_PACKAGES + [
+        ":prerender_lib",
+    ],
+)
+
+npm_package_bin(
+    name = "prerender_test_bin",
+    outs = ["index-prerendered.html"],
+    args = ["$@"],
+    tool = ":prerender",
+)
+
+npm_package_bin(
+    name = "debug_prerender_bin",
+    # Note: the file needs to be called `index.html` specifically so the server can pick it up.
+    outs = ["index.html"],
+    args = [
+        "$@",
+        "--debug",  # Disables some testing behavior that can be annoying while debugging.
+    ],
+    tool = ":prerender",
+)
+
+build_test(
+    name = "prerender_test",
+    targets = [
+        ":prerender_test_bin",
+    ],
+)
+
+http_server(
+    name = "server",
+    srcs = [
+        ":debug_prerender_bin",
+        "@npm//zone.js",
+    ],
+    additional_root_paths = [
+        "npm/node_modules",
+    ],
+    tags = ["manual"],
+    deps = [
+        ":client_bundle",
+        ":styles_scss",
+    ],
+)
+
+ng_e2e_test_library(
+    name = "hydration_e2e_tests_sources",
+    srcs = ["hydration.e2e.spec.ts"],
+)
+
+protractor_web_test_suite(
+    name = "hydration_e2e_tests",
+    configuration = ":protractor.conf.js",
+    on_prepare = ":start-devserver.js",
+    server = ":server",
+    tags = ["e2e"],
+    deps = [
+        ":hydration_e2e_tests_sources",
     ],
 )

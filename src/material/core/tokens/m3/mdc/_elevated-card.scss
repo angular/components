@@ -1,0 +1,22 @@
+@use 'sass:map';
+@use '../../../style/elevation';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, elevated-card);
+
+/// Generates the tokens for MDC elevated-card
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC elevated-card
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: token-definition.get-mdc-tokens('elevated-card', $systems, $exclude-hardcoded);
+  $elevation: map.get($tokens, container-elevation);
+
+  @if ($elevation != null) {
+    $tokens: map.set($tokens, container-elevation, elevation.get-box-shadow($elevation));
+  }
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

@@ -1,6 +1,15 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -14,13 +23,11 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'input-error-state-matcher-example',
   templateUrl: './input-error-state-matcher-example.html',
-  styleUrls: ['./input-error-state-matcher-example.css'],
+  styleUrl: './input-error-state-matcher-example.css',
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
 })
 export class InputErrorStateMatcherExample {
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   matcher = new MyErrorStateMatcher();
 }

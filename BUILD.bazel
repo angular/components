@@ -1,4 +1,5 @@
-load("//:rollup-globals.bzl", "ROLLUP_GLOBALS")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
@@ -8,12 +9,23 @@ package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "LICENSE",
+    "package.json",
 ])
 
+nodejs_binary(
+    name = "yarn_vendored",
+    data = [".yarn/releases/yarn-1.22.17.cjs"],
+    entry_point = ".yarn/releases/yarn-1.22.17.cjs",
+    visibility = ["//integration:__subpackages__"],
+)
+
+# Target which writes the list of package externals into a JSON file so that the
+# Starlark-configured externals (for the NPM package bundling) can be passed to
+# the `check-package-externals` Yarn script, which validates our module imports.
 genrule(
-    name = "rollup_globals",
-    outs = ["rollup_globals.json"],
-    cmd = "echo '%s' > $@" % ROLLUP_GLOBALS,
+    name = "package_externals",
+    outs = ["package_externals.json"],
+    cmd = "echo '%s' > $@" % PKG_EXTERNALS,
 )
 
 entryPoints = ["cdk/%s" % e for e in CDK_ENTRYPOINTS] + \

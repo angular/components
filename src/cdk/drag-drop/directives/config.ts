@@ -3,14 +3,14 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {InjectionToken} from '@angular/core';
 import {DragRefConfig, Point, DragRef} from '../drag-ref';
 
 /** Possible values that can be used to configure the drag start delay. */
-export type DragStartDelay = number | {touch: number, mouse: number};
+export type DragStartDelay = number | {touch: number; mouse: number};
 
 /** Possible axis along which dragging can be locked. */
 export type DragAxis = 'x' | 'y';
@@ -19,7 +19,7 @@ export type DragAxis = 'x' | 'y';
 export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
 
 /** Possible orientations for a drop list. */
-export type DropListOrientation = 'horizontal' | 'vertical';
+export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';
 
 /**
  * Injection token that can be used to configure the

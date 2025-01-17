@@ -11,7 +11,7 @@ export interface MapDirectionsResponse {
 }
 ```
 
-The most common usecase for the component and class would be to use the `MapDirectionsService` to request a route between two points on the map, and then render them on the map using the `MapDirectionsRenderer`.
+The most common use-case for the component and class would be to use the `MapDirectionsService` to request a route between two points on the map, and then render them on the map using the `MapDirectionsRenderer`.
 
 ## Loading the Library
 
@@ -21,12 +21,13 @@ Using the `MapDirectionsService` requires the Directions API to be enabled in Go
 
 ```typescript
 // google-maps-demo.component.ts
-import {MapDirectionsService} from '@angular/google-maps';
 import {Component} from '@angular/core';
+import {GoogleMap, MapDirectionsRenderer, MapDirectionsService} from '@angular/google-maps';
 
 @Component({
   selector: 'google-map-demo',
   templateUrl: 'google-map-demo.html',
+    imports: [GoogleMap, MapDirectionsRenderer],
 })
 export class GoogleMapDemo {
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -47,11 +48,9 @@ export class GoogleMapDemo {
 
 ```html
 <!-- google-maps-demo.component.html -->
-<google-map height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom">
-  <map-directions-renderer *ngIf="(directionsResults$ | async) as directionsResults"
-                           [directions]="directionsResults"></map-directions-renderer>
+<google-map height="400px" width="750px" [center]="center" [zoom]="zoom">
+  @if (directionsResults$ | async; as directionsResults) {
+    <map-directions-renderer [directions]="directionsResults" />
+  }
 </google-map>
 ```

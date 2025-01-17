@@ -1,25 +1,30 @@
 {
-  "hosting": {
-    "public": "dist/dev-app-web-pkg",
-    "rewrites": [
-      {
-        "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "*",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      }
-    ],
-    "ignore": [
-      "firebase.json"
-    ]
-  }
+  "hosting": [
+    {
+      "target": "dev-app",
+      "public": "dist/dev-app-web-pkg",
+      "rewrites": [
+        {
+          "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "*",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            }
+          ]
+        }
+      ],
+      "ignore": ["firebase.json"]
+    }
+  ]
 }

@@ -12,7 +12,6 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    module_name = "@angular/components-examples/material/autocomplete",
     deps = [
         "//src/cdk/overlay",
         "//src/cdk/testing",
@@ -24,7 +23,6 @@ ng_module(
         "//src/material/slide-toggle",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
     ],
 )
@@ -47,12 +45,11 @@ ng_test_library(
         "//src/cdk/testing/testbed",
         "//src/material/autocomplete",
         "//src/material/autocomplete/testing",
-        "@npm//@angular/platform-browser-dynamic",
+        "@npm//@angular/platform-browser",
     ],
 )
 
 ng_web_test_suite(
     name = "unit_tests",
-    exclude_init_script = True,
     deps = [":unit_tests_lib"],
 )

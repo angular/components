@@ -1,3 +1,22 @@
+<h1> Themed Checkboxes </h1>
+
+<div>
+  <mat-checkbox>Default</mat-checkbox>
+</div>
+
+<div>
+  <mat-checkbox color="primary">Primary</mat-checkbox>
+</div>
+
+<div>
+  <mat-checkbox color="accent">Accent</mat-checkbox>
+</div>
+
+<div>
+  <mat-checkbox color="warn">Warn</mat-checkbox>
+</div>
+
+
 <h1>mat-checkbox: Basic Example</h1>
 <form>
   <mat-checkbox [(ngModel)]="isChecked"
@@ -7,19 +26,20 @@
                 (change)="isIndeterminate = false"
                 [indeterminate]="isIndeterminate"
                 [disabled]="isDisabled"
-                [labelPosition]="labelPosition">
+                [disabledInteractive]="isDisabledInteractive"
+                [labelPosition]="labelPosition"
+                [matTooltip]="isDisabled ? 'Tooltip that only shows up when disabled' : null">
     Do you want to <em>foobar</em> the <em>bazquux</em>?
 
   </mat-checkbox> - <strong>{{printResult()}}</strong>
 </form>
 <div class="demo-checkbox">
-  <input id="indeterminate-toggle"
-         type="checkbox"
-         [(ngModel)]="isIndeterminate"
-         [disabled]="isDisabled">
+  <input id="indeterminate-toggle" type="checkbox" [(ngModel)]="isIndeterminate">
   <label for="indeterminate-toggle">Toggle Indeterminate</label>
   <input id="disabled-toggle" type="checkbox" [(ngModel)]="isDisabled">
   <label for="disabled-toggle">Toggle Disabled</label>
+  <input id="disabled-interactive-toggle" type="checkbox" [(ngModel)]="isDisabledInteractive">
+  <label for="disabled-interactive-toggle">Toggle Disabled Interactive</label>
   <input id="color-toggle" type="checkbox" [(ngModel)]="useAlternativeColor">
   <label for="color-toggle">Toggle Color</label>
 </div>
@@ -45,14 +65,29 @@
 </div>
 
 <h1>Pseudo checkboxes</h1>
-<mat-pseudo-checkbox></mat-pseudo-checkbox>
-<mat-pseudo-checkbox [disabled]="true"></mat-pseudo-checkbox>
+<div>
+  <h2>Full appearance</h2>
+  <mat-pseudo-checkbox></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox [disabled]="true"></mat-pseudo-checkbox>
 
-<mat-pseudo-checkbox state="checked"></mat-pseudo-checkbox>
-<mat-pseudo-checkbox state="checked" [disabled]="true"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="checked"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="checked" [disabled]="true"></mat-pseudo-checkbox>
 
-<mat-pseudo-checkbox state="indeterminate"></mat-pseudo-checkbox>
-<mat-pseudo-checkbox state="indeterminate" [disabled]="true"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="indeterminate"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox state="indeterminate" [disabled]="true"></mat-pseudo-checkbox>
+<div>
+<div>
+  <h2>Minimal appearance</h2>
+  <mat-pseudo-checkbox appearance="minimal"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" [disabled]="true"></mat-pseudo-checkbox>
+
+  <mat-pseudo-checkbox appearance="minimal" state="checked"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" state="checked" [disabled]="true"></mat-pseudo-checkbox>
+
+  <mat-pseudo-checkbox appearance="minimal" state="indeterminate"></mat-pseudo-checkbox>
+  <mat-pseudo-checkbox appearance="minimal" state="indeterminate" [disabled]="true">
+  </mat-pseudo-checkbox>
+<div>
 
 <h1>Nested Checklist</h1>
 <mat-checkbox-demo-nested-checklist></mat-checkbox-demo-nested-checklist>
@@ -117,7 +152,9 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [checked] & (change)
+        }
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -133,7 +170,9 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [(ngModel)]
+        }
     </mat-checkbox>
   </div>
   <div clickActionCheck>
@@ -153,7 +192,9 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [checked] & (change)
+        }
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -169,7 +210,9 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [(ngModel)]
+        }
     </mat-checkbox>
   </div>
   <div clickActionNoop>
@@ -189,7 +232,9 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [checked] & (change)
+        }
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -205,7 +250,9 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [(ngModel)]
+        }
     </mat-checkbox>
   </div>
   <div animationsNoop>
@@ -225,7 +272,9 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [checked] & (change)
+        }
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -241,11 +290,15 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
+        @if (!demoHideLabel) {
+          Checkbox w/ [(ngModel)]
+        }
     </mat-checkbox>
   </div>
 </div>
 
-<h1>Overview example</h1>
-<checkbox-overview-example></checkbox-overview-example>
-
+<p>
+  <mat-checkbox class="demo-traffic-light-checkbox">
+    This checkbox has special styling when using the experimental token based theme
+  </mat-checkbox>
+</p>

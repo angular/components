@@ -3,12 +3,15 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
 import {InjectionToken, ViewContainerRef} from '@angular/core';
+
+/** Options for where to set focus to automatically on dialog open */
+export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
 /** Injection token that can be used to access the data that was passed in to a bottom sheet. */
 export const MAT_BOTTOM_SHEET_DATA = new InjectionToken<any>('MatBottomSheetData');
@@ -41,6 +44,9 @@ export class MatBottomSheetConfig<D = any> {
   /** Aria label to assign to the bottom sheet element. */
   ariaLabel?: string | null = null;
 
+  /** Whether this is a modal bottom sheet. Used to set the `aria-modal` attribute. */
+  ariaModal?: boolean = true;
+
   /**
    * Whether the bottom sheet should close when the user goes backwards/forwards in history.
    * Note that this usually doesn't include clicking on links (unless the user is using
@@ -48,11 +54,15 @@ export class MatBottomSheetConfig<D = any> {
    */
   closeOnNavigation?: boolean = true;
 
-  // Note that this is disabled by default, because while the a11y recommendations are to focus
-  // the first focusable element, doing so prevents screen readers from reading out the
+  // Note that this is set to 'dialog' by default, because while the a11y recommendations
+  // are to focus the first focusable element, doing so prevents screen readers from reading out the
   // rest of the bottom sheet content.
-  /** Whether the bottom sheet should focus the first focusable element on open. */
-  autoFocus?: boolean = false;
+  /**
+   * Where the bottom sheet should focus on open.
+   * @breaking-change 14.0.0 Remove boolean option from autoFocus. Use string or
+   * AutoFocusTarget instead.
+   */
+  autoFocus?: AutoFocusTarget | string | boolean = 'dialog';
 
   /**
    * Whether the bottom sheet should restore focus to the
@@ -62,4 +72,13 @@ export class MatBottomSheetConfig<D = any> {
 
   /** Scroll strategy to be used for the bottom sheet. */
   scrollStrategy?: ScrollStrategy;
+
+  /** Height for the bottom sheet. */
+  height?: string = '';
+
+  /** Minimum height for the bottom sheet. If a number is provided, assumes pixel units. */
+  minHeight?: number | string;
+
+  /** Maximum height for the bottom sheet. If a number is provided, assumes pixel units. */
+  maxHeight?: number | string;
 }

@@ -1,0 +1,26 @@
+@use 'sass:map';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, checkbox);
+
+/// Generates custom tokens for mat-checkbox.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for mat-checkbox
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    disabled-label-color:
+      sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    label-text-color: map.get($systems, md-sys-color, on-surface),
+    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+  );
+
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}

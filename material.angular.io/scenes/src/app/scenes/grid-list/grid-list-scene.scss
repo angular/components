@@ -1,0 +1,11 @@
+app-grid-list-scene {
+  display: block;
+  width: 300px;
+  height: 140px;
+}
+
+mat-grid-tile {
+  box-sizing: border-box;
+  padding: 3px;
+  background-clip: content-box !important;
+}

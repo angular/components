@@ -1,6 +1,6 @@
 import {DocCollection, Document, Processor} from 'dgeni';
 import {ClassLikeExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassLikeExportDoc';
-import * as ts from 'typescript';
+import ts from 'typescript';
 import {getInheritedDocsOfClass, isInheritanceCreatedDoc} from '../common/class-inheritance';
 import {ClassExportDoc} from 'dgeni-packages/typescript/api-doc-types/ClassExportDoc';
 import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
@@ -10,8 +10,7 @@ import {ApiDoc} from 'dgeni-packages/typescript/api-doc-types/ApiDoc';
  * dependency injection for classes. The symbol docs map is provided by the TypeScript
  * dgeni package.
  */
-export function resolveInheritedDocs(
-    exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {
+export function resolveInheritedDocs(exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {
   return new ResolveInheritedDocs(exportSymbolsToDocsMap);
 }
 
@@ -21,13 +20,17 @@ export function resolveInheritedDocs(
  * processed by other standard processors in the Dgeni pipeline. This is helpful as
  * API documents for inheritance are created manually if not exported, and we'd want
  * such docs to be processed by the Dgeni JSDoc processor for example.
+ *
+ * Note that we also want to include external API docs (e.g. from the node modules)
+ * since members from those can also be merged with public-facing API docs.
  */
 export class ResolveInheritedDocs implements Processor {
   $runBefore = ['docs-private-filter', 'parsing-tags'];
 
   constructor(
     /** Shared map that can be used to resolve docs through symbols. */
-    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>) {}
+    private _exportSymbolsToDocsMap: Map<ts.Symbol, ClassLikeExportDoc>,
+  ) {}
 
   $process(docs: DocCollection) {
     const newDocs = new Set<Document>(docs);

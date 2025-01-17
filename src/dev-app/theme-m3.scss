@@ -1,0 +1,122 @@
+@use '@angular/material' as mat;
+
+// Plus imports for other components in your app.
+
+// Disable legacy API compatibility, since dev-app is fully migrated to theme inspection API.
+mat.$theme-legacy-inspection-api-compatibility: false;
+
+$primary: mat.$azure-palette;
+$tertiary: mat.$blue-palette;
+
+// Create a theme with the specified color type and density.
+@function create-theme($type: light, $density: 0) {
+  @return mat.define-theme((
+    color: (
+      theme-type: $type,
+      primary: $primary,
+      tertiary: $tertiary,
+      use-system-variables: true,
+    ),
+    typography: (use-system-variables: true),
+    density: (
+      scale: $density
+    ),
+  ));
+}
+
+// Define the default (light) theme.
+$light-theme: create-theme($type: light);
+
+// Create our dark theme.
+$dark-theme: create-theme($type: dark);
+
+// Include the default theme styles.
+html {
+  color-scheme: light;
+  body:not(.demo-experimental-theme) {
+    @include mat.all-component-themes($light-theme);
+    @include mat.system-level-colors($light-theme);
+    @include mat.system-level-typography($light-theme);
+    // TODO(mmalerba): Support M3 for experimental components.
+    // @include matx.column-resize-theme($light-theme);
+    // @include matx.popover-edit-theme($light-theme);
+  }
+
+  body.demo-experimental-theme {
+    @include mat.theme((
+      color: (
+        primary: $primary,
+        tertiary: $tertiary,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+  }
+}
+
+@include mat.typography-hierarchy($light-theme);
+
+.demo-strong-focus {
+  // Note: we can theme the indicators directly through `strong-focus-indicators` as well.
+  // Use the theme so we have some coverage over the entire API surface.
+  @include mat.strong-focus-indicators();
+  @include mat.strong-focus-indicators-theme($light-theme);
+}
+
+// Include the alternative theme styles inside of a block with a CSS class. You can make this
+// CSS class whatever you want. In this example, any component inside of an element with
+// `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
+// default theme.
+body.demo-unicorn-dark-theme {
+  color-scheme: dark;
+  &:not(.demo-experimental-theme) {
+    // Include the dark theme color styles.
+    @include mat.all-component-colors($dark-theme);
+    @include mat.system-level-colors($dark-theme);
+    // TODO(mmalerba): Support M3 for experimental components.
+    // @include matx.column-resize-color($dark-theme);
+    // @include matx.popover-edit-color($dark-theme);
+  }
+
+  // Include the dark theme colors for focus indicators.
+  &.demo-strong-focus {
+    @include mat.strong-focus-indicators-color($dark-theme);
+  }
+}
+
+// Create classes for all density scales which are supported by all MDC-based components.
+// The classes are applied conditionally based on the selected density in the dev-app layout
+// component.
+$density-scales: (-1, -2, -3, -4, minimum, maximum);
+@each $scale in $density-scales {
+  .demo-density-#{$scale} {
+    body:not(.demo-experimental-theme) & {
+      $density-theme: create-theme($density: $scale);
+      @include mat.all-component-densities($density-theme);
+    }
+
+    body.demo-experimental-theme & {
+      @include mat.theme((density: $scale));
+    }
+  }
+}
+
+// Enable back-compat CSS for color="..." API & typography hierarchy.
+.demo-color-api-back-compat {
+  @include mat.color-variants-backwards-compatibility($light-theme);
+  @include mat.typography-hierarchy($light-theme, $back-compat: true);
+
+  &.demo-unicorn-dark-theme {
+    @include mat.color-variants-backwards-compatibility($dark-theme);
+  }
+}
+
+// In M3 buttons are smaller than their touch target at zero-density.
+.demo-config-buttons button {
+  margin: 4px;
+}
+
+// In M3 we need some spacing around the list in the sidenav.
+mat-nav-list.demo-nav-list {
+  margin: 8px;
+}

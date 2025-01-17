@@ -1,46 +1,119 @@
-@use 'sass:map';
+@use '../core/style/sass-utils';
 @use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/circular-progress' as tokens-mdc-circular-progress;
 
-@mixin color($config-or-theme) {
-  $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
-
-  .mat-progress-spinner, .mat-spinner {
-    circle {
-      stroke: theming.get-color-from-palette($primary);
-    }
-
-    &.mat-accent circle {
-      stroke: theming.get-color-from-palette($accent);
-    }
-
-    &.mat-warn circle {
-      stroke: theming.get-color-from-palette($warn);
+/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
+/// for the mat-progress-spinner.
+/// @param {Map} $theme The theme to generate base styles for.
+@mixin base($theme) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-unthemable-tokens()
+      );
     }
   }
 }
 
-@mixin typography($config-or-theme) {}
+/// Outputs color theme styles for the mat-progress-spinner.
+/// @param {Map} $theme The theme to generate color styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the spinner: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin color($theme, $options...) {
+  @if inspection.get-theme-version($theme) == 1 {
+    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      @include token-utils.create-token-values(
+        tokens-mdc-circular-progress.$prefix,
+        tokens-mdc-circular-progress.get-color-tokens($theme, primary)
+      );
 
-@mixin _density($config-or-theme) {}
+      .mat-accent {
+        @include token-utils.create-token-values(
+          tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, accent)
+        );
+      }
 
-@mixin theme($theme-or-color-config) {
-  $theme: theming.private-legacy-get-theme($theme-or-color-config);
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-spinner') {
-    $color: theming.get-color-config($theme);
-    $density: theming.get-density-config($theme);
-    $typography: theming.get-typography-config($theme);
-
-    @if $color != null {
-      @include color($color);
-    }
-    @if $density != null {
-      @include _density($density);
-    }
-    @if $typography != null {
-      @include typography($typography);
+      .mat-warn {
+        @include token-utils.create-token-values(
+          tokens-mdc-circular-progress.$prefix,
+          tokens-mdc-circular-progress.get-color-tokens($theme, warn)
+        );
+      }
     }
   }
+}
+
+/// Outputs typography theme styles for the mat-progress-spinner.
+/// @param {Map} $theme The theme to generate typography styles for.
+@mixin typography($theme) {
+}
+
+/// Outputs density theme styles for the mat-progress-spinner.
+/// @param {Map} $theme The theme to generate density styles for.
+@mixin density($theme) {
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: tokens-mdc-circular-progress.$prefix,
+      tokens: tokens-mdc-circular-progress.get-token-slots(),
+    ),
+  );
+}
+
+/// Outputs the CSS variable values for the given tokens.
+/// @param {Map} $tokens The token values to emit.
+@mixin overrides($tokens: ()) {
+  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+}
+
+/// Outputs all (base, color, typography, and density) theme styles for the mat-progress-spinner.
+/// @param {Map} $theme The theme to generate styles for.
+/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
+///   $color-variant: The color variant to use for the spinner: primary, secondary, tertiary,
+///      or error (If not specified, default primary color will be used).
+@mixin theme($theme, $options...) {
+  @include theming.private-check-duplicate-theme-styles($theme, 'mat-progress-spinner') {
+    @if inspection.get-theme-version($theme) == 1 {
+      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+    } @else {
+      @include base($theme);
+      @if inspection.theme-has($theme, color) {
+        @include color($theme);
+      }
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
+      @if inspection.theme-has($theme, typography) {
+        @include typography($theme);
+      }
+    }
+  }
+}
+
+@mixin _theme-from-tokens($tokens, $options...) {
+  @include validation.selector-defined(
+    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+  $mdc-circular-progress-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-circular-progress.$prefix,
+    $options...
+  );
+  @include token-utils.create-token-values(
+    tokens-mdc-circular-progress.$prefix,
+    $mdc-circular-progress-tokens
+  );
 }

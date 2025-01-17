@@ -1,0 +1,53 @@
+<div class="filters">
+  <mat-form-field class="name-field" subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Filter by name</mat-label>
+    <input
+      #nameInput
+      matInput
+      [value]="nameFilter()"
+      (input)="nameFilter.set(nameInput.value)"/>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Filter by type</mat-label>
+    <mat-select (selectionChange)="typeFilter.set($event.value)">
+      @for (type of types; track $index) {
+        <mat-option [value]="type">{{type | titlecase}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-button (click)="reset()">Reset filters</button>
+</div>
+
+<div class="docs-markdown">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="type-header">Type</th>
+        <th class="system-header">Based on system token</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (token of filteredTokens(); track token.overridesName) {
+        <tr>
+          <td><token-name [name]="token.overridesName"/></td>
+          <td>{{token.type | titlecase}}</td>
+          <td>
+            @if (token.derivedFrom) {
+              <token-name [name]="token.derivedFrom"/>
+            } @else {
+              None
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td>No tokens match the current set of filters</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -3,31 +3,40 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {
+  ComponentHarnessConstructor,
   ContentContainerComponentHarness,
   HarnessLoader,
   HarnessPredicate,
 } from '@angular/cdk/testing';
 import {TabHarnessFilters} from './tab-harness-filters';
 
-/** Harness for interacting with a standard Angular Material tab-label in tests. */
+/** Harness for interacting with an Angular Material tab in tests. */
 export class MatTabHarness extends ContentContainerComponentHarness<string> {
   /** The selector for the host element of a `MatTab` instance. */
-  static hostSelector = '.mat-tab-label';
+  static hostSelector = '.mat-mdc-tab';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a `MatTabHarness` that meets
-   * certain criteria.
+   * Gets a `HarnessPredicate` that can be used to search for a tab with specific attributes.
    * @param options Options for filtering which tab instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: TabHarnessFilters = {}): HarnessPredicate<MatTabHarness> {
-    return new HarnessPredicate(MatTabHarness, options)
-        .addOption('label', options.label,
-            (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label));
+  static with<T extends MatTabHarness>(
+    this: ComponentHarnessConstructor<T>,
+    options: TabHarnessFilters = {},
+  ): HarnessPredicate<T> {
+    return new HarnessPredicate(this, options)
+      .addOption('label', options.label, (harness, label) =>
+        HarnessPredicate.stringMatches(harness.getLabel(), label),
+      )
+      .addOption(
+        'selected',
+        options.selected,
+        async (harness, selected) => (await harness.isSelected()) == selected,
+      );
   }
 
   /** Gets the label of the tab. */
@@ -36,12 +45,12 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
   }
 
   /** Gets the aria-label of the tab. */
-  async getAriaLabel(): Promise<string|null> {
+  async getAriaLabel(): Promise<string | null> {
     return (await this.host()).getAttribute('aria-label');
   }
 
   /** Gets the value of the "aria-labelledby" attribute. */
-  async getAriaLabelledby(): Promise<string|null> {
+  async getAriaLabelledby(): Promise<string | null> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
@@ -59,7 +68,7 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
 
   /** Selects the given tab by clicking on the label. Tab cannot be selected if disabled. */
   async select(): Promise<void> {
-    await (await this.host()).click();
+    await (await this.host()).click('center');
   }
 
   /** Gets the text content of the tab. */
@@ -67,16 +76,6 @@ export class MatTabHarness extends ContentContainerComponentHarness<string> {
     const contentId = await this._getContentId();
     const contentEl = await this.documentRootLocatorFactory().locatorFor(`#${contentId}`)();
     return contentEl.text();
-  }
-
-  /**
-   * Gets a `HarnessLoader` that can be used to load harnesses for components within the tab's
-   * content area.
-   * @deprecated Use `getHarness` or `getChildLoader` instead.
-   * @breaking-change 12.0.0
-   */
-  async getHarnessLoaderForContent(): Promise<HarnessLoader> {
-    return this.getRootHarnessLoader();
   }
 
   protected override async getRootHarnessLoader(): Promise<HarnessLoader> {

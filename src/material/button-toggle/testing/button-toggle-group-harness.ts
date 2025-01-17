@@ -3,7 +3,7 @@
  * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
+ * found in the LICENSE file at https://angular.dev/license
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
@@ -11,7 +11,6 @@ import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 import {ButtonToggleGroupHarnessFilters} from './button-toggle-group-harness-filters';
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 import {MatButtonToggleHarness} from './button-toggle-harness';
-
 
 /** Harness for interacting with a standard mat-button-toggle in tests. */
 export class MatButtonToggleGroupHarness extends ComponentHarness {
@@ -24,9 +23,16 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
    * @param options Options for filtering which button toggle instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
-  static with(options: ButtonToggleGroupHarnessFilters = {}):
-    HarnessPredicate<MatButtonToggleGroupHarness> {
-    return new HarnessPredicate(MatButtonToggleGroupHarness, options);
+  static with(
+    options: ButtonToggleGroupHarnessFilters = {},
+  ): HarnessPredicate<MatButtonToggleGroupHarness> {
+    return new HarnessPredicate(MatButtonToggleGroupHarness, options).addOption(
+      'disabled',
+      options.disabled,
+      async (harness, disabled) => {
+        return (await harness.isDisabled()) === disabled;
+      },
+    );
   }
 
   /**
@@ -39,7 +45,7 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
 
   /** Gets whether the button toggle group is disabled. */
   async isDisabled(): Promise<boolean> {
-    return await (await this.host()).getAttribute('aria-disabled') === 'true';
+    return (await (await this.host()).getAttribute('aria-disabled')) === 'true';
   }
 
   /** Gets whether the button toggle group is laid out vertically. */
@@ -51,6 +57,6 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
   async getAppearance(): Promise<MatButtonToggleAppearance> {
     const host = await this.host();
     const className = 'mat-button-toggle-group-appearance-standard';
-    return await host.hasClass(className) ? 'standard' : 'legacy';
+    return (await host.hasClass(className)) ? 'standard' : 'legacy';
   }
 }
