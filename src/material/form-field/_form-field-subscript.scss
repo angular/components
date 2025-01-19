@@ -3,6 +3,18 @@
 @use '../core/tokens/token-utils';
 
 @mixin private-form-field-subscript() {
+  @keyframes _mat-form-field-subscript-animation {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   // Wrapper for the hints and error messages.
   .mat-mdc-form-field-subscript-wrapper {
     box-sizing: border-box;
@@ -17,6 +29,12 @@
     left: 0;
     right: 0;
     padding: 0 16px;
+    opacity: 1;
+    transform: translateY(0);
+
+    // Note: animation-duration gets set when animations are enabled.
+    // This allows us to skip the animation on init.
+    animation: _mat-form-field-subscript-animation 0ms cubic-bezier(0.55, 0, 0.55, 0.2);
   }
 
   .mat-mdc-form-field-subscript-dynamic-size {

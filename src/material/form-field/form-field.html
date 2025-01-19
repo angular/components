@@ -101,16 +101,13 @@
 >
   @switch (_getDisplayedMessages()) {
     @case ('error') {
-      <div
-        class="mat-mdc-form-field-error-wrapper"
-        [@transitionMessages]="_subscriptAnimationState"
-      >
+      <div class="mat-mdc-form-field-error-wrapper">
         <ng-content select="mat-error, [matError]"></ng-content>
       </div>
     }
 
     @case ('hint') {
-      <div class="mat-mdc-form-field-hint-wrapper" [@transitionMessages]="_subscriptAnimationState">
+      <div class="mat-mdc-form-field-hint-wrapper">
         @if (hintLabel) {
           <mat-hint [id]="_hintLabelId">{{hintLabel}}</mat-hint>
         }

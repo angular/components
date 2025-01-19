@@ -611,8 +611,11 @@
   }
 
   .mdc-line-ripple::after {
-    transition:
-      transform 180ms $timing-curve,
-      opacity 180ms $timing-curve;
+    transition: transform 180ms $timing-curve, opacity 180ms $timing-curve;
+  }
+
+  .mat-mdc-form-field-hint-wrapper,
+  .mat-mdc-form-field-error-wrapper {
+    animation-duration: 300ms;
   }
 }

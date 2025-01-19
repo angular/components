@@ -65,7 +65,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     constructor(...args: unknown[]);
     _animateAndLockLabel(): void;
     // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
+    protected readonly _animationsDisabled: boolean;
     get appearance(): MatFormFieldAppearance;
     set appearance(value: MatFormFieldAppearance);
     color: ThemePalette;
@@ -131,7 +131,6 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _shouldForward(prop: keyof AbstractControlDirective): boolean;
     // (undocumented)
     _shouldLabelFloat(): boolean;
-    _subscriptAnimationState: string;
     get subscriptSizing(): SubscriptSizing;
     set subscriptSizing(value: SubscriptSizing);
     // (undocumented)
@@ -148,7 +147,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
 }
 
-// @public
+// @public @deprecated
 export const matFormFieldAnimations: {
     readonly transitionMessages: AnimationTriggerMetadata;
 };
