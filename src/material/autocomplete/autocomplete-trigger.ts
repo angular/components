@@ -736,13 +736,7 @@ export class MatAutocompleteTrigger
     ) {
       this._clearPreviousSelectedOption(null);
       this._assignOptionValue(null);
-      // Wait for the animation to finish before clearing the form control value, otherwise
-      // the options might change while the animation is running which looks glitchy.
-      if (panel._animationDone) {
-        panel._animationDone.pipe(take(1)).subscribe(() => this._onChange(null));
-      } else {
-        this._onChange(null);
-      }
+      this._onChange(null);
     }
 
     this.closePanel();

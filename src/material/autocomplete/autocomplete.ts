@@ -7,6 +7,7 @@
  */
 
 import {
+  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,7 +26,6 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {AnimationEvent} from '@angular/animations';
 import {
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
@@ -35,7 +35,6 @@ import {
 } from '@angular/material/core';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
-import {panelAnimation} from './animations';
 import {Subscription} from 'rxjs';
 
 /** Event object that is emitted when an autocomplete option is selected. */
@@ -109,17 +108,14 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
     'class': 'mat-mdc-autocomplete',
   },
   providers: [{provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}],
-  animations: [panelAnimation],
 })
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _defaults = inject<MatAutocompleteDefaultOptions>(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS);
-
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _activeOptionChanges = Subscription.EMPTY;
-
-  /** Emits when the panel animation is done. Null if the panel doesn't animate. */
-  _animationDone = new EventEmitter<AnimationEvent>();
 
   /** Manages active item in option list based on key events. */
   _keyManager: ActiveDescendantKeyManager<MatOption>;
@@ -282,7 +278,6 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   ngOnDestroy() {
     this._keyManager?.destroy();
     this._activeOptionChanges.unsubscribe();
-    this._animationDone.complete();
   }
 
   /**

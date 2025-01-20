@@ -7,7 +7,6 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -57,7 +56,8 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 // @public
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
     constructor(...args: unknown[]);
-    _animationDone: EventEmitter<AnimationEvent_2>;
+    // (undocumented)
+    protected _animationsDisabled: boolean;
     ariaLabel: string;
     ariaLabelledby: string;
     autoActiveFirstOption: boolean;
