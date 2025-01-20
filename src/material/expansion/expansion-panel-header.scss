@@ -14,6 +14,11 @@
     transition: height expansion-variables.$header-transition;
   }
 
+  // Ensures that the focus indicator has the same shape as the header.
+  &::before {
+    border-radius: inherit;
+  }
+
   @include token-utils.use-tokens(
     tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
     @include token-utils.create-token-slot(height, header-collapsed-state-height);
