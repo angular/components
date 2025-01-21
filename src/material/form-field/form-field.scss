@@ -212,7 +212,7 @@ $_icon-prefix-infix-padding: 4px;
 
 // In order to make it possible for developers to disable animations for form-fields,
 // we only activate the animation styles if animations are not explicitly disabled.
-.mat-mdc-form-field:not(.mat-form-field-no-animations) {
+.mat-mdc-form-field.mat-form-field-animations-enabled {
   @include mdc-text-field-structure.private-text-field-animations;
 }
 

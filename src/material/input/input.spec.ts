@@ -486,15 +486,6 @@ describe('MatMdcInput without forms', () => {
     expect(selectEl.disabled).toBe(true);
   }));
 
-  it('should add a class to the form-field if animations are disabled', () => {
-    configureTestingModule(MatInputWithId, {animations: false});
-    const fixture = TestBed.createComponent(MatInputWithId);
-    fixture.detectChanges();
-
-    const formFieldEl = fixture.nativeElement.querySelector('.mat-mdc-form-field');
-    expect(formFieldEl.classList).toContain('mat-form-field-no-animations');
-  });
-
   it('should add a class to the form field if it has a native select', fakeAsync(() => {
     const fixture = createComponent(MatInputSelect);
     fixture.detectChanges();

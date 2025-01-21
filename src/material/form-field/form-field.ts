@@ -23,6 +23,7 @@ import {
   InjectionToken,
   Injector,
   Input,
+  NgZone,
   OnDestroy,
   QueryList,
   ViewChild,
@@ -49,7 +50,6 @@ import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
 import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
-import {matFormFieldAnimations} from './form-field-animations';
 import {MatFormFieldControl as _MatFormFieldControl} from './form-field-control';
 import {
   getMatFormFieldDuplicatedHintError,
@@ -141,7 +141,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
   exportAs: 'matFormField',
   templateUrl: './form-field.html',
   styleUrl: './form-field.css',
-  animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-mdc-form-field',
     '[class.mat-mdc-form-field-label-always-float]': '_shouldAlwaysFloat()',
@@ -153,7 +152,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
-    '[class.mat-form-field-no-animations]': '_animationMode === "NoopAnimations"',
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
     '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-hide-placeholder]': '_hasFloatingLabel() && !_shouldLabelFloat()',
@@ -191,10 +189,11 @@ export class MatFormField
   private _dir = inject(Directionality);
   private _platform = inject(Platform);
   private _idGenerator = inject(_IdGenerator);
+  private _ngZone = inject(NgZone);
+  private _injector = inject(Injector);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer: ElementRef<HTMLElement>;
@@ -310,9 +309,6 @@ export class MatFormField
   // Unique id for the hint label.
   readonly _hintLabelId = this._idGenerator.getId('mat-mdc-hint-');
 
-  /** State of the mat-hint and mat-error animations. */
-  _subscriptAnimationState = '';
-
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
     return this._explicitFormFieldControl || this._formFieldControl;
@@ -329,8 +325,7 @@ export class MatFormField
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
-
-  private _injector = inject(Injector);
+  protected readonly _animationsDisabled: boolean;
 
   constructor(...args: unknown[]);
 
@@ -346,14 +341,24 @@ export class MatFormField
         this.color = defaults.color;
       }
     }
+
+    this._animationsDisabled = inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   }
 
   ngAfterViewInit() {
     // Initial focus state sync. This happens rarely, but we want to account for
     // it in case the form field control has "focused" set to true on init.
     this._updateFocusState();
-    // Enable animations now. This ensures we don't animate on initial render.
-    this._subscriptAnimationState = 'enter';
+
+    if (!this._animationsDisabled) {
+      this._ngZone.runOutsideAngular(() => {
+        // Enable animations after a certain amount of time so that they don't run on init.
+        setTimeout(() => {
+          this._elementRef.nativeElement.classList.add('mat-form-field-animations-enabled');
+        }, 300);
+      });
+    }
+
     // Because the above changes a value used in the template after it was checked, we need
     // to trigger CD or the change might not be reflected if there is no other CD scheduled.
     this._changeDetectorRef.detectChanges();

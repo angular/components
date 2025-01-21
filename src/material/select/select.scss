@@ -185,7 +185,7 @@ div.mat-mdc-select-panel {
     @include token-utils.create-token-slot(color, placeholder-text-color);
   }
 
-  .mat-form-field-no-animations &,
+  .mat-mdc-form-field:not(.mat-form-field-animations-enabled) &,
   ._mat-animation-noopable & {
     transition: none;
   }
