@@ -46,9 +46,11 @@ export class BlockScrollStrategy implements ScrollStrategy {
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     constructor(...args: unknown[]);
     readonly attach: EventEmitter<void>;
+    attachOverlay(): void;
     backdropClass: string | string[];
     readonly backdropClick: EventEmitter<MouseEvent>;
     readonly detach: EventEmitter<void>;
+    detachOverlay(): void;
     get dir(): Direction;
     disableClose: boolean;
     get disposeOnNavigation(): boolean;

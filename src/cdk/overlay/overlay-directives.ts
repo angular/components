@@ -106,7 +106,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlay = inject(Overlay);
   private _dir = inject(Directionality, {optional: true});
 
-  private _overlayRef: OverlayRef;
+  private _overlayRef: OverlayRef | undefined;
   private _templatePortal: TemplatePortal;
   private _backdropSubscription = Subscription.EMPTY;
   private _attachSubscription = Subscription.EMPTY;
@@ -251,7 +251,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** The associated overlay reference. */
   get overlayRef(): OverlayRef {
-    return this._overlayRef;
+    return this._overlayRef!;
   }
 
   /** The element's layout direction. */
@@ -264,16 +264,13 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._detachSubscription.unsubscribe();
     this._backdropSubscription.unsubscribe();
     this._positionSubscription.unsubscribe();
-
-    if (this._overlayRef) {
-      this._overlayRef.dispose();
-    }
+    this._overlayRef?.dispose();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this._position) {
       this._updatePositionStrategy(this._position);
-      this._overlayRef.updateSize({
+      this._overlayRef?.updateSize({
         width: this.width,
         minWidth: this.minWidth,
         height: this.height,
@@ -286,7 +283,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     }
 
     if (changes['open']) {
-      this.open ? this._attachOverlay() : this._detachOverlay();
+      this.open ? this.attachOverlay() : this.detachOverlay();
     }
   }
 
@@ -304,7 +301,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
       if (event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)) {
         event.preventDefault();
-        this._detachOverlay();
+        this.detachOverlay();
       }
     });
 
@@ -411,8 +408,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     return null;
   }
 
-  /** Attaches the overlay and subscribes to backdrop clicks if backdrop exists */
-  private _attachOverlay() {
+  /** Attaches the overlay. */
+  attachOverlay() {
     if (!this._overlayRef) {
       this._createOverlay();
     } else {
@@ -420,12 +417,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this._overlayRef.getConfig().hasBackdrop = this.hasBackdrop;
     }
 
-    if (!this._overlayRef.hasAttached()) {
-      this._overlayRef.attach(this._templatePortal);
+    if (!this._overlayRef!.hasAttached()) {
+      this._overlayRef!.attach(this._templatePortal);
     }
 
     if (this.hasBackdrop) {
-      this._backdropSubscription = this._overlayRef.backdropClick().subscribe(event => {
+      this._backdropSubscription = this._overlayRef!.backdropClick().subscribe(event => {
         this.backdropClick.emit(event);
       });
     } else {
@@ -447,16 +444,16 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
           }
         });
     }
+
+    this.open = true;
   }
 
-  /** Detaches the overlay and unsubscribes to backdrop clicks if backdrop exists */
-  private _detachOverlay() {
-    if (this._overlayRef) {
-      this._overlayRef.detach();
-    }
-
+  /** Detaches the overlay. */
+  detachOverlay() {
+    this._overlayRef?.detach();
     this._backdropSubscription.unsubscribe();
     this._positionSubscription.unsubscribe();
+    this.open = false;
   }
 }
 
