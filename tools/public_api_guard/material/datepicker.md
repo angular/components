@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
@@ -338,7 +337,7 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerActions, never>;
 }
 
-// @public
+// @public @deprecated
 export const matDatepickerAnimations: {
     readonly transformPanel: AnimationTriggerMetadata;
     readonly fadeInCalendar: AnimationTriggerMetadata;
@@ -367,11 +366,12 @@ export class MatDatepickerCancel {
 }
 
 // @public
-export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implements OnInit, AfterViewInit, OnDestroy {
+export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     _actionsPortal: TemplatePortal | null;
     readonly _animationDone: Subject<void>;
-    _animationState: 'enter-dropdown' | 'enter-dialog' | 'void';
+    // (undocumented)
+    protected _animationsDisabled: boolean;
     _applyPendingSelection(): void;
     _assignActions(portal: TemplatePortal<any> | null, forceRerender: boolean): void;
     _calendar: MatCalendar<D>;
@@ -383,12 +383,10 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implem
     datepicker: MatDatepickerBase<any, S, D>;
     _dialogLabelId: string | null;
     // (undocumented)
-    protected _elementRef: ElementRef<any>;
+    protected _elementRef: ElementRef<HTMLElement>;
     endDateAccessibleName: string | null;
     // (undocumented)
     _getSelected(): D | DateRange<D> | null;
-    // (undocumented)
-    _handleAnimationEvent(event: AnimationEvent_2): void;
     // (undocumented)
     _handleUserDragDrop(event: MatCalendarUserEvent<DateRange<D>>): void;
     // (undocumented)
@@ -399,8 +397,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> implem
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     startDateAccessibleName: string | null;
     // (undocumented)
     _startExitAnimation(): void;

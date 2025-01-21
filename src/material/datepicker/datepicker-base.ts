@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AnimationEvent} from '@angular/animations';
 import {_IdGenerator, CdkTrapFocus} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceStringArray} from '@angular/cdk/coercion';
@@ -34,6 +33,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   afterNextRender,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -46,10 +46,11 @@ import {
   InjectionToken,
   Injector,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
+  Renderer2,
   SimpleChanges,
   ViewChild,
   ViewContainerRef,
@@ -70,7 +71,6 @@ import {
   ExtractDateTypeFromSelection,
   MatDateSelectionModel,
 } from './date-selection-model';
-import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn} from './datepicker-input-base';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -120,31 +120,34 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   host: {
     'class': 'mat-datepicker-content',
     '[class]': 'color ? "mat-" + color : ""',
-    '[@transformPanel]': '_animationState',
-    '(@transformPanel.start)': '_handleAnimationEvent($event)',
-    '(@transformPanel.done)': '_handleAnimationEvent($event)',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
+    '[class.mat-datepicker-content-animations-enabled]': '!_animationsDisabled',
   },
-  animations: [matDatepickerAnimations.transformPanel, matDatepickerAnimations.fadeInCalendar],
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTrapFocus, MatCalendar, CdkPortalOutlet, MatButton],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
-  implements OnInit, AfterViewInit, OnDestroy
+  implements AfterViewInit, OnDestroy
 {
-  protected _elementRef = inject(ElementRef);
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _globalModel = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter)!;
+  private _ngZone = inject(NgZone);
   private _rangeSelectionStrategy = inject<MatDateRangeSelectionStrategy<D>>(
     MAT_DATE_RANGE_SELECTION_STRATEGY,
     {optional: true},
   );
 
-  private _subscriptions = new Subscription();
+  private _stateChanges: Subscription | undefined;
   private _model: MatDateSelectionModel<S, D>;
+  private _eventCleanups: (() => void)[] | undefined;
+  private _animationFallback: ReturnType<typeof setTimeout> | undefined;
+
   /** Reference to the internal calendar component. */
   @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
 
@@ -175,9 +178,6 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Whether the datepicker is above or below the input. */
   _isAbove: boolean;
 
-  /** Current state of the animation. */
-  _animationState: 'enter-dropdown' | 'enter-dialog' | 'void';
-
   /** Emits when an animation has finished. */
   readonly _animationDone = new Subject<void>();
 
@@ -200,26 +200,31 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
-    const intl = inject(MatDatepickerIntl);
+    this._closeButtonText = inject(MatDatepickerIntl).closeCalendarLabel;
 
-    this._closeButtonText = intl.closeCalendarLabel;
-  }
+    if (!this._animationsDisabled) {
+      const element = this._elementRef.nativeElement;
+      const renderer = inject(Renderer2);
 
-  ngOnInit() {
-    this._animationState = this.datepicker.touchUi ? 'enter-dialog' : 'enter-dropdown';
+      this._eventCleanups = this._ngZone.runOutsideAngular(() => [
+        renderer.listen(element, 'animationstart', this._handleAnimationEvent),
+        renderer.listen(element, 'animationend', this._handleAnimationEvent),
+        renderer.listen(element, 'animationcancel', this._handleAnimationEvent),
+      ]);
+    }
   }
 
   ngAfterViewInit() {
-    this._subscriptions.add(
-      this.datepicker.stateChanges.subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      }),
-    );
+    this._stateChanges = this.datepicker.stateChanges.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
     this._calendar.focusActiveCell();
   }
 
   ngOnDestroy() {
-    this._subscriptions.unsubscribe();
+    clearTimeout(this._animationFallback);
+    this._eventCleanups?.forEach(cleanup => cleanup());
+    this._stateChanges?.unsubscribe();
     this._animationDone.complete();
   }
 
@@ -258,17 +263,38 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   }
 
   _startExitAnimation() {
-    this._animationState = 'void';
-    this._changeDetectorRef.markForCheck();
+    this._elementRef.nativeElement.classList.add('mat-datepicker-content-exit');
+
+    if (this._animationsDisabled) {
+      this._animationDone.next();
+    } else {
+      // Some internal apps disable animations in tests using `* {animation: none !important}`.
+      // If that happens, the animation events won't fire and we'll never clean up the overlay.
+      // Add a fallback that will fire if the animation doesn't run in a certain amount of time.
+      clearTimeout(this._animationFallback);
+      this._animationFallback = setTimeout(() => {
+        if (!this._isAnimating) {
+          this._animationDone.next();
+        }
+      }, 200);
+    }
   }
 
-  _handleAnimationEvent(event: AnimationEvent) {
-    this._isAnimating = event.phaseName === 'start';
+  private _handleAnimationEvent = (event: AnimationEvent) => {
+    const element = this._elementRef.nativeElement;
+
+    if (event.target !== element || !event.animationName.startsWith('_mat-datepicker-content')) {
+      return;
+    }
+
+    clearTimeout(this._animationFallback);
+    this._isAnimating = event.type === 'animationstart';
+    element.classList.toggle('mat-datepicker-content-animating', this._isAnimating);
 
     if (!this._isAnimating) {
       this._animationDone.next();
     }
-  }
+  };
 
   _getSelected() {
     return this._model.selection as unknown as D | DateRange<D> | null;
@@ -672,7 +698,6 @@ export abstract class MatDatepickerBase<
 
     if (this._componentRef) {
       const {instance, location} = this._componentRef;
-      instance._startExitAnimation();
       instance._animationDone.pipe(take(1)).subscribe(() => {
         const activeElement = this._document.activeElement;
 
@@ -690,6 +715,7 @@ export abstract class MatDatepickerBase<
         this._focusedElementBeforeOpen = null;
         this._destroyOverlay();
       });
+      instance._startExitAnimation();
     }
 
     if (canRestoreFocus) {

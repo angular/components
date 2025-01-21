@@ -481,17 +481,13 @@ describe('MatDatepicker', () => {
         for (let i = 0; i < 3; i++) {
           testComponent.datepicker.open();
           fixture.detectChanges();
-          tick();
 
           testComponent.datepicker.close();
           fixture.detectChanges();
-          tick();
         }
 
         testComponent.datepicker.open();
         fixture.detectChanges();
-        tick();
-        flush();
 
         const spy = jasmine.createSpy('close event spy');
         const subscription = testComponent.datepicker.closedStream.subscribe(spy);
@@ -499,7 +495,6 @@ describe('MatDatepicker', () => {
 
         backdrop.click();
         fixture.detectChanges();
-        flush();
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(testComponent.datepicker.opened).toBe(false);
