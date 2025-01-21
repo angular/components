@@ -33,27 +33,26 @@
   cdkConnectedOverlayLockPosition
   cdkConnectedOverlayHasBackdrop
   cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayDisableClose]="true"
   [cdkConnectedOverlayPanelClass]="_overlayPanelClass"
   [cdkConnectedOverlayScrollStrategy]="_scrollStrategy"
   [cdkConnectedOverlayOrigin]="_preferredOverlayOrigin || fallbackOverlayOrigin"
-  [cdkConnectedOverlayOpen]="panelOpen"
   [cdkConnectedOverlayPositions]="_positions"
   [cdkConnectedOverlayWidth]="_overlayWidth"
   (backdropClick)="close()"
-  (attach)="_onAttached()"
-  (detach)="close()">
+  (detach)="openedChange.emit(false)">
   <div
     #panel
     role="listbox"
     tabindex="-1"
     class="mat-mdc-select-panel mdc-menu-surface mdc-menu-surface--open {{ _getPanelTheme() }}"
+    [class.mat-select-panel-animations-enabled]="!_animationsDisabled"
     [attr.id]="id + '-panel'"
     [attr.aria-multiselectable]="multiple"
     [attr.aria-label]="ariaLabel || null"
     [attr.aria-labelledby]="_getPanelAriaLabelledby()"
     [ngClass]="panelClass"
-    [@transformPanel]="'showing'"
-    (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
+    (animationend)="_handleAnimationEndEvent($event)"
     (keydown)="_handleKeydown($event)">
     <ng-content></ng-content>
   </div>
