@@ -114,7 +114,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   /** Cached height of a textarea with a single row. */
-  private _cachedLineHeight: number;
+  private _cachedLineHeight?: number;
   /** Cached height of a textarea with only the placeholder. */
   private _cachedPlaceholderHeight?: number;
 
@@ -165,7 +165,12 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
           this._renderer.listen(this._textareaElement, 'focus', this._handleFocusEvent),
           this._renderer.listen(this._textareaElement, 'blur', this._handleFocusEvent),
         ];
-        this._resizeEvents.pipe(auditTime(16)).subscribe(() => this.resizeToFitContent(true));
+        this._resizeEvents.pipe(auditTime(16)).subscribe(() => {
+          // Clear the cached heights since the styles can change
+          // when the window is resized (e.g. by media queries).
+          this._cachedLineHeight = this._cachedPlaceholderHeight = undefined;
+          this.resizeToFitContent(true);
+        });
       });
 
       this._isViewInited = true;
