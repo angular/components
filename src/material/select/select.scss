@@ -13,6 +13,27 @@ $mat-select-placeholder-arrow-space: 2 *
 $leading-width: 12px !default;
 $scale: 0.75 !default;
 
+@keyframes _mat-select-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes _mat-select-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
 
 .mat-mdc-select {
   display: inline-block;
@@ -170,6 +191,14 @@ div.mat-mdc-select-panel {
 
   .mat-mdc-option {
     --mdc-list-list-item-container-color: var(--mat-select-panel-background-color);
+  }
+}
+
+.mat-select-panel-animations-enabled {
+  animation: _mat-select-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+
+  &.mat-select-panel-exit {
+    animation: _mat-select-exit 100ms linear;
   }
 }
 

@@ -19,6 +19,7 @@ import {
   A,
   DOWN_ARROW,
   ENTER,
+  ESCAPE,
   hasModifierKey,
   LEFT_ARROW,
   RIGHT_ARROW,
@@ -58,6 +59,9 @@ import {
   ViewChild,
   ViewEncapsulation,
   HostAttributeToken,
+  ANIMATION_MODULE_TYPE,
+  Renderer2,
+  NgZone,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -80,16 +84,7 @@ import {
 } from '@angular/material/core';
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-  startWith,
-  switchMap,
-  take,
-  takeUntil,
-} from 'rxjs/operators';
-import {matSelectAnimations} from './select-animations';
+import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -199,7 +194,6 @@ export class MatSelectChange {
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
   },
-  animations: [matSelectAnimations.transformPanel],
   providers: [
     {provide: MatFormFieldControl, useExisting: MatSelect},
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect},
@@ -221,11 +215,16 @@ export class MatSelect
   readonly _elementRef = inject(ElementRef);
   private _dir = inject(Directionality, {optional: true});
   private _idGenerator = inject(_IdGenerator);
+  private _renderer = inject(Renderer2);
+  private _ngZone = inject(NgZone);
   protected _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _initialized = new Subject();
+  private _cleanupDetach: (() => void) | undefined;
 
   /** All of the defined select options. */
   @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
@@ -374,9 +373,6 @@ export class MatSelect
 
   /** ID for the DOM node containing the select's value. */
   _valueId = this._idGenerator.getId('mat-select-value-');
-
-  /** Emits when the panel element is finished transforming in. */
-  readonly _panelDoneAnimatingStream = new Subject<string>();
 
   /** Strategy that will be used to handle scrolling while the select panel is open. */
   _scrollStrategy: ScrollStrategy;
@@ -643,14 +639,6 @@ export class MatSelect
   ngOnInit() {
     this._selectionModel = new SelectionModel<MatOption>(this.multiple);
     this.stateChanges.next();
-
-    // We need `distinctUntilChanged` here, because some browsers will
-    // fire the animation end event twice for the same animation. See:
-    // https://github.com/angular/angular/issues/24084
-    this._panelDoneAnimatingStream
-      .pipe(distinctUntilChanged(), takeUntil(this._destroy))
-      .subscribe(() => this._panelDoneAnimating(this.panelOpen));
-
     this._viewportRuler
       .change()
       .pipe(takeUntil(this._destroy))
@@ -727,6 +715,7 @@ export class MatSelect
   }
 
   ngOnDestroy() {
+    this._cleanupDetach?.();
     this._keyManager?.destroy();
     this._destroy.next();
     this._destroy.complete();
@@ -752,15 +741,27 @@ export class MatSelect
       this._preferredOverlayOrigin = this._parentFormField.getConnectedOverlayOrigin();
     }
 
+    this._cleanupDetach?.();
     this._overlayWidth = this._getOverlayWidth(this._preferredOverlayOrigin);
     this._applyModalPanelOwnership();
     this._panelOpen = true;
+    this._overlayDir.positionChange.pipe(take(1)).subscribe(() => {
+      this._changeDetectorRef.detectChanges();
+      this._positioningSettled();
+    });
+    this._overlayDir.attachOverlay();
     this._keyManager.withHorizontalOrientation(null);
     this._highlightCorrectOption();
     this._changeDetectorRef.markForCheck();
 
     // Required for the MDC form field to pick up when the overlay has been opened.
     this.stateChanges.next();
+
+    // This usually fires at the end of the animation,
+    // but that won't happen if animations are disabled.
+    if (this._animationsDisabled) {
+      this.openedChange.emit(true);
+    }
   }
 
   /**
@@ -832,12 +833,47 @@ export class MatSelect
   close(): void {
     if (this._panelOpen) {
       this._panelOpen = false;
+      this._exitAndDetach();
       this._keyManager.withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
       this._changeDetectorRef.markForCheck();
       this._onTouched();
       // Required for the MDC form field to pick up when the overlay has been closed.
       this.stateChanges.next();
     }
+  }
+
+  /** Triggers the exit animation and detaches the overlay at the end. */
+  private _exitAndDetach() {
+    if (this._animationsDisabled) {
+      this._overlayDir.detachOverlay();
+      return;
+    }
+
+    this._ngZone.runOutsideAngular(() => {
+      this._cleanupDetach?.();
+      this._cleanupDetach = () => {
+        cleanupEvent();
+        clearTimeout(exitFallbackTimer);
+        this._cleanupDetach = undefined;
+      };
+
+      const panel: HTMLElement = this.panel.nativeElement;
+      const cleanupEvent = this._renderer.listen(panel, 'animationend', (event: AnimationEvent) => {
+        if (event.animationName === '_mat-select-exit') {
+          this._cleanupDetach?.();
+          this._overlayDir.detachOverlay();
+        }
+      });
+
+      // Since closing the overlay depends on the animation, we have a fallback in case the panel
+      // doesn't animate. This can happen in some internal tests that do `* {animation: none}`.
+      const exitFallbackTimer = setTimeout(() => {
+        this._cleanupDetach?.();
+        this._overlayDir.detachOverlay();
+      }, 200);
+
+      panel.classList.add('mat-select-panel-exit');
+    });
   }
 
   /**
@@ -970,7 +1006,7 @@ export class MatSelect
     const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
     const isTyping = manager.isTyping();
 
-    if (isArrowKey && event.altKey) {
+    if ((isArrowKey && event.altKey) || (keyCode === ESCAPE && !hasModifierKey(event))) {
       // Close the select on ALT + arrow key to match the native <select>
       event.preventDefault();
       this.close();
@@ -1032,16 +1068,6 @@ export class MatSelect
     }
   }
 
-  /**
-   * Callback that is invoked when the overlay panel has been attached.
-   */
-  _onAttached(): void {
-    this._overlayDir.positionChange.pipe(take(1)).subscribe(() => {
-      this._changeDetectorRef.detectChanges();
-      this._positioningSettled();
-    });
-  }
-
   /** Returns the theme to be used on the panel. */
   _getPanelTheme(): string {
     return this._parentFormField ? `mat-${this._parentFormField.color}` : '';
@@ -1050,6 +1076,13 @@ export class MatSelect
   /** Whether the select has a value. */
   get empty(): boolean {
     return !this._selectionModel || this._selectionModel.isEmpty();
+  }
+
+  /** Handles animation events from the panel. */
+  protected _handleAnimationEndEvent(event: AnimationEvent) {
+    if (event.target === this.panel.nativeElement && event.animationName === '_mat-select-enter') {
+      this.openedChange.emit(true);
+    }
   }
 
   private _initializeSelection(): void {
@@ -1356,7 +1389,7 @@ export class MatSelect
 
   /** Whether the panel is allowed to open. */
   protected _canOpen(): boolean {
-    return !this._panelOpen && !this.disabled && this.options?.length > 0;
+    return !this._panelOpen && !this.disabled && this.options?.length > 0 && !!this._overlayDir;
   }
 
   /** Focuses the select element. */
@@ -1398,11 +1431,6 @@ export class MatSelect
     }
 
     return value;
-  }
-
-  /** Called when the overlay panel is done animating. */
-  protected _panelDoneAnimating(isOpen: boolean) {
-    this.openedChange.emit(isOpen);
   }
 
   /**

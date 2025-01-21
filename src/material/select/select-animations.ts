@@ -23,6 +23,8 @@ import {
  *
  * The values below match the implementation of the AngularJS Material mat-select animation.
  * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
  */
 export const matSelectAnimations: {
   /**
