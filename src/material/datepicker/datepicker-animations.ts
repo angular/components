@@ -18,6 +18,8 @@ import {
 /**
  * Animations used by the Material datepicker.
  * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
  */
 export const matDatepickerAnimations: {
   readonly transformPanel: AnimationTriggerMetadata;
