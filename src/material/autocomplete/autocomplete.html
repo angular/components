@@ -6,13 +6,12 @@
     [class]="_classList"
     [class.mat-mdc-autocomplete-visible]="showPanel"
     [class.mat-mdc-autocomplete-hidden]="!showPanel"
+    [class.mat-autocomplete-panel-animations-enabled]="!_animationsDisabled"
     [class.mat-primary]="_color === 'primary'"
     [class.mat-accent]="_color === 'accent'"
     [class.mat-warn]="_color === 'warn'"
     [attr.aria-label]="ariaLabel || null"
     [attr.aria-labelledby]="_getPanelAriaLabelledby(formFieldId)"
-    [@panelAnimation]="isOpen ? 'visible' : 'hidden'"
-    (@panelAnimation.done)="_animationDone.next($event)"
     #panel>
     <ng-content></ng-content>
   </div>

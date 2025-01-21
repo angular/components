@@ -3849,6 +3849,8 @@ describe('MatAutocomplete', () => {
 
       dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
       fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
 
       const selectedOption = document.querySelector('mat-option[aria-selected="true"]');
       expect(selectedOption).withContext('Expected an option to be selected.').not.toBeNull();
@@ -3874,6 +3876,8 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       dispatchFakeEvent(document.querySelector('mat-option')!, 'click');
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
       const selectedOption = document.querySelector('mat-option[aria-selected="true"]');
