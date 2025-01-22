@@ -111,7 +111,9 @@ async function _main(args) {
       onError('Lighthouse failed to return any results.');
     }
     const success = await processResults(results, minScores, logFile);
-    console.log(`\nCompleted audit of ${url} in ${((Date.now() - startTime) / 1000).toFixed(1)}s\n`);
+    console.log(
+      `\nCompleted audit of ${url} in ${((Date.now() - startTime) / 1000).toFixed(1)}s\n`,
+    );
 
     if (!success) {
       onError('One or more scores are below the minimum required.');
@@ -191,12 +193,12 @@ function parseInput(args) {
   if (unknownCategories.length > 0) {
     onError(
       `Invalid arguments: <min-scores> contains unknown category(-ies): ${unknownCategories.join(
-        ', '
-      )}`
+        ', ',
+      )}`,
     );
   } else if (!allValuesValid) {
     onError(
-      `Invalid arguments: <min-scores> has non-numeric or out-of-range values: ${minScoresRaw}`
+      `Invalid arguments: <min-scores> has non-numeric or out-of-range values: ${minScoresRaw}`,
     );
   }
 
@@ -232,7 +234,7 @@ function parseMinScores(raw) {
 
   if (minScores.hasOwnProperty('all')) {
     AUDIT_CATEGORIES.forEach(
-      cat => minScores.hasOwnProperty(cat) || (minScores[cat] = minScores.all)
+      cat => minScores.hasOwnProperty(cat) || (minScores[cat] = minScores.all),
     );
     delete minScores.all;
   }
@@ -273,7 +275,7 @@ async function processResults(results, minScores, logFile) {
       console.log(
         `  - ${paddedTitle}  ${formatScore(score)}  (Required: ${formatScore(minScore)})  ${
           passed ? 'OK' : 'FAILED'
-        }`
+        }`,
       );
 
       return aggr && passed;
