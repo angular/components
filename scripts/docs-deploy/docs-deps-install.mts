@@ -1,4 +1,5 @@
-import {$} from 'zx';
+import {$, cd} from 'zx';
+import {resolveYarnScriptForProject} from '@angular/ng-dev';
 
 export interface InstallOptions {
   /** Whether dependencies should be installed with the lockfile being frozen. */
@@ -10,11 +11,12 @@ export async function installDepsForDocsSite(
   repoDirPath: string,
   options: InstallOptions = {frozenLockfile: true},
 ) {
+  const yarnBin = await resolveYarnScriptForProject(repoDirPath);
   const additionalArgs = [];
 
   if (options.frozenLockfile) {
-    additionalArgs.push('--frozen-lockfile');
+    additionalArgs.push(yarnBin.legacy ? '--frozen-lock-file' : '--immutable');
   }
 
-  await $`yarn --cwd ${repoDirPath} install ${additionalArgs}`;
+  await $`${yarnBin.binary} ${yarnBin.args} --cwd ${repoDirPath} install ${additionalArgs}`;
 }

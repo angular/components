@@ -13,7 +13,13 @@ export const docsRepoUrl = 'https://github.com/angular/material.angular.io.git';
  *
  * @returns An absolute path to the temporary directory.
  */
+// TODO: Remove this function as it shouldn't be needed long term.
 export async function cloneDocsRepositoryForMajor(major: number): Promise<string> {
+  // As for v19, we use the checked-in code inside the monorepo.
+  if (major >= 19) {
+    return path.join(projectDir, 'material.angular.io');
+  }
+
   const repoTmpDir = path.join(projectDir, 'tmp/docs-repo');
   const baseCloneArgs = [docsRepoUrl, repoTmpDir, '--single-branch', '--depth=1'];
   const majorDocsBranchName = getDocsBranchNameForMajor(major);
