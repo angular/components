@@ -42,7 +42,7 @@ $_side-padding: 16px;
     }
 
     &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      // We don't change the background in multiple mode since
+      // We don't change the background & text color in multiple mode since
       // it has the checkbox to show the selected state.
       &:not(.mat-mdc-option-multiple) {
         @include token-utils.create-token-slot(background-color, selected-state-layer-color);
