@@ -16,7 +16,9 @@ export async function installDepsForDocsSite(
 
   if (options.frozenLockfile) {
     additionalArgs.push(yarnBin.legacy ? '--frozen-lock-file' : '--immutable');
+  } else if (!yarnBin.legacy) {
+    additionalArgs.push('--no-immutable');
   }
 
-  await $`${yarnBin.binary} ${yarnBin.args} --cwd ${repoDirPath} install ${additionalArgs}`;
+  await $`${yarnBin.binary} ${yarnBin.args} --cwd ${repoDirPath} install ${additionalArgs.join(' ')}`;
 }
