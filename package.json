@@ -54,7 +54,7 @@
     "ci-notify-slack-failure": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/circleci/notify-slack-job-failure.mts",
     "prepare": "husky"
   },
-  "version": "19.1.0",
+  "version": "19.1.1",
   "dependencies": {
     "@angular/animations": "^19.1.0-rc.0",
     "@angular/common": "^19.1.0-rc.0",
