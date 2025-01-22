@@ -1,3 +1,21 @@
+<a name="19.2.0-next.1"></a>
+# 19.2.0-next.1 "niobium-napkin" (2025-01-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [48117e7a8](https://github.com/angular/components/commit/48117e7a8d61e631347fa1a90a3e57eb95dc24b2) | fix | **text-field:** clear cached line height on resize ([#30355](https://github.com/angular/components/pull/30355)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [12b767111](https://github.com/angular/components/commit/12b767111e1fc3c01867cacc02ad73e0aec81fed) | fix | **autocomplete:** fix initial render logic ([#30348](https://github.com/angular/components/pull/30348)) |
+| [013fe0456](https://github.com/angular/components/commit/013fe04564fc7eb83cec112c9893163ab431cff1) | fix | **autocomplete:** switch away from animations module ([#30356](https://github.com/angular/components/pull/30356)) |
+| [7c9c898fa](https://github.com/angular/components/commit/7c9c898faac8daac1bbb20a0807168a74360760d) | fix | **chips:** fix chip blur timing ([#30347](https://github.com/angular/components/pull/30347)) |
+| [066c74025](https://github.com/angular/components/commit/066c740251b95f0b62158e98cfd72c7c294114fc) | fix | **datepicker:** switch away from animations module ([#30360](https://github.com/angular/components/pull/30360)) |
+| [d52c32906](https://github.com/angular/components/commit/d52c329064b4f305688f9957c46223e3de5ed710) | fix | **expansion:** inherit shape for focus indicator ([#30352](https://github.com/angular/components/pull/30352)) |
+| [4fa46bccc](https://github.com/angular/components/commit/4fa46bccc99e33096d245334b26818edbd6423c3) | fix | **form-field:** remove dependency on animations module ([#30354](https://github.com/angular/components/pull/30354)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.1"></a>
 # 19.1.1 "lanthanum-labrador" (2025-01-22)
 ### cdk
