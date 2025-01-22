@@ -1,3 +1,18 @@
+<a name="19.1.1"></a>
+# 19.1.1 "lanthanum-labrador" (2025-01-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [380fd1dfa](https://github.com/angular/components/commit/380fd1dfa03a05ab13d92e742eed563037d40e97) | fix | **text-field:** clear cached line height on resize ([#30355](https://github.com/angular/components/pull/30355)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5c4421641](https://github.com/angular/components/commit/5c44216415186ddfd55cd1cb93951ccd9f70b537) | fix | **autocomplete:** fix initial render logic ([#30348](https://github.com/angular/components/pull/30348)) |
+| [db3895cf1](https://github.com/angular/components/commit/db3895cf15dde15e613010aafc9d68f51c7cefe6) | fix | **chips:** fix chip blur timing ([#30347](https://github.com/angular/components/pull/30347)) |
+| [09d7476d9](https://github.com/angular/components/commit/09d7476d9a1ee10a4a6e453507eb0c0bc776f3c5) | fix | **expansion:** inherit shape for focus indicator ([#30352](https://github.com/angular/components/pull/30352)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.0"></a>
 # 19.1.0 "denim-firefly" (2025-01-16)
 ### cdk
