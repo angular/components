@@ -55,7 +55,7 @@
     display: none;
   }
 
-  .mdc-button__label {
+  > .mdc-button__label {
     position: relative;
   }
 }
@@ -78,7 +78,7 @@
     @include token-utils.create-token-slot(text-transform, label-text-transform);
     @include token-utils.create-token-slot(font-weight, label-text-weight);
 
-    &, .mdc-button__ripple {
+    &, > .mdc-button__ripple {
       @include token-utils.create-token-slot(border-radius, container-shape);
     }
 
@@ -137,7 +137,7 @@
       @include token-utils.create-token-slot(background-color, container-color);
     }
 
-    &, .mdc-button__ripple {
+    &, > .mdc-button__ripple {
       @include token-utils.create-token-slot(border-radius, container-shape);
     }
 
@@ -190,7 +190,7 @@
       @include token-utils.create-token-slot(background-color, container-color);
     }
 
-    &, .mdc-button__ripple {
+    &, > .mdc-button__ripple {
       @include token-utils.create-token-slot(border-radius, container-shape);
     }
 
@@ -302,8 +302,8 @@
 // In order to work around this issue by *not* hiding overflow, we adjust the child elements
 // to fully cover the actual button element. This means that the border-radius would be correct
 // then. See: https://github.com/angular/components/issues/13738
-.mat-mdc-outlined-button .mat-mdc-button-ripple,
-.mat-mdc-outlined-button .mdc-button__ripple {
+.mat-mdc-outlined-button > .mat-mdc-button-ripple,
+.mat-mdc-outlined-button > .mdc-button__ripple {
   $offset: -1px;
   top: $offset;
   left: $offset;
@@ -315,7 +315,7 @@
 // the focus indicator is sufficiently contrastive and renders appropriately.
 .mat-mdc-unelevated-button,
 .mat-mdc-raised-button {
-  .mat-focus-indicator::before {
+  > .mat-focus-indicator::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
     $offset: calc(#{$border-width} + 2px);
@@ -323,7 +323,7 @@
   }
 }
 
-.mat-mdc-outlined-button .mat-focus-indicator::before {
+.mat-mdc-outlined-button > .mat-focus-indicator::before {
   $default-border-width: focus-indicators-private.$default-border-width;
   $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
   $offset: calc(#{$border-width} + 3px);

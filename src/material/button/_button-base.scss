@@ -10,9 +10,9 @@
   -webkit-tap-highlight-color: transparent;
 
   // The ripple container should match the bounds of the entire button.
-  .mat-mdc-button-ripple,
-  .mat-mdc-button-persistent-ripple,
-  .mat-mdc-button-persistent-ripple::before {
+  > .mat-mdc-button-ripple,
+  > .mat-mdc-button-persistent-ripple,
+  > .mat-mdc-button-persistent-ripple::before {
     @include layout-common.fill;
 
     // Disable pointer events for the ripple container and state overlay because the container
@@ -29,61 +29,61 @@
 
   // This style used to be applied by the MatRipple
   // directive, which is no longer attached to this element.
-  .mat-mdc-button-ripple {
+  > .mat-mdc-button-ripple {
     overflow: hidden;
   }
 
   // We use ::before so that we can reuse some of MDC's theming.
-  .mat-mdc-button-persistent-ripple::before {
+  > .mat-mdc-button-persistent-ripple::before {
     content: '';
     opacity: 0;
   }
 
   // The content should appear over the state and ripple layers, otherwise they may adversely affect
   // the accessibility of the text content.
-  .mdc-button__label,
-  .mat-icon {
+  > .mdc-button__label,
+  > .mat-icon {
     z-index: 1;
     position: relative;
   }
 
   // The focus indicator should match the bounds of the entire button.
-  .mat-focus-indicator {
+  > .mat-focus-indicator {
     @include layout-common.fill();
   }
 
-  &:focus .mat-focus-indicator::before {
+  &:focus > .mat-focus-indicator::before {
     content: '';
   }
 }
 
 @mixin mat-private-button-ripple($prefix, $slots) {
   @include token-utils.use-tokens($prefix, $slots) {
-    .mat-ripple-element {
+    > .mat-ripple-element {
       @include token-utils.create-token-slot(background-color, ripple-color);
     }
 
-    .mat-mdc-button-persistent-ripple::before {
+    > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(background-color, state-layer-color);
     }
 
-    &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
+    &.mat-mdc-button-disabled > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(background-color, disabled-state-layer-color);
     }
 
-    &:hover .mat-mdc-button-persistent-ripple::before {
+    &:hover > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
     }
 
     &.cdk-program-focused,
     &.cdk-keyboard-focused,
     &.mat-mdc-button-disabled-interactive:focus {
-      .mat-mdc-button-persistent-ripple::before {
+      > .mat-mdc-button-persistent-ripple::before {
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
       }
     }
 
-    &:active .mat-mdc-button-persistent-ripple::before {
+    &:active > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(opacity, pressed-state-layer-opacity);
     }
   }
@@ -116,7 +116,7 @@
 }
 
 @mixin mat-private-button-touch-target($is-square, $prefix, $slots) {
-  .mat-mdc-button-touch-target {
+  > .mat-mdc-button-touch-target {
     position: absolute;
     top: 50%;
     height: 48px;

@@ -75,13 +75,13 @@
   // However, Angular Material expects a `mat-icon` instead. The following
   // mixin will style the icons appropriately.
   // stylelint-disable-next-line selector-class-pattern
-  .mat-icon, .material-icons {
+  > .mat-icon, > .material-icons {
     transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
     fill: currentColor;
     will-change: transform;
   }
 
-  .mat-focus-indicator::before {
+  > .mat-focus-indicator::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
     $offset: calc(#{$border-width} + 2px);
@@ -209,7 +209,7 @@
 
   // All FABs are square except the extended ones so we
   // need to set the touch target back to full-width.
-  .mat-mdc-button-touch-target {
+  > .mat-mdc-button-touch-target {
     width: 100%;
   }
 }
