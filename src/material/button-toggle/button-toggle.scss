@@ -386,7 +386,7 @@ $_standard-tokens: (
     @include token-utils.create-token-slot(--mat-focus-indicator-border-radius, shape);
   }
 
-  .mat-button-toggle-group-appearance-standard .mat-button-toggle {
+  .mat-button-toggle-group-appearance-standard:not(.mat-button-toggle-vertical) .mat-button-toggle {
     &:last-of-type .mat-button-toggle-button::before {
       @include token-utils.create-token-slot(border-top-right-radius, shape);
       @include token-utils.create-token-slot(border-bottom-right-radius, shape);
@@ -395,6 +395,18 @@ $_standard-tokens: (
     &:first-of-type .mat-button-toggle-button::before {
       @include token-utils.create-token-slot(border-top-left-radius, shape);
       @include token-utils.create-token-slot(border-bottom-left-radius, shape);
+    }
+  }
+
+  .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle {
+    &:last-of-type .mat-button-toggle-button::before {
+      @include token-utils.create-token-slot(border-bottom-right-radius, shape);
+      @include token-utils.create-token-slot(border-bottom-left-radius, shape);
+    }
+
+    &:first-of-type .mat-button-toggle-button::before {
+      @include token-utils.create-token-slot(border-top-right-radius, shape);
+      @include token-utils.create-token-slot(border-top-left-radius, shape);
     }
   }
 }
