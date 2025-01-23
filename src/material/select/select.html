@@ -40,7 +40,7 @@
   [cdkConnectedOverlayPositions]="_positions"
   [cdkConnectedOverlayWidth]="_overlayWidth"
   (backdropClick)="close()"
-  (detach)="openedChange.emit(false)">
+  (overlayKeydown)="_handleOverlayKeydown($event)">
   <div
     #panel
     role="listbox"
@@ -52,7 +52,6 @@
     [attr.aria-label]="ariaLabel || null"
     [attr.aria-labelledby]="_getPanelAriaLabelledby()"
     [ngClass]="panelClass"
-    (animationend)="_handleAnimationEndEvent($event)"
     (keydown)="_handleKeydown($event)">
     <ng-content></ng-content>
   </div>

@@ -757,11 +757,8 @@ export class MatSelect
     // Required for the MDC form field to pick up when the overlay has been opened.
     this.stateChanges.next();
 
-    // This usually fires at the end of the animation,
-    // but that won't happen if animations are disabled.
-    if (this._animationsDisabled) {
-      this.openedChange.emit(true);
-    }
+    // Simulate the animation event before we moved away from `@angular/animations`.
+    Promise.resolve().then(() => this.openedChange.emit(true));
   }
 
   /**
@@ -839,6 +836,9 @@ export class MatSelect
       this._onTouched();
       // Required for the MDC form field to pick up when the overlay has been closed.
       this.stateChanges.next();
+
+      // Simulate the animation event before we moved away from `@angular/animations`.
+      Promise.resolve().then(() => this.openedChange.emit(false));
     }
   }
 
@@ -1006,7 +1006,7 @@ export class MatSelect
     const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
     const isTyping = manager.isTyping();
 
-    if ((isArrowKey && event.altKey) || (keyCode === ESCAPE && !hasModifierKey(event))) {
+    if (isArrowKey && event.altKey) {
       // Close the select on ALT + arrow key to match the native <select>
       event.preventDefault();
       this.close();
@@ -1046,6 +1046,18 @@ export class MatSelect
     }
   }
 
+  /** Handles keyboard events coming from the overlay. */
+  protected _handleOverlayKeydown(event: KeyboardEvent): void {
+    // TODO(crisbeto): prior to #30363 this was being handled inside the overlay directive, but we
+    // need control over the animation timing so we do it manually. We should remove the `keydown`
+    // listener from `.mat-mdc-select-panel` and handle all the events here. That may cause
+    // further test breakages so it's left for a follow-up.
+    if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+      event.preventDefault();
+      this.close();
+    }
+  }
+
   _onFocus() {
     if (!this.disabled) {
       this._focused = true;
@@ -1076,13 +1088,6 @@ export class MatSelect
   /** Whether the select has a value. */
   get empty(): boolean {
     return !this._selectionModel || this._selectionModel.isEmpty();
-  }
-
-  /** Handles animation events from the panel. */
-  protected _handleAnimationEndEvent(event: AnimationEvent) {
-    if (event.target === this.panel.nativeElement && event.animationName === '_mat-select-enter') {
-      this.openedChange.emit(true);
-    }
   }
 
   private _initializeSelection(): void {
