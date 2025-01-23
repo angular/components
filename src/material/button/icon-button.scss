@@ -92,4 +92,19 @@
       opacity: 1;
     }
   }
+
+  &::after {
+    content: '';
+    padding: 8px;
+    margin: -8px;
+    box-sizing: border-box;
+    background-clip: content-box;
+    left: 0;
+    right: 0;
+    display: block;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    bottom: 0;
+  }
 }
