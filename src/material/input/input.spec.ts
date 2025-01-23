@@ -1229,11 +1229,13 @@ describe('MatMdcInput with forms', () => {
         .toBe(1);
     }));
 
-    it('should set the proper aria-live attribute on the error messages', fakeAsync(() => {
+    it('should be in a parent element with the an aria-live attribute to announce the error', fakeAsync(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
-      expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
+      expect(
+        containerEl.querySelector('[aria-live]:has(mat-error)')!.getAttribute('aria-live'),
+      ).toBe('polite');
     }));
 
     it('sets the aria-describedby to reference errors when in error state', fakeAsync(() => {

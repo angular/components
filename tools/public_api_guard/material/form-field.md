@@ -83,8 +83,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _formFieldControl: MatFormFieldControl_2<any>;
     getConnectedOverlayOrigin(): ElementRef;
-    _getDisplayedMessages(): 'error' | 'hint';
     getLabelId: Signal<string | null>;
+    _getSubscriptMessageType(): 'error' | 'hint';
     _handleLabelResized(): void;
     // (undocumented)
     _hasFloatingLabel: Signal<boolean>;
