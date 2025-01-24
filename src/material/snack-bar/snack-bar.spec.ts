@@ -564,7 +564,7 @@ describe('MatSnackBar', () => {
       viewContainerFixture.detectChanges();
     }
 
-    flush();
+    flush(50);
     expect(overlayContainerElement.querySelectorAll('mat-snack-bar-container').length).toBe(1);
   }));
 

@@ -94,11 +94,11 @@ export class MatSnackBarConfig<D = any> {
 }
 
 // @public
-export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy, DoCheck {
+export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, OnDestroy {
     constructor(...args: unknown[]);
-    protected _animationDone(event: AnimationEvent): void;
     // (undocumented)
     protected _animationsDisabled: boolean;
+    _animationState: string;
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
@@ -110,8 +110,8 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
     readonly _liveElementId: string;
     // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
     ngOnDestroy(): void;
+    onAnimationEnd(event: AnimationEvent): void;
     readonly _onAnnounce: Subject<void>;
     readonly _onEnter: Subject<void>;
     readonly _onExit: Subject<void>;

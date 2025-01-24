@@ -51,30 +51,33 @@ import {MatSnackBarConfig} from './snack-bar-config';
   imports: [CdkPortalOutlet],
   host: {
     'class': 'mdc-snackbar mat-mdc-snack-bar-container',
-    '[class.mat-snack-bar-animations-enabled]': '!_animationsDisabled',
-    '(animationend)': '_animationDone($event)',
+    '[class.mat-snack-bar-container-enter]': '_animationState === "visible"',
+    '[class.mat-snack-bar-container-exit]': '_animationState === "hidden"',
+    '[class.mat-snack-bar-container-animations-enabled]': '!_animationsDisabled',
+    '(animationend)': 'onAnimationEnd($event)',
+    '(animationcancel)': 'onAnimationEnd($event)',
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy, DoCheck {
+export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, OnDestroy {
   private _ngZone = inject(NgZone);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _enterFallback: ReturnType<typeof setTimeout> | undefined;
-  private _exitFallback: ReturnType<typeof setTimeout> | undefined;
+  private _platform = inject(Platform);
   protected _animationsDisabled =
     inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
-  private _scheduleDelayedEnter: boolean;
-
   snackBarConfig = inject(MatSnackBarConfig);
+
   private _document = inject(DOCUMENT);
   private _trackedModals = new Set<Element>();
+  private _enterFallback: ReturnType<typeof setTimeout> | undefined;
+  private _exitFallback: ReturnType<typeof setTimeout> | undefined;
+  private _pendingNoopAnimation: boolean;
 
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
 
   /** The timeout for announcing the snack bar's content. */
-  private _announceTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  private _announceTimeoutId: ReturnType<typeof setTimeout>;
 
   /** Whether the component has been destroyed. */
   private _destroyed = false;
@@ -90,6 +93,9 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
 
   /** Subject for notifying that the snack bar has finished entering the view. */
   readonly _onEnter: Subject<void> = new Subject();
+
+  /** The state of the snack bar animations. */
+  _animationState = 'void';
 
   /** aria-live value for the live region. */
   _live: AriaLivePoliteness;
@@ -167,32 +173,27 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
   };
 
   /** Handle end of animations, updating the state of the snackbar. */
-  protected _animationDone(event: AnimationEvent) {
-    if (event.animationName === '_mat-snack-bar-enter') {
-      this._completeEnter();
-    } else if (event.animationName === '_mat-snack-bar-exit') {
+  onAnimationEnd(event: AnimationEvent) {
+    if (event.animationName === '_mat-snack-bar-exit') {
       this._completeExit();
+    } else if (event.animationName === '_mat-snack-bar-enter') {
+      this._completeEnter();
     }
   }
 
   /** Begin animation of snack bar entrance into view. */
   enter(): void {
     if (!this._destroyed) {
-      // Previously this was used to ensure that the change-detection-based animation runs.
-      // Now the animation doesn't require change detection, but there seem to be some internal
-      // usages depending on it.
+      this._animationState = 'visible';
+      // _animationState lives in host bindings and `detectChanges` does not refresh host bindings
+      // so we have to call `markForCheck` to ensure the host view is refreshed eventually.
       this._changeDetectorRef.markForCheck();
       this._changeDetectorRef.detectChanges();
       this._screenReaderAnnounce();
 
       if (this._animationsDisabled) {
-        // Delay the enter until the next change detection in an attempt to mimic the timing of
-        // the old animation-based events. Ideally we would use an `afterNextRender` here, but
-        // some tests throw a "Injector has already been destroyed" error.
-        this._scheduleDelayedEnter = true;
+        this._pendingNoopAnimation = true;
       } else {
-        // Guarantees that the animation-related events will
-        // fire even if something interrupts the animation.
         clearTimeout(this._enterFallback);
         this._enterFallback = setTimeout(() => this._completeEnter(), 200);
       }
@@ -201,35 +202,55 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
 
   /** Begin animation of the snack bar exiting from view. */
   exit(): Observable<void> {
-    // Mark this element with an 'exit' attribute to indicate that the snackbar has
-    // been dismissed and will soon be removed from the DOM. This is used by the snackbar
-    // test harness.
-    this._elementRef.nativeElement.setAttribute('mat-exit', '');
+    // It's common for snack bars to be opened by random outside calls like HTTP requests or
+    // errors. Run inside the NgZone to ensure that it functions correctly.
+    this._ngZone.run(() => {
+      // Note: this one transitions to `hidden`, rather than `void`, in order to handle the case
+      // where multiple snack bars are opened in quick succession (e.g. two consecutive calls to
+      // `MatSnackBar.open`).
+      this._animationState = 'hidden';
+      this._changeDetectorRef.markForCheck();
 
-    // Guarantees that the animation-related events will
-    // fire even if something interrupts the animation.
-    clearTimeout(this._exitFallback);
-    this._exitFallback = setTimeout(
-      () => this._completeExit(),
-      this._animationsDisabled ? undefined : 150,
-    );
+      // Mark this element with an 'exit' attribute to indicate that the snackbar has
+      // been dismissed and will soon be removed from the DOM. This is used by the snackbar
+      // test harness.
+      this._elementRef.nativeElement.setAttribute('mat-exit', '');
+
+      // If the snack bar hasn't been announced by the time it exits it wouldn't have been open
+      // long enough to visually read it either, so clear the timeout for announcing.
+      clearTimeout(this._announceTimeoutId);
+
+      if (this._animationsDisabled) {
+        this._pendingNoopAnimation = true;
+      } else {
+        clearTimeout(this._exitFallback);
+        this._exitFallback = setTimeout(() => this._completeExit(), 200);
+      }
+    });
 
     return this._onExit;
   }
 
   ngDoCheck(): void {
-    if (this._scheduleDelayedEnter) {
-      this._scheduleDelayedEnter = false;
-      this._completeEnter();
+    // Aims to mimic the timing of when the snack back was using the animations
+    // module since many internal tests depend on the old timing.
+    if (this._pendingNoopAnimation) {
+      this._pendingNoopAnimation = false;
+      queueMicrotask(() => {
+        if (this._animationState === 'visible') {
+          this._completeEnter();
+        } else {
+          this._completeExit();
+        }
+      });
     }
   }
 
+  /** Makes sure the exit callbacks have been invoked when the element is destroyed. */
   ngOnDestroy() {
-    clearTimeout(this._enterFallback);
     this._destroyed = true;
     this._clearFromModals();
     this._completeExit();
-    this._onAnnounce.complete();
   }
 
   private _completeEnter() {
@@ -245,11 +266,8 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy,
    * removing an element which is in the middle of an animation.
    */
   private _completeExit() {
-    // If the snack bar hasn't been announced by the time it exits it wouldn't have been open
-    // long enough to visually read it either, so clear the timeout for announcing.
-    clearTimeout(this._announceTimeoutId);
     clearTimeout(this._exitFallback);
-    this._ngZone.run(() => {
+    queueMicrotask(() => {
       this._onExit.next();
       this._onExit.complete();
     });
