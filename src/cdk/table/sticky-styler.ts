@@ -185,7 +185,7 @@ export class StickyStyler {
           }
         }
 
-        if (this._positionListener) {
+        if (this._positionListener && cellWidths.some(w => !!w)) {
           this._positionListener.stickyColumnsUpdated({
             sizes:
               lastStickyStart === -1
