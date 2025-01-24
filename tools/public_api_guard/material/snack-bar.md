@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { AriaLivePoliteness } from '@angular/cdk/a11y';
 import { BasePortalOutlet } from '@angular/cdk/portal';
@@ -75,7 +74,7 @@ export class MatSnackBarActions {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBarActions, never>;
 }
 
-// @public
+// @public @deprecated
 export const matSnackBarAnimations: {
     readonly snackBarState: AnimationTriggerMetadata;
 };
@@ -96,7 +95,9 @@ export class MatSnackBarConfig<D = any> {
 // @public
 export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
     constructor(...args: unknown[]);
-    _animationState: string;
+    protected _animationDone(event: AnimationEvent): void;
+    // (undocumented)
+    protected _animationsDisabled: boolean;
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
@@ -107,7 +108,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     _live: AriaLivePoliteness;
     readonly _liveElementId: string;
     ngOnDestroy(): void;
-    onAnimationEnd(event: AnimationEvent_2): void;
     readonly _onAnnounce: Subject<void>;
     readonly _onEnter: Subject<void>;
     readonly _onExit: Subject<void>;
