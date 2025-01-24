@@ -52,7 +52,7 @@
     @include layout-common.fill();
   }
 
-  &:focus .mat-focus-indicator::before {
+  &:focus > .mat-focus-indicator::before {
     content: '';
   }
 }
@@ -78,12 +78,12 @@
     &.cdk-program-focused,
     &.cdk-keyboard-focused,
     &.mat-mdc-button-disabled-interactive:focus {
-      .mat-mdc-button-persistent-ripple::before {
+      > .mat-mdc-button-persistent-ripple::before {
         @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
       }
     }
 
-    &:active .mat-mdc-button-persistent-ripple::before {
+    &:active > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(opacity, pressed-state-layer-opacity);
     }
   }
