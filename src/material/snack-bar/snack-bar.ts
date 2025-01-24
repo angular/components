@@ -242,11 +242,6 @@ export class MatSnackBar implements OnDestroy {
       }
     });
 
-    // If a dismiss timeout is provided, set up dismiss based on after the snackbar is opened.
-    if (config.duration && config.duration > 0) {
-      snackBarRef.afterOpened().subscribe(() => snackBarRef._dismissAfter(config.duration!));
-    }
-
     if (this._openedSnackBarRef) {
       // If a snack bar is already in view, dismiss it and enter the
       // new snack bar after exit animation is complete.
@@ -257,6 +252,11 @@ export class MatSnackBar implements OnDestroy {
     } else {
       // If no snack bar is in view, enter the new snack bar.
       snackBarRef.containerInstance.enter();
+    }
+
+    // If a dismiss timeout is provided, set up dismiss based on after the snackbar is opened.
+    if (config.duration && config.duration > 0) {
+      snackBarRef.afterOpened().subscribe(() => snackBarRef._dismissAfter(config.duration!));
     }
   }
 
