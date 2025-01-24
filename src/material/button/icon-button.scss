@@ -76,6 +76,11 @@
     border-radius: 50%;
   }
 
+  .mat-mdc-button-touch-target {
+    display: block;
+    opacity: 0;
+  }
+
   // MDC used to include this and it seems like a lot of apps depend on it.
   &[hidden] {
     display: none;
@@ -93,18 +98,4 @@
     }
   }
 
-  &::after {
-    content: '';
-    padding: 8px;
-    margin: -8px;
-    box-sizing: border-box;
-    background-clip: content-box;
-    left: 0;
-    right: 0;
-    display: block;
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    bottom: 0;
-  }
 }
