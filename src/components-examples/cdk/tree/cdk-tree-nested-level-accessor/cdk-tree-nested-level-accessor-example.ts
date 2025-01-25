@@ -3,7 +3,7 @@ import {CdkTree, CdkTreeModule} from '@angular/cdk/tree';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {FLAT_DATA, FlatFoodNode} from '../tree-data';
+import {FLAT_DATA, FlatFoodNode} from './cdk-tree-nested-level-accessor-example-data';
 
 /**
  * @title Tree with nested nodes and level accessor
