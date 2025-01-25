@@ -5,21 +5,13 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {RouterLink} from '@angular/router';
 
 /** @title Responsive sidenav */
 @Component({
   selector: 'sidenav-responsive-example',
   templateUrl: 'sidenav-responsive-example.html',
   styleUrl: 'sidenav-responsive-example.css',
-  imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    RouterLink,
-  ],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
 })
 export class SidenavResponsiveExample implements OnDestroy {
   protected readonly fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
