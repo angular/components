@@ -37,11 +37,15 @@
   </h2>
 
   {%- if doc.primaryExportName -%}
-    <p class="docs-api-module-import">
-      <code>
-        import {{$ doc.primaryExportName $}} from '{$ doc.moduleImportPath $}';
-      </code>
-    </p>
+    <div class="docs-api-module">
+      <p class="docs-api-module-import">
+        <code>
+          import {{$ doc.primaryExportName $}} from '{$ doc.moduleImportPath $}';
+        </code>
+      </p>
+
+      <div class="docs-api-module-import-button" data-docs-api-module-import-button="import {{$ doc.primaryExportName $}} from '{$ doc.moduleImportPath $}';"></div>
+    </div>
   {% else %}
     <p>Import symbols from <code>{$ doc.moduleImportPath $}</code></p>
   {%- endif -%}

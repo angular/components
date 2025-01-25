@@ -27,6 +27,15 @@
   word-break: break-word;
 }
 
+.docs-api-module {
+  display: flex;
+  align-items: center;
+}
+
+.docs-api-module-import {
+  margin: 0px;
+}
+
 .docs-api-class-name,
 .docs-api-module-import,
 .docs-api-class-selector-name,

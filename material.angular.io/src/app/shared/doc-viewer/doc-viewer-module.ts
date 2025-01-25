@@ -10,7 +10,7 @@ import {NgModule} from '@angular/core';
 import {HeaderLink} from './header-link';
 import {CodeSnippet} from '../example-viewer/code-snippet';
 import {DeprecatedFieldComponent} from './deprecated-tooltip';
-
+import {ModuleImportCopyButton} from './module-import-copy-button';
 
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({
@@ -25,8 +25,9 @@ import {DeprecatedFieldComponent} from './deprecated-tooltip';
     ExampleViewer,
     HeaderLink,
     CodeSnippet,
-    DeprecatedFieldComponent
+    DeprecatedFieldComponent,
+    ModuleImportCopyButton,
   ],
-  exports: [DocViewer, ExampleViewer, HeaderLink, DeprecatedFieldComponent]
+  exports: [DocViewer, ExampleViewer, HeaderLink, DeprecatedFieldComponent, ModuleImportCopyButton],
 })
-export class DocViewerModule { }
+export class DocViewerModule {}
