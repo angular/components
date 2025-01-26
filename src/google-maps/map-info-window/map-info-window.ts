@@ -231,7 +231,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // undefined. If that's the case, we have to allow it to open in order to handle the
     // case where the window doesn't have an anchor, but is placed at a particular position.
     if (this.infoWindow.get('anchor') !== anchorObject || !anchorObject) {
-      this._elementRef.nativeElement.style.display = '';
+      // If no explicit content is provided, it is taken from the DOM node.
+      // If it is, we need to hide it so it doesn't take up space on the page.
+      this._elementRef.nativeElement.style.display = content ? 'none' : '';
       if (content) {
         this.infoWindow.setContent(content);
       }
