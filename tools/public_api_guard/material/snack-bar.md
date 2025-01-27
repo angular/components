@@ -12,7 +12,6 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { Direction } from '@angular/cdk/bidi';
-import { DoCheck } from '@angular/core';
 import { DomPortal } from '@angular/cdk/portal';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -94,7 +93,7 @@ export class MatSnackBarConfig<D = any> {
 }
 
 // @public
-export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
@@ -108,10 +107,8 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
     _label: ElementRef;
     _live: AriaLivePoliteness;
     readonly _liveElementId: string;
-    // (undocumented)
-    ngDoCheck(): void;
     ngOnDestroy(): void;
-    onAnimationEnd(event: AnimationEvent): void;
+    onAnimationEnd(animationName: string): void;
     readonly _onAnnounce: Subject<void>;
     readonly _onEnter: Subject<void>;
     readonly _onExit: Subject<void>;

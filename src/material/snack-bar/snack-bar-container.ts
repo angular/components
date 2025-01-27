@@ -7,15 +7,16 @@
  */
 
 import {
+  afterNextRender,
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
-  DoCheck,
   ElementRef,
   EmbeddedViewRef,
   inject,
+  Injector,
   NgZone,
   OnDestroy,
   ViewChild,
@@ -29,10 +30,13 @@ import {
   DomPortal,
   TemplatePortal,
 } from '@angular/cdk/portal';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, of} from 'rxjs';
 import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {MatSnackBarConfig} from './snack-bar-config';
+
+const ENTER_ANIMATION = '_mat-snack-bar-enter';
+const EXIT_ANIMATION = '_mat-snack-bar-exit';
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -54,15 +58,16 @@ import {MatSnackBarConfig} from './snack-bar-config';
     '[class.mat-snack-bar-container-enter]': '_animationState === "visible"',
     '[class.mat-snack-bar-container-exit]': '_animationState === "hidden"',
     '[class.mat-snack-bar-container-animations-enabled]': '!_animationsDisabled',
-    '(animationend)': 'onAnimationEnd($event)',
-    '(animationcancel)': 'onAnimationEnd($event)',
+    '(animationend)': 'onAnimationEnd($event.animationName)',
+    '(animationcancel)': 'onAnimationEnd($event.animationName)',
   },
 })
-export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, OnDestroy {
+export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
+  private _injector = inject(Injector);
   protected _animationsDisabled =
     inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   snackBarConfig = inject(MatSnackBarConfig);
@@ -71,7 +76,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
   private _trackedModals = new Set<Element>();
   private _enterFallback: ReturnType<typeof setTimeout> | undefined;
   private _exitFallback: ReturnType<typeof setTimeout> | undefined;
-  private _pendingNoopAnimation: boolean;
 
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
@@ -81,6 +85,9 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
 
   /** Whether the component has been destroyed. */
   private _destroyed = false;
+
+  /** Whether the process of exiting is currently running. */
+  private _isExiting = false;
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
@@ -173,11 +180,15 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
   };
 
   /** Handle end of animations, updating the state of the snackbar. */
-  onAnimationEnd(event: AnimationEvent) {
-    if (event.animationName === '_mat-snack-bar-exit') {
+  onAnimationEnd(animationName: string) {
+    if (animationName === EXIT_ANIMATION) {
       this._completeExit();
-    } else if (event.animationName === '_mat-snack-bar-enter') {
-      this._completeEnter();
+    } else if (animationName === ENTER_ANIMATION) {
+      clearTimeout(this._enterFallback);
+      this._ngZone.run(() => {
+        this._onEnter.next();
+        this._onEnter.complete();
+      });
     }
   }
 
@@ -192,16 +203,43 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
       this._screenReaderAnnounce();
 
       if (this._animationsDisabled) {
-        this._pendingNoopAnimation = true;
+        afterNextRender(
+          () => {
+            this._ngZone.run(() => {
+              queueMicrotask(() => this.onAnimationEnd(ENTER_ANIMATION));
+            });
+          },
+          {
+            injector: this._injector,
+          },
+        );
       } else {
         clearTimeout(this._enterFallback);
-        this._enterFallback = setTimeout(() => this._completeEnter(), 200);
+        this._enterFallback = setTimeout(() => {
+          // The snack bar will stay invisible if it fails to animate. Add a fallback class so it
+          // becomes visible. This can happen in some apps that do `* {animation: none !important}`.
+          this._elementRef.nativeElement.classList.add('mat-snack-bar-fallback-visible');
+          this.onAnimationEnd(ENTER_ANIMATION);
+        }, 200);
       }
     }
   }
 
   /** Begin animation of the snack bar exiting from view. */
   exit(): Observable<void> {
+    if (this._destroyed) {
+      return of(undefined);
+    }
+
+    // It's important not to re-enter here, because `afterNextRender` needs a non-destroyed injector
+    // which might happen between the time `exit` starts and the component is actually destroyed.
+    // This appears to happen in some internal tests when TestBed is being torn down.
+    if (this._isExiting) {
+      return this._onExit;
+    }
+
+    this._isExiting = true;
+
     // It's common for snack bars to be opened by random outside calls like HTTP requests or
     // errors. Run inside the NgZone to ensure that it functions correctly.
     this._ngZone.run(() => {
@@ -221,29 +259,23 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
       clearTimeout(this._announceTimeoutId);
 
       if (this._animationsDisabled) {
-        this._pendingNoopAnimation = true;
+        afterNextRender(
+          () => {
+            this._ngZone.run(() => {
+              queueMicrotask(() => this.onAnimationEnd(EXIT_ANIMATION));
+            });
+          },
+          {
+            injector: this._injector,
+          },
+        );
       } else {
         clearTimeout(this._exitFallback);
-        this._exitFallback = setTimeout(() => this._completeExit(), 200);
+        this._exitFallback = setTimeout(() => this.onAnimationEnd(EXIT_ANIMATION), 200);
       }
     });
 
     return this._onExit;
-  }
-
-  ngDoCheck(): void {
-    // Aims to mimic the timing of when the snack back was using the animations
-    // module since many internal tests depend on the old timing.
-    if (this._pendingNoopAnimation) {
-      this._pendingNoopAnimation = false;
-      queueMicrotask(() => {
-        if (this._animationState === 'visible') {
-          this._completeEnter();
-        } else {
-          this._completeExit();
-        }
-      });
-    }
   }
 
   /** Makes sure the exit callbacks have been invoked when the element is destroyed. */
@@ -253,23 +285,12 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
     this._completeExit();
   }
 
-  private _completeEnter() {
-    clearTimeout(this._enterFallback);
-    this._ngZone.run(() => {
-      this._onEnter.next();
-      this._onEnter.complete();
-    });
-  }
-
-  /**
-   * Removes the element in a microtask. Helps prevent errors where we end up
-   * removing an element which is in the middle of an animation.
-   */
   private _completeExit() {
     clearTimeout(this._exitFallback);
     queueMicrotask(() => {
       this._onExit.next();
       this._onExit.complete();
+      this._isExiting = true;
     });
   }
 
@@ -360,33 +381,40 @@ export class MatSnackBarContainer extends BasePortalOutlet implements DoCheck, O
    * announce it.
    */
   private _screenReaderAnnounce() {
-    if (!this._announceTimeoutId) {
-      this._ngZone.runOutsideAngular(() => {
-        this._announceTimeoutId = setTimeout(() => {
-          const inertElement = this._elementRef.nativeElement.querySelector('[aria-hidden]');
-          const liveElement = this._elementRef.nativeElement.querySelector('[aria-live]');
-
-          if (inertElement && liveElement) {
-            // If an element in the snack bar content is focused before being moved
-            // track it and restore focus after moving to the live region.
-            let focusedElement: HTMLElement | null = null;
-            if (
-              this._platform.isBrowser &&
-              document.activeElement instanceof HTMLElement &&
-              inertElement.contains(document.activeElement)
-            ) {
-              focusedElement = document.activeElement;
-            }
-
-            inertElement.removeAttribute('aria-hidden');
-            liveElement.appendChild(inertElement);
-            focusedElement?.focus();
-
-            this._onAnnounce.next();
-            this._onAnnounce.complete();
-          }
-        }, this._announceDelay);
-      });
+    if (this._announceTimeoutId) {
+      return;
     }
+
+    this._ngZone.runOutsideAngular(() => {
+      this._announceTimeoutId = setTimeout(() => {
+        if (this._destroyed) {
+          return;
+        }
+
+        const element = this._elementRef.nativeElement;
+        const inertElement = element.querySelector('[aria-hidden]');
+        const liveElement = element.querySelector('[aria-live]');
+
+        if (inertElement && liveElement) {
+          // If an element in the snack bar content is focused before being moved
+          // track it and restore focus after moving to the live region.
+          let focusedElement: HTMLElement | null = null;
+          if (
+            this._platform.isBrowser &&
+            document.activeElement instanceof HTMLElement &&
+            inertElement.contains(document.activeElement)
+          ) {
+            focusedElement = document.activeElement;
+          }
+
+          inertElement.removeAttribute('aria-hidden');
+          liveElement.appendChild(inertElement);
+          focusedElement?.focus();
+
+          this._onAnnounce.next();
+          this._onAnnounce.complete();
+        }
+      }, this._announceDelay);
+    });
   }
 }

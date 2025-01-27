@@ -45,6 +45,11 @@ $_side-padding: 8px;
 .mat-snack-bar-container-animations-enabled {
   opacity: 0;
 
+  // Fallback in case the animation fails.
+  &.mat-snack-bar-fallback-visible {
+    opacity: 1;
+  }
+
   &.mat-snack-bar-container-enter {
     animation: _mat-snack-bar-enter 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
   }
