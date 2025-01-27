@@ -378,6 +378,8 @@ export class MatFormField
       this._initializeControl(this._previousControl);
       this._previousControl = this._control;
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 
   ngOnDestroy() {
