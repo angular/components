@@ -7,7 +7,8 @@
  */
 
 import {
-  afterNextRender,
+  afterRender,
+  AfterRenderRef,
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,7 +17,6 @@ import {
   ElementRef,
   EmbeddedViewRef,
   inject,
-  Injector,
   NgZone,
   OnDestroy,
   ViewChild,
@@ -34,6 +34,7 @@ import {Observable, Subject, of} from 'rxjs';
 import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {MatSnackBarConfig} from './snack-bar-config';
+import {take} from 'rxjs/operators';
 
 const ENTER_ANIMATION = '_mat-snack-bar-enter';
 const EXIT_ANIMATION = '_mat-snack-bar-exit';
@@ -67,7 +68,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
-  private _injector = inject(Injector);
+  private _rendersRef: AfterRenderRef;
   protected _animationsDisabled =
     inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   snackBarConfig = inject(MatSnackBarConfig);
@@ -76,6 +77,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _trackedModals = new Set<Element>();
   private _enterFallback: ReturnType<typeof setTimeout> | undefined;
   private _exitFallback: ReturnType<typeof setTimeout> | undefined;
+  private _renders = new Subject<void>();
 
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
@@ -85,9 +87,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
 
   /** Whether the component has been destroyed. */
   private _destroyed = false;
-
-  /** Whether the process of exiting is currently running. */
-  private _isExiting = false;
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
@@ -149,6 +148,11 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
         this._role = 'alert';
       }
     }
+
+    // Note: ideally we'd just do an `afterNextRender` in the places where we need to delay
+    // something, however in some cases (TestBed teardown) the injector can be destroyed at an
+    // unexpected time, causing the `afterRender` to fail.
+    this._rendersRef = afterRender(() => this._renders.next(), {manualCleanup: true});
   }
 
   /** Attach a component portal as content to this snack bar container. */
@@ -203,16 +207,9 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       this._screenReaderAnnounce();
 
       if (this._animationsDisabled) {
-        afterNextRender(
-          () => {
-            this._ngZone.run(() => {
-              queueMicrotask(() => this.onAnimationEnd(ENTER_ANIMATION));
-            });
-          },
-          {
-            injector: this._injector,
-          },
-        );
+        this._renders.pipe(take(1)).subscribe(() => {
+          this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(ENTER_ANIMATION)));
+        });
       } else {
         clearTimeout(this._enterFallback);
         this._enterFallback = setTimeout(() => {
@@ -230,15 +227,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     if (this._destroyed) {
       return of(undefined);
     }
-
-    // It's important not to re-enter here, because `afterNextRender` needs a non-destroyed injector
-    // which might happen between the time `exit` starts and the component is actually destroyed.
-    // This appears to happen in some internal tests when TestBed is being torn down.
-    if (this._isExiting) {
-      return this._onExit;
-    }
-
-    this._isExiting = true;
 
     // It's common for snack bars to be opened by random outside calls like HTTP requests or
     // errors. Run inside the NgZone to ensure that it functions correctly.
@@ -259,16 +247,9 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       clearTimeout(this._announceTimeoutId);
 
       if (this._animationsDisabled) {
-        afterNextRender(
-          () => {
-            this._ngZone.run(() => {
-              queueMicrotask(() => this.onAnimationEnd(EXIT_ANIMATION));
-            });
-          },
-          {
-            injector: this._injector,
-          },
-        );
+        this._renders.pipe(take(1)).subscribe(() => {
+          this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(EXIT_ANIMATION)));
+        });
       } else {
         clearTimeout(this._exitFallback);
         this._exitFallback = setTimeout(() => this.onAnimationEnd(EXIT_ANIMATION), 200);
@@ -283,6 +264,8 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     this._destroyed = true;
     this._clearFromModals();
     this._completeExit();
+    this._renders.complete();
+    this._rendersRef.destroy();
   }
 
   private _completeExit() {
@@ -290,7 +273,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     queueMicrotask(() => {
       this._onExit.next();
       this._onExit.complete();
-      this._isExiting = true;
     });
   }
 
