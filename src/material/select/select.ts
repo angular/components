@@ -844,7 +844,7 @@ export class MatSelect
 
   /** Triggers the exit animation and detaches the overlay at the end. */
   private _exitAndDetach() {
-    if (this._animationsDisabled) {
+    if (this._animationsDisabled || !this.panel) {
       this._overlayDir.detachOverlay();
       return;
     }
