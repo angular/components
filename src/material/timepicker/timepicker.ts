@@ -9,6 +9,7 @@
 import {
   afterNextRender,
   AfterRenderRef,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -32,7 +33,6 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -80,18 +80,6 @@ export interface MatTimepickerSelected<D> {
       useExisting: MatTimepicker,
     },
   ],
-  animations: [
-    trigger('panel', [
-      state('void', style({opacity: 0, transform: 'scaleY(0.8)'})),
-      transition(':enter', [
-        group([
-          animate('0.03s linear', style({opacity: 1})),
-          animate('0.12s cubic-bezier(0, 0, 0.2, 1)', style({transform: 'scaleY(1)'})),
-        ]),
-      ]),
-      transition(':leave', [animate('0.075s linear', style({opacity: 0}))]),
-    ]),
-  ],
 })
 export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _overlay = inject(Overlay);
@@ -101,6 +89,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _defaultConfig = inject(MAT_TIMEPICKER_CONFIG, {optional: true});
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);
@@ -246,8 +236,11 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   close(): void {
     if (this._isOpen()) {
       this._isOpen.set(false);
-      this._overlayRef?.detach();
       this.closed.emit();
+
+      if (this._animationsDisabled) {
+        this._overlayRef?.detach();
+      }
     }
   }
 
@@ -270,9 +263,16 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   }
 
   /** Selects a specific time value. */
-  protected _selectValue(value: D) {
+  protected _selectValue(option: MatOption<D>) {
     this.close();
-    this.selected.emit({value, source: this});
+    this._keyManager.setActiveItem(option);
+    this._options().forEach(current => {
+      // This is primarily here so we don't show two selected options while animating away.
+      if (current !== option) {
+        current.deselect(false);
+      }
+    });
+    this.selected.emit({value: option.value, source: this});
     this._input()?.focus();
   }
 
@@ -282,6 +282,13 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       return null;
     }
     return this.ariaLabelledby() || this._input()?._getLabelId() || null;
+  }
+
+  /** Handles animation events coming from the panel. */
+  protected _handleAnimationEnd(event: AnimationEvent) {
+    if (event.animationName === '_mat-timepicker-exit') {
+      this._overlayRef?.detach();
+    }
   }
 
   /** Creates an overlay reference for the timepicker panel. */
@@ -409,7 +416,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       event.preventDefault();
 
       if (this._keyManager.activeItem) {
-        this._selectValue(this._keyManager.activeItem.value);
+        this._selectValue(this._keyManager.activeItem);
       } else {
         this.close();
       }
