@@ -13,6 +13,7 @@ import {
   TreeKeyManagerItem,
   TreeKeyManagerStrategy,
 } from './tree-key-manager-strategy';
+import {Provider} from '@angular/core';
 
 // NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
 // not emit to streams.
@@ -102,7 +103,7 @@ export function NOOP_TREE_KEY_MANAGER_FACTORY<
  *
  * @breaking-change 21.0.0
  */
-export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER = {
+export const NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER: Provider = {
   provide: TREE_KEY_MANAGER,
   useFactory: NOOP_TREE_KEY_MANAGER_FACTORY,
 };
