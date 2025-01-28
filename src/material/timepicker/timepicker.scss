@@ -2,6 +2,28 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/timepicker' as tokens-mat-timepicker;
 
+@keyframes _mat-timepicker-enter {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes _mat-timepicker-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 mat-timepicker {
   display: none;
 }
@@ -35,6 +57,14 @@ mat-timepicker {
       @include token-utils.create-token-slot(border-top-left-radius, container-shape);
       @include token-utils.create-token-slot(border-top-right-radius, container-shape);
     }
+  }
+}
+
+.mat-timepicker-panel-animations-enabled {
+  animation: _mat-timepicker-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+
+  &.mat-timepicker-panel-exit {
+    animation: _mat-timepicker-exit 100ms linear;
   }
 }
 
