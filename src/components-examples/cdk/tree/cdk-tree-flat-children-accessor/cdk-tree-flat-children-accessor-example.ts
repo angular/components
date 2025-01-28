@@ -5,7 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {timer} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
-import {NestedFoodNode, NESTED_DATA} from '../tree-data';
+import {NestedFoodNode, NESTED_DATA} from './cdk-tree-flat-children-accessor-example-data';
 
 function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
   const flattenedNodes = [];
