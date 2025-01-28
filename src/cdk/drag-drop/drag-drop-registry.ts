@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injectable,
-  ListenerOptions,
   NgZone,
   OnDestroy,
   RendererFactory2,
@@ -20,7 +19,7 @@ import {
   signal,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {_bindEventWithOptions} from '@angular/cdk/platform';
+import {_bindEventWithOptions, _ListenerOptions} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
@@ -178,7 +177,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       const isTouchEvent = event.type.startsWith('touch');
       const endEventHandler = (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent);
 
-      const toBind: [name: string, handler: (event: Event) => void, options: ListenerOptions][] = [
+      const toBind: [name: string, handler: (event: Event) => void, options: _ListenerOptions][] = [
         // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
         // the document. See https://github.com/angular/components/issues/17144.
         ['scroll', (e: Event) => this.scroll.next(e), capturingEventOptions],
