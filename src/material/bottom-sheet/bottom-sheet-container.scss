@@ -10,6 +10,26 @@ $_width-increment: 64px;
 $container-vertical-padding: 8px !default;
 $container-horizontal-padding: 16px !default;
 
+@keyframes _mat-bottom-sheet-enter {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes _mat-bottom-sheet-exit {
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
 .mat-bottom-sheet-container {
   @include elevation.elevation(16);
   padding: $container-vertical-padding
@@ -20,6 +40,10 @@ $container-horizontal-padding: 16px !default;
   outline: 0;
   max-height: 80vh;
   overflow: auto;
+
+  // We don't use this, but it's useful for consumers to position
+  // elements (e.g. close buttons) inside the bottom sheet.
+  position: relative;
 
   @include token-utils.use-tokens(
     tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-token-slots()) {
@@ -34,6 +58,18 @@ $container-horizontal-padding: 16px !default;
 
   @include cdk.high-contrast {
     outline: 1px solid;
+  }
+}
+
+.mat-bottom-sheet-container-animations-enabled {
+  transform: translateY(100%);
+
+  &.mat-bottom-sheet-container-enter {
+    animation: _mat-bottom-sheet-enter 195ms cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+
+  &.mat-bottom-sheet-container-exit {
+    animation: _mat-bottom-sheet-exit 375ms cubic-bezier(0.4, 0, 1, 1) backwards;
   }
 }
 

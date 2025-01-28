@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AnimationEvent} from '@angular/animations';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -18,8 +18,10 @@ import {
   inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {matBottomSheetAnimations} from './bottom-sheet-animations';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
+
+const ENTER_ANIMATION = '_mat-bottom-sheet-enter';
+const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
 
 /**
  * Internal component that wraps user-provided bottom sheet content.
@@ -35,27 +37,34 @@ import {CdkPortalOutlet} from '@angular/cdk/portal';
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
-  animations: [matBottomSheetAnimations.bottomSheetState],
   host: {
     'class': 'mat-bottom-sheet-container',
+    '[class.mat-bottom-sheet-container-animations-enabled]': '!_animationsDisabled',
+    '[class.mat-bottom-sheet-container-enter]': '_animationState === "visible"',
+    '[class.mat-bottom-sheet-container-exit]': '_animationState === "hidden"',
     'tabindex': '-1',
     '[attr.role]': '_config.role',
     '[attr.aria-modal]': '_config.ariaModal',
     '[attr.aria-label]': '_config.ariaLabel',
-    '[@state]': '_animationState',
-    '(@state.start)': '_onAnimationStart($event)',
-    '(@state.done)': '_onAnimationDone($event)',
+    '(animationstart)': '_handleAnimationEvent(true, $event.animationName)',
+    '(animationend)': '_handleAnimationEvent(false, $event.animationName)',
+    '(animationcancel)': '_handleAnimationEvent(false, $event.animationName)',
   },
   imports: [CdkPortalOutlet],
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
   private _breakpointSubscription: Subscription;
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 
   /** The state of the bottom sheet animations. */
   _animationState: 'void' | 'visible' | 'hidden' = 'void';
 
   /** Emits whenever the state of the animation changes. */
-  _animationStateChanged = new EventEmitter<AnimationEvent>();
+  _animationStateChanged = new EventEmitter<{
+    toState: 'visible' | 'hidden';
+    phase: 'start' | 'done';
+  }>();
 
   /** Whether the component has been destroyed. */
   private _destroyed: boolean;
@@ -93,14 +102,21 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
       this._animationState = 'visible';
       this._changeDetectorRef.markForCheck();
       this._changeDetectorRef.detectChanges();
+      if (this._animationsDisabled) {
+        this._simulateAnimation(ENTER_ANIMATION);
+      }
     }
   }
 
   /** Begin animation of the bottom sheet exiting from view. */
   exit(): void {
     if (!this._destroyed) {
+      this._elementRef.nativeElement.setAttribute('mat-exit', '');
       this._animationState = 'hidden';
       this._changeDetectorRef.markForCheck();
+      if (this._animationsDisabled) {
+        this._simulateAnimation(EXIT_ANIMATION);
+      }
     }
   }
 
@@ -110,16 +126,27 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     this._destroyed = true;
   }
 
-  _onAnimationDone(event: AnimationEvent) {
-    if (event.toState === 'visible') {
+  private _simulateAnimation(name: typeof ENTER_ANIMATION | typeof EXIT_ANIMATION) {
+    this._ngZone.run(() => {
+      this._handleAnimationEvent(true, name);
+      setTimeout(() => this._handleAnimationEvent(false, name));
+    });
+  }
+
+  protected _handleAnimationEvent(isStart: boolean, animationName: string) {
+    const isEnter = animationName === ENTER_ANIMATION;
+    const isExit = animationName === EXIT_ANIMATION;
+
+    if (isEnter) {
       this._trapFocus();
     }
 
-    this._animationStateChanged.emit(event);
-  }
-
-  _onAnimationStart(event: AnimationEvent) {
-    this._animationStateChanged.emit(event);
+    if (isEnter || isExit) {
+      this._animationStateChanged.emit({
+        toState: isEnter ? 'visible' : 'hidden',
+        phase: isStart ? 'start' : 'done',
+      });
+    }
   }
 
   protected override _captureInitialFocus(): void {}
