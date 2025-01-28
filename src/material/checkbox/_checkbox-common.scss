@@ -119,15 +119,17 @@ $_fallback-size: 40px;
       border-color: transparent;
     }
 
-    .mdc-checkbox:hover .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background,
+    // stylelint-disable selector-combinator-space-before
+    .mdc-checkbox:hover > .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background,
     .mdc-checkbox:hover
-      .mdc-checkbox__native-control:not(:indeterminate) ~ .mdc-checkbox__background {
+      > .mdc-checkbox__native-control:not(:indeterminate) ~ .mdc-checkbox__background {
       @include token-utils.create-token-slot(border-color, unselected-hover-icon-color);
       background-color: transparent;
     }
+    // stylelint-enable selector-combinator-space-before
 
-    .mdc-checkbox:hover .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
-    .mdc-checkbox:hover .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
       @include token-utils.create-token-slot(border-color, selected-hover-icon-color);
       @include token-utils.create-token-slot(background-color, selected-hover-icon-color);
     }
@@ -147,7 +149,7 @@ $_fallback-size: 40px;
 
     // Needs extra specificity to override the focus, hover, active states.
     .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive {
-      .mdc-checkbox:hover .mdc-checkbox__native-control ~ .mdc-checkbox__background,
+      .mdc-checkbox:hover > .mdc-checkbox__native-control ~ .mdc-checkbox__background,
       .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background,
       .mdc-checkbox__background {
         @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
@@ -306,31 +308,31 @@ $_fallback-size: 40px;
     transition: border-color $_transition-duration $_enter-curve,
                 background-color $_transition-duration $_enter-curve;
 
-    .mdc-checkbox__checkmark-path {
+    > .mdc-checkbox__checkmark > .mdc-checkbox__checkmark-path {
       stroke-dashoffset: 0;
     }
   }
 
   .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
-    .mdc-checkbox__checkmark {
+    > .mdc-checkbox__checkmark {
       transition: opacity $_transition-duration * 2 $_enter-curve,
                   transform $_transition-duration * 2 $_enter-curve;
       opacity: 1;
     }
 
-    .mdc-checkbox__mixedmark {
+    > .mdc-checkbox__mixedmark {
       transform: scaleX(1) rotate(-45deg);
     }
   }
   .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-    .mdc-checkbox__checkmark {
+    > .mdc-checkbox__checkmark {
       transform: rotate(45deg);
       opacity: 0;
       transition: opacity $_transition-duration $_exit-curve,
                   transform $_transition-duration $_exit-curve;
     }
 
-    .mdc-checkbox__mixedmark {
+    > .mdc-checkbox__mixedmark {
       transform: scaleX(1) rotate(0deg);
       opacity: 1;
     }
@@ -445,11 +447,22 @@ $_fallback-size: 40px;
 
 // Conditionally disables the animations of the checkbox.
 @mixin checkbox-noop-animations() {
-  &._mat-animation-noopable .mdc-checkbox {
-    *, *::before {
-      transition: none !important;
-      animation: none !important;
-    }
+  &._mat-animation-noopable > .mat-internal-form-field > .mdc-checkbox {
+    @include checkbox-noop-animations-internal;
+  }
+}
+
+@mixin checkbox-noop-animations-internal() {
+  > .mat-mdc-checkbox-touch-target,
+  > .mdc-checkbox__native-control,
+  > .mdc-checkbox__ripple,
+  > .mat-mdc-checkbox-ripple::before,
+  > .mdc-checkbox__background,
+  > .mdc-checkbox__background > .mdc-checkbox__checkmark,
+  > .mdc-checkbox__background > .mdc-checkbox__checkmark > .mdc-checkbox__checkmark-path,
+  > .mdc-checkbox__background > .mdc-checkbox__mixedmark {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
@@ -465,7 +478,7 @@ $_fallback-size: 40px;
       );
     }
 
-    > .mat-mdc-checkbox-ripple .mat-ripple-element {
+    > .mat-mdc-checkbox-ripple > .mat-ripple-element {
       @include token-utils.create-token-slot(
         background-color,
         unselected-hover-state-layer-color

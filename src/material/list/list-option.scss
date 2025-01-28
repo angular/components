@@ -63,9 +63,13 @@
   // We can't use the MDC checkbox here directly, because this checkbox is purely
   // decorative and including the MDC one will bring in unnecessary JS.
   @include checkbox-common.checkbox-structure(false);
-  @include checkbox-common.checkbox-noop-animations;
   @include radio-common.radio-structure(false);
   @include radio-common.radio-noop-animations;
+
+  &._mat-animation-noopable > .mdc-list-item__start > .mdc-checkbox,
+  &._mat-animation-noopable > .mdc-list-item__end > .mdc-checkbox {
+    @include checkbox-common.checkbox-noop-animations-internal;
+  }
 
   // The internal checkbox/radio is purely decorative, but because it's an `input`, the user can
   // still focus it by tabbing or clicking. Furthermore, `mat-list-option` has the `option` role
