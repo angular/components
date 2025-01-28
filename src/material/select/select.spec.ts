@@ -1457,6 +1457,26 @@ describe('MatSelect', () => {
         expect(() => fixture.componentInstance.select.open()).not.toThrow();
       });
 
+      it('should not throw when closing too quickly after opening', () => {
+        // Need to recreate the testing module, because the issue we're
+        // testing for only happens when animations are enabled.
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          imports: [MatFormFieldModule, MatSelectModule],
+          declarations: [BasicSelect],
+        });
+
+        fixture = TestBed.createComponent(BasicSelect);
+        fixture.detectChanges();
+        const select = fixture.componentInstance.select;
+
+        expect(() => {
+          select.open();
+          select.close();
+        }).not.toThrow();
+        expect(select.panelOpen).toBe(false);
+      });
+
       it('should open the panel when trigger is clicked', fakeAsync(() => {
         trigger.click();
         fixture.detectChanges();
