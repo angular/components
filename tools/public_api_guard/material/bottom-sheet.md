@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentRef } from '@angular/core';
@@ -48,7 +47,7 @@ export class MatBottomSheet implements OnDestroy {
     static ɵprov: i0.ɵɵInjectableDeclaration<MatBottomSheet>;
 }
 
-// @public
+// @public @deprecated
 export const matBottomSheetAnimations: {
     readonly bottomSheetState: AnimationTriggerMetadata;
 };
@@ -76,18 +75,21 @@ export class MatBottomSheetConfig<D = any> {
 // @public
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
     constructor(...args: unknown[]);
+    // (undocumented)
+    protected _animationsDisabled: boolean;
     _animationState: 'void' | 'visible' | 'hidden';
-    _animationStateChanged: EventEmitter<AnimationEvent_2>;
+    _animationStateChanged: EventEmitter<{
+        toState: "visible" | "hidden";
+        phase: "start" | "done";
+    }>;
     // (undocumented)
     protected _captureInitialFocus(): void;
     enter(): void;
     exit(): void;
     // (undocumented)
+    protected _handleAnimationEvent(isStart: boolean, animationName: string): void;
+    // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    _onAnimationDone(event: AnimationEvent_2): void;
-    // (undocumented)
-    _onAnimationStart(event: AnimationEvent_2): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatBottomSheetContainer, "mat-bottom-sheet-container", never, {}, {}, never, never, true, never>;
     // (undocumented)

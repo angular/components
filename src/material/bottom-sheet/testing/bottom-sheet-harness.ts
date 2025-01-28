@@ -13,7 +13,7 @@ import {BottomSheetHarnessFilters} from './bottom-sheet-harness-filters';
 export class MatBottomSheetHarness extends ContentContainerComponentHarness<string> {
   // Developers can provide a custom component or template for the
   // bottom sheet. The canonical parent is the ".mat-bottom-sheet-container".
-  static hostSelector = '.mat-bottom-sheet-container';
+  static hostSelector = '.mat-bottom-sheet-container:not([mat-exit])';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a bottom sheet with
