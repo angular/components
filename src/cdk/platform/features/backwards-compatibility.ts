@@ -6,7 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Renderer2, VERSION, ListenerOptions} from '@angular/core';
+import {Renderer2, VERSION} from '@angular/core';
+
+// TODO(crisbeto): replace interface with the one from core when making breaking changes for v20.
+/** Options when binding events manually. */
+export interface _ListenerOptions {
+  capture?: boolean;
+  once?: boolean;
+  passive?: boolean;
+}
 
 // TODO(crisbeto): remove this function when making breaking changes for v20.
 /**
@@ -20,7 +28,7 @@ export function _bindEventWithOptions(
   target: EventTarget,
   eventName: string,
   callback: (event: any) => boolean | void,
-  options: ListenerOptions,
+  options: _ListenerOptions,
 ): () => void {
   const major = parseInt(VERSION.major);
   const minor = parseInt(VERSION.minor);
