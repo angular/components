@@ -68,7 +68,7 @@ with any assistive technology your application supports.
 Buttons or links containing only icons (such as `mat-fab`, `mat-mini-fab`, and `mat-icon-button`)
 should be given a meaningful label via `aria-label` or `aria-labelledby`. [See the documentation
 for `MatIcon`](https://material.angular.io/components/icon) for more
-information on using icons in buttons.
+information on using icons in buttons. Additionally, to be fully accessible the icon should have a minimum touch-target of 48x48 to ensure that the icon is easily clickable particularly on mobile devices and small screens.
 
 #### Toggle buttons
 [See the documentation for `MatButtonToggle`](https://material.angular.io/components/button-toggle)
