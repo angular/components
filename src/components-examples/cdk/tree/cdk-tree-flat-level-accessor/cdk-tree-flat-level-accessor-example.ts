@@ -3,7 +3,7 @@ import {CdkTree, CdkTreeModule} from '@angular/cdk/tree';
 import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {FlatFoodNode, FLAT_DATA} from '../tree-data';
+import {FlatFoodNode, FLAT_DATA} from './cdk-tree-flat-level-accessor-example-data';
 
 /**
  * @title Tree with flat nodes
