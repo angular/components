@@ -87,8 +87,12 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   /** Dialog label applied via `aria-label` */
   ariaLabel?: string | null = null;
 
-  /** Whether this is a modal dialog. Used to set the `aria-modal` attribute. */
-  ariaModal?: boolean = true;
+  /**
+   * Whether this is a modal dialog. Used to set the `aria-modal` attribute. Off by default,
+   * because it can interfere with other overlay-based components (e.g. `mat-select`) and because
+   * it is redundant since the dialog marks all outside content as `aria-hidden` anyway.
+   */
+  ariaModal?: boolean = false;
 
   /**
    * Where the dialog should focus on open.
