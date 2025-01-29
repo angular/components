@@ -29,6 +29,7 @@ describe('CdkTextareaAutosize', () => {
         AutosizeTextAreaWithValue,
         AutosizeTextareaWithNgModel,
         AutosizeTextareaWithoutAutosize,
+        AutosizeTextAreaWithHeights,
       ],
     });
   }));
@@ -394,6 +395,22 @@ describe('CdkTextareaAutosize', () => {
 
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
+
+  it('should calculate the proper row height with fixture with heights', () => {
+    const fixtureWithHeights = TestBed.createComponent(AutosizeTextAreaWithHeights);
+    fixtureWithHeights.detectChanges();
+    textarea = fixtureWithHeights.nativeElement.querySelector('textarea');
+    textarea.value = 'one line';
+    const autosizeWithHeights = fixtureWithHeights.debugElement
+      .query(By.directive(CdkTextareaAutosize))!
+      .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
+
+    autosizeWithHeights.resizeToFitContent();
+
+    expect(textarea.clientHeight)
+      .withContext('Expected textarea with heights to have the proper height')
+      .toBeLessThanOrEqual(45);
+  });
 });
 
 // Styles to reset padding and border to make measurement comparisons easier.
@@ -444,4 +461,21 @@ class AutosizeTextareaWithNgModel {
 })
 class AutosizeTextareaWithoutAutosize {
   content: string = '';
+}
+
+// Styles to ensure line height is properly calculated
+const textareaStyleWithHeights = `
+    textarea {
+      min-height: 200px;
+      max-height: 400px;
+    }`;
+
+@Component({
+  template: `<textarea #autosize="cdkTextareaAutosize" cdkTextareaAutosize [cdkAutosizeMinRows]="3" [value]="value"></textarea>`,
+  styles: [textareaStyleReset, textareaStyleWithHeights],
+})
+class AutosizeTextAreaWithHeights {
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  maxRows: number | null = null;
+  value: string = '';
 }
