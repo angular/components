@@ -153,7 +153,17 @@ describe('MatBottomSheet', () => {
 
     const containerElement = overlayContainerElement.querySelector('mat-bottom-sheet-container')!;
     expect(containerElement.getAttribute('role')).toBe('dialog');
-    expect(containerElement.getAttribute('aria-modal')).toBe('true');
+    expect(containerElement.getAttribute('aria-modal')).toBe('false');
+  });
+
+  it('should be able to set aria-modal', () => {
+    bottomSheet.open(PizzaMsg, {
+      ariaModal: true,
+    });
+    viewContainerFixture.detectChanges();
+
+    const container = overlayContainerElement.querySelector('mat-bottom-sheet-container')!;
+    expect(container.getAttribute('aria-modal')).toBe('true');
   });
 
   it('should close a bottom sheet via the escape key', fakeAsync(() => {
