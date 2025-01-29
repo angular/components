@@ -1,3 +1,27 @@
+<a name="19.1.2"></a>
+# 19.1.2 "dolomite-domino" (2025-01-29)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0852c88ea](https://github.com/angular/components/commit/0852c88eaad171d49bad594687260b4642fc1df6) | fix | **dialog:** default aria-modal to false ([#30411](https://github.com/angular/components/pull/30411)) |
+| [b72838b10](https://github.com/angular/components/commit/b72838b10ddff42bba788ffee202651ec1017918) | fix | **platform:** preserve compatibility with angular versions less than 19.1 ([#30401](https://github.com/angular/components/pull/30401)) ([#30407](https://github.com/angular/components/pull/30407)) |
+| [5b4ca17d5](https://github.com/angular/components/commit/5b4ca17d5381cd0a8c4b439baf91edb571f3bf7b) | fix | **table:** Column sizing and scrolling bug when number of columns in table changes ([#30378](https://github.com/angular/components/pull/30378)) |
+| [c1a3caeed](https://github.com/angular/components/commit/c1a3caeed8ff25b7756231bc77bebeeb7ff329bb) | fix | **text-field:** auto sizing broken if user styles stretch the element ([#30412](https://github.com/angular/components/pull/30412)) |
+| [f936c97fb](https://github.com/angular/components/commit/f936c97fbe25d20b3c2e652c183f17e25bf2d726) | fix | **tree:** fix broken examples in stackblitz ([#30387](https://github.com/angular/components/pull/30387)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b68347467](https://github.com/angular/components/commit/b68347467279635c28e48077dd1a076b5499e0cd) | fix | **button-toggle:** incorrect shape of focus indicator in vertical group ([#30376](https://github.com/angular/components/pull/30376)) |
+| [4a96a25e1](https://github.com/angular/components/commit/4a96a25e12683b438a168e4acbfaca7ef89766da) | fix | **select:** fixed text color for selected options in multiple select ([#30367](https://github.com/angular/components/pull/30367)) |
+| [29f1da4fb](https://github.com/angular/components/commit/29f1da4fb79fd681319e42531f180ec46955a16d) | perf | **button:** Change frequently missed descendant selectors to child selectors ([#30385](https://github.com/angular/components/pull/30385)) |
+| [5d6d25fc5](https://github.com/angular/components/commit/5d6d25fc5071d0825fe13b66974339279ca7fe74) | perf | **checkbox:** Optimize css selectors ([#30386](https://github.com/angular/components/pull/30386)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [836ad799f](https://github.com/angular/components/commit/836ad799f4114cbca347743a8d56c4a16bd840b1) | fix | hide info window node when opened with content ([#30392](https://github.com/angular/components/pull/30392)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.1"></a>
 # 19.1.1 "lanthanum-labrador" (2025-01-22)
 ### cdk
