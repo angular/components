@@ -198,26 +198,30 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     // Use a clone element because we have to override some styles.
-    let textareaClone = this._textareaElement.cloneNode(false) as HTMLTextAreaElement;
+    const textareaClone = this._textareaElement.cloneNode(false) as HTMLTextAreaElement;
+    const cloneStyles = textareaClone.style;
     textareaClone.rows = 1;
 
     // Use `position: absolute` so that this doesn't cause a browser layout and use
     // `visibility: hidden` so that nothing is rendered. Clear any other styles that
     // would affect the height.
-    textareaClone.style.position = 'absolute';
-    textareaClone.style.visibility = 'hidden';
-    textareaClone.style.border = 'none';
-    textareaClone.style.padding = '0';
-    textareaClone.style.height = '';
-    textareaClone.style.minHeight = '';
-    textareaClone.style.maxHeight = '';
+    cloneStyles.position = 'absolute';
+    cloneStyles.visibility = 'hidden';
+    cloneStyles.border = 'none';
+    cloneStyles.padding = '0';
+    cloneStyles.height = '';
+    cloneStyles.minHeight = '';
+    cloneStyles.maxHeight = '';
+
+    // App styles might be messing with the height through the positioning properties.
+    cloneStyles.top = cloneStyles.bottom = cloneStyles.left = cloneStyles.right = 'auto';
 
     // In Firefox it happens that textarea elements are always bigger than the specified amount
     // of rows. This is because Firefox tries to add extra space for the horizontal scrollbar.
     // As a workaround that removes the extra space for the scrollbar, we can just set overflow
     // to hidden. This ensures that there is no invalid calculation of the line height.
     // See Firefox bug report: https://bugzilla.mozilla.org/show_bug.cgi?id=33654
-    textareaClone.style.overflow = 'hidden';
+    cloneStyles.overflow = 'hidden';
 
     this._textareaElement.parentNode!.appendChild(textareaClone);
     this._cachedLineHeight = textareaClone.clientHeight;
