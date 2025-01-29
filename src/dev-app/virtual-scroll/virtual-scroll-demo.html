@@ -9,7 +9,8 @@
 </cdk-virtual-scroll-viewport>
 
 <h3>Increasing size</h3>
-<cdk-virtual-scroll-viewport class="demo-viewport" autosize>
+
+<cdk-virtual-scroll-viewport class="demo-viewport" autosize #increasingViewport>
   <div *cdkVirtualFor="let size of increasingSizeData; let i = index" class="demo-item"
        [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
@@ -17,7 +18,34 @@
 </cdk-virtual-scroll-viewport>
 
 <h3>Decreasing size</h3>
-<cdk-virtual-scroll-viewport class="demo-viewport" autosize>
+
+<mat-form-field>
+  <mat-label>Behavior</mat-label>
+  <mat-select [(ngModel)]="scrollToBehavior">
+    <mat-option value="auto">Auto</mat-option>
+    <mat-option value="instant">Instant</mat-option>
+    <mat-option value="smooth">Smooth</mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-form-field>
+  <mat-label>Offset</mat-label>
+  <input matInput type="number" [(ngModel)]="scrollToOffset">
+</mat-form-field>
+<button mat-button (click)="increasingViewport.scrollToOffset(scrollToOffset, scrollToBehavior)">
+  Go to offset
+</button>
+<mat-form-field>
+  <mat-label>Index</mat-label>
+  <input matInput type="number" [(ngModel)]="scrollToIndex">
+</mat-form-field>
+<button mat-button (click)="increasingViewport.scrollToIndex(scrollToIndex, scrollToBehavior)">
+  Go to index
+</button>
+<p>
+  Currently scrolled to item: {{scrolledIndex.get(viewport1) || 0}}
+</p>
+
+<cdk-virtual-scroll-viewport class="demo-viewport" autosize #decreasingViewport>
   <div *cdkVirtualFor="let size of decreasingSizeData; let i = index" class="demo-item"
        [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
@@ -25,7 +53,7 @@
 </cdk-virtual-scroll-viewport>
 
 <h3>Random size</h3>
-<cdk-virtual-scroll-viewport class="demo-viewport" autosize>
+<cdk-virtual-scroll-viewport class="demo-viewport" autosize  #randomViewport>
   <div *cdkVirtualFor="let size of randomData; let i = index" class="demo-item"
        [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
