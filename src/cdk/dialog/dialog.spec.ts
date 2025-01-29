@@ -94,7 +94,18 @@ describe('Dialog', () => {
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('cdk-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
-    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('true');
+    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('false');
+  });
+
+  it('should be able to set aria-modal', () => {
+    dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef,
+      ariaModal: true,
+    });
+    viewContainerFixture.detectChanges();
+
+    const container = overlayContainerElement.querySelector('cdk-dialog-container')!;
+    expect(container.getAttribute('aria-modal')).toBe('true');
   });
 
   it('should open a dialog with a template', () => {
@@ -117,7 +128,7 @@ describe('Dialog', () => {
 
     let dialogContainerElement = overlayContainerElement.querySelector('cdk-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
-    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('true');
+    expect(dialogContainerElement.getAttribute('aria-modal')).toBe('false');
 
     dialogRef.close();
   });
