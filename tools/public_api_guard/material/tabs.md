@@ -7,7 +7,6 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
@@ -507,7 +506,7 @@ export class MatTabNavPanel {
 
 // @public @deprecated
 export const matTabsAnimations: {
-    readonly translateTab: AnimationTriggerMetadata;
+    readonly translateTab: any;
 };
 
 // @public
