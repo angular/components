@@ -51,22 +51,20 @@
           [attr.aria-label]="step.ariaLabel || null"
           [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
           [attr.aria-disabled]="_stepIsNavigable($index, step) ? null : true">
-          <div role="group">
-            <ng-container
-              [ngTemplateOutlet]="stepTemplate"
-              [ngTemplateOutletContext]="{step, i: $index}"/>
-            <div
-              #animatedContainer
-              class="mat-vertical-content-container"
-              [class.mat-stepper-vertical-line]="!$last"
-              [class.mat-vertical-content-container-active]="selectedIndex === $index"
-              [attr.inert]="selectedIndex === $index ? null : ''">
-              <div class="mat-vertical-stepper-content"
-                [id]="_getStepContentId($index)"
-                [attr.aria-labelledby]="_getStepLabelId($index)">
-                <div class="mat-vertical-content">
-                  <ng-container [ngTemplateOutlet]="step.content"/>
-                </div>
+          <ng-container
+            [ngTemplateOutlet]="stepTemplate"
+            [ngTemplateOutletContext]="{step, i: $index}"/>
+          <div
+            #animatedContainer
+            class="mat-vertical-content-container"
+            [class.mat-stepper-vertical-line]="!$last"
+            [class.mat-vertical-content-container-active]="selectedIndex === $index"
+            [attr.inert]="selectedIndex === $index ? null : ''">
+            <div class="mat-vertical-stepper-content"
+              [id]="_getStepContentId($index)"
+              [attr.aria-labelledby]="_getStepLabelId($index)">
+              <div class="mat-vertical-content">
+                <ng-container [ngTemplateOutlet]="step.content"/>
               </div>
             </div>
           </div>
