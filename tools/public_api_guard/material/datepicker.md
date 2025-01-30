@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { ControlValueAccessor } from '@angular/forms';
@@ -339,8 +338,8 @@ export class MatDatepickerActions implements AfterViewInit, OnDestroy {
 
 // @public @deprecated
 export const matDatepickerAnimations: {
-    readonly transformPanel: AnimationTriggerMetadata;
-    readonly fadeInCalendar: AnimationTriggerMetadata;
+    readonly transformPanel: any;
+    readonly fadeInCalendar: any;
 };
 
 // @public

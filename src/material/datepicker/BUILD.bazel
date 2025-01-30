@@ -38,7 +38,6 @@ ng_module(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
-        "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
