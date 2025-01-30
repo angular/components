@@ -36,7 +36,6 @@ ng_module(
         "//src/cdk/portal",
         "//src/cdk/scrolling",
         "//src/material/core",
-        "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
     ],
