@@ -11,9 +11,6 @@ import {FocusableOption} from '@angular/cdk/a11y';
 
 @Directive({
   selector: '[cdkStepHeader]',
-  host: {
-    'role': 'tab',
-  },
 })
 export class CdkStepHeader implements FocusableOption {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
