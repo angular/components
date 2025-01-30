@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -26,7 +25,7 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
 // @public @deprecated (undocumented)
-export const fadeInItems: AnimationTriggerMetadata;
+export const fadeInItems: any;
 
 // @public
 export const MAT_MENU_CONTENT: InjectionToken<MatMenuContent>;
@@ -119,8 +118,8 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
 // @public @deprecated
 export const matMenuAnimations: {
-    readonly transformMenu: AnimationTriggerMetadata;
-    readonly fadeInItems: AnimationTriggerMetadata;
+    readonly transformMenu: any;
+    readonly fadeInItems: any;
 };
 
 // @public
@@ -287,7 +286,7 @@ export type MenuPositionX = 'before' | 'after';
 export type MenuPositionY = 'above' | 'below';
 
 // @public @deprecated (undocumented)
-export const transformMenu: AnimationTriggerMetadata;
+export const transformMenu: any;
 
 // (No @packageDocumentation comment for this package)
 
