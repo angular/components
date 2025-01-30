@@ -1,3 +1,32 @@
+<a name="19.2.0-next.2"></a>
+# 19.2.0-next.2 "brazilianite-belt" (2025-01-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c1ff40f3b](https://github.com/angular/components/commit/c1ff40f3bfdfc8dcbe073aa86896bb17d6f97de0) | fix | **dialog:** default aria-modal to false ([#30411](https://github.com/angular/components/pull/30411)) |
+| [de40f2eec](https://github.com/angular/components/commit/de40f2eec4c0eeadfa40fba040f5c9dcbb1ea8c4) | fix | **platform:** preserve compatibility with angular versions less than 19.1 ([#30401](https://github.com/angular/components/pull/30401)) |
+| [8950ec372](https://github.com/angular/components/commit/8950ec3720e4220b830a591261f4579e7fea42c2) | fix | **table:** Column sizing and scrolling bug when number of columns in table changes ([#30378](https://github.com/angular/components/pull/30378)) |
+| [73022d8e2](https://github.com/angular/components/commit/73022d8e20a5d9b7ba94f5ca6bc3eb53b22c1895) | fix | **text-field:** auto sizing broken if user styles stretch the element ([#30412](https://github.com/angular/components/pull/30412)) |
+| [8b876d8e4](https://github.com/angular/components/commit/8b876d8e4a6ba2b2c726513a54ab074e9659851e) | fix | **tree:** fix broken examples in stackblitz ([#30387](https://github.com/angular/components/pull/30387)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0776acc1e](https://github.com/angular/components/commit/0776acc1ee10c3aaa4f3c3bfae51120a8a6b1542) | fix | **bottom-sheet:** switch away from animations module ([#30402](https://github.com/angular/components/pull/30402)) |
+| [e91d5091b](https://github.com/angular/components/commit/e91d5091bbf3d44cc168be458269d260a0c22c27) | fix | **button-toggle:** incorrect shape of focus indicator in vertical group ([#30376](https://github.com/angular/components/pull/30376)) |
+| [86ad51501](https://github.com/angular/components/commit/86ad5150110522873dae2801fd3c2957502949e7) | fix | **select:** avoid error if panel is closed too quickly ([#30408](https://github.com/angular/components/pull/30408)) |
+| [11f02eecc](https://github.com/angular/components/commit/11f02eecc18939a1c8a2ac4c4cc9b74b2f5ca07a) | fix | **select:** fixed text color for selected options in multiple select ([#30367](https://github.com/angular/components/pull/30367)) |
+| [a44b34794](https://github.com/angular/components/commit/a44b34794b129ba127206f7cf74c7c0a8a54be88) | fix | **select:** switch away from animations module |
+| [eb8e998c6](https://github.com/angular/components/commit/eb8e998c6967a29a09531771f908c7fc3fcffaae) | fix | **snack-bar:** switch away from animations module ([#30381](https://github.com/angular/components/pull/30381)) |
+| [992aff18c](https://github.com/angular/components/commit/992aff18cca132e0c1874ebb70467f9844ff4ca4) | fix | **timepicker:** switch away from animations module ([#30404](https://github.com/angular/components/pull/30404)) |
+| [21586aee8](https://github.com/angular/components/commit/21586aee82c9051149c519468d639459b3e72391) | perf | **button:** Change frequently missed descendant selectors to child selectors ([#30385](https://github.com/angular/components/pull/30385)) |
+| [e4388c6f2](https://github.com/angular/components/commit/e4388c6f2594d81c3a95543482a2edeaa34bccff) | perf | **checkbox:** Optimize css selectors ([#30386](https://github.com/angular/components/pull/30386)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [61103c542](https://github.com/angular/components/commit/61103c542ab442f6e89352f638b7aebee7db00fc) | fix | hide info window node when opened with content ([#30392](https://github.com/angular/components/pull/30392)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.2"></a>
 # 19.1.2 "dolomite-domino" (2025-01-29)
 ### cdk
