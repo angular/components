@@ -23,7 +23,6 @@ ng_module(
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
         "//src/material/core",
-        "@npm//@angular/animations",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],

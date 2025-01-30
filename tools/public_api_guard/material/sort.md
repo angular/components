@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/material/core';
@@ -84,12 +83,12 @@ export interface MatSortable {
 
 // @public @deprecated
 export const matSortAnimations: {
-    readonly indicator: AnimationTriggerMetadata;
-    readonly leftPointer: AnimationTriggerMetadata;
-    readonly rightPointer: AnimationTriggerMetadata;
-    readonly arrowOpacity: AnimationTriggerMetadata;
-    readonly arrowPosition: AnimationTriggerMetadata;
-    readonly allowChildren: AnimationTriggerMetadata;
+    readonly indicator: any;
+    readonly leftPointer: any;
+    readonly rightPointer: any;
+    readonly arrowOpacity: any;
+    readonly arrowPosition: any;
+    readonly allowChildren: any;
 };
 
 // @public
