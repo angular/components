@@ -8,7 +8,6 @@ import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -149,7 +148,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
 
 // @public @deprecated
 export const matFormFieldAnimations: {
-    readonly transitionMessages: AnimationTriggerMetadata;
+    readonly transitionMessages: any;
 };
 
 // @public
