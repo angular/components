@@ -29,7 +29,6 @@ ng_module(
         "//src/cdk/stepper",
         "//src/material/core",
         "//src/material/icon",
-        "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
