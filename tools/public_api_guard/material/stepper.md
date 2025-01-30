@@ -7,7 +7,6 @@
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkStep } from '@angular/cdk/stepper';
 import { CdkStepHeader } from '@angular/cdk/stepper';
 import { CdkStepLabel } from '@angular/cdk/stepper';
@@ -153,8 +152,8 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
 
 // @public @deprecated
 export const matStepperAnimations: {
-    readonly horizontalStepTransition: AnimationTriggerMetadata;
-    readonly verticalStepTransition: AnimationTriggerMetadata;
+    readonly horizontalStepTransition: any;
+    readonly verticalStepTransition: any;
 };
 
 // @public
