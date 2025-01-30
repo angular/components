@@ -7,10 +7,15 @@
  */
 
 import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, SPACE, ENTER} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
+  AfterViewInit,
+  ANIMATION_MODULE_TYPE,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -19,6 +24,9 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  HostAttributeToken,
+  inject,
+  InjectionToken,
   Input,
   OnDestroy,
   OnInit,
@@ -26,17 +34,9 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  InjectionToken,
-  AfterViewInit,
-  booleanAttribute,
-  inject,
-  HostAttributeToken,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, MatPseudoCheckbox, _StructuralStylesLoader} from '@angular/material/core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -513,7 +513,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Selects a value if there's a toggle that corresponds to it. */
   private _selectValue(value: any, toggles: MatButtonToggle[]) {
     for (const toggle of toggles) {
-      if (toggle.value != null && toggle.value === value) {
+      if (toggle.value === value) {
         toggle.checked = true;
         this._selectionModel.select(toggle);
         if (!this.multiple) {
