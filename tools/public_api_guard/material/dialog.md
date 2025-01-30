@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
@@ -39,7 +38,7 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 // @public
 export function _closeDialogVia<R>(ref: MatDialogRef<R>, interactionType: FocusOrigin, result?: R): void;
 
-// @public
+// @public @deprecated
 export const _defaultParams: {
     params: {
         enterAnimationDuration: string;
@@ -114,9 +113,9 @@ export class MatDialogActions extends MatDialogLayoutSection {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogActions, never>;
 }
 
-// @public
+// @public @deprecated
 export const matDialogAnimations: {
-    readonly dialogContainer: AnimationTriggerMetadata;
+    readonly dialogContainer: any;
 };
 
 // @public
