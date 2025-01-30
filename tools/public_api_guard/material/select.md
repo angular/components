@@ -6,7 +6,6 @@
 
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -219,8 +218,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
 
 // @public @deprecated
 export const matSelectAnimations: {
-    readonly transformPanelWrap: AnimationTriggerMetadata;
-    readonly transformPanel: AnimationTriggerMetadata;
+    readonly transformPanelWrap: any;
+    readonly transformPanel: any;
 };
 
 // @public
