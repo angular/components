@@ -7,6 +7,6 @@ import {MatChipsModule} from '@angular/material/chips';
   templateUrl: './chips-scene.html',
   styleUrls: ['./chips-scene.scss'],
   standalone: true,
-  imports: [MatChipsModule]
+  imports: [MatChipsModule],
 })
 export class ChipsScene {}

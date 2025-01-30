@@ -21,7 +21,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './table-scene.html',
   styleUrls: ['./table-scene.scss'],
   standalone: true,
-  imports: [MatCardModule, MatTableModule]
+  imports: [MatCardModule, MatTableModule],
 })
 export class TableScene {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

@@ -9,6 +9,6 @@ import {MatListModule} from '@angular/material/list';
   templateUrl: './sidenav-scene.html',
   styleUrls: ['./sidenav-scene.scss'],
   standalone: true,
-  imports: [MatSidenavModule, MatListModule, MatIconModule]
+  imports: [MatSidenavModule, MatListModule, MatIconModule],
 })
 export class SidenavScene {}

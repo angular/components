@@ -8,7 +8,7 @@ describe('HelpSupportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Support]
+      imports: [Support],
     }).compileComponents();
   });
 

@@ -12,10 +12,7 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     // Strictness flags. Matching the settings applied in the Angular Components source
     // code, ensuring that examples do not break in StackBlitz with stricter settings.
     "noUnusedParameters": false,

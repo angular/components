@@ -1,14 +1,8 @@
-import {
-  AfterViewInit,
-  Component,
-  ViewEncapsulation,
-  viewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ViewEncapsulation, viewChild} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -33,4 +27,3 @@ export class AutocompleteScene implements AfterViewInit {
     this.input().focus();
   }
 }
-

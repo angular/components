@@ -142,10 +142,10 @@ describe('DocViewer', () => {
 
     http.expectOne(errorUrl).flush('Not found', {status: 404, statusText: 'Not found'});
 
-
     expect(docViewer).not.toBeNull();
     expect(docViewer.nativeElement.innerHTML).toContain(
-        'Failed to load document: http://material.angular.io/error-doc.html');
+      'Failed to load document: http://material.angular.io/error-doc.html',
+    );
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
@@ -165,7 +165,7 @@ describe('DocViewer', () => {
     // and properties.
     expect(docViewer.children.length).toBe(5);
 
-    // it should have "Deprecated" as its inner text 
+    // it should have "Deprecated" as its inner text
     const deprecatedSymbol = docViewer.children.shift()!;
     expect(deprecatedSymbol.nativeElement.innerText).toBe('Deprecated');
 
@@ -207,8 +207,7 @@ const FAKE_DOCS: {[key: string]: string} = {
     '<div material-docs-example="demo-example"></div>',
   'http://material.angular.io/whole-snippet-example.html':
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
-  'http://material.angular.io/deprecated.html':
-    `<div class="docs-api-class-deprecated-marker" 
+  'http://material.angular.io/deprecated.html': `<div class="docs-api-class-deprecated-marker" 
         deprecated-message="deprecated class">Deprecated</div>
   
       <div class="docs-api-constant-deprecated-marker" 

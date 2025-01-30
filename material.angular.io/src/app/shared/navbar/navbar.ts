@@ -34,7 +34,7 @@ export class NavBar implements OnDestroy {
   skipLinkHidden = true;
 
   constructor(private navigationFocusService: NavigationFocusService) {
-    setTimeout(() => this.skipLinkHref = this.navigationFocusService.getSkipLinkHref(), 100);
+    setTimeout(() => (this.skipLinkHref = this.navigationFocusService.getSkipLinkHref()), 100);
   }
 
   get sections() {
@@ -49,4 +49,3 @@ export class NavBar implements OnDestroy {
     this.subscriptions.unsubscribe();
   }
 }
-

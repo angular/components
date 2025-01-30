@@ -13,22 +13,22 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 const prefersReducedMotion =
   typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion)').matches : false;
 
-
 // Unregister all installed service workers and force reload the page if there was
 // an old service worker from a previous version of the docs.
-unregisterServiceWorkers()
-  .then(hadServiceWorker => hadServiceWorker && location.reload());
+unregisterServiceWorkers().then(hadServiceWorker => hadServiceWorker && location.reload());
 
 bootstrapApplication(MaterialDocsApp, {
   providers: [
     prefersReducedMotion ? provideNoopAnimations() : provideAnimations(),
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: ErrorHandler, useClass: AnalyticsErrorReportHandler},
-    provideRouter(MATERIAL_DOCS_ROUTES, withInMemoryScrolling({
-      scrollPositionRestoration: 'enabled',
-      anchorScrolling: 'enabled'
-    })),
+    provideRouter(
+      MATERIAL_DOCS_ROUTES,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
+    ),
     provideHttpClient(),
-  ]
-})
-  .catch(err => console.error(err));
+  ],
+}).catch(err => console.error(err));

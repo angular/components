@@ -8,6 +8,6 @@ import {MatBadgeModule} from '@angular/material/badge';
   templateUrl: './badge-scene.html',
   styleUrls: ['./badge-scene.scss'],
   standalone: true,
-  imports: [MatIconModule, MatBadgeModule]
+  imports: [MatIconModule, MatBadgeModule],
 })
 export class BadgeScene {}

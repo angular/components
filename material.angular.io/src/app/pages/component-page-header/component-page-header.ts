@@ -8,7 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './component-page-header.html',
   styleUrls: ['./component-page-header.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule]
+  imports: [MatButtonModule, MatIconModule],
 })
 export class ComponentPageHeader {
   @Output() toggleSidenav = new EventEmitter<void>();

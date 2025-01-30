@@ -23,7 +23,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule]
+  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule],
 })
 export class ThemePicker implements OnInit, OnDestroy {
   private _queryParamSubscription = Subscription.EMPTY;
@@ -58,10 +58,12 @@ export class ThemePicker implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(public styleManager: StyleManager,
-              private _themeStorage: ThemeStorage,
-              private _activatedRoute: ActivatedRoute,
-              private liveAnnouncer: LiveAnnouncer) {
+  constructor(
+    public styleManager: StyleManager,
+    private _themeStorage: ThemeStorage,
+    private _activatedRoute: ActivatedRoute,
+    private liveAnnouncer: LiveAnnouncer,
+  ) {
     const themeName = this._themeStorage.getStoredThemeName();
     if (themeName) {
       this.selectTheme(themeName);
@@ -81,7 +83,7 @@ export class ThemePicker implements OnInit, OnDestroy {
         if (themeName) {
           this.selectTheme(themeName);
         }
-    });
+      });
   }
 
   ngOnDestroy() {
@@ -89,7 +91,8 @@ export class ThemePicker implements OnInit, OnDestroy {
   }
 
   selectTheme(themeName: string) {
-    const theme = this.themes.find(currentTheme => currentTheme.name === themeName) ||
+    const theme =
+      this.themes.find(currentTheme => currentTheme.name === themeName) ||
       this.themes.find(currentTheme => currentTheme.isDefault)!;
 
     this.currentTheme = theme;

@@ -9,7 +9,7 @@ import {MatOptionModule} from '@angular/material/core';
   templateUrl: './select-scene.html',
   styleUrls: ['./select-scene.scss'],
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, MatOptionModule]
+  imports: [MatFormFieldModule, MatSelectModule, MatOptionModule],
 })
 export class SelectScene implements AfterViewInit {
   readonly select = viewChild.required(MatSelect);

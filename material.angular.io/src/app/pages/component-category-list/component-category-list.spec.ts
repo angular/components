@@ -13,14 +13,12 @@ describe('ComponentCategoryList', () => {
 
     const fakeActivatedRoute = {
       snapshot: {},
-      pathFromRoot: [{params}]
+      pathFromRoot: [{params}],
     };
 
     TestBed.configureTestingModule({
       imports: [ComponentCategoryListModule, DocsAppTestingModule],
-      providers: [
-        {provide: ActivatedRoute, useValue: fakeActivatedRoute}
-      ]
+      providers: [{provide: ActivatedRoute, useValue: fakeActivatedRoute}],
     }).compileComponents();
   }));
 
@@ -37,8 +35,7 @@ describe('ComponentCategoryList', () => {
 
     const component = fixture.componentInstance;
     const components = component.docItems.getItems('components');
-    const cards = fixture
-        .nativeElement.querySelectorAll('.docs-component-category-list-card');
+    const cards = fixture.nativeElement.querySelectorAll('.docs-component-category-list-card');
     expect(cards.length).toEqual(components.length);
   });
 });

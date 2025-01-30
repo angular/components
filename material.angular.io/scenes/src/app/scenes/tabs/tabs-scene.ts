@@ -6,6 +6,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   templateUrl: './tabs-scene.html',
   styleUrls: ['./tabs-scene.scss'],
   standalone: true,
-  imports: [MatTabsModule]
+  imports: [MatTabsModule],
 })
 export class TabsScene {}

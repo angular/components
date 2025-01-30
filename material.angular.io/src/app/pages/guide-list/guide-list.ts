@@ -12,12 +12,15 @@ import {MatRipple} from '@angular/material/core';
   templateUrl: './guide-list.html',
   styleUrls: ['./guide-list.scss'],
   standalone: true,
-  imports: [NavigationFocus, RouterLink, MatCardModule, Footer, MatRipple]
+  imports: [NavigationFocus, RouterLink, MatCardModule, Footer, MatRipple],
 })
 export class GuideList implements OnInit {
   @HostBinding('class.main-content') readonly mainContentClass = true;
 
-  constructor(public guideItems: GuideItems, public _componentPageTitle: ComponentPageTitle) {}
+  constructor(
+    public guideItems: GuideItems,
+    public _componentPageTitle: ComponentPageTitle,
+  ) {}
 
   ngOnInit(): void {
     this._componentPageTitle.title = 'Guides';

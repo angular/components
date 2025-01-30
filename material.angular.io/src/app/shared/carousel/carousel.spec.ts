@@ -3,11 +3,9 @@ import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angula
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {Carousel, CarouselItem} from './carousel';
 
-
 describe('HorizontalCarousel', () => {
   let fixture: ComponentFixture<CarouselTestComponent>;
   let component: Carousel;
-
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -57,14 +55,16 @@ describe('HorizontalCarousel', () => {
         <div carousel-item class="docs-carousel-item-container"></div>
       }
     </app-carousel>`,
-  styles: [`
+  styles: [
+    `
     .docs-carousel-item-container {
       display: flex;
       width: 250px;
     }
-  `],
+  `,
+  ],
   standalone: true,
-  imports: [Carousel, CarouselItem, DocsAppTestingModule]
+  imports: [Carousel, CarouselItem, DocsAppTestingModule],
 })
 class CarouselTestComponent {
   @ViewChild(Carousel) carousel!: Carousel;

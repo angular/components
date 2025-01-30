@@ -10,8 +10,7 @@ const testExampleBasePath = `/docs-content/examples-source/cdk/my-comp/${testExa
 const FAKE_DOCS: {[key: string]: string} = {
   /* eslint-disable @typescript-eslint/naming-convention */
   '/assets/stack-blitz/src/index.html': '<material-docs-example></material-docs-example>',
-  '/assets/stack-blitz/src/main.ts':
-      `import {MaterialDocsExample} from './material-docs-example';`,
+  '/assets/stack-blitz/src/main.ts': `import {MaterialDocsExample} from './material-docs-example';`,
   /* eslint-enable @typescript-eslint/naming-convention */
   [`${testExampleBasePath}/test.ts`]: 'ExampleComponent',
   [`${testExampleBasePath}/test.html`]: `<example></example>`,
@@ -32,7 +31,7 @@ describe('StackBlitzWriter', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [StackBlitzWriter]
+      providers: [StackBlitzWriter],
     }).compileComponents();
   }));
 
@@ -76,7 +75,6 @@ describe('StackBlitzWriter', () => {
 <!-- Copyright ${year} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at https://angular.io/license -->`);
-
   });
 
   it('should set tags for example stackblitz', fakeAsync(() => {
@@ -91,8 +89,10 @@ describe('StackBlitzWriter', () => {
     flushMicrotasks();
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);
-    expect(openProjectSpy).toHaveBeenCalledWith(jasmine.objectContaining(
-        {tags: ['angular', 'material', 'cdk', 'web', 'example']}), jasmine.anything());
+    expect(openProjectSpy).toHaveBeenCalledWith(
+      jasmine.objectContaining({tags: ['angular', 'material', 'cdk', 'web', 'example']}),
+      jasmine.anything(),
+    );
   }));
 
   it('should read and transform template files properly', fakeAsync(() => {
@@ -121,7 +121,8 @@ describe('StackBlitzWriter', () => {
     });
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);
-    expect(openProjectSpy).toHaveBeenCalledWith(
-        jasmine.objectContaining({files: expectedFiles}), {openFile: 'src/app/test.ts'});
+    expect(openProjectSpy).toHaveBeenCalledWith(jasmine.objectContaining({files: expectedFiles}), {
+      openFile: 'src/app/test.ts',
+    });
   }));
 });

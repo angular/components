@@ -9,6 +9,6 @@ import {MatDividerModule} from '@angular/material/divider';
   templateUrl: './divider-scene.html',
   styleUrls: ['./divider-scene.scss'],
   standalone: true,
-  imports: [MatListModule, MatIconModule, MatDividerModule]
+  imports: [MatListModule, MatIconModule, MatDividerModule],
 })
 export class DividerScene {}

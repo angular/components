@@ -5,6 +5,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
   selector: 'app-button-toggle-scene',
   templateUrl: './placeholder-scene.html',
   styleUrls: ['./placeholder-scene.scss'],
-  standalone: true
+  standalone: true,
 })
 export class PlaceHolderScene {}

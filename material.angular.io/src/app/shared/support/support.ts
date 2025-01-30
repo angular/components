@@ -6,7 +6,6 @@ import {AppLogo} from '../logo/logo';
   templateUrl: './support.html',
   styleUrls: ['./support.scss'],
   standalone: true,
-  imports: [AppLogo]
+  imports: [AppLogo],
 })
-export class Support {
-}
+export class Support {}

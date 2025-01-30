@@ -19,7 +19,7 @@ sh.set('-e');
 
 imagemin(['src/assets/screenshots/*.png'], {
   destination: 'src/assets/screenshots',
-  plugins: [imageminPngquant({quality: [0.4, 0.6]})]
+  plugins: [imageminPngquant({quality: [0.4, 0.6]})],
 })
-.then(() => console.log('Optimization complete.'))
-.catch(error => console.error);
+  .then(() => console.log('Optimization complete.'))
+  .catch(error => console.error);

@@ -6,7 +6,7 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-dialog-scene',
   template: '',
-  standalone: true
+  standalone: true,
 })
 export class DialogScene {
   constructor(public dialog: MatDialog) {
@@ -17,7 +17,6 @@ export class DialogScene {
     this.dialog.open(DialogSceneExampleDialog);
   }
 }
-
 
 @Component({
   selector: 'app-dialog-scene-example-dialog',

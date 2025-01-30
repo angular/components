@@ -17,21 +17,20 @@ describe('Navigation focus service', () => {
   };
 
   beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([
-            {path: '', component: RouteTest},
-            {path: 'cdk', component: RouteTest},
-            {path: 'guides', component: RouteTest}
-          ]),
-          NavigationFocus
-        ],
-        providers: [NavigationFocusService],
-        declarations: [NavigationFocusTest, RouteTest],
-      });
-      fixture = TestBed.createComponent(NavigationFocusTest);
-    }
-  );
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([
+          {path: '', component: RouteTest},
+          {path: 'cdk', component: RouteTest},
+          {path: 'guides', component: RouteTest},
+        ]),
+        NavigationFocus,
+      ],
+      providers: [NavigationFocusService],
+      declarations: [NavigationFocusTest, RouteTest],
+    });
+    fixture = TestBed.createComponent(NavigationFocusTest);
+  });
 
   beforeEach(() => {
     zone = TestBed.inject(NgZone);
@@ -131,13 +130,11 @@ describe('Navigation focus service', () => {
   `,
   standalone: false,
 })
-class NavigationFocusTest {
-}
+class NavigationFocusTest {}
 
 @Component({
   selector: 'route-test',
   template: '',
   standalone: false,
 })
-class RouteTest {
-}
+class RouteTest {}

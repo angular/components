@@ -42,21 +42,22 @@ export interface DocSection {
 const exampleNames = Object.keys(EXAMPLE_COMPONENTS);
 const CDK = 'cdk';
 const COMPONENTS = 'components';
-export const SECTIONS: { [key: string]: DocSection } = {
+export const SECTIONS: {[key: string]: DocSection} = {
   [COMPONENTS]: {
     name: 'Components',
-    summary: 'Angular Material offers a wide variety of UI components based on the <a' +
-      ' href="https://material.io/components">Material Design specification</a>'
+    summary:
+      'Angular Material offers a wide variety of UI components based on the <a' +
+      ' href="https://material.io/components">Material Design specification</a>',
   },
   [CDK]: {
     name: 'CDK',
-    summary: 'The Component Dev Kit (CDK) is a set of behavior primitives for building UI' +
-      ' components.'
+    summary:
+      'The Component Dev Kit (CDK) is a set of behavior primitives for building UI' +
+      ' components.',
   },
 };
 
-
-const DOCS: { [key: string]: DocItem[] } = {
+const DOCS: {[key: string]: DocItem[]} = {
   [COMPONENTS]: [
     {
       id: 'autocomplete',
@@ -91,7 +92,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       summary: 'An interactive button with a range of presentation options.',
       exampleSpecs: {
         prefix: 'button-',
-        exclude: ['button-toggle-']
+        exclude: ['button-toggle-'],
       },
       additionalApiDocs: [{name: 'Testing', path: 'material-button-testing.html'}],
     },
@@ -263,7 +264,6 @@ const DOCS: { [key: string]: DocItem[] } = {
       summary: 'Allows the user to select one option from a group.',
       exampleSpecs: {
         prefix: 'radio-',
-
       },
       additionalApiDocs: [{name: 'Testing', path: 'material-radio-testing.html'}],
     },
@@ -502,7 +502,7 @@ const DOCS: { [key: string]: DocItem[] } = {
     {
       id: 'platform',
       name: 'Platform',
-      summary: 'Provides information about the user\'s platform.',
+      summary: "Provides information about the user's platform.",
       exampleSpecs: {
         prefix: 'cdk-platform-',
       },
@@ -551,12 +551,12 @@ const DOCS: { [key: string]: DocItem[] } = {
       additionalApiDocs: [
         {
           name: 'Testbed',
-          path: 'cdk-testing-testbed.html'
+          path: 'cdk-testing-testbed.html',
         },
         {
           name: 'Protractor',
-          path: 'cdk-testing-protractor.html'
-        }
+          path: 'cdk-testing-protractor.html',
+        },
       ],
     },
     {
@@ -575,7 +575,7 @@ const DOCS: { [key: string]: DocItem[] } = {
         prefix: 'cdk-tree-',
       },
     },
-  ]
+  ],
   // TODO(jelbourn): re-add utilities and a11y as top-level categories once we can generate
   // their API docs with dgeni. Currently our setup doesn't generate API docs for constants
   // and standalone functions (much of the utilities) and we have no way of generating API
@@ -588,7 +588,6 @@ const ALL_DOCS = [...ALL_COMPONENTS, ...ALL_CDK];
 
 @Injectable({providedIn: 'root'})
 export class DocumentationItems {
-
   getItems(section: string): DocItem[] {
     if (section === COMPONENTS) {
       return ALL_COMPONENTS;
@@ -609,9 +608,11 @@ function processDocs(packageName: string, docs: DocItem[]): DocItem[] {
   for (const doc of docs) {
     doc.packageName = packageName;
     doc.hasStyling ??= packageName === 'material';
-    doc.examples = exampleNames.filter(key =>
-      key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
-      !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0));
+    doc.examples = exampleNames.filter(
+      key =>
+        key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
+        !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0),
+    );
   }
 
   return docs.sort((a, b) => a.name.localeCompare(b.name, 'en'));

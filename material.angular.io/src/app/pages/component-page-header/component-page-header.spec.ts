@@ -2,7 +2,6 @@ import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentPageHeader} from './component-page-header';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
-
 describe('ComponentPageHeader', () => {
   let fixture: ComponentFixture<ComponentPageHeader>;
 

@@ -8,7 +8,6 @@ export interface DocsSiteTheme {
   isDefault?: boolean;
 }
 
-
 @Injectable({providedIn: 'root'})
 export class ThemeStorage {
   static storageKey = 'docs-theme-storage-current-name';
@@ -18,7 +17,7 @@ export class ThemeStorage {
   storeTheme(theme: DocsSiteTheme) {
     try {
       window.localStorage[ThemeStorage.storageKey] = theme.name;
-    } catch { }
+    } catch {}
 
     this.onThemeUpdate.emit(theme);
   }
@@ -34,6 +33,6 @@ export class ThemeStorage {
   clearStorage() {
     try {
       window.localStorage.removeItem(ThemeStorage.storageKey);
-    } catch { }
+    } catch {}
   }
 }

@@ -7,14 +7,14 @@ import {SECTIONS} from '../../shared/documentation-items/documentation-items';
  * items.
  */
 @Injectable({providedIn: 'root'})
-export class CanActivateComponentSidenav  {
+export class CanActivateComponentSidenav {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot) {
     // Searches if the section defined in the base UrlSegment is a valid section from the
     // documentation items. If found, returns true to allow activation, otherwise blocks activation
     // and navigates to '/'.
-    if (Object.keys(SECTIONS).some((s => s.toLowerCase() === route.url[0].path.toLowerCase()))) {
+    if (Object.keys(SECTIONS).some(s => s.toLowerCase() === route.url[0].path.toLowerCase())) {
       return true;
     }
 

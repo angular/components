@@ -23,7 +23,7 @@ describe('ComponentSidenav', () => {
   it('should close the sidenav on init', () => {
     // Spy on window.mediaMatch and return stub
     spyOn(window, 'matchMedia').and.returnValue({
-      matches: true
+      matches: true,
     } as any);
 
     // TODO refactor this as none of these expectations are ever verified
@@ -36,10 +36,9 @@ describe('ComponentSidenav', () => {
 
   it('should show a link for each item in doc items categories', () => {
     const totalItems = component.docItems.getItems('categories').length;
-    const totalLinks = fixture
-      .nativeElement
-      .querySelectorAll('.docs-component-viewer-sidenav li a')
-      .length;
+    const totalLinks = fixture.nativeElement.querySelectorAll(
+      '.docs-component-viewer-sidenav li a',
+    ).length;
     expect(totalLinks).toEqual(totalItems);
   });
 });

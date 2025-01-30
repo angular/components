@@ -29,7 +29,7 @@ export interface Token {
     MatSelectModule,
     TokenName,
     TitleCasePipe,
-  ]
+  ],
 })
 export class TokenTable {
   tokens = input.required<Token[]>();
@@ -41,9 +41,11 @@ export class TokenTable {
     const name = this.nameFilter().trim().toLowerCase();
     const typeFilter = this.typeFilter();
 
-    return this.tokens().filter(token =>
-      (!name || token.overridesName.toLowerCase().includes(name)) &&
-      (!typeFilter || token.type === typeFilter));
+    return this.tokens().filter(
+      token =>
+        (!name || token.overridesName.toLowerCase().includes(name)) &&
+        (!typeFilter || token.type === typeFilter),
+    );
   });
 
   protected reset() {

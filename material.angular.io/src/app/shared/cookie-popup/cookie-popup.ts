@@ -9,7 +9,7 @@ const STORAGE_KEY = 'docs-cookies';
   styleUrls: ['./cookie-popup.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule]
+  imports: [MatButtonModule],
 })
 export class CookiePopup {
   /** Whether the user has accepted the cookie disclaimer. */
