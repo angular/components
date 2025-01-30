@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DoCheck } from '@angular/core';
@@ -72,7 +71,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
 // @public @deprecated
 export const matDrawerAnimations: {
-    readonly transformDrawer: AnimationTriggerMetadata;
+    readonly transformDrawer: any;
 };
 
 // @public
