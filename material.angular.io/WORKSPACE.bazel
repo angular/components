@@ -46,9 +46,9 @@ http_archive(
 
 http_archive(
   name = "dev-infra",
-  strip_prefix = "dev-infra-359350bbc10aab1bac85d0eec61a53377078ab82",
-  sha256 = "65d9978854686d802df180ca3812080e9acbf8cedafcb8999508457690ec735e",
-  url = "https://github.com/angular/dev-infra/archive/359350bbc10aab1bac85d0eec61a53377078ab82/359350bbc10aab1bac85d0eec61a53377078ab82.tar.gz",
+  strip_prefix = "dev-infra-de990cad1ed5a56384f4b29f90a3096ddad79b31",
+  sha256 = "dc777c23099d8d8064d50fe59796b6e3ba68c288d940c28efed290252d7ffbc3",
+  url = "https://github.com/angular/dev-infra/archive/de990cad1ed5a56384f4b29f90a3096ddad79b31/de990cad1ed5a56384f4b29f90a3096ddad79b31.tar.gz",
 )
 
 load("@dev-infra//bazel/browsers:browser_repositories.bzl", "browser_repositories")
