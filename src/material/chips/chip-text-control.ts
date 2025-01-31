@@ -25,4 +25,7 @@ export interface MatChipTextControl {
 
   /** Sets the list of ids the input is described by. */
   setDescribedByIds(ids: string[]): void;
+
+  /** Sets the list of ids the input is labelled by. */
+  setLabelledByIds(ids: string[]): void;
 }
