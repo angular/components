@@ -68,7 +68,6 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 .mdc-slider__track--inactive {
   left: 0;
   top: 0;
-  opacity: 0.24;
 
   @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(background-color, inactive-track-color);
