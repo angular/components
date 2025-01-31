@@ -21,7 +21,7 @@
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)"
     />
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fruitInput.value = ''">
       @for (fruit of filteredFruits(); track fruit) {
         <mat-option [value]="fruit">{{fruit}}</mat-option>
       }
