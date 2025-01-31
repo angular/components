@@ -60,23 +60,23 @@ In the `app.component.css` file we can now style the stepper however we want:
 **custom-stepper.component.css**
 
 ```css
-.example-container {
+.container {
   border: 1px solid black;
   padding: 10px;
   margin: 10px;
 }
 
-.example-step-navigation-bar {
+.step-navigation-bar {
   display: flex;
   justify-content: flex-start;
   margin-top: 10px;
 }
 
-.example-active {
+.active {
   color: blue;
 }
 
-.example-step {
+.step {
   background: transparent;
   border: 0;
   margin: 0 10px;
@@ -84,12 +84,12 @@ In the `app.component.css` file we can now style the stepper however we want:
   color: black;
 }
 
-.example-step.example-active {
+.step.active {
   color: blue;
   border-bottom: 1px solid blue;
 }
 
-.example-nav-button {
+.nav-button {
   background: transparent;
   border: 0;
 }
