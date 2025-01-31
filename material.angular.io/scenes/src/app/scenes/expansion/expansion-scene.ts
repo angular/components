@@ -8,6 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './expansion-scene.html',
   styleUrls: ['./expansion-scene.scss'],
   standalone: true,
-  imports: [MatExpansionModule, MatIconModule]
+  imports: [MatExpansionModule, MatIconModule],
 })
 export class ExpansionScene {}

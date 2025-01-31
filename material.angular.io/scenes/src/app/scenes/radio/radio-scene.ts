@@ -7,6 +7,6 @@ import {MatRadioModule} from '@angular/material/radio';
   templateUrl: './radio-scene.html',
   styleUrls: ['./radio-scene.scss'],
   standalone: true,
-  imports: [MatRadioModule]
+  imports: [MatRadioModule],
 })
 export class RadioScene {}

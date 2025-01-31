@@ -12,56 +12,54 @@ npm_link_all_packages(name = "node_modules")
 copy_to_bin(
     name = "ng-base-config",
     srcs = [
-      "angular.json",
-      "tsconfig.json",
-      "package.json",
+        "angular.json",
+        "package.json",
+        "tsconfig.json",
     ],
 )
 
 # Test config files
 copy_to_bin(
-  name = "ng-base-test-config",
-  srcs = [
-    "karma-custom-launchers.js",
-  ],
+    name = "ng-base-test-config",
+    srcs = [
+        "karma-custom-launchers.js",
+    ],
 )
 
 # Lint config files
 copy_to_bin(
-  name = "ng-base-lint-config",
-  srcs = [
-      ".eslintrc.json",
-  ],
+    name = "ng-base-lint-config",
+    srcs = [
+        ".eslintrc.json",
+    ],
 )
-
 
 # The main application
 ng_app(
     name = "app",
     project_name = "material-angular-io",
     deps = [
-      "//:node_modules/@angular/components-examples",
-      "//:node_modules/@stackblitz/sdk",
-      "//:node_modules/path-normalize",
-      "//:node_modules/moment",
+        "//:node_modules/@angular/components-examples",
+        "//:node_modules/@stackblitz/sdk",
+        "//:node_modules/moment",
+        "//:node_modules/path-normalize",
     ],
 )
 
-
 js_test(
-  name = "audit",
-  entry_point = "tools/audit-docs.js",
-  args = [
-    "$(location //:build.production)",
-  ],
-  data = [
-    "tools/lighthouse-audit.mjs",
-    "//:build.production",
-    "//:node_modules/lighthouse",
-    "//:node_modules/lighthouse-logger",
-    "//:node_modules/puppeteer",
-    "//:node_modules/shelljs",
-    "//:node_modules/light-server",
-  ],
-  tags = ["audit"],
+    name = "audit",
+    args = [
+        "$(location //:build.production)",
+    ],
+    data = [
+        "tools/lighthouse-audit.mjs",
+        "//:build.production",
+        "//:node_modules/light-server",
+        "//:node_modules/lighthouse",
+        "//:node_modules/lighthouse-logger",
+        "//:node_modules/puppeteer",
+        "//:node_modules/shelljs",
+    ],
+    entry_point = "tools/audit-docs.js",
+    tags = ["audit"],
 )

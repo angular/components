@@ -62,13 +62,16 @@ type FileDictionary = {[path: string]: string};
 export class StackBlitzWriter {
   private _fileCache = new Map<string, Observable<string>>();
 
-  constructor(private _http: HttpClient, private _ngZone: NgZone) {}
+  constructor(
+    private _http: HttpClient,
+    private _ngZone: NgZone,
+  ) {}
 
   /** Opens a StackBlitz for the specified example. */
   createStackBlitzForExample(
     exampleId: string,
     data: ExampleData,
-    isTest: boolean
+    isTest: boolean,
   ): Promise<() => void> {
     // Run outside the zone since the creation doesn't interact with Angular
     // and the file requests can cause excessive change detections.
@@ -107,7 +110,7 @@ export class StackBlitzWriter {
         template: PROJECT_TEMPLATE,
         tags: PROJECT_TAGS,
       },
-      {openFile}
+      {openFile},
     );
   }
 
@@ -118,22 +121,21 @@ export class StackBlitzWriter {
   private async _buildInMemoryFileDictionary(
     data: ExampleData,
     exampleId: string,
-    isTest: boolean
+    isTest: boolean,
   ): Promise<FileDictionary> {
     const result: FileDictionary = {};
     const tasks: Promise<unknown>[] = [];
     const liveExample = EXAMPLE_COMPONENTS[exampleId];
-    const exampleBaseContentPath =
-      `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
+    const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
 
     for (const relativeFilePath of TEMPLATE_FILES) {
       tasks.push(
         this._loadFile(TEMPLATE_PATH + relativeFilePath)
           // Replace example placeholders in the template files.
           .then(content =>
-            this._replaceExamplePlaceholders(data, relativeFilePath, content, isTest)
+            this._replaceExamplePlaceholders(data, relativeFilePath, content, isTest),
           )
-          .then(content => (result[relativeFilePath] = content))
+          .then(content => (result[relativeFilePath] = content)),
       );
     }
 
@@ -147,7 +149,7 @@ export class StackBlitzWriter {
         this._loadFile(exampleBaseContentPath + relativeFilePath)
           // Insert a copyright footer for all example files inserted into the project.
           .then(content => this._appendCopyright(relativeFilePath, content))
-          .then(content => (result[targetPath] = content))
+          .then(content => (result[targetPath] = content)),
       );
     }
 
@@ -182,7 +184,7 @@ export class StackBlitzWriter {
     data: ExampleData,
     fileName: string,
     fileContent: string,
-    isTest: boolean
+    isTest: boolean,
   ): string {
     // Replaces the version placeholder in the `index.html` and `package.json` file.
     // Technically we invalidate the `package-lock.json` file for the StackBlitz boilerplate
@@ -201,8 +203,10 @@ export class StackBlitzWriter {
         .replace(/material-docs-example/g, data.selectorName)
         .replace(/\${title}/g, data.description);
     } else if (fileName === '.stackblitzrc') {
-      fileContent = fileContent.replace(/\${startCommand}/,
-        isTest ? 'npm run test' : 'npm run start');
+      fileContent = fileContent.replace(
+        /\${startCommand}/,
+        isTest ? 'npm run test' : 'npm run start',
+      );
     } else if (fileName === 'src/main.ts') {
       const mainComponentName = data.componentNames[0];
 
@@ -215,7 +219,7 @@ export class StackBlitzWriter {
       // will be replaced as `bootstrapApplication(ButtonDemo,`
       fileContent = fileContent.replace(
         /bootstrapApplication\(MaterialDocsExample,/g,
-        `bootstrapApplication(${mainComponentName},`
+        `bootstrapApplication(${mainComponentName},`,
       );
 
       const dotIndex = data.indexFilename.lastIndexOf('.');

@@ -29,7 +29,7 @@ export class MaterialDocsApp implements OnDestroy {
         .pipe(
           map(e => e.urlAfterRedirects),
           startWith(''),
-          pairwise()
+          pairwise(),
         )
         .subscribe(([fromUrl, toUrl]) => {
           // We want to reset the scroll position on navigation except when navigating within
@@ -38,7 +38,7 @@ export class MaterialDocsApp implements OnDestroy {
             resetScrollPosition();
           }
           analytics.locationChanged(toUrl);
-        })
+        }),
     );
   }
 

@@ -1,4 +1,4 @@
-import { browser } from 'protractor';
+import {browser} from 'protractor';
 
 export class AppPage {
   async navigateTo(component: string): Promise<unknown> {

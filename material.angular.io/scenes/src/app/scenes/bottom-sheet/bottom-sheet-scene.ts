@@ -3,7 +3,6 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 
-
 @Component({
   selector: 'app-bottom-sheet-scene',
   template: '',
@@ -25,6 +24,6 @@ export class BottomSheetScene implements AfterViewInit {
   templateUrl: './bottom-sheet-scene.html',
   styleUrls: ['./bottom-sheet-scene.scss'],
   standalone: true,
-  imports: [MatListModule, MatIconModule]
+  imports: [MatListModule, MatIconModule],
 })
 export class SampleBottomSheet {}

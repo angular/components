@@ -38,9 +38,9 @@ export class VersionPicker {
   onVersionChanged(version: VersionInfo) {
     if (!version.url.startsWith(window.location.origin)) {
       window.location.assign(
-        window.location.pathname ?
-        (version.url + window.location.pathname + window.location.hash)
-        : version.url
+        window.location.pathname
+          ? version.url + window.location.pathname + window.location.hash
+          : version.url,
       );
     }
   }

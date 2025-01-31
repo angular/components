@@ -1,7 +1,6 @@
 import {TestBed, inject, waitForAsync} from '@angular/core/testing';
 import {GuideItems} from './guide-items';
 
-
 describe('GuideItems', () => {
   let guideItems: GuideItems;
 

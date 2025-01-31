@@ -24,10 +24,9 @@ import {MatIconModule} from '@angular/material/icon';
     </a>
   `,
   standalone: true,
-  imports: [MatIconModule]
+  imports: [MatIconModule],
 })
 export class HeaderLink {
-
   /**
    * Id of the anchor element. Note that is uses "example" because we instantiate the
    * header link components through the ComponentPortal.
@@ -44,5 +43,4 @@ export class HeaderLink {
   _getFragmentUrl(): string {
     return `${this._baseUrl}#${this.example}`;
   }
-
 }

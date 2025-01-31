@@ -9,16 +9,17 @@ import {
   OnInit,
   ViewEncapsulation,
   viewChild,
-  viewChildren
+  viewChildren,
 } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
-import {ActivatedRoute,
+import {
+  ActivatedRoute,
   Params,
   Router,
   RouterModule,
   RouterLinkActive,
   RouterLink,
-  RouterOutlet
+  RouterOutlet,
 } from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, skip, takeUntil} from 'rxjs/operators';
@@ -31,20 +32,13 @@ import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
 import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
 
-
 @Component({
   selector: 'app-component-viewer',
   templateUrl: './component-viewer.html',
   styleUrls: ['./component-viewer.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [
-    MatTabsModule,
-    NavigationFocus,
-    RouterLinkActive,
-    RouterLink,
-    RouterOutlet,
-  ],
+  imports: [MatTabsModule, NavigationFocus, RouterLinkActive, RouterLink, RouterOutlet],
 })
 export class ComponentViewer implements OnDestroy {
   componentDocItem = new ReplaySubject<DocItem>(1);
@@ -55,45 +49,47 @@ export class ComponentViewer implements OnDestroy {
     route: ActivatedRoute,
     private router: Router,
     public componentPageTitle: ComponentPageTitle,
-    readonly docItems: DocumentationItems) {
+    readonly docItems: DocumentationItems,
+  ) {
     const routeAndParentParams = [route.params];
     if (route.parent) {
       routeAndParentParams.push(route.parent.params);
     }
     // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
     // parent route for the section (material/cdk).
-    combineLatest(routeAndParentParams).pipe(
-      map((params: Params[]) => {
-        const id = params[0]['id'];
-        const section = params[1]['section'];
+    combineLatest(routeAndParentParams)
+      .pipe(
+        map((params: Params[]) => {
+          const id = params[0]['id'];
+          const section = params[1]['section'];
 
-        return ({
-          doc: docItems.getItemById(id, section),
-          section: section
-        });
-      },
-      takeUntil(this._destroyed))
-    ).subscribe(({doc, section}) => {
-      if (!doc) {
-        this.router.navigate(['/' + section]);
-        return;
-      }
+          return {
+            doc: docItems.getItemById(id, section),
+            section: section,
+          };
+        }, takeUntil(this._destroyed)),
+      )
+      .subscribe(({doc, section}) => {
+        if (!doc) {
+          this.router.navigate(['/' + section]);
+          return;
+        }
 
-      this.componentDocItem.next(doc);
-      componentPageTitle.title = `${doc.name}`;
+        this.componentDocItem.next(doc);
+        componentPageTitle.title = `${doc.name}`;
 
-      if (doc.hasStyling) {
-        this.sections.add('styling');
-      } else {
-        this.sections.delete('styling');
-      }
+        if (doc.hasStyling) {
+          this.sections.add('styling');
+        } else {
+          this.sections.delete('styling');
+        }
 
-      if (doc.examples && doc.examples.length) {
-        this.sections.add('examples');
-      } else {
-        this.sections.delete('examples');
-      }
-    });
+        if (doc.examples && doc.examples.length) {
+          this.sections.add('examples');
+        } else {
+          this.sections.delete('examples');
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -118,14 +114,14 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   constructor(
     public componentViewer: ComponentViewer,
     breakpointObserver: BreakpointObserver,
-    private changeDetectorRef: ChangeDetectorRef) {
-    this.showToc = breakpointObserver.observe('(max-width: 1200px)')
-      .pipe(
-        map(result => {
-          this.changeDetectorRef.detectChanges();
-          return !result.matches;
-        })
-      );
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
+    this.showToc = breakpointObserver.observe('(max-width: 1200px)').pipe(
+      map(result => {
+        this.changeDetectorRef.detectChanges();
+        return !result.matches;
+      }),
+    );
   }
 
   ngOnInit() {
@@ -136,10 +132,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
       }
     });
 
-    this.showToc.pipe(
-      skip(1),
-      takeUntil(this._destroyed)
-    ).subscribe(() => {
+    this.showToc.pipe(skip(1), takeUntil(this._destroyed)).subscribe(() => {
       if (this.tableOfContents()) {
         this.viewers().forEach(viewer => {
           viewer.contentRendered.emit(viewer._elementRef.nativeElement);
@@ -167,11 +160,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   templateUrl: './component-overview.html',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [
-    DocViewer,
-    TableOfContents,
-    AsyncPipe,
-  ],
+  imports: [DocViewer, TableOfContents, AsyncPipe],
 })
 export class ComponentOverview extends ComponentBaseView {
   getOverviewDocumentUrl(doc: DocItem) {
@@ -191,11 +180,7 @@ export class ComponentOverview extends ComponentBaseView {
   styleUrls: ['./component-api.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [
-    DocViewer,
-    TableOfContents,
-    AsyncPipe,
-  ],
+  imports: [DocViewer, TableOfContents, AsyncPipe],
 })
 export class ComponentApi extends ComponentBaseView {
   getApiDocumentUrl(doc: DocItem) {
@@ -209,10 +194,7 @@ export class ComponentApi extends ComponentBaseView {
   templateUrl: './component-examples.html',
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [
-    ExampleViewer,
-    AsyncPipe,
-  ],
+  imports: [ExampleViewer, AsyncPipe],
 })
 export class ComponentExamples extends ComponentBaseView {}
 

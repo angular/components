@@ -75,15 +75,14 @@ export class AnalyticsService {
   }
 
   private _installGlobalSiteTag() {
-    const url =
-      `https://www.googletagmanager.com/gtag/js?id=${environment.googleAnalyticsMaterialId}`;
+    const url = `https://www.googletagmanager.com/gtag/js?id=${environment.googleAnalyticsMaterialId}`;
 
     // Note: This cannot be an arrow function as `gtag.js` expects an actual `Arguments`
     // instance with e.g. `callee` to be set. Do not attempt to change this and keep this
     // as much as possible in sync with the tracking code snippet suggested by the Google
     // Analytics 4 web UI under `Data Streams`.
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
+    window.gtag = function () {
       window.dataLayer?.push(arguments);
     };
     window.gtag('js', new Date());
@@ -106,7 +105,7 @@ export class AnalyticsService {
 
   private _installWindowErrorHandler() {
     window.addEventListener('error', event =>
-      this.reportError(formatErrorEventForAnalytics(event), true)
+      this.reportError(formatErrorEventForAnalytics(event), true),
     );
   }
 }

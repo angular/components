@@ -9,11 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './tooltip-scene.html',
   styleUrls: ['./tooltip-scene.scss'],
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatTooltipModule,
-    MatIconModule,
-  ],
+  imports: [MatButtonModule, MatTooltipModule, MatIconModule],
 })
 export class TooltipScene implements AfterViewInit {
   readonly tooltip = viewChild.required(MatTooltip);

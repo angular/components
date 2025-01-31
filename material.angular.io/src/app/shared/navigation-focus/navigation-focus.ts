@@ -10,7 +10,10 @@ export class NavigationFocus implements OnDestroy {
   @HostBinding('tabindex') readonly tabindex = '-1';
   @HostBinding('style.outline') readonly outline = 'none';
 
-  constructor(private el: ElementRef, private navigationFocusService: NavigationFocusService) {
+  constructor(
+    private el: ElementRef,
+    private navigationFocusService: NavigationFocusService,
+  ) {
     if (!el.nativeElement.id) {
       el.nativeElement.id = `skip-link-target-${uid++}`;
     }
@@ -23,4 +26,3 @@ export class NavigationFocus implements OnDestroy {
     this.navigationFocusService.relinquishSkipLinkFocus(this.el.nativeElement);
   }
 }
-

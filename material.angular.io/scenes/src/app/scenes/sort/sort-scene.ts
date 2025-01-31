@@ -15,7 +15,7 @@ export interface Dessert {
   templateUrl: './sort-scene.html',
   styleUrls: ['./sort-scene.scss'],
   standalone: true,
-  imports: [MatSortModule]
+  imports: [MatSortModule],
 })
 export class SortScene {
   desserts: Dessert[] = [

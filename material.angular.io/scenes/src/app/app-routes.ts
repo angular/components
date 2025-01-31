@@ -41,13 +41,13 @@ import {TreeScene} from './scenes/tree/tree-scene';
 let hue = 0;
 
 type SceneViewerRoute = {
-  path: string,
-  component: ComponentType<SceneViewer>,
+  path: string;
+  component: ComponentType<SceneViewer>;
   data: {
-    scene: ComponentType<unknown>,
-    scale?: number,
-    hueRotate?: number
-  }
+    scene: ComponentType<unknown>;
+    scale?: number;
+    hueRotate?: number;
+  };
 };
 
 export const routes: SceneViewerRoute[] = [
@@ -75,7 +75,7 @@ export const routes: SceneViewerRoute[] = [
   {
     path: 'progress-spinner',
     component: SceneViewer,
-    data: {scale: 1.3, scene: ProgressSpinnerScene}
+    data: {scale: 1.3, scene: ProgressSpinnerScene},
   },
   {path: 'radio', component: SceneViewer, data: {scene: RadioScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
@@ -92,5 +92,6 @@ export const routes: SceneViewerRoute[] = [
   {path: 'toolbar', component: SceneViewer, data: {scene: ToolbarScene}},
   {path: 'tooltip', component: SceneViewer, data: {scene: TooltipScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
-].sort((a, b) => (a.path > b.path) ? 1 : ((b.path > a.path) ? -1 : 0))
+]
+  .sort((a, b) => (a.path > b.path ? 1 : b.path > a.path ? -1 : 0))
   .map((route: SceneViewerRoute) => ({...route, data: {...route.data, hueRotate: 15 * hue++}}));

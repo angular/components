@@ -8,10 +8,10 @@ const path = require('path');
 // TODO(bazel): drop non-bazel
 const isBazel = !!process.env['TEST_TARGET'];
 if (isBazel) {
-    // Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
-    // runfiles tree so that subprocesses spawned in a different working directory can still find them.
-    process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
-    process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
+  // Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
+  // runfiles tree so that subprocesses spawned in a different working directory can still find them.
+  process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
+  process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
 }
 
 /**
@@ -19,9 +19,7 @@ if (isBazel) {
  */
 const config = {
   allScriptsTimeout: 11000,
-  specs: [
-    './src/**/*.e2e-spec.ts'
-  ],
+  specs: ['./src/**/*.e2e-spec.ts'],
   chromeDriver: process.env.CHROMEDRIVER_BIN,
   capabilities: {
     'browserName': 'chrome',
@@ -37,7 +35,7 @@ const config = {
         '--hide-scrollbars',
         '--mute-audio',
       ],
-    }
+    },
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
@@ -45,16 +43,16 @@ const config = {
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000,
-    print: function() {}
+    print: function () {},
   },
   onPrepare() {
     if (!isBazel) {
       require('ts-node').register({
-        project: require('path').join(__dirname, './tsconfig.json')
+        project: require('path').join(__dirname, './tsconfig.json'),
       });
     }
     jasmine.getEnv().addReporter(new SpecReporter({spec: {displayStacktrace: true}}));
-  }
+  },
 };
 
 if (isBazel) {
@@ -70,7 +68,7 @@ if (process.env['TRAVIS']) {
 
     'tunnel-identifier': process.env['TRAVIS_JOB_NUMBER'],
     'build': process.env['TRAVIS_JOB_NUMBER'],
-    'name': 'Material Docs E2E'
+    'name': 'Material Docs E2E',
   };
 }
 

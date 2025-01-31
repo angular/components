@@ -15,9 +15,9 @@ const mockActivatedRoute = {
   snapshot: {},
   fragment: observableOf({}),
   parent: {
-    params: observableOf({})
+    params: observableOf({}),
   },
-  params: observableOf({id: docItemsId})
+  params: observableOf({id: docItemsId}),
 };
 
 describe('ComponentViewer', () => {
@@ -26,9 +26,7 @@ describe('ComponentViewer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ComponentViewerModule, DocsAppTestingModule, TestExampleModule],
-      providers: [
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-      ]
+      providers: [{provide: ActivatedRoute, useValue: mockActivatedRoute}],
     }).compileComponents();
   }));
 
@@ -48,15 +46,9 @@ describe('ComponentViewer', () => {
   });
 });
 
-
 // Create a version of ExampleModule for testing with only one component so that we odn't have
 // to compile all of the examples for these tests.
 @NgModule({
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    NoopAnimationsModule,
-    ButtonOverviewExample,
-  ],
+  imports: [MatButtonModule, MatIconModule, NoopAnimationsModule, ButtonOverviewExample],
 })
-class TestExampleModule { }
+class TestExampleModule {}

@@ -13,9 +13,8 @@ const mockActivatedRoute = {
   params: new Observable(observer => {
     observer.next({id: guideItemsId});
     observer.complete();
-  })
+  }),
 };
-
 
 describe('GuideViewer', () => {
   let fixture: ComponentFixture<GuideViewer>;
@@ -23,9 +22,7 @@ describe('GuideViewer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [GuideViewerModule, DocsAppTestingModule],
-      providers: [
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-      ]
+      providers: [{provide: ActivatedRoute, useValue: mockActivatedRoute}],
     }).compileComponents();
   }));
 
@@ -36,7 +33,6 @@ describe('GuideViewer', () => {
   it('should set the guide based off route params', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    expect(component.guide)
-      .toEqual(component.guideItems.getItemById(guideItemsId));
+    expect(component.guide).toEqual(component.guideItems.getItemById(guideItemsId));
   });
 });

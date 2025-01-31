@@ -47,11 +47,12 @@ export class ComponentStyling {
   private tokenService = inject(TokenService);
   private domSanitizer = inject(DomSanitizer);
   protected docItem = this.componentViewer.componentDocItem;
-  protected dataStream =
-    this.docItem.pipe(switchMap(item => this.tokenService.getTokenData(item)));
+  protected dataStream = this.docItem.pipe(switchMap(item => this.tokenService.getTokenData(item)));
   protected hasDataStream = this.dataStream.pipe(
-    map(data => data.themes.length > 0 && data.themes.some(d => d.tokens.length > 0)));
+    map(data => data.themes.length > 0 && data.themes.some(d => d.tokens.length > 0)),
+  );
 
-  protected exampleStream = this.dataStream.pipe(map(data => data.example ?
-    this.domSanitizer.bypassSecurityTrustHtml(data.example) : null));
+  protected exampleStream = this.dataStream.pipe(
+    map(data => (data.example ? this.domSanitizer.bypassSecurityTrustHtml(data.example) : null)),
+  );
 }

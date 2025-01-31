@@ -36,23 +36,19 @@ interface FileFlatNode {
   templateUrl: './tree-scene.html',
   styleUrls: ['./tree-scene.scss'],
   standalone: true,
-  imports: [
-    MatTreeModule,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [MatTreeModule, MatIconModule, MatButtonModule],
 })
 export class TreeScene {
   treeControl = new FlatTreeControl<FileFlatNode>(
     node => node.level,
-    node => node.expandable
+    node => node.expandable,
   );
 
   treeFlattener = new MatTreeFlattener(
     this._transformer,
     node => node.level,
     node => node.expandable,
-    node => node.children
+    node => node.children,
   );
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
