@@ -1003,7 +1003,9 @@ describe('MatChipGrid', () => {
       errorTestComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
-      expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
+      expect(
+        containerEl.querySelector('[aria-live]:has(mat-error)')!.getAttribute('aria-live'),
+      ).toBe('polite');
     });
 
     it('sets the aria-describedby on the input to reference errors when in error state', fakeAsync(() => {
