@@ -22,13 +22,16 @@ In case you just want to install the `@angular/cdk`, there are also schematics f
 ng add @angular/cdk
 ```
 
-The Angular Material `ng add` schematic helps you set up an Angular CLI project that uses Material. Running `ng add` will:
+The Angular Material `ng add` schematic helps you set up an Angular CLI project that uses Material.
+See the [`getting started guide](./getting-started#install-angular-material) for more information.
 
-- Ensure [project dependencies](./getting-started#step-1-install-angular-material-angular-cdk-and-angular-animations) are placed in `package.json`
-- Enable the [BrowserAnimationsModule](./getting-started#step-2-configure-animations) in your app module
+Running `ng add` will:
+
+- Ensure project dependencies are placed in `package.json`
+- Enable the BrowserAnimationsModule in your app module
 - Add either a prebuilt theme or a custom theme
 - Add Roboto fonts to your `index.html`
-- Add the [Material Icon font](./getting-started#step-6-optional-add-material-icons) to your `index.html`
+- Add the Material Symbols font to your `index.html`
 - Add global styles to
   - Remove margins from `body`
   - Set `height: 100%` on `html` and `body`

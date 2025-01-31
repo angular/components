@@ -28,7 +28,7 @@ export function addFontsToIndex(options: Schema): Rule {
 
     const fonts = [
       'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap',
-      'https://fonts.googleapis.com/icon?family=Material+Icons',
+      'https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined',
     ];
 
     projectIndexFiles.forEach(indexFilePath => {
