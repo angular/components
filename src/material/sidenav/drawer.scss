@@ -230,7 +230,8 @@ $drawer-over-drawer-z-index: 4;
     }
   }
 
-  &.mat-drawer-opened {
+  // Needs additional specificity to override the RTL styles.
+  &.mat-drawer-opened.mat-drawer-opened {
     transform: none;
   }
 }
