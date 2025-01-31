@@ -10,6 +10,8 @@
   // Required for resizing to work properly.
   .mat-column-resize-table.cdk-column-resize-with-resized-column {
     table-layout: fixed;
+    // stylelint-disable-next-line material/no-prefixes -- Valid in all remotely recent browsers.
+    width: fit-content;
   }
 
   .mat-column-resize-flex {

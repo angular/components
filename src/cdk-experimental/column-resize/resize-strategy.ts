@@ -23,7 +23,6 @@ export abstract class ResizeStrategy implements OnDestroy {
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
   protected abstract readonly table: CdkTable<unknown>;
 
-  private _pendingResizeDelta: number | null = null;
   private _tableObserved = false;
   private _elemSizeCache = new WeakMap<HTMLElement, {width: number; height: number}>();
   private _resizeObserver = globalThis?.ResizeObserver
@@ -54,27 +53,15 @@ export abstract class ResizeStrategy implements OnDestroy {
 
   /** Adjusts the width of the table element by the specified delta. */
   protected updateTableWidthAndStickyColumns(delta: number): void {
-    if (this._pendingResizeDelta === null) {
-      const tableElement = this.columnResize.elementRef.nativeElement;
-      const tableWidth = this.getElementWidth(tableElement);
+    this.columnResize._flushPending = true;
 
-      this.styleScheduler.schedule(() => {
-        tableElement.style.width = coerceCssPixelValue(tableWidth + this._pendingResizeDelta!);
-
-        this._pendingResizeDelta = null;
-      });
-
-      this.styleScheduler.scheduleEnd(() => {
-        // Once the column sizes have updated, we unset the table width so that
-        // it does not have unwanted side effects on future changes in the table
-        // such as columns being added or removed.
-        tableElement.style.width = '';
-
-        this.table.updateStickyColumnStyles();
-      });
-    }
-
-    this._pendingResizeDelta = (this._pendingResizeDelta ?? 0) + delta;
+    this.styleScheduler.scheduleEnd(() => {
+      if (!this.columnResize._flushPending) {
+        return;
+      }
+      this.columnResize._flushPending = false;
+      this.table.updateStickyColumnStyles();
+    });
   }
 
   /** Gets the style.width pixels on the specified element if present, otherwise its offsetWidth. */

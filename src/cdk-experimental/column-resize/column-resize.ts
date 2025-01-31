@@ -65,6 +65,9 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   /** The id attribute of the table, if specified. */
   id?: string;
 
+  /** @docs-private Whether a call to updateStickyColumnStyles is pending after a resize. */
+  _flushPending = false;
+
   /**
    * Whether to update the column's width continuously as the mouse position
    * changes, or to wait until mouseup to apply the new size.
