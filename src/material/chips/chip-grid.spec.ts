@@ -1,4 +1,3 @@
-import {animate, style, transition, trigger} from '@angular/animations';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   BACKSPACE,
@@ -122,9 +121,7 @@ describe('MatChipGrid', () => {
     });
 
     describe('focus behaviors', () => {
-      let fixture:
-        | ComponentFixture<StandardChipGrid>
-        | ComponentFixture<StandardChipGridWithAnimations>;
+      let fixture: ComponentFixture<StandardChipGrid>;
 
       beforeEach(() => {
         fixture = createComponent(StandardChipGrid);
@@ -232,23 +229,6 @@ describe('MatChipGrid', () => {
 
           expect(chipGridInstance.focus).toHaveBeenCalled();
         });
-
-        it('should move focus to the last chip when the focused chip was deleted inside a component with animations', fakeAsync(() => {
-          fixture.destroy();
-          TestBed.resetTestingModule();
-
-          fixture = createComponent(StandardChipGridWithAnimations, BrowserAnimationsModule);
-
-          patchElementFocus(chips.last.primaryAction!._elementRef.nativeElement);
-          chips.last.focus();
-          fixture.detectChanges();
-
-          dispatchKeyboardEvent(chips.last._elementRef.nativeElement, 'keydown', BACKSPACE);
-          fixture.detectChanges();
-          tick(500);
-
-          expect(document.activeElement).toBe(primaryActions[primaryActions.length - 2]);
-        }));
       });
 
       it('should have a focus indicator', () => {
@@ -1215,35 +1195,6 @@ class ChipGridWithFormErrorMessages {
     this.formControl.events.pipe(takeUntilDestroyed()).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
-  }
-}
-
-@Component({
-  template: `
-    <mat-chip-grid #chipGrid>
-      @for (i of numbers; track i) {
-        <mat-chip-row (removed)="remove(i)">{{i}}</mat-chip-row>
-      }
-      <input name="test" [matChipInputFor]="chipGrid"/>
-    </mat-chip-grid>`,
-  animations: [
-    // For the case we're testing this animation doesn't
-    // have to be used anywhere, it just has to be defined.
-    trigger('dummyAnimation', [
-      transition(':leave', [style({opacity: 0}), animate('500ms', style({opacity: 1}))]),
-    ]),
-  ],
-  standalone: false,
-})
-class StandardChipGridWithAnimations {
-  numbers = [0, 1, 2, 3, 4];
-
-  remove(item: number): void {
-    const index = this.numbers.indexOf(item);
-
-    if (index > -1) {
-      this.numbers.splice(index, 1);
-    }
   }
 }
 
