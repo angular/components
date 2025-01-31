@@ -1,24 +1,12 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "*.d.ts",
-    "src/assets/stack-blitz/**/*.ts"
-  ],
+  "ignorePatterns": ["*.d.ts", "src/assets/stack-blitz/**/*.ts"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
-      "plugins": [
-        "@stylistic",
-        "@typescript-eslint",
-        "ban"
-      ],
+      "files": ["*.ts"],
+      "plugins": ["@stylistic", "@typescript-eslint", "ban"],
       "parserOptions": {
-        "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
-        ],
+        "project": ["tsconfig.json", "e2e/tsconfig.json"],
         "createDefaultProgram": true
       },
       "extends": [
@@ -53,28 +41,11 @@
             "allowTemplateLiterals": true
           }
         ],
-        "@stylistic/semi": [
-          "error"
-        ],
-        "arrow-parens": [
-          "off",
-          "always"
-        ],
-        "brace-style": [
-          "error",
-          "1tbs"
-        ],
+        "@stylistic/semi": ["error"],
+        "arrow-parens": ["off", "always"],
+        "brace-style": ["error", "1tbs"],
         "import/order": "off",
-        "linebreak-style": [
-          "error",
-          "unix"
-        ],
-        "max-len": [
-          "error",
-          {
-            "code": 100
-          }
-        ],
+        "linebreak-style": ["error", "unix"],
         "ban/ban": [
           "error",
           {
@@ -90,10 +61,7 @@
             "name": "xdescribe"
           },
           {
-            "name": [
-              "Object",
-              "assign"
-            ],
+            "name": ["Object", "assign"],
             "message": "Use the spread operator instead."
           }
         ],
@@ -107,12 +75,8 @@
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {
         "@angular-eslint/template/accessibility-alt-text": "error",
         "@angular-eslint/template/accessibility-elements-content": "error",

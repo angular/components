@@ -4,15 +4,15 @@ import {by, element} from 'protractor';
 
 const OUTPUT_DIR = path.join(__dirname, '..', '..', 'src', 'assets', 'screenshots');
 
-
 export class Screenshot {
   /** The filename used to store the screenshot. */
   get filename(): string {
-    return this.id
+    return (
+      this.id
         .toLowerCase()
         .replace(/\s/g, '_')
-        .replace(/[^/a-z0-9_-]+/g, '')
-      + '.scene.png';
+        .replace(/[^/a-z0-9_-]+/g, '') + '.scene.png'
+    );
   }
 
   /** The full path to the screenshot */
@@ -34,7 +34,7 @@ export class Screenshot {
     }
 
     if (fs.existsSync(OUTPUT_DIR)) {
-      fs.writeFileSync(this.fullPath, png, {encoding: 'base64' });
+      fs.writeFileSync(this.fullPath, png, {encoding: 'base64'});
     }
   }
 }

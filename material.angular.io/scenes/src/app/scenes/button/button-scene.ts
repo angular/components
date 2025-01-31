@@ -8,7 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './button-scene.html',
   styleUrls: ['./button-scene.scss'],
   standalone: true,
-  imports: [MatButtonModule, MatIconModule]
+  imports: [MatButtonModule, MatIconModule],
 })
-export class ButtonScene {
-}
+export class ButtonScene {}

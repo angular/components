@@ -12,22 +12,26 @@ export class NavigationFocusService implements OnDestroy {
   private skipLinkFocusRequests: HTMLElement[] = [];
   private skipLinkHref: string | null | undefined;
 
-  readonly navigationEndEvents = this.router.events
-    .pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd));
+  readonly navigationEndEvents = this.router.events.pipe(
+    filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd),
+  );
   readonly softNavigations = this.navigationEndEvents.pipe(skip(1));
 
   constructor(private router: Router) {
-    this.subscriptions.add(this.softNavigations.subscribe(() => {
-      // focus if url does not have fragment
-      if (!this.router.url.split('#')[1]) {
-        setTimeout(() => {
-          if (this.navigationFocusRequests.length) {
-            this.navigationFocusRequests[this.navigationFocusRequests.length - 1]
-              .focus({preventScroll: true});
-          }
-        }, 100);
-      }
-    }));
+    this.subscriptions.add(
+      this.softNavigations.subscribe(() => {
+        // focus if url does not have fragment
+        if (!this.router.url.split('#')[1]) {
+          setTimeout(() => {
+            if (this.navigationFocusRequests.length) {
+              this.navigationFocusRequests[this.navigationFocusRequests.length - 1].focus({
+                preventScroll: true,
+              });
+            }
+          }, 100);
+        }
+      }),
+    );
   }
 
   ngOnDestroy() {
@@ -68,8 +72,13 @@ export class NavigationFocusService implements OnDestroy {
     const previousUrlMatch = previousUrl.match(componentViewExpression);
     const newUrlMatch = newUrl.match(componentViewExpression);
 
-    return previousUrl && newUrl && previousUrlMatch && newUrlMatch
-      && previousUrlMatch[0] === newUrlMatch[0]
-      && previousUrlMatch[1] === newUrlMatch[1];
+    return (
+      previousUrl &&
+      newUrl &&
+      previousUrlMatch &&
+      newUrlMatch &&
+      previousUrlMatch[0] === newUrlMatch[0] &&
+      previousUrlMatch[1] === newUrlMatch[1]
+    );
   }
 }

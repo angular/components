@@ -10,11 +10,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   selector: 'stack-blitz-button',
   templateUrl: './stack-blitz-button.html',
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatTooltipModule,
-    MatIconModule,
-  ],
+  imports: [MatButtonModule, MatTooltipModule, MatIconModule],
 })
 export class StackBlitzButton {
   exampleData: ExampleData | undefined;
@@ -43,22 +39,29 @@ export class StackBlitzButton {
   constructor(
     private stackBlitzWriter: StackBlitzWriter,
     private ngZone: NgZone,
-    private snackBar: MatSnackBar) {}
+    private snackBar: MatSnackBar,
+  ) {}
 
   openStackBlitz(): void {
     if (this._openStackBlitzFn) {
       this._openStackBlitzFn();
     } else {
-      this.snackBar.open('StackBlitz is not ready yet. Please try again in a few seconds.',
-          undefined, {duration: 5000});
+      this.snackBar.open(
+        'StackBlitz is not ready yet. Please try again in a few seconds.',
+        undefined,
+        {duration: 5000},
+      );
     }
   }
 
   private _prepareStackBlitzForExample(exampleId: string, data: ExampleData): void {
     this.ngZone.runOutsideAngular(async () => {
       const isTest = exampleId.includes('harness');
-      this._openStackBlitzFn = await this.stackBlitzWriter
-        .createStackBlitzForExample(exampleId, data, isTest);
+      this._openStackBlitzFn = await this.stackBlitzWriter.createStackBlitzForExample(
+        exampleId,
+        data,
+        isTest,
+      );
     });
   }
 }

@@ -7,6 +7,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: './checkbox-scene.html',
   styleUrls: ['./checkbox-scene.scss'],
   standalone: true,
-  imports: [MatCheckboxModule]
+  imports: [MatCheckboxModule],
 })
 export class CheckboxScene {}

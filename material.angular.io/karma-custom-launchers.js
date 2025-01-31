@@ -11,26 +11,19 @@ exports.customLaunchers = {
       '--disable-gpu',
       '--disable-dev-shm-usage',
       '--hide-scrollbars',
-      '--mute-audio'
+      '--mute-audio',
     ],
   },
   ChromeHeadlessLocal: {
     base: 'ChromeHeadless',
-    flags: [
-      '--window-size=1024,768'
-    ]
+    flags: ['--window-size=1024,768'],
   },
   ChromeHeadlessCI: {
     base: 'ChromeHeadless',
-    flags: [
-      '--window-size=1024,768',
-      '--no-sandbox'
-    ]
+    flags: ['--window-size=1024,768', '--no-sandbox'],
   },
   FirefoxHeadless: {
     base: 'Firefox',
-    flags: [
-      '-headless'
-    ]
+    flags: ['-headless'],
   },
 };

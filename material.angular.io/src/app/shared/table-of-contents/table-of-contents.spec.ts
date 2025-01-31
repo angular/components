@@ -7,17 +7,14 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 const mockActivatedRoute = {
   fragment: new Observable(observer => {
     observer.complete();
-  })
+  }),
 };
 
 describe('TableOfContents', () => {
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [DocsAppTestingModule],
-      providers: [
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-      ]
+      providers: [{provide: ActivatedRoute, useValue: mockActivatedRoute}],
     }).compileComponents();
   }));
 
@@ -31,9 +28,7 @@ describe('TableOfContents', () => {
   });
 
   it('should have no header', () => {
-    const header = fixture
-      .nativeElement
-      .querySelector('h2');
+    const header = fixture.nativeElement.querySelector('h2');
     expect(header).toBeNull();
   });
 
@@ -44,8 +39,8 @@ describe('TableOfContents', () => {
         id: 'test',
         name: 'test',
         top: 0,
-        active: false
-      }
+        active: false,
+      },
     ];
 
     const header = fixture.nativeElement.querySelector('h2');

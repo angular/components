@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewContainerRef,
   ViewEncapsulation,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
@@ -43,10 +43,12 @@ export class SceneViewer implements OnInit {
   /** Component of scene to display */
   @Input() component: any;
 
-  readonly scene = viewChild.required('scene', { read: ViewContainerRef });
+  readonly scene = viewChild.required('scene', {read: ViewContainerRef});
 
-  constructor(private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) {
+  constructor(
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
+  ) {
     this.hueRotation = this.route.snapshot.data['hueRotate'];
     this.component = this.route.snapshot.data['scene'];
     this.scale = this.route.snapshot.data['scale'];

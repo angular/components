@@ -7,7 +7,7 @@ import {
   OnInit,
   NgZone,
   ChangeDetectorRef,
-  input
+  input,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -41,7 +41,7 @@ interface Link {
   selector: 'table-of-contents',
   styleUrls: ['./table-of-contents.scss'],
   templateUrl: './table-of-contents.html',
-  standalone: true
+  standalone: true,
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   readonly container = input<string>();
@@ -54,32 +54,36 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   private _urlFragment = '';
   private subscriptions = new Subscription();
 
-  constructor(private _router: Router,
-              private _route: ActivatedRoute,
-              private _element: ElementRef,
-              private _navigationFocusService: NavigationFocusService,
-              @Inject(DOCUMENT) private _document: Document,
-              private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
-
-    this.subscriptions.add(this._navigationFocusService.navigationEndEvents
-      .subscribe(() => {
+  constructor(
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _element: ElementRef,
+    private _navigationFocusService: NavigationFocusService,
+    @Inject(DOCUMENT) private _document: Document,
+    private _ngZone: NgZone,
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {
+    this.subscriptions.add(
+      this._navigationFocusService.navigationEndEvents.subscribe(() => {
         const rootUrl = _router.url.split('#')[0];
         if (rootUrl !== this._rootUrl) {
           this._rootUrl = rootUrl;
         }
-      }));
+      }),
+    );
 
-    this.subscriptions.add(this._route.fragment.subscribe(fragment => {
-      if (fragment != null) {
-        this._urlFragment = fragment;
+    this.subscriptions.add(
+      this._route.fragment.subscribe(fragment => {
+        if (fragment != null) {
+          this._urlFragment = fragment;
 
-        const target = document.getElementById(this._urlFragment);
-        if (target) {
-          target.scrollIntoView();
+          const target = document.getElementById(this._urlFragment);
+          if (target) {
+            target.scrollIntoView();
+          }
         }
-      }
-    }));
+      }),
+    );
   }
 
   ngOnInit(): void {
@@ -88,14 +92,16 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       Promise.resolve().then(() => {
         const container = this.container();
-        this._scrollContainer = container ?
-          this._document.querySelector(container) as HTMLElement :
-          window;
+        this._scrollContainer = container
+          ? (this._document.querySelector(container) as HTMLElement)
+          : window;
 
         if (this._scrollContainer) {
-          this.subscriptions.add(fromEvent(this._scrollContainer, 'scroll').pipe(
-              debounceTime(10))
-              .subscribe(() => this.onScroll()));
+          this.subscriptions.add(
+            fromEvent(this._scrollContainer, 'scroll')
+              .pipe(debounceTime(10))
+              .subscribe(() => this.onScroll()),
+          );
         }
       });
     });
@@ -128,7 +134,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
         type: header.tagName.toLowerCase(),
         top: top,
         id: header.id,
-        active: false
+        active: false,
       };
     }).filter(link => link.id);
 
@@ -163,8 +169,8 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
       // anchor without also being scrolled passed the next link.
       const currentLink = this._links[i];
       const nextLink = this._links[i + 1];
-      const isActive = scrollOffset >= currentLink.top &&
-                       (!nextLink || nextLink.top >= scrollOffset);
+      const isActive =
+        scrollOffset >= currentLink.top && (!nextLink || nextLink.top >= scrollOffset);
 
       if (isActive !== currentLink.active) {
         currentLink.active = isActive;

@@ -8,7 +8,7 @@ import {RouterLink} from '@angular/router';
   templateUrl: './not-found.html',
   styleUrls: ['./not-found.scss'],
   standalone: true,
-  imports: [MatButtonModule, RouterLink, Footer]
+  imports: [MatButtonModule, RouterLink, Footer],
 })
 export class NotFound {
   @HostBinding('class.main-content') readonly mainContentClass = true;

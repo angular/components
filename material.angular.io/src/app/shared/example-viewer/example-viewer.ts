@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  HostBinding,
-  Input,
-  OnInit,
-  Type,
-  viewChildren
-} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, OnInit, Type, viewChildren} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
@@ -79,7 +71,7 @@ export class ExampleViewer implements OnInit {
       this.exampleData = EXAMPLE_COMPONENTS[exampleName];
       this._generateExampleTabs();
       this._loadExampleComponent().catch(error =>
-        console.error(`Could not load example '${exampleName}': ${error}`)
+        console.error(`Could not load example '${exampleName}': ${error}`),
       );
     } else {
       console.error(`Could not find example: ${exampleName}`);
@@ -96,7 +88,7 @@ export class ExampleViewer implements OnInit {
   constructor(
     private readonly snackbar: MatSnackBar,
     private readonly clipboard: Clipboard,
-    private readonly elementRef: ElementRef<HTMLElement>
+    private readonly elementRef: ElementRef<HTMLElement>,
   ) {}
 
   ngOnInit() {

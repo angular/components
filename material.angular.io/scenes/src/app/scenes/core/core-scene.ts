@@ -7,6 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './core-scene.html',
   styleUrls: ['./core-scene.scss'],
   standalone: true,
-  imports: [MatIconModule]
+  imports: [MatIconModule],
 })
 export class CoreScene {}

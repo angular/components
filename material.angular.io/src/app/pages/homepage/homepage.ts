@@ -45,7 +45,8 @@ export class Homepage implements OnInit {
   constructor(
     public _componentPageTitle: ComponentPageTitle,
     public guideItems: GuideItems,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string) {
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string,
+  ) {
     this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 

@@ -8,6 +8,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   templateUrl: './toolbar-scene.html',
   styleUrls: ['./toolbar-scene.scss'],
   standalone: true,
-  imports: [MatToolbarModule, MatIconModule]
+  imports: [MatToolbarModule, MatIconModule],
 })
 export class ToolbarScene {}

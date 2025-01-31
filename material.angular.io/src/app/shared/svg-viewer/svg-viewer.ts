@@ -10,7 +10,10 @@ export class SvgViewer implements OnInit {
   @Input() src: string | undefined;
   @Input() scaleToContainer: boolean | undefined;
 
-  constructor(private elementRef: ElementRef, private http: HttpClient) { }
+  constructor(
+    private elementRef: ElementRef,
+    private http: HttpClient,
+  ) {}
 
   ngOnInit() {
     if (this.src) {

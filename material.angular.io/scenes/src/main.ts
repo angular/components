@@ -13,16 +13,12 @@ import {provideRouter} from '@angular/router';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
-      BrowserModule,
-      MatNativeDateModule,
-      NoopAnimationsModule,
-    ),
+    importProvidersFrom(BrowserModule, MatNativeDateModule, NoopAnimationsModule),
     {
       provide: OverlayContainer,
       useFactory: (doc: any, platform: Platform) => new SceneOverlayContainer(doc, platform),
-      deps: [DOCUMENT, Platform]
+      deps: [DOCUMENT, Platform],
     },
     provideRouter(routes),
-  ]
+  ],
 }).catch(err => console.error(err));

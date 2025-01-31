@@ -12,9 +12,5 @@ console.info('Angular CDK version', CDK_VERSION.full);
 console.info('Angular Material version', MAT_VERSION.full);
 
 bootstrapApplication(MaterialDocsExample, {
-  providers: [
-    provideAnimations(),
-    provideHttpClient(),
-    importProvidersFrom(MatNativeDateModule)
-  ]
+  providers: [provideAnimations(), provideHttpClient(), importProvidersFrom(MatNativeDateModule)],
 }).catch(err => console.error(err));

@@ -5,10 +5,7 @@ import {ActivatedRoute, Params, RouterModule, RouterLink} from '@angular/router'
 import {MatRipple} from '@angular/material/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 
-import {
-  DocumentationItems,
-  SECTIONS
-} from '../../shared/documentation-items/documentation-items';
+import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/documentation-items';
 import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -18,22 +15,25 @@ import {ComponentPageTitle} from '../page-title/page-title';
   templateUrl: './component-category-list.html',
   styleUrls: ['./component-category-list.scss'],
   standalone: true,
-  imports: [NavigationFocus, RouterLink, AsyncPipe, MatRipple]
+  imports: [NavigationFocus, RouterLink, AsyncPipe, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
   params: Observable<Params> | undefined;
   routeParamSubscription: Subscription = new Subscription();
   _categoryListSummary: string | undefined;
 
-  constructor(public docItems: DocumentationItems,
-              public _componentPageTitle: ComponentPageTitle,
-              private _route: ActivatedRoute) {}
+  constructor(
+    public docItems: DocumentationItems,
+    public _componentPageTitle: ComponentPageTitle,
+    private _route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     // Combine params from all of the path into a single object.
     this.params = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
-      Object.assign);
+      Object.assign,
+    );
 
     // title on topbar navigation
     this.routeParamSubscription = this.params.subscribe(params => {
@@ -55,4 +55,4 @@ export class ComponentCategoryList implements OnInit, OnDestroy {
   imports: [MatCardModule, RouterModule, ComponentCategoryList],
   exports: [ComponentCategoryList],
 })
-export class ComponentCategoryListModule { }
+export class ComponentCategoryListModule {}

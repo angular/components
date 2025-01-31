@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
   input,
   contentChildren,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
@@ -41,7 +41,7 @@ export class CarouselItem implements FocusableOption {
   imports: [MatButtonModule, MatIconModule],
 })
 export class Carousel implements AfterContentInit {
-  readonly ariaLabel = input<string|undefined>(undefined, { alias: 'aria-label' });
+  readonly ariaLabel = input<string | undefined>(undefined, {alias: 'aria-label'});
   readonly items = contentChildren(CarouselItem);
   readonly list = viewChild.required<ElementRef<HTMLElement>>('list');
   @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;

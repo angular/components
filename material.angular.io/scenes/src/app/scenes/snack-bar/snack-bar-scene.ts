@@ -1,7 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
-
 @Component({
   selector: 'app-snack-bar-scene',
   template: '<div class="docs-scene-snackbar-background"></div>',
