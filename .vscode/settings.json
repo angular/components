@@ -24,5 +24,8 @@
   "editor.rulers": [100],
   "bazel.buildifierExecutable": "node_modules/.bin/buildifier",
   "bazel.buildifierFixOnFormat": true,
-  "bazel.executable": "node_modules/.bin/bazel"
+  "bazel.executable": "node_modules/.bin/bazel",
+  "git.inputValidation": true,
+  "git.inputValidationSubjectLength": 100,
+  "git.inputValidationLength": 100
 }
