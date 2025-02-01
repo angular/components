@@ -462,8 +462,8 @@ be defined through the `overrides` API instead of defined explicitly.
 
 Angular Material assumes that, by default, all theme styles are loaded as global
 CSS. If you want to use
-[Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM)
+[Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)
 in your application, you must load the theme styles within each shadow root that
 contains an Angular Material component. You can accomplish this by manually
 loading the CSS in each shadow root, or by using
-[Constructable Stylesheets](https://developers.google.com/web/updates/2019/02/constructable-stylesheets).
+[Constructable Stylesheets](https://web.dev/articles/constructable-stylesheets).
