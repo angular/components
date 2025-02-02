@@ -560,6 +560,19 @@ export class DragRef<T = any> {
     this._passiveTransform = {x: 0, y: 0};
   }
 
+  /** Resets drag item to end of boundary element. */
+  resetToBoundary(): void {
+    // can be null if the drag item was never dragged.
+    if (this._boundaryElement) {
+      let x = this._boundaryElement.offsetWidth - this._rootElement.offsetWidth,
+        y = 0; // align it to the top of its boundary
+
+      this._rootElement.style.transform = getTransform(x, y);
+      this._activeTransform = {x, y};
+      this._passiveTransform = {x, y};
+    }
+  }
+
   /**
    * Sets a handle as disabled. While a handle is disabled, it'll capture and interrupt dragging.
    * @param handle Handle element that should be disabled.

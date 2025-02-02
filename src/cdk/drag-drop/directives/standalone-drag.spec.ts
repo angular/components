@@ -46,6 +46,26 @@ describe('Standalone CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
     }));
 
+    it('should reset drag item to boundary', fakeAsync(() => {
+      const fixture = createComponent(DragWithResizeableBoundary);
+      fixture.detectChanges();
+      let dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 50, 100);
+      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+
+      dragElementViaMouse(fixture, dragElement, 300, 300);
+      expect(dragElement.style.transform).toBe('translate3d(300px, 300px, 0px)');
+
+      fixture.componentInstance.resizeBoundary();
+      fixture.detectChanges();
+
+      const position = fixture.componentInstance.dragInstance.getFreeDragPosition();
+      expect(position).toEqual({x: 100, y: 0});
+      expect(dragElement.style.transform).toBe('translate3d(100px, 0px, 0px)');
+    }));
+
     it('should drag an element freely to a particular position when the page is scrolled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
@@ -2046,4 +2066,27 @@ class PlainStandaloneDraggable {
 })
 class StandaloneDraggableWithExternalTemplateHandle {
   @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+}
+
+@Component({
+  template: `
+    <div #boundaryElement class="example-boundary" style="width: 400px; height: 400px">
+      <div #dragElement class="example-box" cdkDragBoundary=".example-boundary" cdkDrag style="width: 100px; height: 100px">
+        I can only be dragged within the dotted container
+      </div>
+    </div>
+  `,
+  imports: [CdkDrag],
+})
+class DragWithResizeableBoundary {
+  @ViewChild('boundaryElement') boundaryElement: ElementRef<HTMLElement>;
+
+  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+
+  resizeBoundary() {
+    this.boundaryElement.nativeElement.style.height = '200px';
+    this.boundaryElement.nativeElement.style.width = '200px';
+    this.dragInstance.resetToBoundary();
+  }
 }
