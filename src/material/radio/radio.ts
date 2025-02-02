@@ -118,6 +118,7 @@ export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
   host: {
     'role': 'radiogroup',
     'class': 'mat-mdc-radio-group',
+    '[attr.aria-required]': 'required',
   },
 })
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
@@ -803,5 +804,14 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
         );
       }
     }
+  }
+
+  protected getInputRequiredAttribute(): boolean | null {
+    // we never want to set required attribute on input when we have MatRadioGroup as we will set
+    // aria-required directly on MatRadioGroup if its required as setting on all MatRadioButton for
+    // it's MatRadioGroup would be confusing for assistive technology.
+    if (this.radioGroup) return null;
+
+    return this.required;
   }
 }
