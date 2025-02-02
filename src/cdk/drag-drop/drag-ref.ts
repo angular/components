@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {deepCloneNode} from './dom/clone-node';
-import {adjustDomRect, getMutableClientRect} from './dom/dom-rect';
+import {adjustDomRect, getMutableClientRect, isOverflowingParent} from './dom/dom-rect';
 import {ParentPositionTracker} from './dom/parent-position-tracker';
 import {getRootNode} from './dom/root-node';
 import {
@@ -544,6 +544,50 @@ export class DragRef<T = any> {
     this._rootElement.style.transform = this._initialTransform || '';
     this._activeTransform = {x: 0, y: 0};
     this._passiveTransform = {x: 0, y: 0};
+  }
+
+  /** Resets drag item to end of boundary element. */
+  resetToBoundary(): void {
+    if (
+      // can be null if the drag item was never dragged.
+      this._boundaryElement &&
+      this._rootElement &&
+      // check if we are overflowing off our boundary element
+      isOverflowingParent(
+        this._boundaryElement.getBoundingClientRect(),
+        this._rootElement.getBoundingClientRect(),
+      )
+    ) {
+      const parentRect = this._boundaryElement.getBoundingClientRect();
+      const childRect = this._rootElement.getBoundingClientRect();
+
+      let offsetX = 0;
+      let offsetY = 0;
+
+      // check if we are overflowing from left or right
+      if (childRect.left < parentRect.left) {
+        offsetX = parentRect.left - childRect.left;
+      } else if (childRect.right > parentRect.right) {
+        offsetX = parentRect.right - childRect.right;
+      }
+
+      // check if we are overflowing from top or bottom
+      if (childRect.top < parentRect.top) {
+        offsetY = parentRect.top - childRect.top;
+      } else if (childRect.bottom > parentRect.bottom) {
+        offsetY = parentRect.bottom - childRect.bottom;
+      }
+
+      const currentLeft = this._activeTransform.x;
+      const currentTop = this._activeTransform.y;
+
+      let x = currentLeft + offsetX,
+        y = currentTop + offsetY;
+
+      this._rootElement.style.transform = getTransform(x, y);
+      this._activeTransform = {x, y};
+      this._passiveTransform = {x, y};
+    }
   }
 
   /**
