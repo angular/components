@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Directionality } from '@angular/cdk/bidi';
@@ -105,7 +104,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
 // @public @deprecated
 export const matTooltipAnimations: {
-    readonly tooltipState: AnimationTriggerMetadata;
+    readonly tooltipState: any;
 };
 
 // @public
