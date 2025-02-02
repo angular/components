@@ -525,6 +525,33 @@ describe('MatRadio', () => {
       expect(groupInstance.selected).toBe(null);
       expect(groupInstance.value).toBe('fire');
     });
+
+    it('should set aria-required on radio group', () => {
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      let group = fixture.debugElement.query(By.directive(MatRadioGroup)).nativeElement;
+
+      // by default it shouldn't be there
+      expect(group.getAttribute('aria-required')).toBe('false');
+
+      testComponent.isGroupRequired = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      group = fixture.debugElement.query(By.directive(MatRadioGroup)).nativeElement;
+      expect(group.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should set not set required attribute on matRadioButton when matRadioGroup is required', () => {
+      testComponent.isGroupRequired = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      for (const radio of radioDebugElements) {
+        expect(radio.nativeElement.hasAttribute('aria-required')).toBeFalse();
+      }
+    });
   });
 
   describe('group with ngModel', () => {

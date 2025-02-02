@@ -49,6 +49,8 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     // (undocumented)
     protected _elementRef: ElementRef<any>;
     focus(options?: FocusOptions, origin?: FocusOrigin): void;
+    // (undocumented)
+    protected getInputRequiredAttribute(): boolean | null;
     id: string;
     _inputElement: ElementRef<HTMLInputElement>;
     get inputId(): string;
