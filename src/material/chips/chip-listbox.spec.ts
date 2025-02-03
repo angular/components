@@ -18,6 +18,8 @@ import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/t
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
+import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
+import {observeOn} from 'rxjs/operators';
 
 describe('MatChipListbox', () => {
   let fixture: ComponentFixture<any>;
@@ -862,6 +864,60 @@ describe('MatChipListbox', () => {
             .toBeFalsy();
         });
       });
+
+      describe('async multiple selection', () => {
+        it('should select initial async chips', fakeAsync(() => {
+          fixture = createComponent(AsyncMultiSelectionChipListbox, undefined, initFixture => {
+            initFixture.componentInstance.control = new FormControl(['tutorial-1', 'tutorial-2']);
+          });
+          fixture.detectChanges();
+          flush();
+
+          tick(400);
+          fixture.detectChanges();
+
+          let array = fixture.componentInstance.chips.toArray();
+
+          expect(array.length).withContext('Expect chips not to be rendered yet').toBe(0);
+
+          tick(100);
+          fixture.detectChanges();
+
+          array = fixture.componentInstance.chips.toArray();
+          flush();
+
+          expect(array[0].selected)
+            .withContext('Expect "tutorial-1" chip to be selected')
+            .toBe(true);
+          expect(array[1].selected)
+            .withContext('Expect "tutorial-2" chip to be selected')
+            .toBe(true);
+        }));
+
+        it('should select async chips that changed over time', fakeAsync(() => {
+          fixture = createComponent(AsyncMultiSelectionChipListbox, undefined, initFixture => {
+            initFixture.componentInstance.control = new FormControl(['tutorial-1']);
+          });
+          fixture.detectChanges();
+          flush();
+
+          tick(500);
+          fixture.detectChanges();
+
+          fixture.componentInstance.control.setValue(['tutorial-4']);
+          fixture.componentInstance.updateChips(['tutorial-3', 'tutorial-4']);
+
+          tick(500);
+          fixture.detectChanges();
+
+          const array = fixture.componentInstance.chips.toArray();
+          flush();
+
+          expect(array[1].selected)
+            .withContext('Expect "tutorial-4" chip to be selected')
+            .toBe(true);
+        }));
+      });
     });
   });
 
@@ -984,6 +1040,27 @@ class MultiSelectionChipListbox {
 
   @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
   @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+}
+
+@Component({
+  template: `
+      <mat-chip-listbox [multiple]="true" [formControl]="control">
+        <mat-chip-option *ngFor="let chip of chips$ | async" [value]="chip">
+          {{ chip }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+  `,
+})
+class AsyncMultiSelectionChipListbox {
+  private _chipsSubject = new BehaviorSubject(['tutorial-1', 'tutorial-2', 'tutorial-3']);
+  chips$: Observable<string[]> = this._chipsSubject.pipe(observeOn(asyncScheduler, 500));
+  control = new FormControl<string[] | null>(null);
+  @ViewChild(MatChipListbox) chipListbox: MatChipListbox;
+  @ViewChildren(MatChipOption) chips: QueryList<MatChipOption>;
+
+  updateChips(chips: string[]): void {
+    this._chipsSubject.next(chips);
+  }
 }
 
 @Component({
