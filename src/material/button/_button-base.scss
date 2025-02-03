@@ -71,7 +71,7 @@
       @include token-utils.create-token-slot(background-color, disabled-state-layer-color);
     }
 
-    &:hover .mat-mdc-button-persistent-ripple::before {
+    &:hover > .mat-mdc-button-persistent-ripple::before {
       @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
     }
 
