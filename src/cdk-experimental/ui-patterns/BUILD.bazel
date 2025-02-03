@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "ui-patterns",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src/cdk-experimental/ui-patterns/listbox",
+        "@npm//@angular/core",
+    ],
+)

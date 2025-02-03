@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "listbox",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
+        "@npm//@angular/core",
+    ],
+)

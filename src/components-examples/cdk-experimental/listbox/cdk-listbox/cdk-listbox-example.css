@@ -1,0 +1,60 @@
+.example-listbox-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+ul {
+  gap: 8px;
+  margin: 0;
+  padding: 8px;
+  max-height: 50vh;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+ul[aria-orientation='horizontal'] {
+  flex-direction: row;
+}
+
+ul[aria-orientation='horizontal'] li::before {
+  display: none;
+}
+
+ul[aria-orientation='horizontal'] li[aria-selected='true']::before {
+  display: block;
+}
+
+label {
+  padding: 16px;
+  flex-shrink: 0;
+}
+
+li {
+  gap: 16px;
+  padding: 16px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+li:hover,
+li[tabindex='0'] {
+  outline: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-container);
+}
+
+li:focus-within {
+  outline: 2px solid var(--mat-sys-primary);
+  background: var(--mat-sys-surface-container);
+}
+
+li[aria-selected='true'] {
+  background-color: var(--mat-sys-secondary-container);
+}

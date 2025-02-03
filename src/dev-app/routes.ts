@@ -46,6 +46,11 @@ export const DEV_APP_ROUTES: Routes = [
       import('./cdk-experimental-combobox/cdk-combobox-demo').then(m => m.CdkComboboxDemo),
   },
   {
+    path: 'cdk-experimental-listbox',
+    loadComponent: () =>
+      import('./cdk-experimental-listbox/cdk-listbox-demo').then(m => m.CdkExperimentalListboxDemo),
+  },
+  {
     path: 'cdk-dialog',
     loadComponent: () => import('./cdk-dialog/dialog-demo').then(m => m.DialogDemo),
   },
