@@ -52,8 +52,20 @@ describe('CDK drag-drop schematic', () => {
       expect(module).not.toContain('FooComponent');
 
       expect(component).not.toContain('DragDropModule');
-      expect(component).toContain('standalone: true');
       expect(component).toContain('imports: [');
+    });
+
+    it('should generate a component with no imports and standalone false', async () => {
+      const app = await createTestApp(runner, {standalone: false});
+      const tree = await runner.runSchematic('drag-drop', {...baseOptions, standalone: false}, app);
+      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
+
+      expect(module).toContain('DragDropModule');
+      expect(module).toContain('FooComponent');
+
+      expect(component).toContain('standalone: false');
+      expect(component).not.toContain('imports: [');
     });
 
     it('should infer the standalone option from the project structure', async () => {
@@ -64,7 +76,6 @@ describe('CDK drag-drop schematic', () => {
 
       expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
 
-      expect(component).toContain('standalone: true');
       expect(component).toContain('imports: [');
 
       expect(test).not.toContain('TestBed.configureTestingModule');

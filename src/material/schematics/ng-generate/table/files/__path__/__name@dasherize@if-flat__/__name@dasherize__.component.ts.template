@@ -16,8 +16,8 @@ import { <%= classify(name) %>DataSource, <%= classify(name) %>Item } from './<%
   styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
-  standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule]<% } %>
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule]<% } else { %>,
+  standalone: false<% } %>
 })
 export class <%= classify(name) %>Component implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

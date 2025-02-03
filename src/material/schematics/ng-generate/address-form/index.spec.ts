@@ -74,8 +74,33 @@ describe('Material address-form schematic', () => {
       });
 
       expect(module).not.toContain('FooComponent');
-      expect(content).toContain('standalone: true');
       expect(content).toContain('imports: [');
+    });
+
+    it('should generate a component with no imports and standalone false', async () => {
+      const app = await createTestApp(runner, {standalone: false});
+      const tree = await runner.runSchematic(
+        'address-form',
+        {...baseOptions, standalone: false},
+        app,
+      );
+      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const content = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
+      const requiredModules = [
+        'MatInputModule',
+        'MatButtonModule',
+        'MatSelectModule',
+        'MatRadioModule',
+        'ReactiveFormsModule',
+      ];
+
+      requiredModules.forEach(name => {
+        expect(module).withContext('Module should import dependencies').toContain(name);
+        expect(content).withContext('Component should not import dependencies').not.toContain(name);
+      });
+
+      expect(content).toContain('standalone: false');
+      expect(content).not.toContain('imports: [');
     });
 
     it('should infer the standalone option from the project structure', async () => {
@@ -84,7 +109,6 @@ describe('Material address-form schematic', () => {
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
 
       expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
-      expect(component).toContain('standalone: true');
       expect(component).toContain('imports: [');
     });
   });
