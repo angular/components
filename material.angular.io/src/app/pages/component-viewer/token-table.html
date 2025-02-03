@@ -10,7 +10,7 @@
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Filter by type</mat-label>
-    <mat-select (selectionChange)="typeFilter.set($event.value)">
+    <mat-select [value]="typeFilter()" (selectionChange)="typeFilter.set($event.value)">
       @for (type of types; track $index) {
         <mat-option [value]="type">{{type | titlecase}}</mat-option>
       }
