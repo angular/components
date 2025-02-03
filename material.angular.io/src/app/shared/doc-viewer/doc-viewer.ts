@@ -28,6 +28,7 @@ import {shareReplay, take, tap} from 'rxjs/operators';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {HeaderLink} from './header-link';
 import {DeprecatedFieldComponent} from './deprecated-tooltip';
+import {ModuleImportCopyButton} from './module-import-copy-button';
 
 @Injectable({providedIn: 'root'})
 class DocFetcher {
@@ -150,6 +151,9 @@ export class DocViewer implements OnDestroy {
     // Create tooltips for the deprecated fields
     this._createTooltipsForDeprecated();
 
+    // Create icon buttons to copy module import
+    this._createCopyIconForModule();
+
     // Resolving and creating components dynamically in Angular happens synchronously, but since
     // we want to emit the output if the components are actually rendered completely, we wait
     // until the Angular zone becomes stable.
@@ -230,6 +234,37 @@ export class DocViewer implements OnDestroy {
 
       if (deprecationTitle) {
         tooltipOutlet.instance.message = deprecationTitle;
+      }
+
+      this._portalHosts.push(elementPortalOutlet);
+    });
+  }
+
+  _createCopyIconForModule() {
+    // every module import element will be marked with docs-api-module-import-button attribute
+    const moduleImportElements = this._elementRef.nativeElement.querySelectorAll(
+      '[data-docs-api-module-import-button]',
+    );
+
+    [...moduleImportElements].forEach((element: HTMLElement) => {
+      // get the module import path stored in the attribute
+      const moduleImport = element.getAttribute('data-docs-api-module-import-button');
+
+      const elementPortalOutlet = new DomPortalOutlet(
+        element,
+        this._componentFactoryResolver,
+        this._appRef,
+        this._injector,
+      );
+
+      const moduleImportPortal = new ComponentPortal(
+        ModuleImportCopyButton,
+        this._viewContainerRef,
+      );
+      const moduleImportOutlet = elementPortalOutlet.attach(moduleImportPortal);
+
+      if (moduleImport) {
+        moduleImportOutlet.instance.import = moduleImport;
       }
 
       this._portalHosts.push(elementPortalOutlet);

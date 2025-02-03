@@ -7,13 +7,17 @@ import {DocViewer} from './doc-viewer';
 import {DocViewerModule} from './doc-viewer-module';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {MatTooltip} from '@angular/material/tooltip';
+import {MatIconButton} from '@angular/material/button';
+import {Clipboard} from '@angular/cdk/clipboard';
 
 describe('DocViewer', () => {
   let http: HttpTestingController;
+  const clipboardSpy = jasmine.createSpyObj<Clipboard>('Clipboard', ['copy']);
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [DocViewerModule, DocsAppTestingModule, DocViewerTestComponent],
+      providers: [{provide: Clipboard, useValue: clipboardSpy}],
     }).compileComponents();
   }));
 
@@ -179,6 +183,27 @@ describe('DocViewer', () => {
     expect(deprecatedSymbol.query(By.directive(MatTooltip))).toBeTruthy();
   });
 
+  it('should show copy icon button for module imports', () => {
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    fixture.componentInstance.documentUrl = `http://material.angular.io/copy-module-import.html`;
+    fixture.detectChanges();
+
+    const url = fixture.componentInstance.documentUrl;
+    http.expectOne(url).flush(FAKE_DOCS[url]);
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer).not.toBeNull();
+
+    const iconButton = fixture.debugElement.query(By.directive(MatIconButton));
+    // icon button for copying module import should exist
+    expect(iconButton).toBeTruthy();
+
+    // click on icon button to trigger copying the module import
+    iconButton.nativeNode.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+    expect(clipboardSpy.copy).toHaveBeenCalled();
+  });
+
   // TODO(mmalerba): Add test that example-viewer is instantiated.
 });
 
@@ -221,6 +246,17 @@ const FAKE_DOCS: {[key: string]: string} = {
         
       <div class="docs-api-deprecated-marker" 
         deprecated-message="deprecated">Deprecated</div>`,
+  'http://material.angular.io/copy-module-import.html': `<div class="docs-api-module">
+      <p class="docs-api-module-import">
+        <code>
+          import {MatIconModule} from '@angular/material/icon';
+        </code>
+      </p>
+
+      <div class="docs-api-module-import-button" 
+        data-docs-api-module-import-button="import {MatIconModule} from '@angular/material/icon';">
+      </div>
+    </div>`,
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 
