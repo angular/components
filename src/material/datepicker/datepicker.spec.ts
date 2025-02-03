@@ -272,27 +272,23 @@ describe('MatDatepicker', () => {
         expect(popup.getAttribute('role')).toBe('dialog');
       }));
 
-      it(
-        'should set aria-labelledby to the one from the input, if not placed inside ' +
-          'a mat-form-field',
-        fakeAsync(() => {
-          expect(fixture.nativeElement.querySelector('mat-form-field')).toBeFalsy();
+      it('should set aria-labelledby to the one from the input, if not placed inside a mat-form-field', fakeAsync(() => {
+        expect(fixture.nativeElement.querySelector('mat-form-field')).toBeFalsy();
 
-          const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
-          input.setAttribute('aria-labelledby', 'test-label');
+        const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+        input.setAttribute('aria-labelledby', 'test-label');
 
-          testComponent.datepicker.open();
-          fixture.detectChanges();
-          tick();
-          flush();
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        tick();
+        flush();
 
-          const popup = document.querySelector(
-            '.cdk-overlay-pane .mat-datepicker-content-container',
-          )!;
-          expect(popup).toBeTruthy();
-          expect(popup.getAttribute('aria-labelledby')).toBe('test-label');
-        }),
-      );
+        const popup = document.querySelector(
+          '.cdk-overlay-pane .mat-datepicker-content-container',
+        )!;
+        expect(popup).toBeTruthy();
+        expect(popup.getAttribute('aria-labelledby')).toBe('test-label');
+      }));
 
       it('close should close dialog', fakeAsync(() => {
         testComponent.touch = true;
@@ -1449,6 +1445,26 @@ describe('MatDatepicker', () => {
 
         expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
       }));
+
+      it('should set aria-expanded on the toggle', fakeAsync(() => {
+        const button = fixture.nativeElement.querySelector('mat-datepicker-toggle button');
+
+        expect(button.getAttribute('aria-expanded')).toBe('false');
+
+        fixture.componentInstance.datepicker.open();
+        fixture.detectChanges();
+        tick();
+        flush();
+
+        expect(button.getAttribute('aria-expanded')).toBe('true');
+
+        fixture.componentInstance.datepicker.close();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(button.getAttribute('aria-expanded')).toBe('false');
+      }));
     });
 
     describe('datepicker with custom mat-datepicker-toggle icon', () => {
@@ -2181,6 +2197,14 @@ describe('MatDatepicker', () => {
       const toggle = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
 
       expect(toggle.hasAttribute('aria-haspopup')).toBe(false);
+    });
+
+    it('should not set aria-expanded if toggle does not have a datepicker', () => {
+      const fixture = createComponent(DatepickerToggleWithNoDatepicker, [MatNativeDateModule]);
+      fixture.detectChanges();
+      const toggle = fixture.nativeElement.querySelector('.mat-datepicker-toggle button');
+
+      expect(toggle.hasAttribute('aria-expanded')).toBe(false);
     });
 
     it('should not throw on init if input does not have a datepicker', () => {
