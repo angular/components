@@ -1050,6 +1050,7 @@ class MultiSelectionChipListbox {
         </mat-chip-option>
       </mat-chip-listbox>
   `,
+  standalone: false,
 })
 class AsyncMultiSelectionChipListbox {
   private _chipsSubject = new BehaviorSubject(['tutorial-1', 'tutorial-2', 'tutorial-3']);
