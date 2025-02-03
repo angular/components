@@ -5,6 +5,7 @@
   [attr.aria-haspopup]="datepicker ? 'dialog' : null"
   [attr.aria-label]="ariaLabel || _intl.openCalendarLabel"
   [attr.tabindex]="disabled ? -1 : tabIndex"
+  [attr.aria-expanded]="datepicker ? datepicker.opened : null"
   [disabled]="disabled"
   [disableRipple]="disableRipple">
 
