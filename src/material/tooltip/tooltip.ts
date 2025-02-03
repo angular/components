@@ -187,10 +187,7 @@ const MAX_WIDTH = 200;
   },
 })
 export class MatTooltip implements OnDestroy, AfterViewInit {
-  private _overlay = inject(Overlay);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _scrollDispatcher = inject(ScrollDispatcher);
-  private _viewContainerRef = inject(ViewContainerRef);
   private _ngZone = inject(NgZone);
   private _platform = inject(Platform);
   private _ariaDescriber = inject(AriaDescriber);
@@ -209,7 +206,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _positionAtOrigin: boolean = false;
   private _disabled: boolean = false;
   private _tooltipClass: string | string[] | Set<string> | {[key: string]: any};
-  private _scrollStrategy = inject(MAT_TOOLTIP_SCROLL_STRATEGY);
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   private readonly _tooltipComponent = TooltipComponent;
@@ -362,9 +358,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private readonly _passiveListeners: (readonly [string, EventListenerOrEventListenerObject])[] =
     [];
 
-  /** Reference to the current document. */
-  private _document = inject(DOCUMENT);
-
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: null | ReturnType<typeof setTimeout> = null;
 
@@ -462,7 +455,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     const overlayRef = this._createOverlay(origin);
     this._detach();
     this._portal =
-      this._portal || new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
+      this._portal ||
+      new ComponentPortal(this._tooltipComponent, this._injector.get(ViewContainerRef));
     const instance = (this._tooltipInstance = overlayRef.attach(this._portal).instance);
     instance._triggerElement = this._elementRef.nativeElement;
     instance._mouseLeaveHideDelay = this._hideDelay;
@@ -512,12 +506,14 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       this._detach();
     }
 
-    const scrollableAncestors = this._scrollDispatcher.getAncestorScrollContainers(
-      this._elementRef,
-    );
+    const scrollableAncestors = this._injector
+      .get(ScrollDispatcher)
+      .getAncestorScrollContainers(this._elementRef);
+
+    const overlay = this._injector.get(Overlay);
 
     // Create connected position strategy that listens for scroll events to reposition.
-    const strategy = this._overlay
+    const strategy = overlay
       .position()
       .flexibleConnectedTo(this.positionAtOrigin ? origin || this._elementRef : this._elementRef)
       .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
@@ -537,11 +533,11 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       }
     });
 
-    this._overlayRef = this._overlay.create({
+    this._overlayRef = overlay.create({
       direction: this._dir,
       positionStrategy: strategy,
       panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
-      scrollStrategy: this._scrollStrategy(),
+      scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
     });
 
     this._updatePosition(this._overlayRef);
@@ -874,7 +870,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   /** Listener for the `wheel` event on the element. */
   private _wheelListener(event: WheelEvent) {
     if (this._isTooltipVisible()) {
-      const elementUnderPointer = this._document.elementFromPoint(event.clientX, event.clientY);
+      const elementUnderPointer = this._injector
+        .get(DOCUMENT)
+        .elementFromPoint(event.clientX, event.clientY);
       const element = this._elementRef.nativeElement;
 
       // On non-touch devices we depend on the `mouseleave` event to close the tooltip, but it
