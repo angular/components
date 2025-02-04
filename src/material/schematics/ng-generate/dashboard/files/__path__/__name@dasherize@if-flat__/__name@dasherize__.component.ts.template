@@ -20,7 +20,6 @@ import { MatCardModule } from '@angular/material/card';<% } %>
   styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
-  standalone: true,
   imports: [
     AsyncPipe,
     MatGridListModule,
@@ -28,7 +27,8 @@ import { MatCardModule } from '@angular/material/card';<% } %>
     MatIconModule,
     MatButtonModule,
     MatCardModule
-  ]<% } %>
+  ]<% } else { %>,
+  standalone: false<% } %>
 })
 export class <%= classify(name) %>Component {
   private breakpointObserver = inject(BreakpointObserver);

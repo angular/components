@@ -78,8 +78,31 @@ describe('material-dashboard-schematic', () => {
       });
 
       expect(module).not.toContain('FooComponent');
-      expect(component).toContain('standalone: true');
       expect(component).toContain('imports: [');
+    });
+
+    it('should generate a component with no imports and standalone false', async () => {
+      const app = await createTestApp(runner, {standalone: false});
+      const tree = await runner.runSchematic('dashboard', {...baseOptions, standalone: false}, app);
+      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
+      const requiredModules = [
+        'MatButtonModule',
+        'MatCardModule',
+        'MatGridListModule',
+        'MatIconModule',
+        'MatMenuModule',
+      ];
+
+      requiredModules.forEach(name => {
+        expect(module).withContext('Module should import dependencies').toContain(name);
+        expect(component)
+          .withContext('Component should not import dependencies')
+          .not.toContain(name);
+      });
+
+      expect(component).toContain('standalone: false');
+      expect(component).not.toContain('imports: [');
     });
 
     it('should infer the standalone option from the project structure', async () => {
@@ -91,7 +114,6 @@ describe('material-dashboard-schematic', () => {
       );
 
       expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
-      expect(componentContent).toContain('standalone: true');
       expect(componentContent).toContain('imports: [');
     });
   });

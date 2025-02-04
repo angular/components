@@ -35,8 +35,8 @@ export interface FlatTreeNode {
   styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
-  standalone: true,
-  imports: [MatTreeModule, MatButtonModule, MatIconModule]<% } %>
+  imports: [MatTreeModule, MatButtonModule, MatIconModule]<% } else { %>,
+  standalone: false<% } %>
 })
 export class <%= classify(name) %>Component {
 

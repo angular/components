@@ -13,8 +13,8 @@ import { <% if(standalone) { %>CdkDrag, CdkDropList, <% } %>CdkDragDrop, moveIte
   styleUrl: './<%= dasherize(name) %>.component.<%= style %>'<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %><% if(standalone) { %>,
-  standalone: true,
-  imports: [CdkDrag, CdkDropList]<% } %>
+  imports: [CdkDrag, CdkDropList]<% } else { %>,
+  standalone: false<% } %>
 })
 export class <%= classify(name) %>Component {
   todo = [
