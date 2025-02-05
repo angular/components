@@ -443,23 +443,6 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     );
   }
 
-  private _dateComponentsAreValid(year: number, month: number, day: number) {
-    if (year < 0 || year > 9999 || month < 0 || month > 11 || day < 1 || day > 31) {
-      return false;
-    }
-
-    if (month === 1) {
-      const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-      return isLeapYear ? day <= 29 : day <= 28;
-    }
-
-    if (month === 3 || month === 5 || month === 8 || month === 10) {
-      return day <= 30;
-    }
-
-    return true;
-  }
-
   /**
    * Attempts to parse a time string into a date object. Returns null if it cannot be parsed.
    * @param value Time string to parse.
