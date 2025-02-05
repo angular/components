@@ -1,3 +1,17 @@
+<a name="19.1.3"></a>
+# 19.1.3 "plastic-wombat" (2025-02-05)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [37436bd299](https://github.com/angular/components/commit/37436bd299ebe48b54213b91aa42cbdbe3dfb3f7) | fix | **button-toggle:** make null value selected on init ([#25553](https://github.com/angular/components/pull/25553)) |
+| [8568cd5ad1](https://github.com/angular/components/commit/8568cd5ad1011a6af777b1355431dee4a8cbf021) | fix | **chips:** Async chips with a delay are not highlighted ([#27399](https://github.com/angular/components/pull/27399)) |
+| [8a99cf45f5](https://github.com/angular/components/commit/8a99cf45f56f62f21c745d62c09075b4f7fcb970) | fix | **datepicker:** set aria-expanded on datepicker toggle ([#30438](https://github.com/angular/components/pull/30438)) |
+| [6d96869bdb](https://github.com/angular/components/commit/6d96869bdb0b352da18d5adf8774cf9d211196b1) | fix | **sidenav:** end positioned sidenav not opening in RTL ([#30427](https://github.com/angular/components/pull/30427)) |
+| [9e152910b1](https://github.com/angular/components/commit/9e152910b1937be2ba169a27c2840b20869495d0) | perf | **button:** Optimize the remaining descendant state selector. ([#30428](https://github.com/angular/components/pull/30428)) |
+| [6bd376174e](https://github.com/angular/components/commit/6bd376174ed3b56e211d725ac21bcb6fba90bbc6) | perf | **checkbox:** Optimize more expensive selectors ([#30409](https://github.com/angular/components/pull/30409)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.2"></a>
 # 19.1.2 "dolomite-domino" (2025-01-29)
 ### cdk
