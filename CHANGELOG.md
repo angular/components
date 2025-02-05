@@ -1,3 +1,38 @@
+<a name="19.2.0-next.3"></a>
+# 19.2.0-next.3 "plastic-moose" (2025-02-05)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5423dd25ea](https://github.com/angular/components/commit/5423dd25ea8933b9f32a10746d2d3b7a6a25bb35) | fix | **bottom-sheet:** remove remaining animation dependencies |
+| [9ea468a591](https://github.com/angular/components/commit/9ea468a591f5ba96628aa28c47e72c2086fec90a) | fix | **button-toggle:** make null value selected on init ([#25553](https://github.com/angular/components/pull/25553)) |
+| [4eb06acbd9](https://github.com/angular/components/commit/4eb06acbd9c30b3f5e8146b949739fe95cfcf6d3) | fix | **chips:** Async chips with a delay are not highlighted ([#27399](https://github.com/angular/components/pull/27399)) |
+| [212c354766](https://github.com/angular/components/commit/212c3547669a98dd936b3b4eb1c3e1e89e2d4bcc) | fix | **datepicker:** remove remaining animation dependencies |
+| [f15a9395a8](https://github.com/angular/components/commit/f15a9395a89b00b74a973f65f3c323d56462879a) | fix | **datepicker:** set aria-expanded on datepicker toggle ([#30438](https://github.com/angular/components/pull/30438)) |
+| [71c71be313](https://github.com/angular/components/commit/71c71be313db564ffd8a1f4b9bd1deaf7526faf3) | fix | **dialog:** remove remaining animation dependencies |
+| [e164e2360e](https://github.com/angular/components/commit/e164e2360ef32391a3fc6ae2b063ecf6c7dce371) | fix | **expansion:** remove remaining animation dependencies |
+| [37693e308a](https://github.com/angular/components/commit/37693e308a205489c39a4697ac70ed025e768673) | fix | **form-field:** remove remaining animation dependencies |
+| [879cbe7557](https://github.com/angular/components/commit/879cbe7557d33c3bf7ecb7c48c91dd9e86c2181e) | fix | **menu:** remove remaining animation dependencies |
+| [5eeade7b43](https://github.com/angular/components/commit/5eeade7b430f0bfb737fc64e31d2fc16416207bd) | fix | **select:** remove remaining animation dependencies |
+| [04ae202b60](https://github.com/angular/components/commit/04ae202b600022b614c5da4e1765c333a98d5294) | fix | **sidenav:** end positioned sidenav not opening in RTL ([#30427](https://github.com/angular/components/pull/30427)) |
+| [712d5e2a40](https://github.com/angular/components/commit/712d5e2a403db8dfbcc77a417df383585a288f8d) | fix | **sidenav:** remove remaining animation dependencies |
+| [02ed862f76](https://github.com/angular/components/commit/02ed862f762f73ffd2b81d74f474b91bcf1b0119) | fix | **snack-bar:** remove remaining animation dependencies |
+| [25c18bf196](https://github.com/angular/components/commit/25c18bf19616206330a2248599c764fa7f5b9180) | fix | **sort:** remove remaining animation dependencies |
+| [872330721a](https://github.com/angular/components/commit/872330721a06da6d02410cfe23b04ae65ae6be19) | fix | **stepper:** remove remaining animation dependencies |
+| [b20a85a47a](https://github.com/angular/components/commit/b20a85a47aa702bfc2b632f201f4d5abc9be514e) | fix | **tabs:** remove remaining animation dependencies |
+| [5d3f43c150](https://github.com/angular/components/commit/5d3f43c15088a16dc995e44261e2207ca56c51df) | fix | **tooltip:** remove remaining animation dependencies |
+| [7b17243689](https://github.com/angular/components/commit/7b1724368965ebc350e0eb63555f8331e1a01661) | perf | **button:** Optimize the remaining descendant state selector. ([#30428](https://github.com/angular/components/pull/30428)) |
+| [1b3c42e074](https://github.com/angular/components/commit/1b3c42e074988dc953198ac071fad1d90298efae) | perf | **checkbox:** Optimize more expensive selectors ([#30409](https://github.com/angular/components/pull/30409)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [151ff1aed6](https://github.com/angular/components/commit/151ff1aed64c7c0d5d3be3a3e20a0c12a0312305) | fix | **column-resize:** Fix lazy resize mode (broken by #[#30378](https://github.com/angular/components/pull/30378)) ([#30413](https://github.com/angular/components/pull/30413)) |
+### material-angular-io
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fe441bdce5](https://github.com/angular/components/commit/fe441bdce520f90cc9b33b67af5f44ad0d32e6dd) | feat | allow module imports to be copied from API tab ([#30389](https://github.com/angular/components/pull/30389)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.3"></a>
 # 19.1.3 "plastic-wombat" (2025-02-05)
 ### material
