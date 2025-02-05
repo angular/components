@@ -53,7 +53,6 @@ export default function (options: Schema): Rule {
       materialVersionRange || fallbackMaterialVersionRange,
     );
     addPackageToPackageJson(host, '@angular/forms', angularDependencyVersion);
-    addPackageToPackageJson(host, '@angular/animations', angularDependencyVersion);
 
     // Since the Angular Material schematics depend on the schematic utility functions from the
     // CDK, we need to install the CDK before loading the schematic files that import from the CDK.
