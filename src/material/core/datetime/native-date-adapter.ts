@@ -179,7 +179,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     const dateParts = value
       .trim()
       .split(DATE_COMPONENT_SEPARATOR_REGEX)
-      .map(part => parseInt(part, 10))
+      .map(part => Number(part))
       .filter(part => !isNaN(part));
 
     if (dateParts.length < 2) {
