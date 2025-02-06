@@ -244,6 +244,7 @@ export class MatChipGridChange {
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     addOnBlur: boolean;
+    ariaPlaceholder: string | null;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
     get chipGrid(): MatChipGrid;
@@ -261,6 +262,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     _focus(): void;
     focused: boolean;
+    getAriaPlaceholder(): string | null;
     id: string;
     readonly inputElement: HTMLInputElement;
     _keydown(event: KeyboardEvent): void;
@@ -279,7 +281,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     setDescribedByIds(ids: string[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "ariaPlaceholder": { "alias": "ariaPlaceholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, never>;
 }
