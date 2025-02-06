@@ -184,12 +184,12 @@
               </button>
             </mat-chip-row>
           }
-          <input [disabled]="disableInputs"
-                 [matChipInputFor]="chipGrid1"
-                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                 [matChipInputAddOnBlur]="addOnBlur"
-                 (matChipInputTokenEnd)="add($event)" />
         </mat-chip-grid>
+        <input [disabled]="disableInputs"
+                [matChipInputFor]="chipGrid1"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)" />
       </mat-form-field>
 
       <h4>Input is next sibling child of chip grid</h4>
