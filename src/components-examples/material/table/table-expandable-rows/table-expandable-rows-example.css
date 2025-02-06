@@ -6,6 +6,10 @@ tr.example-detail-row {
   height: 0;
 }
 
+tr.example-element-row {
+  cursor: pointer;
+}
+
 tr.example-element-row:not(.example-expanded-row):hover {
   background: whitesmoke;
 }
@@ -18,9 +22,21 @@ tr.example-element-row:not(.example-expanded-row):active {
   border-bottom-width: 0;
 }
 
-.example-element-detail {
+.example-element-detail-wrapper {
   overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+  transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-element-detail-wrapper-expanded {
+  grid-template-rows: 1fr;
+}
+
+.example-element-detail {
   display: flex;
+  min-height: 0;
 }
 
 .example-element-diagram {
@@ -44,4 +60,12 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .example-element-description-attribution {
   opacity: 0.5;
+}
+
+.example-toggle-button {
+  transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-toggle-button-expanded {
+  transform: rotate(180deg);
 }
