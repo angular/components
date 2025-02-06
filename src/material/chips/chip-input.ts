@@ -129,8 +129,10 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** The native input element to which this directive is attached. */
   readonly inputElement!: HTMLInputElement;
 
-  /** Default Screen-reader placeholder for the input if no placeholder or
-   * ariaPlaceholder is provided. */
+  /**
+   * Default Screen-reader placeholder for the input if no placeholder or
+   * ariaPlaceholder is provided.
+   */
   private readonly _defaultAriaPlaceholder = 'Enter input';
 
   constructor(...args: unknown[]);
@@ -232,7 +234,8 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
   }
 
-  /** Checks whether placeholder is used, if not checks for ariaPlaceholder, and resorts
+  /**
+   * Checks whether placeholder is used, if not checks for ariaPlaceholder, and resorts
    * to default value if neither is provided.
    */
   getAriaPlaceholder(): string | null {
