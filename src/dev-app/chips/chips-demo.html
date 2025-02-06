@@ -209,7 +209,8 @@
         <input [matChipInputFor]="chipGrid2"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
-               (matChipInputTokenEnd)="add($event)" />
+               (matChipInputTokenEnd)="add($event)"
+               ariaPlaceholder="New contributor input..." />
       </mat-form-field>
 
       <p>
