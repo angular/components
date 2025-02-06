@@ -59,6 +59,7 @@ export interface MatChipInputEvent {
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
+    '[attr.aria-placeholder]': 'getAriaPlaceholder()',
     '[attr.aria-invalid]': '_chipGrid && _chipGrid.ngControl ? _chipGrid.ngControl.invalid : null',
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
@@ -104,6 +105,9 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** The input's placeholder text. */
   @Input() placeholder: string = '';
 
+  /** Screenreader placeholder for the input, only used if placeholder is not provided. */
+  @Input() ariaPlaceholder: string | null;
+
   /** Unique id for the input. */
   @Input() id: string = inject(_IdGenerator).getId('mat-mdc-chip-list-input-');
 
@@ -124,6 +128,10 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
   /** The native input element to which this directive is attached. */
   readonly inputElement!: HTMLInputElement;
+
+  /** Default Screen-reader placeholder for the input if no placeholder or
+   * ariaPlaceholder is provided. */
+  private readonly _defaultAriaPlaceholder = 'Enter input';
 
   constructor(...args: unknown[]);
 
@@ -222,5 +230,12 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Checks whether a keycode is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
+  }
+
+  /** Checks whether placeholder is used, if not checks for ariaPlaceholder, and resorts
+   * to default value if neither is provided.
+   */
+  getAriaPlaceholder(): string | null {
+    return this.placeholder ? null : this.ariaPlaceholder || this._defaultAriaPlaceholder;
   }
 }
