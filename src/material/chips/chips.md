@@ -139,7 +139,7 @@ The chips components support 3 user interaction patterns, each with its own cont
 
 #### Text Entry
 
-`<mat-chip-grid>` and `<mat-chip-row>` : These elements implement a grid accessibility pattern. Use them as part of a free form input that allows users to enter text to add chips.
+`<mat-chip-grid>` and `<mat-chip-row>` : These elements implement a grid accessibility pattern. Use them as part of a free form input that allows users to enter text to add chips. Note : be sure to have the input element be a sibling of mat-chip-grid to ensure accessibility of the input element by accessibility devices such as Voice Control. The input will have a default `aria-placeholder` value of "Enter input" if no `ariaPlaceholder` value or `placeholder` attribute value is applied. This is to provide a calculable name for accessibility controls.
 
 ```html
 <mat-form-field>
@@ -153,10 +153,11 @@ The chips components support 3 user interaction patterns, each with its own cont
         </button>
       </mat-chip-row>
     }
-    <input [matChipInputFor]="myChipGrid"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           (matChipInputTokenEnd)="add($event)" />
   </mat-chip-grid>
+  <input [matChipInputFor]="myChipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)"
+          ariaPlaceholder="Add sandwich fillings..." />
 </mat-form-field>
 ```
 
