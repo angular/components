@@ -184,6 +184,12 @@
               </button>
             </mat-chip-row>
           }
+          <input [disabled]="disableInputs"
+                [matChipInputFor]="chipGrid1"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"
+                ariaLabel="New contributor input..." />
         </mat-chip-grid>
         <input [disabled]="disableInputs"
                 [matChipInputFor]="chipGrid1"
@@ -209,8 +215,7 @@
         <input [matChipInputFor]="chipGrid2"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
-               (matChipInputTokenEnd)="add($event)"
-               ariaLabel="New contributor input..." />
+               (matChipInputTokenEnd)="add($event)"/>
       </mat-form-field>
 
       <p>
