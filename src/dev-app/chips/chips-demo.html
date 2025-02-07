@@ -29,8 +29,8 @@
         <mat-basic-chip-row>Basic Chip Row 1</mat-basic-chip-row>
         <mat-basic-chip-row>Basic Chip Row 2</mat-basic-chip-row>
         <mat-basic-chip-row>Basic Chip Row 3</mat-basic-chip-row>
-        <input [matChipInputFor]="basicGrid" readonly>
       </mat-chip-grid>
+      <input [matChipInputFor]="basicGrid" readonly>
 
       <h4>With avatar, icons, and color</h4>
 
@@ -210,7 +210,7 @@
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
                (matChipInputTokenEnd)="add($event)"
-               ariaPlaceholder="New contributor input..." />
+               ariaLabel="New contributor input..." />
       </mat-form-field>
 
       <p>
