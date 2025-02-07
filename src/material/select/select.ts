@@ -61,7 +61,6 @@ import {
   HostAttributeToken,
   ANIMATION_MODULE_TYPE,
   Renderer2,
-  NgZone,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -216,7 +215,6 @@ export class MatSelect
   private _dir = inject(Directionality, {optional: true});
   private _idGenerator = inject(_IdGenerator);
   private _renderer = inject(Renderer2);
-  private _ngZone = inject(NgZone);
   protected _parentFormField = inject<MatFormField>(MAT_FORM_FIELD, {optional: true});
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
@@ -845,35 +843,41 @@ export class MatSelect
   /** Triggers the exit animation and detaches the overlay at the end. */
   private _exitAndDetach() {
     if (this._animationsDisabled || !this.panel) {
-      this._overlayDir.detachOverlay();
+      this._detachOverlay();
       return;
     }
 
-    this._ngZone.runOutsideAngular(() => {
-      this._cleanupDetach?.();
-      this._cleanupDetach = () => {
-        cleanupEvent();
-        clearTimeout(exitFallbackTimer);
-        this._cleanupDetach = undefined;
-      };
+    this._cleanupDetach?.();
+    this._cleanupDetach = () => {
+      cleanupEvent();
+      clearTimeout(exitFallbackTimer);
+      this._cleanupDetach = undefined;
+    };
 
-      const panel: HTMLElement = this.panel.nativeElement;
-      const cleanupEvent = this._renderer.listen(panel, 'animationend', (event: AnimationEvent) => {
-        if (event.animationName === '_mat-select-exit') {
-          this._cleanupDetach?.();
-          this._overlayDir.detachOverlay();
-        }
-      });
-
-      // Since closing the overlay depends on the animation, we have a fallback in case the panel
-      // doesn't animate. This can happen in some internal tests that do `* {animation: none}`.
-      const exitFallbackTimer = setTimeout(() => {
+    const panel: HTMLElement = this.panel.nativeElement;
+    const cleanupEvent = this._renderer.listen(panel, 'animationend', (event: AnimationEvent) => {
+      if (event.animationName === '_mat-select-exit') {
         this._cleanupDetach?.();
-        this._overlayDir.detachOverlay();
-      }, 200);
-
-      panel.classList.add('mat-select-panel-exit');
+        this._detachOverlay();
+      }
     });
+
+    // Since closing the overlay depends on the animation, we have a fallback in case the panel
+    // doesn't animate. This can happen in some internal tests that do `* {animation: none}`.
+    const exitFallbackTimer = setTimeout(() => {
+      this._cleanupDetach?.();
+      this._detachOverlay();
+    }, 200);
+
+    panel.classList.add('mat-select-panel-exit');
+  }
+
+  /** Detaches the current overlay directive. */
+  private _detachOverlay() {
+    this._overlayDir.detachOverlay();
+    // Some of the overlay detachment logic depends on change detection.
+    // Mark for check to ensure that things get picked up in a timely manner.
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
