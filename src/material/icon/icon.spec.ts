@@ -122,7 +122,7 @@ describe('MatIcon', () => {
       'mat-icon',
       'mat-ligature-font',
       'mat-primary',
-      'material-icons',
+      'material-symbols-outlined',
       'notranslate',
     ]);
   });
@@ -141,7 +141,7 @@ describe('MatIcon', () => {
       'mat-icon',
       'mat-icon-no-color',
       'mat-ligature-font',
-      'material-icons',
+      'material-symbols-outlined',
       'notranslate',
     ]);
   });
@@ -178,7 +178,7 @@ describe('MatIcon', () => {
   });
 
   describe('Ligature icons', () => {
-    it('should add material-icons and mat-ligature-font class by default', () => {
+    it('should add material-symbols-outlined and mat-ligature-font class by default', () => {
       const fixture = TestBed.createComponent(IconWithLigature);
 
       const testComponent = fixture.componentInstance;
@@ -190,7 +190,7 @@ describe('MatIcon', () => {
         'mat-icon',
         'mat-icon-no-color',
         'mat-ligature-font',
-        'material-icons',
+        'material-symbols-outlined',
         'notranslate',
       ]);
     });
@@ -265,7 +265,7 @@ describe('MatIcon', () => {
       expect(icon.getAttribute('fontIcon')).toBe('house');
     });
 
-    it('should add material-icons and mat-ligature-font class by default', () => {
+    it('should add material-symbols-outlined and mat-ligature-font class by default', () => {
       const fixture = TestBed.createComponent(IconWithLigatureByAttribute);
 
       const testComponent = fixture.componentInstance;
@@ -277,7 +277,7 @@ describe('MatIcon', () => {
         'mat-icon',
         'mat-icon-no-color',
         'mat-ligature-font',
-        'material-icons',
+        'material-symbols-outlined',
         'notranslate',
       ]);
     });

@@ -35,7 +35,7 @@ The `ng add` command will additionally perform the following actions:
 
 * Add project dependencies to `package.json`
 * Add the Roboto font to your `index.html`
-* Add the Material Design icon font to your `index.html`
+* Add the Material Symbols icon font to your `index.html`
 * Add a few global CSS styles to:
   * Remove margins from `body`
   * Set `height: 100%` on `html` and `body`
@@ -48,7 +48,7 @@ You're done! Angular Material is now configured to be used in your application.
 Let's display a slide toggle component in your app and verify that everything works.
 
 You need to import the `MatSlideToggleModule` that you want to display by adding the following lines to
-your standalone component's imports, or otherwise your component's `NgModule`. 
+your standalone component's imports, or otherwise your component's `NgModule`.
 
 ```ts
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
