@@ -27,10 +27,6 @@ determine which features to include:
 
    Whether to apply the global [typography](https://material.angular.io/guide/typography) styles to your application.
 
-3. Set up browser animations for Angular Material:
-
-   Importing the [`BrowserAnimationsModule`](https://angular.dev/api/platform-browser/animations/BrowserAnimationsModule) into your application enables Angular's [animation system](https://angular.dev/guide/animations). Declining this will disable most of Angular Material's animations.
-
 The `ng add` command will additionally perform the following actions:
 
 * Add project dependencies to `package.json`
@@ -48,7 +44,7 @@ You're done! Angular Material is now configured to be used in your application.
 Let's display a slide toggle component in your app and verify that everything works.
 
 You need to import the `MatSlideToggleModule` that you want to display by adding the following lines to
-your standalone component's imports, or otherwise your component's `NgModule`. 
+your standalone component's imports, or otherwise your component's `NgModule`.
 
 ```ts
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
