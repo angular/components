@@ -39,7 +39,7 @@ export class StickyStyler {
     ? new globalThis.ResizeObserver(entries => this._updateCachedSizes(entries))
     : null;
   private _updatedStickyColumnsParamsToReplay: UpdateStickyColumnsParams[] = [];
-  private _stickyColumnsReplayTimeout: number | null = null;
+  private _stickyColumnsReplayTimeout: ReturnType<typeof setTimeout> | null = null;
   private _cachedCellWidths: number[] = [];
   private readonly _borderCellCss: Readonly<{[d in StickyDirection]: string}>;
   private _destroyed = false;
@@ -128,24 +128,14 @@ export class StickyStyler {
     recalculateCellWidths = true,
     replay = true,
   ) {
-    if (replay) {
-      this._updateStickyColumnReplayQueue({
-        rows: [...rows],
-        stickyStartStates: [...stickyStartStates],
-        stickyEndStates: [...stickyEndStates],
-      });
-    }
-
+    // Don't cache any state if none of the columns are sticky.
     if (
       !rows.length ||
       !this._isBrowser ||
       !(stickyStartStates.some(state => state) || stickyEndStates.some(state => state))
     ) {
-      if (this._positionListener) {
-        this._positionListener.stickyColumnsUpdated({sizes: []});
-        this._positionListener.stickyEndColumnsUpdated({sizes: []});
-      }
-
+      this._positionListener?.stickyColumnsUpdated({sizes: []});
+      this._positionListener?.stickyEndColumnsUpdated({sizes: []});
       return;
     }
 
@@ -163,6 +153,14 @@ export class StickyStyler {
     let cellWidths: number[];
     let startPositions: number[];
     let endPositions: number[];
+
+    if (replay) {
+      this._updateStickyColumnReplayQueue({
+        rows: [...rows],
+        stickyStartStates: [...stickyStartStates],
+        stickyEndStates: [...stickyEndStates],
+      });
+    }
 
     this._afterNextRender({
       earlyRead: () => {
@@ -321,6 +319,7 @@ export class StickyStyler {
       clearTimeout(this._stickyColumnsReplayTimeout);
     }
 
+    this._resizeObserver?.disconnect();
     this._destroyed = true;
   }
 
@@ -493,11 +492,9 @@ export class StickyStyler {
     this._removeFromStickyColumnReplayQueue(params.rows);
 
     // No need to replay if a flush is pending.
-    if (this._stickyColumnsReplayTimeout) {
-      return;
+    if (!this._stickyColumnsReplayTimeout) {
+      this._updatedStickyColumnsParamsToReplay.push(params);
     }
-
-    this._updatedStickyColumnsParamsToReplay.push(params);
   }
 
   /** Remove updates for the specified rows from the queue. */
