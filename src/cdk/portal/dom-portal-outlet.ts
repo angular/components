@@ -37,11 +37,6 @@ export class DomPortalOutlet extends BasePortalOutlet {
   constructor(
     /** Element into which the content is projected. */
     public outletElement: Element,
-    /**
-     * @deprecated No longer in use. To be removed.
-     * @breaking-change 18.0.0
-     */
-    _unusedComponentFactoryResolver?: any,
     private _appRef?: ApplicationRef,
     private _defaultInjector?: Injector,
 

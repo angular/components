@@ -113,7 +113,6 @@ export class DocViewer implements OnDestroy {
 
   constructor(
     private _appRef: ApplicationRef,
-    private _componentFactoryResolver: ComponentFactoryResolver,
     public _elementRef: ElementRef,
     private _injector: Injector,
     private _viewContainerRef: ViewContainerRef,
@@ -176,12 +175,7 @@ export class DocViewer implements OnDestroy {
       const example = element.getAttribute(componentName);
       const region = element.getAttribute('region');
       const file = element.getAttribute('file');
-      const portalHost = new DomPortalOutlet(
-        element,
-        this._componentFactoryResolver,
-        this._appRef,
-        this._injector,
-      );
+      const portalHost = new DomPortalOutlet(element, this._appRef, this._injector);
       const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const exampleViewer = portalHost.attach(examplePortal);
       const exampleViewerComponent = exampleViewer.instance as ExampleViewer;
@@ -222,12 +216,7 @@ export class DocViewer implements OnDestroy {
       // and breaking change if there is one included.
       const deprecationTitle = element.getAttribute('deprecated-message');
 
-      const elementPortalOutlet = new DomPortalOutlet(
-        element,
-        this._componentFactoryResolver,
-        this._appRef,
-        this._injector,
-      );
+      const elementPortalOutlet = new DomPortalOutlet(element, this._appRef, this._injector);
 
       const tooltipPortal = new ComponentPortal(DeprecatedFieldComponent, this._viewContainerRef);
       const tooltipOutlet = elementPortalOutlet.attach(tooltipPortal);
@@ -250,12 +239,7 @@ export class DocViewer implements OnDestroy {
       // get the module import path stored in the attribute
       const moduleImport = element.getAttribute('data-docs-api-module-import-button');
 
-      const elementPortalOutlet = new DomPortalOutlet(
-        element,
-        this._componentFactoryResolver,
-        this._appRef,
-        this._injector,
-      );
+      const elementPortalOutlet = new DomPortalOutlet(element, this._appRef, this._injector);
 
       const moduleImportPortal = new ComponentPortal(
         ModuleImportCopyButton,
