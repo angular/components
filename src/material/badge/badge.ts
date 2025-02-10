@@ -151,8 +151,9 @@ export class MatBadge implements OnInit, OnDestroy {
   constructor(...args: unknown[]);
 
   constructor() {
-    inject(_CdkPrivateStyleLoader).load(_MatBadgeStyleLoader);
-    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+    const styleLoader = inject(_CdkPrivateStyleLoader);
+    styleLoader.load(_MatBadgeStyleLoader);
+    styleLoader.load(_VisuallyHiddenLoader);
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = this._elementRef.nativeElement;
