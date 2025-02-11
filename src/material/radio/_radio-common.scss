@@ -35,41 +35,41 @@ $_icon-size: 20px;
 
     @if ($is-interactive) {
       // MDC's hover indication comes from their ripple which we don't use.
-      &:hover .mdc-radio__native-control:not([disabled]):not(:focus) {
+      &:hover > .mdc-radio__native-control:not([disabled]):not(:focus) {
         & ~ .mdc-radio__background::before {
           opacity: 0.04;
           transform: scale(1);
         }
       }
 
-      &:hover .mdc-radio__native-control:not([disabled]) ~ .mdc-radio__background {
-        .mdc-radio__outer-circle {
+      &:hover > .mdc-radio__native-control:not([disabled]) ~ .mdc-radio__background {
+        > .mdc-radio__outer-circle {
           @include token-utils.use-tokens($tokens...) {
             @include token-utils.create-token-slot(border-color, unselected-hover-icon-color);
           }
         }
       }
 
-      &:hover .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
-        .mdc-radio__outer-circle,
-        .mdc-radio__inner-circle {
+      &:hover > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+        > .mdc-radio__outer-circle,
+        > .mdc-radio__inner-circle {
           @include token-utils.use-tokens($tokens...) {
             @include token-utils.create-token-slot(border-color, selected-hover-icon-color);
           }
         }
       }
 
-      &:active .mdc-radio__native-control:enabled:not(:checked) + .mdc-radio__background {
-        .mdc-radio__outer-circle {
+      &:active > .mdc-radio__native-control:enabled:not(:checked) + .mdc-radio__background {
+        > .mdc-radio__outer-circle {
           @include token-utils.use-tokens($tokens...) {
             @include token-utils.create-token-slot(border-color, unselected-pressed-icon-color);
           }
         }
       }
 
-      &:active .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
-        .mdc-radio__outer-circle,
-        .mdc-radio__inner-circle {
+      &:active > .mdc-radio__native-control:enabled:checked + .mdc-radio__background {
+        > .mdc-radio__outer-circle,
+        > .mdc-radio__inner-circle {
           @include token-utils.use-tokens($tokens...) {
             @include token-utils.create-token-slot(border-color, selected-pressed-icon-color);
           }
@@ -152,11 +152,11 @@ $_icon-size: 20px;
       + .mdc-radio__background {
         transition: _enter-transition(opacity), _enter-transition(transform);
 
-        .mdc-radio__outer-circle {
+        > .mdc-radio__outer-circle {
           transition: _enter-transition(border-color);
         }
 
-        .mdc-radio__inner-circle {
+        > .mdc-radio__inner-circle {
           transition: _enter-transition(transform), _enter-transition(border-color);
         }
       }
@@ -172,7 +172,7 @@ $_icon-size: 20px;
 
     &:disabled {
       @include token-utils.use-tokens($tokens...) {
-        &:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle {
+        &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
           @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
           @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
         }
@@ -180,8 +180,8 @@ $_icon-size: 20px;
         + .mdc-radio__background {
           cursor: default;
 
-          .mdc-radio__inner-circle,
-          .mdc-radio__outer-circle {
+          > .mdc-radio__inner-circle,
+          > .mdc-radio__outer-circle {
             @include token-utils.create-token-slot(border-color, disabled-selected-icon-color);
             @include token-utils.create-token-slot(opacity, disabled-selected-icon-opacity);
           }
@@ -191,21 +191,21 @@ $_icon-size: 20px;
 
     &:enabled {
       @include token-utils.use-tokens($tokens...) {
-        &:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle {
+        &:not(:checked) + .mdc-radio__background > .mdc-radio__outer-circle {
           @include token-utils.create-token-slot(border-color, unselected-icon-color);
         }
 
         &:checked + .mdc-radio__background {
-          .mdc-radio__outer-circle,
-          .mdc-radio__inner-circle {
+          > .mdc-radio__outer-circle,
+          > .mdc-radio__inner-circle {
             @include token-utils.create-token-slot(border-color, selected-icon-color);
           }
         }
 
         @if ($is-interactive) {
           &:focus:checked + .mdc-radio__background {
-            .mdc-radio__inner-circle,
-            .mdc-radio__outer-circle {
+            > .mdc-radio__inner-circle,
+            > .mdc-radio__outer-circle {
               @include token-utils.create-token-slot(border-color, selected-focus-icon-color);
             }
           }
@@ -213,7 +213,7 @@ $_icon-size: 20px;
       }
     }
 
-    &:checked + .mdc-radio__background .mdc-radio__inner-circle {
+    &:checked + .mdc-radio__background > .mdc-radio__inner-circle {
       transform: scale(0.5);
       transition: _enter-transition(transform), _enter-transition(border-color);
     }
@@ -224,16 +224,19 @@ $_icon-size: 20px;
       pointer-events: auto;
 
       @include token-utils.use-tokens($tokens...) {
-        .mdc-radio__native-control:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle {
+        // stylelint-disable selector-combinator-space-before
+        .mdc-radio__native-control:not(:checked) + .mdc-radio__background
+            > .mdc-radio__outer-circle {
           @include token-utils.create-token-slot(border-color, disabled-unselected-icon-color);
           @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
         }
+        // stylelint-enable selector-combinator-space-before
 
         &:hover .mdc-radio__native-control:checked + .mdc-radio__background,
         .mdc-radio__native-control:checked:focus + .mdc-radio__background,
         .mdc-radio__native-control + .mdc-radio__background {
-          .mdc-radio__inner-circle,
-          .mdc-radio__outer-circle {
+          > .mdc-radio__inner-circle,
+          > .mdc-radio__outer-circle {
             @include token-utils.create-token-slot(border-color, disabled-selected-icon-color);
             @include token-utils.create-token-slot(opacity, disabled-selected-icon-opacity);
           }
