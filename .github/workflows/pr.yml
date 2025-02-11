@@ -65,7 +65,7 @@ jobs:
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
       - name: Check Package Licenses
-        uses: angular/dev-infra/github-actions/linting/licenses@515b575bd6650a12353b6039b618cdb808280ad7
+        uses: angular/dev-infra/github-actions/linting/licenses@8a438a3bdc519880d78b5ac92b62bfe688deb058
 
   e2e:
     runs-on: ubuntu-latest
