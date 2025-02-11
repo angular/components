@@ -139,8 +139,9 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
 
   constructor(...args: unknown[]);
   constructor() {
-    inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
-    inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
+    const styleLoader = inject(_CdkPrivateStyleLoader);
+    styleLoader.load(_StructuralStylesLoader);
+    styleLoader.load(_VisuallyHiddenLoader);
     this._signalDisableRipple = !!this._parent && isSignal(this._parent.disableRipple);
   }
 
