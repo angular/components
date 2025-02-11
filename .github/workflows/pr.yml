@@ -64,6 +64,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
+      - name: Check Package Licenses
+        uses: angular/dev-infra/github-actions/linting/licenses@515b575bd6650a12353b6039b618cdb808280ad7
 
   e2e:
     runs-on: ubuntu-latest
