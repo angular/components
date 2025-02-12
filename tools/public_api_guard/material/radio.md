@@ -97,12 +97,12 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
 }
 
 // @public
-export class MatRadioChange {
+export class MatRadioChange<T = any> {
     constructor(
     source: MatRadioButton,
-    value: any);
+    value: T);
     source: MatRadioButton;
-    value: any;
+    value: T;
 }
 
 // @public (undocumented)
