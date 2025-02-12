@@ -16,6 +16,7 @@ import {
   effect,
   ElementRef,
   inject,
+  InjectionToken,
   Injector,
   input,
   InputSignal,
@@ -41,7 +42,7 @@ import {
   MatOptionParentComponent,
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {ENTER, ESCAPE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
@@ -61,6 +62,18 @@ export interface MatTimepickerSelected<D> {
   value: D;
   source: MatTimepicker<D>;
 }
+
+/** Injection token used to configure the behavior of the timepicker dropdown while scrolling. */
+export const MAT_TIMEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
+  'MAT_TIMEPICKER_SCROLL_STRATEGY',
+  {
+    providedIn: 'root',
+    factory: () => {
+      const overlay = inject(Overlay);
+      return () => overlay.scrollStrategies.reposition();
+    },
+  },
+);
 
 /**
  * Renders out a listbox that can be used to select a time of day.
@@ -101,6 +114,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _defaultConfig = inject(MAT_TIMEPICKER_CONFIG, {optional: true});
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
+  private _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
 
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);
@@ -314,7 +328,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
     this._overlayRef = this._overlay.create({
       positionStrategy,
-      scrollStrategy: this._overlay.scrollStrategies.reposition(),
+      scrollStrategy: this._scrollStrategyFactory(),
       direction: this._dir || 'ltr',
       hasBackdrop: false,
     });
