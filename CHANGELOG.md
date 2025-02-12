@@ -1,3 +1,29 @@
+<a name="19.2.0-next.4"></a>
+# 19.2.0-next.4 "papercrete-zither" (2025-02-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6434841111](https://github.com/angular/components/commit/643484111146cdbc5dec10605e944d189300281e) | fix | **overlay:** avoid issues with overlapping backdrop removals ([#30474](https://github.com/angular/components/pull/30474)) |
+| [bf94082f81](https://github.com/angular/components/commit/bf94082f818eae53a75d5aaa319a03e7e55d5d4a) | fix | **table:** memory leak when no rows are sticky ([#30461](https://github.com/angular/components/pull/30461)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3d91f61053](https://github.com/angular/components/commit/3d91f6105384ac77af74d82773799bb25871ce96) | feat | **core:** drop dependency on animations module ([#30459](https://github.com/angular/components/pull/30459)) |
+| [d141f83f32](https://github.com/angular/components/commit/d141f83f32bcfee752e17707b0ff1d61a25b3d33) | fix | **core:** remove animations from ng add ([#30446](https://github.com/angular/components/pull/30446)) |
+| [24c25672b4](https://github.com/angular/components/commit/24c25672b4eeb8d5599243bd50dec9fe4125de9b) | fix | **select:** overlay not detached on time after exit animation in some cases ([#30456](https://github.com/angular/components/pull/30456)) |
+| [0925cf58ce](https://github.com/angular/components/commit/0925cf58ce6a7c5bc10cea515445bcb5b03f77c4) | fix | **timepicker:** allow scroll strategy to be customized ([#30473](https://github.com/angular/components/pull/30473)) |
+| [622152de76](https://github.com/angular/components/commit/622152de761b629a426b744ec2ff3e4e79d18889) | perf | **tooltip:** Defer injection of injectables not needed until tooltip is shown. ([#30440](https://github.com/angular/components/pull/30440)) |
+### core
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3f37137d7e](https://github.com/angular/components/commit/3f37137d7e865a68dd059c2b78614c588a5f7526) | fix | update incorrect hue reference tokens ([#29902](https://github.com/angular/components/pull/29902)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1ddb9cf056](https://github.com/angular/components/commit/1ddb9cf0569f52042c59ec535e21d885245b532a) | perf | Don't double-inject the style loader. ([#30467](https://github.com/angular/components/pull/30467)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.4"></a>
 # 19.1.4 "wattle-lute" (2025-02-12)
 ### cdk
