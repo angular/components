@@ -59,7 +59,6 @@ export interface MatChipInputEvent {
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
-    '[attr.aria-label]': 'ariaLabel || null',
     '[attr.aria-invalid]': '_chipGrid && _chipGrid.ngControl ? _chipGrid.ngControl.invalid : null',
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
@@ -104,12 +103,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
   /** The input's placeholder text. */
   @Input() placeholder: string = '';
-
-  /**
-   * Aria-label for the input. Optional, but highly recommended to improve
-   * accessibility for Voice Control naming/usage of the entering input field itself.
-   */
-  @Input() ariaLabel: string | null;
 
   /** Unique id for the input. */
   @Input() id: string = inject(_IdGenerator).getId('mat-mdc-chip-list-input-');
