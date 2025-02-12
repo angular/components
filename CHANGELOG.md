@@ -1,3 +1,22 @@
+<a name="19.1.4"></a>
+# 19.1.4 "wattle-lute" (2025-02-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b363eaea36](https://github.com/angular/components/commit/b363eaea36899f27df4966133a670feefb7b8f59) | fix | **overlay:** avoid issues with overlapping backdrop removals ([#30474](https://github.com/angular/components/pull/30474)) |
+| [45e3e725e6](https://github.com/angular/components/commit/45e3e725e6d9b3c31b447b80f4c2698ac575abd9) | fix | **table:** memory leak when no rows are sticky ([#30461](https://github.com/angular/components/pull/30461)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e8d6454e3a](https://github.com/angular/components/commit/e8d6454e3aa8780ba599ce0e1d62270a0c6228cd) | fix | **timepicker:** allow scroll strategy to be customized ([#30473](https://github.com/angular/components/pull/30473)) ([#30479](https://github.com/angular/components/pull/30479)) |
+| [9b323df478](https://github.com/angular/components/commit/9b323df47801bef574963193c065e37df3c94c44) | perf | **tooltip:** Defer injection of injectables not needed until tooltip is shown. ([#30440](https://github.com/angular/components/pull/30440)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0ac0290bb9](https://github.com/angular/components/commit/0ac0290bb98f7ed14fd39fd1797980a7245e6b74) | perf | Don't double-inject the style loader. ([#30467](https://github.com/angular/components/pull/30467)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.1.3"></a>
 # 19.1.3 "plastic-wombat" (2025-02-05)
 ### material
