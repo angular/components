@@ -223,12 +223,4 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
   }
-
-  // /**
-  //  * Checks whether placeholder is used, if not checks for ariaPlaceholder, and resorts
-  //  * to default value if neither is provided.
-  //  */
-  // getAriaPlaceholder(): string | null {
-  //   return this.placeholder ? null : this.ariaPlaceholder || null;
-  // }
 }
