@@ -17,6 +17,7 @@ import { MatOptionParentComponent } from '@angular/material/core';
 import { ModelSignal } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
@@ -24,6 +25,9 @@ import { Validator } from '@angular/forms';
 
 // @public
 export const MAT_TIMEPICKER_CONFIG: InjectionToken<MatTimepickerConfig>;
+
+// @public
+export const MAT_TIMEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
