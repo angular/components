@@ -1,13 +1,13 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
+import {TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
+import {provideRouter} from '@angular/router';
 
 describe('AppComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, AppComponent],
-    }).compileComponents();
-  }));
+      providers: [provideRouter([])],
+    });
+  });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);

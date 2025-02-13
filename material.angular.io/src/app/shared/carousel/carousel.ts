@@ -3,7 +3,6 @@ import {
   Component,
   Directive,
   ElementRef,
-  HostBinding,
   Inject,
   Optional,
   ViewEncapsulation,
@@ -14,16 +13,18 @@ import {
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatIconButton} from '@angular/material/button';
 
 @Directive({
   selector: '[carousel-item]',
-  standalone: true,
+  host: {
+    'role': 'listitem',
+    'tabindex': 'tabindex',
+  },
 })
 export class CarouselItem implements FocusableOption {
-  @HostBinding('attr.role') readonly role = 'listitem';
-  @HostBinding('tabindex') tabindex = '-1';
+  tabindex = '-1';
 
   constructor(readonly element: ElementRef<HTMLElement>) {}
 
@@ -38,13 +39,16 @@ export class CarouselItem implements FocusableOption {
   styleUrls: ['./carousel.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatIconButton, MatIcon],
+  host: {
+    '[class.animations-disabled]': 'animationsDisabled',
+  },
 })
 export class Carousel implements AfterContentInit {
   readonly ariaLabel = input<string | undefined>(undefined, {alias: 'aria-label'});
   readonly items = contentChildren(CarouselItem);
   readonly list = viewChild.required<ElementRef<HTMLElement>>('list');
-  @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
+  readonly animationsDisabled: boolean;
   position = 0;
   showPrevArrow = false;
   showNextArrow = true;

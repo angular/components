@@ -1,8 +1,8 @@
 import {Component, Input, NgZone} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
 import {StackBlitzWriter} from './stack-blitz-writer';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -10,7 +10,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   selector: 'stack-blitz-button',
   templateUrl: './stack-blitz-button.html',
   standalone: true,
-  imports: [MatButtonModule, MatTooltipModule, MatIconModule],
+  imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class StackBlitzButton {
   exampleData: ExampleData | undefined;

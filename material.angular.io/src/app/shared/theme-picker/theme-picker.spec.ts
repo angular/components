@@ -1,13 +1,13 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {ThemePicker} from './theme-picker';
-import {DocsAppTestingModule} from '../../testing/testing-module';
+import {provideRouter} from '@angular/router';
 
 describe('ThemePicker', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DocsAppTestingModule],
-    }).compileComponents();
-  }));
+      providers: [provideRouter([])],
+    });
+  });
 
   it('should install theme based on name', () => {
     const fixture = TestBed.createComponent(ThemePicker);

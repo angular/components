@@ -1,20 +1,18 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {take} from 'rxjs/operators';
-import {ComponentSidenav, ComponentSidenavModule} from './component-sidenav';
-import {DocsAppTestingModule} from '../../testing/testing-module';
+import {ComponentSidenav} from './component-sidenav';
 import {MatSidenav} from '@angular/material/sidenav';
+import {provideRouter} from '@angular/router';
 
 describe('ComponentSidenav', () => {
   let fixture: ComponentFixture<ComponentSidenav>;
   let component: ComponentSidenav;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ComponentSidenavModule, DocsAppTestingModule],
-    }).compileComponents();
-  }));
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    });
+
     fixture = TestBed.createComponent(ComponentSidenav);
     component = fixture.componentInstance;
     fixture.detectChanges();

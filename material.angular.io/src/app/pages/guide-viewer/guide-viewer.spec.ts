@@ -1,8 +1,8 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, provideRouter} from '@angular/router';
 import {GuideViewer, GuideViewerModule} from './guide-viewer';
-import {DocsAppTestingModule} from '../../testing/testing-module';
+import {provideHttpClient} from '@angular/common/http';
 
 const guideItemsId = 'getting-started';
 
@@ -19,12 +19,16 @@ const mockActivatedRoute = {
 describe('GuideViewer', () => {
   let fixture: ComponentFixture<GuideViewer>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [GuideViewerModule, DocsAppTestingModule],
-      providers: [{provide: ActivatedRoute, useValue: mockActivatedRoute}],
-    }).compileComponents();
-  }));
+      imports: [GuideViewerModule],
+      providers: [
+        provideRouter([]),
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        provideHttpClient(),
+      ],
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GuideViewer);

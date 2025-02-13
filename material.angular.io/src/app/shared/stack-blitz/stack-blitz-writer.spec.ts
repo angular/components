@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {waitForAsync, fakeAsync, flushMicrotasks, inject, TestBed} from '@angular/core/testing';
+import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {EXAMPLE_COMPONENTS, ExampleData, LiveExample} from '@angular/components-examples';
 import {StackBlitzWriter, TEMPLATE_FILES} from './stack-blitz-writer';
 import stackblitz from '@stackblitz/sdk';
@@ -28,18 +28,13 @@ describe('StackBlitzWriter', () => {
   let data: ExampleData;
   let http: HttpTestingController;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [StackBlitzWriter],
-    }).compileComponents();
-  }));
+    });
 
-  beforeEach(inject([HttpTestingController], (h: HttpTestingController) => {
-    http = h;
-  }));
-
-  beforeEach(() => {
+    http = TestBed.inject(HttpTestingController);
     stackBlitzWriter = TestBed.inject(StackBlitzWriter);
     data = new ExampleData('');
     data.selectorName = 'this-is-the-comp-name';

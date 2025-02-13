@@ -5,7 +5,8 @@ describe('GuideItems', () => {
   let guideItems: GuideItems;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({}).compileComponents();
+    TestBed.configureTestingModule({});
+    guideItems = TestBed.inject(GuideItems);
   }));
 
   beforeEach(inject([GuideItems], (gi: GuideItems) => {

@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, input, signal} from '@angular/core';
 import {TitleCasePipe} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
+import {MatButton} from '@angular/material/button';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {TokenName} from './token-name';
 
 type TokenType = 'base' | 'color' | 'typography' | 'density';
@@ -21,12 +21,13 @@ export interface Token {
   templateUrl: './token-table.html',
   styleUrl: './token-table.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
+    MatButton,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatSelect,
+    MatOption,
     TokenName,
     TitleCasePipe,
   ],

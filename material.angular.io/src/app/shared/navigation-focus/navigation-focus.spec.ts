@@ -1,7 +1,6 @@
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import {provideRouter, Router} from '@angular/router';
 import {NavigationFocusService} from './navigation-focus.service';
 import {NavigationFocus} from './navigation-focus';
 
@@ -18,21 +17,17 @@ describe('Navigation focus service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([
+      imports: [NavigationFocus],
+      declarations: [NavigationFocusTest, RouteTest],
+      providers: [
+        provideRouter([
           {path: '', component: RouteTest},
           {path: 'cdk', component: RouteTest},
           {path: 'guides', component: RouteTest},
         ]),
-        NavigationFocus,
       ],
-      providers: [NavigationFocusService],
-      declarations: [NavigationFocusTest, RouteTest],
     });
     fixture = TestBed.createComponent(NavigationFocusTest);
-  });
-
-  beforeEach(() => {
     zone = TestBed.inject(NgZone);
     router = TestBed.inject(Router);
     navigationFocusService = TestBed.inject(NavigationFocusService);

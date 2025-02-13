@@ -1,5 +1,5 @@
-import {Component, HostBinding} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import {Component} from '@angular/core';
+import {MatAnchor} from '@angular/material/button';
 import {Footer} from '../../shared/footer/footer';
 import {RouterLink} from '@angular/router';
 
@@ -8,8 +8,9 @@ import {RouterLink} from '@angular/router';
   templateUrl: './not-found.html',
   styleUrls: ['./not-found.scss'],
   standalone: true,
-  imports: [MatButtonModule, RouterLink, Footer],
+  imports: [MatAnchor, RouterLink, Footer],
+  host: {
+    'class': 'main-content',
+  },
 })
-export class NotFound {
-  @HostBinding('class.main-content') readonly mainContentClass = true;
-}
+export class NotFound {}

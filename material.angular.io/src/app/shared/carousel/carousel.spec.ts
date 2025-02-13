@@ -1,19 +1,16 @@
 import {Component, ViewChild} from '@angular/core';
-import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {DocsAppTestingModule} from '../../testing/testing-module';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {Carousel, CarouselItem} from './carousel';
+import {provideRouter} from '@angular/router';
 
 describe('HorizontalCarousel', () => {
   let fixture: ComponentFixture<CarouselTestComponent>;
   let component: Carousel;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [DocsAppTestingModule, CarouselTestComponent],
-    }).compileComponents();
-  }));
-
   beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    });
     fixture = TestBed.createComponent(CarouselTestComponent);
     fixture.nativeElement.style.width = '1300px';
     fixture.detectChanges();
@@ -64,7 +61,7 @@ describe('HorizontalCarousel', () => {
   `,
   ],
   standalone: true,
-  imports: [Carousel, CarouselItem, DocsAppTestingModule],
+  imports: [Carousel, CarouselItem],
 })
 class CarouselTestComponent {
   @ViewChild(Carousel) carousel!: Carousel;

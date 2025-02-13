@@ -3,7 +3,7 @@ import {
   ComponentPortal,
   DomPortalOutlet,
   Portal,
-  PortalModule,
+  CdkPortalOutlet,
 } from '@angular/cdk/portal';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -55,8 +55,7 @@ class DocFetcher {
       Loading document...
     }
   `,
-  standalone: true,
-  imports: [PortalModule],
+  imports: [CdkPortalOutlet],
 })
 export class DocViewer implements OnDestroy {
   private _portalHosts: DomPortalOutlet[] = [];

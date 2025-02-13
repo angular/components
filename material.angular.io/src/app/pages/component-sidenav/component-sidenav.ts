@@ -10,13 +10,10 @@ import {
   viewChild,
 } from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
-import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
-import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import {MatListItem, MatNavList} from '@angular/material/list';
+import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
 import {
   ActivatedRoute,
   Params,
@@ -29,23 +26,18 @@ import {
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {Footer} from '../../shared/footer/footer';
 
 import {NavigationFocusService} from '../../shared/navigation-focus/navigation-focus.service';
 
-import {
-  ComponentCategoryList,
-  ComponentCategoryListModule,
-} from '../component-category-list/component-category-list';
+import {ComponentCategoryList} from '../component-category-list/component-category-list';
 import {ComponentPageHeader} from '../component-page-header/component-page-header';
 import {
   ComponentApi,
   ComponentExamples,
   ComponentOverview,
   ComponentViewer,
-  ComponentViewerModule,
 } from '../component-viewer/component-viewer';
 import {ComponentStyling} from '../component-viewer/component-styling';
 
@@ -66,7 +58,8 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   encapsulation: ViewEncapsulation.None,
   standalone: true,
   imports: [
-    MatSidenavModule,
+    MatSidenav,
+    MatSidenavContainer,
     forwardRef(() => ComponentNav),
     ComponentPageHeader,
     RouterOutlet,
@@ -126,7 +119,7 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   selector: 'app-component-nav',
   templateUrl: './component-nav.html',
   standalone: true,
-  imports: [MatListModule, RouterLinkActive, RouterLink, AsyncPipe],
+  imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, AsyncPipe],
 })
 export class ComponentNav {
   private _docItems = inject(DocumentationItems);
@@ -167,20 +160,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    MatSidenavModule,
-    MatListModule,
-    RouterModule,
-    ComponentCategoryListModule,
-    ComponentViewerModule,
-    DocViewerModule,
-    FormsModule,
-    CdkAccordionModule,
-    MatIconModule,
-    RouterModule.forChild(routes),
-    ComponentSidenav,
-    ComponentNav,
-  ],
-  exports: [ComponentSidenav],
+  imports: [RouterModule.forChild(routes)],
 })
 export class ComponentSidenavModule {}

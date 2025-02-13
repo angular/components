@@ -1,8 +1,7 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, provideRouter} from '@angular/router';
 import {TableOfContents} from './table-of-contents';
-import {DocsAppTestingModule} from '../../testing/testing-module';
 
 const mockActivatedRoute = {
   fragment: new Observable(observer => {
@@ -11,17 +10,14 @@ const mockActivatedRoute = {
 };
 
 describe('TableOfContents', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [DocsAppTestingModule],
-      providers: [{provide: ActivatedRoute, useValue: mockActivatedRoute}],
-    }).compileComponents();
-  }));
-
   let fixture: ComponentFixture<TableOfContents>;
   let component: TableOfContents;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([]), {provide: ActivatedRoute, useValue: mockActivatedRoute}],
+    });
+
     fixture = TestBed.createComponent(TableOfContents);
     component = fixture.componentInstance;
     fixture.detectChanges();
