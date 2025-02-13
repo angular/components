@@ -1,11 +1,14 @@
-import {AsyncPipe} from '@angular/common';
 import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
-import {ActivatedRoute, Params, RouterModule, RouterLink} from '@angular/router';
+import {ActivatedRoute, RouterModule, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 
-import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/documentation-items';
+import {
+  DocItem,
+  DocumentationItems,
+  SECTIONS,
+} from '../../shared/documentation-items/documentation-items';
 import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -15,32 +18,31 @@ import {ComponentPageTitle} from '../page-title/page-title';
   templateUrl: './component-category-list.html',
   styleUrls: ['./component-category-list.scss'],
   standalone: true,
-  imports: [NavigationFocus, RouterLink, AsyncPipe, MatRipple],
+  imports: [NavigationFocus, RouterLink, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
-  params: Observable<Params> | undefined;
+  items: DocItem[] = [];
+  section = '';
   routeParamSubscription: Subscription = new Subscription();
   _categoryListSummary: string | undefined;
 
   constructor(
-    public docItems: DocumentationItems,
-    public _componentPageTitle: ComponentPageTitle,
+    readonly _docItems: DocumentationItems,
+    private _componentPageTitle: ComponentPageTitle,
     private _route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    // Combine params from all of the path into a single object.
-    this.params = combineLatest(
+    this.routeParamSubscription = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
       Object.assign,
-    );
-
-    // title on topbar navigation
-    this.routeParamSubscription = this.params.subscribe(params => {
+    ).subscribe(async params => {
       const sectionName = params['section'];
       const section = SECTIONS[sectionName];
       this._componentPageTitle.title = section.name;
       this._categoryListSummary = section.summary;
+      this.section = sectionName;
+      this.items = await this._docItems.getItems(sectionName);
     });
   }
 

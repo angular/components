@@ -34,8 +34,9 @@ describe('ComponentSidenav', () => {
     });
   });
 
-  it('should show a link for each item in doc items categories', () => {
-    const totalItems = component.docItems.getItems('categories').length;
+  it('should show a link for each item in doc items categories', async () => {
+    const items = await component.docItems.getItems('categories');
+    const totalItems = items.length;
     const totalLinks = fixture.nativeElement.querySelectorAll(
       '.docs-component-viewer-sidenav li a',
     ).length;

@@ -1,8 +1,8 @@
-import {Component, ElementRef, HostBinding, Input, OnInit, Type, viewChildren} from '@angular/core';
+import {Component, ElementRef, inject, Input, OnInit, Type, viewChildren} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
 
-import {EXAMPLE_COMPONENTS, LiveExample, loadExample} from '@angular/components-examples';
+import {type LiveExample, loadExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
 import {normalizePath} from '../normalize-path';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -11,6 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button';
 import {NgComponentOutlet} from '@angular/common';
+import {DocumentationItems} from '../documentation-items/documentation-items';
 
 export type Views = 'snippet' | 'full' | 'demo';
 
@@ -34,8 +35,15 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
     CodeSnippet,
     NgComponentOutlet,
   ],
+  host: {
+    '[attr.id]': 'example',
+  },
 })
 export class ExampleViewer implements OnInit {
+  private readonly _snackbar = inject(MatSnackBar);
+  private readonly _clipboard = inject(Clipboard);
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _docsItems = inject(DocumentationItems);
   readonly snippet = viewChildren(CodeSnippet);
 
   /** The tab to jump to when expanding from snippet view. */
@@ -60,21 +68,14 @@ export class ExampleViewer implements OnInit {
   @Input() showCompactToggle = false;
 
   /** String key of the currently displayed example. */
-  @HostBinding('attr.id')
   @Input()
   get example() {
     return this._example;
   }
   set example(exampleName: string | undefined) {
-    if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
+    if (exampleName && exampleName !== this._example) {
       this._example = exampleName;
-      this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-      this._generateExampleTabs();
-      this._loadExampleComponent().catch(error =>
-        console.error(`Could not load example '${exampleName}': ${error}`),
-      );
-    } else {
-      console.error(`Could not find example: ${exampleName}`);
+      this._exampleChanged(exampleName);
     }
   }
   private _example: string | undefined;
@@ -84,12 +85,6 @@ export class ExampleViewer implements OnInit {
 
   /** Name of file to display in compact view. */
   @Input() file?: string;
-
-  constructor(
-    private readonly snackbar: MatSnackBar,
-    private readonly clipboard: Clipboard,
-    private readonly elementRef: ElementRef<HTMLElement>,
-  ) {}
 
   ngOnInit() {
     if (this.file) {
@@ -132,10 +127,10 @@ export class ExampleViewer implements OnInit {
 
   copySource(snippets: readonly CodeSnippet[], selectedIndex: number = 0) {
     const text = snippets[selectedIndex].viewer().textContent || '';
-    if (this.clipboard.copy(text)) {
-      this.snackbar.open('Code copied', '', {duration: 2500});
+    if (this._clipboard.copy(text)) {
+      this._snackbar.open('Code copied', '', {duration: 2500});
     } else {
-      this.snackbar.open('Copy failed. Please try again!', '', {duration: 2500});
+      this._snackbar.open('Copy failed. Please try again!', '', {duration: 2500});
     }
   }
 
@@ -179,28 +174,39 @@ export class ExampleViewer implements OnInit {
   _copyLink() {
     // Reconstruct the URL using `origin + pathname` so we drop any pre-existing hash.
     const fullUrl = location.origin + location.pathname + '#' + this._example;
+    const copySuccessful = this._clipboard.copy(fullUrl);
 
-    if (this.clipboard.copy(fullUrl)) {
-      this.snackbar.open('Link copied', '', {duration: 2500});
-    } else {
-      this.snackbar.open('Link copy failed. Please try again!', '', {duration: 2500});
-    }
+    this._snackbar.open(
+      copySuccessful ? 'Link copied' : 'Link copy failed. Please try again!',
+      '',
+      {duration: 2500},
+    );
   }
 
-  /** Loads the component and module factory for the currently selected example. */
-  private async _loadExampleComponent() {
-    if (this._example != null) {
-      const {componentName} = EXAMPLE_COMPONENTS[this._example];
+  private async _exampleChanged(name: string) {
+    const examples = (await this._docsItems.getData()).examples;
+    this.exampleData = examples[name];
+
+    if (!this.exampleData) {
+      console.error(`Could not find example: ${name}`);
+      return;
+    }
+
+    try {
+      this._generateExampleTabs();
+
       // Lazily loads the example package that contains the requested example.
-      const moduleExports = await loadExample(this._example);
-      this._exampleComponentType = moduleExports[componentName];
+      const moduleExports = await loadExample(name);
+      this._exampleComponentType = moduleExports[examples[name].componentName];
 
       // Since the data is loaded asynchronously, we can't count on the native behavior
       // that scrolls the element into view automatically. We do it ourselves while giving
       // the page some time to render.
       if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
-        setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
+        setTimeout(() => this._elementRef.nativeElement.scrollIntoView(), 300);
       }
+    } catch (e) {
+      console.error(`Could not load example '${name}': ${e}`);
     }
   }
 

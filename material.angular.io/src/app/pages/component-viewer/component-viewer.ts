@@ -14,7 +14,6 @@ import {
 import {MatTabsModule} from '@angular/material/tabs';
 import {
   ActivatedRoute,
-  Params,
   Router,
   RouterModule,
   RouterLinkActive,
@@ -22,7 +21,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {map, skip, takeUntil} from 'rxjs/operators';
+import {map, skip, switchMap, takeUntil} from 'rxjs/operators';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
@@ -59,15 +58,13 @@ export class ComponentViewer implements OnDestroy {
     // parent route for the section (material/cdk).
     combineLatest(routeAndParentParams)
       .pipe(
-        map((params: Params[]) => {
+        switchMap(async params => {
           const id = params[0]['id'];
           const section = params[1]['section'];
-
-          return {
-            doc: docItems.getItemById(id, section),
-            section: section,
-          };
-        }, takeUntil(this._destroyed)),
+          const doc = await docItems.getItemById(id, section);
+          return {doc, section};
+        }),
+        takeUntil(this._destroyed),
       )
       .subscribe(({doc, section}) => {
         if (!doc) {
