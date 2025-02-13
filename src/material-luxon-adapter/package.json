@@ -20,11 +20,7 @@
     "tslib": "0.0.0-TSLIB"
   },
   "ng-update": {
-    "packageGroup": [
-      "@angular/material",
-      "@angular/cdk",
-      "@angular/material-luxon-adapter"
-    ]
+    "packageGroup": "NG_UPDATE_PACKAGE_GROUP"
   },
   "schematics": "./schematics/collection.json",
   "sideEffects": false

@@ -70,13 +70,7 @@
   "schematics": "./schematics/collection.json",
   "ng-update": {
     "migrations": "./schematics/migration.json",
-    "packageGroup": [
-      "@angular/material",
-      "@angular/cdk",
-      "@angular/material-moment-adapter",
-      "@angular/material-luxon-adapter",
-      "@angular/material-date-fns-adapter"
-    ]
+    "packageGroup": "NG_UPDATE_PACKAGE_GROUP"
   },
   "sideEffects": false
 }
