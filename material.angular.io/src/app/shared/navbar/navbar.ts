@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {MatAnchor} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
@@ -28,12 +28,14 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   ],
 })
 export class NavBar implements OnDestroy {
+  private _navigationFocusService = inject(NavigationFocusService);
+
   private _subscriptions = new Subscription();
   isNextVersion = location.hostname === 'next.material.angular.io';
   skipLinkHref: string | null | undefined;
   skipLinkHidden = true;
 
-  constructor(private _navigationFocusService: NavigationFocusService) {
+  constructor() {
     setTimeout(() => (this.skipLinkHref = this._navigationFocusService.getSkipLinkHref()), 100);
   }
 

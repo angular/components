@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 
@@ -36,7 +36,9 @@ export class HeaderLink {
   /** Base URL that is used to build an absolute fragment URL. */
   private _baseUrl: string;
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     this._baseUrl = router.url.split('#')[0];
   }
 

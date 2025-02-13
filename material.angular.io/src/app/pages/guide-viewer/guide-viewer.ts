@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, NgModule, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, Router, RouterModule, Routes} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
@@ -19,14 +19,16 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   },
 })
 export class GuideViewer implements OnInit {
+  private _componentPageTitle = inject(ComponentPageTitle);
+  private _router = inject(Router);
+  guideItems = inject(GuideItems);
+
   guide: GuideItem | undefined;
 
-  constructor(
-    _route: ActivatedRoute,
-    private _componentPageTitle: ComponentPageTitle,
-    private _router: Router,
-    public guideItems: GuideItems,
-  ) {
+  constructor() {
+    const _route = inject(ActivatedRoute);
+    const guideItems = this.guideItems;
+
     _route.params.subscribe(p => {
       const guideItem = guideItems.getItemById(p['id']);
       if (guideItem) {

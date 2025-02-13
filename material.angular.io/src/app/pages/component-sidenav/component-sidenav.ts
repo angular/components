@@ -68,18 +68,19 @@ const SMALL_WIDTH_BREAKPOINT = 959;
   ],
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
+  docItems = inject(DocumentationItems);
+  private _route = inject(ActivatedRoute);
+  private _navigationFocusService = inject(NavigationFocusService);
+
   readonly sidenav = viewChild(MatSidenav);
   params: Observable<Params>;
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
   private _subscriptions = new Subscription();
 
-  constructor(
-    public docItems: DocumentationItems,
-    private _route: ActivatedRoute,
-    private _navigationFocusService: NavigationFocusService,
-    breakpoints: BreakpointObserver,
-  ) {
+  constructor() {
+    const breakpoints = inject(BreakpointObserver);
+
     this.isExtraScreenSmall = breakpoints
       .observe(`(max-width: ${EXTRA_SMALL_WIDTH_BREAKPOINT}px)`)
       .pipe(map(breakpoint => breakpoint.matches));

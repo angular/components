@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   viewChild,
   viewChildren,
+  inject,
 } from '@angular/core';
 import {ActivatedRoute, Router, RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
@@ -39,16 +40,19 @@ import {MatTabLink, MatTabNav, MatTabNavPanel} from '@angular/material/tabs';
   ],
 })
 export class ComponentViewer implements OnDestroy {
+  private router = inject(Router);
+  componentPageTitle = inject(ComponentPageTitle);
+  readonly docItems = inject(DocumentationItems);
+
   componentDocItem = new ReplaySubject<DocItem>(1);
   sections: Set<string> = new Set(['overview', 'api']);
   private _destroyed = new Subject<void>();
 
-  constructor(
-    route: ActivatedRoute,
-    private router: Router,
-    public componentPageTitle: ComponentPageTitle,
-    readonly docItems: DocumentationItems,
-  ) {
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const componentPageTitle = this.componentPageTitle;
+    const docItems = this.docItems;
+
     const routeAndParentParams = [route.params];
     if (route.parent) {
       routeAndParentParams.push(route.parent.params);
@@ -101,17 +105,18 @@ export class ComponentViewer implements OnDestroy {
  */
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
+  componentViewer = inject(ComponentViewer);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   readonly tableOfContents = viewChild<TableOfContents>('toc');
   readonly viewers = viewChildren(DocViewer);
 
   showToc: Observable<boolean>;
   private _destroyed = new Subject<void>();
 
-  constructor(
-    public componentViewer: ComponentViewer,
-    breakpointObserver: BreakpointObserver,
-    private changeDetectorRef: ChangeDetectorRef,
-  ) {
+  constructor() {
+    const breakpointObserver = inject(BreakpointObserver);
+
     this.showToc = breakpointObserver.observe('(max-width: 1200px)').pipe(
       map(result => {
         this.changeDetectorRef.detectChanges();

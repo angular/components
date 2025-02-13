@@ -1,4 +1,4 @@
-import {Component, Input, NgZone} from '@angular/core';
+import {Component, Input, NgZone, inject} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -13,6 +13,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class StackBlitzButton {
+  private stackBlitzWriter = inject(StackBlitzWriter);
+  private ngZone = inject(NgZone);
+  private snackBar = inject(MatSnackBar);
+
   exampleData: ExampleData | undefined;
 
   /**
@@ -35,12 +39,6 @@ export class StackBlitzButton {
       this._openStackBlitzFn = null;
     }
   }
-
-  constructor(
-    private stackBlitzWriter: StackBlitzWriter,
-    private ngZone: NgZone,
-    private snackBar: MatSnackBar,
-  ) {}
 
   openStackBlitz(): void {
     if (this._openStackBlitzFn) {

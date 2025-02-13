@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, Optional} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 import {MatAnchor} from '@angular/material/button';
@@ -45,13 +45,14 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   },
 })
 export class Homepage implements OnInit {
+  _componentPageTitle = inject(ComponentPageTitle);
+  guideItems = inject(GuideItems);
+
   readonly animationsDisabled: boolean;
 
-  constructor(
-    public _componentPageTitle: ComponentPageTitle,
-    public guideItems: GuideItems,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string,
-  ) {
+  constructor() {
+    const animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 

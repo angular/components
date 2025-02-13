@@ -1,9 +1,16 @@
-import {ComponentPageTitle} from './page-title';
 import {Title} from '@angular/platform-browser';
+import {TestBed} from '@angular/core/testing';
+import {ComponentPageTitle} from './page-title';
 
 describe('ComponentPageTitle', () => {
-  const title: Title = new Title({});
-  const service: ComponentPageTitle = new ComponentPageTitle(title);
+  let service: ComponentPageTitle;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: Title, useValue: new Title({})}],
+    });
+    service = TestBed.inject(ComponentPageTitle);
+  });
 
   it('should initialize title to empty string', () => {
     expect(service._title).toEqual('');

@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
@@ -9,7 +9,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   standalone: true,
 })
 export class SnackBarScene {
-  constructor(snackbar: MatSnackBar) {
+  constructor() {
+    const snackbar = inject(MatSnackBar);
+
     snackbar.open('Message archived', 'Undo');
   }
 }

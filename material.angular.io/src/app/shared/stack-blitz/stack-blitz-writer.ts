@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import type {ExampleData} from '@angular/components-examples';
 import {Observable, firstValueFrom} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
@@ -60,12 +60,10 @@ type FileDictionary = {[path: string]: string};
  */
 @Injectable({providedIn: 'root'})
 export class StackBlitzWriter {
-  private _fileCache = new Map<string, Observable<string>>();
+  private _http = inject(HttpClient);
+  private _ngZone = inject(NgZone);
 
-  constructor(
-    private _http: HttpClient,
-    private _ngZone: NgZone,
-  ) {}
+  private _fileCache = new Map<string, Observable<string>>();
 
   /** Opens a StackBlitz for the specified example. */
   createStackBlitzForExample(

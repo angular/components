@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, ViewEncapsulation, inject} from '@angular/core';
 
 import {AnalyticsService} from './shared/analytics/analytics';
 import {NavigationFocusService} from './shared/navigation-focus/navigation-focus.service';
@@ -23,7 +23,10 @@ import {CookiePopup} from './shared/cookie-popup/cookie-popup';
 export class MaterialDocsApp implements OnDestroy {
   private subscriptions = new Subscription();
 
-  constructor(analytics: AnalyticsService, navigationFocusService: NavigationFocusService) {
+  constructor() {
+    const analytics = inject(AnalyticsService);
+    const navigationFocusService = inject(NavigationFocusService);
+
     this.subscriptions.add(
       navigationFocusService.navigationEndEvents
         .pipe(

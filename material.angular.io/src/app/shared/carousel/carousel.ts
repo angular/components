@@ -3,12 +3,11 @@ import {
   Component,
   Directive,
   ElementRef,
-  Inject,
-  Optional,
   ViewEncapsulation,
   input,
   contentChildren,
   viewChild,
+  inject,
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
@@ -24,9 +23,9 @@ import {MatIconButton} from '@angular/material/button';
   },
 })
 export class CarouselItem implements FocusableOption {
-  tabindex = '-1';
+  readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  constructor(readonly element: ElementRef<HTMLElement>) {}
+  tabindex = '-1';
 
   focus(): void {
     this.element.nativeElement.focus({preventScroll: true});
@@ -77,7 +76,9 @@ export class Carousel implements AfterContentInit {
     }
   }
 
-  constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string) {
+  constructor() {
+    const animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 

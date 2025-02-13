@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
@@ -9,7 +9,9 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
   standalone: true,
 })
 export class DialogScene {
-  constructor(public dialog: MatDialog) {
+  dialog = inject(MatDialog);
+
+  constructor() {
     this.openDialog();
   }
 
