@@ -44,6 +44,8 @@ jobs:
         run: yarn -s ts-circular-deps:check
       - name: Check code format
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+      - name: Check Package Licenses
+        uses: angular/dev-infra/github-actions/linting/licenses@8a438a3bdc519880d78b5ac92b62bfe688deb058
       # Commit message check is last intentionally, because the caretaker can fix it
       # during merge, while other lint failures have to be resolved by the PR author.
       - name: Check commit message
@@ -64,8 +66,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
         run: yarn bazel test tools/public_api_guard/...
-      - name: Check Package Licenses
-        uses: angular/dev-infra/github-actions/linting/licenses@8a438a3bdc519880d78b5ac92b62bfe688deb058
 
   e2e:
     runs-on: ubuntu-latest
