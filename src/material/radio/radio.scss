@@ -50,7 +50,7 @@
     pointer-events: none;
     border-radius: 50%;
 
-    .mat-ripple-element {
+    > .mat-ripple-element {
       opacity: 0.14;
     }
 
@@ -62,8 +62,8 @@
   // We don't inherit the border focus style from MDC since we don't use their ripple.
   // Instead we need to replicate it here.
   @include token-utils.use-tokens(tokens-mdc-radio.$prefix, tokens-mdc-radio.get-token-slots()) {
-    .mdc-radio .mdc-radio__native-control:focus:enabled:not(:checked) {
-      & ~ .mdc-radio__background .mdc-radio__outer-circle {
+    .mdc-radio > .mdc-radio__native-control:focus:enabled:not(:checked) {
+      & ~ .mdc-radio__background > .mdc-radio__outer-circle {
         @include token-utils.create-token-slot(border-color, unselected-focus-icon-color);
       }
     }
