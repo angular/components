@@ -27,7 +27,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   {path: 'guide/duplicate-theming-styles', redirectTo: '/guide/theming'},
   {
     path: 'guide/:id',
-    loadChildren: () => import('./pages/guide-viewer').then(m => m.GuideViewerModule),
+    loadComponent: () => import('./pages/guide-viewer').then(m => m.GuideViewer),
   },
   // Needs to be defined before `:section` so it gets picked first when redirecting a missing page.
   {
@@ -38,7 +38,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
     path: ':section',
     canActivate: [CanActivateComponentSidenav],
     loadChildren: () =>
-      import('./pages/component-sidenav/component-sidenav').then(m => m.ComponentSidenavModule),
+      import('./pages/component-sidenav/component-sidenav').then(m => m.componentSidenavRoutes),
   },
   {path: '**', redirectTo: '/404'},
 ];
