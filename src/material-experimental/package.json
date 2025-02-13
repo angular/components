@@ -27,5 +27,8 @@
   "dependencies": {
     "tslib": "0.0.0-TSLIB"
   },
+  "ng-update": {
+    "packageGroup": "NG_UPDATE_PACKAGE_GROUP"
+  },
   "sideEffects": false
 }
