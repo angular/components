@@ -329,6 +329,10 @@ export class StickyStyler {
    * sticky position if there are no more directions.
    */
   _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]) {
+    if (!element.classList.contains(this._stickCellCss)) {
+      return;
+    }
+
     for (const dir of stickyDirections) {
       element.style[dir] = '';
       element.classList.remove(this._borderCellCss[dir]);
