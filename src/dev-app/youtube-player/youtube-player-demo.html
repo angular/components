@@ -15,14 +15,19 @@
       <mat-checkbox [(ngModel)]="disablePlaceholder">Disable placeholder</mat-checkbox>
       <mat-checkbox [(ngModel)]="startAt30s">Start at 30s</mat-checkbox>
     </div>
-    <youtube-player [videoId]="selectedVideoId"
-                    [playerVars]="playerVars"
-                    [startSeconds]="startAt30s ? 30 : 0"
-                    [width]="videoWidth"
-                    [height]="videoHeight"
-                    [disableCookies]="disableCookies"
-                    [disablePlaceholder]="disablePlaceholder"
-                    [placeholderImageQuality]="placeholderQuality"></youtube-player>
+    <div class="demo-video-selection">
+      <button mat-button (click)="player.requestFullscreen()">Make fullscreen</button>
+    </div>
+    <youtube-player
+      #player
+      [videoId]="selectedVideoId"
+      [playerVars]="playerVars"
+      [startSeconds]="startAt30s ? 30 : 0"
+      [width]="videoWidth"
+      [height]="videoHeight"
+      [disableCookies]="disableCookies"
+      [disablePlaceholder]="disablePlaceholder"
+      [placeholderImageQuality]="placeholderQuality"/>
   </section>
 
   <h2>Placeholder quality comparison (high to low)</h2>
