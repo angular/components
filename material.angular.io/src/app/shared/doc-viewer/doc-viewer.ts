@@ -22,6 +22,7 @@ import {
   SecurityContext,
   ViewContainerRef,
   input,
+  inject,
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -32,9 +33,9 @@ import {ModuleImportCopyButton} from './module-import-copy-button';
 
 @Injectable({providedIn: 'root'})
 class DocFetcher {
-  private _cache: Record<string, Observable<string>> = {};
+  private _http = inject(HttpClient);
 
-  constructor(private _http: HttpClient) {}
+  private _cache: Record<string, Observable<string>> = {};
 
   fetchDocument(url: string): Observable<string> {
     if (this._cache[url]) {
@@ -58,6 +59,15 @@ class DocFetcher {
   imports: [CdkPortalOutlet],
 })
 export class DocViewer implements OnDestroy {
+  private _appRef = inject(ApplicationRef);
+  private _componentFactoryResolver = inject(ComponentFactoryResolver);
+  _elementRef = inject(ElementRef);
+  private _injector = inject(Injector);
+  private _viewContainerRef = inject(ViewContainerRef);
+  private _ngZone = inject(NgZone);
+  private _domSanitizer = inject(DomSanitizer);
+  private _docFetcher = inject(DocFetcher);
+
   private _portalHosts: DomPortalOutlet[] = [];
   private _documentFetchSubscription: Subscription | undefined;
   protected portal: Portal<any> | undefined;
@@ -109,17 +119,6 @@ export class DocViewer implements OnDestroy {
       exampleViewerComponent.view = 'demo';
     }
   }
-
-  constructor(
-    private _appRef: ApplicationRef,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    public _elementRef: ElementRef,
-    private _injector: Injector,
-    private _viewContainerRef: ViewContainerRef,
-    private _ngZone: NgZone,
-    private _domSanitizer: DomSanitizer,
-    private _docFetcher: DocFetcher,
-  ) {}
 
   /** Fetch a document by URL. */
   private _fetchDocument(url: string) {

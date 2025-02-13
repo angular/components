@@ -19,9 +19,9 @@ interface StyleOverridesData {
 
 @Injectable({providedIn: 'root'})
 class TokenService {
-  private _cache: Record<string, Observable<StyleOverridesData>> = {};
+  private _http = inject(HttpClient);
 
-  constructor(private _http: HttpClient) {}
+  private _cache: Record<string, Observable<StyleOverridesData>> = {};
 
   getTokenData(item: DocItem): Observable<StyleOverridesData> {
     const url = `/docs-content/tokens/${item.packageName}/${item.id}/${item.id}.json`;

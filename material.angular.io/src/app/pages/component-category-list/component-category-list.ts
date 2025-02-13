@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
 import {combineLatest, Subscription} from 'rxjs';
@@ -20,16 +20,14 @@ import {ComponentPageTitle} from '../page-title/page-title';
   imports: [NavigationFocus, RouterLink, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
+  readonly _docItems = inject(DocumentationItems);
+  private _componentPageTitle = inject(ComponentPageTitle);
+  private _route = inject(ActivatedRoute);
+
   items: DocItem[] = [];
   section = '';
   routeParamSubscription: Subscription = new Subscription();
   _categoryListSummary: string | undefined;
-
-  constructor(
-    readonly _docItems: DocumentationItems,
-    private _componentPageTitle: ComponentPageTitle,
-    private _route: ActivatedRoute,
-  ) {}
 
   ngOnInit() {
     this.routeParamSubscription = combineLatest(

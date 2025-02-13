@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 import {RouterLink} from '@angular/router';
 import {Footer} from '../../shared/footer/footer';
@@ -17,10 +17,8 @@ import {MatRipple} from '@angular/material/core';
   },
 })
 export class GuideList implements OnInit {
-  constructor(
-    public guideItems: GuideItems,
-    public _componentPageTitle: ComponentPageTitle,
-  ) {}
+  guideItems = inject(GuideItems);
+  _componentPageTitle = inject(ComponentPageTitle);
 
   ngOnInit(): void {
     this._componentPageTitle.title = 'Guides';

@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, inject} from '@angular/core';
 
 @Component({
   selector: 'docs-svg-viewer',
@@ -7,13 +7,11 @@ import {Component, ElementRef, Input, OnInit} from '@angular/core';
   standalone: true,
 })
 export class SvgViewer implements OnInit {
+  private elementRef = inject(ElementRef);
+  private http = inject(HttpClient);
+
   @Input() src: string | undefined;
   @Input() scaleToContainer: boolean | undefined;
-
-  constructor(
-    private elementRef: ElementRef,
-    private http: HttpClient,
-  ) {}
 
   ngOnInit() {
     if (this.src) {

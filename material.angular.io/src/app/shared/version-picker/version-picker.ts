@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
@@ -23,12 +23,12 @@ interface VersionInfo {
   encapsulation: ViewEncapsulation.None,
 })
 export class VersionPicker {
+  private _http = inject(HttpClient);
+
   /** The currently running version of Material. */
   materialVersion = normalizedMaterialVersion;
   /** The possible versions of the doc site. */
   docVersions = this._http.get<VersionInfo[]>(versionUrl);
-
-  constructor(private _http: HttpClient) {}
 
   /**
    * Updates the window location if the selected version is a different version.

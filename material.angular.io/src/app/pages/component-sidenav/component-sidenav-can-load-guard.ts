@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {SECTIONS} from '../../shared/documentation-items/documentation-items';
 
@@ -8,7 +8,7 @@ import {SECTIONS} from '../../shared/documentation-items/documentation-items';
  */
 @Injectable({providedIn: 'root'})
 export class CanActivateComponentSidenav {
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   canActivate(route: ActivatedRouteSnapshot) {
     // Searches if the section defined in the base UrlSegment is a valid section from the

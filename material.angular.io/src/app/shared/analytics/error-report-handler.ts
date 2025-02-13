@@ -1,12 +1,10 @@
-import {ErrorHandler, Injectable} from '@angular/core';
+import {ErrorHandler, Injectable, inject} from '@angular/core';
 import {AnalyticsService} from './analytics';
 import {formatErrorForAnalytics} from './format-error';
 
 @Injectable()
 export class AnalyticsErrorReportHandler extends ErrorHandler {
-  constructor(private _analytics: AnalyticsService) {
-    super();
-  }
+  private _analytics = inject(AnalyticsService);
 
   handleError(error: any): void {
     super.handleError(error);

@@ -2,12 +2,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Inject,
   OnDestroy,
   OnInit,
   NgZone,
   ChangeDetectorRef,
   input,
+  inject,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -44,6 +44,14 @@ interface Link {
   standalone: true,
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+  private _element = inject(ElementRef);
+  private _navigationFocusService = inject(NavigationFocusService);
+  private _document = inject<Document>(DOCUMENT);
+  private _ngZone = inject(NgZone);
+  private _changeDetectorRef = inject(ChangeDetectorRef);
+
   readonly container = input<string>();
 
   _linkSections: LinkSection[] = [];
@@ -54,15 +62,9 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   private _urlFragment = '';
   private subscriptions = new Subscription();
 
-  constructor(
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _element: ElementRef,
-    private _navigationFocusService: NavigationFocusService,
-    @Inject(DOCUMENT) private _document: Document,
-    private _ngZone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef,
-  ) {
+  constructor() {
+    const _router = this._router;
+
     this.subscriptions.add(
       this._navigationFocusService.navigationEndEvents.subscribe(() => {
         const rootUrl = _router.url.split('#')[0];
