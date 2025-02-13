@@ -1,6 +1,5 @@
 import {
   Component,
-  NgModule,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
@@ -17,7 +16,6 @@ import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
 import {
   ActivatedRoute,
   Params,
-  RouterModule,
   Routes,
   RouterOutlet,
   RouterLinkActive,
@@ -133,7 +131,7 @@ export class ComponentNav {
   );
 }
 
-const routes: Routes = [
+export const componentSidenavRoutes: Routes = [
   {
     path: '',
     component: ComponentSidenav,
@@ -159,8 +157,3 @@ const routes: Routes = [
     ],
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class ComponentSidenavModule {}

@@ -1,5 +1,5 @@
-import {Component, NgModule, OnInit, inject} from '@angular/core';
-import {ActivatedRoute, Router, RouterModule, Routes} from '@angular/router';
+import {Component, OnInit, inject} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
 
@@ -47,10 +47,3 @@ export class GuideViewer implements OnInit {
     }
   }
 }
-
-const routes: Routes = [{path: '', component: GuideViewer}];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-})
-export class GuideViewerModule {}

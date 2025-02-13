@@ -1,14 +1,7 @@
-import {NgModule} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatInputModule} from '@angular/material/input';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ExampleViewer} from './example-viewer';
-import {AutocompleteOverviewExample} from '@angular/components-examples/material/autocomplete';
 import {MatTabGroupHarness} from '@angular/material/tabs/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -36,7 +29,6 @@ describe('ExampleViewer', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TestExampleModule],
       providers: [provideHttpClient(), provideRouter([])],
     });
 
@@ -195,18 +187,3 @@ describe('ExampleViewer', () => {
     });
   });
 });
-
-// Create a version of ExampleModule for testing with only one component so that we don't have
-// to compile all of the examples for these tests.
-@NgModule({
-  imports: [
-    MatInputModule,
-    MatAutocompleteModule,
-    MatSlideToggleModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NoopAnimationsModule,
-    AutocompleteOverviewExample,
-  ],
-})
-class TestExampleModule {}
