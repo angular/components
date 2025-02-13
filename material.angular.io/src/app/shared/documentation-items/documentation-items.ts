@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
+import type {LiveExample} from '@angular/components-examples';
 
 export interface AdditionalApiDoc {
   name: string;
@@ -39,7 +39,6 @@ export interface DocSection {
   summary: string;
 }
 
-const exampleNames = Object.keys(EXAMPLE_COMPONENTS);
 const CDK = 'cdk';
 const COMPONENTS = 'components';
 export const SECTIONS: {[key: string]: DocSection} = {
@@ -582,38 +581,58 @@ const DOCS: {[key: string]: DocItem[]} = {
   // docs more granularly than directory-level (within a11y) (same for viewport).
 };
 
-const ALL_COMPONENTS = processDocs('material', DOCS[COMPONENTS]);
-const ALL_CDK = processDocs('cdk', DOCS[CDK]);
-const ALL_DOCS = [...ALL_COMPONENTS, ...ALL_CDK];
+interface DocsData {
+  cdk: DocItem[];
+  components: DocItem[];
+  all: DocItem[];
+  examples: Record<string, LiveExample>;
+}
 
 @Injectable({providedIn: 'root'})
 export class DocumentationItems {
-  getItems(section: string): DocItem[] {
+  private _cachedData: DocsData | null = null;
+
+  async getItems(section: string): Promise<DocItem[]> {
+    const data = await this.getData();
     if (section === COMPONENTS) {
-      return ALL_COMPONENTS;
+      return data.components;
     }
     if (section === CDK) {
-      return ALL_CDK;
+      return data.cdk;
     }
     return [];
   }
 
-  getItemById(id: string, section: string): DocItem | undefined {
+  async getItemById(id: string, section: string): Promise<DocItem | undefined> {
+    const docs = (await this.getData()).all;
     const sectionLookup = section === 'cdk' ? 'cdk' : 'material';
-    return ALL_DOCS.find(doc => doc.id === id && doc.packageName === sectionLookup);
-  }
-}
-
-function processDocs(packageName: string, docs: DocItem[]): DocItem[] {
-  for (const doc of docs) {
-    doc.packageName = packageName;
-    doc.hasStyling ??= packageName === 'material';
-    doc.examples = exampleNames.filter(
-      key =>
-        key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
-        !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0),
-    );
+    return docs.find(doc => doc.id === id && doc.packageName === sectionLookup);
   }
 
-  return docs.sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  async getData(): Promise<DocsData> {
+    if (!this._cachedData) {
+      const examples = (await import('@angular/components-examples')).EXAMPLE_COMPONENTS;
+      const exampleNames = Object.keys(examples);
+      const components = this._processDocs('material', exampleNames, DOCS[COMPONENTS]);
+      const cdk = this._processDocs('cdk', exampleNames, DOCS[CDK]);
+
+      this._cachedData = {components, cdk, all: [...components, ...cdk], examples};
+    }
+
+    return this._cachedData;
+  }
+
+  private _processDocs(packageName: string, exampleNames: string[], docs: DocItem[]): DocItem[] {
+    for (const doc of docs) {
+      doc.packageName = packageName;
+      doc.hasStyling ??= packageName === 'material';
+      doc.examples = exampleNames.filter(
+        key =>
+          key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
+          !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0),
+      );
+    }
+
+    return docs.sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  }
 }

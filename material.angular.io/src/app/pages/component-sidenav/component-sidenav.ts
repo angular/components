@@ -1,14 +1,15 @@
 import {
   Component,
   NgModule,
-  NgZone,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
   forwardRef,
+  inject,
   input,
   viewChild,
 } from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
@@ -26,7 +27,7 @@ import {
   RouterLink,
 } from '@angular/router';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
@@ -75,16 +76,15 @@ const SMALL_WIDTH_BREAKPOINT = 959;
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
   readonly sidenav = viewChild(MatSidenav);
-  params: Observable<Params> | undefined;
+  params: Observable<Params>;
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
-  private subscriptions = new Subscription();
+  private _subscriptions = new Subscription();
 
   constructor(
     public docItems: DocumentationItems,
     private _route: ActivatedRoute,
     private _navigationFocusService: NavigationFocusService,
-    zone: NgZone,
     breakpoints: BreakpointObserver,
   ) {
     this.isExtraScreenSmall = breakpoints
@@ -93,16 +93,15 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     this.isScreenSmall = breakpoints
       .observe(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`)
       .pipe(map(breakpoint => breakpoint.matches));
-  }
 
-  ngOnInit() {
-    // Combine params from all of the path into a single object.
     this.params = combineLatest(
       this._route.pathFromRoot.map(route => route.params),
       Object.assign,
     );
+  }
 
-    this.subscriptions.add(
+  ngOnInit() {
+    this._subscriptions.add(
       this._navigationFocusService.navigationEndEvents
         .pipe(map(() => this.isScreenSmall))
         .subscribe(shouldCloseSideNav => {
@@ -115,7 +114,7 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._subscriptions.unsubscribe();
   }
 
   toggleSidenav(): void {
@@ -130,10 +129,14 @@ export class ComponentSidenav implements OnInit, OnDestroy {
   imports: [MatListModule, RouterLinkActive, RouterLink, AsyncPipe],
 })
 export class ComponentNav {
-  readonly params = input<Observable<Params>>();
-  currentItemId: string | undefined;
+  private _docItems = inject(DocumentationItems);
+  readonly params = input<Params | null>();
 
-  constructor(public docItems: DocumentationItems) {}
+  items = toObservable(this.params).pipe(
+    switchMap(params =>
+      params?.section ? this._docItems.getItems(params.section) : Promise.resolve(null),
+    ),
+  );
 }
 
 const routes: Routes = [

@@ -3,9 +3,9 @@
      focusOnNavigation>
   <div [innerHTML]="_categoryListSummary"></div>
 </div>
-@if ((params | async)?.section; as section) {
+@if (items.length > 0) {
   <div class="docs-component-category-list">
-    @for (component of docItems.getItems(section); track component) {
+    @for (component of items; track component) {
       <a class="docs-component-category-list-item"
          [routerLink]="'/' + section + '/' + component.id">
         <div class="docs-component-category-list-card" matRipple>

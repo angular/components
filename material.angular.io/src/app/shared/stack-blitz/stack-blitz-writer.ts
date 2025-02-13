@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone} from '@angular/core';
-import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
+import type {ExampleData} from '@angular/components-examples';
 import {Observable, firstValueFrom} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 
@@ -123,9 +123,10 @@ export class StackBlitzWriter {
     exampleId: string,
     isTest: boolean,
   ): Promise<FileDictionary> {
+    const examples = await import('@angular/components-examples');
     const result: FileDictionary = {};
     const tasks: Promise<unknown>[] = [];
-    const liveExample = EXAMPLE_COMPONENTS[exampleId];
+    const liveExample = examples.EXAMPLE_COMPONENTS[exampleId];
     const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
 
     for (const relativeFilePath of TEMPLATE_FILES) {
@@ -174,12 +175,6 @@ export class StackBlitzWriter {
     return firstValueFrom(stream);
   }
 
-  /**
-   * The StackBlitz template assets contain placeholder names for the examples:
-   * "<material-docs-example>" and "MaterialDocsExample".
-   * This will replace those placeholders with the names from the example metadata,
-   * e.g. "<basic-button-example>" and "BasicButtonExample"
-   */
   private _replaceExamplePlaceholders(
     data: ExampleData,
     fileName: string,

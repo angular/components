@@ -20,8 +20,10 @@
         "@angular-eslint/component-selector": "off",
         "@angular-eslint/directive-class-suffix": "off",
         "@angular-eslint/directive-selector": "off",
+        "@angular-eslint/no-host-metadata-property": "off",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/member-delimiter-style": "off",
+        "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/explicit-member-accessibility": [
           "off",
           {
