@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatIconModule} from '@angular/material/icon';
+import {MatIcon} from '@angular/material/icon';
 
 /**
  * Header link is a component that handles normalizing
@@ -24,7 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
     </a>
   `,
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIcon],
 })
 export class HeaderLink {
   /**

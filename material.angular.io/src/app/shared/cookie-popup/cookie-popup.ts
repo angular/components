@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import {MatAnchor, MatButton} from '@angular/material/button';
 
 const STORAGE_KEY = 'docs-cookies';
 
@@ -8,8 +8,7 @@ const STORAGE_KEY = 'docs-cookies';
   templateUrl: './cookie-popup.html',
   styleUrls: ['./cookie-popup.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButton, MatAnchor],
 })
 export class CookiePopup {
   /** Whether the user has accepted the cookie disclaimer. */

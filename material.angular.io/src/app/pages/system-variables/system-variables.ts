@@ -1,7 +1,5 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatIconModule} from '@angular/material/icon';
+import {MatExpansionPanel, MatExpansionPanelHeader} from '@angular/material/expansion';
 
 interface Color {
   name: string;
@@ -31,7 +29,6 @@ interface Color {
   `,
   styleUrl: 'system-variables.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ThemeDemoColors {
   colors = input<Color[]>();
@@ -41,8 +38,7 @@ export class ThemeDemoColors {
   selector: 'app-system-variables',
   templateUrl: './system-variables.html',
   styleUrls: ['./system-variables.scss'],
-  imports: [MatCardModule, MatExpansionModule, MatIconModule, ThemeDemoColors],
-  standalone: true,
+  imports: [MatExpansionPanel, MatExpansionPanelHeader, ThemeDemoColors],
 })
 export class SystemVariables {
   alternativeThemeColors: Color[] = [

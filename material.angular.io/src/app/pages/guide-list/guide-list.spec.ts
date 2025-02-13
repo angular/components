@@ -1,16 +1,16 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {GuideList} from './guide-list';
-import {DocsAppTestingModule} from '../../testing/testing-module';
+import {provideRouter} from '@angular/router';
 
 describe('GuideList', () => {
   let fixture: ComponentFixture<GuideList>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DocsAppTestingModule],
-    }).compileComponents();
+      providers: [provideRouter([])],
+    });
     fixture = TestBed.createComponent(GuideList);
-  }));
+  });
 
   it('should display a link for each item in guide items', () => {
     const component = fixture.componentInstance;

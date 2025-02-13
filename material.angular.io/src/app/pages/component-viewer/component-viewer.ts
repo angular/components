@@ -4,25 +4,15 @@ import {
   ChangeDetectorRef,
   Component,
   Directive,
-  NgModule,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
   viewChild,
   viewChildren,
 } from '@angular/core';
-import {MatTabsModule} from '@angular/material/tabs';
-import {
-  ActivatedRoute,
-  Router,
-  RouterModule,
-  RouterLinkActive,
-  RouterLink,
-  RouterOutlet,
-} from '@angular/router';
+import {ActivatedRoute, Router, RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, skip, switchMap, takeUntil} from 'rxjs/operators';
-import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 
@@ -30,6 +20,7 @@ import {ComponentPageTitle} from '../page-title/page-title';
 import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
 import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
 import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
+import {MatTabLink, MatTabNav, MatTabNavPanel} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-component-viewer',
@@ -37,7 +28,15 @@ import {ExampleViewer} from '../../shared/example-viewer/example-viewer';
   styleUrls: ['./component-viewer.scss'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [MatTabsModule, NavigationFocus, RouterLinkActive, RouterLink, RouterOutlet],
+  imports: [
+    MatTabNav,
+    MatTabLink,
+    MatTabNavPanel,
+    NavigationFocus,
+    RouterLinkActive,
+    RouterLink,
+    RouterOutlet,
+  ],
 })
 export class ComponentViewer implements OnDestroy {
   componentDocItem = new ReplaySubject<DocItem>(1);
@@ -194,17 +193,3 @@ export class ComponentApi extends ComponentBaseView {
   imports: [ExampleViewer, AsyncPipe],
 })
 export class ComponentExamples extends ComponentBaseView {}
-
-@NgModule({
-  imports: [
-    MatTabsModule,
-    RouterModule,
-    DocViewerModule,
-    ComponentViewer,
-    ComponentOverview,
-    ComponentApi,
-    ComponentExamples,
-  ],
-  exports: [ComponentViewer],
-})
-export class ComponentViewerModule {}

@@ -1,10 +1,10 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatTooltip} from '@angular/material/tooltip';
 import {normalizedMaterialVersion} from '../normalized-version';
 
 const versionUrl = 'https://material.angular.io/assets/versions.json';
@@ -19,17 +19,16 @@ interface VersionInfo {
   selector: 'version-picker',
   templateUrl: './version-picker.html',
   styleUrls: ['./version-picker.scss'],
-  standalone: true,
-  imports: [MatButtonModule, MatTooltipModule, MatMenuModule, MatIconModule, AsyncPipe],
+  imports: [MatButton, MatTooltip, MatMenu, MatMenuItem, MatIcon, MatMenuTrigger, AsyncPipe],
   encapsulation: ViewEncapsulation.None,
 })
 export class VersionPicker {
   /** The currently running version of Material. */
   materialVersion = normalizedMaterialVersion;
   /** The possible versions of the doc site. */
-  docVersions = this.http.get<VersionInfo[]>(versionUrl);
+  docVersions = this._http.get<VersionInfo[]>(versionUrl);
 
-  constructor(private http: HttpClient) {}
+  constructor(private _http: HttpClient) {}
 
   /**
    * Updates the window location if the selected version is a different version.

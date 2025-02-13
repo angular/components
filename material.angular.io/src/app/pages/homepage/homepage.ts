@@ -1,15 +1,15 @@
-import {Component, HostBinding, Inject, OnInit, Optional} from '@angular/core';
+import {Component, Inject, OnInit, Optional} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
-import {MatButtonModule} from '@angular/material/button';
+import {MatAnchor} from '@angular/material/button';
 import {MatRipple} from '@angular/material/core';
 import {Footer} from '../../shared/footer/footer';
 import {RouterLink} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {NavigationFocus} from '../../shared/navigation-focus/navigation-focus';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatCardModule} from '@angular/material/card';
+import {MatIcon} from '@angular/material/icon';
+import {MatDivider} from '@angular/material/divider';
+import {MatCard, MatCardContent, MatCardTitle} from '@angular/material/card';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 
 import {Support} from '../../shared/support/support';
@@ -25,22 +25,27 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   standalone: true,
   imports: [
     NavigationFocus,
-    MatButtonModule,
+    MatAnchor,
     RouterLink,
-    MatDividerModule,
-    MatIconModule,
+    MatDivider,
+    MatIcon,
     Carousel,
     CarouselItem,
-    MatCardModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
     Support,
     Footer,
     AppLogo,
     MatRipple,
   ],
+  host: {
+    'class': 'main-content',
+    '[class.animations-disabled]': 'animationsDisabled',
+  },
 })
 export class Homepage implements OnInit {
-  @HostBinding('class.main-content') readonly mainContentClass = true;
-  @HostBinding('class.animations-disabled') readonly animationsDisabled: boolean;
+  readonly animationsDisabled: boolean;
 
   constructor(
     public _componentPageTitle: ComponentPageTitle,

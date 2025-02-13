@@ -1,6 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
+import {MatAnchor} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 
 import {SECTIONS} from '../documentation-items/documentation-items';
@@ -18,7 +18,7 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   styleUrls: ['./navbar.scss'],
   standalone: true,
   imports: [
-    MatButtonModule,
+    MatAnchor,
     RouterLink,
     RouterLinkActive,
     VersionPicker,
@@ -28,13 +28,13 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   ],
 })
 export class NavBar implements OnDestroy {
-  private subscriptions = new Subscription();
+  private _subscriptions = new Subscription();
   isNextVersion = location.hostname === 'next.material.angular.io';
   skipLinkHref: string | null | undefined;
   skipLinkHidden = true;
 
-  constructor(private navigationFocusService: NavigationFocusService) {
-    setTimeout(() => (this.skipLinkHref = this.navigationFocusService.getSkipLinkHref()), 100);
+  constructor(private _navigationFocusService: NavigationFocusService) {
+    setTimeout(() => (this.skipLinkHref = this._navigationFocusService.getSkipLinkHref()), 100);
   }
 
   get sections() {
@@ -46,6 +46,6 @@ export class NavBar implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._subscriptions.unsubscribe();
   }
 }

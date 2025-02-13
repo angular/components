@@ -1,4 +1,4 @@
-import {TestBed, inject, waitForAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {DocumentationItems} from './documentation-items';
 
 const COMPONENTS = 'components';
@@ -7,13 +7,10 @@ const CDK = 'cdk';
 describe('DocViewer', () => {
   let docsItems: DocumentationItems;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({}).compileComponents();
-  }));
-
-  beforeEach(inject([DocumentationItems], (di: DocumentationItems) => {
-    docsItems = di;
-  }));
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    docsItems = TestBed.inject(DocumentationItems);
+  });
 
   it('should get a list of all doc items', async () => {
     const items = await docsItems.getItems(COMPONENTS);

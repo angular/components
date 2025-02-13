@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatTooltip} from '@angular/material/tooltip';
 
 /**
  * This component is responsible for showing the
@@ -24,11 +24,11 @@ import {MatTooltipModule} from '@angular/material/tooltip';
  */
 @Component({
   selector: 'deprecated-field',
-  template: `<div class="deprecated-content" 
+  template: `<div class="deprecated-content"
     [matTooltip]="message">
   </div>`,
   standalone: true,
-  imports: [MatTooltipModule],
+  imports: [MatTooltip],
 })
 export class DeprecatedFieldComponent {
   /** Message regarding the deprecation  */

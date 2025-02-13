@@ -7,13 +7,13 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DocsAppTestingModule} from '../../testing/testing-module';
-import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
 import {AutocompleteOverviewExample} from '@angular/components-examples/material/autocomplete';
 import {MatTabGroupHarness} from '@angular/material/tabs/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
 
 const exampleKey = 'autocomplete-overview';
 const exampleBasePath = `/docs-content/examples-highlighted/material/autocomplete/${exampleKey}`;
@@ -36,11 +36,10 @@ describe('ExampleViewer', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DocViewerModule, DocsAppTestingModule, ReactiveFormsModule, TestExampleModule],
-    }).compileComponents();
-  });
+      imports: [ReactiveFormsModule, TestExampleModule],
+      providers: [provideHttpClient(), provideRouter([])],
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ExampleViewer);
     component = fixture.componentInstance;
     fixture.detectChanges();

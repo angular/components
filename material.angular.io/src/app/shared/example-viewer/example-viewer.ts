@@ -5,11 +5,11 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {type LiveExample, loadExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
 import {normalizePath} from '../normalize-path';
-import {MatTabsModule} from '@angular/material/tabs';
+import {MatTab, MatTabGroup} from '@angular/material/tabs';
 import {StackBlitzButton} from '../stack-blitz/stack-blitz-button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatButtonModule} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatIconButton} from '@angular/material/button';
 import {NgComponentOutlet} from '@angular/common';
 import {DocumentationItems} from '../documentation-items/documentation-items';
 
@@ -25,13 +25,13 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
   selector: 'example-viewer',
   templateUrl: './example-viewer.html',
   styleUrls: ['./example-viewer.scss'],
-  standalone: true,
   imports: [
-    MatButtonModule,
-    MatTooltipModule,
-    MatIconModule,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
     StackBlitzButton,
-    MatTabsModule,
+    MatTabGroup,
+    MatTab,
     CodeSnippet,
     NgComponentOutlet,
   ],

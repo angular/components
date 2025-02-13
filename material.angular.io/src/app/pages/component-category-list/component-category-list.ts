@@ -1,6 +1,5 @@
-import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
-import {ActivatedRoute, RouterModule, RouterLink} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
 import {combineLatest, Subscription} from 'rxjs';
 
@@ -52,9 +51,3 @@ export class ComponentCategoryList implements OnInit, OnDestroy {
     }
   }
 }
-
-@NgModule({
-  imports: [MatCardModule, RouterModule, ComponentCategoryList],
-  exports: [ComponentCategoryList],
-})
-export class ComponentCategoryListModule {}

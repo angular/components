@@ -1,29 +1,32 @@
-import {HttpTestingController} from '@angular/common/http/testing';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {Component} from '@angular/core';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewer} from './doc-viewer';
-import {DocViewerModule} from './doc-viewer-module';
 import {ExampleViewer} from '../example-viewer/example-viewer';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatIconButton} from '@angular/material/button';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
 
 describe('DocViewer', () => {
   let http: HttpTestingController;
   const clipboardSpy = jasmine.createSpyObj<Clipboard>('Clipboard', ['copy']);
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DocViewerModule, DocsAppTestingModule, DocViewerTestComponent],
-      providers: [{provide: Clipboard, useValue: clipboardSpy}],
-    }).compileComponents();
-  }));
+      imports: [DocViewerTestComponent],
+      providers: [
+        {provide: Clipboard, useValue: clipboardSpy},
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+    });
 
-  beforeEach(inject([HttpTestingController], (h: HttpTestingController) => {
-    http = h;
-  }));
+    http = TestBed.inject(HttpTestingController);
+  });
 
   it('should load doc into innerHTML', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
@@ -211,7 +214,7 @@ describe('DocViewer', () => {
   selector: 'test',
   template: `<doc-viewer [document]="documentUrl"></doc-viewer>`,
   standalone: true,
-  imports: [DocViewerModule, DocsAppTestingModule],
+  imports: [DocViewer],
 })
 class DocViewerTestComponent {
   documentUrl = 'http://material.angular.io/simple-doc.html';
@@ -232,19 +235,19 @@ const FAKE_DOCS: {[key: string]: string} = {
     '<div material-docs-example="demo-example"></div>',
   'http://material.angular.io/whole-snippet-example.html':
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
-  'http://material.angular.io/deprecated.html': `<div class="docs-api-class-deprecated-marker" 
+  'http://material.angular.io/deprecated.html': `<div class="docs-api-class-deprecated-marker"
         deprecated-message="deprecated class">Deprecated</div>
-  
-      <div class="docs-api-constant-deprecated-marker" 
+
+      <div class="docs-api-constant-deprecated-marker"
         deprecated-message="deprecated constant">Deprecated</div>
-        
-      <div class="docs-api-interface-deprecated-marker" 
+
+      <div class="docs-api-interface-deprecated-marker"
         deprecated-message="deprecated interface">Deprecated</div>
-        
-      <div class="docs-api-type-alias-deprecated-marker" 
+
+      <div class="docs-api-type-alias-deprecated-marker"
         deprecated-message="deprecated type alias">Deprecated</div>
-        
-      <div class="docs-api-deprecated-marker" 
+
+      <div class="docs-api-deprecated-marker"
         deprecated-message="deprecated">Deprecated</div>`,
   'http://material.angular.io/copy-module-import.html': `<div class="docs-api-module">
       <p class="docs-api-module-import">
@@ -253,7 +256,7 @@ const FAKE_DOCS: {[key: string]: string} = {
         </code>
       </p>
 
-      <div class="docs-api-module-import-button" 
+      <div class="docs-api-module-import-button"
         data-docs-api-module-import-button="import {MatIconModule} from '@angular/material/icon';">
       </div>
     </div>`,
@@ -270,7 +273,7 @@ class TestComponent {}
   selector: 'test',
   template: `<doc-viewer [document]="component"></doc-viewer>`,
   standalone: true,
-  imports: [DocViewerModule, DocsAppTestingModule, TestComponent],
+  imports: [DocViewer, TestComponent],
 })
 class DocViewerWithCompTestComponent {
   component = TestComponent;
