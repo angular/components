@@ -13,13 +13,13 @@ import {
   booleanAttribute,
   Directive,
   ElementRef,
+  HostAttributeToken,
   inject,
   InjectionToken,
   Input,
   NgZone,
   numberAttribute,
   OnDestroy,
-  OnInit,
   Renderer2,
 } from '@angular/core';
 import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
@@ -52,6 +52,7 @@ export const MAT_BUTTON_HOST = {
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
   '[class]': 'color ? "mat-" + color : ""',
+  '[attr.tabindex]': '_getTabIndex()',
 };
 
 /** List of classes to add to buttons instances based on host attribute selector. */
@@ -94,12 +95,16 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   private readonly _focusMonitor = inject(FocusMonitor);
+  private _cleanupClick: (() => void) | undefined;
 
   /**
    * Handles the lazy creation of the MatButton ripple.
    * Used to improve initial load time of large applications.
    */
   protected _rippleLoader: MatRippleLoader = inject(MatRippleLoader);
+
+  /** Whether the button is set on an anchor node. */
+  protected _isAnchor: boolean;
 
   /** Whether this button is a FAB. Used to apply the correct class on the ripple. */
   protected _isFab = false;
@@ -153,17 +158,27 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   @Input({transform: booleanAttribute})
   disabledInteractive: boolean;
 
+  @Input({
+    transform: (value: unknown) => (value == null ? undefined : numberAttribute(value)),
+  })
+  tabIndex: number;
+
   constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const config = inject(MAT_BUTTON_CONFIG, {optional: true});
-    const element = this._elementRef.nativeElement;
+    const element: HTMLElement = this._elementRef.nativeElement;
     const classList = (element as HTMLElement).classList;
 
+    this._isAnchor = element.tagName === 'A';
     this.disabledInteractive = config?.disabledInteractive ?? false;
     this.color = config?.color ?? null;
     this._rippleLoader?.configureRipple(element, {className: 'mat-mdc-button-ripple'});
+
+    if (this._isAnchor) {
+      this._setupAsAnchor();
+    }
 
     // For each of the variant selectors that is present in the button's host
     // attributes, add the correct corresponding MDC classes.
@@ -179,6 +194,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._cleanupClick?.();
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
   }
@@ -193,10 +209,9 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   }
 
   protected _getAriaDisabled() {
-    if (this.ariaDisabled != null) {
-      return this.ariaDisabled;
+    if (this._isAnchor) {
+      return this.ariaDisabled != null ? this.ariaDisabled : this.disabled || null;
     }
-
     return this.disabled && this.disabledInteractive ? true : null;
   }
 
@@ -210,74 +225,41 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
       this.disableRipple || this.disabled,
     );
   }
-}
 
-/** Shared host configuration for buttons using the `<a>` tag. */
-export const MAT_ANCHOR_HOST = {
-  // Note that this is basically a noop on anchors,
-  // but it appears that some internal apps depend on it.
-  '[attr.disabled]': '_getDisabledAttribute()',
-  '[class.mat-mdc-button-disabled]': 'disabled',
-  '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
-  '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+  protected _getTabIndex() {
+    if (this._isAnchor) {
+      return this.disabled && !this.disabledInteractive ? -1 : this.tabIndex;
+    }
+    return this.tabIndex;
+  }
 
-  // Note that we ignore the user-specified tabindex when it's disabled for
-  // consistency with the `mat-button` applied on native buttons where even
-  // though they have an index, they're not tabbable.
-  '[attr.tabindex]': 'disabled && !disabledInteractive ? -1 : tabIndex',
-  '[attr.aria-disabled]': '_getAriaDisabled()',
-  // MDC automatically applies the primary theme color to the button, but we want to support
-  // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
-  // select and style this "theme".
-  '[class.mat-unthemed]': '!color',
-  // Add a class that applies to all buttons. This makes it easier to target if somebody
-  // wants to target all Material buttons.
-  '[class.mat-mdc-button-base]': 'true',
-  '[class]': 'color ? "mat-" + color : ""',
-};
+  private _setupAsAnchor() {
+    const renderer = inject(Renderer2);
+    const initialTabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
 
-/**
- * Anchor button base.
- */
-@Directive()
-export class MatAnchorBase extends MatButtonBase implements OnInit, OnDestroy {
-  private _renderer = inject(Renderer2);
-  private _cleanupClick: () => void;
+    if (initialTabIndex !== null) {
+      this.tabIndex = numberAttribute(initialTabIndex, undefined);
+    }
 
-  @Input({
-    transform: (value: unknown) => {
-      return value == null ? undefined : numberAttribute(value);
-    },
-  })
-  tabIndex: number;
-
-  ngOnInit(): void {
     this._ngZone.runOutsideAngular(() => {
-      this._cleanupClick = this._renderer.listen(
+      this._cleanupClick = renderer.listen(
         this._elementRef.nativeElement,
         'click',
-        this._haltDisabledEvents,
+        (event: Event) => {
+          if (this.disabled) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        },
       );
     });
   }
-
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this._cleanupClick?.();
-  }
-
-  _haltDisabledEvents = (event: Event): void => {
-    // A disabled button shouldn't apply any actions
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-  };
-
-  protected override _getAriaDisabled() {
-    if (this.ariaDisabled != null) {
-      return this.ariaDisabled;
-    }
-    return this.disabled || null;
-  }
 }
+
+// tslint:disable:variable-name
+/**
+ * Anchor button base.
+ */
+export const MatAnchorBase = MatButtonBase;
+export type MatAnchorBase = MatButtonBase;
+// tslint:enable:variable-name

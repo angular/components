@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './button-base';
+import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
 
 /**
  * Material Design button component. Users interact with a button to perform an action.
@@ -21,17 +21,19 @@ import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './
 @Component({
   selector: `
     button[mat-button], button[mat-raised-button], button[mat-flat-button],
-    button[mat-stroked-button]
+    button[mat-stroked-button], a[mat-button], a[mat-raised-button], a[mat-flat-button],
+    a[mat-stroked-button]
   `,
   templateUrl: 'button.html',
   styleUrls: ['button.css', 'button-high-contrast.css'],
   host: MAT_BUTTON_HOST,
-  exportAs: 'matButton',
+  exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatButton extends MatButtonBase {}
 
+// tslint:disable:variable-name
 /**
  * Material Design button component for anchor elements. Anchor elements are used to provide
  * links for the user to navigate across different routes or pages.
@@ -42,13 +44,6 @@ export class MatButton extends MatButtonBase {}
  * specification. `MatAnchor` additionally captures an additional "flat" appearance, which matches
  * "contained" but without elevation.
  */
-@Component({
-  selector: `a[mat-button], a[mat-raised-button], a[mat-flat-button], a[mat-stroked-button]`,
-  exportAs: 'matButton, matAnchor',
-  host: MAT_ANCHOR_HOST,
-  templateUrl: 'button.html',
-  styleUrls: ['button.css', 'button-high-contrast.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatAnchor extends MatAnchorBase {}
+export const MatAnchor = MatButton;
+export type MatAnchor = MatButton;
+// tslint:enable:variable-name

@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './button-base';
+import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
 
 /**
  * Material Design icon button component. This type of button displays a single interactive icon for
@@ -15,11 +15,11 @@ import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatAnchorBase, MatButtonBase} from './
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  selector: `button[mat-icon-button]`,
+  selector: `button[mat-icon-button], a[mat-icon-button]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   host: MAT_BUTTON_HOST,
-  exportAs: 'matButton',
+  exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,18 +32,12 @@ export class MatIconButton extends MatButtonBase {
   }
 }
 
+// tslint:disable:variable-name
 /**
  * Material Design icon button component for anchor elements. This button displays a single
  * interaction icon that allows users to navigate across different routes or pages.
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
-@Component({
-  selector: `a[mat-icon-button]`,
-  templateUrl: 'icon-button.html',
-  styleUrls: ['icon-button.css', 'button-high-contrast.css'],
-  host: MAT_ANCHOR_HOST,
-  exportAs: 'matButton, matAnchor',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatIconAnchor extends MatAnchorBase {}
+export const MatIconAnchor = MatIconButton;
+export type MatIconAnchor = MatIconButton;
+// tslint:enable:variable-name
