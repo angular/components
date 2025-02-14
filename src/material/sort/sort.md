@@ -27,6 +27,14 @@ To prevent the user from clearing the sort state from an already sorted column, 
 `matSortDisableClear` to `true` on the `matSort` to affect all headers, or set `disableClear` to
 `true` on a specific header.
 
+#### Enabling multi-sort
+
+By default the sorting behavior only accepts sorting by a single column. In order to change that and have multi-column sorting, set the `matSortMultiple` on the `matSort` directive. 
+
+When using multi-sorting, there's no changes to the `matSortChange` events to avoid breaking backwards compatibility. If you need to get the current sortState containing all sorted columns, you need to access the `matTable.sortState` field directly.
+
+> Notice that the order on which the columns are sorted does matter.
+
 #### Disabling sorting
 
 If you want to prevent the user from changing the sorting order of any column, you can use the
