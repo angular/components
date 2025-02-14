@@ -457,6 +457,9 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   width: 100%;
   z-index: 1;
 
+  // Works around a rendering issue in Safari 18.3 (see #30487).
+  transform: translateZ(0);
+
   @include token-utils.use-tokens($_mdc-slots...) {
     .mdc-switch--disabled.mdc-switch--unselected & {
       @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
