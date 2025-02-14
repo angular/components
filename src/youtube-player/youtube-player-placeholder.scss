@@ -14,6 +14,11 @@
   // Note that they use a base64 image, likely for performance reasons. We can't use the
   // image, because it can break users with a CSP that doesn't allow `data:` URLs.
   box-shadow: inset 0 120px 90px -90px rgba(0, 0, 0, 0.8);
+
+  :fullscreen & {
+    min-width: 100vw;
+    min-height: 100vh;
+  }
 }
 
 .youtube-player-placeholder-button {

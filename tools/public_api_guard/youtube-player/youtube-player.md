@@ -80,6 +80,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     playerVars: YT.PlayerVars | undefined;
     playVideo(): void;
     readonly ready: Observable<YT.PlayerEvent>;
+    requestFullscreen(options?: FullscreenOptions): Promise<void>;
     seekTo(seconds: number, allowSeekAhead: boolean): void;
     setPlaybackRate(playbackRate: number): void;
     setVolume(volume: number): void;

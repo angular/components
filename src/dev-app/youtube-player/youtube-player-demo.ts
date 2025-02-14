@@ -17,6 +17,7 @@ import {
   inject,
 } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {MatButton} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {PlaceholderImageQuality, YouTubePlayer} from '@angular/youtube-player';
@@ -79,7 +80,7 @@ const VIDEOS: Video[] = [
   selector: 'youtube-player-demo',
   templateUrl: 'youtube-player-demo.html',
   styleUrl: 'youtube-player-demo.css',
-  imports: [FormsModule, MatRadioModule, MatCheckboxModule, YouTubePlayer],
+  imports: [FormsModule, MatRadioModule, MatCheckboxModule, MatButton, YouTubePlayer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
