@@ -9,7 +9,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'stack-blitz-button',
   templateUrl: './stack-blitz-button.html',
-  standalone: true,
   imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class StackBlitzButton {

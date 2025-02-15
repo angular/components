@@ -7,7 +7,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-form-field-scene',
   templateUrl: './form-field-scene.html',
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatIconModule],
 })
 export class FormFieldScene {}

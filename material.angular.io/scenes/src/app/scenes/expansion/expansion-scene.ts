@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'app-expansion-scene',
   templateUrl: './expansion-scene.html',
   styleUrls: ['./expansion-scene.scss'],
-  standalone: true,
   imports: [MatExpansionModule, MatIconModule],
 })
 export class ExpansionScene {}

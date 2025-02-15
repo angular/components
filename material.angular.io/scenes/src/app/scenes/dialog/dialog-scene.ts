@@ -6,7 +6,6 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-dialog-scene',
   template: '',
-  standalone: true,
 })
 export class DialogScene {
   dialog = inject(MatDialog);
@@ -28,7 +27,6 @@ export class DialogScene {
       <button mat-button mat-dialog-close>Cancel</button>
       <button mat-button mat-dialog-close>Discard</button>
     </div>`,
-  standalone: true,
   imports: [MatDialogModule, MatButtonModule],
 })
 export class DialogSceneExampleDialog {}

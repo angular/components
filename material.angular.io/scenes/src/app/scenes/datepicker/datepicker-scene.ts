@@ -6,7 +6,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   selector: 'app-datepicker-scene',
   templateUrl: './datepicker-scene.html',
   styleUrls: ['./datepicker-scene.scss'],
-  standalone: true,
   imports: [MatDatepickerModule],
 })
 export class DatepickerScene {

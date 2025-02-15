@@ -7,7 +7,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   selector: 'app-toolbar-scene',
   templateUrl: './toolbar-scene.html',
   styleUrls: ['./toolbar-scene.scss'],
-  standalone: true,
   imports: [MatToolbarModule, MatIconModule],
 })
 export class ToolbarScene {}

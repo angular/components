@@ -41,7 +41,6 @@ interface Link {
   selector: 'table-of-contents',
   styleUrls: ['./table-of-contents.scss'],
   templateUrl: './table-of-contents.html',
-  standalone: true,
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   private _router = inject(Router);

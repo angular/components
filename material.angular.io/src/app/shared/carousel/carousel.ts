@@ -37,7 +37,6 @@ export class CarouselItem implements FocusableOption {
   templateUrl: './carousel.html',
   styleUrls: ['./carousel.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatIconButton, MatIcon],
   host: {
     '[class.animations-disabled]': 'animationsDisabled',

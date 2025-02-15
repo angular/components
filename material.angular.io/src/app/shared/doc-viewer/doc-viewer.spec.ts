@@ -213,7 +213,6 @@ describe('DocViewer', () => {
 @Component({
   selector: 'test',
   template: `<doc-viewer [document]="documentUrl"></doc-viewer>`,
-  standalone: true,
   imports: [DocViewer],
 })
 class DocViewerTestComponent {
@@ -265,14 +264,12 @@ const FAKE_DOCS: {[key: string]: string} = {
 
 @Component({
   template: `TEST_COMPONENT_GUIDE`,
-  standalone: true,
 })
 class TestComponent {}
 
 @Component({
   selector: 'test',
   template: `<doc-viewer [document]="component"></doc-viewer>`,
-  standalone: true,
   imports: [DocViewer, TestComponent],
 })
 class DocViewerWithCompTestComponent {

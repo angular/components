@@ -20,7 +20,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'app-table-scene',
   templateUrl: './table-scene.html',
   styleUrls: ['./table-scene.scss'],
-  standalone: true,
   imports: [MatCardModule, MatTableModule],
 })
 export class TableScene {

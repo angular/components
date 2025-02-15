@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'app-list-scene',
   templateUrl: './list-scene.html',
   styleUrls: ['./list-scene.scss'],
-  standalone: true,
   imports: [MatListModule, MatIconModule],
 })
 export class ListScene {}

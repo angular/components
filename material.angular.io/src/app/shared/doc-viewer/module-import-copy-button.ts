@@ -16,7 +16,6 @@ import {Clipboard} from '@angular/cdk/clipboard';
   (click)="copy()">
   <mat-icon>content_copy</mat-icon>
 </button>`,
-  standalone: true,
   imports: [MatIconButton, MatIcon, MatTooltip],
 })
 export class ModuleImportCopyButton {

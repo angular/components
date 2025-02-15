@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'app-button-scene',
   templateUrl: './button-scene.html',
   styleUrls: ['./button-scene.scss'],
-  standalone: true,
   imports: [MatButtonModule, MatIconModule],
 })
 export class ButtonScene {}

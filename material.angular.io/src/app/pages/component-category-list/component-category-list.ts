@@ -16,7 +16,6 @@ import {ComponentPageTitle} from '../page-title/page-title';
   selector: 'app-component-category-list',
   templateUrl: './component-category-list.html',
   styleUrls: ['./component-category-list.scss'],
-  standalone: true,
   imports: [NavigationFocus, RouterLink, MatRipple],
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {

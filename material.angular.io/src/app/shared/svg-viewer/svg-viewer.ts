@@ -4,7 +4,6 @@ import {Component, ElementRef, Input, OnInit, inject} from '@angular/core';
 @Component({
   selector: 'docs-svg-viewer',
   template: '<div class="docs-svg-viewer" aria-hidden="true"></div>',
-  standalone: true,
 })
 export class SvgViewer implements OnInit {
   private elementRef = inject(ElementRef);

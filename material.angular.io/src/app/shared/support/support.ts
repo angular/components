@@ -5,7 +5,6 @@ import {AppLogo} from '../logo/logo';
   selector: 'app-support',
   templateUrl: './support.html',
   styleUrls: ['./support.scss'],
-  standalone: true,
   imports: [AppLogo],
 })
 export class Support {}

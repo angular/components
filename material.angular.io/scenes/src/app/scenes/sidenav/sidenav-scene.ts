@@ -8,7 +8,6 @@ import {MatListModule} from '@angular/material/list';
   selector: 'app-sidenav-scene',
   templateUrl: './sidenav-scene.html',
   styleUrls: ['./sidenav-scene.scss'],
-  standalone: true,
   imports: [MatSidenavModule, MatListModule, MatIconModule],
 })
 export class SidenavScene {}

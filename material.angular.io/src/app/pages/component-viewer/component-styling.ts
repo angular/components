@@ -39,7 +39,6 @@ class TokenService {
 @Component({
   selector: 'component-styling',
   templateUrl: './component-styling.html',
-  standalone: true,
   imports: [AsyncPipe, TokenTable],
 })
 export class ComponentStyling {

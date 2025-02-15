@@ -23,7 +23,6 @@ import {MatIcon} from '@angular/material/icon';
       <mat-icon>link</mat-icon>
     </a>
   `,
-  standalone: true,
   imports: [MatIcon],
 })
 export class HeaderLink {

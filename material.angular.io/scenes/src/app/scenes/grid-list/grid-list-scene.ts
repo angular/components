@@ -6,7 +6,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
   templateUrl: './grid-list-scene.html',
   styleUrls: ['./grid-list-scene.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [MatGridListModule],
 })
 export class GridListScene {

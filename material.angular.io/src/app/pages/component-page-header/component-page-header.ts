@@ -7,7 +7,6 @@ import {MatIcon} from '@angular/material/icon';
   selector: 'component-page-header',
   templateUrl: './component-page-header.html',
   styleUrls: ['./component-page-header.scss'],
-  standalone: true,
   imports: [MatButton, MatIcon],
 })
 export class ComponentPageHeader {

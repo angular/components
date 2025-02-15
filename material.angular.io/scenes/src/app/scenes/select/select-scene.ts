@@ -8,7 +8,6 @@ import {MatOptionModule} from '@angular/material/core';
   selector: 'app-select-scene',
   templateUrl: './select-scene.html',
   styleUrls: ['./select-scene.scss'],
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatOptionModule],
 })
 export class SelectScene implements AfterViewInit {

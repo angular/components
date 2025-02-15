@@ -4,7 +4,6 @@ import {NavigationFocusService} from './navigation-focus.service';
 let uid = 0;
 @Directive({
   selector: '[focusOnNavigation]',
-  standalone: true,
 })
 export class NavigationFocus implements OnDestroy {
   private el = inject(ElementRef);

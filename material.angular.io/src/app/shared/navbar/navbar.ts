@@ -16,7 +16,6 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   selector: 'app-navbar',
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
-  standalone: true,
   imports: [
     MatAnchor,
     RouterLink,

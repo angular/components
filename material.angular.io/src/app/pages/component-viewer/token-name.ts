@@ -7,7 +7,6 @@ import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'token-name',
-  standalone: true,
   template: `
     <code>{{name()}}</code>
     <button

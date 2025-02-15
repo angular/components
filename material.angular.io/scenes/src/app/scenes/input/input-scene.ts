@@ -7,7 +7,6 @@ import {MatInputModule} from '@angular/material/input';
   selector: 'app-input-scene',
   templateUrl: './input-scene.html',
   styleUrls: ['./input-scene.scss'],
-  standalone: true,
   imports: [MatFormFieldModule, MatInputModule],
 })
 export class InputScene {}
