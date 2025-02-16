@@ -141,6 +141,8 @@ The chips components support 3 user interaction patterns, each with its own cont
 
 `<mat-chip-grid>` and `<mat-chip-row>` : These elements implement a grid accessibility pattern. Use them as part of a free form input that allows users to enter text to add chips.
 
+Note : be sure to have the input element be a sibling of mat-chip-grid to ensure accessibility of the input element by accessibility devices such as Voice Control. It is also recommended to apply an appropriate `aria-label` to the input to optimize accessibility of the input.
+
 ```html
 <mat-form-field>
   <mat-chip-grid #myChipGrid [(ngModel)]="mySelection"
@@ -153,10 +155,11 @@ The chips components support 3 user interaction patterns, each with its own cont
         </button>
       </mat-chip-row>
     }
-    <input [matChipInputFor]="myChipGrid"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           (matChipInputTokenEnd)="add($event)" />
   </mat-chip-grid>
+  <input [matChipInputFor]="myChipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)"
+          aria-label="Add sandwich fillings..." />
 </mat-form-field>
 ```
 
