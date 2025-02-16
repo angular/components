@@ -18,7 +18,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatDrawerContainer, MatSidenavModule} from './index';
 
 describe('MatDrawer', () => {
@@ -517,14 +517,12 @@ describe('MatDrawer', () => {
 
     it('should not throw when a two-way binding is toggled quickly while animating', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatSidenavModule, BrowserAnimationsModule, DrawerOpenBinding],
+        imports: [MatSidenavModule, DrawerOpenBinding],
       });
 
       const fixture = TestBed.createComponent(DrawerOpenBinding);
       fixture.detectChanges();
 
-      // Note that we need actual timeouts and the `BrowserAnimationsModule`
-      // in order to test it correctly.
       setTimeout(() => {
         fixture.componentInstance.isOpen = !fixture.componentInstance.isOpen;
         fixture.changeDetectorRef.markForCheck();
@@ -1019,7 +1017,7 @@ describe('MatDrawerContainer', () => {
 
   it('should not animate when the sidenav is open on load', fakeAsync(() => {
     TestBed.resetTestingModule().configureTestingModule({
-      imports: [MatSidenavModule, BrowserAnimationsModule, DrawerSetToOpenedTrue],
+      imports: [MatSidenavModule, DrawerSetToOpenedTrue],
     });
 
     const fixture = TestBed.createComponent(DrawerSetToOpenedTrue);

@@ -11,7 +11,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable} from 'rxjs';
 import {
   MAT_TABS_CONFIG,
@@ -1026,12 +1026,7 @@ describe('MatTabGroup', () => {
 describe('nested MatTabGroup with enabled animations', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatTabsModule,
-        BrowserAnimationsModule,
-        NestedTabs,
-        TabsWithCustomAnimationDuration,
-      ],
+      imports: [MatTabsModule, NestedTabs, TabsWithCustomAnimationDuration],
     });
   }));
 
@@ -1066,7 +1061,7 @@ describe('MatTabGroup with ink bar fit to content', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabGroupWithInkBarFitToContent],
+      imports: [MatTabsModule, TabGroupWithInkBarFitToContent],
     });
   }));
 
@@ -1108,7 +1103,7 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, SimpleTabsTestApp],
+      imports: [MatTabsModule, SimpleTabsTestApp],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1139,7 +1134,7 @@ describe('MatTabNavBar with a default config', () => {
 describe('MatTabGroup labels aligned with a config', () => {
   it('should work with start align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1155,7 +1150,7 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with center align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1171,7 +1166,7 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with end align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1187,7 +1182,7 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should not add align if default config doesnt set align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignConfig],
+      imports: [MatTabsModule, TabsWithAlignConfig],
     }).createComponent(TabsWithAlignConfig);
     fixture.detectChanges();
 
@@ -1206,7 +1201,7 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should not break if config sets align on already aligned tabs', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithAlignCenter],
+      imports: [MatTabsModule, TabsWithAlignCenter],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {alignTabs: 'end'}}],
     }).createComponent(TabsWithAlignCenter);
     fixture.detectChanges();

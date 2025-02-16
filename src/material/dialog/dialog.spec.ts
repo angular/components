@@ -38,7 +38,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 import {
@@ -2043,12 +2043,7 @@ describe('MatDialog with animations enabled', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        BrowserAnimationsModule,
-        ComponentWithChildViewContainer,
-        DirectiveWithViewContainer,
-      ],
+      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
     });
 
     dialog = TestBed.inject(MatDialog);
@@ -2102,7 +2097,7 @@ describe('MatDialog with explicit injector provided', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, BrowserAnimationsModule, ModuleBoundDialogParentComponent],
+      imports: [MatDialogModule, ModuleBoundDialogParentComponent],
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
