@@ -107,6 +107,11 @@ export class MatChipGrid
   private _ariaDescribedbyIds: string[] = [];
 
   /**
+   * List of element ids to propagate to the chipInput's aria-labelledby attribute.
+   */
+  private _ariaLabelledbyIds: string[] = [];
+
+  /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
    * @docs-private
    */
@@ -311,6 +316,7 @@ export class MatChipGrid
   registerInput(inputElement: MatChipTextControl): void {
     this._chipInput = inputElement;
     this._chipInput.setDescribedByIds(this._ariaDescribedbyIds);
+    this._chipInput.setLabelledByIds(this._ariaLabelledbyIds);
   }
 
   /**
@@ -358,6 +364,13 @@ export class MatChipGrid
     // before the chip input is registered.
     this._ariaDescribedbyIds = ids;
     this._chipInput?.setDescribedByIds(ids);
+  }
+
+  setLabelledByIds(ids: string[]) {
+    // We must keep this up to date to handle the case where ids are set
+    // before the chip input is registered.
+    this._ariaDescribedbyIds = ids;
+    this._chipInput?.setLabelledByIds(ids);
   }
 
   /**
