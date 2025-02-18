@@ -7,7 +7,6 @@ import {RouterLink} from '@angular/router';
   selector: 'app-not-found',
   templateUrl: './not-found.html',
   styleUrls: ['./not-found.scss'],
-  standalone: true,
   imports: [MatAnchor, RouterLink, Footer],
   host: {
     'class': 'main-content',

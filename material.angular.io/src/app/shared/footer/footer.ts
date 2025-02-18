@@ -6,7 +6,6 @@ import {AppLogo} from '../logo/logo';
   templateUrl: './footer.html',
   styleUrls: ['./footer.scss'],
   imports: [AppLogo],
-  standalone: true,
 })
 export class Footer {
   year = new Date().getFullYear();

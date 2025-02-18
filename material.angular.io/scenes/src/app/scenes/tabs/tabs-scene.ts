@@ -5,7 +5,6 @@ import {MatTabsModule} from '@angular/material/tabs';
   selector: 'app-tabs-scene',
   templateUrl: './tabs-scene.html',
   styleUrls: ['./tabs-scene.scss'],
-  standalone: true,
   imports: [MatTabsModule],
 })
 export class TabsScene {}

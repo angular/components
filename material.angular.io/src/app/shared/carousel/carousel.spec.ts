@@ -60,7 +60,6 @@ describe('HorizontalCarousel', () => {
     }
   `,
   ],
-  standalone: true,
   imports: [Carousel, CarouselItem],
 })
 class CarouselTestComponent {

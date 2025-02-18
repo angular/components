@@ -14,7 +14,6 @@ export interface Dessert {
   selector: 'app-sort-scene',
   templateUrl: './sort-scene.html',
   styleUrls: ['./sort-scene.scss'],
-  standalone: true,
   imports: [MatSortModule],
 })
 export class SortScene {

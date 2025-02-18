@@ -28,7 +28,6 @@ import {MatTabLink, MatTabNav, MatTabNavPanel} from '@angular/material/tabs';
   templateUrl: './component-viewer.html',
   styleUrls: ['./component-viewer.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     MatTabNav,
     MatTabLink,
@@ -160,7 +159,6 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   selector: 'component-overview',
   templateUrl: './component-overview.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [DocViewer, TableOfContents, AsyncPipe],
 })
 export class ComponentOverview extends ComponentBaseView {
@@ -180,7 +178,6 @@ export class ComponentOverview extends ComponentBaseView {
   templateUrl: './component-api.html',
   styleUrls: ['./component-api.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [DocViewer, TableOfContents, AsyncPipe],
 })
 export class ComponentApi extends ComponentBaseView {
@@ -194,7 +191,6 @@ export class ComponentApi extends ComponentBaseView {
   selector: 'component-examples',
   templateUrl: './component-examples.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [ExampleViewer, AsyncPipe],
 })
 export class ComponentExamples extends ComponentBaseView {}

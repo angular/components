@@ -7,7 +7,6 @@ import {MatSliderModule} from '@angular/material/slider';
   selector: 'app-slider-scene',
   templateUrl: './slider-scene.html',
   styleUrls: ['./slider-scene.scss'],
-  standalone: true,
   imports: [MatIconModule, MatSliderModule],
 })
 export class SliderScene implements AfterViewInit {

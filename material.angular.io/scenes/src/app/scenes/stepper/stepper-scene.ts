@@ -8,7 +8,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   selector: 'app-stepper-scene',
   templateUrl: './stepper-scene.html',
   styleUrls: ['./stepper-scene.scss'],
-  standalone: true,
   imports: [MatStepperModule, MatFormFieldModule, MatInputModule],
 })
 export class StepperScene {}

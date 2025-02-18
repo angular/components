@@ -7,7 +7,6 @@ import {MatRipple, MatRippleModule} from '@angular/material/core';
   selector: 'app-ripple-scene',
   templateUrl: './ripples-scene.html',
   styleUrls: ['./ripples-scene.scss'],
-  standalone: true,
   imports: [MatRippleModule, MatButtonModule],
 })
 export class RipplesScene implements AfterViewInit {

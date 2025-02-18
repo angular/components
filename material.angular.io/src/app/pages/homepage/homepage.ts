@@ -22,7 +22,6 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   selector: 'app-homepage',
   templateUrl: './homepage.html',
   styleUrls: ['./homepage.scss'],
-  standalone: true,
   imports: [
     NavigationFocus,
     MatAnchor,

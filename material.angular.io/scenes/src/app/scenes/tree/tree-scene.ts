@@ -35,7 +35,6 @@ interface FileFlatNode {
   selector: 'app-tree-scene',
   templateUrl: './tree-scene.html',
   styleUrls: ['./tree-scene.scss'],
-  standalone: true,
   imports: [MatTreeModule, MatIconModule, MatButtonModule],
 })
 export class TreeScene {

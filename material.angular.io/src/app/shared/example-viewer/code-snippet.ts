@@ -6,7 +6,6 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
   templateUrl: './code-snippet.html',
   styleUrls: ['./example-viewer.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [forwardRef(() => DocViewer)],
 })
 export class CodeSnippet {

@@ -12,7 +12,6 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   selector: 'guide-viewer',
   templateUrl: './guide-viewer.html',
   styleUrls: ['./guide-viewer.scss'],
-  standalone: true,
   imports: [DocViewer, NavigationFocus, TableOfContents, Footer],
   host: {
     'class': 'main-content',

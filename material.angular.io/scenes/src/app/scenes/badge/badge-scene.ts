@@ -7,7 +7,6 @@ import {MatBadgeModule} from '@angular/material/badge';
   selector: 'app-badge-scene',
   templateUrl: './badge-scene.html',
   styleUrls: ['./badge-scene.scss'],
-  standalone: true,
   imports: [MatIconModule, MatBadgeModule],
 })
 export class BadgeScene {}

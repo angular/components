@@ -16,7 +16,6 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
   selector: 'app-scene-viewer',
   templateUrl: './scene-viewer.html',
   styleUrls: ['./scene-viewer.scss'],
-  standalone: true,
 })
 export class SceneViewer implements OnInit {
   private route = inject(ActivatedRoute);

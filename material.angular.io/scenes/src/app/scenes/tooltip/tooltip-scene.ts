@@ -8,7 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
   selector: 'app-tooltip-scene',
   templateUrl: './tooltip-scene.html',
   styleUrls: ['./tooltip-scene.scss'],
-  standalone: true,
   imports: [MatButtonModule, MatTooltipModule, MatIconModule],
 })
 export class TooltipScene implements AfterViewInit {

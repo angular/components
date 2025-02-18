@@ -17,7 +17,6 @@ import {CookiePopup} from './shared/cookie-popup/cookie-popup';
   `,
   styleUrls: ['./material-docs-app.scss'],
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [NavBar, RouterOutlet, CookiePopup],
 })
 export class MaterialDocsApp implements OnDestroy {

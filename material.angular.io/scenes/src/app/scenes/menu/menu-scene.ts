@@ -8,7 +8,6 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
   selector: 'app-button-scene',
   templateUrl: './menu-scene.html',
   styleUrls: ['./menu-scene.scss'],
-  standalone: true,
   imports: [MatButtonModule, MatMenuModule, MatIconModule],
 })
 export class MenuScene implements AfterViewInit {

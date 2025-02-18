@@ -8,7 +8,6 @@ import {MatTimepickerModule, MatTimepicker} from '@angular/material/timepicker';
   selector: 'app-timepicker-scene',
   templateUrl: './timepicker-scene.html',
   styleUrls: ['./timepicker-scene.scss'],
-  standalone: true,
   imports: [MatTimepickerModule, MatFormFieldModule, MatInputModule],
 })
 export class TimepickerScene implements AfterViewInit {

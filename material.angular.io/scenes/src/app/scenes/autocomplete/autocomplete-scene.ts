@@ -8,7 +8,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-autocomplete-scene',
   templateUrl: './autocomplete-scene.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FormsModule,

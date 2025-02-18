@@ -27,7 +27,6 @@ import {MatTooltip} from '@angular/material/tooltip';
   template: `<div class="deprecated-content"
     [matTooltip]="message">
   </div>`,
-  standalone: true,
   imports: [MatTooltip],
 })
 export class DeprecatedFieldComponent {
