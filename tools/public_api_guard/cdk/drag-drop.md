@@ -50,7 +50,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     _addHandle(handle: CdkDragHandle): void;
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
-    constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
+    constrainPosition?: DragConstrainPosition;
     data: T;
     get disabled(): boolean;
     set disabled(value: boolean);
