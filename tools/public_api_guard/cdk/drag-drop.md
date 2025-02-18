@@ -381,7 +381,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
 export class DragRef<T = any> {
     constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry, _renderer: Renderer2);
     readonly beforeStarted: Subject<void>;
-    constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
+    constrainPosition?: DragConstrainPosition;
     data: T;
     get disabled(): boolean;
     set disabled(value: boolean);

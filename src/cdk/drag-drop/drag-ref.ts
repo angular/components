@@ -35,6 +35,7 @@ import {
 import {DragDropRegistry} from './drag-drop-registry';
 import type {DropListRef} from './drop-list-ref';
 import {DragPreviewTemplate, PreviewRef} from './preview-ref';
+import {DragConstrainPosition} from './directives/config';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -364,12 +365,7 @@ export class DragRef<T = any> {
    * of the user's pointer on the page, a reference to the item being dragged and its dimensions.
    * Should return a point describing where the item should be rendered.
    */
-  constrainPosition?: (
-    userPointerPosition: Point,
-    dragRef: DragRef,
-    dimensions: DOMRect,
-    pickupPositionInElement: Point,
-  ) => Point;
+  constrainPosition?: DragConstrainPosition;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
