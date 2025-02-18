@@ -37,8 +37,8 @@ import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -339,7 +339,7 @@ describe('MatChipGrid', () => {
         let fixture: ComponentFixture<StandardChipGrid>;
 
         beforeEach(() => {
-          fixture = createComponent(StandardChipGrid, undefined, 'rtl');
+          fixture = createComponent(StandardChipGrid, 'rtl');
         });
 
         it('should focus previous column when press RIGHT ARROW', () => {
@@ -1015,9 +1015,6 @@ describe('MatChipGrid', () => {
 
   function createComponent<T>(
     component: Type<T>,
-    animationsModule:
-      | Type<NoopAnimationsModule>
-      | Type<BrowserAnimationsModule> = NoopAnimationsModule,
     direction: Direction = 'ltr',
   ): ComponentFixture<T> {
     directionality = {
@@ -1032,7 +1029,7 @@ describe('MatChipGrid', () => {
         MatChipsModule,
         MatFormFieldModule,
         MatInputModule,
-        animationsModule,
+        NoopAnimationsModule,
       ],
       providers: [{provide: Directionality, useValue: directionality}],
       declarations: [component],

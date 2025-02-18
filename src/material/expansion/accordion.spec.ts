@@ -8,7 +8,6 @@ import {
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {TestBed, inject, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAccordion,
   MatExpansionModule,
@@ -22,7 +21,6 @@ describe('MatAccordion', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         MatExpansionModule,
         AccordionWithHideToggle,
         AccordionWithTogglePosition,

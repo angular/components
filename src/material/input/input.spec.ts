@@ -36,7 +36,6 @@ import {
 } from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
 
 describe('MatMdcInput without forms', () => {
@@ -1656,17 +1655,15 @@ function configureTestingModule(
     providers?: Provider[];
     imports?: any[];
     declarations?: any[];
-    animations?: boolean;
   } = {},
 ) {
-  const {providers = [], imports = [], declarations = [], animations = true} = options;
+  const {providers = [], imports = [], declarations = []} = options;
   TestBed.configureTestingModule({
     imports: [
       FormsModule,
       MatFormFieldModule,
       MatIconModule,
       MatInputModule,
-      animations ? BrowserAnimationsModule : NoopAnimationsModule,
       ReactiveFormsModule,
       ...imports,
     ],

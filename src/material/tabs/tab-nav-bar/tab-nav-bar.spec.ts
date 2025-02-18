@@ -10,7 +10,6 @@ import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {MAT_TABS_CONFIG} from '../index';
 import {MatTabsModule} from '../module';
@@ -512,7 +511,7 @@ describe('MatTabNavBar with a default config', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabLinkWithNgIf],
+      imports: [MatTabsModule, TabLinkWithNgIf],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}],
     });
   }));
@@ -534,7 +533,7 @@ describe('MatTabNavBar with a default config', () => {
 describe('MatTabNavBar with enabled animations', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, BrowserAnimationsModule, TabsWithCustomAnimationDuration],
+      imports: [MatTabsModule, TabsWithCustomAnimationDuration],
     });
   }));
 

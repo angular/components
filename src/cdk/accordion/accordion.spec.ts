@@ -1,7 +1,6 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkAccordion} from './accordion';
 import {CdkAccordionItem} from './accordion-item';
 import {CdkAccordionModule} from './accordion-module';
@@ -9,7 +8,7 @@ import {CdkAccordionModule} from './accordion-module';
 describe('CdkAccordion', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, CdkAccordionModule, SetOfItems, NestedItems],
+      imports: [CdkAccordionModule, SetOfItems, NestedItems],
     });
   }));
 
