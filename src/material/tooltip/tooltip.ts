@@ -194,6 +194,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _focusMonitor = inject(FocusMonitor);
   protected _dir = inject(Directionality);
   private _injector = inject(Injector);
+  private _viewContainerRef = inject(ViewContainerRef);
   private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -455,8 +456,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     const overlayRef = this._createOverlay(origin);
     this._detach();
     this._portal =
-      this._portal ||
-      new ComponentPortal(this._tooltipComponent, this._injector.get(ViewContainerRef));
+      this._portal || new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
     const instance = (this._tooltipInstance = overlayRef.attach(this._portal).instance);
     instance._triggerElement = this._elementRef.nativeElement;
     instance._mouseLeaveHideDelay = this._hideDelay;
