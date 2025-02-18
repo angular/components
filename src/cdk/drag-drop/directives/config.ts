@@ -16,7 +16,12 @@ export type DragStartDelay = number | {touch: number; mouse: number};
 export type DragAxis = 'x' | 'y';
 
 /** Function that can be used to constrain the position of a dragged element. */
-export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
+export type DragConstrainPosition = (
+  userPointerPosition: Point,
+  dragRef: DragRef,
+  dimensions: DOMRect,
+  pickupPositionInElement: Point,
+) => Point;
 
 /** Possible orientations for a drop list. */
 export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';

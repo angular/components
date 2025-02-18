@@ -300,7 +300,7 @@ export function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], curr
 export type DragAxis = 'x' | 'y';
 
 // @public
-export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
+export type DragConstrainPosition = (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
 
 // @public
 export class DragDrop {
