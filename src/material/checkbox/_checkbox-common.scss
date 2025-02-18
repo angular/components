@@ -49,6 +49,7 @@ $_fallback-size: 40px;
       padding: 0;
       opacity: 0;
       cursor: inherit;
+      z-index: 1;
 
       @include token-utils.use-tokens($prefix, $slots) {
         $layer-size: token-utils.get-token-variable(state-layer-size, $fallback: $_fallback-size);
