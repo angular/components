@@ -43,16 +43,10 @@ import {CDK_DRAG_HANDLE, CdkDragHandle} from './drag-handle';
 import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {DragRef, Point, PreviewContainer} from '../drag-ref';
+import {DragRef, Point, PreviewContainer, DragConstrainPosition} from '../drag-ref';
 import type {CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
-import {
-  CDK_DRAG_CONFIG,
-  DragDropConfig,
-  DragStartDelay,
-  DragAxis,
-  DragConstrainPosition,
-} from './config';
+import {CDK_DRAG_CONFIG, DragDropConfig, DragStartDelay, DragAxis} from './config';
 import {assertElementNode} from './assertions';
 import {DragDropRegistry} from '../drag-drop-registry';
 

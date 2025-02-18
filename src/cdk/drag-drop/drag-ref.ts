@@ -35,7 +35,6 @@ import {
 import {DragDropRegistry} from './drag-drop-registry';
 import type {DropListRef} from './drop-list-ref';
 import {DragPreviewTemplate, PreviewRef} from './preview-ref';
-import {DragConstrainPosition} from './directives/config';
 
 /** Object that can be used to configure the behavior of DragRef. */
 export interface DragRefConfig {
@@ -57,6 +56,14 @@ export interface DragRefConfig {
   /** Ref that the current drag item is nested in. */
   parentDragRef?: DragRef;
 }
+
+/** Function that can be used to constrain the position of a dragged element. */
+export type DragConstrainPosition = (
+  userPointerPosition: Point,
+  dragRef: DragRef,
+  dimensions: DOMRect,
+  pickupPositionInElement: Point,
+) => Point;
 
 /** Options that can be used to bind a passive event listener. */
 const passiveEventListenerOptions = {passive: true};
