@@ -50,7 +50,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // (undocumented)
     _addHandle(handle: CdkDragHandle): void;
     boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
-    constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
+    constrainPosition?: DragConstrainPosition;
     data: T;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -300,7 +300,7 @@ export function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], curr
 export type DragAxis = 'x' | 'y';
 
 // @public
-export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
+export type DragConstrainPosition = (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
 
 // @public
 export class DragDrop {
@@ -381,7 +381,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
 export class DragRef<T = any> {
     constructor(element: ElementRef<HTMLElement> | HTMLElement, _config: DragRefConfig, _document: Document, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry, _renderer: Renderer2);
     readonly beforeStarted: Subject<void>;
-    constrainPosition?: (userPointerPosition: Point, dragRef: DragRef, dimensions: DOMRect, pickupPositionInElement: Point) => Point;
+    constrainPosition?: DragConstrainPosition;
     data: T;
     get disabled(): boolean;
     set disabled(value: boolean);
