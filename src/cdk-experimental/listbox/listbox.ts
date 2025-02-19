@@ -58,17 +58,17 @@ export class CdkListbox implements OnDestroy {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private _dir = inject(Directionality);
 
-  /** A signal wrapper for directionality. */
-  private directionality = signal<'ltr' | 'rtl'>('ltr');
-
   /** The CdkOptions nested inside of the CdkListbox. */
   private _cdkOptions = contentChildren(CdkOption, {descendants: true});
 
-  /** The Option UIPatterns of the child CdkOptions. */
-  private items = computed(() => this._cdkOptions().map(option => option.pattern));
-
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
+
+  /** A signal wrapper for directionality. */
+  protected directionality = signal<'ltr' | 'rtl'>('ltr');
+
+  /** The Option UIPatterns of the child CdkOptions. */
+  protected items = computed(() => this._cdkOptions().map(option => option.pattern));
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -141,16 +141,16 @@ export class CdkOption {
   private _cdkListbox = inject(CdkListbox);
 
   /** A unique identifier for the option. */
-  private id = computed(() => `${count++}`);
+  protected id = computed(() => `${count++}`);
 
   /** The text used by the typeahead search. */
-  private searchTerm = computed(() => this.label() ?? this.element().textContent);
+  protected searchTerm = computed(() => this.label() ?? this.element().textContent);
 
   /** The parent Listbox UIPattern. */
-  private listbox = computed(() => this._cdkListbox.pattern);
+  protected listbox = computed(() => this._cdkListbox.pattern);
 
   /** A reference to the option element to be focused on navigation. */
-  private element = computed(() => this._elementRef.nativeElement);
+  protected element = computed(() => this._elementRef.nativeElement);
 
   /** Whether an item is disabled. */
   disabled = input(false, {transform: booleanAttribute});

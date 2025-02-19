@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, Signal} from '@angular/core';
+import {computed, Signal} from '@angular/core';
 import {ListSelectionItem} from '../behaviors/list-selection/list-selection';
 import {ListTypeaheadItem} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
