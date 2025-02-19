@@ -189,7 +189,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     _scrollOptionIntoView(index: number): void;
     _scrollStrategy: ScrollStrategy;
     get selected(): MatOption | MatOption[];
-    readonly selectionChange: EventEmitter<MatSelectChange>;
+    readonly selectionChange: EventEmitter<MatSelectChange<any>>;
     _selectionModel: SelectionModel<MatOption>;
     setDescribedByIds(ids: string[]): void;
     setDisabledState(isDisabled: boolean): void;
@@ -224,12 +224,12 @@ export const matSelectAnimations: {
 };
 
 // @public
-export class MatSelectChange {
+export class MatSelectChange<T = any> {
     constructor(
     source: MatSelect,
-    value: any);
+    value: T);
     source: MatSelect;
-    value: any;
+    value: T;
 }
 
 // @public
