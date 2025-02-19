@@ -219,6 +219,8 @@ export class CdkDropList<T = any> implements OnDestroy {
   addItem(item: CdkDrag): void {
     this._unsortedItems.add(item);
 
+    // Only sync the items while dragging since this method is
+    // called when items are being initialized one-by-one.
     if (this._dropListRef.isDragging()) {
       this._syncItemsWithRef();
     }
@@ -228,9 +230,8 @@ export class CdkDropList<T = any> implements OnDestroy {
   removeItem(item: CdkDrag): void {
     this._unsortedItems.delete(item);
 
-    if (this._dropListRef.isDragging()) {
-      this._syncItemsWithRef();
-    }
+    // This method might be called on destroy so we always want to sync with the ref.
+    this._syncItemsWithRef();
   }
 
   /** Gets the registered items in the list, sorted by their position in the DOM. */
