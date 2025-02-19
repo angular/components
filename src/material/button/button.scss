@@ -264,14 +264,6 @@
       @include token-utils.create-token-slot(color, disabled-label-text-color);
       @include token-utils.create-token-slot(border-color, disabled-outline-color);
     }
-
-    // TODO(crisbeto): this causes a weird gap between the ripple and the
-    // outline. We should remove it and update the screenshot tests.
-    .mdc-button__ripple {
-      @include token-utils.create-token-slot(border-width, outline-width);
-      border-style: solid;
-      border-color: transparent;
-    }
   }
 }
 
