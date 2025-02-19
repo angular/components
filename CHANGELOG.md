@@ -1,3 +1,22 @@
+<a name="19.1.5"></a>
+# 19.1.5 "bromine-bread" (2025-02-19)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [719e67d29](https://github.com/angular/components/commit/719e67d2948d2a0e7a4c7f4fd8a87704fee5f5ce) | fix | **drag-drop:** avoid retaining destroyed items until next drag ([#30514](https://github.com/angular/components/pull/30514)) |
+| [c24b17955](https://github.com/angular/components/commit/c24b1795550c1a591f0d19123951c6a83cd6c554) | perf | **table:** Short circuit _removeStickyStyle calls against elements with no sticky styles ([#30471](https://github.com/angular/components/pull/30471)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [90ac6134d](https://github.com/angular/components/commit/90ac6134d9bf3fdcb98a77a889641f1e89f8b84b) | fix | **checkbox:** ensure native control receives clicks ([#30511](https://github.com/angular/components/pull/30511)) |
+| [2eb6424b2](https://github.com/angular/components/commit/2eb6424b2331d1cf4ce873d5a270ee9af5adb9ab) | fix | **paginator:** disabled buttons not visible in high contrast mode ([#30505](https://github.com/angular/components/pull/30505)) |
+| [96d7d87c8](https://github.com/angular/components/commit/96d7d87c801c6e0b6e8800b45331d97934f1761c) | fix | **slide-toggle:** rendering issue in Safari 18.3 ([#30490](https://github.com/angular/components/pull/30490)) |
+| [16593f1dc](https://github.com/angular/components/commit/16593f1dcd0cc85f7795febb5ff334dec69a3632) | fix | **snack-bar:** snack-bar action button does not follow material guidelines ([#27769](https://github.com/angular/components/pull/27769)) |
+| [76f28469f](https://github.com/angular/components/commit/76f28469f67c0e23dd99f716538aff6f45917c1d) | fix | **tooltip:** regression when injecting ViewContainerRef ([#30500](https://github.com/angular/components/pull/30500)) |
+| [c2b363ea6](https://github.com/angular/components/commit/c2b363ea6b354560bb51c3783eb64595bda4e787) | perf | **radio:** Optimize costly css selectors. ([#30470](https://github.com/angular/components/pull/30470)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.0-next.4"></a>
 # 19.2.0-next.4 "papercrete-zither" (2025-02-12)
 ### cdk
