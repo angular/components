@@ -7,7 +7,6 @@
  */
 
 import {signal, Signal, WritableSignal} from '@angular/core';
-import type {ListNavigationController} from './controller';
 
 /** The required properties for navigation items. */
 export interface ListNavigationItem {
@@ -41,53 +40,65 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** The last index that was active. */
   prevActiveIndex = signal(0);
 
-  get controller(): Promise<ListNavigationController<T>> {
-    if (this._controller === null) {
-      return this.loadController();
-    }
-    return Promise.resolve(this._controller);
-  }
-  private _controller: ListNavigationController<T> | null = null;
-
   constructor(readonly inputs: ListNavigationInputs<T>) {
     this.prevActiveIndex.set(inputs.activeIndex());
   }
 
-  /** Loads the controller for list navigation. */
-  async loadController(): Promise<ListNavigationController<T>> {
-    return import('./controller').then(m => {
-      this._controller = new m.ListNavigationController(this);
-      return this._controller;
-    });
-  }
-
   /** Navigates to the given item. */
-  async goto(item: T) {
-    return (await this.controller).goto(item);
+  goto(item: T) {
+    if (this.isFocusable(item)) {
+      this.prevActiveIndex.set(this.inputs.activeIndex());
+      const index = this.inputs.items().indexOf(item);
+      this.inputs.activeIndex.set(index);
+    }
   }
 
   /** Navigates to the next item in the list. */
-  async next() {
-    return (await this.controller).next();
+  next() {
+    const items = this.inputs.items();
+    const after = items.slice(this.inputs.activeIndex() + 1);
+    const before = items.slice(0, this.inputs.activeIndex());
+    const array = this.inputs.wrap() ? after.concat(before) : after;
+    const item = array.find(i => this.isFocusable(i));
+
+    if (item) {
+      this.goto(item);
+    }
   }
 
   /** Navigates to the previous item in the list. */
-  async prev() {
-    return (await this.controller).prev();
+  prev() {
+    const items = this.inputs.items();
+    const after = items.slice(this.inputs.activeIndex() + 1).reverse();
+    const before = items.slice(0, this.inputs.activeIndex()).reverse();
+    const array = this.inputs.wrap() ? before.concat(after) : before;
+    const item = array.find(i => this.isFocusable(i));
+
+    if (item) {
+      this.goto(item);
+    }
   }
 
   /** Navigates to the first item in the list. */
-  async first() {
-    return (await this.controller).first();
+  first() {
+    const item = this.inputs.items().find(i => this.isFocusable(i));
+
+    if (item) {
+      this.goto(item);
+    }
   }
 
   /** Navigates to the last item in the list. */
-  async last() {
-    return (await this.controller).last();
+  last() {
+    const item = [...this.inputs.items()].reverse().find(i => this.isFocusable(i));
+
+    if (item) {
+      this.goto(item);
+    }
   }
 
   /** Returns true if the given item can be navigated to. */
-  async isFocusable(item: T) {
-    return (await this.controller).isFocusable(item);
+  isFocusable(item: T): boolean {
+    return !item.disabled() || !this.inputs.skipDisabled();
   }
 }

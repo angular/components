@@ -8,7 +8,6 @@
 
 import {computed, Signal} from '@angular/core';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
-import type {ListFocusController} from './controller';
 
 /** The required properties for focus items. */
 export interface ListFocusItem extends ListNavigationItem {
@@ -30,24 +29,8 @@ export class ListFocus<T extends ListFocusItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<ListFocusItem>;
 
-  get controller(): Promise<ListFocusController<T>> {
-    if (this._controller === null) {
-      return this.loadController();
-    }
-    return Promise.resolve(this._controller);
-  }
-  private _controller: ListFocusController<T> | null = null;
-
   constructor(readonly inputs: ListFocusInputs<T> & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
-  }
-
-  /** Loads the controller for list focus. */
-  async loadController(): Promise<ListFocusController<T>> {
-    return import('./controller').then(m => {
-      this._controller = new m.ListFocusController(this);
-      return this._controller;
-    });
   }
 
   /** Returns the id of the current active item. */
@@ -77,7 +60,12 @@ export class ListFocus<T extends ListFocusItem> {
   }
 
   /** Focuses the current active item. */
-  async focus() {
-    (await this.controller).focus();
+  focus() {
+    if (this.inputs.focusMode() === 'activedescendant') {
+      return;
+    }
+
+    const item = this.navigation.inputs.items()[this.navigation.inputs.activeIndex()];
+    item.element().focus();
   }
 }
