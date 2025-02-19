@@ -1033,6 +1033,10 @@ export class MatSelect
           hasDeselectedOptions ? option.select() : option.deselect();
         }
       });
+    } else if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+      event.stopPropagation();
+      event.preventDefault();
+      this.close();
     } else {
       const previouslyFocusedIndex = manager.activeItemIndex;
 
