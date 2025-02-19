@@ -1,0 +1,25 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# TODO(wagnermaciel): Check if tree shaking handles this or if we need to split out.
+ts_library(
+    name = "behaviors",
+    srcs = glob(
+        ["behaviors/**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = ["@npm//@angular/core"],
+)
+
+ts_library(
+    name = "listbox",
+    srcs = glob(
+        ["listbox/**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        ":behaviors",
+        "@npm//@angular/core",
+    ],
+)
