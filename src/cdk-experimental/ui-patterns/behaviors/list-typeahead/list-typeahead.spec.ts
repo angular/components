@@ -43,14 +43,14 @@ describe('List Typeahead', () => {
         typeaheadDelay: signal(0.5),
       });
 
-      await typeahead.search('i');
+      typeahead.search('i');
       expect(activeIndex()).toBe(1);
 
-      await typeahead.search('t');
-      await typeahead.search('e');
-      await typeahead.search('m');
-      await typeahead.search(' ');
-      await typeahead.search('3');
+      typeahead.search('t');
+      typeahead.search('e');
+      typeahead.search('m');
+      typeahead.search(' ');
+      typeahead.search('3');
       expect(activeIndex()).toBe(3);
     });
 
@@ -70,12 +70,12 @@ describe('List Typeahead', () => {
         typeaheadDelay: signal(0.5),
       });
 
-      await typeahead.search('i');
+      typeahead.search('i');
       expect(activeIndex()).toBe(1);
 
       tick(500);
 
-      await typeahead.search('i');
+      typeahead.search('i');
       expect(activeIndex()).toBe(2);
     }));
 
@@ -96,7 +96,7 @@ describe('List Typeahead', () => {
       });
       items()[1].disabled.set(true);
 
-      await typeahead.search('i');
+      typeahead.search('i');
       expect(activeIndex()).toBe(2);
     });
 
@@ -117,7 +117,7 @@ describe('List Typeahead', () => {
       });
       items()[1].disabled.set(true);
 
-      await typeahead.search('i');
+      typeahead.search('i');
       expect(activeIndex()).toBe(1);
     });
 
@@ -137,15 +137,15 @@ describe('List Typeahead', () => {
         typeaheadDelay: signal(0.5),
       });
 
-      await typeahead.search('i');
-      await typeahead.search('t');
-      await typeahead.search('e');
+      typeahead.search('i');
+      typeahead.search('t');
+      typeahead.search('e');
 
-      await typeahead.search('Shift');
+      typeahead.search('Shift');
 
-      await typeahead.search('m');
-      await typeahead.search(' ');
-      await typeahead.search('2');
+      typeahead.search('m');
+      typeahead.search(' ');
+      typeahead.search('2');
       expect(activeIndex()).toBe(2);
     });
   });

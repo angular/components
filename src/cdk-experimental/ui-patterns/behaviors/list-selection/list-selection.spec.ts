@@ -62,7 +62,7 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [0]
+      selection.select(); // [0]
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
 
@@ -71,9 +71,9 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [0]
-      await nav.next();
-      await selection.select(); // [0, 1]
+      selection.select(); // [0]
+      nav.next();
+      selection.select(); // [0, 1]
 
       expect(selection.inputs.selectedIds()).toEqual(['0', '1']);
     });
@@ -85,9 +85,9 @@ describe('List Selection', () => {
         multiselectable: signal(false),
       });
 
-      await selection.select(); // [0]
-      await nav.next();
-      await selection.select(); // [1]
+      selection.select(); // [0]
+      nav.next();
+      selection.select(); // [1]
 
       expect(selection.inputs.selectedIds()).toEqual(['1']);
     });
@@ -98,7 +98,7 @@ describe('List Selection', () => {
       const selection = getSelection(items, nav);
       items()[0].disabled.set(true);
 
-      await selection.select(); // []
+      selection.select(); // []
       expect(selection.inputs.selectedIds()).toEqual([]);
     });
 
@@ -107,8 +107,8 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [0]
-      await selection.select(); // [0]
+      selection.select(); // [0]
+      selection.select(); // [0]
 
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
@@ -119,7 +119,7 @@ describe('List Selection', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
-      await selection.deselect(); // []
+      selection.deselect(); // []
       expect(selection.inputs.selectedIds().length).toBe(0);
     });
 
@@ -128,9 +128,9 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [0]
+      selection.select(); // [0]
       items()[0].disabled.set(true);
-      await selection.deselect(); // [0]
+      selection.deselect(); // [0]
 
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
@@ -142,7 +142,7 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.toggle(); // [0]
+      selection.toggle(); // [0]
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
 
@@ -150,8 +150,8 @@ describe('List Selection', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
-      await selection.select(); // [0]
-      await selection.toggle(); // []
+      selection.select(); // [0]
+      selection.toggle(); // []
       expect(selection.inputs.selectedIds().length).toBe(0);
     });
   });
@@ -161,7 +161,7 @@ describe('List Selection', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
-      await selection.selectAll();
+      selection.selectAll();
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2', '3', '4']);
     });
 
@@ -169,7 +169,7 @@ describe('List Selection', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
-      await selection.selectAll();
+      selection.selectAll();
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2', '3', '4']);
     });
   });
@@ -179,7 +179,7 @@ describe('List Selection', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
-      await selection.deselectAll(); // []
+      selection.deselectAll(); // []
       expect(selection.inputs.selectedIds().length).toBe(0);
     });
   });
@@ -190,10 +190,10 @@ describe('List Selection', () => {
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [0]
-      await nav.next();
-      await nav.next();
-      await selection.selectFromAnchor(); // [0, 1, 2]
+      selection.select(); // [0]
+      nav.next();
+      nav.next();
+      selection.selectFromAnchor(); // [0, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2']);
     });
@@ -205,10 +205,10 @@ describe('List Selection', () => {
       });
       const selection = getSelection(items, nav);
 
-      await selection.select(); // [3]
-      await nav.prev();
-      await nav.prev();
-      await selection.selectFromAnchor(); // [3, 1, 2]
+      selection.select(); // [3]
+      nav.prev();
+      nav.prev();
+      selection.selectFromAnchor(); // [3, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['3', '1', '2']);
     });

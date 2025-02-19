@@ -92,9 +92,6 @@ export class ListboxPattern {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    console.log('prev key:', this.prevKey());
-    console.log('next key:', this.nextKey());
-
     if (!this.followFocus()) {
       manager
         .on(this.prevKey, () => this.prev())
@@ -181,7 +178,6 @@ export class ListboxPattern {
 
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
-    console.log(this.orientation());
     if (!this.disabled()) {
       this.keydown().handle(event);
     }

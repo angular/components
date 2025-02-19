@@ -44,7 +44,7 @@ describe('List Navigation', () => {
       const nav = getNavigation(items);
 
       expect(nav.inputs.activeIndex()).toBe(0);
-      await nav.goto(items()[3]);
+      nav.goto(items()[3]);
       expect(nav.inputs.activeIndex()).toBe(3);
     });
   });
@@ -52,7 +52,7 @@ describe('List Navigation', () => {
   describe('#next', () => {
     it('should navigate next', async () => {
       const nav = getNavigation(getItems(3));
-      await nav.next(); // 0 -> 1
+      nav.next(); // 0 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -61,9 +61,9 @@ describe('List Navigation', () => {
         wrap: signal(true),
       });
 
-      await nav.next(); // 0 -> 1
-      await nav.next(); // 1 -> 2
-      await nav.next(); // 2 -> 0
+      nav.next(); // 0 -> 1
+      nav.next(); // 1 -> 2
+      nav.next(); // 2 -> 0
 
       expect(nav.inputs.activeIndex()).toBe(0);
     });
@@ -73,9 +73,9 @@ describe('List Navigation', () => {
         wrap: signal(false),
       });
 
-      await nav.next(); // 0 -> 1
-      await nav.next(); // 1 -> 2
-      await nav.next(); // 2 -> 2
+      nav.next(); // 0 -> 1
+      nav.next(); // 1 -> 2
+      nav.next(); // 2 -> 2
 
       expect(nav.inputs.activeIndex()).toBe(2);
     });
@@ -86,7 +86,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      await nav.next(); // 0 -> 2
+      nav.next(); // 0 -> 2
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
@@ -96,7 +96,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      await nav.next(); // 0 -> 1
+      nav.next(); // 0 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -107,8 +107,8 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[2].disabled.set(true);
 
-      await nav.next(); // 0 -> 1
-      await nav.next(); // 1 -> 0
+      nav.next(); // 0 -> 1
+      nav.next(); // 1 -> 0
 
       expect(nav.inputs.activeIndex()).toBe(0);
     });
@@ -120,13 +120,13 @@ describe('List Navigation', () => {
       nav.inputs.items()[1].disabled.set(true);
       nav.inputs.items()[2].disabled.set(true);
 
-      await nav.next(); // 0 -> 0
+      nav.next(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should do nothing if there are no other items to navigate to', async () => {
       const nav = getNavigation(getItems(1));
-      await nav.next(); // 0 -> 0
+      nav.next(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
   });
@@ -136,7 +136,7 @@ describe('List Navigation', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
       });
-      await nav.prev(); // 2 -> 1
+      nav.prev(); // 2 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -144,7 +144,7 @@ describe('List Navigation', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(true),
       });
-      await nav.prev(); // 0 -> 2
+      nav.prev(); // 0 -> 2
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
@@ -152,7 +152,7 @@ describe('List Navigation', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(false),
       });
-      await nav.prev(); // 0 -> 0
+      nav.prev(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
@@ -163,7 +163,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      await nav.prev(); // 2 -> 0
+      nav.prev(); // 2 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
@@ -174,7 +174,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      await nav.prev(); // 2 -> 1
+      nav.prev(); // 2 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -186,8 +186,8 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[0].disabled.set(true);
 
-      await nav.prev(); // 2 -> 1
-      await nav.prev(); // 1 -> 2
+      nav.prev(); // 2 -> 1
+      nav.prev(); // 1 -> 2
 
       expect(nav.inputs.activeIndex()).toBe(2);
     });
@@ -200,13 +200,13 @@ describe('List Navigation', () => {
       nav.inputs.items()[0].disabled.set(true);
       nav.inputs.items()[1].disabled.set(true);
 
-      await nav.prev(); // 2 -> 2
+      nav.prev(); // 2 -> 2
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
     it('should do nothing if there are no other items to navigate to', async () => {
       const nav = getNavigation(getItems(1));
-      await nav.prev(); // 0 -> 0
+      nav.prev(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
   });
@@ -217,7 +217,7 @@ describe('List Navigation', () => {
         activeIndex: signal(2),
       });
 
-      await nav.first();
+      nav.first();
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
@@ -228,7 +228,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[0].disabled.set(true);
 
-      await nav.first();
+      nav.first();
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -239,7 +239,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[0].disabled.set(true);
 
-      await nav.first();
+      nav.first();
       expect(nav.inputs.activeIndex()).toBe(0);
     });
   });
@@ -247,7 +247,7 @@ describe('List Navigation', () => {
   describe('#last', () => {
     it('should navigate to the last item', async () => {
       const nav = getNavigation(getItems(3));
-      await nav.last();
+      nav.last();
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
@@ -257,7 +257,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[2].disabled.set(true);
 
-      await nav.last();
+      nav.last();
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
@@ -267,7 +267,7 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[2].disabled.set(true);
 
-      await nav.last();
+      nav.last();
       expect(nav.inputs.activeIndex()).toBe(2);
     });
   });
@@ -278,9 +278,9 @@ describe('List Navigation', () => {
         skipDisabled: signal(true),
       });
 
-      expect(await nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(await nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
-      expect(await nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
     });
 
     it('should return false for disabled items', async () => {
@@ -289,9 +289,9 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      expect(await nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(await nav.isFocusable(nav.inputs.items()[1])).toBeFalse();
-      expect(await nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[1])).toBeFalse();
+      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
     });
 
     it('should return true for disabled items if skip disabled is false', async () => {
@@ -300,9 +300,9 @@ describe('List Navigation', () => {
       });
       nav.inputs.items()[1].disabled.set(true);
 
-      expect(await nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(await nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
-      expect(await nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
+      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
     });
   });
 });

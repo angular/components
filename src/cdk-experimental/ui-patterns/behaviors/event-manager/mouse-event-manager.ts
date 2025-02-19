@@ -7,10 +7,12 @@
  */
 
 import {
+  EventHandler,
   EventHandlerConfig,
   EventHandlerOptions,
   EventManager,
   hasModifiers,
+  ModifierInputs,
   ModifierKey,
 } from './event-manager';
 
@@ -35,42 +37,22 @@ export interface MouseEventHandlerConfig extends EventHandlerConfig<MouseEvent> 
  * An event manager that is specialized for handling mouse events. By default this manager stops
  * propagation and prevents default on all events it handles.
  */
-export class MouseEventManager extends EventManager<MouseEvent> {
-  override configs: MouseEventHandlerConfig[] = [];
-
-  protected override defaultHandlerOptions: EventHandlerOptions = {
-    preventDefault: true,
-    stopPropagation: true,
+export class MouseEventManager<T extends MouseEvent> extends EventManager<T> {
+  options: EventHandlerOptions = {
+    preventDefault: false,
+    stopPropagation: false,
   };
 
   /**
    * Configures this event manager to handle events with a specific modifer and mouse button
    * combination.
-   *
-   * @param button The mouse button that this handler should run for.
-   * @param modifiers The modifier combinations that this handler should run for.
-   * @param handler The handler function
-   * @param options Options for whether to stop propagation or prevent default.
    */
-  on(
-    button: MouseButton,
-    modifiers: number | number[],
-    handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
-    options?: EventHandlerOptions,
-  ): this;
+  on(button: MouseButton, modifiers: ModifierInputs, handler: EventHandler<T>): this;
 
   /**
    * Configures this event manager to handle events with a specific mouse button and no modifiers.
-   *
-   * @param modifiers The modifier combinations that this handler should run for.
-   * @param handler The handler function
-   * @param options Options for whether to stop propagation or prevent default.
    */
-  on(
-    modifiers: number | number[],
-    handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
-    options?: EventHandlerOptions,
-  ): this;
+  on(modifiers: ModifierInputs, handler: EventHandler<T>): this;
 
   /**
    * Configures this event manager to handle events with the main mouse button and no modifiers.
@@ -78,60 +60,44 @@ export class MouseEventManager extends EventManager<MouseEvent> {
    * @param handler The handler function
    * @param options Options for whether to stop propagation or prevent default.
    */
-  on(
-    handler: ((event: MouseEvent) => void) | ((event: MouseEvent) => boolean),
-    options?: EventHandlerOptions,
-  ): this;
+  on(handler: EventHandler<T>): this;
 
   on(...args: any[]) {
-    const {button, handler, modifiers, options} = this.normalizeHandlerOptions(...args);
-
-    // TODO: Add strict type checks again when finalizing this API.
+    const {button, handler, modifiers} = this._normalizeInputs(...args);
 
     this.configs.push({
-      button,
       handler,
-      modifiers,
-      ...this.defaultHandlerOptions,
-      ...options,
+      matcher: event => this._isMatch(event, button, modifiers),
+      ...this.options,
     });
     return this;
   }
 
-  normalizeHandlerOptions(...args: any[]) {
-    if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+  private _normalizeInputs(...args: any[]) {
+    if (args.length === 3) {
       return {
-        button: args[0],
-        modifiers: args[1],
-        handler: args[2],
-        options: args[3] || {},
+        button: args[0] as MouseButton,
+        modifiers: args[1] as ModifierInputs,
+        handler: args[2] as EventHandler<T>,
       };
     }
 
     if (typeof args[0] === 'number' && typeof args[1] === 'function') {
       return {
         button: MouseButton.Main,
-        modifiers: args[0],
-        handler: args[1],
-        options: args[2] || {},
+        modifiers: args[0] as ModifierInputs,
+        handler: args[1] as EventHandler<T>,
       };
     }
 
     return {
       button: MouseButton.Main,
       modifiers: ModifierKey.None,
-      handler: args[0],
-      options: args[1] || {},
+      handler: args[0] as EventHandler<T>,
     };
   }
 
-  getHandlersForKey(event: MouseEvent) {
-    const configs: MouseEventHandlerConfig[] = [];
-    for (const config of this.configs) {
-      if (config.button === (event.button ?? 0) && hasModifiers(event, config.modifiers)) {
-        configs.push(config);
-      }
-    }
-    return configs;
+  _isMatch(event: MouseEvent, button: MouseButton, modifiers: ModifierInputs) {
+    return button === (event.button ?? 0) && hasModifiers(event, modifiers);
   }
 }

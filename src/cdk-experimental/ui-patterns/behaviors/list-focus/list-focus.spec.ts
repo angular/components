@@ -95,7 +95,7 @@ describe('List Focus', () => {
         i.tabindex = focus.getItemTabindex(i);
       });
 
-      await nav.next();
+      nav.next();
 
       expect(items()[0].tabindex()).toBe(-1);
       expect(items()[1].tabindex()).toBe(0);
@@ -152,7 +152,7 @@ describe('List Focus', () => {
       });
       const activeId = focus.getActiveDescendant();
 
-      await nav.next();
+      nav.next();
       expect(activeId()).toBe(items()[1].id());
     });
   });

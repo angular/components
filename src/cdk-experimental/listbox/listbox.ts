@@ -15,8 +15,6 @@ import {
   inject,
   input,
   model,
-  OnDestroy,
-  signal,
 } from '@angular/core';
 import {ListboxPattern, OptionPattern} from '@angular/cdk-experimental/ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';

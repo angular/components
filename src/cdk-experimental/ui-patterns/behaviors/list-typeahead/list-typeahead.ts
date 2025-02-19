@@ -7,7 +7,6 @@
  */
 
 import {signal, Signal} from '@angular/core';
-import type {ListTypeaheadController} from './controller';
 import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
 
 /** The required properties for typeahead items. */
@@ -31,10 +30,10 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   navigation: ListNavigation<T>;
 
   /** Keeps track of the characters that typeahead search is being called with. */
-  private query = signal('');
+  private _query = signal('');
 
   /** The index where that the typeahead search was initiated from. */
-  private anchorIndex = signal<number | null>(null);
+  private _anchorIndex = signal<number | null>(null);
 
   constructor(readonly inputs: ListTypeaheadInputs & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
@@ -46,12 +45,12 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       return;
     }
 
-    if (this.anchorIndex() === null) {
-      this.anchorIndex.set(this.navigation.inputs.activeIndex());
+    if (this._anchorIndex() === null) {
+      this._anchorIndex.set(this.navigation.inputs.activeIndex());
     }
 
     clearTimeout(this.timeout);
-    this.query.update(q => q + char.toLowerCase());
+    this._query.update(q => q + char.toLowerCase());
     const item = this._getItem();
 
     if (item) {
@@ -59,8 +58,8 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     this.timeout = setTimeout(() => {
-      this.query.set('');
-      this.anchorIndex.set(null);
+      this._query.set('');
+      this._anchorIndex.set(null);
     }, this.inputs.typeaheadDelay() * 1000);
   }
 
@@ -70,10 +69,10 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
    */
   private _getItem() {
     let items = this.navigation.inputs.items();
-    const after = items.slice(this.anchorIndex()! + 1);
-    const before = items.slice(0, this.anchorIndex()!);
+    const after = items.slice(this._anchorIndex()! + 1);
+    const before = items.slice(0, this._anchorIndex()!);
     items = this.navigation.inputs.wrap() ? after.concat(before) : after; // TODO: Always wrap?
-    items.push(this.navigation.inputs.items()[this.anchorIndex()!]);
+    items.push(this.navigation.inputs.items()[this._anchorIndex()!]);
 
     const focusableItems = [];
     for (const item of items) {
@@ -82,6 +81,6 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       }
     }
 
-    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this.query()));
+    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this._query()));
   }
 }
