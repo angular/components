@@ -100,7 +100,7 @@ export abstract class EventManager<T extends Event> {
       submanager.handle(event);
     }
     for (const config of this.getHandlersForKey(event)) {
-      await config.handler(event);
+      config.handler(event);
       if (config.stopPropagation) {
         event.stopPropagation();
       }

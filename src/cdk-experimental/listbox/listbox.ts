@@ -48,7 +48,6 @@ import {toSignal} from '@angular/core/rxjs-interop';
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multiselectable()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '(focusin)': 'pattern.onFocus()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(mousedown)': 'pattern.onMousedown($event)',
   },
@@ -62,7 +61,7 @@ export class CdkListbox {
 
   /** A signal wrapper for directionality. */
   protected directionality = toSignal(this._dir.change, {
-    initialValue: 'ltr',
+    initialValue: this._dir.value,
   });
 
   /** The Option UIPatterns of the child CdkOptions. */
