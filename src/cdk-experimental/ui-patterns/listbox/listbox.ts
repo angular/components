@@ -6,13 +6,26 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {ModifierKey as Modifier} from '../behaviors/event-manager/event-manager';
+import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
+import {MouseEventManager} from '../behaviors/event-manager/mouse-event-manager';
 import {OptionPattern} from './option';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
 import {ListTypeahead, ListTypeaheadInputs} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
 import {computed, Signal} from '@angular/core';
-import {ListboxController} from './controller';
+
+/** The selection operations that the listbox can perform. */
+interface SelectOptions {
+  select?: boolean;
+  toggle?: boolean;
+  toggleOne?: boolean;
+  selectOne?: boolean;
+  selectAll?: boolean;
+  selectFromAnchor?: boolean;
+  selectFromActive?: boolean;
+}
 
 /** The required inputs for the listbox. */
 export type ListboxInputs = ListNavigationInputs<OptionPattern> &
@@ -54,13 +67,103 @@ export class ListboxPattern {
   /** The number of items in the listbox. */
   setsize = computed(() => this.navigation.inputs.items().length);
 
-  get controller(): Promise<ListboxController> {
-    if (this._controller === null) {
-      return this.loadController();
+  followFocus = computed(() => this.inputs.selectionMode() === 'follow');
+
+  /** The key used to navigate to the previous item in the list. */
+  prevKey = computed(() => {
+    if (this.inputs.orientation() === 'vertical') {
+      return 'ArrowUp';
     }
-    return Promise.resolve(this._controller);
-  }
-  private _controller: ListboxController | null = null;
+    return this.inputs.directionality() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+  });
+
+  /** The key used to navigate to the next item in the list. */
+  nextKey = computed(() => {
+    if (this.inputs.orientation() === 'vertical') {
+      return 'ArrowDown';
+    }
+    return this.inputs.directionality() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+  });
+
+  /** The regexp used to decide if a key should trigger typeahead. */
+  typeaheadRegexp = /^.$/; // TODO: Ignore spaces?
+
+  /** The keydown event manager for the listbox. */
+  keydown = computed(() => {
+    const manager = new KeyboardEventManager();
+
+    console.log('prev key:', this.prevKey());
+    console.log('next key:', this.nextKey());
+
+    if (!this.followFocus()) {
+      manager
+        .on(this.prevKey, () => this.prev())
+        .on(this.nextKey, () => this.next())
+        .on('Home', () => this.first())
+        .on('End', () => this.last())
+        .on(this.typeaheadRegexp, e => this.search(e.key));
+    }
+
+    if (this.followFocus()) {
+      manager
+        .on(this.prevKey, () => this.prev({selectOne: true}))
+        .on(this.nextKey, () => this.next({selectOne: true}))
+        .on('Home', () => this.first({selectOne: true}))
+        .on('End', () => this.last({selectOne: true}))
+        .on(this.typeaheadRegexp, e => this.search(e.key, {selectOne: true}));
+    }
+
+    if (this.inputs.multiselectable()) {
+      manager
+        .on(Modifier.Shift, ' ', () => this._updateSelection({selectFromAnchor: true}))
+        .on(Modifier.Shift, this.prevKey, () => this.prev({toggle: true}))
+        .on(Modifier.Shift, this.nextKey, () => this.next({toggle: true}))
+        .on(Modifier.Ctrl | Modifier.Shift, 'Home', () => this.first({selectFromActive: true}))
+        .on(Modifier.Ctrl | Modifier.Shift, 'End', () => this.last({selectFromActive: true}))
+        .on(Modifier.Ctrl, 'A', () => this._updateSelection({selectAll: true}));
+    }
+
+    if (!this.followFocus() && this.inputs.multiselectable()) {
+      manager.on(' ', () => this._updateSelection({toggle: true}));
+    }
+
+    if (!this.followFocus() && !this.inputs.multiselectable()) {
+      manager.on(' ', () => this._updateSelection({toggleOne: true}));
+    }
+
+    if (this.inputs.multiselectable() && this.followFocus()) {
+      manager
+        .on(Modifier.Ctrl, this.prevKey, () => this.prev())
+        .on(Modifier.Ctrl, this.nextKey, () => this.next())
+        .on(Modifier.Ctrl, 'Home', () => this.first()) // TODO: Not in spec but prob should be.
+        .on(Modifier.Ctrl, 'End', () => this.last()); // TODO: Not in spec but prob should be.
+    }
+
+    return manager;
+  });
+
+  /** The mousedown event manager for the listbox. */
+  mousedown = computed(() => {
+    const manager = new MouseEventManager();
+
+    if (!this.followFocus()) {
+      manager.on((e: MouseEvent) => this.goto(e));
+    }
+
+    if (this.followFocus()) {
+      manager.on((e: MouseEvent) => this.goto(e, {selectOne: true}));
+    }
+
+    if (this.inputs.multiselectable() && this.followFocus()) {
+      manager.on(Modifier.Ctrl, (e: MouseEvent) => this.goto(e));
+    }
+
+    if (this.inputs.multiselectable()) {
+      manager.on(Modifier.Shift, (e: MouseEvent) => this.goto(e, {selectFromActive: true}));
+    }
+
+    return manager;
+  });
 
   constructor(readonly inputs: ListboxInputs) {
     this.disabled = inputs.disabled;
@@ -76,32 +179,97 @@ export class ListboxPattern {
     this.activedescendant = this.focus.getActiveDescendant();
   }
 
-  /** Loads the controller for the listbox. */
-  async loadController(): Promise<ListboxController> {
-    return import('./controller').then(module => {
-      this._controller = new module.ListboxController(this);
-      return this._controller;
-    });
-  }
-
-  /** The keydown handler for the listbox. */
-  async onKeydown(event: KeyboardEvent) {
-    (await this.controller).onKeydown(event);
-  }
-
-  /** The mousedown handler for the listbox. */
-  async onMousedown(event: MouseEvent) {
-    (await this.controller).onMousedown(event);
-  }
-
-  /** The focus handler for the listbox. */
-  async onFocus() {
-    if (!this._controller) {
-      await this.loadController();
-      await this.navigation.loadController();
-      await this.selection.loadController();
-      await this.typeahead.loadController();
-      await this.focus.loadController();
+  /** Handles keydown events for the listbox. */
+  onKeydown(event: KeyboardEvent) {
+    console.log(this.orientation());
+    if (!this.disabled()) {
+      this.keydown().handle(event);
     }
+  }
+
+  onMousedown(event: MouseEvent) {
+    if (!this.disabled()) {
+      this.mousedown().handle(event);
+    }
+  }
+
+  /** Navigates to the first option in the listbox. */
+  first(opts?: SelectOptions) {
+    this.navigation.first();
+    this.focus.focus();
+    this._updateSelection(opts);
+  }
+
+  /** Navigates to the last option in the listbox. */
+  last(opts?: SelectOptions) {
+    this.navigation.last();
+    this.focus.focus();
+    this._updateSelection(opts);
+  }
+
+  /** Navigates to the next option in the listbox. */
+  next(opts?: SelectOptions) {
+    this.navigation.next();
+    this.focus.focus();
+    this._updateSelection(opts);
+  }
+
+  /** Navigates to the previous option in the listbox. */
+  prev(opts?: SelectOptions) {
+    this.navigation.prev();
+    this.focus.focus();
+    this._updateSelection(opts);
+  }
+
+  /** Navigates to the given item in the listbox. */
+  goto(event: MouseEvent, opts?: SelectOptions) {
+    const item = this._getItem(event);
+
+    if (item) {
+      this.navigation.goto(item);
+      this.focus.focus();
+      this._updateSelection(opts);
+    }
+  }
+
+  /** Handles typeahead search navigation for the listbox. */
+  search(char: string, opts?: SelectOptions) {
+    this.typeahead.search(char);
+    this.focus.focus();
+    this._updateSelection(opts);
+  }
+
+  /** Handles updating selection for the listbox. */
+  private _updateSelection(opts?: SelectOptions) {
+    if (opts?.select) {
+      this.selection.select();
+    }
+    if (opts?.toggle) {
+      this.selection.toggle();
+    }
+    if (opts?.toggleOne) {
+      this.selection.toggleOne();
+    }
+    if (opts?.selectOne) {
+      this.selection.selectOne();
+    }
+    if (opts?.selectAll) {
+      this.selection.selectAll();
+    }
+    if (opts?.selectFromAnchor) {
+      this.selection.selectFromAnchor();
+    }
+    if (opts?.selectFromActive) {
+      this.selection.selectFromActive();
+    }
+  }
+
+  private _getItem(e: MouseEvent) {
+    if (!(e.target instanceof HTMLElement)) {
+      return;
+    }
+
+    const element = e.target.closest('[cdkoption]'); // TODO: Use a different identifier.
+    return this.inputs.items().find(i => i.element() === element);
   }
 }

@@ -7,7 +7,6 @@
  */
 
 import {signal, Signal, WritableSignal} from '@angular/core';
-import {ListSelectionController} from './controller';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
 /** The required properties for selection items. */
@@ -42,68 +41,102 @@ export class ListSelection<T extends ListSelectionItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
 
-  get controller(): Promise<ListSelectionController<T>> {
-    if (this._controller === null) {
-      return this.loadController();
-    }
-    return Promise.resolve(this._controller);
-  }
-  private _controller: ListSelectionController<T> | null = null;
-
   constructor(readonly inputs: ListSelectionInputs<T> & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
   }
 
-  /** Loads the controller for list selection. */
-  async loadController(): Promise<ListSelectionController<T>> {
-    return import('./controller').then(m => {
-      this._controller = new m.ListSelectionController(this);
-      return this._controller;
-    });
-  }
-
   /** Selects the item at the current active index. */
-  async select(item?: T) {
-    return (await this.controller).select(item);
+  select(item?: T) {
+    item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
+
+    if (item.disabled() || this.inputs.selectedIds().includes(item.id())) {
+      return;
+    }
+
+    if (!this.inputs.multiselectable()) {
+      this.deselectAll();
+    }
+
+    // TODO: Need to discuss when to drop this.
+    this._anchor();
+    this.inputs.selectedIds.update(ids => ids.concat(item.id()));
   }
 
   /** Deselects the item at the current active index. */
-  async deselect(item?: T) {
-    return (await this.controller).deselect(item);
+  deselect(item?: T) {
+    item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
+
+    if (!item.disabled()) {
+      this.inputs.selectedIds.update(ids => ids.filter(id => id !== item.id()));
+    }
   }
 
   /** Toggles the item at the current active index. */
-  async toggle() {
-    return (await this.controller).toggle();
+  toggle() {
+    const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
+    this.inputs.selectedIds().includes(item.id()) ? this.deselect() : this.select();
   }
 
   /** Toggles only the item at the current active index. */
-  async toggleOne() {
-    return (await this.controller).toggleOne();
+  toggleOne() {
+    const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
+    this.inputs.selectedIds().includes(item.id()) ? this.deselect() : this.selectOne();
   }
 
   /** Selects all items in the list. */
-  async selectAll() {
-    return (await this.controller).selectAll();
+  selectAll() {
+    if (!this.inputs.multiselectable()) {
+      return; // Should we log a warning?
+    }
+
+    for (const item of this.inputs.items()) {
+      this.select(item);
+    }
+
+    this._anchor();
   }
 
   /** Deselects all items in the list. */
-  async deselectAll() {
-    return (await this.controller).deselectAll();
+  deselectAll() {
+    for (const item of this.inputs.items()) {
+      this.deselect(item);
+    }
   }
 
   /** Selects the items in the list starting at the last selected item. */
-  async selectFromAnchor() {
-    return (await this.controller).selectFromAnchor();
+  selectFromAnchor() {
+    const anchorIndex = this.inputs.items().findIndex(i => this.anchorId() === i.id());
+    this._selectFromIndex(anchorIndex);
   }
 
   /** Selects the items in the list starting at the last active item. */
-  async selectFromActive() {
-    return (await this.controller).selectFromActive();
+  selectFromActive() {
+    this._selectFromIndex(this.inputs.navigation.prevActiveIndex());
+  }
+
+  /** Selects the items in the list starting at the given index. */
+  private _selectFromIndex(index: number) {
+    if (index === -1) {
+      return;
+    }
+
+    const upper = Math.max(this.inputs.navigation.inputs.activeIndex(), index);
+    const lower = Math.min(this.inputs.navigation.inputs.activeIndex(), index);
+
+    for (let i = lower; i <= upper; i++) {
+      this.select(this.inputs.items()[i]);
+    }
   }
 
   /** Sets the selection to only the current active item. */
-  async selectOne() {
-    return (await this.controller).selectOne();
+  selectOne() {
+    this.deselectAll();
+    this.select();
+  }
+
+  /** Sets the anchor to the current active index. */
+  private _anchor() {
+    const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
+    this.anchorId.set(item.id());
   }
 }

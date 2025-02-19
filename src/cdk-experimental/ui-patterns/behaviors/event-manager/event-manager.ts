@@ -32,7 +32,7 @@ export interface EventHandlerOptions {
  * A config that specifies how to handle a particular event.
  */
 export interface EventHandlerConfig<T extends Event> extends EventHandlerOptions {
-  handler: (event: T) => Promise<boolean | void>;
+  handler: (event: T) => boolean | void;
 }
 
 /**
@@ -89,7 +89,7 @@ export abstract class EventManager<T extends Event> {
    * Note: the use of `undefined` instead of `false` in the unhandled case is necessary to avoid
    * accidentally preventing the default behavior on an unhandled event.
    */
-  async handle(event: T): Promise<true | undefined> {
+  handle(event: T): true | undefined {
     if (!this.isHandled(event)) {
       return undefined;
     }
@@ -97,10 +97,10 @@ export abstract class EventManager<T extends Event> {
       fn(event);
     }
     for (const submanager of this._submanagers) {
-      await submanager.handle(event);
+      submanager.handle(event);
     }
     for (const config of this.getHandlersForKey(event)) {
-      await config.handler(event);
+      config.handler(event);
       if (config.stopPropagation) {
         event.stopPropagation();
       }
@@ -158,7 +158,7 @@ export class GenericEventManager<T extends Event> extends EventManager<T> {
   /**
    * Configures this event manager to handle all events with the given handler.
    */
-  on(handler: (event: T) => Promise<boolean | void>): this {
+  on(handler: (event: T) => boolean | void): this {
     this.configs.push({
       ...this.defaultHandlerOptions,
       handler,
