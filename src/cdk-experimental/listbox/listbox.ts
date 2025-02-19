@@ -21,8 +21,7 @@ import {
 import {OptionPattern} from '@angular/cdk-experimental/ui-patterns/listbox/option';
 import {ListboxPattern} from '@angular/cdk-experimental/ui-patterns/listbox/listbox';
 import {Directionality} from '@angular/cdk/bidi';
-import {startWith, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 /**
  * A listbox container.
@@ -54,18 +53,17 @@ import {Subject} from 'rxjs';
     '(mousedown)': 'pattern.onMousedown($event)',
   },
 })
-export class CdkListbox implements OnDestroy {
+export class CdkListbox {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private _dir = inject(Directionality);
 
   /** The CdkOptions nested inside of the CdkListbox. */
   private _cdkOptions = contentChildren(CdkOption, {descendants: true});
 
-  /** Emits when the list has been destroyed. */
-  private readonly _destroyed = new Subject<void>();
-
   /** A signal wrapper for directionality. */
-  protected directionality = signal<'ltr' | 'rtl'>('ltr');
+  protected directionality = toSignal(this._dir.change, {
+    initialValue: 'ltr',
+  });
 
   /** The Option UIPatterns of the child CdkOptions. */
   protected items = computed(() => this._cdkOptions().map(option => option.pattern));
@@ -106,16 +104,6 @@ export class CdkListbox implements OnDestroy {
     items: this.items,
     directionality: this.directionality,
   });
-
-  constructor() {
-    this._dir.change
-      .pipe(startWith(this._dir.value), takeUntil(this._destroyed))
-      .subscribe(value => this.directionality.set(value));
-  }
-
-  ngOnDestroy() {
-    this._destroyed.complete();
-  }
 }
 
 // TODO(wagnermaciel): Figure out how we actually want to do this.
