@@ -155,12 +155,12 @@ export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
 export const MAT_SELECT_TRIGGER = new InjectionToken<MatSelectTrigger>('MatSelectTrigger');
 
 /** Change event object that is emitted when the select value has changed. */
-export class MatSelectChange {
+export class MatSelectChange<T = any> {
   constructor(
     /** Reference to the select that emitted the change event. */
     public source: MatSelect,
     /** Current value of the select that emitted the event. */
-    public value: any,
+    public value: T,
   ) {}
 }
 
