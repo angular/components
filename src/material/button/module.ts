@@ -8,33 +8,19 @@
 
 import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
-import {MatAnchor, MatButton} from './button';
-import {MatFabAnchor, MatFabButton, MatMiniFabAnchor, MatMiniFabButton} from './fab';
-import {MatIconAnchor, MatIconButton} from './icon-button';
+import {MatButton} from './button';
+import {MatFabButton, MatMiniFabButton} from './fab';
+import {MatIconButton} from './icon-button';
 
 @NgModule({
   imports: [
     MatCommonModule,
     MatRippleModule,
-    MatAnchor,
     MatButton,
-    MatIconAnchor,
-    MatMiniFabAnchor,
     MatMiniFabButton,
     MatIconButton,
-    MatFabAnchor,
     MatFabButton,
   ],
-  exports: [
-    MatAnchor,
-    MatButton,
-    MatIconAnchor,
-    MatIconButton,
-    MatMiniFabAnchor,
-    MatMiniFabButton,
-    MatFabAnchor,
-    MatFabButton,
-    MatCommonModule,
-  ],
+  exports: [MatCommonModule, MatButton, MatMiniFabButton, MatIconButton, MatFabButton],
 })
 export class MatButtonModule {}

@@ -5,7 +5,7 @@
   [attr.aria-label]="getAriaLabel()"
   [attr.aria-labelledby]="ariaLabelledby()"
   [attr.aria-expanded]="timepicker().isOpen()"
-  [attr.tabindex]="_isDisabled() ? -1 : tabIndex()"
+  [tabIndex]="_isDisabled() ? -1 : tabIndex()"
   [disabled]="_isDisabled()"
   [disableRipple]="disableRipple()">
 

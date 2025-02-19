@@ -16,8 +16,7 @@ import {
   inject,
 } from '@angular/core';
 
-import {MatAnchor} from './button';
-import {MAT_ANCHOR_HOST, MAT_BUTTON_HOST, MatButtonBase} from './button-base';
+import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
 import {ThemePalette} from '@angular/material/core';
 
 /** Default FAB options that can be overridden. */
@@ -60,7 +59,7 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
  * The `MatFabButton` class has two appearances: normal and extended.
  */
 @Component({
-  selector: `button[mat-fab]`,
+  selector: `button[mat-fab], a[mat-fab]`,
   templateUrl: 'button.html',
   styleUrl: 'fab.css',
   host: {
@@ -68,7 +67,7 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
     '[class.mdc-fab--extended]': 'extended',
     '[class.mat-mdc-extended-fab]': 'extended',
   },
-  exportAs: 'matButton',
+  exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -94,11 +93,11 @@ export class MatFabButton extends MatButtonBase {
  * See https://material.io/components/buttons-floating-action-button/
  */
 @Component({
-  selector: `button[mat-mini-fab]`,
+  selector: `button[mat-mini-fab], a[mat-mini-fab]`,
   templateUrl: 'button.html',
   styleUrl: 'fab.css',
   host: MAT_BUTTON_HOST,
-  exportAs: 'matButton',
+  exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -116,6 +115,7 @@ export class MatMiniFabButton extends MatButtonBase {
   }
 }
 
+// tslint:disable:variable-name
 /**
  * Material Design floating action button (FAB) component for anchor elements. Anchor elements
  * are used to provide links for the user to navigate across different routes or pages.
@@ -123,59 +123,14 @@ export class MatMiniFabButton extends MatButtonBase {
  *
  * The `MatFabAnchor` class has two appearances: normal and extended.
  */
-@Component({
-  selector: `a[mat-fab]`,
-  templateUrl: 'button.html',
-  styleUrl: 'fab.css',
-  host: {
-    ...MAT_ANCHOR_HOST,
-    '[class.mdc-fab--extended]': 'extended',
-    '[class.mat-mdc-extended-fab]': 'extended',
-  },
-  exportAs: 'matButton, matAnchor',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatFabAnchor extends MatAnchor {
-  private _options = inject<MatFabDefaultOptions>(MAT_FAB_DEFAULT_OPTIONS, {optional: true});
-
-  override _isFab = true;
-
-  @Input({transform: booleanAttribute}) extended: boolean;
-
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super();
-    this._options = this._options || defaults;
-    this.color = this._options!.color || defaults.color;
-  }
-}
+export const MatFabAnchor = MatFabButton;
+export type MatFabAnchor = MatFabButton;
 
 /**
  * Material Design mini floating action button (FAB) component for anchor elements. Anchor elements
  * are used to provide links for the user to navigate across different routes or pages.
  * See https://material.io/components/buttons-floating-action-button/
  */
-@Component({
-  selector: `a[mat-mini-fab]`,
-  templateUrl: 'button.html',
-  styleUrl: 'fab.css',
-  host: MAT_ANCHOR_HOST,
-  exportAs: 'matButton, matAnchor',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatMiniFabAnchor extends MatAnchor {
-  private _options = inject<MatFabDefaultOptions>(MAT_FAB_DEFAULT_OPTIONS, {optional: true});
-
-  override _isFab = true;
-
-  constructor(...args: unknown[]);
-
-  constructor() {
-    super();
-    this._options = this._options || defaults;
-    this.color = this._options!.color || defaults.color;
-  }
-}
+export const MatMiniFabAnchor = MatMiniFabButton;
+export type MatMiniFabAnchor = MatMiniFabButton;
+// tslint:enable:variable-name
