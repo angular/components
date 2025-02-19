@@ -125,7 +125,7 @@ export class MouseEventManager extends EventManager<MouseEvent> {
     };
   }
 
-  getConfigs(event: MouseEvent) {
+  getHandlersForKey(event: MouseEvent) {
     const configs: MouseEventHandlerConfig[] = [];
     for (const config of this.configs) {
       if (config.button === (event.button ?? 0) && hasModifiers(event, config.modifiers)) {

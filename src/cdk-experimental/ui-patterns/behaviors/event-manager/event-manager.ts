@@ -99,7 +99,7 @@ export abstract class EventManager<T extends Event> {
     for (const submanager of this._submanagers) {
       await submanager.handle(event);
     }
-    for (const config of this.getConfigs(event)) {
+    for (const config of this.getHandlersForKey(event)) {
       await config.handler(event);
       if (config.stopPropagation) {
         event.stopPropagation();
@@ -139,13 +139,15 @@ export abstract class EventManager<T extends Event> {
   /**
    * Gets all of the handler configs that are applicable to the given event.
    */
-  protected abstract getConfigs(event: T): EventHandlerConfig<T>[];
+  protected abstract getHandlersForKey(event: T): EventHandlerConfig<T>[];
 
   /**
    * Checks whether this event manager is confugred to handle the given event.
    */
   protected isHandled(event: T): boolean {
-    return this.getConfigs(event).length > 0 || this._submanagers.some(sm => sm.isHandled(event));
+    return (
+      this.getHandlersForKey(event).length > 0 || this._submanagers.some(sm => sm.isHandled(event))
+    );
   }
 }
 
@@ -164,7 +166,7 @@ export class GenericEventManager<T extends Event> extends EventManager<T> {
     return this;
   }
 
-  getConfigs(_event: T): EventHandlerConfig<T>[] {
+  getHandlersForKey(_event: T): EventHandlerConfig<T>[] {
     return this.configs;
   }
 }

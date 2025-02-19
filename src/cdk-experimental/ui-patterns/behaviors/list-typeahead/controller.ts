@@ -43,7 +43,7 @@ export class ListTypeaheadController<T extends ListTypeaheadItem> {
     this.timeout = setTimeout(() => {
       this.query.set('');
       this.anchorIndex.set(null);
-    }, this.state.inputs.delay() * 1000);
+    }, this.state.inputs.typeaheadDelay() * 1000);
   }
 
   /**

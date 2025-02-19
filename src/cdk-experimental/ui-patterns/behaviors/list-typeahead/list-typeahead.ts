@@ -19,7 +19,7 @@ export interface ListTypeaheadItem extends ListNavigationItem {
 /** The required inputs for list typeahead. */
 export interface ListTypeaheadInputs {
   /** The amount of time before the typeahead search is reset. */
-  delay: Signal<number>;
+  typeaheadDelay: Signal<number>;
 }
 
 /** Controls typeahead for a list of items. */

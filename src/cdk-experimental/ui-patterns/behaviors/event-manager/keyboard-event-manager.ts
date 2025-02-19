@@ -82,13 +82,13 @@ export class KeyboardEventManager extends EventManager<KeyboardEvent> {
     return this;
   }
 
-  getConfigs(event: KeyboardEvent) {
-    return this.configs.filter(config => this._checkKey(config, event));
+  getHandlersForKey(event: KeyboardEvent) {
+    return this.configs.filter(config => this._isKeyMatch(config, event));
   }
 
   // TODO: Make modifiers accept a signal as well.
 
-  private _checkKey(config: KeyboardEventHandlerConfig, event: KeyboardEvent) {
+  private _isKeyMatch(config: KeyboardEventHandlerConfig, event: KeyboardEvent) {
     if (config.key instanceof RegExp) {
       return config.key.test(event.key);
     }

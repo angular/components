@@ -7,6 +7,7 @@
  */
 
 import {
+  booleanAttribute,
   computed,
   contentChildren,
   Directive,
@@ -18,7 +19,7 @@ import {
   signal,
 } from '@angular/core';
 import {OptionPattern} from '@angular/cdk-experimental/ui-patterns/listbox/option';
-import {ListboxInputs, ListboxPattern} from '@angular/cdk-experimental/ui-patterns/listbox/listbox';
+import {ListboxPattern} from '@angular/cdk-experimental/ui-patterns/listbox/listbox';
 import {Directionality} from '@angular/cdk/bidi';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -43,31 +44,43 @@ import {Subject} from 'rxjs';
   host: {
     'role': 'listbox',
     'class': 'cdk-listbox',
-    '[attr.tabindex]': 'state.tabindex()',
-    '[attr.aria-disabled]': 'state.disabled()',
-    '[attr.aria-multiselectable]': 'state.multiselectable()',
-    '[attr.aria-activedescendant]': 'state.activedescendant()',
-    '[attr.aria-orientation]': 'state.orientation()',
-    '(focusin)': 'state.onFocus()',
-    '(keydown)': 'state.onKeydown($event)',
-    '(mousedown)': 'state.onMousedown($event)',
+    '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.aria-multiselectable]': 'pattern.multiselectable()',
+    '[attr.aria-activedescendant]': 'pattern.activedescendant()',
+    '[attr.aria-orientation]': 'pattern.orientation()',
+    '(focusin)': 'pattern.onFocus()',
+    '(keydown)': 'pattern.onKeydown($event)',
+    '(mousedown)': 'pattern.onMousedown($event)',
   },
 })
-export class CdkListbox implements ListboxInputs, OnDestroy {
+export class CdkListbox implements OnDestroy {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private _dir = inject(Directionality);
+
+  /** A signal wrapper for directionality. */
+  private directionality = signal<'ltr' | 'rtl'>('ltr');
+
+  /** The CdkOptions nested inside of the CdkListbox. */
+  private _cdkOptions = contentChildren(CdkOption, {descendants: true});
+
+  /** The Option UIPatterns of the child CdkOptions. */
+  private items = computed(() => this._cdkOptions().map(option => option.pattern));
+
+  /** Emits when the list has been destroyed. */
+  private readonly _destroyed = new Subject<void>();
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('vertical');
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable = input<boolean>(false);
+  multiselectable = input(false, {transform: booleanAttribute});
 
   /** Whether focus should wrap when navigating. */
-  wrap = input<boolean>(true);
+  wrap = input(true, {transform: booleanAttribute});
 
   /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled = input<boolean>(true);
+  skipDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the list. */
   focusMode = input<'roving' | 'activedescendant'>('roving');
@@ -76,7 +89,10 @@ export class CdkListbox implements ListboxInputs, OnDestroy {
   selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** The amount of time before the typeahead search is reset. */
-  delay = input<number>(0.5); // Picked arbitrarily.
+  typeaheadDelay = input<number>(0.5); // Picked arbitrarily.
+
+  /** Whether the listbox is disabled. */
+  disabled = input(false, {transform: booleanAttribute});
 
   /** The ids of the current selected items. */
   selectedIds = model<string[]>([]);
@@ -84,23 +100,12 @@ export class CdkListbox implements ListboxInputs, OnDestroy {
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);
 
-  /** The CdkOptions nested inside of the CdkListbox. */
-  private _cdkOptions = contentChildren(CdkOption, {descendants: true});
-
-  /** The Option UIPatterns of the child CdkOptions. */
-  items = computed(() => this._cdkOptions().map(option => option.state));
-
-  /** A signal wrapper for directionality. */
-  directionality = signal<'ltr' | 'rtl'>('ltr');
-
-  /** Emits when the list has been destroyed. */
-  private readonly _destroyed = new Subject<void>();
-
-  /** Whether the listbox is disabled. */
-  disabled = input<boolean>(false);
-
   /** The Listbox UIPattern. */
-  state: ListboxPattern = new ListboxPattern(this);
+  pattern: ListboxPattern = new ListboxPattern({
+    ...this,
+    items: this.items,
+    directionality: this.directionality,
+  });
 
   constructor() {
     this._dir.change
@@ -113,6 +118,9 @@ export class CdkListbox implements ListboxInputs, OnDestroy {
   }
 }
 
+// TODO(wagnermaciel): Figure out how we actually want to do this.
+let count = 0;
+
 /** A selectable option in a CdkListbox. */
 @Directive({
   selector: '[cdkOption]',
@@ -120,9 +128,9 @@ export class CdkListbox implements ListboxInputs, OnDestroy {
   host: {
     'role': 'option',
     'class': 'cdk-option',
-    '[attr.aria-selected]': 'state.selected()',
-    '[attr.tabindex]': 'state.tabindex()',
-    '[attr.aria-disabled]': 'state.disabled()',
+    '[attr.aria-selected]': 'pattern.selected()',
+    '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.aria-disabled]': 'pattern.disabled()',
   },
 })
 export class CdkOption {
@@ -132,21 +140,30 @@ export class CdkOption {
   /** The parent CdkListbox. */
   private _cdkListbox = inject(CdkListbox);
 
+  /** A unique identifier for the option. */
+  private id = computed(() => `${count++}`);
+
+  /** The text used by the typeahead search. */
+  private searchTerm = computed(() => this.label() ?? this.element().textContent);
+
+  /** The parent Listbox UIPattern. */
+  private listbox = computed(() => this._cdkListbox.pattern);
+
+  /** A reference to the option element to be focused on navigation. */
+  private element = computed(() => this._elementRef.nativeElement);
+
   /** Whether an item is disabled. */
-  disabled = input<boolean>(false);
+  disabled = input(false, {transform: booleanAttribute});
 
   /** The text used by the typeahead search. */
   label = input<string>();
 
-  /** The text used by the typeahead search. */
-  searchTerm = computed(() => this.label() ?? this.element().textContent);
-
-  /** A reference to the option element. */
-  element = computed(() => this._elementRef.nativeElement);
-
-  /** The parent Listbox UIPattern. */
-  listbox = computed(() => this._cdkListbox.state);
-
   /** The Option UIPattern. */
-  state = new OptionPattern(this);
+  pattern = new OptionPattern({
+    ...this,
+    id: this.id,
+    listbox: this.listbox,
+    element: this.element,
+    searchTerm: this.searchTerm,
+  });
 }

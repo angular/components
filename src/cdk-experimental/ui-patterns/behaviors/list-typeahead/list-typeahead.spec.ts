@@ -40,7 +40,7 @@ describe('List Typeahead', () => {
       });
       const typeahead = new ListTypeahead({
         navigation,
-        delay: signal(0.5),
+        typeaheadDelay: signal(0.5),
       });
 
       await typeahead.search('i');
@@ -67,7 +67,7 @@ describe('List Typeahead', () => {
       });
       const typeahead = new ListTypeahead({
         navigation,
-        delay: signal(0.5),
+        typeaheadDelay: signal(0.5),
       });
 
       await typeahead.search('i');
@@ -92,7 +92,7 @@ describe('List Typeahead', () => {
       });
       const typeahead = new ListTypeahead({
         navigation,
-        delay: signal(0.5),
+        typeaheadDelay: signal(0.5),
       });
       items()[1].disabled.set(true);
 
@@ -113,7 +113,7 @@ describe('List Typeahead', () => {
       });
       const typeahead = new ListTypeahead({
         navigation,
-        delay: signal(0.5),
+        typeaheadDelay: signal(0.5),
       });
       items()[1].disabled.set(true);
 
@@ -134,7 +134,7 @@ describe('List Typeahead', () => {
       });
       const typeahead = new ListTypeahead({
         navigation,
-        delay: signal(0.5),
+        typeaheadDelay: signal(0.5),
       });
 
       await typeahead.search('i');

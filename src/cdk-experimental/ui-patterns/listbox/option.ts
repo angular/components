@@ -22,12 +22,10 @@ export interface OptionInputs
   listbox: Signal<ListboxPattern>;
 }
 
-let count = 0;
-
 /** An option in a listbox. */
 export class OptionPattern {
   /** A unique identifier for the option. */
-  id = signal(`${count++}`);
+  id: Signal<string>;
 
   /** The position of the option in the list. */
   index = computed(
@@ -55,7 +53,8 @@ export class OptionPattern {
   /** The html element that should receive focus. */
   element: Signal<HTMLElement>;
 
-  constructor(args: Omit<OptionInputs, 'id'>) {
+  constructor(args: OptionInputs) {
+    this.id = args.id;
     this.listbox = args.listbox;
     this.element = args.element;
     this.disabled = args.disabled;
