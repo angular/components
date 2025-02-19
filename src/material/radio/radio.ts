@@ -49,12 +49,12 @@ import {Subscription} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** Change event object emitted by radio button and radio group. */
-export class MatRadioChange {
+export class MatRadioChange<T = any> {
   constructor(
     /** The radio button that emits the change event. */
     public source: MatRadioButton,
     /** The value of the radio button. */
-    public value: any,
+    public value: T,
   ) {}
 }
 
