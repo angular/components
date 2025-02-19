@@ -45,9 +45,9 @@ import {toSignal} from '@angular/core/rxjs-interop';
     'class': 'cdk-listbox',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multiselectable()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
-    '[attr.aria-orientation]': 'pattern.orientation()',
     '(focusin)': 'pattern.onFocus()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(mousedown)': 'pattern.onMousedown($event)',
@@ -116,8 +116,8 @@ let count = 0;
   host: {
     'role': 'option',
     'class': 'cdk-option',
-    '[attr.aria-selected]': 'pattern.selected()',
     '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
   },
 })
