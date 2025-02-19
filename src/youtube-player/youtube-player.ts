@@ -113,6 +113,7 @@ enum PlayerState {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [YouTubePlayerPlaceholder],
+  styleUrl: 'youtube-player.css',
   template: `
     @if (_shouldShowPlaceholder()) {
       <youtube-player-placeholder
@@ -133,6 +134,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   private _ngZone = inject(NgZone);
   private readonly _nonce = inject(CSP_NONCE, {optional: true});
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _player: YT.Player | undefined;
   private _pendingPlayer: YT.Player | undefined;
   private _existingApiReadyCallback: (() => void) | undefined;
@@ -472,6 +474,19 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   /** See https://developers.google.com/youtube/iframe_api_reference#getVideoEmbedCode */
   getVideoEmbedCode(): string {
     return this._player ? this._player.getVideoEmbedCode() : '';
+  }
+
+  /**
+   * Attempts to put the player into fullscreen mode, depending on browser support.
+   * @param options Options controlling how the element behaves in fullscreen mode.
+   */
+  async requestFullscreen(options?: FullscreenOptions): Promise<void> {
+    // Note that we do this on the host, rather than the iframe, because it allows us to handle the
+    // placeholder in fullscreen mode. Null check the method since it's not supported everywhere.
+    const element = this._elementRef.nativeElement;
+    return element.requestFullscreen
+      ? element.requestFullscreen(options)
+      : Promise.reject(new Error('Fullscreen API not supported by browser.'));
   }
 
   /**

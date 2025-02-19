@@ -19,6 +19,7 @@ ng_module(
         ],
     ),
     assets = [
+        ":youtube_player_scss",
         ":youtube_player_placeholder_scss",
     ],
     deps = [
@@ -28,6 +29,11 @@ ng_module(
         "@npm//@types/youtube",
         "@npm//rxjs",
     ],
+)
+
+sass_binary(
+    name = "youtube_player_scss",
+    src = "youtube-player.scss",
 )
 
 sass_binary(
