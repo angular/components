@@ -62,6 +62,9 @@ $_avatar-trailing-padding: 8px;
 .mdc-evolution-chip--disabled,
 .mdc-evolution-chip__action:disabled {
   pointer-events: none;
+  @include cdk.high-contrast {
+    forced-color-adjust: none;
+  }
 }
 
 .mdc-evolution-chip__action--primary {
