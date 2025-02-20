@@ -8,7 +8,6 @@
 
 import {
   EventHandler,
-  EventHandlerConfig,
   EventHandlerOptions,
   EventManager,
   hasModifiers,
@@ -17,7 +16,7 @@ import {
 } from './event-manager';
 
 /**
- * The different mouse buttons that may appear on a mouse event.
+ * The different mouse buttons that may appear on a pointer event.
  */
 export enum MouseButton {
   Main = 0,
@@ -25,19 +24,8 @@ export enum MouseButton {
   Secondary = 2,
 }
 
-/**
- * A config that specifies how to handle a particular mouse event.
- */
-export interface MouseEventHandlerConfig extends EventHandlerConfig<MouseEvent> {
-  button: number;
-  modifiers: number | number[];
-}
-
-/**
- * An event manager that is specialized for handling mouse events. By default this manager stops
- * propagation and prevents default on all events it handles.
- */
-export class MouseEventManager<T extends MouseEvent> extends EventManager<T> {
+/** An event manager that is specialized for handling pointer events. */
+export class PointerEventManager<T extends PointerEvent> extends EventManager<T> {
   options: EventHandlerOptions = {
     preventDefault: false,
     stopPropagation: false,
@@ -97,7 +85,7 @@ export class MouseEventManager<T extends MouseEvent> extends EventManager<T> {
     };
   }
 
-  _isMatch(event: MouseEvent, button: MouseButton, modifiers: ModifierInputs) {
+  _isMatch(event: PointerEvent, button: MouseButton, modifiers: ModifierInputs) {
     return button === (event.button ?? 0) && hasModifiers(event, modifiers);
   }
 }

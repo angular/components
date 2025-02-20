@@ -46,7 +46,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
     '[attr.aria-multiselectable]': 'pattern.multiselectable()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
-    '(mousedown)': 'pattern.onMousedown($event)',
+    '(pointerdown)': 'pattern.onPointerdown($event)',
   },
 })
 export class CdkListbox {

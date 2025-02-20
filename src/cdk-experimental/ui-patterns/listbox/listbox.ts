@@ -8,7 +8,7 @@
 
 import {ModifierKey as Modifier} from '../behaviors/event-manager/event-manager';
 import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
-import {MouseEventManager} from '../behaviors/event-manager/mouse-event-manager';
+import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
 import {OptionPattern} from './option';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
 import {ListTypeahead, ListTypeaheadInputs} from '../behaviors/list-typeahead/list-typeahead';
@@ -139,24 +139,24 @@ export class ListboxPattern {
     return manager;
   });
 
-  /** The mousedown event manager for the listbox. */
-  mousedown = computed(() => {
-    const manager = new MouseEventManager();
+  /** The pointerdown event manager for the listbox. */
+  pointerdown = computed(() => {
+    const manager = new PointerEventManager();
 
     if (!this.followFocus()) {
-      manager.on((e: MouseEvent) => this.goto(e));
+      manager.on((e: PointerEvent) => this.goto(e));
     }
 
     if (this.followFocus()) {
-      manager.on((e: MouseEvent) => this.goto(e, {selectOne: true}));
+      manager.on((e: PointerEvent) => this.goto(e, {selectOne: true}));
     }
 
     if (this.inputs.multiselectable() && this.followFocus()) {
-      manager.on(Modifier.Ctrl, (e: MouseEvent) => this.goto(e));
+      manager.on(Modifier.Ctrl, (e: PointerEvent) => this.goto(e));
     }
 
     if (this.inputs.multiselectable()) {
-      manager.on(Modifier.Shift, (e: MouseEvent) => this.goto(e, {selectFromActive: true}));
+      manager.on(Modifier.Shift, (e: PointerEvent) => this.goto(e, {selectFromActive: true}));
     }
 
     return manager;
@@ -183,9 +183,9 @@ export class ListboxPattern {
     }
   }
 
-  onMousedown(event: MouseEvent) {
+  onPointerdown(event: PointerEvent) {
     if (!this.disabled()) {
-      this.mousedown().handle(event);
+      this.pointerdown().handle(event);
     }
   }
 
@@ -218,7 +218,7 @@ export class ListboxPattern {
   }
 
   /** Navigates to the given item in the listbox. */
-  goto(event: MouseEvent, opts?: SelectOptions) {
+  goto(event: PointerEvent, opts?: SelectOptions) {
     const item = this._getItem(event);
 
     if (item) {
@@ -260,7 +260,7 @@ export class ListboxPattern {
     }
   }
 
-  private _getItem(e: MouseEvent) {
+  private _getItem(e: PointerEvent) {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }
