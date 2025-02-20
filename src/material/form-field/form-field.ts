@@ -32,7 +32,7 @@ import {
   contentChild,
   inject,
 } from '@angular/core';
-import {AbstractControlDirective} from '@angular/forms';
+import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
@@ -326,6 +326,7 @@ export class MatFormField
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _needsOutlineLabelOffsetUpdate = false;
   private _previousControl: MatFormFieldControl<unknown> | null = null;
+  private _previousControlValidatorFn: ValidatorFn | null = null;
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
@@ -369,9 +370,29 @@ export class MatFormField
   ngAfterContentChecked() {
     this._assertFormFieldControl();
 
+    // if form field was being used with an input in first place and then replaced by other
+    // component such as select.
     if (this._control !== this._previousControl) {
       this._initializeControl(this._previousControl);
+
+      // keep a reference for last validator we had.
+      if (this._control.ngControl && this._control.ngControl.control) {
+        this._previousControlValidatorFn = this._control.ngControl.control.validator;
+      }
+
       this._previousControl = this._control;
+    }
+
+    // make sure the the control has been initialized.
+    if (this._control.ngControl && this._control.ngControl.control) {
+      // get the validators for current control.
+      const validatorFn = this._control.ngControl.control.validator;
+
+      // if our current validatorFn isn't equal to it might be we are CD behind, marking the
+      // component will allow us to catch up.
+      if (validatorFn !== this._previousControlValidatorFn) {
+        this._changeDetectorRef.markForCheck();
+      }
     }
   }
 

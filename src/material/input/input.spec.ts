@@ -349,6 +349,48 @@ describe('MatMdcInput without forms', () => {
     expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
   }));
 
+  it('should show the required star when FormControl is reassigned', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithRequiredAssignableFormControl);
+    fixture.detectChanges();
+
+    // should have star by default
+    let label = fixture.debugElement.query(By.css('label'))!;
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
+
+    fixture.componentInstance.reassignFormControl();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // should be removed as form was reassigned with no required validators
+    label = fixture.debugElement.query(By.css('label'))!;
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeFalsy();
+  }));
+
+  it('should show the required star when required validator is toggled', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithRequiredAssignableFormControl);
+    fixture.detectChanges();
+
+    // should have star by default
+    let label = fixture.debugElement.query(By.css('label'))!;
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
+
+    fixture.componentInstance.removeRequiredValidtor();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // should be removed as control validator was removed
+    label = fixture.debugElement.query(By.css('label'))!;
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeFalsy();
+
+    fixture.componentInstance.addRequiredValidator();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // should contain star as control validator was readded
+    label = fixture.debugElement.query(By.css('label'))!;
+    expect(label.nativeElement.querySelector('.mat-mdc-form-field-required-marker')).toBeTruthy();
+  }));
+
   it('should not hide the required star if input is disabled', () => {
     const fixture = createComponent(MatInputLabelRequiredTestComponent);
 
@@ -2333,3 +2375,29 @@ class MatInputSimple {}
   standalone: false,
 })
 class InputWithNgContainerPrefixAndSuffix {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Hello</mat-label>
+      <input matInput [formControl]="formControl">
+    </mat-form-field>`,
+  standalone: false,
+})
+class MatInputWithRequiredAssignableFormControl {
+  formControl = new FormControl('', [Validators.required]);
+
+  reassignFormControl() {
+    this.formControl = new FormControl();
+  }
+
+  addRequiredValidator() {
+    this.formControl.setValidators([Validators.required]);
+    this.formControl.updateValueAndValidity();
+  }
+
+  removeRequiredValidtor() {
+    this.formControl.setValidators([]);
+    this.formControl.updateValueAndValidity();
+  }
+}
