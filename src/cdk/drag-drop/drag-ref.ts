@@ -57,6 +57,14 @@ export interface DragRefConfig {
   parentDragRef?: DragRef;
 }
 
+/** Function that can be used to constrain the position of a dragged element. */
+export type DragConstrainPosition = (
+  userPointerPosition: Point,
+  dragRef: DragRef,
+  dimensions: DOMRect,
+  pickupPositionInElement: Point,
+) => Point;
+
 /** Options that can be used to bind a passive event listener. */
 const passiveEventListenerOptions = {passive: true};
 
@@ -364,12 +372,7 @@ export class DragRef<T = any> {
    * of the user's pointer on the page, a reference to the item being dragged and its dimensions.
    * Should return a point describing where the item should be rendered.
    */
-  constrainPosition?: (
-    userPointerPosition: Point,
-    dragRef: DragRef,
-    dimensions: DOMRect,
-    pickupPositionInElement: Point,
-  ) => Point;
+  constrainPosition?: DragConstrainPosition;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
