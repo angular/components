@@ -1540,6 +1540,8 @@ describe('MatSelectionList with forms', () => {
     });
 
     it('should be able to disable options from the control', () => {
+      const optionElements = listOptions.map(option => option._elementRef.nativeElement);
+      const inputs = optionElements.map(element => element.querySelector('input')!);
       selectionList.focus();
       expect(selectionList.disabled)
         .withContext('Expected the selection list to be enabled.')
@@ -1547,12 +1549,14 @@ describe('MatSelectionList with forms', () => {
       expect(listOptions.every(option => !option.disabled))
         .withContext('Expected every list option to be enabled.')
         .toBe(true);
-      expect(
-        listOptions.some(
-          option => option._elementRef.nativeElement.getAttribute('tabindex') === '0',
-        ),
-      )
+      expect(optionElements.some(el => el.getAttribute('tabindex') === '0'))
         .withContext('Expected one list item to be in the tab order')
+        .toBe(true);
+      // Note: assert the disabled of the inner inputs, because they're placed inside of the
+      // view of the individual options which is detected separately from the host. The tabindex
+      // check above isn't enough, because it doesn't go through change detection.
+      expect(inputs.every(input => !input.disabled))
+        .withContext('Expected all options to be enabled')
         .toBe(true);
 
       fixture.componentInstance.formControl.disable();
@@ -1564,12 +1568,11 @@ describe('MatSelectionList with forms', () => {
       expect(listOptions.every(option => option.disabled))
         .withContext('Expected every list option to be disabled.')
         .toBe(true);
-      expect(
-        listOptions.every(
-          option => option._elementRef.nativeElement.getAttribute('tabindex') === '-1',
-        ),
-      )
+      expect(optionElements.every(el => el.getAttribute('tabindex') === '-1'))
         .withContext('Expected every list option to be removed from the tab order')
+        .toBe(true);
+      expect(inputs.every(input => input.disabled))
+        .withContext('Expected all options to be disabled')
         .toBe(true);
     });
 
