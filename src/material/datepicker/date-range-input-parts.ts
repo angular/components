@@ -193,6 +193,12 @@ abstract class MatDateRangeInputPartBase<D>
     opposite?._validatorOnChange();
   }
 
+  protected override _formatValue(value: D | null) {
+    super._formatValue(value);
+    // Any time the input value is reformatted we need to tell the parent.
+    this._rangeInput._handleChildValueChange();
+  }
+
   /** return the ARIA accessible name of the input element */
   _getAccessibleName(): string {
     return _computeAriaAccessibleName(this._elementRef.nativeElement);
@@ -264,14 +270,8 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
     if (this._model) {
       const range = new DateRange(value, this._model.selection.end);
       this._model.updateSelection(range, this);
+      this._rangeInput._handleChildValueChange();
     }
-  }
-
-  protected override _formatValue(value: D | null) {
-    super._formatValue(value);
-
-    // Any time the input value is reformatted we need to tell the parent.
-    this._rangeInput._handleChildValueChange();
   }
 
   override _onKeydown(event: KeyboardEvent) {
