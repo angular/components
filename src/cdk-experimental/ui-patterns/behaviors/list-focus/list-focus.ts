@@ -9,7 +9,7 @@
 import {computed, Signal} from '@angular/core';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
-/** The required properties for focus items. */
+/** Represents an item in a collection, such as a listbox option, than may receive focus. */
 export interface ListFocusItem extends ListNavigationItem {
   /** A unique identifier for the item. */
   id: Signal<string>;
@@ -18,7 +18,7 @@ export interface ListFocusItem extends ListNavigationItem {
   element: Signal<HTMLElement>;
 }
 
-/** The required inputs for list focus. */
+/** Represents the required inputs for a collection that contains focusable items. */
 export interface ListFocusInputs<T extends ListFocusItem> {
   /** The focus strategy used by the list. */
   focusMode: Signal<'roving' | 'activedescendant'>;
@@ -29,18 +29,16 @@ export class ListFocus<T extends ListFocusItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<ListFocusItem>;
 
+  /** The id of the current active item. */
+  getActiveDescendant = computed<string | undefined>(() => {
+    if (this.inputs.focusMode() === 'roving') {
+      return undefined;
+    }
+    return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
+  });
+
   constructor(readonly inputs: ListFocusInputs<T> & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
-  }
-
-  /** Returns the id of the current active item. */
-  getActiveDescendant(): Signal<string | null> {
-    return computed(() => {
-      if (this.inputs.focusMode() === 'roving') {
-        return null;
-      }
-      return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
-    });
   }
 
   /** Returns a signal that keeps track of the tabindex for the list. */

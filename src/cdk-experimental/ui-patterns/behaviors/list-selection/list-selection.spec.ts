@@ -35,7 +35,7 @@ describe('List Selection', () => {
       wrap: signal(false),
       activeIndex: signal(0),
       skipDisabled: signal(false),
-      directionality: signal('ltr'),
+      textDirection: signal('ltr'),
       orientation: signal('vertical'),
       ...args,
     });
@@ -193,7 +193,7 @@ describe('List Selection', () => {
       selection.select(); // [0]
       nav.next();
       nav.next();
-      selection.selectFromAnchor(); // [0, 1, 2]
+      selection.selectFromLastSelectedItem(); // [0, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2']);
     });
@@ -208,7 +208,7 @@ describe('List Selection', () => {
       selection.select(); // [3]
       nav.prev();
       nav.prev();
-      selection.selectFromAnchor(); // [3, 1, 2]
+      selection.selectFromLastSelectedItem(); // [3, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['3', '1', '2']);
     });

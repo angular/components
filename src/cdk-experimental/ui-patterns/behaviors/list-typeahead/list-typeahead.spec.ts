@@ -35,7 +35,7 @@ describe('List Typeahead', () => {
         activeIndex,
         wrap: signal(false),
         skipDisabled: signal(false),
-        directionality: signal('ltr'),
+        textDirection: signal('ltr'),
         orientation: signal('vertical'),
       });
       const typeahead = new ListTypeahead({
@@ -62,7 +62,7 @@ describe('List Typeahead', () => {
         activeIndex,
         wrap: signal(false),
         skipDisabled: signal(false),
-        directionality: signal('ltr'),
+        textDirection: signal('ltr'),
         orientation: signal('vertical'),
       });
       const typeahead = new ListTypeahead({
@@ -87,7 +87,7 @@ describe('List Typeahead', () => {
         activeIndex,
         wrap: signal(false),
         skipDisabled: signal(true),
-        directionality: signal('ltr'),
+        textDirection: signal('ltr'),
         orientation: signal('vertical'),
       });
       const typeahead = new ListTypeahead({
@@ -108,7 +108,7 @@ describe('List Typeahead', () => {
         activeIndex,
         wrap: signal(false),
         skipDisabled: signal(false),
-        directionality: signal('ltr'),
+        textDirection: signal('ltr'),
         orientation: signal('vertical'),
       });
       const typeahead = new ListTypeahead({
@@ -129,7 +129,7 @@ describe('List Typeahead', () => {
         activeIndex,
         wrap: signal(false),
         skipDisabled: signal(false),
-        directionality: signal('ltr'),
+        textDirection: signal('ltr'),
         orientation: signal('vertical'),
       });
       const typeahead = new ListTypeahead({

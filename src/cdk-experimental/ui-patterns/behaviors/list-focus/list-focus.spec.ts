@@ -36,7 +36,7 @@ describe('List Focus', () => {
       wrap: signal(false),
       activeIndex: signal(0),
       skipDisabled: signal(false),
-      directionality: signal('ltr'),
+      textDirection: signal('ltr'),
       orientation: signal('vertical'),
       ...args,
     });
@@ -62,12 +62,11 @@ describe('List Focus', () => {
       expect(tabindex()).toBe(-1);
     });
 
-    it('should set the activedescendant to null', () => {
+    it('should set the activedescendant to undefined', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const focus = getFocus(nav);
-      const activeId = focus.getActiveDescendant();
-      expect(activeId()).toBeNull();
+      expect(focus.getActiveDescendant()).toBeUndefined();
     });
 
     it('should set the first items tabindex to 0', () => {
@@ -122,8 +121,7 @@ describe('List Focus', () => {
       const focus = getFocus(nav, {
         focusMode: signal('activedescendant'),
       });
-      const activeId = focus.getActiveDescendant();
-      expect(activeId()).toBe(items()[0].id());
+      expect(focus.getActiveDescendant()).toBe(items()[0].id());
     });
 
     it('should set the tabindex of all items to -1', () => {
@@ -150,10 +148,9 @@ describe('List Focus', () => {
       const focus = getFocus(nav, {
         focusMode: signal('activedescendant'),
       });
-      const activeId = focus.getActiveDescendant();
 
       nav.next();
-      expect(activeId()).toBe(items()[1].id());
+      expect(focus.getActiveDescendant()).toBe(items()[1].id());
     });
   });
 });

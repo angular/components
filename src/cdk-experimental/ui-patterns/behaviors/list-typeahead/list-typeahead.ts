@@ -9,13 +9,19 @@
 import {signal, Signal} from '@angular/core';
 import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
 
-/** The required properties for typeahead items. */
+/**
+ * Represents an item in a collection, such as a listbox option, than can be navigated to by
+ * typeahead.
+ */
 export interface ListTypeaheadItem extends ListNavigationItem {
   /** The text used by the typeahead search. */
   searchTerm: Signal<string>;
 }
 
-/** The required inputs for list typeahead. */
+/**
+ * Represents the required inputs for a collection that contains items that can be navigated to by
+ * typeahead.
+ */
 export interface ListTypeaheadInputs {
   /** The amount of time before the typeahead search is reset. */
   typeaheadDelay: Signal<number>;
@@ -24,7 +30,7 @@ export interface ListTypeaheadInputs {
 /** Controls typeahead for a list of items. */
 export class ListTypeahead<T extends ListTypeaheadItem> {
   /** A reference to the timeout for resetting the typeahead search. */
-  timeout?: any;
+  timeout?: ReturnType<typeof setTimeout> | undefined;
 
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
@@ -33,7 +39,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   private _query = signal('');
 
   /** The index where that the typeahead search was initiated from. */
-  private _anchorIndex = signal<number | null>(null);
+  private _startIndex = signal<number | undefined>(undefined);
 
   constructor(readonly inputs: ListTypeaheadInputs & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
@@ -45,8 +51,8 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       return;
     }
 
-    if (this._anchorIndex() === null) {
-      this._anchorIndex.set(this.navigation.inputs.activeIndex());
+    if (this._startIndex() === undefined) {
+      this._startIndex.set(this.navigation.inputs.activeIndex());
     }
 
     clearTimeout(this.timeout);
@@ -59,7 +65,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
 
     this.timeout = setTimeout(() => {
       this._query.set('');
-      this._anchorIndex.set(null);
+      this._startIndex.set(undefined);
     }, this.inputs.typeaheadDelay() * 1000);
   }
 
@@ -69,10 +75,10 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
    */
   private _getItem() {
     let items = this.navigation.inputs.items();
-    const after = items.slice(this._anchorIndex()! + 1);
-    const before = items.slice(0, this._anchorIndex()!);
+    const after = items.slice(this._startIndex()! + 1);
+    const before = items.slice(0, this._startIndex()!);
     items = this.navigation.inputs.wrap() ? after.concat(before) : after; // TODO: Always wrap?
-    items.push(this.navigation.inputs.items()[this._anchorIndex()!]);
+    items.push(this.navigation.inputs.items()[this._startIndex()!]);
 
     const focusableItems = [];
     for (const item of items) {

@@ -8,13 +8,13 @@
 
 import {signal, Signal, WritableSignal} from '@angular/core';
 
-/** The required properties for navigation items. */
+/** Represents an item in a collection, such as a listbox option, than can be navigated to. */
 export interface ListNavigationItem {
   /** Whether an item is disabled. */
   disabled: Signal<boolean>;
 }
 
-/** The required inputs for list navigation. */
+/** Represents the required inputs for a collection that has navigable items. */
 export interface ListNavigationInputs<T extends ListNavigationItem> {
   /** Whether focus should wrap when navigating. */
   wrap: Signal<boolean>;
@@ -32,7 +32,7 @@ export interface ListNavigationInputs<T extends ListNavigationItem> {
   orientation: Signal<'vertical' | 'horizontal'>;
 
   /** The direction that text is read based on the users locale. */
-  directionality: Signal<'rtl' | 'ltr'>;
+  textDirection: Signal<'rtl' | 'ltr'>;
 }
 
 /** Controls navigation for a list of items. */
@@ -56,26 +56,42 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** Navigates to the next item in the list. */
   next() {
     const items = this.inputs.items();
-    const after = items.slice(this.inputs.activeIndex() + 1);
-    const before = items.slice(0, this.inputs.activeIndex());
-    const array = this.inputs.wrap() ? after.concat(before) : after;
-    const item = array.find(i => this.isFocusable(i));
 
-    if (item) {
-      this.goto(item);
+    for (let i = this.inputs.activeIndex() + 1; i < items.length; i++) {
+      if (this.isFocusable(items[i])) {
+        this.goto(items[i]);
+        return;
+      }
+    }
+
+    if (this.inputs.wrap()) {
+      for (let i = 0; i <= this.inputs.activeIndex(); i++) {
+        if (this.isFocusable(items[i])) {
+          this.goto(items[i]);
+          return;
+        }
+      }
     }
   }
 
   /** Navigates to the previous item in the list. */
   prev() {
     const items = this.inputs.items();
-    const after = items.slice(this.inputs.activeIndex() + 1).reverse();
-    const before = items.slice(0, this.inputs.activeIndex()).reverse();
-    const array = this.inputs.wrap() ? before.concat(after) : before;
-    const item = array.find(i => this.isFocusable(i));
 
-    if (item) {
-      this.goto(item);
+    for (let i = this.inputs.activeIndex() - 1; i >= 0; i--) {
+      if (this.isFocusable(items[i])) {
+        this.goto(items[i]);
+        return;
+      }
+    }
+
+    if (this.inputs.wrap()) {
+      for (let i = items.length - 1; i >= this.inputs.activeIndex(); i--) {
+        if (this.isFocusable(items[i])) {
+          this.goto(items[i]);
+          return;
+        }
+      }
     }
   }
 
@@ -90,10 +106,12 @@ export class ListNavigation<T extends ListNavigationItem> {
 
   /** Navigates to the last item in the list. */
   last() {
-    const item = [...this.inputs.items()].reverse().find(i => this.isFocusable(i));
-
-    if (item) {
-      this.goto(item);
+    const items = this.inputs.items();
+    for (let i = items.length - 1; i >= 0; i--) {
+      if (this.isFocusable(items[i])) {
+        this.goto(items[i]);
+        return;
+      }
     }
   }
 

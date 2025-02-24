@@ -9,7 +9,7 @@
 import {signal, Signal, WritableSignal} from '@angular/core';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
-/** The required properties for selection items. */
+/** Represents an item in a collection, such as a listbox option, than can be selected. */
 export interface ListSelectionItem extends ListNavigationItem {
   /** A unique identifier for the item. */
   id: Signal<string>;
@@ -18,7 +18,7 @@ export interface ListSelectionItem extends ListNavigationItem {
   disabled: Signal<boolean>;
 }
 
-/** The required inputs for list selection. */
+/** Represents the required inputs for a collection that contains selectable items. */
 export interface ListSelectionInputs<T extends ListSelectionItem> {
   /** The items in the list. */
   items: Signal<T[]>;
@@ -35,8 +35,8 @@ export interface ListSelectionInputs<T extends ListSelectionItem> {
 
 /** Controls selection for a list of items. */
 export class ListSelection<T extends ListSelectionItem> {
-  /** The id of the previous selected item. */
-  anchorId = signal<string | null>(null);
+  /** The id of the last selected item. */
+  lastSelectedId = signal<string | undefined>(undefined);
 
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
@@ -104,9 +104,9 @@ export class ListSelection<T extends ListSelectionItem> {
   }
 
   /** Selects the items in the list starting at the last selected item. */
-  selectFromAnchor() {
-    const anchorIndex = this.inputs.items().findIndex(i => this.anchorId() === i.id());
-    this._selectFromIndex(anchorIndex);
+  selectFromLastSelectedItem() {
+    const lastSelectedId = this.inputs.items().findIndex(i => this.lastSelectedId() === i.id());
+    this._selectFromIndex(lastSelectedId);
   }
 
   /** Selects the items in the list starting at the last active item. */
@@ -137,6 +137,6 @@ export class ListSelection<T extends ListSelectionItem> {
   /** Sets the anchor to the current active index. */
   private _anchor() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.anchorId.set(item.id());
+    this.lastSelectedId.set(item.id());
   }
 }

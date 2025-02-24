@@ -51,14 +51,14 @@ import {toSignal} from '@angular/core/rxjs-interop';
 })
 export class CdkListbox {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private _dir = inject(Directionality);
+  private _directionality = inject(Directionality);
 
   /** The CdkOptions nested inside of the CdkListbox. */
   private _cdkOptions = contentChildren(CdkOption, {descendants: true});
 
   /** A signal wrapper for directionality. */
-  protected directionality = toSignal(this._dir.change, {
-    initialValue: this._dir.value,
+  protected textDirection = toSignal(this._directionality.change, {
+    initialValue: this._directionality.value,
   });
 
   /** The Option UIPatterns of the child CdkOptions. */
@@ -88,6 +88,7 @@ export class CdkListbox {
   /** Whether the listbox is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
+  // TODO(wagnermaciel): Figure out how we want to expose control over the current listbox value.
   /** The ids of the current selected items. */
   selectedIds = model<string[]>([]);
 
@@ -98,11 +99,11 @@ export class CdkListbox {
   pattern: ListboxPattern = new ListboxPattern({
     ...this,
     items: this.items,
-    directionality: this.directionality,
+    textDirection: this.textDirection,
   });
 }
 
-// TODO(wagnermaciel): Figure out how we actually want to do this.
+// TODO(wagnermaciel): Figure out how we want to generate IDs.
 let count = 0;
 
 /** A selectable option in a CdkListbox. */
@@ -124,6 +125,7 @@ export class CdkOption {
   /** The parent CdkListbox. */
   private _cdkListbox = inject(CdkListbox);
 
+  // TODO(wagnermaciel): Figure out how we want to generate IDs.
   /** A unique identifier for the option. */
   protected id = computed(() => `${count++}`);
 

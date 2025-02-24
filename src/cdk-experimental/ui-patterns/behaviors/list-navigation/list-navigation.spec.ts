@@ -32,7 +32,7 @@ describe('List Navigation', () => {
       wrap: signal(false),
       activeIndex: signal(0),
       skipDisabled: signal(false),
-      directionality: signal('ltr'),
+      textDirection: signal('ltr'),
       orientation: signal('vertical'),
       ...args,
     });

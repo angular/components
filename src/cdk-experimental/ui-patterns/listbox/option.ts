@@ -12,13 +12,17 @@ import {ListTypeaheadItem} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigation, ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusItem} from '../behaviors/list-focus/list-focus';
 
+/**
+ * Represents the properties exposed by a listbox that need to be accessed by an option.
+ * This exists to avoid circular dependency errors between the listbox and option.
+ */
 interface ListboxPattern {
-  focus: ListFocus<OptionPattern>;
+  focusManager: ListFocus<OptionPattern>;
   selection: ListSelection<OptionPattern>;
   navigation: ListNavigation<OptionPattern>;
 }
 
-/** The required inputs to options. */
+/** Represents the required inputs for an option in a listbox. */
 export interface OptionInputs
   extends ListNavigationItem,
     ListSelectionItem,
@@ -27,7 +31,7 @@ export interface OptionInputs
   listbox: Signal<ListboxPattern>;
 }
 
-/** An option in a listbox. */
+/** Represents an option in a listbox. */
 export class OptionPattern {
   /** A unique identifier for the option. */
   id: Signal<string>;
@@ -64,6 +68,6 @@ export class OptionPattern {
     this.element = args.element;
     this.disabled = args.disabled;
     this.searchTerm = args.searchTerm;
-    this.tabindex = this.listbox().focus.getItemTabindex(this);
+    this.tabindex = this.listbox().focusManager.getItemTabindex(this);
   }
 }

@@ -39,13 +39,14 @@
   [orientation]="orientation"
   [focusMode]="focusMode"
   [selectionMode]="selectionMode"
+  class="example-listbox"
 >
-  <label id="fruit-example-label">List of Fruits</label>
+  <label class="example-label" id="fruit-example-label">List of Fruits</label>
 
   @for (fruit of fruits; track fruit) {
     @let checked = option.pattern.selected() ? 'checked' : 'unchecked';
 
-    <li cdkOption #option="cdkOption">
+    <li class="example-option" cdkOption #option="cdkOption">
       <mat-pseudo-checkbox [state]="checked"></mat-pseudo-checkbox>
       <span>{{ fruit }}</span>
     </li>

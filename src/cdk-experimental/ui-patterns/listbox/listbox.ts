@@ -27,7 +27,7 @@ interface SelectOptions {
   selectFromActive?: boolean;
 }
 
-/** The required inputs for the listbox. */
+/** Represents the required inputs for a listbox. */
 export type ListboxInputs = ListNavigationInputs<OptionPattern> &
   ListSelectionInputs<OptionPattern> &
   ListTypeaheadInputs &
@@ -47,7 +47,7 @@ export class ListboxPattern {
   typeahead: ListTypeahead<OptionPattern>;
 
   /** Controls focus for the listbox. */
-  focus: ListFocus<OptionPattern>;
+  focusManager: ListFocus<OptionPattern>;
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation: Signal<'vertical' | 'horizontal'>;
@@ -59,7 +59,7 @@ export class ListboxPattern {
   tabindex: Signal<-1 | 0>;
 
   /** The id of the current active item. */
-  activedescendant: Signal<string | null>;
+  activedescendant: Signal<string | undefined>;
 
   /** Whether multiple items in the list can be selected at once. */
   multiselectable: Signal<boolean>;
@@ -67,6 +67,7 @@ export class ListboxPattern {
   /** The number of items in the listbox. */
   setsize = computed(() => this.navigation.inputs.items().length);
 
+  /** Whether the listbox selection follows focus. */
   followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** The key used to navigate to the previous item in the list. */
@@ -74,7 +75,7 @@ export class ListboxPattern {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
-    return this.inputs.directionality() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
   });
 
   /** The key used to navigate to the next item in the list. */
@@ -82,7 +83,7 @@ export class ListboxPattern {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
-    return this.inputs.directionality() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
   });
 
   /** The regexp used to decide if a key should trigger typeahead. */
@@ -165,10 +166,10 @@ export class ListboxPattern {
     this.navigation = new ListNavigation(inputs);
     this.selection = new ListSelection({...inputs, navigation: this.navigation});
     this.typeahead = new ListTypeahead({...inputs, navigation: this.navigation});
-    this.focus = new ListFocus({...inputs, navigation: this.navigation});
+    this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
 
-    this.tabindex = this.focus.getListTabindex();
-    this.activedescendant = this.focus.getActiveDescendant();
+    this.tabindex = this.focusManager.getListTabindex();
+    this.activedescendant = this.focusManager.getActiveDescendant;
   }
 
   /** Handles keydown events for the listbox. */
@@ -187,28 +188,28 @@ export class ListboxPattern {
   /** Navigates to the first option in the listbox. */
   first(opts?: SelectOptions) {
     this.navigation.first();
-    this.focus.focus();
+    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the last option in the listbox. */
   last(opts?: SelectOptions) {
     this.navigation.last();
-    this.focus.focus();
+    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the next option in the listbox. */
   next(opts?: SelectOptions) {
     this.navigation.next();
-    this.focus.focus();
+    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the previous option in the listbox. */
   prev(opts?: SelectOptions) {
     this.navigation.prev();
-    this.focus.focus();
+    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
@@ -218,7 +219,7 @@ export class ListboxPattern {
 
     if (item) {
       this.navigation.goto(item);
-      this.focus.focus();
+      this.focusManager.focus();
       this._updateSelection(opts);
     }
   }
@@ -226,7 +227,7 @@ export class ListboxPattern {
   /** Handles typeahead search navigation for the listbox. */
   search(char: string, opts?: SelectOptions) {
     this.typeahead.search(char);
-    this.focus.focus();
+    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
@@ -248,7 +249,7 @@ export class ListboxPattern {
       this.selection.selectAll();
     }
     if (opts?.selectFromAnchor) {
-      this.selection.selectFromAnchor();
+      this.selection.selectFromLastSelectedItem();
     }
     if (opts?.selectFromActive) {
       this.selection.selectFromActive();
