@@ -90,6 +90,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     _resetPlaceholderTemplate(placeholder: CdkDragPlaceholder): void;
     // (undocumented)
     _resetPreviewTemplate(preview: CdkDragPreview): void;
+    resetToBoundary(): void;
     rootElementSelector: string;
     scale: number;
     setFreeDragPosition(value: Point): void;
@@ -443,6 +444,7 @@ export class DragRef<T = any> {
         event: MouseEvent | TouchEvent;
     }>;
     reset(): void;
+    resetToBoundary(): void;
     scale: number;
     setFreeDragPosition(value: Point): this;
     _sortFromLastPointerPosition(): void;
