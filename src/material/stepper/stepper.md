@@ -228,10 +228,15 @@ export class MyApp {}
 <!-- example(stepper-intl) -->
 
 ### Accessibility
-The stepper is treated as a tabbed view for accessibility purposes, so it is given
-`role="tablist"` by default. The header of step that can be clicked to select the step
+The stepper is treated as a tabbed view for accessibility purposes.
+
+For a horizontal stepper, based on its structure it is given `role="tablist"` by default. The header of step that can be clicked to select the step
 is given `role="tab"`, and the content that can be expanded upon selection is given
 `role="tabpanel"`. `aria-selected` attribute of step header is automatically set based on
+step selection change.
+
+For a vertical stepper, based on its structure it is given `role="tree"` by default. The `.mat-step` of each vertical step that can be clicked to select the step
+is given `role="treeitem"`, and the `.mat-step` gets an `aria-selected` and `aria-expanded` attribute of the `tree-item` is automatically set based on
 step selection change.
 
 The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
