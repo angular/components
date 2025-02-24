@@ -7,6 +7,7 @@
  */
 
 export * from './fixed-size-virtual-scroll';
+export * from './multi-columns-virtual-scroll';
 export * from './scroll-dispatcher';
 export * from './scrollable';
 export * from './scrolling-module';
