@@ -113,6 +113,7 @@ export class ListboxPattern {
     if (this.inputs.multiselectable()) {
       manager
         .on(Modifier.Shift, ' ', () => this._updateSelection({selectFromAnchor: true}))
+        .on(Modifier.Shift, 'Enter', () => this._updateSelection({selectFromAnchor: true}))
         .on(Modifier.Shift, this.prevKey, () => this.prev({toggle: true}))
         .on(Modifier.Shift, this.nextKey, () => this.next({toggle: true}))
         .on(Modifier.Ctrl | Modifier.Shift, 'Home', () => this.first({selectFromActive: true}))
@@ -122,10 +123,12 @@ export class ListboxPattern {
 
     if (!this.followFocus() && this.inputs.multiselectable()) {
       manager.on(' ', () => this._updateSelection({toggle: true}));
+      manager.on('Enter', () => this._updateSelection({toggle: true}));
     }
 
     if (!this.followFocus() && !this.inputs.multiselectable()) {
       manager.on(' ', () => this._updateSelection({toggleOne: true}));
+      manager.on('Enter', () => this._updateSelection({toggleOne: true}));
     }
 
     if (this.inputs.multiselectable() && this.followFocus()) {
@@ -143,20 +146,12 @@ export class ListboxPattern {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    if (!this.followFocus()) {
-      manager.on((e: PointerEvent) => this.goto(e));
-    }
-
-    if (this.followFocus()) {
-      manager.on((e: PointerEvent) => this.goto(e, {selectOne: true}));
-    }
-
-    if (this.inputs.multiselectable() && this.followFocus()) {
-      manager.on(Modifier.Ctrl, (e: PointerEvent) => this.goto(e));
-    }
-
     if (this.inputs.multiselectable()) {
-      manager.on(Modifier.Shift, (e: PointerEvent) => this.goto(e, {selectFromActive: true}));
+      manager
+        .on(e => this.goto(e, {toggle: true}))
+        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
+    } else {
+      manager.on(e => this.goto(e, {toggleOne: true}));
     }
 
     return manager;
