@@ -20,25 +20,15 @@ export interface ClusterOptions {
   markers?: Marker[];
 }
 
-export declare class Cluster {
+export interface Cluster {
   marker?: Marker;
   readonly markers?: Marker[];
-  protected _position: google.maps.LatLng;
-  constructor({markers, position}: ClusterOptions);
-  get bounds(): google.maps.LatLngBounds | undefined;
-  get position(): google.maps.LatLng;
-  /**
-   * Get the count of **visible** markers.
-   */
-  get count(): number;
-  /**
-   * Add a marker to the cluster.
-   */
+  bounds?: google.maps.LatLngBounds;
+  position: google.maps.LatLng;
+  count: number;
   push(marker: Marker): void;
-  /**
-   * Cleanup references and remove marker from map.
-   */
   delete(): void;
+  new (options: ClusterOptions): Cluster;
 }
 
 export declare class MarkerClusterer extends google.maps.OverlayView {
@@ -117,11 +107,11 @@ export interface Renderer {
   render(cluster: Cluster, stats: ClusterStats, map: google.maps.Map): Marker;
 }
 
-export declare class ClusterStats {
-  readonly markers: {
+export interface ClusterStats {
+  markers: {
     sum: number;
   };
-  readonly clusters: {
+  clusters: {
     count: number;
     markers: {
       mean: number;
@@ -130,7 +120,7 @@ export declare class ClusterStats {
       max: number;
     };
   };
-  constructor(markers: Marker[], clusters: Cluster[]);
+  new (markers: Marker[], clusters: Cluster[]): ClusterStats;
 }
 
 export interface Algorithm {
