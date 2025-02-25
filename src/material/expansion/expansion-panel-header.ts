@@ -6,7 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {
+  FOCUS_MONITOR_DEFAULT_OPTIONS,
+  FocusableOption,
+  FocusMonitor,
+  FocusMonitorDetectionMode,
+  FocusOrigin,
+} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -57,6 +63,15 @@ import {_StructuralStylesLoader} from '@angular/material/core';
     '(click)': '_toggle()',
     '(keydown)': '_keydown($event)',
   },
+  providers: [
+    FocusMonitor,
+    {
+      provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
+      useValue: {
+        detectionMode: FocusMonitorDetectionMode.EVENTUAL,
+      },
+    },
+  ],
 })
 export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
   panel = inject(MatExpansionPanel, {host: true});
@@ -98,9 +113,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
     ).subscribe(() => this._changeDetectorRef.markForCheck());
 
     // Avoids focus being lost if the panel contained the focused element and was closed.
-    panel.closed
-      .pipe(filter(() => panel._containsFocus()))
-      .subscribe(() => this._focusMonitor.focusVia(this._element, 'program'));
+    panel.closed.pipe(filter(() => panel._containsFocus())).subscribe(() => this.focus());
 
     if (defaultOptions) {
       this.expandedHeight = defaultOptions.expandedHeight;
