@@ -114,7 +114,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 
   /** Sends focus to the first gridcell when the user clicks anywhere inside the chip. */
   _handleFocus() {
-    if (!this._isEditing && !this.disabled) {
+    if (!this._isEditing) {
       this.focus();
     }
   }
