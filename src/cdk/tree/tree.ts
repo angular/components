@@ -1061,6 +1061,12 @@ export class CdkTree<T, K = T>
     renderNodes: readonly T[];
     flattenedNodes: readonly T[];
   }> {
+    // clear previously generated data otherwise it is always retained in addition to new data
+    // calling clear() manually removes all key pair values allowing retained data to be
+    // garbage collected.
+    this._parents.clear();
+    this._ariaSets.clear();
+    this._levels.clear();
     // The only situations where we have to convert children types is when
     // they're mismatched; i.e. if the tree is using a childrenAccessor and the
     // nodes are flat, or if the tree is using a levelAccessor and the nodes are
