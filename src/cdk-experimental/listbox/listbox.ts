@@ -129,6 +129,8 @@ export class CdkOption {
   /** A unique identifier for the option. */
   protected id = computed(() => `${count++}`);
 
+  // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
+  // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
   /** The text used by the typeahead search. */
   protected searchTerm = computed(() => this.label() ?? this.element().textContent);
 
