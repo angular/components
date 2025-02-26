@@ -81,8 +81,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
         toState: "visible" | "hidden";
         phase: "start" | "done";
     }>;
-    // (undocumented)
-    protected _captureInitialFocus(): void;
     enter(): void;
     exit(): void;
     // (undocumented)
