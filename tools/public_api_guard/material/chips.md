@@ -410,7 +410,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     editable: boolean;
     readonly edited: EventEmitter<MatChipEditedEvent>;
     // (undocumented)
-    _handleDoubleclick(event: MouseEvent): void;
+    _handleClick(event: MouseEvent): void;
     _handleFocus(): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
