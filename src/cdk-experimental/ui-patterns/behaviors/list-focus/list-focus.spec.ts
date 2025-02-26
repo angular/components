@@ -85,7 +85,7 @@ describe('List Focus', () => {
       expect(items()[4].tabindex()).toBe(-1);
     });
 
-    it('should update the tabindex of the active item when navigating', async () => {
+    it('should update the tabindex of the active item when navigating', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const focus = getFocus(nav);
@@ -142,7 +142,7 @@ describe('List Focus', () => {
       expect(items()[4].tabindex()).toBe(-1);
     });
 
-    it('should update the activedescendant of the list when navigating', async () => {
+    it('should update the activedescendant of the list when navigating', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const focus = getFocus(nav, {

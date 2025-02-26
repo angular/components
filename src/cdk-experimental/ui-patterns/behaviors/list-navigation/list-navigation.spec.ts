@@ -39,7 +39,7 @@ describe('List Navigation', () => {
   }
 
   describe('#goto', () => {
-    it('should navigate to an item', async () => {
+    it('should navigate to an item', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
 
@@ -50,13 +50,13 @@ describe('List Navigation', () => {
   });
 
   describe('#next', () => {
-    it('should navigate next', async () => {
+    it('should navigate next', () => {
       const nav = getNavigation(getItems(3));
       nav.next(); // 0 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should wrap', async () => {
+    it('should wrap', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(true),
       });
@@ -68,7 +68,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should not wrap', async () => {
+    it('should not wrap', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(false),
       });
@@ -80,7 +80,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should skip disabled items', async () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(true),
       });
@@ -90,7 +90,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should not skip disabled items', async () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(false),
       });
@@ -100,7 +100,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should wrap and skip disabled items', async () => {
+    it('should wrap and skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(true),
         skipDisabled: signal(true),
@@ -113,7 +113,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should do nothing if other items are disabled', async () => {
+    it('should do nothing if other items are disabled', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(true),
       });
@@ -124,7 +124,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should do nothing if there are no other items to navigate to', async () => {
+    it('should do nothing if there are no other items to navigate to', () => {
       const nav = getNavigation(getItems(1));
       nav.next(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
@@ -132,7 +132,7 @@ describe('List Navigation', () => {
   });
 
   describe('#prev', () => {
-    it('should navigate prev', async () => {
+    it('should navigate prev', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
       });
@@ -140,7 +140,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should wrap', async () => {
+    it('should wrap', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(true),
       });
@@ -148,7 +148,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should not wrap', async () => {
+    it('should not wrap', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(false),
       });
@@ -156,7 +156,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should skip disabled items', async () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
         skipDisabled: signal(true),
@@ -167,7 +167,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should not skip disabled items', async () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
         skipDisabled: signal(false),
@@ -178,7 +178,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should wrap and skip disabled items', async () => {
+    it('should wrap and skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         wrap: signal(true),
         activeIndex: signal(2),
@@ -192,7 +192,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should do nothing if other items are disabled', async () => {
+    it('should do nothing if other items are disabled', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
         skipDisabled: signal(true),
@@ -204,7 +204,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should do nothing if there are no other items to navigate to', async () => {
+    it('should do nothing if there are no other items to navigate to', () => {
       const nav = getNavigation(getItems(1));
       nav.prev(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
@@ -212,7 +212,7 @@ describe('List Navigation', () => {
   });
 
   describe('#first', () => {
-    it('should navigate to the first item', async () => {
+    it('should navigate to the first item', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
       });
@@ -221,7 +221,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
-    it('should skip disabled items', async () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
         skipDisabled: signal(true),
@@ -232,7 +232,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should not skip disabled items', async () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         activeIndex: signal(2),
         skipDisabled: signal(false),
@@ -245,13 +245,13 @@ describe('List Navigation', () => {
   });
 
   describe('#last', () => {
-    it('should navigate to the last item', async () => {
+    it('should navigate to the last item', () => {
       const nav = getNavigation(getItems(3));
       nav.last();
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
-    it('should skip disabled items', async () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(true),
       });
@@ -261,7 +261,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
-    it('should not skip disabled items', async () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(false),
       });
@@ -273,7 +273,7 @@ describe('List Navigation', () => {
   });
 
   describe('#isFocusable', () => {
-    it('should return true for enabled items', async () => {
+    it('should return true for enabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(true),
       });
@@ -283,7 +283,7 @@ describe('List Navigation', () => {
       expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
     });
 
-    it('should return false for disabled items', async () => {
+    it('should return false for disabled items', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(true),
       });
@@ -294,7 +294,7 @@ describe('List Navigation', () => {
       expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
     });
 
-    it('should return true for disabled items if skip disabled is false', async () => {
+    it('should return true for disabled items if skip disabled is false', () => {
       const nav = getNavigation(getItems(3), {
         skipDisabled: signal(false),
       });

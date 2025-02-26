@@ -60,7 +60,7 @@ export class ListNavigation<T extends ListNavigationItem> {
     const startIndex = this.inputs.activeIndex();
     const step = (i: number) => this._stepIndex(i, 1);
 
-    for (let i = step(startIndex); i !== startIndex && i < itemCount; step(i)) {
+    for (let i = step(startIndex); i !== startIndex && i < itemCount; i = step(i)) {
       if (this.isFocusable(items[i])) {
         this.goto(items[i]);
         return;
@@ -74,7 +74,7 @@ export class ListNavigation<T extends ListNavigationItem> {
     const startIndex = this.inputs.activeIndex();
     const step = (i: number) => this._stepIndex(i, -1);
 
-    for (let i = step(startIndex); i !== startIndex && i >= 0; step(i)) {
+    for (let i = step(startIndex); i !== startIndex && i >= 0; i = step(i)) {
       if (this.isFocusable(items[i])) {
         this.goto(items[i]);
         return;
@@ -108,8 +108,7 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   private _stepIndex(index: number, step: -1 | 1) {
-    return this.inputs.wrap()
-      ? (index + step + this.inputs.items().length) % this.inputs.items().length
-      : index + step;
+    const itemCount = this.inputs.items().length;
+    return this.inputs.wrap() ? (index + step + itemCount) % itemCount : index + step;
   }
 }

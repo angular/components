@@ -57,7 +57,7 @@ describe('List Selection', () => {
   }
 
   describe('#select', () => {
-    it('should select an item', async () => {
+    it('should select an item', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -66,7 +66,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
 
-    it('should select multiple options', async () => {
+    it('should select multiple options', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -78,7 +78,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['0', '1']);
     });
 
-    it('should not select multiple options', async () => {
+    it('should not select multiple options', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav, {
@@ -92,7 +92,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['1']);
     });
 
-    it('should not select disabled items', async () => {
+    it('should not select disabled items', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -102,7 +102,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual([]);
     });
 
-    it('should do nothing to already selected items', async () => {
+    it('should do nothing to already selected items', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -115,7 +115,7 @@ describe('List Selection', () => {
   });
 
   describe('#deselect', () => {
-    it('should deselect an item', async () => {
+    it('should deselect an item', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -123,7 +123,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds().length).toBe(0);
     });
 
-    it('should not deselect disabled items', async () => {
+    it('should not deselect disabled items', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -137,7 +137,7 @@ describe('List Selection', () => {
   });
 
   describe('#toggle', () => {
-    it('should select an unselected item', async () => {
+    it('should select an unselected item', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -146,7 +146,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['0']);
     });
 
-    it('should deselect a selected item', async () => {
+    it('should deselect a selected item', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -157,7 +157,7 @@ describe('List Selection', () => {
   });
 
   describe('#selectAll', () => {
-    it('should select all items', async () => {
+    it('should select all items', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -165,7 +165,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2', '3', '4']);
     });
 
-    it('should do nothing if a list is not multiselectable', async () => {
+    it('should do nothing if a list is not multiselectable', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -175,7 +175,7 @@ describe('List Selection', () => {
   });
 
   describe('#deselectAll', () => {
-    it('should deselect all items', async () => {
+    it('should deselect all items', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -185,7 +185,7 @@ describe('List Selection', () => {
   });
 
   describe('#selectFromAnchor', () => {
-    it('should select all items from an anchor at a lower index', async () => {
+    it('should select all items from an anchor at a lower index', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
@@ -198,7 +198,7 @@ describe('List Selection', () => {
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2']);
     });
 
-    it('should select all items from an anchor at a higher index', async () => {
+    it('should select all items from an anchor at a higher index', () => {
       const items = getItems(5);
       const nav = getNavigation(items, {
         activeIndex: signal(3),

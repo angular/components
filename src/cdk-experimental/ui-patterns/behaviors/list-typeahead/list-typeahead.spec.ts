@@ -27,7 +27,7 @@ describe('List Typeahead', () => {
   }
 
   describe('#search', () => {
-    it('should navigate to an item', async () => {
+    it('should navigate to an item', () => {
       const items = getItems(5);
       const activeIndex = signal(0);
       const navigation = new ListNavigation({
@@ -54,7 +54,7 @@ describe('List Typeahead', () => {
       expect(activeIndex()).toBe(3);
     });
 
-    it('should reset after a delay', fakeAsync(async () => {
+    it('should reset after a delay', fakeAsync(() => {
       const items = getItems(5);
       const activeIndex = signal(0);
       const navigation = new ListNavigation({
@@ -79,7 +79,7 @@ describe('List Typeahead', () => {
       expect(activeIndex()).toBe(2);
     }));
 
-    it('should skip disabled items', async () => {
+    it('should skip disabled items', () => {
       const items = getItems(5);
       const activeIndex = signal(0);
       const navigation = new ListNavigation({
@@ -100,7 +100,7 @@ describe('List Typeahead', () => {
       expect(activeIndex()).toBe(2);
     });
 
-    it('should not skip disabled items', async () => {
+    it('should not skip disabled items', () => {
       const items = getItems(5);
       const activeIndex = signal(0);
       const navigation = new ListNavigation({
@@ -121,7 +121,7 @@ describe('List Typeahead', () => {
       expect(activeIndex()).toBe(1);
     });
 
-    it('should ignore keys like shift', async () => {
+    it('should ignore keys like shift', () => {
       const items = getItems(5);
       const activeIndex = signal(0);
       const navigation = new ListNavigation({
