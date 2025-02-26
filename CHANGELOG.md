@@ -1,3 +1,8 @@
+<a name="19.2.1"></a>
+# 19.2.1 "neptunite-neptune" (2025-02-26)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.0"></a>
 # 19.2.0 "pyrite-pacifier" (2025-02-26)
 ### cdk
