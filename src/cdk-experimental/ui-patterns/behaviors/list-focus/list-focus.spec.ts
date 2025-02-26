@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal} from '@angular/core';
+import {computed, Signal, signal} from '@angular/core';
 import {ListNavigation, ListNavigationInputs} from '../list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs, ListFocusItem} from './list-focus';
 
@@ -58,7 +58,7 @@ describe('List Focus', () => {
       const items = getItems(5);
       const nav = getNavigation(items);
       const focus = getFocus(nav);
-      const tabindex = focus.getListTabindex();
+      const tabindex = computed(() => focus.getListTabindex());
       expect(tabindex()).toBe(-1);
     });
 
@@ -75,7 +75,7 @@ describe('List Focus', () => {
       const focus = getFocus(nav);
 
       items().forEach(i => {
-        i.tabindex = focus.getItemTabindex(i);
+        i.tabindex = computed(() => focus.getItemTabindex(i));
       });
 
       expect(items()[0].tabindex()).toBe(0);
@@ -91,7 +91,7 @@ describe('List Focus', () => {
       const focus = getFocus(nav);
 
       items().forEach(i => {
-        i.tabindex = focus.getItemTabindex(i);
+        i.tabindex = computed(() => focus.getItemTabindex(i));
       });
 
       nav.next();
@@ -111,7 +111,7 @@ describe('List Focus', () => {
       const focus = getFocus(nav, {
         focusMode: signal('activedescendant'),
       });
-      const tabindex = focus.getListTabindex();
+      const tabindex = computed(() => focus.getListTabindex());
       expect(tabindex()).toBe(0);
     });
 
@@ -132,7 +132,7 @@ describe('List Focus', () => {
       });
 
       items().forEach(i => {
-        i.tabindex = focus.getItemTabindex(i);
+        i.tabindex = computed(() => focus.getItemTabindex(i));
       });
 
       expect(items()[0].tabindex()).toBe(-1);

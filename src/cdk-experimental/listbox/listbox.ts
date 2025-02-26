@@ -19,6 +19,7 @@ import {
 import {ListboxPattern, OptionPattern} from '@angular/cdk-experimental/ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {_IdGenerator} from '@angular/cdk/a11y';
 
 /**
  * A listbox container.
@@ -51,10 +52,10 @@ import {toSignal} from '@angular/core/rxjs-interop';
 })
 export class CdkListbox {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private _directionality = inject(Directionality);
+  private readonly _directionality = inject(Directionality);
 
   /** The CdkOptions nested inside of the CdkListbox. */
-  private _cdkOptions = contentChildren(CdkOption, {descendants: true});
+  private readonly _cdkOptions = contentChildren(CdkOption, {descendants: true});
 
   /** A signal wrapper for directionality. */
   protected textDirection = toSignal(this._directionality.change, {
@@ -103,9 +104,6 @@ export class CdkListbox {
   });
 }
 
-// TODO(wagnermaciel): Figure out how we want to generate IDs.
-let count = 0;
-
 /** A selectable option in a CdkListbox. */
 @Directive({
   selector: '[cdkOption]',
@@ -120,14 +118,16 @@ let count = 0;
 })
 export class CdkOption {
   /** A reference to the option element. */
-  private _elementRef = inject(ElementRef);
+  private readonly _elementRef = inject(ElementRef);
 
   /** The parent CdkListbox. */
-  private _cdkListbox = inject(CdkListbox);
+  private readonly _cdkListbox = inject(CdkListbox);
 
-  // TODO(wagnermaciel): Figure out how we want to generate IDs.
   /** A unique identifier for the option. */
-  protected id = computed(() => `${count++}`);
+  private readonly _generatedId = inject(_IdGenerator).getId('cdk-option-');
+
+  /** A unique identifier for the option. */
+  protected id = computed(() => this._generatedId);
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.

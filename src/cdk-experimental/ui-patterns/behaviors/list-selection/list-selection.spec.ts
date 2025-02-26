@@ -193,7 +193,7 @@ describe('List Selection', () => {
       selection.select(); // [0]
       nav.next();
       nav.next();
-      selection.selectFromLastSelectedItem(); // [0, 1, 2]
+      selection.selectFromPrevSelectedItem(); // [0, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2']);
     });
@@ -208,7 +208,7 @@ describe('List Selection', () => {
       selection.select(); // [3]
       nav.prev();
       nav.prev();
-      selection.selectFromLastSelectedItem(); // [3, 1, 2]
+      selection.selectFromPrevSelectedItem(); // [3, 1, 2]
 
       expect(selection.inputs.selectedIds()).toEqual(['3', '1', '2']);
     });

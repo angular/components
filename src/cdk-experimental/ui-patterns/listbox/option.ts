@@ -57,7 +57,7 @@ export class OptionPattern {
   listbox: Signal<ListboxPattern>;
 
   /** The tabindex of the option. */
-  tabindex: Signal<-1 | 0>;
+  tabindex = computed(() => this.listbox().focusManager.getItemTabindex(this));
 
   /** The html element that should receive focus. */
   element: Signal<HTMLElement>;
@@ -68,6 +68,5 @@ export class OptionPattern {
     this.element = args.element;
     this.disabled = args.disabled;
     this.searchTerm = args.searchTerm;
-    this.tabindex = this.listbox().focusManager.getItemTabindex(this);
   }
 }

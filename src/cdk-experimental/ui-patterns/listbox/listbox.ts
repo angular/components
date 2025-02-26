@@ -56,10 +56,10 @@ export class ListboxPattern {
   disabled: Signal<boolean>;
 
   /** The tabindex of the listbox. */
-  tabindex: Signal<-1 | 0>;
+  tabindex = computed(() => this.focusManager.getListTabindex());
 
   /** The id of the current active item. */
-  activedescendant: Signal<string | undefined>;
+  activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
   multiselectable: Signal<boolean>;
@@ -167,9 +167,6 @@ export class ListboxPattern {
     this.selection = new ListSelection({...inputs, navigation: this.navigation});
     this.typeahead = new ListTypeahead({...inputs, navigation: this.navigation});
     this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
-
-    this.tabindex = this.focusManager.getListTabindex();
-    this.activedescendant = this.focusManager.getActiveDescendant;
   }
 
   /** Handles keydown events for the listbox. */
@@ -249,7 +246,7 @@ export class ListboxPattern {
       this.selection.selectAll();
     }
     if (opts?.selectFromAnchor) {
-      this.selection.selectFromLastSelectedItem();
+      this.selection.selectFromPrevSelectedItem();
     }
     if (opts?.selectFromActive) {
       this.selection.selectFromActive();

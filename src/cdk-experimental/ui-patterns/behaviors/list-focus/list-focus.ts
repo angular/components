@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal} from '@angular/core';
+import {Signal} from '@angular/core';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
 /** Represents an item in a collection, such as a listbox option, than may receive focus. */
@@ -29,32 +29,30 @@ export class ListFocus<T extends ListFocusItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<ListFocusItem>;
 
-  /** The id of the current active item. */
-  getActiveDescendant = computed<string | undefined>(() => {
-    if (this.inputs.focusMode() === 'roving') {
-      return undefined;
-    }
-    return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
-  });
-
   constructor(readonly inputs: ListFocusInputs<T> & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
   }
 
-  /** Returns a signal that keeps track of the tabindex for the list. */
-  getListTabindex(): Signal<-1 | 0> {
-    return computed(() => (this.inputs.focusMode() === 'activedescendant' ? 0 : -1));
+  /** The id of the current active item. */
+  getActiveDescendant(): String | undefined {
+    if (this.inputs.focusMode() === 'roving') {
+      return undefined;
+    }
+    return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
   }
 
-  /** Returns a signal that keeps track of the tabindex for the given item. */
-  getItemTabindex(item: T): Signal<-1 | 0> {
-    return computed(() => {
-      if (this.inputs.focusMode() === 'activedescendant') {
-        return -1;
-      }
-      const index = this.navigation.inputs.items().indexOf(item);
-      return this.navigation.inputs.activeIndex() === index ? 0 : -1;
-    });
+  /** The tabindex for the list. */
+  getListTabindex(): -1 | 0 {
+    return this.inputs.focusMode() === 'activedescendant' ? 0 : -1;
+  }
+
+  /** Returns the tabindex for the given item. */
+  getItemTabindex(item: T): -1 | 0 {
+    if (this.inputs.focusMode() === 'activedescendant') {
+      return -1;
+    }
+    const index = this.navigation.inputs.items().indexOf(item);
+    return this.navigation.inputs.activeIndex() === index ? 0 : -1;
   }
 
   /** Focuses the current active item. */

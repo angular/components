@@ -56,20 +56,14 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** Navigates to the next item in the list. */
   next() {
     const items = this.inputs.items();
+    const itemCount = items.length;
+    const startIndex = this.inputs.activeIndex();
+    const step = (i: number) => this._stepIndex(i, 1);
 
-    for (let i = this.inputs.activeIndex() + 1; i < items.length; i++) {
+    for (let i = step(startIndex); i !== startIndex && i < itemCount; step(i)) {
       if (this.isFocusable(items[i])) {
         this.goto(items[i]);
         return;
-      }
-    }
-
-    if (this.inputs.wrap()) {
-      for (let i = 0; i <= this.inputs.activeIndex(); i++) {
-        if (this.isFocusable(items[i])) {
-          this.goto(items[i]);
-          return;
-        }
       }
     }
   }
@@ -77,20 +71,13 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** Navigates to the previous item in the list. */
   prev() {
     const items = this.inputs.items();
+    const startIndex = this.inputs.activeIndex();
+    const step = (i: number) => this._stepIndex(i, -1);
 
-    for (let i = this.inputs.activeIndex() - 1; i >= 0; i--) {
+    for (let i = step(startIndex); i !== startIndex && i >= 0; step(i)) {
       if (this.isFocusable(items[i])) {
         this.goto(items[i]);
         return;
-      }
-    }
-
-    if (this.inputs.wrap()) {
-      for (let i = items.length - 1; i >= this.inputs.activeIndex(); i--) {
-        if (this.isFocusable(items[i])) {
-          this.goto(items[i]);
-          return;
-        }
       }
     }
   }
@@ -118,5 +105,11 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** Returns true if the given item can be navigated to. */
   isFocusable(item: T): boolean {
     return !item.disabled() || !this.inputs.skipDisabled();
+  }
+
+  private _stepIndex(index: number, step: -1 | 1) {
+    return this.inputs.wrap()
+      ? (index + step + this.inputs.items().length) % this.inputs.items().length
+      : index + step;
   }
 }

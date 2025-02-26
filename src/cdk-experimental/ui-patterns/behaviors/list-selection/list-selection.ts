@@ -35,8 +35,8 @@ export interface ListSelectionInputs<T extends ListSelectionItem> {
 
 /** Controls selection for a list of items. */
 export class ListSelection<T extends ListSelectionItem> {
-  /** The id of the last selected item. */
-  lastSelectedId = signal<string | undefined>(undefined);
+  /** The id of the most recently selected item. */
+  previousSelectedId = signal<string | undefined>(undefined);
 
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
@@ -104,9 +104,9 @@ export class ListSelection<T extends ListSelectionItem> {
   }
 
   /** Selects the items in the list starting at the last selected item. */
-  selectFromLastSelectedItem() {
-    const lastSelectedId = this.inputs.items().findIndex(i => this.lastSelectedId() === i.id());
-    this._selectFromIndex(lastSelectedId);
+  selectFromPrevSelectedItem() {
+    const prevSelectedId = this.inputs.items().findIndex(i => this.previousSelectedId() === i.id());
+    this._selectFromIndex(prevSelectedId);
   }
 
   /** Selects the items in the list starting at the last active item. */
@@ -137,6 +137,6 @@ export class ListSelection<T extends ListSelectionItem> {
   /** Sets the anchor to the current active index. */
   private _anchor() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.lastSelectedId.set(item.id());
+    this.previousSelectedId.set(item.id());
   }
 }
