@@ -46,7 +46,7 @@ export class Dialog implements OnDestroy {
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<DialogRef>();
-  private _ariaHiddenElements = new Map<Element, string | null>();
+  private _inertElements = new Map<Element, [ariaHidden: string | null, inert: string | null]>();
   private _scrollStrategy = inject(DIALOG_SCROLL_STRATEGY);
 
   /** Keeps track of the currently-open dialogs. */
@@ -157,7 +157,7 @@ export class Dialog implements OnDestroy {
   ngOnDestroy() {
     // Make one pass over all the dialogs that need to be untracked, but should not be closed. We
     // want to stop tracking the open dialog even if it hasn't been closed, because the tracking
-    // determines when `aria-hidden` is removed from elements outside the dialog.
+    // determines when `inert` is removed from elements outside the dialog.
     reverseForEach(this._openDialogsAtThisLevel, dialog => {
       // Check for `false` specifically since we want `undefined` to be interpreted as `true`.
       if (dialog.config.closeOnDestroy === false) {
@@ -340,18 +340,27 @@ export class Dialog implements OnDestroy {
     if (index > -1) {
       (this.openDialogs as DialogRef<R, C>[]).splice(index, 1);
 
-      // If all the dialogs were closed, remove/restore the `aria-hidden`
+      // If all the dialogs were closed, remove/restore the inert attribute
       // to a the siblings and emit to the `afterAllClosed` stream.
       if (!this.openDialogs.length) {
-        this._ariaHiddenElements.forEach((previousValue, element) => {
-          if (previousValue) {
-            element.setAttribute('aria-hidden', previousValue);
+        this._inertElements.forEach((previousValue, element) => {
+          const [ariaHidden, inert] = previousValue;
+
+          // Note: this code is somewhat repetitive, but we want to use static strings inside
+          // the `setAttribute` calls so that we don't trip up some internal XSS checks.
+          if (ariaHidden) {
+            element.setAttribute('aria-hidden', ariaHidden);
           } else {
             element.removeAttribute('aria-hidden');
           }
-        });
 
-        this._ariaHiddenElements.clear();
+          if (inert) {
+            element.setAttribute('inert', inert);
+          } else {
+            element.removeAttribute('inert');
+          }
+        });
+        this._inertElements.clear();
 
         if (emitEvent) {
           this._getAfterAllClosed().next();
@@ -377,8 +386,15 @@ export class Dialog implements OnDestroy {
           sibling.nodeName !== 'STYLE' &&
           !sibling.hasAttribute('aria-live')
         ) {
-          this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
+          const ariaHidden = sibling.getAttribute('aria-hidden');
+          const inert = sibling.getAttribute('inert');
+
+          // TODO(crisbeto): ideally we'd set only either `aria-hidden` or `inert` here, but
+          // at the moment of writing, some internal checks don't consider `inert` elements as
+          // removed from the a11y tree which reveals a bunch of pre-existing breakages.
+          this._inertElements.set(sibling, [ariaHidden, inert]);
           sibling.setAttribute('aria-hidden', 'true');
+          sibling.setAttribute('inert', 'true');
         }
       }
     }
