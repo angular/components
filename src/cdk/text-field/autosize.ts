@@ -367,6 +367,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // it to receive focus on IE and Edge.
     if (!this._destroyed.isStopped && this._hasFocus) {
       textarea.setSelectionRange(selectionStart, selectionEnd);
+      textarea.blur();
+      textarea.focus();
     }
   }
 }
