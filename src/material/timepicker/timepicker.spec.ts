@@ -1,4 +1,4 @@
-import {Component, Provider, signal, ViewChild} from '@angular/core';
+import {Component, inject, Provider, signal, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
@@ -24,10 +24,13 @@ import {
 import {MatInput} from '@angular/material/input';
 import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatTimepickerInput} from './timepicker-input';
-import {MatTimepicker} from './timepicker';
+import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
 import {MatTimepickerToggle} from './timepicker-toggle';
 import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {Overlay} from '@angular/cdk/overlay';
+import {Subject} from 'rxjs';
 
 describe('MatTimepicker', () => {
   let adapter: DateAdapter<Date>;
@@ -439,6 +442,38 @@ describe('MatTimepicker', () => {
         fixture.detectChanges();
         flush();
       }).not.toThrow();
+    }));
+
+    it('should be able to reopen the panel when closed by a scroll strategy', fakeAsync(() => {
+      const scrolledSubject = new Subject();
+
+      TestBed.resetTestingModule();
+      configureTestingModule([
+        {
+          provide: ScrollDispatcher,
+          useValue: {scrolled: () => scrolledSubject},
+        },
+        {
+          provide: MAT_TIMEPICKER_SCROLL_STRATEGY,
+          useFactory: () => {
+            const overlay = inject(Overlay);
+            return () => overlay.scrollStrategies.close();
+          },
+        },
+      ]);
+
+      const fixture = TestBed.createComponent(StandaloneTimepicker);
+      fixture.detectChanges();
+      fixture.componentInstance.timepicker.open();
+      fixture.detectChanges();
+      expect(getPanel()).toBeTruthy();
+      scrolledSubject.next();
+      fixture.detectChanges();
+      flush();
+      expect(getPanel()).toBeFalsy();
+      fixture.componentInstance.timepicker.open();
+      fixture.detectChanges();
+      expect(getPanel()).toBeTruthy();
     }));
   });
 
