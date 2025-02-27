@@ -55,12 +55,12 @@ export class ListNavigation<T extends ListNavigationItem> {
 
   /** Navigates to the next item in the list. */
   next() {
-    this.advance(1);
+    this._advance(1);
   }
 
   /** Navigates to the previous item in the list. */
   prev() {
-    this.advance(-1);
+    this._advance(-1);
   }
 
   /** Navigates to the first item in the list. */
@@ -89,7 +89,7 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */
-  private advance(delta: 1 | -1) {
+  private _advance(delta: 1 | -1) {
     const items = this.inputs.items();
     const itemCount = items.length;
     const startIndex = this.inputs.activeIndex();
