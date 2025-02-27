@@ -1,12 +1,13 @@
 <div class="docs-component-viewer-nav">
   @let items = (this.items | async) || [];
+  @let params = this._params | async;
 
   @if (items.length > 0) {
     <div class="docs-component-viewer-nav-content">
       <mat-nav-list>
         @for (component of items; track component) {
           <a mat-list-item #link="routerLinkActive"
-              [routerLink]="'/' + params()?.section + '/' + component.id"
+              [routerLink]="'/' + params?.section + '/' + component.id"
               [activated]="link.isActive"
               routerLinkActive="docs-component-viewer-sidenav-item-selected"
               [attr.aria-current]="link.isActive ? 'page': 'false'">
