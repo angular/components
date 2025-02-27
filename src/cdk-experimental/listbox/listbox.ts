@@ -126,6 +126,7 @@ export class CdkOption {
   /** A unique identifier for the option. */
   private readonly _generatedId = inject(_IdGenerator).getId('cdk-option-');
 
+  // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the option. */
   protected id = computed(() => this._generatedId);
 

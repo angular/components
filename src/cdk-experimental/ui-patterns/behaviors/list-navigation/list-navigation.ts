@@ -55,31 +55,12 @@ export class ListNavigation<T extends ListNavigationItem> {
 
   /** Navigates to the next item in the list. */
   next() {
-    const items = this.inputs.items();
-    const itemCount = items.length;
-    const startIndex = this.inputs.activeIndex();
-    const step = (i: number) => this._stepIndex(i, 1);
-
-    for (let i = step(startIndex); i !== startIndex && i < itemCount; i = step(i)) {
-      if (this.isFocusable(items[i])) {
-        this.goto(items[i]);
-        return;
-      }
-    }
+    this.advance(1);
   }
 
   /** Navigates to the previous item in the list. */
   prev() {
-    const items = this.inputs.items();
-    const startIndex = this.inputs.activeIndex();
-    const step = (i: number) => this._stepIndex(i, -1);
-
-    for (let i = step(startIndex); i !== startIndex && i >= 0; i = step(i)) {
-      if (this.isFocusable(items[i])) {
-        this.goto(items[i]);
-        return;
-      }
-    }
+    this.advance(-1);
   }
 
   /** Navigates to the first item in the list. */
@@ -107,8 +88,22 @@ export class ListNavigation<T extends ListNavigationItem> {
     return !item.disabled() || !this.inputs.skipDisabled();
   }
 
-  private _stepIndex(index: number, step: -1 | 1) {
-    const itemCount = this.inputs.items().length;
-    return this.inputs.wrap() ? (index + step + itemCount) % itemCount : index + step;
+  /** Advances to the next or previous focusable item in the list based on the given delta. */
+  private advance(delta: 1 | -1) {
+    const items = this.inputs.items();
+    const itemCount = items.length;
+    const startIndex = this.inputs.activeIndex();
+    const step = (i: number) =>
+      this.inputs.wrap() ? (i + delta + itemCount) % itemCount : i + delta;
+
+    // If wrapping is enabled, this loop ultimately terminates when `i` gets back to `startIndex`
+    // in the case that all options are disabled. If wrapping is disabled, the loop terminates
+    // when the index goes out of bounds.
+    for (let i = step(startIndex); i !== startIndex && i < itemCount && i >= 0; i = step(i)) {
+      if (this.isFocusable(items[i])) {
+        this.goto(items[i]);
+        return;
+      }
+    }
   }
 }
