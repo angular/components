@@ -6,7 +6,7 @@
                 [mode]="(isScreenSmall | async) ? 'over' : 'side'"
                 [fixedInViewport]="(isScreenSmall | async)"
                 [fixedTopGap]="(isExtraScreenSmall | async) ? 92 : 56">
-      <app-component-nav [params]="params | async"></app-component-nav>
+      <app-component-nav/>
     </mat-sidenav>
   }
   <div class="docs-component-sidenav-content">
@@ -15,7 +15,7 @@
       <main class="docs-component-sidenav-body-content">
         <!-- If on large screen, menu resides to left of content -->
         @if ((isScreenSmall | async) === false) {
-          <app-component-nav [params]="params | async"/>
+          <app-component-nav/>
         }
         <router-outlet></router-outlet>
       </main>
