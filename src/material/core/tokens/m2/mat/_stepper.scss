@@ -38,8 +38,10 @@ $prefix: (mat, stepper);
     header-selected-state-label-text-color: inspection.get-theme-color($theme, foreground, text),
     // Color of the header text when a step is in an error state.
     header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
+    // Foreground color of the header icon.
+    header-icon-foreground-color: inspection.get-theme-color($theme, foreground, stepper-icon),
     // Background color of the header icon.
-    header-icon-background-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    header-icon-background-color: inspection.get-theme-color($theme, background, stepper-icon),
     // Foreground color of the header icon in the error state.
     header-error-state-icon-foreground-color: inspection.get-theme-color($theme, warn, text),
     // Background color of the header icon in the error state.
@@ -91,8 +93,6 @@ $prefix: (mat, stepper);
   $active-state-background: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    // Foreground color of the header icon.
-    header-icon-foreground-color: $active-state-foreground,
     // Background color of the header icon in the selected state.
     header-selected-state-icon-background-color: $active-state-background,
     // Foreground color of the header icon in the selected state.
