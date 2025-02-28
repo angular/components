@@ -1,6 +1,5 @@
-<div class="example-listbox-controls">
+<div class="example-tablist-controls">
   <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
-  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
@@ -30,24 +29,24 @@
 </div>
 
 <!-- #docregion tabs -->
-<div cdkTabs class="tabs">
+<div cdkTabs class="example-tabs">
   <ul
     cdkTablist
+    class="example-tablist"
     [wrap]="wrap.value"
     [disabled]="disabled.value"
-    [multiselectable]="multi.value"
     [skipDisabled]="skipDisabled.value"
     [orientation]="orientation"
     [focusMode]="focusMode"
     [selectionMode]="selectionMode"
   >
-    <li cdkTab>tab 1</li>
-    <li cdkTab>tab 2</li>
-    <li cdkTab>tab 3</li>
+    <li cdkTab class="example-tab">tab 1</li>
+    <li cdkTab class="example-tab">tab 2</li>
+    <li cdkTab class="example-tab">tab 3</li>
   </ul>
 
-  <div cdkTabpanel>Tabpanel 1</div>
-  <div cdkTabpanel>Tabpanel 2</div>
-  <div cdkTabpanel>Tabpanel 3</div>
+  <div cdkTabpanel class="example-tabpanel">Tabpanel 1</div>
+  <div cdkTabpanel class="example-tabpanel">Tabpanel 2</div>
+  <div cdkTabpanel class="example-tabpanel">Tabpanel 3</div>
 </div>
 <!-- #enddocregion tabs -->
