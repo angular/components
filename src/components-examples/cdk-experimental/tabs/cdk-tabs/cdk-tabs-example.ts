@@ -28,7 +28,6 @@ export class CdkTabsExample {
   selectionMode: 'explicit' | 'follow' = 'follow';
 
   wrap = new FormControl(true, {nonNullable: true});
-  multi = new FormControl(false, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});
 }
