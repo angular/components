@@ -38,6 +38,23 @@ export function isInsideClientRect(clientRect: DOMRect, x: number, y: number) {
 }
 
 /**
+ * Checks if the child element is overflowing from its parent.
+ * @param parentRect - The bounding rect of the parent element.
+ * @param childRect - The bounding rect of the child element.
+ */
+export function isOverflowingParent(parentRect: DOMRect, childRect: DOMRect): boolean {
+  // check for horizontal overflow (left and right)
+  const isLeftOverflowing = childRect.left < parentRect.left;
+  const isRightOverflowing = childRect.left + childRect.width > parentRect.right;
+
+  // check for vertical overflow (top and bottom)
+  const isTopOverflowing = childRect.top < parentRect.top;
+  const isBottomOverflowing = childRect.top + childRect.height > parentRect.bottom;
+
+  return isLeftOverflowing || isRightOverflowing || isTopOverflowing || isBottomOverflowing;
+}
+
+/**
  * Updates the top/left positions of a `DOMRect`, as well as their bottom/right counterparts.
  * @param domRect `DOMRect` that should be updated.
  * @param top Amount to add to the `top` position.
