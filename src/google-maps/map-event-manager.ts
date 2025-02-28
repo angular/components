@@ -14,7 +14,7 @@ type MapEventManagerTarget =
   | {
       addListener: (
         name: string,
-        callback: (...args: any[]) => void,
+        callback: (...args: unknown[]) => void,
       ) => google.maps.MapsEventListener | undefined;
     }
   | undefined;
@@ -22,7 +22,7 @@ type MapEventManagerTarget =
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
 export class MapEventManager {
   /** Pending listeners that were added before the target was set. */
-  private _pending: {observable: Observable<any>; observer: Subscriber<any>}[] = [];
+  private _pending: {observable: Observable<unknown>; observer: Subscriber<unknown>}[] = [];
   private _listeners: google.maps.MapsEventListener[] = [];
   private _targetStream = new BehaviorSubject<MapEventManagerTarget>(undefined);
 
@@ -48,8 +48,8 @@ export class MapEventManager {
             return undefined;
           }
 
-          const listener = target.addListener(name, (event: T) => {
-            this._ngZone.run(() => observer.next(event));
+          const listener = target.addListener(name, (event: unknown) => {
+            this._ngZone.run(() => observer.next(event as T));
           });
 
           // If there's an error when initializing the Maps API (e.g. a wrong API key), it will
