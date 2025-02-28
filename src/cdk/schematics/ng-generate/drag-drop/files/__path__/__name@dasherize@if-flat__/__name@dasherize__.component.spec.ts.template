@@ -10,7 +10,7 @@ describe('<%= classify(name) %>Component', () => {
     TestBed.configureTestingModule({
       declarations: [<%= classify(name) %>Component],
       imports: [DragDropModule]
-    }).compileComponents();
+    });
   }));<% } %>
 
   beforeEach(() => {
