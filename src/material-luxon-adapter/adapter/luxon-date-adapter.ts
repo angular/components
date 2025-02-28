@@ -173,7 +173,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     return this._useUTC ? LuxonDateTime.utc(options) : LuxonDateTime.local(options);
   }
 
-  parse(value: any, parseFormat: string | string[]): LuxonDateTime | null {
+  parse(value: unknown, parseFormat: string | string[]): LuxonDateTime | null {
     const options: LuxonDateTimeOptions = this._getOptions();
 
     if (typeof value == 'string' && value.length > 0) {
@@ -241,7 +241,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
    * (https://www.ietf.org/rfc/rfc3339.txt) and valid Date objects into valid DateTime and empty
    * string into null. Returns an invalid date for all other values.
    */
-  override deserialize(value: any): LuxonDateTime | null {
+  override deserialize(value: unknown): LuxonDateTime | null {
     const options = this._getOptions();
     let date: LuxonDateTime | undefined;
     if (value instanceof Date) {
@@ -259,7 +259,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     return super.deserialize(value);
   }
 
-  isDateInstance(obj: any): boolean {
+  isDateInstance(obj: unknown): obj is LuxonDateTime {
     return obj instanceof LuxonDateTime;
   }
 
@@ -311,7 +311,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
     return date.second;
   }
 
-  override parseTime(value: any, parseFormat: string | string[]): LuxonDateTime | null {
+  override parseTime(value: unknown, parseFormat: string | string[]): LuxonDateTime | null {
     const result = this.parse(value, parseFormat);
 
     if ((!result || !this.isValid(result)) && typeof value === 'string') {
