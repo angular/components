@@ -9,3 +9,6 @@
 export * from './listbox/listbox';
 export * from './listbox/option';
 export * from './behaviors/signal-like/signal-like';
+export * from './tabs/tab';
+export * from './tabs/tablist';
+export * from './tabs/tabpanel';
