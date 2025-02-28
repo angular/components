@@ -1,5 +1,11 @@
 import {browser, by, element, ExpectedConditions} from 'protractor';
 
+// Expect `ngDevMode` to be always set:
+declare const ngDevMode: {
+  hydratedComponents: number;
+  componentsSkippedHydration: number;
+};
+
 describe('hydration e2e', () => {
   beforeEach(async () => {
     await browser.waitForAngularEnabled(false);
@@ -27,7 +33,7 @@ async function getHydrationState() {
     hydratedComponents: number;
     componentsSkippedHydration: number;
   }>(() => ({
-    hydratedComponents: (window as any).ngDevMode.hydratedComponents,
-    componentsSkippedHydration: (window as any).ngDevMode.componentsSkippedHydration,
+    hydratedComponents: ngDevMode.hydratedComponents,
+    componentsSkippedHydration: ngDevMode.componentsSkippedHydration,
   }));
 }
