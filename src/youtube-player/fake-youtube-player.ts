@@ -63,7 +63,7 @@ export function createFakeYtNamespace(): FakeYtNamespace {
   ]);
 
   let playerConfig: YT.PlayerOptions | undefined;
-  const boundListeners = new Map<keyof YT.Events, Set<(event: any) => void>>();
+  const boundListeners = new Map<keyof YT.Events, Set<(event: unknown) => void>>();
   const playerCtorSpy = jasmine.createSpy('Player Constructor');
 
   // The spy target function cannot be an arrow-function as this breaks when created through `new`.
@@ -72,18 +72,20 @@ export function createFakeYtNamespace(): FakeYtNamespace {
     return playerSpy;
   });
 
-  playerSpy.addEventListener.and.callFake((name: keyof YT.Events, listener: (e: any) => any) => {
-    if (!boundListeners.has(name)) {
-      boundListeners.set(name, new Set());
-    }
-    boundListeners.get(name)!.add(listener);
-  });
+  playerSpy.addEventListener.and.callFake(
+    (name: keyof YT.Events, listener: (e: unknown) => unknown) => {
+      if (!boundListeners.has(name)) {
+        boundListeners.set(name, new Set());
+      }
+      boundListeners.get(name)!.add(listener);
+    },
+  );
 
-  playerSpy.removeEventListener.and.callFake((name: keyof YT.Events, listener: (e: any) => any) => {
-    if (boundListeners.has(name)) {
-      boundListeners.get(name)!.delete(listener);
-    }
-  });
+  playerSpy.removeEventListener.and.callFake(
+    (name: keyof YT.Events, listener: (e: unknown) => unknown) => {
+      boundListeners.get(name)?.delete(listener);
+    },
+  );
 
   function eventHandlerFactory(name: keyof YT.Events) {
     return (arg: Object = {}) => {
@@ -91,9 +93,7 @@ export function createFakeYtNamespace(): FakeYtNamespace {
         throw new Error(`Player not initialized before ${name} called`);
       }
 
-      if (boundListeners.has(name)) {
-        boundListeners.get(name)!.forEach(callback => callback(arg));
-      }
+      boundListeners.get(name)?.forEach(callback => callback(arg));
     };
   }
 
