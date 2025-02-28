@@ -256,6 +256,7 @@ export class MatSelectionList
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     this._changeDetectorRef.markForCheck();
+    this._markOptionsForCheck();
   }
 
   /**

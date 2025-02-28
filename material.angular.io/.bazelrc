@@ -9,6 +9,9 @@ build --nowatchfs
 # Turn off legacy external runfiles
 build --nolegacy_external_runfiles
 
+# By default, failing tests don't print any output, it goes to the log file
+test --test_output=errors
+
 # Turn on --incompatible_strict_action_env which was on by default
 # in Bazel 0.21.0 but turned off again in 0.22.0. Follow
 # https://github.com/bazelbuild/bazel/issues/7026 for more details.

@@ -43,7 +43,7 @@ import {CDK_DRAG_HANDLE, CdkDragHandle} from './drag-handle';
 import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {DragRef, Point, PreviewContainer} from '../drag-ref';
+import {DragRef, Point, PreviewContainer, DragConstrainPosition} from '../drag-ref';
 import type {CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
 import {CDK_DRAG_CONFIG, DragDropConfig, DragStartDelay, DragAxis} from './config';
@@ -137,12 +137,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * of the user's pointer on the page, a reference to the item being dragged and its dimensions.
    * Should return a point describing where the item should be rendered.
    */
-  @Input('cdkDragConstrainPosition') constrainPosition?: (
-    userPointerPosition: Point,
-    dragRef: DragRef,
-    dimensions: DOMRect,
-    pickupPositionInElement: Point,
-  ) => Point;
+  @Input('cdkDragConstrainPosition') constrainPosition?: DragConstrainPosition;
 
   /** Class to be added to the preview element. */
   @Input('cdkDragPreviewClass') previewClass: string | string[];

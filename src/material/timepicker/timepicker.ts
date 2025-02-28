@@ -70,7 +70,7 @@ export const MAT_TIMEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
     providedIn: 'root',
     factory: () => {
       const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      return () => overlay.scrollStrategies.close();
     },
   },
 );
@@ -340,10 +340,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       hasBackdrop: false,
     });
 
-    this._overlayRef.keydownEvents().subscribe(event => {
-      this._handleKeydown(event);
-    });
-
+    this._overlayRef.detachments().subscribe(() => this.close());
+    this._overlayRef.keydownEvents().subscribe(event => this._handleKeydown(event));
     this._overlayRef.outsidePointerEvents().subscribe(event => {
       const target = _getEventTarget(event) as HTMLElement;
       const origin = this._input()?.getOverlayOrigin().nativeElement;

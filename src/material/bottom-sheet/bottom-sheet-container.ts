@@ -137,10 +137,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     const isEnter = animationName === ENTER_ANIMATION;
     const isExit = animationName === EXIT_ANIMATION;
 
-    if (isEnter) {
-      this._trapFocus();
-    }
-
     if (isEnter || isExit) {
       this._animationStateChanged.emit({
         toState: isEnter ? 'visible' : 'hidden',
@@ -148,6 +144,4 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
       });
     }
   }
-
-  protected override _captureInitialFocus(): void {}
 }

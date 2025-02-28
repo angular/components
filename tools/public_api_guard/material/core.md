@@ -29,7 +29,7 @@ import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Version } from '@angular/core';
 
-// @public
+// @public @deprecated (undocumented)
 export class AnimationCurves {
     // (undocumented)
     static ACCELERATION_CURVE: string;
@@ -41,7 +41,7 @@ export class AnimationCurves {
     static STANDARD_CURVE: string;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export class AnimationDurations {
     // (undocumented)
     static COMPLEX: string;

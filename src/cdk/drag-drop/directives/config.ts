@@ -7,16 +7,13 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {DragRefConfig, Point, DragRef} from '../drag-ref';
+import {DragRefConfig, DragConstrainPosition} from '../drag-ref';
 
 /** Possible values that can be used to configure the drag start delay. */
 export type DragStartDelay = number | {touch: number; mouse: number};
 
 /** Possible axis along which dragging can be locked. */
 export type DragAxis = 'x' | 'y';
-
-/** Function that can be used to constrain the position of a dragged element. */
-export type DragConstrainPosition = (point: Point, dragRef: DragRef) => Point;
 
 /** Possible orientations for a drop list. */
 export type DropListOrientation = 'horizontal' | 'vertical' | 'mixed';

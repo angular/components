@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "ng_test_library", "ng_web_test_suite", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "list-selection",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "@npm//@angular/core",
+    ],
+)
+
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":list-selection",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

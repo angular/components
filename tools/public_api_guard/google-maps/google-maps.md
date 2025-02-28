@@ -49,20 +49,22 @@ export type AriaLabelFn = (text: string) => string;
 export type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
 
 // @public (undocumented)
-export class Cluster {
-    constructor({ markers, position }: ClusterOptions);
+export interface Cluster {
     // (undocumented)
-    get bounds(): google.maps.LatLngBounds | undefined;
-    get count(): number;
+    new (options: ClusterOptions): Cluster;
+    // (undocumented)
+    bounds?: google.maps.LatLngBounds;
+    // (undocumented)
+    count: number;
+    // (undocumented)
     delete(): void;
     // (undocumented)
     marker?: Marker;
     // (undocumented)
     readonly markers?: Marker[];
     // (undocumented)
-    get position(): google.maps.LatLng;
+    position: google.maps.LatLng;
     // (undocumented)
-    protected _position: google.maps.LatLng;
     push(marker: Marker): void;
 }
 
@@ -107,10 +109,11 @@ export interface ClusterOptions {
 }
 
 // @public (undocumented)
-export class ClusterStats {
-    constructor(markers: Marker[], clusters: Cluster[]);
+export interface ClusterStats {
     // (undocumented)
-    readonly clusters: {
+    new (markers: Marker[], clusters: Cluster[]): ClusterStats;
+    // (undocumented)
+    clusters: {
         count: number;
         markers: {
             mean: number;
@@ -120,7 +123,7 @@ export class ClusterStats {
         };
     };
     // (undocumented)
-    readonly markers: {
+    markers: {
         sum: number;
     };
 }

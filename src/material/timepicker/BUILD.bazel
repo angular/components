@@ -54,12 +54,15 @@ ng_test_library(
     deps = [
         ":timepicker",
         "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 

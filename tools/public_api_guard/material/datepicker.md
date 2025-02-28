@@ -828,8 +828,6 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
     // (undocumented)
     protected _assignValueToModel(value: D | null): void;
     // (undocumented)
-    protected _formatValue(value: D | null): void;
-    // (undocumented)
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     // (undocumented)
     _onKeydown(event: KeyboardEvent): void;

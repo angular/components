@@ -11,10 +11,12 @@ export const commitMessage: CommitMessageConfig = {
     'multiple', // For when a commit applies to multiple components.
     'cdk-experimental/column-resize',
     'cdk-experimental/combobox',
+    'cdk-experimental/listbox',
     'cdk-experimental/popover-edit',
     'cdk-experimental/scrolling',
     'cdk-experimental/selection',
     'cdk-experimental/table-scroll-container',
+    'cdk-experimental/ui-patterns',
     'cdk/a11y',
     'cdk/accordion',
     'cdk/bidi',
