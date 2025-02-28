@@ -1,20 +1,20 @@
-.example-listbox-controls {
+.example-tablist-controls {
   display: flex;
   align-items: center;
   gap: 16px;
   padding-bottom: 16px;
 }
 
-.tabs {
+.example-tabs {
   border: 1px solid var(--mat-sys-outline);
   min-height: 30vh;
 }
 
-.tabs:has(ul[aria-orientation='vertical']) {
+.example-tabs:has(ul[aria-orientation='vertical']) {
   display: flex;
 }
 
-ul {
+.example-tablist {
   gap: 8px;
   margin: 0;
   padding: 8px;
@@ -28,22 +28,22 @@ ul {
   overflow: scroll;
 }
 
-ul[aria-orientation='vertical'] {
+.example-tablist[aria-orientation='vertical'] {
   flex-direction: column;
   border-bottom: initial;
   border-right: 1px solid var(--mat-sys-outline);
   justify-content: start;
 }
 
-ul[aria-orientation='horizontal'] li::before {
+.example-tablist[aria-orientation='horizontal'] li::before {
   display: none;
 }
 
-ul[aria-orientation='horizontal'] li[aria-selected='true']::before {
+.example-tablist[aria-orientation='horizontal'] li[aria-selected='true']::before {
   display: block;
 }
 
-li {
+.example-tab {
   gap: 16px;
   padding: 16px;
   display: flex;
@@ -52,25 +52,25 @@ li {
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-li:hover,
-li[tabindex='0'] {
+.example-tab:hover,
+.example-tab[tabindex='0'] {
   outline: 1px solid var(--mat-sys-outline);
   background: var(--mat-sys-surface-container);
 }
 
-li:focus-within {
+.example-tab:focus-within {
   outline: 2px solid var(--mat-sys-primary);
   background: var(--mat-sys-surface-container);
 }
 
-li[aria-selected='true'] {
+.example-tab[aria-selected='true'] {
   background-color: var(--mat-sys-secondary-container);
 }
 
-[role='tabpanel'] {
+.example-tabpanel {
   margin: 8px;
 }
 
-[role='tabpanel'][aria-hidden='true'] {
+.example-tabpanel[aria-hidden='true'] {
   display: none;
 }

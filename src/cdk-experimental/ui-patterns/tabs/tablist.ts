@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ModifierKey as Modifier} from '../behaviors/event-manager/event-manager';
 import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
 import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
 import {TabPattern} from './tab';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
-import {computed, Signal} from '@angular/core';
+import {computed, signal, Signal} from '@angular/core';
 
 /** The selection operations that the tablist can perform. */
 interface SelectOptions {
@@ -28,7 +27,7 @@ interface SelectOptions {
 
 /** The required inputs for the tablist. */
 export type TablistInputs = ListNavigationInputs<TabPattern> &
-  ListSelectionInputs<TabPattern> &
+  Omit<ListSelectionInputs<TabPattern>, 'multiselectable'> &
   ListFocusInputs<TabPattern> & {
     disabled: Signal<boolean>;
   };
@@ -56,12 +55,6 @@ export class TablistPattern {
   /** The id of the current active tab. */
   activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
-  /** Whether multiple tabs in the tablist can be selected at once. */
-  multiselectable: Signal<boolean>;
-
-  /** The number of tabs in the tablist. */
-  setsize = computed(() => this.navigation.inputs.items().length);
-
   followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** The key used to navigate to the previous tab in the tablist. */
@@ -84,50 +77,20 @@ export class TablistPattern {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    if (!this.followFocus()) {
-      manager
-        .on(this.prevKey, () => this.prev())
-        .on(this.nextKey, () => this.next())
-        .on('Home', () => this.first())
-        .on('End', () => this.last());
-    }
-
     if (this.followFocus()) {
       manager
         .on(this.prevKey, () => this.prev({selectOne: true}))
         .on(this.nextKey, () => this.next({selectOne: true}))
         .on('Home', () => this.first({selectOne: true}))
         .on('End', () => this.last({selectOne: true}));
-    }
-
-    if (this.inputs.multiselectable()) {
+    } else {
       manager
-        .on(Modifier.Shift, ' ', () => this._updateSelection({selectFromAnchor: true}))
-        .on(Modifier.Shift, this.prevKey, () => this.prev({toggle: true}))
-        .on(Modifier.Shift, this.nextKey, () => this.next({toggle: true}))
-        .on(Modifier.Ctrl | Modifier.Shift, 'Home', () => this.first({selectFromActive: true}))
-        .on(Modifier.Ctrl | Modifier.Shift, 'End', () => this.last({selectFromActive: true}))
-        .on(Modifier.Ctrl, 'A', () => this._updateSelection({selectAll: true}));
-    }
-
-    if (!this.followFocus() && this.inputs.multiselectable()) {
-      manager
-        .on(' ', () => this._updateSelection({toggle: true}))
-        .on('Enter', () => this._updateSelection({toggle: true}));
-    }
-
-    if (!this.followFocus() && !this.inputs.multiselectable()) {
-      manager
-        .on(' ', () => this._updateSelection({toggleOne: true}))
-        .on('Enter', () => this._updateSelection({toggleOne: true}));
-    }
-
-    if (this.inputs.multiselectable() && this.followFocus()) {
-      manager
-        .on(Modifier.Ctrl, this.prevKey, () => this.prev())
-        .on(Modifier.Ctrl, this.nextKey, () => this.next())
-        .on(Modifier.Ctrl, 'Home', () => this.first()) // TODO: Not in spec but prob should be.
-        .on(Modifier.Ctrl, 'End', () => this.last()); // TODO: Not in spec but prob should be.
+        .on(this.prevKey, () => this.prev())
+        .on(this.nextKey, () => this.next())
+        .on('Home', () => this.first())
+        .on('End', () => this.last())
+        .on(' ', () => this._updateSelection({selectOne: true}))
+        .on('Enter', () => this._updateSelection({selectOne: true}));
     }
 
     return manager;
@@ -136,14 +99,7 @@ export class TablistPattern {
   /** The pointerdown event manager for the tablist. */
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
-
-    if (this.inputs.multiselectable()) {
-      manager
-        .on(e => this.goto(e, {toggle: true}))
-        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
-    } else {
-      manager.on(e => this.goto(e, {toggleOne: true}));
-    }
+    manager.on(e => this.goto(e, {selectOne: true}));
 
     return manager;
   });
@@ -151,10 +107,13 @@ export class TablistPattern {
   constructor(readonly inputs: TablistInputs) {
     this.disabled = inputs.disabled;
     this.orientation = inputs.orientation;
-    this.multiselectable = inputs.multiselectable;
 
     this.navigation = new ListNavigation(inputs);
-    this.selection = new ListSelection({...inputs, navigation: this.navigation});
+    this.selection = new ListSelection({
+      ...inputs,
+      navigation: this.navigation,
+      multiselectable: signal(false),
+    });
     this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
   }
 

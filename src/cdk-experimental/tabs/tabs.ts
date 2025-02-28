@@ -53,7 +53,6 @@ export class CdkTabs {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-multiselectable]': 'pattern.multiselectable()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(mousedown)': 'pattern.onPointerdown($event)',
@@ -76,9 +75,6 @@ export class CdkTablist {
 
   /** Whether the tablist is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('horizontal');
-
-  /** Whether multiple items in the list can be selected at once. */
-  multiselectable = input(false, {transform: booleanAttribute});
 
   /** Whether focus should wrap when navigating. */
   wrap = input(true, {transform: booleanAttribute});
