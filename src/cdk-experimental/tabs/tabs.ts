@@ -23,6 +23,26 @@ import {TabpanelPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tabpan
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 
+/**
+ * A Tabs container.
+ *
+ * Represents a set of layered sections of content. The CdkTabs is a container meant to be used with
+ * CdkTablist, CdkTab, and CdkTabpanel as follows:
+ *
+ * ```html
+ * <div cdkTabs>
+ *   <ul cdkTablist>
+ *     <li cdkTab>Tab 1</li>
+ *     <li cdkTab>Tab 2</li>
+ *     <li cdkTab>Tab 3</li>
+ *   </ul>
+ *
+ *   <div cdkTabpanel>Tab content 1</div>
+ *   <div cdkTabpanel>Tab content 2</div>
+ *   <div cdkTabpanel>Tab content 3</div>
+ * </div>
+ * ```
+ */
 @Directive({
   selector: '[cdkTabs]',
   exportAs: 'cdkTabs',
@@ -44,6 +64,11 @@ export class CdkTabs {
   tabpanels = computed(() => this._cdkTabpanels().map(tabpanel => tabpanel.pattern));
 }
 
+/**
+ * A Tablist container.
+ *
+ * Controls a list of CdkTab(s).
+ */
 @Directive({
   selector: '[cdkTablist]',
   exportAs: 'cdkTablist',
@@ -105,6 +130,7 @@ export class CdkTablist {
   });
 }
 
+/** A selectable tab in a tablist. */
 @Directive({
   selector: '[cdkTab]',
   exportAs: 'cdkTab',
@@ -159,6 +185,7 @@ export class CdkTab {
   });
 }
 
+/** A Tabpanel container for the resources of layered content associated with a tab. */
 @Directive({
   selector: '[cdkTabpanel]',
   exportAs: 'cdkTabpanel',
