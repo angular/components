@@ -183,6 +183,20 @@
 <cdk-virtual-scroll-parent-scrolling-example class="demo-resize-example">
 </cdk-virtual-scroll-parent-scrolling-example>
 
+<h2>Multi Columns Virtual Scroll (width in pixel)</h2>
+<cdk-virtual-scroll-viewport class="demo-multicolumns-viewport" [itemDimension]="{width:160,height:50}">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-multicolumns-item">
+    Item #{{i}}
+  </div>
+</cdk-virtual-scroll-viewport>
+
+<h2>Multi Columns Virtual Scroll (width in percentage 30%)</h2>
+<cdk-virtual-scroll-viewport class="demo-multicolumns-viewport" [itemDimension]="{width:'30%',height:50}">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-multicolumns-item-pct">
+    Item #{{i}}
+  </div>
+</cdk-virtual-scroll-viewport>
+
 <h2>Virtual scroller with scrolling window</h2>
 <cdk-virtual-scroll-window-scrolling-example [shouldRun]="true">
 </cdk-virtual-scroll-window-scrolling-example>
