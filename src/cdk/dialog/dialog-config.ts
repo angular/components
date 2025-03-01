@@ -139,13 +139,6 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   closeOnOverlayDetachments?: boolean = true;
 
   /**
-   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
-   * @deprecated No longer used. Will be removed.
-   * @breaking-change 20.0.0
-   */
-  componentFactoryResolver?: unknown;
-
-  /**
    * Providers that will be exposed to the contents of the dialog. Can also
    * be provided as a function in order to generate the providers lazily.
    */

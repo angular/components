@@ -459,7 +459,7 @@ describe('Portals', () => {
     it('should be able to pass projectable nodes to portal', () => {
       // Set the selectedHost to be a ComponentPortal.
       const testAppComponent = fixture.componentInstance;
-      const componentPortal = new ComponentPortal(PizzaMsg, undefined, undefined, undefined, [
+      const componentPortal = new ComponentPortal(PizzaMsg, undefined, undefined, [
         [document.createTextNode('Projectable node')],
       ]);
 
@@ -484,7 +484,7 @@ describe('Portals', () => {
       injector = TestBed.inject(Injector);
       appRef = TestBed.inject(ApplicationRef);
       someDomElement = document.createElement('div');
-      host = new DomPortalOutlet(someDomElement, null, appRef, injector, document);
+      host = new DomPortalOutlet(someDomElement, appRef, injector);
       someFixture = TestBed.createComponent(ArbitraryViewContainerRefComponent);
       someViewContainerRef = someFixture.componentInstance.viewContainerRef;
       someInjector = someFixture.componentInstance.injector;
