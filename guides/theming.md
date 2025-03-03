@@ -422,7 +422,7 @@ html {
     density: 0
   ), $overrides: (
     primary-container: orange,
-  );
+  ));
 }
 ```
 
