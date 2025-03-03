@@ -18,14 +18,17 @@ import {
   MatTreeNestedDataSource,
 } from './index';
 
+type NodeContent = string[];
+type TreeContent = NodeContent[];
+
 describe('MatTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
-  const _ = {};
+  const _ = '';
 
   let treeElement: HTMLElement;
   let underlyingDataSource: FakeDataSource;
 
-  function configureMatTreeTestingModule(declarations: Type<any>[]) {
+  function configureMatTreeTestingModule(declarations: Type<unknown>[]) {
     TestBed.configureTestingModule({
       imports: [MatTreeModule],
       declarations: declarations,
@@ -786,11 +789,11 @@ function getNodes(treeElement: Element): HTMLElement[] {
 function expectFlatTreeToMatch(
   treeElement: Element,
   expectedPaddingIndent: number = 28,
-  ...expectedTree: any[]
+  ...expectedTree: TreeContent
 ) {
   const missedExpectations: string[] = [];
 
-  function checkNode(node: Element, expectedNode: any[]) {
+  function checkNode(node: Element, expectedNode: NodeContent) {
     const actualTextContent = node.textContent!.trim();
     const expectedTextContent = expectedNode[expectedNode.length - 1];
     if (actualTextContent !== expectedTextContent) {
@@ -800,7 +803,7 @@ function expectFlatTreeToMatch(
     }
   }
 
-  function checkLevel(node: Element, expectedNode: any[]) {
+  function checkLevel(node: Element, expectedNode: NodeContent) {
     const rawLevel = (node as HTMLElement).style.paddingLeft;
 
     // Some browsers return 0, while others return 0px.
@@ -820,7 +823,7 @@ function expectFlatTreeToMatch(
   }
 
   getNodes(treeElement).forEach((node, index) => {
-    const expected = expectedTree ? expectedTree[index] : null;
+    const expected = expectedTree[index];
 
     checkLevel(node, expected);
     checkNode(node, expected);
@@ -831,9 +834,9 @@ function expectFlatTreeToMatch(
   }
 }
 
-function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
+function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: TreeContent) {
   const missedExpectations: string[] = [];
-  function checkNodeContent(node: Element, expectedNode: any[]) {
+  function checkNodeContent(node: Element, expectedNode: NodeContent) {
     const expectedTextContent = expectedNode[expectedNode.length - 1];
     const actualTextContent = node.childNodes.item(0).textContent!.trim();
     if (actualTextContent !== expectedTextContent) {
@@ -843,7 +846,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
     }
   }
 
-  function checkNodeDescendants(node: Element, expectedNode: any[], currentIndex: number) {
+  function checkNodeDescendants(node: Element, expectedNode: NodeContent, currentIndex: number) {
     let expectedDescendant = 0;
 
     for (let i = currentIndex + 1; i < expectedTree.length; ++i) {
@@ -863,7 +866,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
   }
 
   getNodes(treeElement).forEach((node, index) => {
-    const expected = expectedTree ? expectedTree[index] : null;
+    const expected = expectedTree[index];
 
     checkNodeDescendants(node, expected, index);
     checkNodeContent(node, expected);
