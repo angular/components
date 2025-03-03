@@ -43,9 +43,9 @@ describe('MatTable', () => {
       const data = fixture.componentInstance.dataSource!.data;
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
-        [data[0].a, data[0].b, data[0].c],
-        [data[1].a, data[1].b, data[1].c],
-        [data[2].a, data[2].b, data[2].c],
+        [data[0].a, data[0].b, data[0].c] as string[],
+        [data[1].a, data[1].b, data[1].c] as string[],
+        [data[2].a, data[2].b, data[2].c] as string[],
         ['fourth_row'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
@@ -91,10 +91,10 @@ describe('MatTable', () => {
       const data = fixture.componentInstance.dataSource!.data;
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
-        [data[0].a, data[0].b, data[0].c],
-        [data[1].a, data[1].b, data[1].c],
-        [data[2].a, data[2].b, data[2].c],
-        [data[3].a, data[3].b, data[3].c],
+        [data[0].a, data[0].b, data[0].c] as string[],
+        [data[1].a, data[1].b, data[1].c] as string[],
+        [data[2].a, data[2].b, data[2].c] as string[],
+        [data[3].a, data[3].b, data[3].c] as string[],
       ]);
     });
 
@@ -186,9 +186,9 @@ describe('MatTable', () => {
     const data = fixture.componentInstance.dataSource!.data;
     expectTableToMatchContent(tableElement, [
       ['Column A', 'Column B', 'Column C'],
-      [data[0].a, data[0].b, data[0].c],
-      [data[1].a, data[1].b, data[1].c],
-      [data[2].a, data[2].b, data[2].c],
+      [data[0].a, data[0].b, data[0].c] as string[],
+      [data[1].a, data[1].b, data[1].c] as string[],
+      [data[2].a, data[2].b, data[2].c] as string[],
     ]);
   });
 
@@ -200,9 +200,9 @@ describe('MatTable', () => {
     const data = fixture.componentInstance.dataSource!.data;
     expectTableToMatchContent(tableElement, [
       ['Column A', 'Column B', 'Column C'],
-      [data[0].a, data[0].b, data[0].c],
-      [data[1].a, data[1].b, data[1].c],
-      [data[2].a, data[2].b, data[2].c],
+      [data[0].a, data[0].b, data[0].c] as string[],
+      [data[1].a, data[1].b, data[1].c] as string[],
+      [data[2].a, data[2].b, data[2].c] as string[],
     ]);
   });
 
@@ -384,7 +384,7 @@ describe('MatTable', () => {
       ]);
 
       // Change the filter to a falsy value that might come in from the view.
-      dataSource.filter = 0 as any;
+      dataSource.filter = 0 as unknown as string;
       flushMicrotasks();
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
@@ -631,7 +631,7 @@ describe('MatTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-      dataSource.data = {} as any;
+      dataSource.data = {} as TestData[];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
@@ -1135,7 +1135,7 @@ function getActualTableContent(tableElement: Element): string[][] {
   return actualTableContent.map(row => row.map(cell => cell.textContent!.trim()));
 }
 
-export function expectTableToMatchContent(tableElement: Element, expected: any[]) {
+export function expectTableToMatchContent(tableElement: Element, expected: string[][]) {
   const missedExpectations: string[] = [];
   function checkCellContent(actualCell: string, expectedCell: string) {
     if (actualCell !== expectedCell) {
@@ -1161,7 +1161,7 @@ export function expectTableToMatchContent(tableElement: Element, expected: any[]
     }
 
     row.forEach((actualCell, cellIndex) => {
-      const expectedCell = expectedRow ? expectedRow[cellIndex] : null;
+      const expectedCell = expectedRow[cellIndex];
       checkCellContent(actualCell, expectedCell);
     });
   });
