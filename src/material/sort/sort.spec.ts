@@ -539,8 +539,8 @@ class SimpleMatSortApp {
   }
 }
 
-class FakeDataSource extends DataSource<any> {
-  connect(collectionViewer: CollectionViewer): Observable<any[]> {
+class FakeDataSource extends DataSource<never> {
+  connect(collectionViewer: CollectionViewer): Observable<never[]> {
     return collectionViewer.viewChange.pipe(map(() => []));
   }
   disconnect() {}
