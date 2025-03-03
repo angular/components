@@ -11,7 +11,7 @@ import {AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 
 /** Injection token that can be used to access the data that was passed in to a snack bar. */
-export const MAT_SNACK_BAR_DATA = new InjectionToken<any>('MatSnackBarData');
+export const MAT_SNACK_BAR_DATA = new InjectionToken<unknown>('MatSnackBarData');
 
 /** Possible values for horizontalPosition on MatSnackBarConfig. */
 export type MatSnackBarHorizontalPosition = 'start' | 'center' | 'end' | 'left' | 'right';
@@ -22,7 +22,7 @@ export type MatSnackBarVerticalPosition = 'top' | 'bottom';
 /**
  * Configuration used when opening a snack-bar.
  */
-export class MatSnackBarConfig<D = any> {
+export class MatSnackBarConfig<D = unknown> {
   /** The politeness level for the MatAriaLiveAnnouncer announcement. */
   politeness?: AriaLivePoliteness = 'assertive';
 
