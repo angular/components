@@ -80,7 +80,7 @@ export class CdkTabs {
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
-    '(mousedown)': 'pattern.onPointerdown($event)',
+    '(pointerdown)': 'pattern.onPointerdown($event)',
   },
 })
 export class CdkTablist {
@@ -88,7 +88,7 @@ export class CdkTablist {
   private readonly _directionality = inject(Directionality);
 
   /** The CdkTabs nested inside of the CdkTablist. */
-  private readonly _cdkTabs = contentChildren(CdkTab, {descendants: true});
+  private readonly _cdkTabs = contentChildren(CdkTab);
 
   /** A signal wrapper for directionality. */
   protected textDirection = toSignal(this._directionality.change, {
