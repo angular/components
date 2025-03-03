@@ -99,14 +99,18 @@
   class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
   [class.mat-mdc-form-field-subscript-dynamic-size]="subscriptSizing === 'dynamic'"
 >
-  @switch (_getDisplayedMessages()) {
-    @case ('error') {
+  @let subscriptMessageType = _getSubscriptMessageType();
+
+  <div aria-atomic="true" aria-live="polite">
+    @if (subscriptMessageType === 'error') {
       <div class="mat-mdc-form-field-error-wrapper">
         <ng-content select="mat-error, [matError]"></ng-content>
       </div>
     }
+  </div>
 
-    @case ('hint') {
+  <div aria-atomic="true" aria-live="polite">
+    @if (subscriptMessageType === 'hint') {
       <div class="mat-mdc-form-field-hint-wrapper">
         @if (hintLabel) {
           <mat-hint [id]="_hintLabelId">{{hintLabel}}</mat-hint>
@@ -116,5 +120,5 @@
         <ng-content select="mat-hint[align='end']"></ng-content>
       </div>
     }
-  }
+  </div>
 </div>
