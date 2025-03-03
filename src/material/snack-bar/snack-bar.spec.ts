@@ -593,10 +593,11 @@ describe('MatSnackBar', () => {
     });
 
     it('should be able to inject arbitrary user data', () => {
+      const data: BurritosNotificationData = {
+        burritoType: 'Chimichanga',
+      };
       const snackBarRef = snackBar.openFromComponent(BurritosNotification, {
-        data: {
-          burritoType: 'Chimichanga',
-        },
+        data,
       });
 
       expect(snackBarRef.instance.data)
@@ -1013,8 +1014,12 @@ class ComponentWithChildViewContainer {
   `,
 })
 class ComponentWithTemplateRef {
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef: TemplateRef<unknown>;
   localValue: string;
+}
+
+interface BurritosNotificationData {
+  burritoType: string;
 }
 
 /** Simple component for testing ComponentPortal. */
@@ -1023,7 +1028,7 @@ class ComponentWithTemplateRef {
 })
 class BurritosNotification {
   snackBarRef = inject<MatSnackBarRef<BurritosNotification>>(MatSnackBarRef);
-  data = inject(MAT_SNACK_BAR_DATA);
+  data = inject<BurritosNotificationData>(MAT_SNACK_BAR_DATA);
 }
 
 @Component({
