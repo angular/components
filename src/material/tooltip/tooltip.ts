@@ -52,6 +52,15 @@ import {
 import {ComponentPortal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
 
+declare global {
+  interface CSSStyleDeclaration {
+    msUserSelect: string;
+    MozUserSelect: string;
+    webkitUserDrag: string;
+    webkitTapHighlightColor: string;
+  }
+}
+
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
 
@@ -206,7 +215,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   private _position: TooltipPosition = 'below';
   private _positionAtOrigin: boolean = false;
   private _disabled: boolean = false;
-  private _tooltipClass: string | string[] | Set<string> | {[key: string]: any};
+  private _tooltipClass: string | string[] | Set<string> | {[key: string]: unknown};
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   private readonly _tooltipComponent = TooltipComponent;
@@ -348,7 +357,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     return this._tooltipClass;
   }
 
-  set tooltipClass(value: string | string[] | Set<string> | {[key: string]: any}) {
+  set tooltipClass(value: string | string[] | Set<string> | {[key: string]: unknown}) {
     this._tooltipClass = value;
     if (this._tooltipInstance) {
       this._setTooltipClass(this._tooltipClass);
@@ -709,7 +718,9 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   /** Updates the tooltip class */
-  private _setTooltipClass(tooltipClass: string | string[] | Set<string> | {[key: string]: any}) {
+  private _setTooltipClass(
+    tooltipClass: string | string[] | Set<string> | {[key: string]: unknown},
+  ) {
     if (this._tooltipInstance) {
       this._tooltipInstance.tooltipClass = tooltipClass;
       this._tooltipInstance._markForCheck();
@@ -897,20 +908,20 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       // textareas, because it prevents the user from typing into them on iOS Safari.
       if (gestures === 'on' || (element.nodeName !== 'INPUT' && element.nodeName !== 'TEXTAREA')) {
         style.userSelect =
-          (style as any).msUserSelect =
+          style.msUserSelect =
           style.webkitUserSelect =
-          (style as any).MozUserSelect =
+          style.MozUserSelect =
             'none';
       }
 
       // If we have `auto` gestures and the element uses native HTML dragging,
       // we don't set `-webkit-user-drag` because it prevents the native behavior.
       if (gestures === 'on' || !element.draggable) {
-        (style as any).webkitUserDrag = 'none';
+        style.webkitUserDrag = 'none';
       }
 
       style.touchAction = 'none';
-      (style as any).webkitTapHighlightColor = 'transparent';
+      style.webkitTapHighlightColor = 'transparent';
     }
   }
 
@@ -971,7 +982,7 @@ export class TooltipComponent implements OnDestroy {
   message: string;
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass: string | string[] | Set<string> | {[key: string]: any};
+  tooltipClass: string | string[] | Set<string> | {[key: string]: unknown};
 
   /** The timeout ID of any current timer set to show the tooltip */
   private _showTimeoutId: ReturnType<typeof setTimeout> | undefined;

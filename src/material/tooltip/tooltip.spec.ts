@@ -1,7 +1,13 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {CdkScrollable, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {
+  CdkScrollable,
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  OverlayContainer,
+  OverlayModule,
+} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {
   createFakeEvent,
@@ -1423,7 +1429,7 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
 
       const styles = fixture.nativeElement.querySelector('button').style;
-      expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
+      expect(styles.touchAction || styles.webkitUserDrag).toBe('none');
     });
 
     it('should allow native touch interactions if touch gestures are turned off', () => {
@@ -1432,7 +1438,7 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
 
       const styles = fixture.nativeElement.querySelector('button').style;
-      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+      expect(styles.touchAction || styles.webkitUserDrag).toBeFalsy();
     });
 
     it('should allow text selection on inputs when gestures are set to auto', () => {
@@ -1444,13 +1450,13 @@ describe('MatTooltip', () => {
 
       expect(inputStyle.userSelect).toBeFalsy();
       expect(inputStyle.webkitUserSelect).toBeFalsy();
-      expect((inputStyle as any).msUserSelect).toBeFalsy();
-      expect((inputStyle as any).MozUserSelect).toBeFalsy();
+      expect(inputStyle.msUserSelect).toBeFalsy();
+      expect(inputStyle.MozUserSelect).toBeFalsy();
 
       expect(textareaStyle.userSelect).toBeFalsy();
       expect(textareaStyle.webkitUserSelect).toBeFalsy();
-      expect((textareaStyle as any).msUserSelect).toBeFalsy();
-      expect((textareaStyle as any).MozUserSelect).toBeFalsy();
+      expect(textareaStyle.msUserSelect).toBeFalsy();
+      expect(textareaStyle.MozUserSelect).toBeFalsy();
     });
 
     it('should disable text selection on inputs when gestures are set to on', () => {
@@ -1462,14 +1468,14 @@ describe('MatTooltip', () => {
       const inputUserSelect =
         inputStyle.userSelect ||
         inputStyle.webkitUserSelect ||
-        (inputStyle as any).msUserSelect ||
-        (inputStyle as any).MozUserSelect;
+        inputStyle.msUserSelect ||
+        inputStyle.MozUserSelect;
       const textareaStyle = fixture.componentInstance.textarea.nativeElement.style;
       const textareaUserSelect =
         textareaStyle.userSelect ||
         textareaStyle.webkitUserSelect ||
-        (textareaStyle as any).msUserSelect ||
-        (textareaStyle as any).MozUserSelect;
+        textareaStyle.msUserSelect ||
+        textareaStyle.MozUserSelect;
 
       expect(inputUserSelect).toBe('none');
       expect(textareaUserSelect).toBe('none');
@@ -1608,7 +1614,7 @@ describe('MatTooltip', () => {
 })
 class BasicTooltipDemo {
   position = 'below';
-  message: any = initialTooltipMessage;
+  message: string | number = initialTooltipMessage;
   showButton = true;
   showTooltipClass = false;
   tooltipDisabled = false;
@@ -1725,7 +1731,7 @@ class TooltipOnDraggableElement {
   standalone: false,
 })
 class TooltipDemoWithoutPositionBinding {
-  message: any = initialTooltipMessage;
+  message: string = initialTooltipMessage;
   @ViewChild(MatTooltip) tooltip: MatTooltip;
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
 }
@@ -1749,7 +1755,7 @@ class TooltipDemoWithoutTooltipClassBinding {
   standalone: false,
 })
 class TooltipDemoWithTooltipClassBinding {
-  message: any = initialTooltipMessage;
+  message: string = initialTooltipMessage;
   @ViewChild(MatTooltip) tooltip: MatTooltip;
   @ViewChild('button') button: ElementRef<HTMLButtonElement>;
 }
