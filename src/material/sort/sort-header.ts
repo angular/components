@@ -84,7 +84,7 @@ interface MatSortHeaderColumnDef {
     'class': 'mat-sort-header',
     '(click)': '_toggleOnInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    '(mouseleave)': '_recentlyCleared.set(false)',
+    '(mouseleave)': '_recentlyCleared.set(null)',
     '[attr.aria-sort]': '_getAriaSortAttribute()',
     '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
