@@ -193,7 +193,7 @@ export class CdkTab {
     'role': 'tabpanel',
     'class': 'cdk-tabpanel',
     '[attr.id]': 'pattern.id()',
-    '[attr.aria-hidden]': 'pattern.hidden()',
+    '[attr.inert]': 'pattern.hidden() ? true : null',
   },
 })
 export class CdkTabpanel {
