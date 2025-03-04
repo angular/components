@@ -71,6 +71,6 @@
   margin: 8px;
 }
 
-.example-tabpanel[aria-hidden='true'] {
+.example-tabpanel[inert] {
   display: none;
 }
