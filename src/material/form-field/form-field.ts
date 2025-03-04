@@ -326,6 +326,7 @@ export class MatFormField
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
+  private _labelledByChanges: Subscription | undefined;
   protected readonly _animationsDisabled: boolean;
 
   constructor(...args: unknown[]);
@@ -405,6 +406,7 @@ export class MatFormField
     this._stateChanges?.unsubscribe();
     this._valueChanges?.unsubscribe();
     this._describedByChanges?.unsubscribe();
+    this._labelledByChanges?.unsubscribe();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -470,6 +472,19 @@ export class MatFormField
       )
       .subscribe(() => this._syncDescribedByIds());
 
+    // Updating the `aria-labelledby` touches the DOM. Only do it if it actually needs to change.
+    this._labelledByChanges?.unsubscribe();
+    this._labelledByChanges = control.stateChanges
+      .pipe(
+        startWith([undefined, undefined] as const),
+        map(() => [control.errorState, control.userAriaLabelledBy] as const),
+        pairwise(),
+        filter(([[prevErrorState, prevLabelledBy], [currentErrorState, currentLabelledBy]]) => {
+          return prevErrorState !== currentErrorState || prevLabelledBy !== currentLabelledBy;
+        }),
+      )
+      .subscribe(() => this._syncLabelledByIds());
+
     this._valueChanges?.unsubscribe();
 
     // Run change detection if the value changes.
@@ -514,12 +529,14 @@ export class MatFormField
     // Update the aria-described by when the number of errors changes.
     this._errorChildren.changes.subscribe(() => {
       this._syncDescribedByIds();
+      this._syncLabelledByIds();
       this._changeDetectorRef.markForCheck();
     });
 
     // Initial mat-hint validation and subscript describedByIds sync.
     this._validateHints();
     this._syncDescribedByIds();
+    this._syncLabelledByIds();
   }
 
   /** Throws an error if the form field's control is missing. */
@@ -643,6 +660,7 @@ export class MatFormField
   private _processHints() {
     this._validateHints();
     this._syncDescribedByIds();
+    this._syncLabelledByIds();
   }
 
   /**
@@ -709,6 +727,47 @@ export class MatFormField
       }
 
       this._control.setDescribedByIds(ids);
+    }
+  }
+
+  /**
+   * Sets the list of element IDs that describe the child control. This allows the control to update
+   * its `aria-describedby` attribute accordingly.
+   */
+  private _syncLabelledByIds() {
+    if (this._control) {
+      let ids: string[] = [];
+
+      // TODO(wagnermaciel): Remove the type check when we find the root cause of this bug.
+      if (
+        this._control.userAriaLabelledBy &&
+        typeof this._control.userAriaLabelledBy === 'string'
+      ) {
+        ids.push(...this._control.userAriaLabelledBy.split(' '));
+      }
+
+      if (this._getDisplayedMessages() === 'hint') {
+        const startHint = this._hintChildren
+          ? this._hintChildren.find(hint => hint.align === 'start')
+          : null;
+        const endHint = this._hintChildren
+          ? this._hintChildren.find(hint => hint.align === 'end')
+          : null;
+
+        if (startHint) {
+          ids.push(startHint.id);
+        } else if (this._hintLabel) {
+          ids.push(this._hintLabelId);
+        }
+
+        if (endHint) {
+          ids.push(endHint.id);
+        }
+      } else if (this._errorChildren) {
+        ids.push(...this._errorChildren.map(error => error.id));
+      }
+
+      this._control.setLabelledByIds(ids);
     }
   }
 
