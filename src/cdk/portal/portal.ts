@@ -95,12 +95,6 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   injector?: Injector | null;
 
   /**
-   * @deprecated No longer in use. To be removed.
-   * @breaking-change 18.0.0
-   */
-  componentFactoryResolver?: any;
-
-  /**
    * List of DOM nodes that should be projected through `<ng-content>` of the attached component.
    */
   projectableNodes?: Node[][] | null;
@@ -109,11 +103,6 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
-    /**
-     * @deprecated No longer in use. To be removed.
-     * @breaking-change 18.0.0
-     */
-    _componentFactoryResolver?: any,
     projectableNodes?: Node[][] | null,
   ) {
     super();

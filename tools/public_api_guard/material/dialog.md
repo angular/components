@@ -149,8 +149,6 @@ export class MatDialogConfig<D = any> {
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
     closeOnNavigation?: boolean;
-    // @deprecated
-    componentFactoryResolver?: unknown;
     data?: D | null;
     delayFocusTrap?: boolean;
     direction?: Direction;

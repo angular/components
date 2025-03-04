@@ -65,7 +65,6 @@ export class MatMenuContent implements OnDestroy {
     if (!this._outlet) {
       this._outlet = new DomPortalOutlet(
         this._document.createElement('div'),
-        null,
         this._appRef,
         this._injector,
       );

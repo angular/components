@@ -76,11 +76,8 @@ export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any
 
 // @public
 export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
-    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null,
-    _componentFactoryResolver?: any, projectableNodes?: Node[][] | null);
+    constructor(component: ComponentType<T>, viewContainerRef?: ViewContainerRef | null, injector?: Injector | null, projectableNodes?: Node[][] | null);
     component: ComponentType<T>;
-    // @deprecated (undocumented)
-    componentFactoryResolver?: any;
     injector?: Injector | null;
     projectableNodes?: Node[][] | null;
     viewContainerRef?: ViewContainerRef | null;
@@ -105,9 +102,7 @@ export class DomPortalHost extends DomPortalOutlet {
 // @public
 export class DomPortalOutlet extends BasePortalOutlet {
     constructor(
-    outletElement: Element,
-    _unusedComponentFactoryResolver?: any, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined,
-    _document?: any);
+    outletElement: Element, _appRef?: ApplicationRef | undefined, _defaultInjector?: Injector | undefined);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;

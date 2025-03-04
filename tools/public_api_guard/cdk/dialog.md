@@ -133,8 +133,6 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;
-    // @deprecated
-    componentFactoryResolver?: unknown;
     container?: Type<C> | {
         type: Type<C>;
         providers: (config: DialogConfig<D, R, C>) => StaticProvider[];
