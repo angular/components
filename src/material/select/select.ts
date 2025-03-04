@@ -1432,8 +1432,7 @@ export class MatSelect
       return null;
     }
 
-    const labelId = this._parentFormField?.getLabelId();
-    let value = (labelId ? labelId + ' ' : '') + this._valueId;
+    let value = this._parentFormField?.getLabelId() || '';
 
     if (this.ariaLabelledby) {
       value += ' ' + this.ariaLabelledby;
