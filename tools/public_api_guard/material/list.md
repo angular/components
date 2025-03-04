@@ -183,6 +183,8 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
     get selected(): boolean;
     set selected(value: BooleanInput);
     readonly selectedChange: EventEmitter<boolean>;
+    // (undocumented)
+    protected _selectionList: SelectionList;
     _setSelected(selected: boolean): boolean;
     _setTabindex(value: number): void;
     // (undocumented)
