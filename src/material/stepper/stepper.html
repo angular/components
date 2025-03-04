@@ -13,9 +13,31 @@
     <div class="mat-horizontal-stepper-wrapper">
       <div class="mat-horizontal-stepper-header-container" role="tablist">
         @for (step of steps; track step) {
-          <ng-container
-            [ngTemplateOutlet]="stepTemplate"
-            [ngTemplateOutletContext]="{step, i: $index}"/>
+          <mat-step-header
+            class="mat-horizontal-stepper-header"
+            role="tab"
+            (click)="step.select()"
+            (keydown)="_onKeydown($event)"
+            [tabIndex]="_getFocusIndex() === $index ? 0 : -1"
+            [id]="_getStepLabelId($index)"
+            [attr.aria-posinset]="$index + 1"
+            [attr.aria-setsize]="steps.length"
+            [attr.aria-controls]="_getStepContentId($index)"
+            [attr.aria-owns]="_getStepContentId($index)"
+            [attr.aria-selected]="selectedIndex == $index"
+            [attr.aria-label]="step.ariaLabel || null"
+            [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
+            [attr.aria-disabled]="_stepIsNavigable($index, step) ? null : true"
+            [index]="$index"
+            [state]="_getIndicatorType($index, step.state)"
+            [label]="step.stepLabel || step.label"
+            [selected]="selectedIndex === $index"
+            [active]="_stepIsNavigable($index, step)"
+            [optional]="step.optional"
+            [errorMessage]="step.errorMessage"
+            [iconOverrides]="_iconOverrides"
+            [disableRipple]="disableRipple || !_stepIsNavigable($index, step)"
+            [color]="step.color || color"/>
           @if (!$last) {
             <div class="mat-stepper-horizontal-line"></div>
           }
@@ -43,9 +65,28 @@
     <div class="mat-vertical-stepper-wrapper" role="group">
       @for (step of steps; track step) {
         <div class="mat-step" role="group">
-          <ng-container
-            [ngTemplateOutlet]="stepTemplate"
-            [ngTemplateOutletContext]="{step, i: $index}"/>
+          <mat-step-header
+            class="mat-vertical-stepper-header"
+            role="button"
+            (click)="step.select()"
+            (keydown)="_onKeydown($event)"
+            [tabIndex]="_getFocusIndex() === $index ? 0 : -1"
+            [id]="_getStepLabelId($index)"
+            [attr.aria-current]="selectedIndex == $index"
+            [attr.aria-label]="step.ariaLabel || null"
+            [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
+            [attr.aria-disabled]="_stepIsNavigable($index, step) ? null : true"
+            [attr.aria-owns]="_getStepContentId($index)"
+            [index]="$index"
+            [state]="_getIndicatorType($index, step.state)"
+            [label]="step.stepLabel || step.label"
+            [selected]="selectedIndex === $index"
+            [active]="_stepIsNavigable($index, step)"
+            [optional]="step.optional"
+            [errorMessage]="step.errorMessage"
+            [iconOverrides]="_iconOverrides"
+            [disableRipple]="disableRipple || !_stepIsNavigable($index, step)"
+            [color]="step.color || color"/>
           <div
             #animatedContainer
             class="mat-vertical-content-container"
@@ -66,33 +107,3 @@
     </div>
   }
 }
-
-<!-- Common step templating -->
-<ng-template let-step="step" let-i="i" #stepTemplate>
-  <mat-step-header
-    [class.mat-horizontal-stepper-header]="orientation === 'horizontal'"
-    [class.mat-vertical-stepper-header]="orientation === 'vertical'"
-    [attr.role]="orientation === 'horizontal' ? 'tab' : 'button'"
-    (click)="step.select()"
-    (keydown)="_onKeydown($event)"
-    [tabIndex]="_getFocusIndex() === i ? 0 : -1"
-    [id]="_getStepLabelId(i)"
-    [attr.aria-posinset]="orientation === 'horizontal' ? i + 1 : undefined"
-    [attr.aria-setsize]="orientation === 'horizontal' ? steps.length : undefined"
-    [attr.aria-controls]="orientation === 'horizontal' ? _getStepContentId(i) : undefined"
-    [attr.aria-selected]="orientation === 'horizontal' ? selectedIndex == i : undefined"
-    [attr.aria-current]="orientation === 'vertical' ? selectedIndex == i : undefined"
-    [attr.aria-label]="step.ariaLabel || `Step ${i+1}`"
-    [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
-    [attr.aria-disabled]="_stepIsNavigable(i, step) ? null : true"
-    [index]="i"
-    [state]="_getIndicatorType(i, step.state)"
-    [label]="step.stepLabel || step.label"
-    [selected]="selectedIndex === i"
-    [active]="_stepIsNavigable(i, step)"
-    [optional]="step.optional"
-    [errorMessage]="step.errorMessage"
-    [iconOverrides]="_iconOverrides"
-    [disableRipple]="disableRipple || !_stepIsNavigable(i, step)"
-    [color]="step.color || color"/>
-</ng-template>
