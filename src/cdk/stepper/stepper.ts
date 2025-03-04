@@ -284,20 +284,21 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     return this._selectedIndex;
   }
   set selectedIndex(index: number) {
-    if (this.steps && this._steps) {
+    if (this._steps) {
       // Ensure that the index can't be out of bounds.
       if (!this._isValidIndex(index) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
       }
 
-      this.selected?._markAsInteracted();
+      if (this._selectedIndex !== index) {
+        this.selected?._markAsInteracted();
 
-      if (
-        this._selectedIndex !== index &&
-        !this._anyControlsInvalidOrPending(index) &&
-        (index >= this._selectedIndex || this.steps.toArray()[index].editable)
-      ) {
-        this._updateSelectedItemIndex(index);
+        if (
+          !this._anyControlsInvalidOrPending(index) &&
+          (index >= this._selectedIndex || this.steps.toArray()[index].editable)
+        ) {
+          this._updateSelectedItemIndex(index);
+        }
       }
     } else {
       this._selectedIndex = index;
