@@ -1213,7 +1213,7 @@ describe('MatStepper', () => {
       fixture.detectChanges();
       expect(stepper.steps.map(step => step.interacted)).toEqual([true, true, false]);
 
-      stepper.next();
+      stepper.previous();
       fixture.detectChanges();
       expect(stepper.steps.map(step => step.interacted)).toEqual([true, true, true]);
     });
@@ -1240,9 +1240,33 @@ describe('MatStepper', () => {
       fixture.detectChanges();
       expect(interactedSteps).toEqual([0, 1]);
 
-      stepper.next();
+      stepper.previous();
       fixture.detectChanges();
       expect(interactedSteps).toEqual([0, 1, 2]);
+      subscription.unsubscribe();
+    });
+
+    it('should not emit interacted event if selectedIndex does not change', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const stepper: MatStepper = fixture.debugElement.query(
+        By.directive(MatStepper),
+      ).componentInstance;
+      const interactedSteps: number[] = [];
+      const subscription = merge(...stepper.steps.map(step => step.interactedStream)).subscribe(
+        step => interactedSteps.push(stepper.steps.toArray().indexOf(step as MatStep)),
+      );
+
+      expect(interactedSteps).toEqual([]);
+
+      stepper.next();
+      fixture.detectChanges();
+      expect(interactedSteps).toEqual([0]);
+
+      stepper.selectedIndex = 1;
+      fixture.detectChanges();
+      expect(interactedSteps).toEqual([0]);
       subscription.unsubscribe();
     });
 
