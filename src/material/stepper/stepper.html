@@ -62,7 +62,7 @@
   }
 
   @case ('vertical') {
-    <div class="mat-vertical-stepper-wrapper" role="group">
+    <div class="mat-vertical-stepper-wrapper" role="region">
       @for (step of steps; track step) {
         <div class="mat-step" role="group">
           <mat-step-header
@@ -72,11 +72,12 @@
             (keydown)="_onKeydown($event)"
             [tabIndex]="_getFocusIndex() === $index ? 0 : -1"
             [id]="_getStepLabelId($index)"
+            [attr.aria-expanded]="selectedIndex === $index"
+            [attr.aria-controls]="_getStepContentId($index)"
             [attr.aria-current]="selectedIndex == $index"
             [attr.aria-label]="step.ariaLabel || null"
             [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
             [attr.aria-disabled]="_stepIsNavigable($index, step) ? null : true"
-            [attr.aria-owns]="_getStepContentId($index)"
             [index]="$index"
             [state]="_getIndicatorType($index, step.state)"
             [label]="step.stepLabel || step.label"
