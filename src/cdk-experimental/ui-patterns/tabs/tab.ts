@@ -7,16 +7,11 @@
  */
 
 import {computed, Signal} from '@angular/core';
-import {ListSelection, ListSelectionItem} from '../behaviors/list-selection/list-selection';
-import {ListNavigation, ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
-import {ListFocus, ListFocusItem} from '../behaviors/list-focus/list-focus';
+import {ListSelectionItem} from '../behaviors/list-selection/list-selection';
+import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
+import {ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {TabpanelPattern} from './tabpanel';
-
-interface TablistPattern {
-  focusManager: ListFocus<TabPattern>;
-  selection: ListSelection<TabPattern>;
-  navigation: ListNavigation<TabPattern>;
-}
+import {TablistPattern} from './tablist';
 
 /** The required inputs to tabs. */
 export interface TabInputs extends ListNavigationItem, ListSelectionItem, ListFocusItem {
