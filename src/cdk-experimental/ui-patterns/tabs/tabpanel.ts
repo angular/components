@@ -26,8 +26,8 @@ export class TabpanelPattern {
   /** Whether the tabpanel is hidden. */
   hidden = computed(() => !this.tab().selected());
 
-  constructor(args: TabpanelInputs) {
-    this.id = args.id;
-    this.tab = args.tab;
+  constructor(inputs: TabpanelInputs) {
+    this.id = inputs.id;
+    this.tab = inputs.tab;
   }
 }
