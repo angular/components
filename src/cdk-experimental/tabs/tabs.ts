@@ -96,7 +96,7 @@ export class CdkTablist {
   });
 
   /** The Tab UIPatterns of the child Tabs. */
-  protected items = computed(() => this._cdkTabs().map(tab => tab.pattern));
+  protected tabs = computed(() => this._cdkTabs().map(tab => tab.pattern));
 
   /** Whether the tablist is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('horizontal');
@@ -125,7 +125,7 @@ export class CdkTablist {
   /** The Tablist UIPattern. */
   pattern: TablistPattern = new TablistPattern({
     ...this,
-    items: this.items,
+    items: this.tabs,
     textDirection: this.textDirection,
   });
 }
