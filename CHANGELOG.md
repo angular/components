@@ -1,3 +1,26 @@
+<a name="19.2.2"></a>
+# 19.2.2 "metal-llama" (2025-03-05)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c31c7fe22a](https://github.com/angular/components/commit/c31c7fe22aca7765d5cc1fe367859681a5a9004c) | fix | **stepper:** emitting interacted event when item has not changed ([#30579](https://github.com/angular/components/pull/30579)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f89ed8115c](https://github.com/angular/components/commit/f89ed8115c229f41eb532f92b28d85322d27a7aa) | fix | **bottom-sheet:** focus first tabbable element by default ([#30549](https://github.com/angular/components/pull/30549)) |
+| [8754784ec5](https://github.com/angular/components/commit/8754784ec5120b997d0dd8f1beb58be1844fb7d3) | fix | **schematics:** remove NoopAnimationsModule from generated tests ([#30562](https://github.com/angular/components/pull/30562)) |
+| [bfdbc23b8c](https://github.com/angular/components/commit/bfdbc23b8cdfe465f68c52e81aa58ca5e6b4c613) | fix | **timepicker:** unable to reopen if closed by scroll strategy ([#30561](https://github.com/angular/components/pull/30561)) |
+### material-angular-io
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cd40ee0f37](https://github.com/angular/components/commit/cd40ee0f37d3952bc78d173361f484b3bd9c5846) | fix | sidenav links not updating ([#30564](https://github.com/angular/components/pull/30564)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3c68b6d6b7](https://github.com/angular/components/commit/3c68b6d6b7078c7da5e4f56311d11bf41f502e5a) | fix | resolve host binding issues ([#30570](https://github.com/angular/components/pull/30570)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.1"></a>
 # 19.2.1 "neptunite-neptune" (2025-02-26)
 
