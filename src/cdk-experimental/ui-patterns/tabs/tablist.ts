@@ -27,7 +27,7 @@ interface SelectOptions {
 
 /** The required inputs for the tablist. */
 export type TablistInputs = ListNavigationInputs<TabPattern> &
-  Omit<ListSelectionInputs<TabPattern>, 'multiselectable'> &
+  Omit<ListSelectionInputs<TabPattern>, 'multiselectable' | 'selectedIds'> &
   ListFocusInputs<TabPattern> & {
     disabled: Signal<boolean>;
   };
@@ -113,6 +113,7 @@ export class TablistPattern {
       ...inputs,
       navigation: this.navigation,
       multiselectable: signal(false),
+      selectedIds: signal<string[]>([]),
     });
     this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
   }

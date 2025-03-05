@@ -116,9 +116,6 @@ export class CdkTablist {
   /** Whether the tablist is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
-  /** The ids of the current selected tab. */
-  selectedIds = model<string[]>([]);
-
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);
 
