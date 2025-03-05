@@ -1,3 +1,33 @@
+<a name="20.0.0-next.0"></a>
+# 20.0.0-next.0 "metal-cat" (2025-03-05)
+## Breaking Changes
+### material
+- `tabindex` values set as `[attr.tabindex]` set on a Material button might not work as expected. Use `tabindex` for static values, or `[tabindex]`/`[tabIndex]` for dynamic ones.
+### multiple
+- * `DialogConfig.componentFactoryResolver` has been removed.
+  * The constructor of `DomPortalOutlet` has changed.
+  * `ComponentPortal.componentFactoryResolver` has been removed.
+  * The constructor signature of `ComponentPortal` has changed.
+  * `MatDialogConfig.componentFactoryResolver` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fc46997442](https://github.com/angular/components/commit/fc46997442b72bc1ba395fcd5f008b0358e5c91f) | feat | **ui-patterns:** listbox ui pattern ([#30495](https://github.com/angular/components/pull/30495)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6a5943d8b0](https://github.com/angular/components/commit/6a5943d8b0fe6042c885e608d7d2a071e27dd802) | fix | **button:** combine MatButton and MatAnchor ([#30492](https://github.com/angular/components/pull/30492)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [69eedd75f7](https://github.com/angular/components/commit/69eedd75f79ceec549ecaf0a8dfc38c36e33f02a) | fix | **drag-drop:** incorrect type DragConstrainPosition ([#30510](https://github.com/angular/components/pull/30510)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cda5c8e686](https://github.com/angular/components/commit/cda5c8e686b0c4394b382db08c2d0b4b793ac7d6) | fix | remove remaining references to ComponentFactoryResolver ([#30569](https://github.com/angular/components/pull/30569)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.2"></a>
 # 19.2.2 "metal-llama" (2025-03-05)
 ### cdk
