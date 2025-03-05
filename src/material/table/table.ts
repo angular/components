@@ -76,7 +76,7 @@ export class MatTable<T> extends CdkTable<T> implements OnInit {
     // this only applies to native tables, because we don't wrap the content of flexbox-based ones.
     if (this._isNativeHtmlTable) {
       const tbody = this._elementRef.nativeElement.querySelector('tbody');
-      tbody.classList.add('mdc-data-table__content');
+      tbody && tbody.classList.add('mdc-data-table__content');
     }
   }
 }
