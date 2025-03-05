@@ -73,6 +73,7 @@
             [tabIndex]="_getFocusIndex() === $index ? 0 : -1"
             [id]="_getStepLabelId($index)"
             [attr.aria-expanded]="selectedIndex === $index"
+            [attr.aria-pressed]="selectedIndex == $index"
             [attr.aria-controls]="_getStepContentId($index)"
             [attr.aria-current]="selectedIndex == $index"
             [attr.aria-label]="step.ariaLabel || null"

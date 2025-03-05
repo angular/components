@@ -131,7 +131,9 @@ describe('MatStepper', () => {
     });
 
     it('should set the "region" role on the vertical stepper', () => {
-      const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
+      const stepperEl = fixture.debugElement.query(
+        By.css('mat-vertical-stepper-wrapper'),
+      )!.nativeElement;
       expect(stepperEl.getAttribute('role')).toBe('region');
     });
 
