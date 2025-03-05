@@ -23,9 +23,9 @@ const materialMigrations: NullableDevkitMigration[] = [
 ];
 
 /** Entry point for the migration schematics with target of Angular Material v19 */
-export function updateToV19(): Rule {
+export function updateToV20(): Rule {
   return createMigrationSchematicRule(
-    TargetVersion.V19,
+    TargetVersion.V20,
     materialMigrations,
     materialUpgradeData,
     onMigrationComplete,
