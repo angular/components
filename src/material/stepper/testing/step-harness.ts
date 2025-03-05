@@ -35,6 +35,11 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
         async (harness, selected) => (await harness.isSelected()) === selected,
       )
       .addOption(
+        'pressed',
+        options.pressed,
+        async (harness, pressed) => (await harness.isPressed()) === pressed,
+      )
+      .addOption(
         'completed',
         options.completed,
         async (harness, completed) => (await harness.isCompleted()) === completed,
@@ -67,10 +72,19 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     return (await host.getAttribute('aria-selected')) === 'true';
   }
 
+  /** Whether the step is selected. */
+  async isPressed(): Promise<boolean> {
+    const host = await this.host();
+    return (await host.getAttribute('aria-pressed')) === 'true';
+  }
+
   /** Whether the step has been filled out. */
   async isCompleted(): Promise<boolean> {
     const state = await this._getIconState();
-    return state === 'done' || (state === 'edit' && !(await this.isSelected()));
+    return (
+      state === 'done' ||
+      (state === 'edit' && !((await this.isSelected()) || (await this.isPressed())))
+    );
   }
 
   /**
