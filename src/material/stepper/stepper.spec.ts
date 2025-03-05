@@ -130,28 +130,28 @@ describe('MatStepper', () => {
       expect(stepperComponent.selected instanceof MatStep).toBe(true);
     });
 
-    it('should set the "tablist" role on stepper', () => {
+    it('should set the "region" role on the vertical stepper', () => {
       const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
-      expect(stepperEl.getAttribute('role')).toBe('tablist');
+      expect(stepperEl.getAttribute('role')).toBe('region');
     });
 
     it('should display the correct label', () => {
       const stepperComponent = fixture.debugElement.query(
         By.directive(MatStepper),
       )!.componentInstance;
-      let selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      let selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('Step 1');
 
       stepperComponent.selectedIndex = 2;
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('Step 3');
 
       fixture.componentInstance.inputLabel.set('New Label');
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('New Label');
     });
 
