@@ -7,35 +7,22 @@
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/material/core';
+import * as i2 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Provider } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { Type } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 
 // @public
 export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatSlideToggleDefaultOptions>;
-
-// @public @deprecated (undocumented)
-export const MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR: Provider;
-
-// @public @deprecated (undocumented)
-export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: {
-    provide: InjectionToken<readonly ControlValueAccessor[]>;
-    useExisting: Type<any>;
-    multi: boolean;
-};
 
 // @public (undocumented)
 export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator {
@@ -131,25 +118,7 @@ export class MatSlideToggleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSlideToggleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSlideToggleModule, never, [typeof i2.MatSlideToggle, typeof i3.MatCommonModule], [typeof i2.MatSlideToggle, typeof i3.MatCommonModule]>;
-}
-
-// @public @deprecated
-export class MatSlideToggleRequiredValidator extends CheckboxRequiredValidator {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSlideToggleRequiredValidator, "mat-slide-toggle[required][formControlName],             mat-slide-toggle[required][formControl], mat-slide-toggle[required][ngModel]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSlideToggleRequiredValidator, never>;
-}
-
-// @public @deprecated (undocumented)
-export class _MatSlideToggleRequiredValidatorModule {
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatSlideToggleRequiredValidatorModule, never>;
-    // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<_MatSlideToggleRequiredValidatorModule>;
-    // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<_MatSlideToggleRequiredValidatorModule, never, [typeof i1.MatSlideToggleRequiredValidator], [typeof i1.MatSlideToggleRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSlideToggleModule, never, [typeof i1.MatSlideToggle, typeof i2.MatCommonModule], [typeof i1.MatSlideToggle, typeof i2.MatCommonModule]>;
 }
 
 // (No @packageDocumentation comment for this package)
