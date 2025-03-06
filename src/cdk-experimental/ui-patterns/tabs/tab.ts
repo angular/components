@@ -24,14 +24,6 @@ export class TabPattern {
   /** A unique identifier for the tab. */
   id: Signal<string>;
 
-  /** The position of the tab in the list. */
-  index = computed(
-    () =>
-      this.tablist()
-        .navigation.inputs.items()
-        .findIndex(i => i.id() === this.id()) ?? -1,
-  );
-
   /** Whether the tab is selected. */
   selected = computed(() => this.tablist().selection.inputs.selectedIds().includes(this.id()));
 
@@ -53,11 +45,11 @@ export class TabPattern {
   /** The html element that should receive focus. */
   element: Signal<HTMLElement>;
 
-  constructor(args: TabInputs) {
-    this.id = args.id;
-    this.tablist = args.tablist;
-    this.tabpanel = args.tabpanel;
-    this.element = args.element;
-    this.disabled = args.disabled;
+  constructor(inputs: TabInputs) {
+    this.id = inputs.id;
+    this.tablist = inputs.tablist;
+    this.tabpanel = inputs.tabpanel;
+    this.element = inputs.element;
+    this.disabled = inputs.disabled;
   }
 }
