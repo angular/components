@@ -64,9 +64,6 @@ export interface CanStick {
 }
 
 // @public
-export type CanStickCtor = Constructor<CanStick>;
-
-// @public
 export const CDK_ROW_TEMPLATE = "<ng-container cdkCellOutlet></ng-container>";
 
 // @public
@@ -443,9 +440,6 @@ export class _CoalescedStyleScheduler {
 }
 
 // @public
-export type Constructor<T> = new (...args: any[]) => T;
-
-// @public
 export class DataRowOutlet implements RowOutlet {
     constructor(...args: unknown[]);
     // (undocumented)
@@ -485,9 +479,6 @@ export class HeaderRowOutlet implements RowOutlet {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<HeaderRowOutlet, never>;
 }
-
-// @public @deprecated
-export function mixinHasStickyInput<T extends Constructor<{}>>(base: T): CanStickCtor & T;
 
 // @public
 export class NoDataRowOutlet implements RowOutlet {
