@@ -59,16 +59,6 @@ export enum TransitionCheckState {
   Indeterminate,
 }
 
-/**
- * @deprecated Will stop being exported.
- * @breaking-change 19.0.0
- */
-export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MatCheckbox),
-  multi: true,
-};
-
 /** Change event object emitted by checkbox. */
 export class MatCheckboxChange {
   /** The source checkbox of the event. */
@@ -99,7 +89,11 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     '[class]': 'color ? "mat-" + color : "mat-accent"',
   },
   providers: [
-    MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MatCheckbox),
+      multi: true,
+    },
     {
       provide: NG_VALIDATORS,
       useExisting: MatCheckbox,
