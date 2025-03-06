@@ -926,6 +926,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       right: '',
       position: '',
       transform: '',
+      maxHeight: '',
     } as CSSStyleDeclaration);
   }
 
@@ -1004,13 +1005,17 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     // We want to set either `top` or `bottom` based on whether the overlay wants to appear
     // above or below the origin and the direction in which the element will expand.
+    const documentHeight = this._document.documentElement!.clientHeight;
     if (position.overlayY === 'bottom') {
       // When using `bottom`, we adjust the y position such that it is the distance
       // from the bottom of the viewport rather than the top.
-      const documentHeight = this._document.documentElement!.clientHeight;
       styles.bottom = `${documentHeight - (overlayPoint.y + this._overlayRect.height)}px`;
+      styles.maxHeight = `${overlayPoint.y + this._overlayRect.height + scrollPosition.top}px`;
     } else {
+      const remainingScroll =
+        this._document.documentElement!.scrollHeight - documentHeight - scrollPosition.top;
       styles.top = coerceCssPixelValue(overlayPoint.y);
+      styles.maxHeight = `${documentHeight - overlayPoint.y + remainingScroll}px`;
     }
 
     return styles;
