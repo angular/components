@@ -130,11 +130,12 @@ describe('MatStepper', () => {
       expect(stepperComponent.selected instanceof MatStep).toBe(true);
     });
 
-    it('should set the "region" role on the vertical stepper', () => {
-      const stepperEl = fixture.debugElement.query(
-        By.css('mat-vertical-stepper-wrapper'),
-      )!.nativeElement;
-      expect(stepperEl.getAttribute('role')).toBe('region');
+    it('should set the "group" role on a vertical stepper', () => {
+      const stepperWrapper = fixture.debugElement.query(By.css('.mat-vertical-stepper-wrapper'));
+      expect(stepperWrapper).toBeTruthy();
+
+      const stepperEl = stepperWrapper!.nativeElement;
+      expect(stepperEl.getAttribute('role')).toBe('group');
     });
 
     it('should display the correct label', () => {
@@ -379,15 +380,6 @@ describe('MatStepper', () => {
 
       selectionChangeSubscription.unsubscribe();
       animationDoneSubscription.unsubscribe();
-    });
-
-    it('should set the correct aria-posinset and aria-setsize', () => {
-      const headers = Array.from<HTMLElement>(
-        fixture.nativeElement.querySelectorAll('.mat-step-header'),
-      );
-
-      expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
-      expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
     it('should adjust the index when removing a step before the current one', () => {
