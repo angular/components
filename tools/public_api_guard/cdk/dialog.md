@@ -25,7 +25,6 @@ import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PositionStrategy } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -106,16 +105,6 @@ export const DIALOG_DATA: InjectionToken<any>;
 
 // @public
 export const DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export const DIALOG_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
 // @public
 export interface DialogCloseOptions {
