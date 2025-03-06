@@ -6,22 +6,23 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal} from '@angular/core';
+import {computed} from '@angular/core';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {TabPattern} from './tab';
 
 /** The required inputs for the tabpanel. */
 export interface TabpanelInputs {
-  id: Signal<string>;
-  tab: Signal<TabPattern>;
+  id: SignalLike<string>;
+  tab: SignalLike<TabPattern>;
 }
 
 /** A tabpanel associated with a tab. */
 export class TabpanelPattern {
   /** A unique identifier for the tabpanel. */
-  id: Signal<string>;
+  id: SignalLike<string>;
 
   /** A reference to the corresponding tab. */
-  tab: Signal<TabPattern>;
+  tab: SignalLike<TabPattern>;
 
   /** Whether the tabpanel is hidden. */
   hidden = computed(() => !this.tab().selected());

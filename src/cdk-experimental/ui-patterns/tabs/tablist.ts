@@ -12,7 +12,8 @@ import {TabPattern} from './tab';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
-import {computed, signal, Signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 /** The selection operations that the tablist can perform. */
 interface SelectOptions {
@@ -29,7 +30,7 @@ interface SelectOptions {
 export type TablistInputs = ListNavigationInputs<TabPattern> &
   Omit<ListSelectionInputs<TabPattern>, 'multiselectable' | 'selectedIds'> &
   ListFocusInputs<TabPattern> & {
-    disabled: Signal<boolean>;
+    disabled: SignalLike<boolean>;
   };
 
 /** Controls the state of a tablist. */
@@ -44,10 +45,10 @@ export class TablistPattern {
   focusManager: ListFocus<TabPattern>;
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  orientation: Signal<'vertical' | 'horizontal'>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the tablist is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 
   /** The tabindex of the tablist. */
   tabindex = computed(() => this.focusManager.getListTabindex());

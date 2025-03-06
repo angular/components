@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal} from '@angular/core';
+import {computed} from '@angular/core';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {ListSelectionItem} from '../behaviors/list-selection/list-selection';
 import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import {ListFocusItem} from '../behaviors/list-focus/list-focus';
@@ -15,14 +16,14 @@ import {TablistPattern} from './tablist';
 
 /** The required inputs to tabs. */
 export interface TabInputs extends ListNavigationItem, ListSelectionItem, ListFocusItem {
-  tablist: Signal<TablistPattern>;
-  tabpanel: Signal<TabpanelPattern>;
+  tablist: SignalLike<TablistPattern>;
+  tabpanel: SignalLike<TabpanelPattern>;
 }
 
 /** A tab in a tablist. */
 export class TabPattern {
   /** A unique identifier for the tab. */
-  id: Signal<string>;
+  id: SignalLike<string>;
 
   /** Whether the tab is selected. */
   selected = computed(() => this.tablist().selection.inputs.selectedIds().includes(this.id()));
@@ -31,19 +32,19 @@ export class TabPattern {
   controls = computed(() => this.tabpanel().id());
 
   /** Whether the tab is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 
   /** A reference to the parent tablist. */
-  tablist: Signal<TablistPattern>;
+  tablist: SignalLike<TablistPattern>;
 
   /** A reference to the corresponding tabpanel. */
-  tabpanel: Signal<TabpanelPattern>;
+  tabpanel: SignalLike<TabpanelPattern>;
 
   /** The tabindex of the tab. */
   tabindex = computed(() => this.tablist().focusManager.getItemTabindex(this));
 
   /** The html element that should receive focus. */
-  element: Signal<HTMLElement>;
+  element: SignalLike<HTMLElement>;
 
   constructor(inputs: TabInputs) {
     this.id = inputs.id;
