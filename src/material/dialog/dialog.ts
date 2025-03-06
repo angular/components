@@ -45,28 +45,6 @@ export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
 );
 
 /**
- * @docs-private
- * @deprecated No longer used. To be removed.
- * @breaking-change 19.0.0
- */
-export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  overlay: Overlay,
-): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.block();
-}
-
-/**
- * @docs-private
- * @deprecated No longer used. To be removed.
- * @breaking-change 19.0.0
- */
-export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
-  provide: MAT_DIALOG_SCROLL_STRATEGY,
-  deps: [Overlay],
-  useFactory: MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
-
-/**
  * Service to open Material Design modal dialogs.
  */
 @Injectable({providedIn: 'root'})
