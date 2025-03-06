@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal, signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
+import {SignalLike} from '../signal-like/signal-like';
 import {ListNavigation, ListNavigationInputs} from '../list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs, ListFocusItem} from './list-focus';
 
 describe('List Focus', () => {
   interface TestItem extends ListFocusItem {
-    tabindex: Signal<-1 | 0>;
+    tabindex: SignalLike<-1 | 0>;
   }
 
-  function getItems(length: number): Signal<TestItem[]> {
+  function getItems(length: number): SignalLike<TestItem[]> {
     return signal(
       Array.from({length}).map((_, i) => ({
         index: signal(i),
@@ -28,7 +29,7 @@ describe('List Focus', () => {
   }
 
   function getNavigation<T extends TestItem>(
-    items: Signal<T[]>,
+    items: SignalLike<T[]>,
     args: Partial<ListNavigationInputs<T>> = {},
   ): ListNavigation<T> {
     return new ListNavigation({

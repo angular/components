@@ -10,7 +10,7 @@ ts_library(
     ),
     deps = [
         "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
-        "@npm//@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 
@@ -20,6 +20,7 @@ ng_test_library(
     deps = [
         ":list-focus",
         "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 

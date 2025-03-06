@@ -10,6 +10,7 @@ ts_library(
     ),
     deps = [
         "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "@npm//@angular/core",
     ],
 )
@@ -20,6 +21,7 @@ ng_test_library(
     deps = [
         ":list-typeahead",
         "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 

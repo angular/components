@@ -6,33 +6,34 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal} from '@angular/core';
+import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
 export interface ListNavigationItem {
   /** Whether an item is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a collection that has navigable items. */
 export interface ListNavigationInputs<T extends ListNavigationItem> {
   /** Whether focus should wrap when navigating. */
-  wrap: Signal<boolean>;
+  wrap: SignalLike<boolean>;
 
   /** The items in the list. */
-  items: Signal<T[]>;
+  items: SignalLike<T[]>;
 
   /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled: Signal<boolean>;
+  skipDisabled: SignalLike<boolean>;
 
   /** The current index that has been navigated to. */
-  activeIndex: WritableSignal<number>;
+  activeIndex: WritableSignalLike<number>;
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation: Signal<'vertical' | 'horizontal'>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** The direction that text is read based on the users locale. */
-  textDirection: Signal<'rtl' | 'ltr'>;
+  textDirection: SignalLike<'rtl' | 'ltr'>;
 }
 
 /** Controls navigation for a list of items. */

@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal} from '@angular/core';
+import {signal} from '@angular/core';
+import {SignalLike} from '../signal-like/signal-like';
 import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
 
 /**
@@ -15,7 +16,7 @@ import {ListNavigationItem, ListNavigation} from '../list-navigation/list-naviga
  */
 export interface ListTypeaheadItem extends ListNavigationItem {
   /** The text used by the typeahead search. */
-  searchTerm: Signal<string>;
+  searchTerm: SignalLike<string>;
 }
 
 /**
@@ -24,7 +25,7 @@ export interface ListTypeaheadItem extends ListNavigationItem {
  */
 export interface ListTypeaheadInputs {
   /** The amount of time before the typeahead search is reset. */
-  typeaheadDelay: Signal<number>;
+  typeaheadDelay: SignalLike<number>;
 }
 
 /** Controls typeahead for a list of items. */

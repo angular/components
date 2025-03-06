@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal, WritableSignal} from '@angular/core';
+import {signal} from '@angular/core';
+import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListSelectionItem, ListSelection, ListSelectionInputs} from './list-selection';
 import {ListNavigation, ListNavigationInputs} from '../list-navigation/list-navigation';
 
 describe('List Selection', () => {
   interface TestItem extends ListSelectionItem {
-    disabled: WritableSignal<boolean>;
+    disabled: WritableSignalLike<boolean>;
   }
 
-  function getItems(length: number): Signal<TestItem[]> {
+  function getItems(length: number): SignalLike<TestItem[]> {
     return signal(
       Array.from({length}).map((_, i) => ({
         index: signal(i),
@@ -27,7 +28,7 @@ describe('List Selection', () => {
   }
 
   function getNavigation<T extends TestItem>(
-    items: Signal<T[]>,
+    items: SignalLike<T[]>,
     args: Partial<ListNavigationInputs<T>> = {},
   ): ListNavigation<T> {
     return new ListNavigation({
@@ -42,7 +43,7 @@ describe('List Selection', () => {
   }
 
   function getSelection<T extends TestItem>(
-    items: Signal<T[]>,
+    items: SignalLike<T[]>,
     navigation: ListNavigation<T>,
     args: Partial<ListSelectionInputs<T>> = {},
   ): ListSelection<T> {

@@ -14,6 +14,7 @@ ts_library(
         "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
         "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
         "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "@npm//@angular/core",
     ],
 )

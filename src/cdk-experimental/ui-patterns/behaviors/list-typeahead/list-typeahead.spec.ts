@@ -6,17 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, signal, WritableSignal} from '@angular/core';
+import {signal} from '@angular/core';
+import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListTypeaheadItem, ListTypeahead} from './list-typeahead';
 import {fakeAsync, tick} from '@angular/core/testing';
 import {ListNavigation} from '../list-navigation/list-navigation';
 
 describe('List Typeahead', () => {
   interface TestItem extends ListTypeaheadItem {
-    disabled: WritableSignal<boolean>;
+    disabled: WritableSignalLike<boolean>;
   }
 
-  function getItems(length: number): Signal<TestItem[]> {
+  function getItems(length: number): SignalLike<TestItem[]> {
     return signal(
       Array.from({length}).map((_, i) => ({
         index: signal(i),
