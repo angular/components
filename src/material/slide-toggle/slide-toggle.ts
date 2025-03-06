@@ -43,16 +43,6 @@ import {
 import {_MatInternalFormField, _StructuralStylesLoader, MatRipple} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
-/**
- * @deprecated Will stop being exported.
- * @breaking-change 19.0.0
- */
-export const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MatSlideToggle),
-  multi: true,
-};
-
 /** Change event object emitted by a slide toggle. */
 export class MatSlideToggleChange {
   constructor(
@@ -84,7 +74,11 @@ export class MatSlideToggleChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    MAT_SLIDE_TOGGLE_VALUE_ACCESSOR,
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MatSlideToggle),
+      multi: true,
+    },
     {
       provide: NG_VALIDATORS,
       useExisting: MatSlideToggle,
