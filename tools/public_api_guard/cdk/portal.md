@@ -16,10 +16,6 @@ import { OnInit } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
-// @public @deprecated (undocumented)
-export abstract class BasePortalHost extends BasePortalOutlet {
-}
-
 // @public
 export abstract class BasePortalOutlet implements PortalOutlet {
     // (undocumented)
@@ -95,10 +91,6 @@ export class DomPortal<T = HTMLElement> extends Portal<T> {
     readonly element: T;
 }
 
-// @public @deprecated (undocumented)
-export class DomPortalHost extends DomPortalOutlet {
-}
-
 // @public
 export class DomPortalOutlet extends BasePortalOutlet {
     constructor(
@@ -120,21 +112,11 @@ export abstract class Portal<T> {
 }
 
 // @public @deprecated (undocumented)
-export type PortalHost = PortalOutlet;
-
-// @public @deprecated (undocumented)
 export class PortalHostDirective extends CdkPortalOutlet {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<PortalHostDirective, "[cdkPortalHost], [portalHost]", ["cdkPortalHost"], { "portal": { "alias": "cdkPortalHost"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<PortalHostDirective, never>;
-}
-
-// @public @deprecated
-export class PortalInjector implements Injector {
-    constructor(_parentInjector: Injector, _customTokens: WeakMap<any, any>);
-    // (undocumented)
-    get(token: any, notFoundValue?: any): any;
 }
 
 // @public (undocumented)
