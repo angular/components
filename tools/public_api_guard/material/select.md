@@ -218,7 +218,6 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
 
 // @public @deprecated
 export const matSelectAnimations: {
-    readonly transformPanelWrap: any;
     readonly transformPanel: any;
 };
 
