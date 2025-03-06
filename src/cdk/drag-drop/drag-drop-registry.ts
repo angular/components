@@ -50,19 +50,19 @@ const activeCapturingEventOptions = {
 })
 export class _ResetsLoader {}
 
-// TODO(crisbeto): remove generics when making breaking changes.
 /**
  * Service that keeps track of all the drag item and drop container
  * instances, and manages global event listeners on the `document`.
  * @docs-private
  */
 @Injectable({providedIn: 'root'})
-export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
+export class DragDropRegistry implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _document = inject(DOCUMENT);
   private _styleLoader = inject(_CdkPrivateStyleLoader);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
   private _cleanupDocumentTouchmove: (() => void) | undefined;
+  private _scroll: Subject<Event> = new Subject<Event>();
 
   /** Registered drop container instances. */
   private _dropInstances = new Set<DropListRef>();
@@ -100,13 +100,6 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
    * while the user is dragging a drag item instance.
    */
   readonly pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
-
-  /**
-   * Emits when the viewport has been scrolled while the user is dragging an item.
-   * @deprecated To be turned into a private member. Use the `scrolled` method instead.
-   * @breaking-change 13.0.0
-   */
-  readonly scroll: Subject<Event> = new Subject<Event>();
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -180,7 +173,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
       const toBind: [name: string, handler: (event: Event) => void, options: _ListenerOptions][] = [
         // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
         // the document. See https://github.com/angular/components/issues/17144.
-        ['scroll', (e: Event) => this.scroll.next(e), capturingEventOptions],
+        ['scroll', (e: Event) => this._scroll.next(e), capturingEventOptions],
 
         // Preventing the default action on `mousemove` isn't enough to disable text selection
         // on Safari so we need to prevent the selection event as well. Alternatively this can
@@ -245,7 +238,7 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
    *   be used to include an additional top-level listener at the shadow root level.
    */
   scrolled(shadowRoot?: DocumentOrShadowRoot | null): Observable<Event> {
-    const streams: Observable<Event>[] = [this.scroll];
+    const streams: Observable<Event>[] = [this._scroll];
 
     if (shadowRoot && shadowRoot !== this._document) {
       // Note that this is basically the same as `fromEvent` from rxjs, but we do it ourselves,

@@ -352,7 +352,7 @@ export class DragDropModule {
 }
 
 // @public
-export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
+export class DragDropRegistry implements OnDestroy {
     constructor(...args: unknown[]);
     getDragDirectiveForNode(node: Node): CdkDrag | null;
     isDragging(drag: DragRef): boolean;
@@ -366,15 +366,13 @@ export class DragDropRegistry<_ = unknown, __ = unknown> implements OnDestroy {
     removeDirectiveNode(node: Node): void;
     removeDragItem(drag: DragRef): void;
     removeDropContainer(drop: DropListRef): void;
-    // @deprecated
-    readonly scroll: Subject<Event>;
     scrolled(shadowRoot?: DocumentOrShadowRoot | null): Observable<Event>;
     startDragging(drag: DragRef, event: TouchEvent | MouseEvent): void;
     stopDragging(drag: DragRef): void;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<DragDropRegistry<any, any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DragDropRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<DragDropRegistry<any, any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<DragDropRegistry>;
 }
 
 // @public
