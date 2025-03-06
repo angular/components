@@ -58,9 +58,8 @@ export class SelectionModel<T> {
    * Selects a value or an array of values.
    * @param values The values to select
    * @return Whether the selection changed as a result of this call
-   * @breaking-change 16.0.0 make return type boolean
    */
-  select(...values: T[]): boolean | void {
+  select(...values: T[]): boolean {
     this._verifyValueAssignment(values);
     values.forEach(value => this._markSelected(value));
     const changed = this._hasQueuedChanges();
@@ -72,9 +71,8 @@ export class SelectionModel<T> {
    * Deselects a value or an array of values.
    * @param values The values to deselect
    * @return Whether the selection changed as a result of this call
-   * @breaking-change 16.0.0 make return type boolean
    */
-  deselect(...values: T[]): boolean | void {
+  deselect(...values: T[]): boolean {
     this._verifyValueAssignment(values);
     values.forEach(value => this._unmarkSelected(value));
     const changed = this._hasQueuedChanges();
@@ -86,9 +84,8 @@ export class SelectionModel<T> {
    * Sets the selected values
    * @param values The new selected values
    * @return Whether the selection changed as a result of this call
-   * @breaking-change 16.0.0 make return type boolean
    */
-  setSelection(...values: T[]): boolean | void {
+  setSelection(...values: T[]): boolean {
     this._verifyValueAssignment(values);
     const oldValues = this.selected;
     const newSelectedSet = new Set(values.map(value => this._getConcreteValue(value)));
@@ -105,9 +102,8 @@ export class SelectionModel<T> {
    * Toggles a value between selected and deselected.
    * @param value The value to toggle
    * @return Whether the selection changed as a result of this call
-   * @breaking-change 16.0.0 make return type boolean
    */
-  toggle(value: T): boolean | void {
+  toggle(value: T): boolean {
     return this.isSelected(value) ? this.deselect(value) : this.select(value);
   }
 
@@ -116,9 +112,8 @@ export class SelectionModel<T> {
    * @param flushEvent Whether to flush the changes in an event.
    *   If false, the changes to the selection will be flushed along with the next event.
    * @return Whether the selection changed as a result of this call
-   * @breaking-change 16.0.0 make return type boolean
    */
-  clear(flushEvent = true): boolean | void {
+  clear(flushEvent = true): boolean {
     this._unmarkAll();
     const changed = this._hasQueuedChanges();
     if (flushEvent) {
