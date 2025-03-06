@@ -139,11 +139,12 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/bazel@https://github.com/angular/bazel-builds.git#d9a8ea4f9e62cb475eff89519426a38631b2704d":
-  version "19.1.0-next.0"
-  resolved "https://github.com/angular/bazel-builds.git#d9a8ea4f9e62cb475eff89519426a38631b2704d"
+"@angular/bazel@https://github.com/angular/bazel-builds.git#39090691c79c5756f5d0579ee685aa1fdaf86743":
+  version "20.0.0-next.1"
+  resolved "https://github.com/angular/bazel-builds.git#39090691c79c5756f5d0579ee685aa1fdaf86743"
   dependencies:
     "@microsoft/api-extractor" "^7.24.2"
+    fast-glob "^3.3.3"
     magic-string "^0.30.0"
     tslib "^2.3.0"
 
@@ -7892,7 +7893,7 @@ fast-glob@3.3.2, fast-glob@^3.2.12, fast-glob@^3.2.9, fast-glob@^3.3.0:
     merge2 "^1.3.0"
     micromatch "^4.0.4"
 
-fast-glob@3.3.3:
+fast-glob@3.3.3, fast-glob@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
   integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
