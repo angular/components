@@ -8,5 +8,7 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = ["@npm//@angular/core"],
+    deps = [
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+    ],
 )

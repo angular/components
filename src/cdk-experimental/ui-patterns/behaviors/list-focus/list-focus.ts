@@ -6,22 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal} from '@angular/core';
+import {SignalLike} from '../signal-like/signal-like';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
 /** Represents an item in a collection, such as a listbox option, than may receive focus. */
 export interface ListFocusItem extends ListNavigationItem {
   /** A unique identifier for the item. */
-  id: Signal<string>;
+  id: SignalLike<string>;
 
   /** The html element that should receive focus. */
-  element: Signal<HTMLElement>;
+  element: SignalLike<HTMLElement>;
 }
 
 /** Represents the required inputs for a collection that contains focusable items. */
 export interface ListFocusInputs<T extends ListFocusItem> {
   /** The focus strategy used by the list. */
-  focusMode: Signal<'roving' | 'activedescendant'>;
+  focusMode: SignalLike<'roving' | 'activedescendant'>;
 }
 
 /** Controls focus for a list of items. */

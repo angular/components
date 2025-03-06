@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal} from '@angular/core';
+import {SignalLike} from '../signal-like/signal-like';
 import {
   EventHandler,
   EventHandlerOptions,
@@ -20,9 +20,9 @@ import {
  * Used to represent a keycode.
  *
  * This is used to match whether an events keycode should be handled. The ability to match using a
- * string, Signal, or Regexp gives us more flexibility when authoring event handlers.
+ * string, SignalLike, or Regexp gives us more flexibility when authoring event handlers.
  */
-type KeyCode = string | Signal<string> | RegExp;
+type KeyCode = string | SignalLike<string> | RegExp;
 
 /**
  * An event manager that is specialized for handling keyboard events. By default this manager stops

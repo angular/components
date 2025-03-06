@@ -6,31 +6,32 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, Signal, WritableSignal} from '@angular/core';
+import {signal} from '@angular/core';
+import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
 /** Represents an item in a collection, such as a listbox option, than can be selected. */
 export interface ListSelectionItem extends ListNavigationItem {
   /** A unique identifier for the item. */
-  id: Signal<string>;
+  id: SignalLike<string>;
 
   /** Whether an item is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a collection that contains selectable items. */
 export interface ListSelectionInputs<T extends ListSelectionItem> {
   /** The items in the list. */
-  items: Signal<T[]>;
+  items: SignalLike<T[]>;
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable: Signal<boolean>;
+  multiselectable: SignalLike<boolean>;
 
   /** The ids of the current selected items. */
-  selectedIds: WritableSignal<string[]>;
+  selectedIds: WritableSignalLike<string[]>;
 
   /** The selection strategy used by the list. */
-  selectionMode: Signal<'follow' | 'explicit'>;
+  selectionMode: SignalLike<'follow' | 'explicit'>;
 }
 
 /** Controls selection for a list of items. */

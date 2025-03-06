@@ -14,7 +14,8 @@ import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/li
 import {ListTypeahead, ListTypeaheadInputs} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
-import {computed, Signal} from '@angular/core';
+import {computed} from '@angular/core';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 /** The selection operations that the listbox can perform. */
 interface SelectOptions {
@@ -32,7 +33,7 @@ export type ListboxInputs = ListNavigationInputs<OptionPattern> &
   ListSelectionInputs<OptionPattern> &
   ListTypeaheadInputs &
   ListFocusInputs<OptionPattern> & {
-    disabled: Signal<boolean>;
+    disabled: SignalLike<boolean>;
   };
 
 /** Controls the state of a listbox. */
@@ -50,10 +51,10 @@ export class ListboxPattern {
   focusManager: ListFocus<OptionPattern>;
 
   /** Whether the list is vertically or horizontally oriented. */
-  orientation: Signal<'vertical' | 'horizontal'>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the listbox is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 
   /** The tabindex of the listbox. */
   tabindex = computed(() => this.focusManager.getListTabindex());
@@ -62,7 +63,7 @@ export class ListboxPattern {
   activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable: Signal<boolean>;
+  multiselectable: SignalLike<boolean>;
 
   /** The number of items in the listbox. */
   setsize = computed(() => this.navigation.inputs.items().length);

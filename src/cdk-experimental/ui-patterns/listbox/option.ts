@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, Signal} from '@angular/core';
+import {computed} from '@angular/core';
 import {ListSelection, ListSelectionItem} from '../behaviors/list-selection/list-selection';
 import {ListTypeaheadItem} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigation, ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import {ListFocus, ListFocusItem} from '../behaviors/list-focus/list-focus';
+import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 /**
  * Represents the properties exposed by a listbox that need to be accessed by an option.
@@ -28,13 +29,13 @@ export interface OptionInputs
     ListSelectionItem,
     ListTypeaheadItem,
     ListFocusItem {
-  listbox: Signal<ListboxPattern>;
+  listbox: SignalLike<ListboxPattern>;
 }
 
 /** Represents an option in a listbox. */
 export class OptionPattern {
   /** A unique identifier for the option. */
-  id: Signal<string>;
+  id: SignalLike<string>;
 
   /** The position of the option in the list. */
   index = computed(
@@ -48,19 +49,19 @@ export class OptionPattern {
   selected = computed(() => this.listbox().selection.inputs.selectedIds().includes(this.id()));
 
   /** Whether the option is disabled. */
-  disabled: Signal<boolean>;
+  disabled: SignalLike<boolean>;
 
   /** The text used by the typeahead search. */
-  searchTerm: Signal<string>;
+  searchTerm: SignalLike<string>;
 
   /** A reference to the parent listbox. */
-  listbox: Signal<ListboxPattern>;
+  listbox: SignalLike<ListboxPattern>;
 
   /** The tabindex of the option. */
   tabindex = computed(() => this.listbox().focusManager.getItemTabindex(this));
 
   /** The html element that should receive focus. */
-  element: Signal<HTMLElement>;
+  element: SignalLike<HTMLElement>;
 
   constructor(args: OptionInputs) {
     this.id = args.id;
