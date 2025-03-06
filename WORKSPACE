@@ -93,6 +93,7 @@ yarn_install(
         "//:tools/postinstall/apply-patches.js",
         "//:tools/postinstall/patches/@angular+bazel+16.0.0-next.6.patch",
         "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
+        "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-1ebf18a3a60b182a3dbad12e9a149fd93af5c29b.patch",
     ],
     # Currently disabled due to:
     #  1. Missing Windows support currently.

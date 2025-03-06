@@ -1,0 +1,27 @@
+diff --git a/node_modules/@angular/build-tooling/.DS_Store b/node_modules/@angular/build-tooling/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@angular/build-tooling/bazel/.DS_Store b/node_modules/@angular/build-tooling/bazel/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@angular/build-tooling/bazel/integration/.DS_Store b/node_modules/@angular/build-tooling/bazel/integration/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@angular/build-tooling/bazel/integration/test_runner/runner.ts b/node_modules/@angular/build-tooling/bazel/integration/test_runner/runner.ts
+index cb9eec0..b99337a 100755
+--- a/node_modules/@angular/build-tooling/bazel/integration/test_runner/runner.ts
++++ b/node_modules/@angular/build-tooling/bazel/integration/test_runner/runner.ts
+@@ -90,7 +90,12 @@ export class TestRunner {
+       // We keep the temporary directory on disk if the users wants to debug the test.
+       if (!this.isTestDebugMode) {
+         debug('Deleting the integration test temporary directory..');
+-        await fs.promises.rm(testTmpDir, {force: true, recursive: true, maxRetries: 3});
++
++        try {
++          fs.rmSync(testTmpDir, {force: true, recursive: true, maxRetries: 3});
++        } catch (e) {
++          console.error(`Failed to delete temporary directory: ${testTmpDir}`);
++        }
+       }
+     }
+   }
