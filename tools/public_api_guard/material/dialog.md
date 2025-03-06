@@ -25,7 +25,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -65,16 +64,6 @@ export const MAT_DIALOG_DEFAULT_OPTIONS: InjectionToken<MatDialogConfig<any>>;
 
 // @public
 export const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public @deprecated
-export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY;
-};
-
-// @public @deprecated
-export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
 // @public
 export class MatDialog implements OnDestroy {
