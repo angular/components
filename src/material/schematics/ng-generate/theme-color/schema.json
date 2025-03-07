@@ -24,6 +24,16 @@
       "description": "Color for neutral color palette",
       "x-prompt": "What HEX color should be used represent the neutral color palette? (Leave blank to use generated colors from Material)"
     },
+    "neutralVariantColor": {
+      "type": "string",
+      "description": "Color for the neutral variant palette",
+      "x-prompt": "What HEX color should be used represent the neutral variant palette? (Leave blank to use generated colors from Material)"
+    },
+    "errorColor": {
+      "type": "string",
+      "description": "Color for the error palette",
+      "x-prompt": "What HEX color should be used represent the error palette? (Leave blank to use generated colors from Material)"
+    },
     "includeHighContrast": {
       "type": "boolean",
       "default": false,
