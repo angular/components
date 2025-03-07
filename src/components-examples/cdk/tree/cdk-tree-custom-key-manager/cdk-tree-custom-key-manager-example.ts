@@ -28,64 +28,6 @@ import {
 import {Subject, isObservable, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
 
-const TREE_DATA: ExampleFlatNode[] = [
-  {
-    name: 'Fruit',
-    expandable: true,
-    level: 0,
-  },
-  {
-    name: 'Apple',
-    expandable: false,
-    level: 1,
-  },
-  {
-    name: 'Banana',
-    expandable: false,
-    level: 1,
-  },
-  {
-    name: 'Fruit loops',
-    expandable: false,
-    level: 1,
-  },
-  {
-    name: 'Vegetables',
-    expandable: true,
-    level: 0,
-  },
-  {
-    name: 'Green',
-    expandable: true,
-    level: 1,
-  },
-  {
-    name: 'Broccoli',
-    expandable: false,
-    level: 2,
-  },
-  {
-    name: 'Brussels sprouts',
-    expandable: false,
-    level: 2,
-  },
-  {
-    name: 'Orange',
-    expandable: true,
-    level: 1,
-  },
-  {
-    name: 'Pumpkins',
-    expandable: false,
-    level: 2,
-  },
-  {
-    name: 'Carrots',
-    expandable: false,
-    level: 2,
-  },
-];
-
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
   expandable: boolean;
@@ -379,16 +321,16 @@ export class CdkTreeCustomKeyManagerExample {
     node => node.expandable,
   );
 
-  dataSource = new ArrayDataSource(TREE_DATA);
+  dataSource = new ArrayDataSource(EXAMPLE_DATA);
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   getParentNode(node: ExampleFlatNode) {
-    const nodeIndex = TREE_DATA.indexOf(node);
+    const nodeIndex = EXAMPLE_DATA.indexOf(node);
 
     for (let i = nodeIndex - 1; i >= 0; i--) {
-      if (TREE_DATA[i].level === node.level - 1) {
-        return TREE_DATA[i];
+      if (EXAMPLE_DATA[i].level === node.level - 1) {
+        return EXAMPLE_DATA[i];
       }
     }
 
@@ -406,3 +348,61 @@ export class CdkTreeCustomKeyManagerExample {
     return true;
   }
 }
+
+const EXAMPLE_DATA: ExampleFlatNode[] = [
+  {
+    name: 'Fruit',
+    expandable: true,
+    level: 0,
+  },
+  {
+    name: 'Apple',
+    expandable: false,
+    level: 1,
+  },
+  {
+    name: 'Banana',
+    expandable: false,
+    level: 1,
+  },
+  {
+    name: 'Fruit loops',
+    expandable: false,
+    level: 1,
+  },
+  {
+    name: 'Vegetables',
+    expandable: true,
+    level: 0,
+  },
+  {
+    name: 'Green',
+    expandable: true,
+    level: 1,
+  },
+  {
+    name: 'Broccoli',
+    expandable: false,
+    level: 2,
+  },
+  {
+    name: 'Brussels sprouts',
+    expandable: false,
+    level: 2,
+  },
+  {
+    name: 'Orange',
+    expandable: true,
+    level: 1,
+  },
+  {
+    name: 'Pumpkins',
+    expandable: false,
+    level: 2,
+  },
+  {
+    name: 'Carrots',
+    expandable: false,
+    level: 2,
+  },
+];
