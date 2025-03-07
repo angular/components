@@ -1,16 +1,16 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ng_module")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
-    name = "ui-patterns",
+ng_module(
+    name = "tabs",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk-experimental/ui-patterns/listbox",
         "//src/cdk-experimental/ui-patterns/tabs",
-        "@npm//@angular/core",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
     ],
 )
