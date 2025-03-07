@@ -76,7 +76,7 @@
             [attr.aria-controls]="_getStepContentId($index)"
             [attr.aria-current]="selectedIndex == $index"
             [attr.aria-label]="step.ariaLabel || null"
-            [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : _getStepLabelId($index)"
+            [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
             [attr.aria-disabled]="_stepIsNavigable($index, step) ? null : true"
             [index]="$index"
             [state]="_getIndicatorType($index, step.state)"
