@@ -152,16 +152,10 @@ export class CdkTab {
   private readonly _cdkTablist = inject(CdkTablist);
 
   /** A unique identifier for the tab. */
-  private readonly _generatedId = inject(_IdGenerator).getId('cdk-tab-');
-
-  /** A unique identifier for the tab. */
-  protected id = computed(() => this._generatedId);
-
-  /** A reference to the tab element to be focused on navigation. */
-  protected element = computed(() => this._elementRef.nativeElement);
+  private readonly _id = inject(_IdGenerator).getId('cdk-tab-');
 
   /** The position of the tab in the list. */
-  protected index = computed(() => this._cdkTabs.tabs().findIndex(tab => tab.id === this.id));
+  protected index = computed(() => this._cdkTabs.tabs().findIndex(tab => tab.id() === this._id));
 
   /** The parent Tablist UIPattern. */
   protected tablist = computed(() => this._cdkTablist.pattern);
@@ -175,14 +169,21 @@ export class CdkTab {
   /** The Tab UIPattern. */
   pattern: TabPattern = new TabPattern({
     ...this,
-    id: this.id,
+    id: () => this._id,
+    element: () => this._elementRef.nativeElement,
     tablist: this.tablist,
     tabpanel: this.tabpanel,
-    element: this.element,
   });
 }
 
-/** A Tabpanel container for the resources of layered content associated with a tab. */
+/**
+ * A Tabpanel container for the resources of layered content associated with a tab.
+ *
+ * If a tabpanel is hidden due to its corresponding tab is not activated, the `inert` attribute
+ * will be applied to the tabpanel element to remove it from the accessibility tree and stop
+ * all the keyboard and pointer interactions. Note that this does not visually hide the tabpenl
+ * and a proper styling is required.
+ */
 @Directive({
   selector: '[cdkTabpanel]',
   exportAs: 'cdkTabpanel',
@@ -198,14 +199,11 @@ export class CdkTabpanel {
   private readonly _cdkTabs = inject(CdkTabs);
 
   /** A unique identifier for the tab. */
-  private readonly _generatedId = inject(_IdGenerator).getId('cdk-tabpanel-');
-
-  /** A unique identifier for the tabpanel. */
-  protected id = computed(() => this._generatedId);
+  private readonly _id = inject(_IdGenerator).getId('cdk-tabpanel-');
 
   /** The position of the tabpanel in the tabs. */
   protected index = computed(() =>
-    this._cdkTabs.tabpanels().findIndex(tabpanel => tabpanel.id === this.id),
+    this._cdkTabs.tabpanels().findIndex(tabpanel => tabpanel.id() === this._id),
   );
 
   /** The Tab UIPattern associated with the tabpanel */
@@ -214,7 +212,7 @@ export class CdkTabpanel {
   /** The Tabpanel UIPattern. */
   pattern: TabpanelPattern = new TabpanelPattern({
     ...this,
-    id: this.id,
+    id: () => this._id,
     tab: this.tab,
   });
 }
