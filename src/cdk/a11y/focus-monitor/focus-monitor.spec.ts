@@ -1,5 +1,5 @@
-import {TAB} from '@angular/cdk/keycodes';
-import {Platform} from '@angular/cdk/platform';
+import {TAB} from '../../keycodes';
+import {Platform} from '../../platform';
 import {DOCUMENT} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Provider, Type, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
-import {ThemePalette} from '@angular/material/core';
-import {MatSelect} from '@angular/material/select';
+import {ThemePalette} from '../core';
+import {MatSelect} from '../select';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {

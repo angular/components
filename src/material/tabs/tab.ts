@@ -28,7 +28,7 @@ import {MAT_TAB, MatTabLabel} from './tab-label';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '@angular/material/core';
+import {_StructuralStylesLoader} from '../core';
 
 /**
  * Used to provide a tab group to a tab without causing a circular dependency.

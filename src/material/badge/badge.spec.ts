@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement, ViewEncapsulation, ViewChild, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;

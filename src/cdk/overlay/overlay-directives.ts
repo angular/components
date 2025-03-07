@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {Direction, Directionality} from '../bidi';
+import {ESCAPE, hasModifierKey} from '../keycodes';
+import {TemplatePortal} from '../portal';
 import {
   Directive,
   ElementRef,
@@ -25,7 +25,7 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {_getEventTarget} from '@angular/cdk/platform';
+import {_getEventTarget} from '../platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {Overlay} from './overlay';

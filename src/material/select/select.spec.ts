@@ -56,13 +56,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '@angular/material/core';
-import {
-  FloatLabelType,
-  MAT_FORM_FIELD_DEFAULT_OPTIONS,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
-import {MAT_SELECT_CONFIG, MatSelectConfig} from '@angular/material/select';
+import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '../core';
+import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
+import {MAT_SELECT_CONFIG, MatSelectConfig} from '../select';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';

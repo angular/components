@@ -26,7 +26,7 @@ import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
 import {merge, Subject} from 'rxjs';
 import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
 
-import {_closest} from '@angular/cdk-experimental/popover-edit';
+import {_closest} from '../popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './selectors';
 import {ResizeOverlayHandle} from './overlay-handle';

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '../bidi';
 import {
   CollectionViewer,
   DataSource,
@@ -18,9 +18,9 @@ import {
   _ViewRepeaterItemChange,
   _ViewRepeaterItemInsertArgs,
   _ViewRepeaterOperation,
-} from '@angular/cdk/collections';
-import {Platform} from '@angular/cdk/platform';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+} from '../collections';
+import {Platform} from '../platform';
+import {ViewportRuler} from '../scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,

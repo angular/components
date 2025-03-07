@@ -9,8 +9,8 @@
 import {PortalModule} from '@angular/cdk/portal';
 import {CdkStepperModule} from '@angular/cdk/stepper';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '@angular/material/core';
-import {MatIconModule} from '@angular/material/icon';
+import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '../core';
+import {MatIconModule} from '../icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatStep, MatStepper} from './stepper';

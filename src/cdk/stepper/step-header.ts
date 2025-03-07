@@ -7,7 +7,7 @@
  */
 
 import {Directive, ElementRef, inject} from '@angular/core';
-import {FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption} from '../a11y';
 
 @Directive({
   selector: '[cdkStepHeader]',

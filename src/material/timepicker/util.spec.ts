@@ -1,10 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatDateFormats,
-  provideNativeDateAdapter,
-} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, provideNativeDateAdapter} from '../core';
 import {generateOptions, parseInterval} from './util';
 
 describe('timepicker utilities', () => {

@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {Platform} from '@angular/cdk/platform';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ComponentPortal, PortalModule} from '../../portal';
+import {Platform} from '../../platform';
+import {ViewportRuler} from '../../scrolling';
 import {Overlay, OverlayContainer, OverlayModule, OverlayRef, OverlayConfig} from '../index';
 
 describe('BlockScrollStrategy', () => {

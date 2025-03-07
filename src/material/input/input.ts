@@ -28,8 +28,8 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher, _ErrorStateTracker} from '@angular/material/core';
-import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
+import {ErrorStateMatcher, _ErrorStateTracker} from '../core';
+import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {Subject} from 'rxjs';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';

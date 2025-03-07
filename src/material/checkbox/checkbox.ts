@@ -36,7 +36,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {MatRipple, _MatInternalFormField, _StructuralStylesLoader} from '@angular/material/core';
+import {MatRipple, _MatInternalFormField, _StructuralStylesLoader} from '../core';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,

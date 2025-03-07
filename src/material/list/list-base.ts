@@ -28,7 +28,7 @@ import {
   RippleGlobalOptions,
   RippleRenderer,
   RippleTarget,
-} from '@angular/material/core';
+} from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Subscription, merge} from 'rxjs';
 import {

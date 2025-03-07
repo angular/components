@@ -23,7 +23,7 @@ import {
   inject,
   HostAttributeToken,
 } from '@angular/core';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '../button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';

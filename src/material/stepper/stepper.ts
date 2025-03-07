@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
+import {ErrorStateMatcher, ThemePalette} from '../core';
 import {Platform} from '@angular/cdk/platform';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {Subscription} from 'rxjs';

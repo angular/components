@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatAutocompleteModule} from '../module';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

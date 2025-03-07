@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ListRange} from '@angular/cdk/collections';
-import {Platform} from '@angular/cdk/platform';
+import {ListRange} from '../collections';
+import {Platform} from '../platform';
 import {
   afterNextRender,
   booleanAttribute,

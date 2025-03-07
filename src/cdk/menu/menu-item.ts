@@ -18,9 +18,9 @@ import {
   Output,
   Renderer2,
 } from '@angular/core';
-import {FocusableOption, InputModalityDetector} from '@angular/cdk/a11y';
-import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {Directionality} from '@angular/cdk/bidi';
+import {FocusableOption, InputModalityDetector} from '../a11y';
+import {ENTER, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, SPACE} from '../keycodes';
+import {Directionality} from '../bidi';
 import {Subject} from 'rxjs';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CDK_MENU, Menu} from './menu-interface';

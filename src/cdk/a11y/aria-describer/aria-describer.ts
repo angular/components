@@ -8,9 +8,9 @@
 
 import {DOCUMENT} from '@angular/common';
 import {Injectable, OnDestroy, APP_ID, inject} from '@angular/core';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '../../platform';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
 
 /**
  * Interface used to register message elements and keep a count of how many registrations have

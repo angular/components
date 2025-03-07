@@ -56,8 +56,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatButton} from '@angular/material/button';
-import {DateAdapter, ThemePalette} from '@angular/material/core';
+import {MatButton} from '../button';
+import {DateAdapter, ThemePalette} from '../core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar, MatCalendarView} from './calendar';

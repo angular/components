@@ -12,7 +12,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/dialog';
-import * as i2 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i3 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';

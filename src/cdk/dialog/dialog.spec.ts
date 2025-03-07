@@ -1,12 +1,8 @@
-import {Directionality} from '@angular/cdk/bidi';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
-import {_supportsShadowDom} from '@angular/cdk/platform';
-import {
-  createKeyboardEvent,
-  dispatchEvent,
-  dispatchKeyboardEvent,
-} from '@angular/cdk/testing/private';
+import {Directionality} from '../bidi';
+import {A, ESCAPE} from '../keycodes';
+import {Overlay, OverlayContainer, ScrollDispatcher} from '../overlay';
+import {_supportsShadowDom} from '../platform';
+import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../testing/private';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {

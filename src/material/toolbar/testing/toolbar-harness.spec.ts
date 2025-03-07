@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {ComponentHarness, HarnessLoader} from '@angular/cdk/testing';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatToolbarHarness, MatToolbarSection} from '@angular/material/toolbar/testing';
+import {MatToolbarModule} from '../../toolbar';
+import {MatToolbarHarness, MatToolbarSection} from './toolbar-harness';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 

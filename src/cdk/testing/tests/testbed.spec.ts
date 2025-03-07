@@ -1,6 +1,6 @@
-import {_supportsShadowDom} from '@angular/cdk/platform';
-import {HarnessLoader, manualChangeDetection, parallel} from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {_supportsShadowDom} from '../../platform';
+import {HarnessLoader, manualChangeDetection, parallel} from '../../testing';
+import {TestbedHarnessEnvironment} from '../../testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {provideZoneChangeDetection} from '@angular/core';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';

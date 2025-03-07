@@ -34,7 +34,7 @@ import {
   RippleTarget,
   ThemePalette,
   _StructuralStylesLoader,
-} from '@angular/material/core';
+} from '../../core';
 import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {ViewportRuler} from '@angular/cdk/scrolling';

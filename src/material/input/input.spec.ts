@@ -19,11 +19,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  ErrorStateMatcher,
-  ShowOnDirtyErrorStateMatcher,
-  ThemePalette,
-} from '@angular/material/core';
+import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, ThemePalette} from '../core';
 import {
   FloatLabelType,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -33,8 +29,8 @@ import {
   SubscriptSizing,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
+} from '../form-field';
+import {MatIconModule} from '../icon';
 import {By} from '@angular/platform-browser';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
 

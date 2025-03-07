@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceArray, coerceNumberProperty} from '@angular/cdk/coercion';
+import {NumberInput, coerceArray, coerceNumberProperty} from '../../coercion';
 import {
   ElementRef,
   EventEmitter,
@@ -18,9 +18,9 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {Directionality} from '../../bidi';
+import {_IdGenerator} from '../../a11y';
+import {ScrollDispatcher} from '../../scrolling';
 import {CDK_DROP_LIST, CdkDrag} from './drag';
 import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
 import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';

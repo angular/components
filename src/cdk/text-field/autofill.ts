@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions} from '../platform';
 import {
   Directive,
   ElementRef,
@@ -19,8 +19,8 @@ import {
   Output,
   RendererFactory2,
 } from '@angular/core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {coerceElement} from '@angular/cdk/coercion';
+import {_CdkPrivateStyleLoader} from '../private';
+import {coerceElement} from '../coercion';
 import {EMPTY, Observable, Subject} from 'rxjs';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
