@@ -8,7 +8,7 @@
            [disabled]="disabled && !disabledInteractive"
            [attr.name]="name"
            [attr.value]="value"
-           [required]="required"
+           [required]="getInputRequiredAttribute()"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
