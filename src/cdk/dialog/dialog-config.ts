@@ -7,9 +7,9 @@
  */
 
 import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
-import {Direction} from '@angular/cdk/bidi';
-import {PositionStrategy, ScrollStrategy} from '@angular/cdk/overlay';
-import {BasePortalOutlet} from '@angular/cdk/portal';
+import {Direction} from '../bidi';
+import {PositionStrategy, ScrollStrategy} from '../overlay';
+import {BasePortalOutlet} from '../portal';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';

@@ -8,9 +8,9 @@
 
 import {Directive, ElementRef, forwardRef, Input, OnDestroy, signal, inject} from '@angular/core';
 import {NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidatorFn, Validators} from '@angular/forms';
-import {ThemePalette} from '@angular/material/core';
-import {MAT_FORM_FIELD} from '@angular/material/form-field';
-import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
+import {ThemePalette} from '../core';
+import {MAT_FORM_FIELD} from '../form-field';
+import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DateSelectionModelChange} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';

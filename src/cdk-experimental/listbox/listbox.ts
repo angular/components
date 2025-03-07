@@ -16,7 +16,7 @@ import {
   input,
   model,
 } from '@angular/core';
-import {ListboxPattern, OptionPattern} from '@angular/cdk-experimental/ui-patterns';
+import {ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';

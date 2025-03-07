@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BidiModule} from '@angular/cdk/bidi';
-import {PortalModule} from '@angular/cdk/portal';
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import {BidiModule} from '../bidi';
+import {PortalModule} from '../portal';
+import {ScrollingModule} from '../scrolling';
 import {NgModule} from '@angular/core';
 import {Overlay} from './overlay';
 import {

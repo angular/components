@@ -12,12 +12,14 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 // @public (undocumented)
 export const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
@@ -165,7 +167,7 @@ export class MatRadioModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatRadioModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatRadioGroup, typeof i2.MatRadioButton], [typeof i1.MatCommonModule, typeof i2.MatRadioGroup, typeof i2.MatRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatRadioModule, never, [typeof i1.MatCommonModule, typeof i2.MatRippleModule, typeof i3.MatRadioGroup, typeof i3.MatRadioButton], [typeof i1.MatCommonModule, typeof i3.MatRadioGroup, typeof i3.MatRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

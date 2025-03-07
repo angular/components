@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken, QueryList} from '@angular/core';
-import {coerceObservable} from '@angular/cdk/coercion/private';
+import {coerceObservable} from '../../coercion/private';
 import {Observable, Subject, Subscription, isObservable, of as observableOf} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {

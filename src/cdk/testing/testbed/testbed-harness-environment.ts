@@ -14,7 +14,7 @@ import {
   HarnessLoader,
   stopHandlingAutoChangeDetectionStatus,
   TestElement,
-} from '@angular/cdk/testing';
+} from '../../testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';

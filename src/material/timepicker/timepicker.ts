@@ -40,7 +40,7 @@ import {
   MAT_OPTION_PARENT_COMPONENT,
   MatOption,
   MatOptionParentComponent,
-} from '@angular/material/core';
+} from '../core';
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';

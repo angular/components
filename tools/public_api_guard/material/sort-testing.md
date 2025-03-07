@@ -7,7 +7,6 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { SortDirection } from '@angular/material/sort';
 
 // @public
 export class MatSortHarness extends ComponentHarness {

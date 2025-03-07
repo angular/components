@@ -19,7 +19,7 @@ import {
   inject,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
+import {MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';

@@ -4,17 +4,15 @@
 
 ```ts
 
-import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { Highlightable } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import { ListKeyManagerOption } from '@angular/cdk/a11y';
+import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)

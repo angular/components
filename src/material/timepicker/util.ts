@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {DateAdapter, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MatDateFormats} from '../core';
 
 /** Pattern that interval strings have to match. */
 const INTERVAL_PATTERN = /^(\d*\.?\d+)\s*(h|hour|hours|m|min|minute|minutes|s|second|seconds)?$/i;

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction} from '@angular/cdk/bidi';
+import {Direction} from '../../bidi';
 import {DragDropRegistry} from '../drag-drop-registry';
 import {moveItemInArray} from '../drag-utils';
 import {combineTransforms} from '../dom/styling';

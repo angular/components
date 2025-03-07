@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '../bidi';
 import {Directive, ElementRef, Input, numberAttribute, OnDestroy, inject} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';

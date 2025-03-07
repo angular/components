@@ -14,13 +14,10 @@ import {
   parallel,
 } from '@angular/cdk/testing';
 import {ErrorHarnessFilters, MatErrorHarness} from './error-harness';
-import {MatInputHarness} from '@angular/material/input/testing';
-import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
-import {MatSelectHarness} from '@angular/material/select/testing';
-import {
-  MatDatepickerInputHarness,
-  MatDateRangeInputHarness,
-} from '@angular/material/datepicker/testing';
+import {MatInputHarness} from '../../input/testing';
+import {MatFormFieldControlHarness} from './control';
+import {MatSelectHarness} from '../../select/testing';
+import {MatDatepickerInputHarness, MatDateRangeInputHarness} from '../../datepicker/testing';
 import {FormFieldHarnessFilters} from './form-field-harness-filters';
 
 /** Possible harnesses of controls which can be bound to a form-field. */

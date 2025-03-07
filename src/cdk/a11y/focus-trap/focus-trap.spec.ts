@@ -1,5 +1,5 @@
-import {Platform, _supportsShadowDom} from '@angular/cdk/platform';
-import {CdkPortalOutlet, PortalModule, TemplatePortal} from '@angular/cdk/portal';
+import {Platform, _supportsShadowDom} from '../../platform';
+import {CdkPortalOutlet, PortalModule, TemplatePortal} from '../../portal';
 import {
   Component,
   TemplateRef,

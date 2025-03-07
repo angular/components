@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
+import {NumberInput, coerceNumberProperty} from '../coercion';
 import {
   Directive,
   ElementRef,
@@ -20,8 +20,8 @@ import {
   Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {Platform} from '@angular/cdk/platform';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {Platform} from '../platform';
+import {_CdkPrivateStyleLoader} from '../private';
 import {auditTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';

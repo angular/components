@@ -17,8 +17,8 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {InputModalityDetector} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+import {InputModalityDetector} from '../a11y';
+import {Directionality} from '../bidi';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
@@ -26,7 +26,7 @@ import {
   OverlayConfig,
   STANDARD_DROPDOWN_ADJACENT_POSITIONS,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
-} from '@angular/cdk/overlay';
+} from '../overlay';
 import {
   DOWN_ARROW,
   ENTER,
@@ -35,8 +35,8 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {_getEventTarget} from '@angular/cdk/platform';
+} from '../keycodes';
+import {_getEventTarget} from '../platform';
 import {takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
 import {PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';

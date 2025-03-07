@@ -3,7 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatRadioModule} from '@angular/material/radio';
+import {MatRadioModule} from '../module';
 import {MatRadioButtonHarness, MatRadioGroupHarness} from './radio-harness';
 
 describe('radio harness', () => {

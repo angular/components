@@ -5,30 +5,32 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { ConnectedPosition } from '@angular/cdk/overlay';
-import { Directionality } from '@angular/cdk/bidi';
+import { ComponentRef } from '@angular/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { EmbeddedViewRef } from '@angular/core';
+import { EnvironmentInjector } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusableOption } from '@angular/cdk/a11y';
-import { FocusKeyManager } from '@angular/cdk/a11y';
-import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { Location as Location_2 } from '@angular/common';
+import { NgIterable } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
-import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { TrackByFunction } from '@angular/core';
+import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
@@ -200,7 +202,7 @@ export class CdkMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<CdkMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkMenuModule, never, [typeof i1.OverlayModule, typeof i2.CdkMenuBar, typeof i3.CdkMenu, typeof i4.CdkMenuItem, typeof i5.CdkMenuItemRadio, typeof i6.CdkMenuItemCheckbox, typeof i7.CdkMenuTrigger, typeof i8.CdkMenuGroup, typeof i9.CdkContextMenuTrigger, typeof i10.CdkTargetMenuAim], [typeof i2.CdkMenuBar, typeof i3.CdkMenu, typeof i4.CdkMenuItem, typeof i5.CdkMenuItemRadio, typeof i6.CdkMenuItemCheckbox, typeof i7.CdkMenuTrigger, typeof i8.CdkMenuGroup, typeof i9.CdkContextMenuTrigger, typeof i10.CdkTargetMenuAim]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkMenuModule, never, [typeof i1.OverlayModule, typeof i2_2.CdkMenuBar, typeof i3_3.CdkMenu, typeof i4_3.CdkMenuItem, typeof i5_2.CdkMenuItemRadio, typeof i6_2.CdkMenuItemCheckbox, typeof i7_2.CdkMenuTrigger, typeof i8.CdkMenuGroup, typeof i9.CdkContextMenuTrigger, typeof i10.CdkTargetMenuAim], [typeof i2_2.CdkMenuBar, typeof i3_3.CdkMenu, typeof i4_3.CdkMenuItem, typeof i5_2.CdkMenuItemRadio, typeof i6_2.CdkMenuItemCheckbox, typeof i7_2.CdkMenuTrigger, typeof i8.CdkMenuGroup, typeof i9.CdkContextMenuTrigger, typeof i10.CdkTargetMenuAim]>;
 }
 
 // @public

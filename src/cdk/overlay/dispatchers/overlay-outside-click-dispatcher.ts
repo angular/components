@@ -7,7 +7,7 @@
  */
 
 import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '../../platform';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 

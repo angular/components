@@ -8,10 +8,7 @@ import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
-import { DividerHarnessFilters } from '@angular/material/divider/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatDividerHarness } from '@angular/material/divider/testing';
-import { MatListOptionTogglePosition } from '@angular/material/list';
 
 // @public (undocumented)
 export interface ActionListHarnessFilters extends BaseHarnessFilters {

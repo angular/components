@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {DomPortalOutlet} from '@angular/cdk/portal';
+import {Directionality} from '../bidi';
+import {DomPortalOutlet} from '../portal';
 import {DOCUMENT, Location} from '@angular/common';
 import {
   ApplicationRef,
@@ -19,8 +19,8 @@ import {
   inject,
   RendererFactory2,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_IdGenerator} from '../a11y';
+import {_CdkPrivateStyleLoader} from '../private';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';

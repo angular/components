@@ -24,7 +24,7 @@ import {
   Signal,
   signal,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS} from '../core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -35,9 +35,9 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {MAT_FORM_FIELD} from '@angular/material/form-field';
+import {MAT_FORM_FIELD} from '../form-field';
 import {MatTimepicker} from './timepicker';
-import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
+import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
 import {validateAdapter} from './util';

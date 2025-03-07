@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
-import {ThemePalette, MatRipple} from '@angular/material/core';
+import {ThemePalette, MatRipple} from '../core';
 import {merge, Subscription} from 'rxjs';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';

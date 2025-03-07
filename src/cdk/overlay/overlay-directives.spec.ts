@@ -1,5 +1,5 @@
-import {Directionality} from '@angular/cdk/bidi';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
+import {Directionality} from '../bidi';
+import {A, ESCAPE} from '../keycodes';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
