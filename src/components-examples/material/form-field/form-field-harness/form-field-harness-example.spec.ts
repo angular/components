@@ -31,11 +31,13 @@ describe('FormFieldHarnessExample', () => {
 
   it('should be able to get error messages and hints of form-field', async () => {
     const formField = await loader.getHarness(MatFormFieldHarness);
+    const control = (await formField.getControl()) as MatInputHarness;
     expect(await formField.getTextErrors()).toEqual([]);
     expect(await formField.getTextHints()).toEqual(['Hint']);
 
     fixture.componentInstance.requiredControl.setValue('');
-    await ((await formField.getControl()) as MatInputHarness)?.blur();
+    await control.focus();
+    await control.blur();
     expect(await formField.getTextErrors()).toEqual(['Error']);
     expect(await formField.getTextHints()).toEqual([]);
   });
