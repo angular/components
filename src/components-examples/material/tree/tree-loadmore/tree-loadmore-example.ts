@@ -13,11 +13,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
-const LOAD_MORE = 'LOAD_MORE';
 let loadMoreId = 1;
 
 /** Nested node */
-export class NestedNode {
+class NestedNode {
   childrenChange = new BehaviorSubject<NestedNode[]>([]);
 
   get children(): NestedNode[] {
@@ -104,7 +103,7 @@ export class LoadmoreDatabase {
       .map(name => this._generateNode(name, parent.name));
     if (newChildrenNumber < children.length) {
       // Need a new "Load More" node
-      nodes.push(new NestedNode(`${LOAD_MORE}-${loadMoreId++}`, false, name, true));
+      nodes.push(new NestedNode(`LOAD_MORE-${loadMoreId++}`, false, name, true));
     }
 
     parent.childrenChange.next(nodes);
