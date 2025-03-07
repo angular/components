@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '../module';
 import {MatCardHarness, MatCardSection} from './card-harness';
 
 describe('MatCardHarness', () => {

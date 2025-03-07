@@ -1,6 +1,6 @@
 import {EnvironmentProviders, Provider, Type, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
-import {dispatchMouseEvent, dispatchTouchEvent} from '@angular/cdk/testing/private';
+import {dispatchMouseEvent, dispatchTouchEvent} from '../../testing/private';
 import {CDK_DRAG_CONFIG, DragDropConfig, DropListOrientation} from './config';
 
 /** Options that can be used to configure a test. */

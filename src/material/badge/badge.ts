@@ -23,7 +23,7 @@ import {
   ViewEncapsulation,
   ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Allowed position options for matBadgePosition */

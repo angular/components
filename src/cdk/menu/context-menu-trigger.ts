@@ -15,14 +15,14 @@ import {
   Input,
   OnDestroy,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '../bidi';
 import {
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
-} from '@angular/cdk/overlay';
-import {_getEventTarget} from '@angular/cdk/platform';
+} from '../overlay';
+import {_getEventTarget} from '../platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';

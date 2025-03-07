@@ -7,7 +7,6 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatButtonToggleAppearance } from '@angular/material/button-toggle';
 
 // @public
 export interface ButtonToggleGroupHarnessFilters extends BaseHarnessFilters {

@@ -33,7 +33,7 @@ import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleGlobalOptions,
   ThemePalette,
-} from '@angular/material/core';
+} from '../core';
 import {Subscription} from 'rxjs';
 import {
   _MatThumb,

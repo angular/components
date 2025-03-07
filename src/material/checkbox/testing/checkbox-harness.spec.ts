@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatCheckboxModule} from '../module';
 import {MatCheckboxHarness} from './checkbox-harness';
 
 describe('MatCheckboxHarness', () => {

@@ -13,7 +13,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/accordion';
 import * as i3 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';

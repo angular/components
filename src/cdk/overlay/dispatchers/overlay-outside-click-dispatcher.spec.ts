@@ -3,7 +3,7 @@ import {ApplicationRef, Component, afterRender} from '@angular/core';
 import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
 import {OverlayModule, Overlay} from '../index';
 import {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';
-import {ComponentPortal} from '@angular/cdk/portal';
+import {ComponentPortal} from '../../portal';
 import {filter, take} from 'rxjs/operators';
 
 describe('OverlayOutsideClickDispatcher', () => {

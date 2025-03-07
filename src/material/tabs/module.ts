@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '../core';
 import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 import {MatTab} from './tab';

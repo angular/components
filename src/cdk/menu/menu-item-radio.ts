@@ -7,8 +7,8 @@
  */
 
 import {Directive, inject, OnDestroy} from '@angular/core';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {_IdGenerator} from '@angular/cdk/a11y';
+import {UniqueSelectionDispatcher} from '../collections';
+import {_IdGenerator} from '../a11y';
 import {CdkMenuItemSelectable} from './menu-item-selectable';
 import {CdkMenuItem} from './menu-item';
 

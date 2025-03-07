@@ -9,7 +9,7 @@
 import {DialogModule} from '@angular/cdk/dialog';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '../core';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheet} from './bottom-sheet';
 

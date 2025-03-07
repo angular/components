@@ -4,18 +4,14 @@
 
 ```ts
 
-import { CollectionViewer } from '@angular/cdk/collections';
-import { DataSource } from '@angular/cdk/collections';
-import { Directionality } from '@angular/cdk/bidi';
+import { AfterContentInit } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
-import { ListRange } from '@angular/cdk/collections';
 import { NgIterable } from '@angular/core';
 import { NgZone } from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';

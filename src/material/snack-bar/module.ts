@@ -9,8 +9,8 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCommonModule} from '@angular/material/core';
+import {MatButtonModule} from '../button';
+import {MatCommonModule} from '../core';
 
 import {SimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';

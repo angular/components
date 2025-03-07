@@ -4,8 +4,14 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AbstractControlDirective } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -13,33 +19,30 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
+import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
-import * as i2 from '@angular/material/core';
-import * as i4 from '@angular/cdk/scrolling';
-import * as i5 from '@angular/material/form-field';
+import * as i1_3 from '@angular/cdk/bidi';
+import * as i2_4 from '@angular/cdk/observers';
+import * as i5_2 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
-import { MatError } from '@angular/material/form-field';
-import { MatFormField } from '@angular/material/form-field';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatHint } from '@angular/material/form-field';
-import { MatLabel } from '@angular/material/form-field';
-import { MatOptgroup } from '@angular/material/core';
-import { MatOption } from '@angular/material/core';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatPrefix } from '@angular/material/form-field';
-import { MatSuffix } from '@angular/material/form-field';
+import { Injector } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ViewportRuler } from '@angular/cdk/scrolling';
@@ -63,22 +66,193 @@ export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): (
 // @public
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
 
-export { MatError }
+// @public
+export class MatError {
+    constructor(...args: unknown[]);
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatError, "mat-error, [matError]", never, { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatError, never>;
+}
 
-export { MatFormField }
+// @public
+export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
+    constructor(...args: unknown[]);
+    _animateAndLockLabel(): void;
+    // (undocumented)
+    protected readonly _animationsDisabled: boolean;
+    get appearance(): MatFormFieldAppearance;
+    set appearance(value: MatFormFieldAppearance);
+    color: ThemePalette;
+    get _control(): MatFormFieldControl<any>;
+    set _control(value: MatFormFieldControl<any>);
+    // (undocumented)
+    _elementRef: ElementRef<any>;
+    // (undocumented)
+    _errorChildren: QueryList<MatError>;
+    // (undocumented)
+    _floatingLabel: MatFormFieldFloatingLabel | undefined;
+    get floatLabel(): FloatLabelType;
+    set floatLabel(value: FloatLabelType);
+    _forceDisplayInfixLabel(): boolean | 0;
+    // (undocumented)
+    _formFieldControl: MatFormFieldControl<any>;
+    getConnectedOverlayOrigin(): ElementRef;
+    _getDisplayedMessages(): 'error' | 'hint';
+    getLabelId: Signal<string | null>;
+    _handleLabelResized(): void;
+    // (undocumented)
+    _hasFloatingLabel: Signal<boolean>;
+    // (undocumented)
+    _hasIconPrefix: boolean;
+    // (undocumented)
+    _hasIconSuffix: boolean;
+    // (undocumented)
+    _hasOutline(): boolean;
+    // (undocumented)
+    _hasTextPrefix: boolean;
+    // (undocumented)
+    _hasTextSuffix: boolean;
+    get hideRequiredMarker(): boolean;
+    set hideRequiredMarker(value: BooleanInput);
+    // (undocumented)
+    _hintChildren: QueryList<MatHint>;
+    get hintLabel(): string;
+    set hintLabel(value: string);
+    // (undocumented)
+    readonly _hintLabelId: string;
+    // (undocumented)
+    _iconPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _iconSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    readonly _labelId: string;
+    // (undocumented)
+    _lineRipple: MatFormFieldLineRipple | undefined;
+    // (undocumented)
+    ngAfterContentChecked(): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    _notchedOutline: MatFormFieldNotchedOutline | undefined;
+    // (undocumented)
+    _prefixChildren: QueryList<MatPrefix>;
+    _refreshOutlineNotchWidth(): void;
+    _shouldAlwaysFloat(): boolean;
+    _shouldForward(prop: keyof AbstractControlDirective): boolean;
+    // (undocumented)
+    _shouldLabelFloat(): boolean;
+    get subscriptSizing(): SubscriptSizing;
+    set subscriptSizing(value: SubscriptSizing);
+    // (undocumented)
+    _suffixChildren: QueryList<MatSuffix>;
+    // (undocumented)
+    _textField: ElementRef<HTMLElement>;
+    // (undocumented)
+    _textPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _textSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
+}
 
-export { MatHint }
+// @public
+export class MatHint {
+    align: 'start' | 'end';
+    id: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHint, "mat-hint", never, { "align": { "alias": "align"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatHint, never>;
+}
 
-export { MatLabel }
+// @public
+export class MatLabel {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLabel, "mat-label", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLabel, never>;
+}
 
-export { MatOptgroup }
+// @public
+export class MatOptgroup {
+    constructor(...args: unknown[]);
+    disabled: boolean;
+    _inert: boolean;
+    label: string;
+    _labelId: string;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, never>;
+}
 
-export { MatOption }
+// @public
+export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+    constructor(...args: unknown[]);
+    get active(): boolean;
+    // (undocumented)
+    _changeDetectorRef: ChangeDetectorRef;
+    deselect(emitEvent?: boolean): void;
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    get disableRipple(): boolean;
+    focus(_origin?: FocusOrigin, options?: FocusOptions): void;
+    _getHostElement(): HTMLElement;
+    getLabel(): string;
+    _getTabIndex(): string;
+    // (undocumented)
+    group: MatOptgroup | null;
+    _handleKeydown(event: KeyboardEvent): void;
+    get hideSingleSelectionIndicator(): boolean;
+    id: string;
+    get multiple(): boolean | null | undefined;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngAfterViewChecked(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
+    select(emitEvent?: boolean): void;
+    get selected(): boolean;
+    _selectViaInteraction(): void;
+    setActiveStyles(): void;
+    setInactiveStyles(): void;
+    readonly _stateChanges: Subject<void>;
+    _text: ElementRef<HTMLElement> | undefined;
+    value: T;
+    get viewValue(): string;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, never>;
+}
 
-export { MatPrefix }
+// @public
+export class MatPrefix {
+    // (undocumented)
+    _isText: boolean;
+    // (undocumented)
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, { "_isTextSelector": { "alias": "matTextPrefix"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPrefix, never>;
+}
 
 // @public (undocumented)
-export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl<any> {
+export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl_2<any> {
     constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
@@ -247,7 +421,7 @@ export class MatSelectModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSelectModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i3.MatSelect, typeof i3.MatSelectTrigger], [typeof i4.CdkScrollableModule, typeof i5.MatFormFieldModule, typeof i3.MatSelect, typeof i3.MatSelectTrigger, typeof i2.MatOptionModule, typeof i2.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSelectModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i3.MatCommonModule, typeof i4_2.MatSelect, typeof i4_2.MatSelectTrigger], [typeof i5_2.CdkScrollableModule, typeof i6.MatFormFieldModule, typeof i4_2.MatSelect, typeof i4_2.MatSelectTrigger, typeof i2.MatOptionModule, typeof i3.MatCommonModule]>;
 }
 
 // @public
@@ -258,7 +432,17 @@ export class MatSelectTrigger {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSelectTrigger, never>;
 }
 
-export { MatSuffix }
+// @public
+export class MatSuffix {
+    // (undocumented)
+    _isText: boolean;
+    // (undocumented)
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, { "_isTextSelector": { "alias": "matTextSuffix"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSuffix, never>;
+}
 
 // (No @packageDocumentation comment for this package)
 

@@ -5,18 +5,11 @@ import {createFakeEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MatError,
-  MatFormField,
-  MatHint,
-  MatLabel,
-  MatPrefix,
-  MatSuffix,
-} from '@angular/material/form-field';
-import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {MatInput} from '@angular/material/input';
-import {MatSelect} from '@angular/material/select';
-import {MatNativeDateModule, MatOption} from '@angular/material/core';
+import {MatError, MatFormField, MatHint, MatLabel, MatPrefix, MatSuffix} from '../../form-field';
+import {MatAutocomplete, MatAutocompleteTrigger} from '../../autocomplete';
+import {MatInput} from '../../input';
+import {MatSelect} from '../../select';
+import {MatNativeDateModule, MatOption} from '../../core';
 import {
   MatDateRangeInput,
   MatDateRangePicker,
@@ -25,13 +18,10 @@ import {
   MatDatepickerModule,
   MatEndDate,
   MatStartDate,
-} from '@angular/material/datepicker';
-import {MatInputHarness} from '@angular/material/input/testing';
-import {MatSelectHarness} from '@angular/material/select/testing';
-import {
-  MatDateRangeInputHarness,
-  MatDatepickerInputHarness,
-} from '@angular/material/datepicker/testing';
+} from '../../datepicker';
+import {MatInputHarness} from '../../input/testing';
+import {MatSelectHarness} from '../../select/testing';
+import {MatDateRangeInputHarness, MatDatepickerInputHarness} from '../../datepicker/testing';
 import {MatFormFieldHarness} from './form-field-harness';
 import {MatErrorHarness} from './error-harness';
 

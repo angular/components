@@ -12,7 +12,6 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 // @public
 export const CDK_ACCORDION: InjectionToken<CdkAccordion>;
