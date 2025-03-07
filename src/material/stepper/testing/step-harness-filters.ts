@@ -19,8 +19,6 @@ export interface StepHarnessFilters extends BaseHarnessFilters {
   label?: string | RegExp;
   /** Only find steps with the given selected state. */
   selected?: boolean;
-  /** Only find steps with the given pressed state. */
-  pressed?: boolean;
   /** Only find completed steps. */
   completed?: boolean;
   /** Only find steps that have errors. */
