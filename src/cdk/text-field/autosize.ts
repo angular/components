@@ -47,6 +47,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
   private _previousValue?: string;
+  private _currentScrollTop: number;
   private _initialHeight: string | undefined;
   private readonly _destroyed = new Subject<void>();
   private _listenerCleanups: (() => void)[] | undefined;
@@ -164,6 +165,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
           this._renderer.listen('window', 'resize', () => this._resizeEvents.next()),
           this._renderer.listen(this._textareaElement, 'focus', this._handleFocusEvent),
           this._renderer.listen(this._textareaElement, 'blur', this._handleFocusEvent),
+          this._renderer.listen(this._textareaElement, 'scroll', this._handleScrollEvent),
         ];
         this._resizeEvents.pipe(auditTime(16)).subscribe(() => {
           // Clear the cached heights since the styles can change
@@ -284,6 +286,10 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._hasFocus = event.type === 'focus';
   };
 
+  private _handleScrollEvent = (event: Event) => {
+    this._currentScrollTop = (event?.target as HTMLTextAreaElement)?.scrollTop;
+  };
+
   ngDoCheck() {
     if (this._platform.isBrowser) {
       this.resizeToFitContent();
@@ -323,6 +329,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
     textarea.style.height = `${height}px`;
+    textarea.scrollTop = this._currentScrollTop;
 
     this._ngZone.runOutsideAngular(() => {
       if (typeof requestAnimationFrame !== 'undefined') {
