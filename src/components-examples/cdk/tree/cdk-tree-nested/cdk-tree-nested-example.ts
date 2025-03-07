@@ -13,7 +13,24 @@ interface FoodNode {
   children?: FoodNode[];
 }
 
-const TREE_DATA: FoodNode[] = [
+/**
+ * @title Tree with nested nodes
+ */
+@Component({
+  selector: 'cdk-tree-nested-example',
+  templateUrl: 'cdk-tree-nested-example.html',
+  styleUrl: 'cdk-tree-nested-example.css',
+  imports: [CdkTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CdkTreeNestedExample {
+  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
+  dataSource = new ArrayDataSource(EXAMPLE_DATA);
+
+  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
+}
+
+const EXAMPLE_DATA: FoodNode[] = [
   {
     name: 'Fruit',
     children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
@@ -32,20 +49,3 @@ const TREE_DATA: FoodNode[] = [
     ],
   },
 ];
-
-/**
- * @title Tree with nested nodes
- */
-@Component({
-  selector: 'cdk-tree-nested-example',
-  templateUrl: 'cdk-tree-nested-example.html',
-  styleUrl: 'cdk-tree-nested-example.css',
-  imports: [CdkTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CdkTreeNestedExample {
-  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
-  dataSource = new ArrayDataSource(TREE_DATA);
-
-  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
-}
