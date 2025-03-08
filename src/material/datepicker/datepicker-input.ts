@@ -48,7 +48,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
     // `aria-owns` for this, because it's only defined while the calendar is open.
     '[attr.data-mat-calendar]': '_datepicker ? _datepicker.id : null',
     '[disabled]': 'disabled',
-    '(input)': '_onInput($event.target.value)',
+    '(input)': '_onInput($event)',
     '(change)': '_onChange()',
     '(blur)': '_onBlur()',
     '(keydown)': '_onKeydown($event)',

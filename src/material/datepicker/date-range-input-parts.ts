@@ -150,8 +150,8 @@ abstract class MatDateRangeInputPartBase<D>
   }
 
   /** Handles `input` events on the input element. */
-  override _onInput(value: string) {
-    super._onInput(value);
+  override _onInput(event: Event) {
+    super._onInput(event);
     this._rangeInput._handleChildValueChange();
   }
 
@@ -211,15 +211,13 @@ abstract class MatDateRangeInputPartBase<D>
   host: {
     'class': 'mat-start-date mat-date-range-input-inner',
     '[disabled]': 'disabled',
-    '(input)': '_onInput($event.target.value)',
+    '(input)': '_onInput($event)',
     '(change)': '_onChange()',
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
-    '[attr.aria-owns]': `_rangeInput._ariaOwns
-        ? _rangeInput._ariaOwns()
-        : (_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null`,
-    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
-    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
+    '[attr.aria-owns]': '_rangeInput._ariaOwns() || null',
+    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()!) : null',
+    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()!) : null',
     '(blur)': '_onBlur()',
     'type': 'text',
   },
@@ -301,15 +299,13 @@ export class MatStartDate<D> extends MatDateRangeInputPartBase<D> {
   host: {
     'class': 'mat-end-date mat-date-range-input-inner',
     '[disabled]': 'disabled',
-    '(input)': '_onInput($event.target.value)',
+    '(input)': '_onInput($event)',
     '(change)': '_onChange()',
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
-    '[attr.aria-owns]': `_rangeInput._ariaOwns
-        ? _rangeInput._ariaOwns()
-        : (_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null`,
-    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
-    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
+    '[attr.aria-owns]': '_rangeInput._ariaOwns() || null',
+    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()!) : null',
+    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()!) : null',
     '(blur)': '_onBlur()',
     'type': 'text',
   },
