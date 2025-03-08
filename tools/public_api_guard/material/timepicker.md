@@ -84,7 +84,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     _getLabelId(): string | null;
     getOverlayOrigin(): ElementRef<HTMLElement>;
     protected _handleBlur(): void;
-    protected _handleInput(value: string): void;
+    protected _handleInput(event: Event): void;
     protected _handleKeydown(event: KeyboardEvent): void;
     readonly max: InputSignalWithTransform<D | null, unknown>;
     readonly min: InputSignalWithTransform<D | null, unknown>;
