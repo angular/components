@@ -10,6 +10,7 @@ import {
   ApplicationRef,
   ComponentRef,
   EmbeddedViewRef,
+  EnvironmentInjector,
   Injector,
   NgModuleRef,
   createComponent,
@@ -66,9 +67,11 @@ export class DomPortalOutlet extends BasePortalOutlet {
         throw Error('Cannot attach component portal to outlet without an ApplicationRef.');
       }
 
+      const elementInjector = portal.injector || this._defaultInjector || Injector.NULL;
+      const environmentInjector = elementInjector.get(EnvironmentInjector, this._appRef!.injector);
       componentRef = createComponent(portal.component, {
-        elementInjector: portal.injector || this._defaultInjector || Injector.NULL,
-        environmentInjector: this._appRef!.injector,
+        elementInjector,
+        environmentInjector,
         projectableNodes: portal.projectableNodes || undefined,
       });
 
