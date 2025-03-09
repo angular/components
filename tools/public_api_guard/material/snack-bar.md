@@ -34,7 +34,7 @@ export const MAT_SNACK_BAR_DATA: InjectionToken<any>;
 // @public
 export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<any>>;
 
-// @public
+// @public @deprecated
 export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig;
 
 // @public

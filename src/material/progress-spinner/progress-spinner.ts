@@ -52,7 +52,11 @@ export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS =
     factory: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY,
   });
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions {
   return {diameter: BASE_SIZE};
 }

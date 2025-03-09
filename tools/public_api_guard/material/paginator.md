@@ -21,14 +21,14 @@ import { ThemePalette } from '@angular/material/core';
 // @public
 export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOptions>;
 
-// @public
+// @public @deprecated
 export const MAT_PAGINATOR_INTL_PROVIDER: {
     provide: typeof MatPaginatorIntl;
     deps: Optional[][];
     useFactory: typeof MAT_PAGINATOR_INTL_PROVIDER_FACTORY;
 };
 
-// @public
+// @public @deprecated
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public
