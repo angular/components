@@ -13,7 +13,7 @@ import { ThemePalette } from '@angular/material/core';
 // @public
 export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatProgressSpinnerDefaultOptions>;
 
-// @public
+// @public @deprecated
 export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
 
 // @public (undocumented)

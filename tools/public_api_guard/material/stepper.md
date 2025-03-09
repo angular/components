@@ -35,14 +35,14 @@ import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { WritableSignal } from '@angular/core';
 
-// @public
+// @public @deprecated
 export const MAT_STEPPER_INTL_PROVIDER: {
     provide: typeof MatStepperIntl;
     deps: Optional[][];
     useFactory: typeof MAT_STEPPER_INTL_PROVIDER_FACTORY;
 };
 
-// @public
+// @public @deprecated
 export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl): MatStepperIntl;
 
 // @public (undocumented)

@@ -32,14 +32,14 @@ export function getMatIconNameNotFoundError(iconName: string): Error;
 // @public
 export function getMatIconNoHttpProviderError(): Error;
 
-// @public
+// @public @deprecated
 export const ICON_REGISTRY_PROVIDER: {
     provide: typeof MatIconRegistry;
     deps: (Optional[] | typeof DomSanitizer | typeof ErrorHandler)[];
     useFactory: typeof ICON_REGISTRY_PROVIDER_FACTORY;
 };
 
-// @public
+// @public @deprecated
 export function ICON_REGISTRY_PROVIDER_FACTORY(parentRegistry: MatIconRegistry, httpClient: HttpClient, sanitizer: DomSanitizer, errorHandler: ErrorHandler, document?: any): MatIconRegistry;
 
 // @public
@@ -57,7 +57,7 @@ export const MAT_ICON_DEFAULT_OPTIONS: InjectionToken<MatIconDefaultOptions>;
 // @public
 export const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
 
-// @public
+// @public @deprecated
 export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 // @public

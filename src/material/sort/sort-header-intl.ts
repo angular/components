@@ -22,12 +22,20 @@ export class MatSortHeaderIntl {
   readonly changes: Subject<void> = new Subject<void>();
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl) {
   return parentIntl || new MatSortHeaderIntl();
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export const MAT_SORT_HEADER_INTL_PROVIDER = {
   // If there is already an MatSortHeaderIntl available, use that. Otherwise, provide a new one.
   provide: MatSortHeaderIntl,

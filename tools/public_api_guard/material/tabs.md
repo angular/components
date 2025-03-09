@@ -35,7 +35,7 @@ import { ThemePalette } from '@angular/material/core';
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
 
-// @public
+// @public @deprecated
 export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner;
 
 // @public

@@ -19,7 +19,7 @@ export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS: InjectionToken<MatProgressBarDefa
 // @public
 export const MAT_PROGRESS_BAR_LOCATION: InjectionToken<MatProgressBarLocation>;
 
-// @public
+// @public @deprecated
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation;
 
 // @public (undocumented)
