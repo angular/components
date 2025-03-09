@@ -643,9 +643,7 @@ describe('Portals', () => {
       );
 
       @Component({template: ''})
-      class ChildComponent {
-        readonly injector = inject(Injector);
-      }
+      class ChildComponent {}
 
       const component = createComponent(ChildComponent, {
         environmentInjector: childEnvironment,

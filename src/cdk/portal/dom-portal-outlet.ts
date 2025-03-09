@@ -66,21 +66,22 @@ export class DomPortalOutlet extends BasePortalOutlet {
       if ((typeof ngDevMode === 'undefined' || ngDevMode) && !this._appRef) {
         throw Error('Cannot attach component portal to outlet without an ApplicationRef.');
       }
+      const appRef = this._appRef!;
 
       const elementInjector = portal.injector || this._defaultInjector || Injector.NULL;
-      const environmentInjector = elementInjector.get(EnvironmentInjector, this._appRef!.injector);
+      const environmentInjector = elementInjector.get(EnvironmentInjector, appRef.injector);
       componentRef = createComponent(portal.component, {
         elementInjector,
         environmentInjector,
         projectableNodes: portal.projectableNodes || undefined,
       });
 
-      this._appRef!.attachView(componentRef.hostView);
+      appRef.attachView(componentRef.hostView);
       this.setDisposeFn(() => {
         // Verify that the ApplicationRef has registered views before trying to detach a host view.
         // This check also protects the `detachView` from being called on a destroyed ApplicationRef.
-        if (this._appRef!.viewCount > 0) {
-          this._appRef!.detachView(componentRef.hostView);
+        if (appRef.viewCount > 0) {
+          appRef.detachView(componentRef.hostView);
         }
         componentRef.destroy();
       });
