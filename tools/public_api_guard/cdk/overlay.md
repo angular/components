@@ -4,35 +4,31 @@
 
 ```ts
 
-import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
-import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { AfterContentInit } from '@angular/core';
 import { ComponentRef } from '@angular/core';
-import { ComponentType } from '@angular/cdk/portal';
-import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { EnvironmentInjector } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/portal';
-import * as i3 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { Location as Location_2 } from '@angular/common';
+import { NgIterable } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
-import { PortalOutlet } from '@angular/cdk/portal';
+import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { ViewportRuler } from '@angular/cdk/scrolling';
+import { Subscription } from 'rxjs';
+import { TemplateRef } from '@angular/core';
+import { TrackByFunction } from '@angular/core';
+import { Type } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
 
 // @public
 export class BlockScrollStrategy implements ScrollStrategy {
@@ -113,7 +109,34 @@ export class CdkOverlayOrigin {
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkOverlayOrigin, never>;
 }
 
-export { CdkScrollable }
+// @public
+export class CdkScrollable implements OnInit, OnDestroy {
+    constructor(...args: unknown[]);
+    // (undocumented)
+    protected readonly _destroyed: Subject<void>;
+    // (undocumented)
+    protected dir?: Directionality | null | undefined;
+    // (undocumented)
+    protected elementRef: ElementRef<HTMLElement>;
+    elementScrolled(): Observable<Event>;
+    getElementRef(): ElementRef<HTMLElement>;
+    measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    protected ngZone: NgZone;
+    // (undocumented)
+    protected scrollDispatcher: ScrollDispatcher;
+    // (undocumented)
+    protected _scrollElement: EventTarget;
+    scrollTo(options: ExtendedScrollToOptions): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkScrollable, "[cdk-scrollable], [cdkScrollable]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkScrollable, never>;
+}
 
 // @public
 export class CloseScrollStrategy implements ScrollStrategy {
@@ -125,7 +148,11 @@ export class CloseScrollStrategy implements ScrollStrategy {
     enable(): void;
 }
 
-export { ComponentType }
+// @public
+export interface ComponentType<T> {
+    // (undocumented)
+    new (...args: any[]): T;
+}
 
 // @public
 export class ConnectedOverlayPositionChange {
@@ -333,7 +360,7 @@ export class OverlayModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<OverlayModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<OverlayModule, never, [typeof i1.BidiModule, typeof i2.PortalModule, typeof i3.ScrollingModule, typeof i4.CdkConnectedOverlay, typeof i4.CdkOverlayOrigin], [typeof i4.CdkConnectedOverlay, typeof i4.CdkOverlayOrigin, typeof i3.ScrollingModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<OverlayModule, never, [typeof i1.BidiModule, typeof i2.PortalModule, typeof i3.ScrollingModule, typeof i4_2.CdkConnectedOverlay, typeof i4_2.CdkOverlayOrigin], [typeof i4_2.CdkConnectedOverlay, typeof i4_2.CdkOverlayOrigin, typeof i3.ScrollingModule]>;
 }
 
 // @public
@@ -431,7 +458,22 @@ export interface RepositionScrollStrategyConfig {
     scrollThrottle?: number;
 }
 
-export { ScrollDispatcher }
+// @public
+export class ScrollDispatcher implements OnDestroy {
+    constructor(...args: unknown[]);
+    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    deregister(scrollable: CdkScrollable): void;
+    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
+    // (undocumented)
+    ngOnDestroy(): void;
+    register(scrollable: CdkScrollable): void;
+    scrollContainers: Map<CdkScrollable, Subscription>;
+    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<ScrollDispatcher>;
+}
 
 // @public
 export class ScrollingVisibility {
@@ -481,7 +523,31 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
 // @public
 export type VerticalConnectionPos = 'top' | 'center' | 'bottom';
 
-export { ViewportRuler }
+// @public
+export class ViewportRuler implements OnDestroy {
+    constructor(...args: unknown[]);
+    change(throttleTime?: number): Observable<Event>;
+    protected _document: Document;
+    getViewportRect(): {
+        top: number;
+        left: number;
+        bottom: number;
+        right: number;
+        height: number;
+        width: number;
+    };
+    getViewportScrollPosition(): ViewportScrollPosition;
+    getViewportSize(): Readonly<{
+        width: number;
+        height: number;
+    }>;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ViewportRuler, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<ViewportRuler>;
+}
 
 // (No @packageDocumentation comment for this package)
 

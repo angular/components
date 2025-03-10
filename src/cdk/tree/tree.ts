@@ -11,15 +11,15 @@ import {
   TreeKeyManagerItem,
   TreeKeyManagerOptions,
   TreeKeyManagerStrategy,
-} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+} from '../a11y';
+import {Directionality} from '../bidi';
 import {
   CollectionViewer,
   DataSource,
   isDataSource,
   SelectionChange,
   SelectionModel,
-} from '@angular/cdk/collections';
+} from '../collections';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -48,7 +48,7 @@ import {
   inject,
   booleanAttribute,
 } from '@angular/core';
-import {coerceObservable} from '@angular/cdk/coercion/private';
+import {coerceObservable} from '../coercion/private';
 import {
   BehaviorSubject,
   combineLatest,

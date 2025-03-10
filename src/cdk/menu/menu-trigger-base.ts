@@ -18,8 +18,8 @@ import {
 } from '@angular/core';
 import {Menu} from './menu-interface';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {ConnectedPosition, Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {ConnectedPosition, Overlay, OverlayRef, ScrollStrategy} from '../overlay';
+import {TemplatePortal} from '../portal';
 import {merge, Subject} from 'rxjs';
 
 /** Injection token used for an implementation of MenuStack. */

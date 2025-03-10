@@ -22,7 +22,7 @@ import {
   ViewEncapsulation,
   HostAttributeToken,
 } from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 

@@ -6,16 +6,26 @@
 
 import { AsyncFactoryFn } from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
+import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
-import { DialogRole } from '@angular/material/dialog';
+import { Dialog } from '@angular/cdk/dialog';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Direction } from '@angular/cdk/bidi';
+import { EventEmitter } from '@angular/core';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { MatDialogConfig } from '@angular/material/dialog';
-import { MatDialogRef } from '@angular/material/dialog';
+import * as i0 from '@angular/core';
+import { Injector } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 import { TestElement } from '@angular/cdk/testing';
+import { ViewContainerRef } from '@angular/core';
 
 // @public
 export interface DialogHarnessFilters extends BaseHarnessFilters {

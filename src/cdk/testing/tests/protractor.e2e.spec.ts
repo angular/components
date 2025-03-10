@@ -1,5 +1,5 @@
-import {HarnessLoader} from '@angular/cdk/testing';
-import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
+import {HarnessLoader} from '../../testing';
+import {ProtractorHarnessEnvironment} from '../../testing/protractor';
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {parallel} from '../change-detection';
 import {crossEnvironmentSpecs} from './cross-environment.spec';

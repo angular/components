@@ -1,4 +1,4 @@
-import {ENTER, SPACE, TAB} from '@angular/cdk/keycodes';
+import {ENTER, SPACE, TAB} from '../keycodes';
 import {Component, ElementRef, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '../../bidi';
 import {
   Directive,
   ElementRef,
@@ -27,7 +27,7 @@ import {
   Injector,
   numberAttribute,
 } from '@angular/core';
-import {coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceElement, coerceNumberProperty} from '../../coercion';
 import {BehaviorSubject, Observable, Observer, Subject, merge} from 'rxjs';
 import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
 import type {

@@ -39,7 +39,7 @@ import {
   MatRippleLoader,
   RippleGlobalOptions,
   _StructuralStylesLoader,
-} from '@angular/material/core';
+} from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
 import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';

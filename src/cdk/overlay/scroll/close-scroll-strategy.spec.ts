@@ -1,5 +1,5 @@
-import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
+import {ComponentPortal, PortalModule} from '../../portal';
+import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '../../scrolling';
 import {Component, ElementRef} from '@angular/core';
 import {TestBed, fakeAsync, inject} from '@angular/core/testing';
 import {Subject} from 'rxjs';

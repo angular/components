@@ -160,16 +160,6 @@
         "**/*.spec.ts"
       ]
     ],
-    "no-cross-entry-point-relative-imports": [
-      true,
-      [
-        // Files that we don't publish to npm so the relative imports don't matter.
-        "**/+(dev-app|components-examples|ui-patterns|schematics|tools)/**",
-        "**/google-maps/testing/**",
-        "**/cdk/testing/+(tests|private)/**",
-        "**/*.spec.ts"
-      ]
-    ],
     "file-name-casing": [
       true,
       {

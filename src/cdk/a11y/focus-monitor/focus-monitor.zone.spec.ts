@@ -1,5 +1,5 @@
-import {Platform} from '@angular/cdk/platform';
-import {patchElementFocus} from '@angular/cdk/testing/private';
+import {Platform} from '../../platform';
+import {patchElementFocus} from '../../testing/private';
 import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, inject, tick} from '@angular/core/testing';
 import {A11yModule} from '../a11y-module';

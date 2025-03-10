@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {Platform, _getFocusedElementPierceShadowDom} from '../../platform';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
@@ -25,7 +25,7 @@ import {
   inject,
 } from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
 
 /**
  * Class that allows for trapping focus within a DOM element.

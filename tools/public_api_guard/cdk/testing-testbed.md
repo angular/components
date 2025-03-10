@@ -5,16 +5,6 @@
 ```ts
 
 import { ComponentFixture } from '@angular/core/testing';
-import { ComponentHarness } from '@angular/cdk/testing';
-import { ComponentHarnessConstructor } from '@angular/cdk/testing';
-import { ElementDimensions } from '@angular/cdk/testing';
-import { EventData } from '@angular/cdk/testing';
-import { HarnessEnvironment } from '@angular/cdk/testing';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { ModifierKeys } from '@angular/cdk/testing';
-import { TestElement } from '@angular/cdk/testing';
-import { TestKey } from '@angular/cdk/testing';
-import { TextOptions } from '@angular/cdk/testing';
 
 // @public
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {

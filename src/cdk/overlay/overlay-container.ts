@@ -15,8 +15,8 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {Platform, _isTestEnvironment} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '../private';
+import {Platform, _isTestEnvironment} from '../platform';
 
 @Component({
   template: '',

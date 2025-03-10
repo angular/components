@@ -11,10 +11,13 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 
 // @public
@@ -164,7 +167,7 @@ export class MatButtonToggleModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatButtonToggleModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonToggleModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatButtonToggleGroup, typeof i2.MatButtonToggle], [typeof i1.MatCommonModule, typeof i2.MatButtonToggleGroup, typeof i2.MatButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonToggleModule, never, [typeof i1.MatCommonModule, typeof i2.MatRippleModule, typeof i3.MatButtonToggleGroup, typeof i3.MatButtonToggle], [typeof i1.MatCommonModule, typeof i3.MatButtonToggleGroup, typeof i3.MatButtonToggle]>;
 }
 
 // @public @deprecated (undocumented)

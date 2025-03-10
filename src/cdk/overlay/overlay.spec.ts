@@ -1,5 +1,5 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {CdkPortal, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
+import {Direction, Directionality} from '../bidi';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {

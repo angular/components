@@ -8,7 +8,7 @@ import {
   MatSnackBarActions,
   MatSnackBarConfig,
   MatSnackBarLabel,
-} from '@angular/material/snack-bar';
+} from '../../snack-bar';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarHarness} from './snack-bar-harness';
 

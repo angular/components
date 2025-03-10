@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusKeyManager, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+import {_IdGenerator, FocusKeyManager, FocusMonitor, FocusOrigin} from '../a11y';
+import {Directionality} from '../bidi';
 import {
   AfterContentInit,
   ContentChildren,

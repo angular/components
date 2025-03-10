@@ -7,7 +7,7 @@
  */
 
 import {EmbeddedViewRef, Renderer2, TemplateRef, ViewContainerRef} from '@angular/core';
-import {Direction} from '@angular/cdk/bidi';
+import {Direction} from '../bidi';
 import {
   extendStyles,
   getTransform,

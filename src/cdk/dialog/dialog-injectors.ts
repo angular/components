@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken, inject} from '@angular/core';
-import {Overlay, ScrollStrategy} from '@angular/cdk/overlay';
+import {Overlay, ScrollStrategy} from '../overlay';
 import {DialogConfig} from './dialog-config';
 
 /** Injection token for the Dialog's ScrollStrategy. */

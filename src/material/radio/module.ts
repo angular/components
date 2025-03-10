@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '../core';
 import {MatRadioButton, MatRadioGroup} from './radio';
 
 @NgModule({

@@ -20,7 +20,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '@angular/material/core';
+import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '../core';
 import {
   _MatThumb,
   _MatSlider,

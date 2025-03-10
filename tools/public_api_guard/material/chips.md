@@ -4,26 +4,29 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -497,7 +500,7 @@ export class MatChipsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatChipsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatChipsModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatChipAction, typeof i3.MatChip, typeof i4.MatChipAvatar, typeof i5.MatChipEditInput, typeof i6.MatChipGrid, typeof i7.MatChipInput, typeof i8.MatChipListbox, typeof i9.MatChipOption, typeof i4.MatChipRemove, typeof i10.MatChipRow, typeof i11.MatChipSet, typeof i4.MatChipTrailingIcon], [typeof i1.MatCommonModule, typeof i3.MatChip, typeof i4.MatChipAvatar, typeof i5.MatChipEditInput, typeof i6.MatChipGrid, typeof i7.MatChipInput, typeof i8.MatChipListbox, typeof i9.MatChipOption, typeof i4.MatChipRemove, typeof i10.MatChipRow, typeof i11.MatChipSet, typeof i4.MatChipTrailingIcon]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatChipsModule, never, [typeof i1.MatCommonModule, typeof i2.MatRippleModule, typeof i3.MatChipAction, typeof i4.MatChip, typeof i5.MatChipAvatar, typeof i6.MatChipEditInput, typeof i7.MatChipGrid, typeof i8.MatChipInput, typeof i9.MatChipListbox, typeof i10.MatChipOption, typeof i5.MatChipRemove, typeof i11.MatChipRow, typeof i12.MatChipSet, typeof i5.MatChipTrailingIcon], [typeof i1.MatCommonModule, typeof i4.MatChip, typeof i5.MatChipAvatar, typeof i6.MatChipEditInput, typeof i7.MatChipGrid, typeof i8.MatChipInput, typeof i9.MatChipListbox, typeof i10.MatChipOption, typeof i5.MatChipRemove, typeof i11.MatChipRow, typeof i12.MatChipSet, typeof i5.MatChipTrailingIcon]>;
 }
 
 // @public

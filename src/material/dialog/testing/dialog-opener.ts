@@ -16,7 +16,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '../../dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
 

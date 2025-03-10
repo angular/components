@@ -39,12 +39,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {
-  MatRipple,
-  ThemePalette,
-  _MatInternalFormField,
-  _StructuralStylesLoader,
-} from '@angular/material/core';
+import {MatRipple, ThemePalette, _MatInternalFormField, _StructuralStylesLoader} from '../core';
 import {Subscription} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 

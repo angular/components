@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {MatPaginatorModule, PageEvent} from '../../paginator';
 import {MatPaginatorHarness} from './paginator-harness';
 
 describe('MatPaginatorHarness', () => {

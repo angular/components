@@ -2,8 +2,8 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatIconModule} from '@angular/material/icon';
-import {MatIconHarness} from '@angular/material/icon/testing';
+import {MatIconModule} from '../../icon';
+import {MatIconHarness} from '../../icon/testing';
 import {MatChipsModule} from '../index';
 import {MatChipHarness} from './chip-harness';
 

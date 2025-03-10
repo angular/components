@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 
 import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 
 /** Default FAB options that can be overridden. */
 export interface MatFabDefaultOptions {

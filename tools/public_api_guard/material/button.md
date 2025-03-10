@@ -8,12 +8,13 @@ import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
-import { MatRippleLoader } from '@angular/material/core';
+import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
+import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 
 // @public
 export const MAT_BUTTON_CONFIG: InjectionToken<MatButtonConfig>;
@@ -51,7 +52,7 @@ export class MatButtonModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatButtonModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatButton, typeof i3.MatMiniFabButton, typeof i4.MatIconButton, typeof i3.MatFabButton], [typeof i1.MatCommonModule, typeof i2.MatButton, typeof i3.MatMiniFabButton, typeof i4.MatIconButton, typeof i3.MatFabButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatButtonModule, never, [typeof i1.MatCommonModule, typeof i2.MatRippleModule, typeof i3.MatButton, typeof i4.MatMiniFabButton, typeof i5.MatIconButton, typeof i4.MatFabButton], [typeof i1.MatCommonModule, typeof i3.MatButton, typeof i4.MatMiniFabButton, typeof i5.MatIconButton, typeof i4.MatFabButton]>;
 }
 
 // @public

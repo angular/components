@@ -11,14 +11,15 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
-import { MatRipple } from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
+import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
-import { RippleGlobalOptions } from '@angular/material/core';
 import { Subject } from 'rxjs';
-import { ThemePalette } from '@angular/material/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
@@ -147,7 +148,7 @@ export class MatSliderModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSliderModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, never, [typeof i1.MatCommonModule, typeof i1.MatRippleModule, typeof i2.MatSlider, typeof i3.MatSliderThumb, typeof i3.MatSliderRangeThumb, typeof i4.MatSliderVisualThumb], [typeof i2.MatSlider, typeof i3.MatSliderThumb, typeof i3.MatSliderRangeThumb]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSliderModule, never, [typeof i1.MatCommonModule, typeof i2.MatRippleModule, typeof i3.MatSlider, typeof i4.MatSliderThumb, typeof i4.MatSliderRangeThumb, typeof i5.MatSliderVisualThumb], [typeof i3.MatSlider, typeof i4.MatSliderThumb, typeof i4.MatSliderRangeThumb]>;
 }
 
 // @public (undocumented)

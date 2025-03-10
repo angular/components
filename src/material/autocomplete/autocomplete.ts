@@ -32,7 +32,7 @@ import {
   MatOptgroup,
   MatOption,
   ThemePalette,
-} from '@angular/material/core';
+} from '../core';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {Subscription} from 'rxjs';

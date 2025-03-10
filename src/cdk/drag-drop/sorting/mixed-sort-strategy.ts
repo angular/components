@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_getShadowRoot} from '@angular/cdk/platform';
+import {_getShadowRoot} from '../../platform';
 import {moveItemInArray} from '../drag-utils';
 import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
 import {DragDropRegistry} from '../drag-drop-registry';

@@ -10,7 +10,7 @@ import {DialogModule} from '@angular/cdk/dialog';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '../core';
 import {MatDialog} from './dialog';
 import {MatDialogContainer} from './dialog-container';
 import {

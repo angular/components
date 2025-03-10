@@ -22,7 +22,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {MatRippleModule} from '@angular/material/core';
+import {MatRippleModule} from '../core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatTabHeader} from './tab-header';

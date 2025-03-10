@@ -2,7 +2,7 @@ import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSidenavModule} from '../../sidenav';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawerContainerHarness} from './drawer-container-harness';
 import {MatDrawerContentHarness} from './drawer-content-harness';

@@ -31,7 +31,7 @@ import {
   OnDestroy,
   inject,
 } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '../core';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   MatCalendarBody,

@@ -22,11 +22,16 @@ import { CdkRowDef } from '@angular/cdk/table';
 import { CdkTable } from '@angular/cdk/table';
 import { CdkTextColumn } from '@angular/cdk/table';
 import { DataSource } from '@angular/cdk/collections';
+import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 
 // @public

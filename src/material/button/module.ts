@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '../core';
 import {MatButton} from './button';
 import {MatFabButton, MatMiniFabButton} from './fab';
 import {MatIconButton} from './icon-button';
