@@ -245,6 +245,8 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
     get chipGrid(): MatChipGrid;
     set chipGrid(value: MatChipGrid);
+    // (undocumented)
+    protected _chipGrid: MatChipGrid;
     clear(): void;
     get disabled(): boolean;
     set disabled(value: boolean);

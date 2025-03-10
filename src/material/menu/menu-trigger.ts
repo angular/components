@@ -92,7 +92,7 @@ const PANELS_TO_TRIGGERS = new WeakMap<MatMenuPanel, MatMenuTrigger>();
     'class': 'mat-mdc-menu-trigger',
     '[attr.aria-haspopup]': 'menu ? "menu" : null',
     '[attr.aria-expanded]': 'menuOpen',
-    '[attr.aria-controls]': 'menuOpen ? menu.panelId : null',
+    '[attr.aria-controls]': 'menuOpen ? menu?.panelId : null',
     '(click)': '_handleClick($event)',
     '(mousedown)': '_handleMousedown($event)',
     '(keydown)': '_handleKeydown($event)',

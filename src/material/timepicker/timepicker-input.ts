@@ -60,7 +60,7 @@ import {DOCUMENT} from '@angular/common';
     '[attr.mat-timepicker-id]': 'timepicker()?.panelId',
     '[disabled]': 'disabled()',
     '(blur)': '_handleBlur()',
-    '(input)': '_handleInput($event.target.value)',
+    '(input)': '_handleInput($event)',
     '(keydown)': '_handleKeydown($event)',
   },
   providers: [
@@ -261,7 +261,8 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   };
 
   /** Handles the `input` event. */
-  protected _handleInput(value: string) {
+  protected _handleInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
     const currentValue = this.value();
     const date = this._dateAdapter.parseTime(value, this._dateFormats.parse.timeInput);
     const hasChanged = !this._dateAdapter.sameTime(date, currentValue);
