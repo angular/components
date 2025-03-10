@@ -22,7 +22,7 @@ import { ThemePalette } from '@angular/material/core';
 // @public (undocumented)
 export const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
 
-// @public (undocumented)
+// @public @deprecated
 export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions;
 
 // @public

@@ -65,7 +65,11 @@ export interface MatIconLocation {
   getPathname: () => string;
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
   const _document = inject(DOCUMENT);
   const _location = _document ? _document.location : null;

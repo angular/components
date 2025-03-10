@@ -70,7 +70,11 @@ export interface MatProgressBarLocation {
   getPathname: () => string;
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
   const _document = inject(DOCUMENT);
   const _location = _document ? _document.location : null;

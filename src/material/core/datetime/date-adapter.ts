@@ -15,7 +15,11 @@ export const MAT_DATE_LOCALE = new InjectionToken<{}>('MAT_DATE_LOCALE', {
   factory: MAT_DATE_LOCALE_FACTORY,
 });
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_DATE_LOCALE_FACTORY(): {} {
   return inject(LOCALE_ID);
 }

@@ -40,7 +40,11 @@ export const MAT_FAB_DEFAULT_OPTIONS = new InjectionToken<MatFabDefaultOptions>(
   },
 );
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_FAB_DEFAULT_OPTIONS_FACTORY(): MatFabDefaultOptions {
   return {
     // The FAB by default has its color set to accent.
