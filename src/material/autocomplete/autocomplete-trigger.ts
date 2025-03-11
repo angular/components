@@ -458,7 +458,8 @@ export class MatAutocompleteTrigger
     this._element.nativeElement.disabled = isDisabled;
   }
 
-  _handleKeydown(event: KeyboardEvent): void {
+  _handleKeydown(e: Event): void {
+    const event = e as KeyboardEvent;
     const keyCode = event.keyCode;
     const hasModifier = hasModifierKey(event);
 
@@ -501,7 +502,7 @@ export class MatAutocompleteTrigger
     }
   }
 
-  _handleInput(event: KeyboardEvent): void {
+  _handleInput(event: Event): void {
     let target = event.target as HTMLInputElement;
     let value: number | string | null = target.value;
 
