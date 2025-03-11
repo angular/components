@@ -67,7 +67,7 @@ index dd6ec61..c2a0acf 100755
 @@ -8,7 +8,7 @@
  import * as fs from 'fs';
  import * as path from 'path';
- import fastGlob from 'fast-glob';
+ import { globSync } from 'tinyglobby';
 -import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports';
 +import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports.mjs';
  /**
