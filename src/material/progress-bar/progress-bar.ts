@@ -25,7 +25,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 
 /** Last animation end data. */
 export interface ProgressAnimationEnd {

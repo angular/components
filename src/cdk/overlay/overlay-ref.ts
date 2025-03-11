@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
+import {Direction, Directionality} from '../bidi';
+import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '../portal';
 import {
   AfterRenderRef,
   ComponentRef,
@@ -25,7 +25,7 @@ import {takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
+import {coerceCssPixelValue, coerceArray} from '../coercion';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
 import {BackdropRef} from './backdrop-ref';

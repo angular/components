@@ -10,7 +10,7 @@ import { ElementRef } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -18,7 +18,6 @@ import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { ThemePalette } from '@angular/material/core';
 
 // @public
 export function getMatIconFailedToSanitizeLiteralError(literal: SafeHtml): Error;

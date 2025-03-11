@@ -3,7 +3,7 @@ import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {

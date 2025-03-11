@@ -8,8 +8,8 @@ import {
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, Type, WritableSignal, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatDividerHarness} from '@angular/material/divider/testing';
-import {MatListModule} from '@angular/material/list';
+import {MatDividerHarness} from '../../divider/testing';
+import {MatListModule} from '../../list';
 import {MatActionListHarness, MatActionListItemHarness} from './action-list-harness';
 import {MatListHarness, MatListItemHarness} from './list-harness';
 import {

@@ -1,5 +1,5 @@
-import {BidiModule} from '@angular/cdk/bidi';
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BidiModule} from '../bidi';
+import {CollectionViewer, DataSource} from '../collections';
 import {
   AfterContentInit,
   AfterViewInit,

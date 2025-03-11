@@ -21,7 +21,7 @@ import {
   OnDestroy,
   Renderer2,
 } from '@angular/core';
-import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
+import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** Object that can be used to configure the default options for the button component. */

@@ -7,8 +7,6 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatBadgePosition } from '@angular/material/badge';
-import { MatBadgeSize } from '@angular/material/badge';
 
 // @public (undocumented)
 export interface BadgeHarnessFilters extends BaseHarnessFilters {

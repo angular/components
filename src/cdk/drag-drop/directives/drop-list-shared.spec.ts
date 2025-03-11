@@ -1,6 +1,6 @@
-import {Directionality} from '@angular/cdk/bidi';
-import {Platform, _supportsShadowDom} from '@angular/cdk/platform';
-import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
+import {Directionality} from '../../bidi';
+import {Platform, _supportsShadowDom} from '../../platform';
+import {CdkScrollable, ViewportRuler} from '../../scrolling';
 import {
   createMouseEvent,
   createTouchEvent,
@@ -8,7 +8,7 @@ import {
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchTouchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../testing/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,

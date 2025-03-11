@@ -10,8 +10,8 @@ import {
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {MatSort, MatSortHeader, MatSortModule} from '@angular/material/sort';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortHeader, MatSortModule} from '../sort';
+import {MatPaginator, MatPaginatorModule} from '../paginator';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MatTable', () => {

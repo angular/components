@@ -6,11 +6,15 @@
 
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ErrorHandler } from '@angular/core';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { HttpClient } from '@angular/common/http';
 import * as i0 from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 // @public
 export class FakeMatIconRegistry implements PublicApi<MatIconRegistry>, OnDestroy {

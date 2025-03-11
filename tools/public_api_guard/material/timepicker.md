@@ -5,20 +5,24 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { AfterViewChecked } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i4 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
-import { MatOption } from '@angular/material/core';
-import { MatOptionParentComponent } from '@angular/material/core';
 import { ModelSignal } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';

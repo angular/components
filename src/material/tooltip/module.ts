@@ -10,7 +10,7 @@ import {NgModule} from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
-import {MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '../core';
 import {
   MatTooltip,
   TooltipComponent,

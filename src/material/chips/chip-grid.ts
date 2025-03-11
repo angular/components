@@ -30,8 +30,8 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import {_ErrorStateTracker, ErrorStateMatcher} from '@angular/material/core';
-import {MatFormFieldControl} from '@angular/material/form-field';
+import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
+import {MatFormFieldControl} from '../form-field';
 import {merge, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';

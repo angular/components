@@ -7,9 +7,8 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatOptionHarness } from '@angular/material/core/testing';
-import { OptionHarnessFilters } from '@angular/material/core/testing';
 
 // @public (undocumented)
 export class MatTimepickerHarness extends ComponentHarness {

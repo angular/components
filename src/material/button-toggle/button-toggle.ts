@@ -36,7 +36,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {_StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '@angular/material/core';
+import {_StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '../core';
 
 /**
  * @deprecated No longer used.

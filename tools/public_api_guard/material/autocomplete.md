@@ -6,27 +6,33 @@
 
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
-import * as i2 from '@angular/material/core';
-import * as i6 from '@angular/cdk/scrolling';
+import * as i1_3 from '@angular/cdk/bidi';
+import * as i7 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
-import { MatOptgroup } from '@angular/material/core';
-import { MatOption } from '@angular/material/core';
-import { MatOptionSelectionChange } from '@angular/material/core';
+import { Injector } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 // @public
 export function getMatAutocompleteMissingPanelError(): Error;
@@ -141,7 +147,7 @@ export class MatAutocompleteModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatAutocompleteModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i3.MatAutocomplete, typeof i4.MatAutocompleteTrigger, typeof i5.MatAutocompleteOrigin], [typeof i6.CdkScrollableModule, typeof i3.MatAutocomplete, typeof i2.MatOptionModule, typeof i2.MatCommonModule, typeof i4.MatAutocompleteTrigger, typeof i5.MatAutocompleteOrigin]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatAutocompleteModule, never, [typeof i1.OverlayModule, typeof i2.MatOptionModule, typeof i3.MatCommonModule, typeof i4_2.MatAutocomplete, typeof i5_2.MatAutocompleteTrigger, typeof i6.MatAutocompleteOrigin], [typeof i7.CdkScrollableModule, typeof i4_2.MatAutocomplete, typeof i2.MatOptionModule, typeof i3.MatCommonModule, typeof i5_2.MatAutocompleteTrigger, typeof i6.MatAutocompleteOrigin]>;
 }
 
 // @public
@@ -211,9 +217,62 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     static ɵfac: i0.ɵɵFactoryDeclaration<MatAutocompleteTrigger, never>;
 }
 
-export { MatOptgroup }
+// @public
+export class MatOptgroup {
+    constructor(...args: unknown[]);
+    disabled: boolean;
+    _inert: boolean;
+    label: string;
+    _labelId: string;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOptgroup, "mat-optgroup", ["matOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*", "mat-option, ng-container"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, never>;
+}
 
-export { MatOption }
+// @public
+export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
+    constructor(...args: unknown[]);
+    get active(): boolean;
+    // (undocumented)
+    _changeDetectorRef: ChangeDetectorRef;
+    deselect(emitEvent?: boolean): void;
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    get disableRipple(): boolean;
+    focus(_origin?: FocusOrigin, options?: FocusOptions): void;
+    _getHostElement(): HTMLElement;
+    getLabel(): string;
+    _getTabIndex(): string;
+    // (undocumented)
+    group: MatOptgroup | null;
+    _handleKeydown(event: KeyboardEvent): void;
+    get hideSingleSelectionIndicator(): boolean;
+    id: string;
+    get multiple(): boolean | null | undefined;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngAfterViewChecked(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
+    select(emitEvent?: boolean): void;
+    get selected(): boolean;
+    _selectViaInteraction(): void;
+    setActiveStyles(): void;
+    setInactiveStyles(): void;
+    readonly _stateChanges: Subject<void>;
+    _text: ElementRef<HTMLElement> | undefined;
+    value: T;
+    get viewValue(): string;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], { "value": { "alias": "value"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["mat-icon", "*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, never>;
+}
 
 // (No @packageDocumentation comment for this package)
 

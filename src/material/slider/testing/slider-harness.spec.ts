@@ -10,7 +10,7 @@ import {Component, signal} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatSliderModule} from '@angular/material/slider';
+import {MatSliderModule} from '../module';
 import {MatSliderHarness} from './slider-harness';
 import {MatSliderThumbHarness} from './slider-thumb-harness';
 import {ThumbPosition} from './slider-harness-filters';

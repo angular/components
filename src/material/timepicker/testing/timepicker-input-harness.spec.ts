@@ -3,8 +3,8 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
-import {MatTimepicker, MatTimepickerInput} from '@angular/material/timepicker';
+import {DateAdapter, provideNativeDateAdapter} from '../../core';
+import {MatTimepicker, MatTimepickerInput} from '../../timepicker';
 import {MatTimepickerHarness} from './timepicker-harness';
 import {MatTimepickerInputHarness} from './timepicker-input-harness';
 

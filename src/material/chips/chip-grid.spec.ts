@@ -34,8 +34,8 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '../form-field';
+import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

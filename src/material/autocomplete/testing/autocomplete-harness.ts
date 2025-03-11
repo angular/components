@@ -18,7 +18,7 @@ import {
   MatOptionHarness,
   OptgroupHarnessFilters,
   OptionHarnessFilters,
-} from '@angular/material/core/testing';
+} from '../../core/testing';
 import {AutocompleteHarnessFilters} from './autocomplete-harness-filters';
 
 export class MatAutocompleteHarness extends ComponentHarness {
