@@ -91,7 +91,7 @@ yarn_install(
         "//:.yarn/releases/yarn-1.22.17.cjs",
         "//:.yarnrc",
         "//:tools/postinstall/apply-patches.js",
-        "//:tools/postinstall/patches/@angular+bazel+16.0.0-next.6.patch",
+        "//:tools/postinstall/patches/@angular+bazel+20.0.0-next.1.patch",
         "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
     ],
     # Currently disabled due to:
