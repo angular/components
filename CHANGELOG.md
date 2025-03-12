@@ -1,3 +1,62 @@
+<a name="20.0.0-next.1"></a>
+# 20.0.0-next.1 "fernium-fern" (2025-03-12)
+## Breaking Changes
+### cdk
+- * `SelectionModel.clear` now returns a boolean.
+  * `SelectionModel.deselect` now returns a boolean.
+  * `SelectionModel.select` now returns a boolean.
+  * `SelectionModel.setSelection` now returns a boolean.
+  * `SelectionModel.toggle` now returns a boolean.
+- * `DIALOG_SCROLL_STRATEGY_PROVIDER` has been removed.
+  * `DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY` has been removed.
+- * `DragDropRegistry` is no longer generic.
+  * `DragDropRegistry.scroll` has been removed. Use the `scrolled` method instead.
+- * `DomPortalHost` has been removed. Use `DomPortalOutlet` instead.
+  * `PortalInjector` has been removed. Use `Injector.create` instead.
+  * `PortalHost` has been removed. Use `PortalOutlet` instead.
+  * `BasePortalHost` has been removed. Use `BasePortalOutlet` instead.
+- * `Constructor` symbol has been removed.
+  * `CanStickCtor` symbol has been removed.
+  * `mixinHasStickyInput` has been removed. Implement the `CanStick` interface instead.
+### material
+- * `MAT_CHECKBOX_REQUIRED_VALIDATOR` has been removed.
+  * `MAT_CHECKBOX_VALUE_ACCESSOR` has been removed.
+  * `MatCheckboxRequiredValidator` has been removed.
+  * `_MatCheckboxRequiredValidatorModule` has been removed.
+- * `MAT_DIALOG_SCROLL_STRATEGY_PROVIDER` has been removed.
+  * `MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY` has been removed.
+- * `matSelectAnimations.transformPanelWrap` has been removed.
+- * `MAT_SLIDE_TOGGLE_REQUIRED_VALIDATOR` has been removed.
+  * `MAT_SLIDE_TOGGLE_VALUE_ACCESSOR` has been removed.
+  * `MatSlideToggleRequiredValidator` has been removed.
+  * `_MatSlideToggleRequiredValidatorModule` has been removed.
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e61d152e0](https://github.com/angular/components/commit/e61d152e002937f4bc9df96851c2932e15ce7461) | fix | **autocomplete:** incorrectly resolving focused element in shadow DOM ([#30619](https://github.com/angular/components/pull/30619)) |
+| [77d6b69e7](https://github.com/angular/components/commit/77d6b69e7789d97220afac64144e8025c5960353) | fix | **checkbox:** breaking changes for v20 |
+| [227e83d24](https://github.com/angular/components/commit/227e83d242a83d680d8cd39b36f6385c9f653102) | fix | **dialog:** breaking changes for v20 |
+| [da371e9ca](https://github.com/angular/components/commit/da371e9ca41013f427fd8f5ee99eef611fe42c46) | fix | **schematics:** some options missing from schema ([#30602](https://github.com/angular/components/pull/30602)) |
+| [db090cac3](https://github.com/angular/components/commit/db090cac310118915c91cec6187ef9c1cfa7ced5) | fix | **select:** breaking changes for v20 |
+| [c6ad44c68](https://github.com/angular/components/commit/c6ad44c68d478833ddfa5d55a14922921f858771) | fix | **slide-toggle:** breaking changes for v20 |
+| [3a970116a](https://github.com/angular/components/commit/3a970116af15928d47958fd353fc091049416b38) | fix | **timepicker:** wrong default scroll strategy ([#30593](https://github.com/angular/components/pull/30593)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1167d0638](https://github.com/angular/components/commit/1167d063882d8f85f30c682244f92804f59afc2b) | fix | **collections:** breaking changes for v20 |
+| [79e887219](https://github.com/angular/components/commit/79e887219316c5d606d687c7a31fc387507da40e) | fix | **dialog:** breaking changes for v20 |
+| [b3e516f2d](https://github.com/angular/components/commit/b3e516f2d1d0cb09b6e1c150d094717f8e68dee3) | fix | **drag-drop:** breaking changes for v20 |
+| [d0d5de489](https://github.com/angular/components/commit/d0d5de489750f396c63a92402623cf3b7abea523) | fix | **portal:** fix incorrect injector hierarchy with DomPortalOutlet and child environment injectors ([#30610](https://github.com/angular/components/pull/30610)) |
+| [11599f808](https://github.com/angular/components/commit/11599f808f823b38e7c3eca99fb5bbf1b48ad922) | fix | **portal:** remove deprecated symbols ([#30584](https://github.com/angular/components/pull/30584)) |
+| [8078efc21](https://github.com/angular/components/commit/8078efc21403d5fc83a0cb40a17df43b64a28c67) | fix | **table:** breaking changes for v20 |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [810495ce0](https://github.com/angular/components/commit/810495ce0085c4faff49143e340f8bf46a02fe31) | fix | deprecate exported factories ([#30608](https://github.com/angular/components/pull/30608)) |
+| [32353fb3a](https://github.com/angular/components/commit/32353fb3ab97de9a5617115b92dafa667d53f1e0) | fix | resolve directive host binding issues ([#30606](https://github.com/angular/components/pull/30606)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-next.0"></a>
 # 20.0.0-next.0 "metal-cat" (2025-03-05)
 ## Breaking Changes
