@@ -31,7 +31,7 @@ import { TemplateRef } from '@angular/core';
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
 
-// @public
+// @public @deprecated
 export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner;
 
 // @public

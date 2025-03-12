@@ -31,14 +31,14 @@ export interface ArrowViewStateTransition {
 // @public
 export const MAT_SORT_DEFAULT_OPTIONS: InjectionToken<MatSortDefaultOptions>;
 
-// @public
+// @public @deprecated
 export const MAT_SORT_HEADER_INTL_PROVIDER: {
     provide: typeof MatSortHeaderIntl;
     deps: Optional[][];
     useFactory: typeof MAT_SORT_HEADER_INTL_PROVIDER_FACTORY;
 };
 
-// @public
+// @public @deprecated
 export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderIntl): MatSortHeaderIntl;
 
 // @public

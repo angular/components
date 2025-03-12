@@ -97,10 +97,10 @@ export const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelec
 // @public
 export const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public
+// @public @deprecated
 export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
-// @public
+// @public @deprecated
 export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];
@@ -113,16 +113,16 @@ export const MAT_DATEPICKER_VALIDATORS: any;
 // @public
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any;
 
-// @public
+// @public @deprecated
 export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
-// @public
+// @public @deprecated
 export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
-// @public
+// @public @deprecated
 export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
-// @public
+// @public @deprecated
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
 // @public

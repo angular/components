@@ -132,7 +132,11 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
   }
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
   parent: MatDateRangeSelectionStrategy<unknown>,
   adapter: DateAdapter<unknown>,
@@ -140,7 +144,11 @@ export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
   return parent || new DefaultMatCalendarRangeStrategy(adapter);
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export const MAT_CALENDAR_RANGE_STRATEGY_PROVIDER: FactoryProvider = {
   provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
   deps: [[new Optional(), new SkipSelf(), MAT_DATE_RANGE_SELECTION_STRATEGY], DateAdapter],

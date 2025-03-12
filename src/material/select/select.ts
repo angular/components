@@ -103,7 +103,11 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   },
 );
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
   overlay: Overlay,
 ): () => ScrollStrategy {
@@ -140,7 +144,11 @@ export interface MatSelectConfig {
 /** Injection token that can be used to provide the default options the select module. */
 export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT_CONFIG');
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
   provide: MAT_SELECT_SCROLL_STRATEGY,
   deps: [Overlay],

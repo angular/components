@@ -30,16 +30,16 @@ export function getMatTooltipInvalidPositionError(position: string): Error;
 // @public
 export const MAT_TOOLTIP_DEFAULT_OPTIONS: InjectionToken<MatTooltipDefaultOptions>;
 
-// @public
+// @public @deprecated
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions;
 
 // @public
 export const MAT_TOOLTIP_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public
+// @public @deprecated
 export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
-// @public
+// @public @deprecated
 export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof Overlay)[];

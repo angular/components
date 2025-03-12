@@ -87,19 +87,31 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
   },
 );
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
 }
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_TOOLTIP_SCROLL_STRATEGY,
   deps: [Overlay],
   useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
 };
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
   return {
     showDelay: 0,

@@ -21,7 +21,7 @@ import { Validator } from '@angular/forms';
 // @public
 export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOptions>;
 
-// @public
+// @public @deprecated
 export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions;
 
 // @public (undocumented)
