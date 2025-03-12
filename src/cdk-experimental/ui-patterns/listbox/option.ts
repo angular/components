@@ -29,7 +29,7 @@ export interface OptionInputs
     ListSelectionItem,
     ListTypeaheadItem,
     ListFocusItem {
-  listbox: SignalLike<ListboxPattern>;
+  listbox: SignalLike<ListboxPattern | undefined>;
 }
 
 /** Represents an option in a listbox. */
@@ -41,12 +41,12 @@ export class OptionPattern {
   index = computed(
     () =>
       this.listbox()
-        .navigation.inputs.items()
+        ?.navigation.inputs.items()
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
   /** Whether the option is selected. */
-  selected = computed(() => this.listbox().selection.inputs.selectedIds().includes(this.id()));
+  selected = computed(() => this.listbox()?.selection.inputs.selectedIds().includes(this.id()));
 
   /** Whether the option is disabled. */
   disabled: SignalLike<boolean>;
@@ -55,10 +55,10 @@ export class OptionPattern {
   searchTerm: SignalLike<string>;
 
   /** A reference to the parent listbox. */
-  listbox: SignalLike<ListboxPattern>;
+  listbox: SignalLike<ListboxPattern | undefined>;
 
   /** The tabindex of the option. */
-  tabindex = computed(() => this.listbox().focusManager.getItemTabindex(this));
+  tabindex = computed(() => this.listbox()?.focusManager.getItemTabindex(this));
 
   /** The html element that should receive focus. */
   element: SignalLike<HTMLElement>;

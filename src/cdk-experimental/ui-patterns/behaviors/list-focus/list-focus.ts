@@ -34,7 +34,7 @@ export class ListFocus<T extends ListFocusItem> {
   }
 
   /** The id of the current active item. */
-  getActiveDescendant(): String | undefined {
+  getActiveDescendant(): string | undefined {
     if (this.inputs.focusMode() === 'roving') {
       return undefined;
     }
