@@ -26,7 +26,11 @@ import {MatSnackBarRef} from './snack-bar-ref';
 import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {takeUntil} from 'rxjs/operators';
 
-/** @docs-private */
+/**
+ * @docs-private
+ * @deprecated No longer used, will be removed.
+ * @breaking-change 21.0.0
+ */
 export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
   return new MatSnackBarConfig();
 }
