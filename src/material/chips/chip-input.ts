@@ -219,6 +219,18 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     }
   }
 
+  setLabelledByIds(ids: string[]): void {
+    const element = this._elementRef.nativeElement;
+
+    // Set the value directly in the DOM since this binding
+    // is prone to "changed after checked" errors.
+    if (ids.length) {
+      element.setAttribute('aria-labelledby', ids.join(' '));
+    } else {
+      element.removeAttribute('aria-labelledby');
+    }
+  }
+
   /** Checks whether a keycode is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
