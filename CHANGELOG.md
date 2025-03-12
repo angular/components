@@ -1,3 +1,22 @@
+<a name="19.2.3"></a>
+# 19.2.3 "californium-coconut" (2025-03-12)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3de78febb](https://github.com/angular/components/commit/3de78febb85ee55beaef451878723093f5feceff) | fix | **portal:** fix incorrect injector hierarchy with DomPortalOutlet and child environment injectors ([#30610](https://github.com/angular/components/pull/30610)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c4e46080e](https://github.com/angular/components/commit/c4e46080e7156afd713b87684c20c505173ffeb1) | fix | **autocomplete:** incorrectly resolving focused element in shadow DOM ([#30619](https://github.com/angular/components/pull/30619)) |
+| [6d978a3aa](https://github.com/angular/components/commit/6d978a3aa5876b162192a408d20377cc1ebf2907) | fix | **schematics:** some options missing from schema ([#30602](https://github.com/angular/components/pull/30602)) |
+| [289a0e0aa](https://github.com/angular/components/commit/289a0e0aa12a980fb83cb22420b330fa5333c206) | fix | **timepicker:** wrong default scroll strategy ([#30593](https://github.com/angular/components/pull/30593)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4d8f3aab8](https://github.com/angular/components/commit/4d8f3aab8bcaaf9566a763a7bee1bce4c8b12ff7) | fix | deprecate exported factories ([#30608](https://github.com/angular/components/pull/30608)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.2"></a>
 # 19.2.2 "metal-llama" (2025-03-05)
 ### cdk
