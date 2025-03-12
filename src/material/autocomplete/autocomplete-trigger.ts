@@ -19,10 +19,9 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {_getEventTarget} from '@angular/cdk/platform';
+import {_getEventTarget, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -147,7 +146,6 @@ export class MatAutocompleteTrigger
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _dir = inject(Directionality, {optional: true});
   private _formField = inject<MatFormField | null>(MAT_FORM_FIELD, {optional: true, host: true});
-  private _document = inject(DOCUMENT);
   private _viewportRuler = inject(ViewportRuler);
   private _scrollStrategy = inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY);
   private _renderer = inject(Renderer2);
@@ -216,8 +214,7 @@ export class MatAutocompleteTrigger
     // If the user blurred the window while the autocomplete is focused, it means that it'll be
     // refocused when they come back. In this case we want to skip the first focus event, if the
     // pane was closed, in order to avoid reopening it unintentionally.
-    this._canOpenOnNextFocus =
-      this._document.activeElement !== this._element.nativeElement || this.panelOpen;
+    this._canOpenOnNextFocus = this.panelOpen || !this._hasFocus();
   };
 
   /** `View -> model callback called when value changes` */
@@ -424,7 +421,7 @@ export class MatAutocompleteTrigger
           // true. Its main purpose is to handle the case where the input is focused from an
           // outside click which propagates up to the `body` listener within the same sequence
           // and causes the panel to close immediately (see #3106).
-          this._document.activeElement !== this._element.nativeElement &&
+          !this._hasFocus() &&
           (!formField || !formField.contains(clickTarget)) &&
           (!customOrigin || !customOrigin.contains(clickTarget)) &&
           !!this._overlayRef &&
@@ -551,7 +548,7 @@ export class MatAutocompleteTrigger
         }
       }
 
-      if (this._canOpen() && this._document.activeElement === event.target) {
+      if (this._canOpen() && this._hasFocus()) {
         // When the `input` event fires, the input's value will have already changed. This means
         // that if we take the `this._element.nativeElement.value` directly, it'll be one keystroke
         // behind. This can be a problem when the user selects a value, changes a character while
@@ -578,6 +575,11 @@ export class MatAutocompleteTrigger
     if (this._canOpen() && !this.panelOpen) {
       this._openPanelInternal();
     }
+  }
+
+  /** Whether the input currently has focus. */
+  private _hasFocus(): boolean {
+    return _getFocusedElementPierceShadowDom() === this._element.nativeElement;
   }
 
   /**
