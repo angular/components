@@ -4,7 +4,7 @@
       Relocated label next to related button and made visually hidden via cdk-visually-hidden
       to enable label to appear in a11y tree for SR when using Firefox -->
     <span [id]="_periodButtonLabelId" class="cdk-visually-hidden" aria-live="polite">{{periodButtonDescription}}</span>
-    <button mat-button type="button" class="mat-calendar-period-button"
+    <button matButton type="button" class="mat-calendar-period-button"
             (click)="currentPeriodClicked()" [attr.aria-label]="periodButtonLabel"
             [attr.aria-describedby]="_periodButtonLabelId">
       <span aria-hidden="true">{{periodButtonText}}</span>
@@ -18,7 +18,7 @@
 
     <ng-content></ng-content>
 
-    <button mat-icon-button type="button" class="mat-calendar-previous-button"
+    <button matIconButton type="button" class="mat-calendar-previous-button"
             [disabled]="!previousEnabled()" (click)="previousClicked()"
             [attr.aria-label]="prevButtonLabel">
       <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -26,7 +26,7 @@
        </svg>
     </button>
 
-    <button mat-icon-button type="button" class="mat-calendar-next-button"
+    <button matIconButton type="button" class="mat-calendar-next-button"
             [disabled]="!nextEnabled()" (click)="nextClicked()"
             [attr.aria-label]="nextButtonLabel">
       <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">

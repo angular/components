@@ -4,11 +4,11 @@
   <mat-drawer #start (opened)="myinput.focus()" mode="side">
     Start Side Drawer
     <br>
-    <button mat-button (click)="start.close()">Close</button>
+    <button matButton (click)="start.close()">Close</button>
     <br>
-    <button mat-button (click)="end.open()">Open End Side</button>
+    <button matButton (click)="end.open()">Open End Side</button>
     <br>
-    <button mat-button
+    <button matButton
             (click)="start.mode = (start.mode === 'push' ? 'over' : (start.mode === 'over' ? 'side' : 'push'))">Toggle Mode</button>
     <div>Mode: {{start.mode}}</div>
     <br>
@@ -18,7 +18,7 @@
   <mat-drawer #end position="end">
     End Side Drawer
     <br>
-    <button mat-button (click)="end.close()">Close</button>
+    <button matButton (click)="end.close()">Close</button>
   </mat-drawer>
 
   <div class="demo-drawer-content">
@@ -26,13 +26,13 @@
 
     <div>
       <header>Drawer</header>
-      <button mat-button (click)="start.toggle()">Toggle Start Side Drawer</button>
-      <button mat-button (click)="end.toggle()">Toggle End Side Drawer</button>
+      <button matButton (click)="start.toggle()">Toggle Start Side Drawer</button>
+      <button matButton (click)="end.toggle()">Toggle End Side Drawer</button>
     </div>
 
-    <button mat-button>HELLO</button>
-    <button mat-raised-button class="mat-primary">HELLO</button>
-    <button mat-fab class="mat-accent">HI</button>
+    <button matButton>HELLO</button>
+    <button matButton="elevated" class="mat-primary">HELLO</button>
+    <button matFab class="mat-accent">HI</button>
   </div>
 </mat-drawer-container>
 
@@ -44,7 +44,7 @@
   </mat-drawer>
 
   <div class="demo-drawer-content">
-    <button mat-button (click)="start2.toggle()">Toggle Start Side Drawer</button>
+    <button matButton (click)="start2.toggle()">Toggle Start Side Drawer</button>
   </div>
 </mat-drawer-container>
 
@@ -81,7 +81,7 @@
 
     <div>
       <header>Drawer</header>
-      <button mat-button (click)="focusDrawer.toggle()">Toggle Drawer</button>
+      <button matButton (click)="focusDrawer.toggle()">Toggle Drawer</button>
     </div>
   </div>
 </mat-drawer-container>

@@ -115,8 +115,8 @@ describe('MatCardHarness', () => {
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button>LIKE</button>
-          <button mat-button>SHARE</button>
+          <button matButton>LIKE</button>
+          <button matButton>SHARE</button>
         </mat-card-actions>
         <mat-card-footer>
           <div>Woof woof!</div>

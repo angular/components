@@ -1,14 +1,14 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <!-- Leaf node -->
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
+    <button matIconButton disabled></button>
     {{node.name}}
   </mat-tree-node>
 
   <!-- expandable node -->
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
                  (expandedChange)="loadChildren(node)" [cdkTreeNodeTypeaheadLabel]="node.name">
-    <button mat-icon-button
+    <button matIconButton
             [attr.aria-label]="'Toggle ' + node.name"
             matTreeNodeToggle>
       <mat-icon class="mat-icon-rtl-mirror">

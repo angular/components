@@ -2,11 +2,11 @@
   <mat-sidenav-container
       class="example-container" (backdropClick)="close('backdrop')">
     <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
-      <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
+      <p><button matButton (click)="close('toggle button')">Toggle</button></p>
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <p><button mat-button (click)="sidenav.open()">Open</button></p>
+      <p><button matButton (click)="sidenav.open()">Open</button></p>
       <p>Closed due to: {{reason}}</p>
     </mat-sidenav-content>
   </mat-sidenav-container>

@@ -102,9 +102,9 @@ For example:
 <h2 mat-dialog-title>Delete all elements?</h2>
 <mat-dialog-content>This will delete all elements that are currently on this page and cannot be undone.</mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
+  <button matButton mat-dialog-close>Cancel</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <button mat-button [mat-dialog-close]="true">Delete</button>
+  <button matButton [mat-dialog-close]="true">Delete</button>
 </mat-dialog-actions>
 ```
 
@@ -113,7 +113,7 @@ Once a dialog opens, the dialog will automatically focus the first tabbable elem
 You can control which elements are tab stops with the `tabindex` attribute
 
 ```html
-<button mat-button tabindex="-1">Not Tabbable</button>
+<button matButton tabindex="-1">Not Tabbable</button>
 ```
 
 <!-- example(dialog-content) -->

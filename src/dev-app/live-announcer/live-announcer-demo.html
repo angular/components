@@ -1,12 +1,12 @@
 <p>
   <button
-    mat-raised-button
+    matButton="elevated"
     color="primary"
     (click)="announceText('Hey Google')">Announce Text</button>
 </p>
 <p>
   <button
-    mat-raised-button
+    matButton="elevated"
     color="primary"
     (click)="openDialog()">Open Dialog</button>
 </p>
@@ -16,12 +16,12 @@
   <p>Test LiveAnnouncer inside an aria modal.</p>
   <p>
     <button
-      mat-raised-button
+      matButton="elevated"
       color="primary"
       (click)="announceText('Hey Google')">Announce Text</button>
   </p>
   <button type="button" cdkFocusInitial
-    mat-button
+    matButton
     (click)="dialogRef.close()">
     Close
   </button>

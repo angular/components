@@ -94,12 +94,12 @@
   </div>
 
   <div>
-    <button mat-raised-button type="button" (click)="close()" [disabled]="!overlayRef">Close</button>
+    <button matButton="elevated" type="button" (click)="close()" [disabled]="!overlayRef">Close</button>
   </div>
 </div>
 
 <div class="demo-trigger-connected-overlay">
-  <button mat-raised-button
+  <button matButton="elevated"
       cdkOverlayOrigin
       type="button"
       [disabled]="!!overlayRef"

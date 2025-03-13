@@ -46,7 +46,7 @@
               <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
             </mat-form-field>
           } @else {
-            <button mat-button type="button" (click)="hasUnitNumber = !hasUnitNumber">
+            <button matButton type="button" (click)="hasUnitNumber = !hasUnitNumber">
               + Add C/O, Apt, Suite, Unit
             </button>
           }
@@ -93,7 +93,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button matButton="elevated" color="primary" type="submit">Submit</button>
     </mat-card-actions>
   </mat-card>
 </form>

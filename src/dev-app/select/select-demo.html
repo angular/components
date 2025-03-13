@@ -1,5 +1,5 @@
 Space above cards: <input type="number" [formControl]="topHeightCtrl">
-<button mat-button (click)="showSelect=!showSelect">SHOW SELECT</button>
+<button matButton (click)="showSelect=!showSelect">SHOW SELECT</button>
 <div [style.height.px]="topHeightCtrl.value"></div>
 
 <div class="demo-select">
@@ -60,10 +60,10 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         </select>
       </p>
 
-      <button mat-button (click)="currentDrink='water-2'">SET VALUE</button>
-      <button mat-button (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
-      <button mat-button (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
-      <button mat-button (click)="drinkControl.reset()">RESET</button>
+      <button matButton (click)="currentDrink='water-2'">SET VALUE</button>
+      <button matButton (click)="drinksRequired=!drinksRequired">TOGGLE REQUIRED</button>
+      <button matButton (click)="drinksDisabled=!drinksDisabled">TOGGLE DISABLED</button>
+      <button matButton (click)="drinkControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
 
@@ -94,11 +94,11 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           }
         </select>
       </p>
-      <button mat-button (click)="setPokemonValue()">SET VALUE</button>
-      <button mat-button (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
-      <button mat-button (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
-      <button mat-button (click)="pokemonOptionsDisabled=!pokemonOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
-      <button mat-button (click)="pokemonControl.reset()">RESET</button>
+      <button matButton (click)="setPokemonValue()">SET VALUE</button>
+      <button matButton (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
+      <button matButton (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
+      <button matButton (click)="pokemonOptionsDisabled=!pokemonOptionsDisabled">TOGGLE DISABLED OPTIONS</button>
+      <button matButton (click)="pokemonControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
 
@@ -118,8 +118,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
 
       <p>Value: {{ currentDigimon }}</p>
 
-      <button mat-button (click)="currentDigimon='pajiramon-3'">SET VALUE</button>
-      <button mat-button (click)="currentDigimon=''">RESET</button>
+      <button matButton (click)="currentDigimon='pajiramon-3'">SET VALUE</button>
+      <button matButton (click)="currentDigimon=''">RESET</button>
     </mat-card-content>
   </mat-card>
 
@@ -163,13 +163,13 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <p> Status: {{ drinkObjectControl.status }} </p>
       <p> Comparison Mode: {{ compareByValue ? 'VALUE' : 'REFERENCE' }} </p>
 
-      <button mat-button (click)="reassignDrinkByCopy()"
+      <button matButton (click)="reassignDrinkByCopy()"
               matTooltip="This action should clear the display value when comparing by reference.">
         REASSIGN DRINK BY COPY
       </button>
-      <button mat-button (click)="drinkObjectRequired=!drinkObjectRequired">TOGGLE REQUIRED</button>
-      <button mat-button (click)="compareByValue=!compareByValue">TOGGLE COMPARE BY VALUE</button>
-      <button mat-button (click)="drinkObjectControl.reset()">RESET</button>
+      <button matButton (click)="drinkObjectRequired=!drinkObjectRequired">TOGGLE REQUIRED</button>
+      <button matButton (click)="compareByValue=!compareByValue">TOGGLE COMPARE BY VALUE</button>
+      <button matButton (click)="drinkObjectControl.reset()">RESET</button>
     </mat-card-content>
   </mat-card>
 
@@ -200,7 +200,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         </mat-form-field>
       </p>
 
-      <button mat-button (click)="toggleSelected()">TOGGLE SELECTED</button>
+      <button matButton (click)="toggleSelected()">TOGGLE SELECTED</button>
     </mat-card-content>
   </mat-card>
 
@@ -222,9 +222,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           <p> Touched: {{ foodControl.touched }} </p>
           <p> Dirty: {{ foodControl.dirty }} </p>
           <p> Status: {{ foodControl.status }} </p>
-          <button mat-button (click)="foodControl.setValue('pizza-1')">SET VALUE</button>
-          <button mat-button (click)="toggleDisabled()">TOGGLE DISABLED</button>
-          <button mat-button (click)="foodControl.reset()">RESET</button>
+          <button matButton (click)="foodControl.setValue('pizza-1')">SET VALUE</button>
+          <button matButton (click)="toggleDisabled()">TOGGLE DISABLED</button>
+          <button matButton (click)="foodControl.reset()">RESET</button>
         </mat-card-content>
       </mat-card>
     </div>
@@ -376,7 +376,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         }
         <mat-hint>You can pick up your favorite car here</mat-hint>
       </mat-form-field>
-      <button color="primary" mat-raised-button>Submit</button>
+      <button color="primary" matButton="elevated">Submit</button>
     </form>
   </mat-card-content>
 </mat-card>

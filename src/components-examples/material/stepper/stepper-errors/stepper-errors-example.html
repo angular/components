@@ -8,7 +8,7 @@
       </mat-form-field>
       <div>
         <p>Go to a different step to see the error state</p>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -22,8 +22,8 @@
       </mat-form-field>
       <div>
         <p>Go to a different step to see the error state</p>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -31,8 +31,8 @@
     <ng-template matStepLabel>Done</ng-template>
     <p>You are now done.</p>
     <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button matButton matStepperPrevious>Back</button>
+      <button matButton (click)="stepper.reset()">Reset</button>
     </div>
   </mat-step>
 </mat-stepper>

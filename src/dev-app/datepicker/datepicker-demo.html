@@ -23,8 +23,8 @@
     <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
       @if (showActions) {
         <mat-datepicker-actions>
-          <button mat-button matDatepickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+          <button matButton matDatepickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDatepickerApply>Apply</button>
         </mat-datepicker-actions>
       }
     </mat-datepicker>
@@ -37,8 +37,8 @@
     <mat-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled">
       @if (showActions) {
         <mat-datepicker-actions>
-          <button mat-button matDatepickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+          <button matButton matDatepickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDatepickerApply>Apply</button>
         </mat-datepicker-actions>
       }
     </mat-datepicker>
@@ -53,8 +53,8 @@
     <mat-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled">
       @if (showActions) {
         <mat-datepicker-actions>
-          <button mat-button matDatepickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+          <button matButton matDatepickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDatepickerApply>Apply</button>
         </mat-datepicker-actions>
       }
     </mat-datepicker>
@@ -86,8 +86,8 @@
         [color]="color">
       @if (showActions) {
         <mat-datepicker-actions>
-          <button mat-button matDatepickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+          <button matButton matDatepickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDatepickerApply>Apply</button>
         </mat-datepicker-actions>
       }
     </mat-datepicker>
@@ -128,8 +128,8 @@
       [startView]="yearView ? 'year' : 'month'">
     @if (showActions) {
       <mat-datepicker-actions>
-        <button mat-button matDatepickerCancel>Cancel</button>
-        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+        <button matButton matDatepickerCancel>Cancel</button>
+        <button matButton="elevated" color="primary" matDatepickerApply>Apply</button>
       </mat-datepicker-actions>
     }
   </mat-datepicker>
@@ -158,7 +158,7 @@
                     [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
   </mat-form-field>
 
-  <button mat-button (click)="dateCtrl.disabled ? dateCtrl.enable() : dateCtrl.disable()">
+  <button matButton (click)="dateCtrl.disabled ? dateCtrl.enable() : dateCtrl.disable()">
     {{dateCtrl.disabled ? 'Enable' : 'Disable'}} FormControl
   </button>
 </p>
@@ -237,8 +237,8 @@
       #range1Picker>
       @if (showActions) {
         <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          <button matButton matDateRangePickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       }
     </mat-date-range-picker>
@@ -269,8 +269,8 @@
       #range2Picker>
       @if (showActions) {
         <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          <button matButton matDateRangePickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       }
     </mat-date-range-picker>
@@ -300,8 +300,8 @@
       #range3Picker>
       @if (showActions) {
         <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          <button matButton matDateRangePickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       }
     </mat-date-range-picker>
@@ -322,8 +322,8 @@
     <mat-date-range-picker customRangeStrategy #range4Picker>
       @if (showActions) {
         <mat-date-range-picker-actions>
-          <button mat-button matDateRangePickerCancel>Cancel</button>
-          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          <button matButton matDateRangePickerCancel>Cancel</button>
+          <button matButton="elevated" color="primary" matDateRangePickerApply>Apply</button>
         </mat-date-range-picker-actions>
       }
     </mat-date-range-picker>

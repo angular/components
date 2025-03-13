@@ -4,7 +4,7 @@
 </mat-form-field>
 
 <div>
-  <button mat-raised-button
+  <button matButton="elevated"
           class="example-add-tab-button"
           (click)="addTab(selectAfterAdding.checked)">
     Add new tab
@@ -18,7 +18,7 @@
     <mat-tab [label]="tab">
       Contents for {{tab}} tab
 
-      <button mat-raised-button
+      <button matButton="elevated"
               class="example-delete-tab-button"
               [disabled]="tabs.length === 1"
               (click)="removeTab(index)">

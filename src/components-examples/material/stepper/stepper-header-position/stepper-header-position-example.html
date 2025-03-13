@@ -6,7 +6,7 @@
         <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -17,8 +17,8 @@
         <input matInput placeholder="Address" formControlName="secondCtrl" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -26,8 +26,8 @@
     <ng-template matStepLabel>Done</ng-template>
     You are now done.
     <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button matButton matStepperPrevious>Back</button>
+      <button matButton (click)="stepper.reset()">Reset</button>
     </div>
   </mat-step>
 </mat-stepper>

@@ -71,14 +71,14 @@ are completed.
     <mat-step formGroupName="0" [stepControl]="formArray.get([0])">
       ...
       <div>
-        <button mat-button matStepperNext type="button">Next</button>
+        <button matButton matStepperNext type="button">Next</button>
       </div>
     </mat-step>
     <mat-step formGroupName="1" [stepControl]="formArray.get([1])">
       ...
       <div>
-        <button mat-button matStepperPrevious type="button">Back</button>
-        <button mat-button matStepperNext type="button">Next</button>
+        <button matButton matStepperPrevious type="button">Back</button>
+        <button matButton matStepperNext type="button">Next</button>
       </div>
     </mat-step>
     ...

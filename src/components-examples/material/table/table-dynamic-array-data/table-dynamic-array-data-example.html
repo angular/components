@@ -1,9 +1,9 @@
 <div class="demo-button-container">
-  <button mat-raised-button (click)="addData()" class="demo-button">
+  <button matButton="elevated" (click)="addData()" class="demo-button">
     Add data
   </button>
   <button
-      mat-raised-button
+      matButton="elevated"
       [disabled]="!dataSource.length"
       (click)="removeData()"
       class="demo-button">
