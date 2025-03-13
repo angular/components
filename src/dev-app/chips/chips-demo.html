@@ -114,10 +114,10 @@
     <mat-toolbar color="primary">Selectable Chips</mat-toolbar>
 
     <mat-card-content>
-      <button mat-button (click)="disabledListboxes = !disabledListboxes">
+      <button matButton (click)="disabledListboxes = !disabledListboxes">
        {{disabledListboxes ? "Enable" : "Disable"}}
       </button>
-      <button mat-button (click)="listboxesWithAvatar = !listboxesWithAvatar">
+      <button matButton (click)="listboxesWithAvatar = !listboxesWithAvatar">
        {{listboxesWithAvatar ? "Hide Avatar" : "Show Avatar"}}
       </button>
 
@@ -160,11 +160,11 @@
         They can be used inside a <code>&lt;mat-form-field&gt;</code>.
       </p>
 
-      <button mat-button (click)="disableInputs = !disableInputs">
+      <button matButton (click)="disableInputs = !disableInputs">
        {{disableInputs ? "Enable" : "Disable"}}
       </button>
 
-      <button mat-button (click)="editable = !editable">
+      <button matButton (click)="editable = !editable">
         {{editable ? "Disable editing" : "Enable editing"}}
       </button>
 

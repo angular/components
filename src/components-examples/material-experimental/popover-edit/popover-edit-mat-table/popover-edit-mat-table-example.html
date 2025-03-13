@@ -26,10 +26,10 @@
 
       <!-- Row hover content in a non-edit cell. -->
       <span *matRowHoverContent>
-        <button mat-icon-button (click)="goodJob(element)">
+        <button matIconButton (click)="goodJob(element)">
           <mat-icon>thumb_up</mat-icon>
         </button>
-        <button mat-icon-button (click)="badJob(element)">
+        <button matIconButton (click)="badJob(element)">
           <mat-icon>thumb_down</mat-icon>
         </button>
       </span>
@@ -62,9 +62,9 @@
               </mat-form-field>
             </div>
             <div mat-edit-actions>
-              <button mat-button type="submit">Confirm</button>
-              <button mat-button matEditRevert>Revert</button>
-              <button mat-button matEditClose>Close</button>
+              <button matButton type="submit">Confirm</button>
+              <button matButton matEditRevert>Revert</button>
+              <button matButton matEditClose>Close</button>
             </div>
           </form>
         </div>
@@ -72,7 +72,7 @@
 
       @if (nameEditEnabled) {
         <span *matRowHoverContent>
-          <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
+          <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
         </span>
       }
     </td>
@@ -109,7 +109,7 @@
       </ng-template>
 
       <span *matRowHoverContent>
-        <button mat-icon-button matEditOpen><mat-icon>arrow_drop_down</mat-icon></button>
+        <button matIconButton matEditOpen><mat-icon>arrow_drop_down</mat-icon></button>
       </span>
     </td>
   </ng-container>
@@ -122,7 +122,7 @@
       {{element.weight}}
 
       <span *matRowHoverContent>
-        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
+        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
     </td>
   </ng-container>
@@ -162,15 +162,15 @@
               </mat-selection-list>
             </div>
             <div mat-edit-actions>
-              <button mat-button type="submit">Confirm</button>
-              <button mat-button matEditRevert>Revert</button>
+              <button matButton type="submit">Confirm</button>
+              <button matButton matEditRevert>Revert</button>
             </div>
           </form>
         </div>
       </ng-template>
 
       <span *matRowHoverContent>
-        <button mat-icon-button matEditOpen><mat-icon>arrow_drop_down</mat-icon></button>
+        <button matIconButton matEditOpen><mat-icon>arrow_drop_down</mat-icon></button>
       </span>
     </td>
   </ng-container>

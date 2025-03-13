@@ -23,7 +23,7 @@ export function findInputsOnElementWithTag(html: string, inputName: string, tagN
 /** Finds the specified Angular @Input in elements that have one of the specified attributes. */
 export function findInputsOnElementWithAttr(html: string, inputName: string, attrs: string[]) {
   return [
-    // Inputs can be also used without brackets (e.g. `<button mat-button color="primary">`)
+    // Inputs can be also used without brackets (e.g. `<button matButton color="primary">`)
     ...findAttributeOnElementWithAttrs(html, inputName, attrs),
     // Add one column to the mapped offset because the first bracket for the @Input
     // is part of the attribute and therefore also part of the offset. We only want to return

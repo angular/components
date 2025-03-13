@@ -46,7 +46,7 @@
   <mat-label>Offset</mat-label>
   <input matInput type="number" [(ngModel)]="scrollToOffset">
 </mat-form-field>
-<button mat-button (click)="viewport1.scrollToOffset(scrollToOffset, scrollToBehavior);
+<button matButton (click)="viewport1.scrollToOffset(scrollToOffset, scrollToBehavior);
                             viewport2.scrollToOffset(scrollToOffset, scrollToBehavior)">
   Go to offset
 </button>
@@ -54,7 +54,7 @@
   <mat-label>Index</mat-label>
   <input matInput type="number" [(ngModel)]="scrollToIndex">
 </mat-form-field>
-<button mat-button (click)="viewport1.scrollToIndex(scrollToIndex, scrollToBehavior);
+<button matButton (click)="viewport1.scrollToIndex(scrollToIndex, scrollToBehavior);
                             viewport2.scrollToIndex(scrollToIndex, scrollToBehavior)">
   Go to index
 </button>

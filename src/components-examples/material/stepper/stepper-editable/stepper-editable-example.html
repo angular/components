@@ -1,4 +1,4 @@
-<button mat-raised-button (click)="isEditable = !isEditable">
+<button matButton="elevated" (click)="isEditable = !isEditable">
   {{!isEditable ? 'Enable edit mode' : 'Disable edit mode'}}
 </button>
 
@@ -15,7 +15,7 @@
         <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -28,8 +28,8 @@
                required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button matButton matStepperPrevious>Back</button>
+        <button matButton matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -37,8 +37,8 @@
     <ng-template matStepLabel>Done</ng-template>
     <p>You are now done.</p>
     <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button matButton matStepperPrevious>Back</button>
+      <button matButton (click)="stepper.reset()">Reset</button>
     </div>
   </mat-step>
 </mat-stepper>

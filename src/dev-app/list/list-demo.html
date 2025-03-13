@@ -1,8 +1,8 @@
 
 <h1>mat-list demo</h1>
 
-<button mat-raised-button (click)="thirdLine = !thirdLine">Show third line</button>
-<button mat-raised-button (click)="showBoxes = !showBoxes">Show item boxes</button>
+<button matButton="elevated" (click)="thirdLine = !thirdLine">Show third line</button>
+<button matButton="elevated" (click)="showBoxes = !showBoxes">Show item boxes</button>
 
 <div class="demo-list" [class.demo-show-boxes]="showBoxes">
 
@@ -57,7 +57,7 @@
       @for (link of links; track link) {
         <mat-list-item>
           <span matListItemTitle>{{ link.name }}</span>
-          <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
+          <button matListItemMeta matIconButton (click)="infoClicked=!infoClicked">
             <mat-icon>info</mat-icon>
           </button>
         </mat-list-item>
@@ -99,7 +99,7 @@
       @for (link of links; track link) {
         <mat-list-item>
           <span matListItemTitle>{{ link.name }}</span>
-          <button matListItemMeta mat-icon-button (click)="infoClicked=!infoClicked">
+          <button matListItemMeta matIconButton (click)="infoClicked=!infoClicked">
             <mat-icon class="material-icons">info</mat-icon>
           </button>
         </mat-list-item>
@@ -191,8 +191,8 @@
       </label>
     </p>
     <p>
-      <button mat-raised-button (click)="groceries.selectAll()">Select all</button>
-      <button mat-raised-button (click)="groceries.deselectAll()">Deselect all</button>
+      <button matButton="elevated" (click)="groceries.selectAll()">Select all</button>
+      <button matButton="elevated" (click)="groceries.deselectAll()">Deselect all</button>
     </p>
   </div>
 
@@ -223,7 +223,7 @@
         }
       </mat-selection-list>
       <p>
-         Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}} 
+         Option selected: {{shoesControl.value ? shoesControl.value[0] : 'None'}}
       </p>
     </form>
   </div>
@@ -281,7 +281,7 @@
       </mat-list-option>
     </mat-selection-list>
 
-    <button mat-raised-button (click)="showBoxes = !showBoxes">Show item boxes</button>
+    <button matButton="elevated" (click)="showBoxes = !showBoxes">Show item boxes</button>
   </div>
 
   <div>
@@ -327,7 +327,7 @@
       </mat-list-option>
     </mat-selection-list>
 
-    <button mat-raised-button (click)="toggleCheckboxPosition()">
+    <button matButton="elevated" (click)="toggleCheckboxPosition()">
       Toggle checkbox position
     </button>
   </div>

@@ -39,17 +39,17 @@ export class DatepickerCustomHeaderExample {
   `,
   template: `
     <div class="example-header">
-      <button mat-icon-button (click)="previousClicked('year')">
+      <button matIconButton (click)="previousClicked('year')">
         <mat-icon>keyboard_double_arrow_left</mat-icon>
       </button>
-      <button mat-icon-button (click)="previousClicked('month')">
+      <button matIconButton (click)="previousClicked('month')">
         <mat-icon>keyboard_arrow_left</mat-icon>
       </button>
       <span class="example-header-label">{{periodLabel()}}</span>
-      <button mat-icon-button (click)="nextClicked('month')">
+      <button matIconButton (click)="nextClicked('month')">
         <mat-icon>keyboard_arrow_right</mat-icon>
       </button>
-      <button mat-icon-button (click)="nextClicked('year')">
+      <button matIconButton (click)="nextClicked('year')">
         <mat-icon>keyboard_double_arrow_right</mat-icon>
       </button>
     </div>

@@ -234,18 +234,18 @@ export class JazzDialog {
 
     <mat-dialog-actions [align]="actionsAlignment">
       <button
-        mat-button
+        matButton
         color="primary"
         mat-dialog-close>Close</button>
 
       <a
-        mat-button
+        matButton
         color="primary"
         href="https://en.wikipedia.org/wiki/Neptune"
         target="_blank">Read more on Wikipedia</a>
 
       <button
-        mat-button
+        matButton
         color="accent"
         (click)="showInStackedDialog()">
         Show in Dialog</button>
@@ -282,7 +282,7 @@ export class ContentElementDialog {
 
     <mat-dialog-actions>
       <button
-        mat-button
+        matButton
         color="primary"
         mat-dialog-close>Close</button>
     </mat-dialog-actions>

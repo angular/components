@@ -1,66 +1,52 @@
 <div class="demo-button">
   <h4 class="demo-section-header">Buttons</h4>
   <section>
-    <button mat-button>normal</button>
-    <button mat-raised-button>raised</button>
-    <button mat-stroked-button>stroked</button>
-    <button mat-flat-button>flat</button>
-    <button mat-fab>
+    @for (appearance of appearances; track $index) {
+      <button [matButton]="appearance">{{appearance}}</button>
+    }
+    <button matFab>
       <mat-icon>check</mat-icon>
     </button>
-    <button mat-mini-fab>
+    <button matMiniFab>
       <mat-icon>check</mat-icon>
     </button>
-    <button mat-fab extended>Search</button>
-    <button mat-fab extended>
+    <button matFab extended>Search</button>
+    <button matFab extended>
       <mat-icon>check</mat-icon>
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
     </button>
   </section>
   <section>
+    @for (appearance of appearances; track $index) {
+      <button
+        [matButton]="appearance"
+        disabled
+        [disabledInteractive]="disabledInteractive"
+        [matTooltip]="tooltipText">{{appearance}}</button>
+    }
     <button
-      mat-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">normal</button>
-    <button
-      mat-raised-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">raised</button>
-    <button
-      mat-stroked-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">stroked</button>
-    <button
-      mat-flat-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">flat</button>
-    <button
-      mat-fab
+      matFab
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
       <mat-icon>check</mat-icon>
     </button>
     <button
-      mat-mini-fab
+      matMiniFab
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
       <mat-icon>check</mat-icon>
     </button>
     <button
-      mat-fab
+      matFab
       extended
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">Search</button>
     <button
-      mat-fab
+      matFab
       extended
       disabled
       [disabledInteractive]="disabledInteractive"
@@ -73,18 +59,17 @@
 
   <h4 class="demo-section-header">Anchors</h4>
   <section>
-    <a href="//www.google.com" mat-button>SEARCH</a>
-    <a href="//www.google.com" mat-raised-button>SEARCH</a>
-    <a href="//www.google.com" mat-stroked-button>SEARCH</a>
-    <a href="//www.google.com" mat-flat-button>SEARCH</a>
-    <a href="//www.google.com" mat-fab>
+    @for (appearance of appearances; track $index) {
+      <a href="//www.google.com" [matButton]="appearance">SEARCH</a>
+    }
+    <a href="//www.google.com" matFab>
       <mat-icon>check</mat-icon>
     </a>
-    <a href="//www.google.com" mat-mini-fab>
+    <a href="//www.google.com" matMiniFab>
       <mat-icon>check</mat-icon>
     </a>
-    <a href="//www.google.com" mat-fab extended>Search</a>
-    <a href="//www.google.com" mat-fab extended>
+    <a href="//www.google.com" matFab extended>Search</a>
+    <a href="//www.google.com" matFab extended>
       <mat-icon>check</mat-icon>
       Search
       <mat-icon iconPositionEnd>check</mat-icon>
@@ -96,32 +81,33 @@
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-button
+      matButton
       color="primary">SEARCH</a>
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-raised-button>SEARCH</a>
+      matButton="elevated">SEARCH</a>
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-stroked-button color="primary">SEARCH</a>
+      matButton="outlined"
+      color="primary">SEARCH</a>
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-flat-button>SEARCH</a>
+      matButton="filled">SEARCH</a>
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-fab>
+      matFab>
       <mat-icon>check</mat-icon>
     </a>
     <a
@@ -129,7 +115,7 @@
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-mini-fab>
+      matMiniFab>
       <mat-icon>check</mat-icon>
     </a>
     <a
@@ -137,14 +123,14 @@
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-fab
+      matFab
       extended>Search</a>
     <a
       href="//www.google.com"
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText"
-      mat-fab
+      matFab
       extended>
       <mat-icon>check</mat-icon>
       Search
@@ -152,110 +138,46 @@
     </a>
   </section>
 
-  <h4 class="demo-section-header">Text Buttons [mat-button]</h4>
-  <section>
-    <button mat-button>unthemed</button>
-    <button mat-button color="primary">primary</button>
-    <button mat-button color="accent">accent</button>
-    <button mat-button color="warn">warn</button>
-    <button
-      mat-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">disabled</button>
-    <button mat-button>
-      <mat-icon>home</mat-icon>
-      with icons
-      <mat-icon iconPositionEnd>favorite</mat-icon>
-    </button>
-    <button mat-button>
-      <mat-icon>home</mat-icon>
-      with icons
-    </button>
-  </section>
+  @for (appearance of appearances; track $index) {
+    <h4 class="demo-section-header"><code>{{appearance}}</code> Appearance</h4>
+    <section>
+      <button [matButton]="appearance">unthemed</button>
+      <button [matButton]="appearance" color="primary">primary</button>
+      <button [matButton]="appearance" color="accent">accent</button>
+      <button [matButton]="appearance" color="warn">warn</button>
+      <button
+        [matButton]="appearance"
+        disabled
+        [disabledInteractive]="disabledInteractive"
+        [matTooltip]="tooltipText">disabled</button>
+      <button [matButton]="appearance">
+        <mat-icon>home</mat-icon>
+        with icons
+        <mat-icon iconPositionEnd>favorite</mat-icon>
+      </button>
+      <button [matButton]="appearance">
+        <mat-icon>home</mat-icon>
+        with icons
+      </button>
+    </section>
+  }
 
-  <h4 class="demo-section-header">Raised Buttons [mat-raised-button]</h4>
+  <h4 class="demo-section-header">Icon Buttons</h4>
   <section>
-    <button mat-raised-button>unthemed</button>
-    <button mat-raised-button color="primary">primary</button>
-    <button mat-raised-button color="accent">accent</button>
-    <button mat-raised-button color="warn">warn</button>
-    <button
-      mat-raised-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">disabled</button>
-    <button mat-raised-button>
-      <mat-icon>home</mat-icon>
-      with icons
-      <mat-icon iconPositionEnd>favorite</mat-icon>
-    </button>
-    <button mat-raised-button>
-      <mat-icon>home</mat-icon>
-      with icons
-    </button>
-  </section>
-
-  <h4 class="demo-section-header">Stroked Buttons [mat-stroked-button]</h4>
-  <section>
-    <button mat-stroked-button>unthemed</button>
-    <button mat-stroked-button color="primary">primary</button>
-    <button mat-stroked-button color="accent">accent</button>
-    <button mat-stroked-button color="warn">warn</button>
-    <button
-      mat-stroked-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">disabled</button>
-    <button mat-stroked-button>
-      <mat-icon>home</mat-icon>
-      with icons
-      <mat-icon iconPositionEnd>favorite</mat-icon>
-    </button>
-    <button mat-stroked-button>
-      <mat-icon>home</mat-icon>
-      with icons
-    </button>
-  </section>
-
-  <h4 class="demo-section-header">Flat Buttons [mat-flat-button]</h4>
-  <section>
-    <button mat-flat-button>unthemed</button>
-    <button mat-flat-button color="primary">primary</button>
-    <button mat-flat-button color="accent">accent</button>
-    <button mat-flat-button color="warn">warn</button>
-    <button
-      mat-flat-button
-      disabled
-      [disabledInteractive]="disabledInteractive"
-      [matTooltip]="tooltipText">disabled</button>
-    <button mat-flat-button>
-      <mat-icon>home</mat-icon>
-      with icons
-      <mat-icon iconPositionEnd>favorite</mat-icon>
-    </button>
-    <button mat-flat-button>
-      <mat-icon>home</mat-icon>
-      with icons
-    </button>
-  </section>
-
-  <h4 class="demo-section-header">Icon Buttons [mat-icon-button]</h4>
-  <section>
-    <button mat-icon-button>
+    <button matIconButton>
       <mat-icon>cached</mat-icon>
     </button>
-    <button mat-icon-button color="primary">
+    <button matIconButton color="primary">
       <mat-icon>cached</mat-icon>
     </button>
-    <button mat-icon-button color="accent">
+    <button matIconButton color="accent">
       <mat-icon>backup</mat-icon>
     </button>
-    <button mat-icon-button color="warn">
+    <button matIconButton color="warn">
       <mat-icon>trending_up</mat-icon>
     </button>
     <button
-      mat-icon-button
+      matIconButton
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
@@ -263,23 +185,23 @@
     </button>
   </section>
 
-  <h4 class="demo-section-header">Icon Button Anchors [mat-icon-button]</h4>
+  <h4 class="demo-section-header">Icon Button Anchors</h4>
   <section>
-    <a href="#" mat-icon-button>
+    <a href="#" matIconButton>
       <mat-icon>cached</mat-icon>
     </a>
-    <a href="#" mat-icon-button color="primary">
+    <a href="#" matIconButton color="primary">
       <mat-icon>cached</mat-icon>
     </a>
-    <a href="#" mat-icon-button color="accent">
+    <a href="#" matIconButton color="accent">
       <mat-icon>backup</mat-icon>
     </a>
-    <a href="#" mat-icon-button color="warn">
+    <a href="#" matIconButton color="warn">
       <mat-icon>trending_up</mat-icon>
     </a>
     <a
       href="#"
-      mat-icon-button
+      matIconButton
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
@@ -287,22 +209,22 @@
     </a>
   </section>
 
-  <h4 class="demo-section-header">Fab Buttons [mat-fab]</h4>
+  <h4 class="demo-section-header">FABs</h4>
   <section>
-    <button mat-fab>
+    <button matFab>
       <mat-icon>delete</mat-icon>
     </button>
-    <button mat-fab color="primary">
+    <button matFab color="primary">
       <mat-icon>delete</mat-icon>
     </button>
-    <button mat-fab color="accent">
+    <button matFab color="accent">
       <mat-icon>bookmark</mat-icon>
     </button>
-    <button mat-fab color="warn">
+    <button matFab color="warn">
       <mat-icon>home</mat-icon>
     </button>
     <button
-      mat-fab
+      matFab
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
@@ -310,22 +232,22 @@
     </button>
   </section>
 
-  <h4 class="demo-section-header"> Mini Fab Buttons [mat-mini-fab]</h4>
+  <h4 class="demo-section-header">Mini FABs</h4>
   <section>
-    <button mat-mini-fab>
+    <button matMiniFab>
       <mat-icon>menu</mat-icon>
     </button>
-    <button mat-mini-fab color="primary">
+    <button matMiniFab color="primary">
       <mat-icon>menu</mat-icon>
     </button>
-    <button mat-mini-fab color="accent">
+    <button matMiniFab color="accent">
       <mat-icon>plus_one</mat-icon>
     </button>
-    <button mat-mini-fab color="warn">
+    <button matMiniFab color="warn">
       <mat-icon>filter_list</mat-icon>
     </button>
     <button
-      mat-mini-fab
+      matMiniFab
       disabled
       [disabledInteractive]="disabledInteractive"
       [matTooltip]="tooltipText">
@@ -344,31 +266,31 @@
       <p>
         <mat-checkbox [(ngModel)]="isDisabled">All disabled</mat-checkbox>
       </p>
-      <button mat-flat-button (click)="button1.focus()">Focus 1</button>
-      <button mat-flat-button (click)="button2.focus()">Focus 2</button>
-      <button mat-flat-button (click)="button3.focus()">Focus 3</button>
-      <button mat-flat-button (click)="button4.focus()">Focus 4</button>
+      <button matButton="filled" (click)="button1.focus()">Focus 1</button>
+      <button matButton="filled" (click)="button2.focus()">Focus 2</button>
+      <button matButton="filled" (click)="button3.focus()">Focus 3</button>
+      <button matButton="filled" (click)="button4.focus()">Focus 4</button>
     </div>
     <div>
-      <button mat-button #button1 [disabled]="isDisabled"
+      <button matButton #button1 [disabled]="isDisabled"
               (click)="clickCounter=clickCounter+1">
         Button 1
       </button>
-      <button mat-button #button2 color="primary" [disabled]="isDisabled">
+      <button matButton #button2 color="primary" [disabled]="isDisabled">
         Button 2
       </button>
-      <a href="//www.google.com" #button3 mat-button color="accent"
+      <a href="//www.google.com" #button3 matButton color="accent"
          [disabled]="isDisabled">
         Button 3
       </a>
-      <button mat-raised-button #button4 color="primary"
+      <button matButton="elevated" #button4 color="primary"
               [disabled]="isDisabled">
         Button 4
       </button>
-      <button mat-mini-fab [disabled]="isDisabled">
+      <button matMiniFab [disabled]="isDisabled">
         <mat-icon>check</mat-icon>
       </button>
-      <button mat-icon-button color="accent" [disabled]="isDisabled">
+      <button matIconButton color="accent" [disabled]="isDisabled">
         <mat-icon>favorite</mat-icon>
       </button>
     </div>

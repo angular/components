@@ -297,8 +297,8 @@ describe('MatDatepickerActions', () => {
       <mat-datepicker #picker [touchUi]="touchUi" [startAt]="startAt">
         @if (renderActions) {
           <mat-datepicker-actions>
-            <button mat-button class="cancel" matDatepickerCancel>Cancel</button>
-            <button mat-raised-button class="apply" matDatepickerApply>Apply</button>
+            <button matButton class="cancel" matDatepickerCancel>Cancel</button>
+            <button matButton="elevated" class="apply" matDatepickerApply>Apply</button>
           </mat-datepicker-actions>
         }
       </mat-datepicker>

@@ -1855,16 +1855,16 @@ function createComponent<T>(
           <mat-error>This field is required</mat-error>
         </mat-form-field>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
@@ -1891,23 +1891,23 @@ class MatHorizontalStepperWithErrorsApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [color]="secondStepTheme()">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [label]="inputLabel" optional>
         Content 3
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
@@ -1929,8 +1929,8 @@ class SimpleMatHorizontalStepperApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
       @if (showStepTwo()) {
@@ -1938,16 +1938,16 @@ class SimpleMatHorizontalStepperApp {
           <ng-template matStepLabel>Step 2</ng-template>
           Content 2
           <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+            <button matButton matStepperPrevious>Back</button>
+            <button matButton matStepperNext>Next</button>
           </div>
         </mat-step>
       }
       <mat-step [label]="inputLabel()">
         Content 3
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button matButton matStepperPrevious>Back</button>
+          <button matButton matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>

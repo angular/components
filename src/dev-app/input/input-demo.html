@@ -114,7 +114,7 @@
         <mat-error>This field is required</mat-error>
       </mat-form-field>
 
-      <button color="primary" mat-raised-button>Submit</button>
+      <button color="primary" matButton="elevated">Submit</button>
     </form>
 
     <h4>With a custom error function</h4>
@@ -166,11 +166,11 @@
       <mat-label>Amount</mat-label>
       <input matInput>
       @if (showPrefix) {
-        <button mat-icon-button matIconPrefix>
+        <button matIconButton matIconPrefix>
           <mat-icon>calendar_today</mat-icon>
         </button>
       }
-      <button mat-icon-button matIconSuffix>
+      <button matIconButton matIconSuffix>
         <mat-icon>mode_edit</mat-icon>
       </button>
     </mat-form-field>
@@ -182,11 +182,11 @@
       <span matTextPrefix>$</span>
       <span matTextSuffix>.00</span>
       @if (showPrefix) {
-        <button mat-icon-button matIconPrefix>
+        <button matIconButton matIconPrefix>
           <mat-icon>calendar_today</mat-icon>
         </button>
       }
-      <button mat-icon-button matIconSuffix>
+      <button matIconButton matIconSuffix>
         <mat-icon>mode_edit</mat-icon>
       </button>
     </mat-form-field>
@@ -544,11 +544,11 @@
       <mat-label>Template</mat-label>
       <input matInput [(ngModel)]="model" required [disabled]="ctrlDisabled">
     </mat-form-field>
-    <button mat-raised-button color="primary"
+    <button matButton="elevated" color="primary"
             (click)="formControl.enabled ? formControl.disable() : formControl.enable()">
       DISABLE REACTIVE CTRL
     </button>
-    <button mat-raised-button color="primary" (click)="ctrlDisabled = !ctrlDisabled">
+    <button matButton="elevated" color="primary" (click)="ctrlDisabled = !ctrlDisabled">
       DISABLE TD CTRL
     </button>
     <div>
@@ -596,12 +596,12 @@
     </div>
 
     <button
-      mat-raised-button
+      matButton="elevated"
       color="primary"
       (click)="togglePlaceholderTestValue()">Toggle value</button>
 
     <button
-      mat-raised-button
+      matButton="elevated"
       color="primary"
       (click)="togglePlaceholderTestTouched()">Toggle touched</button>
   </mat-card-content>
@@ -705,7 +705,7 @@
         <input matInput (cdkAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
                [class.demo-custom-autofill-style]="customAutofillStyle">
       </mat-form-field>
-      <button color="primary" mat-raised-button>Submit</button>
+      <button color="primary" matButton="elevated">Submit</button>
       <span> is autofilled? {{isAutofilled ? 'yes' : 'no'}}</span>
     </form>
   </mat-card-content>
