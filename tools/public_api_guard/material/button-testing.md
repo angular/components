@@ -10,14 +10,18 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
+export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+
+// @public
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
+    appearance?: ButtonAppearance;
     disabled?: boolean;
     text?: string | RegExp;
     variant?: ButtonVariant;
 }
 
 // @public
-export type ButtonVariant = 'basic' | 'raised' | 'flat' | 'icon' | 'stroked' | 'fab' | 'mini-fab';
+export type ButtonVariant = 'basic' | 'icon' | 'fab' | 'mini-fab';
 
 // @public
 export class MatButtonHarness extends ContentContainerComponentHarness {
@@ -26,6 +30,7 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
     click(location: 'center'): Promise<void>;
     click(): Promise<void>;
     focus(): Promise<void>;
+    getAppearance(): Promise<ButtonAppearance | null>;
     getText(): Promise<string>;
     getVariant(): Promise<ButtonVariant>;
     // (undocumented)

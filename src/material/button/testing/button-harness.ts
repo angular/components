@@ -12,13 +12,14 @@ import {
   ContentContainerComponentHarness,
   HarnessPredicate,
 } from '@angular/cdk/testing';
-import {ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
+import {ButtonAppearance, ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
 
 /** Harness for interacting with a mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
   // TODO(jelbourn) use a single class, like `.mat-button-base`
-  static hostSelector = `[mat-button], [mat-raised-button], [mat-flat-button],
-                         [mat-icon-button], [mat-stroked-button], [mat-fab], [mat-mini-fab]`;
+  static hostSelector = `[matButton], [mat-button], [matIconButton], [matFab], [matMiniFab],
+    [mat-raised-button], [mat-flat-button], [mat-icon-button], [mat-stroked-button], [mat-fab],
+    [mat-mini-fab]`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a button with specific attributes.
@@ -26,6 +27,7 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
    *   - `selector` finds a button whose host element matches the given selector.
    *   - `text` finds a button with specific text content.
    *   - `variant` finds buttons matching a specific variant.
+   *   - `appearance` finds buttons matching a specific appearance.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with<T extends MatButtonHarness>(
@@ -38,6 +40,9 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       )
       .addOption('variant', options.variant, (harness, variant) =>
         HarnessPredicate.stringMatches(harness.getVariant(), variant),
+      )
+      .addOption('appearance', options.appearance, (harness, appearance) =>
+        HarnessPredicate.stringMatches(harness.getAppearance(), appearance),
       )
       .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
@@ -91,20 +96,50 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
   async getVariant(): Promise<ButtonVariant> {
     const host = await this.host();
 
-    if ((await host.getAttribute('mat-raised-button')) != null) {
-      return 'raised';
-    } else if ((await host.getAttribute('mat-flat-button')) != null) {
-      return 'flat';
-    } else if ((await host.getAttribute('mat-icon-button')) != null) {
+    // TODO(crisbeto): we're checking both classes and attributes for backwards compatibility
+    // with some internal apps that were applying the attribute without importing the directive.
+    // Really we should be only targeting the classes.
+    if (
+      (await host.hasClass('mat-mdc-icon-button')) ||
+      (await host.getAttribute('mat-icon-button')) != null
+    ) {
       return 'icon';
-    } else if ((await host.getAttribute('mat-stroked-button')) != null) {
-      return 'stroked';
-    } else if ((await host.getAttribute('mat-fab')) != null) {
-      return 'fab';
-    } else if ((await host.getAttribute('mat-mini-fab')) != null) {
+    }
+
+    if (
+      (await host.hasClass('mat-mdc-mini-fab')) ||
+      (await host.getAttribute('mat-mini-fab')) != null
+    ) {
       return 'mini-fab';
     }
 
+    if ((await host.hasClass('mat-mdc-fab')) || (await host.getAttribute('mat-fab')) != null) {
+      return 'fab';
+    }
+
     return 'basic';
+  }
+
+  /** Gets the appearance of the button. */
+  async getAppearance(): Promise<ButtonAppearance | null> {
+    const host = await this.host();
+
+    if (await host.hasClass('mat-mdc-outlined-button')) {
+      return 'outlined';
+    }
+
+    if (await host.hasClass('mat-mdc-raised-button')) {
+      return 'elevated';
+    }
+
+    if (await host.hasClass('mat-mdc-unelevated-button')) {
+      return 'filled';
+    }
+
+    if (await host.hasClass('mat-mdc-button')) {
+      return 'text';
+    }
+
+    return null;
   }
 }
