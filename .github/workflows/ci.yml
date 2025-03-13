@@ -173,6 +173,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+        env:
+          ASPECT_RULES_JS_FROZEN_PNPM_LOCK: '1'
       - uses: ./.github/actions/slack
         if: failure()
         with:

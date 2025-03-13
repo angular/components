@@ -4,6 +4,7 @@ load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_ENTRYPOINTS", "MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,6 +12,10 @@ exports_files([
     "LICENSE",
     "package.json",
 ])
+
+npm_link_all_packages(
+    name = "node_modules",
+)
 
 nodejs_binary(
     name = "yarn_vendored",
