@@ -75,7 +75,7 @@
     "@angular-devkit/schematics": "^20.0.0-next.0",
     "@angular/bazel": "https://github.com/angular/bazel-builds.git#ba9ff4622e455b7cad2f983f5e611b9f46c57e86",
     "@angular/build": "^20.0.0-next.0",
-    "@angular/build-tooling": "https://github.com/angular/dev-infra-private-build-tooling-builds.git#74e0e7b090c6e16056290836b2d936ca7820b86f",
+    "@angular/build-tooling": "https://github.com/angular/dev-infra-private-build-tooling-builds.git#220b0088d48ae5cff6a715ad8823812b913eba7c",
     "@angular/cli": "^20.0.0-next.0",
     "@angular/compiler-cli": "^20.0.0-next.0",
     "@angular/localize": "^20.0.0-next.0",
@@ -179,12 +179,13 @@
     "zx": "^6.2.4"
   },
   "resolutions": {
-    "@angular/build-tooling/typescript": "5.8.2",
-    "@angular/ng-dev/typescript": "5.8.2",
+    "typescript": "5.8.2",
     "browser-sync-client": "2.26.13",
-    "dgeni-packages/typescript": "5.8.2",
-    "**/https-proxy-agent": "5.0.0",
+    "https-proxy-agent": "5.0.0",
     "string-width": "4.2.3",
     "wrap-ansi": "7.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
   }
 }
