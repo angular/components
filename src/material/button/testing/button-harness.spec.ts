@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {Platform, PlatformModule} from '@angular/cdk/platform';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatButtonModule} from '../module';
@@ -14,18 +14,11 @@ describe('MatButtonHarness', () => {
   let platform: Platform;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatButtonModule, MatIconModule, PlatformModule, ButtonHarnessTest],
-    });
-
     fixture = TestBed.createComponent(ButtonHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
+    platform = TestBed.inject(Platform);
   });
-
-  beforeEach(inject([Platform], (p: Platform) => {
-    platform = p;
-  }));
 
   it('should load all button harnesses', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
@@ -53,24 +46,24 @@ describe('MatButtonHarness', () => {
   });
 
   it('should get disabled state', async () => {
-    // Grab each combination of [enabled, disabled] ⨯ [button, anchor]
-    const [disabledFlatButton, enabledFlatAnchor] = await loader.getAllHarnesses(
-      MatButtonHarness.with({text: /flat/i}),
+    // Grab each combination of [enabled, disabled] x [button, anchor]
+    const [disabledFilledButton, enabledFilledAnchor] = await loader.getAllHarnesses(
+      MatButtonHarness.with({text: /filled/i}),
     );
-    const [enabledRaisedButton, disabledRaisedAnchor] = await loader.getAllHarnesses(
-      MatButtonHarness.with({text: /raised/i}),
+    const [enabledElevatedButton, disabledElevatedAnchor] = await loader.getAllHarnesses(
+      MatButtonHarness.with({text: /elevated/i}),
     );
 
-    expect(await enabledFlatAnchor.isDisabled()).toBe(false);
-    expect(await disabledFlatButton.isDisabled()).toBe(true);
-    expect(await enabledRaisedButton.isDisabled()).toBe(false);
-    expect(await disabledRaisedAnchor.isDisabled()).toBe(true);
+    expect(await enabledFilledAnchor.isDisabled()).toBe(false);
+    expect(await disabledFilledButton.isDisabled()).toBe(true);
+    expect(await enabledElevatedButton.isDisabled()).toBe(false);
+    expect(await disabledElevatedAnchor.isDisabled()).toBe(true);
   });
 
   it('should get button text', async () => {
     const [firstButton, secondButton] = await loader.getAllHarnesses(MatButtonHarness);
     expect(await firstButton.getText()).toBe('Basic button');
-    expect(await secondButton.getText()).toBe('Flat button');
+    expect(await secondButton.getText()).toBe('Filled button');
   });
 
   it('should focus and blur a button', async () => {
@@ -99,7 +92,7 @@ describe('MatButtonHarness', () => {
       return;
     }
 
-    const button = await loader.getHarness(MatButtonHarness.with({text: 'Flat button'}));
+    const button = await loader.getHarness(MatButtonHarness.with({text: 'Filled button'}));
     await button.click();
 
     expect(fixture.componentInstance.clicked).toBe(false);
@@ -116,32 +109,60 @@ describe('MatButtonHarness', () => {
     expect(await favIcon.getName()).toBe('favorite');
   });
 
-  it('should load all button harnesses', async () => {
+  it('should be able to ge the type variant of the button', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
     const variants = await parallel(() => buttons.map(button => button.getVariant()));
 
     expect(variants).toEqual([
       'basic',
-      'flat',
-      'raised',
-      'stroked',
+      'basic',
+      'basic',
+      'basic',
       'icon',
       'icon',
       'fab',
       'mini-fab',
       'basic',
-      'flat',
-      'raised',
-      'stroked',
+      'basic',
+      'basic',
+      'basic',
       'icon',
       'fab',
       'mini-fab',
     ]);
   });
 
+  it('should be able to get the appearance of the button', async () => {
+    const buttons = await loader.getAllHarnesses(MatButtonHarness);
+    const appearances = await parallel(() => buttons.map(button => button.getAppearance()));
+
+    expect(appearances).toEqual([
+      'text',
+      'filled',
+      'elevated',
+      'outlined',
+      null,
+      null,
+      null,
+      null,
+      'text',
+      'filled',
+      'elevated',
+      'outlined',
+      null,
+      null,
+      null,
+    ]);
+  });
+
   it('should be able to filter buttons based on their variant', async () => {
-    const button = await loader.getHarness(MatButtonHarness.with({variant: 'flat'}));
-    expect(await button.getText()).toBe('Flat button');
+    const button = await loader.getHarness(MatButtonHarness.with({variant: 'fab'}));
+    expect(await button.getText()).toBe('Fab button');
+  });
+
+  it('should be able to filter buttons based on their appearance', async () => {
+    const button = await loader.getHarness(MatButtonHarness.with({appearance: 'filled'}));
+    expect(await button.getText()).toBe('Filled button');
   });
 });
 
@@ -149,32 +170,32 @@ describe('MatButtonHarness', () => {
   // Include one of each type of button selector to ensure that they're all captured by
   // the harness's selector.
   template: `
-    <button id="basic" type="button" mat-button (click)="clicked = true">
+    <button id="basic" type="button" matButton (click)="clicked = true">
       Basic button
     </button>
-    <button id="flat" type="button" mat-flat-button disabled (click)="clicked = true">
-      Flat button
+    <button id="flat" type="button" matButton="filled" disabled (click)="clicked = true">
+      Filled button
     </button>
-    <button id="raised" type="button" mat-raised-button>Raised button</button>
-    <button id="stroked" type="button" mat-stroked-button>Stroked button</button>
-    <button id="home-icon" type="button" mat-icon-button>
+    <button id="raised" type="button" matButton="elevated">Elevated button</button>
+    <button id="stroked" type="button" matButton="outlined">Outlined button</button>
+    <button id="home-icon" type="button" matIconButton>
       <mat-icon>home</mat-icon>
     </button>
-    <button id="favorite-icon" type="button" mat-icon-button>
+    <button id="favorite-icon" type="button" matIconButton>
       <mat-icon>favorite</mat-icon>
     </button>
-    <button id="fab" type="button" mat-fab>Fab button</button>
-    <button id="mini-fab" type="button" mat-mini-fab>Mini Fab button</button>
+    <button id="fab" type="button" matFab>Fab button</button>
+    <button id="mini-fab" type="button" matMiniFab>Mini Fab button</button>
 
-    <a id="anchor-basic" mat-button>Basic anchor</a>
-    <a id="anchor-flat" mat-flat-button>Flat anchor</a>
-    <a id="anchor-raised" mat-raised-button disabled>Raised anchor</a>
-    <a id="anchor-stroked" mat-stroked-button>Stroked anchor</a>
-    <a id="anchor-icon" mat-icon-button>Icon anchor</a>
-    <a id="anchor-fab" mat-fab>Fab anchor</a>
-    <a id="anchor-mini-fab" mat-mini-fab>Mini Fab anchor</a>
+    <a id="anchor-basic" matButton>Basic anchor</a>
+    <a id="anchor-flat" matButton="filled">Filled anchor</a>
+    <a id="anchor-raised" matButton="elevated" disabled>Elevated anchor</a>
+    <a id="anchor-stroked" matButton="outlined">Stroked anchor</a>
+    <a id="anchor-icon" matIconButton>Icon anchor</a>
+    <a id="anchor-fab" matFab>Fab anchor</a>
+    <a id="anchor-mini-fab" matMiniFab>Mini Fab anchor</a>
   `,
-  imports: [MatButtonModule, MatIconModule, PlatformModule],
+  imports: [MatButtonModule, MatIconModule],
 })
 class ButtonHarnessTest {
   disabled = true;
