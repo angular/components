@@ -1,7 +1,6 @@
 #Workspace for angular material
 workspace(
     name = "angular_material",
-    managed_directories = {"@npm": ["node_modules"]},
 )
 
 # Point to the nested WORKSPACE we merged from github.com/angular/material.angular.io
@@ -102,9 +101,6 @@ yarn_install(
     manual_build_file_contents = create_npm_package_archive_build_file(),
     package_json = "//:package.json",
     quiet = False,
-    # We prefer to symlink the `node_modules` to only maintain a single install.
-    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
-    symlink_node_modules = True,
     yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
     yarn_lock = "//:yarn.lock",
 )
