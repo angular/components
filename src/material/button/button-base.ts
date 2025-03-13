@@ -24,6 +24,12 @@ import {
 import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
+/**
+ * Possible appearances for a `MatButton`.
+ * See https://m3.material.io/components/buttons/overview
+ */
+export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
   /** Whether disabled buttons should be interactive. */
@@ -31,6 +37,9 @@ export interface MatButtonConfig {
 
   /** Default palette color to apply to buttons. */
   color?: ThemePalette;
+
+  /** Default appearance for plain buttons (not icon buttons or FABs). */
+  defaultAppearance?: MatButtonAppearance;
 }
 
 /** Injection token that can be used to provide the default options the button component. */
@@ -58,45 +67,14 @@ function transformTabIndex(value: unknown): number | undefined {
   return value == null ? undefined : numberAttribute(value);
 }
 
-/** List of classes to add to buttons instances based on host attribute selector. */
-const HOST_SELECTOR_MDC_CLASS_PAIR: {attribute: string; mdcClasses: string[]}[] = [
-  {
-    attribute: 'mat-button',
-    mdcClasses: ['mdc-button', 'mat-mdc-button'],
-  },
-  {
-    attribute: 'mat-flat-button',
-    mdcClasses: ['mdc-button', 'mdc-button--unelevated', 'mat-mdc-unelevated-button'],
-  },
-  {
-    attribute: 'mat-raised-button',
-    mdcClasses: ['mdc-button', 'mdc-button--raised', 'mat-mdc-raised-button'],
-  },
-  {
-    attribute: 'mat-stroked-button',
-    mdcClasses: ['mdc-button', 'mdc-button--outlined', 'mat-mdc-outlined-button'],
-  },
-  {
-    attribute: 'mat-fab',
-    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mat-mdc-fab'],
-  },
-  {
-    attribute: 'mat-mini-fab',
-    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mdc-fab--mini', 'mat-mdc-mini-fab'],
-  },
-  {
-    attribute: 'mat-icon-button',
-    mdcClasses: ['mdc-icon-button', 'mat-mdc-icon-button'],
-  },
-];
-
 /** Base class for all buttons.  */
 @Directive()
 export class MatButtonBase implements AfterViewInit, OnDestroy {
-  _elementRef = inject(ElementRef);
+  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   _ngZone = inject(NgZone);
   _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
+  protected readonly _config = inject(MAT_BUTTON_CONFIG, {optional: true});
   private readonly _focusMonitor = inject(FocusMonitor);
   private _cleanupClick: (() => void) | undefined;
   private _renderer = inject(Renderer2);
@@ -179,22 +157,12 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
-    const config = inject(MAT_BUTTON_CONFIG, {optional: true});
-    const element: HTMLElement = this._elementRef.nativeElement;
-    const classList = (element as HTMLElement).classList;
+    const element = this._elementRef.nativeElement;
 
     this._isAnchor = element.tagName === 'A';
-    this.disabledInteractive = config?.disabledInteractive ?? false;
-    this.color = config?.color ?? null;
+    this.disabledInteractive = this._config?.disabledInteractive ?? false;
+    this.color = this._config?.color ?? null;
     this._rippleLoader?.configureRipple(element, {className: 'mat-mdc-button-ripple'});
-
-    // For each of the variant selectors that is present in the button's host
-    // attributes, add the correct corresponding MDC classes.
-    for (const {attribute, mdcClasses} of HOST_SELECTOR_MDC_CLASS_PAIR) {
-      if (element.hasAttribute(attribute)) {
-        classList.add(...mdcClasses);
-      }
-    }
   }
 
   ngAfterViewInit() {

@@ -15,7 +15,7 @@ import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  selector: `button[mat-icon-button], a[mat-icon-button]`,
+  selector: `button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   host: MAT_BUTTON_HOST,
@@ -28,7 +28,9 @@ export class MatIconButton extends MatButtonBase {
 
   constructor() {
     super();
-    this._rippleLoader.configureRipple(this._elementRef.nativeElement, {centered: true});
+    const element = this._elementRef.nativeElement;
+    element.classList.add('mdc-icon-button', 'mat-mdc-icon-button');
+    this._rippleLoader.configureRipple(element, {centered: true});
   }
 }
 
