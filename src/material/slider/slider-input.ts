@@ -96,6 +96,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     return numberAttribute(this._hostElement.value, 0);
   }
   set value(value: number) {
+    if (value === null) {
+      value = this._getDefaultValue();
+    }
     value = isNaN(value) ? 0 : value;
     const stringValue = value + '';
     if (!this._hasSetInitialValue) {
