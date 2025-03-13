@@ -1,4 +1,5 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_config")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load("//tools/dgeni:index.bzl", "dgeni_api_docs")
@@ -57,4 +58,10 @@ ts_config(
         ":bazel-tsconfig-build.json",
         "//goldens:tsec-exemption.json",
     ],
+)
+
+rules_js_tsconfig(
+    name = "build-tsconfig",
+    src = "bazel-tsconfig-build.json",
+    deps = [],
 )
