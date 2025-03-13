@@ -41,9 +41,7 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** The last index that was active. */
   prevActiveIndex = signal(0);
 
-  constructor(readonly inputs: ListNavigationInputs<T>) {
-    this.prevActiveIndex.set(inputs.activeIndex());
-  }
+  constructor(readonly inputs: ListNavigationInputs<T>) {}
 
   /** Navigates to the given item. */
   goto(item: T) {

@@ -8,3 +8,4 @@
 
 export * from './listbox/listbox';
 export * from './listbox/option';
+export * from './behaviors/signal-like/signal-like';

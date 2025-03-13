@@ -259,7 +259,7 @@ export class ListboxPattern {
       return;
     }
 
-    const element = e.target.closest('[cdkoption]'); // TODO: Use a different identifier.
+    const element = e.target.closest('[role="option"]'); // TODO: Use a different identifier.
     return this.inputs.items().find(i => i.element() === element);
   }
 }
