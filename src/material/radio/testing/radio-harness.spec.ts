@@ -145,7 +145,7 @@ describe('radio harness', () => {
   describe('MatRadioButtonHarness', () => {
     it('should load all radio-button harnesses', async () => {
       const radios = await loader.getAllHarnesses(MatRadioButtonHarness);
-      expect(radios.length).toBe(9);
+      expect(radios.length).toBe(10);
     });
 
     it('should load radio-button with exact label', async () => {
@@ -267,10 +267,25 @@ describe('radio harness', () => {
       expect(await radioButton.isChecked()).toBe(true);
     });
 
-    it('should get required state', async () => {
+    // radios with group should not contain required attribute as group itself is marked if its
+    // required or not, see #30399
+    it('should have falsy required state if used with MatRadioGroup', async () => {
+      const radioButton = await loader.getHarness(
+        MatRadioButtonHarness.with({selector: '#required-radio-inside-group'}),
+      );
+      expect(await radioButton.isRequired()).toBe(false);
+    });
+
+    it('should set required state of radio without group', async () => {
       const radioButton = await loader.getHarness(
         MatRadioButtonHarness.with({selector: '#required-radio'}),
       );
+      expect(await radioButton.isRequired()).toBe(false);
+
+      fixture.componentInstance.standaloneRequiredRadio = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
       expect(await radioButton.isRequired()).toBe(true);
     });
   });
@@ -302,10 +317,14 @@ describe('radio harness', () => {
 
 
     <mat-radio-group [id]="secondGroupId" [name]="secondGroupId + '-name'">
-      <mat-radio-button id="required-radio" required [value]="true">
+      <mat-radio-button id="required-radio-inside-group" required [value]="true">
         Accept terms of conditions
       </mat-radio-button>
     </mat-radio-group>
+
+    <mat-radio-button id="required-radio" [required]="standaloneRequiredRadio" [value]="true">
+      Accept terms of conditions
+    </mat-radio-button>
 
     <mat-radio-group [name]="thirdGroupName">
       <mat-radio-button [value]="true">First</mat-radio-button>
@@ -321,4 +340,5 @@ class MultipleRadioButtonsHarnessTest {
   secondGroupId = 'my-group-2';
   thirdGroupName: string = 'third-group-name';
   thirdGroupButtonName: string | undefined = undefined;
+  standaloneRequiredRadio = false;
 }
