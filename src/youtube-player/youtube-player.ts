@@ -759,7 +759,7 @@ function loadApi(nonce: string | null): void {
   };
   script.addEventListener('load', callback);
   script.addEventListener('error', callback);
-  (script as any).src = url;
+  script.src = url;
   script.async = true;
 
   if (nonce) {
