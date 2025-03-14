@@ -39,6 +39,8 @@
   [cdkConnectedOverlayOrigin]="_preferredOverlayOrigin || fallbackOverlayOrigin"
   [cdkConnectedOverlayPositions]="_positions"
   [cdkConnectedOverlayWidth]="_overlayWidth"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayViewportMargin]="8"
   (backdropClick)="close()"
   (overlayKeydown)="_handleOverlayKeydown($event)">
   <div
