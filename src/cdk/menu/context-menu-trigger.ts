@@ -74,7 +74,12 @@ export type ContextMenuCoordinates = {x: number; y: number};
     {name: 'menuPosition', alias: 'cdkContextMenuPosition'},
     {name: 'menuData', alias: 'cdkContextMenuTriggerData'},
   ],
-  outputs: ['opened: cdkContextMenuOpened', 'closed: cdkContextMenuClosed'],
+  outputs: [
+    'opened: cdkContextMenuOpened',
+    'closed: cdkContextMenuClosed',
+    'outsideClicked: cdkContextMenuOutsideClicked',
+    'triggered: cdkContextMenuTriggered',
+  ],
   providers: [
     {provide: MENU_TRIGGER, useExisting: CdkContextMenuTrigger},
     {provide: MENU_STACK, useClass: MenuStack},
@@ -94,6 +99,10 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
   /** Whether the context menu is disabled. */
   @Input({alias: 'cdkContextMenuDisabled', transform: booleanAttribute}) disabled: boolean = false;
+
+  /** Whether on clicking outside of menu should close it */
+  @Input({alias: 'cdkContextMenuDisableCloseOnOutsideClick', transform: booleanAttribute})
+  disableCloseOnOutsideClick: boolean = false;
 
   constructor() {
     super();
@@ -139,6 +148,9 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       } else {
         this.childMenu?.focusFirstItem('program');
       }
+
+      // Emit that the user have triggered contextmenu event.
+      this.triggered.emit({x: event.clientX, y: event.clientY});
     }
   }
 
@@ -209,7 +221,13 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
 
       outsideClicks.pipe(takeUntil(this.stopOutsideClicksListener)).subscribe(event => {
         if (!this.isElementInsideMenuStack(_getEventTarget(event)!)) {
-          this.menuStack.closeAll();
+          // We do not want to close menu if user does not want to on outside clicks.
+          if (!this.disableCloseOnOutsideClick) {
+            this.menuStack.closeAll();
+          }
+
+          // Emit that we had a click outside the menu.
+          this.outsideClicked.emit(event);
         }
       });
     }
