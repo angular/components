@@ -187,5 +187,44 @@ http_archive(
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
 rules_ts_dependencies(
+    # Obtained by: curl --silent https://registry.npmjs.org/typescript/5.8.2 | jq -r '.dist.integrity'
+    ts_integrity = "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==",
     ts_version_from = "//:package.json",
 )
+
+http_archive(
+    name = "aspect_rules_rollup",
+    sha256 = "c4062681968f5dcd3ce01e09e4ba73670c064744a7046211763e17c98ab8396e",
+    strip_prefix = "rules_rollup-2.0.0",
+    url = "https://github.com/aspect-build/rules_rollup/releases/download/v2.0.0/rules_rollup-v2.0.0.tar.gz",
+)
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+    name = "devinfra",
+    commit = "47572aba6019f368057c00966ac7ce354b1d65bc",
+    remote = "https://github.com/angular/dev-infra.git",
+)
+
+load("@devinfra//bazel:setup_dependencies_1.bzl", "setup_dependencies_1")
+
+setup_dependencies_1()
+
+load("@devinfra//bazel:setup_dependencies_2.bzl", "setup_dependencies_2")
+
+setup_dependencies_2()
+
+git_repository(
+    name = "rules_angular",
+    commit = "b1e419e5f6b5e897c07260780cfef2b0aac128fb",
+    remote = "https://github.com/devversion/rules_angular.git",
+)
+
+load("@rules_angular//setup:step_1.bzl", "step_1")
+
+step_1()
+
+load("@rules_angular//setup:step_2.bzl", "step_2")
+
+step_2()

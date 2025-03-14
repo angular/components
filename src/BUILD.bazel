@@ -65,3 +65,12 @@ rules_js_tsconfig(
     src = "bazel-tsconfig-build.json",
     deps = [],
 )
+
+rules_js_tsconfig(
+    name = "test-tsconfig",
+    src = "bazel-tsconfig-test.json",
+    deps = [
+        ":build-tsconfig",
+        "//:node_modules/@types/jasmine",
+    ],
+)

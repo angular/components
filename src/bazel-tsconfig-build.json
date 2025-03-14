@@ -30,7 +30,10 @@
     "inlineSources": true,
     "target": "es2022",
     "lib": ["es2020", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@angular/cdk/*": ["./cdk/*"]
+    }
   },
   "angularCompilerOptions": {
     "extendedDiagnostics": {
