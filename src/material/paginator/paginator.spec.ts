@@ -568,9 +568,13 @@ describe('MatPaginator', () => {
 
     expect(select.disabled).toBe(false);
     expect(getPreviousButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getPreviousButton(fixture).hasAttribute('tabindex')).toBe(false);
     expect(getNextButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getNextButton(fixture).hasAttribute('tabindex')).toBe(false);
     expect(getFirstButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getFirstButton(fixture).hasAttribute('tabindex')).toBe(false);
     expect(getLastButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getLastButton(fixture).hasAttribute('tabindex')).toBe(false);
 
     fixture.componentInstance.disabled = true;
     fixture.changeDetectorRef.markForCheck();
@@ -578,9 +582,13 @@ describe('MatPaginator', () => {
 
     expect(select.disabled).toBe(true);
     expect(getPreviousButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getPreviousButton(fixture).getAttribute('tabindex')).toBe('-1');
     expect(getNextButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getNextButton(fixture).getAttribute('tabindex')).toBe('-1');
     expect(getFirstButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getFirstButton(fixture).getAttribute('tabindex')).toBe('-1');
     expect(getLastButton(fixture).hasAttribute('aria-disabled')).toBe(true);
+    expect(getLastButton(fixture).getAttribute('tabindex')).toBe('-1');
   });
 
   it('should be able to configure the default options via a provider', () => {

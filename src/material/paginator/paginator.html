@@ -41,6 +41,12 @@
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
       </div>
 
+      <!--
+      The buttons use `disabledInteractive` so that they can retain focus if they become disabled,
+      otherwise focus is moved to the document body. However, users should not be able to navigate
+      into these buttons, so `tabindex` is set to -1 when disabled.
+      -->
+
       @if (showFirstLastButtons) {
         <button mat-icon-button type="button"
                 class="mat-mdc-paginator-navigation-first"
@@ -50,6 +56,7 @@
                 [matTooltipDisabled]="_previousButtonsDisabled()"
                 matTooltipPosition="above"
                 [disabled]="_previousButtonsDisabled()"
+                [tabindex]="_previousButtonsDisabled() ? -1 : null"
                 disabledInteractive>
           <svg class="mat-mdc-paginator-icon"
               viewBox="0 0 24 24"
@@ -67,6 +74,7 @@
               [matTooltipDisabled]="_previousButtonsDisabled()"
               matTooltipPosition="above"
               [disabled]="_previousButtonsDisabled()"
+              [tabindex]="_previousButtonsDisabled() ? -1 : null"
               disabledInteractive>
         <svg class="mat-mdc-paginator-icon"
              viewBox="0 0 24 24"
@@ -83,6 +91,7 @@
               [matTooltipDisabled]="_nextButtonsDisabled()"
               matTooltipPosition="above"
               [disabled]="_nextButtonsDisabled()"
+              [tabindex]="_nextButtonsDisabled() ? -1 : null"
               disabledInteractive>
         <svg class="mat-mdc-paginator-icon"
              viewBox="0 0 24 24"
@@ -100,6 +109,7 @@
                 [matTooltipDisabled]="_nextButtonsDisabled()"
                 matTooltipPosition="above"
                 [disabled]="_nextButtonsDisabled()"
+                [tabindex]="_nextButtonsDisabled() ? -1 : null"
                 disabledInteractive>
           <svg class="mat-mdc-paginator-icon"
               viewBox="0 0 24 24"

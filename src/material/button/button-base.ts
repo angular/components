@@ -142,7 +142,9 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   /**
    * Natively disabled buttons prevent focus and any pointer events from reaching the button.
    * In some scenarios this might not be desirable, because it can prevent users from finding out
-   * why the button is disabled (e.g. via tooltip).
+   * why the button is disabled (e.g. via tooltip). This is also useful for buttons that may
+   * become disabled when activated, which would cause focus to be transferred to the document
+   * body instead of remaining on the button.
    *
    * Enabling this input will change the button so that it is styled to be disabled and will be
    * marked as `aria-disabled`, but it will allow the button to receive events and focus.
