@@ -52,6 +52,9 @@ describe('MatSort', () => {
       fixture = TestBed.createComponent(SimpleMatSortApp);
       component = fixture.componentInstance;
       fixture.detectChanges();
+
+      component.matSort.matSortMultiple = false;
+      component.matSort.sortState.clear();
     });
 
     it('should have the sort headers register and deregister themselves', () => {
@@ -291,6 +294,23 @@ describe('MatSort', () => {
       descriptionId = sortButton.getAttribute('aria-describedby');
       descriptionElement = document.getElementById(descriptionId);
       expect(descriptionElement?.textContent).toBe('Sort 2nd column');
+    });
+
+    it('should be able to store sorting for multiple columns when using multisort', () => {
+      component.matSort.matSortMultiple = true;
+      component.start = 'asc';
+      testSingleColumnSortDirectionSequence(fixture, ['asc', 'desc', ''], 'defaultA');
+      testSingleColumnSortDirectionSequence(fixture, ['asc', 'desc', ''], 'defaultB');
+
+      expect(component.matSort.sortState.size).toBe(2);
+
+      const defaultAState = component.matSort.sortState.get('defaultA');
+      expect(defaultAState).toBeTruthy();
+      expect(defaultAState?.direction).toBe(component.start);
+
+      const defaultBState = component.matSort.sortState.get('defaultB');
+      expect(defaultBState).toBeTruthy();
+      expect(defaultBState?.direction).toBe(component.start);
     });
 
     it('should render arrows after sort header by default', () => {
