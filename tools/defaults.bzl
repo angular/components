@@ -19,6 +19,7 @@ load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
+load("//tools/bazel:module_name.bzl", "compute_module_name")
 
 _DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
 _DEFAULT_TSCONFIG_TEST = "//src:tsconfig-test"
@@ -46,27 +47,6 @@ def _make_tsec_test(target):
             target = target,
             tsconfig = "//src:tsec_config",
         )
-
-def _compute_module_name(testonly):
-    current_pkg = native.package_name()
-
-    # For test-only targets we do not compute any module name as
-    # those are not publicly exposed through the `@angular` scope.
-    if testonly:
-        return None
-
-    # We generate no module name for files outside of `src/<pkg>` (usually tools).
-    if not current_pkg.startswith("src/"):
-        return None
-
-    # Skip module name generation for internal apps which are not built as NPM package
-    # and not scoped under `@angular/`. This includes e2e-app, dev-app and universal-app.
-    if "-app" in current_pkg:
-        return None
-
-    # Construct module names based on the current Bazel package. e.g. if a target is
-    # defined within `src/cdk/a11y` then the module name will be `@angular/cdk/a11y`.
-    return "@angular/%s" % current_pkg[len("src/"):]
 
 def _getDefaultTsConfig(testonly):
     if testonly:
@@ -104,7 +84,7 @@ def ts_library(
         tsconfig = _getDefaultTsConfig(testonly)
 
     # Compute an AMD module name for the target.
-    module_name = _compute_module_name(testonly)
+    module_name = compute_module_name(testonly)
 
     _ts_library(
         # `module_name` is used for AMD module names within emitted JavaScript files.
@@ -140,7 +120,7 @@ def ng_module(
         tsconfig = _getDefaultTsConfig(testonly)
 
     # Compute an AMD module name for the target.
-    module_name = _compute_module_name(testonly)
+    module_name = compute_module_name(testonly)
 
     local_deps = [
         # Add tslib because we use import helpers for all public packages.
