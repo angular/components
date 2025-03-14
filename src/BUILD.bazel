@@ -63,7 +63,9 @@ ts_config(
 rules_js_tsconfig(
     name = "build-tsconfig",
     src = "bazel-tsconfig-build.json",
-    deps = [],
+    deps = [
+        "//:node_modules/tslib",
+    ],
 )
 
 rules_js_tsconfig(
