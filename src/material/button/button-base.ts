@@ -45,34 +45,30 @@ export interface MatButtonConfig {
 /** Injection token that can be used to provide the default options the button component. */
 export const MAT_BUTTON_CONFIG = new InjectionToken<MatButtonConfig>('MAT_BUTTON_CONFIG');
 
-/** Shared host configuration for all buttons */
-export const MAT_BUTTON_HOST = {
-  '[attr.disabled]': '_getDisabledAttribute()',
-  '[attr.aria-disabled]': '_getAriaDisabled()',
-  '[class.mat-mdc-button-disabled]': 'disabled',
-  '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
-  '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
-  // MDC automatically applies the primary theme color to the button, but we want to support
-  // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
-  // select and style this "theme".
-  '[class.mat-unthemed]': '!color',
-  // Add a class that applies to all buttons. This makes it easier to target if somebody
-  // wants to target all Material buttons.
-  '[class.mat-mdc-button-base]': 'true',
-  '[class]': 'color ? "mat-" + color : ""',
-  '[attr.tabindex]': '_getTabIndex()',
-};
-
 function transformTabIndex(value: unknown): number | undefined {
   return value == null ? undefined : numberAttribute(value);
 }
 
-/** Base class for all buttons.  */
-@Directive()
+/** Base class for all buttons. */
+@Directive({
+  host: {
+    // Add a class that applies to all buttons. This makes it easier to target if somebody
+    // wants to target all Material buttons.
+    'class': 'mat-mdc-button-base',
+    '[class]': 'color ? "mat-" + color : ""',
+    '[attr.disabled]': '_getDisabledAttribute()',
+    '[attr.aria-disabled]': '_getAriaDisabled()',
+    '[attr.tabindex]': '_getTabIndex()',
+    '[class.mat-mdc-button-disabled]': 'disabled',
+    '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
+    '[class.mat-unthemed]': '!color',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+  },
+})
 export class MatButtonBase implements AfterViewInit, OnDestroy {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  _ngZone = inject(NgZone);
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  protected _ngZone = inject(NgZone);
+  protected _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   protected readonly _config = inject(MAT_BUTTON_CONFIG, {optional: true});
   private readonly _focusMonitor = inject(FocusMonitor);
