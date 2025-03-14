@@ -16,7 +16,7 @@ import {
   inject,
 } from '@angular/core';
 
-import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
+import {MatButtonBase} from './button-base';
 import {ThemePalette} from '../core';
 
 /** Default FAB options that can be overridden. */
@@ -67,7 +67,7 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
   templateUrl: 'button.html',
   styleUrl: 'fab.css',
   host: {
-    ...MAT_BUTTON_HOST,
+    'class': 'mdc-fab mat-mdc-fab-base mat-mdc-fab',
     '[class.mdc-fab--extended]': 'extended',
     '[class.mat-mdc-extended-fab]': 'extended',
   },
@@ -86,8 +86,6 @@ export class MatFabButton extends MatButtonBase {
 
   constructor() {
     super();
-    const element = this._elementRef.nativeElement;
-    element.classList.add('mdc-fab', 'mat-mdc-fab-base', 'mat-mdc-fab');
     this._options = this._options || defaults;
     this.color = this._options!.color || defaults.color;
   }
@@ -102,7 +100,9 @@ export class MatFabButton extends MatButtonBase {
   selector: `button[mat-mini-fab], a[mat-mini-fab], button[matMiniFab], a[matMiniFab]`,
   templateUrl: 'button.html',
   styleUrl: 'fab.css',
-  host: MAT_BUTTON_HOST,
+  host: {
+    'class': 'mdc-fab mat-mdc-fab-base mdc-fab--mini mat-mdc-mini-fab',
+  },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,8 +116,6 @@ export class MatMiniFabButton extends MatButtonBase {
 
   constructor() {
     super();
-    const element = this._elementRef.nativeElement;
-    element.classList.add('mdc-fab', 'mat-mdc-fab-base', 'mdc-fab--mini', 'mat-mdc-mini-fab');
     this._options = this._options || defaults;
     this.color = this._options!.color || defaults.color;
   }

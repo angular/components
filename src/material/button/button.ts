@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
-import {MAT_BUTTON_HOST, MatButtonAppearance, MatButtonBase} from './button-base';
+import {MatButtonAppearance, MatButtonBase} from './button-base';
 
 /**
  * Classes that need to be set for each appearance of the button.
@@ -32,7 +32,9 @@ const APPEARANCE_CLASSES: Map<MatButtonAppearance, readonly string[]> = new Map(
   `,
   templateUrl: 'button.html',
   styleUrls: ['button.css', 'button-high-contrast.css'],
-  host: MAT_BUTTON_HOST,
+  host: {
+    'class': 'mdc-button',
+  },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,11 +56,7 @@ export class MatButton extends MatButtonBase {
 
   constructor() {
     super();
-    const element = this._elementRef.nativeElement;
-    const inferredAppearance = _inferAppearance(element);
-
-    // This class is common across all the appearances so we add it ahead of time.
-    element.classList.add('mdc-button');
+    const inferredAppearance = _inferAppearance(this._elementRef.nativeElement);
 
     // Only set the appearance if we managed to infer it from the static attributes, rather than
     // doing something like `setAppearance(inferredAppearance || 'text')`, because doing so can

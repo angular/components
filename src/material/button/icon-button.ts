@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
+import {MatButtonBase} from './button-base';
 
 /**
  * Material Design icon button component. This type of button displays a single interactive icon for
@@ -18,7 +18,9 @@ import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
   selector: `button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
-  host: MAT_BUTTON_HOST,
+  host: {
+    'class': 'mdc-icon-button mat-mdc-icon-button',
+  },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,9 +30,7 @@ export class MatIconButton extends MatButtonBase {
 
   constructor() {
     super();
-    const element = this._elementRef.nativeElement;
-    element.classList.add('mdc-icon-button', 'mat-mdc-icon-button');
-    this._rippleLoader.configureRipple(element, {centered: true});
+    this._rippleLoader.configureRipple(this._elementRef.nativeElement, {centered: true});
   }
 }
 

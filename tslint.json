@@ -111,13 +111,6 @@
           }
         ],
         "Directive": [
-          {
-            "argument": 0,
-            "properties": {
-              "!host": "\\[class\\]"
-            },
-            "excludeFiles": ["**/dev-app/**"]
-          },
           // Enforce standalone even in the dev-app.
           {
             "argument": 0,
