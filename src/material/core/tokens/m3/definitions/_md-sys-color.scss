@@ -7,12 +7,15 @@
 
 @use './md-ref-palette';
 
+// Indicates whether alternative tokens should be used
+$_alternate-tokens: false;
+
 $_default-dark: (
   'md-ref-palette': md-ref-palette.values(),
 );
 
 @function values-dark($deps: $_default-dark) {
-  @return (
+  $values: (
     'background': map.get($deps, 'md-ref-palette', 'neutral6'),
     'error': map.get($deps, 'md-ref-palette', 'error80'),
     'error-container': map.get($deps, 'md-ref-palette', 'error30'),
@@ -64,6 +67,24 @@ $_default-dark: (
     'tertiary-fixed': map.get($deps, 'md-ref-palette', 'tertiary90'),
     'tertiary-fixed-dim': map.get($deps, 'md-ref-palette', 'tertiary80')
   );
+
+  @if ($_alternate-tokens) {
+    $values: map.merge($values, (
+      'background': map.get($deps, 'md-ref-palette', 'neutral10'),
+      'on-surface-variant': map.get($deps, 'md-ref-palette', 'neutral-variant80'),
+      'surface': map.get($deps, 'md-ref-palette', 'neutral10'),
+      'surface-bright': #37393b,
+      'surface-container': #1e1f20,
+      'surface-container-high': #282a2c,
+      'surface-container-highest': #333537,
+      'surface-container-low': #1b1b1b,
+      'surface-container-lowest': #0e0e0e,
+      'surface-dim': #131313,
+      'surface-tint': #d1e1ff,
+    ));
+  }
+
+  @return $values;
 }
 
 $_default-light: (
@@ -71,7 +92,7 @@ $_default-light: (
 );
 
 @function values-light($deps: $_default-light) {
-  @return (
+  $values: (
     'background': map.get($deps, 'md-ref-palette', 'neutral98'),
     'error': map.get($deps, 'md-ref-palette', 'error40'),
     'error-container': map.get($deps, 'md-ref-palette', 'error90'),
@@ -123,4 +144,25 @@ $_default-light: (
     'tertiary-fixed': map.get($deps, 'md-ref-palette', 'tertiary90'),
     'tertiary-fixed-dim': map.get($deps, 'md-ref-palette', 'tertiary80')
   );
+
+  @if ($_alternate-tokens) {
+    $values: map.merge($values, (
+      'background': map.get($deps, 'md-ref-palette', 'neutral100'),
+      'on-error-container': map.get($deps, 'md-ref-palette', 'error10'),
+      'on-primary-container': map.get($deps, 'md-ref-palette', 'primary10'),
+      'on-secondary-container': map.get($deps, 'md-ref-palette', 'secondary10'),
+      'on-tertiary-container': map.get($deps, 'md-ref-palette', 'tertiary10'),
+      'surface': map.get($deps, 'md-ref-palette', 'neutral100'),
+      'surface-bright': map.get($deps, 'md-ref-palette', 'neutral100'),
+      'surface-container': #f0f4f9,
+      'surface-container-high': #e9eef6,
+      'surface-container-highest': #dde3ea,
+      'surface-container-low': #f8fafd,
+      'surface-container-lowest': map.get($deps, 'md-ref-palette', 'primary100'),
+      'surface-dim': #d3dbe5,
+      'surface-tint': #6991d6,
+    ));
+  }
+
+  @return $values;
 }
