@@ -45,8 +45,14 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
+  &.mat-form-field-appearance-outline {
+    margin-top: form-field-sizing.$mat-form-field-outline-top-spacing / 2;
+  }
+
+  @include token-utils.use-tokens(
+    tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()
+  ) {
     @include vendor-prefixes.smooth-font();
     @include token-utils.create-token-slot(font-family, container-text-font);
     @include token-utils.create-token-slot(line-height, container-text-line-height);
@@ -115,8 +121,10 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-prefix {
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
+  @include token-utils.use-tokens(
+    tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()
+  ) {
     @include token-utils.create-token-slot(color, leading-icon-color);
 
     .mat-form-field-disabled & {
@@ -126,8 +134,10 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-suffix {
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
+  @include token-utils.use-tokens(
+    tokens-mat-form-field.$prefix,
+    tokens-mat-form-field.get-token-slots()
+  ) {
     @include token-utils.create-token-slot(color, trailing-icon-color);
 
     .mat-form-field-disabled & {
@@ -139,7 +149,8 @@ $_icon-prefix-infix-padding: 4px;
     }
 
     .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled)
-      .mat-mdc-text-field-wrapper:hover & {
+      .mat-mdc-text-field-wrapper:hover
+      & {
       @include token-utils.create-token-slot(color, error-hover-trailing-icon-color);
     }
 
