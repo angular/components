@@ -3014,6 +3014,66 @@ describe('MatAutocomplete', () => {
     });
   });
 
+  describe('with backdrop in default options', () => {
+    it('should contain backdrop by default', fakeAsync(() => {
+      const fixture = createComponent(SimpleAutocomplete, []);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+    }));
+
+    it('should be able to remove the backdrop', fakeAsync(() => {
+      const fixture = createComponent(SimpleAutocomplete, [
+        {
+          provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
+          useValue: {hasBackdrop: false},
+        },
+      ]);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      tick(500);
+
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+    }));
+  });
+
+  describe('with backdropClass in default options', () => {
+    it('should contain default backdropClass', fakeAsync(() => {
+      const fixture = createComponent(SimpleAutocomplete, []);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      tick(500);
+
+      const cdkPanelElement = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(cdkPanelElement?.classList).toContain('cdk-overlay-transparent-backdrop');
+    }));
+
+    it('should be able to remove the backdrop', fakeAsync(() => {
+      const fixture = createComponent(SimpleAutocomplete, [
+        {
+          provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
+          useValue: {backdropClass: 'my-custom-backdrop-class', hasBackdrop: true},
+        },
+      ]);
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+
+      tick(500);
+
+      const cdkPanelElement = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+      expect(cdkPanelElement?.classList).toContain('my-custom-backdrop-class');
+    }));
+  });
+
   describe('misc', () => {
     it('should allow basic use without any forms directives', () => {
       expect(() => {

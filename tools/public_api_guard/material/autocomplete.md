@@ -135,6 +135,8 @@ export interface MatAutocompleteActivatedEvent {
 export interface MatAutocompleteDefaultOptions {
     autoActiveFirstOption?: boolean;
     autoSelectActiveOption?: boolean;
+    backdropClass?: string;
+    hasBackdrop?: boolean;
     hideSingleSelectionIndicator?: boolean;
     overlayPanelClass?: string | string[];
     requireSelection?: boolean;
