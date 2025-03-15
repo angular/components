@@ -258,6 +258,23 @@
       @include token-utils.create-token-slot(border-color, outline-color);
     }
 
+    &:hover {
+      @include token-utils.create-token-slot(border-color, hover-outline-color);
+      @include token-utils.create-token-slot(color, hover-label-text-color);
+    }
+
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused,
+    &.mat-mdc-button-disabled-interactive:focus {
+      @include token-utils.create-token-slot(border-color, focus-outline-color);
+      @include token-utils.create-token-slot(color, focus-label-text-color);
+    }
+
+    &:active {
+      @include token-utils.create-token-slot(border-color, pressed-outline-color);
+      @include token-utils.create-token-slot(color, pressed-label-text-color);
+    }
+
     // We need to re-apply the disabled tokens since MDC uses
     // `:disabled` which doesn't apply to anchors.
     @include button-base.mat-private-button-disabled {
