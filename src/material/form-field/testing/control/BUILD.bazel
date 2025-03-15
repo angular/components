@@ -1,11 +1,11 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "control",
     srcs = glob(["**/*.ts"]),
-    deps = ["//src/cdk/testing"],
+    interop_deps = ["//src/cdk/testing"],
 )
 
 filegroup(
