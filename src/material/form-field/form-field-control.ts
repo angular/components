@@ -69,6 +69,12 @@ export abstract class MatFormFieldControl<T> {
   readonly userAriaDescribedBy?: string;
 
   /**
+   * Value of `aria-labelledby` that should be merged with the labelled-by ids
+   * which are set by the form-field.
+   */
+  readonly userAriaLabelledBy?: string;
+
+  /**
    * Whether to automatically assign the ID of the form field as the `for` attribute
    * on the `<label>` inside the form field. Set this to true to prevent the form
    * field from associating the label with non-native elements.
@@ -77,6 +83,9 @@ export abstract class MatFormFieldControl<T> {
 
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;
+
+  /** Sets the list of element IDs that currently label this control. */
+  abstract setLabelledByIds(ids: string[]): void;
 
   /** Handles a click on the control's container. */
   abstract onContainerClick(event: MouseEvent): void;
