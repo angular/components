@@ -7,12 +7,15 @@
 
 @use './md-ref-typeface';
 
+// Indicates whether alternative tokens should be used
+$_alternate-tokens: false;
+
 $_default: (
   'md-ref-typeface': md-ref-typeface.values(),
 );
 
 @function values($deps: $_default, $exclude-hardcoded-values: false) {
-  @return (
+  $values: (
     // Warning: risk of reduced fidelity from using this composite typography token.
     // Tokens md.sys.typescale.body-large.tracking cannot be represented in the "font"
     // property shorthand. Consider using the discrete properties instead.
@@ -305,4 +308,20 @@ $_default: (
     'title-small-tracking': if($exclude-hardcoded-values, null, 0.006rem),
     'title-small-weight': map.get($deps, 'md-ref-typeface', 'weight-medium')
   );
+
+  @if ($_alternate-tokens) {
+    $values: map.merge($values, (
+      'body-large-tracking': if($exclude-hardcoded-values, null, 0),
+      'body-medium-tracking': if($exclude-hardcoded-values, null, 0),
+      'body-small-tracking': if($exclude-hardcoded-values, null, 0.006rem),
+      'display-large-tracking': if($exclude-hardcoded-values, null, 0),
+      'label-large-tracking': if($exclude-hardcoded-values, null, 0),
+      'label-medium-tracking': if($exclude-hardcoded-values, null, 0.006rem),
+      'label-small-tracking': if($exclude-hardcoded-values, null, 0.006rem),
+      'title-medium-tracking': if($exclude-hardcoded-values, null, 0),
+      'title-small-tracking': if($exclude-hardcoded-values, null, 0),
+    ));
+  }
+
+  @return $values;
 }
