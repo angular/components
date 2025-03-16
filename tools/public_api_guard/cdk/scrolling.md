@@ -50,6 +50,29 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
 }
 
 // @public
+export class CdkMultiColumnsVirtualScroll implements OnChanges {
+    get itemDimension(): ItemDimension;
+    set itemDimension(val: ItemDimension);
+    // (undocumented)
+    _itemDimension: ItemDimension;
+    get maxBufferPx(): number;
+    set maxBufferPx(value: NumberInput);
+    // (undocumented)
+    _maxBufferPx: number;
+    get minBufferPx(): number;
+    set minBufferPx(value: NumberInput);
+    // (undocumented)
+    _minBufferPx: number;
+    // (undocumented)
+    ngOnChanges(): void;
+    _scrollStrategy: MultiColumnVirtualScrollStrategy;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMultiColumnsVirtualScroll, "cdk-virtual-scroll-viewport[itemDimension]", never, { "itemDimension": { "alias": "itemDimension"; "required": false; }; "minBufferPx": { "alias": "minBufferPx"; "required": false; }; "maxBufferPx": { "alias": "maxBufferPx"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkMultiColumnsVirtualScroll, never>;
+}
+
+// @public
 export class CdkScrollable implements OnInit, OnDestroy {
     constructor(...args: unknown[]);
     // (undocumented)
@@ -245,9 +268,34 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
 export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSizeVirtualScroll): FixedSizeVirtualScrollStrategy;
 
 // @public (undocumented)
+export class ItemDimension {
+    // (undocumented)
+    height: number;
+    // (undocumented)
+    width: number | string;
+}
+
+// @public (undocumented)
 export type _Left = {
     left?: number;
 };
+
+// @public (undocumented)
+export class MultiColumnVirtualScrollStrategy implements VirtualScrollStrategy {
+    constructor(itemDimension: ItemDimension, minBufferPx: number, maxBufferPx: number);
+    attach(viewport: CdkVirtualScrollViewport): void;
+    detach(): void;
+    onContentRendered(): void;
+    onContentScrolled(): void;
+    onDataLengthChanged(): void;
+    onRenderedOffsetChanged(): void;
+    scrolledIndexChange: Observable<number>;
+    scrollToIndex(dataIndex: number, behavior: ScrollBehavior): void;
+    updateItemAndBufferSize(itemSize: ItemDimension, minBufferPx: number, maxBufferPx: number): void;
+}
+
+// @public
+export function _multiColumnVirtualScrollStrategyFactory(multiColumnsDir: CdkMultiColumnsVirtualScroll): MultiColumnVirtualScrollStrategy;
 
 // @public (undocumented)
 export type _Right = {
@@ -278,7 +326,7 @@ export class ScrollingModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<ScrollingModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<ScrollingModule, never, [typeof i2.BidiModule, typeof CdkScrollableModule, typeof i3.CdkVirtualScrollViewport, typeof i4.CdkFixedSizeVirtualScroll, typeof i5.CdkVirtualForOf, typeof i6.CdkVirtualScrollableWindow, typeof i7.CdkVirtualScrollableElement], [typeof i2.BidiModule, typeof CdkScrollableModule, typeof i4.CdkFixedSizeVirtualScroll, typeof i5.CdkVirtualForOf, typeof i3.CdkVirtualScrollViewport, typeof i6.CdkVirtualScrollableWindow, typeof i7.CdkVirtualScrollableElement]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<ScrollingModule, never, [typeof i2.BidiModule, typeof CdkScrollableModule, typeof i3.CdkVirtualScrollViewport, typeof i4.CdkFixedSizeVirtualScroll, typeof i5.CdkMultiColumnsVirtualScroll, typeof i6.CdkVirtualForOf, typeof i7.CdkVirtualScrollableWindow, typeof i8.CdkVirtualScrollableElement], [typeof i2.BidiModule, typeof CdkScrollableModule, typeof i4.CdkFixedSizeVirtualScroll, typeof i5.CdkMultiColumnsVirtualScroll, typeof i6.CdkVirtualForOf, typeof i3.CdkVirtualScrollViewport, typeof i7.CdkVirtualScrollableWindow, typeof i8.CdkVirtualScrollableElement]>;
 }
 
 // @public (undocumented)

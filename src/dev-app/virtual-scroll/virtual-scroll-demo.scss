@@ -64,3 +64,34 @@ cdk-virtual-scroll-window-scrolling-example {
   display: block;
   width: 500px;
 }
+
+.demo-multicolumns-viewport {
+  height: 500px;
+  width: 500px;
+  border: 1px solid black;
+
+  .cdk-virtual-scroll-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    .demo-multicolumns-item {
+      width: 160px;
+      height: 50px;
+      border: 1px solid lightgray;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .demo-multicolumns-item-pct {
+      width: 30%;
+      height: 50px;
+      border: 1px solid lightgray;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
