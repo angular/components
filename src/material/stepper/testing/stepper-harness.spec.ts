@@ -92,19 +92,11 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      true,
-      false,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([true, false, false]);
 
     await stepper.selectStep({label: 'Three'});
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      false,
-      false,
-      true,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([false, false, true]);
   });
 
   it('should be able to get the text-based label of a step', async () => {
@@ -167,11 +159,7 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      true,
-      false,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([true, false, false]);
   });
 
   it('should be able to select a step in a vertical stepper', async () => {
@@ -199,19 +187,11 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      true,
-      false,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([true, false, false]);
 
     await steps[2].select();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      false,
-      false,
-      true,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([false, false, true]);
   });
 
   it('should get whether a step is optional', async () => {
@@ -265,19 +245,11 @@ describe('MatStepperHarness', () => {
 
     await secondStep.select();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      false,
-      true,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([false, true, false]);
 
     await nextButton.click();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      false,
-      false,
-      true,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([false, false, true]);
   });
 
   it('should go backward when pressing the previous button of a vertical stepper', async () => {
@@ -313,19 +285,11 @@ describe('MatStepperHarness', () => {
 
     await secondStep.select();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      false,
-      true,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([false, true, false]);
 
     await previousButton.click();
 
-    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
-      true,
-      false,
-      false,
-    ]);
+    expect(await parallel(() => steps.map(step => step.isPressed()))).toEqual([true, false, false]);
   });
 
   it('should get whether a step has errors', async () => {
