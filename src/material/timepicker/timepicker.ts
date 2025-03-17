@@ -232,7 +232,13 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     const overlayRef = this._getOverlayRef();
     overlayRef.updateSize({width: input.getOverlayOrigin().nativeElement.offsetWidth});
     this._portal ??= new TemplatePortal(this._panelTemplate(), this._viewContainerRef);
-    overlayRef.attach(this._portal);
+
+    // We need to check this in case `isOpen` was flipped, but change detection hasn't
+    // had a chance to run yet. See https://github.com/angular/components/issues/30637
+    if (!overlayRef.hasAttached()) {
+      overlayRef.attach(this._portal);
+    }
+
     this._onOpenRender?.destroy();
     this._onOpenRender = afterNextRender(
       () => {
