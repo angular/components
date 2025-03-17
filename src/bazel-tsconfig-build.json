@@ -7,6 +7,7 @@
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "strictNullChecks": true,

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@angular/build-tooling/bazel/integration/index.bzl b/node_modules/@angular/build-tooling/bazel/integration/index.bzl
+index 6f99d65..8d966cf 100755
+--- a/node_modules/@angular/build-tooling/bazel/integration/index.bzl
++++ b/node_modules/@angular/build-tooling/bazel/integration/index.bzl
+@@ -262,7 +262,7 @@ def integration_test(
+     nodejs_test(
+         name = name,
+         data = ["@npm//@angular/build-tooling/bazel/integration/test_runner", ":" + config_target],
+-        templated_args = ["--nobazel_run_linker", "$(rootpath :%s)" % config_target],
++        templated_args = ["--nobazel_run_linker", "--nobazel_node_patches", "$(rootpath :%s)" % config_target],
+         entry_point = "@npm//@angular/build-tooling/bazel/integration/test_runner:main.ts",
+         tags = tags,
+         **kwargs
