@@ -140,7 +140,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     return this._min;
   }
   set min(v: number) {
-    const min = isNaN(v) ? this._min : v;
+    const min = v === undefined || v === null || isNaN(v) ? this._min : v;
     if (this._min !== min) {
       this._updateMin(min);
     }
@@ -216,7 +216,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     return this._max;
   }
   set max(v: number) {
-    const max = isNaN(v) ? this._max : v;
+    const max = v === undefined || v === null || isNaN(v) ? this._max : v;
     if (this._max !== max) {
       this._updateMax(max);
     }
