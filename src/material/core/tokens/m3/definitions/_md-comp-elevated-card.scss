@@ -13,9 +13,6 @@
 
 @use './md-sys-state';
 
-// Indicates whether alternative tokens should be used
-$_alternate-tokens: false;
-
 $_default: (
   'md-sys-color': md-sys-color.values-light(),
   'md-sys-elevation': md-sys-elevation.values(),
@@ -53,12 +50,6 @@ $_default: (
     'pressed-state-layer-opacity':
       map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity')
   );
-
-  @if ($_alternate-tokens) {
-    $values: map.merge($values, (
-      'container-color': map.get($deps, 'md-sys-color', 'surface'),
-    ));
-  }
 
   @return $values;
 }
