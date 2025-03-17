@@ -61,7 +61,7 @@
     "./src/universal-app/prerender.ts",
 
     // Exclude the API goldens in order to not slow-down IDE's using this tsconfig file
-    "tools/public_api_guard/**/*.d.ts",
+    "goldens/**/*",
 
     // IDEs should not type-check the different node_modules directories of the different packages.
     // This would cause the IDEs to be slower and also linters would check the node_modules.

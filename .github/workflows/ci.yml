@@ -64,7 +64,7 @@ jobs:
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
-        run: yarn bazel test tools/public_api_guard/...
+        run: yarn bazel test goldens/...
       - uses: ./.github/actions/slack
         if: failure()
         with:

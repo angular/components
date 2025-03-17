@@ -70,8 +70,8 @@ importers:
         specifier: ^20.0.0-next.0
         version: 20.0.0-next.0(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
       '@angular/build-tooling':
-        specifier: https://github.com/angular/dev-infra-private-build-tooling-builds.git#220b0088d48ae5cff6a715ad8823812b913eba7c
-        version: github.com/angular/dev-infra-private-build-tooling-builds/220b0088d48ae5cff6a715ad8823812b913eba7c(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-junit-reporter@2.0.1)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0)
+        specifier: https://github.com/angular/dev-infra-private-build-tooling-builds.git#ec9df12469082e3cb087a9af55072dc2d833c73f
+        version: github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-junit-reporter@2.0.1)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0)
       '@angular/cli':
         specifier: ^20.0.0-next.0
         version: 20.0.0-next.0(@types/node@16.18.101)
@@ -16204,11 +16204,11 @@ packages:
       - '@types/node'
     dev: true
 
-  github.com/angular/dev-infra-private-build-tooling-builds/220b0088d48ae5cff6a715ad8823812b913eba7c(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-junit-reporter@2.0.1)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0):
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-build-tooling-builds/tar.gz/220b0088d48ae5cff6a715ad8823812b913eba7c}
-    id: github.com/angular/dev-infra-private-build-tooling-builds/220b0088d48ae5cff6a715ad8823812b913eba7c
+  github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-junit-reporter@2.0.1)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0):
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-build-tooling-builds/tar.gz/ec9df12469082e3cb087a9af55072dc2d833c73f}
+    id: github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f
     name: '@angular/build-tooling'
-    version: 0.0.0-85eab901e27abe60bb725fbfd8def94559cbe636
+    version: 0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32
     dependencies:
       '@angular/benchpress': 0.3.0(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/build': 20.0.0-next.0(@angular/compiler-cli@20.0.0-next.1)(@angular/compiler@20.0.0-next.1)(@angular/localize@20.0.0-next.1)(@angular/platform-server@20.0.0-next.1)(@types/node@20.17.24)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
