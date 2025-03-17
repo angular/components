@@ -66,7 +66,7 @@ packages locally and test them by either of the following ways:
 ### Approving public API changes
 If you're making changes to a public API, they need to be propagated to our public API golden files.
 To save the changes you can run `yarn approve-api <target>` and to review the changes, you can look
-at the file under `tools/public_api_guard/<target>.d.ts`.
+at the file under `goldens/<package>/<entry-point>.api.md`.
 
 
 ### Disabling Git hooks
@@ -86,7 +86,7 @@ export HUSKY=0
 
 A set of environment variables is made available within the dev-app. Such variables
 will be injected into the dev-app, so that e.g. API keys can be used for development
-without requiring secrets to be committed. 
+without requiring secrets to be committed.
 
 The following variables are currently used in the dev-app:
 

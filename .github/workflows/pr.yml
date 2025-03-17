@@ -65,7 +65,7 @@ jobs:
       - name: Install node modules
         run: yarn install --frozen-lockfile
       - name: Check API Goldens
-        run: yarn bazel test tools/public_api_guard/...
+        run: yarn bazel test goldens/...
 
   e2e:
     runs-on: ubuntu-latest
