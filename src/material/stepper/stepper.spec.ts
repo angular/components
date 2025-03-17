@@ -130,8 +130,8 @@ describe('MatStepper', () => {
       expect(stepperComponent.selected instanceof MatStep).toBe(true);
     });
 
-    it('should set the "group" role on a vertical stepper', () => {
-      const stepperWrapper = fixture.debugElement.query(By.css('.mat-vertical-stepper-wrapper'));
+    it('should set the "group" role on the stepper', () => {
+      const stepperWrapper = fixture.debugElement.query(By.css('.mat-stepper-wrapper'));
       expect(stepperWrapper).toBeTruthy();
 
       const stepperEl = stepperWrapper!.nativeElement;

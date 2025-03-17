@@ -30,11 +30,6 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
         HarnessPredicate.stringMatches(harness.getLabel(), label),
       )
       .addOption(
-        'selected',
-        options.selected,
-        async (harness, selected) => (await harness.isSelected()) === selected,
-      )
-      .addOption(
         'expanded',
         options.expanded,
         async (harness, expanded) => (await harness.isExpanded()) === expanded,
@@ -66,13 +61,7 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Whether the step is selected (Horizontal Stepper). */
-  async isSelected(): Promise<boolean> {
-    const host = await this.host();
-    return (await host.getAttribute('aria-selected')) === 'true';
-  }
-
-  /** Whether the step is expanded (Vertical Stepper). */
+  /** Whether the step is expanded. */
   async isExpanded(): Promise<boolean> {
     const host = await this.host();
     return (await host.getAttribute('aria-expanded')) === 'true';
@@ -81,7 +70,7 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
   /** Whether the step has been filled out. */
   async isCompleted(): Promise<boolean> {
     const state = await this._getIconState();
-    return state === 'done' || (state === 'edit' && !(await this.isSelected()));
+    return state === 'done' || (state === 'edit' && !(await this.isExpanded()));
   }
 
   /**
@@ -103,7 +92,7 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
   }
 
   /**
-   * Selects the given step by clicking on the label. The step may not be selected
+   * Selects the given step by clicking on the label. The step may not be selected/expanded
    * if the stepper doesn't allow it (e.g. if there are validation errors).
    */
   async select(): Promise<void> {
