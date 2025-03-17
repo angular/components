@@ -92,7 +92,7 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       true,
       false,
       false,
@@ -100,7 +100,7 @@ describe('MatStepperHarness', () => {
 
     await stepper.selectStep({label: 'Three'});
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       false,
       true,
@@ -167,7 +167,7 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       true,
       false,
       false,
@@ -199,7 +199,7 @@ describe('MatStepperHarness', () => {
     const stepper = await loader.getHarness(MatStepperHarness.with({selector: '#two-stepper'}));
     const steps = await stepper.getSteps();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       true,
       false,
       false,
@@ -207,7 +207,7 @@ describe('MatStepperHarness', () => {
 
     await steps[2].select();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       false,
       true,
@@ -265,7 +265,7 @@ describe('MatStepperHarness', () => {
 
     await secondStep.select();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       true,
       false,
@@ -273,7 +273,7 @@ describe('MatStepperHarness', () => {
 
     await nextButton.click();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       false,
       true,
@@ -313,7 +313,7 @@ describe('MatStepperHarness', () => {
 
     await secondStep.select();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       true,
       false,
@@ -321,7 +321,7 @@ describe('MatStepperHarness', () => {
 
     await previousButton.click();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       true,
       false,
       false,
