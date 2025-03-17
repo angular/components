@@ -47,7 +47,7 @@ describe('StepperHarnessExample', () => {
 
     await secondStep.select();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       true,
       false,
@@ -55,7 +55,7 @@ describe('StepperHarnessExample', () => {
 
     await nextButton.click();
 
-    expect(await parallel(() => steps.map(step => step.isSelected()))).toEqual([
+    expect(await parallel(() => steps.map(step => step.isExpanded()))).toEqual([
       false,
       false,
       true,
