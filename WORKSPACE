@@ -204,7 +204,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "devinfra",
-    commit = "47572aba6019f368057c00966ac7ce354b1d65bc",
+    commit = "cc73dde52b557f831cc3b6e48daf8c3b542a33df",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
@@ -218,7 +218,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "b1e419e5f6b5e897c07260780cfef2b0aac128fb",
+    commit = "e10bf488aca18c159399f4c1163324a40f45a5dc",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
