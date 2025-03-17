@@ -10,8 +10,8 @@
 
 @switch (orientation) {
   @case ('horizontal') {
-    <div class="mat-horizontal-stepper-wrapper">
-      <div class="mat-horizontal-stepper-header-container" role="tablist">
+    <div class="mat-stepper-wrapper" role="group">
+      <div class="mat-horizontal-stepper-header-container">
         @for (step of steps; track step) {
           <ng-container
             [ngTemplateOutlet]="stepTemplate"
@@ -27,7 +27,7 @@
           <div
             #animatedContainer
             class="mat-horizontal-stepper-content"
-            role="tabpanel"
+            role="region"
             [id]="_getStepContentId($index)"
             [attr.aria-labelledby]="_getStepLabelId($index)"
             [class]="'mat-horizontal-stepper-content-' + _getAnimationDirection($index)"
@@ -40,7 +40,7 @@
   }
 
   @case ('vertical') {
-    <div class="mat-vertical-stepper-wrapper" role="group">
+    <div class="mat-stepper-wrapper" role="group">
       @for (step of steps; track step) {
         <div class="mat-step">
           <ng-container
@@ -72,16 +72,13 @@
   <mat-step-header
     [class.mat-horizontal-stepper-header]="orientation === 'horizontal'"
     [class.mat-vertical-stepper-header]="orientation === 'vertical'"
-    [attr.role]="orientation === 'horizontal'? 'tab' : 'button'"
+    role="button"
     (click)="step.select()"
     (keydown)="_onKeydown($event)"
     [tabIndex]="_getFocusIndex() === i ? 0 : -1"
     [id]="_getStepLabelId(i)"
-    [attr.aria-posinset]="orientation === 'horizontal'? i + 1 : undefined"
-    [attr.aria-setsize]="orientation === 'horizontal'? steps.length : undefined"
     [attr.aria-controls]="_getStepContentId(i)"
-    [attr.aria-selected]="orientation === 'horizontal' ? selectedIndex == i : undefined"
-    [attr.aria-expanded]="orientation === 'vertical' ? selectedIndex == i : undefined"
+    [attr.aria-expanded]="selectedIndex == i"
     [attr.aria-label]="step.ariaLabel || null"
     [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
     [attr.aria-disabled]="_stepIsNavigable(i, step) ? null : true"
