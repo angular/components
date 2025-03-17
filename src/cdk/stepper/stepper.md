@@ -59,10 +59,10 @@ resetting it will call `reset` on the underlying form control which clears the v
 
 ### Accessibility
 Apart from the built-in keyboard support, the stepper doesn't apply any treatment. When implementing
-your own component, it is recommended that the stepper is treated as a tabbed view for accessibility
-purposes by giving it a `role="tablist"`. The header of step that can be clicked to select the step
-should be given `role="tab"`, and the content that can be expanded upon selection should be given
-`role="tabpanel"`. Furthermore, the step header should have an `aria-selected` attribute that
-reflects its selected state.
+your own component, it is recommended that the stepper is treated as a grouped view for accessibility
+purposes by giving it a `role="group"`. The header of step that can be clicked to select the step
+should be given `role="button"`, and the content that can be expanded upon selection should be given
+`role="region"`. Furthermore, the step header should have an `aria-expanded` attribute that
+reflects its expanded state.
 
 You can refer to the [Angular Material stepper](https://github.com/angular/components/tree/main/src/material/stepper) as an example of an accessible implementation.
