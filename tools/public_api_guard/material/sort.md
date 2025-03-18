@@ -14,6 +14,7 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
@@ -50,14 +51,18 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
     set direction(direction: SortDirection);
     disableClear: boolean;
     disabled: boolean;
+    getCurrentSortDirection(id: string): SortDirection;
     getNextSortDirection(sortable: MatSortable): SortDirection;
     initialized: Observable<void>;
+    isActive(id: string): boolean;
+    get matSortMultiple(): boolean;
+    set matSortMultiple(value: any);
     // (undocumented)
     static ngAcceptInputType_disableClear: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    ngOnChanges(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -66,10 +71,11 @@ export class MatSort implements OnChanges, OnDestroy, OnInit {
     sort(sortable: MatSortable): void;
     sortables: Map<string, MatSortable>;
     readonly sortChange: EventEmitter<Sort>;
+    sortState: Map<string, Sort>;
     start: SortDirection;
     readonly _stateChanges: Subject<void>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSort, "[matSort]", ["matSort"], { "active": { "alias": "matSortActive"; "required": false; }; "start": { "alias": "matSortStart"; "required": false; }; "direction": { "alias": "matSortDirection"; "required": false; }; "disableClear": { "alias": "matSortDisableClear"; "required": false; }; "disabled": { "alias": "matSortDisabled"; "required": false; }; }, { "sortChange": "matSortChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSort, "[matSort]", ["matSort"], { "active": { "alias": "matSortActive"; "required": false; }; "start": { "alias": "matSortStart"; "required": false; }; "direction": { "alias": "matSortDirection"; "required": false; }; "matSortMultiple": { "alias": "matSortMultiple"; "required": false; }; "disableClear": { "alias": "matSortDisableClear"; "required": false; }; "disabled": { "alias": "matSortDisabled"; "required": false; }; }, { "sortChange": "matSortChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSort, [{ optional: true; }]>;
 }

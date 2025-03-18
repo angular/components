@@ -223,10 +223,39 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
+    const currentSortDirection = this._sort.getCurrentSortDirection(this.id);
+
     return (
-      this._sort.active == this.id &&
-      (this._sort.direction === 'asc' || this._sort.direction === 'desc')
+      this._sort.isActive(this.id) &&
+      (currentSortDirection === 'asc' || currentSortDirection === 'desc')
     );
+  }
+
+  /** Returns the animation state for the arrow direction (indicator and pointers). */
+  _getArrowDirectionState() {
+    return `${this._isSorted() ? 'active-' : ''}${this._arrowDirection}`;
+  }
+
+  /** Returns the arrow position state (opacity, translation). */
+  _getArrowViewState() {
+    const fromState = this._viewState.fromState;
+    return (fromState ? `${fromState}-to-` : '') + this._viewState.toState;
+  }
+
+  /**
+   * Updates the direction the arrow should be pointing. If it is not sorted, the arrow should be
+   * facing the start direction. Otherwise if it is sorted, the arrow should point in the currently
+   * active sorted direction. The reason this is updated through a function is because the direction
+   * should only be changed at specific times - when deactivated but the hint is displayed and when
+   * the sort is active and the direction changes. Otherwise the arrow's direction should linger
+   * in cases such as the sort becoming deactivated but we want to animate the arrow away while
+   * preserving its direction, even though the next sort direction is actually different and should
+   * only be changed once the arrow displays again (hint or activation).
+   */
+  _updateArrowDirection() {
+    this._arrowDirection = this._isSorted()
+      ? this._sort.getCurrentSortDirection(this.id)
+      : this.start || this._sort.start;
   }
 
   _isDisabled() {
@@ -244,7 +273,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
       return 'none';
     }
 
-    return this._sort.direction == 'asc' ? 'ascending' : 'descending';
+    return this._sort.getCurrentSortDirection(this.id) == 'asc' ? 'ascending' : 'descending';
   }
 
   /** Whether the arrow inside the sort header should be rendered. */
