@@ -1,22 +1,21 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "sass_lib",
     srcs = [
         "compiler-main.ts",
         "local-sass-importer.ts",
     ],
-    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
-    devmode_module = "commonjs",
+    tsconfig = "//tools:tsconfig",
     deps = [
-        "@npm//@bazel/worker",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//sass",
-        "@npm//yargs",
+        "//:node_modules/@bazel/worker",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/sass",
+        "//:node_modules/yargs",
     ],
 )
 
