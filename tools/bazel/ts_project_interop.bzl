@@ -2,6 +2,7 @@ load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("@aspect_rules_ts//ts:defs.bzl", _ts_project = "ts_project")
 load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "JSModuleInfo", "LinkablePackageInfo")
 load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
+load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo")
 
 def _ts_deps_interop_impl(ctx):
     types = []
@@ -79,6 +80,18 @@ def _ts_project_module_impl(ctx):
                 package_path = "",
                 path = "%s/%s/%s" % (ctx.bin_dir.path, ctx.label.workspace_root, ctx.label.package),
                 files = info.sources,
+            ),
+        )
+        providers.append(
+            LinkerPackageMappingInfo(
+                mappings = depset([
+                    struct(
+                        package_name = ctx.attr.module_name,
+                        package_path = "",
+                        link_path = ctx.label.package,
+                    ),
+                ]),
+                node_modules_roots = depset([]),
             ),
         )
 
