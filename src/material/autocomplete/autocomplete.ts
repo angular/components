@@ -70,6 +70,12 @@ export interface MatAutocompleteDefaultOptions {
    */
   requireSelection?: boolean;
 
+  /** Class to be applied to the autocomplete's backdrop. */
+  backdropClass?: string;
+
+  /** Whether the autocomplete has a backdrop. */
+  hasBackdrop?: boolean;
+
   /** Class or list of classes to be applied to the autocomplete's overlay panel. */
   overlayPanelClass?: string | string[];
 
@@ -97,6 +103,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
     autoSelectActiveOption: false,
     hideSingleSelectionIndicator: false,
     requireSelection: false,
+    hasBackdrop: false,
   };
 }
 
