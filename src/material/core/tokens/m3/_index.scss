@@ -43,6 +43,7 @@
 @use './mat/toolbar' as tokens-mat-toolbar;
 @use './mat/tree' as tokens-mat-tree;
 @use './mat/timepicker' as tokens-mat-timepicker;
+@use './mat/tonal-button' as tokens-mat-tonal-button;
 @use './mdc/checkbox' as tokens-mdc-checkbox;
 @use './mdc/text-button' as tokens-mdc-text-button;
 @use './mdc/protected-button' as tokens-mdc-protected-button;
@@ -85,6 +86,7 @@ $_module-names: (
   tokens-mat-fab,
   tokens-mat-fab-small,
   tokens-mat-filled-button,
+  tokens-mat-tonal-button,
   tokens-mat-form-field,
   tokens-mat-grid-list,
   tokens-mat-icon-button,

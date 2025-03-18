@@ -12,7 +12,7 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export type ButtonVariant = 'basic' | 'icon' | 'fab' | 'mini-fab';
 
 /** Possible button appearances. */
-export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
 /** A set of criteria that can be used to filter a list of button harness instances. */
 export interface ButtonHarnessFilters extends BaseHarnessFilters {

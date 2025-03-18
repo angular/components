@@ -6,7 +6,7 @@
     <a matButton href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
 <section>
   <div class="example-label">Elevated</div>
   <div class="example-button-row">
@@ -15,7 +15,7 @@
     <a matButton="elevated" href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
 <section>
   <div class="example-label">Outlined</div>
   <div class="example-button-row">
@@ -24,16 +24,25 @@
     <a matButton="outlined" href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
 <section>
   <div class="example-label">Filled</div>
   <div class="example-button-row">
-    <button matButton="filled" >Basic</button>
-    <button matButton="filled"  disabled>Disabled</button>
+    <button matButton="filled">Basic</button>
+    <button matButton="filled" disabled>Disabled</button>
     <a matButton="filled" href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
+<section>
+  <div class="example-label">Tonal</div>
+  <div class="example-button-row">
+    <button matButton="tonal" >Basic</button>
+    <button matButton="tonal"  disabled>Disabled</button>
+    <a matButton="tonal" href="https://www.google.com/" target="_blank">Link</a>
+  </div>
+</section>
+<mat-divider/>
 <section>
   <div class="example-label">Icon</div>
   <div class="example-button-row">
@@ -47,64 +56,51 @@
     </div>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
 <section>
   <div class="example-label">Floating Action Button (FAB)</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <div class="example-button-container">
-        <button matFab aria-label="Example icon button with a delete icon">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-      <div class="example-button-container">
-        <button matFab disabled aria-label="Example icon button with a heart icon">
-          <mat-icon>favorite</mat-icon>
-        </button>
-      </div>
+      <button matFab aria-label="Example icon button with a delete icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button matFab disabled aria-label="Example icon button with a heart icon">
+        <mat-icon>favorite</mat-icon>
+      </button>
     </div>
   </div>
 </section>
-<mat-divider></mat-divider>
+<mat-divider/>
 <section>
   <div class="example-label">Mini FAB</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <div class="example-button-container">
-        <button matMiniFab aria-label="Example icon button with a menu icon">
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
-      <div class="example-button-container">
-        <button matMiniFab disabled aria-label="Example icon button with a home icon">
-          <mat-icon>home</mat-icon>
-        </button>
-      </div>
+      <button matMiniFab aria-label="Example icon button with a menu icon">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button matMiniFab disabled aria-label="Example icon button with a home icon">
+        <mat-icon>home</mat-icon>
+      </button>
     </div>
   </div>
 </section>
+<mat-divider/>
 <section>
   <div class="example-label">Extended FAB</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <div class="example-button-container">
-        <button matFab extended>
-          <mat-icon>favorite</mat-icon>
-          Basic
-        </button>
-      </div>
-      <div class="example-button-container">
-        <button matFab extended disabled>
-          <mat-icon>favorite</mat-icon>
-          Disabled
-        </button>
-      </div>
-      <div class="example-button-container">
-        <a matFab extended routerLink=".">
-          <mat-icon>favorite</mat-icon>
-          Link
-        </a>
-      </div>
+      <button matFab extended>
+        <mat-icon>favorite</mat-icon>
+        Basic
+      </button>
+      <button matFab extended disabled>
+        <mat-icon>favorite</mat-icon>
+        Disabled
+      </button>
+      <a matFab extended routerLink=".">
+        <mat-icon>favorite</mat-icon>
+        Link
+      </a>
     </div>
   </div>
 </section>

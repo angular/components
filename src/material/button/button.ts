@@ -18,6 +18,7 @@ const APPEARANCE_CLASSES: Map<MatButtonAppearance, readonly string[]> = new Map(
   ['filled', ['mdc-button--unelevated', 'mat-mdc-unelevated-button']],
   ['elevated', ['mdc-button--raised', 'mat-mdc-raised-button']],
   ['outlined', ['mdc-button--outlined', 'mat-mdc-outlined-button']],
+  ['tonal', ['mat-tonal-button']],
 ]);
 
 /**

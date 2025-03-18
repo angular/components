@@ -173,8 +173,7 @@ $_system-fallbacks: null;
     @if(meta.type-of($color) == 'color') {
       $result: map.remove($result, $opacity-key);
       $result: map.set($result, $color-key, rgba($color, $opacity));
-    }
-    @else if($color != null) {
+    } @else if($color != null) {
       $result: map.remove($result, $opacity-key);
       $combined-color: #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
       $result: map.set($result, $color-key, $combined-color);
