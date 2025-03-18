@@ -1,18 +1,25 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files(["bazel-karma-local-config.js"])
 
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = ["//src:build-tsconfig"],
+)
+
 # Common set-up for all Angular Material and CDK tests.
-ts_library(
+ts_project(
     name = "angular_test_init",
     testonly = True,
     # This file *must* end with "spec" in order for "karma_web_test_suite" to load it.
     srcs = ["angular-test-init-spec.ts"],
+    tsconfig = ":tsconfig",
     deps = [
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser-dynamic",
-        "@npm//@types/jasmine",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser-dynamic",
     ],
 )

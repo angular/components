@@ -4,17 +4,18 @@ load(
     "MATERIAL_EXPERIMENTAL_TARGETS",
     "MATERIAL_EXPERIMENTAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
+load("//tools:defaults.bzl", "ng_package", "sass_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "material-experimental",
     srcs = glob(
         ["*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = ["@npm//@angular/core"],
+    deps = ["//:node_modules/@angular/core"],
 )
 
 sass_library(
