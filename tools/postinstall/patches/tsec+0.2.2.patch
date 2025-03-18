@@ -1,0 +1,22 @@
+diff --git a/node_modules/tsec/index.bzl b/node_modules/tsec/index.bzl
+index d2c2df7..f5bde10 100644
+--- a/node_modules/tsec/index.bzl
++++ b/node_modules/tsec/index.bzl
+@@ -16,7 +16,7 @@ def _capture_tsec_attrs_aspect_impl(target, ctx):
+     node_modules_root = None
+     if module_name:
+         paths[module_name] = target.label.package
+-    for d in ctx.rule.attr.deps:
++    for d in getattr(ctx.rule.attr, "deps", []):
+         if TsecTargetInfo in d:
+             paths.update(d[TsecTargetInfo].paths)
+         if DeclarationInfo in d:
+@@ -25,7 +25,7 @@ def _capture_tsec_attrs_aspect_impl(target, ctx):
+             node_modules_root = "/".join(["external", d[NpmPackageInfo].workspace, "node_modules"])
+     return [
+         TsecTargetInfo(
+-            srcs = ctx.rule.attr.srcs,
++            srcs = getattr(ctx.rule.attr, "srcs", []),
+             deps = depset(transitive = deps),
+             module_name = module_name,
+             paths = paths,
