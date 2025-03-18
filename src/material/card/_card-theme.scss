@@ -5,9 +5,9 @@
 @use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/card' as tokens-mat-card;
-@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
-@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use 'tokens/m2/card' as card-tokens;
+@use 'tokens/m2/elevated-card' as elevated-card-tokens;
+@use 'tokens/m2/outlined-card' as outlined-card-tokens;
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -15,16 +15,16 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-unthemable-tokens()
+        elevated-card-tokens.$prefix,
+        elevated-card-tokens.get-unthemable-tokens()
       );
       @include token-utils.create-token-values(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-unthemable-tokens()
+        outlined-card-tokens.$prefix,
+        outlined-card-tokens.get-unthemable-tokens()
       );
       @include token-utils.create-token-values(
-        tokens-mat-card.$prefix,
-        tokens-mat-card.get-unthemable-tokens()
+        card-tokens.$prefix,
+        card-tokens.get-unthemable-tokens()
       );
     }
   }
@@ -36,16 +36,16 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-color-tokens($theme)
+        elevated-card-tokens.$prefix,
+        elevated-card-tokens.get-color-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-color-tokens($theme)
+        outlined-card-tokens.$prefix,
+        outlined-card-tokens.get-color-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mat-card.$prefix,
-        tokens-mat-card.get-color-tokens($theme)
+        card-tokens.$prefix,
+        card-tokens.get-color-tokens($theme)
       );
     }
   }
@@ -57,16 +57,16 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-typography-tokens($theme)
+        elevated-card-tokens.$prefix,
+        elevated-card-tokens.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-typography-tokens($theme)
+        outlined-card-tokens.$prefix,
+        outlined-card-tokens.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mat-card.$prefix,
-        tokens-mat-card.get-typography-tokens($theme)
+        card-tokens.$prefix,
+        card-tokens.get-typography-tokens($theme)
       );
     }
   }
@@ -78,16 +78,16 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-density-tokens($theme)
+        elevated-card-tokens.$prefix,
+        elevated-card-tokens.get-density-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-density-tokens($theme)
+        outlined-card-tokens.$prefix,
+        outlined-card-tokens.get-density-tokens($theme)
       );
       @include token-utils.create-token-values(
-        tokens-mat-card.$prefix,
-        tokens-mat-card.get-density-tokens($theme)
+        card-tokens.$prefix,
+        card-tokens.get-density-tokens($theme)
       );
     }
   }
@@ -97,17 +97,17 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-card.$prefix,
-      tokens: tokens-mat-card.get-token-slots(),
+      namespace: card-tokens.$prefix,
+      tokens: card-tokens.get-token-slots(),
     ),
     (
-      namespace: tokens-mdc-elevated-card.$prefix,
-      tokens: tokens-mdc-elevated-card.get-token-slots(),
+      namespace: elevated-card-tokens.$prefix,
+      tokens: elevated-card-tokens.get-token-slots(),
       prefix: 'elevated-',
     ),
     (
-      namespace: tokens-mdc-outlined-card.$prefix,
-      tokens: tokens-mdc-outlined-card.get-token-slots(),
+      namespace: outlined-card-tokens.$prefix,
+      tokens: outlined-card-tokens.get-token-slots(),
       prefix: 'outlined-',
     ),
   );
@@ -142,16 +142,16 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mdc-elevated-card.$prefix,
-      map.get($tokens, tokens-mdc-elevated-card.$prefix)
+      elevated-card-tokens.$prefix,
+      map.get($tokens, elevated-card-tokens.$prefix)
     );
     @include token-utils.create-token-values(
-      tokens-mdc-outlined-card.$prefix,
-      map.get($tokens, tokens-mdc-outlined-card.$prefix)
+      outlined-card-tokens.$prefix,
+      map.get($tokens, outlined-card-tokens.$prefix)
     );
     @include token-utils.create-token-values(
-      tokens-mat-card.$prefix,
-      map.get($tokens, tokens-mat-card.$prefix)
+      card-tokens.$prefix,
+      map.get($tokens, card-tokens.$prefix)
     );
   }
 }
