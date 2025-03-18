@@ -568,13 +568,13 @@ describe('MatPaginator', () => {
 
     expect(select.disabled).toBe(false);
     expect(getPreviousButton(fixture).hasAttribute('disabled')).toBe(false);
-    expect(getPreviousButton(fixture).hasAttribute('tabindex')).toBe(false);
+    expect(getPreviousButton(fixture).getAttribute('tabindex')).toBe('0');
     expect(getNextButton(fixture).hasAttribute('disabled')).toBe(false);
-    expect(getNextButton(fixture).hasAttribute('tabindex')).toBe(false);
+    expect(getNextButton(fixture).getAttribute('tabindex')).toBe('0');
     expect(getFirstButton(fixture).hasAttribute('disabled')).toBe(false);
-    expect(getFirstButton(fixture).hasAttribute('tabindex')).toBe(false);
+    expect(getFirstButton(fixture).getAttribute('tabindex')).toBe('0');
     expect(getLastButton(fixture).hasAttribute('disabled')).toBe(false);
-    expect(getLastButton(fixture).hasAttribute('tabindex')).toBe(false);
+    expect(getLastButton(fixture).getAttribute('tabindex')).toBe('0');
 
     fixture.componentInstance.disabled = true;
     fixture.changeDetectorRef.markForCheck();
