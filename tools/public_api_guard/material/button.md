@@ -44,7 +44,7 @@ export class MatButton extends MatButtonBase {
 }
 
 // @public
-export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
 // @public
 export interface MatButtonConfig {

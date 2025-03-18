@@ -1,0 +1,101 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../../../style/sass-utils';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, tonal-button);
+
+/// Generates custom tokens for the mat-flat-button.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-flat-button
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $mdc-tokens: token-definition.get-mdc-tokens('filled-tonal-button', $systems, $exclude-hardcoded);
+
+  $tokens: map.merge($mdc-tokens, (
+    horizontal-padding: token-definition.hardcode(24px, $exclude-hardcoded),
+    icon-spacing: token-definition.hardcode(8px, $exclude-hardcoded),
+    icon-offset: token-definition.hardcode(-8px, $exclude-hardcoded),
+    state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
+    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+    ripple-color: sass-utils.safe-color-change(
+      map.get($systems, md-sys-color, on-secondary-container),
+      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    ),
+    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
+  ));
+
+  $variant-tokens: (
+    // Color variants:
+    primary: (),
+    secondary: (),
+    tertiary: (
+      container-color: map.get($systems, md-sys-color, tertiary-container),
+      focus-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      hover-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      hover-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      pressed-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      pressed-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-tertiary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    ),
+    error: (
+      container-color: map.get($systems, md-sys-color, error-container),
+      focus-label-text-color: map.get($systems, md-sys-color, on-error-container),
+      focus-state-layer-color: map.get($systems, md-sys-color, on-error-container),
+      hover-label-text-color: map.get($systems, md-sys-color, on-error-container),
+      hover-state-layer-color: map.get($systems, md-sys-color, on-error-container),
+      label-text-color: map.get($systems, md-sys-color, on-error-container),
+      pressed-label-text-color: map.get($systems, md-sys-color, on-error-container),
+      pressed-state-layer-color: map.get($systems, md-sys-color, on-error-container),
+      with-icon-focus-icon-color: map.get($systems, md-sys-color, on-error-container),
+      with-icon-hover-icon-color: map.get($systems, md-sys-color, on-error-container),
+      with-icon-icon-color: map.get($systems, md-sys-color, on-error-container),
+      with-icon-pressed-icon-color: map.get($systems, md-sys-color, on-error-container),
+      state-layer-color: map.get($systems, md-sys-color, on-error-container),
+      ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-error-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+      ),
+    )
+  );
+
+  @return token-definition.namespace-tokens($prefix, (
+    _fix-tokens($tokens),
+    token-definition.map-values($variant-tokens, meta.get-function(_fix-tokens))
+  ), $token-slots);
+}
+
+
+/// Fixes inconsistent values in the tonal button tokens so that they can produce valid styles.
+/// @param {Map} $initial-tokens Map of tonal button tokens currently being generated.
+/// @return {Map} The given tokens, with the invalid values replaced with valid ones.
+@function _fix-tokens($initial-tokens) {
+  // Need to get the hardcoded values, because they include opacities that are used for the disabled
+  // state.
+  $hardcoded-tokens: token-definition.get-mdc-tokens('filled-tonal-button', (), false);
+
+  @return token-definition.combine-color-tokens($initial-tokens, $hardcoded-tokens, (
+    (
+      color: disabled-label-text-color,
+      opacity: disabled-label-text-opacity,
+    ),
+    (
+      color: disabled-container-color,
+      opacity: disabled-container-opacity,
+    )
+  ));
+}

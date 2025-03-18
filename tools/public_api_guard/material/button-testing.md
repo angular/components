@@ -10,7 +10,7 @@ import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 
 // @public
-export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
 // @public
 export interface ButtonHarnessFilters extends BaseHarnessFilters {

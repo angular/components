@@ -22,7 +22,7 @@ describe('MatButtonHarness', () => {
 
   it('should load all button harnesses', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
-    expect(buttons.length).toBe(15);
+    expect(buttons.length).toBe(16);
   });
 
   it('should load button with exact text', async () => {
@@ -41,7 +41,7 @@ describe('MatButtonHarness', () => {
   it('should filter by whether a button is disabled', async () => {
     const enabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: false}));
     const disabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: true}));
-    expect(enabledButtons.length).toBe(13);
+    expect(enabledButtons.length).toBe(14);
     expect(disabledButtons.length).toBe(2);
   });
 
@@ -118,6 +118,7 @@ describe('MatButtonHarness', () => {
       'basic',
       'basic',
       'basic',
+      'basic',
       'icon',
       'icon',
       'fab',
@@ -141,6 +142,7 @@ describe('MatButtonHarness', () => {
       'filled',
       'elevated',
       'outlined',
+      'tonal',
       null,
       null,
       null,
@@ -178,6 +180,7 @@ describe('MatButtonHarness', () => {
     </button>
     <button id="raised" type="button" matButton="elevated">Elevated button</button>
     <button id="stroked" type="button" matButton="outlined">Outlined button</button>
+    <button id="tonal" type="button" matButton="tonal">Tonal button</button>
     <button id="home-icon" type="button" matIconButton>
       <mat-icon>home</mat-icon>
     </button>

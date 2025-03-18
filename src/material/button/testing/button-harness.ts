@@ -140,6 +140,10 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       return 'text';
     }
 
+    if (await host.hasClass('mat-tonal-button')) {
+      return 'tonal';
+    }
+
     return null;
   }
 }

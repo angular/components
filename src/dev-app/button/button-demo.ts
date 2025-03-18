@@ -49,5 +49,5 @@ export class ButtonDemo {
   toggleDisable = false;
   tooltipText = 'This is a button tooltip!';
   disabledInteractive = false;
-  appearances: MatButtonAppearance[] = ['text', 'elevated', 'outlined', 'filled'];
+  appearances: MatButtonAppearance[] = ['text', 'elevated', 'outlined', 'filled', 'tonal'];
 }

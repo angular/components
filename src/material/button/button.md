@@ -20,13 +20,13 @@ There are several button variants, each applied as an attribute:
 Additionally, the `matButton` has several appearances that can be set using the `matButton`
 attribute, for example `matButton="outlined"`:
 
-
 | Appearance   | Description                                                                      |
 |--------------|----------------------------------------------------------------------------------|
-| `text`       | Default appearance. Does not have a background until the user interacts with it. |
-| `elevated`   | Has a background color, elevation and rounded corners.                           |
-| `filled`     | Has a flat appearance with rounded corners and no elevation.                     |
-| `outlined`   | Has an outline, rounded corners and a transparent background.                    |
+| `text`       | Default appearance. Text buttons are used for the lowest priority actions, especially when presenting multiple options. |
+| `filled`     | High-emphasis buttons used for final or unblocking actions in a flow, such as saving or confirming. |
+| `tonal`      | Medium-emphasis buttons often used for final or unblocking actions in a flow, but with less visual emphasis than a filled button. |
+| `outlined`   | Medium-emphasis buttons often used for actions that need attention but aren't the primary action. |
+| `elevated`   | Medium-emphasis buttons often used when a button requires visual separation from a patterned background. |
 
 
 ### Extended FAB buttons

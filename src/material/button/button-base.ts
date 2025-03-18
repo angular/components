@@ -28,7 +28,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
  * Possible appearances for a `MatButton`.
  * See https://m3.material.io/components/buttons/overview
  */
-export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined';
+export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
