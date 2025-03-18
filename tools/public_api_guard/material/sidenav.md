@@ -13,7 +13,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';

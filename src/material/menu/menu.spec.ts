@@ -29,7 +29,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple} from '../core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';

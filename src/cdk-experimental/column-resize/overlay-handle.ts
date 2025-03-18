@@ -30,7 +30,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 
-import {_closest} from '@angular/cdk-experimental/popover-edit';
+import {_closest} from '../popover-edit';
 
 import {HEADER_CELL_SELECTOR} from './selectors';
 import {ColumnResizeNotifierSource} from './column-resize-notifier';

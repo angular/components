@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken, ChangeDetectorRef, WritableSignal} from '@angular/core';
-import {MatRipple, RippleGlobalOptions} from '@angular/material/core';
+import {MatRipple, RippleGlobalOptions} from '../core';
 
 /**
  * Thumb types: range slider has two thumbs (START, END) whereas single point

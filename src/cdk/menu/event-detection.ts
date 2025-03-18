@@ -7,7 +7,7 @@
  */
 
 import {ElementRef} from '@angular/core';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '../keycodes';
 
 /** Checks whether a keyboard event will trigger a native `click` event on an element. */
 export function eventDispatchesNativeClick(

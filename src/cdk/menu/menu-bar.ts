@@ -15,7 +15,7 @@ import {
   RIGHT_ARROW,
   TAB,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '../keycodes';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';

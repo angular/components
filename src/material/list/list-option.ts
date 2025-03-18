@@ -25,7 +25,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';

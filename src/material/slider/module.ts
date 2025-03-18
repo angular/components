@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '../core';
 import {MatSlider} from './slider';
 import {MatSliderVisualThumb} from './slider-thumb';
 import {MatSliderThumb, MatSliderRangeThumb} from './slider-input';

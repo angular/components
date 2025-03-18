@@ -5,7 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 
 // @public

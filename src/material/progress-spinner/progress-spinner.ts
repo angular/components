@@ -18,7 +18,7 @@ import {
   ANIMATION_MODULE_TYPE,
   inject,
 } from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */

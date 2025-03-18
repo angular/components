@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '../../platform';
 import {Injectable, inject} from '@angular/core';
 
 /**

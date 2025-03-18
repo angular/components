@@ -1,7 +1,7 @@
 import {DOCUMENT} from '@angular/common';
 import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef, inject as inject_1} from '@angular/core';
-import {PortalModule, CdkPortal} from '@angular/cdk/portal';
+import {PortalModule, CdkPortal} from '../portal';
 import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
 import {TemplatePortalDirective} from '../portal/portal-directives';
 

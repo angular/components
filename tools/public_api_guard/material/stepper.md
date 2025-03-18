@@ -6,6 +6,7 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { CdkStep } from '@angular/cdk/stepper';
 import { CdkStepHeader } from '@angular/cdk/stepper';
@@ -14,25 +15,27 @@ import { CdkStepper } from '@angular/cdk/stepper';
 import { CdkStepperNext } from '@angular/cdk/stepper';
 import { CdkStepperPrevious } from '@angular/cdk/stepper';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { EventEmitter } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/portal';
 import * as i3 from '@angular/cdk/stepper';
-import * as i4 from '@angular/material/icon';
+import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { StepState } from '@angular/cdk/stepper';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 import { WritableSignal } from '@angular/core';
 
 // @public @deprecated
@@ -194,7 +197,7 @@ export class MatStepperModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatStepperModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i1.MatCommonModule, typeof i2.PortalModule, typeof i3.CdkStepperModule, typeof i4.MatIconModule, typeof i1.MatRippleModule, typeof i5.MatStep, typeof i6.MatStepLabel, typeof i5.MatStepper, typeof i7.MatStepperNext, typeof i7.MatStepperPrevious, typeof i8.MatStepHeader, typeof i9.MatStepperIcon, typeof i10.MatStepContent], [typeof i1.MatCommonModule, typeof i5.MatStep, typeof i6.MatStepLabel, typeof i5.MatStepper, typeof i7.MatStepperNext, typeof i7.MatStepperPrevious, typeof i8.MatStepHeader, typeof i9.MatStepperIcon, typeof i10.MatStepContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatStepperModule, never, [typeof i1.MatCommonModule, typeof i2.PortalModule, typeof i3.CdkStepperModule, typeof i4.MatIconModule, typeof i5.MatRippleModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent], [typeof i1.MatCommonModule, typeof i6.MatStep, typeof i7.MatStepLabel, typeof i6.MatStepper, typeof i8.MatStepperNext, typeof i8.MatStepperPrevious, typeof i9.MatStepHeader, typeof i10.MatStepperIcon, typeof i11.MatStepContent]>;
 }
 
 // @public

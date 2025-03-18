@@ -1,6 +1,6 @@
 import {fakeAsync, flush} from '@angular/core/testing';
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {dispatchMouseEvent} from '../../testing/private';
+import {_supportsShadowDom} from '../../platform';
 import {createComponent, startDraggingViaMouse} from './test-utils.spec';
 import {
   ConnectedDropZones,

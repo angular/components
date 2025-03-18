@@ -4,14 +4,6 @@
 
 ```ts
 
-import { ElementDimensions } from '@angular/cdk/testing';
-import { EventData } from '@angular/cdk/testing';
-import { HarnessEnvironment } from '@angular/cdk/testing';
-import { HarnessLoader } from '@angular/cdk/testing';
-import { ModifierKeys } from '@angular/cdk/testing';
-import { TestElement } from '@angular/cdk/testing';
-import { TestKey } from '@angular/cdk/testing';
-import { TextOptions } from '@angular/cdk/testing';
 import * as webdriver from 'selenium-webdriver';
 
 // @public

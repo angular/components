@@ -1,6 +1,6 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, NgModule, ViewChild, ViewContainerRef, inject} from '@angular/core';
-import {PortalModule, CdkPortal} from '@angular/cdk/portal';
+import {PortalModule, CdkPortal} from '../portal';
 import {Overlay, OverlayContainer, OverlayModule} from './index';
 
 describe('OverlayContainer', () => {

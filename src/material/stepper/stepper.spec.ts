@@ -45,9 +45,9 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {MatRipple, ThemePalette} from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {MatRipple, ThemePalette} from '../core';
+import {MatFormFieldModule} from '../form-field';
+import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable, Subject, merge} from 'rxjs';

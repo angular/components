@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 

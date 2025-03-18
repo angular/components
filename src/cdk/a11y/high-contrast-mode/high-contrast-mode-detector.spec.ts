@@ -5,7 +5,7 @@ import {
   HighContrastModeDetector,
   WHITE_ON_BLACK_CSS_CLASS,
 } from './high-contrast-mode-detector';
-import {Platform} from '@angular/cdk/platform';
+import {Platform} from '../../platform';
 import {TestBed} from '@angular/core/testing';
 import {Provider} from '@angular/core';
 import {A11yModule} from '../a11y-module';

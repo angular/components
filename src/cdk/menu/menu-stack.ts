@@ -7,7 +7,7 @@
  */
 
 import {inject, Inject, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
+import {_IdGenerator} from '../a11y';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, startWith} from 'rxjs/operators';
 

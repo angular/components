@@ -16,19 +16,13 @@ import {
   ComponentRef,
   inject,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
+import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '../portal';
 import {of as observableOf, Observable, Subject, defer} from 'rxjs';
 import {DialogRef} from './dialog-ref';
 import {DialogConfig} from './dialog-config';
-import {Directionality} from '@angular/cdk/bidi';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {
-  ComponentType,
-  Overlay,
-  OverlayRef,
-  OverlayConfig,
-  OverlayContainer,
-} from '@angular/cdk/overlay';
+import {Directionality} from '../bidi';
+import {_IdGenerator} from '../a11y';
+import {ComponentType, Overlay, OverlayRef, OverlayConfig, OverlayContainer} from '../overlay';
 import {startWith} from 'rxjs/operators';
 
 import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';

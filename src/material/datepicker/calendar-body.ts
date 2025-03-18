@@ -28,7 +28,7 @@ import {
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {NgClass} from '@angular/common';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '@angular/material/core';
+import {_StructuralStylesLoader} from '../core';
 import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */

@@ -3,14 +3,14 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule} from '../../core';
 import {
   MatDateRangeInput,
   MatDateRangePicker,
   MatDatepickerModule,
   MatEndDate,
   MatStartDate,
-} from '@angular/material/datepicker';
+} from '../../datepicker';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendarHarness} from './calendar-harness';
 import {

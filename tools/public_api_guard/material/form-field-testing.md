@@ -7,12 +7,8 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
-import { MatDatepickerInputHarness } from '@angular/material/datepicker/testing';
-import { MatDateRangeInputHarness } from '@angular/material/datepicker/testing';
-import { MatFormFieldControlHarness } from '@angular/material/form-field/testing/control';
-import { MatInputHarness } from '@angular/material/input/testing';
-import { MatSelectHarness } from '@angular/material/select/testing';
 
 // @public
 export interface ErrorHarnessFilters extends BaseHarnessFilters {
@@ -39,7 +35,9 @@ export class MatErrorHarness extends ComponentHarness {
     static with<T extends MatErrorHarness>(this: ComponentHarnessConstructor<T>, options?: ErrorHarnessFilters): HarnessPredicate<T>;
 }
 
-export { MatFormFieldControlHarness }
+// @public
+export abstract class MatFormFieldControlHarness extends ComponentHarness {
+}
 
 // @public (undocumented)
 export class MatFormFieldHarness extends ComponentHarness {

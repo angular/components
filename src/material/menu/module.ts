@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '../core';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatMenu} from './menu';

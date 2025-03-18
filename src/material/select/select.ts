@@ -80,8 +80,8 @@ import {
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
-} from '@angular/material/core';
-import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+} from '../core';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '../form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {

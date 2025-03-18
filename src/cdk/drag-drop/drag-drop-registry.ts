@@ -19,8 +19,8 @@ import {
   signal,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {_bindEventWithOptions, _ListenerOptions} from '@angular/cdk/platform';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_bindEventWithOptions, _ListenerOptions} from '../platform';
+import {_CdkPrivateStyleLoader} from '../private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
 import type {DragRef} from './drag-ref';
