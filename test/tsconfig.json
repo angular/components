@@ -1,0 +1,4 @@
+{
+  // TODO(devversion): move bazel tsconfig up, or this folder into `src/`.
+  "extends": "../src/bazel-tsconfig-build.json"
+}

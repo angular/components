@@ -5,10 +5,21 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary", "ts_library")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
+load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
+
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:node_modules/@types/node",
+        "//src:build-tsconfig",
+    ],
+)
 
 ng_module(
     name = "kitchen-sink",
@@ -25,31 +36,37 @@ ng_module(
     ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
 )
 
-ts_library(
+ts_project(
     name = "client_lib",
     srcs = [
         "main.ts",
     ],
-    deps = [
+    interop_deps = [
         ":kitchen-sink",
-        "@npm//@angular/platform-browser",
+    ],
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@angular/platform-browser",
     ],
 )
 
-ts_library(
+ts_project(
     name = "prerender_lib",
     srcs = [
         "prerender.ts",
     ],
-    deps = [
+    interop_deps = [
         ":kitchen-sink",
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser",
-        "@npm//@angular/platform-server",
-        "@npm//@bazel/runfiles",
-        "@npm//@types/node",
-        "@npm//reflect-metadata",
-        "@npm//zone.js",
+    ],
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@angular/platform-server",
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/node",
+        "//:node_modules/reflect-metadata",
+        "//:node_modules/zone.js",
     ],
 )
 
