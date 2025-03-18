@@ -5,8 +5,14 @@
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "stopUpdatingLabel": "action: merge",
   "labels": ["target: patch"],
-  "lockFileMaintenance": {
-    "enabled": false
+  "postUpgradeTasks": {
+    "commands": [
+      "git restore .yarn/releases/yarn-1.22.17.cjs pnpm-lock.yaml",
+      "yarn install --frozen-lockfile",
+      "yarn bazel sync --only=repo || true"
+    ],
+    "fileFilters": [".aspect/rules/external_repository_action_cache/**/*", "pnpm-lock.yaml"],
+    "executionMode": "branch"
   },
   "dependencyDashboard": true,
   "rangeStrategy": "pin",
