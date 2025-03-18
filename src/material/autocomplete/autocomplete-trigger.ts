@@ -900,6 +900,8 @@ export class MatAutocompleteTrigger
       scrollStrategy: this._scrollStrategy(),
       width: this._getPanelWidth(),
       direction: this._dir ?? undefined,
+      hasBackdrop: this._defaults?.hasBackdrop,
+      backdropClass: this._defaults?.backdropClass,
       panelClass: this._defaults?.overlayPanelClass,
     });
   }
