@@ -123,11 +123,16 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
     // with https://sass-lang.com/documentation/breaking-changes/mixed-decls/. We should
     // figure out a better way to do this or move all the concrete styles out of the theme.
     & {
-      @each $key, $value in $tokens {
-        @if $value != null {
-          #{_create-var-name($prefix, $key)}: #{$value};
-        }
-      }
+      @include define-tokens($prefix, $tokens);
+    }
+  }
+}
+
+// Defines the CSS variables for the tokens.
+@mixin define-tokens($prefix, $tokens) {
+  @each $key, $value in $tokens {
+    @if $value != null {
+      #{_create-var-name($prefix, $key)}: #{$value};
     }
   }
 }
@@ -256,7 +261,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
         $data: map.get($prefixed-name-data, $name);
         $namespace: list.nth($data, 1);
         $name: list.nth($data, 2);
-        @include create-token-values(
+        @include define-tokens(
           $namespace,
           (
             $name: $value,
@@ -268,7 +273,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
         @each $data in $datalist {
           $namespace: list.nth($data, 1);
           $prefixed-names: list.append($prefixed-names, list.nth($data, 2), $separator: comma);
-          @include create-token-values(
+          @include define-tokens(
             $namespace,
             (
               $name: $value,
