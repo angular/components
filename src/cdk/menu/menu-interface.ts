@@ -8,7 +8,7 @@
 
 import {InjectionToken} from '@angular/core';
 import {MenuStackItem} from './menu-stack';
-import {FocusOrigin} from '@angular/cdk/a11y';
+import {FocusOrigin} from '../a11y';
 
 /** Injection token used to return classes implementing the Menu interface */
 export const CDK_MENU = new InjectionToken<Menu>('cdk-menu');

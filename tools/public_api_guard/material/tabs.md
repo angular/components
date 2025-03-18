@@ -17,20 +17,16 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
-import { RippleConfig } from '@angular/material/core';
-import { RippleGlobalOptions } from '@angular/material/core';
-import { RippleTarget } from '@angular/material/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;

@@ -7,7 +7,7 @@
  */
 
 import {Directive} from '@angular/core';
-import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {UniqueSelectionDispatcher} from '../collections';
 
 /**
  * A grouping container for `CdkMenuItemRadio` instances, similar to a `role="radiogroup"` element.

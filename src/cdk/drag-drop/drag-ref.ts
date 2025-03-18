@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
-import {coerceElement} from '@angular/cdk/coercion';
-import {_getEventTarget, _getShadowRoot, _bindEventWithOptions} from '@angular/cdk/platform';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '../a11y';
+import {Direction} from '../bidi';
+import {coerceElement} from '../coercion';
+import {_getEventTarget, _getShadowRoot, _bindEventWithOptions} from '../platform';
+import {ViewportRuler} from '../scrolling';
 import {
   ElementRef,
   EmbeddedViewRef,

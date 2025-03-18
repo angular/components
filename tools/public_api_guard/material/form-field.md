@@ -11,7 +11,7 @@ import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/observers';
 import { InjectionToken } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -19,7 +19,6 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 // @public
 export type FloatLabelType = 'always' | 'auto';

@@ -8,29 +8,29 @@ import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-import { CollectionViewer } from '@angular/cdk/collections';
-import { DataSource } from '@angular/cdk/collections';
-import { Direction } from '@angular/cdk/bidi';
-import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { IterableChangeRecord } from '@angular/core';
 import { IterableChanges } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
+import { NgIterable } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
-import { _ViewRepeater } from '@angular/cdk/collections';
 
 // @public
 export class BaseCdkCell {
@@ -395,7 +395,7 @@ export class CdkTableModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<CdkTableModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkTableModule, never, [typeof i1.ScrollingModule, typeof i2.CdkTable, typeof i3.CdkRowDef, typeof i4.CdkCellDef, typeof i3.CdkCellOutlet, typeof i4.CdkHeaderCellDef, typeof i4.CdkFooterCellDef, typeof i4.CdkColumnDef, typeof i4.CdkCell, typeof i3.CdkRow, typeof i4.CdkHeaderCell, typeof i4.CdkFooterCell, typeof i3.CdkHeaderRow, typeof i3.CdkHeaderRowDef, typeof i3.CdkFooterRow, typeof i3.CdkFooterRowDef, typeof i2.DataRowOutlet, typeof i2.HeaderRowOutlet, typeof i2.FooterRowOutlet, typeof i5.CdkTextColumn, typeof i3.CdkNoDataRow, typeof i2.CdkRecycleRows, typeof i2.NoDataRowOutlet], [typeof i2.CdkTable, typeof i3.CdkRowDef, typeof i4.CdkCellDef, typeof i3.CdkCellOutlet, typeof i4.CdkHeaderCellDef, typeof i4.CdkFooterCellDef, typeof i4.CdkColumnDef, typeof i4.CdkCell, typeof i3.CdkRow, typeof i4.CdkHeaderCell, typeof i4.CdkFooterCell, typeof i3.CdkHeaderRow, typeof i3.CdkHeaderRowDef, typeof i3.CdkFooterRow, typeof i3.CdkFooterRowDef, typeof i2.DataRowOutlet, typeof i2.HeaderRowOutlet, typeof i2.FooterRowOutlet, typeof i5.CdkTextColumn, typeof i3.CdkNoDataRow, typeof i2.CdkRecycleRows, typeof i2.NoDataRowOutlet]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<CdkTableModule, never, [typeof i1.ScrollingModule, typeof i2_2.CdkTable, typeof i3_2.CdkRowDef, typeof i4_2.CdkCellDef, typeof i3_2.CdkCellOutlet, typeof i4_2.CdkHeaderCellDef, typeof i4_2.CdkFooterCellDef, typeof i4_2.CdkColumnDef, typeof i4_2.CdkCell, typeof i3_2.CdkRow, typeof i4_2.CdkHeaderCell, typeof i4_2.CdkFooterCell, typeof i3_2.CdkHeaderRow, typeof i3_2.CdkHeaderRowDef, typeof i3_2.CdkFooterRow, typeof i3_2.CdkFooterRowDef, typeof i2_2.DataRowOutlet, typeof i2_2.HeaderRowOutlet, typeof i2_2.FooterRowOutlet, typeof i5_2.CdkTextColumn, typeof i3_2.CdkNoDataRow, typeof i2_2.CdkRecycleRows, typeof i2_2.NoDataRowOutlet], [typeof i2_2.CdkTable, typeof i3_2.CdkRowDef, typeof i4_2.CdkCellDef, typeof i3_2.CdkCellOutlet, typeof i4_2.CdkHeaderCellDef, typeof i4_2.CdkFooterCellDef, typeof i4_2.CdkColumnDef, typeof i4_2.CdkCell, typeof i3_2.CdkRow, typeof i4_2.CdkHeaderCell, typeof i4_2.CdkFooterCell, typeof i3_2.CdkHeaderRow, typeof i3_2.CdkHeaderRowDef, typeof i3_2.CdkFooterRow, typeof i3_2.CdkFooterRowDef, typeof i2_2.DataRowOutlet, typeof i2_2.HeaderRowOutlet, typeof i2_2.FooterRowOutlet, typeof i5_2.CdkTextColumn, typeof i3_2.CdkNoDataRow, typeof i2_2.CdkRecycleRows, typeof i2_2.NoDataRowOutlet]>;
 }
 
 // @public
@@ -458,7 +458,11 @@ export class DataRowOutlet implements RowOutlet {
     static ɵfac: i0.ɵɵFactoryDeclaration<DataRowOutlet, never>;
 }
 
-export { DataSource }
+// @public (undocumented)
+export abstract class DataSource<T> {
+    abstract connect(collectionViewer: CollectionViewer): Observable<readonly T[]>;
+    abstract disconnect(collectionViewer: CollectionViewer): void;
+}
 
 // @public
 export class FooterRowOutlet implements RowOutlet {

@@ -35,7 +35,7 @@ import {
   CdkFooterCell,
 } from './cell';
 import {CdkTextColumn} from './text-column';
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ScrollingModule} from '../scrolling';
 
 const EXPORTED_DECLARATIONS = [
   CdkTable,

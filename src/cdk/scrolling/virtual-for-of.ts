@@ -15,7 +15,7 @@ import {
   _RecycleViewRepeaterStrategy,
   _VIEW_REPEATER_STRATEGY,
   _ViewRepeaterItemInsertArgs,
-} from '@angular/cdk/collections';
+} from '../collections';
 import {
   Directive,
   DoCheck,
@@ -33,7 +33,7 @@ import {
   ViewContainerRef,
   inject,
 } from '@angular/core';
-import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
+import {NumberInput, coerceNumberProperty} from '../coercion';
 import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';

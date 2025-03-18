@@ -4,19 +4,55 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AbstractControlDirective } from '@angular/forms';
+import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
+import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { ChangeDetectorRef } from '@angular/core';
+import { ConnectedPosition } from '@angular/cdk/overlay';
+import { ControlValueAccessor } from '@angular/forms';
+import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/button';
-import * as i2 from '@angular/material/select';
-import * as i3 from '@angular/material/tooltip';
+import * as i1_3 from '@angular/cdk/bidi';
+import * as i1_4 from '@angular/cdk/overlay';
+import * as i1_5 from '@angular/cdk/a11y';
+import * as i2_6 from '@angular/cdk/observers';
+import * as i5_3 from '@angular/cdk/scrolling';
 import { InjectionToken } from '@angular/core';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { Injector } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { NgZone } from '@angular/core';
+import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Optional } from '@angular/core';
+import { OriginConnectionPosition } from '@angular/cdk/overlay';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayConnectionPosition } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
+import { QueryList } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ThemePalette } from '@angular/material/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public
 export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOptions>;
@@ -118,7 +154,7 @@ export class MatPaginatorModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatPaginatorModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPaginatorModule, never, [typeof i1.MatButtonModule, typeof i2.MatSelectModule, typeof i3.MatTooltipModule, typeof i4.MatPaginator], [typeof i4.MatPaginator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatPaginatorModule, never, [typeof i1.MatButtonModule, typeof i2_3.MatSelectModule, typeof i3_4.MatTooltipModule, typeof i4_6.MatPaginator], [typeof i4_6.MatPaginator]>;
 }
 
 // @public

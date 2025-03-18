@@ -4,35 +4,33 @@
 
 ```ts
 
-import { BasePortalOutlet } from '@angular/cdk/portal';
-import { CdkPortalOutlet } from '@angular/cdk/portal';
+import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { BasePortalOutlet as BasePortalOutlet_2 } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
-import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
-import { ComponentType } from '@angular/cdk/overlay';
-import { Direction } from '@angular/cdk/bidi';
-import { DomPortal } from '@angular/cdk/portal';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { FocusTrapFactory } from '@angular/cdk/a11y';
+import { EnvironmentInjector } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/overlay';
-import * as i2 from '@angular/cdk/portal';
-import * as i3 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { Location as Location_2 } from '@angular/common';
+import { NgIterable } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
-import { OverlayRef } from '@angular/cdk/overlay';
-import { PositionStrategy } from '@angular/cdk/overlay';
-import { ScrollStrategy } from '@angular/cdk/overlay';
+import { OnInit } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { StaticProvider } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { TrackByFunction } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
@@ -79,7 +77,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
 }
 
 // @public
-export const DEFAULT_DIALOG_CONFIG: InjectionToken<DialogConfig<unknown, unknown, BasePortalOutlet>>;
+export const DEFAULT_DIALOG_CONFIG: InjectionToken<DialogConfig<unknown, unknown, BasePortalOutlet_2>>;
 
 // @public (undocumented)
 export class Dialog implements OnDestroy {
@@ -168,7 +166,7 @@ export class DialogModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<DialogModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<DialogModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.A11yModule, typeof i4.CdkDialogContainer], [typeof i2.PortalModule, typeof i4.CdkDialogContainer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<DialogModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3_3.A11yModule, typeof i4_4.CdkDialogContainer], [typeof i2.PortalModule, typeof i4_4.CdkDialogContainer]>;
 }
 
 // @public

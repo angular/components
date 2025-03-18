@@ -6,12 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {
-  getRtlScrollAxisType,
-  RtlScrollAxisType,
-  supportsScrollBehavior,
-} from '@angular/cdk/platform';
+import {Directionality} from '../bidi';
+import {getRtlScrollAxisType, RtlScrollAxisType, supportsScrollBehavior} from '../platform';
 import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {ScrollDispatcher} from './scroll-dispatcher';

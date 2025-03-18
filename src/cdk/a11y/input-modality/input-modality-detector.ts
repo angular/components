@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
+import {ALT, CONTROL, MAC_META, META, SHIFT} from '../../keycodes';
 import {
   Injectable,
   InjectionToken,
@@ -15,7 +15,7 @@ import {
   inject,
   RendererFactory2,
 } from '@angular/core';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '../../platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';

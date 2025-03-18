@@ -40,7 +40,7 @@ import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
   MatSlideToggleDefaultOptions,
 } from './slide-toggle-config';
-import {_MatInternalFormField, _StructuralStylesLoader, MatRipple} from '@angular/material/core';
+import {_MatInternalFormField, _StructuralStylesLoader, MatRipple} from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**

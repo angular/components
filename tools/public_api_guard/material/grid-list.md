@@ -6,9 +6,10 @@
 
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
-import { MatLine } from '@angular/material/core';
+import * as i1_2 from '@angular/cdk/bidi';
+import { InjectionToken } from '@angular/core';
 import { NumberInput } from '@angular/cdk/coercion';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -48,7 +49,7 @@ export class MatGridListModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatGridListModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatGridListModule, never, [typeof i1.MatLineModule, typeof i1.MatCommonModule, typeof i2.MatGridList, typeof i3.MatGridTile, typeof i3.MatGridTileText, typeof i3.MatGridTileHeaderCssMatStyler, typeof i3.MatGridTileFooterCssMatStyler, typeof i3.MatGridAvatarCssMatStyler], [typeof i2.MatGridList, typeof i3.MatGridTile, typeof i3.MatGridTileText, typeof i1.MatLineModule, typeof i1.MatCommonModule, typeof i3.MatGridTileHeaderCssMatStyler, typeof i3.MatGridTileFooterCssMatStyler, typeof i3.MatGridAvatarCssMatStyler]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatGridListModule, never, [typeof i1.MatLineModule, typeof i2.MatCommonModule, typeof i3.MatGridList, typeof i4.MatGridTile, typeof i4.MatGridTileText, typeof i4.MatGridTileHeaderCssMatStyler, typeof i4.MatGridTileFooterCssMatStyler, typeof i4.MatGridAvatarCssMatStyler], [typeof i3.MatGridList, typeof i4.MatGridTile, typeof i4.MatGridTileText, typeof i1.MatLineModule, typeof i2.MatCommonModule, typeof i4.MatGridTileHeaderCssMatStyler, typeof i4.MatGridTileFooterCssMatStyler, typeof i4.MatGridAvatarCssMatStyler]>;
 }
 
 // @public (undocumented)
@@ -98,6 +99,14 @@ export class MatGridTileText implements AfterContentInit {
     static ɵcmp: i0.ɵɵComponentDeclaration<MatGridTileText, "mat-grid-tile-header, mat-grid-tile-footer", never, {}, {}, ["_lines"], ["[mat-grid-avatar], [matGridAvatar]", "[mat-line], [matLine]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatGridTileText, never>;
+}
+
+// @public
+export class MatLine {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLine, "[mat-line], [matLine]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLine, never>;
 }
 
 // (No @packageDocumentation comment for this package)

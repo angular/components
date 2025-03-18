@@ -35,7 +35,7 @@ import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '@angular/material/core';
+import {_StructuralStylesLoader} from '../core';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a

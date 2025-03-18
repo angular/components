@@ -3,12 +3,12 @@ import {CdkMenuModule} from './menu-module';
 import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CdkMenuBar} from './menu-bar';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
 
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {

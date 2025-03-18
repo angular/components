@@ -4,27 +4,28 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
+import { AbstractControlDirective } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/material/core';
-import * as i2 from '@angular/material/form-field';
-import * as i4 from '@angular/cdk/text-field';
+import * as i1_2 from '@angular/cdk/bidi';
+import * as i2_2 from '@angular/cdk/observers';
+import * as i4_2 from '@angular/cdk/text-field';
 import { InjectionToken } from '@angular/core';
-import { MatError } from '@angular/material/form-field';
-import { MatFormField } from '@angular/material/form-field';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatHint } from '@angular/material/form-field';
-import { MatLabel } from '@angular/material/form-field';
-import { MatPrefix } from '@angular/material/form-field';
-import { MatSuffix } from '@angular/material/form-field';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
+import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
@@ -39,11 +40,113 @@ export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
     value: any | WritableSignal<any>;
 }>;
 
-export { MatError }
+// @public
+export class MatError {
+    constructor(...args: unknown[]);
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatError, "mat-error, [matError]", never, { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatError, never>;
+}
 
-export { MatFormField }
+// @public
+export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
+    constructor(...args: unknown[]);
+    _animateAndLockLabel(): void;
+    // (undocumented)
+    protected readonly _animationsDisabled: boolean;
+    get appearance(): MatFormFieldAppearance;
+    set appearance(value: MatFormFieldAppearance);
+    color: ThemePalette;
+    get _control(): MatFormFieldControl_2<any>;
+    set _control(value: MatFormFieldControl_2<any>);
+    // (undocumented)
+    _elementRef: ElementRef<any>;
+    // (undocumented)
+    _errorChildren: QueryList<MatError>;
+    // (undocumented)
+    _floatingLabel: MatFormFieldFloatingLabel | undefined;
+    get floatLabel(): FloatLabelType;
+    set floatLabel(value: FloatLabelType);
+    _forceDisplayInfixLabel(): boolean | 0;
+    // (undocumented)
+    _formFieldControl: MatFormFieldControl_2<any>;
+    getConnectedOverlayOrigin(): ElementRef;
+    _getDisplayedMessages(): 'error' | 'hint';
+    getLabelId: Signal<string | null>;
+    _handleLabelResized(): void;
+    // (undocumented)
+    _hasFloatingLabel: Signal<boolean>;
+    // (undocumented)
+    _hasIconPrefix: boolean;
+    // (undocumented)
+    _hasIconSuffix: boolean;
+    // (undocumented)
+    _hasOutline(): boolean;
+    // (undocumented)
+    _hasTextPrefix: boolean;
+    // (undocumented)
+    _hasTextSuffix: boolean;
+    get hideRequiredMarker(): boolean;
+    set hideRequiredMarker(value: BooleanInput);
+    // (undocumented)
+    _hintChildren: QueryList<MatHint>;
+    get hintLabel(): string;
+    set hintLabel(value: string);
+    // (undocumented)
+    readonly _hintLabelId: string;
+    // (undocumented)
+    _iconPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _iconSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    readonly _labelId: string;
+    // (undocumented)
+    _lineRipple: MatFormFieldLineRipple | undefined;
+    // (undocumented)
+    ngAfterContentChecked(): void;
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    _notchedOutline: MatFormFieldNotchedOutline | undefined;
+    // (undocumented)
+    _prefixChildren: QueryList<MatPrefix>;
+    _refreshOutlineNotchWidth(): void;
+    _shouldAlwaysFloat(): boolean;
+    _shouldForward(prop: keyof AbstractControlDirective): boolean;
+    // (undocumented)
+    _shouldLabelFloat(): boolean;
+    get subscriptSizing(): SubscriptSizing;
+    set subscriptSizing(value: SubscriptSizing);
+    // (undocumented)
+    _suffixChildren: QueryList<MatSuffix>;
+    // (undocumented)
+    _textField: ElementRef<HTMLElement>;
+    // (undocumented)
+    _textPrefixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    _textSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
+}
 
-export { MatHint }
+// @public
+export class MatHint {
+    align: 'start' | 'end';
+    id: string;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatHint, "mat-hint", never, { "align": { "alias": "align"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatHint, never>;
+}
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
@@ -142,14 +245,40 @@ export class MatInputModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof i1.MatCommonModule, typeof i2.MatFormFieldModule, typeof i3.MatInput], [typeof i3.MatInput, typeof i2.MatFormFieldModule, typeof i4.TextFieldModule, typeof i1.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatInputModule, never, [typeof i1.MatCommonModule, typeof i2.MatFormFieldModule, typeof i3_2.MatInput], [typeof i3_2.MatInput, typeof i2.MatFormFieldModule, typeof i4_2.TextFieldModule, typeof i1.MatCommonModule]>;
 }
 
-export { MatLabel }
+// @public
+export class MatLabel {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatLabel, "mat-label", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatLabel, never>;
+}
 
-export { MatPrefix }
+// @public
+export class MatPrefix {
+    // (undocumented)
+    _isText: boolean;
+    // (undocumented)
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatPrefix, "[matPrefix], [matIconPrefix], [matTextPrefix]", never, { "_isTextSelector": { "alias": "matTextPrefix"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatPrefix, never>;
+}
 
-export { MatSuffix }
+// @public
+export class MatSuffix {
+    // (undocumented)
+    _isText: boolean;
+    // (undocumented)
+    set _isTextSelector(value: '');
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSuffix, "[matSuffix], [matIconSuffix], [matTextSuffix]", never, { "_isTextSelector": { "alias": "matTextSuffix"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSuffix, never>;
+}
 
 // (No @packageDocumentation comment for this package)
 

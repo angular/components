@@ -11,20 +11,19 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/observers';
-import * as i10 from '@angular/material/divider';
-import * as i2 from '@angular/material/core';
+import * as i12 from '@angular/material/divider';
+import * as i1_2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
 import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
-import { RippleConfig } from '@angular/material/core';
-import { RippleGlobalOptions } from '@angular/material/core';
-import { RippleTarget } from '@angular/material/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SimpleChanges } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 // @public
 export const MAT_LIST: InjectionToken<MatList>;
@@ -47,6 +46,8 @@ export class MatActionList extends MatListBase {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatActionList, never>;
 }
+
+export { MatDivider }
 
 // @public (undocumented)
 export class MatList extends MatListBase {
@@ -152,7 +153,7 @@ export class MatListModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatListModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatListModule, never, [typeof i1.ObserversModule, typeof i2.MatCommonModule, typeof i2.MatRippleModule, typeof i2.MatPseudoCheckboxModule, typeof i3.MatList, typeof i4.MatActionList, typeof i5.MatNavList, typeof i6.MatSelectionList, typeof i3.MatListItem, typeof i7.MatListOption, typeof i8.MatListSubheaderCssMatStyler, typeof i9.MatListItemAvatar, typeof i9.MatListItemIcon, typeof i9.MatListItemLine, typeof i9.MatListItemTitle, typeof i9.MatListItemMeta], [typeof i3.MatList, typeof i4.MatActionList, typeof i5.MatNavList, typeof i6.MatSelectionList, typeof i3.MatListItem, typeof i7.MatListOption, typeof i9.MatListItemAvatar, typeof i9.MatListItemIcon, typeof i8.MatListSubheaderCssMatStyler, typeof i10.MatDividerModule, typeof i9.MatListItemLine, typeof i9.MatListItemTitle, typeof i9.MatListItemMeta]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatListModule, never, [typeof i1.ObserversModule, typeof i2.MatCommonModule, typeof i3.MatRippleModule, typeof i4.MatPseudoCheckboxModule, typeof i5.MatList, typeof i6.MatActionList, typeof i7.MatNavList, typeof i8.MatSelectionList, typeof i5.MatListItem, typeof i9.MatListOption, typeof i10.MatListSubheaderCssMatStyler, typeof i11.MatListItemAvatar, typeof i11.MatListItemIcon, typeof i11.MatListItemLine, typeof i11.MatListItemTitle, typeof i11.MatListItemMeta], [typeof i5.MatList, typeof i6.MatActionList, typeof i7.MatNavList, typeof i8.MatSelectionList, typeof i5.MatListItem, typeof i9.MatListOption, typeof i11.MatListItemAvatar, typeof i11.MatListItemIcon, typeof i10.MatListSubheaderCssMatStyler, typeof i12.MatDividerModule, typeof i11.MatListItemLine, typeof i11.MatListItemTitle, typeof i11.MatListItemMeta]>;
 }
 
 // @public (undocumented)

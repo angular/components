@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {InjectionToken} from '@angular/core';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 
 /** Default `mat-slide-toggle` options that can be overridden. */
 export interface MatSlideToggleDefaultOptions {

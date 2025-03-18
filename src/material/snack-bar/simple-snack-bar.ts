@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation, inject} from '@angular/core';
-import {MatButton} from '@angular/material/button';
+import {MatButton} from '../button';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {MAT_SNACK_BAR_DATA} from './snack-bar-config';
 import {MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel} from './snack-bar-content';

@@ -8,7 +8,7 @@
 
 import {Injectable, NgZone, ElementRef, inject, RendererFactory2} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ViewportRuler} from '../scrolling';
 import {DragRef, DragRefConfig} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
 import {DragDropRegistry} from './drag-drop-registry';

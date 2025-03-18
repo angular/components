@@ -6,7 +6,7 @@ import {
   MatTreeFlattener,
   MatTreeModule,
   MatTreeNestedDataSource,
-} from '@angular/material/tree';
+} from '../../tree';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTreeHarness} from './tree-harness';

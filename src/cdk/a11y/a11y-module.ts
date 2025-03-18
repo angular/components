@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ObserversModule} from '@angular/cdk/observers';
+import {ObserversModule} from '../observers';
 import {NgModule, inject} from '@angular/core';
 import {CdkMonitorFocus} from './focus-monitor/focus-monitor';
 import {CdkTrapFocus} from './focus-trap/focus-trap';

@@ -1,7 +1,7 @@
 import {Component, inject, Provider, signal, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
+import {DateAdapter, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
   dispatchFakeEvent,
@@ -21,8 +21,8 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {MatInput} from '@angular/material/input';
-import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
+import {MatInput} from '../input';
+import {MatFormField, MatLabel, MatSuffix} from '../form-field';
 import {MatTimepickerInput} from './timepicker-input';
 import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
 import {MatTimepickerToggle} from './timepicker-toggle';

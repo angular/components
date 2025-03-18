@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewInit } from '@angular/core';
 import { AriaLivePoliteness } from '@angular/cdk/a11y';
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
@@ -14,15 +15,19 @@ import { Direction } from '@angular/cdk/bidi';
 import { DomPortal } from '@angular/cdk/portal';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/overlay';
+import * as i1_2 from '@angular/cdk/bidi';
 import * as i2 from '@angular/cdk/portal';
-import * as i3 from '@angular/material/button';
-import * as i4 from '@angular/material/core';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
@@ -144,7 +149,7 @@ export class MatSnackBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatSnackBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.MatButtonModule, typeof i4.MatCommonModule, typeof i5.SimpleSnackBar, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction], [typeof i4.MatCommonModule, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSnackBarModule, never, [typeof i1.OverlayModule, typeof i2.PortalModule, typeof i3.MatButtonModule, typeof i4.MatCommonModule, typeof i5_2.SimpleSnackBar, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction], [typeof i4.MatCommonModule, typeof i6.MatSnackBarContainer, typeof i7.MatSnackBarLabel, typeof i7.MatSnackBarActions, typeof i7.MatSnackBarAction]>;
 }
 
 // @public

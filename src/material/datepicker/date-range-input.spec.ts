@@ -15,9 +15,9 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
-import {ErrorStateMatcher, MatNativeDateModule} from '@angular/material/core';
-import {MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {ErrorStateMatcher, MatNativeDateModule} from '../core';
+import {MatFormField, MatFormFieldModule, MatLabel} from '../form-field';
+import {MatInputModule} from '../input';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
 import {MatDateRangeInput} from './date-range-input';

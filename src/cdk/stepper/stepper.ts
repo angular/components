@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {_IdGenerator, FocusableOption, FocusKeyManager} from '../a11y';
+import {Direction, Directionality} from '../bidi';
+import {ENTER, hasModifierKey, SPACE} from '../keycodes';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,7 +39,7 @@ import {
   type NgForm,
   type FormGroupDirective,
 } from '@angular/forms';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {_getFocusedElementPierceShadowDom} from '../platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 

@@ -34,7 +34,7 @@ import {
   inject,
 } from '@angular/core';
 import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
 import {map, pairwise, takeUntil, filter, startWith} from 'rxjs/operators';

@@ -1,7 +1,7 @@
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
 import {ApplicationRef, Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {ThemePalette} from '@angular/material/core';
+import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
 import {
   MAT_BUTTON_CONFIG,

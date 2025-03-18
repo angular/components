@@ -2,7 +2,7 @@ import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angula
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {CdkTreeModule} from './tree-module';
-import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '@angular/cdk/a11y';
+import {NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER} from '../a11y';
 
 describe('CdkTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleCdkTreeApp>;
