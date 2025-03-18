@@ -186,6 +186,38 @@
     "wrap-ansi": "7.0.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": []
+    "onlyBuiltDependencies": [],
+    "packageExtensions": {
+      "@angular/animations": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      },
+      "@angular/common": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      },
+      "@angular/forms": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      },
+      "@angular/platform-browser": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      },
+      "@angular/router": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      },
+      "@angular/localize": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.0"
+        }
+      }
+    }
   }
 }

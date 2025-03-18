@@ -115,6 +115,7 @@ yarn_install(
         "//:tools/postinstall/patches/@angular+bazel+20.0.0-next.1.patch",
         "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-1ebf18a3a60b182a3dbad12e9a149fd93af5c29b.patch",
         "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
+        "//:tools/postinstall/patches/tsec+0.2.2.patch",
     ],
     # Currently disabled due to:
     #  1. Missing Windows support currently.
@@ -163,6 +164,14 @@ load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
     name = "npm2",
+    custom_postinstalls = {
+        "@angular/animations": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/common": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/forms": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/platform-browser": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/router": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/localize": "node ../../@nginfra/angular-linking/index.mjs",
+    },
     data = [
         "//:package.json",
         "//:pnpm-workspace.yaml",
