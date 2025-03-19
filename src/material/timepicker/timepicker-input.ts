@@ -41,7 +41,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
 import {validateAdapter} from './util';
-import {DOCUMENT} from '@angular/common';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 
 /**
  * Input that can be used to enter time and connect to a `mat-timepicker`.
@@ -82,7 +82,6 @@ import {DOCUMENT} from '@angular/common';
 })
 export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private _document = inject(DOCUMENT);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
   private _formField = inject(MAT_FORM_FIELD, {optional: true});
@@ -405,7 +404,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /** Whether the input is currently focused. */
   private _hasFocus(): boolean {
-    return this._document.activeElement === this._elementRef.nativeElement;
+    return _getFocusedElementPierceShadowDom() === this._elementRef.nativeElement;
   }
 
   /** Gets a function that can be used to validate the input. */
