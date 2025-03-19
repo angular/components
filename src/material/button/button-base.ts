@@ -9,7 +9,6 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   Directive,
   ElementRef,
@@ -21,7 +20,7 @@ import {
   OnDestroy,
   Renderer2,
 } from '@angular/core';
-import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
+import {_animationsDisabled, _StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
@@ -62,13 +61,13 @@ function transformTabIndex(value: unknown): number | undefined {
     '[class.mat-mdc-button-disabled]': 'disabled',
     '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
     '[class.mat-unthemed]': '!color',
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[class._mat-animation-noopable]': '_animationsDisabled',
   },
 })
 export class MatButtonBase implements AfterViewInit, OnDestroy {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _ngZone = inject(NgZone);
-  protected _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  protected _animationsDisabled = _animationsDisabled();
 
   protected readonly _config = inject(MAT_BUTTON_CONFIG, {optional: true});
   private readonly _focusMonitor = inject(FocusMonitor);

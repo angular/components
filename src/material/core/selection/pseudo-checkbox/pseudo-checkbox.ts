@@ -6,14 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Component,
-  ViewEncapsulation,
-  Input,
-  ChangeDetectionStrategy,
-  ANIMATION_MODULE_TYPE,
-  inject,
-} from '@angular/core';
+import {Component, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
+import {_animationsDisabled} from '../../animation/animation';
 
 /**
  * Possible states for a pseudo checkbox.
@@ -47,11 +41,11 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
     '[class.mat-pseudo-checkbox-disabled]': 'disabled',
     '[class.mat-pseudo-checkbox-minimal]': 'appearance === "minimal"',
     '[class.mat-pseudo-checkbox-full]': 'appearance === "full"',
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[class._mat-animation-noopable]': '_animationsDisabled',
   },
 })
 export class MatPseudoCheckbox {
-  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  _animationsDisabled = _animationsDisabled();
 
   /** Display state of the checkbox. */
   @Input() state: MatPseudoCheckboxState = 'unchecked';

@@ -15,10 +15,9 @@ import {
   ViewChild,
   ViewEncapsulation,
   numberAttribute,
-  ANIMATION_MODULE_TYPE,
   inject,
 } from '@angular/core';
-import {ThemePalette} from '../core';
+import {_animationsDisabled, ThemePalette} from '../core';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */
@@ -128,11 +127,9 @@ export class MatProgressSpinner {
   constructor(...args: unknown[]);
 
   constructor() {
-    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     const defaults = inject<MatProgressSpinnerDefaultOptions>(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS);
 
-    this._noopAnimations =
-      animationMode === 'NoopAnimations' && !!defaults && !defaults._forceAnimations;
+    this._noopAnimations = _animationsDisabled() && !!defaults && !defaults._forceAnimations;
     this.mode =
       this._elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner'
         ? 'indeterminate'

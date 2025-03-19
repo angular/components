@@ -22,7 +22,6 @@ import {
   AfterContentInit,
   afterNextRender,
   AfterViewInit,
-  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -45,6 +44,7 @@ import {
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
+import {_animationsDisabled} from '../core';
 
 /**
  * Throws an exception when two MatDrawer are matching the same position.
@@ -703,7 +703,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ngZone = inject(NgZone);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _animationDisabled = _animationsDisabled();
   _transitionsEnabled = false;
 
   /** All drawers in the container. Includes drawers from inside nested containers. */
@@ -819,7 +819,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.updateContentMargins());
 
-    if (this._animationMode !== 'NoopAnimations' && platform.isBrowser) {
+    if (!this._animationDisabled && platform.isBrowser) {
       this._ngZone.runOutsideAngular(() => {
         // Enable the animations after a delay in order to skip
         // the initial transition if a drawer is open by default.

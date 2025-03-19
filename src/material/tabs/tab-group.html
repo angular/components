@@ -65,7 +65,7 @@
 
 <div
   class="mat-mdc-tab-body-wrapper"
-  [class._mat-animation-noopable]="_animationMode === 'NoopAnimations'"
+  [class._mat-animation-noopable]="_animationsDisabled"
   #tabBodyWrapper>
   @for (tab of _tabs; track tab;) {
     <mat-tab-body role="tabpanel"

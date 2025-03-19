@@ -25,8 +25,6 @@ export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation;
 export class MatProgressBar implements AfterViewInit, OnDestroy {
     constructor(...args: unknown[]);
     readonly animationEnd: EventEmitter<ProgressAnimationEnd>;
-    // (undocumented)
-    _animationMode?: "NoopAnimations" | "BrowserAnimations" | null | undefined;
     get bufferValue(): number;
     set bufferValue(v: number);
     get color(): string | null | undefined;

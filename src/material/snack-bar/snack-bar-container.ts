@@ -9,7 +9,6 @@
 import {
   afterRender,
   AfterRenderRef,
-  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -35,6 +34,7 @@ import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {MatSnackBarConfig} from './snack-bar-config';
 import {take} from 'rxjs/operators';
+import {_animationsDisabled} from '../core';
 
 const ENTER_ANIMATION = '_mat-snack-bar-enter';
 const EXIT_ANIMATION = '_mat-snack-bar-exit';
@@ -69,8 +69,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
   private _rendersRef: AfterRenderRef;
-  protected _animationsDisabled =
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
+  protected _animationsDisabled = _animationsDisabled();
   snackBarConfig = inject(MatSnackBarConfig);
 
   private _document = inject(DOCUMENT);

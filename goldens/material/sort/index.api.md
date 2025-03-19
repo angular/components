@@ -100,7 +100,7 @@ export interface MatSortDefaultOptions {
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
     constructor(...args: unknown[]);
     // (undocumented)
-    protected _animationModule: "NoopAnimations" | "BrowserAnimations" | null;
+    protected _animationsDisabled: boolean;
     arrowPosition: SortHeaderArrowPosition;
     // (undocumented)
     _columnDef: MatSortHeaderColumnDef | null;

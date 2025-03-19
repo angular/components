@@ -24,14 +24,13 @@ import {
   booleanAttribute,
   inject,
   numberAttribute,
-  ANIMATION_MODULE_TYPE,
   ViewChildren,
   AfterViewInit,
   NgZone,
 } from '@angular/core';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
-import {ThemePalette, MatRipple} from '../core';
+import {ThemePalette, MatRipple, _animationsDisabled} from '../core';
 import {merge, Subscription} from 'rxjs';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
@@ -101,7 +100,7 @@ export class MatTabGroup
   private _tabLabelSubscription = Subscription.EMPTY;
   private _tabBodySubscription = Subscription.EMPTY;
 
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  _animationsDisabled = _animationsDisabled();
 
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested

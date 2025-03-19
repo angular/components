@@ -59,7 +59,6 @@ import {
   ViewChild,
   ViewEncapsulation,
   HostAttributeToken,
-  ANIMATION_MODULE_TYPE,
   Renderer2,
 } from '@angular/core';
 import {
@@ -71,6 +70,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  _animationsDisabled,
   _countGroupLabelsBeforeOption,
   _ErrorStateTracker,
   _getOptionScrollPosition,
@@ -227,8 +227,7 @@ export class MatSelect
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
-  protected _animationsDisabled =
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
+  protected _animationsDisabled = _animationsDisabled();
   private _initialized = new Subject();
   private _cleanupDetach: (() => void) | undefined;
 

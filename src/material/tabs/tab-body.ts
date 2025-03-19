@@ -10,7 +10,6 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 import {
-  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -31,6 +30,7 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+import {_animationsDisabled} from '../core';
 
 /**
  * The portal host directive for the contents of the tab.
@@ -131,7 +131,7 @@ export class MatTabBody implements OnInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _injector = inject(Injector);
   private _renderer = inject(Renderer2);
-  private _animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _diAnimationsDisabled = _animationsDisabled();
   private _eventCleanups?: (() => void)[];
   private _initialized: boolean;
   private _fallbackTimer: ReturnType<typeof setTimeout>;
@@ -317,7 +317,7 @@ export class MatTabBody implements OnInit, OnDestroy {
   /** Whether animations are disabled for the tab group. */
   private _animationsDisabled() {
     return (
-      this._animationsModule === 'NoopAnimations' ||
+      this._diAnimationsDisabled ||
       this.animationDuration === '0ms' ||
       this.animationDuration === '0s'
     );

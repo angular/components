@@ -9,7 +9,6 @@
 import {
   afterNextRender,
   AfterRenderRef,
-  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -35,6 +34,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  _animationsDisabled,
   DateAdapter,
   MAT_DATE_FORMATS,
   MAT_OPTION_PARENT_COMPONENT,
@@ -103,8 +103,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
   private _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
-  protected _animationsDisabled =
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
+  protected _animationsDisabled = _animationsDisabled();
 
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);

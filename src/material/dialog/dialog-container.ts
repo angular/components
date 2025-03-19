@@ -13,13 +13,12 @@ import {
   EventEmitter,
   OnDestroy,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
-  inject,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
+import {_animationsDisabled} from '../core/animation/animation';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -65,13 +64,11 @@ export const CLOSE_ANIMATION_DURATION = 75;
   },
 })
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
-  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
-
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
   /** Whether animations are enabled. */
-  _animationsEnabled: boolean = this._animationMode !== 'NoopAnimations';
+  _animationsEnabled = !_animationsDisabled();
 
   /** Number of actions projected in the dialog. */
   protected _actionSectionCount = 0;

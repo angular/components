@@ -52,6 +52,9 @@ export class AnimationDurations {
 }
 
 // @public
+export function _animationsDisabled(): boolean;
+
+// @public
 export function _countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<MatOption>, optionGroups: QueryList<MatOptgroup>): number;
 
 // @public
@@ -318,7 +321,7 @@ export class MatOptionSelectionChange<T = any> {
 export class MatPseudoCheckbox {
     constructor(...args: unknown[]);
     // (undocumented)
-    _animationMode?: "NoopAnimations" | "BrowserAnimations" | null | undefined;
+    _animationsDisabled: boolean;
     appearance: 'minimal' | 'full';
     disabled: boolean;
     state: MatPseudoCheckboxState;

@@ -10,7 +10,6 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {NgTemplateOutlet} from '@angular/common';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
@@ -34,7 +33,7 @@ import {
   inject,
 } from '@angular/core';
 import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
-import {ThemePalette} from '../core';
+import {_animationsDisabled, ThemePalette} from '../core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
 import {map, pairwise, takeUntil, filter, startWith} from 'rxjs/operators';
@@ -326,7 +325,7 @@ export class MatFormField
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
-  protected readonly _animationsDisabled: boolean;
+  protected readonly _animationsDisabled = _animationsDisabled();
 
   constructor(...args: unknown[]);
 
@@ -342,8 +341,6 @@ export class MatFormField
         this.color = defaults.color;
       }
     }
-
-    this._animationsDisabled = inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   }
 
   ngAfterViewInit() {
