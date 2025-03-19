@@ -14,15 +14,15 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-elevated-card.$prefix,
         tokens-mdc-elevated-card.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-unthemable-tokens()
       );
@@ -35,15 +35,15 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-elevated-card.$prefix,
         tokens-mdc-elevated-card.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-color-tokens($theme)
       );
@@ -56,15 +56,15 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-elevated-card.$prefix,
         tokens-mdc-elevated-card.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-typography-tokens($theme)
       );
@@ -77,15 +77,15 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-elevated-card.$prefix,
         tokens-mdc-elevated-card.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-outlined-card.$prefix,
         tokens-mdc-outlined-card.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
         tokens-mat-card.get-density-tokens($theme)
       );

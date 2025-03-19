@@ -15,7 +15,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-timepicker.$prefix,
         tokens-mat-timepicker.get-unthemable-tokens()
       );
@@ -33,7 +33,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-timepicker.$prefix,
         tokens-mat-timepicker.get-color-tokens($theme)
       );
@@ -48,7 +48,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-timepicker.$prefix,
         tokens-mat-timepicker.get-typography-tokens($theme)
       );
@@ -63,7 +63,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-timepicker.$prefix,
         tokens-mat-timepicker.get-density-tokens($theme)
       );

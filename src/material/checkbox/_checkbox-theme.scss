@@ -15,11 +15,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-unthemable-tokens()
       );
@@ -37,11 +37,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-color-tokens($theme)
       );
@@ -49,14 +49,14 @@
 
     .mat-mdc-checkbox {
       &.mat-primary {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-checkbox.$prefix,
           tokens-mdc-checkbox.get-color-tokens($theme, primary)
         );
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-checkbox.$prefix,
           tokens-mdc-checkbox.get-color-tokens($theme, warn)
         );
@@ -72,11 +72,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-typography-tokens($theme)
       );
@@ -93,11 +93,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-checkbox.$prefix,
         tokens-mat-checkbox.get-density-tokens($theme)
       );

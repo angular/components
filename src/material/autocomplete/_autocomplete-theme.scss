@@ -12,7 +12,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-autocomplete.$prefix,
         tokens-mat-autocomplete.get-unthemable-tokens()
       );
@@ -25,7 +25,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-autocomplete.$prefix,
         tokens-mat-autocomplete.get-color-tokens($theme)
       );
@@ -38,7 +38,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-autocomplete.$prefix,
         tokens-mat-autocomplete.get-typography-tokens($theme)
       );
@@ -51,7 +51,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-autocomplete.$prefix,
         tokens-mat-autocomplete.get-density-tokens($theme)
       );

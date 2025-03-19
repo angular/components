@@ -15,11 +15,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-legacy-button-toggle.$prefix,
         tokens-mat-legacy-button-toggle.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-standard-button-toggle.$prefix,
         tokens-mat-standard-button-toggle.get-unthemable-tokens()
       );
@@ -37,11 +37,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-legacy-button-toggle.$prefix,
         tokens-mat-legacy-button-toggle.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-standard-button-toggle.$prefix,
         tokens-mat-standard-button-toggle.get-color-tokens($theme)
       );
@@ -56,11 +56,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-legacy-button-toggle.$prefix,
         tokens-mat-legacy-button-toggle.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-standard-button-toggle.$prefix,
         tokens-mat-standard-button-toggle.get-typography-tokens($theme)
       );
@@ -75,11 +75,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-legacy-button-toggle.$prefix,
         tokens-mat-legacy-button-toggle.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-standard-button-toggle.$prefix,
         tokens-mat-standard-button-toggle.get-density-tokens($theme)
       );

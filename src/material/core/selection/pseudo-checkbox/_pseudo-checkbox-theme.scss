@@ -8,11 +8,11 @@
 
 @mixin _palette-styles($theme, $palette-name) {
   @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(
+    @include token-utils.create-token-values-mixed(
       tokens-mat-full-pseudo-checkbox.$prefix,
       tokens-mat-full-pseudo-checkbox.get-color-tokens($theme, $palette-name)
     );
-    @include token-utils.create-token-values(
+    @include token-utils.create-token-values-mixed(
       tokens-mat-minimal-pseudo-checkbox.$prefix,
       tokens-mat-minimal-pseudo-checkbox.get-color-tokens($theme, $palette-name)
     );
@@ -33,11 +33,11 @@
     tokens-mat-minimal-pseudo-checkbox.$prefix,
     $options...
   );
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mat-full-pseudo-checkbox.$prefix,
     $mat-full-pseudo-checkbox-tokens
   );
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mat-minimal-pseudo-checkbox.$prefix,
     $mat-minimal-pseudo-checkbox-tokens
   );
