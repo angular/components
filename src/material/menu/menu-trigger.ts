@@ -47,6 +47,7 @@ import {throwMatMenuRecursiveError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
+import {_animationsDisabled} from '../core';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -117,6 +118,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _scrollStrategy = inject(MAT_MENU_SCROLL_STRATEGY);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _animationsDisabled = _animationsDisabled();
   private _cleanupTouchstart: () => void;
 
   private _portal: TemplatePortal;
@@ -447,6 +449,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       panelClass: menu.overlayPanelClass,
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir || 'ltr',
+      disableAnimations: this._animationsDisabled,
     });
   }
 

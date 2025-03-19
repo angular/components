@@ -207,6 +207,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   protected _dir = inject(Directionality);
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
+  private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -550,6 +551,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       positionStrategy: strategy,
       panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
+      disableAnimations: this._animationsDisabled,
     });
 
     this._updatePosition(this._overlayRef);

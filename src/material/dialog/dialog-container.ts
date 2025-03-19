@@ -77,11 +77,11 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
   private _enterAnimationDuration = this._animationsEnabled
-    ? parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION
+    ? (parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION)
     : 0;
   /** Duration of the dialog close animation. */
   private _exitAnimationDuration = this._animationsEnabled
-    ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
+    ? (parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION)
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;

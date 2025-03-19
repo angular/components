@@ -190,6 +190,7 @@ export class Dialog implements OnDestroy {
       width: config.width,
       height: config.height,
       disposeOnNavigation: config.closeOnNavigation,
+      disableAnimations: config.disableAnimations,
     });
 
     if (config.backdropClass) {

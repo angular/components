@@ -299,6 +299,7 @@ export class OverlayConfig {
     constructor(config?: OverlayConfig);
     backdropClass?: string | string[];
     direction?: Direction | Directionality;
+    disableAnimations?: boolean;
     disposeOnNavigation?: boolean;
     hasBackdrop?: boolean;
     height?: number | string;

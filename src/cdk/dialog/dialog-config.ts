@@ -139,6 +139,11 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   closeOnOverlayDetachments?: boolean = true;
 
   /**
+   * Whether the built-in overlay animations should be disabled.
+   */
+  disableAnimations?: boolean = false;
+
+  /**
    * Providers that will be exposed to the contents of the dialog. Can also
    * be provided as a function in order to generate the providers lazily.
    */

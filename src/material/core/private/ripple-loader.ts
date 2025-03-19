@@ -175,10 +175,10 @@ export class MatRippleLoader implements OnDestroy {
     const globalOptions = this._globalRippleOptions;
     const enterDuration = this._animationsDisabled
       ? 0
-      : globalOptions?.animation?.enterDuration ?? defaultRippleAnimationConfig.enterDuration;
+      : (globalOptions?.animation?.enterDuration ?? defaultRippleAnimationConfig.enterDuration);
     const exitDuration = this._animationsDisabled
       ? 0
-      : globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration;
+      : (globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration);
     const target: RippleTarget = {
       rippleDisabled:
         this._animationsDisabled || globalOptions?.disabled || host.hasAttribute(matRippleDisabled),

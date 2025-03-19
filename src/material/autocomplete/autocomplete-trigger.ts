@@ -45,6 +45,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   MatOption,
   MatOptionSelectionChange,
+  _animationsDisabled,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
 } from '../core';
@@ -149,6 +150,7 @@ export class MatAutocompleteTrigger
   private _viewportRuler = inject(ViewportRuler);
   private _scrollStrategy = inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY);
   private _renderer = inject(Renderer2);
+  private _animationsDisabled = _animationsDisabled();
   private _defaults = inject<MatAutocompleteDefaultOptions | null>(
     MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
     {optional: true},
@@ -903,6 +905,7 @@ export class MatAutocompleteTrigger
       hasBackdrop: this._defaults?.hasBackdrop,
       backdropClass: this._defaults?.backdropClass,
       panelClass: this._defaults?.overlayPanelClass,
+      disableAnimations: this._animationsDisabled,
     });
   }
 

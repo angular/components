@@ -127,6 +127,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     };
     data?: D | null;
     direction?: Direction;
+    disableAnimations?: boolean;
     disableClose?: boolean;
     hasBackdrop?: boolean;
     height?: string;
