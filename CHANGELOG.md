@@ -1,3 +1,38 @@
+<a name="20.0.0-next.2"></a>
+# 20.0.0-next.2 "bismite-bomb" (2025-03-19)
+## Breaking Changes
+### material
+- * `ButtonVariant` which is returned by `MatButtonHarness.getVariant` no longer includes the appearance of the button. Use `MatButtonHarness.getAppearance` instead.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7343657f5](https://github.com/angular/components/commit/7343657f5a562990418e3859d5409c8681f03ea1) | fix | **ui-patterns:** small fixes for internal compatibi… ([#30625](https://github.com/angular/components/pull/30625)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fb81ab4f2](https://github.com/angular/components/commit/fb81ab4f234498acd5b9925087bb712a7db039f6) | feat | **button:** add support for tonal button ([#30638](https://github.com/angular/components/pull/30638)) |
+| [e79f60558](https://github.com/angular/components/commit/e79f60558fec6055c78dddc9d6e291a600778bc5) | feat | **button:** allow appearance to be set dynamically |
+| [097f49d90](https://github.com/angular/components/commit/097f49d90f5fe079a0399fd499202a8bdd1542cf) | fix | **autocomplete:** allow overlay backdrop by setting hasBackdrop option ([#30631](https://github.com/angular/components/pull/30631)) |
+| [2c7199c02](https://github.com/angular/components/commit/2c7199c02886ebf0c8c668f9290ed47a1b7b20ab) | fix | **button:** align harness with new terminology |
+| [443df2661](https://github.com/angular/components/commit/443df2661fa3174bd2c854d9a094c8ade1b47446) | fix | **card:** remove alternate token for container-color ([#30640](https://github.com/angular/components/pull/30640)) |
+| [09b25a159](https://github.com/angular/components/commit/09b25a159da1bad70ac84ac2d26824e547db3bc8) | fix | **chips:** adds default placeholder for chips input ([#30452](https://github.com/angular/components/pull/30452)) |
+| [b4fcae45d](https://github.com/angular/components/commit/b4fcae45d51f2c1da1df8145aca5d12a7616e2d4) | fix | **core:** include alternative tokens ([#30633](https://github.com/angular/components/pull/30633)) |
+| [75713b0a0](https://github.com/angular/components/commit/75713b0a0ae95c8a54d381ffbf91e28fbf2db89a) | fix | **paginator:** prevent keyboard nav to disabled buttons ([#30627](https://github.com/angular/components/pull/30627)) |
+| [688c430fe](https://github.com/angular/components/commit/688c430fe8df09152ee59eb8a2ca62b5ba2fb81e) | fix | **select:** close panel on detach output event ([#30634](https://github.com/angular/components/pull/30634)) |
+| [d5ba63d00](https://github.com/angular/components/commit/d5ba63d00a635059ac0c8dcc5ebb495a55777f0a) | fix | **select:** use flexible overlay dimensions ([#30628](https://github.com/angular/components/pull/30628)) |
+| [0e985f2c6](https://github.com/angular/components/commit/0e985f2c671b6472f6c4f5c3ecdce11e3c1c85f3) | fix | **slider:** handle null values in slider input ([#30621](https://github.com/angular/components/pull/30621)) |
+| [43b08600c](https://github.com/angular/components/commit/43b08600cedc82d99fff75edf55837d02a70c276) | fix | **timepicker:** assertion error if reopened quickly ([#30639](https://github.com/angular/components/pull/30639)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dc70692ab](https://github.com/angular/components/commit/dc70692abafe578a140b7e2b6020663643cd271e) | fix | **text-field:** Long multiline textfield focus issue ([#30312](https://github.com/angular/components/pull/30312)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e1cf2844f](https://github.com/angular/components/commit/e1cf2844f047bfd044cb8b5306faad4bdc09bdbd) | fix | avoid repeating selectors in m3 themes ([#30645](https://github.com/angular/components/pull/30645)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.4"></a>
 # 19.2.4 "cafetite-cafe" (2025-03-19)
 ### cdk
