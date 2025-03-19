@@ -30,9 +30,14 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
         HarnessPredicate.stringMatches(harness.getLabel(), label),
       )
       .addOption(
-        'selected',
-        options.selected,
-        async (harness, selected) => (await harness.isSelected()) === selected,
+        'pressed',
+        options.pressed,
+        async (harness, pressed) => (await harness.isPressed()) === pressed,
+      )
+      .addOption(
+        'expanded',
+        options.expanded,
+        async (harness, expanded) => (await harness.isExpanded()) === expanded,
       )
       .addOption(
         'completed',
@@ -61,16 +66,22 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Whether the step is selected. */
-  async isSelected(): Promise<boolean> {
+  /** Whether the step of Horizontal Stepper is pressed. */
+  async isPressed(): Promise<boolean> {
     const host = await this.host();
-    return (await host.getAttribute('aria-selected')) === 'true';
+    return (await host.getAttribute('aria-pressed')) === 'true';
+  }
+
+  /** Whether the step of Vertical Stepper is expanded. */
+  async isExpanded(): Promise<boolean> {
+    const host = await this.host();
+    return (await host.getAttribute('aria-expanded')) === 'true';
   }
 
   /** Whether the step has been filled out. */
   async isCompleted(): Promise<boolean> {
     const state = await this._getIconState();
-    return state === 'done' || (state === 'edit' && !(await this.isSelected()));
+    return state === 'done' || (state === 'edit' && !(await this.isPressed()));
   }
 
   /**
@@ -92,7 +103,7 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
   }
 
   /**
-   * Selects the given step by clicking on the label. The step may not be selected
+   * Selects the given step by clicking on the label. The step may not be selected/expanded
    * if the stepper doesn't allow it (e.g. if there are validation errors).
    */
   async select(): Promise<void> {
