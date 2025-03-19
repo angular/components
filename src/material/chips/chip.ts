@@ -11,7 +11,6 @@ import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {DOCUMENT} from '@angular/common';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,6 +38,7 @@ import {
   MatRippleLoader,
   RippleGlobalOptions,
   _StructuralStylesLoader,
+  _animationsDisabled,
 } from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
@@ -120,7 +120,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   private _actionChanges: Subscription | undefined;
 
   /** Whether animations for the chip are enabled. */
-  _animationsDisabled: boolean;
+  _animationsDisabled = _animationsDisabled();
 
   /** All avatars present in the chip. */
   @ContentChildren(MAT_CHIP_AVATAR, {descendants: true})
@@ -245,8 +245,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_StructuralStylesLoader);
     styleLoader.load(_VisuallyHiddenLoader);
-    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
-    this._animationsDisabled = animationMode === 'NoopAnimations';
     this._monitorFocus();
 
     this._rippleLoader?.configureRipple(this._elementRef.nativeElement, {

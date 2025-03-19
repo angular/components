@@ -21,9 +21,8 @@ import {
   OnInit,
   Renderer2,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
-import {ThemePalette} from '../core';
+import {_animationsDisabled, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Allowed position options for matBadgePosition */
@@ -76,7 +75,7 @@ export class MatBadge implements OnInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ariaDescriber = inject(AriaDescriber);
   private _renderer = inject(Renderer2);
-  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  private _animationsDisabled = _animationsDisabled();
   private _idGenerator = inject(_IdGenerator);
 
   /**
@@ -240,14 +239,14 @@ export class MatBadge implements OnInit, OnDestroy {
     badgeElement.setAttribute('aria-hidden', 'true');
     badgeElement.classList.add(BADGE_CONTENT_CLASS);
 
-    if (this._animationMode === 'NoopAnimations') {
+    if (this._animationsDisabled) {
       badgeElement.classList.add('_mat-animation-noopable');
     }
 
     this._elementRef.nativeElement.appendChild(badgeElement);
 
     // animate in after insertion
-    if (typeof requestAnimationFrame === 'function' && this._animationMode !== 'NoopAnimations') {
+    if (typeof requestAnimationFrame === 'function' && !this._animationsDisabled) {
       this._ngZone.runOutsideAngular(() => {
         requestAnimationFrame(() => {
           badgeElement.classList.add(activeClass);

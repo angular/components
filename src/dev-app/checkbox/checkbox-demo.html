@@ -255,46 +255,6 @@
         }
     </mat-checkbox>
   </div>
-  <div animationsNoop>
-    <h5>No animations</h5>
-    <mat-checkbox
-        [required]="demoRequired"
-        [labelPosition]="demoLabelAfter ? 'after' : 'before'"
-        [aria-label]="demoLabel"
-        [aria-labelledby]="demoLabelledBy"
-        [color]="demoColor"
-        [disableRipple]="demoDisableRipple"
-        [id]="demoId"
-        [name]="demoName"
-        [value]="demoValue"
-        [checked]="demoChecked"
-        [disabled]="demoDisabled"
-        [indeterminate]="demoIndeterminate"
-        (change)="demoChecked = $event.checked"
-        (indeterminateChange)="demoIndeterminate = $event">
-        @if (!demoHideLabel) {
-          Checkbox w/ [checked] & (change)
-        }
-    </mat-checkbox>
-    <mat-checkbox
-        [required]="demoRequired"
-        [labelPosition]="demoLabelAfter ? 'after' : 'before'"
-        [aria-label]="demoLabel"
-        [aria-labelledby]="demoLabelledBy"
-        [color]="demoColor"
-        [disableRipple]="demoDisableRipple"
-        [id]="demoId"
-        [name]="demoName"
-        [value]="demoValue"
-        [disabled]="demoDisabled"
-        [indeterminate]="demoIndeterminate"
-        [(ngModel)]="demoChecked"
-        (indeterminateChange)="demoIndeterminate = $event">
-        @if (!demoHideLabel) {
-          Checkbox w/ [(ngModel)]
-        }
-    </mat-checkbox>
-  </div>
 </div>
 
 <p>

@@ -28,7 +28,6 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
-  ANIMATION_MODULE_TYPE,
   afterNextRender,
   Injector,
 } from '@angular/core';
@@ -51,6 +50,7 @@ import {
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
+import {_animationsDisabled} from '../core';
 
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -998,7 +998,7 @@ export class TooltipComponent implements OnDestroy {
   _mouseLeaveHideDelay: number;
 
   /** Whether animations are currently disabled. */
-  private _animationsDisabled: boolean;
+  private _animationsDisabled = _animationsDisabled();
 
   /** Reference to the internal tooltip element. */
   @ViewChild('tooltip', {
@@ -1025,10 +1025,7 @@ export class TooltipComponent implements OnDestroy {
 
   constructor(...args: unknown[]);
 
-  constructor() {
-    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
-    this._animationsDisabled = animationMode === 'NoopAnimations';
-  }
+  constructor() {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin

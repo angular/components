@@ -13,7 +13,6 @@ import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
@@ -35,6 +34,7 @@ import {
 } from '@angular/core';
 import {EMPTY, Observable, Observer, Subject, merge, of as observableOf, timer} from 'rxjs';
 import {debounceTime, filter, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {_animationsDisabled} from '../core';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = {
@@ -80,7 +80,7 @@ export abstract class MatPaginatedTabHeader
   private _sharedResizeObserver = inject(SharedResizeObserver);
   private _injector = inject(Injector);
   private _renderer = inject(Renderer2);
-  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  _animationsDisabled = _animationsDisabled();
   private _eventCleanups: (() => void)[];
 
   abstract _items: QueryList<MatPaginatedTabHeaderItem>;

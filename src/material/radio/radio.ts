@@ -9,7 +9,6 @@
 import {_IdGenerator, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,7 +38,13 @@ import {
   Renderer2,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MatRipple, ThemePalette, _MatInternalFormField, _StructuralStylesLoader} from '../core';
+import {
+  MatRipple,
+  ThemePalette,
+  _MatInternalFormField,
+  _StructuralStylesLoader,
+  _animationsDisabled,
+} from '../core';
 import {Subscription} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
@@ -597,7 +602,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   _rippleTrigger: ElementRef<HTMLElement>;
 
   /** Whether animations are disabled. */
-  _noopAnimations: boolean;
+  _noopAnimations = _animationsDisabled();
 
   private _injector = inject(Injector);
 
@@ -606,13 +611,11 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const radioGroup = inject<MatRadioGroup>(MAT_RADIO_GROUP, {optional: true})!;
-    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
-    this._noopAnimations = animationMode === 'NoopAnimations';
     this._disabledInteractive = this._defaultOptions?.disabledInteractive ?? false;
 
     if (tabIndex) {

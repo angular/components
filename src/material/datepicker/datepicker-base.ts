@@ -33,7 +33,6 @@ import {DOCUMENT} from '@angular/common';
 import {
   afterNextRender,
   AfterViewInit,
-  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -57,7 +56,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {MatButton} from '../button';
-import {DateAdapter, ThemePalette} from '../core';
+import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar, MatCalendarView} from './calendar';
@@ -140,8 +139,7 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   implements AfterViewInit, OnDestroy
 {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected _animationsDisabled =
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
+  protected _animationsDisabled = _animationsDisabled();
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _globalModel = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter)!;

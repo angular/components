@@ -21,11 +21,10 @@ import {
   InjectionToken,
   inject,
   numberAttribute,
-  ANIMATION_MODULE_TYPE,
   Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {ThemePalette} from '../core';
+import {_animationsDisabled, ThemePalette} from '../core';
 
 /** Last animation end data. */
 export interface ProgressAnimationEnd {
@@ -117,7 +116,6 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _renderer = inject(Renderer2);
   private _cleanupTransitionEnd: (() => void) | undefined;
-  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   constructor(...args: unknown[]);
 
@@ -125,8 +123,6 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
     const defaults = inject<MatProgressBarDefaultOptions>(MAT_PROGRESS_BAR_DEFAULT_OPTIONS, {
       optional: true,
     });
-
-    this._isNoopAnimation = this._animationMode === 'NoopAnimations';
 
     if (defaults) {
       if (defaults.color) {
@@ -138,7 +134,7 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   }
 
   /** Flag that indicates whether NoopAnimations mode is set to true. */
-  _isNoopAnimation = false;
+  _isNoopAnimation = _animationsDisabled();
 
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
   /**

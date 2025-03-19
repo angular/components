@@ -20,7 +20,6 @@ import {
   booleanAttribute,
   inject,
   signal,
-  ANIMATION_MODULE_TYPE,
   ChangeDetectorRef,
 } from '@angular/core';
 import {merge, Subscription} from 'rxjs';
@@ -35,7 +34,7 @@ import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
+import {_animationsDisabled, _StructuralStylesLoader} from '../core';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -102,7 +101,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ariaDescriber = inject(AriaDescriber, {optional: true});
   private _renderChanges: Subscription | undefined;
-  protected _animationModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
+  protected _animationsDisabled = _animationsDisabled();
 
   /**
    * Indicates which state was just cleared from the sort header.

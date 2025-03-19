@@ -70,7 +70,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     constructor(...args: unknown[]);
     _alignInkBarToSelectedTab(): void;
     // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
+    _animationsDisabled: boolean;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
     _checkPaginationEnabled(): void;
@@ -246,7 +246,7 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     get animationDuration(): string;
     set animationDuration(value: string | number);
     // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
+    _animationsDisabled: boolean;
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated

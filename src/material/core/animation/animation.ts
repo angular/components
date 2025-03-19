@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {ANIMATION_MODULE_TYPE, inject} from '@angular/core';
+
 /**
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
@@ -27,4 +29,12 @@ export class AnimationDurations {
   static COMPLEX = '375ms';
   static ENTERING = '225ms';
   static EXITING = '195ms';
+}
+
+/**
+ * Returns whether animations have been disabled by DI. Must be called in a DI context.
+ * @docs-private
+ */
+export function _animationsDisabled(): boolean {
+  return inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 }

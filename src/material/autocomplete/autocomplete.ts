@@ -7,7 +7,6 @@
  */
 
 import {
-  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,6 +26,7 @@ import {
   inject,
 } from '@angular/core';
 import {
+  _animationsDisabled,
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
@@ -124,8 +124,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _defaults = inject<MatAutocompleteDefaultOptions>(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS);
-  protected _animationsDisabled =
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
+  protected _animationsDisabled = _animationsDisabled();
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Manages active item in option list based on key events. */

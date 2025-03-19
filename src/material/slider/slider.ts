@@ -26,9 +26,9 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
-  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
+  _animationsDisabled,
   _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleGlobalOptions,
@@ -359,7 +359,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   _tickMarks: _MatTickMark[];
 
   /** Whether animations have been disabled. */
-  _noopAnimations: boolean;
+  _noopAnimations = _animationsDisabled();
 
   /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
   private _dirChangeSubscription: Subscription;
@@ -410,8 +410,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
-    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
-    this._noopAnimations = animationMode === 'NoopAnimations';
 
     if (this._dir) {
       this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());

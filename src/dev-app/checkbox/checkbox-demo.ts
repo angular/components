@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ANIMATION_MODULE_TYPE, ChangeDetectionStrategy, Component, Directive} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Directive} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxModule} from '@angular/material/checkbox';
 import {MatPseudoCheckboxModule, ThemePalette} from '@angular/material/core';
@@ -31,12 +31,6 @@ export class ClickActionNoop {}
   providers: [{provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'check'}}],
 })
 export class ClickActionCheck {}
-
-@Directive({
-  selector: '[animationsNoop]',
-  providers: [{provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations'}],
-})
-export class AnimationsNoop {}
 
 @Component({
   selector: 'mat-checkbox-demo-nested-checklist',
@@ -107,7 +101,6 @@ export class MatCheckboxDemoNestedChecklist {
     MatCheckboxDemoNestedChecklist,
     ClickActionNoop,
     ClickActionCheck,
-    AnimationsNoop,
     MatTooltip,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
