@@ -1,4 +1,4 @@
-import {Component, inject, Provider, signal, ViewChild} from '@angular/core';
+import {Component, inject, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DateAdapter, provideNativeDateAdapter} from '../core';
@@ -298,6 +298,15 @@ describe('MatTimepicker', () => {
         const fixture = TestBed.createComponent(TimepickerWithMultipleInputs);
         fixture.detectChanges();
       }).toThrowError(/MatTimepicker can only be registered with one input at a time/);
+    });
+
+    it('input should be properly formatted when in shadow DOM', () => {
+      const fixture = TestBed.createComponent(TimepickerInShadowDom);
+      fixture.detectChanges(); // So that TimepickerInput.timepicker gets set.
+      const input = fixture.nativeElement.shadowRoot.querySelector('.mat-timepicker-input');
+      typeInElement(input, '13:37');
+      fixture.detectChanges();
+      expect(input.value).toBe('13:37');
     });
   });
 
@@ -1413,3 +1422,13 @@ class TimepickerWithMultipleInputs {}
 class TimepickerWithoutInput {
   @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
 }
+
+@Component({
+  template: `
+    <input [matTimepicker]="picker" />
+    <mat-timepicker #picker />
+  `,
+  imports: [MatTimepicker, MatTimepickerInput],
+  encapsulation: ViewEncapsulation.ShadowDom,
+})
+class TimepickerInShadowDom {}
