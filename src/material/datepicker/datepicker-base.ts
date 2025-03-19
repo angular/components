@@ -394,6 +394,7 @@ export abstract class MatDatepickerBase<
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dir = inject(Directionality, {optional: true});
   private _model = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
+  private _animationsDisabled = _animationsDisabled();
 
   private _scrollStrategy = inject(MAT_DATEPICKER_SCROLL_STRATEGY);
   private _inputStateChanges = Subscription.EMPTY;
@@ -769,6 +770,7 @@ export abstract class MatDatepickerBase<
         direction: this._dir || 'ltr',
         scrollStrategy: isDialog ? this._overlay.scrollStrategies.block() : this._scrollStrategy(),
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
+        disableAnimations: this._animationsDisabled,
       }),
     ));
 

@@ -343,6 +343,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       scrollStrategy: this._scrollStrategyFactory(),
       direction: this._dir || 'ltr',
       hasBackdrop: false,
+      disableAnimations: this._animationsDisabled,
     });
 
     this._overlayRef.detachments().subscribe(() => this.close());
