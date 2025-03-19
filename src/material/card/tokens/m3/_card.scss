@@ -1,6 +1,6 @@
+@use '../../../core/style/sass-utils';
+@use '../../../core/tokens/token-definition';
 @use 'sass:map';
-@use '../../../style/sass-utils';
-@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, card);
@@ -21,4 +21,5 @@ $prefix: (mat, card);
 
   @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }
+
 

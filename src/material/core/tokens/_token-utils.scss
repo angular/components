@@ -20,6 +20,13 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   $_tokens: null !global;
 }
 
+// Sets the token prefix and map to use when creating token slots.
+@mixin use($prefix, $tokens) {
+  @include use-tokens($prefix, $tokens) {
+   @content;
+  }
+}
+
 // Combines a prefix and a string to generate a CSS variable name for a token.
 @function _create-var-name($prefix, $token) {
   @if $prefix == null or $token == null {
@@ -75,6 +82,24 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   @if map.get($_tokens, $token) != null {
     #{$property}: #{_get-token-value($token, $fallback)};
   }
+}
+
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
+@function slot($prefix, $tokens, $token, $fallback: null) {
+  $_component-prefix: $prefix !global;
+  $_tokens: $tokens !global;
+
+  $_assert: _assert-use-tokens($token);
+  @if map.get($_tokens, $token) != null {
+    @return _get-token-value($token, $fallback);
+  }
+
+  $_component-prefix: null !global;
+  $_tokens: null !global;
 }
 
 // Returns the name of a token including the current prefix. Intended to be used in calculations
