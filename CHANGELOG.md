@@ -1,3 +1,22 @@
+<a name="19.2.4"></a>
+# 19.2.4 "cafetite-cafe" (2025-03-19)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [60fc781c3](https://github.com/angular/components/commit/60fc781c30c117265463b9626c4d059a74ef26af) | fix | **text-field:** Long multiline textfield focus issue ([#30312](https://github.com/angular/components/pull/30312)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [528cfc23f](https://github.com/angular/components/commit/528cfc23f52e5dcf643761a9a54a38fe389c9edc) | fix | **card:** remove alternate token for container-color ([#30640](https://github.com/angular/components/pull/30640)) |
+| [804c027c3](https://github.com/angular/components/commit/804c027c3d2e5cdce80d8c128e258007e4906bb5) | fix | **chips:** adds default placeholder for chips input ([#30452](https://github.com/angular/components/pull/30452)) |
+| [732397f5b](https://github.com/angular/components/commit/732397f5b8ece8916fcb41580a1262eb2be61d14) | fix | **core:** include alternative tokens ([#30633](https://github.com/angular/components/pull/30633)) |
+| [0ec7fd164](https://github.com/angular/components/commit/0ec7fd1643a4657d8023baa7f703070531d8b05d) | fix | **paginator:** change tabindex expect in test |
+| [9b357a3f1](https://github.com/angular/components/commit/9b357a3f1f89382d0eb0c6ea75f039ae6f2990ba) | fix | **paginator:** prevent keyboard nav to disabled buttons ([#30627](https://github.com/angular/components/pull/30627)) |
+| [432bde7b0](https://github.com/angular/components/commit/432bde7b0ee9efb6e4751270c798f14ff268cd9c) | fix | **select:** use flexible overlay dimensions ([#30628](https://github.com/angular/components/pull/30628)) |
+| [9b9d7bd41](https://github.com/angular/components/commit/9b9d7bd41ba905300d9b3145e61aa4567722eb45) | fix | **timepicker:** assertion error if reopened quickly ([#30639](https://github.com/angular/components/pull/30639)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.3"></a>
 # 19.2.3 "californium-coconut" (2025-03-12)
 ### cdk
