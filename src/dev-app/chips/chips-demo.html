@@ -232,6 +232,74 @@
   </mat-card>
 
   <mat-card>
+    <mat-toolbar color="primary">Disabled Input Chips</mat-toolbar>
+
+    <mat-card-content>
+      <p>
+        The <code>&lt;mat-chip-grid&gt;</code> component pairs with the <code>matChipInputFor</code> directive
+        to convert user input text into chips.
+        They can be used inside a <code>&lt;mat-form-field&gt;</code>.
+      </p>
+
+      <h4>Input is last child of chip grid</h4>
+
+      <mat-form-field class="demo-has-chip-list">
+        <mat-label>New Contributor...</mat-label>
+        <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" required>
+          @for (person of people; track person) {
+            <mat-chip-row
+              [disabled]="true"
+              [editable]="editable"
+              (removed)="remove(person)"
+              (edited)="edit(person, $event)">
+              {{person.name}}
+              <button matChipRemove aria-label="Remove contributor">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+          <input
+                 [matChipInputFor]="chipGrid1"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)" />
+        </mat-chip-grid>
+      </mat-form-field>
+
+      <h4>Input is next sibling child of chip grid</h4>
+
+      <mat-form-field>
+        <mat-label>New Contributor...</mat-label>
+        <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" required>
+          @for (person of people; track person) {
+            <mat-chip-row disabled (removed)="remove(person)">
+              {{person.name}}
+              <button matChipRemove aria-label="Remove contributor">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input [matChipInputFor]="chipGrid2"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="add($event)" />
+      </mat-form-field>
+
+      <p>
+        The example above has overridden the <code>[separatorKeys]</code> input to allow for
+        <code>ENTER</code>, <code>COMMA</code> and <code>SEMICOLON</code> keys.
+      </p>
+
+      <h4>Options</h4>
+      <p>
+        <mat-checkbox name="addOnBlur" [(ngModel)]="addOnBlur">Add on Blur</mat-checkbox>
+      </p>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
     <mat-toolbar color="primary">Miscellaneous</mat-toolbar>
     <mat-card-content>
       <h4>Stacked</h4>
