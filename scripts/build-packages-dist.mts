@@ -64,8 +64,7 @@ function buildReleasePackages(distPath: string, isSnapshotBuild: boolean): Built
   // version placeholder is populated in the release output.
   const stampConfigArg = `--config=${isSnapshotBuild ? 'snapshot-build' : 'release'}`;
 
-  // TODO(josephperrott): Figure out why we can't use workers right now.
-  exec(`${bazelCmd} build --spawn_strategy=local ${stampConfigArg} ${targets.join(' ')}`);
+  exec(`${bazelCmd} build ${stampConfigArg} ${targets.join(' ')}`);
 
   // Delete the distribution directory so that the output is guaranteed to be clean. Re-create
   // the empty directory so that we can copy the release packages into it later.
