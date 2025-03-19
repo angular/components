@@ -17,18 +17,27 @@
 <p class="docs-api-class-description">{$ class.description | marked | safe $}</p>
 {%- endif -%}
 
-{%- if class.directiveSelectors -%}
-<p class="docs-api-directive-selectors">
+{%- if class.selectors and class.isComponent -%}
+<p class="docs-api-component-selectors">
   <span class="docs-api-class-selector-label">Selector:</span>
-  {% for selector in class.directiveSelectors %}
+  {% for selector in class.selectors %}
     <span class="docs-api-class-selector-name">{$ selector $}</span>
   {% endfor %}
 </p>
 {%- endif -%}
 
-{%- if class.directiveExportAs -%}
+{%- if class.selectors and class.isDirective -%}
+<p class="docs-api-directive-selectors">
+  <span class="docs-api-class-selector-label">Selector:</span>
+  {% for selector in class.selectors %}
+    <span class="docs-api-class-selector-name">{$ selector $}</span>
+  {% endfor %}
+</p>
+{%- endif -%}
+
+{%- if class.exportAs -%}
 <span class="docs-api-class-export-label">Exported as:</span>
-<span class="docs-api-class-export-name">{$ class.directiveExportAs $}</span>
+<span class="docs-api-class-export-name">{$ class.exportAs $}</span>
 {%- endif -%}
 
 {%- if class.isDeprecated -%}

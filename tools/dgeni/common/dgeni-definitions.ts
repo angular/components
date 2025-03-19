@@ -29,12 +29,13 @@ export interface CategorizedClassLikeDoc extends ClassLikeExportDoc, Deprecation
 /** Extended Dgeni class document that includes extracted Angular metadata. */
 export interface CategorizedClassDoc extends ClassExportDoc, CategorizedClassLikeDoc {
   isDirective: boolean;
+  isComponent: boolean;
   isService: boolean;
   isNgModule: boolean;
   isTestHarness: boolean;
-  directiveExportAs?: string | null;
-  directiveSelectors?: string[];
-  directiveMetadata: Map<string, any> | null;
+  exportAs?: string | null;
+  selectors?: string[];
+  metadata: Map<string, any> | null;
   extendedDoc: ClassLikeExportDoc | undefined;
   inheritedDocs: ClassLikeExportDoc[];
 }
@@ -42,10 +43,10 @@ export interface CategorizedClassDoc extends ClassExportDoc, CategorizedClassLik
 /** Extended Dgeni property-member document that includes extracted Angular metadata. */
 export interface CategorizedPropertyMemberDoc extends PropertyMemberDoc, DeprecationInfo {
   description: string;
-  isDirectiveInput: boolean;
-  isDirectiveOutput: boolean;
-  directiveInputAlias: string;
-  directiveOutputAlias: string;
+  isInput: boolean;
+  isOutput: boolean;
+  inputAlias: string;
+  outputAlias: string;
 }
 
 /** Extended Dgeni method-member document that simplifies logic for the Dgeni template. */

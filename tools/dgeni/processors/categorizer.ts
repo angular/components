@@ -6,7 +6,8 @@ import {MemberDoc} from 'dgeni-packages/typescript/api-doc-types/MemberDoc';
 import {getInheritedDocsOfClass} from '../common/class-inheritance';
 import {
   decorateDeprecatedDoc,
-  getDirectiveSelectors,
+  getSelectors,
+  isComponent,
   isDirective,
   isMethod,
   isNgModule,
@@ -22,7 +23,7 @@ import {
   CategorizedPropertyMemberDoc,
   CategorizedTypeAliasExportDoc,
 } from '../common/dgeni-definitions';
-import {getDirectiveMetadata} from '../common/directive-metadata';
+import {getMetadata} from '../common/directive-metadata';
 import {normalizeFunctionParameters} from '../common/normalize-function-parameters';
 import {isPublicDoc} from '../common/private-docs';
 import {getInputBindingData, getOutputBindingData} from '../common/property-bindings';
@@ -111,7 +112,7 @@ export class Categorizer implements Processor {
     // clauses for the Dgeni document. To make the template syntax simpler and more readable,
     // store the extended class in a variable.
     classDoc.extendedDoc = classDoc.extendsClauses[0] ? classDoc.extendsClauses[0].doc! : undefined;
-    classDoc.directiveMetadata = getDirectiveMetadata(classDoc);
+    classDoc.metadata = getMetadata(classDoc);
     classDoc.inheritedDocs = getInheritedDocsOfClass(classDoc, this._exportSymbolsToDocsMap);
 
     classDoc.methods.push(
@@ -134,10 +135,14 @@ export class Categorizer implements Processor {
     }
 
     // Categorize the current visited classDoc into its Angular type.
-    if (isDirective(classDoc) && classDoc.directiveMetadata) {
-      classDoc.isDirective = true;
-      classDoc.directiveExportAs = classDoc.directiveMetadata.get('exportAs');
-      classDoc.directiveSelectors = getDirectiveSelectors(classDoc);
+    if ((isDirective(classDoc) || isComponent(classDoc)) && classDoc.metadata) {
+      if (isComponent(classDoc)) {
+        classDoc.isComponent = true;
+      } else {
+        classDoc.isDirective = true;
+      }
+      classDoc.exportAs = classDoc.metadata.get('exportAs');
+      classDoc.selectors = getSelectors(classDoc);
     } else if (isService(classDoc)) {
       classDoc.isService = true;
     } else if (isNgModule(classDoc)) {
@@ -190,17 +195,17 @@ export class Categorizer implements Processor {
 
     const metadata =
       propertyDoc.containerDoc.docType === 'class'
-        ? (propertyDoc.containerDoc as CategorizedClassDoc).directiveMetadata
+        ? (propertyDoc.containerDoc as CategorizedClassDoc).metadata
         : null;
 
     const inputMetadata = metadata ? getInputBindingData(propertyDoc, metadata) : null;
     const outputMetadata = metadata ? getOutputBindingData(propertyDoc, metadata) : null;
 
-    propertyDoc.isDirectiveInput = !!inputMetadata;
-    propertyDoc.directiveInputAlias = (inputMetadata && inputMetadata.alias) || '';
+    propertyDoc.isInput = !!inputMetadata;
+    propertyDoc.inputAlias = (inputMetadata && inputMetadata.alias) || '';
 
-    propertyDoc.isDirectiveOutput = !!outputMetadata;
-    propertyDoc.directiveOutputAlias = (outputMetadata && outputMetadata.alias) || '';
+    propertyDoc.isOutput = !!outputMetadata;
+    propertyDoc.outputAlias = (outputMetadata && outputMetadata.alias) || '';
   }
 
   /**

@@ -47,6 +47,9 @@ export class EntryPointDoc {
   /** List of categorized class docs that are defining a directive. */
   directives: CategorizedClassDoc[] = [];
 
+  /** List of categorized class docs that are defining a directive. */
+  components: CategorizedClassDoc[] = [];
+
   /** List of categorized class docs that are defining a service. */
   services: CategorizedClassDoc[] = [];
 
