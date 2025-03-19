@@ -26,7 +26,7 @@ $calendar-weekday-table-font-size: 11px !default;
     $palette-name
   );
 
-  @include token-utils.create-token-values(
+  @include token-utils.create-token-values-mixed(
     tokens-mat-datepicker.$prefix,
     map.merge($calendar-tokens, $range-tokens)
   );
@@ -40,7 +40,7 @@ $calendar-weekday-table-font-size: 11px !default;
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-datepicker.$prefix,
         tokens-mat-datepicker.get-unthemable-tokens()
       );
@@ -58,7 +58,7 @@ $calendar-weekday-table-font-size: 11px !default;
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-datepicker.$prefix,
         tokens-mat-datepicker.get-color-tokens($theme)
       );
@@ -80,7 +80,8 @@ $calendar-weekday-table-font-size: 11px !default;
           $theme,
           accent
         );
-        @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $accent-tokens);
+        @include token-utils.create-token-values-mixed(tokens-mat-datepicker.$prefix,
+          $accent-tokens);
       }
 
       &.mat-warn {
@@ -88,7 +89,7 @@ $calendar-weekday-table-font-size: 11px !default;
           $theme,
           warn
         );
-        @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $warn-tokens);
+        @include token-utils.create-token-values-mixed(tokens-mat-datepicker.$prefix, $warn-tokens);
       }
     }
   }
@@ -101,7 +102,7 @@ $calendar-weekday-table-font-size: 11px !default;
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-datepicker.$prefix,
         tokens-mat-datepicker.get-typography-tokens($theme)
       );
@@ -124,7 +125,7 @@ $calendar-weekday-table-font-size: 11px !default;
   );
 
   @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values(tokens-mat-datepicker.$prefix, $tokens);
+    @include token-utils.create-token-values-mixed(tokens-mat-datepicker.$prefix, $tokens);
   }
 }
 

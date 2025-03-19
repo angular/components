@@ -13,7 +13,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-circular-progress.$prefix,
         tokens-mdc-circular-progress.get-unthemable-tokens()
       );
@@ -31,20 +31,20 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-circular-progress.$prefix,
         tokens-mdc-circular-progress.get-color-tokens($theme, primary)
       );
 
       .mat-accent {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-circular-progress.$prefix,
           tokens-mdc-circular-progress.get-color-tokens($theme, accent)
         );
       }
 
       .mat-warn {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-circular-progress.$prefix,
           tokens-mdc-circular-progress.get-color-tokens($theme, warn)
         );

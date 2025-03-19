@@ -17,11 +17,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-list.$prefix,
         tokens-mdc-list.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-list.$prefix,
         tokens-mat-list.get-unthemable-tokens()
       );
@@ -34,11 +34,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-list.$prefix,
         tokens-mdc-list.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-list.$prefix,
         tokens-mat-list.get-color-tokens($theme)
       );
@@ -46,7 +46,7 @@
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-radio.$prefix,
         tokens-mdc-radio.get-color-tokens($theme, primary)
       );
@@ -55,7 +55,7 @@
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-radio.$prefix,
           tokens-mdc-radio.get-color-tokens($theme, accent)
         );
@@ -65,7 +65,7 @@
     .mat-warn {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-radio.$prefix,
           tokens-mdc-radio.get-color-tokens($theme, warn)
         );
@@ -73,19 +73,19 @@
     }
 
     .mat-mdc-list-option {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-color-tokens($theme, primary)
       );
     }
     .mat-mdc-list-option.mat-accent {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-color-tokens($theme, accent)
       );
     }
     .mat-mdc-list-option.mat-warn {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-checkbox.$prefix,
         tokens-mdc-checkbox.get-color-tokens($theme, warn)
       );
@@ -123,11 +123,11 @@
     $density-scale: inspection.get-theme-density($theme);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-list.$prefix,
         tokens-mdc-list.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-list.$prefix,
         tokens-mat-list.get-density-tokens($theme)
       );
@@ -135,7 +135,7 @@
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-radio.$prefix,
         tokens-mdc-radio.get-density-tokens($theme)
       );
@@ -185,11 +185,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-list.$prefix,
         tokens-mdc-list.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-list.$prefix,
         tokens-mat-list.get-typography-tokens($theme)
       );

@@ -15,11 +15,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-slider.$prefix,
         tokens-mdc-slider.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-slider.$prefix,
         tokens-mat-slider.get-unthemable-tokens()
       );
@@ -37,32 +37,32 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-slider.$prefix,
         tokens-mdc-slider.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-slider.$prefix,
         tokens-mat-slider.get-color-tokens($theme)
       );
 
       .mat-accent {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-slider.$prefix,
           tokens-mdc-slider.private-get-color-palette-color-tokens($theme, accent)
         );
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mat-slider.$prefix,
           tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent)
         );
       }
 
       .mat-warn {
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mdc-slider.$prefix,
           tokens-mdc-slider.private-get-color-palette-color-tokens($theme, warn)
         );
-        @include token-utils.create-token-values(
+        @include token-utils.create-token-values-mixed(
           tokens-mat-slider.$prefix,
           tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn)
         );
@@ -78,7 +78,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-slider.$prefix,
         tokens-mdc-slider.get-typography-tokens($theme)
       );
@@ -93,7 +93,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-slider.$prefix,
         tokens-mdc-slider.get-density-tokens($theme)
       );

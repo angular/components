@@ -15,11 +15,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-chip.$prefix,
         tokens-mdc-chip.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-unthemable-tokens()
       );
@@ -37,11 +37,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-chip.$prefix,
         tokens-mdc-chip.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-color-tokens($theme)
       );
@@ -49,33 +49,33 @@
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mdc-chip.$prefix,
             tokens-mdc-chip.get-color-tokens($theme, primary)
           );
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, primary)
           );
         }
 
         &.mat-accent {
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mdc-chip.$prefix,
             tokens-mdc-chip.get-color-tokens($theme, accent)
           );
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, accent)
           );
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mdc-chip.$prefix,
             tokens-mdc-chip.get-color-tokens($theme, warn)
           );
-          @include token-utils.create-token-values(
+          @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, warn)
           );
@@ -92,11 +92,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-chip.$prefix,
         tokens-mdc-chip.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-typography-tokens($theme)
       );
@@ -111,11 +111,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-chip.$prefix,
         tokens-mdc-chip.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-density-tokens($theme)
       );

@@ -14,11 +14,11 @@
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-dialog.$prefix,
         tokens-mdc-dialog.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-dialog.$prefix,
         tokens-mat-dialog.get-unthemable-tokens()
       );
@@ -31,11 +31,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-dialog.$prefix,
         tokens-mdc-dialog.get-color-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-dialog.$prefix,
         tokens-mat-dialog.get-color-tokens($theme)
       );
@@ -48,11 +48,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mdc-dialog.$prefix,
         tokens-mdc-dialog.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-dialog.$prefix,
         tokens-mat-dialog.get-typography-tokens($theme)
       );

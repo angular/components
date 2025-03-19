@@ -8,7 +8,7 @@
 @mixin _palette-colors($theme, $palette-name) {
   $color: inspection.get-theme-color($theme, $palette-name, text);
   $tokens: tokens-mat-icon.private-get-icon-color-tokens($color);
-  @include token-utils.create-token-values(tokens-mat-icon.$prefix, $tokens);
+  @include token-utils.create-token-values-mixed(tokens-mat-icon.$prefix, $tokens);
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -31,7 +31,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values(
+      @include token-utils.create-token-values-mixed(
         tokens-mat-icon.$prefix,
         tokens-mat-icon.get-color-tokens($theme)
       );
