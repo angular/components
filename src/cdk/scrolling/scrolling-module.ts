@@ -45,3 +45,9 @@ export class CdkScrollableModule {}
   ],
 })
 export class ScrollingModule {}
+
+// Re-export needed by the Angular compiler.
+// See: https://github.com/angular/components/issues/30663.
+// Note: These exports need to be stable and shouldn't be renamed unnecessarily because
+// consuming libraries might have references to them in their own partial compilation output.
+export {Dir as ɵɵDir} from '../bidi';

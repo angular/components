@@ -23,3 +23,16 @@ import {
   providers: [Overlay, CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER],
 })
 export class OverlayModule {}
+
+// Re-export needed by the Angular compiler.
+// See: https://github.com/angular/components/issues/30663.
+// Note: These exports need to be stable and shouldn't be renamed unnecessarily because
+// consuming libraries might have references to them in their own partial compilation output.
+export {
+  CdkScrollableModule as ɵɵCdkScrollableModule,
+  CdkFixedSizeVirtualScroll as ɵɵCdkFixedSizeVirtualScroll,
+  CdkVirtualForOf as ɵɵCdkVirtualForOf,
+  CdkVirtualScrollViewport as ɵɵCdkVirtualScrollViewport,
+  CdkVirtualScrollableWindow as ɵɵCdkVirtualScrollableWindow,
+  CdkVirtualScrollableElement as ɵɵCdkVirtualScrollableElement,
+} from '../scrolling';
