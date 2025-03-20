@@ -1,0 +1,27 @@
+load("//tools:defaults2.bzl", "ts_project")
+load("//integration/module-tests:index.bzl", "module_test")
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["*.mts"]),
+    source_map = False,
+    tsconfig = "tsconfig.json",
+    deps = [
+        "//:node_modules/@angular/compiler-cli",
+        "//:node_modules/@types/node",
+        "//:node_modules/typescript",
+    ],
+)
+
+module_test(
+    name = "test",
+    npm_packages = {
+        "//src/cdk:npm_package": "src/cdk/npm_package",
+        "//src/material:npm_package": "src/material/npm_package",
+    },
+    skipped_entry_points = [
+        # This entry-point is JIT and would fail the AOT test.
+        "@angular/material/dialog/testing",
+    ],
+)
