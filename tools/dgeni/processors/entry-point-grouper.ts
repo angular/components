@@ -47,6 +47,9 @@ export class EntryPointDoc {
   /** List of categorized class docs that are defining a directive. */
   directives: CategorizedClassDoc[] = [];
 
+  /** List of categorized class docs that are defining a component. */
+  components: CategorizedClassDoc[] = [];
+
   /** List of categorized class docs that are defining a service. */
   services: CategorizedClassDoc[] = [];
 
@@ -124,7 +127,9 @@ export class EntryPointGrouper implements Processor {
       entryPoint.packageDisplayName = packageDisplayName;
 
       // Put this doc into the appropriate list in the entry-point doc.
-      if (doc.isDirective) {
+      if (doc.isComponent) {
+        entryPoint.components.push(doc);
+      } else if (doc.isDirective) {
         entryPoint.directives.push(doc);
       } else if (doc.isService) {
         entryPoint.services.push(doc);
