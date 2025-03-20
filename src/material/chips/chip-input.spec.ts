@@ -22,10 +22,10 @@ import {
 } from './index';
 
 describe('MatChipInput', () => {
-  let fixture: ComponentFixture<any>;
+  let fixture: ComponentFixture<TestChipInput>;
   let testChipInput: TestChipInput;
   let inputDebugElement: DebugElement;
-  let inputNativeElement: HTMLElement;
+  let inputNativeElement: HTMLInputElement;
   let chipInputDirective: MatChipInput;
   let dir = 'ltr';
 
@@ -87,9 +87,27 @@ describe('MatChipInput', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(inputNativeElement.getAttribute('disabled')).toBe('true');
+      expect(inputNativeElement.disabled).toBe(true);
       expect(chipInputDirective.disabled).toBe(true);
     });
+
+    it('should be able to set an input as being disabled and interactive', fakeAsync(() => {
+      fixture.componentInstance.chipGridInstance.disabled = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.disabled).toBe(true);
+      expect(inputNativeElement.readOnly).toBe(false);
+      expect(inputNativeElement.hasAttribute('aria-disabled')).toBe(false);
+
+      fixture.componentInstance.disabledInteractive = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.disabled).toBe(false);
+      expect(inputNativeElement.readOnly).toBe(true);
+      expect(inputNativeElement.getAttribute('aria-disabled')).toBe('true');
+    }));
 
     it('should be aria-required if the list is required', () => {
       expect(inputNativeElement.hasAttribute('aria-required')).toBe(false);
@@ -274,10 +292,12 @@ describe('MatChipInput', () => {
     <mat-form-field>
       <mat-chip-grid #chipGrid [required]="required">
         <mat-chip-row>Hello</mat-chip-row>
-        <input [matChipInputFor]="chipGrid"
-                  [matChipInputAddOnBlur]="addOnBlur"
-                  (matChipInputTokenEnd)="add($event)"
-                  [placeholder]="placeholder" />
+        <input
+          [matChipInputFor]="chipGrid"
+          [matChipInputAddOnBlur]="addOnBlur"
+          [matChipInputDisabledInteractive]="disabledInteractive"
+          (matChipInputTokenEnd)="add($event)"
+          [placeholder]="placeholder" />
       </mat-chip-grid>
     </mat-form-field>
   `,
@@ -288,6 +308,7 @@ class TestChipInput {
   addOnBlur: boolean = false;
   placeholder = '';
   required = false;
+  disabledInteractive = false;
 
   add(_: MatChipInputEvent) {}
 }

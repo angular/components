@@ -38,6 +38,14 @@ describe('MatChipInputHarness', () => {
     expect(await harnesses[1].isDisabled()).toBe(true);
   });
 
+  it('should get the disabled state when disabledInteractive is enabled', async () => {
+    fixture.componentInstance.disabledInteractive = true;
+    fixture.changeDetectorRef.markForCheck();
+    const harnesses = await loader.getAllHarnesses(MatChipInputHarness);
+    expect(await harnesses[0].isDisabled()).toBe(false);
+    expect(await harnesses[1].isDisabled()).toBe(true);
+  });
+
   it('should get whether the input is required', async () => {
     const harness = await loader.getHarness(MatChipInputHarness);
     expect(await harness.isRequired()).toBe(false);
@@ -91,7 +99,10 @@ describe('MatChipInputHarness', () => {
     </mat-chip-grid>
 
     <mat-chip-grid #grid2>
-      <input [matChipInputFor]="grid2" disabled />
+      <input
+        [matChipInputFor]="grid2"
+        [matChipInputDisabledInteractive]="disabledInteractive"
+        disabled/>
     </mat-chip-grid>
   `,
   imports: [MatChipsModule],
@@ -100,4 +111,5 @@ class ChipInputHarnessTest {
   required = false;
   add = jasmine.createSpy('add spy');
   separatorKeyCodes = [COMMA];
+  disabledInteractive = false;
 }

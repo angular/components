@@ -9,6 +9,9 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    interop_deps = [
+        "//src/cdk/coercion",
+    ],
     deps = [
         "//src/cdk/testing:testing_rjs",
     ],

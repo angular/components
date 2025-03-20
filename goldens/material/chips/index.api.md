@@ -252,6 +252,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     clear(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    disabledInteractive: boolean;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLInputElement>;
     _emitChipEnd(event?: KeyboardEvent): void;
@@ -260,6 +261,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     _focus(): void;
     focused: boolean;
+    protected _getReadonlyAttribute(): string | null;
     id: string;
     readonly inputElement: HTMLInputElement;
     _keydown(event: KeyboardEvent): void;
@@ -268,17 +270,22 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
+    // (undocumented)
+    static ngAcceptInputType_readonly: unknown;
+    // (undocumented)
     ngOnChanges(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     _onInput(): void;
     placeholder: string;
+    readonly: boolean;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
     // (undocumented)
     setDescribedByIds(ids: string[]): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; "disabledInteractive": { "alias": "matChipInputDisabledInteractive"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, never>;
 }
@@ -433,6 +440,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
 // @public
 export interface MatChipsDefaultOptions {
     hideSingleSelectionIndicator?: boolean;
+    inputDisabledInteractive?: boolean;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
 }
 
