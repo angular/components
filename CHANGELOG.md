@@ -1,3 +1,20 @@
+<a name="19.2.5"></a>
+# 19.2.5 "argon-planet" (2025-03-20)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ab70ba5b3](https://github.com/angular/components/commit/ab70ba5b304bf1297d2ece4cc72e1318e20cbbbb) | fix | **tree:** retainining previous objects ([#30431](https://github.com/angular/components/pull/30431)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2bfa5262e](https://github.com/angular/components/commit/2bfa5262ea388c3081718de37fe4ea1be703b4b5) | fix | **timepicker:** TimepickerInput component in shadow DOM ([#30642](https://github.com/angular/components/pull/30642)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8d7a0f683](https://github.com/angular/components/commit/8d7a0f683220a754086f89335789d98f17cc67ae) | fix | ensure re-exported module symbols can be imported |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.4"></a>
 # 19.2.4 "cafetite-cafe" (2025-03-19)
 ### cdk
