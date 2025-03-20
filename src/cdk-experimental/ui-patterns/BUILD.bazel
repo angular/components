@@ -1,16 +1,16 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "ui-patterns",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
-        "//src/cdk-experimental/ui-patterns/listbox",
-        "@npm//@angular/core",
+        "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like:signal-like_rjs",
+        "//src/cdk-experimental/ui-patterns/listbox:listbox_rjs",
     ],
 )
