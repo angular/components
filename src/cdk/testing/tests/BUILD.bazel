@@ -1,4 +1,5 @@
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -20,10 +21,10 @@ ng_module(
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_harnesses",
     srcs = glob(["harnesses/**/*.ts"]),
-    deps = [
+    interop_deps = [
         "//src/cdk/testing",
     ],
 )
@@ -78,20 +79,20 @@ ng_e2e_test_library(
     ],
 )
 
-ts_library(
+ts_project(
     name = "webdriver_test_sources",
     testonly = True,
     srcs = ["webdriver.e2e.spec.ts"],
-    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
-    devmode_module = "commonjs",
-    deps = [
+    interop_deps = [
         ":cross_environment_specs",
         ":test_harnesses",
         "//src/cdk/testing",
         "//src/cdk/testing/selenium-webdriver",
-        "@npm//@bazel/runfiles",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/selenium-webdriver",
+    ],
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
     ],
 )
