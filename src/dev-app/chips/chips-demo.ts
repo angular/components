@@ -17,7 +17,6 @@ import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/ma
 import {ThemePalette} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatToolbarModule} from '@angular/material/toolbar';
 
 export interface Person {
   name: string;
@@ -40,7 +39,6 @@ export interface DemoColor {
     MatChipsModule,
     MatFormFieldModule,
     MatIconModule,
-    MatToolbarModule,
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +52,7 @@ export class ChipsDemo {
   listboxesWithAvatar = false;
   disableInputs = false;
   editable = false;
+  disabledInteractive = false;
   message = '';
 
   shirtSizes = [
