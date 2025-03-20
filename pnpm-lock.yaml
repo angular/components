@@ -248,6 +248,9 @@ importers:
       jasmine-core:
         specifier: ^4.1.0
         version: 4.6.1
+      jasmine-reporters:
+        specifier: ^2.5.2
+        version: 2.5.2
       jsonc-parser:
         specifier: ^3.0.0
         version: 3.3.1
@@ -338,6 +341,9 @@ importers:
       shelljs:
         specifier: ^0.8.5
         version: 0.8.5
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
       stylelint:
         specifier: ^14.14.0
         version: 14.16.1

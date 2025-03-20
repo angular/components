@@ -5,7 +5,7 @@
   "extends": "./bazel-tsconfig-build.json",
   "compilerOptions": {
     "importHelpers": true,
-    "types": ["jasmine"]
+    "types": ["jasmine", "node"]
   },
   "bazelOptions": {
     "suppressTsconfigOverrideWarnings": true
