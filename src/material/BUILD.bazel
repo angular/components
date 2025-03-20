@@ -5,11 +5,12 @@ load(
     "MATERIAL_TARGETS",
     "MATERIAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
+load("//tools:defaults.bzl", "ng_package", "sass_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "material",
     srcs = ["index.ts"],
 )

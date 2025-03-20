@@ -1,17 +1,19 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "selenium-webdriver",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk/testing",
-        "@npm//@types/selenium-webdriver",
-        "@npm//selenium-webdriver",
+    ],
+    deps = [
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/selenium-webdriver",
     ],
 )
 
