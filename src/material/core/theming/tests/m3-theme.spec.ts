@@ -3,7 +3,7 @@ import * as path from 'path';
 import {parse} from 'postcss';
 import {compileString} from 'sass';
 
-import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
+import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer.js';
 
 // Note: For Windows compatibility, we need to resolve the directory paths through runfiles
 // which are guaranteed to reside in the source tree.
