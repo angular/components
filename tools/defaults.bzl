@@ -107,7 +107,8 @@ def ts_library(
         **kwargs
     )
 
-    if module_name and not testonly:
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    if False and module_name and not testonly:
         _make_tsec_test(kwargs["name"])
 
 def ng_module(
@@ -147,7 +148,8 @@ def ng_module(
         **kwargs
     )
 
-    if module_name and not testonly:
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    if False and module_name and not testonly:
         _make_tsec_test(kwargs["name"])
 
 def ng_package(name, srcs = [], deps = [], externals = PKG_EXTERNALS, readme_md = None, visibility = None, **kwargs):
