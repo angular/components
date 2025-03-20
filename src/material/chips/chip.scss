@@ -629,7 +629,7 @@ $_avatar-trailing-padding: 8px;
 
   // Technically the avatar is only supposed to have an image, but we also allow for icons.
   // Set the color so the icons inherit the correct color.
-  color: var(--mdc-chip-with-icon-icon-color, currentColor);
+  color: var(--mat-chip-with-icon-icon-color, currentColor);
 }
 
 // Required for the strong focus indicator to fill the chip.

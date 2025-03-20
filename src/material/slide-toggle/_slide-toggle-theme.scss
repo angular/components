@@ -50,7 +50,7 @@
 
       & {
         // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+        --mat-switch-disabled-label-text-color: #{inspection.get-theme-color(
             $theme,
             foreground,
             disabled-text

@@ -1,7 +1,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, snackbar);
+$prefix: (mat, snackbar);
 
 /// Generates the tokens for MDC snackbar
 /// @param {Map} $systems The MDC system tokens

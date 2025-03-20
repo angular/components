@@ -580,6 +580,6 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
 
   // TODO(wagnermaciel): Use our custom token system to emit this css rule.
   .mdc-switch--disabled + label {
-    color: var(--mdc-switch-disabled-label-text-color);
+    color: var(--mat-switch-disabled-label-text-color);
   }
 }
