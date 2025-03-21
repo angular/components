@@ -12,10 +12,10 @@ import {switchMap} from 'rxjs/operators';
 
 type MapEventManagerTarget =
   | {
-      addListener: (
+      addListener<T>(
         name: string,
-        callback: (...args: unknown[]) => void,
-      ) => google.maps.MapsEventListener | undefined;
+        callback: (args: T) => void,
+      ): google.maps.MapsEventListener | undefined;
     }
   | undefined;
 
@@ -48,8 +48,8 @@ export class MapEventManager {
             return undefined;
           }
 
-          const listener = target.addListener(name, (event: unknown) => {
-            this._ngZone.run(() => observer.next(event as T));
+          const listener = target.addListener(name, (event: T) => {
+            this._ngZone.run(() => observer.next(event));
           });
 
           // If there's an error when initializing the Maps API (e.g. a wrong API key), it will

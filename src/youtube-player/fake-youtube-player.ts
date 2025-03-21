@@ -30,6 +30,11 @@ interface FakeYtNamespace {
   namespace: typeof YT;
 }
 
+type ListenersStore<EventName extends keyof YT.Events> = {[E in EventName]?: Set<Listener<E>>};
+type Listener<EventName extends keyof YT.Events> = NonNullable<YT.Events[EventName]>;
+type ListenerArg<EventName extends keyof YT.Events> =
+  Listener<EventName> extends YT.PlayerEventHandler<infer T> ? T : never;
+
 export function createFakeYtNamespace(): FakeYtNamespace {
   const playerSpy: jasmine.SpyObj<YT.Player> = jasmine.createSpyObj('Player', [
     'getPlayerState',
@@ -63,7 +68,7 @@ export function createFakeYtNamespace(): FakeYtNamespace {
   ]);
 
   let playerConfig: YT.PlayerOptions | undefined;
-  const boundListeners = new Map<keyof YT.Events, Set<(event: unknown) => void>>();
+  const boundListeners: ListenersStore<keyof YT.Events> = {};
   const playerCtorSpy = jasmine.createSpy('Player Constructor');
 
   // The spy target function cannot be an arrow-function as this breaks when created through `new`.
@@ -72,28 +77,27 @@ export function createFakeYtNamespace(): FakeYtNamespace {
     return playerSpy;
   });
 
-  playerSpy.addEventListener.and.callFake(
-    (name: keyof YT.Events, listener: (e: unknown) => unknown) => {
-      if (!boundListeners.has(name)) {
-        boundListeners.set(name, new Set());
-      }
-      boundListeners.get(name)!.add(listener);
-    },
-  );
+  playerSpy.addEventListener.and.callFake((name, listener) => {
+    const store: ListenersStore<typeof name> = boundListeners;
+    if (!store[name]) {
+      store[name] = new Set();
+    }
+    store[name].add(listener);
+  });
 
-  playerSpy.removeEventListener.and.callFake(
-    (name: keyof YT.Events, listener: (e: unknown) => unknown) => {
-      boundListeners.get(name)?.delete(listener);
-    },
-  );
+  playerSpy.removeEventListener.and.callFake((name, listener) => {
+    boundListeners[name]?.delete(listener);
+  });
 
-  function eventHandlerFactory(name: keyof YT.Events) {
-    return (arg: Object = {}) => {
+  function eventHandlerFactory<EventName extends keyof YT.Events>(name: EventName) {
+    return (arg = {} as ListenerArg<EventName>) => {
       if (!playerConfig) {
         throw new Error(`Player not initialized before ${name} called`);
       }
 
-      boundListeners.get(name)?.forEach(callback => callback(arg));
+      boundListeners[name]?.forEach(callback =>
+        (callback as (arg: ListenerArg<EventName>) => void)(arg),
+      );
     };
   }
 
