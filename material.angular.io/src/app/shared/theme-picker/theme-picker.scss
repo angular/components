@@ -1,5 +1,16 @@
+@use '@angular/material' as mat;
+
 button.docs-theme-picker-trigger {
   color: inherit;
+
+  &.mat-mdc-icon-button {
+    @include mat.icon-button-overrides(
+      (
+        state-layer-color: var(--mat-sys-primary),
+        ripple-color: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent),
+      )
+    );
+  }
 }
 
 .docs-theme-picker-menu {
