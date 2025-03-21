@@ -1,3 +1,23 @@
+<a name="20.0.0-next.3"></a>
+# 20.0.0-next.3 "iridium-irrigator" (2025-03-21)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1e5082dd5](https://github.com/angular/components/commit/1e5082dd5a47af38e3716bd384d89195ecdd09d7) | fix | **overlay:** ensure re-exported transitive `Dir` directive can be imported ([#30679](https://github.com/angular/components/pull/30679)) |
+| [1b4cae7f2](https://github.com/angular/components/commit/1b4cae7f2914cefdb526461ed0405432fcf738b7) | fix | **tree:** retainining previous objects ([#30431](https://github.com/angular/components/pull/30431)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [aba4c4437](https://github.com/angular/components/commit/aba4c44371c119e1c95e52874d58d50a13e6e296) | fix | **chips:** chip input not showing placeholder ([#30664](https://github.com/angular/components/pull/30664)) |
+| [33795a1a1](https://github.com/angular/components/commit/33795a1a138cb4930b9e20773403ec712e0ace73) | fix | **chips:** implement disabledInteractive in chip input ([#30665](https://github.com/angular/components/pull/30665)) |
+| [ee442555e](https://github.com/angular/components/commit/ee442555e245184dea2703d14d58d9e8a6b34bd4) | fix | **timepicker:** TimepickerInput component in shadow DOM ([#30642](https://github.com/angular/components/pull/30642)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cb3b0a87a](https://github.com/angular/components/commit/cb3b0a87a7528aa2f3525f951a021398821df970) | fix | ensure re-exported module symbols can be imported ([#30667](https://github.com/angular/components/pull/30667)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.6"></a>
 # 19.2.6 "tellurium-transponder" (2025-03-21)
 ### cdk
