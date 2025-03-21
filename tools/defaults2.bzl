@@ -1,6 +1,10 @@
 load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 load("//tools/bazel:ts_project_interop.bzl", _ts_project = "ts_project")
 load("//tools/bazel:module_name.bzl", "compute_module_name")
+load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
+
+def npm_package(**kwargs):
+    _npm_package(**kwargs)
 
 def ts_project(
         name,

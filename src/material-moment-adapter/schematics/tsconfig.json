@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node10",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true
+  }
+}

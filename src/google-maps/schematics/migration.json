@@ -3,7 +3,7 @@
     "migration-v20": {
       "version": "20.0.0-0",
       "description": "Updates the Angular Google Maps package to v20",
-      "factory": "./ng-update/index_bundled#updateToV20"
+      "factory": "./ng-update/index#updateToV20"
     }
   }
 }

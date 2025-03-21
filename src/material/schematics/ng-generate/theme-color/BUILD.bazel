@@ -1,5 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "esbuild", "jasmine_node_test", "pkg_npm", "spec_bundle", "ts_library")
+load("//tools:defaults.bzl", "esbuild", "pkg_npm")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -7,24 +8,27 @@ STATIC_ASSETS = [
     "schema.json",
 ]
 
-ts_library(
+ts_project(
     name = "m3_theme_lib",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk/schematics",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@material/material-color-utilities",
-        "@npm//@types/node",
-        "@npm//sass",
-        "@npm//typescript",
+    ],
+    tsconfig = "//src/material/schematics:tsconfig",
+    deps = [
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@material/material-color-utilities",
+        "//:node_modules/@types/node",
+        "//:node_modules/sass",
+        "//:node_modules/typescript",
     ],
 )
 
 esbuild(
-    name = "m3_theme_bundle",
+    name = "index_bundled",
     entry_point = ":index.ts",
     external = [
         "@angular/cdk/schematics",
@@ -47,39 +51,31 @@ esbuild(
 pkg_npm(
     name = "npm_package",
     srcs = STATIC_ASSETS,
-    deps = [":m3_theme_bundle"],
+    deps = [":index_bundled"],
 )
 
 ########################################
 #   Testing configuration              #
 ########################################
 
-ts_library(
+ts_project(
     name = "unit_tests_lib",
     testonly = True,
-    srcs = glob(["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"]),
-    devmode_module = "commonjs",
+    srcs = glob([
+        "**/*.spec.ts",
+        "index_bundled.d.ts",
+    ] + ["rules/components/test-setup-helper.ts"]),
+    data = [":index_bundled"],
+    tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":m3_theme_lib",
-        "//src/cdk/schematics/testing",
-        "//tools/sass:sass_lib",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@bazel/runfiles",
-        "@npm//@material/material-color-utilities",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//sass",
+        ":m3_theme_lib_rjs",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@material/material-color-utilities",
+        "//:node_modules/sass",
+        "//src/cdk/schematics/testing:testing_rjs",
+        "//tools/sass:sass_lib_rjs",
     ],
-)
-
-spec_bundle(
-    name = "unit_tests_bundle",
-    # Exclude the `node` devkit entry-point to avoid bundling native modules like
-    # `chokidar` and `fsevents`. These rely on native bindings and break with ESBuild.
-    external = ["@angular-devkit/core/node"],
-    platform = "node",
-    target = "es2020",
-    deps = [":unit_tests_lib"],
 )
 
 copy_to_bin(
@@ -88,21 +84,21 @@ copy_to_bin(
     srcs = STATIC_ASSETS,
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "unit_tests",
     data = [
-        ":m3_theme_bundle",
         ":unit_tests_assets",
+        ":unit_tests_lib_rjs",
+        "//src/material:sass_lib",
+        "//src/material-experimental:sass_lib",
         "//src/material/schematics:collection_assets",
         "//src/material/schematics:ng_generate_assets",
+        "//src/material/schematics:package_json",
     ],
-    shard_count = 10,
-    deps = [
-        ":unit_tests_bundle",
-        # Runtime dependencies needed by the test and actual migration sources. These need
-        # to be specified explicitly here because they are not captured by the bundling.
-        "@npm//@schematics/angular",
+    no_copy_to_bin = [
+        # TODO(devversion): Ensure Sass is copied to `bazel-bin`.
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
     ],
+    shard_count = 10,
 )

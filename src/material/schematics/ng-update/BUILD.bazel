@@ -1,9 +1,7 @@
-load("//tools:defaults.bzl", "esbuild", "jasmine_node_test", "spec_bundle", "ts_library")
+load("//tools:defaults.bzl", "esbuild")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
-## THIS ONE IS ESM
-# By default everything is ESM
-# ESBUild needs ESM for bundling. Cannot reliably use CJS as input.
-ts_library(
+ts_project(
     name = "ng_update_lib",
     srcs = glob(
         ["**/*.ts"],
@@ -11,18 +9,16 @@ ts_library(
             "test-cases/**/*.ts",
         ],
     ),
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
+    tsconfig = "//src/material/schematics:tsconfig",
     deps = [
-        "//src/cdk/schematics",
-        "@npm//@angular-devkit/core",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@schematics/angular",
-        "@npm//@types/node",
-        "@npm//postcss",
-        "@npm//postcss-scss",
-        "@npm//typescript",
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@schematics/angular",
+        "//:node_modules/@types/node",
+        "//:node_modules/postcss",
+        "//:node_modules/postcss-scss",
+        "//:node_modules/typescript",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
     ],
 )
 
@@ -36,7 +32,6 @@ esbuild(
         "@angular-devkit/core",
         "typescript",
     ],
-    # TODO: Switch to ESM when Angular CLI supports it.
     format = "cjs",
     output = "index_bundled.js",
     platform = "node",
@@ -44,10 +39,6 @@ esbuild(
     visibility = ["//src/material/schematics:__pkg__"],
     deps = [":ng_update_lib"],
 )
-
-#################
-## Specs
-#################
 
 filegroup(
     name = "schematics_test_cases",
@@ -58,46 +49,30 @@ filegroup(
     ]),
 )
 
-# This one is now ESM, the default in the repository
-# Needs to be ESM because we import frm `ng_update_lib` (which is also ESM)
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
+    tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":ng_update_lib",
-        "//src/cdk/schematics",
-        "//src/cdk/schematics/testing",
-        "//src/material/schematics:paths",
-        "@npm//@angular-devkit/core",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@bazel/runfiles",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        ":ng_update_lib_rjs",
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@bazel/runfiles",
+        "//src/cdk/schematics/testing:testing_rjs",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
+        "//src/material/schematics:paths_rjs",
     ],
 )
 
-spec_bundle(
-    name = "spec_bundle",
-    external = [
-        "*/paths.js",
-        "@angular-devkit/core/node",
-    ],
-    platform = "cjs-legacy",
-    target = "es2020",
-    deps = [":test_lib"],
-)
-
-jasmine_node_test(
+jasmine_test(
     name = "test",
     data = [
-        ":ng_update_index",
         ":schematics_test_cases",
-        "//src/cdk/schematics",
+        ":test_lib_rjs",
         "//src/material/schematics:collection_assets",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
+        "//src/material/schematics:package_json",
     ],
     shard_count = 4,
-    deps = [
-        ":spec_bundle",
-    ],
 )
