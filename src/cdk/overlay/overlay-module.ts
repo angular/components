@@ -36,3 +36,4 @@ export {
   CdkVirtualScrollableWindow as ɵɵCdkVirtualScrollableWindow,
   CdkVirtualScrollableElement as ɵɵCdkVirtualScrollableElement,
 } from '../scrolling';
+export {Dir as ɵɵDir} from '../bidi';

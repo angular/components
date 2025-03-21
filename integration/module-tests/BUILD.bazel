@@ -20,6 +20,7 @@ module_test(
         "//src/cdk:npm_package": "src/cdk/npm_package",
         "//src/material:npm_package": "src/material/npm_package",
     },
+    shard_count = 4,
     skipped_entry_points = [
         # This entry-point is JIT and would fail the AOT test.
         "@angular/material/dialog/testing",
