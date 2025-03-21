@@ -1,5 +1,8 @@
 import {getAllVersionNames} from '@angular/cdk/schematics';
-import {defineJasmineTestCases, findBazelVersionTestCases} from '@angular/cdk/schematics/testing';
+import {
+  defineJasmineTestCases,
+  findBazelVersionTestCases,
+} from '../../../../cdk/schematics/testing/index';
 import {MIGRATION_PATH} from '../../paths';
 
 describe('Material upgrade test cases', () => {
