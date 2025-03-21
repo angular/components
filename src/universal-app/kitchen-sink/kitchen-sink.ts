@@ -69,7 +69,7 @@ interface ElementItem {
 }
 
 export class TableDataSource extends DataSource<ElementItem> {
-  connect(): Observable<Array<ElementItem>> {
+  connect(): Observable<ElementItem[]> {
     return observableOf([
       {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
       {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
@@ -84,7 +84,7 @@ export class TableDataSource extends DataSource<ElementItem> {
     ]);
   }
 
-  override disconnect() {}
+  disconnect() {}
 }
 
 export const AUTOMATED_KITCHEN_SINK = new InjectionToken<boolean>('AUTOMATED_KITCHEN_SINK');
