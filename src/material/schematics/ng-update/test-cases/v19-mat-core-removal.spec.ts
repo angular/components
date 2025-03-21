@@ -1,5 +1,5 @@
 import {UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createTestCaseSetup} from '@angular/cdk/schematics/testing';
+import {createTestCaseSetup} from '../../../../cdk/schematics/testing';
 import {join} from 'path';
 import {MIGRATION_PATH} from '../../paths';
 

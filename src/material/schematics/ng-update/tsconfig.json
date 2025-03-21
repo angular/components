@@ -1,8 +1,0 @@
-// For IDE
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "module": "esnext",
-    "target": "es2015"
-  }
-}

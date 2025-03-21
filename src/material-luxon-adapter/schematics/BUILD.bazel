@@ -1,26 +1,27 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "pkg_npm", "ts_library")
+load("//tools:defaults.bzl", "pkg_npm")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 copy_to_bin(
     name = "schematics_assets",
-    srcs = glob(["**/*.json"]),
+    srcs = glob(
+        ["**/*.json"],
+        exclude = ["tsconfig.json"],
+    ),
 )
 
-ts_library(
+ts_project(
     name = "schematics",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
-    prodmode_module = "commonjs",
+    tsconfig = "tsconfig.json",
     deps = [
-        "@npm//@angular-devkit/schematics",
-        "@npm//@types/node",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@types/node",
     ],
 )
 
