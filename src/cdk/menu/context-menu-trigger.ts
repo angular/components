@@ -175,6 +175,8 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       if (item === this.childMenu && this.isOpen()) {
         this.closed.next();
         this.overlayRef!.detach();
+        this.childMenu = undefined;
+        this._changeDetectorRef.markForCheck();
       }
     });
   }

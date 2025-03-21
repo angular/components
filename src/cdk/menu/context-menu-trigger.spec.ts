@@ -37,14 +37,14 @@ describe('CdkContextMenuTrigger', () => {
     }
 
     /** Get the context in which the context menu should trigger. */
-    function getMenuContext() {
+    function getMenuTrigger() {
       return fixture.componentInstance.triggerElement.nativeElement;
     }
 
     /** Open up the context menu and run change detection. */
     function openContextMenu() {
       // right click triggers a context menu event
-      dispatchMouseEvent(getMenuContext(), 'contextmenu');
+      dispatchMouseEvent(getMenuTrigger(), 'contextmenu');
       fixture.detectChanges();
     }
 
@@ -57,7 +57,7 @@ describe('CdkContextMenuTrigger', () => {
     it('should close out the context menu when clicking in the context', () => {
       openContextMenu();
 
-      getMenuContext().click();
+      getMenuTrigger().click();
       fixture.detectChanges();
 
       expect(getContextMenu()).not.toBeDefined();
@@ -142,6 +142,22 @@ describe('CdkContextMenuTrigger', () => {
       dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW, 'ArrowRight');
       fixture.detectChanges();
       expect(getContextMenu()).toBeDefined();
+    });
+
+    it('should toggle aria-controls depending on if the menu is open', () => {
+      const trigger = getMenuTrigger();
+
+      expect(trigger.hasAttribute('aria-controls')).toBe(false);
+      expect(getContextMenu()).not.toBeDefined();
+
+      openContextMenu();
+      expect(trigger.getAttribute('aria-controls')).toBeTruthy();
+      expect(getContextMenu()).toBeDefined();
+
+      trigger.click();
+      fixture.detectChanges();
+      expect(trigger.hasAttribute('aria-controls')).toBe(false);
+      expect(getContextMenu()).not.toBeDefined();
     });
   });
 
