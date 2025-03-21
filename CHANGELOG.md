@@ -1,3 +1,12 @@
+<a name="19.2.6"></a>
+# 19.2.6 "tellurium-transponder" (2025-03-21)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5a7009a50](https://github.com/angular/components/commit/5a7009a50df836d6f245216730801285fc77a998) | fix | **overlay:** ensure re-exported transitive `Dir` directive can be imported ([#30679](https://github.com/angular/components/pull/30679)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.5"></a>
 # 19.2.5 "argon-planet" (2025-03-20)
 ### cdk
