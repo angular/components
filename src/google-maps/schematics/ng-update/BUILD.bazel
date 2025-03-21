@@ -1,40 +1,18 @@
-load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-## THIS ONE IS ESM
-# By default everything is ESM
-# ESBUild needs ESM for bundling. Cannot reliably use CJS as input.
-ts_library(
-    name = "ng_update_lib",
+ts_project(
+    name = "ng-update",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
-    deps = [
-        "@npm//@angular-devkit/core",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@schematics/angular",
-        "@npm//@types/node",
-        "@npm//typescript",
-    ],
-)
-
-esbuild(
-    name = "ng_update_index",
-    entry_point = ":index.ts",
-    external = [
-        "@schematics/angular",
-        "@angular-devkit/schematics",
-        "@angular-devkit/core",
-        "typescript",
-    ],
-    # TODO: Switch to ESM when Angular CLI supports it.
-    format = "cjs",
-    output = "index_bundled.js",
-    platform = "node",
-    target = "es2015",
+    tsconfig = "//src/google-maps/schematics:tsconfig",
     visibility = ["//src/google-maps/schematics:__pkg__"],
-    deps = [":ng_update_lib"],
+    deps = [
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@schematics/angular",
+        "//:node_modules/@types/node",
+        "//:node_modules/typescript",
+    ],
 )
