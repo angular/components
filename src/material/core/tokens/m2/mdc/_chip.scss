@@ -8,7 +8,7 @@
 @use '../../../m2/palette' as m2-palette;
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, chip);
+$prefix: (mat, chip);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.

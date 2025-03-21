@@ -4,7 +4,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, protected-button);
+$prefix: (mat, protected-button);
 
 /// Generates the tokens for MDC protected-button
 /// @param {Map} $systems The MDC system tokens

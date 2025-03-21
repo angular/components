@@ -4,7 +4,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, fab);
+$prefix: (mat, fab);
 
 @function get-unthemable-tokens() {
   @return (
@@ -27,11 +27,9 @@ $prefix: (mdc, fab);
     focus-outline-color: null,
     focus-outline-width: null,
     focus-state-layer-color: null,
-    focus-state-layer-opacity: null,
 
     hover-icon-color: null,
     hover-state-layer-color: null,
-    hover-state-layer-opacity: null,
 
     lowered-container-elevation: null,
     lowered-focus-container-elevation: null,
@@ -42,7 +40,6 @@ $prefix: (mdc, fab);
     pressed-ripple-color: null,
     pressed-ripple-opacity: null,
     pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null,
 
     container-elevation: null,
     focus-container-elevation: null,

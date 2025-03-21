@@ -3,7 +3,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, filled-text-field);
+$prefix: (mat, filled-text-field);
 
 /// Generates the tokens for MDC filled-text-field
 /// @param {Map} $systems The MDC system tokens

@@ -108,8 +108,8 @@ $_cached-token-slots: null;
   $result: sass-utils.deep-merge-all(
     // Add the system color & typography tokens (so we can give users access via an API).
     (
-      (mdc, theme): map.get($systems, md-sys-color),
-      (mdc, typography): map.get($systems, md-sys-typescale),
+      (mat, theme): map.get($systems, md-sys-color),
+      (mat, typography): map.get($systems, md-sys-typescale),
     ),
     m3.get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
   );

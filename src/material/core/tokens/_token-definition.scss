@@ -92,6 +92,7 @@ $_system-fallbacks: null;
     $variants: list.nth($values, 2);
     $values: list.nth($values, 1);
     @each $variant, $overrides in $variants {
+
       $result: map.merge($result, namespace-tokens($prefix, $overrides, $slots, $variant));
     }
   }
