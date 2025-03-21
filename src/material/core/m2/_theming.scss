@@ -24,7 +24,6 @@
   @return map.get(map.get($palette, contrast), $hue);
 }
 
-
 /// Creates a map of hues to colors for a theme. This is used to define a theme palette in terms
 /// of the Material Design hues.
 /// @param {Map} $base-palette Map of hue keys to color values for the basis for this palette.
@@ -33,28 +32,38 @@
 /// @param {String | Number} $darker "darker" hue for this palette.
 /// @param {String | Number} $text "text" hue for this palette.
 /// @returns {Map} A complete Angular Material theming palette.
-@function define-palette($base-palette, $default: 500, $lighter: 100, $darker: 700,
-  $text: $default) {
-  $result: map.merge($base-palette, (
-    default: _get-color-from-palette($base-palette, $default),
-    lighter: _get-color-from-palette($base-palette, $lighter),
-    darker: _get-color-from-palette($base-palette, $darker),
-    text: _get-color-from-palette($base-palette, $text),
-    default-contrast: get-contrast-color-from-palette($base-palette, $default),
-    lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
-    darker-contrast: get-contrast-color-from-palette($base-palette, $darker)
-  ));
+@function define-palette(
+  $base-palette,
+  $default: 500,
+  $lighter: 100,
+  $darker: 700,
+  $text: $default
+) {
+  $result: map.merge(
+    $base-palette,
+    (
+      default: _get-color-from-palette($base-palette, $default),
+      lighter: _get-color-from-palette($base-palette, $lighter),
+      darker: _get-color-from-palette($base-palette, $darker),
+      text: _get-color-from-palette($base-palette, $text),
+      default-contrast: get-contrast-color-from-palette($base-palette, $default),
+      lighter-contrast: get-contrast-color-from-palette($base-palette, $lighter),
+      darker-contrast: get-contrast-color-from-palette($base-palette, $darker),
+    )
+  );
 
   // For each hue in the palette, add a "-contrast" color to the map.
   @each $hue, $color in $base-palette {
-    $result: map.merge($result, (
-      '#{$hue}-contrast': get-contrast-color-from-palette($base-palette, $hue)
-    ));
+    $result: map.merge(
+      $result,
+      (
+        '#{$hue}-contrast': get-contrast-color-from-palette($base-palette, $hue),
+      )
+    );
   }
 
   @return $result;
 }
-
 
 /// Gets a color from a theme palette (the output of mat-palette).
 /// The hue can be one of the standard values (500, A400, etc.), one of the three preconfigured
@@ -93,11 +102,9 @@
     $color: map.get($theme, color);
     @if not map.get($color, primary) {
       @error 'Theme does not define a valid "primary" palette.';
-    }
-    @else if not map.get($color, accent) {
+    } @else if not map.get($color, accent) {
       @error 'Theme does not define a valid "accent" palette.';
-    }
-    @else if not map.get($color, warn) {
+    } @else if not map.get($color, warn) {
       @error 'Theme does not define a valid "warn" palette.';
     }
   }
@@ -113,7 +120,7 @@
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: false,
     foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette,
+    background: palette.$light-theme-background-palette
   );
 }
 
@@ -126,7 +133,7 @@
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: true,
     foreground: palette.$dark-theme-foreground-palette,
-    background: palette.$dark-theme-background-palette,
+    background: palette.$dark-theme-background-palette
   );
 }
 
@@ -152,10 +159,12 @@
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn theming.$private-legacy-theme-warning;
-    $theme: _mat-validate-theme((
-      _is-legacy-theme: true,
-      color: _mat-create-light-color-config($primary, $accent, $warn),
-    ));
+    $theme: _mat-validate-theme(
+      (
+        _is-legacy-theme: true,
+        color: _mat-create-light-color-config($primary, $accent, $warn),
+      )
+    );
 
     @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
   }
@@ -168,10 +177,16 @@
     $primary: map.get($color-settings, primary);
     $accent: map.get($color-settings, accent);
     $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
+    $result: map.merge(
+      $result,
+      (
+        color: _mat-create-light-color-config($primary, $accent, $warn),
+      )
+    );
   }
   @return _internalize-theme(
-      theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
+    theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
+  );
 }
 
 // TODO: Remove legacy API and rename below `$primary` to `$config`. Currently it cannot be renamed
@@ -196,10 +211,12 @@
   // configuration for the `color` theming part.
   @if $accent != null {
     @warn theming.$private-legacy-theme-warning;
-    $theme: _mat-validate-theme((
-      _is-legacy-theme: true,
-      color: _mat-create-dark-color-config($primary, $accent, $warn),
-    ));
+    $theme: _mat-validate-theme(
+      (
+        _is-legacy-theme: true,
+        color: _mat-create-dark-color-config($primary, $accent, $warn),
+      )
+    );
     @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -211,10 +228,16 @@
     $primary: map.get($color-settings, primary);
     $accent: map.get($color-settings, accent);
     $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
+    $result: map.merge(
+      $result,
+      (
+        color: _mat-create-dark-color-config($primary, $accent, $warn),
+      )
+    );
   }
   @return _internalize-theme(
-      theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result)));
+    theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
+  );
 }
 
 /// Gets the color configuration from the given theme or configuration.
@@ -227,11 +250,11 @@
 }
 
 /// Gets the density configuration from the given theme or configuration.
-/// @param {Map} $theme-or-config  The theme map returned from `define-light-theme` or
+/// @param {Map|string|number} $theme-or-config  The theme map returned from `define-light-theme` or
 ///     `define-dark-theme`.
-/// @param {Map} $default The default value returned if the given `$theme` does not include a
-///     `density` configuration.
-/// @returns {Map} Density configuration for a theme.
+/// @param {string|number} $default The default value returned if the given `$theme` does not
+///     include a `density` configuration.
+/// @returns {string|number} Density configuration for a theme.
 @function get-density-config($theme-or-config, $default: 0) {
   @return theming.private-get-density-config($theme-or-config, $default);
 }
@@ -258,14 +281,16 @@
   $internalized-theme: (
     theming.$private-internal-name: (
       theme-version: 0,
-      m2-config: $theme
-    )
+      m2-config: $theme,
+    ),
   );
   @if (theming.$theme-legacy-inspection-api-compatibility) {
     @return map.merge($theme, $internalized-theme);
   }
-  $error-theme:
-    _replace-values-with-errors($theme, 'Theme may only be accessed via theme inspection API');
+  $error-theme: _replace-values-with-errors(
+    $theme,
+    'Theme may only be accessed via theme inspection API'
+  );
   @return map.merge($error-theme, $internalized-theme);
 }
 
@@ -285,8 +310,7 @@
       $value: map.set($value, $k, _replace-values-with-errors($v, $message));
     }
     @return $value;
-  }
-  @else if $value-type == 'list' and list.length($value) > 0 {
+  } @else if $value-type == 'list' and list.length($value) > 0 {
     @for $i from 1 through list.length() {
       $value: list.set-nth($value, $i, _replace-values-with-errors(list.nth($value, $i), $message));
     }
