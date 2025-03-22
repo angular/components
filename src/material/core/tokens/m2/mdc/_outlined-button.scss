@@ -61,13 +61,20 @@ $prefix: (mdc, outlined-button);
     rgba(if($is-dark, #fff, #000), 0.12),
     inspection.get-theme-color($theme, foreground, divider)
   );
+  $color: inspection.get-theme-color($theme, foreground, text, 1);
 
   @return (
+    outline-color: $outline,
     disabled-outline-color: $outline,
+    hover-outline-color: $outline,
+    focus-outline-color: $outline,
+    pressed-outline-color: $outline,
     disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button,
       if($is-dark, 0.5, 0.38)),
-    label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    outline-color: $outline,
+    hover-label-text-color: $color,
+    focus-label-text-color: $color,
+    pressed-label-text-color: $color,
+    label-text-color: $color,
   );
 }
 
