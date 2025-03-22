@@ -169,7 +169,7 @@ describe('MatDateRangeInput', () => {
     expect(rangeInput.getAttribute('aria-labelledby')).toBe(labelId);
   });
 
-  it('should point the range input aria-labelledby to the form field hint element', () => {
+  it('should point the range input aria-describedby to the form field hint element', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();
     const labelId = fixture.nativeElement.querySelector('.mat-mdc-form-field-hint').id;
@@ -178,6 +178,18 @@ describe('MatDateRangeInput', () => {
     expect(labelId).toBeTruthy();
     expect(rangeInput.getAttribute('aria-describedby')).toBe(labelId);
   });
+
+  it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+    const fixture = createComponent(StandardRangePicker);
+    const rangeInput = fixture.nativeElement.querySelector('.mat-date-range-input');
+
+    rangeInput.setAttribute('aria-describedby', 'custom');
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const hint = fixture.nativeElement.querySelector('.mat-mdc-form-field-hint');
+
+    expect(rangeInput.getAttribute('aria-describedby')).toBe(`${hint.getAttribute('id')} custom`);
+  }));
 
   it('should not set aria-labelledby if the form field does not have a label', () => {
     const fixture = createComponent(RangePickerNoLabel);

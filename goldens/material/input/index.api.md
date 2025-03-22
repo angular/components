@@ -152,6 +152,7 @@ export class MatInput implements MatFormFieldControl_2<any>, OnChanges, OnDestro
     constructor(...args: unknown[]);
     autofilled: boolean;
     controlType: string;
+    get describedByIds(): string[];
     protected _dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: BooleanInput);

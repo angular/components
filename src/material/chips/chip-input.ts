@@ -218,6 +218,17 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     this.inputElement.value = '';
   }
 
+  /**
+   * Implemented as part of MatChipTextControl.
+   * @docs-private
+   */
+  get describedByIds(): string[] {
+    const element = this._elementRef.nativeElement;
+    const existingDescribedBy = element.getAttribute('aria-describedby');
+
+    return existingDescribedBy?.split(' ') || [];
+  }
+
   setDescribedByIds(ids: string[]): void {
     const element = this._elementRef.nativeElement;
 

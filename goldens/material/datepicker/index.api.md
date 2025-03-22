@@ -567,6 +567,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     controlType: string;
     get dateFilter(): DateFilterFn<D>;
     set dateFilter(value: DateFilterFn<D>);
+    get describedByIds(): string[];
     readonly disableAutomaticLabeling = true;
     get disabled(): boolean;
     set disabled(value: boolean);
