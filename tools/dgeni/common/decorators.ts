@@ -30,7 +30,11 @@ export function isProperty(doc: MemberDoc): boolean {
 }
 
 export function isDirective(doc: ClassExportDoc): boolean {
-  return hasClassDecorator(doc, 'Component') || hasClassDecorator(doc, 'Directive');
+  return hasClassDecorator(doc, 'Directive');
+}
+
+export function isComponent(doc: ClassExportDoc): boolean {
+  return hasClassDecorator(doc, 'Component');
 }
 
 export function isService(doc: ClassExportDoc): boolean {
@@ -50,12 +54,12 @@ export function isPrimaryExportDoc(doc: ApiDoc): boolean {
   return hasJsDocTag(doc, 'docs-primary-export');
 }
 
-export function getDirectiveSelectors(classDoc: CategorizedClassDoc): string[] | undefined {
-  if (classDoc.directiveMetadata) {
-    const directiveSelectors: string = classDoc.directiveMetadata.get('selector');
+export function getSelectors(classDoc: CategorizedClassDoc): string[] | undefined {
+  if (classDoc.metadata) {
+    const selectors: string = classDoc.metadata.get('selector');
 
-    if (directiveSelectors) {
-      return directiveSelectors
+    if (selectors) {
+      return selectors
         .replace(/[\r\n]/g, '')
         .split(/\s*,\s*/)
         .filter(s => s !== '');

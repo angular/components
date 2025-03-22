@@ -60,6 +60,15 @@
     {% endfor %}
   {%- endif -%}
 
+  {%- if doc.components.length -%}
+    <h3 id="{$ doc.name $}-components" class="docs-header-link docs-api-h3">
+      <span header-link="components"></span>
+      Components
+    </h3>
+    {% for component in doc.components %}
+      {$ class(component) $}
+    {% endfor %}
+  {%- endif -%}
 
   {%- if doc.directives.length -%}
     <h3 id="{$ doc.name $}-directives" class="docs-header-link docs-api-h3">

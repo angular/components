@@ -41,17 +41,11 @@ export function sortCategorizedPropertyMembers(
   }
 
   // Sort in the order of: Inputs, Outputs, neither
-  if (
-    (docA.isDirectiveInput && !docB.isDirectiveInput) ||
-    (docA.isDirectiveOutput && !docB.isDirectiveInput && !docB.isDirectiveOutput)
-  ) {
+  if ((docA.isInput && !docB.isInput) || (docA.isOutput && !docB.isInput && !docB.isOutput)) {
     return -1;
   }
 
-  if (
-    (docB.isDirectiveInput && !docA.isDirectiveInput) ||
-    (docB.isDirectiveOutput && !docA.isDirectiveInput && !docA.isDirectiveOutput)
-  ) {
+  if ((docB.isInput && !docA.isInput) || (docB.isOutput && !docA.isInput && !docA.isOutput)) {
     return 1;
   }
 

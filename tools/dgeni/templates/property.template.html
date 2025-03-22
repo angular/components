@@ -2,19 +2,19 @@
 
 <tr class="docs-api-properties-row">
   <td class="docs-api-properties-name-cell">
-    {%- if property.isDirectiveInput -%}
+    {%- if property.isInput -%}
       <div class="docs-api-input-marker">
-        {%- if property.directiveInputAlias -%}
-        @Input(<span class="docs-api-input-alias">{$ property.directiveInputAlias $}</span>)
+        {%- if property.inputAlias -%}
+        @Input(<span class="docs-api-input-alias">{$ property.inputAlias $}</span>)
         {% else %}
           @Input()
         {%- endif -%}
       </div>
     {%- endif -%}
-    {%- if property.isDirectiveOutput -%}
+    {%- if property.isOutput -%}
       <div class="docs-api-output-marker">
-        {%- if property.directiveOutputAlias -%}
-        @Output(<span class="docs-api-output-alias">{$ property.directiveOutputAlias $}</span>)
+        {%- if property.outputAlias -%}
+        @Output(<span class="docs-api-output-alias">{$ property.outputAlias $}</span>)
         {% else %}
           @Output()
         {%- endif -%}
