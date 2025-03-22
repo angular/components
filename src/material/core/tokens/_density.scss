@@ -40,6 +40,7 @@ $_density-tokens: (
   ),
   (mat, tonal-button): (
     container-height: (40px, 36px, 32px, 28px),
+    touch-target-display: (block, block, none, none),
   ),
   (mdc, outlined-button): (
     container-height: (40px, 36px, 32px, 28px),
