@@ -1,6 +1,8 @@
 @use '../style/elevation';
 @use '../style/sass-utils';
 @use './m3-system';
+@use './mdc-tokens';
+@use './token-definition';
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:string';
@@ -133,18 +135,32 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
       & {
         @each $key, $value in $tokens {
           @if $value != null {
-            #{_create-var-name($prefix, $key)}: #{$value};
+            @include define-css_var($prefix, $key, $value);
           }
         }
       }
     } @else {
       @each $key, $value in $tokens {
         @if $value != null {
-          #{_create-var-name($prefix, $key)}: #{$value};
+          @include define-css-var($prefix, $key, $value);
         }
       }
     }
   }
+}
+
+@mixin define-css-var($prefix, $key, $value) {
+  $name: _create-var-name($prefix, $key);
+  // Define the token with an MDC prefix if it was previously prefixed with it.
+  // This allows for a backwards compatible migration for clients to read
+  // the token with either the mdc- or mat- prefix.
+  @if (token-definition.$private-is-internal-build) {
+    @if (list.index(mdc-tokens.$mdc-tokens, $name)) {
+      #{--mdc-#{string.slice($name, 7)}}: #{$value};
+    }
+  }
+
+  #{$name}: #{$value};
 }
 
 // MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
