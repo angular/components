@@ -4994,7 +4994,7 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
     [id]="dropZoneId"
     [cdkDropListData]="items"
     [cdkDropListDisabled]="dropDisabled()"
-    [cdkDropListLockAxis]="dropLockAxis()"
+    [cdkDropListLockAxis]="dropLockAxis()!"
     (cdkDropListSorted)="sortedSpy($event)"
     (cdkDropListDropped)="droppedSpy($event)">
     <div
@@ -5165,7 +5165,7 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
 // https://github.com/angular/angular/pull/52515
 @Component({
   template: `
-    <div cdkDropList style="width: 100px; background: pink;" [cdkDropListLockAxis]="dropLockAxis()">
+    <div cdkDropList style="width: 100px; background: pink;" [cdkDropListLockAxis]="dropLockAxis()!">
       @for (item of items; track item) {
         <div
           cdkDrag
@@ -5376,7 +5376,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     cdkDropList
     #extraZone="cdkDropList"
     [cdkDropListData]="extra"
-    [cdkDropListConnectedTo]="extraConnectedTo()"
+    [cdkDropListConnectedTo]="extraConnectedTo()!"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
     @for (item of extra; track item) {

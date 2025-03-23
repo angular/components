@@ -115,7 +115,7 @@ export class MatCheckbox
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _ngZone = inject(NgZone);
-  private _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled = _animationsDisabled();
   private _options = inject<MatCheckboxDefaultOptions>(MAT_CHECKBOX_DEFAULT_OPTIONS, {
     optional: true,
   });
