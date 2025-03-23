@@ -43,6 +43,7 @@
   },
   "angularCompilerOptions": {
     "strictTemplates": true,
+    "typeCheckHostBindings": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }

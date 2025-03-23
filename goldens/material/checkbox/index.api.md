@@ -35,6 +35,8 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
         indeterminateToChecked: string;
         indeterminateToUnchecked: string;
     };
+    // (undocumented)
+    protected _animationsDisabled: boolean;
     ariaControls: string;
     ariaDescribedby: string;
     ariaExpanded: boolean;
