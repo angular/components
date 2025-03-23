@@ -35,10 +35,6 @@ html {
   color-scheme: light;
   body:not(.demo-experimental-theme) {
     @include mat.all-component-themes($light-theme);
-    @include mat.checkbox-overrides((
-      disabled-label-color: orange,
-      label-text-color: red,
-    ));
     @include mat.system-level-colors($light-theme);
     @include mat.system-level-typography($light-theme);
     // TODO(mmalerba): Support M3 for experimental components.
