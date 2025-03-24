@@ -30,14 +30,9 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
         HarnessPredicate.stringMatches(harness.getLabel(), label),
       )
       .addOption(
-        'pressed',
-        options.pressed,
-        async (harness, pressed) => (await harness.isPressed()) === pressed,
-      )
-      .addOption(
-        'expanded',
-        options.expanded,
-        async (harness, expanded) => (await harness.isExpanded()) === expanded,
+        'selected',
+        options.selected,
+        async (harness, selected) => (await harness.isSelected()) === selected,
       )
       .addOption(
         'completed',
@@ -66,22 +61,16 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Whether the step of Horizontal Stepper is pressed. */
-  async isPressed(): Promise<boolean> {
+  /** Whether the step of Stepper is pressed/expanded. */
+  async isSelected(): Promise<boolean> {
     const host = await this.host();
     return (await host.getAttribute('aria-pressed')) === 'true';
-  }
-
-  /** Whether the step of Vertical Stepper is expanded. */
-  async isExpanded(): Promise<boolean> {
-    const host = await this.host();
-    return (await host.getAttribute('aria-expanded')) === 'true';
   }
 
   /** Whether the step has been filled out. */
   async isCompleted(): Promise<boolean> {
     const state = await this._getIconState();
-    return state === 'done' || (state === 'edit' && !(await this.isPressed()));
+    return state === 'done' || (state === 'edit' && !(await this.isSelected()));
   }
 
   /**
