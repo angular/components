@@ -61,10 +61,10 @@
     "@angular/common": "0.0.0-NG",
     "@angular/forms": "0.0.0-NG",
     "@angular/platform-browser": "0.0.0-NG",
-    "rxjs": "0.0.0-RXJS"
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
-    "tslib": "0.0.0-TSLIB"
+    "tslib": "^2.3.0"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {

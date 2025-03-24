@@ -1,5 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "jasmine_node_test", "pkg_npm", "ts_library")
+load("//tools:defaults.bzl", "pkg_npm", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -87,20 +88,7 @@ pkg_npm(
     ],
 )
 
-### Testing rules
-
-jasmine_node_test(
-    name = "unit_tests",
-    srcs = [":unit_test_sources"],
-    data = [
-        ":collection_assets",
-        ":ng_generate_assets",
-        ":schema_assets",
-        ":schematics_test_cases",
-    ],
-)
-
-ts_library(
+ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -137,4 +125,16 @@ filegroup(
         "ng-update/test-cases/**/*_input.ts",
         "ng-update/test-cases/**/*_expected_output.ts",
     ]),
+)
+
+jasmine_test(
+    name = "unit_tests",
+    data = [
+        ":collection_assets",
+        ":ng_generate_assets",
+        ":schema_assets",
+        ":schematics_test_cases",
+        ":unit_test_sources_rjs",
+        "//src/material/schematics:package_json",
+    ],
 )

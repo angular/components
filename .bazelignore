@@ -17,3 +17,5 @@ integration/yarn-pnp-compat/.yarn/cache
 integration/yarn-pnp-compat/.yarn/unplugged
 integration/yarn-pnp-compat/.yarn/install-state.gz
 integration/yarn-pnp-compat/node_modules
+
+src/cdk/node_modules
