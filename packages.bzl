@@ -1,9 +1,3 @@
-# Each individual package uses a placeholder for the version of Angular to ensure they're
-# all in-sync. This map is passed to each ng_package rule to stamp out the appropriate
-# version for the placeholders.
-TSLIB_PACKAGE_VERSION = "^2.3.0"
-RXJS_PACKAGE_VERSION = "^6.5.3 || ^7.4.0"
-
 # Packages which are versioned together on npm
 ANGULAR_COMPONENTS_SCOPED_PACKAGES = ["@angular/%s" % p for p in [
     "material",
@@ -27,12 +21,8 @@ PKG_GROUP_REPLACEMENTS = {
 NPM_PACKAGE_SUBSTITUTIONS = dict(PKG_GROUP_REPLACEMENTS, **{
     # Peer dependency version on the Angular framework.
     "0.0.0-NG": "{STABLE_FRAMEWORK_PEER_DEP_RANGE}",
-    # Version of `tslib`
-    "0.0.0-TSLIB": TSLIB_PACKAGE_VERSION,
     # Version of the local package being built, generated via the `--workspace_status_command` flag.
     "0.0.0-PLACEHOLDER": "{STABLE_PROJECT_VERSION}",
-    # Version of `rxjs`
-    "0.0.0-RXJS": RXJS_PACKAGE_VERSION,
 })
 
 NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
