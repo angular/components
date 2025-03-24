@@ -175,6 +175,7 @@ npm_translate_lock(
     data = [
         "//:package.json",
         "//:pnpm-workspace.yaml",
+        "//src/cdk:package.json",
     ],
     npmrc = "//:.npmrc",
     pnpm_lock = "//:pnpm-lock.yaml",
