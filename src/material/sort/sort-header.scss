@@ -2,9 +2,16 @@
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private';
 
+.mat-sort-header {
+  cursor: pointer;
+}
+
+.mat-sort-header-disabled {
+  cursor: default;
+}
+
 .mat-sort-header-container {
   display: flex;
-  cursor: pointer;
   align-items: center;
   letter-spacing: normal;
 
@@ -17,10 +24,6 @@
   [mat-sort-header].cdk-keyboard-focused &,
   [mat-sort-header].cdk-program-focused & {
     border-bottom: solid 1px currentColor;
-  }
-
-  .mat-sort-header-disabled & {
-    cursor: default;
   }
 
   // For the sort-header element, default inset/offset values are necessary to ensure that
