@@ -189,32 +189,32 @@
     "packageExtensions": {
       "@angular/animations": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/common": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/forms": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/platform-browser": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/router": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/localize": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       }
     }
