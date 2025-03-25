@@ -284,7 +284,9 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   }
 
   private _updateOverlayHandleHeight() {
-    this.overlayRef!.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
+    requestAnimationFrame(() => {
+      this.overlayRef!.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
+    })
   }
 
   private _applySize(sizeInPixels: number, previousSize?: number): void {
