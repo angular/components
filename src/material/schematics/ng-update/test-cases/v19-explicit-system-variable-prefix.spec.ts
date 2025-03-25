@@ -1,5 +1,5 @@
 import {UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createTestCaseSetup} from '@angular/cdk/schematics/testing';
+import {createTestCaseSetup} from '../../../../cdk/schematics/testing';
 import {MIGRATION_PATH} from '../../paths';
 
 const THEME_FILE_PATH = '/projects/cdk-testing/src/theme.scss';

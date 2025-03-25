@@ -38,8 +38,8 @@
     "tslint": "tslint -c tslint.json --project ./tsconfig.json",
     "stylelint": "stylelint \"src/**/*.+(css|scss)\" --config .stylelintrc.json",
     "resync-caretaker-app": "ts-node --project scripts/tsconfig.json scripts/caretaking/resync-caretaker-app-prs.ts",
-    "ts-circular-deps:check": "yarn -s ng-dev ts-circular-deps check --config ./src/circular-deps-test.conf.js",
-    "ts-circular-deps:approve": "yarn -s ng-dev ts-circular-deps approve --config ./src/circular-deps-test.conf.js",
+    "ts-circular-deps:check": "yarn -s ng-dev ts-circular-deps check --config ./src/circular-deps-test.conf.cjs",
+    "ts-circular-deps:approve": "yarn -s ng-dev ts-circular-deps approve --config ./src/circular-deps-test.conf.cjs",
     "merge": "yarn -s ng-dev pr merge",
     "approve-api": "node ./scripts/approve-api-golden.js",
     "approve-size-tests": "node ./scripts/approve-size-golden.js",
@@ -134,6 +134,7 @@
     "inquirer": "^8.2.0",
     "jasmine": "^4.1.0",
     "jasmine-core": "^4.1.0",
+    "jasmine-reporters": "^2.5.2",
     "jsonc-parser": "^3.0.0",
     "kagekiri": "^1.4.1",
     "karma": "^6.3.12",
@@ -164,6 +165,7 @@
     "semver": "^7.3.5",
     "send": "^0.17.2",
     "shelljs": "^0.8.5",
+    "source-map-support": "^0.5.21",
     "stylelint": "^14.14.0",
     "terser": "^5.10.0",
     "ts-node": "^10.9.1",
@@ -189,32 +191,32 @@
     "packageExtensions": {
       "@angular/animations": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/common": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/forms": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/platform-browser": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/router": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       },
       "@angular/localize": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.0"
+          "@nginfra/angular-linking": "1.0.2"
         }
       }
     }

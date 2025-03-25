@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "lib": ["es2022"],
+    "moduleResolution": "node10",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true
+  }
+}

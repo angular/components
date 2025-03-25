@@ -1,19 +1,20 @@
-load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html", "ts_library")
+load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "coercion",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "@npm//@angular/core",
+        "//:node_modules/@angular/core",
     ],
 )
 
-ts_library(
+ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -21,9 +22,8 @@ ts_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":coercion",
-        "@npm//@angular/core",
-        "@npm//@types/jasmine",
+        ":coercion_rjs",
+        "//:node_modules/@angular/core",
     ],
 )
 

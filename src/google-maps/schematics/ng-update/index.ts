@@ -8,7 +8,7 @@
 
 import {Path} from '@angular-devkit/core';
 import {Rule, Tree} from '@angular-devkit/schematics';
-import ts from 'typescript';
+import * as ts from 'typescript';
 
 /** Tag name of the clusterer component. */
 const TAG_NAME = 'map-marker-clusterer';

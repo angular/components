@@ -1,16 +1,18 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "protractor",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk/testing",
-        "@npm//protractor",
+    ],
+    deps = [
+        "//:node_modules/protractor",
     ],
 )
 

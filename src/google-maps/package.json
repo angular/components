@@ -18,12 +18,12 @@
   "homepage": "https://github.com/angular/components/tree/main/src/google-maps#readme",
   "dependencies": {
     "@types/google.maps": "^3.54.10",
-    "tslib": "0.0.0-TSLIB"
+    "tslib": "^2.3.0"
   },
   "peerDependencies": {
     "@angular/core": "0.0.0-NG",
     "@angular/common": "0.0.0-NG",
-    "rxjs": "0.0.0-RXJS"
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "sideEffects": false,
   "schematics": "./schematics/collection.json",

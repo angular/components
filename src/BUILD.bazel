@@ -1,9 +1,10 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_config")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load("//tools/dgeni:index.bzl", "dgeni_api_docs")
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -24,7 +25,16 @@ exports_files([
 ts_config(
     name = "tsconfig-test",
     src = "bazel-tsconfig-test.json",
-    deps = ["bazel-tsconfig-build.json"],
+    deps = [
+        "bazel-tsconfig-build.json",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+    ],
+)
+
+copy_to_bin(
+    name = "package_json",
+    srcs = ["package.json"],
 )
 
 dgeni_api_docs(
@@ -46,7 +56,7 @@ dgeni_api_docs(
     tags = ["docs-package"],
 )
 
-ts_library(
+ts_project(
     name = "dev_mode_types",
     srcs = ["dev-mode-types.d.ts"],
 )

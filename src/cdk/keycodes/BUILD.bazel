@@ -1,4 +1,5 @@
-load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html", "ng_module", "ts_library")
+load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html", "ng_module")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -14,17 +15,19 @@ ng_module(
     ),
 )
 
-ts_library(
+ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":keycodes",
         "//src/cdk/testing/private",
-        "@npm//@types/jasmine",
+    ],
+    deps = [
+        "//:node_modules/@types/jasmine",
     ],
 )
 

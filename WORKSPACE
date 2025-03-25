@@ -116,6 +116,7 @@ yarn_install(
         "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32.patch",
         "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
         "//:tools/postinstall/patches/tsec+0.2.2.patch",
+        "//src/cdk:package.json",
     ],
     # Currently disabled due to:
     #  1. Missing Windows support currently.
@@ -175,6 +176,7 @@ npm_translate_lock(
     data = [
         "//:package.json",
         "//:pnpm-workspace.yaml",
+        "//src/cdk:package.json",
     ],
     npmrc = "//:.npmrc",
     pnpm_lock = "//:pnpm-lock.yaml",
@@ -208,6 +210,17 @@ http_archive(
     strip_prefix = "rules_rollup-2.0.0",
     url = "https://github.com/aspect-build/rules_rollup/releases/download/v2.0.0/rules_rollup-v2.0.0.tar.gz",
 )
+
+http_archive(
+    name = "aspect_rules_jasmine",
+    sha256 = "0d2f9c977842685895020cac721d8cc4f1b37aae15af46128cf619741dc61529",
+    strip_prefix = "rules_jasmine-2.0.0",
+    url = "https://github.com/aspect-build/rules_jasmine/releases/download/v2.0.0/rules_jasmine-v2.0.0.tar.gz",
+)
+
+load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependencies")
+
+rules_jasmine_dependencies()
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 

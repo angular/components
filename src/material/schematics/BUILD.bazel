@@ -1,7 +1,16 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "jasmine_node_test", "pkg_npm", "ts_library")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults2.bzl", "jasmine_test", "npm_package", "ts_project")
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
 
 package(default_visibility = ["//visibility:public"])
+
+# TODO(devversion): Remove when CDK is fully linked properly.
+npm_link_package(
+    name = "node_modules/@angular/cdk/schematics",
+    src = "//src/cdk/schematics:npm_package",
+    root_package = package_name(),
+)
 
 copy_to_bin(
     name = "collection_assets",
@@ -25,7 +34,29 @@ copy_to_bin(
     ]),
 )
 
-ts_library(
+copy_to_bin(
+    name = "package_json",
+    srcs = ["package.json"],
+)
+
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:node_modules/@types/node",
+    ],
+)
+
+rules_js_tsconfig(
+    name = "tsconfig-test",
+    src = "tsconfig-test.json",
+    deps = [
+        "tsconfig.json",
+        "//:node_modules/@types/jasmine",
+    ],
+)
+
+ts_project(
     name = "schematics",
     srcs = glob(
         ["**/*.ts"],
@@ -35,72 +66,46 @@ ts_library(
             "ng-generate/*/files/**/*.ts",
         ],
     ),
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
-    prodmode_module = "commonjs",
-    tsconfig = ":tsconfig.json",
+    tsconfig = ":tsconfig",
     deps = [
-        "//src/cdk/schematics",
-        "@npm//@angular-devkit/core",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@schematics/angular",
-        # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//rxjs",
-        "@npm//tslint",
-        "@npm//typescript",
+        ":node_modules/@angular/cdk/schematics",
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@schematics/angular",
+        "//:node_modules/rxjs",
+        "//:node_modules/tslint",
+        "//:node_modules/typescript",
     ],
 )
 
-ts_library(
+ts_project(
     name = "paths",
     testonly = True,
     srcs = ["paths.ts"],
     data = [
         ":collection_assets",
     ],
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
-    prodmode_module = "commonjs",
-    tsconfig = ":tsconfig.json",
+    tsconfig = ":tsconfig",
     deps = [
-        "@npm//@bazel/runfiles",
+        "//:node_modules/@bazel/runfiles",
     ],
 )
 
 # This package is intended to be combined into the main @angular/material package as a dep.
-pkg_npm(
+npm_package(
     name = "npm_package",
-    srcs = ["package.json"],
-    nested_packages = [
-        "//src/material/schematics/ng-generate/theme-color:npm_package",
-    ],
-    deps = [
+    srcs = [
+        "package.json",
         ":collection_assets",
         ":ng_generate_assets",
         ":schema_assets",
-        ":schematics",
+        ":schematics_rjs",
+        "//src/material/schematics/ng-generate/theme-color:npm_package",
         "//src/material/schematics/ng-update:ng_update_index",
     ],
 )
 
-### Testing rules
-
-jasmine_node_test(
-    name = "unit_tests",
-    srcs = [":unit_test_sources"],
-    data = [
-        ":collection_assets",
-        ":ng_generate_assets",
-        ":schema_assets",
-        ":schematics_test_cases",
-    ],
-)
-
-ts_library(
+ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -110,23 +115,19 @@ ts_library(
             "ng-generate/*/files/**/*.spec.ts",
         ],
     ),
-    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
-    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
-    devmode_module = "commonjs",
-    prodmode_module = "commonjs",
-    tsconfig = ":tsconfig.json",
+    tsconfig = ":tsconfig-test",
     deps = [
-        ":paths",
-        ":schematics",
-        "//src/cdk/schematics",
-        "//src/cdk/schematics/testing",
-        "@npm//@angular-devkit/core",
-        "@npm//@angular-devkit/schematics",
-        "@npm//@schematics/angular",
-        "@npm//@types/fs-extra",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//fs-extra",
+        ":node_modules/@angular/cdk/schematics",
+        ":paths_rjs",
+        ":schematics_rjs",
+        "//:node_modules/@angular-devkit/core",
+        "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@schematics/angular",
+        "//:node_modules/@types/fs-extra",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/fs-extra",
+        "//src/cdk/schematics/testing:testing_rjs",
     ],
 )
 
@@ -137,4 +138,16 @@ filegroup(
         "ng-update/test-cases/**/*_input.ts",
         "ng-update/test-cases/**/*_expected_output.ts",
     ]),
+)
+
+jasmine_test(
+    name = "unit_tests",
+    data = [
+        ":collection_assets",
+        ":ng_generate_assets",
+        ":schema_assets",
+        ":schematics_test_cases",
+        ":unit_test_sources_rjs",
+        "//src/material/schematics:package_json",
+    ],
 )
