@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -14,10 +14,11 @@ ts_project(
     ],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_tests_lib",
+    testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    deps = [
+    interop_deps = [
         ":testing",
         "//src/cdk/keycodes",
         "//src/cdk/testing",
@@ -25,7 +26,10 @@ ng_test_library(
         "//src/material/chips",
         "//src/material/icon",
         "//src/material/icon/testing",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

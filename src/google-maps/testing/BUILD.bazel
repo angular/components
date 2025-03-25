@@ -10,6 +10,7 @@ ts_project(
         "//src/google-maps",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/@types/google.maps",
         "//:node_modules/@types/jasmine",
     ],

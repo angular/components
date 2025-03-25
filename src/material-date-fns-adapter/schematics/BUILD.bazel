@@ -21,6 +21,7 @@ ts_project(
     tsconfig = "tsconfig.json",
     deps = [
         "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@angular/core",
         "//:node_modules/@types/node",
     ],
 )
