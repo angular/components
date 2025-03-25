@@ -100,7 +100,7 @@ npm_package(
         ":ng_generate_assets",
         ":schema_assets",
         ":schematics_rjs",
-        "//src/material/schematics/ng-generate/theme-color:npm_package",
+        "//src/material/schematics/ng-generate/theme-color:npm_package_assets",
         "//src/material/schematics/ng-update:ng_update_index",
     ],
 )
