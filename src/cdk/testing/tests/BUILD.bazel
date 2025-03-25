@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
+load("//tools:defaults.bzl", "ng_module")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -70,20 +70,24 @@ ts_project(
     ],
 )
 
-ng_e2e_test_library(
+ts_project(
     name = "e2e_test_sources",
+    testonly = True,
     srcs = glob(
         [
             "**/*.e2e.spec.ts",
         ],
         exclude = ["webdriver.e2e.spec.ts"],
     ),
-    deps = [
-        ":cross_environment_specs",
-        ":test_harnesses",
+    interop_deps = [
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
+    ],
+    deps = [
+        ":cross_environment_specs_rjs",
+        ":test_harnesses_rjs",
+        "//:node_modules/protractor",
     ],
 )
 

@@ -1,5 +1,5 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_module", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -41,9 +41,14 @@ ng_web_test_suite(
     deps = [":unit_test_sources"],
 )
 
-ng_e2e_test_library(
+ts_project(
     name = "e2e_test_sources",
+    testonly = True,
     srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/protractor",
+    ],
 )
 
 e2e_test_suite(
