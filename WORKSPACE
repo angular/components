@@ -114,7 +114,6 @@ yarn_install(
         "//:tools/postinstall/apply-patches.js",
         "//:tools/postinstall/patches/@angular+bazel+20.0.0-next.1.patch",
         "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32.patch",
-        "//:tools/postinstall/patches/@bazel+concatjs+5.8.1.patch",
         "//:tools/postinstall/patches/tsec+0.2.2.patch",
         "//src/cdk:package.json",
     ],

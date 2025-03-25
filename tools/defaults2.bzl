@@ -19,6 +19,10 @@ def ts_project(
         **kwargs
     )
 
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    # if False and not testonly:
+    #    _make_tsec_test(kwargs["name"])
+
 def jasmine_test(data = [], args = [], **kwargs):
     # Create relative path to root, from current package dir. Necessary as
     # we change the `chdir` below to the package directory.
