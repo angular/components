@@ -2,12 +2,24 @@ load(
     "//tools:defaults.bzl",
     "ng_module",
     "ng_package",
-    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
 )
+load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
+
+rules_js_tsconfig(
+    name = "tsconfig-test",
+    src = "tsconfig-test.json",
+    deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/youtube",
+        "//src:test-tsconfig",
+    ],
+)
 
 ng_module(
     name = "youtube-player",
@@ -49,16 +61,21 @@ ng_package(
     deps = [":youtube-player"],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_test_sources",
+    testonly = True,
     srcs = ["fake-youtube-player.ts"] + glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":youtube-player",
-        "@npm//@angular/platform-browser",
-        "@npm//rxjs",
+    ],
+    tsconfig = ":tsconfig-test",
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
     ],
 )
 

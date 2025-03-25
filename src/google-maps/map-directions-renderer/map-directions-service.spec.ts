@@ -57,7 +57,7 @@ describe('MapDirectionsService', () => {
         destination: 'work',
         travelMode: 'BICYCLING' as google.maps.TravelMode,
       })
-      .subscribe(response => {
+      .subscribe((response: MapDirectionsResponse) => {
         expect(response).toEqual({result, status} as MapDirectionsResponse);
       });
   });

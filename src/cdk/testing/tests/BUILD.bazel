@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -29,17 +29,22 @@ ts_project(
     ],
 )
 
-ng_test_library(
+ts_project(
     name = "cross_environment_specs",
+    testonly = True,
     srcs = ["cross-environment.spec.ts"],
-    deps = [
+    interop_deps = [
         ":test_harnesses",
         "//src/cdk/testing",
     ],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_test_sources",
+    testonly = True,
     srcs = glob(
         [
             "**/*.spec.ts",
@@ -49,7 +54,7 @@ ng_test_library(
             "**/*.e2e.spec.ts",
         ],
     ),
-    deps = [
+    interop_deps = [
         ":cross_environment_specs",
         ":test_components",
         ":test_harnesses",
@@ -57,8 +62,11 @@ ng_test_library(
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
-        "@npm//@angular/platform-browser",
-        "@npm//kagekiri",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/kagekiri",
     ],
 )
 
