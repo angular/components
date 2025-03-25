@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -15,12 +15,16 @@ ts_project(
     ],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_test_sources",
+    testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    deps = [
+    interop_deps = [
         ":list-navigation",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
 

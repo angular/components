@@ -368,7 +368,7 @@ describe('MatIcon', () => {
       verifyPathChildElement(svgElement, 'meow');
 
       // Assert that a registered icon can be looked-up by url.
-      iconRegistry.getSvgIconFromUrl(trustUrl('cat.svg')).subscribe(element => {
+      iconRegistry.getSvgIconFromUrl(trustUrl('cat.svg')).subscribe((element: SVGElement) => {
         verifyPathChildElement(element, 'meow');
       });
 
@@ -836,7 +836,7 @@ describe('MatIcon', () => {
       verifyPathChildElement(svgElement, 'meow');
 
       // Assert that a registered icon can be looked-up by name.
-      iconRegistry.getNamedSvgIcon('fluffy').subscribe(element => {
+      iconRegistry.getNamedSvgIcon('fluffy').subscribe((element: SVGElement) => {
         verifyPathChildElement(element, 'meow');
       });
 
@@ -1264,7 +1264,7 @@ describe('MatIcon', () => {
       verifyPathChildElement(svgElement, 'meow');
 
       // Assert that a registered icon can be looked-up by url.
-      iconRegistry.getSvgIconFromUrl(trustUrl('cat.svg')).subscribe(element => {
+      iconRegistry.getSvgIconFromUrl(trustUrl('cat.svg')).subscribe((element: SVGElement) => {
         verifyPathChildElement(element, 'meow');
       });
 

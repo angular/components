@@ -27,6 +27,7 @@ ts_project(
         "//src/cdk/testing/private",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
     ],
 )

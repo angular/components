@@ -1,0 +1,6 @@
+{
+  "extends": "../bazel-tsconfig-test.json",
+  "compilerOptions": {
+    "types": ["google.maps", "jasmine", "node"]
+  }
+}

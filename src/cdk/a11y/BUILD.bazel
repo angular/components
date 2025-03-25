@@ -2,11 +2,11 @@ load(
     "//tools:defaults.bzl",
     "markdown_to_html",
     "ng_module",
-    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -41,13 +41,14 @@ sass_binary(
     deps = [":a11y_scss_lib"],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_test_sources",
+    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":a11y",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
@@ -55,9 +56,12 @@ ng_test_library(
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/testing/private",
-        "@npm//@angular/common",
-        "@npm//@angular/platform-browser",
-        "@npm//rxjs",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
     ],
 )
 
