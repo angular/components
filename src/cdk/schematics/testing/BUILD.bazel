@@ -14,6 +14,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
+        "//:node_modules/@angular/core",
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@schematics/angular",
         "//:node_modules/@types/fs-extra",

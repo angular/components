@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "protractor",
+    testonly = True,
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
@@ -12,6 +13,7 @@ ts_project(
         "//src/cdk/testing",
     ],
     deps = [
+        "//:node_modules/@angular/core",
         "//:node_modules/protractor",
     ],
 )

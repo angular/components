@@ -34,7 +34,7 @@ describe('MapGeocoder', () => {
       return Promise.resolve({results});
     });
 
-    geocoder.geocode({region: 'Europe'}).subscribe(response => {
+    geocoder.geocode({region: 'Europe'}).subscribe((response: MapGeocoderResponse) => {
       expect(response).toEqual({results, status} as MapGeocoderResponse);
     });
   });

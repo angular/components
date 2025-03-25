@@ -236,20 +236,6 @@ def jasmine_node_test(**kwargs):
     kwargs["templated_args"] = ["--bazel_patch_module_resolver"] + kwargs.get("templated_args", [])
     _jasmine_node_test(**kwargs)
 
-def ng_test_library(deps = [], **kwargs):
-    local_deps = [
-        # We declare "@angular/core" as default dependencies because
-        # all Angular component unit tests use the `TestBed` and `Component` exports.
-        "@npm//@angular/core",
-        "@npm//@types/jasmine",
-    ] + deps
-
-    ts_library(
-        testonly = True,
-        deps = local_deps,
-        **kwargs
-    )
-
 def ng_e2e_test_library(deps = [], **kwargs):
     local_deps = [
         "@npm//@types/jasmine",
