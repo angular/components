@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction, Directionality} from '../bidi';
-import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '../portal';
+import {Location} from '@angular/common';
 import {
   AfterRenderRef,
   ComponentRef,
@@ -16,19 +15,17 @@ import {
   NgZone,
   Renderer2,
   afterNextRender,
-  afterRender,
-  untracked,
 } from '@angular/core';
-import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
+import {Direction, Directionality} from '../bidi';
+import {coerceArray, coerceCssPixelValue} from '../coercion';
+import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '../portal';
+import {BackdropRef} from './backdrop-ref';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
-import {coerceCssPixelValue, coerceArray} from '../coercion';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
-import {BackdropRef} from './backdrop-ref';
 
 /** An object where all of its properties cannot be written. */
 export type ImmutableObject<T> = {
@@ -47,6 +44,8 @@ export class OverlayRef implements PortalOutlet {
   private _scrollStrategy: ScrollStrategy | undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
   private _backdropRef: BackdropRef | null = null;
+  private _detachContentMutationObserver: MutationObserver | undefined;
+  private _detachContentAfterRenderRef: AfterRenderRef | undefined;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
@@ -59,10 +58,6 @@ export class OverlayRef implements PortalOutlet {
 
   /** Stream of mouse outside events dispatched to this overlay. */
   readonly _outsidePointerEvents = new Subject<MouseEvent>();
-
-  private _renders = new Subject<void>();
-
-  private _afterRenderRef: AfterRenderRef;
 
   /** Reference to the currently-running `afterNextRender` call. */
   private _afterNextRenderRef: AfterRenderRef | undefined;
@@ -87,18 +82,6 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._positionStrategy = _config.positionStrategy;
-
-    // Users could open the overlay from an `effect`, in which case we need to
-    // run the `afterRender` as `untracked`. We don't recommend that users do
-    // this, but we also don't want to break users who are doing it.
-    this._afterRenderRef = untracked(() =>
-      afterRender(
-        () => {
-          this._renders.next();
-        },
-        {injector: this._injector},
-      ),
-    );
   }
 
   /** The overlay's HTML element */
@@ -182,6 +165,7 @@ export class OverlayRef implements PortalOutlet {
 
     // Only emit the `attachments` event once all other setup is done.
     this._attachments.next();
+    this._completeDetachContent();
 
     // Track this overlay by the keyboard dispatcher
     this._keyboardDispatcher.add(this);
@@ -242,6 +226,7 @@ export class OverlayRef implements PortalOutlet {
 
     // Only emit after everything is detached.
     this._detachments.next();
+    this._completeDetachContent();
 
     // Remove this overlay from keyboard dispatcher tracking.
     this._keyboardDispatcher.remove(this);
@@ -281,8 +266,7 @@ export class OverlayRef implements PortalOutlet {
     }
 
     this._detachments.complete();
-    this._afterRenderRef.destroy();
-    this._renders.complete();
+    this._completeDetachContent();
   }
 
   /** Whether the overlay has attached content. */
@@ -488,34 +472,60 @@ export class OverlayRef implements PortalOutlet {
     }
   }
 
-  /** Detaches the overlay content next time the zone stabilizes. */
+  /** Detaches the overlay once the content finishes animating and is removed from the DOM. */
   private _detachContentWhenEmpty() {
-    // Normally we wouldn't have to explicitly run this outside the `NgZone`, however
-    // if the consumer is using `zone-patch-rxjs`, the `Subscription.unsubscribe` call will
-    // be patched to run inside the zone, which will throw us into an infinite loop.
-    this._ngZone.runOutsideAngular(() => {
-      // We can't remove the host here immediately, because the overlay pane's content
-      // might still be animating. This stream helps us avoid interrupting the animation
-      // by waiting for the pane to become empty.
-      const subscription = this._renders
-        .pipe(takeUntil(merge(this._attachments, this._detachments)))
-        .subscribe(() => {
-          // Needs a couple of checks for the pane and host, because
-          // they may have been removed by the time the zone stabilizes.
-          if (!this._pane || !this._host || this._pane.children.length === 0) {
-            if (this._pane && this._config.panelClass) {
-              this._toggleClasses(this._pane, this._config.panelClass, false);
-            }
+    let rethrow = false;
+    // Attempt to detach on the next render.
+    try {
+      this._detachContentAfterRenderRef = afterNextRender(
+        () => {
+          // Rethrow if we encounter an actual error detaching.
+          rethrow = true;
+          this._detachContent();
+        },
+        {
+          injector: this._injector,
+        },
+      );
+    } catch (e) {
+      if (rethrow) {
+        throw e;
+      }
+      // afterNextRender throws if the EnvironmentInjector is has already been destroyed.
+      // This may happen in tests that don't properly flush all async work.
+      // In order to avoid breaking those tests, we just detach immediately in this case.
+      this._detachContent();
+    }
+    // Otherwise wait until the content finishes animating out and detach.
+    if (globalThis.MutationObserver && this._pane) {
+      this._detachContentMutationObserver ||= new globalThis.MutationObserver(() => {
+        this._detachContent();
+      });
+      this._detachContentMutationObserver.observe(this._pane, {childList: true});
+    }
+  }
 
-            if (this._host && this._host.parentElement) {
-              this._previousHostParent = this._host.parentElement;
-              this._host.remove();
-            }
+  private _detachContent() {
+    // Needs a couple of checks for the pane and host, because
+    // they may have been removed by the time the zone stabilizes.
+    if (!this._pane || !this._host || this._pane.children.length === 0) {
+      if (this._pane && this._config.panelClass) {
+        this._toggleClasses(this._pane, this._config.panelClass, false);
+      }
 
-            subscription.unsubscribe();
-          }
-        });
-    });
+      if (this._host && this._host.parentElement) {
+        this._previousHostParent = this._host.parentElement;
+        this._host.remove();
+      }
+
+      this._completeDetachContent();
+    }
+  }
+
+  private _completeDetachContent() {
+    this._detachContentAfterRenderRef?.destroy();
+    this._detachContentAfterRenderRef = undefined;
+    this._detachContentMutationObserver?.disconnect();
   }
 
   /** Disposes of a scroll strategy. */
