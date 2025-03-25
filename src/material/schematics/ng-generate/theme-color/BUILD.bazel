@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "esbuild", "pkg_npm")
+load("//tools:defaults.bzl", "esbuild")
 load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -48,10 +48,9 @@ esbuild(
     ],
 )
 
-pkg_npm(
-    name = "npm_package",
-    srcs = STATIC_ASSETS,
-    deps = [":index_bundled"],
+filegroup(
+    name = "npm_package_assets",
+    srcs = STATIC_ASSETS + [":index_bundled"],
 )
 
 ########################################
