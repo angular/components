@@ -3,7 +3,6 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
-    "ng_e2e_test_library",
     "ng_module",
     "ng_web_test_suite",
     "sass_binary",
@@ -102,12 +101,11 @@ ng_web_test_suite(
     ],
 )
 
-ng_e2e_test_library(
+ts_project(
     name = "e2e_test_sources",
+    testonly = True,
     srcs = glob(["**/*.e2e.spec.ts"]),
-    deps = [
-        ":slider",
-    ],
+    deps = ["//:node_modules/protractor"],
 )
 
 e2e_test_suite(

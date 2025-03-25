@@ -5,7 +5,7 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_module", "protractor_web_test_suite", "sass_binary")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 load("//tools:defaults2.bzl", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
@@ -159,9 +159,11 @@ http_server(
     ],
 )
 
-ng_e2e_test_library(
+ts_project(
     name = "hydration_e2e_tests_sources",
+    testonly = True,
     srcs = ["hydration.e2e.spec.ts"],
+    deps = ["//:node_modules/protractor"],
 )
 
 protractor_web_test_suite(

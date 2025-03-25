@@ -236,19 +236,6 @@ def jasmine_node_test(**kwargs):
     kwargs["templated_args"] = ["--bazel_patch_module_resolver"] + kwargs.get("templated_args", [])
     _jasmine_node_test(**kwargs)
 
-def ng_e2e_test_library(deps = [], **kwargs):
-    local_deps = [
-        "@npm//@types/jasmine",
-        "@npm//@types/selenium-webdriver",
-        "@npm//protractor",
-    ] + deps
-
-    ts_library(
-        testonly = True,
-        deps = local_deps,
-        **kwargs
-    )
-
 def karma_web_test_suite(name, **kwargs):
     test_deps = kwargs.get("deps", [])
 
