@@ -8,7 +8,7 @@
 
 import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
-import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators';
+import {distinctUntilChanged, map, share, skip, startWith, debounceTime} from 'rxjs/operators';
 
 import {_closest} from '../popover-edit';
 
@@ -33,7 +33,11 @@ export class HeaderRowEventDispatcher {
   readonly overlayHandleActiveForCell = new Subject<Element | null>();
 
   /** Distinct and shared version of headerCellHovered. */
-  readonly headerCellHoveredDistinct = this.headerCellHovered.pipe(distinctUntilChanged(), share());
+  readonly headerCellHoveredDistinct = this.headerCellHovered.pipe(
+    distinctUntilChanged(),
+    debounceTime(200),
+    share(),
+  );
 
   /**
    * Emits the header that is currently hovered or hosting an active resize event (with active
