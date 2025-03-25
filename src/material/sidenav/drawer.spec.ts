@@ -2,6 +2,7 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {CdkScrollable} from '@angular/cdk/scrolling';
+import {OverlayKeyboardDispatcher, OverlayRef} from '@angular/cdk/overlay';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -22,7 +23,13 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatDrawerContainer, MatSidenavModule} from './index';
 
 describe('MatDrawer', () => {
+  let fakeKeyboardDispatcher: OverlayKeyboardDispatcher;
+
   beforeEach(waitForAsync(() => {
+    fakeKeyboardDispatcher = {
+      _attachedOverlays: [] as OverlayRef[],
+    } as OverlayKeyboardDispatcher;
+
     TestBed.configureTestingModule({
       imports: [
         MatSidenavModule,
@@ -38,6 +45,12 @@ describe('MatDrawer', () => {
         DrawerWithoutFocusableElements,
         IndirectDescendantDrawer,
         NestedDrawerContainers,
+      ],
+      providers: [
+        {
+          provide: OverlayKeyboardDispatcher,
+          useValue: fakeKeyboardDispatcher,
+        },
       ],
     });
   }));
@@ -226,6 +239,33 @@ describe('MatDrawer', () => {
       expect(testComponent.closeStartCount).withContext('Expected no close start events.').toBe(0);
 
       const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
+      dispatchEvent(drawer.nativeElement, event);
+      fixture.detectChanges();
+      flush();
+
+      expect(testComponent.closeCount).withContext('Expected still no close events.').toBe(0);
+      expect(testComponent.closeStartCount)
+        .withContext('Expected still no close start events.')
+        .toBe(0);
+      expect(event.defaultPrevented).toBe(false);
+    }));
+
+    it('should not close when pressing escape while an overlay is open', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.detectChanges();
+
+      const testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      const drawer = fixture.debugElement.query(By.directive(MatDrawer))!;
+
+      drawer.componentInstance.open();
+      fixture.detectChanges();
+      tick();
+
+      expect(testComponent.closeCount).withContext('Expected no close events.').toBe(0);
+      expect(testComponent.closeStartCount).withContext('Expected no close start events.').toBe(0);
+
+      fakeKeyboardDispatcher._attachedOverlays.push(null!);
+      const event = createKeyboardEvent('keydown', ESCAPE);
       dispatchEvent(drawer.nativeElement, event);
       fixture.detectChanges();
       flush();

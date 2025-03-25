@@ -16,6 +16,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
+import {OverlayKeyboardDispatcher} from '@angular/cdk/overlay';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -179,6 +180,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
   private _doc = inject(DOCUMENT, {optional: true})!;
+  private _keyboardDispatcher = inject(OverlayKeyboardDispatcher, {optional: true});
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
 
   private _focusTrap: FocusTrap | null = null;
@@ -360,19 +362,22 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       const element = this._elementRef.nativeElement;
       (fromEvent(element, 'keydown') as Observable<KeyboardEvent>)
-        .pipe(
-          filter(event => {
-            return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
-          }),
-          takeUntil(this._destroyed),
-        )
-        .subscribe(event =>
-          this._ngZone.run(() => {
-            this.close();
-            event.stopPropagation();
-            event.preventDefault();
-          }),
-        );
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(event => {
+          // Skip keyboard events if there are open overlays since they may be
+          // placed inside the sidenav and cause it to close unexpectedly.
+          if (this._keyboardDispatcher && this._keyboardDispatcher._attachedOverlays.length > 0) {
+            return;
+          }
+
+          if (event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)) {
+            this._ngZone.run(() => {
+              this.close();
+              event.stopPropagation();
+              event.preventDefault();
+            });
+          }
+        });
 
       this._eventCleanups = [
         this._renderer.listen(element, 'transitionrun', this._handleTransitionEvent),
