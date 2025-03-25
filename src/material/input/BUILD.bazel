@@ -3,10 +3,10 @@ load(
     "extract_tokens",
     "markdown_to_html",
     "ng_module",
-    "ng_test_library",
     "ng_web_test_suite",
     "sass_library",
 )
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -35,21 +35,25 @@ sass_library(
 # Testing
 ###########
 
-ng_test_library(
+ts_project(
     name = "input_tests_lib",
+    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":input",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
-        "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
     ],
 )
 

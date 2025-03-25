@@ -1,9 +1,9 @@
 load(
     "//tools:defaults.bzl",
     "ng_module",
-    "ng_test_library",
     "ng_web_test_suite",
 )
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -24,18 +24,22 @@ ng_module(
     ],
 )
 
-ng_test_library(
+ts_project(
     name = "unit_test_sources",
+    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":table-scroll-container",
         "//src/cdk/collections",
         "//src/cdk/platform",
         "//src/cdk/table",
-        "@npm//rxjs",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
     ],
 )
 

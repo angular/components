@@ -3,11 +3,11 @@ load(
     "extract_tokens",
     "markdown_to_html",
     "ng_module",
-    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -85,12 +85,13 @@ sass_binary(
     ],
 )
 
-ng_test_library(
+ts_project(
     name = "tabs_tests_lib",
+    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         ":tabs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -101,9 +102,12 @@ ng_test_library(
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
         "//src/material/core",
-        "@npm//@angular/common",
-        "@npm//@angular/platform-browser",
-        "@npm//rxjs",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
     ],
 )
 
