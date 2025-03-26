@@ -11,12 +11,14 @@ import {
   computed,
   contentChildren,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
   model,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
+import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
 import {TabPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tab';
 import {TablistPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tablist';
 import {TabpanelPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tabpanel';
@@ -189,12 +191,22 @@ export class CdkTab {
   exportAs: 'cdkTabpanel',
   host: {
     'role': 'tabpanel',
+    'tabindex': '0',
     'class': 'cdk-tabpanel',
     '[attr.id]': 'pattern.id()',
     '[attr.inert]': 'pattern.hidden() ? true : null',
   },
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
 })
 export class CdkTabpanel {
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware);
+
   /** The parent CdkTabs. */
   private readonly _cdkTabs = inject(CdkTabs);
 
@@ -215,4 +227,18 @@ export class CdkTabpanel {
     id: () => this._id,
     tab: this.tab,
   });
+
+  constructor() {
+    effect(() => this._deferredContentAware.contentVisible.set(!this.pattern.hidden()));
+  }
 }
+
+/**
+ * A Tabcontent container for the lazy-loaded content.
+ */
+@Directive({
+  selector: 'ng-template[cdkTabcontent]',
+  exportAs: 'cdTabcontent',
+  hostDirectives: [DeferredContent],
+})
+export class CdkTabcontent {}

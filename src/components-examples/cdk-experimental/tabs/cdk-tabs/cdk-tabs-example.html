@@ -45,8 +45,14 @@
     <li cdkTab class="example-tab">tab 3</li>
   </ul>
 
-  <div cdkTabpanel class="example-tabpanel">Tabpanel 1</div>
-  <div cdkTabpanel class="example-tabpanel">Tabpanel 2</div>
-  <div cdkTabpanel class="example-tabpanel">Tabpanel 3</div>
+  <div cdkTabpanel class="example-tabpanel">
+    <ng-template cdkTabcontent>Tabpanel 1</ng-template>
+  </div>
+  <div cdkTabpanel class="example-tabpanel">
+    <ng-template cdkTabcontent>Tabpanel 2</ng-template>
+  </div>
+  <div cdkTabpanel class="example-tabpanel">
+    <ng-template cdkTabcontent>Tabpanel 3</ng-template>
+  </div>
 </div>
 <!-- #enddocregion tabs -->

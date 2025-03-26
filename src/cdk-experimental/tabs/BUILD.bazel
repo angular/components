@@ -9,6 +9,7 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        "//src/cdk-experimental/deferred-content",
         "//src/cdk-experimental/ui-patterns/tabs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
