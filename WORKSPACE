@@ -174,6 +174,7 @@ npm_translate_lock(
     },
     data = [
         "//:package.json",
+        "//:patches/@angular__compiler-cli.patch",
         "//:pnpm-workspace.yaml",
         "//src/cdk:package.json",
     ],
@@ -239,14 +240,21 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "bbf9493c73f4a2d715259e8febaa99c363ceaec3",
+    commit = "92127883c3a3714e63782a51bac1a7c03ec8b0f5",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
-load("@rules_angular//setup:step_1.bzl", "step_1")
+load("@rules_angular//setup:step_1.bzl", "rules_angular_step1")
 
-step_1()
+rules_angular_step1()
 
-load("@rules_angular//setup:step_2.bzl", "step_2")
+load("@rules_angular//setup:step_2.bzl", "rules_angular_step2")
 
-step_2()
+rules_angular_step2()
+
+load("@rules_angular//setup:step_3.bzl", "rules_angular_step3")
+
+rules_angular_step3(
+    angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
+    typescript = "//:node_modules/typescript",
+)
