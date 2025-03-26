@@ -1,15 +1,14 @@
 load(
     "//tools:defaults.bzl",
-    "ng_module",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "menubar",
     srcs = glob(
         ["**/*.ts"],
@@ -19,9 +18,11 @@ ng_module(
         ":menubar.css",
         ":menubar-item.css",
     ] + glob(["**/*.html"]),
-    deps = [
+    interop_deps = [
         "//src/cdk/menu",
-        "@npm//@angular/core",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
 

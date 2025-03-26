@@ -1,22 +1,26 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "paginator",
     srcs = glob(["**/*.ts"]),
     assets = [
         "paginator-demo.html",
         ":paginator_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/components-examples/material/paginator",
         "//src/material/card",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/paginator",
         "//src/material/slide-toggle",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

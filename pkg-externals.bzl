@@ -17,6 +17,7 @@ PKG_EXTERNALS = [
     "@angular/common/http",
     "@angular/common/http/testing",
     "@angular/common/testing",
+    "@angular/localize/init",
     "@angular/core",
     "@angular/core/rxjs-interop",
     "@angular/core/testing",

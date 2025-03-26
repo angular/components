@@ -1,19 +1,24 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "grid-list",
     srcs = glob(["**/*.ts"]),
     assets = [
         "grid-list-demo.html",
         ":grid_list_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/material/button",
         "//src/material/card",
         "//src/material/grid-list",
         "//src/material/icon",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 
