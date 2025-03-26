@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # Allow for the formatting command to fail without exiting the script.
 set +e
 
