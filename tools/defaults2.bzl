@@ -2,6 +2,7 @@ load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 load("//tools/bazel:ts_project_interop.bzl", _ts_project = "ts_project")
 load("//tools/bazel:module_name.bzl", "compute_module_name")
 load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
+load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
 
 def npm_package(**kwargs):
     _npm_package(**kwargs)
@@ -15,6 +16,24 @@ def ts_project(
         name,
         source_map = source_map,
         module_name = compute_module_name(testonly),
+        testonly = testonly,
+        **kwargs
+    )
+
+    # TODO(devversion): Partner with ISE team to support `rules_js` here.
+    # if False and not testonly:
+    #    _make_tsec_test(kwargs["name"])
+
+def ng_project(
+        name,
+        source_map = True,
+        testonly = False,
+        **kwargs):
+    _ts_project(
+        name,
+        source_map = source_map,
+        module_name = compute_module_name(testonly),
+        rule_impl = _ng_project,
         testonly = testonly,
         **kwargs
     )
