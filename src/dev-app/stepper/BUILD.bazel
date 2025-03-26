@@ -1,12 +1,12 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "stepper",
     srcs = glob(["**/*.ts"]),
     assets = ["stepper-demo.html"],
-    deps = [
+    interop_deps = [
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/core",
@@ -14,6 +14,9 @@ ng_module(
         "//src/material/input",
         "//src/material/select",
         "//src/material/stepper",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )

@@ -1,16 +1,18 @@
-load("//tools:defaults.bzl", "markdown_to_html", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "markdown_to_html", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "private",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":visually-hidden-styles"],
+    interop_deps = [],
     deps = [
-        "@npm//@angular/core",
+        "//:node_modules/@angular/core",
     ],
 )
 

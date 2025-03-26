@@ -1,8 +1,9 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "checkbox",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -10,14 +11,17 @@ ng_module(
         "nested-checklist.html",
         ":checkbox_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/material/checkbox",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/select",
         "//src/material/tooltip",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

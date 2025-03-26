@@ -1,15 +1,16 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "chips",
     srcs = glob(["**/*.ts"]),
     assets = [
         "chips-demo.html",
         ":chips_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/material/button",
         "//src/material/card",
         "//src/material/checkbox",
@@ -17,6 +18,10 @@ ng_module(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

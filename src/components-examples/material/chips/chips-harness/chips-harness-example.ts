@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';

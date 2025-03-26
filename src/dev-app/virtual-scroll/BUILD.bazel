@@ -1,15 +1,16 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "virtual-scroll",
     srcs = glob(["**/*.ts"]),
     assets = [
         "virtual-scroll-demo.html",
         ":virtual_scroll_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/scrolling",
         "//src/cdk/scrolling",
         "//src/components-examples/cdk/scrolling",
@@ -17,7 +18,12 @@ ng_module(
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/select",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
     ],
 )
 

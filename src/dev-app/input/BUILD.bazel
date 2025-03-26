@@ -1,15 +1,16 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "input",
     srcs = glob(["**/*.ts"]),
     assets = [
         ":input_demo_scss",
         "input-demo.html",
     ],
-    deps = [
+    interop_deps = [
         "//src/components-examples/material/form-field",
         "//src/material/autocomplete",
         "//src/material/button",
@@ -22,7 +23,12 @@ ng_module(
         "//src/material/tabs",
         "//src/material/toolbar",
         "//src/material/tooltip",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
     ],
 )
 

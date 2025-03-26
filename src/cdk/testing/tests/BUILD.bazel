@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "ng_module")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "test_components",
     testonly = True,
     srcs = glob(
@@ -14,10 +13,13 @@ ng_module(
         ],
     ),
     assets = glob(["**/*.html"]),
-    deps = [
+    interop_deps = [
         "//src/cdk/keycodes",
         "//src/cdk/platform",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

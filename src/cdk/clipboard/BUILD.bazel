@@ -1,19 +1,20 @@
-load("//tools:defaults.bzl", "markdown_to_html", "ng_module", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "clipboard",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     assets = glob(["**/*.html"]),
+    interop_deps = [],
     deps = [
-        "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//rxjs",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
     ],
 )
 

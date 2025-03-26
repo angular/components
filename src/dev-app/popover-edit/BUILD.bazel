@@ -1,14 +1,17 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "popover-edit",
     srcs = glob(["**/*.ts"]),
-    deps = [
+    interop_deps = [
         "//src/components-examples/cdk-experimental/popover-edit",
         "//src/components-examples/material-experimental/popover-edit",
         "//src/dev-app/example",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )

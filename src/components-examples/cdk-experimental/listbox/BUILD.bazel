@@ -1,19 +1,23 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "listbox",
     srcs = glob(["**/*.ts"]),
     assets = glob([
         "**/*.html",
         "**/*.css",
     ]),
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/listbox",
         "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/select",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

@@ -1,11 +1,10 @@
 load(
     "//tools:defaults.bzl",
-    "ng_module",
     "ng_package",
     "ng_web_test_suite",
     "sass_binary",
 )
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
@@ -21,7 +20,7 @@ rules_js_tsconfig(
     ],
 )
 
-ng_module(
+ng_project(
     name = "youtube-player",
     srcs = glob(
         ["**/*.ts"],
@@ -34,12 +33,14 @@ ng_module(
         ":youtube_player_scss",
         ":youtube_player_placeholder_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src:dev_mode_types",
-        "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//@types/youtube",
-        "@npm//rxjs",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@types/youtube",
+        "//:node_modules/rxjs",
     ],
 )
 
