@@ -120,6 +120,7 @@ build:build-results --bes_results_url="https://source.cloud.google.com/results/i
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true
+build:remote --remote_upload_local_results=false
 
 ################################
 # --config=debug               #
