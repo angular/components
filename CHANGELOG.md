@@ -1,3 +1,17 @@
+<a name="20.0.0-next.4"></a>
+# 20.0.0-next.4 "bohrium-beans" (2025-03-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [985721c5d](https://github.com/angular/components/commit/985721c5d013f43ee5b779e1b87b2e5ec7eddf28) | fix | **menu:** not clearing aria-controls on context menu ([#30680](https://github.com/angular/components/pull/30680)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3aecb3521](https://github.com/angular/components/commit/3aecb3521614d1bae40a5233d7fcc609fed0e632) | fix | **button:** tonal touch target token transgression ([#30688](https://github.com/angular/components/pull/30688)) |
+| [2d7da0ac7](https://github.com/angular/components/commit/2d7da0ac706d6eb32439c256d9b3fa2e1d7c9225) | fix | **sort:** set cursor on entire clickable area ([#30696](https://github.com/angular/components/pull/30696)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.7"></a>
 # 19.2.7 "bohrium-banana" (2025-03-26)
 ### cdk
