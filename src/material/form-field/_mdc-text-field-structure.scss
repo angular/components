@@ -233,7 +233,7 @@
     }
 
     .mdc-notched-outline & {
-      text-overflow: clip;
+      text-overflow: ellipsis;
     }
 
     .mdc-notched-outline--upgraded & {
@@ -398,6 +398,7 @@
     @include token-utils.use-tokens($outlined-slots...) {
       .mdc-text-field--outlined .mdc-notched-outline & {
         $shape-var: token-utils.get-token-variable(container-shape);
+        --mat-form-field-notch-max-width: 180px; // set width same as .mat-mdc-form-field-infix See form-field.scss
         max-width: min(
           var(--mat-form-field-notch-max-width, 100%),
           calc(100% - max(12px, #{$shape-var}) * 2)
@@ -611,7 +612,9 @@
   }
 
   .mdc-line-ripple::after {
-    transition: transform 180ms $timing-curve, opacity 180ms $timing-curve;
+    transition:
+      transform 180ms $timing-curve,
+      opacity 180ms $timing-curve;
   }
 
   .mat-mdc-form-field-hint-wrapper,

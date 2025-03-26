@@ -51,6 +51,7 @@ $_enable-form-field-will-change-reset: true;
   .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
     // Style the cursor the same way as the rest of the input
     cursor: inherit;
+    width: inherit;
   }
 
   // Reset the height that MDC sets on native input elements. We cannot rely on their
@@ -117,7 +118,9 @@ $_enable-form-field-will-change-reset: true;
   .mat-form-field-disabled .mdc-text-field__input {
     @include vendor-prefixes.input-placeholder {
       @include token-utils.use-tokens(
-        tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
+        tokens-mat-form-field.$prefix,
+        tokens-mat-form-field.get-token-slots()
+      ) {
         @include token-utils.create-token-slot(color, disabled-input-text-placeholder-color);
       }
     }
