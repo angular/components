@@ -1,3 +1,16 @@
+<a name="19.2.7"></a>
+# 19.2.7 "bohrium-banana" (2025-03-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [259bd2323](https://github.com/angular/components/commit/259bd2323d6172eb9382c90d604193193696b9b7) | fix | **menu:** not clearing aria-controls on context menu ([#30680](https://github.com/angular/components/pull/30680)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3ba64d85c](https://github.com/angular/components/commit/3ba64d85cdb730e914d5c7492228c9f47135d77a) | fix | **sort:** set cursor on entire clickable area ([#30696](https://github.com/angular/components/pull/30696)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-next.3"></a>
 # 20.0.0-next.3 "iridium-irrigator" (2025-03-21)
 ### cdk
