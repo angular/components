@@ -1,19 +1,23 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "progress-bar",
     srcs = glob(["**/*.ts"]),
     assets = [
         "progress-bar-demo.html",
         ":progress_bar_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/material/button",
         "//src/material/button-toggle",
         "//src/material/progress-bar",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

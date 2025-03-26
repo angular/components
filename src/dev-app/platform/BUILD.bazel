@@ -1,12 +1,15 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "platform",
     srcs = glob(["**/*.ts"]),
     assets = ["platform-demo.html"],
-    deps = [
+    interop_deps = [
         "//src/cdk/platform",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )

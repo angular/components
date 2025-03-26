@@ -1,8 +1,9 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "focus-trap",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,13 +12,16 @@ ng_module(
         ":focus_trap_demo_scss",
         ":focus_trap_dialog_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk/a11y",
         "//src/cdk/platform",
         "//src/material/button",
         "//src/material/card",
         "//src/material/dialog",
         "//src/material/toolbar",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
 

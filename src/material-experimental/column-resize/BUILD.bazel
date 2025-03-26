@@ -1,20 +1,23 @@
-load("//tools:defaults.bzl", "ng_module", "ng_web_test_suite", "sass_library")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_web_test_suite", "sass_library")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "column-resize",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/column-resize",
         "//src/cdk/overlay",
         "//src/cdk/table",
         "//src/material/table",
-        "@npm//@angular/core",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
     ],
 )
 

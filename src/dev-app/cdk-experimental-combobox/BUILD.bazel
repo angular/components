@@ -1,14 +1,17 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "cdk-experimental-combobox",
     srcs = glob(["**/*.ts"]),
     assets = [
         "cdk-combobox-demo.html",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/combobox",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )

@@ -1,21 +1,24 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "drag-drop",
     srcs = glob(["**/*.ts"]),
     assets = glob([
         "**/*.html",
         "**/*.css",
     ]),
-    deps = [
+    interop_deps = [
         "//src/cdk/drag-drop",
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/icon",
         "//src/material/table",
         "//src/material/tabs",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
 

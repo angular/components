@@ -1,9 +1,9 @@
-load("//tools:defaults.bzl", "ng_module", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "badge",
     srcs = glob(
         ["**/*.ts"],
@@ -13,15 +13,18 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    deps = [
+    interop_deps = [
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/badge",
         "//src/material/badge/testing",
         "//src/material/button",
         "//src/material/icon",
-        "@npm//@angular/platform-browser",
-        "@npm//@types/jasmine",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
     ],
 )
 

@@ -1,14 +1,17 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "cdk-listbox",
     srcs = glob(["**/*.ts"]),
     assets = [
         "cdk-listbox-demo.html",
     ],
-    deps = [
+    interop_deps = [
         "//src/components-examples/cdk/listbox",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )

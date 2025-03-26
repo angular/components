@@ -1,8 +1,8 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "dialog",
     srcs = glob(
         ["**/*.ts"],
@@ -12,10 +12,14 @@ ng_module(
         "**/*.html",
         "**/*.css",
     ]),
-    deps = [
+    interop_deps = [
         "//src/cdk/dialog",
-        "@npm//@angular/forms",
-        "@npm//@angular/platform-browser",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
     ],
 )
 
