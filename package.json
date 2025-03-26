@@ -188,6 +188,9 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [],
+    "patchedDependencies": {
+      "@angular/compiler-cli@19.2.0": "patches/@angular__compiler-cli.patch"
+    },
     "packageExtensions": {
       "@angular/animations": {
         "dependencies": {
