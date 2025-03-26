@@ -1,20 +1,22 @@
-load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "material-luxon-adapter",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src:dev_mode_types",
         "//src/material/core",
-        "@npm//@angular/core",
-        "@npm//@types/luxon",
-        "@npm//luxon",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@types/luxon",
+        "//:node_modules/luxon",
     ],
 )
 

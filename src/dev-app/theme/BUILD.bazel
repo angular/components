@@ -1,20 +1,24 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "theme",
     srcs = glob(["**/*.ts"]),
     assets = [
         "theme-demo.html",
         ":theme_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/dev-app/dev-app",
         "//src/material/card",
         "//src/material/expansion",
         "//src/material/icon",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

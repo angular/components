@@ -1,16 +1,19 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "listbox",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )

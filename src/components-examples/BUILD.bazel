@@ -1,14 +1,21 @@
-load("//tools:defaults.bzl", "ng_module", "ng_package")
+load("//tools:defaults.bzl", "ng_package")
 load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
 load(":config.bzl", "ALL_EXAMPLES")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "components-examples",
-    srcs = glob(["*.ts"]) + [":example-module.ts"],
-    deps = ALL_EXAMPLES,
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["example-module.d.ts"],
+    ) + [":example-module.ts"],
+    interop_deps = ALL_EXAMPLES,
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
 )
 
 filegroup(

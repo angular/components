@@ -1,18 +1,24 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "screen-type",
     srcs = glob(["**/*.ts"]),
     assets = [
         "screen-type-demo.html",
         ":screen_type_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk/layout",
         "//src/material/grid-list",
         "//src/material/icon",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
     ],
 )
 
