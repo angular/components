@@ -1,6 +1,12 @@
 import {Component} from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {CdkTabs, CdkTablist, CdkTab, CdkTabpanel} from '@angular/cdk-experimental/tabs';
+import {
+  CdkTabs,
+  CdkTablist,
+  CdkTab,
+  CdkTabpanel,
+  CdkTabcontent,
+} from '@angular/cdk-experimental/tabs';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -16,6 +22,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
     CdkTablist,
     CdkTab,
     CdkTabpanel,
+    CdkTabcontent,
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
