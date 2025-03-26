@@ -10,7 +10,7 @@ ng_module(
     ),
     deps = [
         "//src/cdk-experimental/deferred-content",
-        "//src/cdk-experimental/ui-patterns/tabs",
+        "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],
