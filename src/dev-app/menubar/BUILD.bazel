@@ -1,17 +1,21 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "menubar",
     srcs = glob(["**/*.ts"]),
     assets = [
         "mat-menubar-demo.html",
         ":mat_menubar_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk/menu",
         "//src/material-experimental/menubar",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
 

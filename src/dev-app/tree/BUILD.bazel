@@ -1,8 +1,9 @@
-load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "tree",
     srcs = glob(["**/*.ts"]),
     assets = glob([
@@ -10,7 +11,7 @@ ng_module(
     ]) + [
         ":tree_demo_scss",
     ],
-    deps = [
+    interop_deps = [
         "//src/cdk/tree",
         "//src/components-examples/cdk/tree",
         "//src/components-examples/material/tree",
@@ -22,6 +23,10 @@ ng_module(
         "//src/material/input",
         "//src/material/progress-bar",
         "//src/material/tree",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
     ],
 )
 

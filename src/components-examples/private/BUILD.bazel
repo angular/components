@@ -12,8 +12,3 @@ ts_project(
         "//:node_modules/@angular/core",
     ],
 )
-
-ts_project(
-    name = "localize_types",
-    srcs = ["localize-types.d.ts"],
-)

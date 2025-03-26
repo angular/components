@@ -5,9 +5,9 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_module", "protractor_web_test_suite", "sass_binary")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "protractor_web_test_suite", "sass_binary")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
@@ -21,7 +21,7 @@ rules_js_tsconfig(
     ],
 )
 
-ng_module(
+ng_project(
     name = "kitchen-sink",
     srcs = [
         "kitchen-sink/kitchen-sink.ts",
@@ -29,11 +29,16 @@ ng_module(
     assets = [
         "kitchen-sink/kitchen-sink.html",
     ],
-    deps = [
+    interop_deps = [
         "//src/google-maps",
         "//src/youtube-player",
-        "@npm//@angular/platform-server",
     ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-server",
+        "//:node_modules/rxjs",
+    ],
 )
 
 ts_project(

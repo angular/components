@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+/// <reference types="youtube" />
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,

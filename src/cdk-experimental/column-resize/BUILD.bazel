@@ -1,14 +1,14 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "column-resize",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//src/cdk-experimental/popover-edit",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
@@ -16,8 +16,10 @@ ng_module(
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/cdk/table",
-        "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//rxjs",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
     ],
 )

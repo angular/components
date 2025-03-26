@@ -3,16 +3,15 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
-    "ng_module",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "slider",
     srcs = glob(
         ["**/*.ts"],
@@ -22,11 +21,15 @@ ng_module(
         ":slider_scss",
         ":slider_thumb_scss",
     ] + glob(["**/*.html"]),
-    deps = [
+    interop_deps = [
         "//src/cdk/bidi",
         "//src/cdk/platform",
         "//src/material/core",
-        "@npm//@angular/forms",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
     ],
 )
 

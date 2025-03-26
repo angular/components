@@ -1,14 +1,17 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "column-resize",
     srcs = glob(["**/*.ts"]),
     assets = ["column-resize-home.html"],
-    deps = [
+    interop_deps = [
         "//src/components-examples/material-experimental/column-resize",
         "//src/dev-app/example",
         "//src/material/expansion",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
     ],
 )
