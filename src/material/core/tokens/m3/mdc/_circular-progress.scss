@@ -2,7 +2,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, circular-progress);
+$prefix: (mat, circular-progress);
 
 /// Generates the tokens for MDC circular-progress
 /// @param {Map} $systems The MDC system tokens

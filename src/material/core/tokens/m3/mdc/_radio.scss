@@ -2,7 +2,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, radio);
+$prefix: (mat, radio);
 
 /// Generates the tokens for MDC radio
 /// @param {Map} $systems The MDC system tokens

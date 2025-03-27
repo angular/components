@@ -49,8 +49,15 @@
       );
 
       & {
-        // TODO(wagnermaciel): Use our token system to define this css variable.
+        // TODO(andrewjs): Remove this once all tokens are migrated to
+        // mat internally.
         --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+            $theme,
+            foreground,
+            disabled-text
+          )};
+        // TODO(wagnermaciel): Use our token system to define this css variable.
+        --mat-switch-disabled-label-text-color: #{inspection.get-theme-color(
             $theme,
             foreground,
             disabled-text

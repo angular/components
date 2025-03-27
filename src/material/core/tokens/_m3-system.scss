@@ -193,7 +193,7 @@
 
 @mixin system-level-elevation($theme, $overrides: (), $prefix: definition.$system-level-prefix) {
   $shadow-color: map.get(
-      $theme, _mat-theming-internals-do-not-access, color-tokens, (mdc, theme), shadow);
+      $theme, _mat-theming-internals-do-not-access, color-tokens, (mat, theme), shadow);
 
   @each $name, $value in definitions.md-sys-elevation-values() {
     $level: map.get($overrides, $name) or $value;

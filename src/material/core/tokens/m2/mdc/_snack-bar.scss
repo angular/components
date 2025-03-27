@@ -5,7 +5,7 @@
 @use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, snackbar);
+$prefix: (mat, snackbar);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.

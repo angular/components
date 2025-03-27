@@ -6,7 +6,7 @@
 @use '../../../theming/theming';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, protected-button);
+$prefix: (mat, protected-button);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -28,9 +28,6 @@ $prefix: (mdc, protected-button);
     // =============================================================================================
     focus-ring-color: null,
     focus-ring-offset: null,
-    focus-state-layer-opacity: null,
-    hover-state-layer-opacity: null,
-    pressed-state-layer-opacity: null,
     with-icon-icon-size: null,
     focus-label-text-color: null,
     hover-label-text-color: null,
