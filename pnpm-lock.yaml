@@ -20,23 +20,23 @@ importers:
   .:
     dependencies:
       '@angular/animations':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
       '@angular/common':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7)
       '@angular/compiler':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4
       '@angular/core':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@angular/platform-browser':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
       '@types/google.maps':
         specifier: ^3.54.10
         version: 3.55.10
@@ -57,44 +57,41 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@16.18.101)(browser-sync@2.26.13)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(yaml@1.10.2)
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@16.18.101)(browser-sync@2.26.13)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(yaml@1.10.2)
       '@angular-devkit/core':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3
       '@angular-devkit/schematics':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3
       '@angular/bazel':
         specifier: https://github.com/angular/bazel-builds.git#54a0ac1bc77b58214a1c4d3cdcf167676ea621e4
-        version: github.com/angular/bazel-builds/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4(@angular/compiler-cli@20.0.0-next.3)(@bazel/concatjs@5.8.1)(@bazel/worker@5.8.1)(@rollup/plugin-commonjs@21.1.0)(@rollup/plugin-node-resolve@13.3.0)(@types/node@16.18.101)(rollup-plugin-dts@6.1.1)(rollup-plugin-sourcemaps@0.6.3)(rollup@2.79.1)(terser@5.39.0)(typescript@5.8.2)
+        version: github.com/angular/bazel-builds/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4(@angular/compiler-cli@20.0.0-next.4)(@bazel/concatjs@5.8.1)(@bazel/worker@5.8.1)(@rollup/plugin-commonjs@21.1.0)(@rollup/plugin-node-resolve@13.3.0)(@types/node@16.18.101)(rollup-plugin-dts@6.1.1)(rollup-plugin-sourcemaps@0.6.3)(rollup@2.79.1)(terser@5.39.0)(typescript@5.8.2)
       '@angular/build':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
       '@angular/build-tooling':
         specifier: https://github.com/angular/dev-infra-private-build-tooling-builds.git#ec9df12469082e3cb087a9af55072dc2d833c73f
-        version: github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0)
+        version: github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0)
       '@angular/cli':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2(@types/node@16.18.101)
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3(@types/node@16.18.101)
       '@angular/compiler-cli':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
       '@angular/localize':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)
       '@angular/ng-dev':
         specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#1fa3a08b6a111de820da092799319ed47c058849
         version: github.com/angular/dev-infra-private-ng-dev-builds/1fa3a08b6a111de820da092799319ed47c058849
-      '@angular/platform-browser-dynamic':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)
       '@angular/platform-server':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@angular/router':
-        specifier: ^20.0.0-next.3
-        version: 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+        specifier: ^20.0.0-next.4
+        version: 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@babel/core':
         specifier: ^7.16.12
         version: 7.26.10
@@ -153,8 +150,8 @@ importers:
         specifier: ^13.1.3
         version: 13.3.0(rollup@2.79.1)
       '@schematics/angular':
-        specifier: ^20.0.0-next.2
-        version: 20.0.0-next.2
+        specifier: ^20.0.0-next.3
+        version: 20.0.0-next.3
       '@types/babel__core':
         specifier: ^7.1.18
         version: 7.20.5
@@ -409,25 +406,26 @@ packages:
       - chokidar
     dev: true
 
-  /@angular-devkit/architect@0.2000.0-next.2:
-    resolution: {integrity: sha512-h/6VqShV5ayUEdSMdQdYx4/bAil38V/xVDXvgiTWhvdyrwGeMBgvfhpL51/rj5ye4RH2Amy9KFbQ3HQh6xQqEw==, tarball: https://registry.npmjs.org/@angular-devkit/architect/-/architect-0.2000.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular-devkit/architect@0.2000.0-next.3:
+    resolution: {integrity: sha512-7gI/gEMMcc3xVOwgQ8OutDbvxSbv23KOCEgUwk7Siap96wILk9o9h/ky1C8e/2WWAlr0pmVWK1mtbzAj9sQXqA==, tarball: https://registry.npmjs.org/@angular-devkit/architect/-/architect-0.2000.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     dependencies:
-      '@angular-devkit/core': 20.0.0-next.2
+      '@angular-devkit/core': 20.0.0-next.3
       rxjs: 7.8.2
     transitivePeerDependencies:
       - chokidar
     dev: true
 
-  /@angular-devkit/build-angular@20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@16.18.101)(browser-sync@2.26.13)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(yaml@1.10.2):
-    resolution: {integrity: sha512-0uKksY0jYd4jOveWfA6BPRJYtrUBOpcOYeTbDei5Eg637JzP3dLxCGbaBThIneVB1XIQOLm9IZoqnFAUBteSFA==, tarball: https://registry.npmjs.org/@angular-devkit/build-angular/-/build-angular-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular-devkit/build-angular@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@16.18.101)(browser-sync@2.26.13)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(yaml@1.10.2):
+    resolution: {integrity: sha512-ubX6B5EOStqgQoD5Y/vKTsta2nJq70Hov61v0lQZ5pYxmYsuk3EhZBoAfOX7ImdmlBZfkqoeFvkisnzF722aNg==, tarball: https://registry.npmjs.org/@angular-devkit/build-angular/-/build-angular-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       '@angular/compiler-cli': ^20.0.0 || ^20.0.0-next.0
       '@angular/localize': ^20.0.0 || ^20.0.0-next.0
+      '@angular/platform-browser': ^20.0.0 || ^20.0.0-next.0
       '@angular/platform-server': ^20.0.0 || ^20.0.0-next.0
       '@angular/service-worker': ^20.0.0 || ^20.0.0-next.0
-      '@angular/ssr': ^20.0.0-next.2
+      '@angular/ssr': ^20.0.0-next.3
       '@web/test-runner': ^0.20.0
       browser-sync: ^3.0.2
       jest: ^29.5.0
@@ -439,6 +437,8 @@ packages:
       typescript: 5.8.2
     peerDependenciesMeta:
       '@angular/localize':
+        optional: true
+      '@angular/platform-browser':
         optional: true
       '@angular/platform-server':
         optional: true
@@ -464,24 +464,25 @@ packages:
         optional: true
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@angular-devkit/architect': 0.2000.0-next.2
-      '@angular-devkit/build-webpack': 0.2000.0-next.2(webpack-dev-server@5.2.0)(webpack@5.98.0)
-      '@angular-devkit/core': 20.0.0-next.2
-      '@angular/build': 20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
-      '@angular/localize': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)
-      '@angular/platform-server': 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+      '@angular-devkit/architect': 0.2000.0-next.3
+      '@angular-devkit/build-webpack': 0.2000.0-next.3(webpack-dev-server@5.2.0)(webpack@5.98.0)
+      '@angular-devkit/core': 20.0.0-next.3
+      '@angular/build': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
+      '@angular/localize': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)
+      '@angular/platform-browser': 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
+      '@angular/platform-server': 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@babel/core': 7.26.10
-      '@babel/generator': 7.26.10
+      '@babel/generator': 7.27.0
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/plugin-transform-async-generator-functions': 7.26.8(@babel/core@7.26.10)
       '@babel/plugin-transform-async-to-generator': 7.25.9(@babel/core@7.26.10)
       '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.26.10)
       '@babel/preset-env': 7.26.9(@babel/core@7.26.10)
-      '@babel/runtime': 7.26.10
+      '@babel/runtime': 7.27.0
       '@discoveryjs/json-ext': 0.6.3
-      '@ngtools/webpack': 20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(typescript@5.8.2)(webpack@5.98.0)
+      '@ngtools/webpack': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(typescript@5.8.2)(webpack@5.98.0)
       '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.2.0)
       ansi-colors: 4.1.3
       autoprefixer: 10.4.21(postcss@8.5.3)
@@ -551,14 +552,14 @@ packages:
       - yaml
     dev: true
 
-  /@angular-devkit/build-webpack@0.2000.0-next.2(webpack-dev-server@5.2.0)(webpack@5.98.0):
-    resolution: {integrity: sha512-WW0j2MQ9/YCdQXat6jjar9ORTlNFV6VIgnMkMSFVZm5Utdp+cUuD+bkwz2ysxxb4Y3F/HUt8LhlUEoAM1yQYmQ==, tarball: https://registry.npmjs.org/@angular-devkit/build-webpack/-/build-webpack-0.2000.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular-devkit/build-webpack@0.2000.0-next.3(webpack-dev-server@5.2.0)(webpack@5.98.0):
+    resolution: {integrity: sha512-qLex4we60IjBUC9tHUrU7gV9keH3AFj3nn9kB/Ye16bTLzN8VgKvGNf1U5KQm/2YaIVmiXNuQipYWLKZB+jfMw==, tarball: https://registry.npmjs.org/@angular-devkit/build-webpack/-/build-webpack-0.2000.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       webpack: ^5.30.0
       webpack-dev-server: ^5.0.2
     dependencies:
-      '@angular-devkit/architect': 0.2000.0-next.2
+      '@angular-devkit/architect': 0.2000.0-next.3
       rxjs: 7.8.2
       webpack: 5.98.0(esbuild@0.25.1)
       webpack-dev-server: 5.2.0(webpack@5.98.0)
@@ -583,9 +584,9 @@ packages:
       source-map: 0.7.4
     dev: true
 
-  /@angular-devkit/core@20.0.0-next.2:
-    resolution: {integrity: sha512-AX5GQDHoVmmOfIH1vl9gRM4lURbmC2xI/JtYb+Q/lAbLlGc3E4wk0LHCQKBTCAM2/0zRreSTgrZBRxBGM5UgNw==, tarball: https://registry.npmjs.org/@angular-devkit/core/-/core-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular-devkit/core@20.0.0-next.3:
+    resolution: {integrity: sha512-4u0FmzFjluX/2G2DBzPvcajMUA66zp2tjv/31s7yu83mTtTmaSD5femxDbeLDLXMhVWyC25d4I6ki96cbvV5rg==, tarball: https://registry.npmjs.org/@angular-devkit/core/-/core-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       chokidar: ^4.0.0
     peerDependenciesMeta:
@@ -600,11 +601,11 @@ packages:
       source-map: 0.7.4
     dev: true
 
-  /@angular-devkit/schematics@20.0.0-next.2:
-    resolution: {integrity: sha512-HcOvEVcEzEcUxe4VRxc5m5TJuczXZJ0qNdu9DkbRKUfuT7Y1y2bgDaiSrr9/4r08GilZ9pbUOyyvXUsoyXo3aw==, tarball: https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular-devkit/schematics@20.0.0-next.3:
+    resolution: {integrity: sha512-1tnJrTx66x6ohg6tFsi5WtzdFrRwEI+g7NVimM9ssbgOPYS3EikmjPVIiMisMRvGX70VwX1o+6mVvoxS0DB3Ig==, tarball: https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     dependencies:
-      '@angular-devkit/core': 20.0.0-next.2
+      '@angular-devkit/core': 20.0.0-next.3
       jsonc-parser: 3.3.1
       magic-string: 0.30.17
       ora: 5.4.1
@@ -613,14 +614,14 @@ packages:
       - chokidar
     dev: true
 
-  /@angular/animations@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3):
-    resolution: {integrity: sha512-hperYaQGLz1Y2O7CRVfp3ea+nztPqM//C1VdBHFXt3BH2E+IKYnMQilIc8KEwU56MYS0JYdcWYzM4/NYiV4ruA==, tarball: https://registry.npmjs.org/@angular/animations/-/animations-20.0.0-next.3.tgz}
+  /@angular/animations@20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4):
+    resolution: {integrity: sha512-LZRI0bUtsFXVGcH/B+nLIpsgPQmqFGzQ9GjDUsW4ZweBIdmbagIygkExhWVAYO+NxOedezpb4xzOL+D66oJdsg==, tarball: https://registry.npmjs.org/@angular/animations/-/animations-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/core': 20.0.0-next.3
+      '@angular/core': 20.0.0-next.4
     dependencies:
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
@@ -636,7 +637,7 @@ packages:
       - zone.js
     dev: true
 
-  /@angular/build@20.0.0-next.0(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@20.17.24)(karma@6.4.3)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2):
+  /@angular/build@20.0.0-next.0(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@20.17.24)(karma@6.4.3)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2):
     resolution: {integrity: sha512-8Cu4smOcsxC+/jecUkS7W5sdiD1XTby7KA3Fi77KpBJAjNLNMHVFh/zZkALVYoG/Uyy7wcQAg/3yo6/7g0WDkA==, tarball: https://registry.npmjs.org/@angular/build/-/build-20.0.0-next.0.tgz}
     engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
@@ -674,10 +675,10 @@ packages:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2000.0-next.0
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
-      '@angular/localize': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)
-      '@angular/platform-server': 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
+      '@angular/localize': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)
+      '@angular/platform-server': 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@babel/core': 7.26.9
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
@@ -721,16 +722,17 @@ packages:
       - yaml
     dev: true
 
-  /@angular/build@20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2):
-    resolution: {integrity: sha512-PNSB1e+Q08onVSiIJmQg7KtL4+pVquwmAcDgnpmm0a+C8GhVdgtV4yzlDEe6LX78hdxWVSdgYpSyTzyA8tcMsQ==, tarball: https://registry.npmjs.org/@angular/build/-/build-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular/build@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2):
+    resolution: {integrity: sha512-gmzlm3N0F7ivr8WFbhw2z64l1c3Tas87WDXWi7OpwLmAWxQT5Np6c3tnA6/cR1D0HnsfkOLKHlQljKFkZjIzew==, tarball: https://registry.npmjs.org/@angular/build/-/build-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       '@angular/compiler': ^20.0.0 || ^20.0.0-next.0
       '@angular/compiler-cli': ^20.0.0 || ^20.0.0-next.0
       '@angular/localize': ^20.0.0 || ^20.0.0-next.0
+      '@angular/platform-browser': ^20.0.0 || ^20.0.0-next.0
       '@angular/platform-server': ^20.0.0 || ^20.0.0-next.0
       '@angular/service-worker': ^20.0.0 || ^20.0.0-next.0
-      '@angular/ssr': ^20.0.0-next.2
+      '@angular/ssr': ^20.0.0-next.3
       karma: ^6.4.0
       less: ^4.2.0
       ng-packagr: ^20.0.0 || ^20.0.0-next.0
@@ -739,6 +741,8 @@ packages:
       typescript: 5.8.2
     peerDependenciesMeta:
       '@angular/localize':
+        optional: true
+      '@angular/platform-browser':
         optional: true
       '@angular/platform-server':
         optional: true
@@ -758,17 +762,18 @@ packages:
         optional: true
     dependencies:
       '@ampproject/remapping': 2.3.0
-      '@angular-devkit/architect': 0.2000.0-next.2
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
-      '@angular/localize': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)
-      '@angular/platform-server': 20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7)
+      '@angular-devkit/architect': 0.2000.0-next.3
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
+      '@angular/localize': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)
+      '@angular/platform-browser': 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
+      '@angular/platform-server': 20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7)
       '@babel/core': 7.26.10
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.26.10)
       '@inquirer/confirm': 5.1.8(@types/node@16.18.101)
-      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.2.2)
+      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.2.3)
       beasties: 0.2.0
       browserslist: 4.24.4
       esbuild: 0.25.1
@@ -784,13 +789,13 @@ packages:
       picomatch: 4.0.2
       piscina: 4.9.2
       postcss: 8.5.3
-      rollup: 4.36.0
+      rollup: 4.37.0
       sass: 1.86.0
       semver: 7.7.1
       source-map-support: 0.5.21
       tinyglobby: 0.2.12
       typescript: 5.8.2
-      vite: 6.2.2(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2)
+      vite: 6.2.3(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2)
       watchpack: 2.4.2
     optionalDependencies:
       lmdb: 3.2.6
@@ -808,17 +813,17 @@ packages:
       - yaml
     dev: true
 
-  /@angular/cli@20.0.0-next.2(@types/node@16.18.101):
-    resolution: {integrity: sha512-/v6/p6E0swTw+xUpj1VLZP2vD3ys0itdzop+oerLNTw+BLo9AOSTjUPcc3NpMFXvorMSZKOJg32HsWhgJt920A==, tarball: https://registry.npmjs.org/@angular/cli/-/cli-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@angular/cli@20.0.0-next.3(@types/node@16.18.101):
+    resolution: {integrity: sha512-W3ZE4Vtd80CzlAtNC+asBfVRr/rlj1q93Us3VB7cJKZq1BQDUT/KsEU8oYGBb1Ksgfw5KCSx3mm6rpjBkoa5Hg==, tarball: https://registry.npmjs.org/@angular/cli/-/cli-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     hasBin: true
     dependencies:
-      '@angular-devkit/architect': 0.2000.0-next.2
-      '@angular-devkit/core': 20.0.0-next.2
-      '@angular-devkit/schematics': 20.0.0-next.2
+      '@angular-devkit/architect': 0.2000.0-next.3
+      '@angular-devkit/core': 20.0.0-next.3
+      '@angular-devkit/schematics': 20.0.0-next.3
       '@inquirer/prompts': 7.4.0(@types/node@16.18.101)
       '@listr2/prompt-adapter-inquirer': 2.0.18(@inquirer/prompts@7.4.0)
-      '@schematics/angular': 20.0.0-next.2
+      '@schematics/angular': 20.0.0-next.3
       '@yarnpkg/lockfile': 1.1.0
       ini: 5.0.0
       jsonc-parser: 3.3.1
@@ -837,30 +842,30 @@ packages:
       - supports-color
     dev: true
 
-  /@angular/common@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7):
-    resolution: {integrity: sha512-Ie5GhDhxSXTKw/nfZM/KIYSiEw1Nry/7tVoqpnDwRE12OkhyDCn+gW9X5ag42wNECCi99p+dnZuqnramZriV3A==, tarball: https://registry.npmjs.org/@angular/common/-/common-20.0.0-next.3.tgz}
+  /@angular/common@20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7):
+    resolution: {integrity: sha512-Qh7+7lFcTGjYWmlb0HOp/rRxdKWq0BPxFkw6xHHaFszzJKDv24Doj2akVf3SV2gi9f2lzIR5PICJLw00zy4jtA==, tarball: https://registry.npmjs.org/@angular/common/-/common-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/core': 20.0.0-next.3
+      '@angular/core': 20.0.0-next.4
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
       - supports-color
 
-  /@angular/compiler-cli@20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2):
-    resolution: {integrity: sha512-TRAEMOQG6z/1GzmCJ6Khzdt0teDgC892O9unW1BBiCQqABjdb3/ahdiIIrK2TzsJPT9USzWfzT2jugFpaPwOgQ==, tarball: https://registry.npmjs.org/@angular/compiler-cli/-/compiler-cli-20.0.0-next.3.tgz}
+  /@angular/compiler-cli@20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2):
+    resolution: {integrity: sha512-BPBVbsWLzZe1sPl7/2rF8OLypLO0RDOSZeXarSb90JwlUX/pp6/85Cl566tPiqX7EWntnVhwlaMFiBmNTV5vrA==, tarball: https://registry.npmjs.org/@angular/compiler-cli/-/compiler-cli-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     hasBin: true
     peerDependencies:
-      '@angular/compiler': 20.0.0-next.3
+      '@angular/compiler': 20.0.0-next.4
       typescript: 5.8.2
     dependencies:
-      '@angular/compiler': 20.0.0-next.3
+      '@angular/compiler': 20.0.0-next.4
       '@babel/core': 7.26.10
       '@jridgewell/sourcemap-codec': 1.5.0
       chokidar: 4.0.1
@@ -873,8 +878,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@angular/compiler@20.0.0-next.3:
-    resolution: {integrity: sha512-gofIOMEFtyFZTTAvU/GTra2U1D2/tck2aQqInQVykwbSAezfnCfEztDmd3DgscbHIr/KzovsiL8guMTTjMGUZA==, tarball: https://registry.npmjs.org/@angular/compiler/-/compiler-20.0.0-next.3.tgz}
+  /@angular/compiler@20.0.0-next.4:
+    resolution: {integrity: sha512-1lQxn1L2yVtc631cwCf0ez50hqbmQXq562wJAaQmcJlfH2EoLcjtfP3xBCluEpI+Dpto7yxXA4Ms9FYPAk8HDA==, tarball: https://registry.npmjs.org/@angular/compiler/-/compiler-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     dependencies:
       tslib: 2.8.1
@@ -891,35 +896,35 @@ packages:
       zone.js: 0.15.0
     dev: true
 
-  /@angular/core@20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0):
-    resolution: {integrity: sha512-UYIUKeDB6UkTrYd5pCurIJav7gK7vwsbzH8DdfUrI32Zj7Yfyn5r7odG1VDIOTiCS54sK0D7rZLa8PtWD8QR6A==, tarball: https://registry.npmjs.org/@angular/core/-/core-20.0.0-next.3.tgz}
+  /@angular/core@20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0):
+    resolution: {integrity: sha512-LZIiGPsfyWxrlLcU1LQy3A+/OR6iyJ8Y40IsMnTFzZlQq96NomQM0AIksGjB2YyMM8z8VLBw5nvitVCbfVXn3w==, tarball: https://registry.npmjs.org/@angular/core/-/core-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/compiler': 20.0.0-next.3
+      '@angular/compiler': 20.0.0-next.4
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.15.0
     peerDependenciesMeta:
       '@angular/compiler':
         optional: true
     dependencies:
-      '@angular/compiler': 20.0.0-next.3
+      '@angular/compiler': 20.0.0-next.4
       rxjs: 6.6.7
       tslib: 2.8.1
       zone.js: 0.15.0
 
-  /@angular/forms@20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7):
-    resolution: {integrity: sha512-Tv4H3R6XKyrROZXLHqiUB2LjB2dQgwvFFbp6dUqN4pnsKmgx0PbZJNnA3IwBo+9ONnNZZe9JbDRu6Z4+BZa5Dg==, tarball: https://registry.npmjs.org/@angular/forms/-/forms-20.0.0-next.3.tgz}
+  /@angular/forms@20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7):
+    resolution: {integrity: sha512-FatZvZriwOZ2WocTlhyRqasXdgbFrUa04n6Wvvn9zNDLiF3expW534R6djmcZQ20ynmHQjeJxBPF42Ark/zeaQ==, tarball: https://registry.npmjs.org/@angular/forms/-/forms-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3
-      '@angular/platform-browser': 20.0.0-next.3
+      '@angular/common': 20.0.0-next.4
+      '@angular/core': 20.0.0-next.4
+      '@angular/platform-browser': 20.0.0-next.4
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/common': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@angular/platform-browser': 20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@angular/common': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7)
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/platform-browser': 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -927,18 +932,18 @@ packages:
       - supports-color
     dev: false
 
-  /@angular/localize@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3):
-    resolution: {integrity: sha512-Kmz89nDEmFwcXy+yDeXAqDN+MTiv0Xt60QyCIwinmJVXeiKa0cE5ecEjUPThmOGRnEvIuuOSAV6lzsW7k7RzKA==, tarball: https://registry.npmjs.org/@angular/localize/-/localize-20.0.0-next.3.tgz}
+  /@angular/localize@20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4):
+    resolution: {integrity: sha512-uUXgFyVF4D4wJzZFUn1et3oc4ThlL72Dzc19Br5tNJkFgFDD73f/O+tJ+vrq0VqbDknpM2xxZcRSYoS7RGGKZw==, tarball: https://registry.npmjs.org/@angular/localize/-/localize-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     hasBin: true
     peerDependencies:
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/compiler-cli': 20.0.0-next.3
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/compiler-cli': 20.0.0-next.4
     dependencies:
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
       '@babel/core': 7.26.10
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       '@types/babel__core': 7.20.5
       tinyglobby: 0.2.12
       yargs: 17.7.2
@@ -946,74 +951,58 @@ packages:
       - supports-color
     dev: true
 
-  /@angular/platform-browser-dynamic@20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3):
-    resolution: {integrity: sha512-i1UbOtTXFEurf/qX4zRuTPyrn+M35JZQZjn9PMyzVgDtpcZlEBpvcSL8ctogDxYXkYd6/rEByPyFdTvH8YN+Ug==, tarball: https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-20.0.0-next.3.tgz}
+  /@angular/platform-browser@20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4):
+    resolution: {integrity: sha512-9nnloL9JD3UZbgdYpRsFynkX99BBJbFZ1f8XlhWC3b0Vwwmlq6dXH96fuWSlpbHwz7+NVooUZmWOx8GI/qK/Uw==, tarball: https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 20.0.0-next.3
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3
-      '@angular/platform-browser': 20.0.0-next.3
-    dependencies:
-      '@angular/common': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@angular/platform-browser': 20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
-      tslib: 2.8.1
-    dev: true
-
-  /@angular/platform-browser@20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3):
-    resolution: {integrity: sha512-rtBwaE0suHAHn5KpFIP6LKGRCIqCg9qPjQQrpgR4Yguke0peNFdY7j6k0oga+vd8xjxrRZftjXcC6cpK5itQGw==, tarball: https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-20.0.0-next.3.tgz}
-    engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
-    peerDependencies:
-      '@angular/animations': 20.0.0-next.3
-      '@angular/common': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3
+      '@angular/animations': 20.0.0-next.4
+      '@angular/common': 20.0.0-next.4
+      '@angular/core': 20.0.0-next.4
     peerDependenciesMeta:
       '@angular/animations':
         optional: true
     dependencies:
-      '@angular/animations': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
-      '@angular/common': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@angular/animations': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
+      '@angular/common': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7)
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
       - supports-color
 
-  /@angular/platform-server@20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7):
-    resolution: {integrity: sha512-1s71I0Oir60JQz/ewxD9G64YTsgns+f8dIpSCUYIMBZWOWEddjUQLmTu58bTRZiah7stzze0SuPHzwdKtlfPyQ==, tarball: https://registry.npmjs.org/@angular/platform-server/-/platform-server-20.0.0-next.3.tgz}
+  /@angular/platform-server@20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7):
+    resolution: {integrity: sha512-Iaszz4BBK882sNLo03cDV07P/qyDXmqax4N5f2QuoEx/GNDFSbePsRDJLshlB8MxnMClamEhOisZSVfwFZ+aKg==, tarball: https://registry.npmjs.org/@angular/platform-server/-/platform-server-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 20.0.0-next.3
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3
-      '@angular/platform-browser': 20.0.0-next.3
+      '@angular/common': 20.0.0-next.4
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/core': 20.0.0-next.4
+      '@angular/platform-browser': 20.0.0-next.4
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/common': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
-      '@angular/compiler': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@angular/platform-browser': 20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
+      '@angular/common': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7)
+      '@angular/compiler': 20.0.0-next.4
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/platform-browser': 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
       rxjs: 6.6.7
       tslib: 2.8.1
       xhr2: 0.2.1
     dev: true
 
-  /@angular/router@20.0.0-next.3(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(@angular/platform-browser@20.0.0-next.3)(rxjs@6.6.7):
-    resolution: {integrity: sha512-Nr2By+GuKoHkA4aUFCfJQmMQK73cETreD50iDE+ZeiRhQL0cM8NgIYCOFsroG9Dk6xXiwETyIDuyVWx4vrE+qQ==, tarball: https://registry.npmjs.org/@angular/router/-/router-20.0.0-next.3.tgz}
+  /@angular/router@20.0.0-next.4(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(@angular/platform-browser@20.0.0-next.4)(rxjs@6.6.7):
+    resolution: {integrity: sha512-cCAC6nsUTq9gWACqCZiLZUd42Fm4r4+7qQ4u52pFEe1Suhuh/7FqzBXXQAXrgoF1MiM903tmAdN7ZO5Yh5Wiig==, tarball: https://registry.npmjs.org/@angular/router/-/router-20.0.0-next.4.tgz}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
-      '@angular/common': 20.0.0-next.3
-      '@angular/core': 20.0.0-next.3
-      '@angular/platform-browser': 20.0.0-next.3
+      '@angular/common': 20.0.0-next.4
+      '@angular/core': 20.0.0-next.4
+      '@angular/platform-browser': 20.0.0-next.4
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/common': 20.0.0-next.3(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)(rxjs@6.6.7)
-      '@angular/core': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@angular/platform-browser': 20.0.0-next.3(@angular/animations@20.0.0-next.3)(@angular/common@20.0.0-next.3)(@angular/compiler-cli@20.0.0-next.3)(@angular/core@20.0.0-next.3)
-      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.3)
+      '@angular/common': 20.0.0-next.4(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)(rxjs@6.6.7)
+      '@angular/core': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/platform-browser': 20.0.0-next.4(@angular/animations@20.0.0-next.4)(@angular/common@20.0.0-next.4)(@angular/compiler-cli@20.0.0-next.4)(@angular/core@20.0.0-next.4)
+      '@nginfra/angular-linking': 1.0.2(@angular/compiler-cli@20.0.0-next.4)
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -1048,14 +1037,14 @@ packages:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.10
+      '@babel/generator': 7.27.0
       '@babel/helper-compilation-targets': 7.26.5
       '@babel/helper-module-transforms': 7.26.0(@babel/core@7.26.10)
       '@babel/helpers': 7.26.10
-      '@babel/parser': 7.26.10
+      '@babel/parser': 7.27.0
       '@babel/template': 7.26.9
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
       convert-source-map: 2.0.0
       debug: 4.4.0(supports-color@10.0.0)
       gensync: 1.0.0-beta.2
@@ -1070,14 +1059,14 @@ packages:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.10
+      '@babel/generator': 7.27.0
       '@babel/helper-compilation-targets': 7.26.5
       '@babel/helper-module-transforms': 7.26.0(@babel/core@7.26.9)
       '@babel/helpers': 7.26.10
-      '@babel/parser': 7.26.10
+      '@babel/parser': 7.27.0
       '@babel/template': 7.26.9
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
       convert-source-map: 2.0.0
       debug: 4.4.0(supports-color@10.0.0)
       gensync: 1.0.0-beta.2
@@ -1087,12 +1076,12 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/generator@7.26.10:
-    resolution: {integrity: sha512-rRHT8siFIXQrAYOYqZQVsAr8vJ+cBNqcVAY6m5V8/4QqzaPl+zDBe6cLEPRDuNOUf3ww8RfJVlOyQMoSI+5Ang==, tarball: https://registry.npmjs.org/@babel/generator/-/generator-7.26.10.tgz}
+  /@babel/generator@7.27.0:
+    resolution: {integrity: sha512-VybsKvpiN1gU1sdMZIp7FcqphVVKEwcuj02x73uvcHE0PTihx1nlBcowYWhDwjpoAXRv43+gDzyggGnn1XZhVw==, tarball: https://registry.npmjs.org/@babel/generator/-/generator-7.27.0.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/parser': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/parser': 7.27.0
+      '@babel/types': 7.27.0
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
       jsesc: 3.0.2
@@ -1101,7 +1090,7 @@ packages:
     resolution: {integrity: sha512-gv7320KBUFJz1RnylIg5WWYPRXKZ884AGkYpgpWW02TH66Dl+HaC1t1CKd0z3R4b6hdYEcmrNZHUmfCP+1u3/g==, tarball: https://registry.npmjs.org/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.25.9.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@babel/helper-compilation-targets@7.26.5:
@@ -1163,14 +1152,14 @@ packages:
     resolution: {integrity: sha512-DoiN84+4Gnd0ncbBOM9AZENV4a5ZiL39HYMyZJGZ/AZEykHYdJw0wW3kdcsh9/Kn+BRXHLkkklZ51ecPKmI1CQ==, tarball: https://registry.npmjs.org/@babel/helper-environment-visitor/-/helper-environment-visitor-7.24.7.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@babel/helper-explode-assignable-expression@7.18.6:
     resolution: {integrity: sha512-eyAYAsQmB80jNfg4baAtLeWAQHfHFiR483rzFK+BhETlGZaQC9bsfrugfXDCbRHLQbIA7U5NxhhOxN7p/dWIcg==, tarball: https://registry.npmjs.org/@babel/helper-explode-assignable-expression/-/helper-explode-assignable-expression-7.18.6.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@babel/helper-member-expression-to-functions@7.25.9:
@@ -1178,7 +1167,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1188,7 +1177,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     transitivePeerDependencies:
       - supports-color
 
@@ -1223,7 +1212,7 @@ packages:
     resolution: {integrity: sha512-FIpuNaz5ow8VyrYcnXQTDRGvV6tTjkNtCK/RYNDXGSLlUD6cBuQTSw43CShGxjvfBTfcUA/r6UhUCbtYqkhcuQ==, tarball: https://registry.npmjs.org/@babel/helper-optimise-call-expression/-/helper-optimise-call-expression-7.25.9.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@babel/helper-plugin-utils@7.26.5:
@@ -1264,7 +1253,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1273,7 +1262,7 @@ packages:
     resolution: {integrity: sha512-oy5V7pD+UvfkEATUKvIjvIAH/xCzfsFVw7ygW2SI6NClZzquT+mwdTfgfdbUiceh6iQO0CHtCPsyze/MZ2YbAA==, tarball: https://registry.npmjs.org/@babel/helper-split-export-declaration/-/helper-split-export-declaration-7.24.7.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@babel/helper-string-parser@7.25.9:
@@ -1294,7 +1283,7 @@ packages:
     dependencies:
       '@babel/template': 7.26.9
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1304,14 +1293,14 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.26.9
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
 
-  /@babel/parser@7.26.10:
-    resolution: {integrity: sha512-6aQR2zGE/QFi8JpDLjUZEPYOs7+mhKXm86VaKFiLP35JQwQb6bwUE+XbvkH0EptsYhbNBSUGaUBLKqxH1xSgsA==, tarball: https://registry.npmjs.org/@babel/parser/-/parser-7.26.10.tgz}
+  /@babel/parser@7.27.0:
+    resolution: {integrity: sha512-iaepho73/2Pz7w2eMS0Q5f83+0RKI7i4xmiYeBmDzfRVbQtTOG7Ts0S4HzJVsTMGI9keU8rNfuZr8DKfSt7Yyg==, tarball: https://registry.npmjs.org/@babel/parser/-/parser-7.27.0.tgz}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
 
   /@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.25.9(@babel/core@7.26.10):
     resolution: {integrity: sha512-ZkRyVkThtxQ/J6nv3JFYv1RYY+JT5BvU0y3k5bWrmuG4woXypRa4PXmm9RhOwodRkYFWqC0C0cqcJ4OqR7kW+g==, tarball: https://registry.npmjs.org/@babel/plugin-bugfix-firefox-class-in-computed-class-key/-/plugin-bugfix-firefox-class-in-computed-class-key-7.25.9.tgz}
@@ -2121,12 +2110,12 @@ packages:
     dependencies:
       '@babel/core': 7.26.10
       '@babel/helper-plugin-utils': 7.26.5
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
       esutils: 2.0.3
     dev: true
 
-  /@babel/runtime@7.26.10:
-    resolution: {integrity: sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==, tarball: https://registry.npmjs.org/@babel/runtime/-/runtime-7.26.10.tgz}
+  /@babel/runtime@7.27.0:
+    resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==, tarball: https://registry.npmjs.org/@babel/runtime/-/runtime-7.27.0.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -2137,25 +2126,25 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/parser': 7.27.0
+      '@babel/types': 7.27.0
 
   /@babel/traverse@7.26.10:
     resolution: {integrity: sha512-k8NuDrxr0WrPH5Aupqb2LCVURP/S0vBEn5mK6iH+GIYob66U5EtoZvcdudR2jQ4cmTwhEwW1DLB+Yyas9zjF6A==, tarball: https://registry.npmjs.org/@babel/traverse/-/traverse-7.26.10.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.26.10
-      '@babel/parser': 7.26.10
+      '@babel/generator': 7.27.0
+      '@babel/parser': 7.27.0
       '@babel/template': 7.26.9
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
       debug: 4.4.0(supports-color@10.0.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
 
-  /@babel/types@7.26.10:
-    resolution: {integrity: sha512-emqcG3vHrpxUKTrxcblR36dcrcoRDvKmnL/dCL6ZsHaShW80qxCAcNhzQZrpeM765VzEos+xOi4s+r4IXzTwdQ==, tarball: https://registry.npmjs.org/@babel/types/-/types-7.26.10.tgz}
+  /@babel/types@7.27.0:
+    resolution: {integrity: sha512-H45s8fVLYjbhFH62dIJ3WtmJ6RSPt/3DRO0ZcT2SUiYiQyz3BLVb9ADEnLl91m74aQPS3AzzeajZHYOalWe3bg==, tarball: https://registry.npmjs.org/@babel/types/-/types-7.27.0.tgz}
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/helper-string-parser': 7.25.9
@@ -3750,26 +3739,26 @@ packages:
     dev: true
     optional: true
 
-  /@nginfra/angular-linking@1.0.2(@angular/compiler-cli@20.0.0-next.3):
+  /@nginfra/angular-linking@1.0.2(@angular/compiler-cli@20.0.0-next.4):
     resolution: {integrity: sha512-fjZxePkH5MHdtmwT/nqHQfMl/tZ2vrKIHm62SCJJnlkNi6sxWYLlaiZs7Rw1vmF/1dEHhmB9VKh+3HZup3qJEA==, tarball: https://registry.npmjs.org/@nginfra/angular-linking/-/angular-linking-1.0.2.tgz}
     peerDependencies:
       '@angular/compiler-cli': '*'
     dependencies:
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
       '@babel/core': 7.26.10
       tinyglobby: 0.2.12
     transitivePeerDependencies:
       - supports-color
 
-  /@ngtools/webpack@20.0.0-next.2(@angular/compiler-cli@20.0.0-next.3)(typescript@5.8.2)(webpack@5.98.0):
-    resolution: {integrity: sha512-Edr7kfYosxoHKpvABk1A28S2jlJQlz/7vf6E2VOK74d0sIbT+h6CgQulRlNOgi5jyH3qOldEgDm3iE+S5KMXxA==, tarball: https://registry.npmjs.org/@ngtools/webpack/-/webpack-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@ngtools/webpack@20.0.0-next.3(@angular/compiler-cli@20.0.0-next.4)(typescript@5.8.2)(webpack@5.98.0):
+    resolution: {integrity: sha512-aVfC9dckydLIjmFvmyoaI3rO1B8z5JysJ1/xlyejhSbKY0Wg6+5QuWMBuh9fnCJljnBucPGpu+EzBIxCKVC8Hw==, tarball: https://registry.npmjs.org/@ngtools/webpack/-/webpack-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     peerDependencies:
       '@angular/compiler-cli': ^20.0.0 || ^20.0.0-next.0
       typescript: 5.8.2
       webpack: ^5.54.0
     dependencies:
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
       typescript: 5.8.2
       webpack: 5.98.0(esbuild@0.25.1)
     dev: true
@@ -4374,8 +4363,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-android-arm-eabi@4.36.0:
-    resolution: {integrity: sha512-jgrXjjcEwN6XpZXL0HUeOVGfjXhPyxAbbhD0BlXUB+abTOpbPiN5Wb3kOT7yb+uEtATNYF5x5gIfwutmuBA26w==, tarball: https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.36.0.tgz}
+  /@rollup/rollup-android-arm-eabi@4.37.0:
+    resolution: {integrity: sha512-l7StVw6WAa8l3vA1ov80jyetOAEo1FtHvZDbzXDO/02Sq/QVvqlHkYoFwDJPIMj0GKiistsBudfx5tGFnwYWDQ==, tarball: https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.37.0.tgz}
     cpu: [arm]
     os: [android]
     dev: true
@@ -4388,8 +4377,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-android-arm64@4.36.0:
-    resolution: {integrity: sha512-NyfuLvdPdNUfUNeYKUwPwKsE5SXa2J6bCt2LdB/N+AxShnkpiczi3tcLJrm5mA+eqpy0HmaIY9F6XCa32N5yzg==, tarball: https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.36.0.tgz}
+  /@rollup/rollup-android-arm64@4.37.0:
+    resolution: {integrity: sha512-6U3SlVyMxezt8Y+/iEBcbp945uZjJwjZimu76xoG7tO1av9VO691z8PkhzQ85ith2I8R2RddEPeSfcbyPfD4hA==, tarball: https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.37.0.tgz}
     cpu: [arm64]
     os: [android]
     dev: true
@@ -4402,8 +4391,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-darwin-arm64@4.36.0:
-    resolution: {integrity: sha512-JQ1Jk5G4bGrD4pWJQzWsD8I1n1mgPXq33+/vP4sk8j/z/C2siRuxZtaUA7yMTf71TCZTZl/4e1bfzwUmFb3+rw==, tarball: https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.36.0.tgz}
+  /@rollup/rollup-darwin-arm64@4.37.0:
+    resolution: {integrity: sha512-+iTQ5YHuGmPt10NTzEyMPbayiNTcOZDWsbxZYR1ZnmLnZxG17ivrPSWFO9j6GalY0+gV3Jtwrrs12DBscxnlYA==, tarball: https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.37.0.tgz}
     cpu: [arm64]
     os: [darwin]
     dev: true
@@ -4416,8 +4405,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-darwin-x64@4.36.0:
-    resolution: {integrity: sha512-6c6wMZa1lrtiRsbDziCmjE53YbTkxMYhhnWnSW8R/yqsM7a6mSJ3uAVT0t8Y/DGt7gxUWYuFM4bwWk9XCJrFKA==, tarball: https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.36.0.tgz}
+  /@rollup/rollup-darwin-x64@4.37.0:
+    resolution: {integrity: sha512-m8W2UbxLDcmRKVjgl5J/k4B8d7qX2EcJve3Sut7YGrQoPtCIQGPH5AMzuFvYRWZi0FVS0zEY4c8uttPfX6bwYQ==, tarball: https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.37.0.tgz}
     cpu: [x64]
     os: [darwin]
     dev: true
@@ -4430,8 +4419,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-freebsd-arm64@4.36.0:
-    resolution: {integrity: sha512-KXVsijKeJXOl8QzXTsA+sHVDsFOmMCdBRgFmBb+mfEb/7geR7+C8ypAml4fquUt14ZyVXaw2o1FWhqAfOvA4sg==, tarball: https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.36.0.tgz}
+  /@rollup/rollup-freebsd-arm64@4.37.0:
+    resolution: {integrity: sha512-FOMXGmH15OmtQWEt174v9P1JqqhlgYge/bUjIbiVD1nI1NeJ30HYT9SJlZMqdo1uQFyt9cz748F1BHghWaDnVA==, tarball: https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.37.0.tgz}
     cpu: [arm64]
     os: [freebsd]
     dev: true
@@ -4444,8 +4433,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-freebsd-x64@4.36.0:
-    resolution: {integrity: sha512-dVeWq1ebbvByI+ndz4IJcD4a09RJgRYmLccwlQ8bPd4olz3Y213uf1iwvc7ZaxNn2ab7bjc08PrtBgMu6nb4pQ==, tarball: https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.36.0.tgz}
+  /@rollup/rollup-freebsd-x64@4.37.0:
+    resolution: {integrity: sha512-SZMxNttjPKvV14Hjck5t70xS3l63sbVwl98g3FlVVx2YIDmfUIy29jQrsw06ewEYQ8lQSuY9mpAPlmgRD2iSsA==, tarball: https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.37.0.tgz}
     cpu: [x64]
     os: [freebsd]
     dev: true
@@ -4458,8 +4447,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm-gnueabihf@4.36.0:
-    resolution: {integrity: sha512-bvXVU42mOVcF4le6XSjscdXjqx8okv4n5vmwgzcmtvFdifQ5U4dXFYaCB87namDRKlUL9ybVtLQ9ztnawaSzvg==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.36.0.tgz}
+  /@rollup/rollup-linux-arm-gnueabihf@4.37.0:
+    resolution: {integrity: sha512-hhAALKJPidCwZcj+g+iN+38SIOkhK2a9bqtJR+EtyxrKKSt1ynCBeqrQy31z0oWU6thRZzdx53hVgEbRkuI19w==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.37.0.tgz}
     cpu: [arm]
     os: [linux]
     dev: true
@@ -4472,8 +4461,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm-musleabihf@4.36.0:
-    resolution: {integrity: sha512-JFIQrDJYrxOnyDQGYkqnNBtjDwTgbasdbUiQvcU8JmGDfValfH1lNpng+4FWlhaVIR4KPkeddYjsVVbmJYvDcg==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.36.0.tgz}
+  /@rollup/rollup-linux-arm-musleabihf@4.37.0:
+    resolution: {integrity: sha512-jUb/kmn/Gd8epbHKEqkRAxq5c2EwRt0DqhSGWjPFxLeFvldFdHQs/n8lQ9x85oAeVb6bHcS8irhTJX2FCOd8Ag==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.37.0.tgz}
     cpu: [arm]
     os: [linux]
     dev: true
@@ -4486,8 +4475,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm64-gnu@4.36.0:
-    resolution: {integrity: sha512-KqjYVh3oM1bj//5X7k79PSCZ6CvaVzb7Qs7VMWS+SlWB5M8p3FqufLP9VNp4CazJ0CsPDLwVD9r3vX7Ci4J56A==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-arm64-gnu@4.37.0:
+    resolution: {integrity: sha512-oNrJxcQT9IcbcmKlkF+Yz2tmOxZgG9D9GRq+1OE6XCQwCVwxixYAa38Z8qqPzQvzt1FCfmrHX03E0pWoXm1DqA==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.37.0.tgz}
     cpu: [arm64]
     os: [linux]
     dev: true
@@ -4500,8 +4489,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-arm64-musl@4.36.0:
-    resolution: {integrity: sha512-QiGnhScND+mAAtfHqeT+cB1S9yFnNQ/EwCg5yE3MzoaZZnIV0RV9O5alJAoJKX/sBONVKeZdMfO8QSaWEygMhw==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.36.0.tgz}
+  /@rollup/rollup-linux-arm64-musl@4.37.0:
+    resolution: {integrity: sha512-pfxLBMls+28Ey2enpX3JvjEjaJMBX5XlPCZNGxj4kdJyHduPBXtxYeb8alo0a7bqOoWZW2uKynhHxF/MWoHaGQ==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.37.0.tgz}
     cpu: [arm64]
     os: [linux]
     dev: true
@@ -4514,8 +4503,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-loongarch64-gnu@4.36.0:
-    resolution: {integrity: sha512-1ZPyEDWF8phd4FQtTzMh8FQwqzvIjLsl6/84gzUxnMNFBtExBtpL51H67mV9xipuxl1AEAerRBgBwFNpkw8+Lg==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-loongarch64-gnu/-/rollup-linux-loongarch64-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-loongarch64-gnu@4.37.0:
+    resolution: {integrity: sha512-yCE0NnutTC/7IGUq/PUHmoeZbIwq3KRh02e9SfFh7Vmc1Z7atuJRYWhRME5fKgT8aS20mwi1RyChA23qSyRGpA==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-loongarch64-gnu/-/rollup-linux-loongarch64-gnu-4.37.0.tgz}
     cpu: [loong64]
     os: [linux]
     dev: true
@@ -4528,8 +4517,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-powerpc64le-gnu@4.36.0:
-    resolution: {integrity: sha512-VMPMEIUpPFKpPI9GZMhJrtu8rxnp6mJR3ZzQPykq4xc2GmdHj3Q4cA+7avMyegXy4n1v+Qynr9fR88BmyO74tg==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-powerpc64le-gnu/-/rollup-linux-powerpc64le-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-powerpc64le-gnu@4.37.0:
+    resolution: {integrity: sha512-NxcICptHk06E2Lh3a4Pu+2PEdZ6ahNHuK7o6Np9zcWkrBMuv21j10SQDJW3C9Yf/A/P7cutWoC/DptNLVsZ0VQ==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-powerpc64le-gnu/-/rollup-linux-powerpc64le-gnu-4.37.0.tgz}
     cpu: [ppc64]
     os: [linux]
     dev: true
@@ -4542,8 +4531,15 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-riscv64-gnu@4.36.0:
-    resolution: {integrity: sha512-ttE6ayb/kHwNRJGYLpuAvB7SMtOeQnVXEIpMtAvx3kepFQeowVED0n1K9nAdraHUPJ5hydEMxBpIR7o4nrm8uA==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-riscv64-gnu@4.37.0:
+    resolution: {integrity: sha512-PpWwHMPCVpFZLTfLq7EWJWvrmEuLdGn1GMYcm5MV7PaRgwCEYJAwiN94uBuZev0/J/hFIIJCsYw4nLmXA9J7Pw==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.37.0.tgz}
+    cpu: [riscv64]
+    os: [linux]
+    dev: true
+    optional: true
+
+  /@rollup/rollup-linux-riscv64-musl@4.37.0:
+    resolution: {integrity: sha512-DTNwl6a3CfhGTAOYZ4KtYbdS8b+275LSLqJVJIrPa5/JuIufWWZ/QFvkxp52gpmguN95eujrM68ZG+zVxa8zHA==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.37.0.tgz}
     cpu: [riscv64]
     os: [linux]
     dev: true
@@ -4556,8 +4552,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-s390x-gnu@4.36.0:
-    resolution: {integrity: sha512-4a5gf2jpS0AIe7uBjxDeUMNcFmaRTbNv7NxI5xOCs4lhzsVyGR/0qBXduPnoWf6dGC365saTiwag8hP1imTgag==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-s390x-gnu@4.37.0:
+    resolution: {integrity: sha512-hZDDU5fgWvDdHFuExN1gBOhCuzo/8TMpidfOR+1cPZJflcEzXdCy1LjnklQdW8/Et9sryOPJAKAQRw8Jq7Tg+A==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.37.0.tgz}
     cpu: [s390x]
     os: [linux]
     dev: true
@@ -4570,8 +4566,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-x64-gnu@4.36.0:
-    resolution: {integrity: sha512-5KtoW8UWmwFKQ96aQL3LlRXX16IMwyzMq/jSSVIIyAANiE1doaQsx/KRyhAvpHlPjPiSU/AYX/8m+lQ9VToxFQ==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.36.0.tgz}
+  /@rollup/rollup-linux-x64-gnu@4.37.0:
+    resolution: {integrity: sha512-pKivGpgJM5g8dwj0ywBwe/HeVAUSuVVJhUTa/URXjxvoyTT/AxsLTAbkHkDHG7qQxLoW2s3apEIl26uUe08LVQ==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.37.0.tgz}
     cpu: [x64]
     os: [linux]
     dev: true
@@ -4584,8 +4580,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-linux-x64-musl@4.36.0:
-    resolution: {integrity: sha512-sycrYZPrv2ag4OCvaN5js+f01eoZ2U+RmT5as8vhxiFz+kxwlHrsxOwKPSA8WyS+Wc6Epid9QeI/IkQ9NkgYyQ==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.36.0.tgz}
+  /@rollup/rollup-linux-x64-musl@4.37.0:
+    resolution: {integrity: sha512-E2lPrLKE8sQbY/2bEkVTGDEk4/49UYRVWgj90MY8yPjpnGBQ+Xi1Qnr7b7UIWw1NOggdFQFOLZ8+5CzCiz143w==, tarball: https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.37.0.tgz}
     cpu: [x64]
     os: [linux]
     dev: true
@@ -4598,8 +4594,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-arm64-msvc@4.36.0:
-    resolution: {integrity: sha512-qbqt4N7tokFwwSVlWDsjfoHgviS3n/vZ8LK0h1uLG9TYIRuUTJC88E1xb3LM2iqZ/WTqNQjYrtmtGmrmmawB6A==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.36.0.tgz}
+  /@rollup/rollup-win32-arm64-msvc@4.37.0:
+    resolution: {integrity: sha512-Jm7biMazjNzTU4PrQtr7VS8ibeys9Pn29/1bm4ph7CP2kf21950LgN+BaE2mJ1QujnvOc6p54eWWiVvn05SOBg==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.37.0.tgz}
     cpu: [arm64]
     os: [win32]
     dev: true
@@ -4612,8 +4608,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-ia32-msvc@4.36.0:
-    resolution: {integrity: sha512-t+RY0JuRamIocMuQcfwYSOkmdX9dtkr1PbhKW42AMvaDQa+jOdpUYysroTF/nuPpAaQMWp7ye+ndlmmthieJrQ==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.36.0.tgz}
+  /@rollup/rollup-win32-ia32-msvc@4.37.0:
+    resolution: {integrity: sha512-e3/1SFm1OjefWICB2Ucstg2dxYDkDTZGDYgwufcbsxTHyqQps1UQf33dFEChBNmeSsTOyrjw2JJq0zbG5GF6RA==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.37.0.tgz}
     cpu: [ia32]
     os: [win32]
     dev: true
@@ -4626,8 +4622,8 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/rollup-win32-x64-msvc@4.36.0:
-    resolution: {integrity: sha512-aRXd7tRZkWLqGbChgcMMDEHjOKudo1kChb1Jt1IfR8cY/KIpgNviLeJy5FUb9IpSuQj8dU2fAYNMPW/hLKOSTw==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.36.0.tgz}
+  /@rollup/rollup-win32-x64-msvc@4.37.0:
+    resolution: {integrity: sha512-LWbXUBwn/bcLx2sSsqy7pK5o+Nr+VCoRoAohfJ5C/aBio9nfJmGQqHAhU6pwxV/RmyTk5AqdySma7uwWGlmeuA==, tarball: https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.37.0.tgz}
     cpu: [x64]
     os: [win32]
     dev: true
@@ -4726,12 +4722,12 @@ packages:
       - '@types/node'
     dev: true
 
-  /@schematics/angular@20.0.0-next.2:
-    resolution: {integrity: sha512-du8Ft+vEGelxt4BNuSHD2PZx+9fNgZpVFtu/4N+unsjImdaK5dOstaRXJkRmBy+DUr5z6V633rN9/q1tE14VPg==, tarball: https://registry.npmjs.org/@schematics/angular/-/angular-20.0.0-next.2.tgz}
-    engines: {node: ^20.11.1 || >=22.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+  /@schematics/angular@20.0.0-next.3:
+    resolution: {integrity: sha512-QEkCset/k0s0jR7+BJYnI/UxpQV3Y9ORiG03XFx3/fRfs/0d8HeMxJgssUw2wa96kUxJZIzvPnYd6yYqm4tn0g==, tarball: https://registry.npmjs.org/@schematics/angular/-/angular-20.0.0-next.3.tgz}
+    engines: {node: ^20.11.1 || >=22.11.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
     dependencies:
-      '@angular-devkit/core': 20.0.0-next.2
-      '@angular-devkit/schematics': 20.0.0-next.2
+      '@angular-devkit/core': 20.0.0-next.3
+      '@angular-devkit/schematics': 20.0.0-next.3
       jsonc-parser: 3.3.1
     transitivePeerDependencies:
       - chokidar
@@ -4855,8 +4851,8 @@ packages:
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==, tarball: https://registry.npmjs.org/@types/babel__core/-/babel__core-7.20.5.tgz}
     dependencies:
-      '@babel/parser': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/parser': 7.27.0
+      '@babel/types': 7.27.0
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
       '@types/babel__traverse': 7.20.6
@@ -4865,20 +4861,20 @@ packages:
   /@types/babel__generator@7.6.8:
     resolution: {integrity: sha512-ASsj+tpEDsEiFr1arWrlN6V3mdfjRMZt6LtK/Vp/kreFLnr5QH5+DhvD5nINYZXzwJvXeGq+05iUXcAzVrqWtw==, tarball: https://registry.npmjs.org/@types/babel__generator/-/babel__generator-7.6.8.tgz}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@types/babel__template@7.4.4:
     resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==, tarball: https://registry.npmjs.org/@types/babel__template/-/babel__template-7.4.4.tgz}
     dependencies:
-      '@babel/parser': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/parser': 7.27.0
+      '@babel/types': 7.27.0
     dev: true
 
   /@types/babel__traverse@7.20.6:
     resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==, tarball: https://registry.npmjs.org/@types/babel__traverse/-/babel__traverse-7.20.6.tgz}
     dependencies:
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
     dev: true
 
   /@types/big.js@6.2.2:
@@ -5286,13 +5282,13 @@ packages:
       vite: 6.2.0(@types/node@20.17.24)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2)
     dev: true
 
-  /@vitejs/plugin-basic-ssl@2.0.0(vite@6.2.2):
+  /@vitejs/plugin-basic-ssl@2.0.0(vite@6.2.3):
     resolution: {integrity: sha512-gc9Tjg8bUxBVSTzeWT3Njc0Cl3PakHFKdNfABnZWiUgbxqmHDEn7uECv3fHVylxoYgNzAcmU7ZrILz+BwSo3sA==, tarball: https://registry.npmjs.org/@vitejs/plugin-basic-ssl/-/plugin-basic-ssl-2.0.0.tgz}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     peerDependencies:
       vite: ^6.0.0
     dependencies:
-      vite: 6.2.2(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2)
+      vite: 6.2.3(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2)
     dev: true
 
   /@webassemblyjs/ast@1.14.1:
@@ -10204,7 +10200,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       '@babel/core': 7.26.10
-      '@babel/parser': 7.26.10
+      '@babel/parser': 7.27.0
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
       semver: 7.7.1
@@ -13011,7 +13007,7 @@ packages:
   /regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==, tarball: https://registry.npmjs.org/regenerator-transform/-/regenerator-transform-0.15.2.tgz}
     dependencies:
-      '@babel/runtime': 7.26.10
+      '@babel/runtime': 7.27.0
     dev: true
 
   /regex-parser@2.3.0:
@@ -13346,32 +13342,33 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /rollup@4.36.0:
-    resolution: {integrity: sha512-zwATAXNQxUcd40zgtQG0ZafcRK4g004WtEl7kbuhTWPvf07PsfohXl39jVUvPF7jvNAIkKPQ2XrsDlWuxBd++Q==, tarball: https://registry.npmjs.org/rollup/-/rollup-4.36.0.tgz}
+  /rollup@4.37.0:
+    resolution: {integrity: sha512-iAtQy/L4QFU+rTJ1YUjXqJOJzuwEghqWzCEYD2FEghT7Gsy1VdABntrO4CLopA5IkflTyqNiLNwPcOJ3S7UKLg==, tarball: https://registry.npmjs.org/rollup/-/rollup-4.37.0.tgz}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
     dependencies:
       '@types/estree': 1.0.6
     optionalDependencies:
-      '@rollup/rollup-android-arm-eabi': 4.36.0
-      '@rollup/rollup-android-arm64': 4.36.0
-      '@rollup/rollup-darwin-arm64': 4.36.0
-      '@rollup/rollup-darwin-x64': 4.36.0
-      '@rollup/rollup-freebsd-arm64': 4.36.0
-      '@rollup/rollup-freebsd-x64': 4.36.0
-      '@rollup/rollup-linux-arm-gnueabihf': 4.36.0
-      '@rollup/rollup-linux-arm-musleabihf': 4.36.0
-      '@rollup/rollup-linux-arm64-gnu': 4.36.0
-      '@rollup/rollup-linux-arm64-musl': 4.36.0
-      '@rollup/rollup-linux-loongarch64-gnu': 4.36.0
-      '@rollup/rollup-linux-powerpc64le-gnu': 4.36.0
-      '@rollup/rollup-linux-riscv64-gnu': 4.36.0
-      '@rollup/rollup-linux-s390x-gnu': 4.36.0
-      '@rollup/rollup-linux-x64-gnu': 4.36.0
-      '@rollup/rollup-linux-x64-musl': 4.36.0
-      '@rollup/rollup-win32-arm64-msvc': 4.36.0
-      '@rollup/rollup-win32-ia32-msvc': 4.36.0
-      '@rollup/rollup-win32-x64-msvc': 4.36.0
+      '@rollup/rollup-android-arm-eabi': 4.37.0
+      '@rollup/rollup-android-arm64': 4.37.0
+      '@rollup/rollup-darwin-arm64': 4.37.0
+      '@rollup/rollup-darwin-x64': 4.37.0
+      '@rollup/rollup-freebsd-arm64': 4.37.0
+      '@rollup/rollup-freebsd-x64': 4.37.0
+      '@rollup/rollup-linux-arm-gnueabihf': 4.37.0
+      '@rollup/rollup-linux-arm-musleabihf': 4.37.0
+      '@rollup/rollup-linux-arm64-gnu': 4.37.0
+      '@rollup/rollup-linux-arm64-musl': 4.37.0
+      '@rollup/rollup-linux-loongarch64-gnu': 4.37.0
+      '@rollup/rollup-linux-powerpc64le-gnu': 4.37.0
+      '@rollup/rollup-linux-riscv64-gnu': 4.37.0
+      '@rollup/rollup-linux-riscv64-musl': 4.37.0
+      '@rollup/rollup-linux-s390x-gnu': 4.37.0
+      '@rollup/rollup-linux-x64-gnu': 4.37.0
+      '@rollup/rollup-linux-x64-musl': 4.37.0
+      '@rollup/rollup-win32-arm64-msvc': 4.37.0
+      '@rollup/rollup-win32-ia32-msvc': 4.37.0
+      '@rollup/rollup-win32-x64-msvc': 4.37.0
       fsevents: 2.3.3
     dev: true
 
@@ -13419,9 +13416,9 @@ packages:
     resolution: {integrity: sha512-omv1DIv5z1kV+zDAEjaDjWSkx8w5TbFp5NZoPwUipwzYVcor/4So9ZU3bUyQ1c8lxY5Q0Es/ztWW7PGjY7to0Q==, tarball: https://registry.npmjs.org/rxjs-report-usage/-/rxjs-report-usage-1.0.6.tgz}
     hasBin: true
     dependencies:
-      '@babel/parser': 7.26.10
+      '@babel/parser': 7.27.0
       '@babel/traverse': 7.26.10
-      '@babel/types': 7.26.10
+      '@babel/types': 7.27.0
       bent: 7.3.12
       chalk: 4.1.2
       glob: 7.2.3
@@ -15475,7 +15472,7 @@ packages:
       '@types/node': 20.17.24
       esbuild: 0.25.1
       postcss: 8.5.3
-      rollup: 4.36.0
+      rollup: 4.37.0
       sass: 1.85.1
       terser: 5.39.0
       yaml: 1.10.2
@@ -15483,8 +15480,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@6.2.2(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2):
-    resolution: {integrity: sha512-yW7PeMM+LkDzc7CgJuRLMW2Jz0FxMOsVJ8Lv3gpgW9WLcb9cTW+121UEr1hvmfR7w3SegR5ItvYyzVz1vxNJgQ==, tarball: https://registry.npmjs.org/vite/-/vite-6.2.2.tgz}
+  /vite@6.2.3(@types/node@16.18.101)(less@4.2.2)(sass@1.86.0)(terser@5.39.0)(yaml@1.10.2):
+    resolution: {integrity: sha512-IzwM54g4y9JA/xAeBPNaDXiBF8Jsgl3VBQ2YQ/wOY6fyW3xMdSoltIV3Bo59DErdqdE6RxUfv8W69DvUorE4Eg==, tarball: https://registry.npmjs.org/vite/-/vite-6.2.3.tgz}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -15527,7 +15524,7 @@ packages:
       esbuild: 0.25.1
       less: 4.2.2
       postcss: 8.5.3
-      rollup: 4.36.0
+      rollup: 4.37.0
       sass: 1.86.0
       terser: 5.39.0
       yaml: 1.10.2
@@ -16163,7 +16160,7 @@ packages:
       yaml: 2.7.0
     dev: true
 
-  github.com/angular/bazel-builds/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4(@angular/compiler-cli@20.0.0-next.3)(@bazel/concatjs@5.8.1)(@bazel/worker@5.8.1)(@rollup/plugin-commonjs@21.1.0)(@rollup/plugin-node-resolve@13.3.0)(@types/node@16.18.101)(rollup-plugin-dts@6.1.1)(rollup-plugin-sourcemaps@0.6.3)(rollup@2.79.1)(terser@5.39.0)(typescript@5.8.2):
+  github.com/angular/bazel-builds/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4(@angular/compiler-cli@20.0.0-next.4)(@bazel/concatjs@5.8.1)(@bazel/worker@5.8.1)(@rollup/plugin-commonjs@21.1.0)(@rollup/plugin-node-resolve@13.3.0)(@types/node@16.18.101)(rollup-plugin-dts@6.1.1)(rollup-plugin-sourcemaps@0.6.3)(rollup@2.79.1)(terser@5.39.0)(typescript@5.8.2):
     resolution: {tarball: https://codeload.github.com/angular/bazel-builds/tar.gz/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4}
     id: github.com/angular/bazel-builds/54a0ac1bc77b58214a1c4d3cdcf167676ea621e4
     name: '@angular/bazel'
@@ -16185,7 +16182,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@angular/compiler-cli': 20.0.0-next.3(@angular/compiler@20.0.0-next.3)(typescript@5.8.2)
+      '@angular/compiler-cli': 20.0.0-next.4(@angular/compiler@20.0.0-next.4)(typescript@5.8.2)
       '@bazel/concatjs': 5.8.1(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(typescript@5.8.2)
       '@bazel/worker': 5.8.1
       '@microsoft/api-extractor': 7.52.1(@types/node@16.18.101)
@@ -16203,14 +16200,14 @@ packages:
       - '@types/node'
     dev: true
 
-  github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0):
+  github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(karma-chrome-launcher@3.2.0)(karma-firefox-launcher@2.1.3)(karma-jasmine@4.0.2)(karma-requirejs@1.1.0)(karma-sourcemap-loader@0.3.8)(karma@6.4.3)(postcss@8.5.3)(rxjs@6.6.7)(terser@5.39.0)(yaml@1.10.2)(zone.js@0.15.0):
     resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-build-tooling-builds/tar.gz/ec9df12469082e3cb087a9af55072dc2d833c73f}
     id: github.com/angular/dev-infra-private-build-tooling-builds/ec9df12469082e3cb087a9af55072dc2d833c73f
     name: '@angular/build-tooling'
     version: 0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32
     dependencies:
       '@angular/benchpress': 0.3.0(rxjs@6.6.7)(zone.js@0.15.0)
-      '@angular/build': 20.0.0-next.0(@angular/compiler-cli@20.0.0-next.3)(@angular/compiler@20.0.0-next.3)(@angular/localize@20.0.0-next.3)(@angular/platform-server@20.0.0-next.3)(@types/node@20.17.24)(karma@6.4.3)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
+      '@angular/build': 20.0.0-next.0(@angular/compiler-cli@20.0.0-next.4)(@angular/compiler@20.0.0-next.4)(@angular/localize@20.0.0-next.4)(@angular/platform-server@20.0.0-next.4)(@types/node@20.17.24)(karma@6.4.3)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
       '@babel/core': 7.26.10
       '@babel/plugin-proposal-async-generator-functions': 7.20.7(@babel/core@7.26.10)
       '@bazel/buildifier': 6.3.3
