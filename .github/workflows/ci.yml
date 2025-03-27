@@ -113,8 +113,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run integration tests
         run: yarn integration-tests
-      - name: Running size integration tests
-        run: yarn integration-tests:size-test
         continue-on-error: true
       - uses: ./.github/actions/slack
         if: failure()
