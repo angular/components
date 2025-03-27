@@ -1,10 +1,10 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, Directive, ElementRef, Provider, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {Component, Directive, ElementRef, Provider, signal, Type, ViewChild} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -15,11 +15,11 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subscription} from 'rxjs';
 import {ErrorStateMatcher, MatNativeDateModule} from '../core';
 import {MatFormField, MatFormFieldModule, MatLabel} from '../form-field';
 import {MatInputModule} from '../input';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Subscription} from 'rxjs';
 import {MatDateRangeInput} from './date-range-input';
 import {MatEndDate, MatStartDate} from './date-range-input-parts';
 import {MatDateRangePicker} from './date-range-picker';
@@ -830,7 +830,7 @@ describe('MatDateRangeInput', () => {
 
   it('moves focus between fields with arrow keys when cursor is at edge (RTL)', () => {
     class RTL extends Directionality {
-      override readonly value = 'rtl';
+      override readonly valueSignal = signal<Direction>('rtl');
     }
     const fixture = createComponent(StandardRangePicker, [
       {
