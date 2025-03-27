@@ -11,12 +11,17 @@ def ts_project(
         name,
         source_map = True,
         testonly = False,
+        tsconfig = None,
         **kwargs):
+    if tsconfig == None and native.package_name().startswith("src"):
+        tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
+
     _ts_project(
         name,
         source_map = source_map,
         module_name = compute_module_name(testonly),
         testonly = testonly,
+        tsconfig = tsconfig,
         **kwargs
     )
 
@@ -28,13 +33,18 @@ def ng_project(
         name,
         source_map = True,
         testonly = False,
+        tsconfig = None,
         **kwargs):
+    if tsconfig == None and native.package_name().startswith("src"):
+        tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
+
     _ts_project(
         name,
         source_map = source_map,
         module_name = compute_module_name(testonly),
         rule_impl = _ng_project,
         testonly = testonly,
+        tsconfig = tsconfig,
         **kwargs
     )
 
