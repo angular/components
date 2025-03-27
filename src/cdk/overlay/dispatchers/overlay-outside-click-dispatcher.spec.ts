@@ -1,10 +1,10 @@
+import {ApplicationRef, Component} from '@angular/core';
 import {TestBed, inject} from '@angular/core/testing';
-import {ApplicationRef, Component, afterRender} from '@angular/core';
-import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
-import {OverlayModule, Overlay} from '../index';
-import {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';
-import {ComponentPortal} from '../../portal';
 import {filter, take} from 'rxjs/operators';
+import {ComponentPortal} from '../../portal';
+import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
+import {Overlay, OverlayModule} from '../index';
+import {OverlayOutsideClickDispatcher} from './overlay-outside-click-dispatcher';
 
 describe('OverlayOutsideClickDispatcher', () => {
   let appRef: ApplicationRef;
@@ -388,11 +388,13 @@ describe('OverlayOutsideClickDispatcher', () => {
 
     it('should run change detection if the click was made outside the overlay and there are `outsidePointerEvents` observers', async () => {
       let renders = 0;
-      TestBed.runInInjectionContext(() => {
-        afterRender(() => {
+      @Component({template: '{{increment()}}'})
+      class Counter {
+        increment() {
           renders++;
-        });
-      });
+        }
+      }
+      TestBed.createComponent(Counter);
       function stablePromise() {
         return TestBed.inject(ApplicationRef)
           .isStable.pipe(
@@ -402,7 +404,8 @@ describe('OverlayOutsideClickDispatcher', () => {
           .toPromise();
       }
       await stablePromise();
-      expect(renders).toEqual(1);
+      renders = 0;
+      expect(renders).toEqual(0);
       const portal = new ComponentPortal(TestComponent);
       const overlayRef = overlay.create();
       overlayRef.attach(portal);
@@ -412,16 +415,16 @@ describe('OverlayOutsideClickDispatcher', () => {
       document.body.appendChild(context);
 
       await stablePromise();
-      expect(renders).toEqual(2);
+      expect(renders).toEqual(1);
       dispatchMouseEvent(context, 'click');
       await stablePromise();
-      expect(renders).toEqual(2);
+      expect(renders).toEqual(1);
 
       overlayRef.outsidePointerEvents().subscribe();
 
       dispatchMouseEvent(context, 'click');
       await stablePromise();
-      expect(renders).toEqual(2);
+      expect(renders).toEqual(1);
     });
   });
 });
