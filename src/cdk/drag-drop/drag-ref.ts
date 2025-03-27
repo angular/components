@@ -981,7 +981,7 @@ export class DragRef<T = any> {
 
     // when pixel threshold = 0 and dragStartDelay = 0 and a preview container/position exists we immediately drag
     if (
-      event.type == 'mousedown' &&
+      (event.type == 'mousedown' || event.type == 'touchstart') &&
       previewTemplate &&
       this._config.dragStartThreshold === 0 &&
       this._getDragStartDelay(event) === 0
