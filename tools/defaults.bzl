@@ -3,7 +3,7 @@
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
 load("@io_bazel_rules_sass//:defs.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary", _sass_library = "sass_library")
-load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
+load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
 load("@npm//@angular/build-tooling/bazel/karma:index.bzl", _karma_web_test_suite = "karma_web_test_suite")
 load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
@@ -12,16 +12,11 @@ load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = 
 load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
-load("@npm//tsec:index.bzl", _tsec_test = "tsec_test")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
-load("//tools/bazel:module_name.bzl", "compute_module_name")
-
-_DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
-_DEFAULT_TSCONFIG_TEST = "//src:tsconfig-test"
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -36,23 +31,6 @@ esbuild = _esbuild
 esbuild_config = _esbuild_config
 http_server = _http_server
 
-def _make_tsec_test(target):
-    package_name = native.package_name()
-    if not package_name.startswith("src/components-examples") and \
-       not package_name.endswith("/testing") and \
-       not package_name.endswith("/schematics"):
-        _tsec_test(
-            name = target + "_tsec_test",
-            target = target,
-            tsconfig = "//src:tsec_config",
-        )
-
-def _getDefaultTsConfig(testonly):
-    if testonly:
-        return _DEFAULT_TSCONFIG_TEST
-    else:
-        return _DEFAULT_TSCONFIG_BUILD
-
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(
         sourcemap = sourcemap,
@@ -66,47 +44,6 @@ def sass_library(**kwargs):
 
 def npm_sass_library(**kwargs):
     _npm_sass_library(**kwargs)
-
-def ng_module(
-        deps = [],
-        srcs = [],
-        tsconfig = None,
-        testonly = False,
-        **kwargs):
-    if not tsconfig:
-        tsconfig = _getDefaultTsConfig(testonly)
-
-    # Compute an AMD module name for the target.
-    module_name = compute_module_name(testonly)
-
-    local_deps = [
-        # Add tslib because we use import helpers for all public packages.
-        "@npm//tslib",
-    ]
-
-    # Append given deps only if they're not in the default set of deps
-    for d in deps:
-        if d not in local_deps:
-            local_deps = local_deps + [d]
-
-    _ng_module(
-        srcs = srcs,
-        # `module_name` is used for AMD module names within emitted JavaScript files.
-        module_name = module_name,
-        # We use the module name as package name, so that the target can be resolved within
-        # NodeJS executions, by activating the Bazel NodeJS linker.
-        # See: https://github.com/bazelbuild/rules_nodejs/pull/2799.
-        package_name = module_name,
-        strict_templates = True,
-        deps = local_deps,
-        tsconfig = tsconfig,
-        testonly = testonly,
-        **kwargs
-    )
-
-    # TODO(devversion): Partner with ISE team to support `rules_js` here.
-    if False and module_name and not testonly:
-        _make_tsec_test(kwargs["name"])
 
 def ng_package(name, srcs = [], deps = [], externals = PKG_EXTERNALS, readme_md = None, visibility = None, **kwargs):
     # If no readme file has been specified explicitly, use the default readme for
@@ -295,7 +232,7 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
     ]
 
     # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
-    # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,
+    # Since some of our tests depend on CSS files which are not part of the `ng_project` rule,
     # we need to somehow load static CSS files within Karma (e.g. overlay prebuilt). Those styles
     # are required for successful test runs. Since the `karma_web_test_suite` rule currently only
     # allows JS files to be included and served within Karma, we need to create a JS file that
