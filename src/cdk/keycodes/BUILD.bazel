@@ -3,7 +3,7 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-# We need to use "ng_module" here since we want metadata to be generated for keycode
+# We need to use "ng_project" here since we want metadata to be generated for keycode
 # constants. This is necessary because some of these constants are statically used in
 # component/directive metadata (e.g. chips) and NGC needs to be able to evaluate these
 # at compile time.
