@@ -31,6 +31,8 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
     _rawDir: string;
     get value(): Direction;
     // (undocumented)
+    readonly valueSignal: i0.WritableSignal<Direction>;
+    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<Dir, "[dir]", ["dir"], { "dir": { "alias": "dir"; "required": false; }; }, { "change": "dirChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Dir, never>;
@@ -48,7 +50,8 @@ export class Directionality implements OnDestroy {
     readonly change: EventEmitter<Direction>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly value: Direction;
+    get value(): Direction;
+    readonly valueSignal: i0.WritableSignal<Direction>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Directionality, never>;
     // (undocumented)

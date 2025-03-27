@@ -5,6 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
@@ -20,23 +21,23 @@ import {
   ContentChildren,
   ElementRef,
   InjectionToken,
-  Injector,
   Input,
   NgZone,
   OnDestroy,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  afterRender,
+  afterRenderEffect,
   computed,
   contentChild,
   inject,
+  signal,
+  viewChild,
 } from '@angular/core';
 import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
-import {_animationsDisabled, ThemePalette} from '../core';
-import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject, Subscription, merge} from 'rxjs';
-import {map, pairwise, takeUntil, filter, startWith} from 'rxjs/operators';
+import {filter, map, pairwise, startWith, takeUntil} from 'rxjs/operators';
+import {ThemePalette, _animationsDisabled} from '../core';
 import {MAT_ERROR, MatError} from './directives/error';
 import {
   FLOATING_LABEL_PARENT,
@@ -189,7 +190,6 @@ export class MatFormField
   private _platform = inject(Platform);
   private _idGenerator = inject(_IdGenerator);
   private _ngZone = inject(NgZone);
-  private _injector = inject(Injector);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -202,6 +202,21 @@ export class MatFormField
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel | undefined;
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline | undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple | undefined;
+
+  private _iconPrefixContainerSignal = viewChild<ElementRef<HTMLElement>>('iconPrefixContainer');
+  private _textPrefixContainerSignal = viewChild<ElementRef<HTMLElement>>('textPrefixContainer');
+  private _iconSuffixContainerSignal = viewChild<ElementRef<HTMLElement>>('iconSuffixContainer');
+  private _textSuffixContainerSignal = viewChild<ElementRef<HTMLElement>>('textSuffixContainer');
+  private _prefixSuffixContainers = computed(() => {
+    return [
+      this._iconPrefixContainerSignal(),
+      this._textPrefixContainerSignal(),
+      this._iconSuffixContainerSignal(),
+      this._textSuffixContainerSignal(),
+    ]
+      .map(container => container?.nativeElement)
+      .filter(e => e !== undefined);
+  });
 
   @ContentChild(_MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
   @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
@@ -250,10 +265,9 @@ export class MatFormField
   /** The form field appearance style. */
   @Input()
   get appearance(): MatFormFieldAppearance {
-    return this._appearance;
+    return this._appearanceSignal();
   }
   set appearance(value: MatFormFieldAppearance) {
-    const oldValue = this._appearance;
     const newAppearance = value || this._defaults?.appearance || DEFAULT_APPEARANCE;
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (newAppearance !== 'fill' && newAppearance !== 'outline') {
@@ -262,15 +276,9 @@ export class MatFormField
         );
       }
     }
-    this._appearance = newAppearance;
-    if (this._appearance === 'outline' && this._appearance !== oldValue) {
-      // If the appearance has been switched to `outline`, the label offset needs to be updated.
-      // The update can happen once the view has been re-checked, but not immediately because
-      // the view has not been updated and the notched-outline floating label is not present.
-      this._needsOutlineLabelOffsetUpdate = true;
-    }
+    this._appearanceSignal.set(newAppearance);
   }
-  private _appearance: MatFormFieldAppearance = DEFAULT_APPEARANCE;
+  private _appearanceSignal = signal(DEFAULT_APPEARANCE);
 
   /**
    * Whether the form field should reserve space for one line of hint/error text (default)
@@ -319,7 +327,6 @@ export class MatFormField
   private _destroyed = new Subject<void>();
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
-  private _needsOutlineLabelOffsetUpdate = false;
   private _previousControl: MatFormFieldControl<unknown> | null = null;
   private _previousControlValidatorFn: ValidatorFn | null = null;
   private _stateChanges: Subscription | undefined;
@@ -341,6 +348,8 @@ export class MatFormField
         this.color = defaults.color;
       }
     }
+
+    this._syncOutlineLabelOffset();
   }
 
   ngAfterViewInit() {
@@ -366,7 +375,6 @@ export class MatFormField
     this._assertFormFieldControl();
     this._initializeSubscript();
     this._initializePrefixAndSuffix();
-    this._initializeOutlineLabelOffsetSubscriptions();
   }
 
   ngAfterContentChecked() {
@@ -399,6 +407,7 @@ export class MatFormField
   }
 
   ngOnDestroy() {
+    this._outlineLabelOffsetResizeObserver?.disconnect();
     this._stateChanges?.unsubscribe();
     this._valueChanges?.unsubscribe();
     this._describedByChanges?.unsubscribe();
@@ -546,34 +555,37 @@ export class MatFormField
     );
   }
 
+  private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
+
   /**
    * The floating label in the docked state needs to account for prefixes. The horizontal offset
    * is calculated whenever the appearance changes to `outline`, the prefixes change, or when the
    * form field is added to the DOM. This method sets up all subscriptions which are needed to
    * trigger the label offset update.
    */
-  private _initializeOutlineLabelOffsetSubscriptions() {
+  private _syncOutlineLabelOffset() {
     // Whenever the prefix changes, schedule an update of the label offset.
-    // TODO(mmalerba): Use ResizeObserver to better support dynamically changing prefix content.
-    this._prefixChildren.changes.subscribe(() => (this._needsOutlineLabelOffsetUpdate = true));
-
     // TODO(mmalerba): Split this into separate `afterRender` calls using the `EarlyRead` and
     //  `Write` phases.
-    afterRender(
-      () => {
-        if (this._needsOutlineLabelOffsetUpdate) {
-          this._needsOutlineLabelOffsetUpdate = false;
-          this._updateOutlineLabelOffset();
+    afterRenderEffect(() => {
+      if (this._appearanceSignal() === 'outline') {
+        this._updateOutlineLabelOffset();
+        if (!globalThis.ResizeObserver) {
+          return;
         }
-      },
-      {
-        injector: this._injector,
-      },
-    );
 
-    this._dir.change
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => (this._needsOutlineLabelOffsetUpdate = true));
+        // Setup a resize observer to monitor changes to the size of the prefix / suffix and
+        // readjust the label offset.
+        this._outlineLabelOffsetResizeObserver ||= new globalThis.ResizeObserver(() =>
+          this._updateOutlineLabelOffset(),
+        );
+        for (const el of this._prefixSuffixContainers()) {
+          this._outlineLabelOffsetResizeObserver.observe(el, {box: 'border-box'});
+        }
+      } else {
+        this._outlineLabelOffsetResizeObserver?.disconnect();
+      }
+    });
   }
 
   /** Whether the floating label should always float or not. */
@@ -719,6 +731,7 @@ export class MatFormField
    * incorporate the horizontal offset into their default text-field styles.
    */
   private _updateOutlineLabelOffset() {
+    const dir = this._dir.valueSignal();
     if (!this._hasOutline() || !this._floatingLabel) {
       return;
     }
@@ -732,7 +745,6 @@ export class MatFormField
     // If the form field is not attached to the DOM yet (e.g. in a tab), we defer
     // the label offset update until the zone stabilizes.
     if (!this._isAttachedToDom()) {
-      this._needsOutlineLabelOffsetUpdate = true;
       return;
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
@@ -745,7 +757,7 @@ export class MatFormField
     const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
-    const negate = this._dir.value === 'rtl' ? '-1' : '1';
+    const negate = dir === 'rtl' ? '-1' : '1';
     const prefixWidth = `${iconPrefixContainerWidth + textPrefixContainerWidth}px`;
     const labelOffset = `var(--mat-mdc-form-field-label-offset-x, 0px)`;
     const labelHorizontalOffset = `calc(${negate} * (${prefixWidth} + ${labelOffset}))`;
