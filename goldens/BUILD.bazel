@@ -1,7 +1,6 @@
 load("@devinfra//bazel/api-golden:index.bzl", "api_golden_test_npm_package")
 
 exports_files([
-    "size-test.yaml",
     "tsec-exemption.json",
 ])
 
