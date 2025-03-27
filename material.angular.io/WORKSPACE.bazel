@@ -10,6 +10,7 @@ http_archive(
 load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies", "aspect_bazel_lib_register_toolchains")
 
 aspect_bazel_lib_dependencies()
+
 aspect_bazel_lib_register_toolchains()
 
 http_archive(
@@ -45,10 +46,10 @@ http_archive(
 )
 
 http_archive(
-  name = "dev-infra",
-  strip_prefix = "dev-infra-8a438a3bdc519880d78b5ac92b62bfe688deb058",
-  sha256 = "2e75c26ba9f678de8496f05a10470d62a398bad05f6b64864bbed5dc304a6f4e",
-  url = "https://github.com/angular/dev-infra/archive/8a438a3bdc519880d78b5ac92b62bfe688deb058/8a438a3bdc519880d78b5ac92b62bfe688deb058.tar.gz",
+    name = "dev-infra",
+    sha256 = "2e75c26ba9f678de8496f05a10470d62a398bad05f6b64864bbed5dc304a6f4e",
+    strip_prefix = "dev-infra-8a438a3bdc519880d78b5ac92b62bfe688deb058",
+    url = "https://github.com/angular/dev-infra/archive/8a438a3bdc519880d78b5ac92b62bfe688deb058/8a438a3bdc519880d78b5ac92b62bfe688deb058.tar.gz",
 )
 
 load("@dev-infra//bazel/browsers:browser_repositories.bzl", "browser_repositories")
@@ -64,13 +65,14 @@ load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 npm_translate_lock(
     name = "npm",
     data = ["//:package.json"],
-    yarn_lock = "//:yarn.lock",
-    pnpm_lock = "//:pnpm-lock.yaml",
     npmrc = "//:.npmrc",
-    verify_node_modules_ignored = "//:.bazelignore",
     patches = {
-      "@angular-devkit/architect-cli": ["//:tools/patches/bazel-architect-cli.patch"],
+        "@angular-devkit/architect-cli": ["//:tools/patches/bazel-architect-cli.patch"],
     },
+    pnpm_lock = "//:pnpm-lock.yaml",
+    update_pnpm_lock = True,
+    verify_node_modules_ignored = "//:.bazelignore",
+    yarn_lock = "//:yarn.lock",
 )
 
 load("@npm//:repositories.bzl", "npm_repositories")
