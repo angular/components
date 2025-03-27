@@ -6,22 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  afterRender,
-  AfterRenderRef,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ComponentRef,
-  ElementRef,
-  EmbeddedViewRef,
-  inject,
-  NgZone,
-  OnDestroy,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
@@ -29,12 +15,25 @@ import {
   DomPortal,
   TemplatePortal,
 } from '@angular/cdk/portal';
-import {Observable, Subject, of} from 'rxjs';
-import {_IdGenerator, AriaLivePoliteness} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
-import {MatSnackBarConfig} from './snack-bar-config';
-import {take} from 'rxjs/operators';
+import {DOCUMENT} from '@angular/common';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentRef,
+  ElementRef,
+  EmbeddedViewRef,
+  inject,
+  Injector,
+  NgZone,
+  OnDestroy,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {Observable, of, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
+import {MatSnackBarConfig} from './snack-bar-config';
 
 const ENTER_ANIMATION = '_mat-snack-bar-enter';
 const EXIT_ANIMATION = '_mat-snack-bar-exit';
@@ -68,7 +67,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _platform = inject(Platform);
-  private _rendersRef: AfterRenderRef;
   protected _animationsDisabled = _animationsDisabled();
   snackBarConfig = inject(MatSnackBarConfig);
 
@@ -76,7 +74,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _trackedModals = new Set<Element>();
   private _enterFallback: ReturnType<typeof setTimeout> | undefined;
   private _exitFallback: ReturnType<typeof setTimeout> | undefined;
-  private _renders = new Subject<void>();
+  private _injector = inject(Injector);
 
   /** The number of milliseconds to wait before announcing the snack bar's content. */
   private readonly _announceDelay: number = 150;
@@ -147,11 +145,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
         this._role = 'alert';
       }
     }
-
-    // Note: ideally we'd just do an `afterNextRender` in the places where we need to delay
-    // something, however in some cases (TestBed teardown) the injector can be destroyed at an
-    // unexpected time, causing the `afterRender` to fail.
-    this._rendersRef = afterRender(() => this._renders.next(), {manualCleanup: true});
   }
 
   /** Attach a component portal as content to this snack bar container. */
@@ -206,9 +199,12 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       this._screenReaderAnnounce();
 
       if (this._animationsDisabled) {
-        this._renders.pipe(take(1)).subscribe(() => {
-          this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(ENTER_ANIMATION)));
-        });
+        afterNextRender(
+          () => {
+            this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(ENTER_ANIMATION)));
+          },
+          {injector: this._injector},
+        );
       } else {
         clearTimeout(this._enterFallback);
         this._enterFallback = setTimeout(() => {
@@ -246,9 +242,12 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
       clearTimeout(this._announceTimeoutId);
 
       if (this._animationsDisabled) {
-        this._renders.pipe(take(1)).subscribe(() => {
-          this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(EXIT_ANIMATION)));
-        });
+        afterNextRender(
+          () => {
+            this._ngZone.run(() => queueMicrotask(() => this.onAnimationEnd(EXIT_ANIMATION)));
+          },
+          {injector: this._injector},
+        );
       } else {
         clearTimeout(this._exitFallback);
         this._exitFallback = setTimeout(() => this.onAnimationEnd(EXIT_ANIMATION), 200);
@@ -263,8 +262,6 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     this._destroyed = true;
     this._clearFromModals();
     this._completeExit();
-    this._renders.complete();
-    this._rendersRef.destroy();
   }
 
   private _completeExit() {
