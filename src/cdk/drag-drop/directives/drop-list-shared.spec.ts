@@ -823,6 +823,92 @@ export function defineCommonDropListTests(config: {
       expect(anchor!.parentNode).toBeFalsy();
     }));
 
+    it('should display preview on mousedown for config.dragStartThreshold = 0', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomPreview, {
+        providers: [
+          {
+            provide: CDK_DRAG_CONFIG,
+            useValue: {
+              dragStartThreshold: 0,
+            },
+          },
+        ],
+      });
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const itemRect = item.getBoundingClientRect();
+      flush();
+      dispatchMouseEvent(item, 'mousedown', undefined, undefined);
+      fixture.detectChanges();
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      expect(preview).not.toBeNull();
+      const previewRect = preview.getBoundingClientRect();
+      expect(previewRect).not.toBeNull();
+    }));
+
+    it('should snap preview to cursor when snapToCursor is set on preview template', fakeAsync(() => {
+      @Component({
+        styles: `
+      .list {
+        display: flex;
+        width: 100px;
+        flex-direction: row;
+      }
+
+      .item {
+        display: flex;
+        flex-grow: 1;
+        flex-basis: 0;
+        min-height: 50px;
+      }
+    `,
+        template: `
+      <div class="list" cdkDropList>
+        @for (item of items; track item) {
+          <div class="item" cdkDrag>
+            {{item}}
+            <ng-template cdkDragPreview snapToCursor>
+              <div class="item">{{item}}</div>
+            </ng-template>
+          </div>
+        }
+      </div>
+    `,
+        imports: [CdkDropList, CdkDrag, CdkDragPreview],
+      })
+      class DraggableInHorizontalFlexDropZoneWithSnapToCursorPreview {
+        @ViewChild(CdkDropList) dropInstance: CdkDropList;
+        @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+        items = ['Zero', 'One', 'Two'];
+      }
+
+      const fixture = createComponent(DraggableInHorizontalFlexDropZoneWithSnapToCursorPreview);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const listRect =
+        fixture.componentInstance.dropInstance.element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+
+      startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
+      flush();
+      dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
+      fixture.detectChanges();
+
+      const previewRect = preview.getBoundingClientRect();
+
+      // centered on the cursor
+      expect(Math.floor(previewRect.bottom - previewRect.height / 2)).toBe(
+        Math.floor(listRect.bottom + 50),
+      );
+      expect(Math.floor(previewRect.right - previewRect.width / 2)).toBe(
+        Math.floor(listRect.right + 50),
+      );
+    }));
+
     it('should create a preview element while the item is dragged', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();

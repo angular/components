@@ -21,6 +21,7 @@ import {getTransformTransitionDurationInMs} from './dom/transition-duration';
 /** Template that can be used to create a drag preview element. */
 export interface DragPreviewTemplate<T = any> {
   matchSize?: boolean;
+  snapToCursor?: boolean;
   template: TemplateRef<T> | null;
   viewContainer: ViewContainerRef;
   context: T;

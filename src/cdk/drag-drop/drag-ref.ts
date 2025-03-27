@@ -677,7 +677,7 @@ export class DragRef<T = any> {
   };
 
   /** Handler that is invoked when the user moves their pointer after they've initiated a drag. */
-  private _pointerMove = (event: MouseEvent | TouchEvent) => {
+  private _pointerMove = (event: MouseEvent | TouchEvent, mouseDown: boolean = false) => {
     const pointerPosition = this._getPointerPositionOnPage(event);
 
     if (!this._hasStartedDragging()) {
@@ -711,8 +711,9 @@ export class DragRef<T = any> {
           this._ngZone.run(() => this._startDragSequence(event));
         }
       }
-
-      return;
+      if (!mouseDown) {
+        return;
+      }
     }
 
     // We prevent the default action down here so that we know that dragging has started. This is
@@ -977,6 +978,16 @@ export class DragRef<T = any> {
     this._pointerPositionAtLastDirectionChange = {x: pointerPosition.x, y: pointerPosition.y};
     this._dragStartTime = Date.now();
     this._dragDropRegistry.startDragging(this, event);
+
+    // when pixel threshold = 0 and dragStartDelay = 0 and a preview container/position exists we immediately drag
+    if (
+      event.type == 'mousedown' &&
+      previewTemplate &&
+      this._config.dragStartThreshold === 0 &&
+      this._getDragStartDelay(event) === 0
+    ) {
+      this._pointerMove(event, true);
+    }
   }
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
@@ -1086,6 +1097,9 @@ export class DragRef<T = any> {
 
       if (this.constrainPosition) {
         this._applyPreviewTransform(x, y);
+      } else if (this._previewTemplate?.snapToCursor) {
+        const previewRect = this._getPreviewRect();
+        this._applyPreviewTransform(rawX - previewRect.width / 2, rawY - previewRect.height / 2);
       } else {
         this._applyPreviewTransform(
           x - this._pickupPositionInElement.x,

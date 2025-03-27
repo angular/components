@@ -437,6 +437,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
               template: this._previewTemplate.templateRef,
               context: this._previewTemplate.data,
               matchSize: this._previewTemplate.matchSize,
+              snapToCursor: this._previewTemplate.snapToCursor,
               viewContainer: this._viewContainerRef,
             }
           : null;
