@@ -121,6 +121,9 @@ build:build-results --bes_results_url="https://source.cloud.google.com/results/i
 # Set remote caching settings
 build:remote --remote_accept_cached=true
 
+# Additional flags added when running a "trusted build" with additional access
+build:trusted-build --remote_upload_local_results=true
+
 ################################
 # --config=debug               #
 ################################
