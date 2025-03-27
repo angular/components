@@ -34,11 +34,13 @@ export class ListFocus<T extends ListFocusItem> {
   }
 
   /** The id of the current active item. */
-  getActiveDescendant(): string | undefined {
+  getActiveDescendant(): string | void {
     if (this.inputs.focusMode() === 'roving') {
-      return undefined;
+      return;
     }
-    return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
+    if (this.navigation.inputs.items().length) {
+      return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
+    }
   }
 
   /** The tabindex for the list. */

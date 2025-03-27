@@ -50,7 +50,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(pointerdown)': 'pattern.onPointerdown($event)',
   },
 })
-export class CdkListbox {
+export class CdkListbox<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -89,15 +89,14 @@ export class CdkListbox {
   /** Whether the listbox is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
-  // TODO(wagnermaciel): Figure out how we want to expose control over the current listbox value.
   /** The ids of the current selected items. */
-  selectedIds = model<string[]>([]);
+  values = model<V[]>([]);
 
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);
 
   /** The Listbox UIPattern. */
-  pattern: ListboxPattern = new ListboxPattern({
+  pattern: ListboxPattern<V> = new ListboxPattern<V>({
     ...this,
     items: this.items,
     textDirection: this.textDirection,
@@ -116,7 +115,7 @@ export class CdkListbox {
     '[attr.aria-disabled]': 'pattern.disabled()',
   },
 })
-export class CdkOption {
+export class CdkOption<V> {
   /** A reference to the option element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -129,6 +128,8 @@ export class CdkOption {
   // TODO(wagnermaciel): https://github.com/angular/components/pull/30495#discussion_r1972601144.
   /** A unique identifier for the option. */
   protected id = computed(() => this._generatedId);
+
+  protected value = input.required<V>();
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
@@ -148,9 +149,10 @@ export class CdkOption {
   label = input<string>();
 
   /** The Option UIPattern. */
-  pattern = new OptionPattern({
+  pattern = new OptionPattern<V>({
     ...this,
     id: this.id,
+    value: this.value,
     listbox: this.listbox,
     element: this.element,
     searchTerm: this.searchTerm,

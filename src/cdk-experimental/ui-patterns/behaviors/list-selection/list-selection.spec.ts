@@ -12,22 +12,22 @@ import {ListSelectionItem, ListSelection, ListSelectionInputs} from './list-sele
 import {ListNavigation, ListNavigationInputs} from '../list-navigation/list-navigation';
 
 describe('List Selection', () => {
-  interface TestItem extends ListSelectionItem {
+  interface TestItem<V> extends ListSelectionItem<V> {
     disabled: WritableSignalLike<boolean>;
   }
 
-  function getItems(length: number): SignalLike<TestItem[]> {
+  function getItems<V>(values: V[]): SignalLike<TestItem<V>[]> {
     return signal(
-      Array.from({length}).map((_, i) => ({
+      values.map((value, i) => ({
         index: signal(i),
-        id: signal(`${i}`),
+        value: signal(value),
         disabled: signal(false),
         isAnchor: signal(false),
       })),
     );
   }
 
-  function getNavigation<T extends TestItem>(
+  function getNavigation<T extends TestItem<V>, V>(
     items: SignalLike<T[]>,
     args: Partial<ListNavigationInputs<T>> = {},
   ): ListNavigation<T> {
@@ -42,15 +42,15 @@ describe('List Selection', () => {
     });
   }
 
-  function getSelection<T extends TestItem>(
+  function getSelection<T extends TestItem<V>, V>(
     items: SignalLike<T[]>,
     navigation: ListNavigation<T>,
-    args: Partial<ListSelectionInputs<T>> = {},
-  ): ListSelection<T> {
+    args: Partial<ListSelectionInputs<T, V>> = {},
+  ): ListSelection<T, V> {
     return new ListSelection({
       items,
       navigation,
-      selectedIds: signal([]),
+      values: signal<V[]>([]),
       multiselectable: signal(true),
       selectionMode: signal('explicit'),
       ...args,
@@ -59,16 +59,16 @@ describe('List Selection', () => {
 
   describe('#select', () => {
     it('should select an item', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
       selection.select(); // [0]
-      expect(selection.inputs.selectedIds()).toEqual(['0']);
+      expect(selection.inputs.values()).toEqual([0]);
     });
 
     it('should select multiple options', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
@@ -76,11 +76,11 @@ describe('List Selection', () => {
       nav.next();
       selection.select(); // [0, 1]
 
-      expect(selection.inputs.selectedIds()).toEqual(['0', '1']);
+      expect(selection.inputs.values()).toEqual([0, 1]);
     });
 
     it('should not select multiple options', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav, {
         multiselectable: signal(false),
@@ -90,42 +90,42 @@ describe('List Selection', () => {
       nav.next();
       selection.select(); // [1]
 
-      expect(selection.inputs.selectedIds()).toEqual(['1']);
+      expect(selection.inputs.values()).toEqual([1]);
     });
 
     it('should not select disabled items', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       items()[0].disabled.set(true);
 
       selection.select(); // []
-      expect(selection.inputs.selectedIds()).toEqual([]);
+      expect(selection.inputs.values()).toEqual([]);
     });
 
     it('should do nothing to already selected items', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
       selection.select(); // [0]
       selection.select(); // [0]
 
-      expect(selection.inputs.selectedIds()).toEqual(['0']);
+      expect(selection.inputs.values()).toEqual([0]);
     });
   });
 
   describe('#deselect', () => {
     it('should deselect an item', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       selection.deselect(); // []
-      expect(selection.inputs.selectedIds().length).toBe(0);
+      expect(selection.inputs.values().length).toBe(0);
     });
 
     it('should not deselect disabled items', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
@@ -133,61 +133,61 @@ describe('List Selection', () => {
       items()[0].disabled.set(true);
       selection.deselect(); // [0]
 
-      expect(selection.inputs.selectedIds()).toEqual(['0']);
+      expect(selection.inputs.values()).toEqual([0]);
     });
   });
 
   describe('#toggle', () => {
     it('should select an unselected item', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
       selection.toggle(); // [0]
-      expect(selection.inputs.selectedIds()).toEqual(['0']);
+      expect(selection.inputs.values()).toEqual([0]);
     });
 
     it('should deselect a selected item', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       selection.select(); // [0]
       selection.toggle(); // []
-      expect(selection.inputs.selectedIds().length).toBe(0);
+      expect(selection.inputs.values().length).toBe(0);
     });
   });
 
   describe('#selectAll', () => {
     it('should select all items', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       selection.selectAll();
-      expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2', '3', '4']);
+      expect(selection.inputs.values()).toEqual([0, 1, 2, 3, 4]);
     });
 
     it('should do nothing if a list is not multiselectable', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       selection.selectAll();
-      expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2', '3', '4']);
+      expect(selection.inputs.values()).toEqual([0, 1, 2, 3, 4]);
     });
   });
 
   describe('#deselectAll', () => {
     it('should deselect all items', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
       selection.deselectAll(); // []
-      expect(selection.inputs.selectedIds().length).toBe(0);
+      expect(selection.inputs.values().length).toBe(0);
     });
   });
 
   describe('#selectFromAnchor', () => {
     it('should select all items from an anchor at a lower index', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav);
 
@@ -196,11 +196,11 @@ describe('List Selection', () => {
       nav.next();
       selection.selectFromPrevSelectedItem(); // [0, 1, 2]
 
-      expect(selection.inputs.selectedIds()).toEqual(['0', '1', '2']);
+      expect(selection.inputs.values()).toEqual([0, 1, 2]);
     });
 
     it('should select all items from an anchor at a higher index', () => {
-      const items = getItems(5);
+      const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items, {
         activeIndex: signal(3),
       });
@@ -211,7 +211,8 @@ describe('List Selection', () => {
       nav.prev();
       selection.selectFromPrevSelectedItem(); // [3, 1, 2]
 
-      expect(selection.inputs.selectedIds()).toEqual(['3', '1', '2']);
+      // TODO(wagnermaciel): Order the values when inserting them.
+      expect(selection.inputs.values()).toEqual([3, 1, 2]);
     });
   });
 });

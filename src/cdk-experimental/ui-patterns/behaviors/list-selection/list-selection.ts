@@ -11,38 +11,38 @@ import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
 
 /** Represents an item in a collection, such as a listbox option, than can be selected. */
-export interface ListSelectionItem extends ListNavigationItem {
-  /** A unique identifier for the item. */
-  id: SignalLike<string>;
+export interface ListSelectionItem<V> extends ListNavigationItem {
+  /** The value of the item. */
+  value: SignalLike<V>;
 
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a collection that contains selectable items. */
-export interface ListSelectionInputs<T extends ListSelectionItem> {
+export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> {
   /** The items in the list. */
   items: SignalLike<T[]>;
 
   /** Whether multiple items in the list can be selected at once. */
   multiselectable: SignalLike<boolean>;
 
-  /** The ids of the current selected items. */
-  selectedIds: WritableSignalLike<string[]>;
+  /** The values of the current selected items. */
+  values: WritableSignalLike<V[]>;
 
   /** The selection strategy used by the list. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
 }
 
 /** Controls selection for a list of items. */
-export class ListSelection<T extends ListSelectionItem> {
-  /** The id of the most recently selected item. */
-  previousSelectedId = signal<string | undefined>(undefined);
+export class ListSelection<T extends ListSelectionItem<V>, V> {
+  /** The value of the most recently selected item. */
+  previousValue = signal<V | undefined>(undefined);
 
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
 
-  constructor(readonly inputs: ListSelectionInputs<T> & {navigation: ListNavigation<T>}) {
+  constructor(readonly inputs: ListSelectionInputs<T, V> & {navigation: ListNavigation<T>}) {
     this.navigation = inputs.navigation;
   }
 
@@ -50,7 +50,7 @@ export class ListSelection<T extends ListSelectionItem> {
   select(item?: T) {
     item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
 
-    if (item.disabled() || this.inputs.selectedIds().includes(item.id())) {
+    if (item.disabled() || this.inputs.values().includes(item.value())) {
       return;
     }
 
@@ -60,7 +60,7 @@ export class ListSelection<T extends ListSelectionItem> {
 
     // TODO: Need to discuss when to drop this.
     this._anchor();
-    this.inputs.selectedIds.update(ids => ids.concat(item.id()));
+    this.inputs.values.update(values => values.concat(item.value()));
   }
 
   /** Deselects the item at the current active index. */
@@ -68,20 +68,20 @@ export class ListSelection<T extends ListSelectionItem> {
     item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
 
     if (!item.disabled()) {
-      this.inputs.selectedIds.update(ids => ids.filter(id => id !== item.id()));
+      this.inputs.values.update(values => values.filter(value => value !== item.value()));
     }
   }
 
   /** Toggles the item at the current active index. */
   toggle() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.inputs.selectedIds().includes(item.id()) ? this.deselect() : this.select();
+    this.inputs.values().includes(item.value()) ? this.deselect() : this.select();
   }
 
   /** Toggles only the item at the current active index. */
   toggleOne() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.inputs.selectedIds().includes(item.id()) ? this.deselect() : this.selectOne();
+    this.inputs.values().includes(item.value()) ? this.deselect() : this.selectOne();
   }
 
   /** Selects all items in the list. */
@@ -106,8 +106,8 @@ export class ListSelection<T extends ListSelectionItem> {
 
   /** Selects the items in the list starting at the last selected item. */
   selectFromPrevSelectedItem() {
-    const prevSelectedId = this.inputs.items().findIndex(i => this.previousSelectedId() === i.id());
-    this._selectFromIndex(prevSelectedId);
+    const previousValue = this.inputs.items().findIndex(i => this.previousValue() === i.value());
+    this._selectFromIndex(previousValue);
   }
 
   /** Selects the items in the list starting at the last active item. */
@@ -138,6 +138,6 @@ export class ListSelection<T extends ListSelectionItem> {
   /** Sets the anchor to the current active index. */
   private _anchor() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.previousSelectedId.set(item.id());
+    this.previousValue.set(item.value());
   }
 }
