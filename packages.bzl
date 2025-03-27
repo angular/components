@@ -40,7 +40,6 @@ ANGULAR_PACKAGES_CONFIG = [
     ("@angular/forms", struct(entry_points = [])),
     ("@angular/platform-browser", struct(entry_points = ["testing", "animations"])),
     ("@angular/platform-server", struct(entry_points = [], platform = "node")),
-    ("@angular/platform-browser-dynamic", struct(entry_points = ["testing"])),
     ("@angular/router", struct(entry_points = [])),
     ("@angular/localize", struct(entry_points = ["init"])),
 ]

@@ -20,6 +20,6 @@ ts_project(
     tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser-dynamic",
+        "//:node_modules/@angular/platform-browser",
     ],
 )
