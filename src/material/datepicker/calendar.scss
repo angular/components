@@ -55,7 +55,7 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   @include token-utils.use-tokens($_tokens...) {
     @include token-utils.create-token-slot(font-size, calendar-period-button-text-size);
     @include token-utils.create-token-slot(font-weight, calendar-period-button-text-weight);
-    @include token-utils.create-token-slot(--mdc-text-button-label-text-color,
+    @include token-utils.create-token-slot(--mat-text-button-label-text-color,
       calendar-period-button-text-color);
   }
 }

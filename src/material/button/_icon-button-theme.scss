@@ -108,14 +108,15 @@
       // Match the styles that used to be present. This is necessary for backwards
       // compat to match the previous implementations selector count (two classes).
       --mdc-icon-button-state-layer-size: #{$calculated-size};
+      --mat-icon-button-state-layer-size: #{$calculated-size};
 
-      // TODO: Switch calculated-size to "var(--mdc-icon-button-state-layer-size)"
+      // TODO: Switch calculated-size to "var(--mat-icon-button-state-layer-size)"
       // Currently fails validation because the variable is "undefined"
       // in the sass stack.
-      // TODO: Switch icon-size to "var(--mdc-icon-button-icon-size)". Currently
+      // TODO: Switch icon-size to "var(--mat-icon-button-icon-size)". Currently
       // fails validation because the variable is "undefined" in the sass stack.
-      width: var(--mdc-icon-button-state-layer-size);
-      height: var(--mdc-icon-button-state-layer-size);
+      width: var(--mat-icon-button-state-layer-size);
+      height: var(--mat-icon-button-state-layer-size);
       padding: math.div($calculated-size - $icon-size, 2);
     }
   }

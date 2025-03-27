@@ -6,7 +6,7 @@
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mdc, switch);
+$prefix: (mat, switch);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -89,7 +89,7 @@ $prefix: (mdc, switch);
       disabled-unselected-icon-color: $icon-color,
       // Color of track when disabled.
       disabled-unselected-track-color: $on-surface,
-      // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mdc-surface-color, #fff)`
+      // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mat-surface-color, #fff)`
       // which made it basically hardcoded to #fff. Should it be based on the theme?
       // Color of slide-toggle handle's surface.
       handle-surface-color: #fff,

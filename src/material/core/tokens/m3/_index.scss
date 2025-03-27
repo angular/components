@@ -158,7 +158,7 @@ $_module-names: (
       $name: 'get-tokens',
       $module: $module-name,
     );
-    $tokens: map.merge($tokens, meta.call($fn, $systems, $exclude-hardcoded, $token-slots));
+    $tokens: map.deep-merge($tokens, meta.call($fn, $systems, $exclude-hardcoded, $token-slots));
   }
 
   @return $tokens;

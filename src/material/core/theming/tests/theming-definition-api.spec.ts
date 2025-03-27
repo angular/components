@@ -111,10 +111,10 @@ describe('theming definition api', () => {
         ));
         $data: map.get($theme, $internals);
         :root {
-          --token-surface: #{map.get($data, color-tokens, (mdc, theme), surface)};
-          --token-primary: #{map.get($data, color-tokens, (mdc, theme), primary)};
-          --token-secondary: #{map.get($data, color-tokens, (mdc, theme), secondary)};
-          --token-tertiary: #{map.get($data, color-tokens, (mdc, theme), tertiary)};
+          --token-surface: #{map.get($data, color-tokens, (mat, theme), surface)};
+          --token-primary: #{map.get($data, color-tokens, (mat, theme), primary)};
+          --token-secondary: #{map.get($data, color-tokens, (mat, theme), secondary)};
+          --token-tertiary: #{map.get($data, color-tokens, (mat, theme), tertiary)};
           --palette-primary: #{map.get($data, palettes, primary, 50)};
           --palette-secondary: #{map.get($data, palettes, secondary, 50)};
           --palette-tertiary: #{map.get($data, palettes, tertiary, 50)};
@@ -146,13 +146,13 @@ describe('theming definition api', () => {
         $data: map.get($theme, $internals);
         :root {
           --display-font:
-            #{map.get($data, typography-tokens, (mdc, typography), display-large-font)};
+            #{map.get($data, typography-tokens, (mat, typography), display-large-font)};
           --display-weight:
-            #{map.get($data, typography-tokens, (mdc, typography), display-large-weight)};
+            #{map.get($data, typography-tokens, (mat, typography), display-large-weight)};
           --title-font:
-            #{map.get($data, typography-tokens, (mdc, typography), title-small-font)};
+            #{map.get($data, typography-tokens, (mat, typography), title-small-font)};
           --title-weight:
-            #{map.get($data, typography-tokens, (mdc, typography), title-small-weight)};
+            #{map.get($data, typography-tokens, (mat, typography), title-small-weight)};
         }
       `);
       const vars = getRootVars(css);
@@ -171,7 +171,7 @@ describe('theming definition api', () => {
         ));
         $data: map.get($theme, $internals);
         :root {
-          --size: #{map.get($data, density-tokens, (mdc, checkbox), state-layer-size)};
+          --size: #{map.get($data, density-tokens, (mat, checkbox), state-layer-size)};
         }
       `);
       const vars = getRootVars(css);
