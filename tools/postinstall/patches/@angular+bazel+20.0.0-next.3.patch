@@ -1,0 +1,30 @@
+diff --git a/node_modules/@angular/bazel/src/ng_module/partial_compilation.bzl b/node_modules/@angular/bazel/src/ng_module/partial_compilation.bzl
+index 5fd9a73..c155cea 100755
+--- a/node_modules/@angular/bazel/src/ng_module/partial_compilation.bzl
++++ b/node_modules/@angular/bazel/src/ng_module/partial_compilation.bzl
+@@ -16,10 +16,10 @@ ng_partial_compilation_flag = rule(
+ )
+
+ def _partial_compilation_transition_impl(_settings, _attr):
+-    return {"@npm//@angular/bazel/src:partial_compilation": True}
++    return {"@rules_angular//src/ng_project/config:partial_compilation": True}
+
+ partial_compilation_transition = transition(
+     implementation = _partial_compilation_transition_impl,
+     inputs = [],
+-    outputs = ["@npm//@angular/bazel/src:partial_compilation"],
++    outputs = ["@rules_angular//src/ng_project/config:partial_compilation"],
+ )
+diff --git a/node_modules/@angular/bazel/src/ng_package/packager.mjs b/node_modules/@angular/bazel/src/ng_package/packager.mjs
+index 20604c5..6066214 100755
+--- a/node_modules/@angular/bazel/src/ng_package/packager.mjs
++++ b/node_modules/@angular/bazel/src/ng_package/packager.mjs
+@@ -8,7 +8,7 @@
+ import * as fs from 'fs';
+ import * as path from 'path';
+ import { globSync } from 'tinyglobby';
+-import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports';
++import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports.mjs';
+ /**
+  * List of known `package.json` fields which provide information about
+  * supported package formats and their associated entry paths.

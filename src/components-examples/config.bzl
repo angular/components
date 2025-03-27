@@ -1,7 +1,7 @@
 ALL_EXAMPLES = [
     # TODO(devversion): try to have for each entry-point a bazel package so that
     # we can automate this using the "package.bzl" variables. Currently generated
-    # with "bazel query 'kind("ng_module", //src/components-examples/...:*)' --output="label"
+    # with "bazel query 'kind("ng_project", //src/components-examples/...:*)' --output="label"
     "//src/components-examples/material/tree",
     "//src/components-examples/material/tooltip",
     "//src/components-examples/material/toolbar",

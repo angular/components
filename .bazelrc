@@ -35,7 +35,7 @@ build --nobuild_runfile_links
 ###############################
 
 # A more useful default output mode for bazel query
-# Prints eg. "ng_module rule //foo:bar" rather than just "//foo:bar"
+# Prints eg. "ng_project rule //foo:bar" rather than just "//foo:bar"
 query --output=label_kind
 
 # By default, failing tests don't print any output, it goes to the log file
