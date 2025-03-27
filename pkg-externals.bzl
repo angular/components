@@ -22,8 +22,6 @@ PKG_EXTERNALS = [
     "@angular/core/testing",
     "@angular/forms",
     "@angular/platform-browser",
-    "@angular/platform-browser-dynamic",
-    "@angular/platform-browser-dynamic/testing",
     "@angular/platform-browser/animations",
     "@angular/platform-server",
     "@angular/router",
