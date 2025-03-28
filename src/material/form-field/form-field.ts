@@ -627,8 +627,8 @@ export class MatFormField
     return control && control[prop];
   }
 
-  /** Determines whether to display hints or errors. */
-  _getDisplayedMessages(): 'error' | 'hint' {
+  /** Gets the type of subscript message to render (error or hint). */
+  _getSubscriptMessageType(): 'error' | 'hint' {
     return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState
       ? 'error'
       : 'hint';
@@ -696,7 +696,7 @@ export class MatFormField
         ids.push(...this._control.userAriaDescribedBy.split(' '));
       }
 
-      if (this._getDisplayedMessages() === 'hint') {
+      if (this._getSubscriptMessageType() === 'hint') {
         const startHint = this._hintChildren
           ? this._hintChildren.find(hint => hint.align === 'start')
           : null;
