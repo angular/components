@@ -1013,6 +1013,44 @@ describe('MatChipGrid', () => {
     }));
   });
 
+  describe('chip with form control', () => {
+    let fixture: ComponentFixture<ChipsFormControlUpdate>;
+    let component: ChipsFormControlUpdate;
+    let nativeInput: HTMLInputElement;
+    let nativeButton: HTMLButtonElement;
+
+    beforeEach(() => {
+      fixture = createComponent(ChipsFormControlUpdate);
+      component = fixture.componentInstance;
+      nativeInput = fixture.nativeElement.querySelector('input');
+      nativeButton = fixture.nativeElement.querySelector('button[id="save"]');
+    });
+
+    it('should update the form control value when pressed enter', fakeAsync(() => {
+      nativeInput.value = 'hello';
+      nativeInput.focus();
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(document.activeElement!, 'keydown', ENTER);
+      fixture.detectChanges();
+      flush();
+
+      expect(component.keywordChipControl.value).not.toBeNull();
+      expect(component.keywordChipControl.value.length).toBe(1);
+      expect(nativeButton.disabled).toBeFalsy();
+
+      nativeInput.value = 'how are you ?';
+      nativeInput.focus();
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(document.activeElement!, 'keydown', ENTER);
+      fixture.detectChanges();
+      flush();
+
+      expect(component.keywordChipControl.value.length).toBe(2);
+    }));
+  });
+
   function createComponent<T>(
     component: Type<T>,
     direction: Direction = 'ltr',
@@ -1216,5 +1254,39 @@ class ChipGridWithRemove {
 
   removeChip(event: MatChipEvent) {
     this.chips.splice(event.chip.value, 1);
+  }
+}
+
+@Component({
+  template: `
+<mat-form-field>
+      <mat-label>Keywords</mat-label>
+      <mat-chip-grid #chipGrid [formControl]="keywordChipControl">
+      @for (keyword of keywords; track keyword) {
+        <mat-chip-row>{{keyword}}</mat-chip-row>
+      }
+      </mat-chip-grid>
+      <input placeholder="New keyword..." [matChipInputFor]="chipGrid" (matChipInputTokenEnd)="add($event)">
+    </mat-form-field>
+    <button id="save" [disabled]="!keywordChipControl.valid">Save</button>
+    <button >Cancel</button>`,
+  standalone: false,
+})
+class ChipsFormControlUpdate {
+  keywords = new Array<string>();
+  keywordChipControl = new FormControl();
+
+  constructor() {
+    this.keywordChipControl.setValidators(Validators.required);
+  }
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.keywords.push(value);
+    }
+
+    event.chipInput.clear();
   }
 }
