@@ -14,9 +14,6 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/schematics",
-    ],
     tsconfig = "//src/material/schematics:tsconfig",
     deps = [
         "//:node_modules/@angular-devkit/schematics",
@@ -24,6 +21,7 @@ ts_project(
         "//:node_modules/@types/node",
         "//:node_modules/sass",
         "//:node_modules/typescript",
+        "//src/cdk/schematics",
     ],
 )
 
@@ -67,13 +65,13 @@ ts_project(
     data = [":index_bundled"],
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":m3_theme_lib_rjs",
+        ":m3_theme_lib",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@material/material-color-utilities",
         "//:node_modules/sass",
-        "//src/cdk/schematics/testing:testing_rjs",
-        "//tools/sass:sass_lib_rjs",
+        "//src/cdk/schematics/testing",
+        "//tools/sass:sass_lib",
     ],
 )
 
@@ -87,7 +85,7 @@ jasmine_test(
     name = "unit_tests",
     data = [
         ":unit_tests_assets",
-        ":unit_tests_lib_rjs",
+        ":unit_tests_lib",
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
         "//src/material/schematics:collection_assets",

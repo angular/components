@@ -10,12 +10,10 @@ ng_project(
         "layout-demo.html",
         ":layout_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/layout",
-        "//src/components-examples/cdk/layout",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/layout",
+        "//src/components-examples/cdk/layout",
     ],
 )
 

@@ -10,12 +10,10 @@ ng_project(
         ":clipboard_demo_scss",
         "clipboard-demo.html",
     ],
-    interop_deps = [
-        "//src/cdk/clipboard",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/cdk/clipboard",
     ],
 )
 

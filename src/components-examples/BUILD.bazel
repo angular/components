@@ -3,6 +3,7 @@ load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
 load(":config.bzl", "ALL_EXAMPLES")
 load("//tools:defaults2.bzl", "ng_project")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -12,10 +13,9 @@ ng_project(
         ["*.ts"],
         exclude = ["example-module.d.ts"],
     ) + [":example-module.ts"],
-    interop_deps = ALL_EXAMPLES,
     deps = [
         "//:node_modules/@angular/core",
-    ],
+    ] + ALL_EXAMPLES,
 )
 
 filegroup(
@@ -64,7 +64,7 @@ ng_package(
     # ng_package does not properly handle tree artifacts currently so we escalate to nested_packages
     nested_packages = [":docs-content"],
     tags = ["docs-package"],
-    deps = [":components-examples"] + ALL_EXAMPLES,
+    deps = [":components-examples_legacy"] + [get_legacy_label(t) for t in ALL_EXAMPLES],
 )
 
 genrule(

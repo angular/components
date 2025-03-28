@@ -6,10 +6,8 @@ ng_project(
     name = "platform",
     srcs = glob(["**/*.ts"]),
     assets = ["platform-demo.html"],
-    interop_deps = [
-        "//src/cdk/platform",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/platform",
     ],
 )

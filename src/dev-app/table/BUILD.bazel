@@ -6,12 +6,10 @@ ng_project(
     name = "table",
     srcs = glob(["**/*.ts"]),
     assets = ["table-demo.html"],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/components-examples/cdk/table",
         "//src/components-examples/material/table",
         "//src/dev-app/example",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )

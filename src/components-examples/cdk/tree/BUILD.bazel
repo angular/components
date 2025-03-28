@@ -9,16 +9,14 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/tree",
-        "//src/material/button",
-        "//src/material/icon",
-        "//src/material/progress-spinner",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/tree",
+        "//src/material/button",
+        "//src/material/icon",
+        "//src/material/progress-spinner",
     ],
 )
 

@@ -17,16 +17,14 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":paginator.css"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/button",
-        "//src/material/core",
-        "//src/material/select",
-        "//src/material/tooltip",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/material/button",
+        "//src/material/core",
+        "//src/material/select",
+        "//src/material/tooltip",
     ],
 )
 
@@ -54,15 +52,13 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":paginator",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

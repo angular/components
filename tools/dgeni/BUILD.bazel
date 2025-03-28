@@ -6,7 +6,7 @@ package(default_visibility = ["//visibility:public"])
 nodejs_binary(
     name = "dgeni",
     data = [
-        ":sources",
+        ":sources_legacy",
         "@npm//dgeni",
         "@npm//dgeni-packages",
     ],
@@ -25,6 +25,6 @@ ts_project(
         "//:node_modules/dgeni-packages",
         "//:node_modules/highlight.js",
         "//:node_modules/typescript",
-        "//tools/highlight-files:sources_rjs",
+        "//tools/highlight-files:sources",
     ],
 )

@@ -6,12 +6,10 @@ ts_project(
     name = "testing",
     testonly = True,
     srcs = glob(["**/*.ts"]),
-    interop_deps = [
-        "//src/google-maps",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@types/google.maps",
         "//:node_modules/@types/jasmine",
+        "//src/google-maps",
     ],
 )

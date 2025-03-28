@@ -9,12 +9,10 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/coercion",
-        "//src/material/slider",
-    ],
     deps = [
-        "//src/cdk/testing:testing_rjs",
+        "//src/cdk/coercion",
+        "//src/cdk/testing",
+        "//src/material/slider",
     ],
 )
 
@@ -22,14 +20,12 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":testing",
+        "//:node_modules/@angular/core",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/slider",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

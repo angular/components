@@ -9,17 +9,15 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/cdk/coercion",
-        "//src/cdk/collections",
-        "//src/cdk/table",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/table",
     ],
 )
 
@@ -30,14 +28,12 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":selection",
-        "//src/cdk/table",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":selection",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src/cdk/table",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -10,14 +10,12 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":selection_column_scss"],
-    interop_deps = [
-        "//src/cdk-experimental/selection",
-        "//src/material/checkbox",
-        "//src/material/table",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/selection",
+        "//src/material/checkbox",
+        "//src/material/table",
     ],
 )
 

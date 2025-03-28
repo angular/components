@@ -10,12 +10,10 @@ ng_project(
         "mat-menubar-demo.html",
         ":mat_menubar_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/menu",
-        "//src/material-experimental/menubar",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/menu",
+        "//src/material-experimental/menubar",
     ],
 )
 

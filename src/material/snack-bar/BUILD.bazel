@@ -20,17 +20,15 @@ ng_project(
         ":simple_snack_bar_scss",
         ":snack_bar_container_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/button",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -67,16 +65,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":snack-bar",
-        "//src/cdk/a11y",
-        "//src/cdk/overlay",
-        "//src/cdk/platform",
-    ],
     deps = [
+        ":snack-bar",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/a11y",
+        "//src/cdk/overlay",
+        "//src/cdk/platform",
     ],
 )
 

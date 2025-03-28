@@ -11,7 +11,9 @@ ng_project(
     ]) + [
         ":tree_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk/tree",
         "//src/components-examples/cdk/tree",
         "//src/components-examples/material/tree",
@@ -23,10 +25,6 @@ ng_project(
         "//src/material/input",
         "//src/material/progress-bar",
         "//src/material/tree",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

@@ -10,12 +10,10 @@ ng_project(
         "typography-demo.html",
         ":typography_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/checkbox",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/checkbox",
     ],
 )
 

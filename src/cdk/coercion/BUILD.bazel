@@ -22,7 +22,7 @@ ts_project(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":coercion_rjs",
+        ":coercion",
         "//:node_modules/@angular/core",
     ],
 )

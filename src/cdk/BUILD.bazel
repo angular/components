@@ -1,6 +1,7 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS", "CDK_ENTRYPOINTS_WITH_STYLES", "CDK_SCSS_LIBS", "CDK_TARGETS")
 load("//tools:defaults.bzl", "ng_package", "sass_library")
 load("//tools:defaults2.bzl", "ts_project")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -58,7 +59,7 @@ ng_package(
         "//src/cdk/schematics:npm_package",
     ],
     tags = ["release-package"],
-    deps = CDK_TARGETS,
+    deps = [get_legacy_label(t) for t in CDK_TARGETS],
 )
 
 filegroup(

@@ -21,7 +21,7 @@ ts_project(
 
 js_binary(
     name = "compiler",
-    data = [":sass_lib_rjs"],
+    data = [":sass_lib"],
     entry_point = "compiler-main.js",
     env = {
         # TODO(devversion): Replace `rules_sass` with modernized standalone ruleset.

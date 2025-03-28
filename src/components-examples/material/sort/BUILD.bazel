@@ -13,16 +13,14 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/sort",
-        "//src/material/sort/testing",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/sort",
+        "//src/material/sort/testing",
     ],
 )
 
@@ -39,16 +37,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":sort",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/sort",
         "//src/material/sort/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

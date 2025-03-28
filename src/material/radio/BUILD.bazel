@@ -17,15 +17,13 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":radio_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/a11y",
-        "//src/cdk/collections",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/collections",
+        "//src/material/core",
     ],
 )
 
@@ -71,15 +69,13 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":radio",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":radio",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing/private",
     ],
 )
 

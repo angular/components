@@ -8,7 +8,10 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src/cdk-experimental/popover-edit",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
@@ -16,10 +19,5 @@ ng_project(
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/cdk/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )

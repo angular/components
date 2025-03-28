@@ -6,10 +6,8 @@ ng_project(
     name = "cdk-experimental-listbox",
     srcs = glob(["**/*.ts"]),
     assets = ["cdk-listbox-demo.html"],
-    interop_deps = [
-        "//src/components-examples/cdk-experimental/listbox",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/listbox",
     ],
 )

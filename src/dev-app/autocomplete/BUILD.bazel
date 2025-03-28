@@ -10,7 +10,10 @@ ng_project(
         "autocomplete-demo.html",
         ":autocomplete_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/material/autocomplete",
         "//src/material/button",
         "//src/material/card",
@@ -18,11 +21,6 @@ ng_project(
         "//src/material/dialog",
         "//src/material/form-field",
         "//src/material/input",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 
