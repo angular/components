@@ -22,17 +22,15 @@ ng_project(
         ":chip_scss",
         ":chip_set_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/material/core",
-        "//src/material/form-field",
-    ],
     deps = [
         "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/material/core",
+        "//src/material/form-field",
     ],
 )
 
@@ -68,8 +66,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":chips",
+        "//:node_modules/@angular/animations",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -79,14 +83,6 @@ ts_project(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
-    ],
-    deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

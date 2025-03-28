@@ -12,16 +12,14 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/platform",
-        "//src/cdk/table",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/platform",
+        "//src/cdk/table",
     ],
 )
 
@@ -32,15 +30,13 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":table-scroll-container",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src/cdk/collections",
         "//src/cdk/platform",
         "//src/cdk/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 

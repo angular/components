@@ -10,16 +10,14 @@ ng_project(
         "youtube-player-demo.html",
         ":youtube_player_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/button",
-        "//src/material/checkbox",
-        "//src/material/radio",
-        "//src/youtube-player",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@types/youtube",
+        "//src/material/button",
+        "//src/material/checkbox",
+        "//src/material/radio",
+        "//src/youtube-player",
     ],
 )
 

@@ -13,7 +13,9 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -21,10 +23,6 @@ ng_project(
         "//src/cdk/collections",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -35,16 +33,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":menu",
-        "//src/cdk/collections",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":menu",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -10,12 +10,10 @@ ng_project(
         "icon-demo.html",
         ":icon_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/icon",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/material/icon",
     ],
 )
 

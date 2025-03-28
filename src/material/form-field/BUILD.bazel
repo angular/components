@@ -16,18 +16,16 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":form_field_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/cdk/bidi",
-        "//src/cdk/observers/private",
-        "//src/cdk/platform",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/cdk/bidi",
+        "//src/cdk/observers/private",
+        "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 

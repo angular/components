@@ -17,15 +17,13 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":icon.css"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
+        "//src:dev_mode_types",
+        "//src/material/core",
     ],
 )
 
@@ -47,15 +45,13 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":icon",
-        "//src/cdk/testing",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":icon",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -12,14 +12,12 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/dialog",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
+        "//src/cdk/dialog",
     ],
 )
 

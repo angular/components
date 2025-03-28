@@ -24,11 +24,9 @@ ng_project(
         ":fab_scss",
         ":icon-button_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/material/core",
     ],
 )
 
@@ -89,15 +87,13 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":button",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

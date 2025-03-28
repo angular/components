@@ -13,13 +13,11 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/platform",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/coercion",
+        "//src/cdk/platform",
     ],
 )
 
@@ -30,13 +28,11 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":layout",
-        "//src/cdk/platform",
-    ],
     deps = [
+        ":layout",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/platform",
     ],
 )
 

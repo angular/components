@@ -18,15 +18,13 @@ ng_project(
     assets = [
         ":text-field-prebuilt.css",
     ],
-    interop_deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/platform",
-        "//src/cdk/private",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/coercion",
+        "//src/cdk/platform",
+        "//src/cdk/private",
     ],
 )
 
@@ -48,16 +46,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":text-field",
-        "//src/cdk/platform",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":text-field",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
+        "//src/cdk/platform",
+        "//src/cdk/testing/private",
     ],
 )
 

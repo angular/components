@@ -9,7 +9,7 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
         "//src/material/core/testing",
@@ -25,16 +25,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
-        ":testing",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/autocomplete",
-    ],
     deps = [
+        ":testing",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/autocomplete",
     ],
 )
 

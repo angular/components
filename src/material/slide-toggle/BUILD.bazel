@@ -20,14 +20,12 @@ ng_project(
         ],
     ),
     assets = [":slide_toggle_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/animations",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/material/core",
     ],
 )
 
@@ -54,16 +52,14 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":slide-toggle",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":slide-toggle",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/testing/private",
     ],
 )
 

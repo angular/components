@@ -40,9 +40,6 @@ ts_project(
             "testing/**/*.ts",
         ],
     ),
-    interop_deps = [
-        "//src/cdk/schematics/update-tool",
-    ],
     tsconfig = "tsconfig.json",
     deps = [
         "//:node_modules/@angular-devkit/core",
@@ -53,6 +50,7 @@ ts_project(
         "//:node_modules/glob",
         "//:node_modules/parse5",
         "//:node_modules/typescript",
+        "//src/cdk/schematics/update-tool",
     ],
 )
 
@@ -61,8 +59,8 @@ npm_package(
     name = "npm_package",
     srcs = [
         "package.json",
+        ":schematics",
         ":schematics_assets",
-        ":schematics_rjs",
     ],
     package = "@angular/cdk/schematics",
 )
@@ -78,26 +76,24 @@ ts_project(
         ],
     ),
     extends = "tsconfig.json",
-    interop_deps = [
-        "//src/cdk/schematics/testing",
-        "//src/cdk/schematics/update-tool",
-        "//src/cdk/testing/private",
-    ],
     tsconfig = "tsconfig-test.json",
     deps = [
-        ":schematics_rjs",
+        ":schematics",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@schematics/angular",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/typescript",
+        "//src/cdk/schematics/testing",
+        "//src/cdk/schematics/update-tool",
+        "//src/cdk/testing/private",
     ],
 )
 
 jasmine_node_test(
     name = "unit_tests",
-    srcs = [":unit_test_sources"],
+    srcs = [":unit_test_sources_legacy"],
     data = [
         ":schematics_assets",
     ],

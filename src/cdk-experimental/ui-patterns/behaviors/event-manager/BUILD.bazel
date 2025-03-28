@@ -9,6 +9,6 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like:signal-like_rjs",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )

@@ -10,18 +10,16 @@ ng_project(
         "drag-drop-demo.html",
         ":drag-drop_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/drag-drop",
         "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/icon",
         "//src/material/input",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

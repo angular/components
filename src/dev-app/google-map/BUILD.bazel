@@ -10,14 +10,12 @@ ng_project(
         "google-map-demo.html",
         ":google_map_demo_scss",
     ],
-    interop_deps = [
-        "//src/google-maps",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@types/google.maps",
         "//:node_modules/rxjs",
+        "//src/google-maps",
     ],
 )
 

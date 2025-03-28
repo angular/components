@@ -9,13 +9,11 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/date-fns",
+        "//src:dev_mode_types",
+        "//src/material/core",
     ],
 )
 
@@ -26,13 +24,11 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":material-date-fns-adapter",
-        "//src/material/core",
-    ],
     deps = [
+        ":material-date-fns-adapter",
         "//:node_modules/@angular/core",
         "//:node_modules/date-fns",
+        "//src/material/core",
     ],
 )
 
@@ -48,5 +44,5 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/material-date-fns-adapter/schematics:npm_package"],
     tags = ["release-package"],
-    deps = [":material-date-fns-adapter"],
+    deps = [":material-date-fns-adapter_legacy"],
 )

@@ -9,15 +9,13 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk-experimental/listbox",
         "//src/material/checkbox",
         "//src/material/form-field",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

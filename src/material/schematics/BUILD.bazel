@@ -99,7 +99,7 @@ npm_package(
         ":collection_assets",
         ":ng_generate_assets",
         ":schema_assets",
-        ":schematics_rjs",
+        ":schematics",
         "//src/material/schematics/ng-generate/theme-color:npm_package_assets",
         "//src/material/schematics/ng-update:ng_update_index",
     ],
@@ -118,8 +118,8 @@ ts_project(
     tsconfig = ":tsconfig-test",
     deps = [
         ":node_modules/@angular/cdk/schematics",
-        ":paths_rjs",
-        ":schematics_rjs",
+        ":paths",
+        ":schematics",
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@schematics/angular",
@@ -127,7 +127,7 @@ ts_project(
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",
-        "//src/cdk/schematics/testing:testing_rjs",
+        "//src/cdk/schematics/testing",
     ],
 )
 
@@ -147,7 +147,7 @@ jasmine_test(
         ":ng_generate_assets",
         ":schema_assets",
         ":schematics_test_cases",
-        ":unit_test_sources_rjs",
+        ":unit_test_sources",
         "//src/material/schematics:package_json",
     ],
 )

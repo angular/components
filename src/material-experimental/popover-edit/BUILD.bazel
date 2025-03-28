@@ -13,13 +13,11 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk-experimental/popover-edit",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/cdk-experimental/popover-edit",
+        "//src/material/core",
     ],
 )
 
@@ -39,19 +37,17 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":popover-edit",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
         "//src/cdk-experimental/popover-edit",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
         "//src/cdk/testing/private",
         "//src/material/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
     ],
 )
 

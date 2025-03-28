@@ -20,7 +20,7 @@ ts_project(
     srcs = glob(["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"]),
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":migration-utilities_rjs",
+        ":migration-utilities",
         "//:node_modules/@types/jasmine",
         "//:node_modules/typescript",
     ],
@@ -29,7 +29,7 @@ ts_project(
 jasmine_test(
     name = "unit_tests",
     data = [
-        ":unit_tests_lib_rjs",
+        ":unit_tests_lib",
         "//src/material/schematics:package_json",
     ],
 )

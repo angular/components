@@ -10,7 +10,8 @@ ng_project(
         "baseline-demo.html",
         ":baseline_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/material/card",
         "//src/material/checkbox",
         "//src/material/form-field",
@@ -18,9 +19,6 @@ ng_project(
         "//src/material/radio",
         "//src/material/select",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

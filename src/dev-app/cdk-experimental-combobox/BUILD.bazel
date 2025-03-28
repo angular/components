@@ -8,10 +8,8 @@ ng_project(
     assets = [
         "cdk-combobox-demo.html",
     ],
-    interop_deps = [
-        "//src/cdk-experimental/combobox",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/combobox",
     ],
 )

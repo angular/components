@@ -17,14 +17,12 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":grid-list.css"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src:dev_mode_types",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 
@@ -46,13 +44,11 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":grid-list",
-        "//src/cdk/bidi",
-    ],
     deps = [
+        ":grid-list",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/bidi",
     ],
 )
 
