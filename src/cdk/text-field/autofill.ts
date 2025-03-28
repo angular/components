@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform, _bindEventWithOptions} from '../platform';
+import {Platform} from '../platform';
 import {
   Directive,
   ElementRef,
@@ -111,13 +111,7 @@ export class AutofillMonitor implements OnDestroy {
 
     const unlisten = this._ngZone.runOutsideAngular(() => {
       element.classList.add('cdk-text-field-autofill-monitored');
-      return _bindEventWithOptions(
-        this._renderer,
-        element,
-        'animationstart',
-        listener,
-        listenerOptions,
-      );
+      return this._renderer.listen(element, 'animationstart', listener, listenerOptions);
     });
 
     this._monitoredElements.set(element, {subject, unlisten});
