@@ -2,6 +2,7 @@ load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
 load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
 load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "JSModuleInfo", "LinkablePackageInfo")
 load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
 
 def _ts_deps_interop_impl(ctx):
     types = []
@@ -102,7 +103,6 @@ def ts_project(
         name,
         module_name = None,
         deps = [],
-        interop_deps = [],
         tsconfig = None,
         testonly = False,
         visibility = None,
@@ -121,23 +121,23 @@ def ts_project(
         for d in deps:
             if d.startswith("//:node_modules/"):
                 rjs_modules_to_rnjs.append(d.replace("//:node_modules/", "@npm//"))
-            if d.endswith("_rjs"):
-                rjs_modules_to_rnjs.append(d.replace("_rjs", ""))
+            elif not ":node_modules" in d:
+                rjs_modules_to_rnjs.append(get_legacy_label(d))
 
     ts_deps_interop(
         name = "%s_interop_deps" % name,
-        deps = [] + interop_deps + rjs_modules_to_rnjs,
+        deps = [] + rjs_modules_to_rnjs,
         visibility = visibility,
         testonly = testonly,
     )
 
     rule_impl(
-        name = "%s_rjs" % name,
+        name = name,
         testonly = testonly,
         declaration = True,
         tsconfig = tsconfig,
         visibility = visibility,
-        deps = [":%s_interop_deps" % name] + deps,
+        deps = deps,
         **kwargs
     )
 
@@ -149,13 +149,13 @@ def ts_project(
         )
 
     ts_project_module(
-        name = name,
+        name = "%s_legacy" % name,
         testonly = testonly,
         visibility = visibility,
-        dep = "%s_rjs" % name,
+        dep = name,
         # Forwarded dependencies for linker module mapping aspect.
         # RJS deps can also transitively pull in module mappings from their `interop_deps`.
-        deps = [] + ["%s_interop_deps" % name] + deps,
+        deps = [":%s_interop_deps" % name] + deps,
         module_name = module_name,
     )
 
