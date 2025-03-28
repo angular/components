@@ -1,13 +1,7 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {
-  CdkScrollable,
-  ConnectedPosition,
-  FlexibleConnectedPositionStrategy,
-  OverlayContainer,
-  OverlayModule,
-} from '@angular/cdk/overlay';
+import {CdkScrollable, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {
   createFakeEvent,
