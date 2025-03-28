@@ -41,6 +41,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@types/youtube",
         "//:node_modules/rxjs",
+        "//:node_modules/safevalues",
     ],
 )
 
