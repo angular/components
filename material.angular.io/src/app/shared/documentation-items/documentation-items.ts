@@ -269,7 +269,7 @@ const DOCS: {[key: string]: DocItem[]} = {
     {
       id: 'ripple',
       name: 'Ripples',
-      overviewPath: 'material/core/ripple/ripple.html',
+      overviewPath: 'material/core/ripple/ripple.md.html',
       summary: 'Directive for adding Material Design ripple effects',
       hasStyling: false, // Ripple styling is documented through `core`.
       exampleSpecs: {
@@ -545,7 +545,7 @@ const DOCS: {[key: string]: DocItem[]} = {
       exampleSpecs: {
         prefix: 'cdk-test-harnesses-',
       },
-      overviewPath: 'cdk/testing/test-harnesses.html',
+      overviewPath: 'cdk/testing/test-harnesses.md.html',
       apiDocId: 'cdk-testing',
       additionalApiDocs: [
         {
