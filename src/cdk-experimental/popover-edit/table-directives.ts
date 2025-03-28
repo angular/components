@@ -9,18 +9,18 @@ import {FocusTrap} from '@angular/cdk/a11y';
 import {OverlayRef, OverlaySizeConfig, PositionStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
-  afterRender,
+  afterNextRender,
   AfterViewInit,
   Directive,
   ElementRef,
   EmbeddedViewRef,
+  inject,
+  ListenerOptions,
   NgZone,
   OnDestroy,
+  Renderer2,
   TemplateRef,
   ViewContainerRef,
-  inject,
-  Renderer2,
-  ListenerOptions,
 } from '@angular/core';
 import {merge, Observable, Subject} from 'rxjs';
 import {
@@ -35,8 +35,10 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
+import {_bindEventWithOptions} from '@angular/cdk/platform';
 import {CELL_SELECTOR, EDIT_PANE_CLASS, EDIT_PANE_SELECTOR, ROW_SELECTOR} from './constants';
 import {EditEventDispatcher, HoverContentState} from './edit-event-dispatcher';
+import {EditRef} from './edit-ref';
 import {EditServices} from './edit-services';
 import {FocusDispatcher} from './focus-dispatcher';
 import {
@@ -45,8 +47,6 @@ import {
   FocusEscapeNotifierFactory,
 } from './focus-escape-notifier';
 import {closest} from './polyfill';
-import {EditRef} from './edit-ref';
-import {_bindEventWithOptions} from '@angular/cdk/platform';
 
 /**
  * Describes the number of columns before and after the originating cell that the
@@ -60,6 +60,23 @@ export interface CdkPopoverEditColspan {
 
 /** Used for rate-limiting mousemove events. */
 const MOUSE_MOVE_THROTTLE_TIME_MS = 10;
+
+function hasRowElement(nl: NodeList) {
+  for (let i = 0; i < nl.length; i++) {
+    const el = nl[i];
+    if (!(el instanceof HTMLElement)) {
+      continue;
+    }
+    if (el.matches(ROW_SELECTOR)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isRowMutation(mutation: MutationRecord): boolean {
+  return hasRowElement(mutation.addedNodes) || hasRowElement(mutation.removedNodes);
+}
 
 /**
  * A directive that must be attached to enable editability on a table.
@@ -80,11 +97,25 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
   protected readonly destroyed = new Subject<void>();
 
-  private _rendered = new Subject();
+  private _rowsRendered = new Subject();
+
+  private _rowMutationObserver = globalThis.MutationObserver
+    ? new globalThis.MutationObserver(mutations => {
+        if (mutations.some(isRowMutation)) {
+          this._rowsRendered.next();
+        }
+      })
+    : null;
 
   constructor() {
-    afterRender(() => {
-      this._rendered.next();
+    // TODO: consider a design where instead of polling for row changes we just use
+    // afterRenderEffect + a signal of the rows.
+    afterNextRender(() => {
+      this._rowsRendered.next();
+      this._rowMutationObserver?.observe(this.elementRef.nativeElement, {
+        childList: true,
+        subtree: true,
+      });
     });
   }
 
@@ -95,7 +126,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed.next();
     this.destroyed.complete();
-    this._rendered.complete();
+    this._rowMutationObserver?.disconnect();
   }
 
   private _observableFromEvent<T extends Event>(
@@ -153,9 +184,10 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
       // Keep track of rows within the table. This is used to know which rows with hover content
       // are first or last in the table. They are kept focusable in case focus enters from above
       // or below the table.
-      this._rendered
+      this._rowsRendered
         .pipe(
           // Avoid some timing inconsistencies since Angular v19.
+          // TODO: see if we can remove this now that we're using MutationObserver.
           debounceTime(0),
           // Optimization: ignore dom changes while focus is within the table as we already
           // ensure that rows above and below the focused/active row are tabbable.
