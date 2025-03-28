@@ -1,0 +1,14 @@
+diff --git a/index.d.ts b/index.d.ts
+index 08895d3..716db96 100755
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -4,6 +4,9 @@
+  * License: MIT
+  */
+
++declare global {
++    const ngDevMode: object|undefined;
++}
+
+ import { BehaviorSubject } from 'rxjs';
+ import { EnvironmentProviders as EnvironmentProviders_2 } from '@angular/core';

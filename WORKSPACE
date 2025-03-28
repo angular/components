@@ -175,6 +175,7 @@ npm_translate_lock(
     data = [
         "//:package.json",
         "//:patches/@angular__compiler-cli.patch",
+        "//:patches/@angular__core.patch",
         "//:pnpm-workspace.yaml",
         "//src/cdk:package.json",
     ],
