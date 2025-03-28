@@ -17,7 +17,10 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":timepicker.css"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -28,11 +31,6 @@ ng_project(
         "//src/material/button",
         "//src/material/core",
         "//src/material/input",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -54,8 +52,12 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":timepicker",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
         "//src/cdk/scrolling",
@@ -63,12 +65,6 @@ ts_project(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

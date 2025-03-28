@@ -14,12 +14,10 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src:dev_mode_types",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src:dev_mode_types",
     ],
 )
 
@@ -30,10 +28,8 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":portal",
-    ],
     deps = [
+        ":portal",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
     ],

@@ -10,13 +10,11 @@ ng_project(
         "dialog-demo.html",
         ":dialog_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/dialog",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/cdk/dialog",
     ],
 )
 

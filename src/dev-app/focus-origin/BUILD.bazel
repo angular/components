@@ -10,11 +10,9 @@ ng_project(
         "focus-origin-demo.html",
         ":focus_origin_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/a11y",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/a11y",
     ],
 )
 

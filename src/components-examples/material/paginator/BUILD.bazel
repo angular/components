@@ -13,16 +13,6 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/card",
-        "//src/material/form-field",
-        "//src/material/input",
-        "//src/material/paginator",
-        "//src/material/paginator/testing",
-        "//src/material/slide-toggle",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -31,6 +21,14 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
         "//:node_modules/rxjs",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/card",
+        "//src/material/form-field",
+        "//src/material/input",
+        "//src/material/paginator",
+        "//src/material/paginator/testing",
+        "//src/material/slide-toggle",
     ],
 )
 
@@ -47,16 +45,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":paginator",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/paginator",
         "//src/material/paginator/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

@@ -10,15 +10,13 @@ ng_project(
         "theme-demo.html",
         ":theme_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/dev-app/dev-app",
         "//src/material/card",
         "//src/material/expansion",
         "//src/material/icon",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

@@ -10,15 +10,13 @@ ng_project(
         "sidenav-demo.html",
         ":sidenav_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/sidenav",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

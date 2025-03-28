@@ -10,7 +10,9 @@ ng_project(
         "connected-overlay-demo.html",
         ":connected-overlay_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/cdk/portal",
@@ -18,10 +20,6 @@ ng_project(
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/radio",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

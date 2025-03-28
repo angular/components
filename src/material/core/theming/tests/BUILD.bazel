@@ -63,15 +63,15 @@ ts_project(
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/postcss",
         "//:node_modules/sass",
-        "//tools/postcss:postcss_rjs",
-        "//tools/sass:sass_lib_rjs",
+        "//tools/postcss",
+        "//tools/sass:sass_lib",
     ],
 )
 
 jasmine_test(
     name = "unit_tests",
     data = [
-        ":unit_test_lib_rjs",
+        ":unit_test_lib",
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
     ],

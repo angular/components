@@ -10,14 +10,12 @@ ng_project(
         "card-demo.html",
         ":card_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/button",
-        "//src/material/card",
-        "//src/material/checkbox",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/checkbox",
     ],
 )
 

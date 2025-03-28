@@ -9,13 +9,11 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/a11y",
-        "//src/material/select",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/material/select",
     ],
 )
 

@@ -15,18 +15,16 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":table.css"],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/platform",
         "//src/cdk/scrolling",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -42,14 +40,12 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":table",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-    ],
     deps = [
+        ":table",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
     ],
 )
 

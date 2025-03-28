@@ -10,14 +10,12 @@ ng_project(
         "badge-demo.html",
         ":badge_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/badge",
-        "//src/material/button",
-        "//src/material/icon",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/badge",
+        "//src/material/button",
+        "//src/material/icon",
     ],
 )
 

@@ -37,7 +37,7 @@ esbuild(
     platform = "node",
     target = "es2015",
     visibility = ["//src/material/schematics:__pkg__"],
-    deps = [":ng_update_lib"],
+    deps = [":ng_update_lib_legacy"],
 )
 
 filegroup(
@@ -55,13 +55,13 @@ ts_project(
     srcs = glob(["**/*.spec.ts"]),
     tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
-        ":ng_update_lib_rjs",
+        ":ng_update_lib",
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@bazel/runfiles",
-        "//src/cdk/schematics/testing:testing_rjs",
+        "//src/cdk/schematics/testing",
         "//src/material/schematics:node_modules/@angular/cdk/schematics",
-        "//src/material/schematics:paths_rjs",
+        "//src/material/schematics:paths",
     ],
 )
 
@@ -70,7 +70,7 @@ jasmine_test(
     data = [
         ":ng_update_index",
         ":schematics_test_cases",
-        ":test_lib_rjs",
+        ":test_lib",
         "//src/material/schematics:collection_assets",
         "//src/material/schematics:node_modules/@angular/cdk/schematics",
         "//src/material/schematics:package_json",

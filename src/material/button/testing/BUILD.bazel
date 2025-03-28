@@ -11,7 +11,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk/testing:testing_rjs",
+        "//src/cdk/testing",
     ],
 )
 
@@ -24,19 +24,17 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":testing",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",
         "//src/material/icon",
         "//src/material/icon/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

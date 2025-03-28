@@ -9,16 +9,14 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-        "//src/cdk/keycodes",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
     ],
 )
 
@@ -29,16 +27,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":listbox",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":listbox",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

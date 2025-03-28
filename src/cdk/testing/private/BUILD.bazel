@@ -9,11 +9,9 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/testing/testbed",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
+        "//src/cdk/testing/testbed",
     ],
 )

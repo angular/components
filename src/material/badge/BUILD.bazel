@@ -19,17 +19,15 @@ ng_project(
     assets = [
         ":badge_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/cdk/a11y",
-        "//src/cdk/private",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src:dev_mode_types",
+        "//src/cdk/a11y",
+        "//src/cdk/private",
+        "//src/material/core",
     ],
 )
 
@@ -58,13 +56,11 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":badge",
-        "//src/material/core",
-    ],
     deps = [
+        ":badge",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/material/core",
     ],
 )
 

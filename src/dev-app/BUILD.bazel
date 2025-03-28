@@ -13,7 +13,13 @@ ng_project(
         "main.ts",
         "routes.ts",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/compiler",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/localize",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@angular/router",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/dev-app/autocomplete",
@@ -82,14 +88,6 @@ ng_project(
         "//src/dev-app/youtube-player",
         "//src/material/core",
     ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/compiler",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/localize",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@angular/router",
-    ],
 )
 
 esbuild_config(
@@ -109,7 +107,7 @@ devmode_esbuild(
     # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
     # map all framework packages to their linker-processed bundles from `tools/angular`.
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":dev-app",
+        ":dev-app_legacy",
     ],
 )
 

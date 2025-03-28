@@ -10,16 +10,14 @@ ng_project(
         "list-demo.html",
         ":list_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/button",
-        "//src/material/icon",
-        "//src/material/list",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/router",
+        "//src/material/button",
+        "//src/material/icon",
+        "//src/material/list",
     ],
 )
 

@@ -10,11 +10,9 @@ ng_project(
         "portal-demo.html",
         ":portal_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/portal",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/portal",
     ],
 )
 

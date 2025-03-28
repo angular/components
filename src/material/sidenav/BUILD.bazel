@@ -17,7 +17,11 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":drawer.css"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -25,12 +29,6 @@ ng_project(
         "//src/cdk/keycodes",
         "//src/cdk/scrolling",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -55,8 +53,11 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":sidenav",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -64,11 +65,6 @@ ts_project(
         "//src/cdk/scrolling",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

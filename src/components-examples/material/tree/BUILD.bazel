@@ -13,7 +13,11 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/rxjs",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",
@@ -23,12 +27,6 @@ ng_project(
         "//src/material/progress-bar",
         "//src/material/tree",
         "//src/material/tree/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -45,17 +43,15 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":tree",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/icon",
         "//src/material/tree",
         "//src/material/tree/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

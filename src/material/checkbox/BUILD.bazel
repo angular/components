@@ -19,13 +19,11 @@ ng_project(
         ],
     ),
     assets = [":checkbox_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/animations",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/core",
     ],
 )
 
@@ -53,16 +51,14 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":checkbox",
-        "//src/cdk/testing/private",
-        "//src/cdk/testing/testbed",
-        "//src/material/core",
-    ],
     deps = [
+        ":checkbox",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing/private",
+        "//src/cdk/testing/testbed",
+        "//src/material/core",
     ],
 )
 

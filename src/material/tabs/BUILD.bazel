@@ -23,7 +23,10 @@ ng_project(
         ":tab-nav-bar/tab-nav-bar.css",
         ":tab-nav-bar/tab-link.css",
     ] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -35,11 +38,6 @@ ng_project(
         "//src/cdk/portal",
         "//src/cdk/scrolling",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -93,8 +91,12 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":tabs",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
@@ -104,12 +106,6 @@ ts_project(
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

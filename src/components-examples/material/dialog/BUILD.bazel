@@ -13,7 +13,12 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/rxjs",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",
@@ -21,13 +26,6 @@ ng_project(
         "//src/material/dialog/testing",
         "//src/material/input",
         "//src/material/menu",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -44,16 +42,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":dialog",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/dialog",
         "//src/material/dialog/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

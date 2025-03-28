@@ -10,7 +10,6 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = glob(["**/*.html"]),
-    interop_deps = [],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -25,14 +24,12 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":clipboard",
-        "//src/cdk/testing",
-    ],
     deps = [
+        ":clipboard",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing",
     ],
 )
 

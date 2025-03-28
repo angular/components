@@ -10,14 +10,12 @@ ng_project(
         "button-toggle-demo.html",
         ":button_toggle_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/button-toggle",
-        "//src/material/checkbox",
-        "//src/material/icon",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/button-toggle",
+        "//src/material/checkbox",
+        "//src/material/icon",
     ],
 )
 

@@ -9,12 +9,10 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/material-experimental/column-resize",
-        "//src/material/table",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/material-experimental/column-resize",
+        "//src/material/table",
     ],
 )
 

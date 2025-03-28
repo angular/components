@@ -15,17 +15,15 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":virtual-scroll-viewport.css"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/platform",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -41,16 +39,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":scrolling",
-        "//src/cdk/bidi",
-        "//src/cdk/collections",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":scrolling",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -13,12 +13,10 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/coercion",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/coercion",
     ],
 )
 
@@ -29,8 +27,10 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [":observers"],
-    deps = ["//:node_modules/@angular/core"],
+    deps = [
+        ":observers",
+        "//:node_modules/@angular/core",
+    ],
 )
 
 ng_web_test_suite(

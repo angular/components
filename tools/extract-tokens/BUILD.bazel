@@ -9,14 +9,14 @@ ts_project(
     tsconfig = "//tools:tsconfig",
     deps = [
         "//:node_modules/sass",
-        "//tools/highlight-files:sources_rjs",
+        "//tools/highlight-files:sources",
     ],
 )
 
 nodejs_binary(
     name = "extract-tokens",
     data = [
-        ":extract_tokens_lib",
+        ":extract_tokens_lib_legacy",
         "@npm//highlight.js",
         "@npm//sass",
     ],

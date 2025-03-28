@@ -10,15 +10,13 @@ ng_project(
         "table-scroll-container-demo.html",
         ":table_scroll_container_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/table-scroll-container",
         "//src/material/button",
         "//src/material/button-toggle",
         "//src/material/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
     ],
 )
 

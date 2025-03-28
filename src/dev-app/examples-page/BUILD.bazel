@@ -5,11 +5,9 @@ package(default_visibility = ["//visibility:public"])
 ng_project(
     name = "examples-page",
     srcs = glob(["**/*.ts"]),
-    interop_deps = [
-        "//src/components-examples",
-        "//src/dev-app/example",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/components-examples",
+        "//src/dev-app/example",
     ],
 )

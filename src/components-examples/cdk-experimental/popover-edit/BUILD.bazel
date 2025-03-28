@@ -9,15 +9,13 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk-experimental/popover-edit",
-        "//src/cdk/collections",
-        "//src/cdk/table",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/cdk-experimental/popover-edit",
+        "//src/cdk/collections",
+        "//src/cdk/table",
     ],
 )
 

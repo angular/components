@@ -22,7 +22,11 @@ ng_project(
         ":list_scss",
         ":list_option_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/coercion",
         "//src/cdk/collections",
@@ -30,12 +34,6 @@ ng_project(
         "//src/cdk/private",
         "//src/material/core",
         "//src/material/divider",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -91,17 +89,15 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":list",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

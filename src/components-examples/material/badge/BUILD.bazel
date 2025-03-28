@@ -13,18 +13,16 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/badge",
         "//src/material/badge/testing",
         "//src/material/button",
         "//src/material/icon",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -41,15 +39,13 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":badge",
+        "//:node_modules/@angular/core",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/badge",
         "//src/material/badge/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

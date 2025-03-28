@@ -1,5 +1,4 @@
-// These type lacks type definitions.
-const highlightJs = require('highlight.js');
+import highlightJs from 'highlight.js';
 
 /**
  * Transforms a given code block into its corresponding HTML output. We do this using

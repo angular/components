@@ -8,12 +8,10 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/testing",
-    ],
     deps = [
         "//:node_modules/@types/selenium-webdriver",
         "//:node_modules/selenium-webdriver",
+        "//src/cdk/testing",
     ],
 )
 
