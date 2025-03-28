@@ -172,6 +172,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     readonly controlType: string;
     // (undocumented)
     protected _defaultRole: string;
+    get describedByIds(): string[];
     get disabled(): boolean;
     set disabled(value: boolean);
     get empty(): boolean;
@@ -250,6 +251,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     // (undocumented)
     protected _chipGrid: MatChipGrid;
     clear(): void;
+    get describedByIds(): string[];
     get disabled(): boolean;
     set disabled(value: boolean);
     disabledInteractive: boolean;
@@ -514,6 +516,7 @@ export class MatChipsModule {
 
 // @public
 export interface MatChipTextControl {
+    readonly describedByIds?: string[];
     empty: boolean;
     focus(): void;
     focused: boolean;

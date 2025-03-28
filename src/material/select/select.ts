@@ -1453,6 +1453,17 @@ export class MatSelect
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
+  get describedByIds(): string[] {
+    const element = this._elementRef.nativeElement;
+    const existingDescribedBy = element.getAttribute('aria-describedby');
+
+    return existingDescribedBy?.split(' ') || [];
+  }
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) {
     if (ids.length) {
       this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
