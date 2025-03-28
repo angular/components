@@ -1,0 +1,7 @@
+
+// Use in components with icons to not cut off/shrink making the icon visible to fix b/250063405
+@mixin icon-no-shrink() {
+  .mat-icon {
+    min-height: min-content;  // stylelint-disable material/no-prefixes
+  }
+}
