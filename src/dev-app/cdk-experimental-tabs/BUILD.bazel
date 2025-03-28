@@ -1,0 +1,10 @@
+load("//tools:defaults.bzl", "ng_module")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "cdk-experimental-tabs",
+    srcs = glob(["**/*.ts"]),
+    assets = ["cdk-tabs-demo.html"],
+    deps = ["//src/components-examples/cdk-experimental/tabs"],
+)
