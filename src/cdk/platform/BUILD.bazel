@@ -9,7 +9,6 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",

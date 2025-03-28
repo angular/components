@@ -13,7 +13,6 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [],
     deps = [],
 )
 
@@ -24,13 +23,11 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":keycodes",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":keycodes",
         "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
+        "//src/cdk/testing/private",
     ],
 )
 

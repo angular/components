@@ -21,16 +21,14 @@ ng_project(
     assets = [
         ":tooltip_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/overlay",
-        "//src/cdk/portal",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/coercion",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
+        "//src/material/core",
     ],
 )
 
@@ -59,19 +57,17 @@ ts_project(
             "**/*.e2e.spec.ts",
         ],
     ),
-    interop_deps = [
+    deps = [
         ":tooltip",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

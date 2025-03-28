@@ -29,16 +29,14 @@ ng_project(
     assets = [
         "kitchen-sink/kitchen-sink.html",
     ],
-    interop_deps = [
-        "//src/google-maps",
-        "//src/youtube-player",
-    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-server",
         "//:node_modules/rxjs",
-    ],
+        "//src/google-maps",
+        "//src/youtube-player",
+    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
 )
 
 ts_project(
@@ -46,11 +44,9 @@ ts_project(
     srcs = [
         "main.ts",
     ],
-    interop_deps = [
-        ":kitchen-sink",
-    ],
     tsconfig = ":tsconfig",
     deps = [
+        ":kitchen-sink",
         "//:node_modules/@angular/platform-browser",
     ],
 )
@@ -60,11 +56,9 @@ ts_project(
     srcs = [
         "prerender.ts",
     ],
-    interop_deps = [
-        ":kitchen-sink",
-    ],
     tsconfig = ":tsconfig",
     deps = [
+        ":kitchen-sink",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@angular/platform-server",
@@ -105,7 +99,7 @@ devmode_esbuild(
     platform = "browser",
     target = "es2016",
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":client_lib",
+        ":client_lib_legacy",
     ],
 )
 
@@ -119,7 +113,7 @@ devmode_esbuild(
     # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
     # map all framework packages to their linker-processed bundles from `tools/angular`.
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":prerender_lib",
+        ":prerender_lib_legacy",
     ],
 )
 

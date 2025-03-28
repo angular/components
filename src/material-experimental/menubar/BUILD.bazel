@@ -18,11 +18,9 @@ ng_project(
         ":menubar.css",
         ":menubar-item.css",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/menu",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/menu",
     ],
 )
 
@@ -48,15 +46,13 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":menubar",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/keycodes",
         "//src/cdk/menu",
         "//src/cdk/testing/private",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

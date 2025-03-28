@@ -10,17 +10,15 @@ ng_project(
         "paginator-demo.html",
         ":paginator_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/components-examples/material/paginator",
         "//src/material/card",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/paginator",
         "//src/material/slide-toggle",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

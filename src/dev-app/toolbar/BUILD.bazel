@@ -10,14 +10,12 @@ ng_project(
         "toolbar-demo.html",
         ":toolbar_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/components-examples/material/toolbar",
         "//src/material/button",
         "//src/material/icon",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

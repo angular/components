@@ -6,12 +6,10 @@ ng_project(
     name = "column-resize",
     srcs = glob(["**/*.ts"]),
     assets = ["column-resize-home.html"],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/components-examples/material-experimental/column-resize",
         "//src/dev-app/example",
         "//src/material/expansion",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )

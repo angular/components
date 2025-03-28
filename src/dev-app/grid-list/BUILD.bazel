@@ -10,15 +10,13 @@ ng_project(
         "grid-list-demo.html",
         ":grid_list_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/material/button",
         "//src/material/card",
         "//src/material/grid-list",
         "//src/material/icon",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

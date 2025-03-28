@@ -17,15 +17,13 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":button-toggle.css"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/collections",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 
@@ -53,16 +51,14 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":button-toggle",
-        "//src/cdk/testing",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":button-toggle",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing",
+        "//src/cdk/testing/private",
     ],
 )
 

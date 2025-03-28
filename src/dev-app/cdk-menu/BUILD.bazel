@@ -9,11 +9,9 @@ ng_project(
         "cdk-menu-demo.html",
         "cdk-menu-demo.css",
     ],
-    interop_deps = [
-        "//src/cdk/menu",
-        "//src/components-examples/cdk/menu",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/menu",
+        "//src/components-examples/cdk/menu",
     ],
 )

@@ -17,14 +17,12 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":tree.css"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/collections",
-        "//src/cdk/tree",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/collections",
+        "//src/cdk/tree",
+        "//src/material/core",
     ],
 )
 
@@ -51,16 +49,14 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":tree",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
         "//src/cdk/tree",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 

@@ -6,12 +6,10 @@ ng_project(
     name = "live-announcer",
     srcs = glob(["**/*.ts"]),
     assets = ["live-announcer-demo.html"],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk/a11y",
         "//src/material/button",
         "//src/material/dialog",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )

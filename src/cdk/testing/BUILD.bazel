@@ -38,13 +38,13 @@ ng_web_test_suite(
 e2e_test_suite(
     name = "protractor_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:e2e_test_sources",
+        "//src/cdk/testing/tests:e2e_test_sources_legacy",
     ],
 )
 
 webdriver_test(
     name = "webdriver_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:webdriver_test_sources",
+        "//src/cdk/testing/tests:webdriver_test_sources_legacy",
     ],
 )

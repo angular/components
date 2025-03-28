@@ -10,11 +10,11 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/ui-patterns/behaviors/event-manager:event-manager_rjs",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-focus:list-focus_rjs",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation:list-navigation_rjs",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-selection:list-selection_rjs",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead:list-typeahead_rjs",
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like:signal-like_rjs",
+        "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )

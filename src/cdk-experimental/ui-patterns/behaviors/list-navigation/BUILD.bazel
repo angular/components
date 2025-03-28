@@ -11,7 +11,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like:signal-like_rjs",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 
@@ -19,12 +19,10 @@ ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
-        ":list-navigation",
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
-    ],
     deps = [
+        ":list-navigation",
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 

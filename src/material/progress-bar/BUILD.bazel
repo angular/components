@@ -19,12 +19,10 @@ ng_project(
         ],
     ),
     assets = [":progress_bar_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src/material/core",
     ],
 )
 
@@ -50,13 +48,11 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":progress-bar",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":progress-bar",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/testing/private",
     ],
 )
 

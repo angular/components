@@ -8,12 +8,10 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )

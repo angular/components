@@ -15,7 +15,7 @@ def module_test(name, npm_packages, skipped_entry_points = [], additional_deps =
         name = "test",
         data = [
             ":%s_config" % name,
-            "//integration/module-tests:test_lib_rjs",
+            "//integration/module-tests:test_lib",
             "//:node_modules/@angular/common",
             "//:node_modules/@angular/core",
         ] + additional_deps + [pkg[0] for pkg in npm_packages.items()],

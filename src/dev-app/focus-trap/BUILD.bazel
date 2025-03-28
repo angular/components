@@ -12,16 +12,14 @@ ng_project(
         ":focus_trap_demo_scss",
         ":focus_trap_dialog_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk/a11y",
         "//src/cdk/platform",
         "//src/material/button",
         "//src/material/card",
         "//src/material/dialog",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

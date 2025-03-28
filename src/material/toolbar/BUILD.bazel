@@ -17,14 +17,12 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":toolbar.css"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src:dev_mode_types",
-        "//src/cdk/platform",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src:dev_mode_types",
+        "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 
@@ -51,10 +49,8 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":toolbar",
-    ],
     deps = [
+        ":toolbar",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",

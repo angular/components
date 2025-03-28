@@ -6,16 +6,14 @@ ng_project(
     name = "input-modality",
     srcs = glob(["**/*.ts"]),
     assets = ["input-modality-detector-demo.html"],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/material/button",
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/radio",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )

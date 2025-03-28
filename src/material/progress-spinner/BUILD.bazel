@@ -19,13 +19,11 @@ ng_project(
         ],
     ),
     assets = [":progress_spinner_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/platform",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
+        "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 
@@ -52,14 +50,12 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":progress-spinner",
-        "//src/cdk/platform",
-    ],
     deps = [
+        ":progress-spinner",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/platform",
     ],
 )
 

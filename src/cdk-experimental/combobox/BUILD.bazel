@@ -9,16 +9,14 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/collections",
         "//src/cdk/overlay",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
     ],
 )
 
@@ -29,14 +27,12 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":combobox",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
-    ],
     deps = [
+        ":combobox",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

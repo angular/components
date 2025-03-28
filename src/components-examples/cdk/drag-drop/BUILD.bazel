@@ -9,16 +9,14 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
         "//src/cdk/drag-drop",
         "//src/cdk/overlay",
         "//src/cdk/portal",
         "//src/material/icon",
         "//src/material/table",
         "//src/material/tabs",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
     ],
 )
 

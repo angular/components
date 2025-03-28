@@ -16,7 +16,7 @@ ts_project(
     deps = [
         "//:node_modules/@types/marked",
         "//:node_modules/marked",
-        "//tools/highlight-files:sources_rjs",
+        "//tools/highlight-files:sources",
     ],
 )
 
@@ -40,16 +40,16 @@ ts_project(
     tsconfig = "//tools:tsconfig-test",
     visibility = ["//visibility:private"],
     deps = [
-        ":transform-markdown_rjs",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//marked",
-        "@npm//typescript",
+        ":transform-markdown",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/marked",
+        "//:node_modules/typescript",
     ],
 )
 
 jasmine_node_test(
     name = "unit_tests",
-    srcs = [":unit_test_lib"],
+    srcs = [":unit_test_lib_legacy"],
     visibility = ["//visibility:private"],
 )

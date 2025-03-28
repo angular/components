@@ -13,7 +13,10 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
         "//src/cdk/overlay",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
@@ -21,11 +24,6 @@ ng_project(
         "//src/material/bottom-sheet/testing",
         "//src/material/button",
         "//src/material/list",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -42,16 +40,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":bottom-sheet",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/bottom-sheet",
         "//src/material/bottom-sheet/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 
