@@ -90,7 +90,7 @@ export class CdkListbox<V> {
   disabled = input(false, {transform: booleanAttribute});
 
   /** The values of the current selected items. */
-  values = model<V[]>([]);
+  value = model<V[]>([]);
 
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);

@@ -49,7 +49,7 @@ export class OptionPattern<V> {
   );
 
   /** Whether the option is selected. */
-  selected = computed(() => this.listbox()?.selection.inputs.values().includes(this.value()));
+  selected = computed(() => this.listbox()?.selection.inputs.value().includes(this.value()));
 
   /** Whether the option is disabled. */
   disabled: SignalLike<boolean>;

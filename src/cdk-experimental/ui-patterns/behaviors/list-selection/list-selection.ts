@@ -27,8 +27,8 @@ export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> {
   /** Whether multiple items in the list can be selected at once. */
   multiselectable: SignalLike<boolean>;
 
-  /** The values of the current selected items. */
-  values: WritableSignalLike<V[]>;
+  /** The current value of the list selection. */
+  value: WritableSignalLike<V[]>;
 
   /** The selection strategy used by the list. */
   selectionMode: SignalLike<'follow' | 'explicit'>;
@@ -50,7 +50,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   select(item?: T) {
     item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
 
-    if (item.disabled() || this.inputs.values().includes(item.value())) {
+    if (item.disabled() || this.inputs.value().includes(item.value())) {
       return;
     }
 
@@ -60,7 +60,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
     // TODO: Need to discuss when to drop this.
     this._anchor();
-    this.inputs.values.update(values => values.concat(item.value()));
+    this.inputs.value.update(values => values.concat(item.value()));
   }
 
   /** Deselects the item at the current active index. */
@@ -68,20 +68,20 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
     item = item ?? this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
 
     if (!item.disabled()) {
-      this.inputs.values.update(values => values.filter(value => value !== item.value()));
+      this.inputs.value.update(values => values.filter(value => value !== item.value()));
     }
   }
 
   /** Toggles the item at the current active index. */
   toggle() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.inputs.values().includes(item.value()) ? this.deselect() : this.select();
+    this.inputs.value().includes(item.value()) ? this.deselect() : this.select();
   }
 
   /** Toggles only the item at the current active index. */
   toggleOne() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
-    this.inputs.values().includes(item.value()) ? this.deselect() : this.selectOne();
+    this.inputs.value().includes(item.value()) ? this.deselect() : this.selectOne();
   }
 
   /** Selects all items in the list. */
