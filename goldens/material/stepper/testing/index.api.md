@@ -20,8 +20,9 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     hasErrors(): Promise<boolean>;
     static hostSelector: string;
     isCompleted(): Promise<boolean>;
+    isExpanded(): Promise<boolean>;
     isOptional(): Promise<boolean>;
-    isSelected(): Promise<boolean>;
+    isPressed(): Promise<boolean>;
     select(): Promise<void>;
     static with(options?: StepHarnessFilters): HarnessPredicate<MatStepHarness>;
 }
@@ -50,9 +51,10 @@ export class MatStepperPreviousHarness extends StepperButtonHarness {
 // @public
 export interface StepHarnessFilters extends BaseHarnessFilters {
     completed?: boolean;
+    expanded?: boolean;
     invalid?: boolean;
     label?: string | RegExp;
-    selected?: boolean;
+    pressed?: boolean;
 }
 
 // @public
