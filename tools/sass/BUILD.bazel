@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -19,9 +19,13 @@ ts_project(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "compiler",
-    data = [":sass_lib"],
-    entry_point = "compiler-main.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
+    data = [":sass_lib_rjs"],
+    entry_point = "compiler-main.js",
+    env = {
+        # TODO(devversion): Replace `rules_sass` with modernized standalone ruleset.
+        # e.g. https://github.com/devversion/rules_sass.
+        "BAZEL_BINDIR": ".",
+    },
 )
