@@ -3252,6 +3252,17 @@ describe('MatAutocomplete', () => {
     });
   });
 
+  it('should not throw errors when closing without options', fakeAsync(() => {
+    const fixture = createComponent(AutocompleteWithoutOptions);
+    const trigger = fixture.componentInstance.trigger;
+
+    trigger.openPanel();
+    fixture.detectChanges();
+    fixture.destroy();
+
+    expect(() => trigger.closePanel()).not.toThrow();
+  }));
+
   describe('automatically selecting the active option', () => {
     let fixture: ComponentFixture<SimpleAutocomplete>;
 
@@ -4496,3 +4507,20 @@ class AutocompleteInsideAModal {
   @ViewChildren(MatOption) options: QueryList<MatOption>;
   @ViewChild('modal') modal: ElementRef;
 }
+
+@Component({
+  selector: 'autocomplete-without-options',
+  template: `
+    <mat-form-field>
+      <input matInput [matAutocomplete]="auto">
+    </mat-form-field>
+
+    <mat-autocomplete #auto="matAutocomplete">
+    </mat-autocomplete>
+  `,
+  standalone: false,
+})
+class AutocompleteWithoutOptions {
+  @ViewChild(MatAutocompleteTrigger, { static: true }) trigger: MatAutocompleteTrigger;
+}
+
