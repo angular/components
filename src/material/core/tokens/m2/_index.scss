@@ -10,7 +10,6 @@
 @use './mat/outlined-button' as tokens-mat-outlined-button;
 @use './mat/dialog' as tokens-mat-dialog;
 @use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
-@use './mat/card' as tokens-mat-card;
 @use './mat/chip' as tokens-mat-chip;
 @use './mat/datepicker' as tokens-mat-datepicker;
 @use './mat/divider' as tokens-mat-divider;
@@ -54,7 +53,6 @@
 @use './mdc/chip' as tokens-mdc-chip;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
-@use './mdc/elevated-card' as tokens-mdc-elevated-card;
 @use './mdc/extended-fab' as tokens-mdc-extended-fab;
 @use './mdc/fab' as tokens-mdc-fab;
 @use './mdc/fab-small' as tokens-mdc-fab-small;
@@ -62,7 +60,6 @@
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
 @use './mdc/list' as tokens-mdc-list;
-@use './mdc/outlined-card' as tokens-mdc-outlined-card;
 @use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 @use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use './mdc/radio' as tokens-mdc-radio;
@@ -81,6 +78,11 @@
 /// @return {Map} The token map by calling the token getter for the given system in the given module
 ///    with the given Angular Material theme. Token names are not fully-qualified.
 @function _get-tokens-for-module-and-system($theme, $module, $system) {
+  @if (meta.function-exists(tokens, $module: $module)) {
+    $token-slots: meta.call(meta.get-function(tokens, $module: $module), $theme);
+    @return map.get($token-slots, $system);
+  }
+
   @if $system == unthemable {
     @return meta.call(meta.get-function(get-#{$system}-tokens, $module: $module));
   }
@@ -120,7 +122,6 @@
     _get-tokens-for-module($theme, tokens-mat-badge),
     _get-tokens-for-module($theme, tokens-mat-bottom-sheet),
     _get-tokens-for-module($theme, tokens-mat-button-toggle),
-    _get-tokens-for-module($theme, tokens-mat-card),
     _get-tokens-for-module($theme, tokens-mat-chip),
     _get-tokens-for-module($theme, tokens-mat-datepicker),
     _get-tokens-for-module($theme, tokens-mat-dialog),
@@ -164,7 +165,6 @@
     _get-tokens-for-module($theme, tokens-mdc-chip),
     _get-tokens-for-module($theme, tokens-mdc-circular-progress),
     _get-tokens-for-module($theme, tokens-mdc-dialog),
-    _get-tokens-for-module($theme, tokens-mdc-elevated-card),
     _get-tokens-for-module($theme, tokens-mdc-extended-fab),
     _get-tokens-for-module($theme, tokens-mdc-fab),
     _get-tokens-for-module($theme, tokens-mdc-fab-small),
@@ -174,7 +174,6 @@
     _get-tokens-for-module($theme, tokens-mdc-linear-progress),
     _get-tokens-for-module($theme, tokens-mdc-list),
     _get-tokens-for-module($theme, tokens-mdc-outlined-button),
-    _get-tokens-for-module($theme, tokens-mdc-outlined-card),
     _get-tokens-for-module($theme, tokens-mdc-outlined-text-field),
     _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
     _get-tokens-for-module($theme, tokens-mdc-protected-button),

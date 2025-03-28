@@ -33,10 +33,22 @@ sass_library(
     ],
 )
 
+sass_library(
+    name = "tokens_scss_lib",
+    srcs = [
+        "_m2-tokens.scss",
+        "_m3-tokens.scss",
+    ],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
 sass_binary(
     name = "card_scss",
     src = "card.scss",
     deps = [
+        ":tokens_scss_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

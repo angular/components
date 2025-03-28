@@ -1,13 +1,13 @@
-@use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/card' as tokens-mat-card;
-@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
-@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '../core/tokens/token-utils' as token;
+@use 'm3-tokens';
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
 
 // Default padding for text content within a card.
 $mat-card-default-padding: 16px !default;
+
+$_tokens: m3-tokens.get-system-fallbacks();
 
 .mat-mdc-card {
   display: flex;
@@ -16,16 +16,10 @@ $mat-card-default-padding: 16px !default;
   position: relative;
   border-style: solid;
   border-width: 0;
-
-  @include token-utils.use-tokens(
-    tokens-mdc-elevated-card.$prefix,
-    tokens-mdc-elevated-card.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(border-color, container-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(box-shadow, container-elevation);
-  }
+  background-color: token.slot(elevated-card-container-color, $_tokens);
+  border-color: token.slot(elevated-card-container-color, $_tokens);
+  border-radius: token.slot(elevated-card-container-shape, $_tokens);
+  box-shadow: token.slot(elevated-card-container-elevation, $_tokens);
 
   // Transparent card border for high-contrast mode.
   &::after {
@@ -39,27 +33,16 @@ $mat-card-default-padding: 16px !default;
     display: block;
     pointer-events: none;
     box-sizing: border-box;
-
-    @include token-utils.use-tokens(
-      tokens-mdc-elevated-card.$prefix,
-      tokens-mdc-elevated-card.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(border-radius, container-shape);
-    }
+    border-radius: token.slot(elevated-card-container-shape, $_tokens);
   }
 }
 
 .mat-mdc-card-outlined {
-  @include token-utils.use-tokens(
-    tokens-mdc-outlined-card.$prefix,
-    tokens-mdc-outlined-card.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(border-width, outline-width);
-    @include token-utils.create-token-slot(border-color, outline-color);
-    @include token-utils.create-token-slot(box-shadow, container-elevation);
-  }
+  background-color: token.slot(outlined-card-container-color, $_tokens);
+  border-radius: token.slot(outlined-card-container-shape, $_tokens);
+  border-width: token.slot(outlined-card-outline-width, $_tokens);
+  border-color: token.slot(outlined-card-outline-color, $_tokens);
+  box-shadow: token.slot(outlined-card-container-elevation, $_tokens);
 
   // Outlined card already displays border in high-contrast mode.
   // Overwriting styles set above to remove a duplicate border.
@@ -101,23 +84,21 @@ $mat-card-default-padding: 16px !default;
 }
 
 // Add slots for custom Angular Material card tokens.
-@include token-utils.use-tokens(tokens-mat-card.$prefix, tokens-mat-card.get-token-slots()) {
-  .mat-mdc-card-title {
-    @include token-utils.create-token-slot(font-family, title-text-font);
-    @include token-utils.create-token-slot(line-height, title-text-line-height);
-    @include token-utils.create-token-slot(font-size, title-text-size);
-    @include token-utils.create-token-slot(letter-spacing, title-text-tracking);
-    @include token-utils.create-token-slot(font-weight, title-text-weight);
-  }
+.mat-mdc-card-title {
+  font-family: token.slot(card-title-text-font, $_tokens);
+  line-height: token.slot(card-title-text-line-height, $_tokens);
+  font-size: token.slot(card-title-text-size, $_tokens);
+  letter-spacing: token.slot(card-title-text-tracking, $_tokens);
+  font-weight: token.slot(card-title-text-weight, $_tokens);
+}
 
-  .mat-mdc-card-subtitle {
-    @include token-utils.create-token-slot(color, subtitle-text-color);
-    @include token-utils.create-token-slot(font-family, subtitle-text-font);
-    @include token-utils.create-token-slot(line-height, subtitle-text-line-height);
-    @include token-utils.create-token-slot(font-size, subtitle-text-size);
-    @include token-utils.create-token-slot(letter-spacing, subtitle-text-tracking);
-    @include token-utils.create-token-slot(font-weight, subtitle-text-weight);
-  }
+.mat-mdc-card-subtitle {
+  color: token.slot(card-subtitle-text-color, $_tokens);
+  font-family: token.slot(card-subtitle-text-font, $_tokens);
+  line-height: token.slot(card-subtitle-text-line-height, $_tokens);
+  font-size: token.slot(card-subtitle-text-size, $_tokens);
+  letter-spacing: token.slot(card-subtitle-text-tracking, $_tokens);
+  font-weight: token.slot(card-subtitle-text-weight, $_tokens);
 }
 
 // Title text and subtitles text within a card. MDC doesn't have pre-made title sections for cards.

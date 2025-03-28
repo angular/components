@@ -34,7 +34,10 @@ $theme-version: 1;
       define-colors(map.get($config, color) or ()),
       define-typography(map.get($config, typography) or ()),
       define-density(map.get($config, density) or ()),
-      ($internals: (base-tokens: m3-tokens.generate-base-tokens())),
+      ($internals: (
+        base-tokens: m3-tokens.generate-base-tokens(),
+        system: m3-tokens.create-base-system(),
+      )),
   );
 }
 
@@ -53,6 +56,9 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-color-variables: map.get($config, use-system-variables) or false;
 
+  $color-system: m3-tokens.create-color-system(
+      $type, $primary, $tertiary, map.get($primary, error), $system-variables-prefix);
+
   @return (
     $internals: (
       theme-version: $theme-version,
@@ -66,8 +72,8 @@ $theme-version: 1;
         error: map.get($primary, error),
       ),
       color-system-variables-prefix: $system-variables-prefix,
-      color-tokens: m3-tokens.generate-color-tokens(
-          $type, $primary, $tertiary, map.get($primary, error), $system-variables-prefix)
+      color-tokens: m3-tokens.generate-tokens($color-system),
+      system: $color-system,
     )
   );
 }
@@ -89,6 +95,9 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-typography-variables: map.get($config, use-system-variables) or false;
 
+  $typography-system: m3-tokens.create-typography-system(
+      $brand, $plain, $bold, $medium, $regular, $system-variables-prefix);
+
   @return (
     $internals: (
       theme-version: $theme-version,
@@ -100,8 +109,8 @@ $theme-version: 1;
         regular: $regular,
       ),
       typography-system-variables-prefix: $system-variables-prefix,
-      typography-tokens: m3-tokens.generate-typography-tokens(
-          $brand, $plain, $bold, $medium, $regular, $system-variables-prefix)
+      typography-tokens: m3-tokens.generate-tokens($typography-system),
+      system: $typography-system,
     )
   );
 }

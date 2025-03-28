@@ -1,5 +1,6 @@
 @use '../style/elevation';
 @use '../style/sass-utils';
+@use '../theming/validation';
 @use './m3-system';
 @use 'sass:list';
 @use 'sass:map';
@@ -33,6 +34,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
     $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
   }
 
+
   @return string.unquote('--#{$string-prefix}-#{$token}');
 }
 
@@ -46,9 +48,9 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 }
 
 // Gets the value of the token given the current global context state.
-@function _get-token-value($token, $fallback) {
+@function _get-token-value($token, $fallback, $fallbacks: null) {
   $var-name: _create-var-name($_component-prefix, $token);
-  $fallback: _get-token-fallback($token, $fallback);
+  $fallback: _get-token-fallback($token, $fallback, $component-fallbacks: $fallbacks);
   @return _create-var($var-name, $fallback);
 }
 
@@ -77,6 +79,22 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   }
 }
 
+// Emits a slot for the given token, provided that it has a non-null value in the token map passed
+// to `use-tokens`.
+// Accepts an optional fallback parameter to include in the CSS variable.
+// If $fallback is `true`, then use the tokens map to get the fallback.
+// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
+@function slot($token, $tokens) {
+  $_component-prefix: ('mat') !global;
+  $_tokens: $tokens !global;
+
+  $_assert: _assert-use-tokens($token);
+  @return _get-token-value($token, $fallback: null, $fallbacks: $tokens);
+
+  $_component-prefix: null !global;
+  $_tokens: null !global;
+}
+
 // Returns the name of a token including the current prefix. Intended to be used in calculations
 // involving tokens. `create-token-slot` should be used when outputting tokens.
 @function get-token-variable-name($token) {
@@ -96,7 +114,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 
 // Gets the token's fallback value. Prefers adding a system-level fallback if one exists, otherwise
 // use the provided fallback.
-@function _get-token-fallback($token, $fallback: null) {
+@function _get-token-fallback($token, $fallback: null, $component-fallbacks: null) {
   // If the $fallback is `true`, this is the component's signal to use the current token map value
   @if ($fallback == true) {
     $fallback: map.get($_tokens, $token);
@@ -105,6 +123,9 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   // Check whether there's a system-level fallback. If not, return the optional
   // provided fallback (otherwise null).
   $sys-fallback: map.get($_system-fallbacks, $_component-prefix, $token);
+  @if ($component-fallbacks) {
+    $sys-fallback: map.get($component-fallbacks, $token);
+  }
   @if (not $sys-fallback) {
     @return $fallback;
   }
@@ -116,9 +137,20 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   @return $sys-fallback;
 }
 
+// Outputs a map of tokens.
+@mixin define-token-values($tokens) {
+  @include _create-token-values-internal((mat), $tokens, false);
+}
+
 // Outputs a map of tokens under a specific prefix.
 @mixin create-token-values($prefix, $tokens) {
   @include _create-token-values-internal($prefix, $tokens, false);
+}
+
+// Outputs a map of tokens in scenarios where tokens may be mixed with
+// other declarations (e.g. M2 themes). Used to avoid https://sass-lang.com/documentation/breaking-changes/mixed-decls/
+@mixin define-token-values-mixed($tokens) {
+  @include _create-token-values-internal((mat), $tokens, true);
 }
 
 // Outputs a map of tokens under a specific prefix in scenarios where tokens may be mixed with
@@ -149,6 +181,11 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 
 @mixin define-css-var($prefix, $key, $value) {
   $name: _create-var-name($prefix, $key);
+
+  @include validation.selector-defined(
+      'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
+  );
+
   #{$name}: #{$value};
 }
 

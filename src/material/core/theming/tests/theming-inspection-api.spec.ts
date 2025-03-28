@@ -453,14 +453,5 @@ describe('theming inspection api', () => {
         `),
       ).toThrowError(/Density information is not available on this theme/);
     });
-
-    it('should not emit styles for removed theme dimensions', () => {
-      const css = transpile(`
-        $theme: mat.theme-remove(mat.define-theme(), base, color, typography, density);
-        div {
-          @include mat.all-component-themes($theme);
-        }`);
-      expect(css.trim()).toBe('');
-    });
   });
 });

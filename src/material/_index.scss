@@ -23,7 +23,6 @@
     system-level-motion, system-level-state, theme, theme-overrides;
 
 // Private/Internal
-@forward './core/density/private/all-density' show all-component-densities;
 @forward './core/theming/theming' show private-check-duplicate-theme-styles,
   private-legacy-get-theme, private-is-theme-object;
 @forward './core/style/private' show private-theme-elevation;
@@ -42,9 +41,9 @@
 @forward './core/style/elevation' show elevation, overridable-elevation, elevation-transition;
 
 // Theme bundles
-@forward './core/theming/all-theme' show all-component-themes, all-component-bases;
-@forward './core/color/all-color' show all-component-colors;
-@forward './core/typography/all-typography' show all-component-typographies;
+@forward './core/theming/all-theme' show
+    all-component-themes, all-component-bases, all-component-colors,
+    all-component-typographies, all-component-densities;
 
 // Component themes
 @forward './core/core-theme' as core-* show core-color, core-theme, core-typography, core-density,
