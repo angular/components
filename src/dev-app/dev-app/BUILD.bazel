@@ -10,7 +10,10 @@ ng_project(
         "dev-app-layout.html",
         ":dev_app_layout_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/router",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/material/button",
@@ -20,11 +23,6 @@ ng_project(
         "//src/material/sidenav",
         "//src/material/toolbar",
         "//src/material/tooltip",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/router",
     ],
 )
 

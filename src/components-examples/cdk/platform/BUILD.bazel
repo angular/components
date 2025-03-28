@@ -9,11 +9,9 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
-        "//src/cdk/platform",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/platform",
     ],
 )
 

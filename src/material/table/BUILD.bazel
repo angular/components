@@ -17,16 +17,14 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":table_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/table",
-        "//src/material/core",
-        "//src/material/paginator",
-        "//src/material/sort",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/table",
+        "//src/material/core",
+        "//src/material/paginator",
+        "//src/material/sort",
     ],
 )
 
@@ -65,16 +63,14 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":table",
-        "//src/cdk/table",
-        "//src/material/paginator",
-        "//src/material/sort",
-    ],
     deps = [
+        ":table",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
+        "//src/cdk/table",
+        "//src/material/paginator",
+        "//src/material/sort",
     ],
 )
 

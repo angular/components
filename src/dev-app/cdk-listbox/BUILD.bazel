@@ -8,10 +8,8 @@ ng_project(
     assets = [
         "cdk-listbox-demo.html",
     ],
-    interop_deps = [
-        "//src/components-examples/cdk/listbox",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/components-examples/cdk/listbox",
     ],
 )

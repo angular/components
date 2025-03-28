@@ -10,7 +10,10 @@ ng_project(
         "dialog-demo.html",
         ":dialog_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk/drag-drop",
         "//src/material/button",
         "//src/material/card",
@@ -19,11 +22,6 @@ ng_project(
         "//src/material/form-field",
         "//src/material/input",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

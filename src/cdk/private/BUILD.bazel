@@ -10,7 +10,6 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":visually-hidden-styles"],
-    interop_deps = [],
     deps = [
         "//:node_modules/@angular/core",
     ],

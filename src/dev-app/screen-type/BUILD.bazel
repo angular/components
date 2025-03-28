@@ -10,15 +10,13 @@ ng_project(
         "screen-type-demo.html",
         ":screen_type_demo_scss",
     ],
-    interop_deps = [
-        "//src/cdk/layout",
-        "//src/material/grid-list",
-        "//src/material/icon",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/layout",
+        "//src/material/grid-list",
+        "//src/material/icon",
     ],
 )
 

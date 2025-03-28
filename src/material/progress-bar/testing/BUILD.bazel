@@ -9,12 +9,10 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/testing",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/coercion",
+        "//src/cdk/testing",
     ],
 )
 
@@ -22,15 +20,13 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":testing",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/progress-bar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

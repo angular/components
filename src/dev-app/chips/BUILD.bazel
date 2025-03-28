@@ -10,7 +10,9 @@ ng_project(
         "chips-demo.html",
         ":chips_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/material/button",
         "//src/material/card",
         "//src/material/checkbox",
@@ -19,10 +21,6 @@ ng_project(
         "//src/material/form-field",
         "//src/material/icon",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

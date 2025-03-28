@@ -9,13 +9,11 @@ ts_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        "//src/cdk/keycodes",
-        "//src/cdk/testing",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing",
     ],
 )
 
@@ -28,10 +26,8 @@ ts_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
-        ":testbed",
-    ],
     deps = [
+        ":testbed",
         "//:node_modules/@angular/core",
     ],
 )

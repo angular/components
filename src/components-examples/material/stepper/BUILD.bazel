@@ -13,7 +13,13 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/rxjs",
         "//src/cdk/layout",
         "//src/cdk/stepper",
         "//src/cdk/testing",
@@ -24,14 +30,6 @@ ng_project(
         "//src/material/radio",
         "//src/material/stepper",
         "//src/material/stepper/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -48,17 +46,15 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":stepper",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/stepper",
         "//src/material/stepper/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

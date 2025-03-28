@@ -9,15 +9,13 @@ ng_project(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/column-resize",
         "//src/cdk/overlay",
         "//src/cdk/table",
         "//src/material/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
     ],
 )
 
@@ -33,8 +31,10 @@ ts_project(
     name = "column_resize_test_sources",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":column-resize",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src/cdk-experimental/column-resize",
         "//src/cdk/bidi",
         "//src/cdk/collections",
@@ -42,10 +42,6 @@ ts_project(
         "//src/cdk/overlay",
         "//src/cdk/testing/private",
         "//src/material/table",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 

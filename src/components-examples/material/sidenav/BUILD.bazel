@@ -13,7 +13,12 @@ ng_project(
         "**/*.html",
         "**/*.css",
     ]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@angular/router",
+        "//:node_modules/@types/jasmine",
         "//src/cdk/layout",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
@@ -26,13 +31,6 @@ ng_project(
         "//src/material/select",
         "//src/material/sidenav",
         "//src/material/toolbar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@angular/router",
-        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -49,16 +47,14 @@ ts_project(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
-    interop_deps = [
+    deps = [
         ":sidenav",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/sidenav",
         "//src/material/sidenav/testing",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
     ],
 )
 

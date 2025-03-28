@@ -6,7 +6,7 @@ package(default_visibility = ["//visibility:public"])
 nodejs_binary(
     name = "package-docs-content",
     data = [
-        ":sources",
+        ":sources_legacy",
         "@npm//fs-extra",
     ],
     entry_point = ":package-docs-content.ts",

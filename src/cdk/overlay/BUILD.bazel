@@ -19,7 +19,10 @@ ng_project(
     assets = [
         ":overlay-structure.css",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -29,11 +32,6 @@ ng_project(
         "//src/cdk/portal",
         "//src/cdk/private",
         "//src/cdk/scrolling",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -65,20 +63,18 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":overlay",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -98,7 +94,7 @@ ts_project(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources",
+        ":e2e_test_sources_legacy",
     ],
 )
 

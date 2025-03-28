@@ -10,7 +10,9 @@ ng_project(
         "snack-bar-demo.html",
         ":snack_bar_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/cdk/bidi",
         "//src/material/button",
         "//src/material/checkbox",
@@ -18,10 +20,6 @@ ng_project(
         "//src/material/input",
         "//src/material/select",
         "//src/material/snack-bar",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

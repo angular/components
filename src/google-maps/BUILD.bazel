@@ -23,14 +23,12 @@ ng_project(
             "**/*.spec.ts",
         ],
     ),
-    interop_deps = [
-        "//src:dev_mode_types",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@types/google.maps",
         "//:node_modules/rxjs",
+        "//src:dev_mode_types",
     ],
 )
 
@@ -40,7 +38,7 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/google-maps/schematics:npm_package"],
     tags = ["release-package"],
-    deps = [":google-maps"],
+    deps = [":google-maps_legacy"],
 )
 
 filegroup(
@@ -55,14 +53,12 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":google-maps",
-        "//src/google-maps/testing",
-    ],
     tsconfig = ":tsconfig-test",
     deps = [
+        ":google-maps",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//src/google-maps/testing",
     ],
 )
 

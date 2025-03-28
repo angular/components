@@ -10,14 +10,12 @@ ng_project(
         "progress-bar-demo.html",
         ":progress_bar_demo_scss",
     ],
-    interop_deps = [
-        "//src/material/button",
-        "//src/material/button-toggle",
-        "//src/material/progress-bar",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/material/button",
+        "//src/material/button-toggle",
+        "//src/material/progress-bar",
     ],
 )
 

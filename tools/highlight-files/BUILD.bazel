@@ -10,16 +10,15 @@ ts_project(
     deps = [
         "//:node_modules/@types/fs-extra",
         "//:node_modules/fs-extra",
-        "//tools/region-parser:region-parser_rjs",
+        "//:node_modules/highlight.js",
+        "//tools/region-parser",
     ],
 )
 
 nodejs_binary(
     name = "highlight-files",
     data = [
-        ":sources",
-        "@npm//fs-extra",
-        "@npm//highlight.js",
+        ":sources_legacy",
     ],
     entry_point = ":highlight-files.ts",
     templated_args = [

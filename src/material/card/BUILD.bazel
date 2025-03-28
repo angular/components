@@ -17,11 +17,9 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     assets = [":card_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/material/core",
     ],
 )
 
@@ -47,10 +45,8 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
-        ":card",
-    ],
     deps = [
+        ":card",
         "//:node_modules/@angular/core",
     ],
 )

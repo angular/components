@@ -19,15 +19,13 @@ ng_project(
         ],
     ),
     assets = [":menu_scss"] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/overlay",
-        "//src/cdk/scrolling",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/overlay",
+        "//src/cdk/scrolling",
+        "//src/material/core",
     ],
 )
 
@@ -54,8 +52,11 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":menu",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -63,11 +64,6 @@ ts_project(
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

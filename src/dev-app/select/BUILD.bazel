@@ -10,7 +10,10 @@ ng_project(
         "select-demo.html",
         ":select_demo_scss",
     ],
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
         "//src/material/button",
         "//src/material/card",
         "//src/material/checkbox",
@@ -18,11 +21,6 @@ ng_project(
         "//src/material/icon",
         "//src/material/input",
         "//src/material/select",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
     ],
 )
 

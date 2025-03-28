@@ -19,7 +19,11 @@ ng_project(
         ],
     ),
     assets = [":select_scss"] + glob(["**/*.html"]),
-    interop_deps = [
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -29,12 +33,6 @@ ng_project(
         "//src/cdk/scrolling",
         "//src/material/core",
         "//src/material/form-field",
-    ],
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -61,8 +59,12 @@ ts_project(
     srcs = glob(
         ["**/*.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":select",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -71,12 +73,6 @@ ts_project(
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/form-field",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 

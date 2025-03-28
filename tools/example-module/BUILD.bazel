@@ -16,7 +16,7 @@ nodejs_binary(
     name = "bazel-bin",
     data = [
         ":example-module.template",
-        ":example-module-lib",
+        ":example-module-lib_legacy",
         "@npm//typescript",
     ],
     entry_point = ":bazel-bin.ts",

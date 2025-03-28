@@ -13,20 +13,18 @@ ng_project(
         ],
     ),
     assets = glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/keycodes",
-        "//src/cdk/platform",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
+        "//src/cdk/keycodes",
+        "//src/cdk/platform",
     ],
 )
 
 ts_project(
     name = "test_harnesses",
     srcs = glob(["harnesses/**/*.ts"]),
-    interop_deps = [
+    deps = [
         "//src/cdk/testing",
     ],
 )
@@ -35,12 +33,10 @@ ts_project(
     name = "cross_environment_specs",
     testonly = True,
     srcs = ["cross-environment.spec.ts"],
-    interop_deps = [
-        ":test_harnesses",
-        "//src/cdk/testing",
-    ],
     deps = [
+        ":test_harnesses",
         "//:node_modules/@angular/core",
+        "//src/cdk/testing",
     ],
 )
 
@@ -56,19 +52,17 @@ ts_project(
             "**/*.e2e.spec.ts",
         ],
     ),
-    interop_deps = [
+    deps = [
         ":cross_environment_specs",
         ":test_components",
         ":test_harnesses",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/kagekiri",
         "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/kagekiri",
     ],
 )
 
@@ -81,15 +75,13 @@ ts_project(
         ],
         exclude = ["webdriver.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
+        ":cross_environment_specs",
+        ":test_harnesses",
+        "//:node_modules/protractor",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
-    ],
-    deps = [
-        ":cross_environment_specs_rjs",
-        ":test_harnesses_rjs",
-        "//:node_modules/protractor",
     ],
 )
 
@@ -97,16 +89,14 @@ ts_project(
     name = "webdriver_test_sources",
     testonly = True,
     srcs = ["webdriver.e2e.spec.ts"],
-    interop_deps = [
+    deps = [
         ":cross_environment_specs",
         ":test_harnesses",
-        "//src/cdk/testing",
-        "//src/cdk/testing/selenium-webdriver",
-    ],
-    deps = [
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/@types/selenium-webdriver",
+        "//src/cdk/testing",
+        "//src/cdk/testing/selenium-webdriver",
     ],
 )

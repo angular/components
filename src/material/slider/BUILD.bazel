@@ -21,15 +21,13 @@ ng_project(
         ":slider_scss",
         ":slider_thumb_scss",
     ] + glob(["**/*.html"]),
-    interop_deps = [
-        "//src/cdk/bidi",
-        "//src/cdk/platform",
-        "//src/material/core",
-    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
+        "//src/cdk/bidi",
+        "//src/cdk/platform",
+        "//src/material/core",
     ],
 )
 
@@ -81,19 +79,17 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
+    deps = [
         ":slider",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/forms",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
-    ],
-    deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
     ],
 )
 
@@ -114,6 +110,6 @@ ts_project(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources",
+        ":e2e_test_sources_legacy",
     ],
 )
