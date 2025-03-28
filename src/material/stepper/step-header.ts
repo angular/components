@@ -35,6 +35,7 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
   host: {
     'class': 'mat-step-header',
     '[class]': '"mat-" + (color || "primary")',
+    'role': 'button',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
