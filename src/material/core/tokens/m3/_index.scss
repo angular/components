@@ -9,7 +9,6 @@
 @use './mat/outlined-button' as tokens-mat-outlined-button;
 @use './mat/dialog' as tokens-mat-dialog;
 @use './mat/bottom-sheet' as tokens-mat-bottom-sheet;
-@use './mat/card' as tokens-mat-card;
 @use './mat/chip' as tokens-mat-chip;
 @use './mat/datepicker' as tokens-mat-datepicker;
 @use './mat/divider' as tokens-mat-divider;
@@ -52,7 +51,6 @@
 @use './mdc/chip' as tokens-mdc-chip;
 @use './mdc/circular-progress' as tokens-mdc-circular-progress;
 @use './mdc/dialog' as tokens-mdc-dialog;
-@use './mdc/elevated-card' as tokens-mdc-elevated-card;
 @use './mdc/extended-fab' as tokens-mdc-extended-fab;
 @use './mdc/fab' as tokens-mdc-fab;
 @use './mdc/fab-small' as tokens-mdc-fab-small;
@@ -60,7 +58,6 @@
 @use './mdc/icon-button' as tokens-mdc-icon-button;
 @use './mdc/linear-progress' as tokens-mdc-linear-progress;
 @use './mdc/list' as tokens-mdc-list;
-@use './mdc/outlined-card' as tokens-mdc-outlined-card;
 @use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
 @use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use './mdc/radio' as tokens-mdc-radio;
@@ -77,7 +74,6 @@ $_module-names: (
   tokens-mat-badge,
   tokens-mat-bottom-sheet,
   tokens-mat-button-toggle,
-  tokens-mat-card,
   tokens-mat-chip,
   tokens-mat-datepicker,
   tokens-mat-dialog,
@@ -126,7 +122,6 @@ $_module-names: (
   tokens-mdc-chip,
   tokens-mdc-circular-progress,
   tokens-mdc-dialog,
-  tokens-mdc-elevated-card,
   tokens-mdc-extended-fab,
   tokens-mdc-fab,
   tokens-mdc-fab-small,
@@ -134,7 +129,6 @@ $_module-names: (
   tokens-mdc-icon-button,
   tokens-mdc-linear-progress,
   tokens-mdc-list,
-  tokens-mdc-outlined-card,
   tokens-mdc-outlined-text-field,
   tokens-mdc-plain-tooltip,
   tokens-mdc-radio,

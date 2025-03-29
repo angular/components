@@ -83,6 +83,17 @@ $_cached-token-slots: null;
   @return $_cached-token-slots;
 }
 
+@function define-systems($config) {
+  @return (
+    md-sys-color: (),
+    md-sys-elevation: (),
+    md-sys-motion: (),
+    md-sys-shape: (),
+    md-sys-state: (),
+    md-sys-typescale: ()
+  );
+}
+
 /// Generates a set of namespaced tokens for all components.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $include-non-systemized Whether to include non-systemized tokens
@@ -111,6 +122,7 @@ $_cached-token-slots: null;
       (mat, theme): map.get($systems, md-sys-color),
       (mat, typography): map.get($systems, md-sys-typescale),
     ),
+    $systems,
     m3.get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
   );
 
@@ -301,21 +313,14 @@ $_cached-token-slots: null;
   @return m3-token-definitions.md-sys-typescale-values($ref);
 }
 
-/// Generates a set of namespaced color tokens for all components.
-/// @param {String} $type The type of theme system (light or dark)
-/// @param {Map} $primary The primary palette
-/// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $error The error palette
-/// @param {String} $system-variables-prefix The prefix of system tokens
-/// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $tertiary, $error, $system-variables-prefix) {
+@function create-color-system($type, $primary, $tertiary, $error, $system-variables-prefix) {
   $ref: (
     md-ref-palette: generate-ref-palette-tokens($primary, $tertiary, $error)
   );
 
   $sys-color: _get-sys-color($type, $ref, $system-variables-prefix);
 
-  @return generate-tokens(map.merge($ref, (
+  @return map.merge($ref, (
     md-sys-color: $sys-color,
     // Because the elevation values are always combined with color values to create the box shadow,
     // elevation needs to be part of the color dimension.
@@ -325,7 +330,30 @@ $_cached-token-slots: null;
     // TODO(mmalerba): If at some point we remove the need for these combined values, we can move
     //  state to the base dimension.
     md-sys-state: m3-token-definitions.md-sys-state-values(),
-  )));
+  ));
+}
+
+/// Generates a set of namespaced color tokens for all components.
+/// @param {String} $type The type of theme system (light or dark)
+/// @param {Map} $primary The primary palette
+/// @param {Map} $tertiary The tertiary palette
+/// @param {Map} $error The error palette
+/// @param {String} $system-variables-prefix The prefix of system tokens
+/// @return {Map} A map of namespaced color tokens
+@function generate-color-tokens($type, $primary, $tertiary, $error, $system-variables-prefix) {
+  $color-system: create-color-system($type, $primary, $tertiary, $error, $system-variables-prefix);
+  @return generate-tokens($color-system);
+}
+
+@function create-typography-system(
+    $brand, $plain, $bold, $medium, $regular, $system-variables-prefix) {
+  $ref: (
+    md-ref-typeface: generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
+  );
+  $sys-typeface: _get-sys-typeface($ref, $system-variables-prefix);
+  @return (
+    md-sys-typescale: $sys-typeface
+  );
 }
 
 /// Generates a set of namespaced color tokens for all components.
@@ -338,13 +366,9 @@ $_cached-token-slots: null;
 /// @return {Map} A map of namespaced typography tokens
 @function generate-typography-tokens($brand, $plain, $bold, $medium, $regular,
 $system-variables-prefix) {
-  $ref: (
-    md-ref-typeface: generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
-  );
-  $sys-typeface: _get-sys-typeface($ref, $system-variables-prefix);
-  @return generate-tokens((
-    md-sys-typescale: $sys-typeface
-  ));
+  $typography-system: create-typography-system(
+      $brand, $plain, $bold, $medium, $regular, $system-variables-prefix);
+  @return generate-tokens($typography-system);
 }
 
 /// Generates a set of namespaced density tokens for all components.
@@ -354,13 +378,18 @@ $system-variables-prefix) {
   @return density.get-tokens-for-scale($scale);
 }
 
+@function create-base-system() {
+  @return (
+    md-sys-motion: m3-token-definitions.md-sys-motion-values(),
+    md-sys-shape: m3-token-definitions.md-sys-shape-values(),
+  );
+}
+
 /// Generates a set of namespaced tokens not related to color, typography, or density for all
 /// components.
 /// @return {Map} A map of namespaced tokens not related to color, typography, or density
 @function generate-base-tokens() {
   // TODO(mmalerba): Exclude density tokens once implemented.
-  @return generate-tokens((
-    md-sys-motion: m3-token-definitions.md-sys-motion-values(),
-    md-sys-shape: m3-token-definitions.md-sys-shape-values(),
-  ), $include-non-systemized: true);
+  $base-system: create-base-system();
+  @return generate-tokens($base-system, $include-non-systemized: true);
 }

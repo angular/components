@@ -133,8 +133,7 @@ function extractTokens(themePath: string): Token[] {
   const parsedTokens = JSON.parse(data[0]) as ExtractedToken[];
 
   return parsedTokens.map(token => {
-    const value = token.value;
-    const derivedFrom = typeof value === 'string' ? textBetween(value, 'var(', ')') : null;
+    const derivedFrom = extractDerivedFrom(token.value);
 
     return {
       name: token.name,
@@ -145,6 +144,24 @@ function extractTokens(themePath: string): Token[] {
       derivedFrom: derivedFrom || undefined,
     };
   });
+}
+
+/**
+ * Gets the system variable from the token value. May either be a variable shaped as 'var(...)'
+ * or just the variable name itself.
+ */
+function extractDerivedFrom(value: string | number) {
+  if (typeof value === 'string') {
+    if (value.startsWith('var(')) {
+      return textBetween(value, 'var(', ')');
+    }
+
+    if (value.startsWith('--mat')) {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -286,6 +303,7 @@ function getTokenExtractionCode(
     @each $map in $__override-tokens {
       $namespace: ${map}.get($map, namespace);
       $tokens: ${map}.get($map, tokens);
+      $overrideTransforms: ${map}.get($map, overrideTransforms);
       $prefix: ${map}.get($map, prefix) or '';
       $color: ${map}.get($__all-color, $namespace) or ();
       $base: ${map}.get($__all-base, $namespace) or ();
@@ -328,13 +346,19 @@ function getTokenExtractionCode(
           $value: $resolved-value;
         }
 
+        // Transform the token's name if the overrides function accepts a different key.
+        @each $overrideTokenKey, $overrideTokenName in $overrideTransforms {
+          @if ($name == $overrideTokenName) {
+            $name: $overrideTokenKey;
+          }
+        }
+
         @if ($value) {
           $__results: ${list}.append($__results, (
             name: ${str}.unquote($name),
             value: $value,
             type: $type,
             prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
-            overridesName: ${str}.unquote($prefix + $name),
           )) !global;
         }
       }

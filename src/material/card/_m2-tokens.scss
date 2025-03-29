@@ -1,0 +1,47 @@
+@use '../core/theming/inspection';
+@use '../core/style/elevation';
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+@function get-unthemable-tokens() {
+  @return (
+    elevated-card-container-shape: 4px,
+    outlined-card-container-shape: 4px,
+    outlined-card-outline-width: 1px,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  @return (
+    card-subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    elevated-card-container-color: inspection.get-theme-color($theme, background, card),
+    elevated-card-container-elevation: elevation.get-box-shadow(1),
+    outlined-card-container-color: inspection.get-theme-color($theme, background, card),
+    outlined-card-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
+    outlined-card-container-elevation: elevation.get-box-shadow(0),
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    card-title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    card-title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
+    card-title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    card-title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
+    card-title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    card-subtitle-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    card-subtitle-text-line-height:
+        inspection.get-theme-typography($theme, subtitle-2, line-height),
+    card-subtitle-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    card-subtitle-text-tracking:
+        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
+    card-subtitle-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  @return ();
+}

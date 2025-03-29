@@ -106,27 +106,14 @@
 }
 
 @mixin system-level-colors($theme, $overrides: (), $prefix: null) {
-  $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
-  $base-palettes: (
-    neutral: map.get($palettes, neutral),
-    neutral-variant: map.get($palettes, neutral-variant),
-    secondary: map.get($palettes, secondary),
-    error: map.get($palettes, error),
-  );
-
   $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
-  $primary: map.merge(map.get($palettes, primary), $base-palettes);
-  $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
-  $error: map.get($palettes, error);
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
         color-system-variables-prefix) or definition.$system-level-prefix;
   }
 
-  $ref: (
-    md-ref-palette: m3-tokens.generate-ref-palette-tokens($primary, $tertiary, $error)
-  );
+  $ref: map.get($theme, _mat-theming-internals-do-not-access, system);
 
   $sys-colors: _generate-sys-colors($ref, $type);
 
@@ -231,33 +218,39 @@
   @return $new-map;
 }
 
+$system-vars: (
+  'md-sys-color':
+  _create-system-app-vars-map(definitions.md-sys-color-values-light()),
+  'md-sys-typescale':
+  _create-system-app-vars-map(definitions.md-sys-typescale-values()),
+  'md-sys-elevation':
+  _create-system-app-vars-map(definitions.md-sys-elevation-values()),
+  'md-sys-state':
+  _create-system-app-vars-map(definitions.md-sys-state-values()),
+  'md-sys-shape':
+  _create-system-app-vars-map(definitions.md-sys-shape-values()),
+  // Add a subset of palette-specific colors used by components instead of system values
+  'md-ref-palette':
+  _create-system-app-vars-map(
+      (
+        neutral10: '', // Form field native select option text color
+        neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
+      )
+  ),
+);
+
+$system-var-theme: (
+  _mat-theming-internals-do-not-access: (
+    system: $system-vars
+  )
+);
+
 // Create a components tokens map where values are based on
 // system fallback variables referencing Material's system keys.
 // Includes density token fallbacks where density is 0.
 @function create-system-fallbacks() {
-  $app-vars: (
-    'md-sys-color':
-        _create-system-app-vars-map(definitions.md-sys-color-values-light()),
-    'md-sys-typescale':
-        _create-system-app-vars-map(definitions.md-sys-typescale-values()),
-    'md-sys-elevation':
-        _create-system-app-vars-map(definitions.md-sys-elevation-values()),
-    'md-sys-state':
-        _create-system-app-vars-map(definitions.md-sys-state-values()),
-    'md-sys-shape':
-        _create-system-app-vars-map(definitions.md-sys-shape-values()),
-    // Add a subset of palette-specific colors used by components instead of system values
-    'md-ref-palette':
-        _create-system-app-vars-map(
-          (
-            neutral10: '', // Form field native select option text color
-            neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
-          )
-        ),
-  );
-
   @return sass-utils.deep-merge-all(
-      m3-tokens.generate-tokens($app-vars, true, true),
+      m3-tokens.generate-tokens($system-vars, true, true),
       m3-tokens.generate-density-tokens(0)
   );
 }

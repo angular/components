@@ -74,6 +74,7 @@ describe('theming definition api', () => {
         'palettes',
         'color-system-variables-prefix',
         'color-tokens',
+        'system',
         'font-definition',
         'typography-system-variables-prefix',
         'typography-tokens',
@@ -261,6 +262,7 @@ describe('theming definition api', () => {
         'palettes',
         'color-system-variables-prefix',
         'color-tokens',
+        'system',
       ]);
     });
   });
@@ -280,6 +282,7 @@ describe('theming definition api', () => {
         'font-definition',
         'typography-system-variables-prefix',
         'typography-tokens',
+        'system',
       ]);
     });
   });
