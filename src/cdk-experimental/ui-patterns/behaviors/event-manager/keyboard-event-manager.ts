@@ -65,11 +65,15 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
   }
 
   private _isMatch(event: T, key: KeyCode, modifiers: ModifierInputs) {
+    if (!hasModifiers(event, modifiers)) {
+      return false;
+    }
+
     if (key instanceof RegExp) {
       return key.test(event.key);
     }
 
     const keyStr = typeof key === 'string' ? key : key();
-    return keyStr.toLowerCase() === event.key.toLowerCase() && hasModifiers(event, modifiers);
+    return keyStr.toLowerCase() === event.key.toLowerCase();
   }
 }
