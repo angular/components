@@ -103,10 +103,7 @@ mat-menu {
 
   .mat-divider {
     // Use margin instead of padding since divider uses border-top to render out the line.
-    @include token-utils.use-tokens(
-      tokens-mat-menu.$prefix,
-      tokens-mat-menu.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
       color: token-utils.get-token-variable(divider-color);
       margin-bottom: token-utils.get-token-variable(divider-bottom-spacing);
       margin-top: token-utils.get-token-variable(divider-top-spacing);
@@ -165,7 +162,9 @@ mat-menu {
     // The class selector isn't specific enough to overide the link pseudo selectors so we need
     // to target them specifically, otherwise the item color might be overwritten by the user
     // agent resets of the app.
-    &, &:visited, &:link {
+    &,
+    &:visited,
+    &:link {
       @include token-utils.create-token-slot(color, item-label-text-color);
     }
 
@@ -178,6 +177,7 @@ mat-menu {
   &[disabled] {
     cursor: default;
     opacity: 0.38;
+    pointer-events: none;
 
     // The browser prevents clicks on disabled buttons from propagating which prevents the menu
     // from closing, but clicks on child nodes still propagate which is inconsistent (see #16694).
@@ -191,6 +191,15 @@ mat-menu {
       left: 0;
       bottom: 0;
       right: 0;
+    }
+    @include token-utils.use-tokens(tokens-mat-menu.$prefix, tokens-mat-menu.get-token-slots()) {
+      &.mat-mdc-menu-item-disabled-interactive {
+        pointer-events: auto;
+
+        &:hover {
+          @include token-utils.create-token-slot(background-color, item-hover-state-layer-color);
+        }
+      }
     }
   }
 
