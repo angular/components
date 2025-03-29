@@ -10,8 +10,7 @@ $prefix: (mat, circular-progress);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC circular-progress
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $mdc-tokens: token-definition.get-mdc-tokens(
-      'circular-progress-indicator', $systems, $exclude-hardcoded);
+  $mdc-tokens: values($systems, $exclude-hardcoded);
   $variant-tokens: (
     primary: (), // Default, no overrides needed
     secondary: (
@@ -27,4 +26,17 @@ $prefix: (mat, circular-progress);
 
   @return token-definition.namespace-tokens(
       $prefix, ($mdc-tokens, $variant-tokens), $token-slots);
+}
+
+@function values($deps, $exclude-hardcoded-values: false) {
+  @return (
+    active-indicator-color: map.get($deps, md-sys-color, primary),
+    active-indicator-shape: map.get($deps, md-sys-shape, corner-none),
+    active-indicator-width: if($exclude-hardcoded-values, null, 4px),
+    four-color-active-indicator-four-color: map.get($deps, md-sys-color, tertiary-container),
+    four-color-active-indicator-one-color: map.get($deps, md-sys-color, primary),
+    four-color-active-indicator-three-color: map.get($deps, md-sys-color, tertiary),
+    four-color-active-indicator-two-color: map.get($deps, md-sys-color, primary-container),
+    size: if($exclude-hardcoded-values, null, 48px)
+  );
 }
