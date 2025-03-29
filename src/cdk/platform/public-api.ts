@@ -13,4 +13,3 @@ export * from './features/passive-listeners';
 export * from './features/scrolling';
 export * from './features/shadow-dom';
 export * from './features/test-environment';
-export * from './features/backwards-compatibility';

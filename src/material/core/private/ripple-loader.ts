@@ -14,7 +14,7 @@ import {
   RippleTarget,
   defaultRippleAnimationConfig,
 } from '../ripple';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
+import {Platform, _getEventTarget} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_animationsDisabled} from '../animation/animation';
 
@@ -65,17 +65,11 @@ export class MatRippleLoader implements OnDestroy {
   constructor() {
     const renderer = inject(RendererFactory2).createRenderer(null, null);
 
-    this._eventCleanups = this._ngZone.runOutsideAngular(() => {
-      return rippleInteractionEvents.map(name =>
-        _bindEventWithOptions(
-          renderer,
-          this._document,
-          name,
-          this._onInteraction,
-          eventListenerOptions,
-        ),
-      );
-    });
+    this._eventCleanups = this._ngZone.runOutsideAngular(() =>
+      rippleInteractionEvents.map(name =>
+        renderer.listen(this._document, name, this._onInteraction, eventListenerOptions),
+      ),
+    );
   }
 
   ngOnDestroy(): void {

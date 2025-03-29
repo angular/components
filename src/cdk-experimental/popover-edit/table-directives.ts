@@ -35,7 +35,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
-import {_bindEventWithOptions} from '@angular/cdk/platform';
 import {CELL_SELECTOR, EDIT_PANE_CLASS, EDIT_PANE_SELECTOR, ROW_SELECTOR} from './constants';
 import {EditEventDispatcher, HoverContentState} from './edit-event-dispatcher';
 import {EditRef} from './edit-ref';
@@ -136,9 +135,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
   ) {
     return new Observable<T>(subscriber => {
       const handler = (event: T) => subscriber.next(event);
-      const cleanup = options
-        ? _bindEventWithOptions(this._renderer, element, name, handler, options)
-        : this._renderer.listen(element, name, handler, options);
+      const cleanup = this._renderer.listen(element, name, handler, options);
       return () => {
         cleanup();
         subscriber.complete();

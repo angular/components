@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injectable,
+  ListenerOptions,
   NgZone,
   OnDestroy,
   RendererFactory2,
@@ -19,7 +20,6 @@ import {
   signal,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {_bindEventWithOptions, _ListenerOptions} from '../platform';
 import {_CdkPrivateStyleLoader} from '../private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';
@@ -123,8 +123,7 @@ export class DragDropRegistry implements OnDestroy {
         // The event handler has to be explicitly active,
         // because newer browsers make it passive by default.
         this._cleanupDocumentTouchmove?.();
-        this._cleanupDocumentTouchmove = _bindEventWithOptions(
-          this._renderer,
+        this._cleanupDocumentTouchmove = this._renderer.listen(
           this._document,
           'touchmove',
           this._persistentTouchmoveListener,
@@ -170,7 +169,7 @@ export class DragDropRegistry implements OnDestroy {
       const isTouchEvent = event.type.startsWith('touch');
       const endEventHandler = (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent);
 
-      const toBind: [name: string, handler: (event: Event) => void, options: _ListenerOptions][] = [
+      const toBind: [name: string, handler: (event: Event) => void, options: ListenerOptions][] = [
         // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
         // the document. See https://github.com/angular/components/issues/17144.
         ['scroll', (e: Event) => this._scroll.next(e), capturingEventOptions],
@@ -203,7 +202,7 @@ export class DragDropRegistry implements OnDestroy {
 
       this._ngZone.runOutsideAngular(() => {
         this._globalListeners = toBind.map(([name, handler, options]) =>
-          _bindEventWithOptions(this._renderer, this._document, name, handler, options),
+          this._renderer.listen(this._document, name, handler, options),
         );
       });
     }
@@ -247,8 +246,7 @@ export class DragDropRegistry implements OnDestroy {
       streams.push(
         new Observable((observer: Observer<Event>) => {
           return this._ngZone.runOutsideAngular(() => {
-            const cleanup = _bindEventWithOptions(
-              this._renderer,
+            const cleanup = this._renderer.listen(
               shadowRoot as ShadowRoot,
               'scroll',
               (event: Event) => {

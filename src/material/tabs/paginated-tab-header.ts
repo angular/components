@@ -10,7 +10,7 @@ import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {SharedResizeObserver} from '@angular/cdk/observers/private';
-import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
+import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
@@ -177,15 +177,13 @@ export abstract class MatPaginatedTabHeader
     // We need to handle these events manually, because we want to bind passive event listeners.
 
     this._eventCleanups.push(
-      _bindEventWithOptions(
-        this._renderer,
+      this._renderer.listen(
         this._previousPaginator.nativeElement,
         'touchstart',
         () => this._handlePaginatorPress('before'),
         passiveEventListenerOptions,
       ),
-      _bindEventWithOptions(
-        this._renderer,
+      this._renderer.listen(
         this._nextPaginator.nativeElement,
         'touchstart',
         () => this._handlePaginatorPress('after'),

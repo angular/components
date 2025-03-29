@@ -9,7 +9,7 @@
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '../a11y';
 import {Direction} from '../bidi';
 import {coerceElement} from '../coercion';
-import {_getEventTarget, _getShadowRoot, _bindEventWithOptions} from '../platform';
+import {_getEventTarget, _getShadowRoot} from '../platform';
 import {ViewportRuler} from '../scrolling';
 import {
   ElementRef,
@@ -457,28 +457,11 @@ export class DragRef<T = any> {
 
     if (element !== this._rootElement) {
       this._removeRootElementListeners();
+      const renderer = this._renderer;
       this._rootElementCleanups = this._ngZone.runOutsideAngular(() => [
-        _bindEventWithOptions(
-          this._renderer,
-          element,
-          'mousedown',
-          this._pointerDown,
-          activeEventListenerOptions,
-        ),
-        _bindEventWithOptions(
-          this._renderer,
-          element,
-          'touchstart',
-          this._pointerDown,
-          passiveEventListenerOptions,
-        ),
-        _bindEventWithOptions(
-          this._renderer,
-          element,
-          'dragstart',
-          this._nativeDragStart,
-          activeEventListenerOptions,
-        ),
+        renderer.listen(element, 'mousedown', this._pointerDown, activeEventListenerOptions),
+        renderer.listen(element, 'touchstart', this._pointerDown, passiveEventListenerOptions),
+        renderer.listen(element, 'dragstart', this._nativeDragStart, activeEventListenerOptions),
       ]);
       this._initialTransform = undefined;
       this._rootElement = element;
@@ -832,8 +815,7 @@ export class DragRef<T = any> {
       // In some browsers the global `selectstart` that we maintain in the `DragDropRegistry`
       // doesn't cross the shadow boundary so we have to prevent it at the shadow root (see #28792).
       this._ngZone.runOutsideAngular(() => {
-        this._cleanupShadowRootSelectStart = _bindEventWithOptions(
-          this._renderer,
+        this._cleanupShadowRootSelectStart = this._renderer.listen(
           shadowRoot,
           'selectstart',
           shadowDomSelectStart,
