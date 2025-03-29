@@ -1,4 +1,5 @@
 @use '../../token-definition';
+@use 'sass:map';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, dialog);
@@ -9,7 +10,7 @@ $prefix: (mat, dialog);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of tokens for the MDC dialog
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: token-definition.get-mdc-tokens('dialog', $systems, $exclude-hardcoded);
+  $tokens: values($systems, $exclude-hardcoded);
   $tokens: token-definition.rename-map-keys($tokens, (
     headline-color: subhead-color,
     headline-font: subhead-font,
@@ -20,4 +21,81 @@ $prefix: (mat, dialog);
   ));
 
   @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+}
+
+@function values($deps, $exclude-hardcoded-values: false) {
+  @return (
+    action-focus-label-text-color: map.get($deps, md-sys-color, primary),
+    action-focus-state-layer-color: map.get($deps, md-sys-color, primary),
+    action-focus-state-layer-opacity: map.get($deps, md-sys-state, focus-state-layer-opacity),
+    action-hover-label-text-color: map.get($deps, md-sys-color, primary),
+    action-hover-state-layer-color: map.get($deps, md-sys-color, primary),
+    action-hover-state-layer-opacity: map.get($deps, md-sys-state, hover-state-layer-opacity),
+    action-label-text-color: map.get($deps, md-sys-color, primary),
+    action-label-text-font: map.get($deps, md-sys-typescale, label-large-font),
+    action-label-text-line-height: map.get($deps, md-sys-typescale, label-large-line-height),
+    action-label-text-size: map.get($deps, md-sys-typescale, label-large-size),
+    action-label-text-tracking: map.get($deps, md-sys-typescale, label-large-tracking),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.dialog.action.label-text.tracking cannot be represented in the "font"
+    // property shorthand. Consider using the discrete properties instead.
+    action-label-text-type: if(
+        $exclude-hardcoded-values,
+        null,
+        map.get($deps, md-sys-typescale, label-large-weight)
+        map.get($deps, md-sys-typescale, label-large-size) #{'/'} map.get(
+            $deps,
+            md-sys-typescale,
+            label-large-line-height
+        ) map.get($deps, md-sys-typescale, label-large-font)
+    ),
+    action-label-text-weight: map.get($deps, md-sys-typescale, label-large-weight),
+    action-pressed-label-text-color: map.get($deps, md-sys-color, primary),
+    action-pressed-state-layer-color: map.get($deps, md-sys-color, primary),
+    action-pressed-state-layer-opacity: map.get($deps, md-sys-state, pressed-state-layer-opacity),
+    container-color: map.get($deps, md-sys-color, surface),
+    container-elevation: map.get($deps, md-sys-elevation, level3),
+    container-shape: map.get($deps, md-sys-shape, corner-extra-large),
+    container-surface-tint-layer-color: map.get($deps, md-sys-color, surface-tint),
+    headline-color: map.get($deps, md-sys-color, on-surface),
+    headline-font: map.get($deps, md-sys-typescale, headline-small-font),
+    headline-line-height: map.get($deps, md-sys-typescale, headline-small-line-height),
+    headline-size: map.get($deps, md-sys-typescale, headline-small-size),
+    headline-tracking: map.get($deps, md-sys-typescale, headline-small-tracking),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.dialog.headline.tracking cannot be represented in the "font" property
+    // shorthand. Consider using the discrete properties instead.
+    headline-type: if(
+        $exclude-hardcoded-values,
+        null,
+        map.get($deps, md-sys-typescale, headline-small-weight)
+        map.get($deps, md-sys-typescale, headline-small-size) #{'/'} map.get(
+            $deps,
+            md-sys-typescale,
+            headline-small-line-height
+        ) map.get($deps, md-sys-typescale, headline-small-font)
+    ),
+    headline-weight: map.get($deps, md-sys-typescale, headline-small-weight),
+    supporting-text-color: map.get($deps, md-sys-color, on-surface-variant),
+    supporting-text-font: map.get($deps, md-sys-typescale, body-medium-font),
+    supporting-text-line-height: map.get($deps, md-sys-typescale, body-medium-line-height),
+    supporting-text-size: map.get($deps, md-sys-typescale, body-medium-size),
+    supporting-text-tracking: map.get($deps, md-sys-typescale, body-medium-tracking),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.dialog.supporting-text.tracking cannot be represented in the "font"
+    // property shorthand. Consider using the discrete properties instead.
+    supporting-text-type: if(
+        $exclude-hardcoded-values,
+        null,
+        map.get($deps, md-sys-typescale, body-medium-weight)
+        map.get($deps, md-sys-typescale, body-medium-size) #{'/'} map.get(
+            $deps,
+            md-sys-typescale,
+            body-medium-line-height
+        ) map.get($deps, md-sys-typescale, body-medium-font)
+    ),
+    supporting-text-weight: map.get($deps, md-sys-typescale, body-medium-weight),
+    with-icon-icon-color: map.get($deps, md-sys-color, secondary),
+    with-icon-icon-size: if($exclude-hardcoded-values, null, 24px)
+  );
 }

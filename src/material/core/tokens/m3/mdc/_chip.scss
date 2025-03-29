@@ -41,10 +41,9 @@ $prefix: (mat, chip);
       focus-outline-color: map.get($systems, md-sys-color, on-surface-variant),
       hover-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      with-avatar-disabled-avatar-opacity:
-          token-definition.hardcode(0.38, $exclude-hardcoded),
+      with-avatar-disabled-avatar-opacity: token-definition.hardcode(0.38, $exclude-hardcoded),
       elevated-selected-container-color: map.get($systems, md-sys-color, secondary-container),
-      // In the M3 tokens this is a `surface` color, but in the MDC implementation it's
+      // In the M3 tokens this is a `surface` color, but in the MDC implementation its
       // never being emitted. We emit `transparent` so consumers override the color.
       elevated-container-color: token-definition.hardcode(transparent, $exclude-hardcoded),
       flat-selected-outline-width: token-definition.hardcode(0, $exclude-hardcoded),
@@ -55,13 +54,13 @@ $prefix: (mat, chip);
       ),
       selected-hover-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       selected-hover-state-layer-opacity:
-        map.get($systems, md-sys-state, hover-state-layer-opacity),
+          map.get($systems, md-sys-state, hover-state-layer-opacity),
       selected-focus-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       selected-focus-state-layer-opacity:
-        map.get($systems, md-sys-state, focus-state-layer-opacity),
+          map.get($systems, md-sys-state, focus-state-layer-opacity),
       with-icon-disabled-icon-opacity: token-definition.hardcode(0.38, $exclude-hardcoded),
       with-trailing-icon-disabled-trailing-icon-opacity:
-        token-definition.hardcode(0.38, $exclude-hardcoded),
+          token-definition.hardcode(0.38, $exclude-hardcoded),
     ),
   ), (
     // Color variants:
