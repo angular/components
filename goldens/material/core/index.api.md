@@ -52,6 +52,11 @@ export class AnimationDurations {
 }
 
 // @public
+export interface AnimationsConfig {
+    animationsDisabled: boolean;
+}
+
+// @public
 export function _animationsDisabled(): boolean;
 
 // @public
@@ -188,6 +193,9 @@ export type MatDateFormats = {
         timeOptionLabel?: any;
     };
 };
+
+// @public
+export const MATERIAL_ANIMATIONS: InjectionToken<AnimationsConfig>;
 
 // @public @deprecated
 export const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
