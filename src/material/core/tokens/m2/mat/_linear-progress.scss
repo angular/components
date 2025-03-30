@@ -1,9 +1,11 @@
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
+@use 'sass:color';
+@use 'sass:meta';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, circular-progress);
+$prefix: (mat, linear-progress);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -12,30 +14,27 @@ $prefix: (mat, circular-progress);
 // `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
 // our CSS.
 @function get-unthemable-tokens() {
+  $height: 4px;
+
   @return (
-    // The thickness of the progress spinner's active indicator.
-    active-indicator-width: 4px,
-    // The diameter of the spinner
-    size: 48px,
-    // =============================================================================================
-    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
-    // =============================================================================================
-    // Angular Material does not support four color spinners
-    four-color-active-indicator-one-color: null,
-    // Angular Material does not support four color spinners
-    four-color-active-indicator-two-color: null,
-    // Angular Material does not support four color spinners
-    four-color-active-indicator-three-color: null,
-    // Angular Material does not support four color spinners
-    four-color-active-indicator-four-color: null
+    // The height of the progress bar. `active-indicator-height` applies to the
+    // bar and `track-height` applies to the track.
+    active-indicator-height: $height,
+    track-height: $height,
+    track-shape: 0,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary) {
+  $palette-color: inspection.get-theme-color($theme, $palette-name);
   @return (
-    // The color of the progress spinner's active indicator.
-    active-indicator-color: inspection.get-theme-color($theme, $palette-name)
+    active-indicator-color: $palette-color,
+    track-color: if(
+        meta.type-of($palette-color) == color,
+        color.adjust($palette-color, $alpha: -0.75),
+        $palette-color
+    )
   );
 }
 

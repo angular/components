@@ -14,40 +14,6 @@ $prefix: (mat, extended-fab);
     focus-container-elevation-shadow: elevation.get-box-shadow(8),
     hover-container-elevation-shadow: elevation.get-box-shadow(8),
     pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-
-    // =============================================================================================
-    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
-    // =============================================================================================
-    container-color: null,
-    container-surface-tint-layer-color: null,
-    focus-icon-color: null,
-    focus-label-text-color: null,
-    focus-outline-color: null,
-    focus-outline-width: null,
-    focus-state-layer-color: null,
-    focus-state-layer-opacity: null,
-    hover-icon-color: null,
-    hover-label-text-color: null,
-    hover-state-layer-color: null,
-    hover-state-layer-opacity: null,
-    icon-color: null,
-    icon-size: null,
-    label-text-color: null,
-    lowered-container-elevation: null,
-    lowered-focus-container-elevation: null,
-    lowered-hover-container-elevation: null,
-    lowered-pressed-container-elevation: null,
-    pressed-icon-color: null,
-    pressed-label-text-color: null,
-    pressed-ripple-color: null,
-    pressed-ripple-opacity: null,
-    pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null,
-    container-elevation: null,
-    focus-container-elevation: null,
-    hover-container-elevation: null,
-    pressed-container-elevation: null,
-    container-shadow-color: null,
   );
 }
 

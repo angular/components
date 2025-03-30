@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -5,7 +6,6 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
-@use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-slide-toggle.
@@ -15,9 +15,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
+      // TODO: See if this can be removed
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-unthemable-tokens()
+          tokens-mat-switch.$prefix,
+          tokens-mat-switch.get-unthemable-tokens()
       );
 
       .mat-mdc-slide-toggle {
@@ -39,13 +40,13 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
-    $mdc-tokens: tokens-mdc-switch.get-color-tokens($theme);
+    $mat-tokens: tokens-mat-switch.get-color-tokens($theme);
 
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-color-tokens($theme)
+        tokens-mat-switch.$prefix,
+        tokens-mat-switch.get-color-tokens($theme)
       );
 
       & {
@@ -65,23 +66,25 @@
       }
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(
-          tokens-mat-switch.$prefix,
-          tokens-mat-switch.get-color-tokens($theme)
-        );
+        // TODO(wagnermaciel): Use our token system to define this css variable.
+        --mat-switch-label-text-color: #{inspection.get-theme-color(
+          $theme,
+          foreground,
+          text
+        )};
 
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-            tokens-mdc-switch.$prefix,
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, accent)
+            tokens-mat-switch.$prefix,
+            tokens-mat-switch.private-get-color-palette-color-tokens($theme, accent)
           );
         }
 
         &.mat-warn {
           @include token-utils.create-token-values-mixed(
-            tokens-mdc-switch.$prefix,
-            tokens-mdc-switch.private-get-color-palette-color-tokens($theme, warn)
+            tokens-mat-switch.$prefix,
+            tokens-mat-switch.private-get-color-palette-color-tokens($theme, warn)
           );
         }
       }
@@ -96,9 +99,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
+      // TODO: See if this can be removed
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-typography-tokens($theme)
+        tokens-mat-switch.$prefix,
+        tokens-mat-switch.get-typography-tokens($theme)
       );
 
       .mat-mdc-slide-toggle {
@@ -118,9 +122,10 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
+      // TODO: See if this can be removed
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-switch.$prefix,
-        tokens-mdc-switch.get-density-tokens($theme)
+        tokens-mat-switch.$prefix,
+        tokens-mat-switch.get-density-tokens($theme)
       );
 
       .mat-mdc-slide-toggle {
@@ -139,10 +144,6 @@
     (
       namespace: tokens-mat-switch.$prefix,
       tokens: tokens-mat-switch.get-token-slots(),
-    ),
-    (
-      namespace: tokens-mdc-switch.$prefix,
-      tokens: tokens-mdc-switch.get-token-slots(),
     ),
   );
 }
@@ -181,11 +182,9 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mdc-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-switch.$prefix, $options...);
-  // Don't pass $options here, since the mat-switch doesn't support color options,
-  // only the mdc-switch does.
   $mat-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix);
+  $mat-switch-tokens-options: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix, $options...);
 
-  @include token-utils.create-token-values(tokens-mdc-switch.$prefix, $mdc-switch-tokens);
-  @include token-utils.create-token-values(tokens-mat-switch.$prefix, $mat-switch-tokens);
+  $tokens: map.merge($mat-switch-tokens, $mat-switch-tokens-options);
+  @include token-utils.create-token-values(tokens-mat-switch.$prefix, $tokens);
 }

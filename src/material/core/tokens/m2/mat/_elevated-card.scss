@@ -1,10 +1,10 @@
-@use '../../../style/elevation';
 @use '../../../theming/inspection';
+@use '../../../style/elevation';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, outlined-card);
+$prefix: (mat, elevated-card);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,39 +14,7 @@ $prefix: (mat, outlined-card);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    // The border-radius of the card.
     container-shape: 4px,
-    // The thickness of the card's border.
-    outline-width: 1px,
-    // =============================================================================================
-    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
-    // =============================================================================================
-    // Angular Material's card is not an interactive element, and therefore does not support states.
-    disabled-container-elevation: null,
-    disabled-outline-color: null,
-    disabled-outline-opacity: null,
-    dragged-container-elevation: null,
-    dragged-outline-color: null,
-    dragged-state-layer-color: null,
-    dragged-state-layer-opacity: null,
-    focus-container-elevation: null,
-    focus-outline-color: null,
-    focus-state-layer-color: null,
-    focus-state-layer-opacity: null,
-    hover-container-elevation: null,
-    hover-outline-color: null,
-    hover-state-layer-color: null,
-    hover-state-layer-opacity: null,
-    pressed-container-elevation: null,
-    pressed-outline-color: null,
-    pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null,
-    container-shadow-color: null,
-    // Angular Material does not currently support surface tint.
-    container-surface-tint-layer-color: null,
-    // MDC does not seem to use these tokens.
-    icon-color: null,
-    icon-size: null,
   );
 }
 
@@ -57,9 +25,7 @@ $prefix: (mat, outlined-card);
   @return (
     // The background color of the card.
     container-color: inspection.get-theme-color($theme, background, card),
-    // The border color of the card.
-    outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    container-elevation: elevation.get-box-shadow(0),
+    container-elevation: elevation.get-box-shadow(1),
   );
 }
 

@@ -4,7 +4,7 @@
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
+@use '../core/tokens/m2/mat/plain-tooltip' as tokens-mat-plain-tooltip;
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -13,8 +13,8 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-unthemable-tokens()
+        tokens-mat-plain-tooltip.$prefix,
+        tokens-mat-plain-tooltip.get-unthemable-tokens()
       );
     }
   }
@@ -26,8 +26,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-color-tokens($theme)
+        tokens-mat-plain-tooltip.$prefix,
+        tokens-mat-plain-tooltip.get-color-tokens($theme)
       );
     }
   }
@@ -39,8 +39,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-typography-tokens($theme)
+        tokens-mat-plain-tooltip.$prefix,
+        tokens-mat-plain-tooltip.get-typography-tokens($theme)
       );
     }
   }
@@ -52,8 +52,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-plain-tooltip.$prefix,
-        tokens-mdc-plain-tooltip.get-density-tokens($theme)
+        tokens-mat-plain-tooltip.$prefix,
+        tokens-mat-plain-tooltip.get-density-tokens($theme)
       );
     }
   }
@@ -63,8 +63,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mdc-plain-tooltip.$prefix,
-      tokens: tokens-mdc-plain-tooltip.get-token-slots(),
+      namespace: tokens-mat-plain-tooltip.$prefix,
+      tokens: tokens-mat-plain-tooltip.get-token-slots(),
     ),
   );
 }
@@ -97,7 +97,7 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   @if $tokens != () {
-    $tokens: token-utils.get-tokens-for($tokens, tokens-mdc-plain-tooltip.$prefix);
-    @include token-utils.create-token-values(tokens-mdc-plain-tooltip.$prefix, $tokens);
+    $tokens: token-utils.get-tokens-for($tokens, tokens-mat-plain-tooltip.$prefix);
+    @include token-utils.create-token-values(tokens-mat-plain-tooltip.$prefix, $tokens);
   }
 }

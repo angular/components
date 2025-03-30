@@ -6,8 +6,8 @@
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/card' as tokens-mat-card;
-@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
-@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
+@use '../core/tokens/m2/mat/elevated-card' as tokens-mat-elevated-card;
+@use '../core/tokens/m2/mat/outlined-card' as tokens-mat-outlined-card;
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -15,12 +15,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-unthemable-tokens()
+        tokens-mat-elevated-card.$prefix,
+        tokens-mat-elevated-card.get-unthemable-tokens()
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-unthemable-tokens()
+        tokens-mat-outlined-card.$prefix,
+        tokens-mat-outlined-card.get-unthemable-tokens()
       );
       @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
@@ -36,12 +36,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-color-tokens($theme)
+        tokens-mat-elevated-card.$prefix,
+        tokens-mat-elevated-card.get-color-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-color-tokens($theme)
+        tokens-mat-outlined-card.$prefix,
+        tokens-mat-outlined-card.get-color-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
@@ -57,12 +57,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-typography-tokens($theme)
+        tokens-mat-elevated-card.$prefix,
+        tokens-mat-elevated-card.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-typography-tokens($theme)
+        tokens-mat-outlined-card.$prefix,
+        tokens-mat-outlined-card.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
@@ -78,12 +78,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-elevated-card.$prefix,
-        tokens-mdc-elevated-card.get-density-tokens($theme)
+        tokens-mat-elevated-card.$prefix,
+        tokens-mat-elevated-card.get-density-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-outlined-card.$prefix,
-        tokens-mdc-outlined-card.get-density-tokens($theme)
+        tokens-mat-outlined-card.$prefix,
+        tokens-mat-outlined-card.get-density-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
         tokens-mat-card.$prefix,
@@ -101,13 +101,13 @@
       tokens: tokens-mat-card.get-token-slots(),
     ),
     (
-      namespace: tokens-mdc-elevated-card.$prefix,
-      tokens: tokens-mdc-elevated-card.get-token-slots(),
+      namespace: tokens-mat-elevated-card.$prefix,
+      tokens: tokens-mat-elevated-card.get-token-slots(),
       prefix: 'elevated-',
     ),
     (
-      namespace: tokens-mdc-outlined-card.$prefix,
-      tokens: tokens-mdc-outlined-card.get-token-slots(),
+      namespace: tokens-mat-outlined-card.$prefix,
+      tokens: tokens-mat-outlined-card.get-token-slots(),
       prefix: 'outlined-',
     ),
   );
@@ -142,12 +142,12 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mdc-elevated-card.$prefix,
-      map.get($tokens, tokens-mdc-elevated-card.$prefix)
+      tokens-mat-elevated-card.$prefix,
+      map.get($tokens, tokens-mat-elevated-card.$prefix)
     );
     @include token-utils.create-token-values(
-      tokens-mdc-outlined-card.$prefix,
-      map.get($tokens, tokens-mdc-outlined-card.$prefix)
+      tokens-mat-outlined-card.$prefix,
+      map.get($tokens, tokens-mat-outlined-card.$prefix)
     );
     @include token-utils.create-token-values(
       tokens-mat-card.$prefix,

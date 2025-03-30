@@ -1,6 +1,6 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use '../core/tokens/m2/mdc/checkbox' as tokens-mdc-checkbox;
+@use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
@@ -16,8 +16,8 @@ $_fallback-size: 40px;
 
 // Structural styles for a checkbox. Shared with the selection list.
 @mixin checkbox-structure($include-state-layer-styles) {
-  $prefix: tokens-mdc-checkbox.$prefix;
-  $slots: tokens-mdc-checkbox.get-token-slots();
+  $prefix: tokens-mat-checkbox.$prefix;
+  $slots: tokens-mat-checkbox.get-token-slots();
 
   .mdc-checkbox {
     display: inline-block;

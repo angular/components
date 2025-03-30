@@ -1,11 +1,9 @@
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
-@use 'sass:color';
-@use 'sass:meta';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, linear-progress);
+$prefix: (mat, plain-tooltip);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,34 +12,29 @@ $prefix: (mat, linear-progress);
 // `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
 // our CSS.
 @function get-unthemable-tokens() {
-  $height: 4px;
-
   @return (
-    // The height of the progress bar. `active-indicator-height` applies to the
-    // bar and `track-height` applies to the track.
-    active-indicator-height: $height,
-    track-height: $height,
-    track-shape: 0,
+    container-shape: 4px,
+    supporting-text-line-height: 16px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
+@function get-color-tokens($theme) {
+
   @return (
-    // The color of the progress bar's active section.
-    active-indicator-color: $palette-color,
-    track-color: if(
-        meta.type-of($palette-color) == color,
-        color.adjust($palette-color, $alpha: -0.75),
-        $palette-color
-    )
+    container-color: inspection.get-theme-color($theme, background, tooltip),
+    supporting-text-color: #fff,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return ();
+  @return (
+    supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
+    supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
+    supporting-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
