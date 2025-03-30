@@ -183,7 +183,8 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   $mat-switch-tokens: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix);
-  $mat-switch-tokens-options: token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix, $options...);
+  $mat-switch-tokens-options:
+    token-utils.get-tokens-for($tokens, tokens-mat-switch.$prefix, $options...);
 
   $tokens: map.merge($mat-switch-tokens, $mat-switch-tokens-options);
   @include token-utils.create-token-values(tokens-mat-switch.$prefix, $tokens);
