@@ -11,18 +11,21 @@ import '@angular/localize/init';
 
 import {provideHttpClient} from '@angular/common/http';
 import {
-  importProvidersFrom,
   provideExperimentalZonelessChangeDetection,
   // tslint:disable-next-line:no-zone-dependencies -- Allow manual testing of dev-app with zones
   provideZoneChangeDetection,
 } from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from '@angular/router';
+import {provideRouter} from '@angular/router';
 
 import {Directionality} from '@angular/cdk/bidi';
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, provideNativeDateAdapter} from '@angular/material/core';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  MATERIAL_ANIMATIONS,
+  provideNativeDateAdapter,
+  AnimationsConfig,
+} from '@angular/material/core';
 
 import {DevApp} from './dev-app';
 import {DevAppDirectionality} from './dev-app/dev-app-directionality';
@@ -46,14 +49,15 @@ document.head.appendChild(theme);
 function bootstrap(): void {
   bootstrapApplication(DevApp, {
     providers: [
-      importProvidersFrom(
-        BrowserAnimationsModule.withConfig({
-          disableAnimations: !cachedAppState.animations,
-        }),
-        RouterModule.forRoot(DEV_APP_ROUTES),
-      ),
+      provideRouter(DEV_APP_ROUTES),
       provideNativeDateAdapter(),
       provideHttpClient(),
+      {
+        provide: MATERIAL_ANIMATIONS,
+        useValue: {
+          animationsDisabled: !cachedAppState.animations,
+        } as AnimationsConfig,
+      },
       {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
       {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
       {provide: Directionality, useClass: DevAppDirectionality},
