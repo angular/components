@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ANIMATION_MODULE_TYPE, inject} from '@angular/core';
+import {ANIMATION_MODULE_TYPE, inject, InjectionToken} from '@angular/core';
+
+/** Object used to configure the animation in Angular Material. */
+export interface AnimationsConfig {
+  /** Whether all animations should be disabled. */
+  animationsDisabled: boolean;
+}
+
+/** Injection token used to configure the animations in Angular Material. */
+export const MATERIAL_ANIMATIONS = new InjectionToken<AnimationsConfig>('MATERIAL_ANIMATIONS');
 
 /**
  * @deprecated No longer used, will be removed.
@@ -36,5 +45,11 @@ export class AnimationDurations {
  * @docs-private
  */
 export function _animationsDisabled(): boolean {
+  const customToken = inject(MATERIAL_ANIMATIONS, {optional: true});
+
+  if (customToken) {
+    return customToken.animationsDisabled;
+  }
+
   return inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 }
