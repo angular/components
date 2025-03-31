@@ -13,7 +13,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: 6872365af57c90f63767f2b1fffa523b
+packageExtensionsChecksum: 6b2e2c7894348e03ca8cf3ad60a5e701
 
 patchedDependencies:
   '@angular/compiler-cli@20.0.0-next.4':
@@ -7523,6 +7523,7 @@ packages:
       canonical-path: 1.0.0
       catharsis: 0.8.11
       change-case: 3.0.0
+      clonedeep: 2.0.0
       dgeni: 0.4.14
       espree: 7.3.1
       estraverse: 4.3.0

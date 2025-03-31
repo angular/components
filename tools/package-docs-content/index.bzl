@@ -62,6 +62,10 @@ def _package_docs_content(ctx):
     ctx.actions.run(
         inputs = ctx.files.srcs,
         executable = ctx.executable._packager,
+        env = {
+            # Not needed as we operate with source files; not inside `bazel-bin`.
+            "JS_BINARY__NO_CD_BINDIR": "1",
+        },
         outputs = [output_dir],
         arguments = [args],
         progress_message = "PackageDocsContent",
@@ -89,7 +93,7 @@ package_docs_content = rule(
         "_packager": attr.label(
             default = Label("//tools/package-docs-content"),
             executable = True,
-            cfg = "host",
+            cfg = "exec",
         ),
     },
 )

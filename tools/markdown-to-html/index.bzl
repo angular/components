@@ -46,6 +46,10 @@ def _markdown_to_html(ctx):
     # if the script didn't generate the required outputs.
     ctx.actions.run(
         inputs = input_files,
+        env = {
+            # Not needed as we operate with source files outside bazel-bin.
+            "JS_BINARY__NO_CD_BINDIR": "1",
+        },
         executable = ctx.executable._transform_markdown,
         outputs = expected_outputs,
         arguments = [args],
