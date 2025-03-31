@@ -47,7 +47,7 @@ if (failedPackages) {
   // uses exit code `3` to indicate non-fatal test failures.
   process.exitCode = 3;
 } else {
-  console.info(chalk.green('✓ All packages have been successfully linked.'));
+  console.info(chalk.green(`✓ All packages have been successfully linked: ${npmPackages.length}`));
 }
 
 /**
