@@ -1,6 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "jasmine_node_test")
-load("//tools:defaults2.bzl", "npm_package", "ts_project")
+load("//tools:defaults2.bzl", "jasmine_test", "npm_package", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
@@ -91,10 +90,10 @@ ts_project(
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "unit_tests",
-    srcs = [":unit_test_sources_legacy"],
     data = [
         ":schematics_assets",
+        ":unit_test_sources",
     ],
 )

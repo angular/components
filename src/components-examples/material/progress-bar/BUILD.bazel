@@ -18,13 +18,8 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/card",
-        "//src/material/progress-bar",
-        "//src/material/progress-bar/testing",
-        "//src/material/radio",
-        "//src/material/slider",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 
@@ -44,10 +39,8 @@ ts_project(
     deps = [
         ":progress-bar",
         "//:node_modules/@angular/core",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/progress-bar",
-        "//src/material/progress-bar/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 

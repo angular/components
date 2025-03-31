@@ -8,8 +8,8 @@ ng_project(
     assets = ["column-resize-home.html"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/components-examples/material-experimental/column-resize",
+        "//src/dev-app:node_modules/@angular/material",
+        "//src/dev-app:node_modules/@angular/material-experimental",
         "//src/dev-app/example",
-        "//src/material/expansion",
     ],
 )

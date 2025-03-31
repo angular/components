@@ -17,10 +17,8 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/icon",
-        "//src/material/icon/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 
@@ -41,10 +39,8 @@ ts_project(
         ":icon",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/icon",
-        "//src/material/icon/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 

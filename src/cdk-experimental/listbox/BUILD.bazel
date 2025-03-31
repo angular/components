@@ -10,8 +10,7 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental:node_modules/@angular/cdk",
         "//src/cdk-experimental/ui-patterns",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
     ],
 )

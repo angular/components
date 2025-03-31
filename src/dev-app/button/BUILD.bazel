@@ -13,10 +13,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/material/button",
-        "//src/material/checkbox",
-        "//src/material/icon",
-        "//src/material/tooltip",
+        "//src/dev-app:node_modules/@angular/material",
     ],
 )
 

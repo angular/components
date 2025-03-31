@@ -13,8 +13,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/cdk/overlay",
-        "//src/cdk/testing",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/dialog",
     ],
 )
@@ -32,9 +31,7 @@ ts_project(
         ":testing",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/overlay",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/dialog",
     ],
 )

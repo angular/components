@@ -20,7 +20,7 @@ ng_project(
     ] + glob(["**/*.html"]),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk/menu",
+        "//src/material-experimental:node_modules/@angular/cdk",
     ],
 )
 
@@ -50,9 +50,7 @@ ts_project(
         ":menubar",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/keycodes",
-        "//src/cdk/menu",
-        "//src/cdk/testing/private",
+        "//src/material-experimental:node_modules/@angular/cdk",
     ],
 )
 

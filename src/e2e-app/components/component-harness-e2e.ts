@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TestMainComponent} from '@angular/cdk/testing/tests';
+import {TestMainComponent} from '../../cdk/testing/tests';
 
 @Component({
   selector: 'component-harness-e2e',
