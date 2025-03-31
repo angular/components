@@ -44,27 +44,17 @@ def _ts_project_module_impl(ctx):
     runfiles = ctx.attr.dep[DefaultInfo].default_runfiles
     info = ctx.attr.dep[JsInfo]
 
-    # Filter runfiles to not include `node_modules` from Aspect as this interop
-    # target is supposed to be used downstream by `rules_nodejs` consumers,
-    # and mixing pnpm-style node modules with linker node modules is incompatible.
-    filtered_runfiles = []
-    for f in runfiles.files.to_list():
-        if f.short_path.startswith("node_modules/"):
-            continue
-        filtered_runfiles.append(f)
-    runfiles = ctx.runfiles(files = filtered_runfiles)
-
     providers = [
         DefaultInfo(
             runfiles = runfiles,
         ),
         JSModuleInfo(
             direct_sources = info.sources,
-            sources = depset(transitive = [info.transitive_sources]),
+            sources = depset(transitive = [info.transitive_sources, info.npm_sources]),
         ),
         JSEcmaScriptModuleInfo(
             direct_sources = info.sources,
-            sources = depset(transitive = [info.transitive_sources]),
+            sources = depset(transitive = [info.transitive_sources, info.npm_sources]),
         ),
         DeclarationInfo(
             declarations = _filter_types_depset(info.types),
@@ -155,7 +145,7 @@ def ts_project(
         dep = name,
         # Forwarded dependencies for linker module mapping aspect.
         # RJS deps can also transitively pull in module mappings from their `interop_deps`.
-        deps = [":%s_interop_deps" % name] + deps,
+        deps = deps,
         module_name = module_name,
     )
 
