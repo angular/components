@@ -1,11 +1,9 @@
 @use '@angular/cdk';
 @use '../core/style/layout-common';
 @use '../core/tokens/m2/mat/switch' as tokens-mat-switch;
-@use '../core/tokens/m2/mdc/switch' as tokens-mdc-switch;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
-$_mdc-slots: (tokens-mdc-switch.$prefix, tokens-mdc-switch.get-token-slots());
 $_mat-slots: (tokens-mat-switch.$prefix, tokens-mat-switch.get-token-slots());
 $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc-switch--disabled';
 
@@ -22,7 +20,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   padding: 0;
   position: relative;
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     @include token-utils.create-token-slot(width, track-width);
   }
 
@@ -41,7 +39,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   position: relative;
   width: 100%;
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     @include token-utils.create-token-slot(height, track-height);
     @include token-utils.create-token-slot(border-radius, track-shape);
 
@@ -87,7 +85,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
     transform: translateX(0);
 
-    @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.use-tokens($_mat-slots...) {
       @include token-utils.create-token-slot(background, unselected-track-color);
     }
 
@@ -112,7 +110,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
       }
     }
 
-    @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.use-tokens($_mat-slots...) {
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, unselected-hover-track-color);
       }
@@ -137,7 +135,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   &::after {
     transform: translateX(-100%);
 
-    @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.use-tokens($_mat-slots...) {
       @include token-utils.create-token-slot(background, selected-track-color);
     }
 
@@ -161,7 +159,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
       }
     }
 
-    @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.use-tokens($_mat-slots...) {
       .mdc-switch:enabled:hover:not(:focus):not(:active) & {
         @include token-utils.create-token-slot(background, selected-hover-track-color);
       }
@@ -194,7 +192,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   right: auto;
   transform: translateX(0);
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     width: calc(100% - #{token-utils.get-token-variable(handle-width)});
   }
 
@@ -228,7 +226,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     height 75ms cubic-bezier(0.4, 0, 0.2, 1),
     margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     @include token-utils.create-token-slot(width, handle-width);
     @include token-utils.create-token-slot(height, handle-height);
     @include token-utils.create-token-slot(border-radius, handle-shape);
@@ -308,7 +306,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
     }
   }
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     &::after {
       .mdc-switch--selected:enabled & {
         @include token-utils.create-token-slot(background, selected-handle-color);
@@ -368,7 +366,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   right: 0;
   top: 0;
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     .mdc-switch:enabled & {
       @include token-utils.create-token-slot(box-shadow, handle-elevation-shadow);
     }
@@ -389,7 +387,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   transform: translate(-50%, -50%);
   z-index: -1;
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     @include token-utils.create-token-slot(width, state-layer-size);
     @include token-utils.create-token-slot(height, state-layer-size);
   }
@@ -416,7 +414,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
       opacity: 0.12;
     }
 
-    @include token-utils.use-tokens($_mdc-slots...) {
+    @include token-utils.use-tokens($_mat-slots...) {
       #{$_interactive-disabled-selector}:enabled:focus &,
       #{$_interactive-disabled-selector}:enabled:active &,
       #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
@@ -460,7 +458,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   // Works around a rendering issue in Safari 18.3 (see #30487).
   transform: translateZ(0);
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     .mdc-switch--disabled.mdc-switch--unselected & {
       @include token-utils.create-token-slot(opacity, disabled-unselected-icon-opacity);
     }
@@ -481,7 +479,7 @@ $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc
   opacity: 0;
   transition: opacity 30ms 0ms cubic-bezier(0.4, 0, 1, 1);
 
-  @include token-utils.use-tokens($_mdc-slots...) {
+  @include token-utils.use-tokens($_mat-slots...) {
     .mdc-switch--unselected & {
       @include token-utils.create-token-slot(width, unselected-icon-size);
       @include token-utils.create-token-slot(height, unselected-icon-size);

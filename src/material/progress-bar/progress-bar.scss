@@ -1,5 +1,5 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mdc/linear-progress' as tokens-mdc-linear-progress;
+@use '../core/tokens/m2/mat/linear-progress' as tokens-mat-linear-progress;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
@@ -42,8 +42,8 @@
   transition: opacity 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     $track-variable: token-utils.get-token-variable(track-height);
     $indicator-height-variable: token-utils.get-token-variable(active-indicator-height);
@@ -66,8 +66,8 @@
   transition: transform 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, active-indicator-height);
   }
@@ -90,8 +90,8 @@
   border-top-style: solid;
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     @include token-utils.create-token-slot(border-color, active-indicator-color);
     @include token-utils.create-token-slot(border-top-width, active-indicator-height);
@@ -108,8 +108,8 @@
   overflow: hidden;
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, track-height);
     @include token-utils.create-token-slot(border-radius, track-shape);
@@ -129,8 +129,8 @@
   animation: mdc-linear-progress-buffering 250ms infinite linear;
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     @include token-utils.create-token-slot(background-color, track-color);
   }
@@ -150,8 +150,8 @@
   transition: flex-basis 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-linear-progress.$prefix,
-    tokens-mdc-linear-progress.get-token-slots()
+    tokens-mat-linear-progress.$prefix,
+    tokens-mat-linear-progress.get-token-slots()
   ) {
     @include token-utils.create-token-slot(background-color, track-color);
   }
@@ -215,8 +215,8 @@
 @keyframes mdc-linear-progress-buffering {
   from {
     @include token-utils.use-tokens(
-      tokens-mdc-linear-progress.$prefix,
-      tokens-mdc-linear-progress.get-token-slots()
+      tokens-mat-linear-progress.$prefix,
+      tokens-mat-linear-progress.get-token-slots()
     ) {
       $track-variable: token-utils.get-token-variable(track-height);
       transform: rotate(180deg) translateX(calc(#{$track-variable} * -2.5));

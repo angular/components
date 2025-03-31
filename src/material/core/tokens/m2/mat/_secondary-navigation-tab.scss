@@ -18,35 +18,6 @@ $prefix: (mat, secondary-navigation-tab);
     // This is specified both here and in the density tokens, because it determines the size of the
     // tab itself and there are internal tests who don't configure the theme correctly.
     container-height: 48px,
-    // =============================================================================================
-    // = TOKENS NOT USED IN ANGULAR MATERIAL                                                       =
-    // =============================================================================================
-    inactive-label-text-color: null,
-    active-label-text-color: null,
-    container-color: null,
-    container-elevation: null,
-    container-shadow-color: null,
-    container-shape: null,
-    focus-label-text-color: null,
-    focus-state-layer-color: null,
-    focus-state-layer-opacity: null,
-    hover-label-text-color: null,
-    hover-state-layer-color: null,
-    hover-state-layer-opacity: null,
-    pressed-label-text-color: null,
-    pressed-state-layer-color: null,
-    pressed-state-layer-opacity: null,
-    with-icon-active-icon-color: null,
-    with-icon-focus-icon-color: null,
-    with-icon-hover-icon-color: null,
-    with-icon-inactive-icon-color: null,
-    with-icon-pressed-icon-color: null,
-    with-icon-icon-size: null,
-    label-text-font: null,
-    label-text-size: null,
-    label-text-letter-spacing: null,
-    label-text-line-height: null,
-    label-text-weight: null,
   );
 }
 

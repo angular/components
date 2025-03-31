@@ -14,7 +14,6 @@ $prefix: (mat, card);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    // Text color of the card's subtitle.
     subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
   );
 }
@@ -22,25 +21,15 @@ $prefix: (mat, card);
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    // Font family of the card's title.
     title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    // Line height of the card's title.
     title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    // Font size of the card's title.
     title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    // Letter spacing of the card's title.
     title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    // Font weight of the card's title.
     title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    // Font family of the card's subtitle.
     subtitle-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    // Line height of the card's subtitle.
     subtitle-text-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
-    // Font size of the card's subtitle.
     subtitle-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    // Letter spacing of the card's subtitle.
     subtitle-text-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
-    // Font weight of the card's subtitle.
     subtitle-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
   );
 }
