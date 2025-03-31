@@ -5,7 +5,6 @@ load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
 load("@io_bazel_rules_sass//:defs.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
-load("@npm//@angular/build-tooling/bazel/karma:index.bzl", _karma_web_test_suite = "karma_web_test_suite")
 load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
 load("@npm//@angular/build-tooling/bazel/spec-bundling:index.bzl", _spec_bundle = "spec_bundle")
 load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = "http_server")
@@ -18,6 +17,7 @@ load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
+load("//tools:defaults2.bzl", _karma_web_test_suite = "karma_web_test_suite")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -31,6 +31,7 @@ extract_tokens = _extract_tokens
 esbuild = _esbuild
 esbuild_config = _esbuild_config
 http_server = _http_server
+karma_web_test_suite = _karma_web_test_suite
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(
@@ -144,35 +145,6 @@ def pkg_npm(name, visibility = None, **kwargs):
 def jasmine_node_test(**kwargs):
     kwargs["templated_args"] = ["--bazel_patch_module_resolver"] + kwargs.get("templated_args", [])
     _jasmine_node_test(**kwargs)
-
-def karma_web_test_suite(name, **kwargs):
-    test_deps = kwargs.get("deps", [])
-
-    kwargs["tags"] = ["partial-compilation-integration"] + kwargs.get("tags", [])
-    kwargs["deps"] = ["%s_bundle" % name]
-
-    spec_bundle(
-        name = "%s_bundle" % name,
-        deps = test_deps,
-        platform = "browser",
-    )
-
-    # Set up default browsers if no explicit `browsers` have been specified.
-    if not hasattr(kwargs, "browsers"):
-        kwargs["tags"] = ["native"] + kwargs.get("tags", [])
-        kwargs["browsers"] = [
-            # Note: when changing the browser names here, also update the "yarn test"
-            # script to reflect the new browser names.
-            "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium",
-            "@npm//@angular/build-tooling/bazel/browsers/firefox:firefox",
-        ]
-
-    # Default test suite with all configured browsers, and the debug target being
-    # setup from `angular/dev-infra`.
-    _karma_web_test_suite(
-        name = name,
-        **kwargs
-    )
 
 def protractor_web_test_suite(name, deps, **kwargs):
     spec_bundle(
