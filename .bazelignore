@@ -18,4 +18,17 @@ integration/yarn-pnp-compat/.yarn/unplugged
 integration/yarn-pnp-compat/.yarn/install-state.gz
 integration/yarn-pnp-compat/node_modules
 
+integration/node_modules
+src/cdk-experimental/node_modules
 src/cdk/node_modules
+src/components-examples/node_modules
+src/dev-app/node_modules
+src/e2e-app/node_modules
+src/google-maps/node_modules
+src/material-date-fns-adapter/node_modules
+src/material-experimental/node_modules
+src/material-luxon-adapter/node_modules
+src/material-moment-adapter/node_modules
+src/material/node_modules
+src/universal-app/node_modules
+src/youtube-player/node_modules
