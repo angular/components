@@ -3,10 +3,8 @@
 @use '../core/style/private' as style-private;
 @use '../core/style/vendor-prefixes';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
-@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mat/extended-fab' as tokens-mat-extended-fab;
 @use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
-@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
 @use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
 
 .mat-mdc-fab-base {
@@ -96,8 +94,8 @@
   }
 }
 
-@mixin _fab-elevation($mdc-tokens) {
-  @include token-utils.use-tokens($mdc-tokens...) {
+@mixin _fab-elevation($mat-tokens) {
+  @include token-utils.use-tokens($mat-tokens...) {
     @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
 
     &:hover {
@@ -114,8 +112,8 @@
   }
 }
 
-@mixin _fab-structure($mdc-tokens, $mat-tokens) {
-  @include token-utils.use-tokens($mdc-tokens...) {
+@mixin _fab-structure($mat-tokens) {
+  @include token-utils.use-tokens($mat-tokens...) {
     @include token-utils.create-token-slot(background-color, container-color);
     @include token-utils.create-token-slot(border-radius, container-shape);
   }
@@ -124,7 +122,7 @@
     @include token-utils.create-token-slot(color, foreground-color, inherit);
   }
 
-  @include _fab-elevation($mdc-tokens);
+  @include _fab-elevation($mat-tokens);
 
   @include button-base.mat-private-button-disabled {
     @include token-utils.use-tokens($mat-tokens...) {
@@ -139,7 +137,6 @@
 
 .mat-mdc-fab {
   @include _fab-structure(
-    (tokens-mdc-fab.$prefix, tokens-mdc-fab.get-token-slots()),
     (tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()),
   );
 }
@@ -149,13 +146,12 @@
   height: 40px;
 
   @include _fab-structure(
-    (tokens-mdc-fab-small.$prefix, tokens-mdc-fab-small.get-token-slots()),
     (tokens-mat-fab-small.$prefix, tokens-mat-fab-small.get-token-slots()),
   );
 }
 
 .mat-mdc-extended-fab {
-  $mdc-tokens: (tokens-mdc-extended-fab.$prefix, tokens-mdc-extended-fab.get-token-slots());
+  $mat-tokens: (tokens-mat-extended-fab.$prefix, tokens-mat-extended-fab.get-token-slots());
 
   // Before tokens MDC included the font smoothing automatically, but with
   // tokens it doesn't. We add it since it can cause tiny differences in
@@ -168,7 +164,7 @@
   max-width: 100%;
   line-height: normal;
 
-  @include token-utils.use-tokens($mdc-tokens...) {
+  @include token-utils.use-tokens($mat-tokens...) {
     @include token-utils.create-token-slot(height, container-height);
     @include token-utils.create-token-slot(border-radius, container-shape);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -177,7 +173,7 @@
     @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
   }
 
-  @include _fab-elevation($mdc-tokens);
+  @include _fab-elevation($mat-tokens);
 
   @include button-base.mat-private-button-disabled {
     // Necessary for interactive disabled buttons.

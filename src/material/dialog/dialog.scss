@@ -1,5 +1,4 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mdc/dialog' as tokens-mdc-dialog;
 @use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
@@ -23,12 +22,6 @@ $_emit-fallbacks: true;
 
 @mixin _use-mat-tokens {
   @include token-utils.use-tokens(tokens-mat-dialog.$prefix, tokens-mat-dialog.get-token-slots()) {
-    @content;
-  }
-}
-
-@mixin _use-mdc-tokens {
-  @include token-utils.use-tokens(tokens-mdc-dialog.$prefix, tokens-mdc-dialog.get-token-slots()) {
     @content;
   }
 }
@@ -116,7 +109,7 @@ $_emit-fallbacks: true;
       $_emit-fallbacks);
   }
 
-  @include _use-mdc-tokens {
+  @include _use-mat-tokens {
     @include token-utils.create-token-slot(border-radius, container-shape, $_emit-fallbacks);
     @include token-utils.create-token-slot(background-color, container-color, $_emit-fallbacks);
   }
@@ -177,7 +170,7 @@ $_emit-fallbacks: true;
 
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
-    @include _use-mdc-tokens {
+    @include _use-mat-tokens {
       @include token-utils.create-token-slot(color, subhead-color, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-family, subhead-font,
         if($_emit-fallbacks, inherit, null));
@@ -207,7 +200,7 @@ $_emit-fallbacks: true;
 
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
-    @include _use-mdc-tokens {
+    @include _use-mat-tokens {
       @include token-utils.create-token-slot(color, supporting-text-color, $_emit-fallbacks);
       @include token-utils.create-token-slot(font-family, supporting-text-font,
         if($_emit-fallbacks, inherit, null));

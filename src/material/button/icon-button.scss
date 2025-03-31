@@ -1,4 +1,3 @@
-@use '../core/tokens/m2/mdc/icon-button' as tokens-mdc-icon-button;
 @use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
 
 @use './button-base';
@@ -32,7 +31,7 @@
   text-align: center;
 
   @include token-utils.use-tokens(
-    tokens-mdc-icon-button.$prefix, tokens-mdc-icon-button.get-token-slots()) {
+    tokens-mat-icon-button.$prefix, tokens-mat-icon-button.get-token-slots()) {
     $button-size: token-utils.get-token-variable(state-layer-size, $fallback: 48px);
     $icon-size: token-utils.get-token-variable(icon-size, $fallback: 24px);
 
@@ -59,7 +58,7 @@
   @include private.private-animation-noop();
 
   @include token-utils.use-tokens(
-    tokens-mdc-icon-button.$prefix, tokens-mdc-icon-button.get-token-slots()) {
+    tokens-mat-icon-button.$prefix, tokens-mat-icon-button.get-token-slots()) {
     @include button-base.mat-private-button-disabled {
       @include token-utils.create-token-slot(color, disabled-icon-color);
     };

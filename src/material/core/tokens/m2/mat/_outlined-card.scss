@@ -1,9 +1,10 @@
+@use '../../../style/elevation';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, plain-tooltip);
+$prefix: (mat, outlined-card);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,38 +14,25 @@ $prefix: (mat, plain-tooltip);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    // Border radius for the tooltip container.
     container-shape: 4px,
-    // Line height of the tooltip text.
-    supporting-text-line-height: 16px,
-    // MDC does not seem to use these token.
-    supporting-text-type: null,
+    outline-width: 1px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $elevation: inspection.get-theme-color($theme, foreground, elevation);
 
   @return (
-    // Color of the tooltip container.
-    container-color: inspection.get-theme-color($theme, background, tooltip),
-    // Color of the tooltip text.
-    supporting-text-color: #fff,
+    container-color: inspection.get-theme-color($theme, background, card),
+    outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
+    container-elevation: elevation.get-box-shadow(0),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return (
-    // Font for the tooltip text.
-    supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    // Font size for the tooltip text.
-    supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    // Font weight of the tooltip text.
-    supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    // Tracking (space between letters) of the tooltip text.
-    supporting-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

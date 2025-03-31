@@ -3,13 +3,9 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/filled-button' as tokens-mdc-filled-button;
 @use '../core/tokens/m2/mat/filled-button' as tokens-mat-filled-button;
-@use '../core/tokens/m2/mdc/outlined-button' as tokens-mdc-outlined-button;
 @use '../core/tokens/m2/mat/outlined-button' as tokens-mat-outlined-button;
-@use '../core/tokens/m2/mdc/protected-button' as tokens-mdc-protected-button;
 @use '../core/tokens/m2/mat/protected-button' as tokens-mat-protected-button;
-@use '../core/tokens/m2/mdc/text-button' as tokens-mdc-text-button;
 @use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
 @use '../core/tokens/m2/mat/tonal-button' as tokens-mat-tonal-button;
 
@@ -69,8 +65,8 @@
   }
 
   @include token-utils.use-tokens(
-    tokens-mdc-text-button.$prefix,
-    tokens-mdc-text-button.get-token-slots()
+    tokens-mat-text-button.$prefix,
+    tokens-mat-text-button.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, container-height);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -107,8 +103,8 @@
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-filled-button.$prefix,
-    tokens-mdc-filled-button.get-token-slots()
+    tokens-mat-filled-button.$prefix,
+    tokens-mat-filled-button.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, container-height);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -130,8 +126,8 @@
     $mat-filled-button-slots);
 
   @include token-utils.use-tokens(
-    tokens-mdc-filled-button.$prefix,
-    tokens-mdc-filled-button.get-token-slots()
+    tokens-mat-filled-button.$prefix,
+    tokens-mat-filled-button.get-token-slots()
   ) {
     &:not(:disabled) {
       @include token-utils.create-token-slot(color, label-text-color);
@@ -156,8 +152,8 @@
   transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-protected-button.$prefix,
-    tokens-mdc-protected-button.get-token-slots()
+    tokens-mat-protected-button.$prefix,
+    tokens-mat-protected-button.get-token-slots()
   ) {
     @include button-base.mat-private-button-elevation(container-elevation);
     @include token-utils.create-token-slot(height, container-height);
@@ -183,8 +179,8 @@
     $mat-protected-button-slots);
 
   @include token-utils.use-tokens(
-    tokens-mdc-protected-button.$prefix,
-    tokens-mdc-protected-button.get-token-slots()
+    tokens-mat-protected-button.$prefix,
+    tokens-mat-protected-button.get-token-slots()
   ) {
     &:not(:disabled) {
       @include token-utils.create-token-slot(color, label-text-color);
@@ -226,8 +222,8 @@
   transition: border 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   @include token-utils.use-tokens(
-    tokens-mdc-outlined-button.$prefix,
-    tokens-mdc-outlined-button.get-token-slots()
+    tokens-mat-outlined-button.$prefix,
+    tokens-mat-outlined-button.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, container-height);
     @include token-utils.create-token-slot(font-family, label-text-font);
@@ -251,8 +247,8 @@
     $mat-outlined-button-slots);
 
   @include token-utils.use-tokens(
-    tokens-mdc-outlined-button.$prefix,
-    tokens-mdc-outlined-button.get-token-slots()
+    tokens-mat-outlined-button.$prefix,
+    tokens-mat-outlined-button.get-token-slots()
   ) {
     &:not(:disabled) {
       @include token-utils.create-token-slot(color, label-text-color);

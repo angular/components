@@ -1,7 +1,6 @@
 @use '@angular/cdk';
 @use '../core/style/layout-common';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
 @use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
@@ -75,7 +74,7 @@ $_avatar-trailing-padding: 8px;
   white-space: inherit;
   overflow-x: hidden;
 
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip &::before {
       @include token-utils.create-token-slot(border-width, outline-width);
       @include token-utils.create-token-slot(border-radius, container-shape-radius);
@@ -178,7 +177,7 @@ $_avatar-trailing-padding: 8px;
   position: relative;
   overflow: visible;
 
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
       @include token-utils.create-token-slot(color, with-trailing-icon-trailing-icon-color);
     }
@@ -222,7 +221,7 @@ $_avatar-trailing-padding: 8px;
   text-overflow: ellipsis;
   overflow: hidden;
 
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip & {
       @include token-utils.create-token-slot(font-family, label-text-font);
       @include token-utils.create-token-slot(line-height, label-text-line-height);
@@ -255,7 +254,7 @@ $_avatar-trailing-padding: 8px;
   position: relative;
   flex: 1 0 auto;
 
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip & {
       @include token-utils.create-token-slot(width, with-avatar-avatar-size);
       @include token-utils.create-token-slot(height, with-avatar-avatar-size);
@@ -315,7 +314,7 @@ $_avatar-trailing-padding: 8px;
   height: $_checkmark-size;
   width: $_checkmark-size;
 
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
       @include token-utils.create-token-slot(color, with-icon-selected-icon-color);
     }
@@ -371,7 +370,7 @@ $_avatar-trailing-padding: 8px;
   }
 
   $disabled-icon-opacity: null;
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     $disabled-icon-opacity:
       token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
   }
@@ -392,7 +391,7 @@ $_avatar-trailing-padding: 8px;
 }
 
 .mat-mdc-standard-chip {
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     @include token-utils.create-token-slot(border-radius, container-shape-radius);
     @include token-utils.create-token-slot(height, container-height);
 
@@ -420,7 +419,7 @@ $_avatar-trailing-padding: 8px;
 }
 
 .mdc-evolution-chip__icon--primary {
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     .mat-mdc-standard-chip & {
       @include token-utils.create-token-slot(border-radius, with-avatar-avatar-shape-radius);
       @include token-utils.create-token-slot(width, with-icon-icon-size);
@@ -448,7 +447,7 @@ $_avatar-trailing-padding: 8px;
 // that we don't re-implement ourselves below.
 // TODO(crisbeto): with some future refactors we may be able to clean this up.
 .mat-mdc-chip-highlighted {
-  @include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
     $highlighted-remapped-tokens: (
       with-icon-icon-color: with-icon-selected-icon-color,
       elevated-container-color: elevated-selected-container-color,
@@ -463,7 +462,7 @@ $_avatar-trailing-padding: 8px;
 }
 
 // Add additional slots for the MDC chip tokens, needed in Angular Material.
-@include token-utils.use-tokens(tokens-mdc-chip.$prefix, tokens-mdc-chip.get-token-slots()) {
+@include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
   .mat-mdc-chip-focus-overlay {
     @include token-utils.create-token-slot(background, focus-state-layer-color);
 

@@ -1,7 +1,7 @@
 @use '@angular/cdk';
 
 @use '../tokens/m2/mat/option' as tokens-mat-option;
-@use '../tokens/m2/mdc/list' as tokens-mdc-list;
+@use '../tokens/m2/mat/list' as tokens-mat-list;
 @use '../tokens/token-utils';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
@@ -186,7 +186,7 @@ $_side-padding: 16px;
   // because the checkbox already indicates that they're selected. This happened to work in M2,
   // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
   // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
-  @include token-utils.use-tokens(tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-list.$prefix, tokens-mat-list.get-token-slots()) {
     $selected-token: token-utils.get-token-variable-name(list-item-selected-container-color);
     $base-token: token-utils.get-token-variable(list-item-container-color, $fallback: transparent);
     #{$selected-token}: $base-token;
