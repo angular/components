@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -12,15 +12,11 @@ ts_project(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "bazel-bin",
     data = [
         ":example-module.template",
-        ":example-module-lib_legacy",
-        "@npm//typescript",
+        ":example-module-lib",
     ],
-    entry_point = ":bazel-bin.ts",
-    # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
-    # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
-    templated_args = ["--bazel_patch_module_resolver"],
+    entry_point = ":bazel-bin.js",
 )
