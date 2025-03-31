@@ -115,7 +115,6 @@ yarn_install(
         "//:tools/postinstall/patches/@angular+bazel+20.0.0-next.3.patch",
         "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32.patch",
         "//:tools/postinstall/patches/tsec+0.2.2.patch",
-        "//src/cdk:package.json",
     ],
     # Currently disabled due to:
     #  1. Missing Windows support currently.
@@ -177,7 +176,20 @@ npm_translate_lock(
         "//:patches/@angular__compiler-cli.patch",
         "//:patches/@angular__core.patch",
         "//:pnpm-workspace.yaml",
+        "//integration:package.json",
         "//src/cdk:package.json",
+        "//src/cdk-experimental:package.json",
+        "//src/components-examples:package.json",
+        "//src/dev-app:package.json",
+        "//src/e2e-app:package.json",
+        "//src/google-maps:package.json",
+        "//src/material:package.json",
+        "//src/material-date-fns-adapter:package.json",
+        "//src/material-experimental:package.json",
+        "//src/material-luxon-adapter:package.json",
+        "//src/material-moment-adapter:package.json",
+        "//src/universal-app:package.json",
+        "//src/youtube-player:package.json",
     ],
     npmrc = "//:.npmrc",
     pnpm_lock = "//:pnpm-lock.yaml",
@@ -258,4 +270,22 @@ load("@rules_angular//setup:step_3.bzl", "rules_angular_step3")
 rules_angular_step3(
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
     typescript = "//:node_modules/typescript",
+)
+
+http_archive(
+    name = "aspect_rules_esbuild",
+    sha256 = "550e33ddeb86a564b22b2c5d3f84748c6639b1b2b71fae66bf362c33392cbed8",
+    strip_prefix = "rules_esbuild-0.21.0",
+    url = "https://github.com/aspect-build/rules_esbuild/releases/download/v0.21.0/rules_esbuild-v0.21.0.tar.gz",
+)
+
+load("@aspect_rules_esbuild//esbuild:dependencies.bzl", "rules_esbuild_dependencies")
+
+rules_esbuild_dependencies()
+
+load("@aspect_rules_esbuild//esbuild:repositories.bzl", "LATEST_ESBUILD_VERSION", "esbuild_register_toolchains")
+
+esbuild_register_toolchains(
+    name = "esbuild",
+    esbuild_version = LATEST_ESBUILD_VERSION,
 )
