@@ -18,6 +18,7 @@ load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -46,7 +47,15 @@ def sass_library(**kwargs):
 def npm_sass_library(**kwargs):
     _npm_sass_library(**kwargs)
 
-def ng_package(name, srcs = [], deps = [], externals = PKG_EXTERNALS, readme_md = None, visibility = None, **kwargs):
+def ng_package(
+        name,
+        package_name,
+        srcs = [],
+        deps = [],
+        externals = PKG_EXTERNALS,
+        readme_md = None,
+        visibility = None,
+        **kwargs):
     # If no readme file has been specified explicitly, use the default readme for
     # release packages from "src/README.md".
     if not readme_md:
@@ -93,6 +102,13 @@ def ng_package(name, srcs = [], deps = [], externals = PKG_EXTERNALS, readme_md 
         # Target should not build on CI unless it is explicitly requested.
         tags = ["manual"],
         visibility = visibility,
+    )
+
+    ng_package_interop(
+        name = "pkg",
+        src = ":%s" % name,
+        interop_deps = [d.replace("_legacy", "") for d in deps],
+        package_name = package_name,
     )
 
 def pkg_npm(name, visibility = None, **kwargs):

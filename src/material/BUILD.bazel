@@ -40,6 +40,7 @@ sass_library(
 # Creates the @angular/material package published to npm.
 ng_package(
     name = "npm_package",
+    package_name = "@angular/material",
     srcs = [
         "package.json",
         ":sass_lib",

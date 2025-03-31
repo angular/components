@@ -16,6 +16,7 @@ ts_project(
 
 ng_package(
     name = "npm_package",
+    package_name = "@angular/cdk-experimental",
     srcs = ["package.json"],
     tags = ["release-package"],
     deps = [get_legacy_label(t) for t in CDK_EXPERIMENTAL_TARGETS],
