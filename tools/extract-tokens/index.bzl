@@ -25,6 +25,10 @@ def _extract_tokens(ctx):
     # can throw an error if the script didn't generate the required outputs.
     ctx.actions.run(
         inputs = input_files,
+        env = {
+            # Not needed as we operate with source files; not inside `bazel-bin`.
+            "JS_BINARY__NO_CD_BINDIR": "1",
+        },
         executable = ctx.executable._extract_tokens,
         outputs = expected_outputs,
         arguments = [args],

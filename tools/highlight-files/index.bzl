@@ -35,6 +35,10 @@ def _highlight_files(ctx):
         inputs = input_files,
         executable = ctx.executable._highlight_files,
         outputs = [output_dir],
+        env = {
+            # Not needed as we operate with source files outside bazel-bin.
+            "JS_BINARY__NO_CD_BINDIR": "1",
+        },
         arguments = [args],
         progress_message = "HighlightFiles",
     )
@@ -56,7 +60,7 @@ highlight_files = rule(
         "_highlight_files": attr.label(
             default = Label("//tools/highlight-files"),
             executable = True,
-            cfg = "host",
+            cfg = "exec",
         ),
     },
 )

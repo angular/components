@@ -1,5 +1,5 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -15,15 +15,10 @@ ts_project(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "highlight-files",
     data = [
-        ":sources_legacy",
+        ":sources",
     ],
-    entry_point = ":highlight-files.ts",
-    templated_args = [
-        # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
-        # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
-        "--bazel_patch_module_resolver",
-    ],
+    entry_point = ":highlight-files.js",
 )

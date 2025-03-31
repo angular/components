@@ -35,19 +35,19 @@ def _dgeni_api_docs(ctx):
         args.add_joined(entry_points, join_with = ",")
 
         for entry_point in entry_points:
-            expected_outputs += [
+            expected_outputs.append(
                 # Declare the output for the current entry-point. The output file will always follow the
                 # same format: "{output_folder}/{package_name}-{entry_point_name}.html"
                 # (e.g. "api-docs/material-slider-testing.html")
                 ctx.actions.declare_file("%s-%s.html" %
                                          (package_name, entry_point.replace("/", "-"))),
-            ]
+            )
 
         # Small workaround that ensures that the "ripple" API doc is properly exposed as an output
         # of the packaging rule. Technically Dgeni should not output the "ripple" directory as
         # its own entry-point. TODO(devversion): Support sub API docs for entry-points
         if package_name == "material":
-            expected_outputs += [ctx.actions.declare_file("%s-%s.html" % (package_name, "ripple"))]
+            expected_outputs.append(ctx.actions.declare_file("%s-%s.html" % (package_name, "ripple")))
 
     # Run the Dgeni bazel executable which builds the documentation output based on the
     # configured rule attributes.
@@ -55,6 +55,10 @@ def _dgeni_api_docs(ctx):
         # Note that we want to add the dgeni template files as well. This makes sure that the
         # templates are available in the sandbox execution and can be read by Dgeni.
         inputs = input_files + ctx.files._dgeni_templates,
+        env = {
+            # Not needed as we operate with source files outside bazel-bin.
+            "JS_BINARY__NO_CD_BINDIR": "1",
+        },
         executable = ctx.executable._dgeni_bin,
         outputs = expected_outputs,
         arguments = [args],
@@ -83,7 +87,7 @@ dgeni_api_docs = rule(
         "_dgeni_bin": attr.label(
             default = Label("//tools/dgeni"),
             executable = True,
-            cfg = "host",
+            cfg = "exec",
         ),
 
         # Dgeni document templates that should be be available as inputs to the
