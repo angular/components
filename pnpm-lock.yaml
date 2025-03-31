@@ -383,7 +383,26 @@ importers:
         specifier: ^6.2.4
         version: 6.2.5
 
-  integration: {}
+  integration:
+    dependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../src/cdk
+      '@angular/cdk-experimental':
+        specifier: workspace:*
+        version: link:../src/cdk-experimental
+      '@angular/google-maps':
+        specifier: workspace:*
+        version: link:../src/google-maps
+      '@angular/material':
+        specifier: workspace:*
+        version: link:../src/material
+      '@angular/material-experimental':
+        specifier: workspace:*
+        version: link:../src/material-experimental
+      '@angular/youtube-player':
+        specifier: workspace:*
+        version: link:../src/youtube-player
 
   src/cdk:
     dependencies:
@@ -399,12 +418,38 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
 
   src/components-examples:
     dependencies:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
+      '@angular/cdk-experimental':
+        specifier: workspace:*
+        version: link:../cdk-experimental
+      '@angular/material':
+        specifier: workspace:*
+        version: link:../material
+      '@angular/material-date-fns-adapter':
+        specifier: workspace:*
+        version: link:../material-date-fns-adapter
+      '@angular/material-experimental':
+        specifier: workspace:*
+        version: link:../material-experimental
+      '@angular/material-luxon-adapter':
+        specifier: workspace:*
+        version: link:../material-luxon-adapter
+      '@angular/material-moment-adapter':
+        specifier: workspace:*
+        version: link:../material-moment-adapter
 
   src/dev-app:
     devDependencies:
@@ -479,6 +524,16 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
+      '@angular/cdk-experimental':
+        specifier: workspace:*
+        version: link:../cdk-experimental
+      '@angular/material':
+        specifier: workspace:*
+        version: link:../material
 
   src/material-luxon-adapter:
     dependencies:

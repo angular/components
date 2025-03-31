@@ -17,7 +17,6 @@ load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
 
 npmPackageSubstitutions = select({
@@ -152,11 +151,9 @@ def karma_web_test_suite(name, **kwargs):
     kwargs["tags"] = ["partial-compilation-integration"] + kwargs.get("tags", [])
     kwargs["deps"] = ["%s_bundle" % name]
 
-    test_deps_legacy = [get_legacy_label(d) for d in test_deps]
-
     spec_bundle(
         name = "%s_bundle" % name,
-        deps = test_deps_legacy,
+        deps = test_deps,
         platform = "browser",
     )
 

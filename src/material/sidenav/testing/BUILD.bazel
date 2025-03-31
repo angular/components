@@ -10,8 +10,7 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/testing",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
 
@@ -28,8 +27,7 @@ ts_project(
         ":testing",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/sidenav",
     ],
 )

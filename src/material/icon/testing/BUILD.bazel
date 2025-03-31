@@ -13,7 +13,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk/testing",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/icon",
     ],
 )
@@ -31,9 +31,7 @@ ts_project(
         ":testing",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/platform",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/icon",
     ],
 )

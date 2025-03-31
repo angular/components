@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export default {
-  resolveExtensions: ['.js'],
-  format: 'esm',
-};
+// TODO(devversion): Remove when APF ships pre-linked output.
+import '@angular/compiler';
+
+// Load `$localize` for examples using it.
+import '@angular/localize/init';

@@ -13,10 +13,9 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/cdk-experimental/selection",
-        "//src/cdk/collections",
-        "//src/cdk/table",
-        "//src/material/checkbox",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/cdk-experimental",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 

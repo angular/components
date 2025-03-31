@@ -11,8 +11,8 @@ ng_project(
     ]),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material-experimental/column-resize",
-        "//src/material/table",
+        "//src/components-examples:node_modules/@angular/material",
+        "//src/components-examples:node_modules/@angular/material-experimental",
     ],
 )
 
