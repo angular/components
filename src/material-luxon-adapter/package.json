@@ -16,6 +16,9 @@
     "@angular/core": "0.0.0-NG",
     "luxon": "^3.0.0"
   },
+  "devDependencies": {
+    "@angular/material": "workspace:*"
+  },
   "dependencies": {
     "tslib": "^2.3.0"
   },

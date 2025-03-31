@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@angular/cdk": "workspace:*",
+    "@angular/cdk-experimental": "workspace:*",
+    "@angular/material": "workspace:*",
+    "@angular/components-examples": "workspace:*"
+  }
+}

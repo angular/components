@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@angular/cdk": "workspace:*",
+    "@angular/cdk-experimental": "workspace:*",
+    "@angular/material": "workspace:*",
+    "@angular/material-experimental": "workspace:*",
+    "@angular/components-examples": "workspace:*",
+    "@angular/google-maps": "workspace:*",
+    "@angular/youtube-player": "workspace:*"
+  }
+}
