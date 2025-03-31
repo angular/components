@@ -15,9 +15,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/router",
-        "//src/material/button",
-        "//src/material/icon",
-        "//src/material/list",
+        "//src/dev-app:node_modules/@angular/material",
     ],
 )
 

@@ -4,7 +4,6 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "private",
-    testonly = True,
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
@@ -14,4 +13,9 @@ ts_project(
         "//:node_modules/@types/jasmine",
         "//src/cdk/testing/testbed",
     ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
 )

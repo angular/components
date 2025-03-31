@@ -13,7 +13,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material/icon",
+        "//src/dev-app:node_modules/@angular/material",
     ],
 )
 

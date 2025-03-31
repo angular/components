@@ -16,8 +16,8 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/cdk-experimental/popover-edit",
-        "//src/material/core",
+        "//src/material-experimental:node_modules/@angular/cdk-experimental",
+        "//src/material-experimental:node_modules/@angular/material",
     ],
 )
 
@@ -43,11 +43,8 @@ ts_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
         "//src/cdk-experimental/popover-edit",
-        "//src/cdk/collections",
-        "//src/cdk/keycodes",
-        "//src/cdk/overlay",
-        "//src/cdk/testing/private",
-        "//src/material/table",
+        "//src/material-experimental:node_modules/@angular/cdk",
+        "//src/material-experimental:node_modules/@angular/material",
     ],
 )
 

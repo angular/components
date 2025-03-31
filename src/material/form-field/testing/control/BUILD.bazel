@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "control",
     srcs = glob(["**/*.ts"]),
-    deps = ["//src/cdk/testing"],
+    deps = ["//src/material:node_modules/@angular/cdk"],
 )
 
 filegroup(

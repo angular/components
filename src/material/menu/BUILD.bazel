@@ -23,8 +23,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk/overlay",
-        "//src/cdk/scrolling",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )
@@ -57,12 +56,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/keycodes",
-        "//src/cdk/overlay",
-        "//src/cdk/scrolling",
-        "//src/cdk/testing/private",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )

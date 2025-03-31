@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import 'zone.js';
 
+// TODO(devversion): Remove when APF ships pre-linked output.
+import '@angular/compiler';
+
 import {ErrorHandler} from '@angular/core';
 import {bootstrapApplication, provideClientHydration} from '@angular/platform-browser';
 import {provideServerRendering, renderApplication} from '@angular/platform-server';

@@ -20,8 +20,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk/collections",
-        "//src/cdk/tree",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )
@@ -53,10 +52,7 @@ ts_project(
         ":tree",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk/a11y",
-        "//src/cdk/keycodes",
-        "//src/cdk/testing/private",
-        "//src/cdk/tree",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
 

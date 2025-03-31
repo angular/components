@@ -8,7 +8,7 @@ ng_project(
     assets = ["tooltip-demo.html"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/components-examples/material/tooltip",
+        "//src/dev-app:node_modules/@angular/material",
         "//src/dev-app/example",
     ],
 )

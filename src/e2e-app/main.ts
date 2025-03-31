@@ -1,3 +1,6 @@
+// TODO(devversion): Remove when APF ships pre-linked output.
+import '@angular/compiler';
+
 import {enableProdMode} from '@angular/core';
 import {bootstrapApplication, provideProtractorTestingSupport} from '@angular/platform-browser';
 import {provideNoopAnimations} from '@angular/platform-browser/animations';

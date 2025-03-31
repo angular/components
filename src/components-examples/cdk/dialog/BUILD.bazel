@@ -17,7 +17,8 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/cdk/dialog",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/cdk-experimental",
     ],
 )
 

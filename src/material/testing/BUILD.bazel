@@ -8,6 +8,6 @@ ng_project(
     srcs = glob(["**/*.ts"]),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material/core",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
