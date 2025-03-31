@@ -42,6 +42,7 @@ ng_web_test_suite(
 
 ng_package(
     name = "npm_package",
+    package_name = "@angular/material-moment-adapter",
     srcs = ["package.json"],
     nested_packages = ["//src/material-moment-adapter/schematics:npm_package"],
     tags = ["release-package"],
