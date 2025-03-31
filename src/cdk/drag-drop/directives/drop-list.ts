@@ -59,6 +59,9 @@ export class CdkDropList<T = any> implements OnDestroy {
     skipSelf: true,
   });
 
+  /** Refs that have been synced with the drop ref most recently. */
+  private _latestSortedRefs: DragRef[] | undefined;
+
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
 
@@ -222,7 +225,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     // Only sync the items while dragging since this method is
     // called when items are being initialized one-by-one.
     if (this._dropListRef.isDragging()) {
-      this._syncItemsWithRef();
+      this._syncItemsWithRef(this.getSortedItems().map(item => item._dragRef));
     }
   }
 
@@ -231,7 +234,16 @@ export class CdkDropList<T = any> implements OnDestroy {
     this._unsortedItems.delete(item);
 
     // This method might be called on destroy so we always want to sync with the ref.
-    this._syncItemsWithRef();
+    // Note that we reuse the last set of synced items, rather than re-sorting the whole
+    // list, because it can slow down re-renders of large lists (see #30737).
+    if (this._latestSortedRefs) {
+      const index = this._latestSortedRefs.indexOf(item._dragRef);
+
+      if (index > -1) {
+        this._latestSortedRefs.splice(index, 1);
+        this._syncItemsWithRef(this._latestSortedRefs);
+      }
+    }
   }
 
   /** Gets the registered items in the list, sorted by their position in the DOM. */
@@ -259,6 +271,7 @@ export class CdkDropList<T = any> implements OnDestroy {
       this._group._items.delete(this);
     }
 
+    this._latestSortedRefs = undefined;
     this._unsortedItems.clear();
     this._dropListRef.dispose();
     this._destroyed.next();
@@ -335,7 +348,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   /** Handles events from the underlying DropListRef. */
   private _handleEvents(ref: DropListRef<CdkDropList>) {
     ref.beforeStarted.subscribe(() => {
-      this._syncItemsWithRef();
+      this._syncItemsWithRef(this.getSortedItems().map(item => item._dragRef));
       this._changeDetectorRef.markForCheck();
     });
 
@@ -403,7 +416,8 @@ export class CdkDropList<T = any> implements OnDestroy {
   }
 
   /** Syncs up the registered drag items with underlying drop list ref. */
-  private _syncItemsWithRef() {
-    this._dropListRef.withItems(this.getSortedItems().map(item => item._dragRef));
+  private _syncItemsWithRef(items: DragRef[]) {
+    this._latestSortedRefs = items;
+    this._dropListRef.withItems(items);
   }
 }
