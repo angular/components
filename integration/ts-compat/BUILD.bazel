@@ -1,5 +1,5 @@
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
+load("@aspect_rules_js//js:defs.bzl", "js_test")
 load("//integration/ts-compat:import-all-entry-points.bzl", "generate_import_all_entry_points_file")
 
 package(default_visibility = ["//visibility:public"])
@@ -18,24 +18,23 @@ typescript_version_packages = [
 
 # Generates a NodeJS test for each configured TypeScript version.
 [
-    nodejs_test(
+    js_test(
         name = ts_pkg_name,
         args = [ts_pkg_name],
+        chdir = package_name(),
         data = [
             "helpers.mjs",
             "test.mjs",
             ":import-all-entry-points-file",
-            "//integration:npm-packages-from-runfiles",
-            "//src/cdk:npm_package",
-            "//src/cdk-experimental:npm_package",
-            "//src/google-maps:npm_package",
-            "//src/material:npm_package",
-            "//src/material-experimental:npm_package",
-            "//src/youtube-player:npm_package",
-            "@npm//@bazel/runfiles",
-            "@npm//shelljs",
-            "@npm//%s" % ts_pkg_name,
-            "@npm//@types/node",
+            "//:node_modules/shelljs",
+            "//integration:node_modules/@angular/cdk",
+            "//integration:node_modules/@angular/cdk-experimental",
+            "//integration:node_modules/@angular/google-maps",
+            "//integration:node_modules/@angular/material",
+            "//integration:node_modules/@angular/material-experimental",
+            "//integration:node_modules/@angular/youtube-player",
+            "//:node_modules/%s" % ts_pkg_name,
+            "//:node_modules/@types/node",
         ],
         entry_point = "test.mjs",
     )
