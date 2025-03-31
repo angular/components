@@ -2,8 +2,11 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//tools:defaults.bzl", "ng_package")
 load("//tools:defaults2.bzl", "ts_project")
 load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("@npm2//defs:bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
 
 ts_project(
     name = "cdk-experimental",

@@ -66,6 +66,9 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "devDependencies": {
+    "@angular/cdk": "workspace:*"
+  },
   "schematics": "./schematics/collection.json",
   "ng-update": {
     "migrations": "./schematics/migration.json",
