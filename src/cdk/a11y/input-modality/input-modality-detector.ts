@@ -15,7 +15,7 @@ import {
   inject,
   RendererFactory2,
 } from '@angular/core';
-import {Platform, _bindEventWithOptions, _getEventTarget} from '../../platform';
+import {Platform, _getEventTarget} from '../../platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
@@ -205,27 +205,9 @@ export class InputModalityDetector implements OnDestroy {
 
       this._listenerCleanups = ngZone.runOutsideAngular(() => {
         return [
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'keydown',
-            this._onKeydown,
-            modalityEventListenerOptions,
-          ),
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'mousedown',
-            this._onMousedown,
-            modalityEventListenerOptions,
-          ),
-          _bindEventWithOptions(
-            renderer,
-            document,
-            'touchstart',
-            this._onTouchstart,
-            modalityEventListenerOptions,
-          ),
+          renderer.listen(document, 'keydown', this._onKeydown, modalityEventListenerOptions),
+          renderer.listen(document, 'mousedown', this._onMousedown, modalityEventListenerOptions),
+          renderer.listen(document, 'touchstart', this._onTouchstart, modalityEventListenerOptions),
         ];
       });
     }
