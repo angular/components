@@ -38,9 +38,6 @@ $prefix: (mat, menu);
       container-color: map.get($systems, md-sys-color, surface-container),
       container-elevation-shadow: token-definition.hardcode(
         elevation.get-box-shadow(2), $exclude-hardcoded),
-
-      // Unused
-      base-elevation-level: null,
     )
   );
 

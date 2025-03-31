@@ -1,5 +1,7 @@
 @use 'sass:map';
 @use '../../token-definition';
+@use '../../../style/elevation';
+@use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, switch);
@@ -10,47 +12,155 @@ $prefix: (mat, switch);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-slide-toggle
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  // visible/hidden-track-opacity:
+  // The hidden and visible track represent whichever track is visible or
+  // hidden in the ui. This could be the .mdc-switch__track :before or
+  // :after depending on whether the switch is selected or unselected.
+  //
+  // The m2 slide-toggle uses transforms to hide & show the tracks while
+  // the m3 slide-toggle uses opacity.
   $tokens: (
-    disabled-selected-handle-opacity: token-definition.hardcode(1, $exclude-hardcoded),
-    disabled-unselected-handle-opacity: token-definition.hardcode(0.38, $exclude-hardcoded),
-    unselected-handle-size: token-definition.hardcode(16px, $exclude-hardcoded),
-    selected-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
-    with-icon-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
-    pressed-handle-size: token-definition.hardcode(28px, $exclude-hardcoded),
-    selected-handle-horizontal-margin: token-definition.hardcode(0 24px, $exclude-hardcoded),
-    selected-with-icon-handle-horizontal-margin:
-        token-definition.hardcode(0 24px, $exclude-hardcoded),
-    selected-pressed-handle-horizontal-margin:
-        token-definition.hardcode(0 22px, $exclude-hardcoded),
-    unselected-handle-horizontal-margin: token-definition.hardcode(0 8px, $exclude-hardcoded),
-    unselected-with-icon-handle-horizontal-margin:
-        token-definition.hardcode(0 4px, $exclude-hardcoded),
-    unselected-pressed-handle-horizontal-margin:
-        token-definition.hardcode(0 2px, $exclude-hardcoded),
-    // The hidden and visible track represent whichever track is visible or
-    // hidden in the ui. This could be the .mdc-switch__track :before or
-    // :after depending on whether the switch is selected or unselected.
-    //
-    // The m2 slide-toggle uses transforms to hide & show the tracks while
-    // the m3 slide-toggle uses opacity.
-    visible-track-opacity: token-definition.hardcode(1, $exclude-hardcoded),
-    hidden-track-opacity: token-definition.hardcode(0, $exclude-hardcoded),
-    visible-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
-    hidden-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
-    track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
-    track-outline-color: map.get($systems, md-sys-color, outline),
-    selected-track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
-    selected-track-outline-color: token-definition.hardcode(transparent, $exclude-hardcoded),
-    disabled-unselected-track-outline-width:
-        token-definition.hardcode(2px, $exclude-hardcoded),
+    disabled-selected-handle-color: map.get($systems, md-sys-color, surface),
+    disabled-selected-handle-opacity: if($exclude-hardcoded, null, 1),
+    disabled-selected-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-selected-track-color: map.get($systems, md-sys-color, on-surface),
+    disabled-track-opacity: if($exclude-hardcoded, null, 0.12),
+    disabled-unselected-handle-color: map.get($systems, md-sys-color, on-surface),
+    disabled-unselected-handle-opacity: if($exclude-hardcoded, null, 0.38),
+    disabled-unselected-icon-color: map.get($systems, md-sys-color, surface-variant),
+    disabled-unselected-icon-opacity: if($exclude-hardcoded, null, 0.38),
+    disabled-unselected-track-color: map.get($systems, md-sys-color, surface-variant),
     disabled-unselected-track-outline-color: map.get($systems, md-sys-color, on-surface),
+    disabled-unselected-track-outline-width:
+    token-definition.hardcode(2px, $exclude-hardcoded),
+    handle-shape: map.get($systems, md-sys-shape, corner-full),
+    hidden-track-opacity: token-definition.hardcode(0, $exclude-hardcoded),
+    hidden-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
     label-text-color: map.get($systems, md-sys-color, on-surface),
     label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
     label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
     label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
     label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
     label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+    pressed-handle-size: token-definition.hardcode(28px, $exclude-hardcoded),
+    selected-focus-handle-color: map.get($systems, md-sys-color, primary-container),
+    selected-focus-state-layer-color: map.get($systems, md-sys-color, primary),
+    selected-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
+    selected-focus-track-color: map.get($systems, md-sys-color, primary),
+    selected-handle-color: map.get($systems, md-sys-color, on-primary),
+    selected-handle-horizontal-margin: token-definition.hardcode(0 24px, $exclude-hardcoded),
+    selected-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+    selected-hover-handle-color: map.get($systems, md-sys-color, primary-container),
+    selected-hover-state-layer-color: map.get($systems, md-sys-color, primary),
+    selected-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+    selected-hover-track-color: map.get($systems, md-sys-color, primary),
+    selected-icon-color: map.get($systems, md-sys-color, on-primary-container),
+    selected-icon-size: if($exclude-hardcoded, null, 16px),
+    selected-pressed-handle-color: map.get($systems, md-sys-color, primary-container),
+    selected-pressed-handle-horizontal-margin:
+    token-definition.hardcode(0 22px, $exclude-hardcoded),
+    selected-pressed-state-layer-color: map.get($systems, md-sys-color, primary),
+    selected-pressed-state-layer-opacity:
+        map.get($systems, md-sys-state, pressed-state-layer-opacity),
+    selected-pressed-track-color: map.get($systems, md-sys-color, primary),
+    selected-track-color: map.get($systems, md-sys-color, primary),
+    selected-track-outline-color: token-definition.hardcode(transparent, $exclude-hardcoded),
+    selected-track-outline-width: token-definition.hardcode(2px, $exclude-hardcoded),
+    selected-with-icon-handle-horizontal-margin:
+    token-definition.hardcode(0 24px, $exclude-hardcoded),
+    state-layer-size: if($exclude-hardcoded, null, 40px),
+    track-height: if($exclude-hardcoded, null, 32px),
+    track-outline-color: map.get($systems, md-sys-color, outline),
+    track-outline-width: if($exclude-hardcoded, null, 2px),
+    track-shape: map.get($systems, md-sys-shape, corner-full),
+    track-width: if($exclude-hardcoded, null, 52px),
+    unselected-focus-handle-color: map.get($systems, md-sys-color, on-surface-variant),
+    unselected-focus-state-layer-color: map.get($systems, md-sys-color, on-surface),
+    unselected-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
+    unselected-focus-track-color: map.get($systems, md-sys-color, surface-variant),
+    unselected-handle-color: map.get($systems, md-sys-color, outline),
+    unselected-handle-horizontal-margin:
+    token-definition.hardcode(0 8px, $exclude-hardcoded),
+    unselected-handle-size: token-definition.hardcode(16px, $exclude-hardcoded),
+    unselected-hover-handle-color: map.get($systems, md-sys-color, on-surface-variant),
+    unselected-hover-state-layer-color: map.get($systems, md-sys-color, on-surface),
+    unselected-hover-state-layer-opacity:
+        map.get($systems, md-sys-state, hover-state-layer-opacity),
+    unselected-hover-track-color: map.get($systems, md-sys-color, surface-variant),
+    unselected-icon-color: map.get($systems, md-sys-color, surface-variant),
+    unselected-icon-size: if($exclude-hardcoded, null, 16px),
+    unselected-pressed-handle-color: map.get($systems, md-sys-color, on-surface-variant),
+    unselected-pressed-handle-horizontal-margin:
+        token-definition.hardcode(0 2px, $exclude-hardcoded),
+    unselected-pressed-state-layer-color: map.get($systems, md-sys-color, on-surface),
+    unselected-pressed-state-layer-opacity:
+        map.get($systems, md-sys-state, pressed-state-layer-opacity),
+    unselected-pressed-track-color: map.get($systems, md-sys-color, surface-variant),
+    unselected-track-color: map.get($systems, md-sys-color, surface-variant),
+    unselected-with-icon-handle-horizontal-margin:
+        token-definition.hardcode(0 4px, $exclude-hardcoded),
+    visible-track-opacity: token-definition.hardcode(1, $exclude-hardcoded),
+    visible-track-transition: token-definition.hardcode(opacity 75ms, $exclude-hardcoded),
+    with-icon-handle-size: token-definition.hardcode(24px, $exclude-hardcoded),
+  );
+  $elevation-tokens: (handle-elevation, disabled-handle-elevation);
+
+  @each $token in $elevation-tokens {
+    $elevation: map.get($tokens, $token);
+
+    @if ($elevation != null) {
+      $tokens: map.set($tokens, $token + -shadow, elevation.get-box-shadow($elevation));
+    }
+  }
+
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-track-color: map.get($systems, md-sys-color, secondary),
+      selected-handle-color: map.get($systems, md-sys-color, on-secondary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-track-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, secondary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, secondary),
+      selected-track-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-handle-color: map.get($systems, md-sys-color, on-tertiary),
+      selected-hover-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-track-color: map.get($systems, md-sys-color, tertiary),
+      selected-track-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      selected-focus-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-focus-track-color: map.get($systems, md-sys-color, error),
+      selected-handle-color: map.get($systems, md-sys-color, on-error),
+      selected-hover-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-hover-track-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-pressed-handle-color: map.get($systems, md-sys-color, error-container),
+      selected-pressed-state-layer-color: map.get($systems, md-sys-color, error),
+      selected-pressed-track-color: map.get($systems, md-sys-color, error),
+      selected-track-color: map.get($systems, md-sys-color, error),
+    ),
   );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }

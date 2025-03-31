@@ -12,34 +12,55 @@ $prefix: (mat, radio);
 /// @return {Map} A set of custom tokens for the mat-radio
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
-    (
-      ripple-color: map.get($systems, md-sys-color, on-surface),
-      checked-ripple-color: map.get($systems, md-sys-color, primary),
-      disabled-label-color:
-        sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      label-text-color: map.get($systems, md-sys-color, on-surface),
-      label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-      label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-      label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-      label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
-      label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    ),
-    (
-      // Color variants:
-      primary: (),
-      // Default, no overrides needed
-      secondary:
-        (
-          checked-ripple-color: map.get($systems, md-sys-color, secondary),
-        ),
-      tertiary: (
-        checked-ripple-color: map.get($systems, md-sys-color, tertiary),
-      ),
-      error: (
-        checked-ripple-color: map.get($systems, md-sys-color, error),
-      )
-    )
+    ripple-color: map.get($systems, md-sys-color, on-surface),
+    checked-ripple-color: map.get($systems, md-sys-color, primary),
+    disabled-label-color:
+    sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    label-text-color: map.get($systems, md-sys-color, on-surface),
+    label-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    label-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+    disabled-selected-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-unselected-icon-color: map.get($systems, md-sys-color, on-surface),
+    disabled-unselected-icon-opacity: if($exclude-hardcoded, null, 0.38),
+    selected-focus-icon-color: map.get($systems, md-sys-color, primary),
+    selected-hover-icon-color: map.get($systems, md-sys-color, primary),
+    selected-icon-color: map.get($systems, md-sys-color, primary),
+    selected-pressed-icon-color: map.get($systems, md-sys-color, primary),
+    state-layer-size: if($exclude-hardcoded, null, 40px),
+    unselected-focus-icon-color: map.get($systems, md-sys-color, on-surface),
+    unselected-hover-icon-color: map.get($systems, md-sys-color, on-surface),
+    unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    unselected-pressed-icon-color: map.get($systems, md-sys-color, on-surface),
   );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      checked-ripple-color: map.get($systems, md-sys-color, secondary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-icon-color: map.get($systems, md-sys-color, secondary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      checked-ripple-color: map.get($systems, md-sys-color, tertiary),
+      selected-focus-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-hover-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-icon-color: map.get($systems, md-sys-color, tertiary),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      checked-ripple-color: map.get($systems, md-sys-color, error),
+      selected-focus-icon-color: map.get($systems, md-sys-color, error),
+      selected-hover-icon-color: map.get($systems, md-sys-color, error),
+      selected-icon-color: map.get($systems, md-sys-color, error),
+      selected-pressed-icon-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }

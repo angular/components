@@ -1,6 +1,6 @@
 @use 'sass:map';
-@use '../../../style/sass-utils';
 @use '../../token-definition';
+@use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, icon-button);
@@ -11,23 +11,31 @@ $prefix: (mat, icon-button);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-icon-button
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: ((
+  $tokens: (
     state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
     ripple-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, on-surface-variant),
+        map.get($systems, md-sys-color, on-surface-variant),
       $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
     ),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-  ), (
+    disabled-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    icon-size: if($exclude-hardcoded, null, 24px),
+    state-layer-size: if($exclude-hardcoded, null, 40px),
+    icon-color: map.get($systems, md-sys-color, on-surface-variant),
+  );
+
+  $variant-tokens: (
     primary: (
       state-layer-color: map.get($systems, md-sys-color, primary),
       ripple-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
+      icon-color: map.get($systems, md-sys-color, primary)
     ),
     secondary: (
       state-layer-color: map.get($systems, md-sys-color, secondary),
@@ -35,6 +43,7 @@ $prefix: (mat, icon-button);
         map.get($systems, md-sys-color, secondary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
+      icon-color: map.get($systems, md-sys-color, secondary)
     ),
     tertiary: (
       state-layer-color: map.get($systems, md-sys-color, tertiary),
@@ -42,6 +51,7 @@ $prefix: (mat, icon-button);
         map.get($systems, md-sys-color, tertiary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
+      icon-color: map.get($systems, md-sys-color, tertiary)
     ),
     error: (
       state-layer-color: map.get($systems, md-sys-color, error),
@@ -49,8 +59,9 @@ $prefix: (mat, icon-button);
         map.get($systems, md-sys-color, error),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
       ),
+      icon-color: map.get($systems, md-sys-color, error)
     )
-  ));
+  );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }

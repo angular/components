@@ -16,7 +16,6 @@ $prefix: (mat, tab-header);
     (
       divider-color: map.get($systems, md-sys-color, surface-variant),
       divider-height: token-definition.hardcode(1px, $exclude-hardcoded),
-      disabled-ripple-color: null, // TODO(mmalerba): Figure out correct value.
       pagination-icon-color: map.get($systems, md-sys-color, on-surface),
       inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
       active-label-text-color: map.get($systems, md-sys-color, on-surface),
@@ -29,7 +28,9 @@ $prefix: (mat, tab-header);
       active-focus-indicator-color: map.get($systems, md-sys-color, primary),
       active-hover-indicator-color: map.get($systems, md-sys-color, primary),
     ),
-  ), (
+  );
+
+  $variant-tokens: (
     // Color variants
     primary: (), // Default, no overrides needed
     secondary: (
@@ -46,6 +47,6 @@ $prefix: (mat, tab-header);
     )
   );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }
 
