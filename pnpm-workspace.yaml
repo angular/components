@@ -1,3 +1,16 @@
 packages:
   - .
+  - integration
   - src/cdk
+  - src/cdk-experimental
+  - src/components-examples
+  - src/dev-app
+  - src/e2e-app
+  - src/google-maps
+  - src/material
+  - src/material-date-fns-adapter
+  - src/material-experimental
+  - src/material-luxon-adapter
+  - src/material-moment-adapter
+  - src/universal-app
+  - src/youtube-player
