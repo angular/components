@@ -1,7 +1,10 @@
 load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
 
 ng_project(
     name = "material-date-fns-adapter",
@@ -10,10 +13,10 @@ ng_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
+        ":node_modules/@angular/material",
         "//:node_modules/@angular/core",
         "//:node_modules/date-fns",
         "//src:dev_mode_types",
-        "//src/material/core",
     ],
 )
 
@@ -26,9 +29,9 @@ ts_project(
     ),
     deps = [
         ":material-date-fns-adapter",
+        ":node_modules/@angular/material",
         "//:node_modules/@angular/core",
         "//:node_modules/date-fns",
-        "//src/material/core",
     ],
 )
 

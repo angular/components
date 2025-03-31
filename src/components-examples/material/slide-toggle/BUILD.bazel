@@ -18,14 +18,8 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/button",
-        "//src/material/card",
-        "//src/material/checkbox",
-        "//src/material/radio",
-        "//src/material/slide-toggle",
-        "//src/material/slide-toggle/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 
@@ -46,10 +40,8 @@ ts_project(
         ":slide-toggle",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/slide-toggle",
-        "//src/material/slide-toggle/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 

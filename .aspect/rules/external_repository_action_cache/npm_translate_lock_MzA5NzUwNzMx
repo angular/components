@@ -2,20 +2,20 @@
 # Input hashes for repository rule npm_translate_lock(name = "npm2", pnpm_lock = "@//:pnpm-lock.yaml").
 # This file should be checked into version control along with the pnpm-lock.yaml file.
 .npmrc=-1406867100
-integration/package.json=122088
+integration/package.json=-620011313
 package.json=1450829053
 patches/@angular__compiler-cli.patch=-11405367
 patches/@angular__core.patch=213102054
-pnpm-lock.yaml=-475681958
+pnpm-lock.yaml=1097062160
 pnpm-workspace.yaml=334858811
-src/cdk-experimental/package.json=2063150503
+src/cdk-experimental/package.json=237487315
 src/cdk/package.json=-908433069
-src/components-examples/package.json=560048349
+src/components-examples/package.json=-2087309525
 src/dev-app/package.json=624475908
 src/e2e-app/package.json=-1971485006
 src/google-maps/package.json=-886415500
 src/material-date-fns-adapter/package.json=-332076964
-src/material-experimental/package.json=592784609
+src/material-experimental/package.json=-1707816737
 src/material-luxon-adapter/package.json=-199007660
 src/material-moment-adapter/package.json=-1407689629
 src/material/package.json=-1237533685
