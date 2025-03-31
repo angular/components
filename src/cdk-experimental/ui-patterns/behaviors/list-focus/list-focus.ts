@@ -38,7 +38,10 @@ export class ListFocus<T extends ListFocusItem> {
     if (this.inputs.focusMode() === 'roving') {
       return undefined;
     }
-    return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
+    if (this.navigation.inputs.items().length) {
+      return this.navigation.inputs.items()[this.navigation.inputs.activeIndex()].id();
+    }
+    return undefined;
   }
 
   /** The tabindex for the list. */
