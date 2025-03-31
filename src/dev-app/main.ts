@@ -6,9 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-// Load `$localize` for examples using it.
-import '@angular/localize/init';
-
 import {provideHttpClient} from '@angular/common/http';
 import {
   importProvidersFrom,

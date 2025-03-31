@@ -21,8 +21,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/cdk/a11y",
-        "//src/cdk/collections",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )
@@ -75,7 +74,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing/private",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
 

@@ -20,8 +20,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src:dev_mode_types",
-        "//src/cdk/bidi",
-        "//src/cdk/coercion",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )
@@ -48,7 +47,7 @@ ts_project(
         ":grid-list",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/bidi",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
 

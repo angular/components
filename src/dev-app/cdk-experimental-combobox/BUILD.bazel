@@ -10,6 +10,7 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/combobox",
+        "//src/dev-app:node_modules/@angular/cdk",
+        "//src/dev-app:node_modules/@angular/cdk-experimental",
     ],
 )

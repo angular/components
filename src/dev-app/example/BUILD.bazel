@@ -7,9 +7,8 @@ ng_project(
     srcs = glob(["**/*.ts"]),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk/coercion",
-        "//src/components-examples",
-        "//src/components-examples/private",
-        "//src/material/expansion",
+        "//src/dev-app:node_modules/@angular/cdk",
+        "//src/dev-app:node_modules/@angular/components-examples",
+        "//src/dev-app:node_modules/@angular/material",
     ],
 )

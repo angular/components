@@ -21,14 +21,8 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
         "//:node_modules/rxjs",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/card",
-        "//src/material/form-field",
-        "//src/material/input",
-        "//src/material/paginator",
-        "//src/material/paginator/testing",
-        "//src/material/slide-toggle",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 
@@ -49,10 +43,8 @@ ts_project(
         ":paginator",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
-        "//src/material/paginator",
-        "//src/material/paginator/testing",
+        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/components-examples:node_modules/@angular/material",
     ],
 )
 

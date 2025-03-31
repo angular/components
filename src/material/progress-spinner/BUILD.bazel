@@ -22,7 +22,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src/cdk/platform",
+        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )
@@ -55,7 +55,7 @@ ts_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk/platform",
+        "//src/material:node_modules/@angular/cdk",
     ],
 )
 

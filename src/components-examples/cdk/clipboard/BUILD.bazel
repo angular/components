@@ -12,7 +12,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/cdk/clipboard",
+        "//src/components-examples:node_modules/@angular/cdk",
     ],
 )
 
