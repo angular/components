@@ -51,6 +51,7 @@ sass_library(
 # Creates the @angular/cdk package published to npm.
 ng_package(
     name = "npm_package",
+    package_name = "@angular/cdk",
     srcs = [
         "package.json",
         ":sass_lib",

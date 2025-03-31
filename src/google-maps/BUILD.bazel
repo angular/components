@@ -35,6 +35,7 @@ ng_project(
 # Creates the @angular/google-maps package published to npm
 ng_package(
     name = "npm_package",
+    package_name = "@angular/google-maps",
     srcs = ["package.json"],
     nested_packages = ["//src/google-maps/schematics:npm_package"],
     tags = ["release-package"],
