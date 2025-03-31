@@ -46,31 +46,16 @@
 @use './mat/tree' as tokens-mat-tree;
 @use './mat/timepicker' as tokens-mat-timepicker;
 @use './mat/tonal-button' as tokens-mat-tonal-button;
-@use './mdc/checkbox' as tokens-mdc-checkbox;
-@use './mdc/text-button' as tokens-mdc-text-button;
-@use './mdc/protected-button' as tokens-mdc-protected-button;
-@use './mdc/filled-button' as tokens-mdc-filled-button;
-@use './mdc/outlined-button' as tokens-mdc-outlined-button;
-@use './mdc/chip' as tokens-mdc-chip;
-@use './mdc/circular-progress' as tokens-mdc-circular-progress;
-@use './mdc/dialog' as tokens-mdc-dialog;
-@use './mdc/elevated-card' as tokens-mdc-elevated-card;
-@use './mdc/extended-fab' as tokens-mdc-extended-fab;
-@use './mdc/fab' as tokens-mdc-fab;
-@use './mdc/fab-small' as tokens-mdc-fab-small;
-@use './mdc/filled-text-field' as tokens-mdc-filled-text-field;
-@use './mdc/icon-button' as tokens-mdc-icon-button;
-@use './mdc/linear-progress' as tokens-mdc-linear-progress;
-@use './mdc/list' as tokens-mdc-list;
-@use './mdc/outlined-card' as tokens-mdc-outlined-card;
-@use './mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
-@use './mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
-@use './mdc/radio' as tokens-mdc-radio;
-@use './mdc/slider' as tokens-mdc-slider;
-@use './mdc/snack-bar' as tokens-mdc-snack-bar;
-@use './mdc/switch' as tokens-mdc-switch;
-@use './mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
-@use './mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use './mat/circular-progress' as tokens-mat-circular-progress;
+@use './mat/elevated-card' as tokens-mat-elevated-card;
+@use './mat/extended-fab' as tokens-mat-extended-fab;
+@use './mat/filled-text-field' as tokens-mat-filled-text-field;
+@use './mat/linear-progress' as tokens-mat-linear-progress;
+@use './mat/outlined-card' as tokens-mat-outlined-card;
+@use './mat/outlined-text-field' as tokens-mat-outlined-text-field;
+@use './mat/plain-tooltip' as tokens-mat-plain-tooltip;
+@use './mat/secondary-navigation-tab' as tokens-mat-secondary-navigation-tab;
+@use './mat/tab-indicator' as tokens-mat-tab-indicator;
 @use '../../theming/inspection';
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
@@ -160,30 +145,15 @@
     _get-tokens-for-module($theme, tokens-mat-tree),
     _get-tokens-for-module($theme, tokens-mat-timepicker),
     _get-tokens-for-module($theme, tokens-mat-tonal-button),
-    _get-tokens-for-module($theme, tokens-mdc-checkbox),
-    _get-tokens-for-module($theme, tokens-mdc-chip),
-    _get-tokens-for-module($theme, tokens-mdc-circular-progress),
-    _get-tokens-for-module($theme, tokens-mdc-dialog),
-    _get-tokens-for-module($theme, tokens-mdc-elevated-card),
-    _get-tokens-for-module($theme, tokens-mdc-extended-fab),
-    _get-tokens-for-module($theme, tokens-mdc-fab),
-    _get-tokens-for-module($theme, tokens-mdc-fab-small),
-    _get-tokens-for-module($theme, tokens-mdc-filled-button),
-    _get-tokens-for-module($theme, tokens-mdc-filled-text-field),
-    _get-tokens-for-module($theme, tokens-mdc-icon-button),
-    _get-tokens-for-module($theme, tokens-mdc-linear-progress),
-    _get-tokens-for-module($theme, tokens-mdc-list),
-    _get-tokens-for-module($theme, tokens-mdc-outlined-button),
-    _get-tokens-for-module($theme, tokens-mdc-outlined-card),
-    _get-tokens-for-module($theme, tokens-mdc-outlined-text-field),
-    _get-tokens-for-module($theme, tokens-mdc-plain-tooltip),
-    _get-tokens-for-module($theme, tokens-mdc-protected-button),
-    _get-tokens-for-module($theme, tokens-mdc-radio),
-    _get-tokens-for-module($theme, tokens-mdc-slider),
-    _get-tokens-for-module($theme, tokens-mdc-snack-bar),
-    _get-tokens-for-module($theme, tokens-mdc-switch),
-    _get-tokens-for-module($theme, tokens-mdc-tab-indicator),
-    _get-tokens-for-module($theme, tokens-mdc-secondary-navigation-tab),
-    _get-tokens-for-module($theme, tokens-mdc-text-button)
+    _get-tokens-for-module($theme, tokens-mat-circular-progress),
+    _get-tokens-for-module($theme, tokens-mat-elevated-card),
+    _get-tokens-for-module($theme, tokens-mat-extended-fab),
+    _get-tokens-for-module($theme, tokens-mat-filled-text-field),
+    _get-tokens-for-module($theme, tokens-mat-linear-progress),
+    _get-tokens-for-module($theme, tokens-mat-outlined-card),
+    _get-tokens-for-module($theme, tokens-mat-outlined-text-field),
+    _get-tokens-for-module($theme, tokens-mat-plain-tooltip),
+    _get-tokens-for-module($theme, tokens-mat-tab-indicator),
+    _get-tokens-for-module($theme, tokens-mat-secondary-navigation-tab),
   );
 }

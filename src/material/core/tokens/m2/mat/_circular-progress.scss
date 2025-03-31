@@ -1,48 +1,33 @@
-@use '../../token-definition';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use 'sass:meta';
-@use 'sass:color';
+@use '../../token-definition';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, snack-bar);
+$prefix: (mat, circular-progress);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
+    active-indicator-width: 4px,
+    size: 48px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
-
+@function get-color-tokens($theme, $palette-name: primary) {
   @return (
-    container-color: if(
-        meta.type-of($surface) == color,
-        color.mix(if($is-dark, #fff, #000), $surface, 80%),
-        $surface),
-    supporting-text-color: if(meta.type-of($surface) == color, rgba($surface, 0.87), $surface),
-    button-color:
-      if(
-        $is-dark,
-        inspection.get-theme-color($theme, primary, 500),
-        inspection.get-theme-color($theme, primary, 100)
-      )
+    active-indicator-color: inspection.get-theme-color($theme, $palette-name)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return (
-    supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    supporting-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

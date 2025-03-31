@@ -1,5 +1,4 @@
 @use 'sass:color';
-@use '../core/tokens/m2/mdc/chip' as tokens-mdc-chip;
 @use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
@@ -15,10 +14,6 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        tokens-mdc-chip.$prefix,
-        tokens-mdc-chip.get-unthemable-tokens()
-      );
       @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-unthemable-tokens()
@@ -38,10 +33,6 @@
   } @else {
     .mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-chip.$prefix,
-        tokens-mdc-chip.get-color-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-color-tokens($theme)
       );
@@ -50,10 +41,6 @@
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
           @include token-utils.create-token-values-mixed(
-            tokens-mdc-chip.$prefix,
-            tokens-mdc-chip.get-color-tokens($theme, primary)
-          );
-          @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, primary)
           );
@@ -61,20 +48,12 @@
 
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-            tokens-mdc-chip.$prefix,
-            tokens-mdc-chip.get-color-tokens($theme, accent)
-          );
-          @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, accent)
           );
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values-mixed(
-            tokens-mdc-chip.$prefix,
-            tokens-mdc-chip.get-color-tokens($theme, warn)
-          );
           @include token-utils.create-token-values-mixed(
             tokens-mat-chip.$prefix,
             tokens-mat-chip.get-color-tokens($theme, warn)
@@ -93,10 +72,6 @@
   } @else {
     .mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-chip.$prefix,
-        tokens-mdc-chip.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-typography-tokens($theme)
       );
@@ -112,10 +87,6 @@
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-chip.$prefix,
-        tokens-mdc-chip.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         tokens-mat-chip.$prefix,
         tokens-mat-chip.get-density-tokens($theme)
       );
@@ -126,10 +97,6 @@
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
-    (
-      namespace: tokens-mdc-chip.$prefix,
-      tokens: tokens-mdc-chip.get-token-slots(),
-    ),
     (
       namespace: tokens-mat-chip.$prefix,
       tokens: tokens-mat-chip.get-token-slots(),
@@ -171,8 +138,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mdc-chip-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-chip.$prefix, $options...);
   $mat-chip-tokens: token-utils.get-tokens-for($tokens, tokens-mat-chip.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mdc-chip.$prefix, $mdc-chip-tokens);
   @include token-utils.create-token-values(tokens-mat-chip.$prefix, $mat-chip-tokens);
 }

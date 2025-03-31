@@ -11,17 +11,9 @@ $prefix: (mat, tonal-button);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    // Shape of the container element.
     container-shape: 4px,
-
-    // Start/end padding of the button.
     horizontal-padding: 16px,
-
-    // Space between the icon and the button's main content.
     icon-spacing: 8px,
-
-    // Amount by which to offset the icon so that its presence
-    // doesn't increase throw off the horizontal padding.
     icon-offset: -4px,
   );
 }
@@ -37,23 +29,11 @@ $prefix: (mat, tonal-button);
       0.12),
     disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button,
       if($is-dark, 0.5, 0.38)),
-
-    // Color of the element that shows the hover, focus and pressed states.
     state-layer-color: inspection.get-theme-color($theme, foreground, base),
-
-    // Color of the element that shows the hover, focus and pressed states while disabled.
     disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-
-    // Color of the ripple element.
     ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-
-    // Opacity of the ripple when the button is hovered.
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-
-    // Opacity of the ripple when the button is focused.
     focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-
-    // Opacity of the ripple when the button is pressed.
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
   );
 }

@@ -4,7 +4,6 @@
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mdc/radio' as tokens-mdc-radio;
 @use '../core/tokens/m2/mat/radio' as tokens-mat-radio;
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -15,10 +14,6 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-unthemable-tokens()
-      );
       @include token-utils.create-token-values-mixed(
         tokens-mat-radio.$prefix,
         tokens-mat-radio.get-unthemable-tokens()
@@ -39,10 +34,6 @@
     .mat-mdc-radio-button {
       &.mat-primary {
         @include token-utils.create-token-values-mixed(
-          tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme, primary)
-        );
-        @include token-utils.create-token-values-mixed(
           tokens-mat-radio.$prefix,
           tokens-mat-radio.get-color-tokens($theme, primary)
         );
@@ -50,20 +41,12 @@
 
       &.mat-accent {
         @include token-utils.create-token-values-mixed(
-          tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme)
-        );
-        @include token-utils.create-token-values-mixed(
           tokens-mat-radio.$prefix,
           tokens-mat-radio.get-color-tokens($theme)
         );
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values-mixed(
-          tokens-mdc-radio.$prefix,
-          tokens-mdc-radio.get-color-tokens($theme, warn)
-        );
         @include token-utils.create-token-values-mixed(
           tokens-mat-radio.$prefix,
           tokens-mat-radio.get-color-tokens($theme, warn)
@@ -80,10 +63,6 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-typography-tokens($theme)
-      );
       @include token-utils.create-token-values-mixed(
         tokens-mat-radio.$prefix,
         tokens-mat-radio.get-typography-tokens($theme)
@@ -102,10 +81,6 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mdc-radio.$prefix,
-        tokens-mdc-radio.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         tokens-mat-radio.$prefix,
         tokens-mat-radio.get-density-tokens($theme)
       );
@@ -116,10 +91,6 @@
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
-    (
-      namespace: tokens-mdc-radio.$prefix,
-      tokens: tokens-mdc-radio.get-token-slots(),
-    ),
     (
       namespace: tokens-mat-radio.$prefix,
       tokens: tokens-mat-radio.get-token-slots(),
@@ -161,8 +132,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mdc-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-radio.$prefix, $options...);
   $mat-radio-tokens: token-utils.get-tokens-for($tokens, tokens-mat-radio.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mdc-radio.$prefix, $mdc-radio-tokens);
   @include token-utils.create-token-values(tokens-mat-radio.$prefix, $mat-radio-tokens);
 }

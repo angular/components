@@ -1,18 +1,18 @@
 @use '@angular/cdk';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mdc/filled-text-field' as tokens-mdc-filled-text-field;
-@use '../core/tokens/m2/mdc/outlined-text-field' as tokens-mdc-outlined-text-field;
+@use '../core/tokens/m2/mat/filled-text-field' as tokens-mat-filled-text-field;
+@use '../core/tokens/m2/mat/outlined-text-field' as tokens-mat-outlined-text-field;
 
 // Includes the structural styles for the form field inherited from MDC.
 @mixin private-text-field-structure {
   $filled-slots: (
-    tokens-mdc-filled-text-field.$prefix,
-    tokens-mdc-filled-text-field.get-token-slots()
+    tokens-mat-filled-text-field.$prefix,
+    tokens-mat-filled-text-field.get-token-slots()
   );
   $outlined-slots: (
-    tokens-mdc-outlined-text-field.$prefix,
-    tokens-mdc-outlined-text-field.get-token-slots()
+    tokens-mat-outlined-text-field.$prefix,
+    tokens-mat-outlined-text-field.get-token-slots()
   );
 
   .mdc-text-field {
