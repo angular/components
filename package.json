@@ -191,6 +191,11 @@
       "@angular/core@19.2.0": "patches/@angular__core.patch"
     },
     "packageExtensions": {
+      "dgeni-packages": {
+        "dependencies": {
+          "clonedeep": "*"
+        }
+      },
       "@angular/animations": {
         "dependencies": {
           "@nginfra/angular-linking": "1.0.2"
