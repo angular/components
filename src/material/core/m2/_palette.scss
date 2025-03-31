@@ -688,6 +688,7 @@ $light-theme-background-palette: (
   unselected-chip: map.get($grey-palette, 300),
   disabled-list-option: map.get($grey-palette, 200),
   tooltip: map.get($grey-palette, 700),
+  stepper-icon: $dark-secondary-text,
 );
 
 // Background palette for dark themes.
@@ -707,6 +708,7 @@ $dark-theme-background-palette: (
   unselected-chip: map.get($grey-palette, 700),
   disabled-list-option: rgba(white, 0.12),
   tooltip: map.get($grey-palette, 700),
+  stepper-icon: $light-secondary-text,
 );
 
 // Foreground palette for light themes.
@@ -726,6 +728,7 @@ $light-theme-foreground-palette: (
   slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
+  stepper-icon:      white,
 );
 
 // Foreground palette for dark themes.
@@ -745,4 +748,5 @@ $dark-theme-foreground-palette: (
   slider-min:        white,
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
+  stepper-icon:      black,
 );
