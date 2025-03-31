@@ -29,26 +29,26 @@ interface SelectOptions {
 }
 
 /** Represents the required inputs for a listbox. */
-export type ListboxInputs = ListNavigationInputs<OptionPattern> &
-  ListSelectionInputs<OptionPattern> &
+export type ListboxInputs<V> = ListNavigationInputs<OptionPattern<V>> &
+  ListSelectionInputs<OptionPattern<V>, V> &
   ListTypeaheadInputs &
-  ListFocusInputs<OptionPattern> & {
+  ListFocusInputs<OptionPattern<V>> & {
     disabled: SignalLike<boolean>;
   };
 
 /** Controls the state of a listbox. */
-export class ListboxPattern {
+export class ListboxPattern<V> {
   /** Controls navigation for the listbox. */
-  navigation: ListNavigation<OptionPattern>;
+  navigation: ListNavigation<OptionPattern<V>>;
 
   /** Controls selection for the listbox. */
-  selection: ListSelection<OptionPattern>;
+  selection: ListSelection<OptionPattern<V>, V>;
 
   /** Controls typeahead for the listbox. */
-  typeahead: ListTypeahead<OptionPattern>;
+  typeahead: ListTypeahead<OptionPattern<V>>;
 
   /** Controls focus for the listbox. */
-  focusManager: ListFocus<OptionPattern>;
+  focusManager: ListFocus<OptionPattern<V>>;
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -159,7 +159,7 @@ export class ListboxPattern {
     return manager;
   });
 
-  constructor(readonly inputs: ListboxInputs) {
+  constructor(readonly inputs: ListboxInputs<V>) {
     this.disabled = inputs.disabled;
     this.orientation = inputs.orientation;
     this.multiselectable = inputs.multiselectable;

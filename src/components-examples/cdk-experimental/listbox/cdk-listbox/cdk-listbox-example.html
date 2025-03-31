@@ -44,10 +44,8 @@
   <label class="example-label" id="fruit-example-label">List of Fruits</label>
 
   @for (fruit of fruits; track fruit) {
-    @let checked = option.pattern.selected() ? 'checked' : 'unchecked';
-
-    <li class="example-option" cdkOption #option="cdkOption">
-      <mat-pseudo-checkbox [state]="checked"></mat-pseudo-checkbox>
+    <li class="example-option" [value]="fruit" cdkOption #option="cdkOption">
+      <mat-pseudo-checkbox [state]="option.pattern.selected() ? 'checked' : 'unchecked'"></mat-pseudo-checkbox>
       <span>{{ fruit }}</span>
     </li>
   }
