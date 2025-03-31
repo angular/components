@@ -1,5 +1,5 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "npm_package_bin")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
@@ -78,7 +78,7 @@ sass_binary(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "prerender",
     data = [
         "index-source.html",
@@ -86,11 +86,6 @@ nodejs_binary(
         ":styles_scss",
     ],
     entry_point = ":prerender_bundle.js",
-    templated_args = [
-        # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
-        # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
-        "--bazel_patch_module_resolver",
-    ],
 )
 
 devmode_esbuild(
@@ -117,19 +112,19 @@ devmode_esbuild(
     ],
 )
 
-npm_package_bin(
+js_run_binary(
     name = "prerender_test_bin",
     outs = ["index-prerendered.html"],
-    args = ["$@"],
+    args = ["../../../$@"],
     tool = ":prerender",
 )
 
-npm_package_bin(
+js_run_binary(
     name = "debug_prerender_bin",
     # Note: the file needs to be called `index.html` specifically so the server can pick it up.
     outs = ["index.html"],
     args = [
-        "$@",
+        "../../../$@",
         "--debug",  # Disables some testing behavior that can be annoying while debugging.
     ],
     tool = ":prerender",

@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -13,13 +13,10 @@ ts_project(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "extract-tokens",
     data = [
-        ":extract_tokens_lib_legacy",
-        "@npm//highlight.js",
-        "@npm//sass",
+        ":extract_tokens_lib",
     ],
-    entry_point = ":extract-tokens.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
+    entry_point = ":extract-tokens.js",
 )

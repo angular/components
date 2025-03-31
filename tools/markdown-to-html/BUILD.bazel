@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults.bzl", "jasmine_node_test")
 load("//tools:defaults2.bzl", "ts_project")
 
@@ -20,15 +20,12 @@ ts_project(
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "markdown-to-html",
     data = [
         ":transform-markdown",
-        "@npm//highlight.js",
-        "@npm//marked",
     ],
-    entry_point = ":transform-markdown.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
+    entry_point = ":transform-markdown.js",
 )
 
 ts_project(

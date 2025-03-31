@@ -79,6 +79,8 @@ genrule(
       echo "$(execpaths //src/components-examples:example-source-files)" \
           > $(execpath _example_module.MF)
 
+      export JS_BINARY__NO_CD_BINDIR="1"
+
       # Run the bazel entry-point for generating the example module.
       ./$(execpath //tools/example-module:bazel-bin) \
           "$(execpath _example_module.MF)" \

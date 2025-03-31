@@ -189,6 +189,11 @@
       "@angular/compiler-cli@20.0.0-next.4": "patches/@angular__compiler-cli.patch"
     },
     "packageExtensions": {
+      "dgeni-packages": {
+        "dependencies": {
+          "clonedeep": "*"
+        }
+      },
       "@angular/animations": {
         "dependencies": {
           "@nginfra/angular-linking": "1.0.2"
