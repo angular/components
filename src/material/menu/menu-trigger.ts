@@ -39,7 +39,6 @@ import {
   Renderer2,
   ViewContainerRef,
 } from '@angular/core';
-import {_bindEventWithOptions} from '@angular/cdk/platform';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu, MenuCloseReason} from './menu';
@@ -228,8 +227,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     const renderer = inject(Renderer2);
 
     this._parentMaterialMenu = parentMenu instanceof MatMenu ? parentMenu : undefined;
-    this._cleanupTouchstart = _bindEventWithOptions(
-      renderer,
+    this._cleanupTouchstart = renderer.listen(
       this._element.nativeElement,
       'touchstart',
       (event: TouchEvent) => {
