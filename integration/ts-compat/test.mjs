@@ -4,8 +4,8 @@
  * by a Bazel `nodejs_test` target and relies on Bazel runfile resolution.
  */
 
-import {runfiles} from '@bazel/runfiles';
 import {runTypeScriptCompatibilityTest} from './helpers.mjs';
+import path from 'path';
 
 const [pkgName] = process.argv.slice(2);
 if (!pkgName) {
@@ -13,7 +13,7 @@ if (!pkgName) {
   process.exit(1);
 }
 
-const tscBin = runfiles.resolve(`npm/node_modules/${pkgName}/bin/tsc`);
+const tscBin = path.resolve(`../../node_modules/${pkgName}/bin/tsc`);
 
 runTypeScriptCompatibilityTest(tscBin).catch(e => {
   console.error(e);
