@@ -54,6 +54,7 @@ sass_binary(
 
 ng_package(
     name = "npm_package",
+    package_name = "@angular/youtube-player",
     srcs = ["package.json"],
     nested_packages = ["//src/youtube-player/schematics:npm_package"],
     tags = ["release-package"],
