@@ -35,6 +35,7 @@ typescript_version_packages = [
             "//integration:node_modules/@angular/youtube-player",
             "//:node_modules/%s" % ts_pkg_name,
             "//:node_modules/@types/node",
+            "//:node_modules/@types/selenium-webdriver",
         ],
         entry_point = "test.mjs",
     )

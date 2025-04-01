@@ -5,7 +5,6 @@
 
 import {createEs2015LinkerPlugin} from '@angular/compiler-cli/linker/babel';
 import {NodeJSFileSystem, ConsoleLogger, LogLevel} from '@angular/compiler-cli';
-import {getNpmPackagesFromRunfiles} from '../npm-packages-from-runfiles.mjs';
 import fs from 'fs';
 import path from 'path';
 import babel from '@babel/core';
@@ -17,7 +16,14 @@ const fileSystem = new NodeJSFileSystem();
 /** Logger used by the Angular linker plugin. */
 const logger = new ConsoleLogger(LogLevel.info);
 /** List of NPM packages available in the Bazel runfiles. */
-const npmPackages = getNpmPackagesFromRunfiles();
+const npmPackages = [
+  {name: 'cdk', pkgPath: '../../src/cdk/npm_package'},
+  {name: 'cdk-experimental', pkgPath: '../../src/cdk-experimental/npm_package'},
+  {name: 'google-maps', pkgPath: '../../src/google-maps/npm_package'},
+  {name: 'material', pkgPath: '../../src/material/npm_package'},
+  {name: 'material-experimental', pkgPath: '../../src/material-experimental/npm_package'},
+  {name: 'youtube-player', pkgPath: '../../src/youtube-player/npm_package'},
+];
 /** Whether any package could not be linked successfully. */
 let failedPackages = false;
 
