@@ -3,9 +3,9 @@
 # This file should be checked into version control along with the pnpm-lock.yaml file.
 .npmrc=-1406867100
 integration/package.json=-620011313
-package.json=1314863161
+package.json=-635422980
 patches/@angular__compiler-cli.patch=-65319555
-pnpm-lock.yaml=-2045227594
+pnpm-lock.yaml=-1708159829
 pnpm-workspace.yaml=334858811
 src/cdk-experimental/package.json=237487315
 src/cdk/package.json=-908433069
