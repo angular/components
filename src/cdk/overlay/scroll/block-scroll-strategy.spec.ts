@@ -160,6 +160,11 @@ describe('BlockScrollStrategy', () => {
   it(
     `should't do anything if the page isn't scrollable while zoomed out`,
     skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
       forceScrollElement.style.display = 'none';
       document.body.style.zoom = '75%';
       overlayRef.attach(componentPortal);
@@ -179,6 +184,11 @@ describe('BlockScrollStrategy', () => {
   it(
     `should add cdk-global-scrollblock while zoomed in`,
     skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
       forceScrollElement.style.width = window.innerWidth - 20 + 'px';
       forceScrollElement.style.height = window.innerHeight - 20 + 'px';
       overlayRef.attach(componentPortal);
