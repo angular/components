@@ -1,4 +1,5 @@
 @use '../../token-definition';
+@use 'sass:map';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, dialog);
@@ -9,23 +10,37 @@ $prefix: (mat, dialog);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the dialog
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  // headline-padding:
+  // The vertical padding values are a bit weird, because MDC uses a `::before` pseudo
+  // element to size the title which in turn means that we can't set a specific padding
+  // and get the exact same space out of it. These values were determined through
+  // trial and error so that the first line of text is 24px from the top and the bottom
+  // of the text is 16px from the content under it.
   $tokens: (
+    actions-alignment: token-definition.hardcode(flex-end, $exclude-hardcoded),
+    actions-padding: token-definition.hardcode(16px 24px, $exclude-hardcoded),
+    container-color: map.get($systems, md-sys-color, surface),
     container-elevation-shadow: token-definition.hardcode(none, $exclude-hardcoded),
     container-max-width: token-definition.hardcode(560px, $exclude-hardcoded),
-    container-small-max-width:
-        token-definition.hardcode(calc(100vw - 32px), $exclude-hardcoded),
     container-min-width: token-definition.hardcode(280px, $exclude-hardcoded),
-    actions-alignment: token-definition.hardcode(flex-end, $exclude-hardcoded),
+    container-shape: map.get($systems, md-sys-shape, corner-extra-large),
+    container-small-max-width:
+    token-definition.hardcode(calc(100vw - 32px), $exclude-hardcoded),
     content-padding: token-definition.hardcode(20px 24px, $exclude-hardcoded),
-    with-actions-content-padding: token-definition.hardcode(20px 24px 0, $exclude-hardcoded),
-    actions-padding: token-definition.hardcode(16px 24px, $exclude-hardcoded),
-
-    // The vertical padding values are a bit weird, because MDC uses a `::before` pseudo
-    // element to size the title which in turn means that we can't set a specific padding
-    // and get the exact same space out of it. These values were determined through
-    // trial and error so that the first line of text is 24px from the top and the bottom
-    // of the text is 16px from the content under it.
     headline-padding: token-definition.hardcode(6px 24px 13px, $exclude-hardcoded),
+    subhead-color: map.get($systems, md-sys-color, on-surface),
+    subhead-font: map.get($systems, md-sys-typescale, headline-small-font),
+    subhead-line-height: map.get($systems, md-sys-typescale, headline-small-line-height),
+    subhead-size: map.get($systems, md-sys-typescale, headline-small-size),
+    subhead-tracking: map.get($systems, md-sys-typescale, headline-small-tracking),
+    subhead-weight: map.get($systems, md-sys-typescale, headline-small-weight),
+    supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
+    supporting-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
+    supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
+    supporting-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
+    supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
+    with-actions-content-padding: token-definition.hardcode(20px 24px 0, $exclude-hardcoded),
   );
 
   @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);

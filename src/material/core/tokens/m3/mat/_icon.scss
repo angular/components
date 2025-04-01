@@ -10,9 +10,11 @@ $prefix: (mat, icon);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-icon
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: ((
+  $tokens: (
     color: token-definition.hardcode(inherit, $exclude-hardcoded),
-  ), (
+  );
+
+  $variant-tokens: (
     // Color variants:
     surface: (), // Default, no overrides needed.
     primary: (
@@ -27,7 +29,7 @@ $prefix: (mat, icon);
     error: (
       color: map.get($systems, md-sys-color, error),
     )
-  ));
+  );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }

@@ -37,7 +37,9 @@ $prefix: (mat, standard-button-toggle);
       $alpha: 0.12,
     ),
     divider-color: map.get($systems, md-sys-color, outline),
-  ), (
+  ));
+
+  $color-variants: (
     // Color variants:
     primary: (
       selected-state-background-color: map.get($systems, md-sys-color, primary-container),
@@ -52,7 +54,7 @@ $prefix: (mat, standard-button-toggle);
       selected-state-background-color: map.get($systems, md-sys-color, error-container),
       selected-state-text-color: map.get($systems, md-sys-color, on-error-container),
     )
-  ));
+  );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $color-variants), $token-slots);
 }

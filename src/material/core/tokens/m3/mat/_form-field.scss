@@ -28,12 +28,9 @@ $prefix: (mat, form-field);
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       focus-state-layer-opacity: token-definition.hardcode(0, $exclude-hardcoded),
       focus-select-arrow-color: map.get($systems, md-sys-color, primary),
-      outlined-label-text-populated-size: map.get($systems, md-sys-typeface, body-large-size),
-
       leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
       disabled-leading-icon-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-
       trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
       disabled-trailing-icon-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
@@ -41,7 +38,9 @@ $prefix: (mat, form-field);
       error-hover-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
       error-trailing-icon-color: map.get($systems, md-sys-color, error),
     )
-  ), (
+  );
+
+  $variant-tokens: (
     // Color variants:
     primary: (), // Default, no overrides needed.
     secondary: (
@@ -55,5 +54,5 @@ $prefix: (mat, form-field);
     )
   );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }
