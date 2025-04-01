@@ -7,8 +7,7 @@
  */
 
 import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
-// TODO: Change to relative import
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '../core';
 import {Observable, Subject} from 'rxjs';
 
 /** A class representing a range of dates. */
