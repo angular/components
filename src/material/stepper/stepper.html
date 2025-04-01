@@ -84,6 +84,7 @@
     [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
     [attr.aria-disabled]="_stepIsNavigable(i, step) ? null : true"
     [attr.aria-owns]="_getStepContentId(i)"
+    [attr.data-test-index]="i"
     [index]="i"
     [state]="_getIndicatorType(i, step.state)"
     [label]="step.stepLabel || step.label"
