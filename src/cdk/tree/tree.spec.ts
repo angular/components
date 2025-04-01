@@ -20,14 +20,14 @@ import {
   ElementRef,
 } from '@angular/core';
 
-import {Direction, Directionality} from '../bidi';
-import {CollectionViewer, DataSource} from '../collections';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {combineLatest, BehaviorSubject, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
-import {createKeyboardEvent} from '../testing/testbed/fake-events';
+import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,

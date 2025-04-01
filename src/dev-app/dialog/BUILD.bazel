@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "dialog",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,9 +10,6 @@ ng_project(
         ":dialog_demo_scss",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/cdk/drag-drop",
         "//src/material/button",
         "//src/material/card",

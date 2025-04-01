@@ -11,7 +11,7 @@ import {
   ComponentHarnessConstructor,
   HarnessPredicate,
 } from '@angular/cdk/testing';
-import {MatOptionHarness, OptionHarnessFilters} from '../../core/testing';
+import {MatOptionHarness, OptionHarnessFilters} from '@angular/material/core/testing';
 import {TimepickerHarnessFilters} from './timepicker-harness-filters';
 
 export class MatTimepickerHarness extends ComponentHarness {

@@ -34,8 +34,8 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -983,9 +983,7 @@ describe('MatChipGrid', () => {
       errorTestComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
-      expect(
-        containerEl.querySelector('[aria-live]:has(mat-error)')!.getAttribute('aria-live'),
-      ).toBe('polite');
+      expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
     });
 
     it('sets the aria-describedby on the input to reference errors when in error state', fakeAsync(() => {

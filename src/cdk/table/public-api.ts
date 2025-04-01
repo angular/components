@@ -18,4 +18,4 @@ export * from './text-column';
 export * from './tokens';
 
 /** Re-export DataSource for a more intuitive experience for users of just the table. */
-export {DataSource} from '../collections';
+export {DataSource} from '@angular/cdk/collections';

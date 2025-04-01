@@ -31,7 +31,7 @@ import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Header element of a `<mat-expansion-panel>`.

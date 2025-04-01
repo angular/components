@@ -15,7 +15,7 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {CloseScrollStrategy, Overlay, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -56,15 +56,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {
+  FloatLabelType,
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
+import {MAT_SELECT_CONFIG, MatSelectConfig} from '@angular/material/select';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '../core';
-import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
-import {MAT_SELECT_CONFIG, MatSelectConfig} from '../select';
 import {MatSelectModule} from './index';
-import {MAT_SELECT_SCROLL_STRATEGY, MatSelect} from './select';
+import {MatSelect} from './select';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -1781,44 +1785,6 @@ describe('MatSelect', () => {
         expect(selectInstance.focused)
           .withContext('Expected select element to remain focused.')
           .toBe(true);
-      }));
-
-      it('should close the panel on scroll event when MAT_SELECT_SCROLL_STRATEGY token was defined with CloseScrollStrategy', fakeAsync(() => {
-        // Need to recreate the testing module, because the issue we're
-        // testing for only the MAT_SELECT_SCROLL_STRATEGY is defined with thw
-        // is defined with the CloseScrollStrategy
-
-        TestBed.resetTestingModule();
-        TestBed.configureTestingModule({
-          imports: [MatFormFieldModule, MatSelectModule],
-          declarations: [BasicSelect],
-          providers: [
-            {
-              provide: MAT_SELECT_SCROLL_STRATEGY,
-              useFactory: (overlay: Overlay) => (): CloseScrollStrategy =>
-                overlay.scrollStrategies.close(),
-              deps: [Overlay],
-            },
-            {
-              provide: ScrollDispatcher,
-              useFactory: () => ({
-                scrolled: () => scrolledSubject,
-              }),
-            },
-          ],
-        });
-
-        fixture = TestBed.createComponent(BasicSelect);
-        fixture.detectChanges();
-
-        const select = fixture.componentInstance.select;
-        select.open();
-
-        scrolledSubject.next();
-        fixture.detectChanges();
-        flush();
-
-        expect(select.panelOpen).toBe(false);
       }));
     });
 

@@ -17,8 +17,8 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import {_IdGenerator} from '../a11y';
-import {UniqueSelectionDispatcher} from '../collections';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {CDK_ACCORDION, CdkAccordion} from './accordion';
 import {Subscription} from 'rxjs';
 

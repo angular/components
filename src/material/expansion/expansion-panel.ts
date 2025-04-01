@@ -28,6 +28,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   booleanAttribute,
+  ANIMATION_MODULE_TYPE,
   inject,
   NgZone,
   Renderer2,
@@ -38,7 +39,6 @@ import {filter, startWith, take} from 'rxjs/operators';
 import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
 import {MAT_EXPANSION_PANEL} from './expansion-panel-base';
 import {MatExpansionPanelContent} from './expansion-panel-content';
-import {_animationsDisabled} from '../core';
 
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
@@ -94,7 +94,8 @@ export class MatExpansionPanel
   implements AfterContentInit, OnChanges, OnDestroy
 {
   private _viewContainerRef = inject(ViewContainerRef);
-  private readonly _animationsDisabled = _animationsDisabled();
+  private readonly _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _document = inject(DOCUMENT);
   private _ngZone = inject(NgZone);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

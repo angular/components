@@ -15,7 +15,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-badge.$prefix,
         tokens-mat-badge.get-unthemable-tokens()
       );
@@ -33,21 +33,21 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-badge.$prefix,
         tokens-mat-badge.get-color-tokens($theme)
       );
     }
 
     .mat-badge-accent {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-badge.$prefix,
         tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent)
       );
     }
 
     .mat-badge-warn {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-badge.$prefix,
         tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn)
       );
@@ -62,7 +62,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-badge.$prefix,
         tokens-mat-badge.get-typography-tokens($theme)
       );

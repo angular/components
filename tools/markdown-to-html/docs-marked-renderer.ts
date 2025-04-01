@@ -2,7 +2,7 @@ import {Renderer, Slugger} from 'marked';
 import {basename, extname} from 'path';
 
 /** Regular expression that matches example comments. */
-const exampleCommentRegex = /<!--\s*example\(\s*([^)]+)\)\s*-->/g;
+const exampleCommentRegex = /<!--\s*example\(([^)]+)\)\s*-->/g;
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -80,7 +80,7 @@ export class DocsMarkdownRenderer extends Renderer {
     html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
       // using [\s\S]* because .* does not match line breaks
       if (content.match(/\{[\s\S]*\}/g)) {
-        const {example, file, region} = JSON.parse(content.trim()) as {
+        const {example, file, region} = JSON.parse(content) as {
           example: string;
           file: string;
           region: string;

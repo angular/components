@@ -728,11 +728,7 @@ export class MatIconRegistry implements OnDestroy {
   }
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function ICON_REGISTRY_PROVIDER_FACTORY(
   parentRegistry: MatIconRegistry,
   httpClient: HttpClient,
@@ -743,11 +739,7 @@ export function ICON_REGISTRY_PROVIDER_FACTORY(
   return parentRegistry || new MatIconRegistry(httpClient, sanitizer, document, errorHandler);
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const ICON_REGISTRY_PROVIDER = {
   // If there is already an MatIconRegistry available, use that. Otherwise, provide a new one.
   provide: MatIconRegistry,

@@ -9,6 +9,7 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   Directive,
   ElementRef,
@@ -20,14 +21,8 @@ import {
   OnDestroy,
   Renderer2,
 } from '@angular/core';
-import {_animationsDisabled, _StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
+import {_StructuralStylesLoader, MatRippleLoader, ThemePalette} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-
-/**
- * Possible appearances for a `MatButton`.
- * See https://m3.material.io/components/buttons/overview
- */
-export type MatButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
 /** Object that can be used to configure the default options for the button component. */
 export interface MatButtonConfig {
@@ -36,40 +31,72 @@ export interface MatButtonConfig {
 
   /** Default palette color to apply to buttons. */
   color?: ThemePalette;
-
-  /** Default appearance for plain buttons (not icon buttons or FABs). */
-  defaultAppearance?: MatButtonAppearance;
 }
 
 /** Injection token that can be used to provide the default options the button component. */
 export const MAT_BUTTON_CONFIG = new InjectionToken<MatButtonConfig>('MAT_BUTTON_CONFIG');
 
+/** Shared host configuration for all buttons */
+export const MAT_BUTTON_HOST = {
+  '[attr.disabled]': '_getDisabledAttribute()',
+  '[attr.aria-disabled]': '_getAriaDisabled()',
+  '[class.mat-mdc-button-disabled]': 'disabled',
+  '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
+  '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+  // MDC automatically applies the primary theme color to the button, but we want to support
+  // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
+  // select and style this "theme".
+  '[class.mat-unthemed]': '!color',
+  // Add a class that applies to all buttons. This makes it easier to target if somebody
+  // wants to target all Material buttons.
+  '[class.mat-mdc-button-base]': 'true',
+  '[class]': 'color ? "mat-" + color : ""',
+  '[attr.tabindex]': '_getTabIndex()',
+};
+
 function transformTabIndex(value: unknown): number | undefined {
   return value == null ? undefined : numberAttribute(value);
 }
 
-/** Base class for all buttons. */
-@Directive({
-  host: {
-    // Add a class that applies to all buttons. This makes it easier to target if somebody
-    // wants to target all Material buttons.
-    'class': 'mat-mdc-button-base',
-    '[class]': 'color ? "mat-" + color : ""',
-    '[attr.disabled]': '_getDisabledAttribute()',
-    '[attr.aria-disabled]': '_getAriaDisabled()',
-    '[attr.tabindex]': '_getTabIndex()',
-    '[class.mat-mdc-button-disabled]': 'disabled',
-    '[class.mat-mdc-button-disabled-interactive]': 'disabledInteractive',
-    '[class.mat-unthemed]': '!color',
-    '[class._mat-animation-noopable]': '_animationsDisabled',
+/** List of classes to add to buttons instances based on host attribute selector. */
+const HOST_SELECTOR_MDC_CLASS_PAIR: {attribute: string; mdcClasses: string[]}[] = [
+  {
+    attribute: 'mat-button',
+    mdcClasses: ['mdc-button', 'mat-mdc-button'],
   },
-})
-export class MatButtonBase implements AfterViewInit, OnDestroy {
-  _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected _ngZone = inject(NgZone);
-  protected _animationsDisabled = _animationsDisabled();
+  {
+    attribute: 'mat-flat-button',
+    mdcClasses: ['mdc-button', 'mdc-button--unelevated', 'mat-mdc-unelevated-button'],
+  },
+  {
+    attribute: 'mat-raised-button',
+    mdcClasses: ['mdc-button', 'mdc-button--raised', 'mat-mdc-raised-button'],
+  },
+  {
+    attribute: 'mat-stroked-button',
+    mdcClasses: ['mdc-button', 'mdc-button--outlined', 'mat-mdc-outlined-button'],
+  },
+  {
+    attribute: 'mat-fab',
+    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mat-mdc-fab'],
+  },
+  {
+    attribute: 'mat-mini-fab',
+    mdcClasses: ['mdc-fab', 'mat-mdc-fab-base', 'mdc-fab--mini', 'mat-mdc-mini-fab'],
+  },
+  {
+    attribute: 'mat-icon-button',
+    mdcClasses: ['mdc-icon-button', 'mat-mdc-icon-button'],
+  },
+];
 
-  protected readonly _config = inject(MAT_BUTTON_CONFIG, {optional: true});
+/** Base class for all buttons.  */
+@Directive()
+export class MatButtonBase implements AfterViewInit, OnDestroy {
+  _elementRef = inject(ElementRef);
+  _ngZone = inject(NgZone);
+  _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   private readonly _focusMonitor = inject(FocusMonitor);
   private _cleanupClick: (() => void) | undefined;
   private _renderer = inject(Renderer2);
@@ -124,9 +151,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
   /**
    * Natively disabled buttons prevent focus and any pointer events from reaching the button.
    * In some scenarios this might not be desirable, because it can prevent users from finding out
-   * why the button is disabled (e.g. via tooltip). This is also useful for buttons that may
-   * become disabled when activated, which would cause focus to be transferred to the document
-   * body instead of remaining on the button.
+   * why the button is disabled (e.g. via tooltip).
    *
    * Enabling this input will change the button so that it is styled to be disabled and will be
    * marked as `aria-disabled`, but it will allow the button to receive events and focus.
@@ -154,12 +179,22 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
-    const element = this._elementRef.nativeElement;
+    const config = inject(MAT_BUTTON_CONFIG, {optional: true});
+    const element: HTMLElement = this._elementRef.nativeElement;
+    const classList = (element as HTMLElement).classList;
 
     this._isAnchor = element.tagName === 'A';
-    this.disabledInteractive = this._config?.disabledInteractive ?? false;
-    this.color = this._config?.color ?? null;
+    this.disabledInteractive = config?.disabledInteractive ?? false;
+    this.color = config?.color ?? null;
     this._rippleLoader?.configureRipple(element, {className: 'mat-mdc-button-ripple'});
+
+    // For each of the variant selectors that is present in the button's host
+    // attributes, add the correct corresponding MDC classes.
+    for (const {attribute, mdcClasses} of HOST_SELECTOR_MDC_CLASS_PAIR) {
+      if (element.hasAttribute(attribute)) {
+        classList.add(...mdcClasses);
+      }
+    }
   }
 
   ngAfterViewInit() {

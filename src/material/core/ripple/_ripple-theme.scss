@@ -18,7 +18,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-ripple.$prefix,
         tokens-mat-ripple.get-color-tokens($theme)
       );
@@ -31,7 +31,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-ripple.$prefix,
         tokens-mat-ripple.get-typography-tokens($theme)
       );
@@ -44,7 +44,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-ripple.$prefix,
         tokens-mat-ripple.get-density-tokens($theme)
       );

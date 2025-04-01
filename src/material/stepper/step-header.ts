@@ -23,8 +23,8 @@ import {MatStepLabel} from './step-label';
 import {MatStepperIntl} from './stepper-intl';
 import {MatStepperIconContext} from './stepper-icon';
 import {CdkStepHeader, StepState} from '@angular/cdk/stepper';
-import {_StructuralStylesLoader, MatRipple, ThemePalette} from '../core';
-import {MatIcon} from '../icon';
+import {_StructuralStylesLoader, MatRipple, ThemePalette} from '@angular/material/core';
+import {MatIcon} from '@angular/material/icon';
 import {NgTemplateOutlet} from '@angular/common';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 

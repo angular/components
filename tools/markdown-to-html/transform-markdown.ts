@@ -9,6 +9,9 @@ import {join} from 'path';
 import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
 import {DocsMarkdownRenderer} from './docs-marked-renderer';
 
+// Regular expression that matches the markdown extension of a given path.
+const markdownExtension = /.md$/;
+
 // Custom markdown renderer for transforming markdown files for the docs.
 const markdownRenderer = new DocsMarkdownRenderer();
 
@@ -23,7 +26,7 @@ if (require.main === module) {
   // Walk through each input file and write transformed markdown output to the specified
   // Bazel bin directory.
   inputFiles.forEach(inputPath => {
-    const outputPath = join(bazelBinPath, `${inputPath}.html`);
+    const outputPath = join(bazelBinPath, inputPath.replace(markdownExtension, '.html'));
     const htmlOutput = markdownRenderer.finalizeOutput(
       marked(readFileSync(inputPath, 'utf8')),
       inputPath,

@@ -19,7 +19,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-optgroup.$prefix,
         tokens-mat-optgroup.get-color-tokens($theme)
       );
@@ -32,7 +32,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-optgroup.$prefix,
         tokens-mat-optgroup.get-typography-tokens($theme)
       );

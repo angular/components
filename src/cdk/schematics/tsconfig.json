@@ -4,10 +4,10 @@
     "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": ".",
+    "outDir": "../../../dist/packages/cdk/schematics",
+    "noEmitOnError": false,
     "strictNullChecks": true,
     "noPropertyAccessFromIndexSignature": true,
-    "strict": true,
     "useUnknownInCatchVariables": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
@@ -22,5 +22,8 @@
     "target": "es2015",
     "types": ["jasmine", "node"]
   },
-  "exclude": ["**/files/**/*", "**/*.spec.ts", "ng-update/test-cases/**/*", "testing/**/*.ts"]
+  "exclude": ["**/files/**/*", "**/*.spec.ts", "ng-update/test-cases/**/*", "testing/**/*.ts"],
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
+  }
 }

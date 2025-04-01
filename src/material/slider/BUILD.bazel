@@ -3,15 +3,17 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_e2e_test_library",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "slider",
     srcs = glob(
         ["**/*.ts"],
@@ -22,12 +24,10 @@ ng_project(
         ":slider_thumb_scss",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/platform",
         "//src/material/core",
+        "@npm//@angular/forms",
     ],
 )
 
@@ -72,24 +72,22 @@ filegroup(
 # Testing
 ###########
 
-ts_project(
+ng_test_library(
     name = "slider_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":slider",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 
@@ -100,16 +98,17 @@ ng_web_test_suite(
     ],
 )
 
-ts_project(
+ng_e2e_test_library(
     name = "e2e_test_sources",
-    testonly = True,
     srcs = glob(["**/*.e2e.spec.ts"]),
-    deps = ["//:node_modules/protractor"],
+    deps = [
+        ":slider",
+    ],
 )
 
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources_legacy",
+        ":e2e_test_sources",
     ],
 )

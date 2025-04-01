@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "target": "es2020",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "types": ["jasmine", "node"]
+  },
+  "exclude": ["*.spec.ts"],
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
+  }
+}

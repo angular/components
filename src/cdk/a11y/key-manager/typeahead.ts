@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {A, NINE, Z, ZERO} from '../../keycodes';
+import {A, NINE, Z, ZERO} from '@angular/cdk/keycodes';
 import {Subject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 

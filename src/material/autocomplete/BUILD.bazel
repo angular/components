@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "autocomplete",
     srcs = glob(
         ["**/*.ts"],
@@ -22,16 +23,13 @@ ng_project(
         ":autocomplete_scss",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/coercion",
         "//src/cdk/overlay",
         "//src/cdk/scrolling",
         "//src/material/core",
         "//src/material/form-field",
+        "@npm//@angular/common",
     ],
 )
 
@@ -52,9 +50,8 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "autocomplete_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = [
@@ -63,10 +60,6 @@ ts_project(
     ),
     deps = [
         ":autocomplete",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
@@ -76,6 +69,9 @@ ts_project(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 

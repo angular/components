@@ -14,8 +14,8 @@
   </ng-template>
 
   <mat-action-row>
-    <button matButton (click)="myPanel.expanded = false">CANCEL</button>
-    <button matButton>SAVE</button>
+    <button mat-button (click)="myPanel.expanded = false">CANCEL</button>
+    <button mat-button>SAVE</button>
   </mat-action-row>
 </mat-expansion-panel>
 
@@ -60,8 +60,8 @@
   </mat-radio-group>
   <p>Accordion Actions <sup>('Multi Expansion' mode only)</sup></p>
   <div>
-    <button matButton (click)="accordion.openAll()" [disabled]="!multi">Expand All</button>
-    <button matButton (click)="accordion.closeAll()" [disabled]="!multi">Collapse All</button>
+    <button mat-button (click)="accordion.openAll()" [disabled]="!multi">Expand All</button>
+    <button mat-button (click)="accordion.closeAll()" [disabled]="!multi">Collapse All</button>
   </div>
   <p>Accordion Panel(s)</p>
   <div>
@@ -86,8 +86,8 @@
       <mat-checkbox #showButtons>Reveal Buttons Below</mat-checkbox>
       @if (showButtons.checked) {
         <mat-action-row>
-          <button matButton (click)="panel2.expanded = true">OPEN SECTION 2</button>
-          <button matButton (click)="panel3.expanded = false">CLOSE</button>
+          <button mat-button (click)="panel2.expanded = true">OPEN SECTION 2</button>
+          <button mat-button (click)="panel3.expanded = false">CLOSE</button>
         </mat-action-row>
       }
     </mat-expansion-panel>
@@ -105,8 +105,8 @@
   <cdk-accordion-item #item1="cdkAccordionItem">
     <p>
       Item 1:
-      <button matButton (click)="item1.expanded = true">Expand</button>
-      <button matButton (click)="item1.expanded = false">Collapse</button>
+      <button mat-button (click)="item1.expanded = true">Expand</button>
+      <button mat-button (click)="item1.expanded = false">Collapse</button>
     </p>
     @if (item1.expanded) {
       <p>I only show if item 1 is expanded</p>
@@ -115,8 +115,8 @@
   <cdk-accordion-item #item2="cdkAccordionItem">
     <p>
       Item 2:
-      <button matButton (click)="item2.expanded = true">Expand</button>
-      <button matButton (click)="item2.expanded = false">Collapse</button>
+      <button mat-button (click)="item2.expanded = true">Expand</button>
+      <button mat-button (click)="item2.expanded = false">Collapse</button>
     </p>
     @if (item2.expanded) {
       <p>I only show if item 2 is expanded</p>
@@ -125,8 +125,8 @@
   <cdk-accordion-item #item3="cdkAccordionItem">
     <p>
       Item 3:
-      <button matButton (click)="item3.expanded = true">Expand</button>
-      <button matButton (click)="item3.expanded = false">Collapse</button>
+      <button mat-button (click)="item3.expanded = true">Expand</button>
+      <button mat-button (click)="item3.expanded = false">Collapse</button>
     </p>
     @if (item3.expanded) {
       <p>I only show if item 3 is expanded</p>

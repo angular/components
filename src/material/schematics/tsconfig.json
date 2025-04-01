@@ -1,17 +1,30 @@
 {
   "compilerOptions": {
-    "lib": ["es2022"],
-    "target": "es2022",
-    "module": "CommonJS",
-    "moduleResolution": "node10",
-    "strict": true,
+    "lib": ["es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "../../../dist/packages/material/schematics",
+    "noEmitOnError": false,
+    "strictNullChecks": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "skipDefaultLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictFunctionTypes": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "declaration": true,
+    "target": "es6",
     "types": ["jasmine", "node"],
+    "baseUrl": ".",
     "paths": {
-      "@angular/cdk/schematics": ["../../cdk/schematics"],
-      "@angular/cdk/schematics/*": ["../../cdk/schematics/*"]
+      "@angular/cdk/schematics": ["../../cdk/schematics"]
     }
   },
   "exclude": [
@@ -22,5 +35,8 @@
     "ng-generate/*/files/**/*.ts",
     // Exclude all test-case files because those should not be included in the schematics output.
     "ng-update/test-cases/**/*.ts"
-  ]
+  ],
+  "bazelOptions": {
+    "suppressTsconfigOverrideWarnings": true
+  }
 }

@@ -1,12 +1,11 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "sass_binary")
+load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "ng_module", "sass_binary")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
-load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "dev-app",
     srcs = [
         "dev-app.ts",
@@ -14,12 +13,6 @@ ng_project(
         "routes.ts",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/compiler",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/localize",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@angular/router",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/dev-app/autocomplete",
@@ -31,7 +24,6 @@ ng_project(
         "//src/dev-app/card",
         "//src/dev-app/cdk-dialog",
         "//src/dev-app/cdk-experimental-combobox",
-        "//src/dev-app/cdk-experimental-listbox",
         "//src/dev-app/cdk-listbox",
         "//src/dev-app/cdk-menu",
         "//src/dev-app/checkbox",
@@ -88,6 +80,9 @@ ng_project(
         "//src/dev-app/virtual-scroll",
         "//src/dev-app/youtube-player",
         "//src/material/core",
+        "@npm//@angular/compiler",
+        "@npm//@angular/localize",
+        "@npm//@angular/router",
     ],
 )
 
@@ -108,7 +103,7 @@ devmode_esbuild(
     # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
     # map all framework packages to their linker-processed bundles from `tools/angular`.
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":dev-app_legacy",
+        ":dev-app",
     ],
 )
 

@@ -1,0 +1,110 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-elevation';
+
+@use './md-sys-shape';
+
+@use './md-sys-state';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-elevation': md-sys-elevation.values(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-state': md-sys-state.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'active-track-color': map.get($deps, 'md-sys-color', 'primary'),
+    'active-track-height': if($exclude-hardcoded-values, null, 4px),
+    'active-track-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'disabled-active-track-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-active-track-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'disabled-handle-color': map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-handle-elevation': map.get($deps, 'md-sys-elevation', 'level0'),
+    'disabled-handle-opacity': if($exclude-hardcoded-values, null, 0.38),
+    'disabled-inactive-track-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'disabled-inactive-track-opacity': if($exclude-hardcoded-values, null, 0.12),
+    'focus-handle-color': map.get($deps, 'md-sys-color', 'primary'),
+    'focus-state-layer-color': map.get($deps, 'md-sys-color', 'primary'),
+    'focus-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'focus-state-layer-opacity'),
+    'handle-color': map.get($deps, 'md-sys-color', 'primary'),
+    'handle-elevation': map.get($deps, 'md-sys-elevation', 'level1'),
+    'handle-height': if($exclude-hardcoded-values, null, 20px),
+    'handle-shadow-color': map.get($deps, 'md-sys-color', 'shadow'),
+    'handle-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'handle-width': if($exclude-hardcoded-values, null, 20px),
+    'hover-handle-color': map.get($deps, 'md-sys-color', 'primary'),
+    'hover-state-layer-color': map.get($deps, 'md-sys-color', 'primary'),
+    'hover-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'hover-state-layer-opacity'),
+    'inactive-track-color': map.get($deps, 'md-sys-color', 'surface-variant'),
+    'inactive-track-height': if($exclude-hardcoded-values, null, 4px),
+    'inactive-track-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'label-container-color': map.get($deps, 'md-sys-color', 'primary'),
+    'label-container-elevation': map.get($deps, 'md-sys-elevation', 'level0'),
+    'label-container-height': if($exclude-hardcoded-values, null, 28px),
+    'label-label-text-color': map.get($deps, 'md-sys-color', 'on-primary'),
+    'label-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'label-medium-font'),
+    'label-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-medium-line-height'),
+    'label-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'label-medium-size'),
+    'label-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-medium-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.slider.label.label-text.tracking cannot be represented in the "font"
+    // property shorthand. Consider using the discrete properties instead.
+    'label-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-medium-weight')
+          map.get($deps, 'md-sys-typescale', 'label-medium-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-medium-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-medium-font')
+      ),
+    'label-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-medium-weight'),
+    'pressed-handle-color': map.get($deps, 'md-sys-color', 'primary'),
+    'pressed-state-layer-color': map.get($deps, 'md-sys-color', 'primary'),
+    'pressed-state-layer-opacity':
+      map.get($deps, 'md-sys-state', 'pressed-state-layer-opacity'),
+    'state-layer-size': if($exclude-hardcoded-values, null, 40px),
+    'track-elevation': map.get($deps, 'md-sys-elevation', 'level0'),
+    'with-overlap-handle-outline-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'with-overlap-handle-outline-width':
+      if($exclude-hardcoded-values, null, 1px),
+    'with-tick-marks-active-container-color':
+      map.get($deps, 'md-sys-color', 'on-primary'),
+    'with-tick-marks-active-container-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'with-tick-marks-container-shape':
+      map.get($deps, 'md-sys-shape', 'corner-full'),
+    'with-tick-marks-container-size': if($exclude-hardcoded-values, null, 2px),
+    'with-tick-marks-disabled-container-color':
+      map.get($deps, 'md-sys-color', 'on-surface'),
+    'with-tick-marks-disabled-container-opacity':
+      if($exclude-hardcoded-values, null, 0.38),
+    'with-tick-marks-inactive-container-color':
+      map.get($deps, 'md-sys-color', 'on-surface-variant'),
+    'with-tick-marks-inactive-container-opacity':
+      if($exclude-hardcoded-values, null, 0.38)
+  );
+}

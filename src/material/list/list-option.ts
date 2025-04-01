@@ -25,7 +25,7 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {ThemePalette} from '../core';
+import {ThemePalette} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';
@@ -100,7 +100,7 @@ export interface SelectionList extends MatListBase {
   imports: [NgTemplateOutlet, CdkObserveContent],
 })
 export class MatListOption extends MatListItemBase implements ListOption, OnInit, OnDestroy {
-  protected _selectionList = inject<SelectionList>(SELECTION_LIST);
+  private _selectionList = inject<SelectionList>(SELECTION_LIST);
   private _changeDetectorRef = inject(ChangeDetectorRef);
 
   @ContentChildren(MatListItemLine, {descendants: true}) _lines: QueryList<MatListItemLine>;

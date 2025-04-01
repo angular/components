@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "list",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,13 +10,10 @@ ng_project(
         ":list_demo_scss",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/router",
         "//src/material/button",
         "//src/material/icon",
         "//src/material/list",
+        "@npm//@angular/router",
     ],
 )
 

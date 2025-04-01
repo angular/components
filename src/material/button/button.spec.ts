@@ -1,18 +1,22 @@
 import {createMouseEvent, dispatchEvent} from '@angular/cdk/testing/private';
 import {ApplicationRef, Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ThemePalette} from '../core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
   MAT_BUTTON_CONFIG,
   MAT_FAB_DEFAULT_OPTIONS,
-  MatButtonAppearance,
-  MatButtonConfig,
   MatButtonModule,
   MatFabDefaultOptions,
 } from './index';
 
 describe('MatButton', () => {
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatButtonModule, TestApp],
+    });
+  }));
+
   // General button tests
   it('should apply class based on color attribute', () => {
     let fixture = TestBed.createComponent(TestApp);
@@ -78,45 +82,6 @@ describe('MatButton', () => {
     expect(buttonDebugElement.nativeElement.classList.contains('mat-primary')).toBe(false);
     expect(buttonDebugElement.nativeElement.classList.contains('mat-accent')).toBe(true);
     expect(buttonDebugElement.nativeElement.classList.contains('custom-class')).toBe(true);
-  });
-
-  it('should be able to change the button appearance dynamically', () => {
-    const fixture = TestBed.createComponent(TestApp);
-    const button = fixture.nativeElement.querySelector('.dynamic') as HTMLElement;
-    fixture.detectChanges();
-
-    expect(button.classList).toContain('mat-mdc-button');
-    expect(button.classList).not.toContain('mat-mdc-outlined-button');
-    expect(button.classList).not.toContain('mat-mdc-raised-button');
-
-    fixture.componentInstance.appearance = 'outlined';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    expect(button.classList).not.toContain('mat-mdc-button');
-    expect(button.classList).toContain('mat-mdc-outlined-button');
-    expect(button.classList).not.toContain('mat-mdc-raised-button');
-
-    fixture.componentInstance.appearance = 'elevated';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    expect(button.classList).not.toContain('mat-mdc-button');
-    expect(button.classList).not.toContain('mat-mdc-outlined-button');
-    expect(button.classList).toContain('mat-mdc-raised-button');
-  });
-
-  it('should be able to configure the default button appearance', () => {
-    const config: MatButtonConfig = {
-      defaultAppearance: 'outlined',
-    };
-
-    TestBed.configureTestingModule({
-      providers: [{provide: MAT_BUTTON_CONFIG, useValue: config}],
-    });
-
-    const fixture = TestBed.createComponent(TestApp);
-    const button = fixture.nativeElement.querySelector('.default-appearance') as HTMLElement;
-    fixture.detectChanges();
-    expect(button.classList).toContain('mat-mdc-outlined-button');
   });
 
   describe('button[mat-fab]', () => {
@@ -457,8 +422,6 @@ describe('MatFabDefaultOptions', () => {
     <button mat-fab>Fab Button</button>
     <button mat-fab [extended]="extended" class="extended-fab-test">Extended</button>
     <button mat-mini-fab>Mini Fab Button</button>
-    <button class="dynamic" [matButton]="appearance">Dynamic button</button>
-    <button class="default-appearance" matButton>Dynamic button</button>
   `,
   imports: [MatButtonModule],
 })
@@ -470,7 +433,6 @@ class TestApp {
   tabIndex: number;
   extended = false;
   disabledInteractive = false;
-  appearance: MatButtonAppearance = 'text';
 
   increment() {
     this.clickCount++;

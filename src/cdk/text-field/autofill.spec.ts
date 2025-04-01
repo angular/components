@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {normalizePassiveListenerOptions} from '../platform';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {EMPTY} from 'rxjs';

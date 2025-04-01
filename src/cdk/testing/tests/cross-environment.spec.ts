@@ -14,7 +14,7 @@ import {
   HarnessPredicate,
   parallel,
   TestElement,
-} from '../../testing';
+} from '@angular/cdk/testing';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
 

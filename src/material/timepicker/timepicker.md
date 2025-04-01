@@ -81,7 +81,7 @@ Furthermore, the default interval can be controlled for the entire application u
 default all timepickers to a 90 minute interval:
 
 ```ts
-import {MAT_TIMEPICKER_CONFIG} from '../timepicker';
+import {MAT_TIMEPICKER_CONFIG} from '@angular/material/timepicker';
 
 {
   provide: MAT_TIMEPICKER_CONFIG,

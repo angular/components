@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '../bidi';
-import {DomPortalOutlet} from '../portal';
+import {Directionality} from '@angular/cdk/bidi';
+import {DomPortalOutlet} from '@angular/cdk/portal';
 import {DOCUMENT, Location} from '@angular/common';
 import {
   ApplicationRef,
@@ -19,8 +19,8 @@ import {
   inject,
   RendererFactory2,
 } from '@angular/core';
-import {_IdGenerator} from '../a11y';
-import {_CdkPrivateStyleLoader} from '../private';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {OverlayKeyboardDispatcher} from './dispatchers/overlay-keyboard-dispatcher';
 import {OverlayOutsideClickDispatcher} from './dispatchers/overlay-outside-click-dispatcher';
 import {OverlayConfig} from './overlay-config';
@@ -86,7 +86,7 @@ export class Overlay {
       this._document,
       this._location,
       this._outsideClickDispatcher,
-      config?.disableAnimations ?? this._animationsModuleType === 'NoopAnimations',
+      this._animationsModuleType === 'NoopAnimations',
       this._injector.get(EnvironmentInjector),
       this._renderer,
     );
@@ -138,6 +138,6 @@ export class Overlay {
       this._appRef = this._injector.get<ApplicationRef>(ApplicationRef);
     }
 
-    return new DomPortalOutlet(pane, this._appRef, this._injector);
+    return new DomPortalOutlet(pane, null, this._appRef, this._injector, this._document);
   }
 }

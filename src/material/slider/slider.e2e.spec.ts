@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {$, browser, by, element, ElementFinder, logging} from 'protractor';
+import {$, browser, by, element, ElementFinder} from 'protractor';
+import {logging} from 'selenium-webdriver';
 
 describe('MatSlider', () => {
   const getStandardSlider = () => element(by.id('standard-slider'));

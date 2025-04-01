@@ -25,7 +25,7 @@ import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatInkBar} from './ink-bar';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
-import {MatRipple} from '../core';
+import {MatRipple} from '@angular/material/core';
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes

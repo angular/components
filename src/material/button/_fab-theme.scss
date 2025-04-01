@@ -2,7 +2,9 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
-@use '../core/tokens/m2/mat/extended-fab' as tokens-mat-extended-fab;
+@use '../core/tokens/m2/mdc/fab' as tokens-mdc-fab;
+@use '../core/tokens/m2/mdc/fab-small' as tokens-mdc-fab-small;
+@use '../core/tokens/m2/mdc/extended-fab' as tokens-mdc-extended-fab;
 @use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
 @use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
 @use '../core/tokens/token-utils';
@@ -16,40 +18,54 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-fab.$prefix,
-        tokens-mat-fab.get-unthemable-tokens()
+      @include token-utils.create-token-values(
+        tokens-mdc-fab.$prefix,
+        tokens-mdc-fab.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-fab-small.$prefix,
-        tokens-mat-fab-small.get-unthemable-tokens()
+      @include token-utils.create-token-values(
+        tokens-mdc-fab-small.$prefix,
+        tokens-mdc-fab-small.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-extended-fab.$prefix,
-        tokens-mat-extended-fab.get-unthemable-tokens()
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-unthemable-tokens()
       );
     }
   }
 }
 
 @mixin _fab-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-fab.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-fab.get-color-tokens($theme)
+  );
+
   $mat-tokens: if(
     $palette,
     tokens-mat-fab.private-get-color-palette-color-tokens($theme, $palette),
     tokens-mat-fab.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values-mixed(tokens-mat-fab.$prefix, $mat-tokens);
+  @include token-utils.create-token-values(tokens-mdc-fab.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-tokens);
 }
 
 @mixin _fab-small-variant($theme, $palette) {
+  $mdc-tokens: if(
+    $palette,
+    tokens-mdc-fab-small.private-get-color-palette-color-tokens($theme, $palette),
+    tokens-mdc-fab-small.get-color-tokens($theme)
+  );
+
   $mat-tokens: if(
     $palette,
     tokens-mat-fab-small.private-get-color-palette-color-tokens($theme, $palette),
     tokens-mat-fab-small.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values-mixed(tokens-mat-fab-small.$prefix, $mat-tokens);
+  @include token-utils.create-token-values(tokens-mdc-fab-small.$prefix, $mdc-tokens);
+  @include token-utils.create-token-values(tokens-mat-fab-small.$prefix, $mat-tokens);
 }
 
 /// Outputs color theme styles for the mat-fab.
@@ -64,9 +80,9 @@
     @include sass-utils.current-selector-or-root() {
       @include _fab-variant($theme, null);
       @include _fab-small-variant($theme, null);
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-extended-fab.$prefix,
-        tokens-mat-extended-fab.get-color-tokens($theme)
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-color-tokens($theme)
       );
 
       .mat-mdc-fab {
@@ -107,15 +123,15 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-extended-fab.$prefix,
-        tokens-mat-extended-fab.get-typography-tokens($theme)
+      @include token-utils.create-token-values(
+        tokens-mdc-extended-fab.$prefix,
+        tokens-mdc-extended-fab.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-fab.$prefix,
         tokens-mat-fab.get-typography-tokens($theme)
       );
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-fab-small.$prefix,
         tokens-mat-fab-small.get-typography-tokens($theme)
       );
@@ -130,11 +146,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-fab.$prefix,
         tokens-mat-fab.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-fab-small.$prefix,
         tokens-mat-fab-small.get-density-tokens($theme)
       );
@@ -146,8 +162,17 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-extended-fab.$prefix,
-      tokens: tokens-mat-extended-fab.get-token-slots(),
+      namespace: tokens-mdc-fab.$prefix,
+      tokens: tokens-mdc-fab.get-token-slots(),
+    ),
+    (
+      namespace: tokens-mdc-fab-small.$prefix,
+      tokens: tokens-mdc-fab-small.get-token-slots(),
+      prefix: 'small-',
+    ),
+    (
+      namespace: tokens-mdc-extended-fab.$prefix,
+      tokens: tokens-mdc-extended-fab.get-token-slots(),
       prefix: 'extended-',
     ),
     (
@@ -198,7 +223,13 @@
   );
   $mdc-extended-fab-tokens: token-utils.get-tokens-for(
     $tokens,
-    tokens-mat-extended-fab.$prefix,
+    tokens-mdc-extended-fab.$prefix,
+    $options...
+  );
+  $mdc-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mdc-fab.$prefix, $options...);
+  $mdc-fab-small-tokens: token-utils.get-tokens-for(
+    $tokens,
+    tokens-mdc-fab-small.$prefix,
     $options...
   );
   $mat-fab-tokens: token-utils.get-tokens-for($tokens, tokens-mat-fab.$prefix, $options...);
@@ -208,9 +239,11 @@
     $options...
   );
   @include token-utils.create-token-values(
-    tokens-mat-extended-fab.$prefix,
+    tokens-mdc-extended-fab.$prefix,
     $mdc-extended-fab-tokens
   );
+  @include token-utils.create-token-values(tokens-mdc-fab.$prefix, $mdc-fab-tokens);
+  @include token-utils.create-token-values(tokens-mdc-fab-small.$prefix, $mdc-fab-small-tokens);
   @include token-utils.create-token-values(tokens-mat-fab.$prefix, $mat-fab-tokens);
   @include token-utils.create-token-values(tokens-mat-fab-small.$prefix, $mat-fab-small-tokens);
 }

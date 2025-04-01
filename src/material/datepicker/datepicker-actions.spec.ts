@@ -1,9 +1,9 @@
 import {Component, ElementRef, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '../core';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerModule} from './datepicker-module';
@@ -297,8 +297,8 @@ describe('MatDatepickerActions', () => {
       <mat-datepicker #picker [touchUi]="touchUi" [startAt]="startAt">
         @if (renderActions) {
           <mat-datepicker-actions>
-            <button matButton class="cancel" matDatepickerCancel>Cancel</button>
-            <button matButton="elevated" class="apply" matDatepickerApply>Apply</button>
+            <button mat-button class="cancel" matDatepickerCancel>Cancel</button>
+            <button mat-raised-button class="apply" matDatepickerApply>Apply</button>
           </mat-datepicker-actions>
         }
       </mat-datepicker>

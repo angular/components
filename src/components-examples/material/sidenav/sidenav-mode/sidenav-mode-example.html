@@ -1,7 +1,7 @@
 @if (shouldRun) {
   <mat-sidenav-container class="example-container">
     <mat-sidenav #sidenav [mode]="mode.value || 'over'">
-      <p><button matButton (click)="sidenav.toggle()">Toggle</button></p>
+      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
       <p>
         <mat-radio-group class="example-radio-group" [formControl]="mode">
           <label>Mode:</label>
@@ -13,7 +13,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <p><button matButton (click)="sidenav.toggle()">Toggle</button></p>
+      <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
       <p>
         <mat-radio-group class="example-radio-group" [formControl]="mode">
           <label>Mode:</label>

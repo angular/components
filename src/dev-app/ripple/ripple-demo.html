@@ -1,12 +1,12 @@
 <div class="demo-ripple">
   <section>
     <mat-checkbox [(ngModel)]="disableButtonRipples">Disable button ripples</mat-checkbox>
-    <button matButton [disableRipple]="disableButtonRipples">flat</button>
-    <button matButton="elevated" [disableRipple]="disableButtonRipples">raised</button>
-    <button matFab [disableRipple]="disableButtonRipples">
+    <button mat-button [disableRipple]="disableButtonRipples">flat</button>
+    <button mat-raised-button [disableRipple]="disableButtonRipples">raised</button>
+    <button mat-fab [disableRipple]="disableButtonRipples">
       <mat-icon>check</mat-icon>
     </button>
-    <button matMiniFab [disableRipple]="disableButtonRipples">
+    <button mat-mini-fab [disableRipple]="disableButtonRipples">
       <mat-icon>check</mat-icon>
     </button>
   </section>

@@ -10,4 +10,4 @@ export * from './button';
 export * from './fab';
 export * from './icon-button';
 export * from './module';
-export {MAT_BUTTON_CONFIG, MatButtonAppearance, MatButtonConfig} from './button-base';
+export {MAT_BUTTON_CONFIG, MatButtonConfig} from './button-base';

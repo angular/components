@@ -1,23 +1,22 @@
-load("//tools:defaults.bzl", "markdown_to_html")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "markdown_to_html", "ng_module")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "stepper",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+        "@npm//rxjs",
     ],
 )
 

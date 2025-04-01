@@ -1,9 +1,0 @@
-load("//tools:defaults2.bzl", "ts_project")
-
-package(default_visibility = ["//visibility:public"])
-
-ts_project(
-    name = "signal-like",
-    srcs = ["signal-like.ts"],
-    deps = [],
-)

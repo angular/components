@@ -1,14 +1,17 @@
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createTestApp} from '../../../../cdk/schematics/testing';
+import {createTestApp} from '@angular/cdk/schematics/testing';
 
 import {runfiles} from '@bazel/runfiles';
 import {compileString} from 'sass';
 import * as path from 'path';
 import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
-import {ColorPalettes, generateSCSSTheme, getColorPalettes} from './index_bundled';
+import {ColorPalettes, generateSCSSTheme, getColorPalettes} from './index';
 import {Schema} from './schema';
 
-const packagesDir = path.resolve('../../../..');
+// Note: For Windows compatibility, we need to resolve the directory paths through runfiles
+// which are guaranteed to reside in the source tree.
+const testDir = runfiles.resolvePackageRelative('../theme-color');
+const packagesDir = path.join(runfiles.resolveWorkspaceRelative('src/cdk/_index.scss'), '../..');
 const localPackageSassImporter = createLocalAngularPackageImporter(packagesDir);
 
 describe('material-theme-color-schematic', () => {
@@ -62,7 +65,7 @@ describe('material-theme-color-schematic', () => {
         }
         `,
       {
-        loadPaths: [],
+        loadPaths: [testDir],
         importers: [localPackageSassImporter],
       },
     ).css.toString();
@@ -88,7 +91,7 @@ describe('material-theme-color-schematic', () => {
     }
   });
 
-  describe('with scss output', () => {
+  describe('with scss output', async () => {
     it('should generate theme file', async () => {
       const tree = await runM3ThemeSchematic(runner, {
         primaryColor: '#984061',
@@ -415,7 +418,7 @@ describe('material-theme-color-schematic', () => {
     });
   });
 
-  describe('with CSS output', () => {
+  describe('with CSS output', async () => {
     it('should generate m3 theme CSS file', async () => {
       const tree = await runM3ThemeSchematic(runner, {
         primaryColor: '#984061',

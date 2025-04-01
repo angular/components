@@ -3,7 +3,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchMouseEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
 import {Component, ElementRef, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
-import {MatTableModule} from '../table';
+import {MatTableModule} from '@angular/material/table';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable} from 'rxjs';

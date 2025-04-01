@@ -12,16 +12,16 @@ import {
   FocusTrap,
   FocusTrapFactory,
   InteractivityChecker,
-} from '../a11y';
-import {OverlayRef} from '../overlay';
-import {Platform, _getFocusedElementPierceShadowDom} from '../platform';
+} from '@angular/cdk/a11y';
+import {OverlayRef} from '@angular/cdk/overlay';
+import {Platform, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
   DomPortal,
   TemplatePortal,
-} from '../portal';
+} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,

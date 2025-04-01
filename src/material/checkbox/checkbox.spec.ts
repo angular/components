@@ -2,7 +2,7 @@ import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {ChangeDetectionStrategy, Component, DebugElement, Type} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, flushMicrotasks} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {ThemePalette} from '../core';
+import {ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,

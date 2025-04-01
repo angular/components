@@ -1,34 +1,31 @@
-load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "material-date-fns-adapter",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/date-fns",
         "//src:dev_mode_types",
         "//src/material/core",
+        "@npm//@angular/core",
+        "@npm//date-fns",
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":material-date-fns-adapter",
-        "//:node_modules/@angular/core",
-        "//:node_modules/date-fns",
         "//src/material/core",
+        "@npm//date-fns",
     ],
 )
 
@@ -44,5 +41,5 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/material-date-fns-adapter/schematics:npm_package"],
     tags = ["release-package"],
-    deps = [":material-date-fns-adapter_legacy"],
+    deps = [":material-date-fns-adapter"],
 )

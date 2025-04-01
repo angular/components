@@ -5,15 +5,12 @@ import {
   ComponentRef,
   Directive,
   ElementRef,
-  EnvironmentInjector,
   Injector,
   QueryList,
   TemplateRef,
   ViewChild,
   ViewChildren,
   ViewContainerRef,
-  createComponent,
-  createEnvironmentInjector,
   inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -462,7 +459,7 @@ describe('Portals', () => {
     it('should be able to pass projectable nodes to portal', () => {
       // Set the selectedHost to be a ComponentPortal.
       const testAppComponent = fixture.componentInstance;
-      const componentPortal = new ComponentPortal(PizzaMsg, undefined, undefined, [
+      const componentPortal = new ComponentPortal(PizzaMsg, undefined, undefined, undefined, [
         [document.createTextNode('Projectable node')],
       ]);
 
@@ -487,7 +484,7 @@ describe('Portals', () => {
       injector = TestBed.inject(Injector);
       appRef = TestBed.inject(ApplicationRef);
       someDomElement = document.createElement('div');
-      host = new DomPortalOutlet(someDomElement, appRef, injector);
+      host = new DomPortalOutlet(someDomElement, null, appRef, injector, document);
       someFixture = TestBed.createComponent(ArbitraryViewContainerRefComponent);
       someViewContainerRef = someFixture.componentInstance.viewContainerRef;
       someInjector = someFixture.componentInstance.injector;
@@ -617,9 +614,6 @@ describe('Portals', () => {
       expect(someDomElement.textContent)
         .withContext('Expected the static string "Pizza" in the DomPortalOutlet.')
         .toContain('Pizza');
-      expect(someDomElement.textContent)
-        .withContext('Did not expect the bound string "Chocolate" in the DomPortalOutlet')
-        .not.toContain('Chocolate');
 
       componentInstance.snack = new Chocolate();
       someFixture.detectChanges();
@@ -632,28 +626,6 @@ describe('Portals', () => {
       expect(someDomElement.innerHTML)
         .withContext('Expected the DomPortalOutlet to be empty after detach')
         .toBe('');
-    });
-
-    it('should support a component portal with element injector that has a child environment injector as parent', () => {
-      // https://github.com/angular/components/issues/30609
-      const childEnvironment = createEnvironmentInjector(
-        [Chocolate],
-        someInjector.get(EnvironmentInjector),
-        'Child environment',
-      );
-
-      @Component({template: ''})
-      class ChildComponent {}
-
-      const component = createComponent(ChildComponent, {
-        environmentInjector: childEnvironment,
-      });
-      const portal = new ComponentPortal(PizzaMsg, null, component.injector);
-
-      const componentInstance = portal.attach(host).instance;
-      expect(componentInstance.snack)
-        .withContext('Expected Chocolate to have been injected')
-        .toBeInstanceOf(Chocolate);
     });
 
     it('should call the dispose function even if the host has no attached content', () => {

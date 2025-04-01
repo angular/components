@@ -1,4 +1,5 @@
 @use '@angular/cdk';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 @use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
 @use '../core/tokens/token-utils';
@@ -88,8 +89,8 @@ $_side-padding: 8px;
   }
 
   @include token-utils.use-tokens(
-    tokens-mat-snack-bar.$prefix,
-    tokens-mat-snack-bar.get-token-slots()
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
   ) {
     .mat-mdc-snack-bar-container & {
       @include token-utils.create-token-slot(color, supporting-text-color);
@@ -112,8 +113,8 @@ $_side-padding: 8px;
   }
 
   @include token-utils.use-tokens(
-    tokens-mat-snack-bar.$prefix,
-    tokens-mat-snack-bar.get-token-slots()
+    tokens-mdc-snack-bar.$prefix,
+    tokens-mdc-snack-bar.get-token-slots()
   ) {
     .mat-mdc-snack-bar-container & {
       @include token-utils.create-token-slot(font-family, supporting-text-font);
@@ -156,7 +157,7 @@ $_side-padding: 8px;
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values-mixed(tokens-mat-text-button.$prefix, (
+  @include token-utils.create-token-values(tokens-mat-text-button.$prefix, (
     state-layer-color: currentColor,
     ripple-color: currentColor,
   ));

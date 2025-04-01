@@ -1,22 +1,20 @@
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "ng_package")
-load("//tools:defaults2.bzl", "ts_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("//tools:defaults.bzl", "ng_package", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "cdk-experimental",
     srcs = glob(
         ["*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = ["//:node_modules/@angular/core"],
+    deps = ["@npm//@angular/core"],
 )
 
 ng_package(
     name = "npm_package",
     srcs = ["package.json"],
     tags = ["release-package"],
-    deps = [get_legacy_label(t) for t in CDK_EXPERIMENTAL_TARGETS],
+    deps = CDK_EXPERIMENTAL_TARGETS,
 )

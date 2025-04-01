@@ -22,7 +22,7 @@ import {
   ViewEncapsulation,
   HostAttributeToken,
 } from '@angular/core';
-import {ThemePalette} from '../core';
+import {ThemePalette} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
 
@@ -65,11 +65,7 @@ export interface MatIconLocation {
   getPathname: () => string;
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_ICON_LOCATION_FACTORY(): MatIconLocation {
   const _document = inject(DOCUMENT);
   const _location = _document ? _document.location : null;

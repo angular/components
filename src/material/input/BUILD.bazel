@@ -2,14 +2,15 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "input",
     srcs = glob(
         ["**/*.ts"],
@@ -17,12 +18,10 @@ ng_project(
     ),
     assets = glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src/cdk/text-field",
         "//src/material/core",
         "//src/material/form-field",
+        "@npm//@angular/forms",
     ],
 )
 
@@ -36,23 +35,21 @@ sass_library(
 # Testing
 ###########
 
-ts_project(
+ng_test_library(
     name = "input_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":input",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
     ],
 )
 

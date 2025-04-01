@@ -11,15 +11,15 @@ import {
   TreeKeyManagerItem,
   TreeKeyManagerOptions,
   TreeKeyManagerStrategy,
-} from '../a11y';
-import {Directionality} from '../bidi';
+} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   CollectionViewer,
   DataSource,
   isDataSource,
   SelectionChange,
   SelectionModel,
-} from '../collections';
+} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -48,7 +48,7 @@ import {
   inject,
   booleanAttribute,
 } from '@angular/core';
-import {coerceObservable} from '../coercion/private';
+import {coerceObservable} from '@angular/cdk/coercion/private';
 import {
   BehaviorSubject,
   combineLatest,
@@ -1066,9 +1066,6 @@ export class CdkTree<T, K = T>
     // nodes are flat, or if the tree is using a levelAccessor and the nodes are
     // nested.
     if (this.childrenAccessor && nodeType === 'flat') {
-      // clear previously generated data so we don't keep end up retaining data overtime causing
-      // memory leaks.
-      this._clearPreviousCache();
       // This flattens children into a single array.
       this._ariaSets.set(null, [...nodes]);
       return this._flattenNestedNodesWithExpansion(nodes).pipe(
@@ -1101,9 +1098,6 @@ export class CdkTree<T, K = T>
         }),
       );
     } else {
-      // clear previously generated data so we don't keep end up retaining data overtime causing
-      // memory leaks.
-      this._clearPreviousCache();
       // For nested nodes, we still need to perform the node flattening in order
       // to maintain our caches for various tree operations.
       this._ariaSets.set(null, [...nodes]);
@@ -1131,9 +1125,8 @@ export class CdkTree<T, K = T>
       return;
     }
 
-    // clear previously generated data so we don't keep end up retaining data overtime causing
-    // memory leaks.
-    this._clearPreviousCache();
+    this._parents.clear();
+    this._ariaSets.clear();
 
     for (let index = 0; index < flattenedNodes.length; index++) {
       const dataNode = flattenedNodes[index];
@@ -1169,13 +1162,6 @@ export class CdkTree<T, K = T>
     } else {
       callback(toToggle);
     }
-  }
-
-  /** Clears the maps we use to store parents, level & aria-sets in. */
-  private _clearPreviousCache() {
-    this._parents.clear();
-    this._levels.clear();
-    this._ariaSets.clear();
   }
 }
 

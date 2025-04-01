@@ -11,10 +11,10 @@ import {
   ActiveDescendantKeyManager,
   Highlightable,
   ListKeyManagerOption,
-} from '../a11y';
-import {Directionality} from '../bidi';
-import {coerceArray} from '../coercion';
-import {SelectionModel} from '../collections';
+} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {coerceArray} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
   DOWN_ARROW,
@@ -26,8 +26,8 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-} from '../keycodes';
-import {Platform} from '../platform';
+} from '@angular/cdk/keycodes';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
   booleanAttribute,

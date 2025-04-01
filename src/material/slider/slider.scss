@@ -1,10 +1,12 @@
 @use '@angular/cdk';
 @use '../core/tokens/m2/mat/slider' as tokens-mat-slider;
+@use '../core/tokens/m2/mdc/slider' as tokens-mdc-slider;
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
 $mat-slider-min-size: 128px !default;
 $mat-slider-horizontal-margin: 8px !default;
+$_mdc-slots: (tokens-mdc-slider.$prefix, tokens-mdc-slider.get-token-slots());
 $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 
 .mdc-slider__track {
@@ -14,7 +16,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   width: 100%;
   pointer-events: none;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(height, inactive-track-height);
   }
 }
@@ -30,7 +32,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 .mdc-slider__track--active {
   overflow: hidden;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(border-radius, active-track-shape);
     $active-height-ref: token-utils.get-token-variable(active-track-height);
     $inactive-height-ref: token-utils.get-token-variable(inactive-track-height);
@@ -48,7 +50,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   transform-origin: left;
   transition: transform 80ms ease;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(border-color, active-track-color);
     @include token-utils.create-token-slot(border-top-width, active-track-height);
 
@@ -68,7 +70,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   top: 0;
   opacity: 0.24;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(background-color, inactive-track-color);
     @include token-utils.create-token-slot(height, inactive-track-height);
     @include token-utils.create-token-slot(border-radius, inactive-track-shape);
@@ -128,7 +130,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   // the word-break of the value indicator.
   word-break: normal;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(background-color, label-container-color);
     @include token-utils.create-token-slot(color, label-label-text-color);
   }
@@ -162,7 +164,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
       @include token-utils.create-token-slot(display, value-indicator-caret-display);
     }
 
-    @include token-utils.use-tokens($_mat-slots...) {
+    @include token-utils.use-tokens($_mdc-slots...) {
       @include token-utils.create-token-slot(border-top-color, label-container-color);
     }
   }
@@ -193,7 +195,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     @include token-utils.create-token-slot(transform, value-indicator-text-transform);
   }
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(font-family, label-label-text-font);
     @include token-utils.create-token-slot(font-size, label-label-text-size);
     @include token-utils.create-token-slot(font-weight, label-label-text-weight);
@@ -233,7 +235,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
   transform: translate(-50%, -50%);
   border-style: solid;
 
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     $width-ref: token-utils.get-token-variable(handle-width);
     $height-ref: token-utils.get-token-variable(handle-height);
     width: $width-ref;
@@ -267,7 +269,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
     border: solid 1px #fff;
     box-sizing: content-box;
 
-    @include token-utils.use-tokens($_mat-slots...) {
+    @include token-utils.use-tokens($_mdc-slots...) {
       @include token-utils.create-token-slot(border-color, with-overlap-handle-outline-color);
       @include token-utils.create-token-slot(border-width, with-overlap-handle-outline-width);
     }
@@ -287,7 +289,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 
 .mdc-slider__tick-mark--active,
 .mdc-slider__tick-mark--inactive {
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(width, with-tick-marks-container-size);
     @include token-utils.create-token-slot(height, with-tick-marks-container-size);
     @include token-utils.create-token-slot(border-radius, with-tick-marks-container-shape);
@@ -295,7 +297,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 }
 
 .mdc-slider__tick-mark--inactive {
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(opacity, with-tick-marks-inactive-container-opacity);
     @include token-utils.create-token-slot(background-color,
       with-tick-marks-inactive-container-color);
@@ -309,7 +311,7 @@ $_mat-slots: (tokens-mat-slider.$prefix, tokens-mat-slider.get-token-slots());
 }
 
 .mdc-slider__tick-mark--active {
-  @include token-utils.use-tokens($_mat-slots...) {
+  @include token-utils.use-tokens($_mdc-slots...) {
     @include token-utils.create-token-slot(opacity, with-tick-marks-active-container-opacity);
     @include token-utils.create-token-slot(background-color,
       with-tick-marks-active-container-color);

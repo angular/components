@@ -1,11 +1,10 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
-load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite")
+load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite", "ts_library")
 load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
-load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "testing",
     srcs = glob(
         ["**/*.ts"],
@@ -14,7 +13,7 @@ ts_project(
         ],
     ),
     deps = [
-        "//:node_modules/rxjs",
+        "@npm//rxjs",
     ],
 )
 
@@ -38,13 +37,13 @@ ng_web_test_suite(
 e2e_test_suite(
     name = "protractor_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:e2e_test_sources_legacy",
+        "//src/cdk/testing/tests:e2e_test_sources",
     ],
 )
 
 webdriver_test(
     name = "webdriver_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:webdriver_test_sources_legacy",
+        "//src/cdk/testing/tests:webdriver_test_sources",
     ],
 )

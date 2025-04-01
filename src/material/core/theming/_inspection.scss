@@ -119,7 +119,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
-  $color-roles: map.get($theme, $_internals, color-tokens, (mat, theme));
+  $color-roles: map.get($theme, $_internals, color-tokens, (mdc, theme));
   $result: map.get($color-roles, $color-role-name);
   @if not $result {
     @error #{'Valid color roles are: #{map.keys($color-roles)}. Got:'} $color-role-name;
@@ -185,7 +185,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
       font-weight: '-weight'
     ), $property);
     $token-name: '#{$typescale}#{$property-key}';
-    @return map.get($theme, $_internals, typography-tokens, (mat, typography), $token-name);
+    @return map.get($theme, $_internals, typography-tokens, (mdc, typography), $token-name);
   }
   @else {
     @error #{'Unrecognized theme version:'} $version;

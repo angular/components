@@ -1,8 +1,8 @@
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "test_components",
     testonly = True,
     srcs = glob(
@@ -14,14 +14,13 @@ ng_project(
     ),
     assets = glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
+        "@npm//@angular/forms",
     ],
 )
 
-ts_project(
+ts_library(
     name = "test_harnesses",
     srcs = glob(["harnesses/**/*.ts"]),
     deps = [
@@ -29,20 +28,17 @@ ts_project(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "cross_environment_specs",
-    testonly = True,
     srcs = ["cross-environment.spec.ts"],
     deps = [
         ":test_harnesses",
-        "//:node_modules/@angular/core",
         "//src/cdk/testing",
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         [
             "**/*.spec.ts",
@@ -56,19 +52,17 @@ ts_project(
         ":cross_environment_specs",
         ":test_components",
         ":test_harnesses",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/kagekiri",
         "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
+        "@npm//@angular/platform-browser",
+        "@npm//kagekiri",
     ],
 )
 
-ts_project(
+ng_e2e_test_library(
     name = "e2e_test_sources",
-    testonly = True,
     srcs = glob(
         [
             "**/*.e2e.spec.ts",
@@ -78,25 +72,26 @@ ts_project(
     deps = [
         ":cross_environment_specs",
         ":test_harnesses",
-        "//:node_modules/protractor",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
     ],
 )
 
-ts_project(
+ts_library(
     name = "webdriver_test_sources",
     testonly = True,
     srcs = ["webdriver.e2e.spec.ts"],
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     deps = [
         ":cross_environment_specs",
         ":test_harnesses",
-        "//:node_modules/@bazel/runfiles",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
-        "//:node_modules/@types/selenium-webdriver",
         "//src/cdk/testing",
         "//src/cdk/testing/selenium-webdriver",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//@types/selenium-webdriver",
     ],
 )

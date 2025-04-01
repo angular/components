@@ -29,6 +29,7 @@ import {
   AfterRenderRef,
   inject,
   Injector,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
@@ -47,7 +48,6 @@ import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
-import {_animationsDisabled} from '../core';
 
 /** Reason why the menu was closed. */
 export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -82,11 +82,7 @@ export const MAT_MENU_DEFAULT_OPTIONS = new InjectionToken<MatMenuDefaultOptions
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_MENU_DEFAULT_OPTIONS_FACTORY(): MatMenuDefaultOptions {
   return {
     overlapTrigger: false,
@@ -128,7 +124,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   private _exitFallbackTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** Whether animations are currently disabled. */
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled: boolean;
 
   /** All items inside the menu. Includes items nested inside another menu. */
   @ContentChildren(MatMenuItem, {descendants: true}) _allItems: QueryList<MatMenuItem>;
@@ -290,6 +286,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     this.backdropClass = defaultOptions.backdropClass;
     this.overlapTrigger = defaultOptions.overlapTrigger;
     this.hasBackdrop = defaultOptions.hasBackdrop;
+    this._animationsDisabled = inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   }
 
   ngOnInit() {

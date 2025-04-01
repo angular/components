@@ -29,11 +29,7 @@ export const DIR_DOCUMENT = new InjectionToken<Document>('cdk-dir-doc', {
   factory: DIR_DOCUMENT_FACTORY,
 });
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function DIR_DOCUMENT_FACTORY(): Document {
   return inject(DOCUMENT);
 }

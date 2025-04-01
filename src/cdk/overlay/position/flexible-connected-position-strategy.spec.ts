@@ -1,5 +1,5 @@
-import {ComponentPortal, PortalModule} from '../../portal';
-import {CdkScrollable, ScrollingModule, ViewportRuler} from '../../scrolling';
+import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
+import {CdkScrollable, ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {dispatchFakeEvent} from '../../testing/private';
 import {
   ApplicationRef,

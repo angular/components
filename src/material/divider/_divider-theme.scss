@@ -11,7 +11,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-divider.$prefix,
         tokens-mat-divider.get-unthemable-tokens()
       );
@@ -24,7 +24,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-divider.$prefix,
         tokens-mat-divider.get-color-tokens($theme)
       );

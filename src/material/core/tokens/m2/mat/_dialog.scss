@@ -1,7 +1,6 @@
 @use '../../token-definition';
 @use '../../../style/elevation';
 @use '../../../style/sass-utils';
-@use '../../../theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, dialog);
@@ -10,7 +9,6 @@ $prefix: (mat, dialog);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
     container-elevation-shadow: elevation.get-box-shadow(24),
     container-max-width: 80vw,
     container-small-max-width: 80vw,
@@ -28,36 +26,12 @@ $prefix: (mat, dialog);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $text-base: if(token-definition.$private-is-internal-build,
-    if($is-dark, #fff, #000),
-    inspection.get-theme-color($theme, foreground, text, 1)
-  );
-
-  @return (
-    container-color: inspection.get-theme-color($theme, background, dialog),
-    subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
-    supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return (
-    subhead-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    subhead-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    subhead-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    subhead-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    subhead-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    supporting-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    supporting-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    supporting-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    supporting-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    supporting-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

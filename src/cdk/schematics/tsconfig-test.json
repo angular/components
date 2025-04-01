@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "types": ["jasmine", "node"]
-  },
-  "exclude": []
-}

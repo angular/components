@@ -8,11 +8,8 @@
 
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
-/** Possible button variants. */
-export type ButtonVariant = 'basic' | 'icon' | 'fab' | 'mini-fab';
-
 /** Possible button appearances. */
-export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
+export type ButtonVariant = 'basic' | 'raised' | 'flat' | 'icon' | 'stroked' | 'fab' | 'mini-fab';
 
 /** A set of criteria that can be used to filter a list of button harness instances. */
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
@@ -21,9 +18,6 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
 
   /** Only find instances with a variant. */
   variant?: ButtonVariant;
-
-  /** Only find instances with a specific appearance. */
-  appearance?: ButtonAppearance;
 
   /** Only find instances which match the given disabled state. */
   disabled?: boolean;

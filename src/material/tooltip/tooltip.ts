@@ -28,6 +28,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
+  ANIMATION_MODULE_TYPE,
   afterNextRender,
   Injector,
 } from '@angular/core';
@@ -50,7 +51,6 @@ import {
 } from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {Observable, Subject} from 'rxjs';
-import {_animationsDisabled} from '../core';
 
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -87,31 +87,19 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_TOOLTIP_SCROLL_STRATEGY,
   deps: [Overlay],
   useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
 };
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions {
   return {
     showDelay: 0,
@@ -207,7 +195,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   protected _dir = inject(Directionality);
   private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
-  private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatTooltipDefaultOptions>(MAT_TOOLTIP_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -551,7 +538,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       positionStrategy: strategy,
       panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
-      disableAnimations: this._animationsDisabled,
     });
 
     this._updatePosition(this._overlayRef);
@@ -1000,7 +986,7 @@ export class TooltipComponent implements OnDestroy {
   _mouseLeaveHideDelay: number;
 
   /** Whether animations are currently disabled. */
-  private _animationsDisabled = _animationsDisabled();
+  private _animationsDisabled: boolean;
 
   /** Reference to the internal tooltip element. */
   @ViewChild('tooltip', {
@@ -1027,7 +1013,10 @@ export class TooltipComponent implements OnDestroy {
 
   constructor(...args: unknown[]);
 
-  constructor() {}
+  constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    this._animationsDisabled = animationMode === 'NoopAnimations';
+  }
 
   /**
    * Shows the tooltip with an animation originating from the provided origin

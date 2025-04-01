@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("//tools:defaults.bzl", "jasmine_node_test", "sass_binary", "ts_library")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
 package(default_visibility = ["//visibility:public"])
@@ -53,29 +52,29 @@ build_test(
     ],
 )
 
-ts_project(
+ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = glob([
         "*.spec.ts",
     ]),
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     deps = [
-        "//:node_modules/@bazel/runfiles",
-        "//:node_modules/postcss",
-        "//:node_modules/sass",
         "//tools/postcss",
         "//tools/sass:sass_lib",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//postcss",
+        "@npm//sass",
     ],
 )
 
-jasmine_test(
+jasmine_node_test(
     name = "unit_tests",
+    srcs = [":unit_test_lib"],
     data = [
-        ":unit_test_lib",
-        "//src/material:sass_lib",
-        "//src/material-experimental:sass_lib",
-    ],
-    no_copy_to_bin = [
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
     ],

@@ -1,7 +1,7 @@
-import {Component, inject, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Provider, signal, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DateAdapter, provideNativeDateAdapter} from '../core';
+import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
 import {
   clearElement,
   dispatchFakeEvent,
@@ -21,16 +21,13 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {MatInput} from '../input';
-import {MatFormField, MatLabel, MatSuffix} from '../form-field';
+import {MatInput} from '@angular/material/input';
+import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatTimepickerInput} from './timepicker-input';
-import {MAT_TIMEPICKER_SCROLL_STRATEGY, MatTimepicker} from './timepicker';
+import {MatTimepicker} from './timepicker';
 import {MatTimepickerToggle} from './timepicker-toggle';
 import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {Overlay} from '@angular/cdk/overlay';
-import {Subject} from 'rxjs';
 
 describe('MatTimepicker', () => {
   let adapter: DateAdapter<Date>;
@@ -299,15 +296,6 @@ describe('MatTimepicker', () => {
         fixture.detectChanges();
       }).toThrowError(/MatTimepicker can only be registered with one input at a time/);
     });
-
-    it('input should be properly formatted when in shadow DOM', () => {
-      const fixture = TestBed.createComponent(TimepickerInShadowDom);
-      fixture.detectChanges(); // So that TimepickerInput.timepicker gets set.
-      const input = fixture.nativeElement.shadowRoot.querySelector('.mat-timepicker-input');
-      typeInElement(input, '13:37');
-      fixture.detectChanges();
-      expect(input.value).toBe('13:37');
-    });
   });
 
   describe('opening and closing', () => {
@@ -451,38 +439,6 @@ describe('MatTimepicker', () => {
         fixture.detectChanges();
         flush();
       }).not.toThrow();
-    }));
-
-    it('should be able to reopen the panel when closed by a scroll strategy', fakeAsync(() => {
-      const scrolledSubject = new Subject();
-
-      TestBed.resetTestingModule();
-      configureTestingModule([
-        {
-          provide: ScrollDispatcher,
-          useValue: {scrolled: () => scrolledSubject},
-        },
-        {
-          provide: MAT_TIMEPICKER_SCROLL_STRATEGY,
-          useFactory: () => {
-            const overlay = inject(Overlay);
-            return () => overlay.scrollStrategies.close();
-          },
-        },
-      ]);
-
-      const fixture = TestBed.createComponent(StandaloneTimepicker);
-      fixture.detectChanges();
-      fixture.componentInstance.timepicker.open();
-      fixture.detectChanges();
-      expect(getPanel()).toBeTruthy();
-      scrolledSubject.next();
-      fixture.detectChanges();
-      flush();
-      expect(getPanel()).toBeFalsy();
-      fixture.componentInstance.timepicker.open();
-      fixture.detectChanges();
-      expect(getPanel()).toBeTruthy();
     }));
   });
 
@@ -1422,13 +1378,3 @@ class TimepickerWithMultipleInputs {}
 class TimepickerWithoutInput {
   @ViewChild(MatTimepicker) timepicker: MatTimepicker<Date>;
 }
-
-@Component({
-  template: `
-    <input [matTimepicker]="picker" />
-    <mat-timepicker #picker />
-  `,
-  imports: [MatTimepicker, MatTimepickerInput],
-  encapsulation: ViewEncapsulation.ShadowDom,
-})
-class TimepickerInShadowDom {}

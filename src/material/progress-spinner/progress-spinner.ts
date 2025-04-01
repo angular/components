@@ -15,9 +15,10 @@ import {
   ViewChild,
   ViewEncapsulation,
   numberAttribute,
+  ANIMATION_MODULE_TYPE,
   inject,
 } from '@angular/core';
-import {_animationsDisabled, ThemePalette} from '../core';
+import {ThemePalette} from '@angular/material/core';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */
@@ -51,11 +52,7 @@ export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS =
     factory: MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY,
   });
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions {
   return {diameter: BASE_SIZE};
 }
@@ -84,8 +81,8 @@ const BASE_STROKE_WIDTH = 10;
     '[class.mdc-circular-progress--indeterminate]': 'mode === "indeterminate"',
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
-    '[style.--mat-circular-progress-size]': 'diameter + "px"',
-    '[style.--mat-circular-progress-active-indicator-width]': 'diameter + "px"',
+    '[style.--mdc-circular-progress-size]': 'diameter + "px"',
+    '[style.--mdc-circular-progress-active-indicator-width]': 'diameter + "px"',
     '[attr.aria-valuemin]': '0',
     '[attr.aria-valuemax]': '100',
     '[attr.aria-valuenow]': 'mode === "determinate" ? value : null',
@@ -127,9 +124,11 @@ export class MatProgressSpinner {
   constructor(...args: unknown[]);
 
   constructor() {
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     const defaults = inject<MatProgressSpinnerDefaultOptions>(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS);
 
-    this._noopAnimations = _animationsDisabled() && !!defaults && !defaults._forceAnimations;
+    this._noopAnimations =
+      animationMode === 'NoopAnimations' && !!defaults && !defaults._forceAnimations;
     this.mode =
       this._elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner'
         ? 'indeterminate'

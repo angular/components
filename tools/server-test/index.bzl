@@ -8,7 +8,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 
 def server_test(server, test, **kwargs):
     nodejs_test(
-        data = [server, test, "//tools/server-test:test_runner_lib_legacy"],
+        data = [server, test, "//tools/server-test:test_runner_lib"],
         args = ["$(rootpath %s)" % server, "$(rootpath %s)" % test],
         entry_point = "//tools/server-test:test-runner.ts",
         # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver

@@ -39,6 +39,7 @@ import {
   Renderer2,
   ViewContainerRef,
 } from '@angular/core';
+import {_bindEventWithOptions} from '@angular/cdk/platform';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu, MenuCloseReason} from './menu';
@@ -46,7 +47,6 @@ import {throwMatMenuRecursiveError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {_animationsDisabled} from '../core';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -60,20 +60,12 @@ export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_MENU_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_MENU_SCROLL_STRATEGY,
   deps: [Overlay],
@@ -100,7 +92,7 @@ const PANELS_TO_TRIGGERS = new WeakMap<MatMenuPanel, MatMenuTrigger>();
     'class': 'mat-mdc-menu-trigger',
     '[attr.aria-haspopup]': 'menu ? "menu" : null',
     '[attr.aria-expanded]': 'menuOpen',
-    '[attr.aria-controls]': 'menuOpen ? menu?.panelId : null',
+    '[attr.aria-controls]': 'menuOpen ? menu.panelId : null',
     '(click)': '_handleClick($event)',
     '(mousedown)': '_handleMousedown($event)',
     '(keydown)': '_handleKeydown($event)',
@@ -117,7 +109,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _scrollStrategy = inject(MAT_MENU_SCROLL_STRATEGY);
   private _changeDetectorRef = inject(ChangeDetectorRef);
-  private _animationsDisabled = _animationsDisabled();
   private _cleanupTouchstart: () => void;
 
   private _portal: TemplatePortal;
@@ -227,7 +218,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     const renderer = inject(Renderer2);
 
     this._parentMaterialMenu = parentMenu instanceof MatMenu ? parentMenu : undefined;
-    this._cleanupTouchstart = renderer.listen(
+    this._cleanupTouchstart = _bindEventWithOptions(
+      renderer,
       this._element.nativeElement,
       'touchstart',
       (event: TouchEvent) => {
@@ -447,7 +439,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       panelClass: menu.overlayPanelClass,
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir || 'ltr',
-      disableAnimations: this._animationsDisabled,
     });
   }
 

@@ -1,6 +1,6 @@
 import {Component, ApplicationRef} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
-import {PortalModule, ComponentPortal} from '../../portal';
+import {PortalModule, ComponentPortal} from '@angular/cdk/portal';
 import {OverlayModule, Overlay, OverlayConfig, OverlayRef} from '../index';
 
 describe('GlobalPositonStrategy', () => {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceElement, coerceNumberProperty} from '../coercion';
+import {NumberInput, coerceElement, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Directive,

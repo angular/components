@@ -8,11 +8,11 @@
                  [fixedInViewport]="fixed" [fixedTopGap]="fixedTop" [fixedBottomGap]="fixedBottom">
       Start Side Sidenav
       <br>
-      <button matButton (click)="start.close()">Close</button>
+      <button mat-button (click)="start.close()">Close</button>
       <br>
-      <button matButton (click)="end.open('keyboard')">Open End Side</button>
+      <button mat-button (click)="end.open('keyboard')">Open End Side</button>
       <br>
-      <button matButton (click)="modeIndex = (modeIndex + 1) % 3">Toggle Mode</button>
+      <button mat-button (click)="modeIndex = (modeIndex + 1) % 3">Toggle Mode</button>
       <div>Mode: {{start.mode}}</div>
       <br>
       <input #myinput>
@@ -25,7 +25,7 @@
                  [fixedInViewport]="fixed" [fixedTopGap]="fixedTop" [fixedBottomGap]="fixedBottom">
       End Side Sidenav
       <br>
-      <button matButton (click)="end.close()">Close</button>
+      <button mat-button (click)="end.close()">Close</button>
       @for (c of fillerContent; track c) {
         <div class="demo-filler-content">Filler Content</div>
       }
@@ -37,15 +37,15 @@
       }
       <div class="demo-sidenav-content">
         <div>
-          <button matButton="elevated" (click)="isLaunched = false">
+          <button mat-raised-button (click)="isLaunched = false">
             Exit Fullscreen Sidenav Demo
           </button>
         </div>
 
         <div>
           <h3>Sidenav</h3>
-          <button matButton (click)="start.toggle(undefined, 'mouse')">Toggle Start Side Sidenav</button>
-          <button matButton (click)="end.toggle(undefined, 'mouse')">Toggle End Side Sidenav</button>
+          <button mat-button (click)="start.toggle(undefined, 'mouse')">Toggle Start Side Sidenav</button>
+          <button mat-button (click)="end.toggle(undefined, 'mouse')">Toggle End Side Sidenav</button>
           <mat-checkbox [(ngModel)]="hasBackdrop">Has backdrop</mat-checkbox>
           <mat-checkbox [(ngModel)]="fixed">Fixed mode</mat-checkbox>
           <mat-checkbox [(ngModel)]="coverHeader">Sidenav covers header/footer</mat-checkbox>
@@ -71,7 +71,7 @@
   }
 </div>
 } @else {
-  <button matButton="elevated" (click)="isLaunched = true" color="primary">
+  <button mat-raised-button (click)="isLaunched = true" color="primary">
     Launch Fullscreen Sidenav Demo
   </button>
 }

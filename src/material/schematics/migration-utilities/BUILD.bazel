@@ -1,35 +1,36 @@
-load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("//tools:defaults.bzl", "jasmine_node_test", "spec_bundle", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "migration-utilities",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    tsconfig = "//src/material/schematics:tsconfig",
     deps = [
-        "//:node_modules/typescript",
+        "@npm//typescript",
     ],
 )
 
-ts_project(
+ts_library(
     name = "unit_tests_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"] + ["rules/components/test-setup-helper.ts"]),
-    tsconfig = "//src/material/schematics:tsconfig-test",
     deps = [
         ":migration-utilities",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/typescript",
+        "@npm//@types/jasmine",
+        "@npm//typescript",
     ],
 )
 
-jasmine_test(
+spec_bundle(
+    name = "unit_tests_bundle",
+    platform = "cjs-legacy",
+    deps = [":unit_tests_lib"],
+)
+
+jasmine_node_test(
     name = "unit_tests",
-    data = [
-        ":unit_tests_lib",
-        "//src/material/schematics:package_json",
-    ],
+    deps = [":unit_tests_bundle"],
 )

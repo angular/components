@@ -58,20 +58,12 @@ export class MatPaginatorIntl {
   };
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl) {
   return parentIntl || new MatPaginatorIntl();
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_PAGINATOR_INTL_PROVIDER = {
   // If there is already an MatPaginatorIntl available, use that. Otherwise, provide a new one.
   provide: MatPaginatorIntl,

@@ -5,23 +5,12 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "protractor_web_test_suite", "sass_binary")
+load("//tools:defaults.bzl", "devmode_esbuild", "http_server", "ng_e2e_test_library", "ng_module", "protractor_web_test_suite", "sass_binary", "ts_library")
 load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
 
-rules_js_tsconfig(
-    name = "tsconfig",
-    src = "tsconfig.json",
-    deps = [
-        "//:node_modules/@types/node",
-        "//src:build-tsconfig",
-    ],
-)
-
-ng_project(
+ng_module(
     name = "kitchen-sink",
     srcs = [
         "kitchen-sink/kitchen-sink.ts",
@@ -30,42 +19,37 @@ ng_project(
         "kitchen-sink/kitchen-sink.html",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-server",
-        "//:node_modules/rxjs",
         "//src/google-maps",
         "//src/youtube-player",
+        "@npm//@angular/platform-server",
     ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ALL_EXAMPLES,
 )
 
-ts_project(
+ts_library(
     name = "client_lib",
     srcs = [
         "main.ts",
     ],
-    tsconfig = ":tsconfig",
     deps = [
         ":kitchen-sink",
-        "//:node_modules/@angular/platform-browser",
+        "@npm//@angular/platform-browser",
     ],
 )
 
-ts_project(
+ts_library(
     name = "prerender_lib",
     srcs = [
         "prerender.ts",
     ],
-    tsconfig = ":tsconfig",
     deps = [
         ":kitchen-sink",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@angular/platform-server",
-        "//:node_modules/@bazel/runfiles",
-        "//:node_modules/@types/node",
-        "//:node_modules/reflect-metadata",
-        "//:node_modules/zone.js",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-server",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/node",
+        "@npm//reflect-metadata",
+        "@npm//zone.js",
     ],
 )
 
@@ -99,7 +83,7 @@ devmode_esbuild(
     platform = "browser",
     target = "es2016",
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":client_lib_legacy",
+        ":client_lib",
     ],
 )
 
@@ -113,7 +97,7 @@ devmode_esbuild(
     # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
     # map all framework packages to their linker-processed bundles from `tools/angular`.
     deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":prerender_lib_legacy",
+        ":prerender_lib",
     ],
 )
 
@@ -158,11 +142,9 @@ http_server(
     ],
 )
 
-ts_project(
+ng_e2e_test_library(
     name = "hydration_e2e_tests_sources",
-    testonly = True,
     srcs = ["hydration.e2e.spec.ts"],
-    deps = ["//:node_modules/protractor"],
 )
 
 protractor_web_test_suite(

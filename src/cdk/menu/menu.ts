@@ -7,7 +7,7 @@
  */
 
 import {AfterContentInit, Directive, EventEmitter, inject, OnDestroy, Output} from '@angular/core';
-import {ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, TAB} from '../keycodes';
+import {ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';

@@ -12,25 +12,7 @@ interface FoodNode {
   children?: FoodNode[];
 }
 
-/**
- * @title Tree with nested nodes (childrenAccessor)
- */
-@Component({
-  selector: 'tree-nested-child-accessor-overview-example',
-  templateUrl: 'tree-nested-child-accessor-overview-example.html',
-  styleUrl: 'tree-nested-child-accessor-overview-example.css',
-  imports: [MatTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TreeNestedChildAccessorOverviewExample {
-  childrenAccessor = (node: FoodNode) => node.children ?? [];
-
-  dataSource = EXAMPLE_DATA;
-
-  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
-}
-
-const EXAMPLE_DATA: FoodNode[] = [
+const TREE_DATA: FoodNode[] = [
   {
     name: 'Fruit',
     children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
@@ -49,3 +31,21 @@ const EXAMPLE_DATA: FoodNode[] = [
     ],
   },
 ];
+
+/**
+ * @title Tree with nested nodes (childrenAccessor)
+ */
+@Component({
+  selector: 'tree-nested-child-accessor-overview-example',
+  templateUrl: 'tree-nested-child-accessor-overview-example.html',
+  styleUrl: 'tree-nested-child-accessor-overview-example.css',
+  imports: [MatTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TreeNestedChildAccessorOverviewExample {
+  childrenAccessor = (node: FoodNode) => node.children ?? [];
+
+  dataSource = TREE_DATA;
+
+  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
+}

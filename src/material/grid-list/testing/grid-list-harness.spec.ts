@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatGridListModule} from '../../grid-list';
+import {MatGridListModule} from '@angular/material/grid-list';
 import {MatGridListHarness} from './grid-list-harness';
 import {MatGridTileHarness} from './grid-tile-harness';
 

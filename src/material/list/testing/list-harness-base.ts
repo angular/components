@@ -12,7 +12,7 @@ import {
   HarnessPredicate,
   parallel,
 } from '@angular/cdk/testing';
-import {DividerHarnessFilters, MatDividerHarness} from '../../divider/testing';
+import {DividerHarnessFilters, MatDividerHarness} from '@angular/material/divider/testing';
 import {BaseListItemHarnessFilters, SubheaderHarnessFilters} from './list-harness-filters';
 import {MatSubheaderHarness} from './list-item-harness-base';
 

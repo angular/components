@@ -1,14 +1,15 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "postcss",
     srcs = [
         "compare-nodes.ts",
     ],
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
     deps = [
-        "//:node_modules/postcss",
+        "@npm//postcss",
     ],
 )

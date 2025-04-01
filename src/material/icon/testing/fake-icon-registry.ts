@@ -7,7 +7,7 @@
  */
 
 import {Injectable, NgModule, OnDestroy} from '@angular/core';
-import {MatIconRegistry} from '../../icon';
+import {MatIconRegistry} from '@angular/material/icon';
 import {Observable, of as observableOf} from 'rxjs';
 
 type PublicApi<T> = {

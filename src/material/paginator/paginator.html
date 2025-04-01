@@ -41,14 +41,8 @@
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
       </div>
 
-      <!--
-      The buttons use `disabledInteractive` so that they can retain focus if they become disabled,
-      otherwise focus is moved to the document body. However, users should not be able to navigate
-      into these buttons, so `tabindex` is set to -1 when disabled.
-      -->
-
       @if (showFirstLastButtons) {
-        <button matIconButton type="button"
+        <button mat-icon-button type="button"
                 class="mat-mdc-paginator-navigation-first"
                 (click)="_buttonClicked(0, _previousButtonsDisabled())"
                 [attr.aria-label]="_intl.firstPageLabel"
@@ -56,7 +50,6 @@
                 [matTooltipDisabled]="_previousButtonsDisabled()"
                 matTooltipPosition="above"
                 [disabled]="_previousButtonsDisabled()"
-                [tabindex]="_previousButtonsDisabled() ? -1 : null"
                 disabledInteractive>
           <svg class="mat-mdc-paginator-icon"
               viewBox="0 0 24 24"
@@ -66,7 +59,7 @@
           </svg>
         </button>
       }
-      <button matIconButton type="button"
+      <button mat-icon-button type="button"
               class="mat-mdc-paginator-navigation-previous"
               (click)="_buttonClicked(pageIndex - 1, _previousButtonsDisabled())"
               [attr.aria-label]="_intl.previousPageLabel"
@@ -74,7 +67,6 @@
               [matTooltipDisabled]="_previousButtonsDisabled()"
               matTooltipPosition="above"
               [disabled]="_previousButtonsDisabled()"
-              [tabindex]="_previousButtonsDisabled() ? -1 : null"
               disabledInteractive>
         <svg class="mat-mdc-paginator-icon"
              viewBox="0 0 24 24"
@@ -83,7 +75,7 @@
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
         </svg>
       </button>
-      <button matIconButton type="button"
+      <button mat-icon-button type="button"
               class="mat-mdc-paginator-navigation-next"
               (click)="_buttonClicked(pageIndex + 1, _nextButtonsDisabled())"
               [attr.aria-label]="_intl.nextPageLabel"
@@ -91,7 +83,6 @@
               [matTooltipDisabled]="_nextButtonsDisabled()"
               matTooltipPosition="above"
               [disabled]="_nextButtonsDisabled()"
-              [tabindex]="_nextButtonsDisabled() ? -1 : null"
               disabledInteractive>
         <svg class="mat-mdc-paginator-icon"
              viewBox="0 0 24 24"
@@ -101,7 +92,7 @@
         </svg>
       </button>
       @if (showFirstLastButtons) {
-        <button matIconButton type="button"
+        <button mat-icon-button type="button"
                 class="mat-mdc-paginator-navigation-last"
                 (click)="_buttonClicked(getNumberOfPages() - 1, _nextButtonsDisabled())"
                 [attr.aria-label]="_intl.lastPageLabel"
@@ -109,7 +100,6 @@
                 [matTooltipDisabled]="_nextButtonsDisabled()"
                 matTooltipPosition="above"
                 [disabled]="_nextButtonsDisabled()"
-                [tabindex]="_nextButtonsDisabled() ? -1 : null"
                 disabledInteractive>
           <svg class="mat-mdc-paginator-icon"
               viewBox="0 0 24 24"

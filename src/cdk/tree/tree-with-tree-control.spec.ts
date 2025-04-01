@@ -17,9 +17,9 @@ import {
   QueryList,
 } from '@angular/core';
 
-import {CollectionViewer, DataSource} from '../collections';
-import {Directionality, Direction} from '../bidi';
-import {createKeyboardEvent} from '../testing/testbed/fake-events';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {Directionality, Direction} from '@angular/cdk/bidi';
+import {createKeyboardEvent} from '@angular/cdk/testing/testbed/fake-events';
 import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 

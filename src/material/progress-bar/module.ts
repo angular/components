@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatProgressBar} from './progress-bar';
 
 @NgModule({

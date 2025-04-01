@@ -7,16 +7,23 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Injectable, Injector, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {
+  ANIMATION_MODULE_TYPE,
+  Injectable,
+  Injector,
+  NgZone,
+  OnDestroy,
+  RendererFactory2,
+  inject,
+} from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleRenderer,
   RippleTarget,
   defaultRippleAnimationConfig,
 } from '../ripple';
-import {Platform, _getEventTarget} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_animationsDisabled} from '../animation/animation';
 
 /** The options for the MatRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
@@ -51,7 +58,7 @@ const matRippleDisabled = 'mat-ripple-loader-disabled';
 @Injectable({providedIn: 'root'})
 export class MatRippleLoader implements OnDestroy {
   private _document = inject(DOCUMENT);
-  private _animationsDisabled = _animationsDisabled();
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _globalRippleOptions = inject(MAT_RIPPLE_GLOBAL_OPTIONS, {optional: true});
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
@@ -65,11 +72,17 @@ export class MatRippleLoader implements OnDestroy {
   constructor() {
     const renderer = inject(RendererFactory2).createRenderer(null, null);
 
-    this._eventCleanups = this._ngZone.runOutsideAngular(() =>
-      rippleInteractionEvents.map(name =>
-        renderer.listen(this._document, name, this._onInteraction, eventListenerOptions),
-      ),
-    );
+    this._eventCleanups = this._ngZone.runOutsideAngular(() => {
+      return rippleInteractionEvents.map(name =>
+        _bindEventWithOptions(
+          renderer,
+          this._document,
+          name,
+          this._onInteraction,
+          eventListenerOptions,
+        ),
+      );
+    });
   }
 
   ngOnDestroy(): void {
@@ -166,16 +179,17 @@ export class MatRippleLoader implements OnDestroy {
     rippleEl.classList.add('mat-ripple', host.getAttribute(matRippleClassName)!);
     host.append(rippleEl);
 
+    const isNoopAnimations = this._animationMode === 'NoopAnimations';
     const globalOptions = this._globalRippleOptions;
-    const enterDuration = this._animationsDisabled
+    const enterDuration = isNoopAnimations
       ? 0
-      : (globalOptions?.animation?.enterDuration ?? defaultRippleAnimationConfig.enterDuration);
-    const exitDuration = this._animationsDisabled
+      : globalOptions?.animation?.enterDuration ?? defaultRippleAnimationConfig.enterDuration;
+    const exitDuration = isNoopAnimations
       ? 0
-      : (globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration);
+      : globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration;
     const target: RippleTarget = {
       rippleDisabled:
-        this._animationsDisabled || globalOptions?.disabled || host.hasAttribute(matRippleDisabled),
+        isNoopAnimations || globalOptions?.disabled || host.hasAttribute(matRippleDisabled),
       rippleConfig: {
         centered: host.hasAttribute(matRippleCentered),
         terminateOnPointerUp: globalOptions?.terminateOnPointerUp,

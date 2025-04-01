@@ -1,33 +1,26 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "pkg_npm")
-load("//tools:defaults2.bzl", "ts_project")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "pkg_npm", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
 copy_to_bin(
     name = "schematics_assets",
-    srcs = glob(
-        ["**/*.json"],
-        exclude = ["tsconfig.json"],
-    ),
+    srcs = glob(["**/*.json"]),
 )
 
-rules_js_tsconfig(
-    name = "tsconfig",
-    src = "tsconfig.json",
-)
-
-ts_project(
+ts_library(
     name = "schematics",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    tsconfig = ":tsconfig",
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
+    devmode_module = "commonjs",
+    prodmode_module = "commonjs",
     deps = [
-        "//:node_modules/@angular-devkit/schematics",
-        "//:node_modules/@types/node",
+        "@npm//@angular-devkit/schematics",
+        "@npm//@types/node",
     ],
 )
 
@@ -37,6 +30,6 @@ pkg_npm(
     deps = [
         ":schematics",
         ":schematics_assets",
-        "//src/google-maps/schematics/ng-update",
+        "//src/google-maps/schematics/ng-update:ng_update_index",
     ],
 )

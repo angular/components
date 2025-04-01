@@ -23,7 +23,7 @@
         Performance
       </a>
     </mat-nav-list>
-    <button matButton tabindex="-1" (click)="navigation.close()">CLOSE</button>
+    <button mat-button tabindex="-1" (click)="navigation.close()">CLOSE</button>
   </mat-sidenav>
   <!--
     Note that the setup with the directionality and density is a little convoluted, but it's
@@ -35,7 +35,7 @@
   <main [attr.dir]="state.direction" [class]="getDensityClass()" class="demo-main">
     <!-- The toolbar should always be in the LTR direction -->
     <mat-toolbar color="primary" dir="ltr">
-      <button matIconButton (click)="navigation.open('mouse')">
+      <button mat-icon-button (click)="navigation.open('mouse')">
         <mat-icon>menu</mat-icon>
       </button>
       <div class="demo-toolbar">
@@ -43,18 +43,18 @@
         <div class="demo-config-buttons">
           @if (state.m3Enabled) {
             <button
-              matIconButton
+              mat-icon-button
               (click)="toggleColorApiBackCompat()"
               matTooltip="{{state.colorApiBackCompat ? 'Disable' : 'Enable'}} color API back-compat"
             >
               <mat-icon>colorize</mat-icon>
             </button>
           }
-          <button matIconButton (click)="toggleFullscreen()" matTooltip="Toggle fullscreen">
+          <button mat-icon-button (click)="toggleFullscreen()" matTooltip="Toggle fullscreen">
             <mat-icon>fullscreen</mat-icon>
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleM3()"
             [matTooltip]="state.m3Enabled ? 'Use M2 theme' : 'Use M3 theme'"
           >
@@ -65,7 +65,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleZoneless()"
             [matTooltip]="isZoneless ? 'Use zones' : 'Use zoneless'"
           >
@@ -76,7 +76,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleAnimations()"
             [matTooltip]="state.animations ? 'Disable animations' : 'Enable animations'"
           >
@@ -87,7 +87,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleTheme()"
             [matTooltip]="state.darkTheme ? 'Switch to light theme' : 'Switch to dark theme'"
           >
@@ -98,7 +98,7 @@
             }
           </button>
           <button
-              matIconButton
+              mat-icon-button
               (click)="toggleSystemTheme()"
               [matTooltip]="state.systemTheme ? 'Switch to standard theme' : 'Switch to system theme'"
           >
@@ -109,7 +109,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleRippleDisabled()"
             [matTooltip]="state.rippleDisabled ? 'Enable ripples' : 'Disable ripples'"
           >
@@ -120,7 +120,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleStrongFocus()"
             [matTooltip]="state.strongFocusEnabled ? 'Disable strong focus' : 'Enable strong focus'"
           >
@@ -131,7 +131,7 @@
             }
           </button>
           <button
-            matIconButton
+            mat-icon-button
             (click)="toggleDirection()"
             [matTooltip]="state.direction === 'rtl' ? 'Switch to LTR' : 'Switch to RTL'"
           >
@@ -143,7 +143,7 @@
           </button>
           <button
             #densityTooltip="matTooltip"
-            matIconButton
+            mat-icon-button
             (click)="toggleDensity(undefined, densityTooltip)"
             [matTooltip]="'Density: ' + state.density"
           >

@@ -7,7 +7,7 @@
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {InputHarnessFilters} from './input-harness-filters';
 

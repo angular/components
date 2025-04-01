@@ -22,11 +22,11 @@ import {
   numberAttribute,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatOption, ThemePalette} from '../core';
-import {MatSelect} from '../select';
-import {MatIconButton} from '../button';
-import {MatTooltip} from '../tooltip';
-import {MatFormField, MatFormFieldAppearance} from '../form-field';
+import {MatOption, ThemePalette} from '@angular/material/core';
+import {MatSelect} from '@angular/material/select';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatFormField, MatFormFieldAppearance} from '@angular/material/form-field';
 import {Observable, ReplaySubject, Subscription} from 'rxjs';
 import {MatPaginatorIntl} from './paginator-intl';
 

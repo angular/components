@@ -59,6 +59,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   HostAttributeToken,
+  ANIMATION_MODULE_TYPE,
   Renderer2,
 } from '@angular/core';
 import {
@@ -70,7 +71,6 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  _animationsDisabled,
   _countGroupLabelsBeforeOption,
   _ErrorStateTracker,
   _getOptionScrollPosition,
@@ -80,8 +80,8 @@ import {
   MatOptgroup,
   MatOption,
   MatOptionSelectionChange,
-} from '../core';
-import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '../form-field';
+} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {
@@ -103,11 +103,7 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
   overlay: Overlay,
 ): () => ScrollStrategy {
@@ -144,11 +140,7 @@ export interface MatSelectConfig {
 /** Injection token that can be used to provide the default options the select module. */
 export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT_CONFIG');
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
   provide: MAT_SELECT_SCROLL_STRATEGY,
   deps: [Overlay],
@@ -227,7 +219,8 @@ export class MatSelect
   ngControl = inject(NgControl, {self: true, optional: true})!;
   private _liveAnnouncer = inject(LiveAnnouncer);
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _initialized = new Subject();
   private _cleanupDetach: (() => void) | undefined;
 

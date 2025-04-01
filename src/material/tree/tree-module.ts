@@ -9,7 +9,7 @@
 import {NgModule} from '@angular/core';
 
 import {CdkTreeModule} from '@angular/cdk/tree';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatNestedTreeNode, MatTreeNodeDef, MatTreeNode} from './node';
 import {MatTree} from './tree';
 import {MatTreeNodeToggle} from './toggle';

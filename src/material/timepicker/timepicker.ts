@@ -9,6 +9,7 @@
 import {
   afterNextRender,
   AfterRenderRef,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -34,13 +35,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  _animationsDisabled,
   DateAdapter,
   MAT_DATE_FORMATS,
   MAT_OPTION_PARENT_COMPONENT,
   MatOption,
   MatOptionParentComponent,
-} from '../core';
+} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -103,7 +103,8 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
   private _scrollStrategyFactory = inject(MAT_TIMEPICKER_SCROLL_STRATEGY);
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 
   private _isOpen = signal(false);
   private _activeDescendant = signal<string | null>(null);
@@ -231,13 +232,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     const overlayRef = this._getOverlayRef();
     overlayRef.updateSize({width: input.getOverlayOrigin().nativeElement.offsetWidth});
     this._portal ??= new TemplatePortal(this._panelTemplate(), this._viewContainerRef);
-
-    // We need to check this in case `isOpen` was flipped, but change detection hasn't
-    // had a chance to run yet. See https://github.com/angular/components/issues/30637
-    if (!overlayRef.hasAttached()) {
-      overlayRef.attach(this._portal);
-    }
-
+    overlayRef.attach(this._portal);
     this._onOpenRender?.destroy();
     this._onOpenRender = afterNextRender(
       () => {
@@ -343,11 +338,12 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       scrollStrategy: this._scrollStrategyFactory(),
       direction: this._dir || 'ltr',
       hasBackdrop: false,
-      disableAnimations: this._animationsDisabled,
     });
 
-    this._overlayRef.detachments().subscribe(() => this.close());
-    this._overlayRef.keydownEvents().subscribe(event => this._handleKeydown(event));
+    this._overlayRef.keydownEvents().subscribe(event => {
+      this._handleKeydown(event);
+    });
+
     this._overlayRef.outsidePointerEvents().subscribe(event => {
       const target = _getEventTarget(event) as HTMLElement;
       const origin = this._input()?.getOverlayOrigin().nativeElement;

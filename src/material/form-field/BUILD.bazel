@@ -2,14 +2,14 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "form-field",
     srcs = glob(
         ["**/*.ts"],
@@ -17,15 +17,13 @@ ng_project(
     ),
     assets = [":form_field_scss"] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/bidi",
         "//src/cdk/observers/private",
         "//src/cdk/platform",
         "//src/material/core",
+        "@npm//@angular/forms",
+        "@npm//rxjs",
     ],
 )
 

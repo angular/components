@@ -7,7 +7,6 @@
     "declaration": true,
     "stripInternal": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "strictNullChecks": true,
@@ -31,26 +30,9 @@
     "inlineSources": true,
     "target": "es2022",
     "lib": ["es2020", "dom"],
-    "types": [],
-    "skipLibCheck": true,
-    "paths": {
-      "@angular/cdk-experimental/*": ["./cdk-experimental/*"],
-      "@angular/cdk/*": ["./cdk/*"],
-      "@angular/components-examples": ["./components-examples"],
-      "@angular/components-examples/*": ["./components-examples/*"],
-      "@angular/google-maps": ["./google-maps"],
-      "@angular/google-maps/*": ["./google-maps/*"],
-      "@angular/material-date-fns-adapter": ["./material-date-fns-adapter"],
-      "@angular/material-experimental/*": ["./material-experimental/*"],
-      "@angular/material-luxon-adapter": ["./material-luxon-adapter"],
-      "@angular/material-moment-adapter": ["./material-moment-adapter"],
-      "@angular/material/*": ["./material/*"],
-      "@angular/youtube-player": ["./youtube-player"]
-    }
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
-    "strictTemplates": true,
-    "typeCheckHostBindings": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '@angular/cdk/platform';
+import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +28,7 @@ import {
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {NgClass} from '@angular/common';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
+import {_StructuralStylesLoader} from '@angular/material/core';
 import {MatDatepickerIntl} from './datepicker-intl';
 
 /** Extra CSS classes that can be associated with a calendar cell. */
@@ -239,13 +239,55 @@ export class MatCalendarBody<D = any> implements OnChanges, OnDestroy, AfterView
       const element = this._elementRef.nativeElement;
       const cleanups = [
         // `touchmove` is active since we need to call `preventDefault`.
-        renderer.listen(element, 'touchmove', this._touchmoveHandler, activeCapturingEventOptions),
-        renderer.listen(element, 'mouseenter', this._enterHandler, passiveCapturingEventOptions),
-        renderer.listen(element, 'focus', this._enterHandler, passiveCapturingEventOptions),
-        renderer.listen(element, 'mouseleave', this._leaveHandler, passiveCapturingEventOptions),
-        renderer.listen(element, 'blur', this._leaveHandler, passiveCapturingEventOptions),
-        renderer.listen(element, 'mousedown', this._mousedownHandler, passiveEventOptions),
-        renderer.listen(element, 'touchstart', this._mousedownHandler, passiveEventOptions),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'touchmove',
+          this._touchmoveHandler,
+          activeCapturingEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'mouseenter',
+          this._enterHandler,
+          passiveCapturingEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'focus',
+          this._enterHandler,
+          passiveCapturingEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'mouseleave',
+          this._leaveHandler,
+          passiveCapturingEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'blur',
+          this._leaveHandler,
+          passiveCapturingEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'mousedown',
+          this._mousedownHandler,
+          passiveEventOptions,
+        ),
+        _bindEventWithOptions(
+          renderer,
+          element,
+          'touchstart',
+          this._mousedownHandler,
+          passiveEventOptions,
+        ),
       ];
 
       if (this._platform.isBrowser) {

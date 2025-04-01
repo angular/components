@@ -2,15 +2,17 @@ load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_e2e_test_library",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "overlay",
     srcs = glob(
         ["**/*.ts"],
@@ -20,9 +22,6 @@ ng_project(
         ":overlay-structure.css",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -32,6 +31,9 @@ ng_project(
         "//src/cdk/portal",
         "//src/cdk/private",
         "//src/cdk/scrolling",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//rxjs",
     ],
 )
 
@@ -56,25 +58,23 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":overlay",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "@npm//@angular/common",
+        "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 
@@ -84,17 +84,15 @@ ng_web_test_suite(
     deps = [":unit_test_sources"],
 )
 
-ts_project(
+ng_e2e_test_library(
     name = "e2e_test_sources",
-    testonly = True,
     srcs = glob(["**/*.e2e.spec.ts"]),
-    deps = ["//:node_modules/protractor"],
 )
 
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources_legacy",
+        ":e2e_test_sources",
     ],
 )
 

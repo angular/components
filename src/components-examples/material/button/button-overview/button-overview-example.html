@@ -1,106 +1,110 @@
 <section>
-  <div class="example-label">Text</div>
+  <div class="example-label">Basic</div>
   <div class="example-button-row">
-    <button matButton>Basic</button>
-    <button matButton disabled>Disabled</button>
-    <a matButton href="https://www.google.com/" target="_blank">Link</a>
+    <button mat-button>Basic</button>
+    <button mat-button disabled>Disabled</button>
+    <a mat-button href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
-  <div class="example-label">Elevated</div>
+  <div class="example-label">Raised</div>
   <div class="example-button-row">
-    <button matButton="elevated">Basic</button>
-    <button matButton="elevated" disabled>Disabled</button>
-    <a matButton="elevated" href="https://www.google.com/" target="_blank">Link</a>
+    <button mat-raised-button>Basic</button>
+    <button mat-raised-button disabled>Disabled</button>
+    <a mat-raised-button href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
-  <div class="example-label">Outlined</div>
+  <div class="example-label">Stroked</div>
   <div class="example-button-row">
-    <button matButton="outlined">Basic</button>
-    <button matButton="outlined" disabled>Disabled</button>
-    <a matButton="outlined" href="https://www.google.com/" target="_blank">Link</a>
+    <button mat-stroked-button>Basic</button>
+    <button mat-stroked-button disabled>Disabled</button>
+    <a mat-stroked-button href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
-  <div class="example-label">Filled</div>
+  <div class="example-label">Flat</div>
   <div class="example-button-row">
-    <button matButton="filled">Basic</button>
-    <button matButton="filled" disabled>Disabled</button>
-    <a matButton="filled" href="https://www.google.com/" target="_blank">Link</a>
+    <button mat-flat-button>Basic</button>
+    <button mat-flat-button disabled>Disabled</button>
+    <a mat-flat-button href="https://www.google.com/" target="_blank">Link</a>
   </div>
 </section>
-<mat-divider/>
-<section>
-  <div class="example-label">Tonal</div>
-  <div class="example-button-row">
-    <button matButton="tonal" >Basic</button>
-    <button matButton="tonal"  disabled>Disabled</button>
-    <a matButton="tonal" href="https://www.google.com/" target="_blank">Link</a>
-  </div>
-</section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
   <div class="example-label">Icon</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <button matIconButton aria-label="Example icon button with a vertical three dot icon">
+      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
         <mat-icon>more_vert</mat-icon>
       </button>
-      <button matIconButton disabled aria-label="Example icon button with a open in new tab icon">
+      <button mat-icon-button disabled aria-label="Example icon button with a open in new tab icon">
         <mat-icon>open_in_new</mat-icon>
       </button>
     </div>
   </div>
 </section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
-  <div class="example-label">Floating Action Button (FAB)</div>
+  <div class="example-label">FAB</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <button matFab aria-label="Example icon button with a delete icon">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <button matFab disabled aria-label="Example icon button with a heart icon">
-        <mat-icon>favorite</mat-icon>
-      </button>
+      <div class="example-button-container">
+        <button mat-fab aria-label="Example icon button with a delete icon">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div class="example-button-container">
+        <button mat-fab disabled aria-label="Example icon button with a heart icon">
+          <mat-icon>favorite</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </section>
-<mat-divider/>
+<mat-divider></mat-divider>
 <section>
   <div class="example-label">Mini FAB</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <button matMiniFab aria-label="Example icon button with a menu icon">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <button matMiniFab disabled aria-label="Example icon button with a home icon">
-        <mat-icon>home</mat-icon>
-      </button>
+      <div class="example-button-container">
+        <button mat-mini-fab aria-label="Example icon button with a menu icon">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div class="example-button-container">
+        <button mat-mini-fab disabled aria-label="Example icon button with a home icon">
+          <mat-icon>home</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </section>
-<mat-divider/>
 <section>
-  <div class="example-label">Extended FAB</div>
+  <div class="example-label">Extended Fab</div>
   <div class="example-button-row">
     <div class="example-flex-container">
-      <button matFab extended>
-        <mat-icon>favorite</mat-icon>
-        Basic
-      </button>
-      <button matFab extended disabled>
-        <mat-icon>favorite</mat-icon>
-        Disabled
-      </button>
-      <a matFab extended routerLink=".">
-        <mat-icon>favorite</mat-icon>
-        Link
-      </a>
+      <div class="example-button-container">
+        <button mat-fab extended>
+          <mat-icon>favorite</mat-icon>
+          Basic
+        </button>
+      </div>
+      <div class="example-button-container">
+        <button mat-fab extended disabled>
+          <mat-icon>favorite</mat-icon>
+          Disabled
+        </button>
+      </div>
+      <div class="example-button-container">
+        <a mat-fab extended routerLink=".">
+          <mat-icon>favorite</mat-icon>
+          Link
+        </a>
+      </div>
     </div>
   </div>
 </section>

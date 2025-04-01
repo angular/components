@@ -7,9 +7,9 @@
  */
 
 import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
-import {Direction} from '../bidi';
-import {PositionStrategy, ScrollStrategy} from '../overlay';
-import {BasePortalOutlet} from '../portal';
+import {Direction} from '@angular/cdk/bidi';
+import {PositionStrategy, ScrollStrategy} from '@angular/cdk/overlay';
+import {BasePortalOutlet} from '@angular/cdk/portal';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -139,9 +139,11 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   closeOnOverlayDetachments?: boolean = true;
 
   /**
-   * Whether the built-in overlay animations should be disabled.
+   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
+   * @deprecated No longer used. Will be removed.
+   * @breaking-change 20.0.0
    */
-  disableAnimations?: boolean = false;
+  componentFactoryResolver?: unknown;
 
   /**
    * Providers that will be exposed to the contents of the dialog. Can also

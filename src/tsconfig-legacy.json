@@ -28,8 +28,6 @@
   "angularCompilerOptions": {
     // This is needed so that test components are not AOT compiled. Ngtsc will
     // not find an associated module for test components and error out.
-    "compileNonExportedClasses": false,
-    "typeCheckHostBindings": true,
-    "strictTemplates": true
+    "compileNonExportedClasses": false
   }
 }

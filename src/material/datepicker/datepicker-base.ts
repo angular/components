@@ -33,6 +33,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   afterNextRender,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -55,8 +56,8 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatButton} from '../button';
-import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
+import {MatButton} from '@angular/material/button';
+import {DateAdapter, ThemePalette} from '@angular/material/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar, MatCalendarView} from './calendar';
@@ -87,11 +88,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
@@ -102,11 +99,7 @@ export type DatepickerDropdownPositionX = 'start' | 'end';
 /** Possible positions for the datepicker dropdown along the Y axis. */
 export type DatepickerDropdownPositionY = 'above' | 'below';
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_DATEPICKER_SCROLL_STRATEGY,
   deps: [Overlay],
@@ -139,7 +132,8 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   implements AfterViewInit, OnDestroy
 {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _globalModel = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter)!;
@@ -394,7 +388,6 @@ export abstract class MatDatepickerBase<
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dir = inject(Directionality, {optional: true});
   private _model = inject<MatDateSelectionModel<S, D>>(MatDateSelectionModel);
-  private _animationsDisabled = _animationsDisabled();
 
   private _scrollStrategy = inject(MAT_DATEPICKER_SCROLL_STRATEGY);
   private _inputStateChanges = Subscription.EMPTY;
@@ -770,7 +763,6 @@ export abstract class MatDatepickerBase<
         direction: this._dir || 'ltr',
         scrollStrategy: isDialog ? this._overlay.scrollStrategies.block() : this._scrollStrategy(),
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
-        disableAnimations: this._animationsDisabled,
       }),
     ));
 

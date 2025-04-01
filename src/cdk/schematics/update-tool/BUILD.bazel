@@ -1,14 +1,17 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "update-tool",
     srcs = glob(["**/*.ts"]),
-    extends = "//src/cdk/schematics:tsconfig",
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
+    devmode_module = "commonjs",
+    prodmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/@types/node",
-        "//:node_modules/typescript",
+        "@npm//@types/node",
+        "@npm//typescript",
     ],
 )

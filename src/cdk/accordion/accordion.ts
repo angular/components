@@ -16,7 +16,7 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {_IdGenerator} from '../a11y';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 
 /**

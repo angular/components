@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "badge",
     srcs = glob(
         ["**/*.ts"],
@@ -20,14 +21,14 @@ ng_project(
         ":badge_scss",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/private",
         "//src/material/core",
+        "@npm//@angular/animations",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
     ],
 )
 
@@ -49,18 +50,16 @@ sass_library(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":badge",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/material/core",
+        "@npm//@angular/platform-browser",
     ],
 )
 

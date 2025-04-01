@@ -23,8 +23,8 @@ import {
   inject,
 } from '@angular/core';
 import {ControlContainer, NgControl, Validators} from '@angular/forms';
-import {DateAdapter, ThemePalette} from '../core';
-import {MAT_FORM_FIELD, MatFormFieldControl} from '../form-field';
+import {DateAdapter, ThemePalette} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormFieldControl} from '@angular/material/form-field';
 import {Subject, Subscription, merge} from 'rxjs';
 import type {MatEndDate, MatStartDate} from './date-range-input-parts';
 import {MatDateRangePickerInput} from './date-range-picker';

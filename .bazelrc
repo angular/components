@@ -1,7 +1,3 @@
-# Required by `rules_ts`.
-common --@aspect_rules_ts//ts:skipLibCheck=always
-common --@aspect_rules_ts//ts:default_to_tsc_transpiler
-
 ###############################
 # Filesystem interactions     #
 ###############################
@@ -11,7 +7,7 @@ common --@aspect_rules_ts//ts:default_to_tsc_transpiler
 # https://github.com/bazelbuild/rules_typescript/issues/12 which affects the common case of
 # having `tsconfig.json` in the WORKSPACE directory. Instead, you should run
 # `bazel info output_base` to find out where the outputs went.
-build --symlink_prefix=dist/
+build --symlink_prefix=/
 
 # Performance: avoid stat'ing input files
 build --watchfs
@@ -35,7 +31,7 @@ build --nobuild_runfile_links
 ###############################
 
 # A more useful default output mode for bazel query
-# Prints eg. "ng_project rule //foo:bar" rather than just "//foo:bar"
+# Prints eg. "ng_module rule //foo:bar" rather than just "//foo:bar"
 query --output=label_kind
 
 # By default, failing tests don't print any output, it goes to the log file
@@ -91,9 +87,11 @@ build:remote --google_default_credentials=true
 
 # Setup the toolchain and platform for the remote build execution. The platform
 # is provided by the shared dev-infra package and targets k8 remote containers.
-build:remote --extra_execution_platforms=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --host_platform=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --platforms=@devinfra//bazel/remote-execution:platform_with_network
+build:remote --crosstool_top=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain_suite
+build:remote --extra_toolchains=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain
+build:remote --extra_execution_platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
+build:remote --host_platform=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
+build:remote --platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform_with_network
 
 ################################
 #  Sandbox settings            #
@@ -120,10 +118,6 @@ build:build-results --bes_results_url="https://source.cloud.google.com/results/i
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true
-build:remote --remote_upload_local_results=false
-
-# Additional flags added when running a "trusted build" with additional access
-build:trusted-build --remote_upload_local_results=true
 
 ################################
 # --config=debug               #

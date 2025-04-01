@@ -11,32 +11,30 @@ $prefix: (mat, option);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-option
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    selected-state-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
-    label-text-color: map.get($systems, md-sys-color, on-surface),
-    hover-state-layer-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, on-surface),
-      $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
-    ),
-    focus-state-layer-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, on-surface),
-      $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
-    ),
-    selected-state-layer-color: map.get($systems, md-sys-color, secondary-container),
+  $tokens: ((
+      selected-state-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
+      label-text-color: map.get($systems, md-sys-color, on-surface),
+      hover-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
+      ),
+      focus-state-layer-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface),
+        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
+      ),
+      selected-state-layer-color: map.get($systems, md-sys-color, secondary-container),
 
-    // According to the spec the options have to be `label-large` in all typography
-    // dimensions, however this is inconsistent with the designs and with MDC's
-    // own implementation. This appears to be a bug in the spec, because MDC overrides
-    // the font size and weight to be `body-large` (see b/261838263). We make the same
-    // override here so the label looks correct.
-    label-text-size: map.get($systems, md-sys-typescale, body-large-size),
-    label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
-    label-text-font: map.get($systems, md-sys-typescale, label-large-font),
-    label-text-line-height: map.get($systems, md-sys-typescale, label-large-line-height),
-    label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
-  );
-
-  $variant-tokens: (
+      // According to the spec the options have to be `label-large` in all typography
+      // dimensions, however this is inconsistent with the designs and with MDC's
+      // own implementation. This appears to be a bug in the spec, because MDC overrides
+      // the font size and weight to be `body-large` (see b/261838263). We make the same
+      // override here so the label looks correct.
+      label-text-size: map.get($systems, md-sys-typescale, body-large-size),
+      label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
+      label-text-font: map.get($systems, md-sys-typescale, label-large-font),
+      label-text-line-height: map.get($systems, md-sys-typescale, label-large-line-height),
+      label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
+  ), (
     // Color variants:
     primary: (
       selected-state-label-text-color: map.get($systems, md-sys-color, on-primary-container),
@@ -51,7 +49,7 @@ $prefix: (mat, option);
       selected-state-label-text-color: map.get($systems, md-sys-color, on-error-container),
       selected-state-layer-color: map.get($systems, md-sys-color, error-container),
     )
-  );
+  ));
 
-  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
 }

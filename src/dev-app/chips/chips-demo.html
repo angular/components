@@ -1,6 +1,6 @@
 <div class="demo-chips">
   <mat-card>
-    <mat-card-header>Static Chips</mat-card-header>
+    <mat-toolbar color="primary">Static Chips</mat-toolbar>
 
     <mat-card-content>
       <h4>Simple</h4>
@@ -29,8 +29,8 @@
         <mat-basic-chip-row>Basic Chip Row 1</mat-basic-chip-row>
         <mat-basic-chip-row>Basic Chip Row 2</mat-basic-chip-row>
         <mat-basic-chip-row>Basic Chip Row 3</mat-basic-chip-row>
+        <input [matChipInputFor]="basicGrid" readonly>
       </mat-chip-grid>
-      <input [matChipInputFor]="basicGrid" readonly>
 
       <h4>With avatar, icons, and color</h4>
 
@@ -111,24 +111,26 @@
   </mat-card>
 
   <mat-card>
-    <mat-card-header>Chip Listbox</mat-card-header>
+    <mat-toolbar color="primary">Selectable Chips</mat-toolbar>
 
     <mat-card-content>
-      <p>Chip list utilizing the listbox pattern. Should be used for selectable chips.</p>
-
-      <mat-checkbox [(ngModel)]="disabledListboxes">Disabled</mat-checkbox>
-      <mat-checkbox [(ngModel)]="listboxesWithAvatar">Show avatar</mat-checkbox>
+      <button mat-button (click)="disabledListboxes = !disabledListboxes">
+       {{disabledListboxes ? "Enable" : "Disable"}}
+      </button>
+      <button mat-button (click)="listboxesWithAvatar = !listboxesWithAvatar">
+       {{listboxesWithAvatar ? "Hide Avatar" : "Show Avatar"}}
+      </button>
 
       <h4>Single selection</h4>
 
       <mat-chip-listbox multiple="false" [disabled]="disabledListboxes">
         @for (shirtSize of shirtSizes; track shirtSize) {
-          <mat-chip-option [disabled]="shirtSize.disabled">
-            {{shirtSize.label}}
-            @if (listboxesWithAvatar) {
-              <mat-chip-avatar>{{shirtSize.avatar}}</mat-chip-avatar>
-            }
-          </mat-chip-option>
+            <mat-chip-option [disabled]="shirtSize.disabled">
+              {{shirtSize.label}}
+              @if (listboxesWithAvatar) {
+                <mat-chip-avatar>{{shirtSize.avatar}}</mat-chip-avatar>
+              }
+            </mat-chip-option>
           }
       </mat-chip-listbox>
 
@@ -149,7 +151,7 @@
   </mat-card>
 
   <mat-card>
-    <mat-card-header>Chip Grid</mat-card-header>
+    <mat-toolbar color="primary">Input Chips</mat-toolbar>
 
     <mat-card-content>
       <p>
@@ -158,9 +160,13 @@
         They can be used inside a <code>&lt;mat-form-field&gt;</code>.
       </p>
 
-      <mat-checkbox [(ngModel)]="disableInputs">Disabled</mat-checkbox>
-      <mat-checkbox [(ngModel)]="editable">Editable</mat-checkbox>
-      <mat-checkbox [(ngModel)]="disabledInteractive">Disabled Interactive</mat-checkbox>
+      <button mat-button (click)="disableInputs = !disableInputs">
+       {{disableInputs ? "Enable" : "Disable"}}
+      </button>
+
+      <button mat-button (click)="editable = !editable">
+        {{editable ? "Disable editing" : "Enable editing"}}
+      </button>
 
       <h4>Input is last child of chip grid</h4>
 
@@ -179,18 +185,16 @@
             </mat-chip-row>
           }
           <input [disabled]="disableInputs"
-                [matChipInputFor]="chipGrid1"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                [matChipInputDisabledInteractive]="disabledInteractive"
-                (matChipInputTokenEnd)="add($event)"
-                placeholder="Add a contributor"/>
+                 [matChipInputFor]="chipGrid1"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)" />
         </mat-chip-grid>
       </mat-form-field>
 
       <h4>Input is next sibling child of chip grid</h4>
 
-      <mat-form-field class="demo-has-chip-list">
+      <mat-form-field>
         <mat-label>New Contributor...</mat-label>
         <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
           @for (person of people; track person) {
@@ -205,9 +209,7 @@
         <input [matChipInputFor]="chipGrid2"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
-               [matChipInputDisabledInteractive]="disabledInteractive"
-               (matChipInputTokenEnd)="add($event)"
-               placeholder="Add a contributor"/>
+               (matChipInputTokenEnd)="add($event)" />
       </mat-form-field>
 
       <p>
@@ -224,7 +226,7 @@
   </mat-card>
 
   <mat-card>
-    <mat-card-header>Miscellaneous</mat-card-header>
+    <mat-toolbar color="primary">Miscellaneous</mat-toolbar>
     <mat-card-content>
       <h4>Stacked</h4>
 

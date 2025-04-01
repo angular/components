@@ -3,17 +3,18 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files(["theming/_theming.scss"])
 
-ng_project(
+ng_module(
     name = "core",
     srcs = glob(
         ["**/*.ts"],
@@ -28,12 +29,6 @@ ng_project(
         ":focus-indicators/structural-styles.css",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk",
         "//src/cdk/a11y",
@@ -42,6 +37,11 @@ ng_project(
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/private",
+        "@npm//@angular/animations",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 
@@ -176,21 +176,19 @@ sass_binary(
 #  Test targets
 #################
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":core",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/testing",
+        "@npm//@angular/platform-browser",
     ],
 )
 

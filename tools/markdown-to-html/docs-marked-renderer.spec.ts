@@ -7,8 +7,8 @@ describe('DocsMarkdownRenderer', () => {
   });
 
   it('generates regular headings for h1 and h2', () => {
-    expect(renderer.heading('a', 1, 'ignored')).toBe('<h1>a</h1>');
-    expect(renderer.heading('b', 2, 'ignored')).toContain('<h2 ');
+    expect(renderer.heading('a', 1, 'ignored')).toEqual('<h1>a</h1>');
+    expect(renderer.heading('b', 2, 'ignored')).toEqual('<h2>b</h2>');
   });
 
   it('creates header link for h3 and h4 headings', () => {
@@ -74,28 +74,23 @@ describe('DocsMarkdownRenderer', () => {
     const result = renderer.html(`<!-- example(
          {
           "example": "exampleName",
-          "file": "example-html.html"
+          "file": "example-html.html",
          }
         ) -->`);
     expectEqualIgnoreLeadingWhitespace(
       result,
       `<div material-docs-example="exampleName"
-          file="example-html.html"
-       ></div>`,
+          file="example-html.html"></div>`,
     );
   });
 
   it('generates html using new API with no file and no region', () => {
     const result = renderer.html(`<!-- example(
          {
-          "example": "exampleName"
+          "example": "exampleName",
          }
         ) -->`);
-    expectEqualIgnoreLeadingWhitespace(
-      result,
-      `<div material-docs-example="exampleName"
-       ></div>`,
-    );
+    expectEqualIgnoreLeadingWhitespace(result, `<div material-docs-example="exampleName"></div>`);
   });
 
   it('generates html using old API', () => {

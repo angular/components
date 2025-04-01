@@ -76,7 +76,7 @@ element in an `<mat-list-item>`.
   @for (link of links; track link) {
     <mat-list-item [activated]="link.isActive">
        <a matListItemTitle href="...">{{ link }}</a>
-       <button matIconButton (click)="showInfo(link)" matListItemMeta>
+       <button mat-icon-button (click)="showInfo(link)" matListItemMeta>
           <mat-icon>info</mat-icon>
        </button>
     </mat-list-item>

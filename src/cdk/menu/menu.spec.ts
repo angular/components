@@ -1,4 +1,4 @@
-import {TAB} from '../keycodes';
+import {TAB} from '@angular/cdk/keycodes';
 import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,

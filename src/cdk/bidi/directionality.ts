@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EventEmitter, Injectable, OnDestroy, inject, signal} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, inject} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
 export type Direction = 'ltr' | 'rtl';
@@ -33,14 +33,7 @@ export function _resolveDirectionality(rawValue: string): Direction {
 @Injectable({providedIn: 'root'})
 export class Directionality implements OnDestroy {
   /** The current 'ltr' or 'rtl' value. */
-  get value() {
-    return this.valueSignal();
-  }
-
-  /**
-   * The current 'ltr' or 'rtl' value.
-   */
-  readonly valueSignal = signal<Direction>('ltr');
+  readonly value: Direction = 'ltr';
 
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
@@ -53,7 +46,7 @@ export class Directionality implements OnDestroy {
     if (_document) {
       const bodyDir = _document.body ? _document.body.dir : null;
       const htmlDir = _document.documentElement ? _document.documentElement.dir : null;
-      this.valueSignal.set(_resolveDirectionality(bodyDir || htmlDir || 'ltr'));
+      this.value = _resolveDirectionality(bodyDir || htmlDir || 'ltr');
     }
   }
 

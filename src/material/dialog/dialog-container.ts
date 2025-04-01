@@ -13,12 +13,13 @@ import {
   EventEmitter,
   OnDestroy,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
+  inject,
 } from '@angular/core';
 import {MatDialogConfig} from './dialog-config';
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
-import {_animationsDisabled} from '../core/animation/animation';
 
 /** Event that captures the state of dialog container animations. */
 interface LegacyDialogAnimationEvent {
@@ -64,11 +65,13 @@ export const CLOSE_ANIMATION_DURATION = 75;
   },
 })
 export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> implements OnDestroy {
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
   /** Emits when an animation state changes. */
   _animationStateChanged = new EventEmitter<LegacyDialogAnimationEvent>();
 
   /** Whether animations are enabled. */
-  _animationsEnabled = !_animationsDisabled();
+  _animationsEnabled: boolean = this._animationMode !== 'NoopAnimations';
 
   /** Number of actions projected in the dialog. */
   protected _actionSectionCount = 0;
@@ -77,11 +80,11 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
   private _hostElement: HTMLElement = this._elementRef.nativeElement;
   /** Duration of the dialog open animation. */
   private _enterAnimationDuration = this._animationsEnabled
-    ? (parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION)
+    ? parseCssTime(this._config.enterAnimationDuration) ?? OPEN_ANIMATION_DURATION
     : 0;
   /** Duration of the dialog close animation. */
   private _exitAnimationDuration = this._animationsEnabled
-    ? (parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION)
+    ? parseCssTime(this._config.exitAnimationDuration) ?? CLOSE_ANIMATION_DURATION
     : 0;
   /** Current timer for dialog animations. */
   private _animationTimer: ReturnType<typeof setTimeout> | null = null;

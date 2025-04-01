@@ -20,6 +20,7 @@ import {
   booleanAttribute,
   inject,
   signal,
+  ANIMATION_MODULE_TYPE,
   ChangeDetectorRef,
 } from '@angular/core';
 import {merge, Subscription} from 'rxjs';
@@ -34,7 +35,7 @@ import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_animationsDisabled, _StructuralStylesLoader} from '../core';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -83,7 +84,7 @@ interface MatSortHeaderColumnDef {
     'class': 'mat-sort-header',
     '(click)': '_toggleOnInteraction()',
     '(keydown)': '_handleKeydown($event)',
-    '(mouseleave)': '_recentlyCleared.set(null)',
+    '(mouseleave)': '_recentlyCleared.set(false)',
     '[attr.aria-sort]': '_getAriaSortAttribute()',
     '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
@@ -101,7 +102,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _ariaDescriber = inject(AriaDescriber, {optional: true});
   private _renderChanges: Subscription | undefined;
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   /**
    * Indicates which state was just cleared from the sort header.

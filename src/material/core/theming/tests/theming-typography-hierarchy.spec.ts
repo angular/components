@@ -2,7 +2,7 @@ import {compileString} from 'sass';
 import {runfiles} from '@bazel/runfiles';
 import * as path from 'path';
 
-import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer.js';
+import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
 
 // Note: For Windows compatibility, we need to resolve the directory paths through runfiles
 // which are guaranteed to reside in the source tree.

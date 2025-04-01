@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "paginator",
     srcs = glob(
         ["**/*.ts"],
@@ -18,13 +19,13 @@ ng_project(
     ),
     assets = [":paginator.css"] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src/material/button",
         "//src/material/core",
         "//src/material/select",
         "//src/material/tooltip",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",  # TODO(jelbourn): transitive dep via generated code
+        "@npm//rxjs",
     ],
 )
 
@@ -45,20 +46,18 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "paginator_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":paginator",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing/private",
         "//src/material/core",
         "//src/material/select",
+        "@npm//@angular/platform-browser",
     ],
 )
 

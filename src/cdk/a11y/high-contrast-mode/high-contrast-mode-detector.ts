@@ -7,8 +7,8 @@
  */
 
 import {inject, Injectable, OnDestroy} from '@angular/core';
-import {BreakpointObserver} from '../../layout';
-import {Platform} from '../../platform';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 

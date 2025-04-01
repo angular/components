@@ -22,7 +22,7 @@ import {
   SPACE,
   TAB,
   UP_ARROW,
-} from '../keycodes';
+} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
   dispatchEvent,

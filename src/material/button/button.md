@@ -1,5 +1,5 @@
 Angular Material buttons are native `<button>` or `<a>` elements enhanced with Material Design
-styling.
+styling and ink ripples.
 
 <!-- example(button-overview) -->
 
@@ -9,34 +9,26 @@ is performed. An `<a>` element should be used whenever the user will _navigate_ 
 
 
 There are several button variants, each applied as an attribute:
+
 | Attribute            | Description                                                              |
 |----------------------|--------------------------------------------------------------------------|
-| `matButton`          | Rectangular button that can contain text and icons                       |
-| `matIconButton`      | Smaller, circular button, meant to contain an icon and no text           |
-| `matFab`             | Rectangular button w/ elevation and rounded corners, meant to contain an icon. Can be [extended](https://material.angular.io/components/button/overview#extended-fab-buttons) to a rectangle to also fit a label               |
-| `matMiniFab`         | Smaller variant of `matFab`                                              |
+| `mat-button`         | Rectangular text button w/ no elevation and rounded corners                                 |
+| `mat-raised-button`  | Rectangular contained button w/ elevation and rounded corners                               |
+| `mat-flat-button`    | Rectangular contained button w/ no elevation and rounded corners                            |
+| `mat-stroked-button` | Rectangular outlined button w/ no elevation and rounded corners                             |
+| `mat-icon-button`    | Circular button with a transparent background, meant to contain an icon  |
+| `mat-fab`            | Square button w/ elevation and rounded corners, meant to contain an icon. Can be [extended](https://material.angular.io/components/button/overview#extended-fab-buttons) to a rectangle to also fit a label           |
+| `mat-mini-fab`       | Same as `mat-fab` but smaller                                            |
 
 
-Additionally, the `matButton` has several appearances that can be set using the `matButton`
-attribute, for example `matButton="outlined"`:
-
-| Appearance   | Description                                                                      |
-|--------------|----------------------------------------------------------------------------------|
-| `text`       | Default appearance. Text buttons are used for the lowest priority actions, especially when presenting multiple options. |
-| `filled`     | High-emphasis buttons used for final or unblocking actions in a flow, such as saving or confirming. |
-| `tonal`      | Medium-emphasis buttons often used for final or unblocking actions in a flow, but with less visual emphasis than a filled button. |
-| `outlined`   | Medium-emphasis buttons often used for actions that need attention but aren't the primary action. |
-| `elevated`   | Medium-emphasis buttons often used when a button requires visual separation from a patterned background. |
-
-
-### Extended FAB buttons
-Traditional floating action buttons (FAB) buttons are circular and only have space for a single
-icon. However, you can add the `extended` attribute to allow the fab to expand into a rounded
-rectangle shape with space for a text label in addition to the icon. Only full sized fabs support
-the `extended` attribute, mini FABs do not.
+### Extended fab buttons
+Traditional fab buttons are circular and only have space for a single icon. However, you can add the
+`extended` attribute to allow the fab to expand into a rounded rectangle shape with space for a text
+label in addition to the icon. Only full sized fabs support the `extended` attribute, mini fabs do
+not.
 
 ```html
-<button matFab extended>
+<button mat-fab extended>
   <mat-icon>home</mat-icon>
   Home
 </button>
@@ -73,7 +65,7 @@ We recommend not changing the default capitalization for the button text.
 with any assistive technology your application supports.
 
 #### Buttons with icons
-Buttons or links containing only icons (such as `matFab`, `matMiniFab`, and `matIconButton`)
+Buttons or links containing only icons (such as `mat-fab`, `mat-mini-fab`, and `mat-icon-button`)
 should be given a meaningful label via `aria-label` or `aria-labelledby`. [See the documentation
 for `MatIcon`](https://material.angular.io/components/icon) for more
 information on using icons in buttons. Additionally, to be fully accessible the icon should have a minimum touch-target of 48x48 to ensure that the icon is easily clickable particularly on mobile devices and small screens.

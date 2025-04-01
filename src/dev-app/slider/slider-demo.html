@@ -33,7 +33,7 @@
         <td class="demo-value-cell">{{ngStartThumb1.disabled}} : {{ngEndThumb1.disabled}}</td>
       </tr>
     </table>
-
+    
     <input class="demo-native-slider" type="range" [formControl]="control" #nativeSlider1 />
     <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
       <input matSliderThumb [formControl]="control" #ngThumb1 />
@@ -89,7 +89,7 @@
         <td class="demo-value-cell">{{ngStartThumb2.disabled}} : {{ngEndThumb2.disabled}}</td>
       </tr>
     </table>
-
+    
     <input class="demo-native-slider" type="range" #nativeSlider2 [(ngModel)]="valueModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel" />
     <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel" [min]="minModel" [max]="maxModel" [step]="stepModel" [disabled]="disabledModel">
       <input matSliderThumb #ngThumb2 [(ngModel)]="valueModel" />
@@ -171,7 +171,7 @@
         <td class="demo-value-cell">{{ngStartThumb4.value}} : {{ngEndThumb4.value}}</td>
       </tr>
     </table>
-
+    
       <mat-slider [discrete]="discrete" [showTickMarks]="showTickMarks" [color]="colorModel">
         <input matSliderThumb #ngThumb4 [(value)]="twoWayValue" />
       </mat-slider>
@@ -183,7 +183,7 @@
 
   <mat-tab label="Slider in a dialog">
     <div class="demo-dialog-trigger-container">
-      <button matButton="elevated" [color]="colorModel" (click)="openDialog()">Open dialog</button>
+      <button mat-raised-button [color]="colorModel" (click)="openDialog()">Open dialog</button>
     </div>
   </mat-tab>
 </mat-tab-group>

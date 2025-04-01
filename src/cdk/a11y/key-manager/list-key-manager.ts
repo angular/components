@@ -17,7 +17,7 @@ import {
   TAB,
   UP_ARROW,
   hasModifierKey,
-} from '../../keycodes';
+} from '@angular/cdk/keycodes';
 import {EffectRef, Injector, QueryList, Signal, effect, isSignal, signal} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {Typeahead} from './typeahead';

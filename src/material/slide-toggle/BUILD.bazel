@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "slide-toggle",
     srcs = glob(
         ["**/*.ts"],
@@ -21,11 +22,10 @@ ng_project(
     ),
     assets = [":slide_toggle_scss"] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src/material/core",
+        "@npm//@angular/animations",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
     ],
 )
 
@@ -46,20 +46,18 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "slide_toggle_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
     ),
     deps = [
         ":slide-toggle",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/testing/private",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
     ],
 )
 

@@ -18,8 +18,8 @@ import {
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchTouchEvent,
-} from '../../testing/private';
-import {_supportsShadowDom} from '../../platform';
+} from '@angular/cdk/testing/private';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDrag} from './drag';
 import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig} from './config';

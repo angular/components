@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatLineModule, MatCommonModule} from '../core';
+import {MatLineModule, MatCommonModule} from '@angular/material/core';
 import {
   MatGridTile,
   MatGridTileText,
@@ -16,9 +16,6 @@ import {
   MatGridAvatarCssMatStyler,
 } from './grid-tile';
 import {MatGridList} from './grid-list';
-
-// Export required to fix compiler confusion about import module paths
-export {MatLine} from '../core';
 
 @NgModule({
   imports: [

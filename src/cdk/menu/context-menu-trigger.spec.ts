@@ -3,12 +3,12 @@ import {CdkMenuModule} from './menu-module';
 import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
-import {dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenuTrigger} from './menu-trigger';
 import {CdkMenuBar} from './menu-bar';
-import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {
@@ -37,14 +37,14 @@ describe('CdkContextMenuTrigger', () => {
     }
 
     /** Get the context in which the context menu should trigger. */
-    function getMenuTrigger() {
+    function getMenuContext() {
       return fixture.componentInstance.triggerElement.nativeElement;
     }
 
     /** Open up the context menu and run change detection. */
     function openContextMenu() {
       // right click triggers a context menu event
-      dispatchMouseEvent(getMenuTrigger(), 'contextmenu');
+      dispatchMouseEvent(getMenuContext(), 'contextmenu');
       fixture.detectChanges();
     }
 
@@ -57,7 +57,7 @@ describe('CdkContextMenuTrigger', () => {
     it('should close out the context menu when clicking in the context', () => {
       openContextMenu();
 
-      getMenuTrigger().click();
+      getMenuContext().click();
       fixture.detectChanges();
 
       expect(getContextMenu()).not.toBeDefined();
@@ -142,22 +142,6 @@ describe('CdkContextMenuTrigger', () => {
       dispatchKeyboardEvent(document.activeElement!, 'keydown', RIGHT_ARROW, 'ArrowRight');
       fixture.detectChanges();
       expect(getContextMenu()).toBeDefined();
-    });
-
-    it('should toggle aria-controls depending on if the menu is open', () => {
-      const trigger = getMenuTrigger();
-
-      expect(trigger.hasAttribute('aria-controls')).toBe(false);
-      expect(getContextMenu()).not.toBeDefined();
-
-      openContextMenu();
-      expect(trigger.getAttribute('aria-controls')).toBeTruthy();
-      expect(getContextMenu()).toBeDefined();
-
-      trigger.click();
-      fixture.detectChanges();
-      expect(trigger.hasAttribute('aria-controls')).toBe(false);
-      expect(getContextMenu()).not.toBeDefined();
     });
   });
 

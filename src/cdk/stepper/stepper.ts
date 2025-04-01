@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusableOption, FocusKeyManager} from '../a11y';
-import {Direction, Directionality} from '../bidi';
-import {ENTER, hasModifierKey, SPACE} from '../keycodes';
+import {_IdGenerator, FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,7 +39,7 @@ import {
   type NgForm,
   type FormGroupDirective,
 } from '@angular/forms';
-import {_getFocusedElementPierceShadowDom} from '../platform';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 
@@ -284,21 +284,20 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     return this._selectedIndex;
   }
   set selectedIndex(index: number) {
-    if (this._steps) {
+    if (this.steps && this._steps) {
       // Ensure that the index can't be out of bounds.
       if (!this._isValidIndex(index) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
       }
 
-      if (this._selectedIndex !== index) {
-        this.selected?._markAsInteracted();
+      this.selected?._markAsInteracted();
 
-        if (
-          !this._anyControlsInvalidOrPending(index) &&
-          (index >= this._selectedIndex || this.steps.toArray()[index].editable)
-        ) {
-          this._updateSelectedItemIndex(index);
-        }
+      if (
+        this._selectedIndex !== index &&
+        !this._anyControlsInvalidOrPending(index) &&
+        (index >= this._selectedIndex || this.steps.toArray()[index].editable)
+      ) {
+        this._updateSelectedItemIndex(index);
       }
     } else {
       this._selectedIndex = index;

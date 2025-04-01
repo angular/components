@@ -1,5 +1,3 @@
-@use '../core/style/vendor-prefixes';
-
 // Ensures that the internal chip container spans the entire outer container width, if the
 // outer container width is customized. This is used by some wrapper components in g3.
 .mat-mdc-chip-set {
@@ -64,20 +62,5 @@ input.mat-mdc-chip-input {
   [dir='rtl'] & {
     margin-left: 0;
     margin-right: 8px;
-  }
-
-  // The form field hides the placeholder by default,
-  // but we actually want to show it if there are chips.
-  .mat-mdc-form-field:not(.mat-form-field-hide-placeholder) & {
-    @include vendor-prefixes.input-placeholder {
-      opacity: 1;
-    }
-  }
-
-  // The margin isn't necessary if the input is placed next to the chip set,
-  // because it'll be on the next line.
-  .mat-mdc-chip-set + & {
-    margin-left: 0;
-    margin-right: 0;
   }
 }

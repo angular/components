@@ -138,6 +138,13 @@ export class MatDialogConfig<D = any> {
   closeOnNavigation?: boolean = true;
 
   /**
+   * Alternate `ComponentFactoryResolver` to use when resolving the associated component.
+   * @deprecated No longer used. Will be removed.
+   * @breaking-change 20.0.0
+   */
+  componentFactoryResolver?: unknown;
+
+  /**
    * Duration of the enter animation in ms.
    * Should be a number, string type is deprecated.
    * @breaking-change 17.0.0 Remove string signature.

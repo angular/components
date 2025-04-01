@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "google-map",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,11 +10,8 @@ ng_project(
         ":google_map_demo_scss",
     ],
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@types/google.maps",
-        "//:node_modules/rxjs",
         "//src/google-maps",
+        "@npm//@angular/forms",
     ],
 )
 

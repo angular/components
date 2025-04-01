@@ -35,6 +35,6 @@
     "@angular/material-date-fns-adapter": "0.0.0-PLACEHOLDER"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "0.0.0-TSLIB"
   }
 }

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {ComponentHarness, HarnessLoader} from '@angular/cdk/testing';
-import {MatToolbarModule} from '../../toolbar';
-import {MatToolbarHarness, MatToolbarSection} from './toolbar-harness';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatToolbarHarness, MatToolbarSection} from '@angular/material/toolbar/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
@@ -65,10 +65,10 @@ describe('MatToolbarHarness', () => {
     <mat-toolbar>
       <mat-toolbar-row><span>Row 1</span></mat-toolbar-row>
       <mat-toolbar-row><span>Row 2</span>
-        <button matButton>
+        <button mat-button>
           Button 1
         </button>
-        <button matButton>
+        <button mat-button>
           Button 2
         </button>
       </mat-toolbar-row>

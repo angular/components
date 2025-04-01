@@ -13,3 +13,4 @@
 /.github/ISSUE_TEMPLATE/**          @angular/components-googlers
 
 /tools/                             @angular/dev-infra-components
+/tools/public_api_guard/**/*.md     @angular/components-googlers

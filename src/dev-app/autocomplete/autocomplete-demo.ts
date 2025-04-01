@@ -229,7 +229,7 @@ export class AutocompleteDemo {
         </mat-autocomplete>
       </mat-form-field>
 
-      <button type="submit" matButton>Close</button>
+      <button type="submit" mat-button>Close</button>
     </form>
   `,
   styles: `

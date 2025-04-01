@@ -1,24 +1,28 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "sources",
     srcs = glob(["**/*.ts"]),
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/@types/fs-extra",
-        "//:node_modules/fs-extra",
-        "//:node_modules/highlight.js",
         "//tools/region-parser",
+        "@npm//@types/fs-extra",
+        "@npm//@types/node",
+        "@npm//fs-extra",
     ],
 )
 
 nodejs_binary(
     name = "highlight-files",
     data = [
-        ":sources_legacy",
+        ":sources",
+        "@npm//fs-extra",
+        "@npm//highlight.js",
     ],
     entry_point = ":highlight-files.ts",
     templated_args = [

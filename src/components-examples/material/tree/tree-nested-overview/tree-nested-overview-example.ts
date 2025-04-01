@@ -13,28 +13,7 @@ interface FoodNode {
   children?: FoodNode[];
 }
 
-/**
- * @title Tree with nested nodes
- */
-@Component({
-  selector: 'tree-nested-overview-example',
-  templateUrl: 'tree-nested-overview-example.html',
-  styleUrl: 'tree-nested-overview-example.css',
-  imports: [MatTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TreeNestedOverviewExample {
-  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
-  dataSource = new MatTreeNestedDataSource<FoodNode>();
-
-  constructor() {
-    this.dataSource.data = EXAMPLE_DATA;
-  }
-
-  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
-}
-
-const EXAMPLE_DATA: FoodNode[] = [
+const TREE_DATA: FoodNode[] = [
   {
     name: 'Fruit',
     children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
@@ -53,3 +32,24 @@ const EXAMPLE_DATA: FoodNode[] = [
     ],
   },
 ];
+
+/**
+ * @title Tree with nested nodes
+ */
+@Component({
+  selector: 'tree-nested-overview-example',
+  templateUrl: 'tree-nested-overview-example.html',
+  styleUrl: 'tree-nested-overview-example.css',
+  imports: [MatTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TreeNestedOverviewExample {
+  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<FoodNode>();
+
+  constructor() {
+    this.dataSource.data = TREE_DATA;
+  }
+
+  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
+}

@@ -25,13 +25,8 @@ import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarRef} from './snack-bar-ref';
 import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {takeUntil} from 'rxjs/operators';
-import {_animationsDisabled} from '../core';
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig {
   return new MatSnackBarConfig();
 }
@@ -56,7 +51,6 @@ export class MatSnackBar implements OnDestroy {
   private _breakpointObserver = inject(BreakpointObserver);
   private _parentSnackBar = inject(MatSnackBar, {optional: true, skipSelf: true});
   private _defaultConfig = inject<MatSnackBarConfig>(MAT_SNACK_BAR_DEFAULT_OPTIONS);
-  private _animationsDisabled = _animationsDisabled();
 
   /**
    * Reference to the current snack bar in the view *at this level* (in the Angular injector tree).
@@ -297,7 +291,6 @@ export class MatSnackBar implements OnDestroy {
     }
 
     overlayConfig.positionStrategy = positionStrategy;
-    overlayConfig.disableAnimations = this._animationsDisabled;
     return this._overlay.create(overlayConfig);
   }
 

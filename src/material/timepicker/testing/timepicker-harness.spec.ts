@@ -1,10 +1,10 @@
 import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {DateAdapter, provideNativeDateAdapter} from '../../core';
+import {DateAdapter, provideNativeDateAdapter} from '@angular/material/core';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatTimepicker, MatTimepickerInput} from '../../timepicker';
+import {MatTimepicker, MatTimepickerInput} from '@angular/material/timepicker';
 import {MatTimepickerHarness} from './timepicker-harness';
 import {MatTimepickerInputHarness} from './timepicker-input-harness';
 

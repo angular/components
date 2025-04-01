@@ -12,8 +12,8 @@ import {
   MatOptgroupHarness,
   OptionHarnessFilters,
   OptgroupHarnessFilters,
-} from '../../core/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+} from '@angular/material/core/testing';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {SelectHarnessFilters} from './select-harness-filters';
 
 /** Harness for interacting with a mat-select in tests. */

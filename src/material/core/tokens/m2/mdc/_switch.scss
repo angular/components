@@ -1,0 +1,192 @@
+@use 'sass:map';
+@use '../../../style/elevation';
+@use '../../../style/sass-utils';
+@use '../../../theming/inspection';
+@use '../../../theming/theming';
+@use '../../token-definition';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mdc, switch);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+//
+// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
+// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
+// our CSS.
+
+@function get-unthemable-tokens() {
+  @return (
+    // Opacity of handle when disabled.
+    disabled-handle-opacity: null,
+    // Opacity of icon when disabled and selected.
+    disabled-selected-icon-opacity: 0.38,
+    // Opacity of track when disabled.
+    disabled-track-opacity: 0.12,
+    // Opacity of icon when disabled and unselected.
+    disabled-unselected-icon-opacity: 0.38,
+    // Height of handle.
+    handle-height: 20px,
+    // Border radius of handle.
+    handle-shape: 10px,
+    // Width of handle.
+    handle-width: 20px,
+    // Width and height of icon when selected.
+    selected-icon-size: 18px,
+    // Height of track.
+    track-height: 14px,
+    // Border radius of track.
+    track-shape: 7px,
+    // Width of track.
+    track-width: 36px,
+    // Width and height of icon when unselected.
+    unselected-icon-size: 18px,
+    // Opacity of ripple when selected and focused.
+    selected-focus-state-layer-opacity: 0.12,
+    // Opacity of ripple when selected and on hover.
+    selected-hover-state-layer-opacity: 0.04,
+    // Opacity of ripple when selected and pressed.
+    selected-pressed-state-layer-opacity: 0.1,
+    // Opacity of ripple when unselected and focused.
+    unselected-focus-state-layer-opacity: 0.12,
+    // Opacity of ripple when unselected and on hover.
+    unselected-hover-state-layer-opacity: 0.04,
+    // Opacity of ripple when unselected and pressed.
+    unselected-pressed-state-layer-opacity: 0.1,
+
+    // Unused tokens
+    handle-elevation: null,
+    handle-shadow-color: null,
+    disabled-handle-elevation: null,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $on-surface: if($is-dark, #f5f5f5, #424242);
+  $hairline: if($is-dark, #616161, #e0e0e0);
+  $on-surface-variant: if($is-dark, #9e9e9e, #616161);
+  $on-surface-state-content: if($is-dark, #fafafa, #212121);
+  $disabled-handle-color: if($is-dark, #000, #424242);
+  $icon-color: if($is-dark, #212121, #fff);
+
+  // The default for tokens that rely on the theme will use the primary palette
+  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
+
+  @return map.merge(
+    $theme-color-tokens,
+    (
+      // Color of handle when selected while disabled.
+      disabled-selected-handle-color: $disabled-handle-color,
+      // Color of handle when selected while disabled.
+      disabled-selected-icon-color: $icon-color,
+      // Color of track when selected while disabled.
+      disabled-selected-track-color: $on-surface,
+      // Color of handle when unselected while disabled.
+      disabled-unselected-handle-color: $disabled-handle-color,
+      // Color of icon when unselected while disabled.
+      disabled-unselected-icon-color: $icon-color,
+      // Color of track when disabled.
+      disabled-unselected-track-color: $on-surface,
+      // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mdc-surface-color, #fff)`
+      // which made it basically hardcoded to #fff. Should it be based on the theme?
+      // Color of slide-toggle handle's surface.
+      handle-surface-color: #fff,
+      // Color of icon (ex. checkmark) when selected
+      selected-icon-color: $icon-color,
+      // Color of handle when unselected and focused.
+      unselected-focus-handle-color: $on-surface-state-content,
+      // Color of ripple when unselected and focused.
+      unselected-focus-state-layer-color: $on-surface,
+      // Color of track when unselected and focused.
+      unselected-focus-track-color: $hairline,
+      // Color of handle when unselected.
+      unselected-handle-color: $on-surface-variant,
+      // Color of handle when unselected and on hover.
+      unselected-hover-handle-color: $on-surface-state-content,
+      // Color of ripple when unselected and on hover.
+      unselected-hover-state-layer-color: $on-surface,
+      // Color of track when unselected and on hover.
+      unselected-hover-track-color: $hairline,
+      // Color of icon color when unselected.
+      unselected-icon-color: $icon-color,
+      // Color of handle when unselected and pressed.
+      unselected-pressed-handle-color: $on-surface-state-content,
+      // Color of ripple when unselected and pressed.
+      unselected-pressed-state-layer-color: $on-surface,
+      // Color of track when unselected and pressed.
+      unselected-pressed-track-color: $hairline,
+      // Color of track when selected.
+      unselected-track-color: $hairline,
+      // Elevation level for handle.
+      handle-elevation-shadow: elevation.get-box-shadow(1),
+      // Elevation level for handle when disabled.
+      disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
+    )
+  );
+}
+
+// Generates the mapping for the properties that change based on the slide toggle color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $palette-color: inspection.get-theme-color($theme, $palette-name, if($is-dark, 300, 600));
+  $state-content: inspection.get-theme-color($theme, $palette-name, if($is-dark, 200, 900));
+  $inverse: inspection.get-theme-color($theme, $palette-name, if($is-dark, 600, 300));
+
+  @return (
+    // Color of ripple when selected and focused.
+    selected-focus-state-layer-color: $palette-color,
+    // Color of handle when selected
+    selected-handle-color: $palette-color,
+    // Color of ripple when selected and on hover.
+    selected-hover-state-layer-color: $palette-color,
+    // Color of ripple when selected and pressed.
+    selected-pressed-state-layer-color: $palette-color,
+    // Color of handle when selected and focused.
+    selected-focus-handle-color: $state-content,
+    // Color of handle when selected and on hover.
+    selected-hover-handle-color: $state-content,
+    // Color of handle when selected and pressed.
+    selected-pressed-handle-color: $state-content,
+    // Color of track when selected and focused.
+    selected-focus-track-color: $inverse,
+    // Color of track when selected and on hover.
+    selected-hover-track-color: $inverse,
+    /// Color of track when selected and pressed.
+    selected-pressed-track-color: $inverse,
+    // Color of track when selected.
+    selected-track-color: $inverse,
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return ();
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+
+  @return (
+    // The diameter of the handle ripple.
+    state-layer-size: map.get((
+      0: 40px,
+      -1: 36px,
+      -2: 32px,
+      -3: 28px,
+    ), $scale)
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+          get-unthemable-tokens(),
+          get-color-tokens(token-definition.$placeholder-color-config),
+          get-typography-tokens(token-definition.$placeholder-typography-config),
+          get-density-tokens(token-definition.$placeholder-density-config)
+  );
+}

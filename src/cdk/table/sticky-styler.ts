@@ -11,7 +11,7 @@
  * @docs-private
  */
 import {afterNextRender, Injector} from '@angular/core';
-import {Direction} from '../bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 import {StickyPositioningListener} from './sticky-position-listener';
 

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ContentObserver} from '../../observers';
+import {ContentObserver} from '@angular/cdk/observers';
 import {DOCUMENT} from '@angular/common';
 import {Directive, ElementRef, Injectable, Input, NgZone, OnDestroy, inject} from '@angular/core';
 import {Subscription} from 'rxjs';
@@ -16,7 +16,7 @@ import {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LIVE_ANNOUNCER_DEFAULT_OPTIONS,
 } from './live-announcer-tokens';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 let uniqueIds = 0;
 

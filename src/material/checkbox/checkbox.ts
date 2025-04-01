@@ -8,6 +8,7 @@
 
 import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
 import {
+  ANIMATION_MODULE_TYPE,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -35,12 +36,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {
-  MatRipple,
-  _MatInternalFormField,
-  _StructuralStylesLoader,
-  _animationsDisabled,
-} from '../core';
+import {MatRipple, _MatInternalFormField, _StructuralStylesLoader} from '@angular/material/core';
 import {
   MAT_CHECKBOX_DEFAULT_OPTIONS,
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
@@ -63,6 +59,16 @@ export enum TransitionCheckState {
   Indeterminate,
 }
 
+/**
+ * @deprecated Will stop being exported.
+ * @breaking-change 19.0.0
+ */
+export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MatCheckbox),
+  multi: true,
+};
+
 /** Change event object emitted by checkbox. */
 export class MatCheckboxChange {
   /** The source checkbox of the event. */
@@ -83,7 +89,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     '[attr.tabindex]': 'null',
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
-    '[class._mat-animation-noopable]': '_animationsDisabled',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
     '[class.mdc-checkbox--disabled]': 'disabled',
     '[id]': 'id',
     // Add classes that users can use to more easily target disabled or checked checkboxes.
@@ -93,11 +99,7 @@ const defaults = MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY();
     '[class]': 'color ? "mat-" + color : "mat-accent"',
   },
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MatCheckbox),
-      multi: true,
-    },
+    MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR,
     {
       provide: NG_VALIDATORS,
       useExisting: MatCheckbox,
@@ -115,7 +117,7 @@ export class MatCheckbox
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _ngZone = inject(NgZone);
-  protected _animationsDisabled = _animationsDisabled();
+  _animationMode? = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _options = inject<MatCheckboxDefaultOptions>(MAT_CHECKBOX_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -468,7 +470,7 @@ export class MatCheckbox
     newState: TransitionCheckState,
   ): string {
     // Don't transition if animations are disabled.
-    if (this._animationsDisabled) {
+    if (this._animationMode === 'NoopAnimations') {
       return '';
     }
 

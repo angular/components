@@ -1,10 +1,10 @@
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m2/mat/list' as tokens-mat-list;
+@use '../core/tokens/m2/mdc/list' as tokens-mdc-list;
 @use '../core/tokens/token-utils';
 
 // Includes the structural styles for the list that were inherited from MDC.
 @mixin private-list-inherited-structural-styles {
-  $tokens: (tokens-mat-list.$prefix, tokens-mat-list.get-token-slots());
+  $tokens: (tokens-mdc-list.$prefix, tokens-mdc-list.get-token-slots());
 
   .mdc-list {
     margin: 0;

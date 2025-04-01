@@ -22,7 +22,7 @@ import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
 import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
-import {_StructuralStylesLoader, MatRipple} from '../core';
+import {_StructuralStylesLoader, MatRipple} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**

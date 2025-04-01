@@ -21,7 +21,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 import {merge, Subject} from 'rxjs';
 import {mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
-import {_closest} from '../popover-edit';
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {ColumnResizeNotifier, ColumnResizeNotifierSource} from './column-resize-notifier';
 import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './selectors';

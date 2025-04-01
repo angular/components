@@ -1,7 +1,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/tokens/m2/mat/card' as tokens-mat-card;
-@use '../core/tokens/m2/mat/elevated-card' as tokens-mat-elevated-card;
-@use '../core/tokens/m2/mat/outlined-card' as tokens-mat-outlined-card;
+@use '../core/tokens/m2/mdc/elevated-card' as tokens-mdc-elevated-card;
+@use '../core/tokens/m2/mdc/outlined-card' as tokens-mdc-outlined-card;
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -18,8 +18,8 @@ $mat-card-default-padding: 16px !default;
   border-width: 0;
 
   @include token-utils.use-tokens(
-    tokens-mat-elevated-card.$prefix,
-    tokens-mat-elevated-card.get-token-slots()
+    tokens-mdc-elevated-card.$prefix,
+    tokens-mdc-elevated-card.get-token-slots()
   ) {
     @include token-utils.create-token-slot(background-color, container-color);
     @include token-utils.create-token-slot(border-color, container-color);
@@ -41,8 +41,8 @@ $mat-card-default-padding: 16px !default;
     box-sizing: border-box;
 
     @include token-utils.use-tokens(
-      tokens-mat-elevated-card.$prefix,
-      tokens-mat-elevated-card.get-token-slots()
+      tokens-mdc-elevated-card.$prefix,
+      tokens-mdc-elevated-card.get-token-slots()
     ) {
       @include token-utils.create-token-slot(border-radius, container-shape);
     }
@@ -51,8 +51,8 @@ $mat-card-default-padding: 16px !default;
 
 .mat-mdc-card-outlined {
   @include token-utils.use-tokens(
-    tokens-mat-outlined-card.$prefix,
-    tokens-mat-outlined-card.get-token-slots()
+    tokens-mdc-outlined-card.$prefix,
+    tokens-mdc-outlined-card.get-token-slots()
   ) {
     @include token-utils.create-token-slot(background-color, container-color);
     @include token-utils.create-token-slot(border-radius, container-shape);

@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "chips",
     srcs = glob(
         ["**/*.ts"],
@@ -23,14 +24,12 @@ ng_project(
         ":chip_set_scss",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/material/core",
         "//src/material/form-field",
+        "@npm//@angular/animations",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
     ],
 )
 
@@ -59,21 +58,14 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "chips_tests_lib",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":chips",
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
@@ -83,6 +75,11 @@ ts_project(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/input",
+        "@npm//@angular/animations",
+        "@npm//@angular/common",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 

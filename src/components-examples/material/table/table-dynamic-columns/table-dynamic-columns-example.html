@@ -1,6 +1,6 @@
-<button matButton="elevated" (click)="addColumn()"> Add column </button>
-<button matButton="elevated" (click)="removeColumn()"> Remove column </button>
-<button matButton="elevated" (click)="shuffle()"> Shuffle </button>
+<button mat-raised-button (click)="addColumn()"> Add column </button>
+<button mat-raised-button (click)="removeColumn()"> Remove column </button>
+<button mat-raised-button (click)="shuffle()"> Shuffle </button>
 
 <table mat-table [dataSource]="data" class="mat-elevation-z8">
   @for (column of displayedColumns; track column) {

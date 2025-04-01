@@ -15,14 +15,14 @@ import {
   Input,
   OnDestroy,
 } from '@angular/core';
-import {Directionality} from '../bidi';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
-} from '../overlay';
-import {_getEventTarget} from '../platform';
+} from '@angular/cdk/overlay';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
@@ -175,8 +175,6 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       if (item === this.childMenu && this.isOpen()) {
         this.closed.next();
         this.overlayRef!.detach();
-        this.childMenu = undefined;
-        this._changeDetectorRef.markForCheck();
       }
     });
   }

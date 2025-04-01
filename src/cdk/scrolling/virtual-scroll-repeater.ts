@@ -7,7 +7,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {ListRange} from '../collections';
+import {ListRange} from '@angular/cdk/collections';
 
 /**
  * An item to be repeated by the VirtualScrollViewport

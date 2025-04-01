@@ -2,8 +2,8 @@
 
 <div class="demo-progress-spinner-controls">
   <p>Value: {{progressValue}}</p>
-  <button matButton="elevated" (click)="step(10)">Increase</button>
-  <button matButton="elevated" (click)="step(-10)">Decrease</button>
+  <button mat-raised-button (click)="step(10)">Increase</button>
+  <button mat-raised-button (click)="step(-10)">Decrease</button>
   <mat-checkbox [(ngModel)]="isDeterminate">Is determinate</mat-checkbox>
 </div>
 

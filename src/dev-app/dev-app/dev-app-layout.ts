@@ -59,7 +59,6 @@ export class DevAppLayout {
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
     {name: 'CDK Experimental Combobox', route: '/cdk-experimental-combobox'},
-    {name: 'CDK Experimental Listbox', route: '/cdk-experimental-listbox'},
     {name: 'CDK Listbox', route: '/cdk-listbox'},
     {name: 'CDK Menu', route: '/cdk-menu'},
     {name: 'Autocomplete', route: '/autocomplete'},

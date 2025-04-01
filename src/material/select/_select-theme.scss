@@ -16,7 +16,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       $mat-tokens: tokens-mat-select.get-unthemable-tokens();
-      @include token-utils.create-token-values-mixed(tokens-mat-select.$prefix, $mat-tokens);
+      @include token-utils.create-token-values(tokens-mat-select.$prefix, $mat-tokens);
     }
   }
 }
@@ -31,20 +31,20 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-select.$prefix,
         tokens-mat-select.get-color-tokens($theme)
       );
 
       .mat-mdc-form-field.mat-accent {
-        @include token-utils.create-token-values-mixed(
+        @include token-utils.create-token-values(
           tokens-mat-select.$prefix,
           tokens-mat-select.get-color-tokens($theme, accent)
         );
       }
 
       .mat-mdc-form-field.mat-warn {
-        @include token-utils.create-token-values-mixed(
+        @include token-utils.create-token-values(
           tokens-mat-select.$prefix,
           tokens-mat-select.get-color-tokens($theme, warn)
         );
@@ -60,7 +60,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-select.$prefix,
         tokens-mat-select.get-typography-tokens($theme)
       );
@@ -75,7 +75,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-select.$prefix,
         tokens-mat-select.get-density-tokens($theme)
       );

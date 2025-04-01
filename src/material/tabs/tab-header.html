@@ -17,7 +17,7 @@
   class="mat-mdc-tab-label-container"
   #tabListContainer
   (keydown)="_handleKeydown($event)"
-  [class._mat-animation-noopable]="_animationsDisabled">
+  [class._mat-animation-noopable]="_animationMode === 'NoopAnimations'">
   <div
     #tabList
     class="mat-mdc-tab-list"

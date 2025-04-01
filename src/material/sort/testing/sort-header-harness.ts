@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {SortDirection} from '../../sort';
+import {SortDirection} from '@angular/material/sort';
 import {SortHeaderHarnessFilters} from './sort-harness-filters';
 
 /** Harness for interacting with a standard Angular Material sort header in tests. */

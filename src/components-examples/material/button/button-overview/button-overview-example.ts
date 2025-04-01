@@ -4,7 +4,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 
 /**
- * @title Button overview
+ * @title Basic buttons
  */
 @Component({
   selector: 'button-overview-example',

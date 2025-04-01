@@ -1,4 +1,4 @@
-import {coerceStringArray} from '../coercion/string-array';
+import {coerceStringArray} from '@angular/cdk/coercion/string-array';
 
 describe('coerceStringArray', () => {
   it('should split a string', () => {

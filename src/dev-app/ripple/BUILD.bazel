@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "ripple",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,14 +10,13 @@ ng_project(
         ":ripple_demo_scss",
     ],
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/components-examples/material/core",
         "//src/dev-app/example",
         "//src/material/button",
         "//src/material/checkbox",
         "//src/material/icon",
         "//src/material/input",
+        "@npm//@angular/forms",
     ],
 )
 

@@ -2,7 +2,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatButtonToggleAppearance, MatButtonToggleModule} from '../../button-toggle';
+import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatButtonToggleGroupHarness} from './button-toggle-group-harness';
 
 describe('MatButtonToggleGroupHarness', () => {

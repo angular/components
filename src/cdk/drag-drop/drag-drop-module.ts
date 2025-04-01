@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CdkScrollableModule} from '../scrolling';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {CdkDropList} from './directives/drop-list';
 import {CdkDropListGroup} from './directives/drop-list-group';
 import {CdkDrag} from './directives/drag';
@@ -31,9 +31,3 @@ const DRAG_DROP_DIRECTIVES = [
   providers: [DragDrop],
 })
 export class DragDropModule {}
-
-// Re-export needed by the Angular compiler.
-// See: https://github.com/angular/components/issues/30663.
-// Note: These exports need to be stable and shouldn't be renamed unnecessarily because
-// consuming libraries might have references to them in their own partial compilation output.
-export {CdkScrollable as ɵɵCdkScrollable} from '../scrolling';

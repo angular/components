@@ -1,22 +1,6 @@
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
-
-rules_js_tsconfig(
-    name = "tsconfig",
-    src = "tsconfig.json",
-    deps = ["//:node_modules/@types/node"],
-)
-
-rules_js_tsconfig(
-    name = "tsconfig-test",
-    src = "tsconfig-test.json",
-    deps = [
-        ":tsconfig",
-        "//:node_modules/@types/jasmine",
-    ],
-)
 
 # Bazel config setting that matches if the partial compilation flag
 # for `@angular/bazel` is set to `True`.

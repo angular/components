@@ -2,7 +2,11 @@ import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatBottomSheet, MatBottomSheetConfig, MatBottomSheetModule} from '../../bottom-sheet';
+import {
+  MatBottomSheet,
+  MatBottomSheetConfig,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatBottomSheetHarness} from './bottom-sheet-harness';
 

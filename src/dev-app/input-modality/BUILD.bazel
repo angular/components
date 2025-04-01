@@ -1,14 +1,12 @@
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "input-modality",
     srcs = glob(["**/*.ts"]),
     assets = ["input-modality-detector-demo.html"],
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
         "//src/cdk/a11y",
         "//src/material/button",
         "//src/material/form-field",

@@ -1,4 +1,4 @@
-import {CdkComboboxPopup} from '../combobox';
+import {CdkComboboxPopup} from '@angular/cdk-experimental/combobox/combobox-popup';
 import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ElementRef, ViewChild, signal} from '@angular/core';

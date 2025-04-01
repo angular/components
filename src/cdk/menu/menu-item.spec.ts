@@ -1,8 +1,8 @@
 import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {dispatchKeyboardEvent} from '../testing/private';
+import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {By} from '@angular/platform-browser';
-import {ENTER} from '../keycodes';
+import {ENTER} from '@angular/cdk/keycodes';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
 

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '../platform';
+import {Platform, _bindEventWithOptions} from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
@@ -19,8 +19,8 @@ import {
   Output,
   RendererFactory2,
 } from '@angular/core';
-import {_CdkPrivateStyleLoader} from '../private';
-import {coerceElement} from '../coercion';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {coerceElement} from '@angular/cdk/coercion';
 import {EMPTY, Observable, Subject} from 'rxjs';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
 
@@ -111,7 +111,13 @@ export class AutofillMonitor implements OnDestroy {
 
     const unlisten = this._ngZone.runOutsideAngular(() => {
       element.classList.add('cdk-text-field-autofill-monitored');
-      return this._renderer.listen(element, 'animationstart', listener, listenerOptions);
+      return _bindEventWithOptions(
+        this._renderer,
+        element,
+        'animationstart',
+        listener,
+        listenerOptions,
+      );
     });
 
     this._monitoredElements.set(element, {subject, unlisten});

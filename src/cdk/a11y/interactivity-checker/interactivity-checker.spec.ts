@@ -1,4 +1,4 @@
-import {Platform} from '../../platform';
+import {Platform} from '@angular/cdk/platform';
 import {TestBed} from '@angular/core/testing';
 import {InteractivityChecker, IsFocusableConfig} from './interactivity-checker';
 

@@ -8,7 +8,7 @@
   <mat-checkbox [(ngModel)]="isVertical">Vertical</mat-checkbox>
 </p>
 <p>
-  <button matButton="outlined" (click)="showLabelBottom = !showLabelBottom">
+  <button mat-stroked-button (click)="showLabelBottom = !showLabelBottom">
     Toggle label position
   </button>
 </p>
@@ -46,7 +46,7 @@
         <mat-error>This field is required</mat-error>
       </mat-form-field>
       <div>
-        <button matButton matStepperNext>Next</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
 
@@ -61,8 +61,8 @@
         <mat-error>The input is invalid.</mat-error>
       </mat-form-field>
       <div>
-        <button matButton matStepperPrevious>Back</button>
-        <button matButton matStepperNext>Next</button>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
 
@@ -70,8 +70,8 @@
       <ng-template matStepLabel>Confirm your information</ng-template>
       Everything seems correct.
       <div>
-        <button matButton>Done</button>
-        <button type="button" matButton (click)="linearStepper.reset()">Reset</button>
+        <button mat-button>Done</button>
+        <button type="button" mat-button (click)="linearStepper.reset()">Reset</button>
       </div>
     </mat-step>
   </mat-stepper>
@@ -96,7 +96,7 @@
         <mat-error>This field is required</mat-error>
       </mat-form-field>
       <div>
-        <button matButton matStepperNext>Next</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -110,8 +110,8 @@
         <mat-error>The input is invalid</mat-error>
       </mat-form-field>
       <div>
-        <button matButton matStepperPrevious>Back</button>
-        <button matButton matStepperNext>Next</button>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -121,8 +121,8 @@
       <ng-template matStepLabel>Confirm your information</ng-template>
       Everything seems correct.
       <div>
-        <button matButton>Done</button>
-        <button type="button" matButton (click)="linearHorizontalStepper.reset()">Reset</button>
+        <button mat-button>Done</button>
+        <button type="button" mat-button (click)="linearHorizontalStepper.reset()">Reset</button>
       </div>
     </form>
   </mat-step>
@@ -143,7 +143,7 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
@@ -156,8 +156,8 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperPrevious>Back</button>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
@@ -170,8 +170,8 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperPrevious>Back</button>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
@@ -179,7 +179,7 @@
     <ng-template matStepLabel>Confirm your information</ng-template>
     Everything seems correct.
     <div>
-      <button matButton>Done</button>
+      <button mat-button>Done</button>
     </div>
   </mat-step>
 </mat-stepper>
@@ -197,7 +197,7 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
@@ -207,8 +207,8 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperPrevious>Back</button>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
@@ -218,15 +218,15 @@
       <input matInput>
     </mat-form-field>
     <div>
-      <button matButton matStepperPrevious>Back</button>
-      <button matButton matStepperNext>Next</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
     </div>
   </mat-step>
 
   <mat-step label="Confirm your information">
     Everything seems correct.
     <div>
-      <button matButton>Done</button>
+      <button mat-button>Done</button>
     </div>
   </mat-step>
 </mat-stepper>
@@ -241,8 +241,8 @@
         <input matInput [(ngModel)]="step.content">
       </mat-form-field>
       <div>
-        <button matButton matStepperPrevious>Back</button>
-        <button matButton matStepperNext>Next</button>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
   }

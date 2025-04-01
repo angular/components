@@ -1,6 +1,6 @@
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m2/mat/tab-indicator' as tokens-mat-tab-indicator;
-@use '../core/tokens/m2/mat/secondary-navigation-tab' as tokens-mat-secondary-navigation-tab;
+@use '../core/tokens/m2/mdc/tab-indicator' as tokens-mdc-tab-indicator;
+@use '../core/tokens/m2/mdc/secondary-navigation-tab' as tokens-mdc-secondary-navigation-tab;
 @use '../core/tokens/m2/mat/tab-header' as tokens-mat-tab-header;
 @use '../core/tokens/m2/mat/tab-header-with-background' as tokens-mat-tab-header-with-background;
 @use '../core/tokens/token-utils';
@@ -103,8 +103,8 @@ $mat-tab-animation-duration: 500ms !default;
   background: none;
 
   @include token-utils.use-tokens(
-    tokens-mat-secondary-navigation-tab.$prefix,
-    tokens-mat-secondary-navigation-tab.get-token-slots()
+    tokens-mdc-secondary-navigation-tab.$prefix,
+    tokens-mdc-secondary-navigation-tab.get-token-slots()
   ) {
     @include token-utils.create-token-slot(height, container-height);
   }
@@ -129,8 +129,8 @@ $mat-tab-animation-duration: 500ms !default;
 
   .mdc-tab-indicator__content--underline {
     @include token-utils.use-tokens(
-      tokens-mat-tab-indicator.$prefix,
-      tokens-mat-tab-indicator.get-token-slots()
+      tokens-mdc-tab-indicator.$prefix,
+      tokens-mdc-tab-indicator.get-token-slots()
     ) {
       @include token-utils.create-token-slot(border-color, active-indicator-color);
       @include token-utils.create-token-slot(border-top-width, active-indicator-height);
@@ -403,8 +403,8 @@ $mat-tab-animation-duration: 500ms !default;
   .cdk-drop-list &,
   &.cdk-drop-list {
     @include token-utils.use-tokens(
-      tokens-mat-secondary-navigation-tab.$prefix,
-      tokens-mat-secondary-navigation-tab.get-token-slots()
+      tokens-mdc-secondary-navigation-tab.$prefix,
+      tokens-mdc-secondary-navigation-tab.get-token-slots()
     ) {
       @include token-utils.create-token-slot(min-height, container-height);
     }

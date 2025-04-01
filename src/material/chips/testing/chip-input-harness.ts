@@ -12,7 +12,6 @@ import {
   HarnessPredicate,
   TestKey,
 } from '@angular/cdk/testing';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ChipInputHarnessFilters} from './chip-harness-filters';
 
 /** Harness for interacting with a grid's chip input in tests. */
@@ -43,14 +42,7 @@ export class MatChipInputHarness extends ComponentHarness {
 
   /** Whether the input is disabled. */
   async isDisabled(): Promise<boolean> {
-    const host = await this.host();
-    const disabled = await host.getAttribute('disabled');
-
-    if (disabled !== null) {
-      return coerceBooleanProperty(disabled);
-    }
-
-    return (await host.getAttribute('aria-disabled')) === 'true';
+    return (await this.host()).getProperty<boolean>('disabled');
   }
 
   /** Whether the input is required. */

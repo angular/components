@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {HarnessEnvironment, HarnessLoader, TestElement} from '../../testing';
+import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
 import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 

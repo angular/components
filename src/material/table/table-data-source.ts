@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {MatPaginator, PageEvent} from '../paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {
   BehaviorSubject,
   combineLatest,
@@ -17,7 +17,7 @@ import {
   Subscription,
 } from 'rxjs';
 import {DataSource} from '@angular/cdk/collections';
-import {MatSort, Sort} from '../sort';
+import {MatSort, Sort} from '@angular/material/sort';
 import {_isNumberValue} from '@angular/cdk/coercion';
 import {map} from 'rxjs/operators';
 

@@ -17,7 +17,7 @@ import {
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_CHIP} from './tokens';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
+import {_StructuralStylesLoader} from '@angular/material/core';
 
 /**
  * Section within a chip.

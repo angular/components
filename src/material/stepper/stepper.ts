@@ -10,6 +10,7 @@ import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
@@ -31,7 +32,7 @@ import {
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {AbstractControl, FormGroupDirective, NgForm} from '@angular/forms';
-import {_animationsDisabled, ErrorStateMatcher, ThemePalette} from '../core';
+import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
 import {Platform} from '@angular/cdk/platform';
 import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {Subscription} from 'rxjs';
@@ -141,7 +142,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
-  private _animationsDisabled = _animationsDisabled();
+  private _animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _cleanupTransition: (() => void) | undefined;
   protected _isAnimating = signal(false);
 
@@ -233,7 +234,7 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     });
 
     this._ngZone.runOutsideAngular(() => {
-      if (!this._animationsDisabled) {
+      if (this._animationsModule !== 'NoopAnimations') {
         setTimeout(() => {
           // Delay enabling the animations so we don't animate the initial state.
           this._elementRef.nativeElement.classList.add('mat-stepper-animations-enabled');
@@ -288,7 +289,7 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   }
 
   _getAnimationDuration() {
-    if (this._animationsDisabled) {
+    if (this._animationsModule === 'NoopAnimations') {
       return '0ms';
     }
 

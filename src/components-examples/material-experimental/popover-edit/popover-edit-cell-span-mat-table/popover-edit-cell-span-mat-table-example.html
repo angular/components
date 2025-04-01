@@ -22,9 +22,9 @@
         </div>
 
         <div mat-edit-actions>
-          <button matButton type="submit">Confirm</button>
-          <button matButton cdkEditRevert>Revert</button>
-          <button matButton cdkEditClose>Close</button>
+          <button mat-button type="submit">Confirm</button>
+          <button mat-button cdkEditRevert>Revert</button>
+          <button mat-button cdkEditClose>Close</button>
         </div>
       </form>
     </div>
@@ -46,7 +46,7 @@
       {{person.firstName}}
 
       <span *matRowHoverContent>
-        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
     </td>
   </ng-container>
@@ -61,7 +61,7 @@
       {{person.middleName}}
 
       <span *matRowHoverContent>
-        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
     </td>
   </ng-container>
@@ -76,7 +76,7 @@
       {{person.lastName}}
 
       <span *matRowHoverContent>
-        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
     </td>
   </ng-container>

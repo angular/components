@@ -7,6 +7,7 @@
  */
 
 import {
+  ANIMATION_MODULE_TYPE,
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -26,13 +27,12 @@ import {
   inject,
 } from '@angular/core';
 import {
-  _animationsDisabled,
   MAT_OPTGROUP,
   MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
   MatOption,
   ThemePalette,
-} from '../core';
+} from '@angular/material/core';
 import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
 import {Subscription} from 'rxjs';
@@ -70,12 +70,6 @@ export interface MatAutocompleteDefaultOptions {
    */
   requireSelection?: boolean;
 
-  /** Class to be applied to the autocomplete's backdrop. */
-  backdropClass?: string;
-
-  /** Whether the autocomplete has a backdrop. */
-  hasBackdrop?: boolean;
-
   /** Class or list of classes to be applied to the autocomplete's overlay panel. */
   overlayPanelClass?: string | string[];
 
@@ -92,18 +86,13 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<MatAutocomple
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefaultOptions {
   return {
     autoActiveFirstOption: false,
     autoSelectActiveOption: false,
     hideSingleSelectionIndicator: false,
     requireSelection: false,
-    hasBackdrop: false,
   };
 }
 
@@ -124,7 +113,8 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _defaults = inject<MatAutocompleteDefaultOptions>(MAT_AUTOCOMPLETE_DEFAULT_OPTIONS);
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Manages active item in option list based on key events. */

@@ -1,32 +1,28 @@
-load("//tools:defaults.bzl", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "testing",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/core",
         "//src/cdk/coercion",
         "//src/cdk/testing",
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_tests_lib",
-    testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/progress-bar",
+        "@npm//@angular/platform-browser",
     ],
 )
 

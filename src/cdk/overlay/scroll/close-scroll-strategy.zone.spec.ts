@@ -1,4 +1,4 @@
-import {ComponentPortal, PortalModule} from '../../portal';
+import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
 import {TestBed, fakeAsync, inject} from '@angular/core/testing';
 import {Subject} from 'rxjs';

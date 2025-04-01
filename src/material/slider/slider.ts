@@ -26,14 +26,14 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
 } from '@angular/core';
 import {
-  _animationsDisabled,
   _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleGlobalOptions,
   ThemePalette,
-} from '../core';
+} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {
   _MatThumb,
@@ -140,7 +140,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     return this._min;
   }
   set min(v: number) {
-    const min = v === undefined || v === null || isNaN(v) ? this._min : v;
+    const min = isNaN(v) ? this._min : v;
     if (this._min !== min) {
       this._updateMin(min);
     }
@@ -216,7 +216,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     return this._max;
   }
   set max(v: number) {
-    const max = v === undefined || v === null || isNaN(v) ? this._max : v;
+    const max = isNaN(v) ? this._max : v;
     if (this._max !== max) {
       this._updateMax(max);
     }
@@ -359,7 +359,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   _tickMarks: _MatTickMark[];
 
   /** Whether animations have been disabled. */
-  _noopAnimations = _animationsDisabled();
+  _noopAnimations: boolean;
 
   /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
   private _dirChangeSubscription: Subscription;
@@ -410,6 +410,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+    this._noopAnimations = animationMode === 'NoopAnimations';
 
     if (this._dir) {
       this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());

@@ -1,15 +1,14 @@
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "selection",
     srcs = glob(["**/*.ts"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/components-examples/cdk-experimental/selection",
         "//src/components-examples/material-experimental/selection",
         "//src/dev-app/example",
+        "@npm//@angular/forms",
     ],
 )

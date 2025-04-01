@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_getEventTarget} from '../../platform';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {getMutableClientRect, adjustDomRect} from './dom-rect';
 
 /** Object holding the scroll position of something. */

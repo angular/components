@@ -14,6 +14,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
   AfterViewInit,
+  ANIMATION_MODULE_TYPE,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -35,7 +36,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {_animationsDisabled, _StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '../core';
+import {_StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '@angular/material/core';
 
 /**
  * @deprecated No longer used.
@@ -76,11 +77,6 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonTog
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
 export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions {
   return {
     hideSingleSelectionIndicator: false,
@@ -576,7 +572,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _focusMonitor = inject(FocusMonitor);
   private _idGenerator = inject(_IdGenerator);
-  private _animationDisabled = _animationsDisabled();
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
   private _checked = false;
 
   /**
@@ -720,7 +716,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     // 1. We don't want the animation to fire on the first render for pre-checked toggles so we
     //    delay adding the class until the view is rendered.
     // 2. We don't want animation if the `NoopAnimationsModule` is provided.
-    if (!this._animationDisabled) {
+    if (this._animationMode !== 'NoopAnimations') {
       this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
     }
 

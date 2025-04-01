@@ -1,8 +1,8 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "private",
     testonly = True,
     srcs = glob(
@@ -10,8 +10,8 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@types/jasmine",
         "//src/cdk/testing/testbed",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
     ],
 )

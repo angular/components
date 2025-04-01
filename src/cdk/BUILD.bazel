@@ -1,17 +1,15 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS", "CDK_ENTRYPOINTS_WITH_STYLES", "CDK_SCSS_LIBS", "CDK_TARGETS")
-load("//tools:defaults.bzl", "ng_package", "sass_library")
-load("//tools:defaults2.bzl", "ts_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "cdk",
     srcs = glob(
         ["*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    deps = ["//:node_modules/@angular/core"],
+    deps = ["@npm//@angular/core"],
 )
 
 # List of style files that need to be copied to the root of the CDK package. We do this
@@ -59,7 +57,7 @@ ng_package(
         "//src/cdk/schematics:npm_package",
     ],
     tags = ["release-package"],
-    deps = [get_legacy_label(t) for t in CDK_TARGETS],
+    deps = CDK_TARGETS,
 )
 
 filegroup(

@@ -148,7 +148,7 @@ export class CustomHeader<D> implements OnDestroy {
   selector: 'custom-header-ng-content',
   template: `
       <mat-calendar-header #header>
-        <button matButton type="button" (click)="todayClicked()">TODAY</button>
+        <button mat-button type="button" (click)="todayClicked()">TODAY</button>
       </mat-calendar-header>
     `,
   imports: [MatDatepickerModule],

@@ -3,7 +3,6 @@
 @use '../../../theming/theming';
 @use '../../../theming/inspection';
 @use '../../../style/sass-utils';
-@use 'sass:map';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, outlined-button);
@@ -12,11 +11,14 @@ $prefix: (mat, outlined-button);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    keep-touch-target: false,
-    outline-width: 1px,
-    container-shape: 4px,
+    // Start/end padding of the button.
     horizontal-padding: 15px, // Normally it's 16px, but -1px for the outline.
+
+    // Space between the icon and the button's main content.
     icon-spacing: 8px,
+
+    // Amount by which to offset the icon so that its presence
+    // doesn't increase throw off the horizontal padding.
     icon-offset: -4px,
   );
 }
@@ -25,25 +27,24 @@ $prefix: (mat, outlined-button);
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
 
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $outline: if(token-definition.$private-is-internal-build,
-    rgba(if($is-dark, #fff, #000), 0.12),
-    inspection.get-theme-color($theme, foreground, divider)
-  );
-
   @return (
-    disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    disabled-outline-color: $outline,
-    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
-    outline-color: $outline,
-    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    // Color of the element that shows the hover, focus and pressed states.
     state-layer-color: inspection.get-theme-color($theme, foreground, base),
+
+    // Color of the element that shows the hover, focus and pressed states while disabled.
+    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+
+    // Color of the ripple element.
+    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+
+    // Opacity of the ripple when the button is hovered.
+    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+
+    // Opacity of the ripple when the button is focused.
+    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+
+    // Opacity of the ripple when the button is pressed.
+    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
   );
 }
 
@@ -53,11 +54,6 @@ $prefix: (mat, outlined-button);
   $ripple-opacity: 0.1;
 
   @return (
-    label-text-color: inspection.get-theme-color($theme, $palette-name, default),
-    // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
-    // there are a bunch of tests internally that depend on it. We should remove this and clean
-    // up the screenshots separately.
-    outline-color: map.get(get-color-tokens($theme), outline-color),
     state-layer-color: $color,
     ripple-color: if(
       meta.type-of($color) == color,
@@ -68,31 +64,15 @@ $prefix: (mat, outlined-button);
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return (
-    label-text-font: inspection.get-theme-typography($theme, button, font-family),
-    label-text-size: inspection.get-theme-typography($theme, button, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
-    label-text-transform: none,
-  );
+  @return ();
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   @return (
-    container-height:
-    map.get(
-        (
-          0: 36px,
-          -1: 32px,
-          -2: 28px,
-          -3: 24px,
-        ),
-        $scale
-    ),
-    touch-target-display: if($scale < -1, none, block),
+    touch-target-display: if($density-scale < -1, none, block),
   );
 }
 

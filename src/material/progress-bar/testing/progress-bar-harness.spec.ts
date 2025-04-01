@@ -2,7 +2,7 @@ import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatProgressBarModule} from '../module';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressBarHarness} from './progress-bar-harness';
 
 describe('MatProgressBarHarness', () => {

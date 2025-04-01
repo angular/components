@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "slide-toggle",
     srcs = glob(
         ["**/*.ts"],
@@ -14,10 +13,6 @@ ng_project(
         "**/*.css",
     ]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@types/jasmine",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/button",
@@ -26,6 +21,9 @@ ng_project(
         "//src/material/radio",
         "//src/material/slide-toggle",
         "//src/material/slide-toggle/testing",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//@types/jasmine",
     ],
 )
 
@@ -38,18 +36,16 @@ filegroup(
     ]),
 )
 
-ts_project(
+ng_test_library(
     name = "unit_tests_lib",
-    testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":slide-toggle",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/slide-toggle",
         "//src/material/slide-toggle/testing",
+        "@npm//@angular/forms",
     ],
 )
 

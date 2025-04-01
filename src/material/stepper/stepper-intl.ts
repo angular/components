@@ -28,20 +28,12 @@ export class MatStepperIntl {
   editableLabel: string = 'Editable';
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl) {
   return parentIntl || new MatStepperIntl();
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_STEPPER_INTL_PROVIDER = {
   provide: MatStepperIntl,
   deps: [[new Optional(), new SkipSelf(), MatStepperIntl]],

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {HarnessEnvironment, HarnessLoader, TestElement} from '../../testing';
+import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
 import * as webdriver from 'selenium-webdriver';
 import {SeleniumWebDriverElement} from './selenium-web-driver-element';
 

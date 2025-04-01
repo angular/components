@@ -19,7 +19,7 @@ import {
   inject,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatFormField, MAT_FORM_FIELD} from '../form-field';
+import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
@@ -57,12 +57,10 @@ export interface MatChipInputEvent {
     '(focus)': '_focus()',
     '(input)': '_onInput()',
     '[id]': 'id',
-    '[attr.disabled]': 'disabled && !disabledInteractive ? "" : null',
+    '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
     '[attr.aria-invalid]': '_chipGrid && _chipGrid.ngControl ? _chipGrid.ngControl.invalid : null',
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
-    '[attr.aria-disabled]': 'disabled && disabledInteractive ? "true" : null',
-    '[attr.readonly]': '_getReadonlyAttribute()',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
   },
 })
@@ -83,7 +81,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
       this._chipGrid.registerInput(this);
     }
   }
-  protected _chipGrid: MatChipGrid;
+  private _chipGrid: MatChipGrid;
 
   /**
    * Whether or not the chipEnd event will be emitted when the input is blurred.
@@ -119,14 +117,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   }
   private _disabled: boolean = false;
 
-  /** Whether the input is readonly. */
-  @Input({transform: booleanAttribute})
-  readonly: boolean = false;
-
-  /** Whether the input should remain interactive when it is disabled. */
-  @Input({alias: 'matChipInputDisabledInteractive', transform: booleanAttribute})
-  disabledInteractive: boolean;
-
   /** Whether the input is empty. */
   get empty(): boolean {
     return !this.inputElement.value;
@@ -143,7 +133,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
     this.separatorKeyCodes = defaultOptions.separatorKeyCodes;
-    this.disabledInteractive = defaultOptions.inputDisabledInteractive ?? false;
 
     if (formField) {
       this.inputElement.classList.add('mat-mdc-form-field-input-control');
@@ -233,10 +222,5 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Checks whether a keycode is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
-  }
-
-  /** Gets the value to set on the `readonly` attribute. */
-  protected _getReadonlyAttribute(): string | null {
-    return this.readonly || (this.disabled && this.disabledInteractive) ? 'true' : null;
   }
 }

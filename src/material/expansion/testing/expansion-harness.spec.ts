@@ -2,7 +2,7 @@ import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatAccordionTogglePosition, MatExpansionModule} from '../../expansion';
+import {MatAccordionTogglePosition, MatExpansionModule} from '@angular/material/expansion';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAccordionHarness} from './accordion-harness';
 import {MatExpansionPanelHarness} from './expansion-harness';

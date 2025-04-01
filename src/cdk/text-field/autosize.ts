@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceNumberProperty} from '../coercion';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -20,8 +20,8 @@ import {
   Renderer2,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {Platform} from '../platform';
-import {_CdkPrivateStyleLoader} from '../private';
+import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {auditTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {_CdkTextFieldStyleLoader} from './text-field-style-loader';
@@ -117,8 +117,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _cachedLineHeight?: number;
   /** Cached height of a textarea with only the placeholder. */
   private _cachedPlaceholderHeight?: number;
-  /** Cached scroll top of a textarea */
-  private _cachedScrollTop: number;
 
   /** Used to reference correct document/window */
   protected _document? = inject(DOCUMENT, {optional: true});
@@ -305,7 +303,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
     this._cacheTextareaLineHeight();
     this._cacheTextareaPlaceholderHeight();
-    this._cachedScrollTop = this._textareaElement.scrollTop;
 
     // If we haven't determined the line-height yet, we know we're still hidden and there's no point
     // in checking the height of the textarea.
@@ -370,7 +367,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // it to receive focus on IE and Edge.
     if (!this._destroyed.isStopped && this._hasFocus) {
       textarea.setSelectionRange(selectionStart, selectionEnd);
-      textarea.scrollTop = this._cachedScrollTop;
     }
   }
 }

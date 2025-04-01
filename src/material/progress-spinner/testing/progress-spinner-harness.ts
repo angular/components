@@ -12,7 +12,7 @@ import {
   ComponentHarnessConstructor,
   HarnessPredicate,
 } from '@angular/cdk/testing';
-import {ProgressSpinnerMode} from '../progress-spinner';
+import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import {ProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters';
 
 /** Harness for interacting with a MDC based mat-progress-spinner in tests. */

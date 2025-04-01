@@ -24,7 +24,7 @@ import {
   Signal,
   signal,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS} from '../core';
+import {DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -35,13 +35,13 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {MAT_FORM_FIELD} from '../form-field';
+import {MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MatTimepicker} from './timepicker';
-import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
+import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
 import {validateAdapter} from './util';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
 
 /**
  * Input that can be used to enter time and connect to a `mat-timepicker`.
@@ -60,7 +60,7 @@ import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
     '[attr.mat-timepicker-id]': 'timepicker()?.panelId',
     '[disabled]': 'disabled()',
     '(blur)': '_handleBlur()',
-    '(input)': '_handleInput($event)',
+    '(input)': '_handleInput($event.target.value)',
     '(keydown)': '_handleKeydown($event)',
   },
   providers: [
@@ -82,6 +82,7 @@ import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 })
 export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, OnDestroy {
   private _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private _document = inject(DOCUMENT);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
   private _formField = inject(MAT_FORM_FIELD, {optional: true});
@@ -260,8 +261,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   };
 
   /** Handles the `input` event. */
-  protected _handleInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  protected _handleInput(value: string) {
     const currentValue = this.value();
     const date = this._dateAdapter.parseTime(value, this._dateFormats.parse.timeInput);
     const hasChanged = !this._dateAdapter.sameTime(date, currentValue);
@@ -405,7 +405,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /** Whether the input is currently focused. */
   private _hasFocus(): boolean {
-    return _getFocusedElementPierceShadowDom() === this._elementRef.nativeElement;
+    return this._document.activeElement === this._elementRef.nativeElement;
   }
 
   /** Gets a function that can be used to validate the input. */

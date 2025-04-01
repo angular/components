@@ -3,7 +3,7 @@
   <cdk-nested-tree-node #treeNode="cdkNestedTreeNode" *cdkTreeNodeDef="let node"
       class="example-tree-node">
     <!-- use a disabled button to provide padding for tree leaf -->
-    <button matIconButton disabled></button>
+    <button mat-icon-button disabled></button>
     {{node.name}}
   </cdk-nested-tree-node>
   <!-- This is the tree node template for expandable nodes -->
@@ -14,7 +14,7 @@
     isExpandable
     class="example-tree-node">
     <button
-      matIconButton
+      mat-icon-button
       class="example-toggle"
       [attr.aria-label]="'Toggle ' + node.name"
       cdkTreeNodeToggle>

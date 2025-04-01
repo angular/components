@@ -12,7 +12,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-expansion.$prefix,
         tokens-mat-expansion.get-unthemable-tokens()
       );
@@ -25,7 +25,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-expansion.$prefix,
         tokens-mat-expansion.get-color-tokens($theme)
       );
@@ -41,7 +41,7 @@
     $theme: inspection.private-get-typography-back-compat-theme($theme);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-expansion.$prefix,
         tokens-mat-expansion.get-typography-tokens($theme)
       );
@@ -54,7 +54,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-expansion.$prefix,
         tokens-mat-expansion.get-density-tokens($theme)
       );

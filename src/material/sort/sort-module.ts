@@ -10,7 +10,7 @@ import {NgModule} from '@angular/core';
 import {MatSortHeader} from './sort-header';
 import {MatSort} from './sort';
 import {MAT_SORT_HEADER_INTL_PROVIDER} from './sort-header-intl';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 
 @NgModule({
   imports: [MatCommonModule, MatSort, MatSortHeader],

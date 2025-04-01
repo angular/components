@@ -18,7 +18,7 @@ import {
   InputSignalWithTransform,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatIconButton} from '../button';
+import {MatIconButton} from '@angular/material/button';
 import {MAT_TIMEPICKER_CONFIG} from './util';
 import type {MatTimepicker} from './timepicker';
 

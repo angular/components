@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '../core';
+import {MatNativeDateModule} from '@angular/material/core';
 
 import {JAN, FEB, MAR} from '../testing';
 import {

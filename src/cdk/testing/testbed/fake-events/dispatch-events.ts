@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ModifierKeys} from '../../test-element';
+import {ModifierKeys} from '@angular/cdk/testing';
 import {
   createFakeEvent,
   createKeyboardEvent,

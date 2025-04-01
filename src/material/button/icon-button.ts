@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MatButtonBase} from './button-base';
+import {MAT_BUTTON_HOST, MatButtonBase} from './button-base';
 
 /**
  * Material Design icon button component. This type of button displays a single interactive icon for
@@ -15,12 +15,10 @@ import {MatButtonBase} from './button-base';
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  selector: `button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]`,
+  selector: `button[mat-icon-button], a[mat-icon-button]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
-  host: {
-    'class': 'mdc-icon-button mat-mdc-icon-button',
-  },
+  host: MAT_BUTTON_HOST,
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,8 @@
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "selection",
     srcs = glob(["**/*.ts"]),
     assets = glob([
@@ -10,13 +10,11 @@ ng_project(
         "**/*.css",
     ]),
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
         "//src/cdk-experimental/selection",
         "//src/cdk/collections",
         "//src/cdk/table",
         "//src/material/checkbox",
+        "@npm//@angular/forms",
     ],
 )
 

@@ -26,7 +26,6 @@
     "src/cdk/schematics/**/*",
     "src/material/schematics/**/*",
     "src/material/schematics/ng-generate/theme-color/**/*.bazel",
-    "src/material/schematics/ng-generate/theme-color/index_bundled.d.ts",
     "src/google-maps/schematics/**/*",
     "src/cdk/testing/testbed/zone-types.d.ts",
     "src/material/_theming.scss",

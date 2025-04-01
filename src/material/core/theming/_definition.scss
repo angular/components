@@ -7,12 +7,12 @@
 @use './config-validation';
 
 // Prefix used for component token fallback variables, e.g.
-// `color: var(--mat-text-button-label-text-color, var(--mat-sys-primary));`
+// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
 $system-fallback-prefix: mat-sys;
 
 // Default system level prefix to use when directly calling the `system-level-*` mixins.
 // Prefix used for component token fallback variables, e.g.
-// `color: var(--mat-text-button-label-text-color, var(--mat-sys-primary));`
+// `color: var(--mdc-text-button-label-text-color, var(--mat-sys-primary));`
 // TODO: Remove this variable after internal clients are migrated from "sys"
 $system-level-prefix: mat-sys;
 

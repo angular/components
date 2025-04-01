@@ -1,15 +1,16 @@
 section {
-  display: flex;
-  align-items: center;
+  display: table;
 }
 
 .example-label {
+  display: table-cell;
   font-size: 14px;
-  margin: 0 16px 0 8px;
+  margin-left: 8px;
   min-width: 120px;
 }
 
 .example-button-row {
+  display: table-cell;
   max-width: 600px;
 }
 
@@ -21,4 +22,10 @@ section {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 140px;
 }

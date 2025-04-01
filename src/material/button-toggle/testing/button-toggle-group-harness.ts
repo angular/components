@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {MatButtonToggleAppearance} from '../button-toggle';
+import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 import {ButtonToggleGroupHarnessFilters} from './button-toggle-group-harness-filters';
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 import {MatButtonToggleHarness} from './button-toggle-harness';

@@ -8,7 +8,7 @@ import {
   MatDialogConfig,
   MatDialogContent,
   MatDialogTitle,
-} from '../../dialog';
+} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogHarness} from './dialog-harness';
 

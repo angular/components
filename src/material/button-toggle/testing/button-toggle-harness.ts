@@ -8,7 +8,7 @@
 
 import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {MatButtonToggleAppearance} from '../button-toggle';
+import {MatButtonToggleAppearance} from '@angular/material/button-toggle';
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 
 /** Harness for interacting with a standard mat-button-toggle in tests. */

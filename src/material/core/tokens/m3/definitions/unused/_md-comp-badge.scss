@@ -1,0 +1,54 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@use 'sass:map';
+
+@use './md-sys-color';
+
+@use './md-sys-shape';
+
+@use './md-sys-typescale';
+
+$_default: (
+  'md-sys-color': md-sys-color.values-light(),
+  'md-sys-shape': md-sys-shape.values(),
+  'md-sys-typescale': md-sys-typescale.values(),
+);
+
+@function values($deps: $_default, $exclude-hardcoded-values: false) {
+  @return (
+    'color': map.get($deps, 'md-sys-color', 'error'),
+    'large-color': map.get($deps, 'md-sys-color', 'error'),
+    'large-label-text-color': map.get($deps, 'md-sys-color', 'on-error'),
+    'large-label-text-font':
+      map.get($deps, 'md-sys-typescale', 'label-small-font'),
+    'large-label-text-line-height':
+      map.get($deps, 'md-sys-typescale', 'label-small-line-height'),
+    'large-label-text-size':
+      map.get($deps, 'md-sys-typescale', 'label-small-size'),
+    'large-label-text-tracking':
+      map.get($deps, 'md-sys-typescale', 'label-small-tracking'),
+    // Warning: risk of reduced fidelity from using this composite typography token.
+    // Tokens md.comp.badge.large.label-text.tracking cannot be represented in the "font"
+    // property shorthand. Consider using the discrete properties instead.
+    'large-label-text-type':
+      if(
+        $exclude-hardcoded-values,
+        null,
+          map.get($deps, 'md-sys-typescale', 'label-small-weight')
+          map.get($deps, 'md-sys-typescale', 'label-small-size') #{'/'} map.get(
+            $deps,
+            'md-sys-typescale',
+            'label-small-line-height'
+          ) map.get($deps, 'md-sys-typescale', 'label-small-font')
+      ),
+    'large-label-text-weight':
+      map.get($deps, 'md-sys-typescale', 'label-small-weight'),
+    'large-shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'large-size': if($exclude-hardcoded-values, null, 16px),
+    'shape': map.get($deps, 'md-sys-shape', 'corner-full'),
+    'size': if($exclude-hardcoded-values, null, 6px)
+  );
+}

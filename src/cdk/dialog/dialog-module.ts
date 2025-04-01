@@ -7,9 +7,9 @@
  */
 
 import {NgModule} from '@angular/core';
-import {OverlayModule} from '../overlay';
-import {PortalModule} from '../portal';
-import {A11yModule} from '../a11y';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {PortalModule} from '@angular/cdk/portal';
+import {A11yModule} from '@angular/cdk/a11y';
 import {Dialog} from './dialog';
 import {CdkDialogContainer} from './dialog-container';
 
@@ -24,14 +24,3 @@ import {CdkDialogContainer} from './dialog-container';
   providers: [Dialog],
 })
 export class DialogModule {}
-
-// Re-export needed by the Angular compiler.
-// See: https://github.com/angular/components/issues/30663.
-// Note: These exports need to be stable and shouldn't be renamed unnecessarily because
-// consuming libraries might have references to them in their own partial compilation output.
-export {
-  CdkPortal as ɵɵCdkPortal,
-  CdkPortalOutlet as ɵɵCdkPortalOutlet,
-  TemplatePortalDirective as ɵɵTemplatePortalDirective,
-  PortalHostDirective as ɵɵPortalHostDirective,
-} from '../portal';

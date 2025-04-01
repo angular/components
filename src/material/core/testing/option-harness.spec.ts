@@ -7,7 +7,7 @@ import {
   MatOption,
   MatOptionModule,
   MatOptionParentComponent,
-} from '../option';
+} from '@angular/material/core';
 import {MatOptionHarness} from './option-harness';
 
 describe('MatOptionHarness', () => {

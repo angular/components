@@ -1,9 +1,8 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "dev-app",
     srcs = glob(["**/*.ts"]),
     assets = [
@@ -11,9 +10,6 @@ ng_project(
         ":dev_app_layout_scss",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/router",
         "//src/cdk/bidi",
         "//src/cdk/overlay",
         "//src/material/button",
@@ -23,6 +19,7 @@ ng_project(
         "//src/material/sidenav",
         "//src/material/toolbar",
         "//src/material/tooltip",
+        "@npm//@angular/router",
     ],
 )
 

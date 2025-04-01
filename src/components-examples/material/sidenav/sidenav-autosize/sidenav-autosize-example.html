@@ -4,13 +4,13 @@
     @if (showFiller) {
       <p>Lorem, ipsum dolor sit amet consectetur.</p>
     }
-    <button (click)="showFiller = !showFiller" matButton="elevated">
+    <button (click)="showFiller = !showFiller" mat-raised-button>
       Toggle extra text
     </button>
   </mat-drawer>
 
   <div class="example-sidenav-content">
-    <button type="button" matButton (click)="drawer.toggle()">
+    <button type="button" mat-button (click)="drawer.toggle()">
       Toggle sidenav
     </button>
   </div>

@@ -7,7 +7,7 @@ import {
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, inject, waitForAsync} from '@angular/core/testing';
-import {DateAdapter, MatNativeDateModule} from '../core';
+import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {MatCalendar} from './calendar';

@@ -4,7 +4,6 @@
 .mat-mdc-unelevated-button:not(.mdc-button--outlined),
 .mat-mdc-raised-button:not(.mdc-button--outlined),
 .mat-mdc-outlined-button:not(.mdc-button--outlined),
-.mat-mdc-button-base.mat-tonal-button,
 .mat-mdc-icon-button.mat-mdc-icon-button,
 .mat-mdc-outlined-button .mdc-button__ripple {
   @include cdk.high-contrast {

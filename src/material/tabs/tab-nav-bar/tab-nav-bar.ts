@@ -10,16 +10,19 @@ import {
   AfterViewInit,
   booleanAttribute,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   forwardRef,
   Input,
+  NgZone,
   numberAttribute,
   OnDestroy,
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  ANIMATION_MODULE_TYPE,
   inject,
   HostAttributeToken,
 } from '@angular/core';
@@ -31,9 +34,11 @@ import {
   RippleTarget,
   ThemePalette,
   _StructuralStylesLoader,
-  _animationsDisabled,
-} from '../../core';
+} from '@angular/material/core';
 import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
+import {ViewportRuler} from '@angular/cdk/scrolling';
+import {Platform} from '@angular/cdk/platform';
 import {MatInkBar, InkBarItem} from '../ink-bar';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -61,7 +66,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-primary]': 'color !== "warn" && color !== "accent"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
-    '[class._mat-animation-noopable]': '_animationsDisabled',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
     '[style.--mat-tab-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
@@ -155,9 +160,16 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   constructor(...args: unknown[]);
 
   constructor() {
+    const elementRef = inject(ElementRef);
+    const dir = inject(Directionality, {optional: true});
+    const ngZone = inject(NgZone);
+    const changeDetectorRef = inject(ChangeDetectorRef);
+    const viewportRuler = inject(ViewportRuler);
+    const platform = inject(Platform);
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
     const defaultConfig = inject<MatTabsConfig>(MAT_TABS_CONFIG, {optional: true});
 
-    super();
+    super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
     this.disablePagination =
       defaultConfig && defaultConfig.disablePagination != null
         ? defaultConfig.disablePagination
@@ -320,10 +332,12 @@ export class MatTabLink
       optional: true,
     });
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.rippleConfig = globalRippleOptions || {};
     this.tabIndex = tabIndex == null ? 0 : parseInt(tabIndex) || 0;
 
-    if (_animationsDisabled()) {
+    if (animationMode === 'NoopAnimations') {
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
     }
 

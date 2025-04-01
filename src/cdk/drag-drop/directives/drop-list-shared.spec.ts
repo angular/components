@@ -1,6 +1,6 @@
-import {Directionality} from '../../bidi';
-import {Platform, _supportsShadowDom} from '../../platform';
-import {CdkScrollable, ViewportRuler} from '../../scrolling';
+import {Directionality} from '@angular/cdk/bidi';
+import {Platform, _supportsShadowDom} from '@angular/cdk/platform';
+import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createMouseEvent,
   createTouchEvent,
@@ -8,7 +8,7 @@ import {
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchTouchEvent,
-} from '../../testing/private';
+} from '@angular/cdk/testing/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -4994,7 +4994,7 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
     [id]="dropZoneId"
     [cdkDropListData]="items"
     [cdkDropListDisabled]="dropDisabled()"
-    [cdkDropListLockAxis]="dropLockAxis()!"
+    [cdkDropListLockAxis]="dropLockAxis()"
     (cdkDropListSorted)="sortedSpy($event)"
     (cdkDropListDropped)="droppedSpy($event)">
     <div
@@ -5165,7 +5165,7 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
 // https://github.com/angular/angular/pull/52515
 @Component({
   template: `
-    <div cdkDropList style="width: 100px; background: pink;" [cdkDropListLockAxis]="dropLockAxis()!">
+    <div cdkDropList style="width: 100px; background: pink;" [cdkDropListLockAxis]="dropLockAxis()">
       @for (item of items; track item) {
         <div
           cdkDrag
@@ -5376,7 +5376,7 @@ const CONNECTED_DROP_ZONES_TEMPLATE = `
     cdkDropList
     #extraZone="cdkDropList"
     [cdkDropListData]="extra"
-    [cdkDropListConnectedTo]="extraConnectedTo()!"
+    [cdkDropListConnectedTo]="extraConnectedTo()"
     (cdkDropListDropped)="droppedSpy($event)"
     (cdkDropListEntered)="enteredSpy($event)">
     @for (item of extra; track item) {

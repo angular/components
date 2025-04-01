@@ -7,7 +7,7 @@
  */
 import {MediaMatcher} from './media-matcher';
 import {inject} from '@angular/core/testing';
-import {Platform} from '../platform';
+import {Platform} from '@angular/cdk/platform';
 
 describe('MediaMatcher', () => {
   let mediaMatcher: MediaMatcher;

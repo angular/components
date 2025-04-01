@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {InjectionToken} from '@angular/core';
-import {ThemePalette} from '../core';
+import {ThemePalette} from '@angular/material/core';
 
 /** Default `mat-checkbox` options that can be overridden. */
 export interface MatCheckboxDefaultOptions {
@@ -35,11 +35,7 @@ export const MAT_CHECKBOX_DEFAULT_OPTIONS = new InjectionToken<MatCheckboxDefaul
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY(): MatCheckboxDefaultOptions {
   return {
     color: 'accent',

@@ -7,7 +7,6 @@
  */
 
 import {Injectable, InjectionToken, Optional, SkipSelf, FactoryProvider} from '@angular/core';
-// TODO: Change to relative import
 import {DateAdapter} from '@angular/material/core';
 import {DateRange} from './date-selection-model';
 
@@ -132,11 +131,7 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
   }
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
   parent: MatDateRangeSelectionStrategy<unknown>,
   adapter: DateAdapter<unknown>,
@@ -144,11 +139,7 @@ export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
   return parent || new DefaultMatCalendarRangeStrategy(adapter);
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_CALENDAR_RANGE_STRATEGY_PROVIDER: FactoryProvider = {
   provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
   deps: [[new Optional(), new SkipSelf(), MAT_DATE_RANGE_SELECTION_STRATEGY], DateAdapter],

@@ -24,7 +24,7 @@
     @include optgroup-theme.base($theme);
     @include pseudo-checkbox-theme.base($theme);
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-app.$prefix,
         tokens-mat-app.get-unthemable-tokens()
       );
@@ -41,7 +41,7 @@
     @include optgroup-theme.color($theme);
     @include pseudo-checkbox-theme.color($theme);
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-app.$prefix,
         tokens-mat-app.get-color-tokens($theme)
       );

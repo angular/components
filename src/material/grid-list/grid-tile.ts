@@ -18,7 +18,7 @@ import {
   ChangeDetectionStrategy,
   inject,
 } from '@angular/core';
-import {MatLine, setLines} from '../core';
+import {MatLine, setLines} from '@angular/material/core';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 

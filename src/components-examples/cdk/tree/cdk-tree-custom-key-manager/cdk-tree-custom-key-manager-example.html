@@ -5,7 +5,7 @@
                  [isDisabled]="!shouldRender(node)"
                  class="example-tree-node">
     <!-- use a disabled button to provide padding for tree leaf -->
-    <button matIconButton disabled></button>
+    <button mat-icon-button disabled></button>
     {{node.name}}
   </cdk-tree-node>
   <!-- This is the tree node template for expandable nodes -->
@@ -17,7 +17,7 @@
                  (expandedChange)="node.isExpanded = $event"
                  class="example-tree-node"
                  tabindex="0">
-    <button matIconButton cdkTreeNodeToggle
+    <button mat-icon-button cdkTreeNodeToggle
             [attr.aria-label]="'Toggle ' + node.name"
             [style.visibility]="node.expandable ? 'visible' : 'hidden'">
       <mat-icon class="mat-icon-rtl-mirror">

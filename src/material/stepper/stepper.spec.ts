@@ -45,9 +45,9 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {MatRipple, ThemePalette} from '../core';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
+import {MatRipple, ThemePalette} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable, Subject, merge} from 'rxjs';
@@ -1213,7 +1213,7 @@ describe('MatStepper', () => {
       fixture.detectChanges();
       expect(stepper.steps.map(step => step.interacted)).toEqual([true, true, false]);
 
-      stepper.previous();
+      stepper.next();
       fixture.detectChanges();
       expect(stepper.steps.map(step => step.interacted)).toEqual([true, true, true]);
     });
@@ -1240,33 +1240,9 @@ describe('MatStepper', () => {
       fixture.detectChanges();
       expect(interactedSteps).toEqual([0, 1]);
 
-      stepper.previous();
-      fixture.detectChanges();
-      expect(interactedSteps).toEqual([0, 1, 2]);
-      subscription.unsubscribe();
-    });
-
-    it('should not emit interacted event if selectedIndex does not change', () => {
-      const fixture = createComponent(SimpleMatHorizontalStepperApp);
-      fixture.detectChanges();
-
-      const stepper: MatStepper = fixture.debugElement.query(
-        By.directive(MatStepper),
-      ).componentInstance;
-      const interactedSteps: number[] = [];
-      const subscription = merge(...stepper.steps.map(step => step.interactedStream)).subscribe(
-        step => interactedSteps.push(stepper.steps.toArray().indexOf(step as MatStep)),
-      );
-
-      expect(interactedSteps).toEqual([]);
-
       stepper.next();
       fixture.detectChanges();
-      expect(interactedSteps).toEqual([0]);
-
-      stepper.selectedIndex = 1;
-      fixture.detectChanges();
-      expect(interactedSteps).toEqual([0]);
+      expect(interactedSteps).toEqual([0, 1, 2]);
       subscription.unsubscribe();
     });
 
@@ -1855,16 +1831,16 @@ function createComponent<T>(
           <mat-error>This field is required</mat-error>
         </mat-form-field>
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
@@ -1891,23 +1867,23 @@ class MatHorizontalStepperWithErrorsApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [color]="secondStepTheme()">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [label]="inputLabel" optional>
         Content 3
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
@@ -1929,8 +1905,8 @@ class SimpleMatHorizontalStepperApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
       @if (showStepTwo()) {
@@ -1938,16 +1914,16 @@ class SimpleMatHorizontalStepperApp {
           <ng-template matStepLabel>Step 2</ng-template>
           Content 2
           <div>
-            <button matButton matStepperPrevious>Back</button>
-            <button matButton matStepperNext>Next</button>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
           </div>
         </mat-step>
       }
       <mat-step [label]="inputLabel()">
         Content 3
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>

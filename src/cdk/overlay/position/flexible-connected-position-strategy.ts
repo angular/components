@@ -8,7 +8,7 @@
 
 import {PositionStrategy} from './position-strategy';
 import {ElementRef} from '@angular/core';
-import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '../../scrolling';
+import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '@angular/cdk/scrolling';
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
@@ -18,8 +18,8 @@ import {
 } from './connected-position';
 import {Observable, Subscription, Subject} from 'rxjs';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
-import {coerceCssPixelValue, coerceArray} from '../../coercion';
-import {Platform} from '../../platform';
+import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '../overlay-container';
 import {OverlayRef} from '../overlay-ref';
 

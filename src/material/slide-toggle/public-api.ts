@@ -9,3 +9,4 @@
 export * from './slide-toggle';
 export * from './slide-toggle-config';
 export * from './module';
+export * from './slide-toggle-required-validator';

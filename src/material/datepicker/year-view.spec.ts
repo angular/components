@@ -12,7 +12,7 @@ import {
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatNativeDateModule} from '../core';
+import {MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
 import {MatCalendarBody} from './calendar-body';

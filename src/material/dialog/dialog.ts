@@ -23,7 +23,6 @@ import {defer, Observable, Subject} from 'rxjs';
 import {Dialog, DialogConfig} from '@angular/cdk/dialog';
 import {startWith} from 'rxjs/operators';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {_animationsDisabled} from '../core';
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
 export const MAT_DIALOG_DATA = new InjectionToken<any>('MatMdcDialogData');
@@ -46,6 +45,28 @@ export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
 );
 
 /**
+ * @docs-private
+ * @deprecated No longer used. To be removed.
+ * @breaking-change 19.0.0
+ */
+export function MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY(
+  overlay: Overlay,
+): () => ScrollStrategy {
+  return () => overlay.scrollStrategies.block();
+}
+
+/**
+ * @docs-private
+ * @deprecated No longer used. To be removed.
+ * @breaking-change 19.0.0
+ */
+export const MAT_DIALOG_SCROLL_STRATEGY_PROVIDER = {
+  provide: MAT_DIALOG_SCROLL_STRATEGY,
+  deps: [Overlay],
+  useFactory: MAT_DIALOG_SCROLL_STRATEGY_PROVIDER_FACTORY,
+};
+
+/**
  * Service to open Material Design modal dialogs.
  */
 @Injectable({providedIn: 'root'})
@@ -56,7 +77,6 @@ export class MatDialog implements OnDestroy {
   private _parentDialog = inject(MatDialog, {optional: true, skipSelf: true});
   private _idGenerator = inject(_IdGenerator);
   protected _dialog = inject(Dialog);
-  private _animationsDisabled = _animationsDisabled();
 
   private readonly _openDialogsAtThisLevel: MatDialogRef<any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
@@ -148,10 +168,6 @@ export class MatDialog implements OnDestroy {
       // Disable closing on detachments so that we can sync up the animation.
       // The Material dialog ref handles this manually.
       closeOnOverlayDetachments: false,
-      disableAnimations:
-        this._animationsDisabled ||
-        config.enterAnimationDuration?.toLocaleString() === '0' ||
-        config.exitAnimationDuration?.toString() === '0',
       container: {
         type: this._dialogContainerType,
         providers: () => [

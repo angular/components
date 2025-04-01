@@ -13,7 +13,6 @@ import {Injectable, TemplateRef, InjectionToken, OnDestroy, inject} from '@angul
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
-import {_animationsDisabled} from '../core';
 
 /** Injection token that can be used to specify default bottom sheet options. */
 export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomSheetConfig>(
@@ -27,7 +26,6 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomShee
 export class MatBottomSheet implements OnDestroy {
   private _overlay = inject(Overlay);
   private _parentBottomSheet = inject(MatBottomSheet, {optional: true, skipSelf: true});
-  private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatBottomSheetConfig>(MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -91,7 +89,6 @@ export class MatBottomSheet implements OnDestroy {
       container: MatBottomSheetContainer,
       scrollStrategy: _config.scrollStrategy || this._overlay.scrollStrategies.block(),
       positionStrategy: this._overlay.position().global().centerHorizontally().bottom('0'),
-      disableAnimations: this._animationsDisabled,
       templateContext: () => ({bottomSheetRef: ref}),
       providers: (cdkRef, _cdkConfig, container) => {
         ref = new MatBottomSheetRef(cdkRef, _config, container as MatBottomSheetContainer);

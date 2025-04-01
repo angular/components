@@ -1,15 +1,14 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "testing",
     testonly = True,
     srcs = glob(["**/*.ts"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/@types/google.maps",
-        "//:node_modules/@types/jasmine",
         "//src/google-maps",
+        "@npm//@types/google.maps",
+        "@npm//@types/jasmine",
     ],
 )

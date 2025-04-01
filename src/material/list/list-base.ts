@@ -18,17 +18,17 @@ import {
   NgZone,
   OnDestroy,
   QueryList,
+  ANIMATION_MODULE_TYPE,
   Injector,
 } from '@angular/core';
 import {
-  _animationsDisabled,
   _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleConfig,
   RippleGlobalOptions,
   RippleRenderer,
   RippleTarget,
-} from '../core';
+} from '@angular/material/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {Subscription, merge} from 'rxjs';
 import {
@@ -109,7 +109,7 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   _isButtonElement: boolean;
 
   /** Whether animations are disabled. */
-  _noopAnimations = _animationsDisabled();
+  _noopAnimations: boolean;
 
   @ContentChildren(MatListItemAvatar, {descendants: false}) _avatars: QueryList<never>;
   @ContentChildren(MatListItemIcon, {descendants: false}) _icons: QueryList<never>;
@@ -183,9 +183,12 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
     const globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
       optional: true,
     });
+    const animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
+
     this.rippleConfig = globalRippleOptions || {};
     this._hostElement = this._elementRef.nativeElement;
     this._isButtonElement = this._hostElement.nodeName.toLowerCase() === 'button';
+    this._noopAnimations = animationMode === 'NoopAnimations';
 
     if (this._listBase && !this._listBase._isNonInteractive) {
       this._initInteractiveListItem();

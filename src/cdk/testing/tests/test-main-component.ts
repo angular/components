@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ENTER} from '../../keycodes';
-import {_supportsShadowDom} from '../../platform';
+import {ENTER} from '@angular/cdk/keycodes';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   ChangeDetectionStrategy,

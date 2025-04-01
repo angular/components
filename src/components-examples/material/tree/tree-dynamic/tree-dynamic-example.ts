@@ -9,7 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTreeModule} from '@angular/material/tree';
 
 /** Flat node with expandable and level information */
-class DynamicFlatNode {
+export class DynamicFlatNode {
   constructor(
     public item: string,
     public level = 1,

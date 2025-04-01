@@ -1,14 +1,17 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "example-module-lib",
     srcs = glob(["**/*.ts"]),
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/typescript",
+        "@npm//@types/node",
+        "@npm//typescript",
     ],
 )
 
@@ -16,7 +19,7 @@ nodejs_binary(
     name = "bazel-bin",
     data = [
         ":example-module.template",
-        ":example-module-lib_legacy",
+        ":example-module-lib",
         "@npm//typescript",
     ],
     entry_point = ":bazel-bin.ts",

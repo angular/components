@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarnessConstructor, HarnessPredicate} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {DatepickerInputHarnessFilters} from './datepicker-harness-filters';
 
 /** Sets up the filter predicates for a datepicker input harness. */

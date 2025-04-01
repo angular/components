@@ -6,11 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {
+  _getTextWithExcludedElements,
+  ElementDimensions,
+  EventData,
+  getNoKeysSpecifiedError,
+  ModifierKeys,
+  TestElement,
+  TestKey,
+  TextOptions,
+} from '@angular/cdk/testing';
 import * as webdriver from 'selenium-webdriver';
-import {ElementDimensions} from '../element-dimensions';
-import {EventData, ModifierKeys, TestElement, TestKey, TextOptions} from '../test-element';
-import {getNoKeysSpecifiedError} from '../test-element-errors';
-import {_getTextWithExcludedElements} from '../text-filtering';
 import {getSeleniumWebDriverModifierKeys, seleniumWebDriverKeyMap} from './selenium-webdriver-keys';
 
 /** A `TestElement` implementation for WebDriver. */

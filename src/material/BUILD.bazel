@@ -5,13 +5,11 @@ load(
     "MATERIAL_TARGETS",
     "MATERIAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "sass_library")
-load("//tools:defaults2.bzl", "ts_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "material",
     srcs = ["index.ts"],
 )
@@ -55,5 +53,5 @@ ng_package(
     ] + MATERIAL_SCSS_LIBS,
     nested_packages = ["//src/material/schematics:npm_package"],
     tags = ["release-package"],
-    deps = [get_legacy_label(t) for t in MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS],
+    deps = MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS,
 )

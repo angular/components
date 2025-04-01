@@ -622,7 +622,7 @@ describe('MatBottomSheet', () => {
     beforeEach(() => document.body.appendChild(overlayContainerElement));
     afterEach(() => overlayContainerElement.remove());
 
-    it('should focus the first tabbable element by default', fakeAsync(() => {
+    it('should focus the bottom sheet container by default', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {
         viewContainerRef: testViewContainerRef,
       });
@@ -631,7 +631,9 @@ describe('MatBottomSheet', () => {
       flush();
       viewContainerFixture.detectChanges();
 
-      expect(document.activeElement!.tagName).toBe('INPUT');
+      expect(document.activeElement!.tagName)
+        .withContext('Expected bottom sheet container to be focused.')
+        .toBe('MAT-BOTTOM-SHEET-CONTAINER');
     }));
 
     it('should create a focus trap if autoFocus is disabled', fakeAsync(() => {
@@ -667,62 +669,72 @@ describe('MatBottomSheet', () => {
       },
     );
 
-    it('should focus the bottom sheet element on open when autoFocus is set to "dialog"', fakeAsync(() => {
-      bottomSheet.open(PizzaMsg, {
-        viewContainerRef: testViewContainerRef,
-        autoFocus: 'dialog',
-      });
+    it(
+      'should focus the bottom sheet element on open when autoFocus is set to ' +
+        '"dialog" (the default)',
+      fakeAsync(() => {
+        bottomSheet.open(PizzaMsg, {
+          viewContainerRef: testViewContainerRef,
+        });
 
-      viewContainerFixture.detectChanges();
-      flush();
-      viewContainerFixture.detectChanges();
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
 
-      let container = overlayContainerElement.querySelector(
-        '.mat-bottom-sheet-container',
-      ) as HTMLInputElement;
+        let container = overlayContainerElement.querySelector(
+          '.mat-bottom-sheet-container',
+        ) as HTMLInputElement;
 
-      expect(document.activeElement)
-        .withContext('Expected container to be focused on open')
-        .toBe(container);
-    }));
+        expect(document.activeElement)
+          .withContext('Expected container to be focused on open')
+          .toBe(container);
+      }),
+    );
 
-    it('should focus the bottom sheet element on open when autoFocus is set to "first-heading"', fakeAsync(() => {
-      bottomSheet.open(ContentElementDialog, {
-        viewContainerRef: testViewContainerRef,
-        autoFocus: 'first-heading',
-      });
+    it(
+      'should focus the bottom sheet element on open when autoFocus is set to ' + '"first-heading"',
+      fakeAsync(() => {
+        bottomSheet.open(ContentElementDialog, {
+          viewContainerRef: testViewContainerRef,
+          autoFocus: 'first-heading',
+        });
 
-      viewContainerFixture.detectChanges();
-      flush();
-      viewContainerFixture.detectChanges();
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
 
-      let firstHeader = overlayContainerElement.querySelector(
-        'h1[tabindex="-1"]',
-      ) as HTMLInputElement;
+        let firstHeader = overlayContainerElement.querySelector(
+          'h1[tabindex="-1"]',
+        ) as HTMLInputElement;
 
-      expect(document.activeElement)
-        .withContext('Expected first header to be focused on open')
-        .toBe(firstHeader);
-    }));
+        expect(document.activeElement)
+          .withContext('Expected first header to be focused on open')
+          .toBe(firstHeader);
+      }),
+    );
 
-    it('should focus the first element that matches the css selector on open when autoFocus is set to a css selector', fakeAsync(() => {
-      bottomSheet.open(ContentElementDialog, {
-        viewContainerRef: testViewContainerRef,
-        autoFocus: 'p',
-      });
+    it(
+      'should focus the first element that matches the css selector on open when ' +
+        'autoFocus is set to a css selector',
+      fakeAsync(() => {
+        bottomSheet.open(ContentElementDialog, {
+          viewContainerRef: testViewContainerRef,
+          autoFocus: 'p',
+        });
 
-      viewContainerFixture.detectChanges();
-      flush();
-      viewContainerFixture.detectChanges();
+        viewContainerFixture.detectChanges();
+        flush();
+        viewContainerFixture.detectChanges();
 
-      let firstParagraph = overlayContainerElement.querySelector(
-        'p[tabindex="-1"]',
-      ) as HTMLInputElement;
+        let firstParagraph = overlayContainerElement.querySelector(
+          'p[tabindex="-1"]',
+        ) as HTMLInputElement;
 
-      expect(document.activeElement)
-        .withContext('Expected first paragraph to be focused on open')
-        .toBe(firstParagraph);
-    }));
+        expect(document.activeElement)
+          .withContext('Expected first paragraph to be focused on open')
+          .toBe(firstParagraph);
+      }),
+    );
 
     it('should re-focus trigger element when bottom sheet closes', fakeAsync(() => {
       const button = document.createElement('button');

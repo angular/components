@@ -5,7 +5,6 @@ const chalk = require('chalk');
 const path = require('path');
 const {guessPackageName} = require('./util');
 const projectDir = path.join(__dirname, '../');
-const bazel = process.env['BAZEL'] || 'yarn bazel';
 
 if (process.argv.length < 3) {
   console.error(chalk.red('No package name has been passed in for API golden approval.'));
@@ -30,8 +29,10 @@ for (const searchPackageName of process.argv.slice(2)) {
     process.exit(1);
   }
 
-  const [packageName, ..._entryPointTail] = packageNameGuess.result.split('/');
-  const apiGoldenTargetName = `//goldens:${packageName}_api.accept`.replace(/-/g, '_');
+  const [packageName, ...entryPointTail] = packageNameGuess.result.split('/');
+  const suffix = entryPointTail.length ? entryPointTail.join('-') : packageName;
+  const apiGoldenTargetName = `//tools/public_api_guard:${packageName}/${suffix}.md_api.accept`;
 
-  shelljs.exec(`${bazel} run ${apiGoldenTargetName}`);
+  shelljs.touch(path.join(projectDir, `tools/public_api_guard/${packageName}/${suffix}.md`));
+  shelljs.exec(`yarn bazel run ${apiGoldenTargetName}`);
 }

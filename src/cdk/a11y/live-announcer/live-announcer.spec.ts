@@ -1,6 +1,6 @@
-import {MutationObserverFactory} from '../../observers';
-import {Overlay} from '../../overlay';
-import {ComponentPortal} from '../../portal';
+import {MutationObserverFactory} from '@angular/cdk/observers';
+import {Overlay} from '@angular/cdk/overlay';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {Component, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';

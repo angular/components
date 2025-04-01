@@ -1,35 +1,34 @@
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "bidi",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":bidi",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
+        "@npm//@angular/platform-browser",
     ],
 )
 

@@ -1,5 +1,5 @@
-import {ESCAPE} from '../../keycodes';
-import {ComponentPortal} from '../../portal';
+import {ESCAPE} from '@angular/cdk/keycodes';
+import {ComponentPortal} from '@angular/cdk/portal';
 import {ApplicationRef, Component} from '@angular/core';
 import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';

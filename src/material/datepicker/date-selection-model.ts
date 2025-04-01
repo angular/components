@@ -7,7 +7,6 @@
  */
 
 import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
-// TODO: Change to relative import
 import {DateAdapter} from '@angular/material/core';
 import {Observable, Subject} from 'rxjs';
 
@@ -212,11 +211,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
   }
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
   parent: MatSingleDateSelectionModel<unknown>,
   adapter: DateAdapter<unknown>,
@@ -227,8 +222,6 @@ export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
 /**
  * Used to provide a single selection model to a component.
  * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
  */
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
@@ -236,11 +229,7 @@ export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
 };
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
   parent: MatSingleDateSelectionModel<unknown>,
   adapter: DateAdapter<unknown>,
@@ -251,8 +240,6 @@ export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
 /**
  * Used to provide a range selection model to a component.
  * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
  */
 export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,

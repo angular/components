@@ -1,11 +1,11 @@
-import {ArrayDataSource} from '../collections';
+import {ArrayDataSource} from '@angular/cdk/collections';
 import {
   CdkScrollable,
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
   ScrollDispatcher,
   ScrollingModule,
-} from '../scrolling';
+} from '@angular/cdk/scrolling';
 import {
   ApplicationRef,
   Component,

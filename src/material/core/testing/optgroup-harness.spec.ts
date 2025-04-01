@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatOptionModule} from '../option';
+import {MatOptionModule} from '@angular/material/core';
 import {MatOptgroupHarness} from './optgroup-harness';
 
 describe('MatOptgroupHarness', () => {

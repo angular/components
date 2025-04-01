@@ -2,7 +2,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatBadgeModule, MatBadgePosition, MatBadgeSize} from '../../badge';
+import {MatBadgeModule, MatBadgePosition, MatBadgeSize} from '@angular/material/badge';
 import {MatBadgeHarness} from './badge-harness';
 
 describe('MatBadgeHarness', () => {

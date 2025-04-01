@@ -35,9 +35,9 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatOption, MatOptionSelectionChange} from '../core';
-import {MatFormField, MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
+import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
@@ -3012,54 +3012,6 @@ describe('MatAutocomplete', () => {
       expect(panelClassList).toContain('default1');
       expect(panelClassList).toContain('default2');
     });
-  });
-
-  describe('with backdrop in options', () => {
-    it('should not contain backdrop by default', fakeAsync(() => {
-      const fixture = createComponent(SimpleAutocomplete, []);
-      fixture.detectChanges();
-      fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
-
-      tick(500);
-
-      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-    }));
-
-    it('should be able to add the backdrop using hasBackdrop option', fakeAsync(() => {
-      const fixture = createComponent(SimpleAutocomplete, [
-        {
-          provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
-          useValue: {hasBackdrop: true},
-        },
-      ]);
-      fixture.detectChanges();
-      fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
-
-      tick(500);
-
-      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
-    }));
-  });
-
-  describe('with hasBackdrop and backdropClass in options', () => {
-    it('should be able to configure custom backdrop class', fakeAsync(() => {
-      const fixture = createComponent(SimpleAutocomplete, [
-        {
-          provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
-          useValue: {backdropClass: 'my-custom-backdrop-class', hasBackdrop: true},
-        },
-      ]);
-      fixture.detectChanges();
-      fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
-
-      tick(500);
-
-      const cdkPanelElement = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
-      expect(cdkPanelElement?.classList).toContain('my-custom-backdrop-class');
-    }));
   });
 
   describe('misc', () => {

@@ -5,6 +5,7 @@
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m2/mdc/snack-bar' as tokens-mdc-snack-bar;
 @use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
 
 @mixin base($theme) {
@@ -13,9 +14,9 @@
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-unthemable-tokens()
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-unthemable-tokens()
       );
     }
   }
@@ -26,7 +27,11 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values(
         tokens-mat-snack-bar.$prefix,
         tokens-mat-snack-bar.get-color-tokens($theme)
       );
@@ -39,9 +44,9 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-typography-tokens($theme)
+      @include token-utils.create-token-values(
+        tokens-mdc-snack-bar.$prefix,
+        tokens-mdc-snack-bar.get-typography-tokens($theme)
       );
     }
   }
@@ -53,6 +58,10 @@
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
   @return (
+    (
+      namespace: tokens-mdc-snack-bar.$prefix,
+      tokens: tokens-mdc-snack-bar.get-token-slots(),
+    ),
     (
       namespace: tokens-mat-snack-bar.$prefix,
       tokens: tokens-mat-snack-bar.get-token-slots(),
@@ -90,6 +99,10 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   @if ($tokens != ()) {
+    @include token-utils.create-token-values(
+      tokens-mdc-snack-bar.$prefix,
+      map.get($tokens, tokens-mdc-snack-bar.$prefix)
+    );
     @include token-utils.create-token-values(
       tokens-mat-snack-bar.$prefix,
       map.get($tokens, tokens-mat-snack-bar.$prefix)

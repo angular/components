@@ -30,9 +30,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     </mat-autocomplete>
 
     <p>
-      <button matButton (click)="stateCtrl.reset()">RESET</button>
-      <button matButton (click)="stateCtrl.setValue(states[10])">SET VALUE</button>
-      <button matButton (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
+      <button mat-button (click)="stateCtrl.reset()">RESET</button>
+      <button mat-button (click)="stateCtrl.setValue(states[10])">SET VALUE</button>
+      <button mat-button (click)="stateCtrl.enabled ? stateCtrl.disable() : stateCtrl.enable()">
         TOGGLE DISABLED
       </button>
     </p>
@@ -88,9 +88,9 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     }
 
     <p>
-      <button matButton (click)="clearTemplateState()">RESET</button>
-      <button matButton (click)="currentState='California'">SET VALUE</button>
-      <button matButton (click)="tdDisabled=!tdDisabled">
+      <button mat-button (click)="clearTemplateState()">RESET</button>
+      <button mat-button (click)="currentState='California'">SET VALUE</button>
+      <button mat-button (click)="tdDisabled=!tdDisabled">
         TOGGLE DISABLED
       </button>
       <select [(ngModel)]="templateStatesTheme">
@@ -140,7 +140,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <mat-card>
     <mat-card-subtitle>Autocomplete inside a Dialog</mat-card-subtitle>
     <mat-card-content>
-      <button matButton (click)="openDialog()">Open dialog</button>
+      <button mat-button (click)="openDialog()">Open dialog</button>
     </mat-card-content>
   </mat-card>
 </div>

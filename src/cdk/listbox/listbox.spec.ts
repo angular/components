@@ -1,4 +1,14 @@
-import {A, B, DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '../keycodes';
+import {
+  A,
+  B,
+  DOWN_ARROW,
+  END,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 import {Component, Type, signal} from '@angular/core';
 import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';

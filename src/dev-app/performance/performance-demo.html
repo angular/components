@@ -39,10 +39,10 @@
           @if (allSamples.length) {
 
             <strong>Average render time</strong>
-
+          
 }
           @if (!allSamples.length) {
- No data yet
+ No data yet 
 }
         </td>
       </ng-container>
@@ -72,29 +72,29 @@
 @if (allSamples.length) {
 <button
   color="accent"
-  matButton
+  mat-button
   (click)="clearMetrics()"
   [disabled]="isRunningBenchmark"
   style="margin-right: 32px"
-
+ 
 >
   Clear Metrics
 </button>
 }
 
-<button color="primary" matButton="elevated" (click)="runBenchmark()" [disabled]="isRunningBenchmark">
+<button color="primary" mat-raised-button (click)="runBenchmark()" [disabled]="isRunningBenchmark">
   Run Benchmark
 </button>
 
 @if (show) {
 
   @for (_ of componentArray; track _) {
-
+  
     <mat-form-field>
       <mat-label>Input</mat-label>
       <input matInput />
     </mat-form-field>
-
+  
 }
 
 }

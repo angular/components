@@ -3,7 +3,7 @@ import * as path from 'path';
 import {parse} from 'postcss';
 import {compileString} from 'sass';
 
-import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer.js';
+import {createLocalAngularPackageImporter} from '../../../../../tools/sass/local-sass-importer';
 
 // Note: For Windows compatibility, we need to resolve the directory paths through runfiles
 // which are guaranteed to reside in the source tree.
@@ -151,7 +151,7 @@ describe('M3 theme', () => {
         }
       `);
 
-      expect(css).toContain('--mat-checkbox-selected-checkmark-color: magenta');
+      expect(css).toContain('--mdc-checkbox-selected-checkmark-color: magenta');
       expectNoWarning(/`selected-checkmark-color` is deprecated/);
     });
 
@@ -162,8 +162,8 @@ describe('M3 theme', () => {
         }
       `);
 
-      expect(css).toContain('--mat-filled-text-field-caret-color: magenta');
-      expect(css).not.toContain('--mat-outline-text-field-caret-color: magenta');
+      expect(css).toContain('--mdc-filled-text-field-caret-color: magenta');
+      expect(css).not.toContain('--mdc-outline-text-field-caret-color: magenta');
       expectNoWarning(/`filled-caret-color` is deprecated/);
     });
 
@@ -174,8 +174,8 @@ describe('M3 theme', () => {
         }
       `);
 
-      expect(css).toContain('--mat-filled-text-field-caret-color: magenta');
-      expect(css).toContain('--mat-outlined-text-field-caret-color: magenta');
+      expect(css).toContain('--mdc-filled-text-field-caret-color: magenta');
+      expect(css).toContain('--mdc-outlined-text-field-caret-color: magenta');
       expectWarning(
         /Token `caret-color` is deprecated. Please use one of the following alternatives: filled-caret-color, outlined-caret-color/,
       );

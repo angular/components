@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {PERIOD} from '../../../keycodes';
-import {ModifierKeys} from '../../test-element';
-import {getNoKeysSpecifiedError} from '../../test-element-errors';
+import {getNoKeysSpecifiedError, ModifierKeys} from '@angular/cdk/testing';
+import {PERIOD} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
 

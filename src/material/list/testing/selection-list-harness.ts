@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarnessConstructor, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatListOptionTogglePosition} from '../../list';
+import {MatListOptionTogglePosition} from '@angular/material/list';
 import {MatListHarnessBase} from './list-harness-base';
 import {
   ListItemHarnessFilters,

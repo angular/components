@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_test_library", "ng_web_test_suite", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -8,7 +7,7 @@ filegroup(
     srcs = glob(["**/*.ts"]),
 )
 
-ts_project(
+ts_library(
     name = "testing",
     srcs = glob(
         ["**/*.ts"],
@@ -20,18 +19,16 @@ ts_project(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_tests_lib",
-    testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/slide-toggle",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
     ],
 )
 

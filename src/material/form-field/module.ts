@@ -8,7 +8,7 @@
 
 import {ObserversModule} from '@angular/cdk/observers';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatError} from './directives/error';
 import {MatHint} from './directives/hint';
 import {MatLabel} from './directives/label';

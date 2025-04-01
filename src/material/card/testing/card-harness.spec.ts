@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatCardModule} from '../module';
+import {MatCardModule} from '@angular/material/card';
 import {MatCardHarness, MatCardSection} from './card-harness';
 
 describe('MatCardHarness', () => {
@@ -115,8 +115,8 @@ describe('MatCardHarness', () => {
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button matButton>LIKE</button>
-          <button matButton>SHARE</button>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
         </mat-card-actions>
         <mat-card-footer>
           <div>Woof woof!</div>

@@ -7,7 +7,7 @@
  */
 
 import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
-import {Platform, _getEventTarget} from '../../platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 
@@ -40,13 +40,24 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     if (!this._isAttached) {
       const body = this._document.body;
       const eventOptions = {capture: true};
-      const renderer = this._renderer;
 
       this._cleanups = this._ngZone.runOutsideAngular(() => [
-        renderer.listen(body, 'pointerdown', this._pointerDownListener, eventOptions),
-        renderer.listen(body, 'click', this._clickListener, eventOptions),
-        renderer.listen(body, 'auxclick', this._clickListener, eventOptions),
-        renderer.listen(body, 'contextmenu', this._clickListener, eventOptions),
+        _bindEventWithOptions(
+          this._renderer,
+          body,
+          'pointerdown',
+          this._pointerDownListener,
+          eventOptions,
+        ),
+        _bindEventWithOptions(this._renderer, body, 'click', this._clickListener, eventOptions),
+        _bindEventWithOptions(this._renderer, body, 'auxclick', this._clickListener, eventOptions),
+        _bindEventWithOptions(
+          this._renderer,
+          body,
+          'contextmenu',
+          this._clickListener,
+          eventOptions,
+        ),
       ]);
 
       // click event is not fired on iOS. To make element "clickable" we are

@@ -19,9 +19,10 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {_getEventTarget, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
+import {_getEventTarget} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {ViewportRuler} from '@angular/cdk/scrolling';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -45,11 +46,10 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   MatOption,
   MatOptionSelectionChange,
-  _animationsDisabled,
   _countGroupLabelsBeforeOption,
   _getOptionScrollPosition,
-} from '../core';
-import {MAT_FORM_FIELD, MatFormField} from '../form-field';
+} from '@angular/material/core';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {Observable, Subject, Subscription, defer, merge, of as observableOf} from 'rxjs';
 import {delay, filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
@@ -93,20 +93,12 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
   },
 );
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
-/**
- * @docs-private
- * @deprecated No longer used, will be removed.
- * @breaking-change 21.0.0
- */
+/** @docs-private */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
   deps: [Overlay],
@@ -147,10 +139,10 @@ export class MatAutocompleteTrigger
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _dir = inject(Directionality, {optional: true});
   private _formField = inject<MatFormField | null>(MAT_FORM_FIELD, {optional: true, host: true});
+  private _document = inject(DOCUMENT);
   private _viewportRuler = inject(ViewportRuler);
   private _scrollStrategy = inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY);
   private _renderer = inject(Renderer2);
-  private _animationsDisabled = _animationsDisabled();
   private _defaults = inject<MatAutocompleteDefaultOptions | null>(
     MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
     {optional: true},
@@ -216,7 +208,8 @@ export class MatAutocompleteTrigger
     // If the user blurred the window while the autocomplete is focused, it means that it'll be
     // refocused when they come back. In this case we want to skip the first focus event, if the
     // pane was closed, in order to avoid reopening it unintentionally.
-    this._canOpenOnNextFocus = this.panelOpen || !this._hasFocus();
+    this._canOpenOnNextFocus =
+      this._document.activeElement !== this._element.nativeElement || this.panelOpen;
   };
 
   /** `View -> model callback called when value changes` */
@@ -423,7 +416,7 @@ export class MatAutocompleteTrigger
           // true. Its main purpose is to handle the case where the input is focused from an
           // outside click which propagates up to the `body` listener within the same sequence
           // and causes the panel to close immediately (see #3106).
-          !this._hasFocus() &&
+          this._document.activeElement !== this._element.nativeElement &&
           (!formField || !formField.contains(clickTarget)) &&
           (!customOrigin || !customOrigin.contains(clickTarget)) &&
           !!this._overlayRef &&
@@ -465,8 +458,7 @@ export class MatAutocompleteTrigger
     this._element.nativeElement.disabled = isDisabled;
   }
 
-  _handleKeydown(e: Event): void {
-    const event = e as KeyboardEvent;
+  _handleKeydown(event: KeyboardEvent): void {
     const keyCode = event.keyCode;
     const hasModifier = hasModifierKey(event);
 
@@ -509,7 +501,7 @@ export class MatAutocompleteTrigger
     }
   }
 
-  _handleInput(event: Event): void {
+  _handleInput(event: KeyboardEvent): void {
     let target = event.target as HTMLInputElement;
     let value: number | string | null = target.value;
 
@@ -550,7 +542,7 @@ export class MatAutocompleteTrigger
         }
       }
 
-      if (this._canOpen() && this._hasFocus()) {
+      if (this._canOpen() && this._document.activeElement === event.target) {
         // When the `input` event fires, the input's value will have already changed. This means
         // that if we take the `this._element.nativeElement.value` directly, it'll be one keystroke
         // behind. This can be a problem when the user selects a value, changes a character while
@@ -577,11 +569,6 @@ export class MatAutocompleteTrigger
     if (this._canOpen() && !this.panelOpen) {
       this._openPanelInternal();
     }
-  }
-
-  /** Whether the input currently has focus. */
-  private _hasFocus(): boolean {
-    return _getFocusedElementPierceShadowDom() === this._element.nativeElement;
   }
 
   /**
@@ -902,10 +889,7 @@ export class MatAutocompleteTrigger
       scrollStrategy: this._scrollStrategy(),
       width: this._getPanelWidth(),
       direction: this._dir ?? undefined,
-      hasBackdrop: this._defaults?.hasBackdrop,
-      backdropClass: this._defaults?.backdropClass,
       panelClass: this._defaults?.overlayPanelClass,
-      disableAnimations: this._animationsDisabled,
     });
   }
 

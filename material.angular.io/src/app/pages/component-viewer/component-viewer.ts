@@ -168,7 +168,7 @@ export class ComponentOverview extends ComponentBaseView {
     // folder named after the component while the overview file is named similarly. e.g.
     //    `cdk#overlay`     -> `cdk/overlay/overlay.md`
     //    `material#button` -> `material/button/button.md`
-    const overviewPath = doc.overviewPath || `${doc.packageName}/${doc.id}/${doc.id}.md.html`;
+    const overviewPath = doc.overviewPath || `${doc.packageName}/${doc.id}/${doc.id}.html`;
     return `/docs-content/overviews/${overviewPath}`;
   }
 }

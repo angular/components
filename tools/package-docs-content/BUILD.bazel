@@ -1,12 +1,12 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
 nodejs_binary(
     name = "package-docs-content",
     data = [
-        ":sources_legacy",
+        ":sources",
         "@npm//fs-extra",
     ],
     entry_point = ":package-docs-content.ts",
@@ -15,11 +15,14 @@ nodejs_binary(
     templated_args = ["--bazel_patch_module_resolver"],
 )
 
-ts_project(
+ts_library(
     name = "sources",
     srcs = glob(["**/*.ts"]),
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/@types/fs-extra",
+        "@npm//@types/fs-extra",
+        "@npm//@types/node",
     ],
 )

@@ -15,7 +15,7 @@
      [class.mat-sort-header-ascending]="this._sort.direction === 'asc'"
      [class.mat-sort-header-recently-cleared-ascending]="_recentlyCleared() === 'asc'"
      [class.mat-sort-header-recently-cleared-descending]="_recentlyCleared() === 'desc'"
-     [class.mat-sort-header-animations-disabled]="_animationsDisabled"
+     [class.mat-sort-header-animations-disabled]="_animationModule === 'NoopAnimations'"
      [attr.tabindex]="_isDisabled() ? null : 0"
      [attr.role]="_isDisabled() ? null : 'button'">
 

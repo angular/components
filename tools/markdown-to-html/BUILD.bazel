@@ -1,10 +1,9 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults.bzl", "jasmine_node_test")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "transform-markdown",
     srcs = glob(
         ["**/*.ts"],
@@ -12,11 +11,14 @@ ts_project(
             "*.spec.ts",
         ],
     ),
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/@types/marked",
-        "//:node_modules/marked",
         "//tools/highlight-files:sources",
+        "@npm//@types/marked",
+        "@npm//@types/node",
+        "@npm//marked",
     ],
 )
 
@@ -31,25 +33,25 @@ nodejs_binary(
     templated_args = ["--bazel_patch_module_resolver"],
 )
 
-ts_project(
+ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = glob(
         ["*.spec.ts"],
     ),
-    tsconfig = "//tools:tsconfig-test",
+    tsconfig = ":tsconfig.json",
     visibility = ["//visibility:private"],
     deps = [
         ":transform-markdown",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
-        "//:node_modules/marked",
-        "//:node_modules/typescript",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//marked",
+        "@npm//typescript",
     ],
 )
 
 jasmine_node_test(
     name = "unit_tests",
-    srcs = [":unit_test_lib_legacy"],
+    srcs = [":unit_test_lib"],
     visibility = ["//visibility:private"],
 )

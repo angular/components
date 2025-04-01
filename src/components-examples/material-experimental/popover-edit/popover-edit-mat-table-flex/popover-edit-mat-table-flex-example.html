@@ -47,16 +47,16 @@
               </mat-form-field>
             </div>
             <div mat-edit-actions>
-              <button matButton type="submit">Confirm</button>
-              <button matButton matEditRevert>Revert</button>
-              <button matButton matEditClose>Close</button>
+              <button mat-button type="submit">Confirm</button>
+              <button mat-button matEditRevert>Revert</button>
+              <button mat-button matEditClose>Close</button>
             </div>
           </form>
         </div>
       </ng-template>
 
       <span *matRowHoverContent>
-        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
     </mat-cell>
   </ng-container>
@@ -69,7 +69,7 @@
       {{element.weight}}
 
       <span *matRowHoverContent>
-        <button matIconButton matEditOpen><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button matEditOpen><mat-icon>edit</mat-icon></button>
       </span>
       </mat-cell>
   </ng-container>

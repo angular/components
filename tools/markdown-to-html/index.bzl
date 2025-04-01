@@ -30,12 +30,12 @@ def _markdown_to_html(ctx):
     for input_file in input_files:
         # Determine the input file path relatively to the current package path. This is necessary
         # because we want to preserve directories for the input files and `declare_file` expects a
-        # path that is relative to the current package.
-        relative_basepath = _relative_to_label(ctx.label, input_file.short_path)
+        # path that is relative to the current package. Also note that we should not use `.replace`
+        # here because the extension can be also in upper case.
+        relative_basepath = _relative_to_label(ctx.label, input_file.short_path)[:-len(".md")]
 
-        # For each input file "xxx.md", we want to write an output file "xxx.md.html"
-        # Note: we preserve the `.md` text to avoid collisions with real templates.
-        expected_outputs.append(ctx.actions.declare_file("%s.html" % relative_basepath))
+        # For each input file "xxx.md", we want to write an output file "xxx.html"
+        expected_outputs += [ctx.actions.declare_file("%s.html" % relative_basepath)]
 
         # Add the input file to the command line arguments that will be passed to the
         # transform-markdown executable.
@@ -69,7 +69,7 @@ markdown_to_html = rule(
         "_transform_markdown": attr.label(
             default = Label("//tools/markdown-to-html"),
             executable = True,
-            cfg = "exec",
+            cfg = "host",
         ),
     },
 )

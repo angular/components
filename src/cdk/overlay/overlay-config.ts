@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position/position-strategy';
-import {Direction, Directionality} from '../bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
 
 /** Initial configuration used when creating an overlay. */
@@ -26,9 +26,6 @@ export class OverlayConfig {
 
   /** Custom class to add to the backdrop */
   backdropClass?: string | string[] = 'cdk-overlay-dark-backdrop';
-
-  /** Whether to disable any built-in animations. */
-  disableAnimations?: boolean;
 
   /** The width of the overlay panel. If a number is provided, pixel units are assumed. */
   width?: number | string;

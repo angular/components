@@ -20,7 +20,7 @@
 
       @if (!node.areChildrenLoading() && node.isExpandable()) {
         <button
-            matIconButton
+            mat-icon-button
             cdkTreeNodeToggle
             [attr.aria-label]="'Toggle ' + node.raw.name">
           <mat-icon class="mat-icon-rtl-mirror">

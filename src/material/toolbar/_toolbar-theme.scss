@@ -8,7 +8,7 @@
 @use '../core/style/sass-utils';
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
+  @include token-utils.create-token-values(
     tokens-mat-toolbar.$prefix,
     tokens-mat-toolbar.private-get-color-palette-color-tokens(
       $background-color: inspection.get-theme-color($theme, $palette-name),
@@ -25,7 +25,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-toolbar.$prefix,
         tokens-mat-toolbar.get-color-tokens($theme)
       );
@@ -55,7 +55,7 @@
     $theme: inspection.private-get-typography-back-compat-theme($theme);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-toolbar.$prefix,
         tokens-mat-toolbar.get-typography-tokens($theme)
       );
@@ -68,7 +68,7 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.create-token-values(
         tokens-mat-toolbar.$prefix,
         tokens-mat-toolbar.get-density-tokens($theme)
       );

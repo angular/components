@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule, MatOptionModule} from '../core';
+import {MatCommonModule, MatOptionModule} from '@angular/material/core';
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {MatAutocomplete} from './autocomplete';

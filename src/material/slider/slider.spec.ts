@@ -18,7 +18,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
 import {MatSliderModule} from './module';
@@ -1314,25 +1314,6 @@ describe('MatSlider', () => {
     }));
   });
 
-  describe('slider with form group', () => {
-    it('should reset to initial min-max value when form reset is done', fakeAsync(() => {
-      const fixture = createComponent(SliderWithFormGroup);
-      fixture.detectChanges();
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
-      const slider = sliderDebugElement.componentInstance;
-      const minInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
-      const maxInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-      flush();
-
-      expect(minInput.value).toBe(0);
-      expect(maxInput.value).toBe(10);
-      slideToValue(slider, minInput, 20);
-      fixture.componentInstance.fg.reset();
-      expect(minInput.value).toBe(0);
-      expect(maxInput.value).toBe(10);
-    }));
-  });
-
   describe('slider as a custom form control', () => {
     let fixture: ComponentFixture<SliderWithFormControl>;
     let slider: MatSlider;
@@ -2041,28 +2022,6 @@ class SliderWithTickMarks {
 })
 class RangeSliderWithTickMarks {
   @ViewChild(MatSlider) slider: MatSlider;
-}
-
-@Component({
-  template: `
-  <div [formGroup]="fg" >
-    <mat-slider [min]="MIN" [max]="MAX" >
-      <input formControlName="min" matSliderStartThumb>
-      <input formControlName="max" matSliderEndThumb>
-    </mat-slider>
-  <div>
-  `,
-  styles: SLIDER_STYLES,
-  standalone: false,
-})
-class SliderWithFormGroup {
-  readonly MIN = 0;
-  readonly MAX = 10;
-
-  readonly fg = new FormGroup({
-    min: new FormControl<number | null>(null),
-    max: new FormControl<number | null>(null),
-  });
 }
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */

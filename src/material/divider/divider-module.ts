@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatDivider} from './divider';
 
 @NgModule({

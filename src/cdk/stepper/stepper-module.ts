@@ -11,7 +11,7 @@ import {CdkStepper, CdkStep} from './stepper';
 import {CdkStepLabel} from './step-label';
 import {CdkStepperNext, CdkStepperPrevious} from './stepper-button';
 import {CdkStepHeader} from './step-header';
-import {BidiModule} from '../bidi';
+import {BidiModule} from '@angular/cdk/bidi';
 
 @NgModule({
   imports: [

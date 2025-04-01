@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {CdkScrollable, ScrollDispatcher} from '../../scrolling';
+export {CdkScrollable, ScrollDispatcher} from '@angular/cdk/scrolling';
 
 // Export pre-defined scroll strategies and interface to build custom ones.
 export {ScrollStrategy} from './scroll-strategy';

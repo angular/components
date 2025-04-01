@@ -6,15 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  AfterContentInit,
-  Directive,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-  signal,
-} from '@angular/core';
+import {Directive, Output, Input, EventEmitter, AfterContentInit, OnDestroy} from '@angular/core';
 
 import {Direction, Directionality, _resolveDirectionality} from './directionality';
 
@@ -31,6 +23,9 @@ import {Direction, Directionality, _resolveDirectionality} from './directionalit
   exportAs: 'dir',
 })
 export class Dir implements Directionality, AfterContentInit, OnDestroy {
+  /** Normalized direction that accounts for invalid/unsupported values. */
+  private _dir: Direction = 'ltr';
+
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
 
@@ -43,19 +38,19 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
   /** @docs-private */
   @Input()
   get dir(): Direction {
-    return this.valueSignal();
+    return this._dir;
   }
   set dir(value: Direction | 'auto') {
-    const previousValue = this.valueSignal();
+    const previousValue = this._dir;
 
     // Note: `_resolveDirectionality` resolves the language based on the browser's language,
     // whereas the browser does it based on the content of the element. Since doing so based
     // on the content can be expensive, for now we're doing the simpler matching.
-    this.valueSignal.set(_resolveDirectionality(value));
+    this._dir = _resolveDirectionality(value);
     this._rawDir = value;
 
-    if (previousValue !== this.valueSignal() && this._isInitialized) {
-      this.change.emit(this.valueSignal());
+    if (previousValue !== this._dir && this._isInitialized) {
+      this.change.emit(this._dir);
     }
   }
 
@@ -63,8 +58,6 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
   get value(): Direction {
     return this.dir;
   }
-
-  readonly valueSignal = signal<Direction>('ltr');
 
   /** Initialize once default value has been set. */
   ngAfterContentInit() {

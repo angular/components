@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceArray, coerceNumberProperty} from '../../coercion';
+import {NumberInput, coerceArray, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   ElementRef,
   EventEmitter,
@@ -18,9 +18,9 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {Directionality} from '../../bidi';
-import {_IdGenerator} from '../../a11y';
-import {ScrollDispatcher} from '../../scrolling';
+import {Directionality} from '@angular/cdk/bidi';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {CDK_DROP_LIST, CdkDrag} from './drag';
 import {CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragSortEvent} from '../drag-events';
 import {CDK_DROP_LIST_GROUP, CdkDropListGroup} from './drop-list-group';
@@ -58,9 +58,6 @@ export class CdkDropList<T = any> implements OnDestroy {
     optional: true,
     skipSelf: true,
   });
-
-  /** Refs that have been synced with the drop ref most recently. */
-  private _latestSortedRefs: DragRef[] | undefined;
 
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -225,7 +222,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     // Only sync the items while dragging since this method is
     // called when items are being initialized one-by-one.
     if (this._dropListRef.isDragging()) {
-      this._syncItemsWithRef(this.getSortedItems().map(item => item._dragRef));
+      this._syncItemsWithRef();
     }
   }
 
@@ -234,16 +231,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     this._unsortedItems.delete(item);
 
     // This method might be called on destroy so we always want to sync with the ref.
-    // Note that we reuse the last set of synced items, rather than re-sorting the whole
-    // list, because it can slow down re-renders of large lists (see #30737).
-    if (this._latestSortedRefs) {
-      const index = this._latestSortedRefs.indexOf(item._dragRef);
-
-      if (index > -1) {
-        this._latestSortedRefs.splice(index, 1);
-        this._syncItemsWithRef(this._latestSortedRefs);
-      }
-    }
+    this._syncItemsWithRef();
   }
 
   /** Gets the registered items in the list, sorted by their position in the DOM. */
@@ -271,7 +259,6 @@ export class CdkDropList<T = any> implements OnDestroy {
       this._group._items.delete(this);
     }
 
-    this._latestSortedRefs = undefined;
     this._unsortedItems.clear();
     this._dropListRef.dispose();
     this._destroyed.next();
@@ -348,7 +335,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   /** Handles events from the underlying DropListRef. */
   private _handleEvents(ref: DropListRef<CdkDropList>) {
     ref.beforeStarted.subscribe(() => {
-      this._syncItemsWithRef(this.getSortedItems().map(item => item._dragRef));
+      this._syncItemsWithRef();
       this._changeDetectorRef.markForCheck();
     });
 
@@ -416,8 +403,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   }
 
   /** Syncs up the registered drag items with underlying drop list ref. */
-  private _syncItemsWithRef(items: DragRef[]) {
-    this._latestSortedRefs = items;
-    this._dropListRef.withItems(items);
+  private _syncItemsWithRef() {
+    this._dropListRef.withItems(this.getSortedItems().map(item => item._dragRef));
   }
 }

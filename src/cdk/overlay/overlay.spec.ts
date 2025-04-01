@@ -1,3 +1,5 @@
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
@@ -19,8 +21,6 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Direction, Directionality} from '../bidi';
-import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {dispatchFakeEvent} from '../testing/private';
 import {
   Overlay,
@@ -380,9 +380,8 @@ describe('Overlay', () => {
     expect(overlayRef.getDirection()).toBe('ltr');
   });
 
-  it('should add and remove the overlay host as the ref is being attached and detached', async () => {
+  it('should add and remove the overlay host as the ref is being attached and detached', () => {
     const overlayRef = overlay.create();
-    const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
     overlayRef.attach(componentPortal);
     viewContainerFixture.detectChanges();
@@ -391,8 +390,6 @@ describe('Overlay', () => {
       .withContext('Expected host element to be in the DOM.')
       .toBeTruthy();
 
-    // Simulate animating element that hasn't been removed yet.
-    pane.appendChild(document.createElement('div'));
     overlayRef.detach();
 
     expect(overlayRef.hostElement.parentElement)
@@ -400,8 +397,6 @@ describe('Overlay', () => {
       .toBeTruthy();
 
     viewContainerFixture.detectChanges();
-    pane.children[0].remove();
-    await new Promise(r => setTimeout(r));
 
     expect(overlayRef.hostElement.parentElement)
       .withContext('Expected host element to have been removed once the zone stabilizes.')
@@ -927,7 +922,7 @@ describe('Overlay', () => {
       expect(pane.classList).toContain('custom-class-two');
     });
 
-    it('should remove the custom panel class when the overlay is detached', async () => {
+    it('should remove the custom panel class when the overlay is detached', () => {
       const config = new OverlayConfig({panelClass: 'custom-panel-class'});
       const overlayRef = overlay.create(config);
 
@@ -962,16 +957,12 @@ describe('Overlay', () => {
         .withContext('Expected class to be added')
         .toContain('custom-panel-class');
 
-      // Simulate animating element that hasn't been removed yet.
-      pane.appendChild(document.createElement('div'));
       overlayRef.detach();
       expect(pane.classList)
         .withContext('Expected class not to be removed immediately')
         .toContain('custom-panel-class');
       await viewContainerFixture.whenStable();
 
-      pane.children[0].remove();
-      await new Promise(r => setTimeout(r));
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')
         .toContain('custom-panel-class');

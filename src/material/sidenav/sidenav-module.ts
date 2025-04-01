@@ -7,7 +7,7 @@
  */
 import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '../core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from './drawer';
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from './sidenav';
 

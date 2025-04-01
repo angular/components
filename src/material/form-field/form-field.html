@@ -96,33 +96,25 @@
 </div>
 
 <div
-    class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
-    [class.mat-mdc-form-field-subscript-dynamic-size]="subscriptSizing === 'dynamic'"
+  class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
+  [class.mat-mdc-form-field-subscript-dynamic-size]="subscriptSizing === 'dynamic'"
 >
-  @let subscriptMessageType = _getSubscriptMessageType();
-
-  <!-- 
-    Use a single permanent wrapper for both hints and errors so aria-live works correctly,
-    as having it appear post render will not consistently work. We also do not want to add
-    additional divs as it causes styling regressions.
-    -->
-  <div aria-atomic="true" aria-live="polite" 
-      [class.mat-mdc-form-field-error-wrapper]="subscriptMessageType === 'error'"
-      [class.mat-mdc-form-field-hint-wrapper]="subscriptMessageType === 'hint'"
-    >
-    @switch (subscriptMessageType) {
-      @case ('error') {
+  @switch (_getDisplayedMessages()) {
+    @case ('error') {
+      <div class="mat-mdc-form-field-error-wrapper">
         <ng-content select="mat-error, [matError]"></ng-content>
-      }
+      </div>
+    }
 
-      @case ('hint') {
+    @case ('hint') {
+      <div class="mat-mdc-form-field-hint-wrapper">
         @if (hintLabel) {
           <mat-hint [id]="_hintLabelId">{{hintLabel}}</mat-hint>
         }
         <ng-content select="mat-hint:not([align='end'])"></ng-content>
         <div class="mat-mdc-form-field-hint-spacer"></div>
         <ng-content select="mat-hint[align='end']"></ng-content>
-      }
+      </div>
     }
-  </div>
+  }
 </div>

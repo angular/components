@@ -15,13 +15,13 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  ANIMATION_MODULE_TYPE,
   Injector,
   inject,
 } from '@angular/core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
-import {_animationsDisabled} from '../animation/animation';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
@@ -65,7 +65,7 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS = new InjectionToken<RippleGlobalOptions>
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _animationsDisabled = _animationsDisabled();
+  private _animationMode = inject(ANIMATION_MODULE_TYPE, {optional: true});
 
   /** Custom color for all ripples. */
   @Input('matRippleColor') color: string;
@@ -177,7 +177,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
       color: this.color,
       animation: {
         ...this._globalOptions.animation,
-        ...(this._animationsDisabled ? {enterDuration: 0, exitDuration: 0} : {}),
+        ...(this._animationMode === 'NoopAnimations' ? {enterDuration: 0, exitDuration: 0} : {}),
         ...this.animation,
       },
       terminateOnPointerUp: this._globalOptions.terminateOnPointerUp,

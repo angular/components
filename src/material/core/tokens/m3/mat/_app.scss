@@ -12,6 +12,7 @@ $prefix: (mat, app);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the app
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $shadow-color: map.get($systems, md-sys-color, shadow);
   $tokens: (
     background-color: map.get($systems, md-sys-color, background),
     text-color: map.get($systems, md-sys-color, on-background),
@@ -19,7 +20,6 @@ $prefix: (mat, app);
 
   // If the shadow-color is an actual color, convert it to a box-shadow value. Otherwise
   // use the token value as itself (e,g. as a CSS var name).
-  $shadow-color: map.get($systems, md-sys-color, shadow);
   @if (meta.type-of($shadow-color) == color) {
     @for $zValue from 0 through 24 {
       $shadow: elevation.get-box-shadow($zValue, $shadow-color);

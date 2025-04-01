@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {BaseHarnessFilters} from '@angular/cdk/testing';
-import {SortDirection} from '../../sort';
+import {SortDirection} from '@angular/material/sort';
 
 export interface SortHarnessFilters extends BaseHarnessFilters {}
 

@@ -1,12 +1,12 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
 nodejs_binary(
     name = "dgeni",
     data = [
-        ":sources_legacy",
+        ":sources",
         "@npm//dgeni",
         "@npm//dgeni-packages",
     ],
@@ -16,15 +16,18 @@ nodejs_binary(
     templated_args = ["--bazel_patch_module_resolver"],
 )
 
-ts_project(
+ts_library(
     name = "sources",
     srcs = glob(["**/*.ts"]),
-    tsconfig = "//tools:tsconfig",
+    # TODO(ESM): remove this once the Bazel NodeJS rules can handle ESM with `nodejs_binary`.
+    devmode_module = "commonjs",
+    tsconfig = ":tsconfig.json",
     deps = [
-        "//:node_modules/dgeni",
-        "//:node_modules/dgeni-packages",
-        "//:node_modules/highlight.js",
-        "//:node_modules/typescript",
         "//tools/highlight-files:sources",
+        "@npm//@types/node",
+        "@npm//dgeni",
+        "@npm//dgeni-packages",
+        "@npm//highlight.js",
+        "@npm//typescript",
     ],
 )

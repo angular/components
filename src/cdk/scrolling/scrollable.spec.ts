@@ -1,5 +1,5 @@
-import {Direction} from '../bidi';
-import {CdkScrollable, ScrollingModule} from '../scrolling';
+import {Direction} from '@angular/cdk/bidi';
+import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 

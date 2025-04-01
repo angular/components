@@ -27,7 +27,7 @@ import {
   Validator,
   ValidatorFn,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '../core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {Subscription, Subject} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {
@@ -322,8 +322,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     }
   }
 
-  _onInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  _onInput(value: string) {
     const lastValueWasValid = this._lastValueValid;
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = this._isValidValue(date);

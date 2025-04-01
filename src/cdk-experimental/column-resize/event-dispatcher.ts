@@ -10,7 +10,7 @@ import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators';
 
-import {_closest} from '../popover-edit';
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './selectors';
 

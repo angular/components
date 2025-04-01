@@ -1,29 +1,27 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_project(
+ts_library(
     name = "testing",
     testonly = True,
     srcs = glob(["**/*.ts"]),
-    # Needed to ensure these files are picked up as CommonJS, as otherwise
-    # the higher-level `package.json` from `src/package.json` is `type: module`.
-    data = ["//src/cdk/schematics:package_json"],
-    extends = "//src/cdk/schematics:tsconfig",
+    # Schematics can not yet run in ESM module. For now we continue to use CommonJS.
+    # TODO(ESM): remove this once the Angular CLI supports ESM schematics.
+    devmode_module = "commonjs",
+    prodmode_module = "commonjs",
     tsconfig = "tsconfig.json",
     deps = [
-        "//:node_modules/@angular-devkit/core",
-        "//:node_modules/@angular-devkit/schematics",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@bazel/runfiles",
-        "//:node_modules/@schematics/angular",
-        "//:node_modules/@types/fs-extra",
-        "//:node_modules/@types/glob",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
-        "//:node_modules/fs-extra",
-        "//:node_modules/glob",
-        "//:node_modules/jsonc-parser",
-        "//:node_modules/rxjs",
+        "@npm//@angular-devkit/core",
+        "@npm//@angular-devkit/schematics",
+        "@npm//@bazel/runfiles",
+        "@npm//@schematics/angular",
+        "@npm//@types/fs-extra",
+        "@npm//@types/glob",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//fs-extra",
+        "@npm//jsonc-parser",
+        "@npm//rxjs",
     ],
 )

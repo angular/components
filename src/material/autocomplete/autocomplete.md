@@ -64,7 +64,7 @@ desired display value. Then bind it to the autocomplete's `displayWith` property
 ### Require an option to be selected
 
 By default, the autocomplete will accept the value that the user typed into the input field.
-Instead, if you want to ensure that an option from the autocomplete was selected, you can
+Instead, if you want to instead ensure that an option from the autocomplete was selected, you can
 enable the `requireSelection` input on `mat-autocomplete`. This will change the behavior of
 the autocomplete in the following ways:
 1. If the user opens the autocomplete, changes its value, but doesn't select anything, the

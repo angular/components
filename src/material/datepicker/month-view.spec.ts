@@ -21,7 +21,7 @@ import {
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MAT_DATE_FORMATS, MatNativeDateModule} from '../core';
+import {MAT_DATE_FORMATS, MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {MatCalendarBody, MatCalendarUserEvent} from './calendar-body';

@@ -95,6 +95,12 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
   injector?: Injector | null;
 
   /**
+   * @deprecated No longer in use. To be removed.
+   * @breaking-change 18.0.0
+   */
+  componentFactoryResolver?: any;
+
+  /**
    * List of DOM nodes that should be projected through `<ng-content>` of the attached component.
    */
   projectableNodes?: Node[][] | null;
@@ -103,6 +109,11 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
+    /**
+     * @deprecated No longer in use. To be removed.
+     * @breaking-change 18.0.0
+     */
+    _componentFactoryResolver?: any,
     projectableNodes?: Node[][] | null,
   ) {
     super();
@@ -179,6 +190,12 @@ export interface PortalOutlet {
   /** Whether there is currently a portal attached to this outlet. */
   hasAttached(): boolean;
 }
+
+/**
+ * @deprecated Use `PortalOutlet` instead.
+ * @breaking-change 9.0.0
+ */
+export type PortalHost = PortalOutlet;
 
 /**
  * Partial implementation of PortalOutlet that handles attaching
@@ -275,3 +292,9 @@ export abstract class BasePortalOutlet implements PortalOutlet {
     }
   }
 }
+
+/**
+ * @deprecated Use `BasePortalOutlet` instead.
+ * @breaking-change 9.0.0
+ */
+export abstract class BasePortalHost extends BasePortalOutlet {}

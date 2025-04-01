@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarness, HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {ɵTileCoordinator as TileCoordinator} from '../../grid-list';
+import {ɵTileCoordinator as TileCoordinator} from '@angular/material/grid-list';
 import {GridListHarnessFilters, GridTileHarnessFilters} from './grid-list-harness-filters';
 import {MatGridTileHarness} from './grid-tile-harness';
 

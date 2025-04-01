@@ -9,6 +9,7 @@
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
+  ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -18,7 +19,6 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
-import {_animationsDisabled} from '../core';
 
 const ENTER_ANIMATION = '_mat-bottom-sheet-enter';
 const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
@@ -54,7 +54,8 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
 })
 export class MatBottomSheetContainer extends CdkDialogContainer implements OnDestroy {
   private _breakpointSubscription: Subscription;
-  protected _animationsDisabled = _animationsDisabled();
+  protected _animationsDisabled =
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations';
 
   /** The state of the bottom sheet animations. */
   _animationState: 'void' | 'visible' | 'hidden' = 'void';
@@ -136,6 +137,10 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     const isEnter = animationName === ENTER_ANIMATION;
     const isExit = animationName === EXIT_ANIMATION;
 
+    if (isEnter) {
+      this._trapFocus();
+    }
+
     if (isEnter || isExit) {
       this._animationStateChanged.emit({
         toState: isEnter ? 'visible' : 'hidden',
@@ -143,4 +148,6 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
       });
     }
   }
+
+  protected override _captureInitialFocus(): void {}
 }

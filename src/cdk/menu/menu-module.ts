@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {OverlayModule} from '../overlay';
+import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkMenu} from './menu';
 import {CdkMenuBar} from './menu-bar';
 import {CdkMenuItem} from './menu-item';

@@ -5,14 +5,23 @@ import {
   ViewEncapsulation,
   forwardRef,
   inject,
+  input,
   viewChild,
 } from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {AsyncPipe} from '@angular/common';
 import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
-import {ActivatedRoute, Routes, RouterOutlet, RouterLinkActive, RouterLink} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
+import {
+  ActivatedRoute,
+  Params,
+  Routes,
+  RouterOutlet,
+  RouterLinkActive,
+  RouterLink,
+} from '@angular/router';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
@@ -57,9 +66,11 @@ const SMALL_WIDTH_BREAKPOINT = 959;
 })
 export class ComponentSidenav implements OnInit, OnDestroy {
   docItems = inject(DocumentationItems);
+  private _route = inject(ActivatedRoute);
   private _navigationFocusService = inject(NavigationFocusService);
 
   readonly sidenav = viewChild(MatSidenav);
+  params: Observable<Params>;
   isExtraScreenSmall: Observable<boolean>;
   isScreenSmall: Observable<boolean>;
   private _subscriptions = new Subscription();
@@ -73,6 +84,11 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     this.isScreenSmall = breakpoints
       .observe(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`)
       .pipe(map(breakpoint => breakpoint.matches));
+
+    this.params = combineLatest(
+      this._route.pathFromRoot.map(route => route.params),
+      Object.assign,
+    );
   }
 
   ngOnInit() {
@@ -104,11 +120,12 @@ export class ComponentSidenav implements OnInit, OnDestroy {
 })
 export class ComponentNav {
   private _docItems = inject(DocumentationItems);
-  private _route = inject(ActivatedRoute);
-  protected _params = this._route.params;
+  readonly params = input<Params | null>();
 
-  items = this._params.pipe(
-    switchMap(params => (params?.section ? this._docItems.getItems(params.section) : of([]))),
+  items = toObservable(this.params).pipe(
+    switchMap(params =>
+      params?.section ? this._docItems.getItems(params.section) : Promise.resolve(null),
+    ),
   );
 }
 

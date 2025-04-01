@@ -2,8 +2,6 @@ import {Component, Injectable} from '@angular/core';
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
 
-import '@angular/localize/init';
-
 @Injectable()
 export class MyCustomPaginatorIntl implements MatPaginatorIntl {
   changes = new Subject<void>();

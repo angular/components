@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ALT, CONTROL, MAC_META, META, SHIFT} from '../../keycodes';
+import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
 import {
   Injectable,
   InjectionToken,
@@ -15,7 +15,7 @@ import {
   inject,
   RendererFactory2,
 } from '@angular/core';
-import {Platform, _getEventTarget} from '../../platform';
+import {Platform, _bindEventWithOptions, _getEventTarget} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
@@ -205,9 +205,27 @@ export class InputModalityDetector implements OnDestroy {
 
       this._listenerCleanups = ngZone.runOutsideAngular(() => {
         return [
-          renderer.listen(document, 'keydown', this._onKeydown, modalityEventListenerOptions),
-          renderer.listen(document, 'mousedown', this._onMousedown, modalityEventListenerOptions),
-          renderer.listen(document, 'touchstart', this._onTouchstart, modalityEventListenerOptions),
+          _bindEventWithOptions(
+            renderer,
+            document,
+            'keydown',
+            this._onKeydown,
+            modalityEventListenerOptions,
+          ),
+          _bindEventWithOptions(
+            renderer,
+            document,
+            'mousedown',
+            this._onMousedown,
+            modalityEventListenerOptions,
+          ),
+          _bindEventWithOptions(
+            renderer,
+            document,
+            'touchstart',
+            this._onTouchstart,
+            modalityEventListenerOptions,
+          ),
         ];
       });
     }

@@ -2,13 +2,13 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '../../core';
+import {MatNativeDateModule} from '@angular/material/core';
 import {
   DateRange,
   DefaultMatCalendarRangeStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
   MatDatepickerModule,
-} from '../../datepicker';
+} from '@angular/material/datepicker';
 import {CalendarView, MatCalendarHarness} from './calendar-harness';
 
 /** Date at which the calendars are set. */

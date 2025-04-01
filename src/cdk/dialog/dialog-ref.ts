@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {OverlayRef} from '../overlay';
-import {ESCAPE, hasModifierKey} from '../keycodes';
+import {OverlayRef} from '@angular/cdk/overlay';
+import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {DialogConfig} from './dialog-config';
-import {FocusOrigin} from '../a11y';
-import {BasePortalOutlet} from '../portal';
+import {FocusOrigin} from '@angular/cdk/a11y';
+import {BasePortalOutlet} from '@angular/cdk/portal';
 import {ComponentRef} from '@angular/core';
 
 /** Additional options that can be passed in when closing a dialog. */

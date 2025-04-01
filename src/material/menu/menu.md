@@ -62,7 +62,7 @@ with the `matMenuContent` attribute:
   </ng-template>
 </mat-menu>
 
-<button matIconButton [matMenuTriggerFor]="appMenu">
+<button mat-icon-button [matMenuTriggerFor]="appMenu">
   <mat-icon>more_vert</mat-icon>
 </button>
 ```
@@ -80,11 +80,11 @@ with a different set of data, depending on the trigger that opened it:
   </ng-template>
 </mat-menu>
 
-<button matIconButton [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
+<button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
   <mat-icon>more_vert</mat-icon>
 </button>
 
-<button matIconButton [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Bob'}">
+<button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Bob'}">
   <mat-icon>more_vert</mat-icon>
 </button>
 ```
@@ -109,7 +109,7 @@ The menu trigger is a standard button element augmented with `aria-haspopup`, `a
 The pop-up menu implements the `role="menu"` pattern, handling keyboard interaction and focus
 management. Upon opening, the trigger will focus the first focusable menu item. Upon close, the menu
 will return focus to its trigger. Avoid creating a menu in which all items are disabled, instead
-hiding or disabling the menu trigger.
+hiding or disabling the menu trigger. 
 
 Angular Material does not support the `menuitemcheckbox` or `menuitemradio` roles.
 

@@ -7,7 +7,7 @@ import {
   getProjectStyleFile,
   getProjectTargetOptions,
 } from '@angular/cdk/schematics';
-import {createTestApp, createTestLibrary, getFileContent} from '../../../cdk/schematics/testing';
+import {createTestApp, createTestLibrary, getFileContent} from '@angular/cdk/schematics/testing';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {COLLECTION_PATH} from '../paths';
 import {addPackageToPackageJson} from './package-config';

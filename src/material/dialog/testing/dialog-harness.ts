@@ -13,7 +13,7 @@ import {
   TestKey,
 } from '@angular/cdk/testing';
 import {DialogHarnessFilters} from './dialog-harness-filters';
-import {DialogRole} from '../../dialog';
+import {DialogRole} from '@angular/material/dialog';
 
 /** Selectors for different sections of the mat-dialog that can contain user content. */
 export enum MatDialogSection {

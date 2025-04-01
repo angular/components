@@ -1,21 +1,8 @@
-load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_test_library", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
-rules_js_tsconfig(
-    name = "tsconfig-test",
-    src = "tsconfig-test.json",
-    deps = [
-        "//:node_modules/@types/google.maps",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
-        "//src:test-tsconfig",
-    ],
-)
-
-ng_project(
+ng_module(
     name = "google-maps",
     srcs = glob(
         ["**/*.ts"],
@@ -24,11 +11,11 @@ ng_project(
         ],
     ),
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@types/google.maps",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@types/google.maps",
+        "@npm//rxjs",
     ],
 )
 
@@ -38,7 +25,7 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/google-maps/schematics:npm_package"],
     tags = ["release-package"],
-    deps = [":google-maps_legacy"],
+    deps = [":google-maps"],
 )
 
 filegroup(
@@ -46,19 +33,16 @@ filegroup(
     srcs = glob(["**/*.ts"]),
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    tsconfig = ":tsconfig-test",
     deps = [
         ":google-maps",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/google-maps/testing",
+        "@npm//@angular/platform-browser",
     ],
 )
 

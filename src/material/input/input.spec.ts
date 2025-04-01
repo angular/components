@@ -19,7 +19,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, ThemePalette} from '../core';
+import {
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
+  ThemePalette,
+} from '@angular/material/core';
 import {
   FloatLabelType,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -29,8 +33,8 @@ import {
   SubscriptSizing,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-} from '../form-field';
-import {MatIconModule} from '../icon';
+} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
 
@@ -1266,13 +1270,11 @@ describe('MatMdcInput with forms', () => {
         .toBe(1);
     }));
 
-    it('should be in a parent element with the an aria-live attribute to announce the error', fakeAsync(() => {
+    it('should set the proper aria-live attribute on the error messages', fakeAsync(() => {
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
-      expect(
-        containerEl.querySelector('[aria-live]:has(mat-error)')!.getAttribute('aria-live'),
-      ).toBe('polite');
+      expect(containerEl.querySelector('mat-error')!.getAttribute('aria-live')).toBe('polite');
     }));
 
     it('sets the aria-describedby to reference errors when in error state', fakeAsync(() => {

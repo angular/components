@@ -2,15 +2,16 @@ load(
     "//tools:defaults.bzl",
     "extract_tokens",
     "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
+ng_module(
     name = "bottom-sheet",
     srcs = glob(
         ["**/*.ts"],
@@ -20,8 +21,6 @@ ng_project(
         ":bottom-sheet-container.css",
     ] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/core",
-        "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -33,6 +32,8 @@ ng_project(
         "//src/cdk/platform",
         "//src/cdk/portal",
         "//src/material/core",
+        "@npm//@angular/core",
+        "@npm//rxjs",
     ],
 )
 
@@ -51,24 +52,22 @@ sass_binary(
     ],
 )
 
-ts_project(
+ng_test_library(
     name = "unit_test_sources",
-    testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
         ":bottom-sheet",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
         "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing/private",
+        "@npm//@angular/common",
+        "@npm//@angular/platform-browser",
     ],
 )
 

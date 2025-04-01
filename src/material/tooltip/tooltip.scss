@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/plain-tooltip' as tokens-mat-plain-tooltip;
+@use '../core/tokens/m2/mdc/plain-tooltip' as tokens-mdc-plain-tooltip;
 @use '../core/tokens/token-utils';
 
 .mat-mdc-tooltip {
@@ -62,8 +62,8 @@
   will-change: transform, opacity;
 
   @include token-utils.use-tokens(
-    tokens-mat-plain-tooltip.$prefix,
-    tokens-mat-plain-tooltip.get-token-slots()
+    tokens-mdc-plain-tooltip.$prefix,
+    tokens-mdc-plain-tooltip.get-token-slots()
   ) {
     @include token-utils.create-token-slot(background-color, container-color);
     @include token-utils.create-token-slot(color, supporting-text-color);

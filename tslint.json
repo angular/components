@@ -111,6 +111,13 @@
           }
         ],
         "Directive": [
+          {
+            "argument": 0,
+            "properties": {
+              "!host": "\\[class\\]"
+            },
+            "excludeFiles": ["**/dev-app/**"]
+          },
           // Enforce standalone even in the dev-app.
           {
             "argument": 0,
@@ -153,6 +160,16 @@
         "**/*.spec.ts"
       ]
     ],
+    "no-cross-entry-point-relative-imports": [
+      true,
+      [
+        // Files that we don't publish to npm so the relative imports don't matter.
+        "**/+(dev-app|components-examples|schematics|tools)/**",
+        "**/google-maps/testing/**",
+        "**/cdk/testing/+(tests|private)/**",
+        "**/*.spec.ts"
+      ]
+    ],
     "file-name-casing": [
       true,
       {
@@ -181,8 +198,8 @@
   },
   "linterOptions": {
     "exclude": [
-      // Exclude golden files
-      "goldens/**/*",
+      // Exclude the API golden files
+      "tools/public_api_guard/**/*.d.ts",
       // Exclude schematic template files and test cases that can't be linted.
       "src/material/schematics/ng-generate/*/files/**/*",
       "src/cdk/schematics/ng-generate/*/files/**/*",

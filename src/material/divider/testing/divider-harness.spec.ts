@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatDividerModule} from '../../divider';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatDividerHarness} from './divider-harness';
 
 describe('MatLegacyButtonHarness', () => {

@@ -8,7 +8,10 @@
 
 import {ErrorHandler, NgModule, provideExperimentalZonelessChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
-import {BrowserTestingModule, platformBrowserTesting} from '@angular/platform-browser/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 
 @NgModule({
   providers: [
@@ -28,7 +31,10 @@ export class TestModule {}
 /*
  * Common setup / initialization for all unit tests in Angular Material and CDK.
  */
-TestBed.initTestEnvironment([BrowserTestingModule, TestModule], platformBrowserTesting());
+TestBed.initTestEnvironment(
+  [BrowserDynamicTestingModule, TestModule],
+  platformBrowserDynamicTesting(),
+);
 
 (window as any).module = {};
 (window as any).isNode = false;

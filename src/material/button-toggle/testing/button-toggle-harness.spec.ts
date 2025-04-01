@@ -2,7 +2,7 @@ import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatButtonToggleModule} from '../../button-toggle';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatButtonToggleHarness} from './button-toggle-harness';
 
 describe('MatButtonToggleHarness', () => {

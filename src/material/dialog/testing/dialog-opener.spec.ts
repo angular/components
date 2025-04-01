@@ -1,8 +1,8 @@
 import {Component, inject} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
-import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '../../dialog';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '@angular/material/dialog';
+import {MatTestDialogOpener, MatTestDialogOpenerModule} from '@angular/material/dialog/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatTestDialogOpener, MatTestDialogOpenerModule} from './dialog-opener';
 
 describe('MatTestDialogOpener', () => {
   beforeEach(fakeAsync(() => {

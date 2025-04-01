@@ -14,6 +14,40 @@ interface BackendData {
   children?: string[];
 }
 
+const TREE_DATA: Map<string, BackendData> = new Map(
+  [
+    {
+      id: '1',
+      name: 'Fruit',
+      children: ['1-1', '1-2', '1-3'],
+    },
+    {id: '1-1', name: 'Apple', parent: '1'},
+    {id: '1-2', name: 'Banana', parent: '1'},
+    {id: '1-3', name: 'Fruit Loops', parent: '1'},
+    {
+      id: '2',
+      name: 'Vegetables',
+      children: ['2-1', '2-2'],
+    },
+    {
+      id: '2-1',
+      name: 'Green',
+      parent: '2',
+      children: ['2-1-1', '2-1-2'],
+    },
+    {
+      id: '2-2',
+      name: 'Orange',
+      parent: '2',
+      children: ['2-2-1', '2-2-2'],
+    },
+    {id: '2-1-1', name: 'Broccoli', parent: '2-1'},
+    {id: '2-1-2', name: 'Brussel sprouts', parent: '2-1'},
+    {id: '2-2-1', name: 'Pumpkins', parent: '2-2'},
+    {id: '2-2-2', name: 'Carrots', parent: '2-2'},
+  ].map(datum => [datum.id, datum]),
+);
+
 class FakeDataBackend {
   private _getRandomDelayTime() {
     // anywhere from 100 to 500ms.
@@ -22,16 +56,16 @@ class FakeDataBackend {
 
   getChildren(id: string): Observable<BackendData[]> {
     // first, find the specified ID in our tree
-    const item = EXAMPLE_DATA.get(id);
+    const item = TREE_DATA.get(id);
     const children = item?.children ?? [];
 
-    return observableOf(children.map(childId => EXAMPLE_DATA.get(childId)!)).pipe(
+    return observableOf(children.map(childId => TREE_DATA.get(childId)!)).pipe(
       delay(this._getRandomDelayTime()),
     );
   }
 
   getRoots(): Observable<BackendData[]> {
-    return observableOf([...EXAMPLE_DATA.values()].filter(datum => !datum.parent)).pipe(
+    return observableOf([...TREE_DATA.values()].filter(datum => !datum.parent)).pipe(
       delay(this._getRandomDelayTime()),
     );
   }
@@ -234,7 +268,7 @@ class ComplexDataStore {
     const transformFn = sourcesAndTransform[sourcesAndTransform.length - 1] as TransformFn<T, U>;
 
     return combineLatest([...sources, this._state]).pipe(
-      map(args => transformFn(...(args as unknown as [...ObservedValuesOf<T>, State]))),
+      map(args => transformFn(...(args as [...ObservedValuesOf<T>, State]))),
       shareReplay({refCount: true, bufferSize: 1}),
     );
   }
@@ -271,37 +305,3 @@ export class CdkTreeComplexExample implements OnInit {
     }
   }
 }
-
-const EXAMPLE_DATA = new Map<string, BackendData>(
-  [
-    {
-      id: '1',
-      name: 'Fruit',
-      children: ['1-1', '1-2', '1-3'],
-    },
-    {id: '1-1', name: 'Apple', parent: '1'},
-    {id: '1-2', name: 'Banana', parent: '1'},
-    {id: '1-3', name: 'Fruit Loops', parent: '1'},
-    {
-      id: '2',
-      name: 'Vegetables',
-      children: ['2-1', '2-2'],
-    },
-    {
-      id: '2-1',
-      name: 'Green',
-      parent: '2',
-      children: ['2-1-1', '2-1-2'],
-    },
-    {
-      id: '2-2',
-      name: 'Orange',
-      parent: '2',
-      children: ['2-2-1', '2-2-2'],
-    },
-    {id: '2-1-1', name: 'Broccoli', parent: '2-1'},
-    {id: '2-1-2', name: 'Brussel sprouts', parent: '2-1'},
-    {id: '2-2-1', name: 'Pumpkins', parent: '2-2'},
-    {id: '2-2-2', name: 'Carrots', parent: '2-2'},
-  ].map(datum => [datum.id, datum]),
-);
