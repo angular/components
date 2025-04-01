@@ -6,7 +6,6 @@
 @use '../m2/palette' as m2-palette;
 @use '../m2/theming' as m2-theming;
 @use '../m2/typography' as m2-typography;
-@use '../style/sass-utils';
 
 // Indicates whether we're building internally. Used for backwards compatibility.
 $private-is-internal-build: false;
@@ -133,41 +132,6 @@ $_system-fallbacks: null;
       $result: map.set($result, $new-key-name, map.get($map, $old-key-name));
     }
   }
-  @return $result;
-}
-
-/// At the time of writing, some color tokens (e.g. disabled state) are defined as a solid color
-/// token and a separate opacity token. This function applies the opacity to the color and drops the
-/// opacity key from the map. Can be removed once b/213331407 is resolved.
-/// @param {Map} $tokens The map of tokens currently being generated
-/// @param {Map} $all-tokens A map of all tokens, including hardcoded values
-/// @param {List} $pairs Pairs of color token names and their opacities. Should be in the shape of
-/// `((color: 'color-key', opacity: 'opacity-key'))`.
-/// @return {Map} The initial tokens with the combined color values.
-@function combine-color-tokens($tokens, $opacity-lookup, $pairs) {
-  $result: $tokens;
-
-  @each $pair in $pairs {
-    $color-key: map.get($pair, color);
-    $opacity-key: map.get($pair, opacity);
-    $color: map.get($tokens, $color-key);
-
-    @if (sass-utils.is-css-var-name($color)) {
-      $color: var(#{$color});
-    }
-
-    $opacity: map.get($opacity-lookup, $opacity-key);
-
-    @if(meta.type-of($color) == 'color') {
-      $result: map.remove($result, $opacity-key);
-      $result: map.set($result, $color-key, rgba($color, $opacity));
-    } @else if($color != null) {
-      $result: map.remove($result, $opacity-key);
-      $combined-color: #{color-mix(in srgb, #{$color} #{($opacity * 100) + '%'}, transparent)};
-      $result: map.set($result, $color-key, $combined-color);
-    }
-  }
-
   @return $result;
 }
 
