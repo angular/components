@@ -12,7 +12,6 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { ControlValueAccessor } from '@angular/forms';
-import { DateAdapter } from '@angular/material/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -701,7 +700,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     _comparisonRangeStart: number | null;
     comparisonStart: D | null;
     // (undocumented)
-    _dateAdapter: DateAdapter_2<D, any>;
+    _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _dateSelected(event: MatCalendarUserEvent<number>): void;
@@ -759,7 +758,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;
     // (undocumented)
-    _dateAdapter: DateAdapter_2<D, any>;
+    _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _focusActiveCell(): void;
@@ -848,7 +847,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     // (undocumented)
     readonly _changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    _dateAdapter: DateAdapter_2<D, any>;
+    _dateAdapter: DateAdapter<D, any>;
     dateClass: MatCalendarCellClassFunction<D>;
     dateFilter: (date: D) => boolean;
     _focusActiveCell(): void;

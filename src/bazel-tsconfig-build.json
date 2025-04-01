@@ -26,7 +26,7 @@
     // Bazel either uses "umd" or "esnext". We replicate this here for IDE support.
     // https://github.com/bazelbuild/rules_typescript/blob/master/internal/common/tsconfig.bzl#L199
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "inlineSources": true,
     "target": "es2022",
