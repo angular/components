@@ -45,6 +45,6 @@ e2e_test_suite(
 webdriver_test(
     name = "webdriver_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:webdriver_test_sources_legacy",
+        "//src/cdk/testing/tests:webdriver_test_sources",
     ],
 )

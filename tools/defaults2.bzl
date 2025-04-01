@@ -3,8 +3,10 @@ load("//tools/bazel:ts_project_interop.bzl", _ts_project = "ts_project")
 load("//tools/bazel:module_name.bzl", "compute_module_name")
 load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
-load("@devinfra//bazel/spec-bundling:index_rjs.bzl", "spec_bundle_amd")
+load("@devinfra//bazel/spec-bundling:index_rjs.bzl", "spec_bundle_amd", _spec_bundle = "spec_bundle")
 load("@devinfra//bazel/karma:index.bzl", _karma_web_test_suite = "karma_web_test_suite")
+
+spec_bundle = _spec_bundle
 
 def npm_package(**kwargs):
     _npm_package(**kwargs)
@@ -62,7 +64,7 @@ def jasmine_test(data = [], args = [], **kwargs):
     _jasmine_test(
         node_modules = "//:node_modules",
         chdir = native.package_name(),
-        args = [
+        fixed_args = [
             "--require=%s/node_modules/source-map-support/register.js" % relative_to_root,
             "**/*spec.js",
             "**/*spec.mjs",
@@ -70,8 +72,6 @@ def jasmine_test(data = [], args = [], **kwargs):
         ] + args,
         data = data + [
             "//:node_modules/source-map-support",
-            # Needed to ensure code is recognized as ESM.
-            "//src:package_json",
         ],
         **kwargs
     )
