@@ -197,6 +197,9 @@
       "@angular/animations": {
         "dependencies": {
           "@nginfra/angular-linking": "1.0.6"
+        },
+        "peerDependencies": {
+          "@angular/common": "*"
         }
       },
       "@angular/common": {
