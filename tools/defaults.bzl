@@ -6,7 +6,6 @@ load("@io_bazel_rules_sass//:defs.bzl", _npm_sass_library = "npm_sass_library", 
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
 load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
-load("@npm//@angular/build-tooling/bazel/spec-bundling:index.bzl", _spec_bundle = "spec_bundle")
 load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = "http_server")
 load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
@@ -14,9 +13,8 @@ load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBST
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
-load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
-load("//tools:defaults2.bzl", _karma_web_test_suite = "karma_web_test_suite")
+load("//tools:defaults2.bzl", "spec_bundle", _karma_web_test_suite = "karma_web_test_suite")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -145,7 +143,6 @@ def protractor_web_test_suite(name, deps, **kwargs):
     spec_bundle(
         name = "%s_bundle" % name,
         deps = deps,
-        platform = "cjs-legacy",
         external = ["protractor", "selenium-webdriver"],
     )
 
@@ -247,39 +244,6 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
         # Depend on our custom test initialization script. This needs to be the first dependency.
         deps = deps if exclude_init_script else ["//test:angular_test_init"] + deps,
         bootstrap = bootstrap,
-        **kwargs
-    )
-
-def spec_bundle(name, deps, **kwargs):
-    # TODO: Rename once devmode and prodmode have been combined.
-    # For spec bundling we also only consume devmode output as it is ESM in this repository.
-    # This helps speeding up development experience as ESBuild (used internally by the rule)
-    # would request both devmode and prodmode output flavor (resulting in 2x TS compilations).
-    extract_js_module_output(
-        name = "%s_devmode_deps" % name,
-        deps = deps,
-        provider = "JSModuleInfo",
-        forward_linker_mappings = True,
-        include_external_npm_packages = True,
-        include_default_files = False,
-        include_declarations = False,
-        testonly = True,
-    )
-
-    _spec_bundle(
-        name = name,
-        # For specs, we always add the pre-processed linker FW packages so that these
-        # are resolved instead of the unprocessed FW entry-points through the `node_modules`.
-        deps = ["%s_devmode_deps" % name] + LINKER_PROCESSED_FW_PACKAGES,
-        workspace_name = "angular_material",
-        run_angular_linker = select({
-            # Depending on whether partial compilation is enabled, we may want to run the linker
-            # to test the Angular compiler linker AOT processing. Additionally, a config setting
-            # can forcibly disable the linker to ensure tests rely on JIT linking at runtime.
-            "//tools:force_partial_jit_compilation_enabled": False,
-            "//tools:partial_compilation_enabled": True,
-            "//conditions:default": False,
-        }),
         **kwargs
     )
 
