@@ -13,7 +13,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: dfec39ade71a1c3f92f8642583acc388
+packageExtensionsChecksum: 7c98045a9c49ce191158d99623d18a74
 
 patchedDependencies:
   '@angular/compiler-cli@19.2.0':
@@ -29,7 +29,7 @@ importers:
     dependencies:
       '@angular/animations':
         specifier: ^19.2.0
-        version: 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
+        version: 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       '@angular/common':
         specifier: ^19.2.0
         version: 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
@@ -817,12 +817,14 @@ packages:
       - chokidar
     dev: true
 
-  /@angular/animations@19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0):
+  /@angular/animations@19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0):
     resolution: {integrity: sha512-GJDwtZ+7XmAAbzCbPSJrR1iMs2l16VoA7myeVl6n5k/KsZywqb4KhPmjzLKpQlAFP0NRjg1LbHc2Fsus7/Ydag==}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
+      '@angular/common': '*'
       '@angular/core': 19.2.0
     dependencies:
+      '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
       '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       tslib: 2.8.1
@@ -1264,7 +1266,7 @@ packages:
       '@angular/animations':
         optional: true
     dependencies:
-      '@angular/animations': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
+      '@angular/animations': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
       '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
