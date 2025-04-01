@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../../../style/sass-utils';
 @use '../../token-definition';
+@use '../../../style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, slider);
@@ -11,7 +12,7 @@ $prefix: (mat, slider);
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-slider
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: ((
+  $tokens: (
     ripple-color: map.get($systems, md-sys-color, primary),
     hover-state-layer-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, primary), $alpha: 0.05),
@@ -23,13 +24,51 @@ $prefix: (mat, slider);
     value-indicator-height: token-definition.hardcode(28px, $exclude-hardcoded),
     value-indicator-caret-display: token-definition.hardcode(none, $exclude-hardcoded),
     value-indicator-border-radius:
-        token-definition.hardcode(50% 50% 50% 0, $exclude-hardcoded),
+    token-definition.hardcode(50% 50% 50% 0, $exclude-hardcoded),
     value-indicator-text-transform:
-        token-definition.hardcode(rotate(45deg), $exclude-hardcoded),
+    token-definition.hardcode(rotate(45deg), $exclude-hardcoded),
     value-indicator-container-transform:
-      token-definition.hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded)
-  ), (
-    // Color variants
+    token-definition.hardcode(translateX(-50%) rotate(-45deg), $exclude-hardcoded),
+    active-track-color: map.get($systems, md-sys-color, primary),
+    active-track-height: if($exclude-hardcoded, null, 4px),
+    active-track-shape: map.get($systems, md-sys-shape, corner-full),
+    disabled-active-track-color: map.get($systems, md-sys-color, on-surface),
+    disabled-handle-color: map.get($systems, md-sys-color, on-surface),
+    disabled-inactive-track-color: map.get($systems, md-sys-color, on-surface),
+    focus-handle-color: map.get($systems, md-sys-color, primary),
+    handle-color: map.get($systems, md-sys-color, primary),
+    handle-elevation: map.get($systems, md-sys-elevation, level1),
+    handle-height: if($exclude-hardcoded, null, 20px),
+    handle-shape: map.get($systems, md-sys-shape, corner-full),
+    handle-width: if($exclude-hardcoded, null, 20px),
+    hover-handle-color: map.get($systems, md-sys-color, primary),
+    inactive-track-color: map.get($systems, md-sys-color, surface-variant),
+    inactive-track-height: if($exclude-hardcoded, null, 4px),
+    inactive-track-shape: map.get($systems, md-sys-shape, corner-full),
+    label-container-color: map.get($systems, md-sys-color, primary),
+    label-label-text-color: map.get($systems, md-sys-color, on-primary),
+    label-label-text-font: map.get($systems, md-sys-typescale, label-medium-font),
+    label-label-text-line-height: map.get($systems, md-sys-typescale, label-medium-line-height),
+    label-label-text-size: map.get($systems, md-sys-typescale, label-medium-size),
+    label-label-text-tracking: map.get($systems, md-sys-typescale, label-medium-tracking),
+    label-label-text-weight: map.get($systems, md-sys-typescale, label-medium-weight),
+    with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-primary),
+    with-overlap-handle-outline-width: if($exclude-hardcoded, null, 1px),
+    with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-primary),
+    with-tick-marks-active-container-opacity: if($exclude-hardcoded, null, 0.38),
+    with-tick-marks-container-shape: map.get($systems, md-sys-shape, corner-full),
+    with-tick-marks-container-size: if($exclude-hardcoded, null, 2px),
+    with-tick-marks-disabled-container-color: map.get($systems, md-sys-color, on-surface),
+    with-tick-marks-inactive-container-color: map.get($systems, md-sys-color, on-surface-variant),
+    with-tick-marks-inactive-container-opacity: if($exclude-hardcoded, null, 0.38)
+  );
+  $handle-elevation: map.get($tokens, handle-elevation);
+
+  @if ($handle-elevation != null) {
+    $tokens: map.set($tokens, handle-elevation, elevation.get-box-shadow($handle-elevation));
+  }
+
+  $variant-tokens: (
     primary: (), // Default, no overrides needed
     secondary: (
       ripple-color: map.get($systems, md-sys-color, secondary),
@@ -37,6 +76,14 @@ $prefix: (mat, slider);
           map.get($systems, md-sys-color, secondary), $alpha: 0.05),
       focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, secondary), $alpha: 0.2),
+      active-track-color: map.get($systems, md-sys-color, secondary),
+      focus-handle-color: map.get($systems, md-sys-color, secondary),
+      handle-color: map.get($systems, md-sys-color, secondary),
+      hover-handle-color: map.get($systems, md-sys-color, secondary),
+      label-container-color: map.get($systems, md-sys-color, secondary),
+      label-label-text-color: map.get($systems, md-sys-color, on-secondary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-secondary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-secondary),
     ),
     tertiary: (
       ripple-color: map.get($systems, md-sys-color, tertiary),
@@ -44,6 +91,14 @@ $prefix: (mat, slider);
           map.get($systems, md-sys-color, tertiary), $alpha: 0.05),
       focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, tertiary), $alpha: 0.2),
+      active-track-color: map.get($systems, md-sys-color, tertiary),
+      focus-handle-color: map.get($systems, md-sys-color, tertiary),
+      handle-color: map.get($systems, md-sys-color, tertiary),
+      hover-handle-color: map.get($systems, md-sys-color, tertiary),
+      label-container-color: map.get($systems, md-sys-color, tertiary),
+      label-label-text-color: map.get($systems, md-sys-color, on-tertiary),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-tertiary),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-tertiary),
     ),
     error: (
       ripple-color: map.get($systems, md-sys-color, error),
@@ -51,8 +106,16 @@ $prefix: (mat, slider);
           map.get($systems, md-sys-color, error), $alpha: 0.05),
       focus-state-layer-color: sass-utils.safe-color-change(
           map.get($systems, md-sys-color, error), $alpha: 0.2),
+      active-track-color: map.get($systems, md-sys-color, error),
+      focus-handle-color: map.get($systems, md-sys-color, error),
+      handle-color: map.get($systems, md-sys-color, error),
+      hover-handle-color: map.get($systems, md-sys-color, error),
+      label-container-color: map.get($systems, md-sys-color, error),
+      label-label-text-color: map.get($systems, md-sys-color, on-error),
+      with-overlap-handle-outline-color: map.get($systems, md-sys-color, on-error),
+      with-tick-marks-active-container-color: map.get($systems, md-sys-color, on-error),
     ),
-  ));
+  );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }

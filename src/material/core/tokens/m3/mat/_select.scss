@@ -28,7 +28,9 @@ $prefix: (mat, select);
       container-elevation-shadow:
         token-definition.hardcode(elevation.get-box-shadow(2), $exclude-hardcoded),
     )
-  ), (
+  );
+
+  $variant-tokens: (
     // Color variants:
     primary: (), // Default, no overrides needed
     secondary: (
@@ -42,5 +44,5 @@ $prefix: (mat, select);
     )
   );
 
-  @return token-definition.namespace-tokens($prefix, $tokens, $token-slots);
+  @return token-definition.namespace-tokens($prefix, ($tokens, $variant-tokens), $token-slots);
 }
