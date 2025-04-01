@@ -22,8 +22,8 @@ $prefix: (mat, radio);
     label-text-size: map.get($systems, md-sys-typescale, body-medium-size),
     label-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
     label-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    disabled-selected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-selected-icon-color: map.get($systems, md-sys-color, on-surface),
+    disabled-selected-icon-opacity: if($exclude-hardcoded, null, 0.38),
     disabled-unselected-icon-color: map.get($systems, md-sys-color, on-surface),
     disabled-unselected-icon-opacity: if($exclude-hardcoded, null, 0.38),
     selected-focus-icon-color: map.get($systems, md-sys-color, primary),

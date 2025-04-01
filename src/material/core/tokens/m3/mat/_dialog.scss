@@ -20,6 +20,7 @@ $prefix: (mat, dialog);
     actions-alignment: token-definition.hardcode(flex-end, $exclude-hardcoded),
     actions-padding: token-definition.hardcode(16px 24px, $exclude-hardcoded),
     container-color: map.get($systems, md-sys-color, surface),
+    container-elevation-shadow: token-definition.hardcode(none, $exclude-hardcoded),
     container-max-width: token-definition.hardcode(560px, $exclude-hardcoded),
     container-min-width: token-definition.hardcode(280px, $exclude-hardcoded),
     container-shape: map.get($systems, md-sys-shape, corner-extra-large),

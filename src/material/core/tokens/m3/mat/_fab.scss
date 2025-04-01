@@ -31,6 +31,7 @@ $prefix: (mat, fab);
     hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
+    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
   );
 
   $variant-tokens: (

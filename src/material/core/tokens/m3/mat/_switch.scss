@@ -22,8 +22,8 @@ $prefix: (mat, switch);
   $tokens: (
     disabled-selected-handle-color: map.get($systems, md-sys-color, surface),
     disabled-selected-handle-opacity: if($exclude-hardcoded, null, 1),
-    disabled-selected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-selected-icon-color: map.get($systems, md-sys-color, on-surface),
+    disabled-selected-icon-opacity: if($exclude-hardcoded, null, 0.38),
     disabled-selected-track-color: map.get($systems, md-sys-color, on-surface),
     disabled-track-opacity: if($exclude-hardcoded, null, 0.12),
     disabled-unselected-handle-color: map.get($systems, md-sys-color, on-surface),
