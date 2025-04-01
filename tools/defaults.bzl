@@ -9,7 +9,6 @@ load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild
 load("@npm//@angular/build-tooling/bazel/spec-bundling:index.bzl", _spec_bundle = "spec_bundle")
 load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = "http_server")
 load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
-load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
@@ -141,10 +140,6 @@ def pkg_npm(name, visibility = None, **kwargs):
         tags = ["manual"],
         visibility = visibility,
     )
-
-def jasmine_node_test(**kwargs):
-    kwargs["templated_args"] = ["--bazel_patch_module_resolver"] + kwargs.get("templated_args", [])
-    _jasmine_node_test(**kwargs)
 
 def protractor_web_test_suite(name, deps, **kwargs):
     spec_bundle(
