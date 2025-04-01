@@ -1,3 +1,4 @@
+load("//tools:defaults.bzl", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -17,4 +18,21 @@ ts_project(
         "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":listbox",
+        "//:node_modules/@angular/core",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
 )
