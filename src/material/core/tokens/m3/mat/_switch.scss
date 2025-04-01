@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '../../token-definition';
 @use '../../../style/elevation';
-@use '../../../style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, switch);
