@@ -91,6 +91,9 @@ export class ListboxPattern<V> {
     return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
   });
 
+  /** Represents the space key. Does nothing when the user is actively using typeahead. */
+  spaceKey = computed(() => (this.typeahead.query().length ? '' : ' '));
+
   /** The regexp used to decide if a key should trigger typeahead. */
   typeaheadRegexp = /^.$/; // TODO: Ignore spaces?
 
@@ -127,7 +130,7 @@ export class ListboxPattern<V> {
 
     if (this.inputs.multi()) {
       manager
-        .on(Modifier.Shift, ' ', () => this._updateSelection({selectFromAnchor: true}))
+        .on(Modifier.Shift, this.spaceKey, () => this._updateSelection({selectFromAnchor: true}))
         .on(Modifier.Shift, 'Enter', () => this._updateSelection({selectFromAnchor: true}))
         .on(Modifier.Shift, this.prevKey, () => this.prev({toggle: true}))
         .on(Modifier.Shift, this.nextKey, () => this.next({toggle: true}))
@@ -137,12 +140,12 @@ export class ListboxPattern<V> {
     }
 
     if (!this.followFocus() && this.inputs.multi()) {
-      manager.on(' ', () => this._updateSelection({toggle: true}));
+      manager.on(this.spaceKey, () => this._updateSelection({toggle: true}));
       manager.on('Enter', () => this._updateSelection({toggle: true}));
     }
 
     if (!this.followFocus() && !this.inputs.multi()) {
-      manager.on(' ', () => this._updateSelection({toggleOne: true}));
+      manager.on(this.spaceKey, () => this._updateSelection({toggleOne: true}));
       manager.on('Enter', () => this._updateSelection({toggleOne: true}));
     }
 
