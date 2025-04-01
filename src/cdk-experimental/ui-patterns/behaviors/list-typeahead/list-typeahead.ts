@@ -37,7 +37,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   navigation: ListNavigation<T>;
 
   /** Keeps track of the characters that typeahead search is being called with. */
-  private _query = signal('');
+  query = signal('');
 
   /** The index where that the typeahead search was initiated from. */
   private _startIndex = signal<number | undefined>(undefined);
@@ -57,7 +57,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     clearTimeout(this.timeout);
-    this._query.update(q => q + char.toLowerCase());
+    this.query.update(q => q + char.toLowerCase());
     const item = this._getItem();
 
     if (item) {
@@ -65,7 +65,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     this.timeout = setTimeout(() => {
-      this._query.set('');
+      this.query.set('');
       this._startIndex.set(undefined);
     }, this.inputs.typeaheadDelay() * 1000);
   }
@@ -88,6 +88,6 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       }
     }
 
-    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this._query()));
+    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this.query()));
   }
 }
