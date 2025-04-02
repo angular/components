@@ -10,16 +10,58 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_snack-bar-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "container_css",
+    src = "snack-bar-container.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:elevation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "simple-snack-bar.scss",
+)
+
 ng_project(
     name = "snack-bar",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "public-api.ts",
+        "simple-snack-bar.ts",
+        "snack-bar.ts",
+        "snack-bar-animations.ts",
+        "snack-bar-config.ts",
+        "snack-bar-container.ts",
+        "snack-bar-content.ts",
+        "snack-bar-ref.ts",
+    ],
     assets = [
-        ":simple_snack_bar_scss",
-        ":snack_bar_container_scss",
-    ] + glob(["**/*.html"]),
+        "simple-snack-bar.html",
+        "snack-bar-container.html",
+        ":container_css",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -28,28 +70,6 @@ ng_project(
         "//src/material:node_modules/@angular/cdk",
         "//src/material/button",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "snack_bar_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "simple_snack_bar_scss",
-    src = "simple-snack-bar.scss",
-)
-
-sass_binary(
-    name = "snack_bar_container_scss",
-    src = "snack-bar-container.scss",
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -87,7 +107,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":snack_bar_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

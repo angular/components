@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "m2_sass",
+    srcs = [
+        "_index.scss",
+        "_palette.scss",
+        "_theming.scss",
+        "_typography.scss",
+        "_typography-utils.scss",
+    ],
+    deps = ["//src/material/core/theming"],
+)

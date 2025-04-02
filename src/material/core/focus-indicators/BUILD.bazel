@@ -1,0 +1,30 @@
+load("//tools:defaults.bzl", "sass_binary", "sass_library")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "focus-indicators",
+    srcs = [
+        "_private.scss",
+    ],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:layout_common",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+    ],
+)
+
+ng_project(
+    name = "internal",
+    srcs = ["structural-styles.ts"],
+    assets = [":structural_styles_css"],
+    deps = ["//:node_modules/@angular/core"],
+)
+
+sass_binary(
+    name = "structural_styles_css",
+    src = "structural-styles.scss",
+    deps = [":focus-indicators"],
+)

@@ -10,37 +10,48 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_progress-spinner-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "progress-spinner.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "progress-spinner",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-        ],
-    ),
-    assets = [":progress_spinner_scss"] + glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "progress-spinner.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "progress-spinner.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "progress_spinner_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "progress_spinner_scss",
-    src = "progress-spinner.scss",
-    deps = [
-        "//src/material:sass_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -73,7 +84,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":progress_spinner_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

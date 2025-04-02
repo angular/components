@@ -10,38 +10,61 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_menu-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "menu.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:button_common",
+        "//src/material/core/style:menu_common",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "menu",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-        ],
-    ),
-    assets = [":menu_scss"] + glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "menu.ts",
+        "menu-animations.ts",
+        "menu-content.ts",
+        "menu-errors.ts",
+        "menu-item.ts",
+        "menu-panel.ts",
+        "menu-positions.ts",
+        "menu-trigger.ts",
+        "module.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "menu-item.html",
+        "menu.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "menu_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "menu_scss",
-    src = "menu.scss",
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -75,7 +98,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":menu_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

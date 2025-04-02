@@ -1,4 +1,3 @@
-load("//src/material:config.bzl", "MATERIAL_SCSS_LIBS")
 load(
     "//tools:defaults.bzl",
     "extract_tokens",
@@ -11,159 +10,70 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["theming/_theming.scss"])
-
 ng_project(
     name = "core",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [
-        ":selection/pseudo-checkbox/pseudo-checkbox.css",
-        ":option/option.css",
-        ":option/optgroup.css",
-        ":internal-form-field/internal-form-field.css",
-        ":ripple/ripple-structure.css",
-        ":focus-indicators/structural-styles.css",
-    ] + glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "line/line.ts",
+        "public-api.ts",
+    ],
     deps = [
-        "//:node_modules/@angular/animations",
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/forms",
-        "//:node_modules/@angular/platform-browser",
+        ":version",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/material:node_modules/@angular/cdk",
+        "//src/material/core:ripple",
+        "//src/material/core/animation",
+        "//src/material/core/common-behaviors",
+        "//src/material/core/datetime",
+        "//src/material/core/error",
+        "//src/material/core/focus-indicators:internal",
+        "//src/material/core/internal-form-field",
+        "//src/material/core/option",
+        "//src/material/core/private",
+        "//src/material/core/selection",
     ],
 )
 
-ALL_THEMING_FILES = [
-    # The `_core.scss` file needs to be added here too because it depends
-    # on the `_all-typography` file.
-    "_core.scss",
-    "color/_all-color.scss",
-    "density/private/_all-density.scss",
-    "theming/_all-theme.scss",
-    "typography/_all-typography.scss",
-]
+ng_project(
+    name = "version",
+    srcs = [
+        "version.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)
 
 sass_library(
-    name = "core_scss_lib",
-    srcs = glob(
-        ["**/_*.scss"],
-        exclude = ALL_THEMING_FILES + ["./tokens/m3/definitions/unused/**/*_.scss"],
-    ),
+    name = "core_sass",
+    srcs = [
+        "_core.scss",
+    ],
     deps = [
-        "//src/cdk:sass_lib",
+        "//src/material/core/style:elevation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
     ],
 )
 
 sass_library(
-    name = "theming_scss_lib",
-    srcs = ALL_THEMING_FILES,
-    deps = MATERIAL_SCSS_LIBS + [
-        "//src/cdk:sass_lib",
+    name = "theme_sass",
+    srcs = [
+        "_core-theme.scss",
     ],
-)
-
-sass_binary(
-    name = "structural_styles_scss",
-    src = "focus-indicators/structural-styles.scss",
-    deps = [":core_scss_lib"],
-)
-
-sass_binary(
-    name = "pseudo_checkbox_scss",
-    src = "selection/pseudo-checkbox/pseudo-checkbox.scss",
-    deps = [":core_scss_lib"],
-)
-
-sass_binary(
-    name = "option_scss",
-    src = "option/option.scss",
-    deps = [":core_scss_lib"],
-)
-
-sass_binary(
-    name = "optgroup_scss",
-    src = "option/optgroup.scss",
-    deps = [":core_scss_lib"],
-)
-
-sass_binary(
-    name = "internal_form_field_scss",
-    src = "internal-form-field/internal-form-field.scss",
-    deps = [":core_scss_lib"],
-)
-
-sass_binary(
-    name = "ripple_structure_scss",
-    src = "ripple/ripple-structure.scss",
-    deps = [":core_scss_lib"],
-)
-
-# M3 themes
-sass_binary(
-    name = "azure_blue_prebuilt",
-    src = "theming/prebuilt/azure-blue.scss",
     deps = [
-        ":theming_scss_lib",
-        "//src/material-experimental:sass_lib",
+        "//src/material/core:ripple_sass_theme",
+        "//src/material/core/option:theme",
+        "//src/material/core/selection/pseudo-checkbox:sass_theme",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
     ],
-)
-
-sass_binary(
-    name = "rose_red_prebuilt",
-    src = "theming/prebuilt/rose-red.scss",
-    deps = [
-        ":theming_scss_lib",
-        "//src/material-experimental:sass_lib",
-    ],
-)
-
-sass_binary(
-    name = "cyan_orange_prebuilt",
-    src = "theming/prebuilt/cyan-orange.scss",
-    deps = [
-        ":theming_scss_lib",
-        "//src/material-experimental:sass_lib",
-    ],
-)
-
-sass_binary(
-    name = "magenta_violet_prebuilt",
-    src = "theming/prebuilt/magenta-violet.scss",
-    deps = [
-        ":theming_scss_lib",
-        "//src/material-experimental:sass_lib",
-    ],
-)
-
-# Legacy M2 themes
-sass_binary(
-    name = "indigo_pink_prebuilt",
-    src = "theming/prebuilt/indigo-pink.scss",
-    deps = [":theming_scss_lib"],
-)
-
-sass_binary(
-    name = "deeppurple-amber_prebuilt",
-    src = "theming/prebuilt/deeppurple-amber.scss",
-    deps = [":theming_scss_lib"],
-)
-
-sass_binary(
-    name = "pink-bluegrey_prebuilt",
-    src = "theming/prebuilt/pink-bluegrey.scss",
-    deps = [":theming_scss_lib"],
-)
-
-sass_binary(
-    name = "purple-green_prebuilt",
-    src = "theming/prebuilt/purple-green.scss",
-    deps = [":theming_scss_lib"],
 )
 
 #################
@@ -201,10 +111,70 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":core_scss_lib"],
+    srcs = [":theme_sass"],
 )
 
 filegroup(
     name = "source-files",
     srcs = glob(["**/*.ts"]),
+)
+
+### Ripple
+### Cannot be in its own ripple/BUILD.bazel due to breaking docs generation.
+
+sass_library(
+    name = "ripple_sass_theme",
+    srcs = [
+        "ripple/_ripple-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_library(
+    name = "ripple_sass",
+    srcs = [
+        "ripple/_ripple.scss",
+    ],
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "ripple_structure",
+    src = "ripple/ripple-structure.scss",
+    deps = [
+        ":ripple_sass",
+    ],
+)
+
+ng_project(
+    name = "ripple",
+    srcs = [
+        "ripple/index.ts",
+        "ripple/ripple.ts",
+        "ripple/ripple-event-manager.ts",
+        "ripple/ripple-ref.ts",
+        "ripple/ripple-renderer.ts",
+    ],
+    assets = [
+        ":ripple_structure",
+    ],
+    deps = [
+        "//src/cdk/a11y",
+        "//src/cdk/coercion",
+        "//src/cdk/platform",
+        "//src/cdk/private",
+        "//src/material/core/animation",
+        "//src/material/core/common-behaviors",
+    ],
 )

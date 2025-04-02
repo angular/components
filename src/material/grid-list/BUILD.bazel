@@ -10,31 +10,57 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_grid-list-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "grid-list.scss",
+    deps = [
+        "//src/material/core/style:layout_common",
+        "//src/material/core/style:list_common",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "grid-list",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [":grid-list.css"] + glob(["**/*.html"]),
+    srcs = [
+        "grid-list.ts",
+        "grid-list-base.ts",
+        "grid-list-module.ts",
+        "grid-tile.ts",
+        "index.ts",
+        "public-api.ts",
+        "tile-coordinator.ts",
+        "tile-styler.ts",
+    ],
+    assets = [
+        "grid-list.html",
+        "grid-tile-text.html",
+        "grid-tile.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//src:dev_mode_types",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
-)
-
-sass_library(
-    name = "grid_list_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_binary(
-    name = "grid_list_scss",
-    src = "grid-list.scss",
-    deps = ["//src/material/core:core_scss_lib"],
 )
 
 ts_project(
@@ -63,7 +89,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":grid_list_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

@@ -9,56 +9,56 @@ package(default_visibility = ["//visibility:public"])
 
 genrule(
     name = "indigo-pink",
-    srcs = ["//src/material/core:theming/prebuilt/indigo-pink.css"],
+    srcs = ["//src/material/core/theming/prebuilt:indigo-pink-theme"],
     outs = ["indigo-pink.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "deeppurple-amber",
-    srcs = ["//src/material/core:theming/prebuilt/deeppurple-amber.css"],
+    srcs = ["//src/material/core/theming/prebuilt:deeppurple-amber-theme"],
     outs = ["deeppurple-amber.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "pink-bluegrey",
-    srcs = ["//src/material/core:theming/prebuilt/pink-bluegrey.css"],
+    srcs = ["//src/material/core/theming/prebuilt:pink-bluegrey-theme"],
     outs = ["pink-bluegrey.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "purple-green",
-    srcs = ["//src/material/core:theming/prebuilt/purple-green.css"],
+    srcs = ["//src/material/core/theming/prebuilt:purple-green-theme"],
     outs = ["purple-green.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "azure-blue",
-    srcs = ["//src/material/core:theming/prebuilt/azure-blue.css"],
+    srcs = ["//src/material/core/theming/prebuilt:azure_blue"],
     outs = ["azure-blue.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "rose-red",
-    srcs = ["//src/material/core:theming/prebuilt/rose-red.css"],
+    srcs = ["//src/material/core/theming/prebuilt:rose_red"],
     outs = ["rose-red.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "cyan-orange",
-    srcs = ["//src/material/core:theming/prebuilt/cyan-orange.css"],
+    srcs = ["//src/material/core/theming/prebuilt:cyan_orange"],
     outs = ["cyan-orange.css"],
     cmd = "cp $< $@",
 )
 
 genrule(
     name = "magenta-violet",
-    srcs = ["//src/material/core:theming/prebuilt/magenta-violet.css"],
+    srcs = ["//src/material/core/theming/prebuilt:magenta_violet"],
     outs = ["magenta-violet.css"],
     cmd = "cp $< $@",
 )

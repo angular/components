@@ -1,0 +1,13 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "m2",
+    srcs = ["_index.scss"],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)

@@ -1,0 +1,25 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "directives",
+    srcs = [
+        "error.ts",
+        "floating-label.ts",
+        "hint.ts",
+        "label.ts",
+        "line-ripple.ts",
+        "notched-outline.ts",
+        "prefix.ts",
+        "suffix.ts",
+    ],
+    assets = [
+        "notched-outline.html",
+    ],
+    deps = [
+        "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/observers/private",
+    ],
+)
