@@ -1,3 +1,21 @@
+<a name="19.2.8"></a>
+# 19.2.8 "sapphire-kraken" (2025-04-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0ee159390f](https://github.com/angular/components/commit/0ee159390f7f40322187c1f08c3684a6382fc2b8) | perf | **drag-drop:** fix performance regression when destroying items ([#30751](https://github.com/angular/components/pull/30751)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [491fce2aa7](https://github.com/angular/components/commit/491fce2aa7aa9fc72cb95c043172a8f1a1ea2b1b) | fix | **form-field:** move error aria-live to parent container ([#30678](https://github.com/angular/components/pull/30678)) |
+| [bdbf32af29](https://github.com/angular/components/commit/bdbf32af2980d517c55262d852439058dbc65b6a) | fix | **tabs:** allow ID to be set on tab ([#30768](https://github.com/angular/components/pull/30768)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bc99b420b2](https://github.com/angular/components/commit/bc99b420b22af93d5dcde34b7bf1ba567519a3bd) | perf | **column-resize:** improve hover responsiveness of… ([#30708](https://github.com/angular/components/pull/30708)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-next.4"></a>
 # 20.0.0-next.4 "bohrium-beans" (2025-03-26)
 ### cdk
