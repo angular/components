@@ -35,13 +35,13 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatOption, MatOptionSelectionChange} from '../core';
-import {MatFormField, MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {MatOption, MatOptionSelectionChange} from '../core';
+import {MatFormField, MatFormFieldModule} from '../form-field';
+import {MatInputModule} from '../input';
 import {
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
   MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
@@ -3254,6 +3254,7 @@ describe('MatAutocomplete', () => {
 
   it('should not throw errors when closing without options', fakeAsync(() => {
     const fixture = createComponent(AutocompleteWithoutOptions);
+    fixture.detectChanges();
     const trigger = fixture.componentInstance.trigger;
 
     trigger.openPanel();
@@ -4521,6 +4522,5 @@ class AutocompleteInsideAModal {
   standalone: false,
 })
 class AutocompleteWithoutOptions {
-  @ViewChild(MatAutocompleteTrigger, { static: true }) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
 }
-
