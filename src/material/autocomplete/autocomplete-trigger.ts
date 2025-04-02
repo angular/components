@@ -622,12 +622,12 @@ export class MatAutocompleteTrigger
         {injector: this._environmentInjector},
       );
     });
-    const optionChanges = this.autocomplete.options.changes.pipe(
+    const optionChanges = this.autocomplete.options?.changes.pipe(
       tap(() => this._positionStrategy.reapplyLastPosition()),
       // Defer emitting to the stream until the next tick, because changing
       // bindings in here will cause "changed after checked" errors.
       delay(0),
-    );
+    ) ?? observableOf();
 
     // When the options are initially rendered, and when the option list changes...
     return (
