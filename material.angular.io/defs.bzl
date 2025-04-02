@@ -53,9 +53,8 @@ APPLICATION_CONFIG = COMMON_CONFIG + [
 
 # Common dependencies of Angular CLI test suites
 TEST_CONFIG = COMMON_CONFIG + [
-    "@dev-infra//bazel/browsers/chromium",
-    "@dev-infra//bazel/browsers/firefox",
-
+    "@devinfra//bazel/browsers/chromium",
+    "@devinfra//bazel/browsers/firefox",
     "//:ng-base-test-config",
     ":ng-test-config",
     "//:node_modules/karma",
@@ -74,9 +73,8 @@ TEST_DEPS = [
 
 # Common dependencies of Angular CLI e2e tests
 E2E_CONFIG = COMMON_CONFIG + [
-    "@dev-infra//bazel/browsers/chromium",
-    "@dev-infra//bazel/browsers/firefox",
-
+    "@devinfra//bazel/browsers/chromium",
+    "@devinfra//bazel/browsers/firefox",
     "//:ng-base-test-config",
     ":ng-e2e-config",
     "//:node_modules/jasmine-spec-reporter",
@@ -89,28 +87,28 @@ E2E_DEPS = [
 ]
 
 LINT_CONFIG = COMMON_CONFIG + [
-  # Lint uses the e2e config
-  "//:ng-base-test-config",
-  ":ng-e2e-config",
-  "//:ng-base-lint-config",
-  "//:node_modules/@angular-eslint/builder",
-  "//:node_modules/@angular-eslint/eslint-plugin",
-  "//:node_modules/@angular-eslint/eslint-plugin-template",
-  "//:node_modules/@angular-eslint/template-parser",
-  "//:node_modules/eslint-plugin-ban",
-  "//:node_modules/eslint-plugin-import",
-  "//:node_modules/eslint-plugin-jsdoc",
-  "//:node_modules/eslint-plugin-prefer-arrow",
-  "//:node_modules/@typescript-eslint/eslint-plugin",
-  "//:node_modules/@typescript-eslint/parser",
-  "//:node_modules/@stylistic/eslint-plugin",
+    # Lint uses the e2e config
+    "//:ng-base-test-config",
+    ":ng-e2e-config",
+    "//:ng-base-lint-config",
+    "//:node_modules/@angular-eslint/builder",
+    "//:node_modules/@angular-eslint/eslint-plugin",
+    "//:node_modules/@angular-eslint/eslint-plugin-template",
+    "//:node_modules/@angular-eslint/template-parser",
+    "//:node_modules/eslint-plugin-ban",
+    "//:node_modules/eslint-plugin-import",
+    "//:node_modules/eslint-plugin-jsdoc",
+    "//:node_modules/eslint-plugin-prefer-arrow",
+    "//:node_modules/@typescript-eslint/eslint-plugin",
+    "//:node_modules/@typescript-eslint/parser",
+    "//:node_modules/@stylistic/eslint-plugin",
 ]
 LINT_DEPS = [
-  # TODO(bazel): this should be included as a transitive of @angular-devkit/architect-cli!?
-  "//:node_modules/@angular-devkit/architect",
+    # TODO(bazel): this should be included as a transitive of @angular-devkit/architect-cli!?
+    "//:node_modules/@angular-devkit/architect",
 ]
 
-
+# buildifier: disable=unused-variable
 def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], **kwargs):
     """
     Macro for Angular applications, creating various targets aligning with the Angular CLI.
@@ -137,7 +135,7 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
 
     test_srcs = native.glob(["src/test.ts", "src/**/*.spec.ts"])
 
-    e2e_srcs =  native.glob(["e2e/src/**/*.ts"])
+    e2e_srcs = native.glob(["e2e/src/**/*.ts"])
 
     tags = kwargs.pop("tags", [])
 
@@ -145,36 +143,36 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
     copy_to_bin(
         name = "ng-app-config",
         srcs = [
-          "tsconfig.app.json",
+            "tsconfig.app.json",
         ],
         visibility = ["//visibility:private"],
     )
     copy_to_bin(
         name = "ng-test-config",
         srcs = [
-          "karma.conf.js",
-          "tsconfig.spec.json",
+            "karma.conf.js",
+            "tsconfig.spec.json",
         ],
         visibility = ["//visibility:private"],
     )
     copy_to_bin(
         name = "ng-e2e-config",
         srcs = [
-          "e2e/tsconfig.json",
-          "e2e/protractor.conf.js",
+            "e2e/tsconfig.json",
+            "e2e/protractor.conf.js",
         ],
         visibility = ["//visibility:private"],
     )
 
     # Lint config files in addition to the root
-    if native.package_name() != '':
-      copy_to_bin(
-          name = "lint-config",
-          srcs = [
-              ".eslintrc.json",
-          ],
-          visibility = ["//visibility:private"],
-      )
+    if native.package_name() != "":
+        copy_to_bin(
+            name = "lint-config",
+            srcs = [
+                ".eslintrc.json",
+            ],
+            visibility = ["//visibility:private"],
+        )
 
     project_name = project_name if project_name else name
 
@@ -239,7 +237,7 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
     _architect_test(
         project_name,
         "lint",
-        srcs = srcs + test_srcs + e2e_srcs + deps + test_deps + NG_COMMON_DEPS + LINT_DEPS + LINT_CONFIG + ([":lint-config"] if native.package_name() != '' else []),
+        srcs = srcs + test_srcs + e2e_srcs + deps + test_deps + NG_COMMON_DEPS + LINT_DEPS + LINT_CONFIG + ([":lint-config"] if native.package_name() != "" else []),
         tags = tags + ["lint"],
         **kwargs
     )
@@ -248,8 +246,9 @@ def _architect_build(project_name, configuration = None, args = [], srcs = [], *
     output_dir = "%s%s" % (project_name, ".%s" % configuration if configuration else "")
 
     args = [
-      "%s:build%s" % (project_name, ":%s" % configuration if configuration else ""),
-      "--output-path", output_dir
+        "%s:build%s" % (project_name, ":%s" % configuration if configuration else ""),
+        "--output-path",
+        output_dir,
     ] + args
 
     architect_cli.architect(
@@ -258,13 +257,13 @@ def _architect_build(project_name, configuration = None, args = [], srcs = [], *
         args = args,
         out_dirs = [output_dir],
         srcs = srcs,
-        **kwargs,
+        **kwargs
     )
 
 def _architect_test(project_name, command, configuration = None, args = [], srcs = [], **kwargs):
     to_root = ""
     if native.package_name() != "":
-      to_root = "".join(["../" for _ in native.package_name().split("/")])
+        to_root = "".join(["../" for _ in native.package_name().split("/")])
 
     env = {
         "CHROME_BIN": to_root + "$(CHROMIUM)",
@@ -275,15 +274,15 @@ def _architect_test(project_name, command, configuration = None, args = [], srcs
         name = "%s%s" % (command, ".%s" % configuration if configuration else ""),
         chdir = native.package_name(),
         args = [
-          "%s:%s%s" % (project_name, command, ":%s" % configuration if configuration else "")
+            "%s:%s%s" % (project_name, command, ":%s" % configuration if configuration else ""),
         ] + args,
         data = srcs,
         env = env,
         toolchains = [
-            "@dev-infra//bazel/browsers/chromium:toolchain_alias",
-            "@dev-infra//bazel/browsers/firefox:toolchain_alias",
+            "@devinfra//bazel/browsers/chromium:toolchain_alias",
+            "@devinfra//bazel/browsers/firefox:toolchain_alias",
         ],
-        **kwargs,
+        **kwargs
     )
 
 def _architect_binary(project_name, command, configuration = None, args = [], srcs = [], **kwargs):
@@ -291,9 +290,8 @@ def _architect_binary(project_name, command, configuration = None, args = [], sr
         name = "%s%s" % (command, ".%s" % configuration if configuration else ""),
         chdir = native.package_name(),
         args = [
-          "%s:%s%s" % (project_name, command, ":%s" % configuration if configuration else "")
+            "%s:%s%s" % (project_name, command, ":%s" % configuration if configuration else ""),
         ] + args,
         data = srcs,
-        **kwargs,
+        **kwargs
     )
-
