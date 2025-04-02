@@ -307,7 +307,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
 
   /** Panel should hide itself when the option list is empty. */
   _setVisibility() {
-    this.showPanel = !!this.options.length;
+    this.showPanel = !!this.options?.length;
     this._changeDetectorRef.markForCheck();
   }
 
