@@ -1,7 +1,7 @@
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "http_server", "sass_binary")
 load("//tools:defaults2.bzl", "ng_project")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
-load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -56,7 +56,6 @@ sass_binary(
     deps = [
         "//src/material:sass_lib",
         "//src/material-experimental:sass_lib",
-        "//src/material/core:theming_scss_lib",
     ],
 )
 

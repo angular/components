@@ -10,36 +10,60 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_radio-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_library(
+    name = "radio_common",
+    srcs = ["_radio-common.scss"],
+    deps = [
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "radio.scss",
+    deps = [
+        ":radio_common",
+        "//src/material/core/style:layout_common",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "radio",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [":radio_scss"] + glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "public-api.ts",
+        "radio.ts",
+    ],
+    assets = [
+        "radio.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "radio_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "radio_scss",
-    src = "radio.scss",
-    deps = [
-        ":radio_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -50,7 +74,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":radio_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

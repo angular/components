@@ -1,0 +1,42 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "all_density",
+    srcs = [
+        "_all-density.scss",
+    ],
+    deps = [
+        "//src/material/autocomplete:theme",
+        "//src/material/button:fab_theme",
+        "//src/material/button:icon_button_theme",
+        "//src/material/button:theme",
+        "//src/material/button-toggle:theme",
+        "//src/material/card:theme",
+        "//src/material/checkbox:theme",
+        "//src/material/chips:theme",
+        "//src/material/core:theme_sass",
+        "//src/material/core/theming:_inspection",
+        "//src/material/dialog:theme",
+        "//src/material/expansion:theme",
+        "//src/material/form-field:theme",
+        "//src/material/input:theme",
+        "//src/material/list:theme",
+        "//src/material/menu:theme",
+        "//src/material/paginator:theme",
+        "//src/material/progress-bar:theme",
+        "//src/material/progress-spinner:theme",
+        "//src/material/radio:theme",
+        "//src/material/select:theme",
+        "//src/material/slide-toggle:theme",
+        "//src/material/slider:theme",
+        "//src/material/snack-bar:theme",
+        "//src/material/stepper:theme",
+        "//src/material/table:theme",
+        "//src/material/tabs:theme",
+        "//src/material/toolbar:theme",
+        "//src/material/tooltip:theme",
+        "//src/material/tree:theme",
+    ],
+)

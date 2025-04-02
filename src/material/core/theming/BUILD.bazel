@@ -1,0 +1,141 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(["_theming.scss"])
+
+sass_library(
+    name = "core_all_theme",
+    srcs = [
+        "_all-theme.scss",
+    ],
+    deps = [
+        ":theming",
+        "//src/material/autocomplete:theme",
+        "//src/material/badge:theme",
+        "//src/material/bottom-sheet:theme",
+        "//src/material/button:fab_theme",
+        "//src/material/button:icon_button_theme",
+        "//src/material/button:theme",
+        "//src/material/button-toggle:theme",
+        "//src/material/card:theme",
+        "//src/material/checkbox:theme",
+        "//src/material/chips:theme",
+        "//src/material/core:theme_sass",
+        "//src/material/datepicker:theme",
+        "//src/material/dialog:theme",
+        "//src/material/divider:theme",
+        "//src/material/expansion:theme",
+        "//src/material/form-field:theme",
+        "//src/material/grid-list:theme",
+        "//src/material/icon:theme",
+        "//src/material/input:theme",
+        "//src/material/list:theme",
+        "//src/material/menu:theme",
+        "//src/material/paginator:theme",
+        "//src/material/progress-bar:theme",
+        "//src/material/progress-spinner:theme",
+        "//src/material/radio:theme",
+        "//src/material/select:theme",
+        "//src/material/sidenav:theme",
+        "//src/material/slide-toggle:theme",
+        "//src/material/slider:theme",
+        "//src/material/snack-bar:theme",
+        "//src/material/sort:theme",
+        "//src/material/stepper:theme",
+        "//src/material/table:theme",
+        "//src/material/tabs:theme",
+        "//src/material/timepicker:theme",
+        "//src/material/toolbar:theme",
+        "//src/material/tooltip:theme",
+        "//src/material/tree:theme",
+    ],
+)
+
+sass_library(
+    name = "theming",
+    srcs = [
+        "_theming.scss",
+    ],
+)
+
+sass_library(
+    name = "_inspection",
+    srcs = ["_inspection.scss"],
+    deps = [
+        ":_m2_inspection",
+        "//src/material/core/style:_validation",
+    ],
+)
+
+sass_library(
+    name = "_m2_inspection",
+    srcs = ["_m2-inspection.scss"],
+    deps = [
+        ":theming",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/typography:_versioning",
+    ],
+)
+
+sass_library(
+    name = "_validation",
+    srcs = ["_validation.scss"],
+)
+
+sass_library(
+    name = "_theming_deprecated",
+    srcs = ["_theming-deprecated.scss"],
+    deps = ["//src/material/core/m2:m2_sass"],
+)
+
+sass_library(
+    name = "_palettes",
+    srcs = ["_palettes.scss"],
+)
+
+sass_library(
+    name = "_config_validation",
+    srcs = ["_config-validation.scss"],
+    deps = [
+        ":_palettes",
+        "//src/material/core/style:_validation",
+    ],
+)
+
+sass_library(
+    name = "_color_api_backwards_compatibility",
+    srcs = ["_color-api-backwards-compatibility.scss"],
+    deps = [
+        "//src/material/badge:theme",
+        "//src/material/button:fab_theme",
+        "//src/material/button:icon_button_theme",
+        "//src/material/button:theme",
+        "//src/material/checkbox:theme",
+        "//src/material/chips:theme",
+        "//src/material/core/option:theme",
+        "//src/material/core/selection/pseudo-checkbox:sass_theme",
+        "//src/material/datepicker:theme",
+        "//src/material/form-field:theme",
+        "//src/material/icon:theme",
+        "//src/material/progress-bar:theme",
+        "//src/material/progress-spinner:theme",
+        "//src/material/radio:theme",
+        "//src/material/select:theme",
+        "//src/material/slide-toggle:theme",
+        "//src/material/slider:theme",
+        "//src/material/stepper:theme",
+        "//src/material/tabs:theme",
+    ],
+)
+
+sass_library(
+    name = "_definition",
+    srcs = ["_definition.scss"],
+    deps = [
+        ":_config_validation",
+        ":_palettes",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_tokens",
+    ],
+)

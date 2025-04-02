@@ -1,0 +1,59 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "format_tokens",
+    srcs = ["_format-tokens.scss"],
+)
+
+sass_library(
+    name = "token_utils",
+    srcs = [
+        "_token-utils.scss",
+    ],
+    deps = [
+        ":m3_system",
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+    ],
+)
+
+sass_library(
+    name = "m3_system",
+    srcs = ["_m3-system.scss"],
+    deps = [
+        ":m3_tokens",
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_config_validation",
+        "//src/material/core/theming:_definition",
+        "//src/material/core/tokens/m3/definitions",
+    ],
+)
+
+sass_library(
+    name = "token_definition",
+    srcs = ["_token-definition.scss"],
+    deps = ["//src/material/core/m2:m2_sass"],
+)
+
+sass_library(
+    name = "density",
+    srcs = ["_density.scss"],
+    deps = ["//src/material/core/theming"],
+)
+
+sass_library(
+    name = "m3_tokens",
+    srcs = ["_m3-tokens.scss"],
+    deps = [
+        ":density",
+        ":format_tokens",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens/m2",
+        "//src/material/core/tokens/m3",
+        "//src/material/core/tokens/m3/definitions",
+    ],
+)

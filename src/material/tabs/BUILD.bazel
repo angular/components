@@ -10,19 +10,108 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_tabs-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_library(
+    name = "sass",
+    srcs = [
+        "_tabs-common.scss",
+    ],
+    deps = [
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "tab_group_css",
+    src = "tab-group.scss",
+    deps = [
+        ":sass",
+        "//src/material/core/style:private",
+        "//src/material/core/style:variables",
+    ],
+)
+
+sass_binary(
+    name = "tab_nav_bar_css",
+    src = "tab-nav-bar/tab-nav-bar.scss",
+    deps = [
+        ":sass",
+    ],
+)
+
+sass_binary(
+    name = "tab_link_css",
+    src = "tab-nav-bar/tab-link.scss",
+    deps = [
+        ":sass",
+        "//src/material/core/style:variables",
+    ],
+)
+
+sass_binary(
+    name = "tab_header_css",
+    src = "tab-header.scss",
+    deps = [
+        ":sass",
+        "//src/cdk:sass_lib",
+    ],
+)
+
+sass_binary(
+    name = "tab_body_css",
+    src = "tab-body.scss",
+    deps = ["//src/material/core/style:layout_common"],
+)
+
 ng_project(
     name = "tabs",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "index.ts",
+        "ink-bar.ts",
+        "module.ts",
+        "paginated-tab-header.ts",
+        "public-api.ts",
+        "tab.ts",
+        "tab-body.ts",
+        "tab-config.ts",
+        "tab-content.ts",
+        "tab-group.ts",
+        "tab-header.ts",
+        "tab-label.ts",
+        "tab-label-wrapper.ts",
+        "tab-nav-bar/tab-nav-bar.ts",
+        "tabs-animations.ts",
+    ],
     assets = [
-        ":tab-body.css",
-        ":tab-header.css",
-        ":tab-group.css",
+        "tab-body.html",
+        "tab-group.html",
+        "tab-header.html",
+        "tab.html",
+        "tab-nav-bar/tab-nav-bar.html",
+        "tab-nav-bar/tab-link.html",
+        ":tab_group_css",
         ":tab-nav-bar/tab-nav-bar.css",
         ":tab-nav-bar/tab-link.css",
-    ] + glob(["**/*.html"]),
+        ":tab_header_css",
+        ":tab_body_css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -30,50 +119,6 @@ ng_project(
         "//src:dev_mode_types",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "tabs_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "tab_body_scss",
-    src = "tab-body.scss",
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "tab_header_scss",
-    src = "tab-header.scss",
-    deps = [":tabs_scss_lib"],
-)
-
-sass_binary(
-    name = "tab_group_scss",
-    src = "tab-group.scss",
-    deps = [
-        ":tabs_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "tab_nav_bar_scss",
-    src = "tab-nav-bar/tab-nav-bar.scss",
-    deps = [":tabs_scss_lib"],
-)
-
-sass_binary(
-    name = "tab_link_scss",
-    src = "tab-nav-bar/tab-link.scss",
-    deps = [
-        ":tabs_scss_lib",
     ],
 )
 
@@ -108,7 +153,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":tabs_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

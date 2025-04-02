@@ -1,0 +1,26 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "internal",
+    srcs = [
+        "date-adapter.ts",
+        "date-formats.ts",
+        "native-date-adapter.ts",
+        "native-date-formats.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//:node_modules/rxjs",
+    ],
+)
+
+ng_project(
+    name = "datetime",
+    srcs = ["index.ts"],
+    deps = [
+        ":internal",
+        "//:node_modules/@angular/core",
+    ],
+)

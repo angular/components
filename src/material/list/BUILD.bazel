@@ -10,18 +10,83 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_list-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "list.scss",
+    deps = [
+        ":list_inherited_structure",
+        ":list_item_hcm_indicator",
+        "//src/material/core/style:layout_common",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_library(
+    name = "list_item_hcm_indicator",
+    srcs = ["_list-item-hcm-indicator.scss"],
+    deps = ["//src/cdk:sass_lib"],
+)
+
+sass_library(
+    name = "list_inherited_structure",
+    srcs = ["_list-inherited-structure.scss"],
+    deps = [
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "option_css",
+    src = "list-option.scss",
+    deps = [
+        ":list_item_hcm_indicator",
+        "//src/material/checkbox:checkbox_common",
+        "//src/material/radio:radio_common",
+    ],
+)
+
 ng_project(
     name = "list",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-        ],
-    ),
+    srcs = [
+        "action-list.ts",
+        "index.ts",
+        "list.ts",
+        "list-base.ts",
+        "list-item-sections.ts",
+        "list-module.ts",
+        "list-option.ts",
+        "list-option-types.ts",
+        "nav-list.ts",
+        "public-api.ts",
+        "selection-list.ts",
+        "subheader.ts",
+        "tokens.ts",
+    ],
     assets = [
-        ":list_scss",
-        ":list_option_scss",
-    ] + glob(["**/*.html"]),
+        "list-item.html",
+        "list-option.html",
+        ":css",
+        ":option_css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -31,52 +96,6 @@ ng_project(
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
         "//src/material/divider",
-    ],
-)
-
-sass_library(
-    name = "hcm_indicator_scss_lib",
-    srcs = ["_list-item-hcm-indicator.scss"],
-)
-
-sass_library(
-    name = "inherited_structure_scss_lib",
-    srcs = ["_list-inherited-structure.scss"],
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_library(
-    name = "list_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        ":hcm_indicator_scss_lib",
-        "//src/material/checkbox:checkbox_scss_lib",
-        "//src/material/core:core_scss_lib",
-        "//src/material/radio:radio_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "list_scss",
-    src = "list.scss",
-    deps = [
-        ":hcm_indicator_scss_lib",
-        ":inherited_structure_scss_lib",
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "list_option_scss",
-    src = "list-option.scss",
-    deps = [
-        ":list_scss_lib",
-        "//src/cdk:sass_lib",
-        "//src/material/checkbox:checkbox_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -110,7 +129,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":list_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

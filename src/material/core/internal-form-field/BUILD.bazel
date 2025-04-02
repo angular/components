@@ -1,0 +1,21 @@
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "internal-form-field",
+    srcs = [
+        "internal-form-field.ts",
+    ],
+    assets = [":internal_form_field_css"],
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)
+
+sass_binary(
+    name = "internal_form_field_css",
+    src = "internal-form-field.scss",
+    deps = ["//src/material/core/style:vendor_prefixes"],
+)

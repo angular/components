@@ -10,35 +10,62 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_dialog-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_library(
+    name = "dialog_legacy_padding",
+    srcs = [
+        "_dialog-legacy-padding.scss",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "dialog.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:variables",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "dialog",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [":dialog_scss"] + glob(["**/*.html"]),
+    srcs = [
+        "dialog.ts",
+        "dialog-animations.ts",
+        "dialog-config.ts",
+        "dialog-container.ts",
+        "dialog-content-directives.ts",
+        "dialog-ref.ts",
+        "index.ts",
+        "module.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "dialog-container.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "dialog_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "dialog_scss",
-    src = "dialog.scss",
-    deps = [
-        ":dialog_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -76,7 +103,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":dialog_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

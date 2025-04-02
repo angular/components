@@ -1,0 +1,81 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "button_common",
+    srcs = ["_button-common.scss"],
+    deps = [":vendor_prefixes"],
+)
+
+sass_library(
+    name = "checkbox_common",
+    srcs = ["_checkbox-common.scss"],
+)
+
+sass_library(
+    name = "elevation",
+    srcs = ["_elevation.scss"],
+    deps = [
+        ":sass_utils",
+        ":variables",
+    ],
+)
+
+sass_library(
+    name = "form_common",
+    srcs = ["_form-common.scss"],
+    deps = [
+        ":sass_utils",
+        "//src/material/core/theming:_inspection",
+    ],
+)
+
+sass_library(
+    name = "layout_common",
+    srcs = ["_layout-common.scss"],
+)
+
+sass_library(
+    name = "list_common",
+    srcs = ["_list-common.scss"],
+)
+
+sass_library(
+    name = "menu_common",
+    srcs = ["_menu-common.scss"],
+    deps = [
+        ":layout_common",
+        ":list_common",
+        "//src/cdk:sass_lib",
+    ],
+)
+
+sass_library(
+    name = "private",
+    srcs = ["_private.scss"],
+    deps = [
+        ":elevation",
+        "//src/material/core/theming:_inspection",
+    ],
+)
+
+sass_library(
+    name = "variables",
+    srcs = ["_variables.scss"],
+)
+
+sass_library(
+    name = "vendor_prefixes",
+    srcs = ["_vendor-prefixes.scss"],
+)
+
+sass_library(
+    name = "sass_utils",
+    srcs = ["_sass-utils.scss"],
+)
+
+sass_library(
+    name = "_validation",
+    srcs = ["_validation.scss"],
+)

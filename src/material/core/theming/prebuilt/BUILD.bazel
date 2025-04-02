@@ -1,0 +1,83 @@
+load("//tools:defaults.bzl", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_binary(
+    name = "indigo-pink-theme",
+    src = "indigo-pink.scss",
+    deps = [
+        "//src/material/core:core_sass",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "deeppurple-amber-theme",
+    src = "deeppurple-amber.scss",
+    deps = [
+        "//src/material/core:core_sass",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "pink-bluegrey-theme",
+    src = "pink-bluegrey.scss",
+    deps = [
+        "//src/material/core:core_sass",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "purple-green-theme",
+    src = "purple-green.scss",
+    deps = [
+        "//src/material/core:core_sass",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "rose_red",
+    src = "rose-red.scss",
+    deps = [
+        "//src/material/core/theming:_palettes",
+        "//src/material/core/tokens:m3_system",
+    ],
+)
+
+sass_binary(
+    name = "azure_blue",
+    src = "azure-blue.scss",
+    deps = [
+        "//src/material/core/theming:_palettes",
+        "//src/material/core/tokens:m3_system",
+    ],
+)
+
+sass_binary(
+    name = "cyan_orange",
+    src = "cyan-orange.scss",
+    deps = [
+        "//src/material/core/theming:_palettes",
+        "//src/material/core/tokens:m3_system",
+    ],
+)
+
+sass_binary(
+    name = "magenta_violet",
+    src = "magenta-violet.scss",
+    deps = [
+        "//src/material/core/theming:_palettes",
+        "//src/material/core/tokens:m3_system",
+    ],
+)

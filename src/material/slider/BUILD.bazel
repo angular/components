@@ -11,16 +11,55 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_slider-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "slider-css",
+    src = "slider.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "slider-thumb-css",
+    src = "slider-thumb.scss",
+)
+
 ng_project(
     name = "slider",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "public-api.ts",
+        "slider.ts",
+        "slider-input.ts",
+        "slider-interface.ts",
+        "slider-thumb.ts",
+    ],
     assets = [
-        ":slider_scss",
-        ":slider_thumb_scss",
-    ] + glob(["**/*.html"]),
+        "slider.html",
+        "slider-thumb.html",
+        ":slider-css",
+        ":slider-thumb-css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
@@ -30,28 +69,6 @@ ng_project(
     ],
 )
 
-sass_library(
-    name = "slider_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "slider_scss",
-    src = "slider.scss",
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "slider_thumb_scss",
-    src = "slider-thumb.scss",
-)
-
 markdown_to_html(
     name = "overview",
     srcs = [":slider.md"],
@@ -59,7 +76,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":slider_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

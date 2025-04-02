@@ -10,15 +10,69 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_expansion-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "expansion-panel.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:variables",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "header_css",
+    src = "expansion-panel-header.scss",
+    deps = [
+        ":variables",
+        "//src/cdk:sass_lib",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_library(
+    name = "variables",
+    srcs = ["_expansion-variables.scss"],
+)
+
 ng_project(
     name = "expansion",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = glob(["**/*.html"]) + [
-        ":expansion-panel.css",
-        ":expansion-panel-header.css",
+    srcs = [
+        "accordion.ts",
+        "accordion-base.ts",
+        "expansion-animations.ts",
+        "expansion-module.ts",
+        "expansion-panel.ts",
+        "expansion-panel-base.ts",
+        "expansion-panel-content.ts",
+        "expansion-panel-header.ts",
+        "index.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "expansion-panel-header.html",
+        "expansion-panel.html",
+        ":css",
+        ":header_css",
     ],
     deps = [
         "//:node_modules/@angular/common",
@@ -27,30 +81,6 @@ ng_project(
         "//:node_modules/rxjs",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "expansion_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_binary(
-    name = "expansion_panel_scss",
-    src = "expansion-panel.scss",
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "expansion_panel_header_scss",
-    src = "expansion-panel-header.scss",
-    deps = [
-        ":expansion_scss_lib",
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -80,7 +110,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":expansion_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

@@ -1,0 +1,14 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "color",
+    srcs = [
+        "_all-color.scss",
+    ],
+    deps = [
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:core_all_theme",
+    ],
+)
