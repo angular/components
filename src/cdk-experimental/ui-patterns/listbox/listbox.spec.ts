@@ -145,10 +145,10 @@ describe('Listbox Pattern', () => {
 
     it('should navigate to the last option on End', () => {
       const event = createKeyboardEvent('keydown', 35, 'End');
-      const {listbox, options} = getDefaultPatterns();
+      const {listbox} = getDefaultPatterns();
       expect(listbox.inputs.activeIndex()).toBe(0);
       listbox.onKeydown(event);
-      expect(listbox.inputs.activeIndex()).toBe(options().length - 1);
+      expect(listbox.inputs.activeIndex()).toBe(8);
     });
   });
 });
