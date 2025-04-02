@@ -132,5 +132,23 @@ describe('Listbox Pattern', () => {
       listbox.onKeydown(event);
       expect(listbox.inputs.activeIndex()).toBe(0);
     });
+
+    it('should navigate to the first option on Home', () => {
+      const event = createKeyboardEvent('keydown', 36, 'Home');
+      const {listbox, options} = getDefaultPatterns({
+        activeIndex: signal(8),
+      });
+      expect(listbox.inputs.activeIndex()).toBe(8);
+      listbox.onKeydown(event);
+      expect(listbox.inputs.activeIndex()).toBe(0);
+    });
+
+    it('should navigate to the last option on End', () => {
+      const event = createKeyboardEvent('keydown', 35, 'End');
+      const {listbox, options} = getDefaultPatterns();
+      expect(listbox.inputs.activeIndex()).toBe(0);
+      listbox.onKeydown(event);
+      expect(listbox.inputs.activeIndex()).toBe(options().length - 1);
+    });
   });
 });
