@@ -1,3 +1,33 @@
+<a name="20.0.0-next.5"></a>
+# 20.0.0-next.5 "chitin-enigma" (2025-04-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f9973ee231](https://github.com/angular/components/commit/f9973ee231166e02bb176f5c6172f1d4a1e0bfef) | fix | **overlay:** use MutationObserver to detach overlay ([#30703](https://github.com/angular/components/pull/30703)) |
+| [1372f52ae6](https://github.com/angular/components/commit/1372f52ae6774015b1a956aa1dbcde12d62eb42f) | perf | **drag-drop:** fix performance regression when destroying items ([#30751](https://github.com/angular/components/pull/30751)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3daa360300](https://github.com/angular/components/commit/3daa360300a98e0c63db770f6812faa94eea1133) | feat | **core:** introduce custom token for controlling animations ([#30749](https://github.com/angular/components/pull/30749)) |
+| [907815dc5c](https://github.com/angular/components/commit/907815dc5cecc2b56d54fd9c525b1e37fb9002be) | fix | **checkbox:** hardcode token renames ([#30752](https://github.com/angular/components/pull/30752)) |
+| [e9b015737c](https://github.com/angular/components/commit/e9b015737ca86eabd18e1ce2411dd4e5c8882dc4) | fix | **form-field:** move error aria-live to parent container ([#30678](https://github.com/angular/components/pull/30678)) |
+| [ec538b598b](https://github.com/angular/components/commit/ec538b598bb7e4b5184d460de852b31523b99710) | fix | **form-field:** use ResizeObserver for label offset calculation ([#30702](https://github.com/angular/components/pull/30702)) |
+| [2d86ad441e](https://github.com/angular/components/commit/2d86ad441eeb3ec5fac3e99d7c9081db356615b3) | fix | **slider:** fix clobbered token for hover/focus/pressed ([#30754](https://github.com/angular/components/pull/30754)) |
+| [40d0ab4fc7](https://github.com/angular/components/commit/40d0ab4fc73f059cb5496c4c035d4dcebc08b8b0) | fix | **snack-bar:** rename snackbar token prefix ([#30750](https://github.com/angular/components/pull/30750)) |
+| [387313fc41](https://github.com/angular/components/commit/387313fc4112399d05d2b677c9e5fcf7f2424e49) | fix | **tabs:** allow ID to be set on tab ([#30768](https://github.com/angular/components/pull/30768)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [149fe6129c](https://github.com/angular/components/commit/149fe6129c9647b0d330ec47d901909f01f933a5) | fix | **popover-edit:** use MutationObserver to detect table rows ([#30713](https://github.com/angular/components/pull/30713)) |
+| [4bf3591c77](https://github.com/angular/components/commit/4bf3591c77af15881a5d49b73492ddfa023d9833) | fix | **ui-patterns:** add modifier checks for regexps ([#30738](https://github.com/angular/components/pull/30738)) |
+| [dd69023340](https://github.com/angular/components/commit/dd69023340987ccc0371abfed30603df6982e36f) | perf | **column-resize:** improve hover responsiveness of… ([#30708](https://github.com/angular/components/pull/30708)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [590971359f](https://github.com/angular/components/commit/590971359f053f93e891d84d8544c6295d6d321e) | fix | remove backwards-compatibility code ([#30747](https://github.com/angular/components/pull/30747)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.8"></a>
 # 19.2.8 "sapphire-kraken" (2025-04-02)
 ### cdk
