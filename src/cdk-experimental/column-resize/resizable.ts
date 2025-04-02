@@ -19,7 +19,7 @@ import {
   ViewContainerRef,
   ChangeDetectorRef,
   afterNextRender,
-  runInInjectionContext
+  runInInjectionContext,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal} from '@angular/cdk/portal';
@@ -289,8 +289,8 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     runInInjectionContext(this.injector, () => {
       afterNextRender({
         write: () => {
-          this.overlayRef!.updateSize({ height: this.elementRef.nativeElement!.offsetHeight });
-        }
+          this.overlayRef!.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
+        },
       });
     });
   }
