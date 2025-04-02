@@ -152,6 +152,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     _closestTabGroup: any;
     get content(): TemplatePortal | null;
     disabled: boolean;
+    id: string | null;
     _implicitContent: TemplateRef<any>;
     isActive: boolean;
     labelClass: string | string[];
@@ -170,7 +171,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     set templateLabel(value: MatTabLabel);
     textLabel: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, never>;
 }
@@ -267,9 +268,9 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     // (undocumented)
     _focusChanged(index: number): void;
     focusTab(index: number): void;
-    _getTabContentId(i: number): string;
+    _getTabContentId(index: number): string;
     _getTabIndex(index: number): number;
-    _getTabLabelId(i: number): string;
+    _getTabLabelId(tab: MatTab, index: number): string;
     _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
     headerPosition: MatTabHeaderPosition;
     protected _isServer: boolean;

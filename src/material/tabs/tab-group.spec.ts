@@ -442,6 +442,45 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
       expect(tabList.hasAttribute('aria-labelledby')).toBe(false);
     }));
+
+    it('should set IDs on individual tabs and use them to label the tab bodies', () => {
+      fixture.detectChanges();
+      const tabs = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-mdc-tab'));
+      const bodies = Array.from<HTMLElement>(
+        fixture.nativeElement.querySelectorAll('mat-tab-body'),
+      );
+
+      expect(tabs.length).toBe(3);
+      expect(bodies.length).toBe(3);
+      expect(tabs.every(tab => !!tab.getAttribute('id')))
+        .withContext('All tabs should have IDs')
+        .toBe(true);
+      expect(
+        bodies.every((body, index) => {
+          const attr = body.getAttribute('aria-labelledby');
+          return !!attr && tabs[index].getAttribute('id') === attr;
+        }),
+      )
+        .withContext('All tab bodies should be labelled')
+        .toBe(true);
+    });
+
+    it('should be able to set a custom ID for a tab', () => {
+      fixture.detectChanges();
+      const tab = fixture.nativeElement.querySelectorAll('.mat-mdc-tab')[1] as HTMLElement;
+      const body = fixture.nativeElement.querySelectorAll('mat-tab-body')[1] as HTMLElement;
+
+      expect(tab.getAttribute('id')).toBeTruthy();
+      expect(tab.getAttribute('id')).not.toBe('foo');
+      expect(body.getAttribute('aria-labelledby')).toBeTruthy();
+      expect(body.getAttribute('aria-labelledby')).toBe(tab.getAttribute('id'));
+
+      fixture.componentInstance.secondTabId = 'foo';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(tab.getAttribute('id')).toBe('foo');
+      expect(body.getAttribute('aria-labelledby')).toBe('foo');
+    });
   });
 
   describe('aria labelling', () => {
@@ -1236,7 +1275,7 @@ describe('MatTabGroup labels aligned with a config', () => {
         <ng-template mat-tab-label>Tab One</ng-template>
         Tab one content
       </mat-tab>
-      <mat-tab>
+      <mat-tab [id]="secondTabId">
         <ng-template mat-tab-label>Tab Two</ng-template>
         <span>Tab </span><span>two</span><span>content</span>
       </mat-tab>
@@ -1259,6 +1298,7 @@ class SimpleTabsTestApp {
   headerPosition: MatTabHeaderPosition = 'above';
   ariaLabel: string;
   ariaLabelledby: string;
+  secondTabId: string | null = null;
   handleFocus(event: any) {
     this.focusEvent = event;
   }
