@@ -50,7 +50,7 @@ PKG_EXTERNALS = [
     "rxjs/operators",
     "selenium-webdriver",
     "safevalues",
-    "safevalues-dom",
+    "safevalues/dom",
 ]
 
 # Creates externals for a given package and its entry-points.
