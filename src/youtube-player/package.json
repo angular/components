@@ -18,7 +18,8 @@
   "homepage": "https://github.com/angular/components/tree/main/src/youtube-player#readme",
   "dependencies": {
     "@types/youtube": "^0.1.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "safevalues": "^1.2.0"
   },
   "peerDependencies": {
     "@angular/core": "0.0.0-NG",
