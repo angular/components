@@ -10,74 +10,128 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
-    name = "button",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-        ],
-    ),
-    assets = [
-        ":button_high_contrast_scss",
-        ":button_scss",
-        ":fab_scss",
-        ":icon-button_scss",
-    ] + glob(["**/*.html"]),
+sass_library(
+    name = "theme",
+    srcs = [
+        "_button-theme.scss",
+    ],
     deps = [
-        "//:node_modules/@angular/core",
-        "//src/material/core",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
     ],
 )
 
 sass_library(
-    name = "button_scss_lib",
-    srcs = glob(["**/_*.scss"]),
+    name = "fab_theme",
+    srcs = ["_fab-theme.scss"],
     deps = [
-        "//src/material/core:core_scss_lib",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
     ],
 )
 
 sass_library(
-    name = "button_base_scss_lib",
-    srcs = ["_button-base.scss"],
-)
-
-sass_binary(
-    name = "button_scss",
-    src = "button.scss",
+    name = "icon_button_theme",
+    srcs = ["_icon-button-theme.scss"],
     deps = [
-        ":button_base_scss_lib",
-        "//src/material:sass_lib",
-        "//src/material/core:core_scss_lib",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
     ],
 )
 
 sass_binary(
-    name = "button_high_contrast_scss",
+    name = "icon_button_css",
+    src = "icon-button.scss",
+    deps = [
+        ":base_lib",
+        "//src/material/core/style:private",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "fab_css",
+    src = "fab.scss",
+    deps = [
+        ":base_lib",
+        "//src/material/core/focus-indicators",
+        "//src/material/core/style:private",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "button_high_contrast",
     src = "button-high-contrast.scss",
     deps = [
         "//src/cdk:sass_lib",
     ],
 )
 
-sass_binary(
-    name = "fab_scss",
-    src = "fab.scss",
+sass_library(
+    name = "base_lib",
+    srcs = [
+        "_button-base.scss",
+    ],
     deps = [
-        ":button_base_scss_lib",
-        "//src/material:sass_lib",
-        "//src/material/core:core_scss_lib",
+        "//src/material/core/style:layout_common",
+        "//src/material/core/tokens:token_utils",
     ],
 )
 
 sass_binary(
-    name = "icon-button_scss",
-    src = "icon-button.scss",
+    name = "css",
+    src = "button.scss",
     deps = [
-        ":button_base_scss_lib",
-        "//src/material:sass_lib",
-        "//src/material/core:core_scss_lib",
+        ":base_lib",
+        "//src/material/core/focus-indicators",
+        "//src/material/core/style:private",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+ng_project(
+    name = "button",
+    srcs = [
+        "button.ts",
+        "button-base.ts",
+        "fab.ts",
+        "icon-button.ts",
+        "index.ts",
+        "module.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "button.html",
+        ":css",
+        ":fab_css",
+        ":icon_button_css",
+        "icon-button.html",
+        ":button_high_contrast",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/material/core",
     ],
 )
 
@@ -110,7 +164,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":button_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

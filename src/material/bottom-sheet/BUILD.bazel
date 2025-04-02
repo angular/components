@@ -10,36 +10,55 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_bottom-sheet-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "bottom-sheet-container.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:elevation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "bottom-sheet",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "bottom-sheet.ts",
+        "bottom-sheet-animations.ts",
+        "bottom-sheet-config.ts",
+        "bottom-sheet-container.ts",
+        "bottom-sheet-module.ts",
+        "bottom-sheet-ref.ts",
+        "index.ts",
+        "public-api.ts",
+    ],
     assets = [
-        ":bottom-sheet-container.css",
-    ] + glob(["**/*.html"]),
+        "bottom-sheet-container.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
         "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
-    ],
-)
-
-sass_library(
-    name = "bottom_sheet_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_binary(
-    name = "bottom_sheet_container_scss",
-    src = "bottom-sheet-container.scss",
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -71,7 +90,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":bottom_sheet_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

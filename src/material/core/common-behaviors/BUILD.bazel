@@ -1,0 +1,21 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "common-behaviors",
+    srcs = [
+        "common-module.ts",
+        "error-state.ts",
+        "index.ts",
+        "palette.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/forms",
+        "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/platform",
+        "//src/material/core/error",
+    ],
+)

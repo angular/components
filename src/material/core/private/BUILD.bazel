@@ -1,0 +1,18 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "private",
+    srcs = [
+        "index.ts",
+        "ripple-loader.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//src/cdk/platform",
+        "//src/cdk/private",
+        "//src/material/core:ripple",
+        "//src/material/core/animation",
+    ],
+)

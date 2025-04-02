@@ -1,0 +1,11 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "selection",
+    srcs = [
+        "index.ts",
+    ],
+    deps = ["//src/material/core/selection/pseudo-checkbox"],
+)

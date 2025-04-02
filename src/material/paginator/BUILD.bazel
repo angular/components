@@ -10,13 +10,46 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_paginator-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "paginator.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "paginator",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [":paginator.css"] + glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "paginator.ts",
+        "paginator-intl.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "paginator.html",
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
@@ -25,23 +58,6 @@ ng_project(
         "//src/material/core",
         "//src/material/select",
         "//src/material/tooltip",
-    ],
-)
-
-sass_library(
-    name = "paginator_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = [
-        "//src/material/core:core_scss_lib",
-    ],
-)
-
-sass_binary(
-    name = "paginator_scss",
-    src = "paginator.scss",
-    deps = [
-        "//src/cdk:sass_lib",
-        "//src/material:sass_lib",
     ],
 )
 
@@ -76,7 +92,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":paginator_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

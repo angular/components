@@ -1,0 +1,54 @@
+load("//tools:defaults.bzl", "sass_binary", "sass_library")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "pseudo-checkbox",
+    srcs = [
+        "pseudo-checkbox.ts",
+        "pseudo-checkbox-module.ts",
+    ],
+    assets = [
+        ":css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/material/core/animation",
+        "//src/material/core/common-behaviors",
+    ],
+)
+
+sass_library(
+    name = "sass_theme",
+    srcs = [
+        "_pseudo-checkbox-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_library(
+    name = "_pseudo_checkbox_common",
+    srcs = ["_pseudo-checkbox-common.scss"],
+    deps = ["//src/material/core/style:checkbox_common"],
+)
+
+sass_binary(
+    name = "css",
+    src = "pseudo-checkbox.scss",
+    deps = [
+        ":_pseudo_checkbox_common",
+        "//src/material/core/style:checkbox_common",
+        "//src/material/core/style:private",
+        "//src/material/core/style:variables",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)

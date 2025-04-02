@@ -1,0 +1,84 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "all_typography",
+    srcs = [
+        "_all-typography.scss",
+    ],
+    deps = [
+        ":typography",
+        "//src/material/autocomplete:theme",
+        "//src/material/badge:theme",
+        "//src/material/bottom-sheet:theme",
+        "//src/material/button:fab_theme",
+        "//src/material/button:icon_button_theme",
+        "//src/material/button:theme",
+        "//src/material/button-toggle:theme",
+        "//src/material/card:theme",
+        "//src/material/checkbox:theme",
+        "//src/material/chips:theme",
+        "//src/material/core:theme_sass",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming:_inspection",
+        "//src/material/datepicker:theme",
+        "//src/material/dialog:theme",
+        "//src/material/divider:theme",
+        "//src/material/expansion:theme",
+        "//src/material/form-field:theme",
+        "//src/material/grid-list:theme",
+        "//src/material/icon:theme",
+        "//src/material/input:theme",
+        "//src/material/list:theme",
+        "//src/material/menu:theme",
+        "//src/material/paginator:theme",
+        "//src/material/progress-bar:theme",
+        "//src/material/progress-spinner:theme",
+        "//src/material/radio:theme",
+        "//src/material/select:theme",
+        "//src/material/sidenav:theme",
+        "//src/material/slide-toggle:theme",
+        "//src/material/slider:theme",
+        "//src/material/snack-bar:theme",
+        "//src/material/sort:theme",
+        "//src/material/stepper:theme",
+        "//src/material/table:theme",
+        "//src/material/tabs:theme",
+        "//src/material/timepicker:theme",
+        "//src/material/toolbar:theme",
+        "//src/material/tooltip:theme",
+        "//src/material/tree:theme",
+    ],
+)
+
+sass_library(
+    name = "typography",
+    srcs = [
+        "_typography.scss",
+    ],
+    deps = [
+        ":_versioning",
+        ":utils",
+        "//src/material/core/theming:_inspection",
+    ],
+)
+
+sass_library(
+    name = "utils",
+    srcs = [
+        "_typography-utils.scss",
+    ],
+)
+
+sass_library(
+    name = "_versioning",
+    srcs = ["_versioning.scss"],
+    deps = ["//src/material/core/m2:m2_sass"],
+)
+
+sass_library(
+    name = "_typography_utils_deprecated",
+    srcs = ["_typography-utils-deprecated.scss"],
+    deps = [":utils"],
+)

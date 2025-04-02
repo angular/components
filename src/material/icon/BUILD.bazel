@@ -10,13 +10,45 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_icon-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "css",
+    src = "icon.scss",
+    deps = [
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
 ng_project(
     name = "icon",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = [":icon.css"] + glob(["**/*.html"]),
+    srcs = [
+        "fake-svgs.ts",
+        "icon.ts",
+        "icon-module.ts",
+        "icon-registry.ts",
+        "index.ts",
+        "public-api.ts",
+        "trusted-types.ts",
+    ],
+    assets = [
+        ":css",
+    ],
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
@@ -25,18 +57,6 @@ ng_project(
         "//src:dev_mode_types",
         "//src/material/core",
     ],
-)
-
-sass_library(
-    name = "icon_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
-)
-
-sass_binary(
-    name = "icon_scss",
-    src = "icon.scss",
-    deps = ["//src/material/core:core_scss_lib"],
 )
 
 ts_project(
@@ -66,7 +86,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":icon_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

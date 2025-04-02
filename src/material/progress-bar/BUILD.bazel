@@ -10,35 +10,48 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_project(
-    name = "progress-bar",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-        ],
-    ),
-    assets = [":progress_bar_scss"] + glob(["**/*.html"]),
-    deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//src/material/core",
-    ],
-)
-
 sass_library(
-    name = "progress_bar_scss_lib",
-    srcs = glob(["**/_*.scss"]),
+    name = "theme",
+    srcs = [
+        "_progress-bar-theme.scss",
+    ],
     deps = [
-        "//src/material/core:core_scss_lib",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
     ],
 )
 
 sass_binary(
-    name = "progress_bar_scss",
+    name = "css",
     src = "progress-bar.scss",
     deps = [
-        "//src/material/core:core_scss_lib",
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+ng_project(
+    name = "progress-bar",
+    srcs = [
+        "index.ts",
+        "module.ts",
+        "progress-bar.ts",
+        "public-api.ts",
+    ],
+    assets = [
+        "progress-bar.html",
+        ":css",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//src/material/core",
     ],
 )
 
@@ -70,7 +83,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":progress_bar_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

@@ -9,13 +9,30 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "theme",
+    srcs = [
+        "_input-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/typography",
+    ],
+)
+
 ng_project(
     name = "input",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    assets = glob(["**/*.html"]),
+    srcs = [
+        "index.ts",
+        "input.ts",
+        "input-errors.ts",
+        "input-value-accessor.ts",
+        "module.ts",
+        "public-api.ts",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
@@ -24,12 +41,6 @@ ng_project(
         "//src/material/core",
         "//src/material/form-field",
     ],
-)
-
-sass_library(
-    name = "input_scss_lib",
-    srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
 )
 
 ###########
@@ -69,7 +80,7 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":input_scss_lib"],
+    srcs = [":theme"],
 )
 
 filegroup(

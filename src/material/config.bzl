@@ -94,10 +94,3 @@ MATERIAL_TARGETS = ["//src/material"] + \
 
 # List of all testing entry-point targets of the Angular Material package.
 MATERIAL_TESTING_TARGETS = ["//src/material/%s" % ep for ep in MATERIAL_TESTING_ENTRYPOINTS]
-
-# List that references the sass libraries for each Material non-testing entry-point. This
-# can be used to specify dependencies for the "all-theme.scss" file in core.
-MATERIAL_SCSS_LIBS = [
-    "//src/material/%s:%s_scss_lib" % (ep, ep.replace("-", "_"))
-    for ep in MATERIAL_ENTRYPOINTS
-]

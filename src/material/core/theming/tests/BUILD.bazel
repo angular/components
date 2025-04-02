@@ -1,6 +1,6 @@
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//tools:defaults.bzl", "sass_binary")
 load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,7 +11,12 @@ sass_binary(
     testonly = True,
     src = "test-css-variables-theme.scss",
     deps = [
-        "//src/material/core:theming_scss_lib",
+        "//src/material/core/color",
+        "//src/material/core/density/private:all_density",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography:all_typography",
     ],
 )
 
@@ -23,7 +28,12 @@ sass_binary(
     testonly = True,
     src = "test-theming-api.scss",
     deps = [
-        "//src/material/core:theming_scss_lib",
+        "//src/material/core/color",
+        "//src/material/core/density/private:all_density",
+        "//src/material/core/m2:m2_sass",
+        "//src/material/core/theming",
+        "//src/material/core/theming:core_all_theme",
+        "//src/material/core/typography:all_typography",
     ],
 )
 

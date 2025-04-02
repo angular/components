@@ -1,13 +1,13 @@
-@use 'sass:map';
-@use '../../density/private/all-density';
 @use '../../color/all-color';
-@use '../../typography/all-typography';
-@use '../all-theme';
-@use '../../typography/typography';
-@use '../theming';
-@use '../../m2/typography' as m2-typography;
+@use '../../density/private/all-density';
 @use '../../m2/palette' as m2-palette;
 @use '../../m2/theming' as m2-theming;
+@use '../../m2/typography' as m2-typography;
+@use '../../typography/all-typography';
+@use '../../typography/typography';
+@use '../all-theme';
+@use '../theming';
+@use 'sass:map';
 
 // Disable theme style duplication warnings. This test intentionally generates
 // the same themes multiple times.

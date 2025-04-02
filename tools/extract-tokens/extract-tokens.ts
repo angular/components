@@ -45,6 +45,7 @@ interface ThemeData {
 // Script that extracts the tokens from a specific Bazel target.
 if (require.main === module) {
   const [packagePath, outputPath, ...inputFiles] = process.argv.slice(2);
+  console.log(packagePath);
   const themeFiles = inputFiles
     // Filter out only the files within the package
     // since the path also includes dependencies.

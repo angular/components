@@ -1,0 +1,69 @@
+load("//tools:defaults.bzl", "sass_binary", "sass_library")
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "theme",
+    srcs = [
+        "_optgroup-theme.scss",
+        "_option-theme.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/theming:_validation",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+        "//src/material/core/typography",
+    ],
+)
+
+ng_project(
+    name = "option",
+    srcs = [
+        "index.ts",
+        "optgroup.ts",
+        "option.ts",
+        "option-parent.ts",
+    ],
+    assets = [
+        "optgroup.html",
+        "option.html",
+        ":optgroup_css",
+        ":option_css",
+    ],
+    deps = [
+        "//:node_modules/rxjs",
+        "//src/cdk/a11y",
+        "//src/cdk/keycodes",
+        "//src/cdk/private",
+        "//src/material/core:ripple",
+        "//src/material/core/common-behaviors",
+        "//src/material/core/focus-indicators:internal",
+        "//src/material/core/selection",
+        "//src/material/core/selection/pseudo-checkbox",
+    ],
+)
+
+sass_binary(
+    name = "option_css",
+    src = "option.scss",
+    deps = [
+        "//src/cdk:sass_lib",
+        "//src/material/core/style:layout_common",
+        "//src/material/core/style:vendor_prefixes",
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
+
+sass_binary(
+    name = "optgroup_css",
+    src = "optgroup.scss",
+    deps = [
+        "//src/material/core/tokens:token_utils",
+        "//src/material/core/tokens/m2/mat",
+    ],
+)
