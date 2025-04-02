@@ -51,6 +51,9 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
     // This element will be rendered on the server in order to support hydration.
     // Hide it so it doesn't cause a layout shift when it's removed on the client.
     'hidden': '',
+
+    // Clear any custom IDs from the tab since they'll be forwarded to the actual tab.
+    '[attr.id]': 'null',
   },
 })
 export class MatTab implements OnInit, OnChanges, OnDestroy {
@@ -98,6 +101,12 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
 
   /** Classes to be passed to the tab mat-tab-body container. */
   @Input() bodyClass: string | string[];
+
+  /**
+   * Custom ID for the tab, overriding the auto-generated one by Material.
+   * Note that when using this input, it's your responsibility to ensure that the ID is unique.
+   */
+  @Input() id: string | null = null;
 
   /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;
