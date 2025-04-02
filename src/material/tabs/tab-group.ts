@@ -497,13 +497,13 @@ export class MatTabGroup
   }
 
   /** Returns a unique id for each tab label element */
-  _getTabLabelId(i: number): string {
-    return `${this._groupId}-label-${i}`;
+  _getTabLabelId(tab: MatTab, index: number): string {
+    return tab.id || `${this._groupId}-label-${index}`;
   }
 
   /** Returns a unique id for each tab content element */
-  _getTabContentId(i: number): string {
-    return `${this._groupId}-content-${i}`;
+  _getTabContentId(index: number): string {
+    return `${this._groupId}-content-${index}`;
   }
 
   /**
