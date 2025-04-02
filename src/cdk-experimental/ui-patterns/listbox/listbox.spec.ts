@@ -135,7 +135,7 @@ describe('Listbox Pattern', () => {
 
     it('should navigate to the first option on Home', () => {
       const event = createKeyboardEvent('keydown', 36, 'Home');
-      const {listbox, options} = getDefaultPatterns({
+      const {listbox} = getDefaultPatterns({
         activeIndex: signal(8),
       });
       expect(listbox.inputs.activeIndex()).toBe(8);
