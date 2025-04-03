@@ -18,12 +18,11 @@ rules_js_tsconfig(
     ],
 )
 
-# Bazel config setting that matches if the partial compilation flag
-# for `@angular/bazel` is set to `True`.
+# Bazel config setting that matches if the partial compilation is enabled.
 config_setting(
     name = "partial_compilation_enabled",
     flag_values = {
-        "@npm//@angular/bazel/src:partial_compilation": "True",
+        "@rules_angular//src/ng_project/config:partial_compilation": "True",
     },
 )
 
@@ -39,7 +38,7 @@ bool_flag(
 config_setting(
     name = "force_partial_jit_compilation_enabled",
     flag_values = {
-        "@npm//@angular/bazel/src:partial_compilation": "True",
+        "@rules_angular//src/ng_project/config:partial_compilation": "True",
         ":force_partial_jit_compilation": "True",
     },
 )
