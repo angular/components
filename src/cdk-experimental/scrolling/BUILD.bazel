@@ -14,7 +14,9 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/scrolling",
     ],
 )
 
@@ -28,7 +30,7 @@ ts_project(
     deps = [
         ":scrolling",
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/scrolling",
     ],
 )
 

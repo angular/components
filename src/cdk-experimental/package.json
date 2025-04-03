@@ -15,9 +15,6 @@
     "@angular/cdk": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG"
   },
-  "devDependencies": {
-    "@angular/cdk": "workspace:*"
-  },
   "dependencies": {
     "tslib": "^2.3.0"
   },

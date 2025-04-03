@@ -11,7 +11,7 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/cdk",
-        "//src/dev-app:node_modules/@angular/components-examples",
+        "//src/cdk/menu",
+        "//src/components-examples/cdk/menu",
     ],
 )

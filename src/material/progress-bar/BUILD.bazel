@@ -52,7 +52,7 @@ ts_project(
         ":progress-bar",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/testing/private",
     ],
 )
 

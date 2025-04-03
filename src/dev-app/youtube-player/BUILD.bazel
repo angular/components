@@ -14,8 +14,10 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@types/youtube",
-        "//src/dev-app:node_modules/@angular/material",
-        "//src/dev-app:node_modules/@angular/youtube-player",
+        "//src/material/button",
+        "//src/material/checkbox",
+        "//src/material/radio",
+        "//src/youtube-player",
     ],
 )
 

@@ -16,7 +16,10 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/platform",
+        "//src/cdk/table",
     ],
 )
 
@@ -31,7 +34,9 @@ ts_project(
         ":table-scroll-container",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/collections",
+        "//src/cdk/platform",
+        "//src/cdk/table",
     ],
 )
 

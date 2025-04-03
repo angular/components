@@ -8,7 +8,8 @@ ng_project(
     assets = ["table-demo.html"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/components-examples",
+        "//src/components-examples/cdk/table",
+        "//src/components-examples/material/table",
         "//src/dev-app/example",
     ],
 )

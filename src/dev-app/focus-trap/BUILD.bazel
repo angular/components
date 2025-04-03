@@ -14,8 +14,12 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/cdk",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/cdk/a11y",
+        "//src/cdk/platform",
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/dialog",
+        "//src/material/toolbar",
     ],
 )
 
