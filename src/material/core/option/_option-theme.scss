@@ -1,4 +1,4 @@
-@use '../tokens/m2/mat/option' as tokens-mat-option;
+@use './m2-option';
 @use '../tokens/token-utils';
 @use '../style/sass-utils';
 @use '../theming/theming';
@@ -27,23 +27,17 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-option.$prefix,
-        tokens-mat-option.get-color-tokens($theme)
-      );
+        m2-option.$prefix, m2-option.get-color-tokens($theme));
     }
 
     .mat-accent {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-option.$prefix,
-        tokens-mat-option.get-color-tokens($theme, accent)
-      );
+        m2-option.$prefix, m2-option.get-color-tokens($theme, accent));
     }
 
     .mat-warn {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-option.$prefix,
-        tokens-mat-option.get-color-tokens($theme, warn)
-      );
+        m2-option.$prefix, m2-option.get-color-tokens($theme, warn));
     }
   }
 }
@@ -56,9 +50,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-option.$prefix,
-        tokens-mat-option.get-typography-tokens($theme)
-      );
+        m2-option.$prefix, m2-option.get-typography-tokens($theme));
     }
   }
 }
@@ -76,8 +68,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-option.$prefix,
-      tokens: tokens-mat-option.get-token-slots(),
+      namespace: m2-option.$prefix,
+      tokens: m2-option.get-token-slots(),
     ),
   );
 }
@@ -116,6 +108,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-option-tokens: token-utils.get-tokens-for($tokens, tokens-mat-option.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-option.$prefix, $mat-option-tokens);
+  $mat-option-tokens: token-utils.get-tokens-for($tokens, m2-option.$prefix, $options...);
+  @include token-utils.create-token-values(m2-option.$prefix, $mat-option-tokens);
 }

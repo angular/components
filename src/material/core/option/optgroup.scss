@@ -1,16 +1,15 @@
-@use '../tokens/m2/mat/optgroup' as tokens-mat-optgroup;
+@use './m2-optgroup';
 @use '../tokens/token-utils';
 
 .mat-mdc-optgroup {
   // These tokens are set on the root option group to make them easier to override.
-  @include token-utils.use-tokens(
-    tokens-mat-optgroup.$prefix, tokens-mat-optgroup.get-token-slots()) {
-    @include token-utils.create-token-slot(color, label-text-color);
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(line-height, label-text-line-height);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
+  @include token-utils.use-tokens(m2-optgroup.$prefix, m2-optgroup.get-token-slots()) {
+    color: token-utils.slot(label-text-color);
+    font-family: token-utils.slot(label-text-font);
+    line-height: token-utils.slot(label-text-line-height);
+    font-size: token-utils.slot(label-text-size);
+    letter-spacing: token-utils.slot(label-text-tracking);
+    font-weight: token-utils.slot(label-text-weight);
   }
 }
 

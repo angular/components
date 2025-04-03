@@ -11,17 +11,57 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 sass_library(
+    name = "m3",
+    srcs = [
+        "_m3-extended-fab.scss",
+        "_m3-fab.scss",
+        "_m3-fab-small.scss",
+        "_m3-filled-button.scss",
+        "_m3-icon-button.scss",
+        "_m3-outlined-button.scss",
+        "_m3-protected-button.scss",
+        "_m3-text-button.scss",
+        "_m3-tonal-button.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_utils",
+    ],
+)
+
+sass_library(
+    name = "m2",
+    srcs = [
+        "_m2-extended-fab.scss",
+        "_m2-fab.scss",
+        "_m2-fab-small.scss",
+        "_m2-filled-button.scss",
+        "_m2-icon-button.scss",
+        "_m2-outlined-button.scss",
+        "_m2-protected-button.scss",
+        "_m2-text-button.scss",
+        "_m2-tonal-button.scss",
+    ],
+    deps = [
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
+    ],
+)
+
+sass_library(
     name = "theme",
     srcs = [
         "_button-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
         "//src/material/core/typography",
     ],
 )
@@ -30,12 +70,12 @@ sass_library(
     name = "fab_theme",
     srcs = ["_fab-theme.scss"],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
         "//src/material/core/typography",
     ],
 )
@@ -44,12 +84,12 @@ sass_library(
     name = "icon_button_theme",
     srcs = ["_icon-button-theme.scss"],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -58,10 +98,10 @@ sass_binary(
     src = "icon-button.scss",
     deps = [
         ":base_lib",
+        ":m2",
         "//src/material/core/style:private",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -70,11 +110,11 @@ sass_binary(
     src = "fab.scss",
     deps = [
         ":base_lib",
+        ":m2",
         "//src/material/core/focus-indicators",
         "//src/material/core/style:private",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -102,11 +142,11 @@ sass_binary(
     src = "button.scss",
     deps = [
         ":base_lib",
+        ":m2",
         "//src/material/core/focus-indicators",
         "//src/material/core/style:private",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 

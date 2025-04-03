@@ -1,0 +1,116 @@
+@use 'sass:map';
+@use '../core/style/sass-utils';
+@use '../core/tokens/m3-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, chip);
+
+/// Generates custom tokens for the mat-chip.
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of custom tokens for the mat-chip
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  // MDC has a chip component, but they seem to have made up the tokens rather than using ones
+  // generated from the token database, therefore we need a custom token function for it.
+  $tokens: sass-utils.merge-all(
+      m3-utils.generate-typography-tokens($systems, label-text, label-large),
+      (
+        disabled-container-opacity: m3-utils.hardcode(1, $exclude-hardcoded),
+        selected-trailing-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+        selected-disabled-trailing-icon-color: map.get($systems, md-sys-color, on-surface),
+        trailing-action-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+        selected-trailing-action-state-layer-color:
+        map.get($systems, md-sys-color, on-secondary-container),
+        trailing-action-hover-state-layer-opacity:
+        map.get($systems, md-sys-state, hover-state-layer-opacity),
+        trailing-action-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
+        trailing-action-opacity: m3-utils.hardcode(1, $exclude-hardcoded),
+        trailing-action-focus-opacity: m3-utils.hardcode(1, $exclude-hardcoded),
+        container-shape-radius: m3-utils.hardcode(8px, $exclude-hardcoded),
+        with-avatar-avatar-size: m3-utils.hardcode(24px, $exclude-hardcoded),
+        with-avatar-avatar-shape-radius: m3-utils.hardcode(24px, $exclude-hardcoded),
+        label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+        disabled-label-text-color: sass-utils.safe-color-change(
+            map.get($systems, md-sys-color, on-surface),
+          $alpha: 0.38,
+        ),
+        with-icon-icon-size: m3-utils.hardcode(18px, $exclude-hardcoded),
+        with-icon-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+        with-icon-disabled-icon-color: map.get($systems, md-sys-color, on-surface),
+        with-icon-selected-icon-color: map.get($systems, md-sys-color, on-secondary-container),
+        with-trailing-icon-trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
+        with-trailing-icon-disabled-trailing-icon-color:
+            map.get($systems, md-sys-color, on-surface),
+        focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
+        focus-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+        outline-width: m3-utils.hardcode(1px, $exclude-hardcoded),
+        outline-color: map.get($systems, md-sys-color, outline),
+        disabled-outline-color: sass-utils.safe-color-change(
+            map.get($systems, md-sys-color, on-surface),
+          $alpha: 0.12,
+        ),
+        focus-outline-color: map.get($systems, md-sys-color, on-surface-variant),
+        hover-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
+        hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
+        with-avatar-disabled-avatar-opacity: m3-utils.hardcode(0.38, $exclude-hardcoded),
+        elevated-selected-container-color: map.get($systems, md-sys-color, secondary-container),
+        // In the M3 tokens this is a `surface` color, but in the MDC implementation its
+        // never being emitted. We emit `transparent` so consumers override the color.
+        elevated-container-color: m3-utils.hardcode(transparent, $exclude-hardcoded),
+        flat-selected-outline-width: m3-utils.hardcode(0, $exclude-hardcoded),
+        selected-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
+        flat-disabled-selected-container-color: sass-utils.safe-color-change(
+            map.get($systems, md-sys-color, on-surface),
+          $alpha: 0.12,
+        ),
+        selected-hover-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
+        selected-hover-state-layer-opacity:
+        map.get($systems, md-sys-state, hover-state-layer-opacity),
+        selected-focus-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
+        selected-focus-state-layer-opacity:
+        map.get($systems, md-sys-state, focus-state-layer-opacity),
+        with-icon-disabled-icon-opacity: m3-utils.hardcode(0.38, $exclude-hardcoded),
+        with-trailing-icon-disabled-trailing-icon-opacity:
+        m3-utils.hardcode(0.38, $exclude-hardcoded),
+      ),
+  );
+
+  $variant-tokens: (
+    // Color variants:
+    primary: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-trailing-action-state-layer-color:
+      map.get($systems, md-sys-color, on-primary-container),
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-primary-container),
+      elevated-selected-container-color: map.get($systems, md-sys-color, primary-container),
+      selected-label-text-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, on-primary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, on-primary-container),
+    ),
+    secondary: (), // Default, no overrides needed.
+    tertiary: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-trailing-action-state-layer-color:
+      map.get($systems, md-sys-color, on-tertiary-container),
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-tertiary-container),
+      elevated-selected-container-color: map.get($systems, md-sys-color, tertiary-container),
+      selected-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
+    ),
+    error: (
+      selected-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
+      selected-trailing-action-state-layer-color:
+      map.get($systems, md-sys-color, on-error-container),
+      with-icon-selected-icon-color: map.get($systems, md-sys-color, on-error-container),
+      elevated-selected-container-color: map.get($systems, md-sys-color, error-container),
+      selected-label-text-color: map.get($systems, md-sys-color, on-error-container),
+      selected-hover-state-layer-color: map.get($systems, md-sys-color, on-error-container),
+      selected-focus-state-layer-color: map.get($systems, md-sys-color, on-error-container),
+    )
+  );
+
+  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}

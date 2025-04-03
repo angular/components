@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use './m2-datepicker';
 @use '../core/tokens/token-utils';
 
 $calendar-padding: 8px;
@@ -63,11 +63,11 @@ $touch-max-height: 788px;
   border-radius: 4px;
 
   @include token-utils.use-tokens(
-    tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
-    @include token-utils.create-token-slot(background-color, calendar-container-background-color);
-    @include token-utils.create-token-slot(color, calendar-container-text-color);
-    @include token-utils.create-token-slot(box-shadow, calendar-container-elevation-shadow);
-    @include token-utils.create-token-slot(border-radius, calendar-container-shape);
+      m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+    background-color: token-utils.slot(calendar-container-background-color);
+    color: token-utils.slot(calendar-container-text-color);
+    box-shadow: token-utils.slot(calendar-container-elevation-shadow);
+    border-radius: token-utils.slot(calendar-container-shape);
   }
 
   &.mat-datepicker-content-animations-enabled {
@@ -115,9 +115,9 @@ $touch-max-height: 788px;
   max-height: 80vh;
 
   @include token-utils.use-tokens(
-      tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()) {
-    @include token-utils.create-token-slot(box-shadow, calendar-container-touch-elevation-shadow);
-    @include token-utils.create-token-slot(border-radius, calendar-container-touch-shape);
+      m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+    box-shadow: token-utils.slot(calendar-container-touch-elevation-shadow);
+    border-radius: token-utils.slot(calendar-container-touch-shape);
   }
 
   // Allows for the screen reader close button to be seen in touch UI mode.

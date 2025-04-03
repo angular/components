@@ -4,7 +4,7 @@
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
+@use './m2-stepper';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for mat-stepper.
@@ -27,21 +27,21 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-color-tokens($theme)
+        m2-stepper.$prefix,
+        m2-stepper.get-color-tokens($theme)
       );
 
       .mat-step-header.mat-accent {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-stepper.$prefix,
-          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, accent)
+          m2-stepper.$prefix,
+          m2-stepper.private-get-color-palette-color-tokens($theme, accent)
         );
       }
 
       .mat-step-header.mat-warn {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-stepper.$prefix,
-          tokens-mat-stepper.private-get-color-palette-color-tokens($theme, warn)
+          m2-stepper.$prefix,
+          m2-stepper.private-get-color-palette-color-tokens($theme, warn)
         );
       }
     }
@@ -56,8 +56,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-typography-tokens($theme)
+        m2-stepper.$prefix,
+        m2-stepper.get-typography-tokens($theme)
       );
     }
   }
@@ -71,8 +71,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-stepper.$prefix,
-        tokens-mat-stepper.get-density-tokens($theme)
+        m2-stepper.$prefix,
+        m2-stepper.get-density-tokens($theme)
       );
     }
   }
@@ -82,8 +82,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-stepper.$prefix,
-      tokens: tokens-mat-stepper.get-token-slots(),
+      namespace: m2-stepper.$prefix,
+      tokens: m2-stepper.get-token-slots(),
     ),
   );
 }
@@ -125,9 +125,9 @@
   @if ($tokens != ()) {
     $mat-stepper-tokens: token-utils.get-tokens-for(
       $tokens,
-      tokens-mat-stepper.$prefix,
+      m2-stepper.$prefix,
       $options...
     );
-    @include token-utils.create-token-values(tokens-mat-stepper.$prefix, $mat-stepper-tokens);
+    @include token-utils.create-token-values(m2-stepper.$prefix, $mat-stepper-tokens);
   }
 }

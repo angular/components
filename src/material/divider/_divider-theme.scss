@@ -4,7 +4,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
+@use './m2-divider';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -12,9 +12,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-divider.$prefix,
-        tokens-mat-divider.get-unthemable-tokens()
-      );
+        m2-divider.$prefix, m2-divider.get-unthemable-tokens());
     }
   }
 }
@@ -25,9 +23,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-divider.$prefix,
-        tokens-mat-divider.get-color-tokens($theme)
-      );
+        m2-divider.$prefix, m2-divider.get-color-tokens($theme));
     }
   }
 }
@@ -50,8 +46,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-divider.$prefix,
-      tokens: tokens-mat-divider.get-token-slots(),
+      namespace: m2-divider.$prefix,
+      tokens: m2-divider.get-token-slots(),
     ),
   );
 }
@@ -85,8 +81,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-divider.$prefix,
-      map.get($tokens, tokens-mat-divider.$prefix)
+      m2-divider.$prefix,
+      map.get($tokens, m2-divider.$prefix)
     );
   }
 }

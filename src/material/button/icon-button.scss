@@ -1,10 +1,11 @@
-@use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
-
-@use './button-base';
 @use '../core/style/private';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
+@use './button-base';
+@use './m2-icon-button';
 
+$token-prefix: m2-icon-button.$prefix;
+$token-slots: m2-icon-button.get-token-slots();
 
 .mat-mdc-icon-button {
   @include vendor-prefixes.user-select(none);
@@ -30,10 +31,9 @@
   // Ensure the icons are centered.
   text-align: center;
 
-  @include token-utils.use-tokens(
-    tokens-mat-icon-button.$prefix, tokens-mat-icon-button.get-token-slots()) {
-    $button-size: token-utils.get-token-variable(state-layer-size, $fallback: 48px);
-    $icon-size: token-utils.get-token-variable(icon-size, $fallback: 24px);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    $button-size: token-utils.slot(state-layer-size, $fallback: 48px);
+    $icon-size: token-utils.slot(icon-size, $fallback: 24px);
 
     // We emit these tokens ourselves here so we can provide a default value.
     // This avoids a lot internal breakages in apps that didn't include the icon button theme.
@@ -46,27 +46,25 @@
 
     // Icon size used to be placed on the host element. Now, in `theme-styles` it is placed on
     // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
-    @include token-utils.create-token-slot(font-size, icon-size);
-    @include token-utils.create-token-slot(color, icon-color);
+    font-size: token-utils.slot(icon-size);
+    color: token-utils.slot(icon-color);
   }
 
   @include button-base.mat-private-button-interactive();
-  @include button-base.mat-private-button-ripple(tokens-mat-icon-button.$prefix,
-    tokens-mat-icon-button.get-token-slots());
-  @include button-base.mat-private-button-touch-target(true, tokens-mat-icon-button.$prefix,
-    tokens-mat-icon-button.get-token-slots());
+  @include button-base.mat-private-button-ripple($token-prefix, $token-slots);
+  @include button-base.mat-private-button-touch-target(
+      true, $token-prefix, $token-slots);
   @include private.private-animation-noop();
 
-  @include token-utils.use-tokens(
-    tokens-mat-icon-button.$prefix, tokens-mat-icon-button.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     @include button-base.mat-private-button-disabled {
-      @include token-utils.create-token-slot(color, disabled-icon-color);
+      color: token-utils.slot(disabled-icon-color);
     };
 
     img,
     svg {
-      @include token-utils.create-token-slot(width, icon-size);
-      @include token-utils.create-token-slot(height, icon-size);
+      width: token-utils.slot(icon-size);
+      height: token-utils.slot(icon-size);
       vertical-align: baseline;
     }
   }

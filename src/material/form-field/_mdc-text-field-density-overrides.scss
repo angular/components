@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use './m2-form-field';
 @use '../core/tokens/token-utils';
 
 // Mixin that includes the density styles for form fields. MDC provides their own density
@@ -10,23 +10,21 @@
 // based on the density scale.
 @mixin private-text-field-density-overrides() {
   @include token-utils.use-tokens(
-    tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
-    $height: token-utils.get-token-variable(container-height);
+      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    $height: token-utils.slot(container-height);
 
     .mat-mdc-form-field-infix {
       // We add a minimum height to the infix container to ensure that custom controls have the
       // same default vertical space as text-field inputs (with respect to the vertical padding).
       min-height: #{$height};
 
-      @include token-utils.create-token-slot(padding-top,
-        filled-with-label-container-padding-top);
-      @include token-utils.create-token-slot(padding-bottom,
-        filled-with-label-container-padding-bottom);
+      padding-top: token-utils.slot(filled-with-label-container-padding-top);
+      padding-bottom: token-utils.slot(filled-with-label-container-padding-bottom);
 
       .mdc-text-field--outlined &,
       .mdc-text-field--no-label & {
-        @include token-utils.create-token-slot(padding-top, container-vertical-padding);
-        @include token-utils.create-token-slot(padding-bottom, container-vertical-padding);
+        padding-top: token-utils.slot(container-vertical-padding);
+        padding-bottom: token-utils.slot(container-vertical-padding);
       }
     }
 
@@ -40,7 +38,7 @@
 
     // We need to conditionally hide the floating label based on the height of the form field.
     .mdc-text-field--filled .mat-mdc-floating-label {
-      display: token-utils.get-token-variable(filled-label-display, $fallback: block);
+      display: token-utils.slot(filled-label-display, $fallback: block);
     }
 
     // For the outline appearance, we re-create the active floating label transform. This is

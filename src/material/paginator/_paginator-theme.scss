@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:meta';
-@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use './m2-paginator';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/theming/theming';
@@ -21,9 +21,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-paginator.$prefix,
-        tokens-mat-paginator.get-color-tokens($theme)
-      );
+        m2-paginator.$prefix, m2-paginator.get-color-tokens($theme));
     }
   }
 }
@@ -34,9 +32,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-paginator.$prefix,
-        tokens-mat-paginator.get-typography-tokens($theme)
-      );
+        m2-paginator.$prefix, m2-paginator.get-typography-tokens($theme));
     }
   }
 }
@@ -55,9 +51,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-paginator.$prefix,
-        tokens-mat-paginator.get-density-tokens($theme)
-      );
+        m2-paginator.$prefix, m2-paginator.get-density-tokens($theme));
     }
   }
 }
@@ -66,8 +60,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-paginator.$prefix,
-      tokens: tokens-mat-paginator.get-token-slots(),
+      namespace: m2-paginator.$prefix,
+      tokens: m2-paginator.get-token-slots(),
     ),
   );
 }
@@ -101,8 +95,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-paginator.$prefix,
-      map.get($tokens, tokens-mat-paginator.$prefix)
+      m2-paginator.$prefix,
+      map.get($tokens, m2-paginator.$prefix)
     );
   }
 }

@@ -1,5 +1,5 @@
 @use '../core/style/layout-common';
-@use '../core/tokens/m2/mat/list' as tokens-mat-list;
+@use './m2-list';
 @use '../core/tokens/token-utils';
 @use './list-item-hcm-indicator';
 @use './list-inherited-structure';
@@ -7,28 +7,28 @@
 @include list-inherited-structure.private-list-inherited-structural-styles;
 
 // Add additional slots for the MDC list tokens, needed in Angular Material.
-@include token-utils.use-tokens(tokens-mat-list.$prefix, tokens-mat-list.get-token-slots()) {
+@include token-utils.use-tokens(m2-list.$prefix, m2-list.get-token-slots()) {
   // MDC allows focus and hover colors to take precedence over disabled color. We add the disabled
   // color here with higher specificity so that the disabled color takes precedence.
   // TODO(mmalerba): Dicuss with MDC whether to change this in their code.
   .mdc-list-item.mdc-list-item--disabled .mdc-list-item__primary-text {
-    @include token-utils.create-token-slot(color, list-item-disabled-label-text-color);
+    color: token-utils.slot(list-item-disabled-label-text-color);
   }
 
   // We don't use MDC's state layer since it's tied in with their ripple. Instead we emit slots
   // for our own state layer.
   // TODO(mmalerba): Consider using MDC's ripple & state layer.
   .mdc-list-item:hover::before {
-    @include token-utils.create-token-slot(background-color, list-item-hover-state-layer-color);
-    @include token-utils.create-token-slot(opacity, list-item-hover-state-layer-opacity);
+    background-color: token-utils.slot(list-item-hover-state-layer-color);
+    opacity: token-utils.slot(list-item-hover-state-layer-opacity);
   }
   .mdc-list-item.mdc-list-item--disabled::before {
-    @include token-utils.create-token-slot(background-color, list-item-disabled-state-layer-color);
-    @include token-utils.create-token-slot(opacity, list-item-disabled-state-layer-opacity);
+    background-color: token-utils.slot(list-item-disabled-state-layer-color);
+    opacity: token-utils.slot(list-item-disabled-state-layer-opacity);
   }
   .mdc-list-item:focus::before {
-    @include token-utils.create-token-slot(background-color, list-item-focus-state-layer-color);
-    @include token-utils.create-token-slot(opacity, list-item-focus-state-layer-opacity);
+    background-color: token-utils.slot(list-item-focus-state-layer-color);
+    opacity: token-utils.slot(list-item-focus-state-layer-opacity);
   }
 
   // Apply the disabled opacity to the checkbox/radio indicators.
@@ -37,7 +37,7 @@
   .mdc-list-item--disabled {
     .mdc-radio,
     .mdc-checkbox {
-      @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
+      opacity: token-utils.slot(list-item-disabled-label-text-opacity);
     }
   }
 
@@ -46,15 +46,15 @@
   // TODO(mmalerba): We should try to change MDC's recommended DOM or change ours to match their
   //  recommendation.
   .mdc-list-item--with-leading-avatar .mat-mdc-list-item-avatar {
-    @include token-utils.create-token-slot(border-radius, list-item-leading-avatar-shape);
-    @include token-utils.create-token-slot(background-color, list-item-leading-avatar-color);
+    border-radius: token-utils.slot(list-item-leading-avatar-shape);
+    background-color: token-utils.slot(list-item-leading-avatar-color);
   }
 
   // Set font-size of leading icon to same value as its width and height. Ensure icon scales to
   // "list-item-leading-icon-size" token. In Angular Material, the icon is on the same element as
   // ".mdc-list-item__start", rather than a child of ".mdc-list-item__start".
   .mat-mdc-list-item-icon {
-    @include token-utils.create-token-slot(font-size, list-item-leading-icon-size);
+    font-size: token-utils.slot(list-item-leading-icon-size);
   }
 }
 
@@ -170,21 +170,18 @@ mat-action-list button {
   }
 }
 
-@include token-utils.use-tokens(tokens-mat-list.$prefix, tokens-mat-list.get-token-slots()) {
+@include token-utils.use-tokens(m2-list.$prefix, m2-list.get-token-slots()) {
   .mdc-list-item--with-leading-icon .mdc-list-item__start {
-    @include token-utils.create-token-slot(margin-inline-start, list-item-leading-icon-start-space);
-    @include token-utils.create-token-slot(margin-inline-end, list-item-leading-icon-end-space);
+    margin-inline-start: token-utils.slot(list-item-leading-icon-start-space);
+    margin-inline-end: token-utils.slot(list-item-leading-icon-end-space);
   }
 
   .mat-mdc-nav-list .mat-mdc-list-item {
-    @include token-utils.create-token-slot(border-radius, active-indicator-shape);
-    @include token-utils.create-token-slot(
-      --mat-focus-indicator-border-radius,
-      active-indicator-shape
-    );
+    border-radius: token-utils.slot(active-indicator-shape);
+    --mat-focus-indicator-border-radius: #{token-utils.slot(active-indicator-shape)};
 
     &.mdc-list-item--activated {
-      @include token-utils.create-token-slot(background-color, active-indicator-color);
+      background-color: token-utils.slot(active-indicator-color);
     }
   }
 }

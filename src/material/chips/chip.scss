@@ -1,9 +1,9 @@
 @use '@angular/cdk';
-@use '../core/style/layout-common';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
+@use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
+@use './m2-chip';
 
 $_checkmark-size: 20px;
 $_trailing-icon-size: 18px;
@@ -12,6 +12,9 @@ $_graphic-padding: 6px;
 $_trailing-action-padding: 8px;
 $_avatar-leading-padding: 4px;
 $_avatar-trailing-padding: 8px;
+
+$token-prefix: m2-chip.$prefix;
+$token-slots: m2-chip.get-token-slots();
 
 .mdc-evolution-chip,
 .mdc-evolution-chip__cell,
@@ -74,10 +77,10 @@ $_avatar-trailing-padding: 8px;
   white-space: inherit;
   overflow-x: hidden;
 
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip &::before {
-      @include token-utils.create-token-slot(border-width, outline-width);
-      @include token-utils.create-token-slot(border-radius, container-shape-radius);
+      border-width: token-utils.slot(outline-width);
+      border-radius: token-utils.slot(container-shape-radius);
       box-sizing: border-box;
       content: '';
       height: 100%;
@@ -106,19 +109,19 @@ $_avatar-trailing-padding: 8px;
     }
 
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) &::before {
-      @include token-utils.create-token-slot(border-color, outline-color);
+      border-color: token-utils.slot(outline-color);
     }
 
     &:not(.mdc-evolution-chip__action--presentational):not(.mdc-ripple-upgraded):focus::before {
-      @include token-utils.create-token-slot(border-color, focus-outline-color);
+      border-color: token-utils.slot(focus-outline-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled &::before {
-      @include token-utils.create-token-slot(border-color, disabled-outline-color);
+      border-color: token-utils.slot(disabled-outline-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--selected &::before {
-      @include token-utils.create-token-slot(border-width, flat-selected-outline-width);
+      border-width: token-utils.slot(flat-selected-outline-width);
     }
   }
 
@@ -177,14 +180,13 @@ $_avatar-trailing-padding: 8px;
   position: relative;
   overflow: visible;
 
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      @include token-utils.create-token-slot(color, with-trailing-icon-trailing-icon-color);
+      color: token-utils.slot(with-trailing-icon-trailing-icon-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      @include token-utils.create-token-slot(color,
-        with-trailing-icon-disabled-trailing-icon-color);
+      color: token-utils.slot(with-trailing-icon-disabled-trailing-icon-color);
     }
   }
 
@@ -221,26 +223,26 @@ $_avatar-trailing-padding: 8px;
   text-overflow: ellipsis;
   overflow: hidden;
 
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip & {
-      @include token-utils.create-token-slot(font-family, label-text-font);
-      @include token-utils.create-token-slot(line-height, label-text-line-height);
-      @include token-utils.create-token-slot(font-size, label-text-size);
-      @include token-utils.create-token-slot(font-weight, label-text-weight);
-      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+      font-family: token-utils.slot(label-text-font);
+      line-height: token-utils.slot(label-text-line-height);
+      font-size: token-utils.slot(label-text-size);
+      font-weight: token-utils.slot(label-text-weight);
+      letter-spacing: token-utils.slot(label-text-tracking);
     }
 
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      @include token-utils.create-token-slot(color, label-text-color);
+      color: token-utils.slot(label-text-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) & {
-      @include token-utils.create-token-slot(color, selected-label-text-color);
+      color: token-utils.slot(selected-label-text-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled &,
     .mat-mdc-standard-chip.mdc-evolution-chip--selected.mdc-evolution-chip--disabled & {
-      @include token-utils.create-token-slot(color, disabled-label-text-color);
+      color: token-utils.slot(disabled-label-text-color);
     }
   }
 }
@@ -254,11 +256,11 @@ $_avatar-trailing-padding: 8px;
   position: relative;
   flex: 1 0 auto;
 
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip & {
-      @include token-utils.create-token-slot(width, with-avatar-avatar-size);
-      @include token-utils.create-token-slot(height, with-avatar-avatar-size);
-      @include token-utils.create-token-slot(font-size, with-avatar-avatar-size);
+      width: token-utils.slot(with-avatar-avatar-size);
+      height: token-utils.slot(with-avatar-avatar-size);
+      font-size: token-utils.slot(with-avatar-avatar-size);
     }
   }
 
@@ -314,13 +316,13 @@ $_avatar-trailing-padding: 8px;
   height: $_checkmark-size;
   width: $_checkmark-size;
 
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      @include token-utils.create-token-slot(color, with-icon-selected-icon-color);
+      color: token-utils.slot(with-icon-selected-icon-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      @include token-utils.create-token-slot(color, with-icon-disabled-icon-color);
+      color: token-utils.slot(with-icon-disabled-icon-color);
     }
   }
 
@@ -370,20 +372,20 @@ $_avatar-trailing-padding: 8px;
   }
 
   $disabled-icon-opacity: null;
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     $disabled-icon-opacity:
-      token-utils.get-token-variable(with-trailing-icon-disabled-trailing-icon-opacity);
+      token-utils.slot(with-trailing-icon-disabled-trailing-icon-opacity);
   }
 
   // If the trailing icon is a chip-remove button, we have to factor in the trailing action
   // opacity as well as the disabled opacity.
   .mdc-evolution-chip--disabled &.mat-mdc-chip-remove {
-    @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
-      $action-opacity: token-utils.get-token-variable(trailing-action-opacity);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      $action-opacity: token-utils.slot(trailing-action-opacity);
       opacity: calc(#{$action-opacity} * #{$disabled-icon-opacity});
 
       &:focus {
-        $action-focus-opacity: token-utils.get-token-variable(trailing-action-focus-opacity);
+        $action-focus-opacity: token-utils.slot(trailing-action-focus-opacity);
         opacity: calc(#{$action-focus-opacity} * #{$disabled-icon-opacity});
       }
     }
@@ -391,25 +393,24 @@ $_avatar-trailing-padding: 8px;
 }
 
 .mat-mdc-standard-chip {
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
-    @include token-utils.create-token-slot(border-radius, container-shape-radius);
-    @include token-utils.create-token-slot(height, container-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    border-radius: token-utils.slot(container-shape-radius);
+    height: token-utils.slot(container-height);
 
     &:not(.mdc-evolution-chip--disabled) {
-      @include token-utils.create-token-slot(background-color, elevated-container-color);
+      background-color: token-utils.slot(elevated-container-color);
     }
 
     &.mdc-evolution-chip--disabled {
-      @include token-utils.create-token-slot(background-color, elevated-disabled-container-color);
+      background-color: token-utils.slot(elevated-disabled-container-color);
     }
 
     &.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
-      @include token-utils.create-token-slot(background-color, elevated-selected-container-color);
+      background-color: token-utils.slot(elevated-selected-container-color);
     }
 
     &.mdc-evolution-chip--selected.mdc-evolution-chip--disabled {
-      @include token-utils.create-token-slot(background-color,
-        flat-disabled-selected-container-color);
+      background-color: token-utils.slot(flat-disabled-selected-container-color);
     }
   }
 
@@ -419,12 +420,12 @@ $_avatar-trailing-padding: 8px;
 }
 
 .mdc-evolution-chip__icon--primary {
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-standard-chip & {
-      @include token-utils.create-token-slot(border-radius, with-avatar-avatar-shape-radius);
-      @include token-utils.create-token-slot(width, with-icon-icon-size);
-      @include token-utils.create-token-slot(height, with-icon-icon-size);
-      @include token-utils.create-token-slot(font-size, with-icon-icon-size);
+      border-radius: token-utils.slot(with-avatar-avatar-shape-radius);
+      width: token-utils.slot(with-icon-icon-size);
+      height: token-utils.slot(with-icon-icon-size);
+      font-size: token-utils.slot(with-icon-icon-size);
     }
 
     .mdc-evolution-chip--selected & {
@@ -432,11 +433,11 @@ $_avatar-trailing-padding: 8px;
     }
 
     .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      @include token-utils.create-token-slot(color, with-icon-icon-color);
+      color: token-utils.slot(with-icon-icon-color);
     }
 
     .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      @include token-utils.create-token-slot(color, with-icon-disabled-icon-color);
+      color: token-utils.slot(with-icon-disabled-icon-color);
     }
   }
 }
@@ -447,7 +448,7 @@ $_avatar-trailing-padding: 8px;
 // that we don't re-implement ourselves below.
 // TODO(crisbeto): with some future refactors we may be able to clean this up.
 .mat-mdc-chip-highlighted {
-  @include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     $highlighted-remapped-tokens: (
       with-icon-icon-color: with-icon-selected-icon-color,
       elevated-container-color: elevated-selected-container-color,
@@ -456,102 +457,100 @@ $_avatar-trailing-padding: 8px;
     );
 
     @each $selected, $base in $highlighted-remapped-tokens {
-      #{token-utils.get-token-variable-name($selected)}: token-utils.get-token-variable($base);
+      #{token-utils.get-token-variable-name($selected)}: token-utils.slot($base);
     }
   }
 }
 
 // Add additional slots for the MDC chip tokens, needed in Angular Material.
-@include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   .mat-mdc-chip-focus-overlay {
-    @include token-utils.create-token-slot(background, focus-state-layer-color);
+    background: token-utils.slot(focus-state-layer-color);
 
     .mat-mdc-chip-selected &,
     .mat-mdc-chip-highlighted & {
-      @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
+      background: token-utils.slot(selected-focus-state-layer-color);
     }
 
     .mat-mdc-chip:hover & {
-      @include token-utils.create-token-slot(background, hover-state-layer-color);
-      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      background: token-utils.slot(hover-state-layer-color);
+      opacity: token-utils.slot(hover-state-layer-opacity);
     }
 
     .mat-mdc-chip-selected:hover,
     .mat-mdc-chip-highlighted:hover & {
-      @include token-utils.create-token-slot(background, selected-hover-state-layer-color);
-      @include token-utils.create-token-slot(opacity, selected-hover-state-layer-opacity);
+      background: token-utils.slot(selected-hover-state-layer-color);
+      opacity: token-utils.slot(selected-hover-state-layer-opacity);
     }
 
     .mat-mdc-chip.cdk-focused & {
-      @include token-utils.create-token-slot(background, focus-state-layer-color);
-      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      background: token-utils.slot(focus-state-layer-color);
+      opacity: token-utils.slot(focus-state-layer-opacity);
     }
 
     .mat-mdc-chip-selected.cdk-focused &,
     .mat-mdc-chip-highlighted.cdk-focused & {
-      @include token-utils.create-token-slot(background, selected-focus-state-layer-color);
-      @include token-utils.create-token-slot(opacity, selected-focus-state-layer-opacity);
+      background: token-utils.slot(selected-focus-state-layer-color);
+      opacity: token-utils.slot(selected-focus-state-layer-opacity);
     }
   }
 
   .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
-    @include token-utils.create-token-slot(opacity, with-avatar-disabled-avatar-opacity);
+    opacity: token-utils.slot(with-avatar-disabled-avatar-opacity);
   }
 
   .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-    @include token-utils.create-token-slot(
-      opacity, with-trailing-icon-disabled-trailing-icon-opacity);
+    opacity: token-utils.slot(with-trailing-icon-disabled-trailing-icon-opacity);
   }
 
   .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
-    @include token-utils.create-token-slot(opacity, with-icon-disabled-icon-opacity);
+    opacity: token-utils.slot(with-icon-disabled-icon-opacity);
   }
 }
 
-@include token-utils.use-tokens(tokens-mat-chip.$prefix, tokens-mat-chip.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
   // Now that MDC supports disabled styles, we should switch to using theirs.
   .mat-mdc-standard-chip {
     &.mdc-evolution-chip--disabled {
-      @include token-utils.create-token-slot(opacity, disabled-container-opacity);
+      opacity: token-utils.slot(disabled-container-opacity);
     }
 
     &.mdc-evolution-chip--selected,
     &.mat-mdc-chip-highlighted {
       .mdc-evolution-chip__icon--trailing {
-        @include token-utils.create-token-slot(color, selected-trailing-icon-color);
+        color: token-utils.slot(selected-trailing-icon-color);
       }
 
       &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-        @include token-utils.create-token-slot(color, selected-disabled-trailing-icon-color);
+        color: token-utils.slot(selected-disabled-trailing-icon-color);
       }
     }
   }
 
   .mat-mdc-chip-remove {
-    @include token-utils.create-token-slot(opacity, trailing-action-opacity);
+    opacity: token-utils.slot(trailing-action-opacity);
 
     &:focus {
-      @include token-utils.create-token-slot(opacity, trailing-action-focus-opacity);
+      opacity: token-utils.slot(trailing-action-focus-opacity);
     }
 
     &::after {
-      @include token-utils.create-token-slot(background-color, trailing-action-state-layer-color);
+      background-color: token-utils.slot(trailing-action-state-layer-color);
     }
 
     &:hover::after {
-      @include token-utils.create-token-slot(opacity, trailing-action-hover-state-layer-opacity);
+      opacity: token-utils.slot(trailing-action-hover-state-layer-opacity);
     }
 
     &:focus::after {
-      @include token-utils.create-token-slot(opacity, trailing-action-focus-state-layer-opacity);
+      opacity: token-utils.slot(trailing-action-focus-state-layer-opacity);
     }
   }
 
   .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
   .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
-    @include token-utils.create-token-slot(background-color,
-      selected-trailing-action-state-layer-color);
+    background-color: token-utils.slot(selected-trailing-action-state-layer-color);
   }
 }
 
