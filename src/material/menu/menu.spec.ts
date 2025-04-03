@@ -41,7 +41,7 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus,
-} from '@angular/cdk/testing/private';
+} from '../../cdk/testing/private';
 import {MatMenu, MatMenuItem, MatMenuModule} from './index';
 import {
   MAT_MENU_DEFAULT_OPTIONS,

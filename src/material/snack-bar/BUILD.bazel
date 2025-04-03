@@ -67,7 +67,8 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
         "//src/material/button",
         "//src/material/core",
     ],
@@ -89,7 +90,9 @@ ts_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/overlay",
+        "//src/cdk/platform",
     ],
 )
 

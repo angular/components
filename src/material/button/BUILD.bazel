@@ -145,7 +145,8 @@ ts_project(
         ":button",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/platform",
+        "//src/cdk/testing/private",
         "//src/material/core",
     ],
 )

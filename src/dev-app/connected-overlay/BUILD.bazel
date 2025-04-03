@@ -13,9 +13,13 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/dev-app:node_modules/@angular/cdk",
-        "//src/dev-app:node_modules/@angular/components-examples",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/cdk/bidi",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
+        "//src/components-examples/cdk/overlay",
+        "//src/material/button",
+        "//src/material/checkbox",
+        "//src/material/radio",
     ],
 )
 

@@ -8,6 +8,6 @@ ng_project(
     assets = ["platform-demo.html"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/cdk",
+        "//src/cdk/platform",
     ],
 )

@@ -15,7 +15,9 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/table",
     ],
 )
 
@@ -30,7 +32,7 @@ ts_project(
         ":selection",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/table",
         "//src/cdk/testing/private",
     ],
 )

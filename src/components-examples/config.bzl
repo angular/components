@@ -58,6 +58,5 @@ ALL_EXAMPLES = [
     "//src/components-examples/cdk/overlay",
     "//src/components-examples/cdk/dialog",
     "//src/components-examples/cdk-experimental/popover-edit",
-    "//src/components-examples/cdk-experimental/listbox",
     "//src/components-examples/cdk-experimental/selection",
 ]

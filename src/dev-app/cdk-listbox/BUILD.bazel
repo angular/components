@@ -10,6 +10,6 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/components-examples",
+        "//src/components-examples/cdk/listbox",
     ],
 )

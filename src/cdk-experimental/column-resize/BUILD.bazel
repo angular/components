@@ -12,7 +12,12 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
         "//src/cdk-experimental/popover-edit",
+        "//src/cdk/bidi",
+        "//src/cdk/coercion",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
+        "//src/cdk/table",
     ],
 )

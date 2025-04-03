@@ -70,7 +70,8 @@ ts_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/testing",
+        "//src/cdk/testing/private",
     ],
 )
 

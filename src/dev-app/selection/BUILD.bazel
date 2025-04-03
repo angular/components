@@ -8,8 +8,8 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/dev-app:node_modules/@angular/cdk-experimental",
-        "//src/dev-app:node_modules/@angular/material-experimental",
+        "//src/components-examples/cdk-experimental/selection",
+        "//src/components-examples/material-experimental/selection",
         "//src/dev-app/example",
     ],
 )

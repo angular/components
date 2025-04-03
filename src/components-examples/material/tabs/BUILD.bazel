@@ -20,8 +20,15 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
         "//:node_modules/rxjs",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/material",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/button",
+        "//src/material/button-toggle",
+        "//src/material/checkbox",
+        "//src/material/icon",
+        "//src/material/input",
+        "//src/material/tabs",
+        "//src/material/tabs/testing",
     ],
 )
 
@@ -42,8 +49,10 @@ ts_project(
         ":tabs",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/material",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/tabs",
+        "//src/material/tabs/testing",
     ],
 )
 

@@ -14,7 +14,13 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/material/autocomplete",
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/checkbox",
+        "//src/material/dialog",
+        "//src/material/form-field",
+        "//src/material/input",
     ],
 )
 

@@ -15,7 +15,15 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/core",
+        "//src/material/datepicker",
+        "//src/material/form-field",
+        "//src/material/icon",
+        "//src/material/input",
+        "//src/material/select",
+        "//src/material/timepicker",
     ],
 )
 
