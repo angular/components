@@ -9,8 +9,8 @@ npm_link_all_packages()
 
 # List of dependencies that are referenced in the `index.html` file.
 devserverIndexHtmlDependencies = [
-    "@npm//zone.js",
-    "@npm//kagekiri",
+    "//:node_modules/zone.js",
+    "//:node_modules/kagekiri",
     "//src/material/prebuilt-themes:azure-blue",
     ":index.html",
     ":theme",
@@ -91,7 +91,7 @@ http_server(
     testonly = True,
     srcs = devserverIndexHtmlDependencies,
     additional_root_paths = [
-        "npm/node_modules",
+        "angular_material/",
     ],
     tags = ["manual"],
     deps = [
