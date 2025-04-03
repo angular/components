@@ -29,6 +29,8 @@ ts_project(
     deps = [
         ":testbed",
         "//:node_modules/@angular/core",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -5,7 +5,7 @@ import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/t
 import {FormsModule, NgForm} from '@angular/forms';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 
 import {
   CdkPopoverEditColspan,

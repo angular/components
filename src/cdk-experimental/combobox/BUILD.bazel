@@ -13,7 +13,10 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//src:dev_mode_types",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/overlay",
     ],
 )
 
@@ -28,7 +31,8 @@ ts_project(
         ":combobox",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

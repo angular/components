@@ -24,7 +24,6 @@ CDK_ENTRYPOINTS = [
     "text-field",
     "tree",
     "testing",
-    "testing/private",
     "testing/testbed",
     "testing/selenium-webdriver",
     "private",

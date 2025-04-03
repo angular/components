@@ -13,8 +13,9 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/cdk-experimental",
+        "//src/cdk-experimental/popover-edit",
+        "//src/cdk/collections",
+        "//src/cdk/table",
     ],
 )
 

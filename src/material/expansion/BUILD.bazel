@@ -25,7 +25,11 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/accordion",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/portal",
         "//src/material/core",
     ],
 )
@@ -64,7 +68,9 @@ ts_project(
         ":expansion",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

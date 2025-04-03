@@ -25,7 +25,8 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/private",
         "//src/material/core",
     ],
 )

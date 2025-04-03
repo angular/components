@@ -13,7 +13,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/cdk/stepper",
     ],
 )
 

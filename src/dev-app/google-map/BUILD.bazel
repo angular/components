@@ -15,7 +15,7 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@types/google.maps",
         "//:node_modules/rxjs",
-        "//src/dev-app:node_modules/@angular/google-maps",
+        "//src/google-maps",
     ],
 )
 

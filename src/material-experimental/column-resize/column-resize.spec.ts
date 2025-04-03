@@ -12,7 +12,7 @@ import {
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject, Observable, ReplaySubject} from 'rxjs';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 
 import {ColumnSize, ColumnSizeStore} from '@angular/cdk-experimental/column-resize';
 import {AbstractMatColumnResize} from './column-resize-directives/common';
