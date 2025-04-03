@@ -196,6 +196,11 @@
           "clonedeep": "*"
         }
       },
+      "@angular/core": {
+        "peerDependencies": {
+          "@angular/compiler": "*"
+        }
+      },
       "@angular/animations": {
         "dependencies": {
           "@nginfra/angular-linking": "1.0.6"
