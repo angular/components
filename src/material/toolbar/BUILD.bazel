@@ -77,7 +77,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/platform",
         "//src/material/core",
     ],
 )

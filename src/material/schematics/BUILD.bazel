@@ -68,13 +68,13 @@ ts_project(
     ),
     tsconfig = ":tsconfig",
     deps = [
+        ":node_modules/@angular/cdk/schematics",
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@schematics/angular",
         "//:node_modules/rxjs",
         "//:node_modules/tslint",
         "//:node_modules/typescript",
-        "//src/material:node_modules/@angular/cdk",
     ],
 )
 
@@ -117,6 +117,7 @@ ts_project(
     ),
     tsconfig = ":tsconfig-test",
     deps = [
+        ":node_modules/@angular/cdk/schematics",
         ":paths",
         ":schematics",
         "//:node_modules/@angular-devkit/core",
@@ -127,7 +128,6 @@ ts_project(
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",
         "//src/cdk/schematics/testing",
-        "//src/material:node_modules/@angular/cdk",
     ],
 )
 

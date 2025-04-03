@@ -12,7 +12,7 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/cdk",
+        "//src/cdk/portal",
     ],
 )
 

@@ -8,7 +8,8 @@ ng_project(
     assets = ["live-announcer-demo.html"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/cdk",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/cdk/a11y",
+        "//src/material/button",
+        "//src/material/dialog",
     ],
 )

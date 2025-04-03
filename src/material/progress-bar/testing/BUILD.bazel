@@ -11,7 +11,8 @@ ng_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/coercion",
+        "//src/cdk/testing",
     ],
 )
 
@@ -23,7 +24,8 @@ ts_project(
         ":testing",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material/progress-bar",
     ],
 )

@@ -12,9 +12,10 @@ ng_project(
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src/material-experimental:node_modules/@angular/cdk",
-        "//src/material-experimental:node_modules/@angular/cdk-experimental",
-        "//src/material-experimental:node_modules/@angular/material",
+        "//src/cdk-experimental/column-resize",
+        "//src/cdk/overlay",
+        "//src/cdk/table",
+        "//src/material/table",
     ],
 )
 
@@ -34,9 +35,13 @@ ts_project(
         ":column-resize",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/material-experimental:node_modules/@angular/cdk",
-        "//src/material-experimental:node_modules/@angular/cdk-experimental",
-        "//src/material-experimental:node_modules/@angular/material",
+        "//src/cdk-experimental/column-resize",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/testing/private",
+        "//src/material/table",
     ],
 )
 

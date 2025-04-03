@@ -27,7 +27,8 @@ ts_project(
     deps = [
         ":listbox",
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
     ],
 )
 

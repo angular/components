@@ -4,11 +4,8 @@ load("//tools/package-docs-content:index.bzl", "package_docs_content")
 load(":config.bzl", "ALL_EXAMPLES")
 load("//tools:defaults2.bzl", "ng_project")
 load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
-
-npm_link_all_packages()
 
 ng_project(
     name = "components-examples",
@@ -18,7 +15,6 @@ ng_project(
     ) + [":example-module.ts"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/components-examples:node_modules/@angular/cdk",
     ] + ALL_EXAMPLES,
 )
 
@@ -63,16 +59,12 @@ package_docs_content(
 
 ng_package(
     name = "npm_package",
-    package_name = "@angular/components-examples",
     srcs = ["package.json"],
     # this is a workaround to store a tree artifact in the ng_package.
     # ng_package does not properly handle tree artifacts currently so we escalate to nested_packages
     nested_packages = [":docs-content"],
     tags = ["docs-package"],
-    deps = [
-        ":components-examples_legacy",
-        "//src/components-examples/private:private_legacy",
-    ] + [get_legacy_label(t) for t in ALL_EXAMPLES],
+    deps = [":components-examples_legacy"] + [get_legacy_label(t) for t in ALL_EXAMPLES],
 )
 
 genrule(

@@ -12,7 +12,9 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/dev-app:node_modules/@angular/material",
+        "//src/material/button",
+        "//src/material/list",
+        "//src/material/sidenav",
     ],
 )
 

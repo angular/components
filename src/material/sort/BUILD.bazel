@@ -81,7 +81,8 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/keycodes",
         "//src/material/core",
     ],
 )
@@ -98,7 +99,9 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/collections",
+        "//src/cdk/table",
+        "//src/cdk/testing/private",
         "//src/material/table",
     ],
 )

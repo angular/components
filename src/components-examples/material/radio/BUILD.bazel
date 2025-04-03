@@ -18,8 +18,10 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@types/jasmine",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/material",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/radio",
+        "//src/material/radio/testing",
     ],
 )
 
@@ -40,8 +42,10 @@ ts_project(
         ":radio",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/material",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "//src/material/radio",
+        "//src/material/radio/testing",
     ],
 )
 

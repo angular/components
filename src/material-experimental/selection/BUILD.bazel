@@ -13,9 +13,9 @@ ng_project(
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
-        "//src/material-experimental:node_modules/@angular/cdk",
-        "//src/material-experimental:node_modules/@angular/cdk-experimental",
-        "//src/material-experimental:node_modules/@angular/material",
+        "//src/cdk-experimental/selection",
+        "//src/material/checkbox",
+        "//src/material/table",
     ],
 )
 
