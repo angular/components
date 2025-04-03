@@ -12,7 +12,7 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
-        "//src/components-examples:node_modules/@angular/cdk",
+        "//src/cdk/table",
     ],
 )
 

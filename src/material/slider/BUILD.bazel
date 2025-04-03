@@ -88,7 +88,8 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/bidi",
+        "//src/cdk/platform",
         "//src/material/core",
     ],
 )
@@ -125,7 +126,10 @@ ts_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/bidi",
+        "//src/cdk/keycodes",
+        "//src/cdk/platform",
+        "//src/cdk/testing/private",
         "//src/material/core",
     ],
 )

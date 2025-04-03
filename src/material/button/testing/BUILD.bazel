@@ -11,7 +11,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/testing",
     ],
 )
 
@@ -29,7 +29,9 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
-        "//src/material:node_modules/@angular/cdk",
+        "//src/cdk/platform",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
         "//src/material/button",
         "//src/material/icon",
         "//src/material/icon/testing",

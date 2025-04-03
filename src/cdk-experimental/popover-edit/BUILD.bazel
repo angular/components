@@ -14,7 +14,12 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/portal",
+        "//src/cdk/scrolling",
     ],
 )
 
@@ -31,7 +36,12 @@ ts_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/cdk-experimental:node_modules/@angular/cdk",
+        "//src/cdk/bidi",
+        "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/overlay",
+        "//src/cdk/table",
+        "//src/cdk/testing/private",
     ],
 )
 

@@ -14,10 +14,14 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
-        "//src/components-examples:node_modules/@angular/cdk",
-        "//src/components-examples:node_modules/@angular/cdk-experimental",
-        "//src/components-examples:node_modules/@angular/material",
-        "//src/components-examples:node_modules/@angular/material-experimental",
+        "//src/material-experimental/popover-edit",
+        "//src/material/button",
+        "//src/material/checkbox",
+        "//src/material/icon",
+        "//src/material/input",
+        "//src/material/list",
+        "//src/material/snack-bar",
+        "//src/material/table",
     ],
 )
 

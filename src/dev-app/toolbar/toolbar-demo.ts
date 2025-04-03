@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  ToolbarOverviewExample,
-  ToolbarSimpleExample,
-} from '@angular/components-examples/material/toolbar';
+import {ToolbarOverviewExample} from '@angular/components-examples/material/toolbar';
+import {ToolbarSimpleExample} from '@angular/components-examples/material/toolbar/toolbar-simple/toolbar-simple-example';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
