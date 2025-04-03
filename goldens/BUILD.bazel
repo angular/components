@@ -1,4 +1,4 @@
-load("@devinfra//bazel/api-golden:index.bzl", "api_golden_test_npm_package")
+load("@devinfra//bazel/api-golden:index_rjs.bzl", "api_golden_test_npm_package")
 
 exports_files([
     "tsec-exemption.json",
@@ -9,29 +9,33 @@ api_golden_test_npm_package(
     data = glob(["cdk/**"]) + [
         "//src/cdk:npm_package",
     ],
-    golden_dir = "angular_material/goldens/cdk",
-    npm_package = "angular_material/src/cdk/npm_package",
+    golden_dir = "goldens/cdk",
+    npm_package = "src/cdk/npm_package",
 )
 
 api_golden_test_npm_package(
     name = "material_api",
     data = glob(["material/**"]) + ["//src/material:npm_package"],
-    golden_dir = "angular_material/goldens/material",
-    npm_package = "angular_material/src/material/npm_package",
+    golden_dir = "goldens/material",
+    npm_package = "src/material/npm_package",
 )
 
 api_golden_test_npm_package(
     name = "google_maps_api",
     data = glob(["google-maps/**"]) + ["//src/google-maps:npm_package"],
-    golden_dir = "angular_material/goldens/google-maps",
-    npm_package = "angular_material/src/google-maps/npm_package",
-    types = ["@npm//@types/google.maps"],
+    golden_dir = "goldens/google-maps",
+    npm_package = "src/google-maps/npm_package",
+    types = {
+        "//:node_modules/@types/google.maps": "google.maps",
+    },
 )
 
 api_golden_test_npm_package(
     name = "youtube_player_api",
     data = glob(["youtube-player/**"]) + ["//src/youtube-player:npm_package"],
-    golden_dir = "angular_material/goldens/youtube-player",
-    npm_package = "angular_material/src/youtube-player/npm_package",
-    types = ["@npm//@types/youtube"],
+    golden_dir = "goldens/youtube-player",
+    npm_package = "src/youtube-player/npm_package",
+    types = {
+        "//:node_modules/@types/youtube": "youtube",
+    },
 )
