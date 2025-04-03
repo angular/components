@@ -13,7 +13,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: 7c98045a9c49ce191158d99623d18a74
+packageExtensionsChecksum: 0bde749b72d616c02ed63ba4f549f8b7
 
 patchedDependencies:
   '@angular/compiler-cli@19.2.0':
@@ -38,7 +38,7 @@ importers:
         version: 19.2.0(@angular/core@19.2.0)
       '@angular/core':
         specifier: ^19.2.0
-        version: 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+        version: 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/forms':
         specifier: ^19.2.0
         version: 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)(rxjs@6.6.7)
@@ -825,19 +825,20 @@ packages:
       '@angular/core': 19.2.0
     dependencies:
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
       - supports-color
 
-  /@angular/benchpress@0.3.0(rxjs@6.6.7)(zone.js@0.15.0):
+  /@angular/benchpress@0.3.0(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0):
     resolution: {integrity: sha512-ApxoY5lTj1S0QFLdq5ZdTfdkIds1m3tma9EJOZpNVHRU9eCj2D/5+VFb5tlWsv9NHQ2S0XXkJjauFOAdfzT8uw==}
     dependencies:
-      '@angular/core': 14.3.0(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 14.3.0(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       reflect-metadata: 0.1.14
     transitivePeerDependencies:
+      - '@angular/compiler'
       - rxjs
       - zone.js
     dev: true
@@ -1134,7 +1135,7 @@ packages:
       '@angular/core': 19.2.0
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       rxjs: 6.6.7
       tslib: 2.8.1
@@ -1173,28 +1174,32 @@ packages:
       '@angular/core':
         optional: true
     dependencies:
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       tslib: 2.8.1
 
-  /@angular/core@14.3.0(rxjs@6.6.7)(zone.js@0.15.0):
+  /@angular/core@14.3.0(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0):
     resolution: {integrity: sha512-wYiwItc0Uyn4FWZ/OAx/Ubp2/WrD3EgUJ476y1XI7yATGPF8n9Ld5iCXT08HOvc4eBcYlDfh90kTXR6/MfhzdQ==}
     engines: {node: ^14.15.0 || >=16.10.0}
     peerDependencies:
+      '@angular/compiler': '*'
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.11.4 || ~0.12.0
     dependencies:
+      '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       rxjs: 6.6.7
       tslib: 2.8.1
       zone.js: 0.15.0
     dev: true
 
-  /@angular/core@19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0):
+  /@angular/core@19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0):
     resolution: {integrity: sha512-WKTRltOt3MMWWuhRX7Y9RonKxIYjZeBDE6XRwceHMgaEDS2d8I2D3AIuqizRsgHpJqDPnQnH+vxcek4FivcSGA==}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
+      '@angular/compiler': '*'
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.15.0
     dependencies:
+      '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       rxjs: 6.6.7
       tslib: 2.8.1
       zone.js: 0.15.0
@@ -1210,7 +1215,7 @@ packages:
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.0(@angular/animations@19.2.0)(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       rxjs: 6.6.7
@@ -1250,7 +1255,7 @@ packages:
     dependencies:
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.0(@angular/animations@19.2.0)(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       tslib: 2.8.1
     dev: true
@@ -1268,7 +1273,7 @@ packages:
     dependencies:
       '@angular/animations': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -1286,7 +1291,7 @@ packages:
     dependencies:
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.0(@angular/animations@19.2.0)(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       tslib: 2.8.1
       xhr2: 0.2.1
@@ -1302,7 +1307,7 @@ packages:
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
       '@angular/common': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(rxjs@6.6.7)
-      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.0(@angular/animations@19.2.0)(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
       '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       rxjs: 6.6.7
@@ -16902,7 +16907,7 @@ packages:
     name: '@angular/build-tooling'
     version: 0.0.0-335a273d3eb2a73c51efb97930fc1e0cd72e0d32
     dependencies:
-      '@angular/benchpress': 0.3.0(rxjs@6.6.7)(zone.js@0.15.0)
+      '@angular/benchpress': 0.3.0(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/build': 20.0.0-next.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/localize@19.2.0)(@angular/platform-server@19.2.0)(@types/node@20.17.24)(karma@6.4.3)(postcss@8.5.3)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
       '@babel/core': 7.26.9
       '@babel/plugin-proposal-async-generator-functions': 7.20.7(@babel/core@7.26.9)
