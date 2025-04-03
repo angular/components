@@ -1,6 +1,6 @@
 @use '@angular/cdk';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/timepicker' as tokens-mat-timepicker;
+@use './m2-timepicker';
 
 @keyframes _mat-timepicker-enter {
   from {
@@ -36,12 +36,11 @@ mat-timepicker {
   padding: 8px 0;
   box-sizing: border-box;
 
-  @include token-utils.use-tokens(
-    tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
-    @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
-    @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
-    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
-    @include token-utils.create-token-slot(background-color, container-background-color);
+  @include token-utils.use-tokens(m2-timepicker.$prefix, m2-timepicker.get-token-slots()) {
+    border-bottom-left-radius: token-utils.slot(container-shape);
+    border-bottom-right-radius: token-utils.slot(container-shape);
+    box-shadow: token-utils.slot(container-elevation-shadow);
+    background-color: token-utils.slot(container-background-color);
   }
 
   @include cdk.high-contrast {
@@ -52,10 +51,9 @@ mat-timepicker {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
-    @include token-utils.use-tokens(
-      tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
-      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
-      @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+    @include token-utils.use-tokens(m2-timepicker.$prefix, m2-timepicker.get-token-slots()) {
+      border-top-left-radius: token-utils.slot(container-shape);
+      border-top-right-radius: token-utils.slot(container-shape);
     }
   }
 }

@@ -1,5 +1,5 @@
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
+@use './m2-icon';
 @use '../core/tokens/token-utils';
 
 // The width/height of the icon element.
@@ -15,8 +15,8 @@ $size: 24px !default;
 // `warn` because there we want the additional specificity.
 mat-icon {
   &, &.mat-primary, &.mat-accent, &.mat-warn {
-    @include token-utils.use-tokens(tokens-mat-icon.$prefix, tokens-mat-icon.get-token-slots()) {
-      @include token-utils.create-token-slot(color, color);
+    @include token-utils.use-tokens(m2-icon.$prefix, m2-icon.get-token-slots()) {
+      color: token-utils.slot(color);
     }
   }
 }

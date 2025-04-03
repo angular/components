@@ -1,8 +1,8 @@
 @use '@angular/cdk';
 
 @use '../core/focus-indicators/private';
-@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
 @use '../core/tokens/token-utils';
+@use './m2-datepicker';
 
 $calendar-padding: 8px !default;
 $calendar-header-divider-width: 1px !default;
@@ -15,7 +15,8 @@ $calendar-controls-side-margin: calc(33% / 7 - 16px);
 $calendar-arrow-size: 5px !default;
 $calendar-arrow-disabled-opacity: 0.5 !default;
 
-$_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots();
+$token-prefix: m2-datepicker.$prefix;
+$token-slots: m2-datepicker.get-token-slots();
 
 .mat-calendar {
   display: block;
@@ -23,9 +24,9 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   // Prevents layout issues if the line height bleeds in from the body (see #29756).
   line-height: normal;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(font-family, calendar-text-font);
-    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    font-family: token-utils.slot(calendar-text-font);
+    font-size: token-utils.slot(calendar-text-size);
   }
 }
 
@@ -52,11 +53,10 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   min-width: 0;
   margin: 0 8px;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(font-size, calendar-period-button-text-size);
-    @include token-utils.create-token-slot(font-weight, calendar-period-button-text-weight);
-    @include token-utils.create-token-slot(--mat-text-button-label-text-color,
-      calendar-period-button-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    font-size: token-utils.slot(calendar-period-button-text-size);
+    font-weight: token-utils.slot(calendar-period-button-text-weight);
+    --mat-text-button-label-text-color: #{token-utils.slot(calendar-period-button-text-color)};
   }
 }
 
@@ -67,8 +67,8 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   margin: 0 0 0 $calendar-arrow-size;
   vertical-align: middle;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(fill, calendar-period-button-icon-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    fill: token-utils.slot(calendar-period-button-icon-color);
   }
 
   &.mat-calendar-invert {
@@ -87,10 +87,10 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
 
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
-  @include token-utils.use-tokens($_tokens...) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
     .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
-      @include token-utils.create-token-slot(color, calendar-navigation-button-icon-color);
+      color: token-utils.slot(calendar-navigation-button-icon-color);
     }
   }
 
@@ -109,10 +109,10 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
   text-align: center;
   padding: 0 0 $calendar-padding 0;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(color, calendar-header-text-color);
-    @include token-utils.create-token-slot(font-size, calendar-header-text-size);
-    @include token-utils.create-token-slot(font-weight, calendar-header-text-weight);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(calendar-header-text-color);
+    font-size: token-utils.slot(calendar-header-text-size);
+    font-weight: token-utils.slot(calendar-header-text-weight);
   }
 }
 
@@ -130,8 +130,8 @@ $_tokens: tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots()
     right: -$calendar-padding;
     height: $calendar-header-divider-width;
 
-    @include token-utils.use-tokens($_tokens...) {
-      @include token-utils.create-token-slot(background, calendar-header-divider-color);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      background: token-utils.slot(calendar-header-divider-color);
     }
   }
 }

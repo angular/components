@@ -1,0 +1,65 @@
+@use 'sass:map';
+@use '../core/tokens/m3-utils';
+@use '../core/style/sass-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, outlined-text-field);
+
+/// Generates the tokens for MDC outlined-text-field
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC outlined-text-field
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    caret-color: map.get($systems, md-sys-color, primary),
+    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
+    disabled-input-text-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-label-text-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-outline-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
+    error-focus-label-text-color: map.get($systems, md-sys-color, error),
+    error-focus-outline-color: map.get($systems, md-sys-color, error),
+    error-hover-label-text-color: map.get($systems, md-sys-color, on-error-container),
+    error-hover-outline-color: map.get($systems, md-sys-color, on-error-container),
+    error-label-text-color: map.get($systems, md-sys-color, error),
+    error-outline-color: map.get($systems, md-sys-color, error),
+    focus-label-text-color: map.get($systems, md-sys-color, primary),
+    focus-outline-color: map.get($systems, md-sys-color, primary),
+    focus-outline-width: if($exclude-hardcoded, null, 2px),
+    hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+    hover-outline-color: map.get($systems, md-sys-color, on-surface),
+    input-text-color: map.get($systems, md-sys-color, on-surface),
+    input-text-placeholder-color: map.get($systems, md-sys-color, on-surface-variant),
+    label-text-color: map.get($systems, md-sys-color, on-surface-variant),
+    label-text-font: map.get($systems, md-sys-typescale, body-large-font),
+    label-text-size: map.get($systems, md-sys-typescale, body-large-size),
+    label-text-tracking: map.get($systems, md-sys-typescale, body-large-tracking),
+    label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
+    outline-color: map.get($systems, md-sys-color, outline),
+    outline-width: if($exclude-hardcoded, null, 1px),
+  );
+
+  $variant-tokens: (
+    primary: (), // Default, no overrides needed
+    secondary: (
+      caret-color: map.get($systems, md-sys-color, secondary),
+      focus-label-text-color: map.get($systems, md-sys-color, secondary),
+      focus-outline-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      caret-color: map.get($systems, md-sys-color, tertiary),
+      focus-label-text-color: map.get($systems, md-sys-color, tertiary),
+      focus-outline-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      caret-color: map.get($systems, md-sys-color, error),
+      focus-label-text-color: map.get($systems, md-sys-color, error),
+      focus-outline-color: map.get($systems, md-sys-color, error),
+    ),
+  );
+
+  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}

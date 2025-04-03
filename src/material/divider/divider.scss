@@ -1,5 +1,5 @@
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/divider' as tokens-mat-divider;
+@use './m2-divider';
 
 $inset-margin: 80px;
 
@@ -7,16 +7,15 @@ $inset-margin: 80px;
   display: block;
   margin: 0;
   border-top-style: solid;
-  @include token-utils.use-tokens(
-    tokens-mat-divider.$prefix, tokens-mat-divider.get-token-slots()) {
-    @include token-utils.create-token-slot(border-top-color, color);
-    @include token-utils.create-token-slot(border-top-width, width);
+  @include token-utils.use-tokens(m2-divider.$prefix, m2-divider.get-token-slots()) {
+    border-top-color: token-utils.slot(color);
+    border-top-width: token-utils.slot(width);
 
     &.mat-divider-vertical {
       border-top: 0;
       border-right-style: solid;
-      @include token-utils.create-token-slot(border-right-color, color);
-      @include token-utils.create-token-slot(border-right-width, width);
+      border-right-color: token-utils.slot(color);
+      border-right-width: token-utils.slot(width);
     }
   }
 

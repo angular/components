@@ -11,17 +11,41 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 sass_library(
+    name = "m3",
+    srcs = [
+        "_m3-stepper.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_utils",
+    ],
+)
+
+sass_library(
+    name = "m2",
+    srcs = [
+        "_m2-stepper.scss",
+    ],
+    deps = [
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
+    ],
+)
+
+sass_library(
     name = "theme",
     srcs = [
         "_stepper-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
         "//src/material/core/typography",
     ],
 )
@@ -30,10 +54,10 @@ sass_binary(
     name = "css",
     src = "stepper.scss",
     deps = [
+        ":m2",
         ":variables",
         "//src/cdk:sass_lib",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -41,11 +65,11 @@ sass_binary(
     name = "header_css",
     src = "step-header.scss",
     deps = [
+        ":m2",
         ":variables",
         "//src/cdk:sass_lib",
         "//src/material/core/style:layout_common",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 

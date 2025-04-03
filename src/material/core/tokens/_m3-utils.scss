@@ -1,0 +1,85 @@
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:meta';
+
+/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
+/// @param {List} $prefix The token prefix for the given tokens.
+/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
+///  This param may also be a tuple of maps, the first one representing the default M3 token values,
+//   and the second containing overrides for different color variants.
+//   Single map example:
+//     (token1: green, token2: 2px)
+//   Tuple example:
+//     (
+//       (token1: green, token2: 2px),
+//       (
+//         secondary: (token1: blue),
+//         error: (token1: red),
+//       )
+//     )
+/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
+/// @param {String|null} $variant The name of the variant the token values are for.
+/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
+@function namespace($prefix, $values, $slots, $variant: null) {
+  $result: ();
+  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
+    $variants: list.nth($values, 2);
+    $values: list.nth($values, 1);
+    @each $variant, $overrides in $variants {
+
+      $result: map.merge($result, namespace($prefix, $overrides, $slots, $variant));
+    }
+  }
+  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
+  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
+  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
+  @return map.merge($result, ($prefix: $used-m3-tokens));
+}
+
+/// Hardcode the given value, or null if hardcoded values are excluded.
+@function hardcode($value, $exclude-hardcoded) {
+  @return if($exclude-hardcoded, null, $value);
+}
+
+/// Picks a submap containing only the given keys out the given map.
+/// @param {Map} $map The map to pick from.
+/// @param {List} $keys The map keys to pick.
+/// @return {Map} A submap containing only the given keys.
+@function _pick($map, $keys) {
+  $result: ();
+  @each $key in $keys {
+    @if map.has-key($map, $key) {
+      $result: map.set($result, $key, map.get($map, $key));
+    }
+  }
+  @return $result;
+}
+
+
+/// Filters keys with a null value out of the map.
+/// @param {Map} $map The map to filter.
+/// @return {Map} The given map with all of the null keys filtered out.
+@function _filter-nulls($map) {
+  $result: ();
+  @each $key, $val in $map {
+    @if $val != null {
+      $result: map.set($result, $key, $val);
+    }
+  }
+  @return $result;
+}
+
+/// Sets all of the standard typography tokens for the given token base name to the given typography
+/// level.
+/// @param {Map} $systems The MDC system tokens
+/// @param {String} $base-name The token base name to get the typography tokens for
+/// @param {String} $typography-level The typography level to base the token values on
+/// @return {Map} A map containing the typography tokens for the given base token name
+@function generate-typography-tokens($systems, $base-name, $typography-level) {
+  $result: ();
+  @each $prop in (font, line-height, size, tracking, weight) {
+    $result: map.set($result, #{$base-name}-#{$prop},
+      map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
+  }
+  @return $result;
+}

@@ -3,7 +3,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/circular-progress' as tokens-mat-circular-progress;
+@use './m2-progress-spinner';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-progress-spinner.
@@ -14,8 +14,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-circular-progress.$prefix,
-        tokens-mat-circular-progress.get-unthemable-tokens()
+        m2-progress-spinner.$prefix,
+        m2-progress-spinner.get-unthemable-tokens()
       );
     }
   }
@@ -32,21 +32,21 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-circular-progress.$prefix,
-        tokens-mat-circular-progress.get-color-tokens($theme, primary)
+        m2-progress-spinner.$prefix,
+        m2-progress-spinner.get-color-tokens($theme, primary)
       );
 
       .mat-accent {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-circular-progress.$prefix,
-          tokens-mat-circular-progress.get-color-tokens($theme, accent)
+          m2-progress-spinner.$prefix,
+          m2-progress-spinner.get-color-tokens($theme, accent)
         );
       }
 
       .mat-warn {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-circular-progress.$prefix,
-          tokens-mat-circular-progress.get-color-tokens($theme, warn)
+          m2-progress-spinner.$prefix,
+          m2-progress-spinner.get-color-tokens($theme, warn)
         );
       }
     }
@@ -67,8 +67,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-circular-progress.$prefix,
-      tokens: tokens-mat-circular-progress.get-token-slots(),
+      namespace: m2-progress-spinner.$prefix,
+      tokens: m2-progress-spinner.get-token-slots(),
     ),
   );
 }
@@ -109,11 +109,11 @@
   );
   $mdc-circular-progress-tokens: token-utils.get-tokens-for(
     $tokens,
-    tokens-mat-circular-progress.$prefix,
+    m2-progress-spinner.$prefix,
     $options...
   );
   @include token-utils.create-token-values(
-    tokens-mat-circular-progress.$prefix,
+    m2-progress-spinner.$prefix,
     $mdc-circular-progress-tokens
   );
 }

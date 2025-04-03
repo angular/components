@@ -1,6 +1,6 @@
 @use '../core/style/list-common';
 @use '../core/style/layout-common';
-@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use './m2-grid-list';
 @use '../core/tokens/token-utils';
 
 
@@ -72,18 +72,18 @@ $text-padding: 16px;
 
 .mat-grid-tile-header {
   @include token-utils.use-tokens(
-    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
-    $secondary-token-name: token-utils.get-token-variable(tile-header-secondary-text-size);
-    @include token-utils.create-token-slot(font-size, tile-header-primary-text-size);
+      m2-grid-list.$prefix, m2-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.slot(tile-header-secondary-text-size);
+    font-size: token-utils.slot(tile-header-primary-text-size);
     @include list-common.base(#{$secondary-token-name});
   }
 }
 
 .mat-grid-tile-footer {
   @include token-utils.use-tokens(
-    tokens-mat-grid-list.$prefix, tokens-mat-grid-list.get-token-slots()) {
-    $secondary-token-name: token-utils.get-token-variable(tile-footer-secondary-text-size);
-    @include token-utils.create-token-slot(font-size, tile-footer-primary-text-size);
+      m2-grid-list.$prefix, m2-grid-list.get-token-slots()) {
+    $secondary-token-name: token-utils.slot(tile-footer-secondary-text-size);
+    font-size: token-utils.slot(tile-footer-primary-text-size);
     @include list-common.base(#{$secondary-token-name});
   }
 }

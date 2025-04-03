@@ -1,28 +1,30 @@
 @use '@angular/cdk';
-@use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
-@use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
-@use '../core/tokens/m2/mat/outlined-button' as tokens-mat-outlined-button;
+@use '../button/m2-outlined-button';
+@use '../button/m2-text-button';
 @use '../core/style/variables';
+@use '../core/tokens/token-utils';
+@use './m2-toolbar';
 
 $row-padding: 16px !default;
+
+$token-prefix: m2-toolbar.$prefix;
+$token-slots: m2-toolbar.get-token-slots();
 
 // @deprecated @breaking-change 8.0.0
 // TODO: Remove once internal g3 apps no longer depend on this variable. Tracked with: COMP-303.
 $height-mobile-portrait: 56px !default;
 
 .mat-toolbar {
-  @include token-utils.use-tokens(
-    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
-    @include token-utils.create-token-slot(background, container-background-color);
-    @include token-utils.create-token-slot(color, container-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background: token-utils.slot(container-background-color);
+    color: token-utils.slot(container-text-color);
 
     &, h1, h2, h3, h4, h5, h6 {
-      @include token-utils.create-token-slot(font-family, title-text-font);
-      @include token-utils.create-token-slot(font-size, title-text-size);
-      @include token-utils.create-token-slot(line-height, title-text-line-height);
-      @include token-utils.create-token-slot(font-weight, title-text-weight);
-      @include token-utils.create-token-slot(letter-spacing, title-text-tracking);
+      font-family: token-utils.slot(title-text-font);
+      font-size: token-utils.slot(title-text-size);
+      line-height: token-utils.slot(title-text-line-height);
+      font-weight: token-utils.slot(title-text-weight);
+      letter-spacing: token-utils.slot(title-text-tracking);
       margin: 0;
     }
   }
@@ -54,18 +56,18 @@ $height-mobile-portrait: 56px !default;
     $color-token: null;
 
     @include token-utils.use-tokens(
-      tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
-      $color-token: token-utils.get-token-variable(container-text-color);
+        $token-prefix, $token-slots) {
+      $color-token: token-utils.slot(container-text-color);
     }
 
     @include token-utils.use-tokens(
-      tokens-mat-text-button.$prefix, tokens-mat-text-button.get-token-slots()) {
+        m2-text-button.$prefix, m2-text-button.get-token-slots()) {
       $token: token-utils.get-token-variable-name(label-text-color);
       #{$token}: #{$color-token};
     }
 
     @include token-utils.use-tokens(
-      tokens-mat-outlined-button.$prefix, tokens-mat-outlined-button.get-token-slots()) {
+        m2-outlined-button.$prefix, m2-outlined-button.get-token-slots()) {
       $token: token-utils.get-token-variable-name(label-text-color);
       #{$token}: #{$color-token};
     }
@@ -87,12 +89,11 @@ $height-mobile-portrait: 56px !default;
   // Disable text wrapping inside of the toolbar. Developers are still able to overwrite it.
   white-space: nowrap;
 
-  @include token-utils.use-tokens(
-    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
-    @include token-utils.create-token-slot(height, standard-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    height: token-utils.slot(standard-height);
 
     @media (variables.$xsmall) {
-      @include token-utils.create-token-slot(height, mobile-height);
+      height: token-utils.slot(mobile-height);
     }
   }
 }
@@ -103,15 +104,14 @@ $height-mobile-portrait: 56px !default;
   flex-direction: column;
   width: 100%;
 
-  @include token-utils.use-tokens(
-    tokens-mat-toolbar.$prefix, tokens-mat-toolbar.get-token-slots()) {
-    @include token-utils.create-token-slot(min-height, standard-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    min-height: token-utils.slot(standard-height);
 
     // As per specs, toolbars should have a different height in mobile devices. This has been
     // specified in the old guidelines and is still observable in the new specifications by
     // looking at the spec images. See: https://material.io/design/components/app-bars-top.html#anatomy
     @media (variables.$xsmall) {
-      @include token-utils.create-token-slot(min-height, mobile-height);
+      min-height: token-utils.slot(mobile-height);
     }
   }
 }

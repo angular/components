@@ -2,8 +2,8 @@
 @use '@angular/cdk';
 
 @use '../core/style/button-common';
-@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
 @use '../core/tokens/token-utils';
+@use './m2-datepicker';
 
 $calendar-body-label-padding-start: 5% !default;
 // We don't want the label to jump around when we switch between month and year views, so we use
@@ -23,13 +23,14 @@ $calendar-body-cell-content-size: 100% - $calendar-body-cell-content-margin * 2 
 $calendar-range-end-body-cell-size:
     $calendar-body-cell-content-size + $calendar-body-cell-content-margin !default;
 
-$_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots());
+$token-prefix: m2-datepicker.$prefix;
+$token-slots: m2-datepicker.get-token-slots();
 
 // Styles for a highlighted calendar cell (e.g. hovered or focused).
 @mixin _highlighted-cell($token-name) {
   & > .mat-calendar-body-cell-content {
     @include _unselected-cell {
-      @include token-utils.create-token-slot(background-color, $token-name);
+      background-color: token-utils.slot($token-name);
     }
   }
 }
@@ -47,9 +48,8 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 
 .mat-calendar-body-today {
   @include _unselected-cell {
-    @include token-utils.use-tokens($_tokens...) {
-      @include token-utils.create-token-slot(border-color,
-        calendar-date-today-outline-color);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      border-color: token-utils.slot(calendar-date-today-outline-color);
     }
   }
 }
@@ -61,10 +61,10 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   padding-left: $calendar-body-label-side-padding;
   padding-right: $calendar-body-label-side-padding;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(font-size, calendar-body-label-text-size);
-    @include token-utils.create-token-slot(font-weight, calendar-body-label-text-weight);
-    @include token-utils.create-token-slot(color, calendar-body-label-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    font-size: token-utils.slot(calendar-body-label-text-size);
+    font-weight: token-utils.slot(calendar-body-label-text-weight);
+    color: token-utils.slot(calendar-body-label-text-color);
   }
 }
 
@@ -92,9 +92,9 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   margin: 0;
 
   // Needs to be repeated here in order to override the user agent styles.
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(font-family, calendar-text-font);
-    @include token-utils.create-token-slot(font-size, calendar-text-size);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    font-family: token-utils.slot(calendar-text-font);
+    font-size: token-utils.slot(calendar-text-size);
   }
 
   @include button-common.reset();
@@ -188,8 +188,8 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 }
 
 .mat-calendar-body-in-preview {
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(color, calendar-date-preview-state-outline-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(calendar-date-preview-state-outline-color);
   }
 
   .mat-calendar-body-cell-preview {
@@ -219,17 +219,16 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 .mat-calendar-body-disabled {
   cursor: default;
 
-  @include token-utils.use-tokens($_tokens...) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     & > .mat-calendar-body-cell-content {
       @include _unselected-cell {
-        @include token-utils.create-token-slot(color, calendar-date-disabled-state-text-color);
+        color: token-utils.slot(calendar-date-disabled-state-text-color);
       }
     }
 
     & > .mat-calendar-body-today {
       @include _unselected-cell {
-        @include token-utils.create-token-slot(border-color,
-          calendar-date-today-disabled-state-outline-color);
+        border-color: token-utils.slot(calendar-date-today-disabled-state-outline-color);
       }
     }
   }
@@ -264,10 +263,9 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
   // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
   border-radius: $calendar-body-cell-radius;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(color, calendar-date-text-color);
-    @include token-utils.create-token-slot(border-color,
-      calendar-date-outline-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(calendar-date-text-color);
+    border-color: token-utils.slot(calendar-date-outline-color);
   }
 
   // Increase specificity because focus indicator styles are part of the `mat-core` mixin and can
@@ -282,7 +280,7 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 }
 
 .mat-calendar-body-active {
-  @include token-utils.use-tokens($_tokens...) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .cdk-keyboard-focused &, .cdk-program-focused & {
       @include _highlighted-cell(calendar-date-focus-state-background-color);
     }
@@ -291,51 +289,46 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 
 @media (hover: hover) {
   .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-    @include token-utils.use-tokens($_tokens...) {
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
         @include _highlighted-cell(calendar-date-hover-state-background-color);
     }
   }
 }
 
 .mat-calendar-body-selected {
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(background-color,
-      calendar-date-selected-state-background-color);
-    @include token-utils.create-token-slot(color, calendar-date-selected-state-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background-color: token-utils.slot(calendar-date-selected-state-background-color);
+    color: token-utils.slot(calendar-date-selected-state-text-color);
 
     .mat-calendar-body-disabled > & {
-      @include token-utils.create-token-slot(background-color,
-        calendar-date-selected-disabled-state-background-color);
+      background-color: token-utils.slot(calendar-date-selected-disabled-state-background-color);
     }
 
     &.mat-calendar-body-today {
-      $shadow: token-utils.get-token-variable(calendar-date-today-selected-state-outline-color);
+      $shadow: token-utils.slot(calendar-date-today-selected-state-outline-color);
       box-shadow: inset 0 0 0 1px #{$shadow};
     }
   }
 }
 
-@include token-utils.use-tokens($_tokens...) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   $range-color:
-    token-utils.get-token-variable(calendar-date-in-range-state-background-color);
+    token-utils.slot(calendar-date-in-range-state-background-color);
   $comparison-color:
-    token-utils.get-token-variable(calendar-date-in-comparison-range-state-background-color);
+    token-utils.slot(calendar-date-in-comparison-range-state-background-color);
 
   .mat-calendar-body-in-range::before {
-    @include token-utils.create-token-slot(background,
-      calendar-date-in-range-state-background-color);
+    background: token-utils.slot(calendar-date-in-range-state-background-color);
   }
 
   .mat-calendar-body-comparison-identical,
   .mat-calendar-body-in-comparison-range::before {
-    @include token-utils.create-token-slot(background,
-      calendar-date-in-comparison-range-state-background-color);
+    background: token-utils.slot(calendar-date-in-comparison-range-state-background-color);
   }
 
   .mat-calendar-body-comparison-identical,
   .mat-calendar-body-in-comparison-range::before {
-    @include token-utils.create-token-slot(background,
-      calendar-date-in-comparison-range-state-background-color);
+   background: token-utils.slot(calendar-date-in-comparison-range-state-background-color);
   }
 
   .mat-calendar-body-comparison-bridge-start::before,
@@ -350,14 +343,12 @@ $_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots(
 
   .mat-calendar-body-in-range > .mat-calendar-body-comparison-identical,
   .mat-calendar-body-in-comparison-range.mat-calendar-body-in-range::after {
-    @include token-utils.create-token-slot(background,
-      calendar-date-in-overlap-range-state-background-color);
+    background: token-utils.slot(calendar-date-in-overlap-range-state-background-color);
   }
 
   .mat-calendar-body-comparison-identical.mat-calendar-body-selected,
   .mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
-    @include token-utils.create-token-slot(background,
-      calendar-date-in-overlap-range-selected-state-background-color);
+    background: token-utils.slot(calendar-date-in-overlap-range-selected-state-background-color);
   }
 }
 

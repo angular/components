@@ -1,6 +1,6 @@
 @use '@angular/cdk';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/circular-progress' as tokens-mat-circular-progress;
+@use './m2-progress-spinner';
 
 .mat-mdc-progress-spinner {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
@@ -18,10 +18,10 @@
 
   circle {
     @include token-utils.use-tokens(
-      tokens-mat-circular-progress.$prefix,
-      tokens-mat-circular-progress.get-token-slots()
+      m2-progress-spinner.$prefix,
+      m2-progress-spinner.get-token-slots()
     ) {
-      @include token-utils.create-token-slot(stroke-width, active-indicator-width);
+      stroke-width: token-utils.slot(active-indicator-width);
     }
   }
 
@@ -94,10 +94,10 @@
 .mat-mdc-progress-spinner .mdc-circular-progress__determinate-circle,
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
   @include token-utils.use-tokens(
-    tokens-mat-circular-progress.$prefix,
-    tokens-mat-circular-progress.get-token-slots()
+    m2-progress-spinner.$prefix,
+    m2-progress-spinner.get-token-slots()
   ) {
-    @include token-utils.create-token-slot(stroke, active-indicator-color);
+    stroke: token-utils.slot(active-indicator-color);
   }
 
   @include cdk.high-contrast {

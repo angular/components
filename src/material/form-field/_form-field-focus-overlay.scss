@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use './m2-form-field';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 
@@ -16,15 +16,15 @@
     pointer-events: none; // Make sure we don't block click on the prefix/suffix.
 
     @include token-utils.use-tokens(
-      tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
-      @include token-utils.create-token-slot(background-color, state-layer-color);
+        m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+      background-color: token-utils.slot(state-layer-color);
 
       .mat-mdc-text-field-wrapper:hover & {
-        @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+        opacity: token-utils.slot(hover-state-layer-opacity);
       }
 
       .mat-mdc-form-field.mat-focused & {
-        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+        opacity: token-utils.slot(focus-state-layer-opacity);
       }
     }
   }

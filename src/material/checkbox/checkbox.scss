@@ -1,9 +1,12 @@
 @use '../core/style/layout-common';
-@use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
+@use './m2-checkbox';
 @use '../core/tokens/token-utils';
 @use './checkbox-common';
 
 @include checkbox-common.checkbox-structure(true);
+
+$token-prefix: m2-checkbox.$prefix;
+$token-slots: m2-checkbox.get-token-slots();
 
 .mat-mdc-checkbox {
   // The host node defaults to `display: inline`, we have to change it in order for margins to work.
@@ -22,16 +25,13 @@
   }
 
   .mat-internal-form-field {
-    @include token-utils.use-tokens(
-      tokens-mat-checkbox.$prefix,
-      tokens-mat-checkbox.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(color, label-text-color);
-      @include token-utils.create-token-slot(font-family, label-text-font);
-      @include token-utils.create-token-slot(line-height, label-text-line-height);
-      @include token-utils.create-token-slot(font-size, label-text-size);
-      @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
-      @include token-utils.create-token-slot(font-weight, label-text-weight);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(label-text-color);
+      font-family: token-utils.slot(label-text-font);
+      line-height: token-utils.slot(label-text-line-height);
+      font-size: token-utils.slot(label-text-size);
+      letter-spacing: token-utils.slot(label-text-tracking);
+      font-weight: token-utils.slot(label-text-weight);
     }
   }
 
@@ -47,11 +47,8 @@
     label {
       cursor: default;
 
-      @include token-utils.use-tokens(
-        tokens-mat-checkbox.$prefix,
-        tokens-mat-checkbox.get-token-slots()
-      ) {
-        @include token-utils.create-token-slot(color, disabled-label-color);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        color: token-utils.slot(disabled-label-color);
       }
     }
   }
@@ -98,11 +95,8 @@
   width: 48px;
   transform: translate(-50%, -50%);
 
-  @include token-utils.use-tokens(
-    tokens-mat-checkbox.$prefix,
-    tokens-mat-checkbox.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(display, touch-target-display);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    display: token-utils.slot(touch-target-display);
   }
 }
 

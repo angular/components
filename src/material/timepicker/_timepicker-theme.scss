@@ -4,7 +4,7 @@
 @use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
-@use '../core/tokens/m2/mat/timepicker' as tokens-mat-timepicker;
+@use './m2-timepicker';
 @use '../core/tokens/token-utils';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -16,8 +16,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-timepicker.$prefix,
-        tokens-mat-timepicker.get-unthemable-tokens()
+        m2-timepicker.$prefix,
+        m2-timepicker.get-unthemable-tokens()
       );
     }
   }
@@ -34,8 +34,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-timepicker.$prefix,
-        tokens-mat-timepicker.get-color-tokens($theme)
+        m2-timepicker.$prefix,
+        m2-timepicker.get-color-tokens($theme)
       );
     }
   }
@@ -49,8 +49,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-timepicker.$prefix,
-        tokens-mat-timepicker.get-typography-tokens($theme)
+        m2-timepicker.$prefix,
+        m2-timepicker.get-typography-tokens($theme)
       );
     }
   }
@@ -64,8 +64,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-timepicker.$prefix,
-        tokens-mat-timepicker.get-density-tokens($theme)
+        m2-timepicker.$prefix,
+        m2-timepicker.get-density-tokens($theme)
       );
     }
   }
@@ -75,8 +75,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-timepicker.$prefix,
-      tokens: tokens-mat-timepicker.get-token-slots(),
+      namespace: m2-timepicker.$prefix,
+      tokens: m2-timepicker.get-token-slots(),
     ),
   );
 }
@@ -117,8 +117,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-timepicker.$prefix,
-      map.get($tokens, tokens-mat-timepicker.$prefix)
+      m2-timepicker.$prefix,
+      map.get($tokens, m2-timepicker.$prefix)
     );
   }
 }

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '../core/style/sass-utils';
-@use '../core/tokens/m2/mat/dialog' as tokens-mat-dialog;
+@use './m2-dialog';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -14,9 +14,7 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-dialog.$prefix,
-        tokens-mat-dialog.get-unthemable-tokens()
-      );
+        m2-dialog.$prefix, m2-dialog.get-unthemable-tokens());
     }
   }
 }
@@ -27,9 +25,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-dialog.$prefix,
-        tokens-mat-dialog.get-color-tokens($theme)
-      );
+        m2-dialog.$prefix, m2-dialog.get-color-tokens($theme));
     }
   }
 }
@@ -40,9 +36,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-dialog.$prefix,
-        tokens-mat-dialog.get-typography-tokens($theme)
-      );
+        m2-dialog.$prefix, m2-dialog.get-typography-tokens($theme));
     }
   }
 }
@@ -58,8 +52,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-dialog.$prefix,
-      tokens: tokens-mat-dialog.get-token-slots(),
+      namespace: m2-dialog.$prefix,
+      tokens: m2-dialog.get-token-slots(),
     ),
   );
 }
@@ -93,8 +87,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-dialog.$prefix,
-      map.get($tokens, tokens-mat-dialog.$prefix)
+      m2-dialog.$prefix,
+      map.get($tokens, m2-dialog.$prefix)
     );
   }
 }

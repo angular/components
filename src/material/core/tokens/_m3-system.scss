@@ -2,7 +2,7 @@
 @use '../style/sass-utils';
 @use '../theming/config-validation';
 @use '../theming/definition';
-@use './m3/definitions';
+@use './m3';
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:list';
@@ -90,11 +90,11 @@
 /// change the primary color to red, use `mat.theme-overrides((primary: red));`
 @mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
   $sys-names: map-merge-all(
-      definitions.md-sys-color-values-light(),
-      definitions.md-sys-typescale-values(),
-      definitions.md-sys-elevation-values(),
-      definitions.md-sys-shape-values(),
-      definitions.md-sys-state-values());
+      m3.md-sys-color-values-light(),
+      m3.md-sys-typescale-values(),
+      m3.md-sys-elevation-values(),
+      m3.md-sys-shape-values(),
+      m3.md-sys-state-values());
 
   & {
     @each $name, $value in $overrides {
@@ -145,12 +145,12 @@
 }
 
 @function _generate-sys-colors($ref, $type) {
-  $light-sys-colors: definitions.md-sys-color-values-light($ref);
+  $light-sys-colors: m3.md-sys-color-values-light($ref);
   @if ($type == light) {
     @return $light-sys-colors;
   }
 
-  $dark-sys-colors: definitions.md-sys-color-values-dark($ref);
+  $dark-sys-colors: m3.md-sys-color-values-dark($ref);
   @if ($type == dark) {
     @return $dark-sys-colors;
   }
@@ -185,7 +185,7 @@
   }
 
   & {
-    @each $name, $value in definitions.md-sys-typescale-values($ref) {
+    @each $name, $value in m3.md-sys-typescale-values($ref) {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -195,7 +195,7 @@
   $shadow-color: map.get(
       $theme, _mat-theming-internals-do-not-access, color-tokens, (mat, theme), shadow);
 
-  @each $name, $value in definitions.md-sys-elevation-values() {
+  @each $name, $value in m3.md-sys-elevation-values() {
     $level: map.get($overrides, $name) or $value;
     $value: elevation.get-box-shadow($level, $shadow-color);
     & {
@@ -206,7 +206,7 @@
 
 @mixin system-level-shape($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   & {
-    @each $name, $value in definitions.md-sys-shape-values() {
+    @each $name, $value in m3.md-sys-shape-values() {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -214,7 +214,7 @@
 
 @mixin system-level-state($theme: (), $overrides: (), $prefix: definition.$system-level-prefix) {
   & {
-    @each $name, $value in definitions.md-sys-state-values() {
+    @each $name, $value in m3.md-sys-state-values() {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -237,15 +237,15 @@
 @function create-system-fallbacks() {
   $app-vars: (
     'md-sys-color':
-        _create-system-app-vars-map(definitions.md-sys-color-values-light()),
+        _create-system-app-vars-map(m3.md-sys-color-values-light()),
     'md-sys-typescale':
-        _create-system-app-vars-map(definitions.md-sys-typescale-values()),
+        _create-system-app-vars-map(m3.md-sys-typescale-values()),
     'md-sys-elevation':
-        _create-system-app-vars-map(definitions.md-sys-elevation-values()),
+        _create-system-app-vars-map(m3.md-sys-elevation-values()),
     'md-sys-state':
-        _create-system-app-vars-map(definitions.md-sys-state-values()),
+        _create-system-app-vars-map(m3.md-sys-state-values()),
     'md-sys-shape':
-        _create-system-app-vars-map(definitions.md-sys-shape-values()),
+        _create-system-app-vars-map(m3.md-sys-shape-values()),
     // Add a subset of palette-specific colors used by components instead of system values
     'md-ref-palette':
         _create-system-app-vars-map(

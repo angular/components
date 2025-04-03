@@ -1,11 +1,11 @@
-@use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/theming/validation';
-@use '../core/typography/typography';
-@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
-@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
-@use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use './m2-legacy-button-toggle';
+@use './m2-standard-button-toggle';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-button-toggle.
@@ -16,12 +16,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-legacy-button-toggle.$prefix,
-        tokens-mat-legacy-button-toggle.get-unthemable-tokens()
+        m2-legacy-button-toggle.$prefix,
+        m2-legacy-button-toggle.get-unthemable-tokens()
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mat-standard-button-toggle.$prefix,
-        tokens-mat-standard-button-toggle.get-unthemable-tokens()
+        m2-standard-button-toggle.$prefix,
+        m2-standard-button-toggle.get-unthemable-tokens()
       );
     }
   }
@@ -38,12 +38,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-legacy-button-toggle.$prefix,
-        tokens-mat-legacy-button-toggle.get-color-tokens($theme)
+        m2-legacy-button-toggle.$prefix,
+        m2-legacy-button-toggle.get-color-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mat-standard-button-toggle.$prefix,
-        tokens-mat-standard-button-toggle.get-color-tokens($theme)
+        m2-standard-button-toggle.$prefix,
+        m2-standard-button-toggle.get-color-tokens($theme)
       );
     }
   }
@@ -57,12 +57,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-legacy-button-toggle.$prefix,
-        tokens-mat-legacy-button-toggle.get-typography-tokens($theme)
+        m2-legacy-button-toggle.$prefix,
+        m2-legacy-button-toggle.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mat-standard-button-toggle.$prefix,
-        tokens-mat-standard-button-toggle.get-typography-tokens($theme)
+        m2-standard-button-toggle.$prefix,
+        m2-standard-button-toggle.get-typography-tokens($theme)
       );
     }
   }
@@ -76,12 +76,12 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-legacy-button-toggle.$prefix,
-        tokens-mat-legacy-button-toggle.get-density-tokens($theme)
+        m2-legacy-button-toggle.$prefix,
+        m2-legacy-button-toggle.get-density-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
-        tokens-mat-standard-button-toggle.$prefix,
-        tokens-mat-standard-button-toggle.get-density-tokens($theme)
+        m2-standard-button-toggle.$prefix,
+        m2-standard-button-toggle.get-density-tokens($theme)
       );
     }
   }
@@ -89,17 +89,17 @@
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
-  $legacy-tokens: tokens-mat-legacy-button-toggle.get-token-slots();
-  $standard-tokens: tokens-mat-standard-button-toggle.get-token-slots();
+  $legacy-tokens: m2-legacy-button-toggle.get-token-slots();
+  $standard-tokens: m2-standard-button-toggle.get-token-slots();
 
   @return (
     (
-      namespace: tokens-mat-legacy-button-toggle.$prefix,
+      namespace: m2-legacy-button-toggle.$prefix,
       tokens: $legacy-tokens,
       prefix: 'legacy-',
     ),
     (
-      namespace: tokens-mat-standard-button-toggle.$prefix,
+      namespace: m2-standard-button-toggle.$prefix,
       tokens: $standard-tokens,
     ),
   );
@@ -141,11 +141,11 @@
   );
   $mat-standard-button-toggle-tokens: token-utils.get-tokens-for(
     $tokens,
-    tokens-mat-standard-button-toggle.$prefix,
+    m2-standard-button-toggle.$prefix,
     $options...
   );
   @include token-utils.create-token-values(
-    tokens-mat-standard-button-toggle.$prefix,
+    m2-standard-button-toggle.$prefix,
     $mat-standard-button-toggle-tokens
   );
 }

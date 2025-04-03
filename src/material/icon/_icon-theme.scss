@@ -1,14 +1,14 @@
-@use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/theming/validation';
-@use '../core/tokens/m2/mat/icon' as tokens-mat-icon;
-@use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
+@use './m2-icon';
 
 @mixin _palette-colors($theme, $palette-name) {
   $color: inspection.get-theme-color($theme, $palette-name, text);
-  $tokens: tokens-mat-icon.private-get-icon-color-tokens($color);
-  @include token-utils.create-token-values-mixed(tokens-mat-icon.$prefix, $tokens);
+  $tokens: m2-icon.private-get-icon-color-tokens($color);
+  @include token-utils.create-token-values-mixed(m2-icon.$prefix, $tokens);
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -32,8 +32,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-icon.$prefix,
-        tokens-mat-icon.get-color-tokens($theme)
+        m2-icon.$prefix,
+        m2-icon.get-color-tokens($theme)
       );
     }
 
@@ -75,8 +75,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-icon.$prefix,
-      tokens: tokens-mat-icon.get-token-slots(),
+      namespace: m2-icon.$prefix,
+      tokens: m2-icon.get-token-slots(),
     ),
   );
 }
@@ -115,6 +115,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-icon-tokens: token-utils.get-tokens-for($tokens, tokens-mat-icon.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-icon.$prefix, $mat-icon-tokens);
+  $mat-icon-tokens: token-utils.get-tokens-for($tokens, m2-icon.$prefix, $options...);
+  @include token-utils.create-token-values(m2-icon.$prefix, $mat-icon-tokens);
 }

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../core/tokens/m2/mat/menu' as tokens-mat-menu;
+@use './m2-menu';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
@@ -13,9 +13,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-unthemable-tokens()
-      );
+        m2-menu.$prefix, m2-menu.get-unthemable-tokens());
     }
   }
 }
@@ -26,9 +24,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-color-tokens($theme)
-      );
+        m2-menu.$prefix, m2-menu.get-color-tokens($theme));
     }
   }
 }
@@ -39,9 +35,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-menu.$prefix,
-        tokens-mat-menu.get-typography-tokens($theme)
-      );
+        m2-menu.$prefix, m2-menu.get-typography-tokens($theme));
     }
   }
 }
@@ -57,8 +51,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-menu.$prefix,
-      tokens: tokens-mat-menu.get-token-slots(),
+      namespace: m2-menu.$prefix,
+      tokens: m2-menu.get-token-slots(),
     ),
   );
 }
@@ -92,8 +86,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-menu.$prefix,
-      map.get($tokens, tokens-mat-menu.$prefix)
+      m2-menu.$prefix,
+      map.get($tokens, m2-menu.$prefix)
     );
   }
 }

@@ -1,23 +1,25 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/stepper' as tokens-mat-stepper;
+@use './m2-stepper';
 @use '../core/tokens/token-utils';
 @use './stepper-variables';
 
 // Gets the `calc` expression for the vertical padding of the stepper header.
 @function _get-vertical-padding-calc() {
-  $height: token-utils.get-token-variable(header-height);
+  $height: token-utils.slot(header-height);
   @return calc(calc(#{$height} - #{stepper-variables.$label-header-height}) / 2);
 }
+
+$token-prefix: m2-stepper.$prefix;
+$token-slots: m2-stepper.get-token-slots();
 
 .mat-stepper-vertical,
 .mat-stepper-horizontal {
   display: block;
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
-    @include token-utils.create-token-slot(font-family, container-text-font);
-    @include token-utils.create-token-slot(background, container-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    font-family: token-utils.slot(container-text-font);
+    background: token-utils.slot(container-color);
   }
 }
 
@@ -43,9 +45,8 @@
   margin: 0 stepper-variables.$line-gap - stepper-variables.$side-gap;
   min-width: stepper-variables.$line-gap + stepper-variables.$side-gap;
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
-    @include token-utils.create-token-slot(border-top-color, line-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    border-top-color: token-utils.slot(line-color);
 
     .mat-stepper-label-position-bottom & {
       $vertical-padding: _get-vertical-padding-calc();
@@ -77,9 +78,8 @@
   align-items: center;
   padding: 0 stepper-variables.$side-gap;
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
-    @include token-utils.create-token-slot(height, header-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    height: token-utils.slot(header-height);
   }
 
   .mat-step-icon {
@@ -92,13 +92,12 @@
     }
   }
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     $vertical-padding: _get-vertical-padding-calc();
 
     &::before,
     &::after {
-      @include token-utils.create-token-slot(border-top-color, line-color);
+      border-top-color: token-utils.slot(line-color);
     }
 
     .mat-stepper-label-position-bottom & {
@@ -157,8 +156,7 @@
   // We can't use `max-height` here, because it breaks the flexbox centering in IE.
   height: stepper-variables.$label-header-height;
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     padding: #{_get-vertical-padding-calc()} stepper-variables.$side-gap;
   }
 
@@ -273,12 +271,11 @@
   border-left-width: stepper-variables.$line-width;
   border-left-style: solid;
 
-  @include token-utils.use-tokens(
-    tokens-mat-stepper.$prefix, tokens-mat-stepper.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     $vertical-padding: _get-vertical-padding-calc();
     $vertical-offset: calc(#{stepper-variables.$line-gap} - #{$vertical-padding});
 
-    @include token-utils.create-token-slot(border-left-color, line-color);
+    border-left-color: token-utils.slot(line-color);
 
     // Ensures that the vertical lines for the step content exceed into the step
     // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.

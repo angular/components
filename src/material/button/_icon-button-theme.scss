@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'sass:math';
-@use '../core/tokens/m2/mat/icon-button' as tokens-mat-icon-button;
+@use './m2-icon-button';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
@@ -14,8 +14,8 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-icon-button.$prefix,
-        tokens-mat-icon-button.get-unthemable-tokens()
+        m2-icon-button.$prefix,
+        m2-icon-button.get-unthemable-tokens()
       );
     }
   }
@@ -24,11 +24,11 @@
 @mixin _icon-button-variant($theme, $palette) {
   $mat-tokens: if(
     $palette,
-    tokens-mat-icon-button.private-get-color-palette-color-tokens($theme, $palette),
-    tokens-mat-icon-button.get-color-tokens($theme)
+    m2-icon-button.private-get-color-palette-color-tokens($theme, $palette),
+    m2-icon-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values-mixed(tokens-mat-icon-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed(m2-icon-button.$prefix, $mat-tokens);
 }
 
 /// Outputs color theme styles for the mat-icon-button.
@@ -65,8 +65,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-icon-button.$prefix,
-        tokens-mat-icon-button.get-typography-tokens($theme)
+        m2-icon-button.$prefix,
+        m2-icon-button.get-typography-tokens($theme)
       );
     }
   }
@@ -90,8 +90,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-icon-button.$prefix,
-        tokens-mat-icon-button.get-density-tokens(
+        m2-icon-button.$prefix,
+        m2-icon-button.get-density-tokens(
             $theme, $exclude: (state-layer-size))
       );
     }
@@ -119,8 +119,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-icon-button.$prefix,
-      tokens: tokens-mat-icon-button.get-token-slots(),
+      namespace: m2-icon-button.$prefix,
+      tokens: m2-icon-button.get-token-slots(),
     ),
   );
 }
@@ -157,8 +157,8 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   @if ($tokens != ()) {
-    $mat-tokens: token-utils.get-tokens-for($tokens, tokens-mat-icon-button.$prefix, $options...);
+    $mat-tokens: token-utils.get-tokens-for($tokens, m2-icon-button.$prefix, $options...);
 
-    @include token-utils.create-token-values(tokens-mat-icon-button.$prefix, $mat-tokens);
+    @include token-utils.create-token-values(m2-icon-button.$prefix, $mat-tokens);
   }
 }

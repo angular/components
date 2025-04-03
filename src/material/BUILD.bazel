@@ -1,3 +1,4 @@
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 load(
     "//src/material:config.bzl",
     "MATERIAL_ENTRYPOINTS",
@@ -7,7 +8,6 @@ load(
 load("//tools:defaults.bzl", "ng_package", "sass_library")
 load("//tools:defaults2.bzl", "ts_project")
 load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -68,7 +68,6 @@ sass_library(
         "//src/material/core/theming:_palettes",
         "//src/material/core/theming:core_all_theme",
         "//src/material/core/tokens:m3_system",
-        "//src/material/core/tokens/m2",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
         "//src/material/core/typography:utils",
@@ -144,7 +143,6 @@ ng_package(
         "//src/material/core/theming:_palettes",
         "//src/material/core/theming:core_all_theme",
         "//src/material/core/tokens:m3_system",
-        "//src/material/core/tokens/m2",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
         "//src/material/core/typography:utils",

@@ -1,20 +1,16 @@
 @use '@angular/cdk';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/filled-text-field' as tokens-mat-filled-text-field;
-@use '../core/tokens/m2/mat/outlined-text-field' as tokens-mat-outlined-text-field;
+@use './m2-filled-text-field';
+@use './m2-outlined-text-field';
+
+$filled-token-prefix: m2-filled-text-field.$prefix;
+$filled-token-slots: m2-filled-text-field.get-token-slots();
+$outlined-token-prefix: m2-outlined-text-field.$prefix;
+$outlined-token-slots: m2-outlined-text-field.get-token-slots();
 
 // Includes the structural styles for the form field inherited from MDC.
 @mixin private-text-field-structure {
-  $filled-slots: (
-    tokens-mat-filled-text-field.$prefix,
-    tokens-mat-filled-text-field.get-token-slots()
-  );
-  $outlined-slots: (
-    tokens-mat-outlined-text-field.$prefix,
-    tokens-mat-outlined-text-field.get-token-slots()
-  );
-
   .mdc-text-field {
     display: inline-flex;
     align-items: baseline;
@@ -97,11 +93,11 @@
       pointer-events: auto;
     }
 
-    @include token-utils.use-tokens($filled-slots...) {
+    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
       @include _input-tokens('.mdc-text-field--filled');
     }
 
-    @include token-utils.use-tokens($outlined-slots...) {
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
       @include _input-tokens('.mdc-text-field--outlined');
     }
 
@@ -117,16 +113,16 @@
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 
-    @include token-utils.use-tokens($filled-slots...) {
-      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
-      @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
+      border-top-left-radius: token-utils.slot(container-shape);
+      border-top-right-radius: token-utils.slot(container-shape);
 
       &:not(.mdc-text-field--disabled) {
-        @include token-utils.create-token-slot(background-color, container-color);
+        background-color: token-utils.slot(container-color);
       }
 
       &.mdc-text-field--disabled {
-        @include token-utils.create-token-slot(background-color, disabled-container-color);
+        background-color: token-utils.slot(disabled-container-color);
       }
     }
   }
@@ -135,8 +131,8 @@
     height: 56px;
     overflow: visible;
 
-    @include token-utils.use-tokens($outlined-slots...) {
-      $shape-var: token-utils.get-token-variable(container-shape);
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+      $shape-var: token-utils.slot(container-shape);
       padding-right: max(16px, #{$shape-var});
       padding-left: max(16px, calc(#{$shape-var} + 4px));
 
@@ -210,11 +206,11 @@
       display: none;
     }
 
-    @include token-utils.use-tokens($filled-slots...) {
+    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
       @include _floating-label-tokens('.mdc-text-field--filled');
     }
 
-    @include token-utils.use-tokens($outlined-slots...) {
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
       @include _floating-label-tokens('.mdc-text-field--outlined');
     }
   }
@@ -297,42 +293,42 @@
       border-width: 2px;
     }
 
-    @include token-utils.use-tokens($outlined-slots...) {
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
       // Moved out into variables because the selectors we inherited were too long.
       $enabled-selector: '.mdc-text-field--outlined:not(.mdc-text-field--disabled)';
       $hover-selector: ':not(.mdc-text-field--focused):hover';
 
       #{$enabled-selector} & {
-        @include token-utils.create-token-slot(border-color, outline-color);
-        @include token-utils.create-token-slot(border-width, outline-width);
+        border-color: token-utils.slot(outline-color);
+        border-width: token-utils.slot(outline-width);
       }
 
       #{$enabled-selector}#{$hover-selector} & {
-        @include token-utils.create-token-slot(border-color, hover-outline-color);
+        border-color: token-utils.slot(hover-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--focused & {
-        @include token-utils.create-token-slot(border-color, focus-outline-color);
+        border-color: token-utils.slot(focus-outline-color);
       }
 
       .mdc-text-field--outlined.mdc-text-field--disabled & {
-        @include token-utils.create-token-slot(border-color, disabled-outline-color);
+        border-color: token-utils.slot(disabled-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid & {
-        @include token-utils.create-token-slot(border-color, error-outline-color);
+        border-color: token-utils.slot(error-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid#{$hover-selector} .mdc-notched-outline & {
-        @include token-utils.create-token-slot(border-color, error-hover-outline-color);
+        border-color: token-utils.slot(error-hover-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid.mdc-text-field--focused & {
-        @include token-utils.create-token-slot(border-color, error-focus-outline-color);
+        border-color: token-utils.slot(error-focus-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--focused .mdc-notched-outline & {
-        @include token-utils.create-token-slot(border-width, focus-outline-width);
+        border-width: token-utils.slot(focus-outline-width);
       }
     }
   }
@@ -343,12 +339,12 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 
-    @include token-utils.use-tokens($outlined-slots...) {
-      @include token-utils.create-token-slot(border-top-left-radius, container-shape);
-      @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+      border-top-left-radius: token-utils.slot(container-shape);
+      border-bottom-left-radius: token-utils.slot(container-shape);
 
       .mdc-text-field--outlined .mdc-notched-outline & {
-        $shape-var: token-utils.get-token-variable(container-shape);
+        $shape-var: token-utils.slot(container-shape);
         width: max(12px, #{$shape-var});
       }
     }
@@ -359,9 +355,9 @@
       border-bottom-left-radius: 0;
       border-top-left-radius: 0;
 
-      @include token-utils.use-tokens($outlined-slots...) {
-        @include token-utils.create-token-slot(border-top-right-radius, container-shape);
-        @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+      @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+        border-top-right-radius: token-utils.slot(container-shape);
+        border-bottom-right-radius: token-utils.slot(container-shape);
       }
     }
   }
@@ -373,9 +369,9 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 
-    @include token-utils.use-tokens($outlined-slots...) {
-      @include token-utils.create-token-slot(border-top-right-radius, container-shape);
-      @include token-utils.create-token-slot(border-bottom-right-radius, container-shape);
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+      border-top-right-radius: token-utils.slot(container-shape);
+      border-bottom-right-radius: token-utils.slot(container-shape);
     }
 
     [dir='rtl'] & {
@@ -384,9 +380,9 @@
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
-      @include token-utils.use-tokens($outlined-slots...) {
-        @include token-utils.create-token-slot(border-top-left-radius, container-shape);
-        @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
+      @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+        border-top-left-radius: token-utils.slot(container-shape);
+        border-bottom-left-radius: token-utils.slot(container-shape);
       }
     }
   }
@@ -395,9 +391,9 @@
     flex: 0 0 auto;
     width: auto;
 
-    @include token-utils.use-tokens($outlined-slots...) {
+    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
       .mdc-text-field--outlined .mdc-notched-outline & {
-        $shape-var: token-utils.get-token-variable(container-shape);
+        $shape-var: token-utils.slot(container-shape);
         max-width: min(
           var(--mat-form-field-notch-max-width, 100%),
           calc(100% - max(12px, #{$shape-var}) * 2)
@@ -444,35 +440,29 @@
     &::before {
       z-index: 1;
 
-      @include token-utils.use-tokens($filled-slots...) {
+      @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
         $enabled-field: '.mdc-text-field--filled:not(.mdc-text-field--disabled)';
 
-        @include token-utils.create-token-slot(border-bottom-width, active-indicator-height);
+        border-bottom-width: token-utils.slot(active-indicator-height);
 
         #{$enabled-field} & {
-          @include token-utils.create-token-slot(border-bottom-color, active-indicator-color);
+          border-bottom-color: token-utils.slot(active-indicator-color);
         }
 
         #{$enabled-field}:not(.mdc-text-field--focused):hover & {
-          @include token-utils.create-token-slot(border-bottom-color, hover-active-indicator-color);
+          border-bottom-color: token-utils.slot(hover-active-indicator-color);
         }
 
         .mdc-text-field--filled.mdc-text-field--disabled & {
-          @include token-utils.create-token-slot(
-            border-bottom-color,
-            disabled-active-indicator-color
-          );
+          border-bottom-color: token-utils.slot(disabled-active-indicator-color);
         }
 
         #{$enabled-field}.mdc-text-field--invalid & {
-          @include token-utils.create-token-slot(border-bottom-color, error-active-indicator-color);
+          border-bottom-color: token-utils.slot(error-active-indicator-color);
         }
 
         #{$enabled-field}.mdc-text-field--invalid:not(.mdc-text-field--focused):hover & {
-          @include token-utils.create-token-slot(
-            border-bottom-color,
-            error-hover-active-indicator-color
-          );
+          border-bottom-color: token-utils.slot(error-hover-active-indicator-color);
         }
       }
     }
@@ -482,23 +472,17 @@
       opacity: 0;
       z-index: 2;
 
-      @include token-utils.use-tokens($filled-slots...) {
+      @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
         .mdc-text-field--filled & {
-          @include token-utils.create-token-slot(
-            border-bottom-width,
-            focus-active-indicator-height
-          );
+          border-bottom-width: token-utils.slot(focus-active-indicator-height);
         }
 
         .mdc-text-field--filled:not(.mdc-text-field--disabled) & {
-          @include token-utils.create-token-slot(border-bottom-color, focus-active-indicator-color);
+          border-bottom-color: token-utils.slot(focus-active-indicator-color);
         }
 
         .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
-          @include token-utils.create-token-slot(
-            border-bottom-color,
-            error-focus-active-indicator-color
-          );
+          border-bottom-color: token-utils.slot(error-focus-active-indicator-color);
         }
       }
     }
@@ -523,58 +507,58 @@
   $enabled-field: '#{$selector}:not(.mdc-text-field--disabled)';
 
   #{$enabled-field} & {
-    @include token-utils.create-token-slot(color, label-text-color);
+    color: token-utils.slot(label-text-color);
   }
 
   #{$enabled-field}.mdc-text-field--focused & {
-    @include token-utils.create-token-slot(color, focus-label-text-color);
+    color: token-utils.slot(focus-label-text-color);
   }
 
   #{$enabled-field}:not(.mdc-text-field--focused):hover & {
-    @include token-utils.create-token-slot(color, hover-label-text-color);
+    color: token-utils.slot(hover-label-text-color);
   }
 
   #{$selector}.mdc-text-field--disabled & {
-    @include token-utils.create-token-slot(color, disabled-label-text-color);
+    color: token-utils.slot(disabled-label-text-color);
   }
 
   #{$enabled-field}.mdc-text-field--invalid & {
-    @include token-utils.create-token-slot(color, error-label-text-color);
+    color: token-utils.slot(error-label-text-color);
   }
 
   #{$enabled-field}.mdc-text-field--invalid.mdc-text-field--focused & {
-    @include token-utils.create-token-slot(color, error-focus-label-text-color);
+    color: token-utils.slot(error-focus-label-text-color);
   }
 
   #{$enabled-field}.mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
-    @include token-utils.create-token-slot(color, error-hover-label-text-color);
+    color: token-utils.slot(error-hover-label-text-color);
   }
 
   #{$selector} & {
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    font-family: token-utils.slot(label-text-font);
+    font-size: token-utils.slot(label-text-size);
+    font-weight: token-utils.slot(label-text-weight);
+    letter-spacing: token-utils.slot(label-text-tracking);
   }
 }
 
 // Includes the tokens for the input for a specific form field variant.
 @mixin _input-tokens($selector) {
   #{$selector}:not(.mdc-text-field--disabled) & {
-    @include token-utils.create-token-slot(color, input-text-color);
-    @include token-utils.create-token-slot(caret-color, caret-color);
+    color: token-utils.slot(input-text-color);
+    caret-color: token-utils.slot(caret-color);
 
     @include vendor-prefixes.input-placeholder {
-      @include token-utils.create-token-slot(color, input-text-placeholder-color);
+      color: token-utils.slot(input-text-placeholder-color);
     }
   }
 
   #{$selector}.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
-    @include token-utils.create-token-slot(caret-color, error-caret-color);
+    caret-color: token-utils.slot(error-caret-color);
   }
 
   #{$selector}.mdc-text-field--disabled & {
-    @include token-utils.create-token-slot(color, disabled-input-text-color);
+    color: token-utils.slot(disabled-input-text-color);
   }
 }
 

@@ -1,6 +1,6 @@
 @use '@angular/cdk';
 @use '../core/style/elevation';
-@use '../core/tokens/m2/mat/bottom-sheet' as tokens-mat-bottom-sheet;
+@use './m2-bottom-sheet';
 @use '../core/tokens/token-utils';
 
 // The bottom sheet minimum width on larger screen sizes is based
@@ -9,6 +9,9 @@
 $_width-increment: 64px;
 $container-vertical-padding: 8px !default;
 $container-horizontal-padding: 16px !default;
+
+$token-prefix: m2-bottom-sheet.$prefix;
+$token-slots: m2-bottom-sheet.get-token-slots();
 
 @keyframes _mat-bottom-sheet-enter {
   from {
@@ -45,15 +48,14 @@ $container-horizontal-padding: 16px !default;
   // elements (e.g. close buttons) inside the bottom sheet.
   position: relative;
 
-  @include token-utils.use-tokens(
-    tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-token-slots()) {
-    @include token-utils.create-token-slot(background, container-background-color);
-    @include token-utils.create-token-slot(color, container-text-color);
-    @include token-utils.create-token-slot(font-family, container-text-font);
-    @include token-utils.create-token-slot(font-size, container-text-size);
-    @include token-utils.create-token-slot(line-height, container-text-line-height);
-    @include token-utils.create-token-slot(font-weight, container-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background: token-utils.slot(container-background-color);
+    color: token-utils.slot(container-text-color);
+    font-family: token-utils.slot(container-text-font);
+    font-size: token-utils.slot(container-text-size);
+    line-height: token-utils.slot(container-text-line-height);
+    font-weight: token-utils.slot(container-text-weight);
+    letter-spacing: token-utils.slot(container-text-tracking);
   }
 
   @include cdk.high-contrast {
@@ -75,10 +77,9 @@ $container-horizontal-padding: 16px !default;
 
 // Applies a border radius to the bottom sheet. Should only be applied when it's not full-screen.
 %_mat-bottom-sheet-container-border-radius {
-  @include token-utils.use-tokens(
-    tokens-mat-bottom-sheet.$prefix, tokens-mat-bottom-sheet.get-token-slots()) {
-    @include token-utils.create-token-slot(border-top-left-radius, container-shape);
-    @include token-utils.create-token-slot(border-top-right-radius, container-shape);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    border-top-left-radius: token-utils.slot(container-shape);
+    border-top-right-radius: token-utils.slot(container-shape);
   }
 }
 

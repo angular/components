@@ -10,6 +10,30 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_library(
+    name = "m3",
+    srcs = [
+        "_m3-app.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_utils",
+    ],
+)
+
+sass_library(
+    name = "m2",
+    srcs = [
+        "_m2-app.scss",
+    ],
+    deps = [
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
+    ],
+)
+
 ng_project(
     name = "core",
     srcs = [
@@ -53,7 +77,6 @@ sass_library(
     deps = [
         "//src/material/core/style:elevation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -71,7 +94,6 @@ sass_library(
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
         "//src/material/core/typography",
     ],
 )
@@ -123,17 +145,41 @@ filegroup(
 ### Cannot be in its own ripple/BUILD.bazel due to breaking docs generation.
 
 sass_library(
+    name = "ripple_m3",
+    srcs = [
+        "ripple/_m3-ripple.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_utils",
+    ],
+)
+
+sass_library(
+    name = "ripple_m2",
+    srcs = [
+        "ripple/_m2-ripple.scss",
+    ],
+    deps = [
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
+    ],
+)
+
+sass_library(
     name = "ripple_sass_theme",
     srcs = [
         "ripple/_ripple-theme.scss",
     ],
     deps = [
+        ":ripple_m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -143,9 +189,9 @@ sass_library(
         "ripple/_ripple.scss",
     ],
     deps = [
+        ":ripple_m2",
         "//src/cdk:sass_lib",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 

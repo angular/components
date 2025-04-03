@@ -1,11 +1,12 @@
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m2/mat/list' as tokens-mat-list;
 @use '../core/tokens/token-utils';
+@use './m2-list';
+
+$token-prefix: m2-list.$prefix;
+$token-slots: m2-list.get-token-slots();
 
 // Includes the structural styles for the list that were inherited from MDC.
 @mixin private-list-inherited-structural-styles {
-  $tokens: (tokens-mat-list.$prefix, tokens-mat-list.get-token-slots());
-
   .mdc-list {
     margin: 0;
     padding: 8px 0;
@@ -27,13 +28,12 @@
     padding-left: 16px;
     padding-right: 16px;
 
-    @include token-utils.use-tokens($tokens...) {
-      @include token-utils.create-token-slot(background-color, list-item-container-color);
-      @include token-utils.create-token-slot(border-radius, list-item-container-shape);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      background-color: token-utils.slot(list-item-container-color);
+      border-radius: token-utils.slot(list-item-container-shape);
 
       &.mdc-list-item--selected {
-        @include token-utils.create-token-slot(background-color,
-          list-item-selected-container-color);
+        background-color: token-utils.slot(list-item-selected-container-color);
       }
     }
 
@@ -46,8 +46,8 @@
     }
 
     &.mdc-list-item--with-one-line {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(height, list-item-one-line-container-height);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        height: token-utils.slot(list-item-one-line-container-height);
       }
 
       .mdc-list-item__start {
@@ -62,8 +62,8 @@
     }
 
     &.mdc-list-item--with-two-lines {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(height, list-item-two-line-container-height);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        height: token-utils.slot(list-item-two-line-container-height);
       }
 
       .mdc-list-item__start {
@@ -78,8 +78,8 @@
     }
 
     &.mdc-list-item--with-three-lines {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(height, list-item-three-line-container-height);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        height: token-utils.slot(list-item-three-line-container-height);
       }
 
       .mdc-list-item__start {
@@ -118,11 +118,11 @@
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($tokens...) {
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
       .mdc-list-item--with-leading-icon & {
-        @include token-utils.create-token-slot(color, list-item-leading-icon-color);
-        @include token-utils.create-token-slot(width, list-item-leading-icon-size);
-        @include token-utils.create-token-slot(height, list-item-leading-icon-size);
+        color: token-utils.slot(list-item-leading-icon-color);
+        width: token-utils.slot(list-item-leading-icon-size);
+        height: token-utils.slot(list-item-leading-icon-size);
         margin-left: 16px;
         margin-right: 32px;
       }
@@ -133,13 +133,13 @@
       }
 
       .mdc-list-item--with-leading-icon:hover & {
-        @include token-utils.create-token-slot(color, list-item-hover-leading-icon-color);
+        color: token-utils.slot(list-item-hover-leading-icon-color);
       }
 
       // This is the same in RTL, but we need the specificity.
       .mdc-list-item--with-leading-avatar & {
-        @include token-utils.create-token-slot(width, list-item-leading-avatar-size);
-        @include token-utils.create-token-slot(height, list-item-leading-avatar-size);
+        width: token-utils.slot(list-item-leading-avatar-size);
+        height: token-utils.slot(list-item-leading-avatar-size);
         margin-left: 16px;
         margin-right: 16px;
         border-radius: 50%;
@@ -158,38 +158,33 @@
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($tokens...) {
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
       .mdc-list-item--with-trailing-meta & {
-        @include token-utils.create-token-slot(font-family,
-          list-item-trailing-supporting-text-font);
-        @include token-utils.create-token-slot(line-height,
-          list-item-trailing-supporting-text-line-height);
-        @include token-utils.create-token-slot(font-size,
-          list-item-trailing-supporting-text-size);
-        @include token-utils.create-token-slot(font-weight,
-          list-item-trailing-supporting-text-weight);
-        @include token-utils.create-token-slot(letter-spacing,
-          list-item-trailing-supporting-text-tracking);
+        font-family: token-utils.slot(list-item-trailing-supporting-text-font);
+        line-height: token-utils.slot(list-item-trailing-supporting-text-line-height);
+        font-size: token-utils.slot(list-item-trailing-supporting-text-size);
+        font-weight: token-utils.slot(list-item-trailing-supporting-text-weight);
+        letter-spacing: token-utils.slot(list-item-trailing-supporting-text-tracking);
       }
 
       .mdc-list-item--with-trailing-icon & {
-        @include token-utils.create-token-slot(color, list-item-trailing-icon-color);
-        @include token-utils.create-token-slot(width, list-item-trailing-icon-size);
-        @include token-utils.create-token-slot(height, list-item-trailing-icon-size);
+        color: token-utils.slot(list-item-trailing-icon-color);
+        width: token-utils.slot(list-item-trailing-icon-size);
+        height: token-utils.slot(list-item-trailing-icon-size);
       }
 
       .mdc-list-item--with-trailing-icon:hover & {
-        @include token-utils.create-token-slot(color, list-item-hover-trailing-icon-color);
+        color: token-utils.slot(list-item-hover-trailing-icon-color);
       }
 
       // For some reason this has an increased specificity just for the `color`.
       // Keeping it in place for now to reduce the amount of screenshot diffs.
       .mdc-list-item.mdc-list-item--with-trailing-meta & {
-        @include token-utils.create-token-slot(color, list-item-trailing-supporting-text-color);
+        color: token-utils.slot(list-item-trailing-supporting-text-color);
       }
 
       .mdc-list-item--selected.mdc-list-item--with-trailing-icon & {
-        @include token-utils.create-token-slot(color, list-item-selected-trailing-icon-color);
+        color: token-utils.slot(list-item-selected-trailing-icon-color);
       }
     }
   }
@@ -213,20 +208,20 @@
     white-space: nowrap;
     overflow: hidden;
 
-    @include token-utils.use-tokens($tokens...) {
-      @include token-utils.create-token-slot(color, list-item-label-text-color);
-      @include token-utils.create-token-slot(font-family, list-item-label-text-font);
-      @include token-utils.create-token-slot(line-height, list-item-label-text-line-height);
-      @include token-utils.create-token-slot(font-size, list-item-label-text-size);
-      @include token-utils.create-token-slot(font-weight, list-item-label-text-weight);
-      @include token-utils.create-token-slot(letter-spacing, list-item-label-text-tracking);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(list-item-label-text-color);
+      font-family: token-utils.slot(list-item-label-text-font);
+      line-height: token-utils.slot(list-item-label-text-line-height);
+      font-size: token-utils.slot(list-item-label-text-size);
+      font-weight: token-utils.slot(list-item-label-text-weight);
+      letter-spacing: token-utils.slot(list-item-label-text-tracking);
 
       .mdc-list-item:hover & {
-        @include token-utils.create-token-slot(color, list-item-hover-label-text-color);
+        color: token-utils.slot(list-item-hover-label-text-color);
       }
 
       .mdc-list-item:focus & {
-        @include token-utils.create-token-slot(color, list-item-focus-label-text-color);
+        color: token-utils.slot(list-item-focus-label-text-color);
       }
     }
 
@@ -264,13 +259,13 @@
     display: block;
     margin-top: 0;
 
-    @include token-utils.use-tokens($tokens...) {
-      @include token-utils.create-token-slot(color, list-item-supporting-text-color);
-      @include token-utils.create-token-slot(font-family, list-item-supporting-text-font);
-      @include token-utils.create-token-slot(line-height, list-item-supporting-text-line-height);
-      @include token-utils.create-token-slot(font-size, list-item-supporting-text-size);
-      @include token-utils.create-token-slot(font-weight, list-item-supporting-text-weight);
-      @include token-utils.create-token-slot(letter-spacing, list-item-supporting-text-tracking);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(list-item-supporting-text-color);
+      font-family: token-utils.slot(list-item-supporting-text-font);
+      line-height: token-utils.slot(list-item-supporting-text-line-height);
+      font-size: token-utils.slot(list-item-supporting-text-size);
+      font-weight: token-utils.slot(list-item-supporting-text-weight);
+      letter-spacing: token-utils.slot(list-item-supporting-text-tracking);
     }
 
     &::before {
@@ -475,22 +470,22 @@
 
     .mdc-list-item__primary-text,
     .mdc-list-item__secondary-text {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(opacity, list-item-disabled-label-text-opacity);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        opacity: token-utils.slot(list-item-disabled-label-text-opacity);
       }
     }
 
     &.mdc-list-item--with-leading-icon .mdc-list-item__start {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(color, list-item-disabled-leading-icon-color);
-        @include token-utils.create-token-slot(opacity, list-item-disabled-leading-icon-opacity);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        color: token-utils.slot(list-item-disabled-leading-icon-color);
+        opacity: token-utils.slot(list-item-disabled-leading-icon-opacity);
       }
     }
 
     &.mdc-list-item--with-trailing-icon .mdc-list-item__end {
-      @include token-utils.use-tokens($tokens...) {
-        @include token-utils.create-token-slot(color, list-item-disabled-trailing-icon-color);
-        @include token-utils.create-token-slot(opacity, list-item-disabled-trailing-icon-opacity);
+      @include token-utils.use-tokens($token-prefix, $token-slots) {
+        color: token-utils.slot(list-item-disabled-trailing-icon-color);
+        opacity: token-utils.slot(list-item-disabled-trailing-icon-opacity);
       }
     }
   }

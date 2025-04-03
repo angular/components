@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use './m2-form-field';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
@@ -117,8 +117,8 @@ $_enable-form-field-will-change-reset: true;
   .mat-form-field-disabled .mdc-text-field__input {
     @include vendor-prefixes.input-placeholder {
       @include token-utils.use-tokens(
-        tokens-mat-form-field.$prefix, tokens-mat-form-field.get-token-slots()) {
-        @include token-utils.create-token-slot(color, disabled-input-text-placeholder-color);
+          m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+        color: token-utils.slot(disabled-input-text-placeholder-color);
       }
     }
   }

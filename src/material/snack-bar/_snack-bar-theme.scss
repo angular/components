@@ -5,7 +5,7 @@
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
+@use './m2-snack-bar';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -14,9 +14,7 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-unthemable-tokens()
-      );
+        m2-snack-bar.$prefix, m2-snack-bar.get-unthemable-tokens());
     }
   }
 }
@@ -27,9 +25,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-color-tokens($theme)
-      );
+        m2-snack-bar.$prefix, m2-snack-bar.get-color-tokens($theme));
     }
   }
 }
@@ -40,9 +36,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-snack-bar.$prefix,
-        tokens-mat-snack-bar.get-typography-tokens($theme)
-      );
+        m2-snack-bar.$prefix, m2-snack-bar.get-typography-tokens($theme));
     }
   }
 }
@@ -54,8 +48,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-snack-bar.$prefix,
-      tokens: tokens-mat-snack-bar.get-token-slots(),
+      namespace: m2-snack-bar.$prefix,
+      tokens: m2-snack-bar.get-token-slots(),
     ),
   );
 }
@@ -91,8 +85,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-snack-bar.$prefix,
-      map.get($tokens, tokens-mat-snack-bar.$prefix)
+      m2-snack-bar.$prefix,
+      map.get($tokens, m2-snack-bar.$prefix)
     );
   }
 }

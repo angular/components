@@ -1,22 +1,20 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/datepicker' as tokens-mat-datepicker;
+@use './m2-datepicker';
 @use '../core/tokens/token-utils';
-
-$_tokens: (tokens-mat-datepicker.$prefix, tokens-mat-datepicker.get-token-slots());
 
 // We support the case where the form field is disabled, but the datepicker is not.
 // MDC sets `pointer-events: none` on disabled form fields which prevents clicks on the toggle.
 .mat-datepicker-toggle {
   pointer-events: auto;
 
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(color, toggle-icon-color);
+  @include token-utils.use-tokens(m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+    color: token-utils.slot(toggle-icon-color);
   }
 }
 
 .mat-datepicker-toggle-active {
-  @include token-utils.use-tokens($_tokens...) {
-    @include token-utils.create-token-slot(color, toggle-active-state-icon-color);
+  @include token-utils.use-tokens(m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+    color: token-utils.slot(toggle-active-state-icon-color);
   }
 }
 

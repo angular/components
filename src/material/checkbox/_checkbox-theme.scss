@@ -4,7 +4,7 @@
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mat/checkbox' as tokens-mat-checkbox;
+@use './m2-checkbox';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-checkbox.
@@ -15,9 +15,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-checkbox.$prefix,
-        tokens-mat-checkbox.get-unthemable-tokens()
-      );
+        m2-checkbox.$prefix, m2-checkbox.get-unthemable-tokens());
     }
   }
 }
@@ -33,24 +31,22 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-checkbox.$prefix,
-        tokens-mat-checkbox.get-color-tokens($theme)
-      );
+        m2-checkbox.$prefix, m2-checkbox.get-color-tokens($theme));
     }
 
     .mat-mdc-checkbox {
       &.mat-primary {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-checkbox.$prefix,
-          tokens-mat-checkbox.get-color-tokens($theme, primary,
+          m2-checkbox.$prefix,
+          m2-checkbox.get-color-tokens($theme, primary,
               $exclude: (disabled-label-color, label-text-color))
         );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-checkbox.$prefix,
-          tokens-mat-checkbox.get-color-tokens($theme, warn,
+          m2-checkbox.$prefix,
+          m2-checkbox.get-color-tokens($theme, warn,
               $exclude: (disabled-label-color, label-text-color))
         );
       }
@@ -66,8 +62,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-checkbox.$prefix,
-        tokens-mat-checkbox.get-typography-tokens($theme)
+        m2-checkbox.$prefix,
+        m2-checkbox.get-typography-tokens($theme)
       );
     }
   }
@@ -83,8 +79,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-checkbox.$prefix,
-        tokens-mat-checkbox.get-density-tokens($theme)
+        m2-checkbox.$prefix,
+        m2-checkbox.get-density-tokens($theme)
       );
     }
   }
@@ -94,8 +90,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-checkbox.$prefix,
-      tokens: tokens-mat-checkbox.get-token-slots(),
+      namespace: m2-checkbox.$prefix,
+      tokens: m2-checkbox.get-token-slots(),
     ),
   );
 }
@@ -136,8 +132,8 @@
   );
   $mat-checkbox-tokens: token-utils.get-tokens-for(
     $tokens,
-    tokens-mat-checkbox.$prefix,
+    m2-checkbox.$prefix,
     $options...
   );
-  @include token-utils.create-token-values(tokens-mat-checkbox.$prefix, $mat-checkbox-tokens);
+  @include token-utils.create-token-values(m2-checkbox.$prefix, $mat-checkbox-tokens);
 }

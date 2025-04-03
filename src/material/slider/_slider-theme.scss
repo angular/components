@@ -4,7 +4,7 @@
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/slider' as tokens-mat-slider;
+@use './m2-slider';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-slider.
@@ -15,9 +15,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-unthemable-tokens()
-      );
+        m2-slider.$prefix, m2-slider.get-unthemable-tokens());
     }
   }
 }
@@ -33,22 +31,16 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-color-tokens($theme)
-      );
+        m2-slider.$prefix, m2-slider.get-color-tokens($theme));
 
       .mat-accent {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-slider.$prefix,
-          tokens-mat-slider.private-get-color-palette-color-tokens($theme, accent)
-        );
+          m2-slider.$prefix, m2-slider.private-get-color-palette-color-tokens($theme, accent));
       }
 
       .mat-warn {
         @include token-utils.create-token-values-mixed(
-          tokens-mat-slider.$prefix,
-          tokens-mat-slider.private-get-color-palette-color-tokens($theme, warn)
-        );
+          m2-slider.$prefix, m2-slider.private-get-color-palette-color-tokens($theme, warn));
       }
     }
   }
@@ -62,9 +54,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-typography-tokens($theme)
-      );
+        m2-slider.$prefix, m2-slider.get-typography-tokens($theme));
     }
   }
 }
@@ -77,9 +67,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-slider.$prefix,
-        tokens-mat-slider.get-density-tokens($theme)
-      );
+        m2-slider.$prefix, m2-slider.get-density-tokens($theme));
     }
   }
 }
@@ -88,8 +76,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-slider.$prefix,
-      tokens: tokens-mat-slider.get-token-slots(),
+      namespace: m2-slider.$prefix,
+      tokens: m2-slider.get-token-slots(),
     ),
   );
 }
@@ -128,6 +116,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-slider-tokens: token-utils.get-tokens-for($tokens, tokens-mat-slider.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-slider.$prefix, $mat-slider-tokens);
+  $mat-slider-tokens: token-utils.get-tokens-for($tokens, m2-slider.$prefix, $options...);
+  @include token-utils.create-token-values(m2-slider.$prefix, $mat-slider-tokens);
 }
