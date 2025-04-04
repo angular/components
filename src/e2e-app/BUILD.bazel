@@ -1,9 +1,11 @@
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "http_server", "sass_binary")
 load("//tools:defaults2.bzl", "ng_project")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
-load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
 
 # List of dependencies that are referenced in the `index.html` file.
 devserverIndexHtmlDependencies = [
@@ -59,27 +61,26 @@ sass_binary(
     ],
 )
 
-esbuild_config(
-    name = "esbuild_config",
-    testonly = True,
-    config_file = "esbuild.config.mjs",
-)
-
-devmode_esbuild(
+esbuild(
     name = "bundles",
     testonly = True,
-    config = ":esbuild_config",
-    entry_points = [":main.ts"] + ["%s:index.ts" % e for e in ALL_EXAMPLES],
+    srcs = [
+        ":e2e-app",
+        "//:node_modules/tslib",
+        "//src:build-tsconfig",
+    ],
+    bundle = True,
+    config = "//src:esbuild-linked-config",
+    entry_point = ":main.js",
+    format = "esm",
+    metafile = True,
+    output_dir = True,
     platform = "browser",
+    sourcemap = "external",
     splitting = True,
-    # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
+    # We cannot use `ES2017` or high as that would result in `async/await` not being downleveled.
     # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
     target = "es2016",
-    # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
-    # map all framework packages to their linker-processed bundles from `tools/angular`.
-    deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":e2e-app_legacy",
-    ],
 )
 
 http_server(

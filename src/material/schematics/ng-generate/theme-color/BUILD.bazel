@@ -21,7 +21,7 @@ ts_project(
         "//:node_modules/@types/node",
         "//:node_modules/sass",
         "//:node_modules/typescript",
-        "//src/cdk/schematics",
+        "//src/material/schematics:node_modules/@angular/cdk/schematics",
     ],
 )
 

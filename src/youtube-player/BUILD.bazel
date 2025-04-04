@@ -58,6 +58,11 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/youtube-player/schematics:npm_package"],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [":youtube-player_legacy"],
 )
 
