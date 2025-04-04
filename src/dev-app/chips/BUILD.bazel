@@ -20,6 +20,7 @@ ng_project(
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
+        "//src/material/toolbar",
     ],
 )
 

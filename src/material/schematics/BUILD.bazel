@@ -5,7 +5,6 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
 
 package(default_visibility = ["//visibility:public"])
 
-# TODO(devversion): Remove when CDK is fully linked properly.
 npm_link_package(
     name = "node_modules/@angular/cdk/schematics",
     src = "//src/cdk/schematics:npm_package",
@@ -146,6 +145,7 @@ jasmine_test(
         ":collection_assets",
         ":ng_generate_assets",
         ":schema_assets",
+        ":schematics",
         ":schematics_test_cases",
         ":unit_test_sources",
         "//src/material/schematics:package_json",

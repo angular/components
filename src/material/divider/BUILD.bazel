@@ -19,7 +19,6 @@ ng_project(
     assets = [":divider.css"] + glob(["**/*.html"]),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )

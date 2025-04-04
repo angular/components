@@ -13,7 +13,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: 0bde749b72d616c02ed63ba4f549f8b7
+packageExtensionsChecksum: ff452259b62957306a04cd2d3e29c1c2
 
 patchedDependencies:
   '@angular/compiler-cli@19.2.0':
@@ -108,7 +108,7 @@ importers:
         version: 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@angular/platform-server':
         specifier: ^19.2.0
-        version: 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
+        version: 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@angular/router':
         specifier: ^19.2.0
         version: 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)(rxjs@6.6.7)
@@ -424,6 +424,10 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
 
   src/components-examples:
     dependencies:
@@ -504,6 +508,16 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@angular/cdk':
+        specifier: workspace:*
+        version: link:../cdk
+      '@angular/cdk-experimental':
+        specifier: workspace:*
+        version: link:../cdk-experimental
+      '@angular/material':
+        specifier: workspace:*
+        version: link:../material
 
   src/material-luxon-adapter:
     dependencies:
@@ -638,7 +652,7 @@ packages:
       '@angular/build': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/localize@19.2.0)(@angular/platform-server@19.2.0)(@types/node@16.18.101)(karma@6.4.3)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(typescript@5.8.2)(yaml@1.10.2)
       '@angular/compiler-cli': 19.2.0(patch_hash=hpfraclutqvkf4j7qbkovdoo3u)(@angular/compiler@19.2.0)(typescript@5.8.2)
       '@angular/localize': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)
-      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
+      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@babel/core': 7.26.9
       '@babel/generator': 7.26.9
       '@babel/helper-annotate-as-pure': 7.25.9
@@ -848,7 +862,7 @@ packages:
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       '@angular/compiler-cli': 19.2.0(patch_hash=hpfraclutqvkf4j7qbkovdoo3u)(@angular/compiler@19.2.0)(typescript@5.8.2)
       '@angular/localize': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)
-      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
+      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@babel/core': 7.26.9
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
@@ -934,7 +948,7 @@ packages:
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       '@angular/compiler-cli': 19.2.0(patch_hash=hpfraclutqvkf4j7qbkovdoo3u)(@angular/compiler@19.2.0)(typescript@5.8.2)
       '@angular/localize': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)
-      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
+      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@babel/core': 7.26.9
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
@@ -1019,7 +1033,7 @@ packages:
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       '@angular/compiler-cli': 19.2.0(patch_hash=hpfraclutqvkf4j7qbkovdoo3u)(@angular/compiler@19.2.0)(typescript@5.8.2)
       '@angular/localize': 19.2.0(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)
-      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
+      '@angular/platform-server': 19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)
       '@babel/core': 7.26.9
       '@babel/helper-annotate-as-pure': 7.25.9
       '@babel/helper-split-export-declaration': 7.24.7
@@ -1244,7 +1258,7 @@ packages:
       - '@angular/compiler-cli'
       - supports-color
 
-  /@angular/platform-server@19.2.0(@angular/common@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0):
+  /@angular/platform-server@19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/compiler@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0):
     resolution: {integrity: sha512-640hy3aWduYYdxoII71SDQtN5omvZIiWB7K+e0LbhQyQ9WWKCWEnWOneyRPZnFle8j8hoEnxKgbJLVZxBbnXoA==}
     engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
     peerDependencies:
@@ -1257,8 +1271,12 @@ packages:
       '@angular/compiler': 19.2.0(@angular/core@19.2.0)
       '@angular/core': 19.2.0(patch_hash=pg6zregdqtn7sw2pslgizh6xre)(@angular/compiler@19.2.0)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.0(@angular/animations@19.2.0)(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)
+      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.0)
       tslib: 2.8.1
       xhr2: 0.2.1
+    transitivePeerDependencies:
+      - '@angular/compiler-cli'
+      - supports-color
     dev: true
 
   /@angular/router@19.2.0(@angular/common@19.2.0)(@angular/compiler-cli@19.2.0)(@angular/core@19.2.0)(@angular/platform-browser@19.2.0)(rxjs@6.6.7):

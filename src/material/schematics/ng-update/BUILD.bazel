@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "esbuild")
 load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 
 ts_project(
     name = "ng_update_lib",
@@ -24,7 +24,7 @@ ts_project(
 
 esbuild(
     name = "ng_update_index",
-    entry_point = ":index.ts",
+    entry_point = ":index.js",
     external = [
         "@angular/cdk/schematics",
         "@schematics/angular",
@@ -37,7 +37,7 @@ esbuild(
     platform = "node",
     target = "es2015",
     visibility = ["//src/material/schematics:__pkg__"],
-    deps = [":ng_update_lib_legacy"],
+    deps = [":ng_update_lib"],
 )
 
 filegroup(
