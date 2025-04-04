@@ -578,6 +578,6 @@ $token-slots: m2-slide-toggle.get-token-slots();
 
   // TODO(wagnermaciel): Use our custom token system to emit this css rule.
   .mdc-switch--disabled + label {
-    color: var(--mat-switch-disabled-label-text-color);
+    color: var(--mat-slide-toggle-disabled-label-text-color);
   }
 }

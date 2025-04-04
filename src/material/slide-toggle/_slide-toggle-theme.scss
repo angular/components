@@ -52,13 +52,13 @@
       & {
         // TODO(andrewjs): Remove this once all tokens are migrated to
         // mat internally.
-        --mdc-switch-disabled-label-text-color: #{inspection.get-theme-color(
+        --mdc-slide-toggle-disabled-label-text-color: #{inspection.get-theme-color(
             $theme,
             foreground,
             disabled-text
           )};
         // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-switch-disabled-label-text-color: #{inspection.get-theme-color(
+        --mat-slide-toggle-disabled-label-text-color: #{inspection.get-theme-color(
             $theme,
             foreground,
             disabled-text
@@ -67,7 +67,7 @@
 
       .mat-mdc-slide-toggle {
         // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-switch-label-text-color: #{inspection.get-theme-color(
+        --mat-slide-toggle-label-text-color: #{inspection.get-theme-color(
           $theme,
           foreground,
           text

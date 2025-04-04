@@ -52,7 +52,7 @@ $_side-padding: 16px;
     }
 
     .mat-pseudo-checkbox {
-      --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
+      --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
           token-utils.slot(selected-state-label-text-color)};
     }
   }
