@@ -42,6 +42,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     'role': 'listbox',
     'class': 'cdk-listbox',
     '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.aria-readonly]': 'pattern.readonly()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multi()',

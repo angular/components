@@ -57,6 +57,9 @@ export class ListboxPattern<V> {
   /** Whether the listbox is disabled. */
   disabled: SignalLike<boolean>;
 
+  /** Whether the listbox is readonly. */
+  readonly: SignalLike<boolean>;
+
   /** The tabindex of the listbox. */
   tabindex = computed(() => this.focusManager.getListTabindex());
 
@@ -95,7 +98,7 @@ export class ListboxPattern<V> {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    if (this.inputs.readonly()) {
+    if (this.readonly()) {
       return manager
         .on(this.prevKey, () => this.prev())
         .on(this.nextKey, () => this.next())
@@ -160,8 +163,8 @@ export class ListboxPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    if (this.inputs.readonly()) {
-      manager.on(e => this.goto(e));
+    if (this.readonly()) {
+      return manager.on(e => this.goto(e));
     }
 
     if (this.inputs.multi()) {
@@ -175,6 +178,7 @@ export class ListboxPattern<V> {
 
   constructor(readonly inputs: ListboxInputs<V>) {
     this.disabled = inputs.disabled;
+    this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
 
