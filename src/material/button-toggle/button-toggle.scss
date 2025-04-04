@@ -4,8 +4,8 @@
 @use '../core/style/layout-common';
 @use '../core/style/elevation';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/legacy-button-toggle' as tokens-mat-legacy-button-toggle;
-@use '../core/tokens/m2/mat/standard-button-toggle' as tokens-mat-standard-button-toggle;
+@use './m2-legacy-button-toggle';
+@use './m2-standard-button-toggle';
 
 $standard-padding: 12px !default;
 $legacy-padding: 16px !default;
@@ -19,13 +19,13 @@ $standard-border-radius: 4px !default;
 $legacy-border-radius: 2px !default;
 
 $_legacy-tokens: (
-  tokens-mat-legacy-button-toggle.$prefix,
-  tokens-mat-legacy-button-toggle.get-token-slots()
+  m2-legacy-button-toggle.$prefix,
+  m2-legacy-button-toggle.get-token-slots()
 );
 
 $_standard-tokens: (
-  tokens-mat-standard-button-toggle.$prefix,
-  tokens-mat-standard-button-toggle.get-token-slots()
+  m2-standard-button-toggle.$prefix,
+  m2-standard-button-toggle.get-token-slots()
 );
 
 .mat-button-toggle-standalone,
@@ -41,7 +41,7 @@ $_standard-tokens: (
   transform: translateZ(0);
 
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(border-radius, shape);
+    border-radius: token-utils.slot(shape);
   }
 
   @include elevation.overridable-elevation(2);
@@ -54,12 +54,12 @@ $_standard-tokens: (
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
-    @include token-utils.create-token-slot(border-radius, shape);
-    border: solid 1px token-utils.get-token-variable(divider-color);
+    border-radius: token-utils.slot(shape);
+    border: solid 1px token-utils.slot(divider-color);
 
     .mat-pseudo-checkbox {
       --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
-          token-utils.get-token-variable(selected-state-text-color)};
+          token-utils.slot(selected-state-text-color)};
     }
   }
 
@@ -87,18 +87,18 @@ $_standard-tokens: (
   position: relative;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(color, text-color);
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(line-height, label-text-line-height);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    color: token-utils.slot(text-color);
+    font-family: token-utils.slot(label-text-font);
+    font-size: token-utils.slot(label-text-size);
+    line-height: token-utils.slot(label-text-line-height);
+    font-weight: token-utils.slot(label-text-weight);
+    letter-spacing: token-utils.slot(label-text-tracking);
 
     --mat-minimal-pseudo-checkbox-selected-checkmark-color: #{
-        token-utils.get-token-variable(selected-state-text-color)};
+        token-utils.slot(selected-state-text-color)};
 
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
-      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      opacity: token-utils.slot(focus-state-layer-opacity);
     }
   }
 
@@ -156,8 +156,8 @@ $_standard-tokens: (
 
 .mat-button-toggle-checked {
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(color, selected-state-text-color);
-    @include token-utils.create-token-slot(background-color, selected-state-background-color);
+    color: token-utils.slot(selected-state-text-color);
+    background-color: token-utils.slot(selected-state-background-color);
   }
 }
 
@@ -165,14 +165,13 @@ $_standard-tokens: (
   pointer-events: none;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(color, disabled-state-text-color);
-    @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+    color: token-utils.slot(disabled-state-text-color);
+    background-color: token-utils.slot(disabled-state-background-color);
     --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
-        token-utils.get-token-variable(disabled-state-text-color)};
+        token-utils.slot(disabled-state-text-color)};
 
     &.mat-button-toggle-checked {
-      @include token-utils.create-token-slot(background-color,
-        disabled-selected-state-background-color);
+      background-color: token-utils.slot(disabled-selected-state-background-color);
     }
   }
 }
@@ -183,14 +182,14 @@ $_standard-tokens: (
 
 .mat-button-toggle-appearance-standard {
   @include token-utils.use-tokens($_standard-tokens...) {
-    $divider-color: token-utils.get-token-variable(divider-color);
-    @include token-utils.create-token-slot(color, text-color);
-    @include token-utils.create-token-slot(background-color, background-color);
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(line-height, label-text-line-height);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    $divider-color: token-utils.slot(divider-color);
+    color: token-utils.slot(text-color);
+    background-color: token-utils.slot(background-color);
+    font-family: token-utils.slot(label-text-font);
+    font-size: token-utils.slot(label-text-size);
+    line-height: token-utils.slot(label-text-line-height);
+    font-weight: token-utils.slot(label-text-weight);
+    letter-spacing: token-utils.slot(label-text-tracking);
 
     .mat-button-toggle-group-appearance-standard & + & {
       border-left: solid 1px $divider-color;
@@ -208,32 +207,31 @@ $_standard-tokens: (
     }
 
     &.mat-button-toggle-checked {
-      @include token-utils.create-token-slot(color, selected-state-text-color);
-      @include token-utils.create-token-slot(background-color, selected-state-background-color);
+      color: token-utils.slot(selected-state-text-color);
+      background-color: token-utils.slot(selected-state-background-color);
     }
 
     &.mat-button-toggle-disabled {
-      @include token-utils.create-token-slot(color, disabled-state-text-color);
-      @include token-utils.create-token-slot(background-color, disabled-state-background-color);
+      color: token-utils.slot(disabled-state-text-color);
+      background-color: token-utils.slot(disabled-state-background-color);
 
       .mat-pseudo-checkbox {
         --mat-minimal-pseudo-checkbox-disabled-selected-checkmark-color: #{
-            token-utils.get-token-variable(disabled-selected-state-text-color)};
+            token-utils.slot(disabled-selected-state-text-color)};
       }
 
       &.mat-button-toggle-checked {
-        @include token-utils.create-token-slot(color, disabled-selected-state-text-color);
-        @include token-utils.create-token-slot(background-color,
-          disabled-selected-state-background-color);
+        color: token-utils.slot(disabled-selected-state-text-color);
+        background-color: token-utils.slot(disabled-selected-state-background-color);
       }
     }
 
     .mat-button-toggle-focus-overlay {
-      @include token-utils.create-token-slot(background-color, state-layer-color);
+      background-color: token-utils.slot(state-layer-color);
     }
 
     &:hover .mat-button-toggle-focus-overlay {
-      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      opacity: token-utils.slot(hover-state-layer-opacity);
     }
 
     // Similar to components like the checkbox, slide-toggle and radio, we cannot show the focus
@@ -241,7 +239,7 @@ $_standard-tokens: (
     // always treated as programmatic focus.
     // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
-      @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+      opacity: token-utils.slot(focus-state-layer-opacity);
     }
   }
 
@@ -262,7 +260,7 @@ $_standard-tokens: (
   padding: 0 $legacy-padding;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(line-height, height);
+    line-height: token-utils.slot(height);
   }
 
   // Prevents IE from shifting the content on click.
@@ -272,7 +270,7 @@ $_standard-tokens: (
     padding: 0 $standard-padding;
 
     @include token-utils.use-tokens($_standard-tokens...) {
-      @include token-utils.create-token-slot(line-height, height);
+      line-height: token-utils.slot(height);
     }
   }
 }
@@ -291,7 +289,7 @@ $_standard-tokens: (
   opacity: 0;
 
   @include token-utils.use-tokens($_legacy-tokens...) {
-    @include token-utils.create-token-slot(background-color, state-layer-color);
+    background-color: token-utils.slot(state-layer-color);
   }
 }
 
@@ -383,30 +381,30 @@ $_standard-tokens: (
 // radius of the button-toggle-group or standalone button-toggle.
 @include token-utils.use-tokens($_standard-tokens...) {
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
-    @include token-utils.create-token-slot(--mat-focus-indicator-border-radius, shape);
+    --mat-focus-indicator-border-radius: #{token-utils.slot(shape)};
   }
 
   .mat-button-toggle-group-appearance-standard:not(.mat-button-toggle-vertical) .mat-button-toggle {
     &:last-of-type .mat-button-toggle-button::before {
-      @include token-utils.create-token-slot(border-top-right-radius, shape);
-      @include token-utils.create-token-slot(border-bottom-right-radius, shape);
+      border-top-right-radius: token-utils.slot(shape);
+      border-bottom-right-radius: token-utils.slot(shape);
     }
 
     &:first-of-type .mat-button-toggle-button::before {
-      @include token-utils.create-token-slot(border-top-left-radius, shape);
-      @include token-utils.create-token-slot(border-bottom-left-radius, shape);
+      border-top-left-radius: token-utils.slot(shape);
+      border-bottom-left-radius: token-utils.slot(shape);
     }
   }
 
   .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle {
     &:last-of-type .mat-button-toggle-button::before {
-      @include token-utils.create-token-slot(border-bottom-right-radius, shape);
-      @include token-utils.create-token-slot(border-bottom-left-radius, shape);
+      border-bottom-right-radius: token-utils.slot(shape);
+      border-bottom-left-radius: token-utils.slot(shape);
     }
 
     &:first-of-type .mat-button-toggle-button::before {
-      @include token-utils.create-token-slot(border-top-right-radius, shape);
-      @include token-utils.create-token-slot(border-top-left-radius, shape);
+      border-top-right-radius: token-utils.slot(shape);
+      border-top-left-radius: token-utils.slot(shape);
     }
   }
 }

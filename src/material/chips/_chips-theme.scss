@@ -1,5 +1,5 @@
 @use 'sass:color';
-@use '../core/tokens/m2/mat/chip' as tokens-mat-chip;
+@use './m2-chip';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -15,9 +15,7 @@
   } @else {
     .mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-chip.$prefix,
-        tokens-mat-chip.get-unthemable-tokens()
-      );
+        m2-chip.$prefix, m2-chip.get-unthemable-tokens());
     }
   }
 }
@@ -33,31 +31,23 @@
   } @else {
     .mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-chip.$prefix,
-        tokens-mat-chip.get-color-tokens($theme)
-      );
+        m2-chip.$prefix, m2-chip.get-color-tokens($theme));
 
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
           @include token-utils.create-token-values-mixed(
-            tokens-mat-chip.$prefix,
-            tokens-mat-chip.get-color-tokens($theme, primary)
-          );
+            m2-chip.$prefix, m2-chip.get-color-tokens($theme, primary));
         }
 
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-            tokens-mat-chip.$prefix,
-            tokens-mat-chip.get-color-tokens($theme, accent)
-          );
+            m2-chip.$prefix, m2-chip.get-color-tokens($theme, accent));
         }
 
         &.mat-warn {
           @include token-utils.create-token-values-mixed(
-            tokens-mat-chip.$prefix,
-            tokens-mat-chip.get-color-tokens($theme, warn)
-          );
+            m2-chip.$prefix, m2-chip.get-color-tokens($theme, warn));
         }
       }
     }
@@ -72,8 +62,7 @@
   } @else {
     .mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-chip.$prefix,
-        tokens-mat-chip.get-typography-tokens($theme)
+        m2-chip.$prefix, m2-chip.get-typography-tokens($theme)
       );
     }
   }
@@ -87,8 +76,7 @@
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-chip.$prefix,
-        tokens-mat-chip.get-density-tokens($theme)
+        m2-chip.$prefix, m2-chip.get-density-tokens($theme)
       );
     }
   }
@@ -98,8 +86,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-chip.$prefix,
-      tokens: tokens-mat-chip.get-token-slots(),
+      namespace: m2-chip.$prefix,
+      tokens: m2-chip.get-token-slots(),
     ),
   );
 }
@@ -138,6 +126,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-chip-tokens: token-utils.get-tokens-for($tokens, tokens-mat-chip.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-chip.$prefix, $mat-chip-tokens);
+  $mat-chip-tokens: token-utils.get-tokens-for($tokens, m2-chip.$prefix, $options...);
+  @include token-utils.create-token-values(m2-chip.$prefix, $mat-chip-tokens);
 }

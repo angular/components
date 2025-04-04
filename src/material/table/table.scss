@@ -1,6 +1,6 @@
-@use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/table' as tokens-mat-table;
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/token-utils';
+@use './m2-table';
 @use './table-flex-styles';
 
 .mat-mdc-table-sticky {
@@ -10,9 +10,12 @@
   position: sticky !important;
 }
 
+$token-prefix: m2-table.$prefix;
+$token-slots: m2-table.get-token-slots();
+
 @mixin _cell-border {
-  @include token-utils.create-token-slot(border-bottom-color, row-item-outline-color, true);
-  @include token-utils.create-token-slot(border-bottom-width, row-item-outline-width, true);
+  border-bottom-color: token-utils.slot(row-item-outline-color, true);
+  border-bottom-width: token-utils.slot(row-item-outline-width, true);
   border-bottom-style: solid;
 }
 
@@ -25,8 +28,8 @@
   table-layout: auto;
   white-space: normal;
 
-  @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
-    @include token-utils.create-token-slot(background-color, background-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background-color: token-utils.slot(background-color);
   }
 }
 
@@ -46,22 +49,22 @@
   padding: 0 16px;
 }
 
-@include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   // TODO(crisbeto): these tokens have default values in order to make the initial token
   // work easier to land in g3. Eventually we should remove them.
   .mat-mdc-header-row {
     @include vendor-prefixes.smooth-font;
-    @include token-utils.create-token-slot(height, header-container-height, 56px);
-    @include token-utils.create-token-slot(color, header-headline-color, true);
-    @include token-utils.create-token-slot(font-family, header-headline-font, true);
-    @include token-utils.create-token-slot(line-height, header-headline-line-height);
-    @include token-utils.create-token-slot(font-size, header-headline-size, 14px);
-    @include token-utils.create-token-slot(font-weight, header-headline-weight, 500);
+    height: token-utils.slot(header-container-height, 56px);
+    color: token-utils.slot(header-headline-color, true);
+    font-family: token-utils.slot(header-headline-font, true);
+    line-height: token-utils.slot(header-headline-line-height);
+    font-size: token-utils.slot(header-headline-size, 14px);
+    font-weight: token-utils.slot(header-headline-weight, 500);
   }
 
   .mat-mdc-row {
-    @include token-utils.create-token-slot(height, row-item-container-height, 52px);
-    @include token-utils.create-token-slot(color, row-item-label-text-color, true);
+    height: token-utils.slot(row-item-container-height, 52px);
+    color: token-utils.slot(row-item-label-text-color, true);
   }
 
   // Note that while it's redundant to apply the typography both to the row
@@ -71,26 +74,26 @@
   .mat-mdc-row,
   .mdc-data-table__content {
     @include vendor-prefixes.smooth-font;
-    @include token-utils.create-token-slot(font-family, row-item-label-text-font, true);
-    @include token-utils.create-token-slot(line-height, row-item-label-text-line-height);
-    @include token-utils.create-token-slot(font-size, row-item-label-text-size, 14px);
-    @include token-utils.create-token-slot(font-weight, row-item-label-text-weight);
+    font-family: token-utils.slot(row-item-label-text-font, true);
+    line-height: token-utils.slot(row-item-label-text-line-height);
+    font-size: token-utils.slot(row-item-label-text-size, 14px);
+    font-weight: token-utils.slot(row-item-label-text-weight);
   }
 
   .mat-mdc-footer-row {
     @include vendor-prefixes.smooth-font;
-    @include token-utils.create-token-slot(height, footer-container-height, 52px);
-    @include token-utils.create-token-slot(color, row-item-label-text-color, true);
-    @include token-utils.create-token-slot(font-family, footer-supporting-text-font, true);
-    @include token-utils.create-token-slot(line-height, footer-supporting-text-line-height);
-    @include token-utils.create-token-slot(font-size, footer-supporting-text-size, 14px);
-    @include token-utils.create-token-slot(font-weight, footer-supporting-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, footer-supporting-text-tracking);
+    height: token-utils.slot(footer-container-height, 52px);
+    color: token-utils.slot(row-item-label-text-color, true);
+    font-family: token-utils.slot(footer-supporting-text-font, true);
+    line-height: token-utils.slot(footer-supporting-text-line-height);
+    font-size: token-utils.slot(footer-supporting-text-size, 14px);
+    font-weight: token-utils.slot(footer-supporting-text-weight);
+    letter-spacing: token-utils.slot(footer-supporting-text-tracking);
   }
 
   .mat-mdc-header-cell {
     @include _cell-border;
-    @include token-utils.create-token-slot(letter-spacing, header-headline-tracking);
+    letter-spacing: token-utils.slot(header-headline-tracking);
     font-weight: inherit;
     line-height: inherit;
     box-sizing: border-box;
@@ -110,7 +113,7 @@
 
   .mat-mdc-cell {
     @include _cell-border;
-    @include token-utils.create-token-slot(letter-spacing, row-item-label-text-tracking);
+    letter-spacing: token-utils.slot(row-item-label-text-tracking);
     line-height: inherit;
 
     .mdc-data-table__row:last-child > & {
@@ -119,7 +122,7 @@
   }
 
   .mat-mdc-footer-cell {
-    @include token-utils.create-token-slot(letter-spacing, row-item-label-text-tracking);
+    letter-spacing: token-utils.slot(row-item-label-text-tracking);
   }
 }
 

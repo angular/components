@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../tokens/m2/mat/ripple' as tokens-mat-ripple;
+@use './m2-ripple';
 @use '../tokens/token-utils';
 @use '../style/sass-utils';
 @use '../theming/theming';
@@ -19,8 +19,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-ripple.$prefix,
-        tokens-mat-ripple.get-color-tokens($theme)
+        m2-ripple.$prefix,
+        m2-ripple.get-color-tokens($theme)
       );
     }
   }
@@ -32,8 +32,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-ripple.$prefix,
-        tokens-mat-ripple.get-typography-tokens($theme)
+        m2-ripple.$prefix,
+        m2-ripple.get-typography-tokens($theme)
       );
     }
   }
@@ -45,8 +45,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-ripple.$prefix,
-        tokens-mat-ripple.get-density-tokens($theme)
+        m2-ripple.$prefix,
+        m2-ripple.get-density-tokens($theme)
       );
     }
   }
@@ -56,8 +56,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-ripple.$prefix,
-      tokens: tokens-mat-ripple.get-token-slots(),
+      namespace: m2-ripple.$prefix,
+      tokens: m2-ripple.get-token-slots(),
     ),
   );
 }
@@ -91,8 +91,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-ripple.$prefix,
-      map.get($tokens, tokens-mat-ripple.$prefix)
+      m2-ripple.$prefix,
+      map.get($tokens, m2-ripple.$prefix)
     );
   }
 }

@@ -1,7 +1,10 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/linear-progress' as tokens-mat-linear-progress;
+@use './m2-progress-bar';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
+
+$token-prefix: m2-progress-bar.$prefix;
+$token-slots: m2-progress-bar.get-token-slots();
 
 .mat-mdc-progress-bar {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
@@ -41,12 +44,9 @@
   overflow-x: hidden;
   transition: opacity 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    $track-variable: token-utils.get-token-variable(track-height);
-    $indicator-height-variable: token-utils.get-token-variable(active-indicator-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    $track-variable: token-utils.slot(track-height);
+    $indicator-height-variable: token-utils.slot(active-indicator-height);
     height: max(#{$track-variable}, #{$indicator-height-variable});
   }
 
@@ -65,11 +65,8 @@
   transform-origin: top left;
   transition: transform 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(height, active-indicator-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    height: token-utils.slot(active-indicator-height);
   }
 
   .mdc-linear-progress--indeterminate & {
@@ -89,12 +86,9 @@
   animation: none;
   border-top-style: solid;
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(border-color, active-indicator-color);
-    @include token-utils.create-token-slot(border-top-width, active-indicator-height);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    border-color: token-utils.slot(active-indicator-color);
+    border-top-width: token-utils.slot(active-indicator-height);
   }
 }
 
@@ -107,12 +101,9 @@
   width: 100%;
   overflow: hidden;
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(height, track-height);
-    @include token-utils.create-token-slot(border-radius, track-shape);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    height: token-utils.slot(track-height);
+    border-radius: token-utils.slot(track-shape);
   }
 }
 
@@ -128,11 +119,8 @@
   transform: rotate(180deg);
   animation: mdc-linear-progress-buffering 250ms infinite linear;
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, track-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background-color: token-utils.slot(track-color);
   }
 
   @include cdk.high-contrast {
@@ -149,11 +137,8 @@
   flex: 0 1 100%;
   transition: flex-basis 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
 
-  @include token-utils.use-tokens(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, track-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background-color: token-utils.slot(track-color);
   }
 }
 
@@ -214,11 +199,8 @@
 
 @keyframes mdc-linear-progress-buffering {
   from {
-    @include token-utils.use-tokens(
-      tokens-mat-linear-progress.$prefix,
-      tokens-mat-linear-progress.get-token-slots()
-    ) {
-      $track-variable: token-utils.get-token-variable(track-height);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      $track-variable: token-utils.slot(track-height);
       transform: rotate(180deg) translateX(calc(#{$track-variable} * -2.5));
     }
   }

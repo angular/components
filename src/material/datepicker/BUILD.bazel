@@ -11,18 +11,42 @@ load("//tools:defaults2.bzl", "ng_project", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 sass_library(
+    name = "m3",
+    srcs = [
+        "_m3-datepicker.scss",
+    ],
+    deps = [
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/tokens:m3_utils",
+    ],
+)
+
+sass_library(
+    name = "m2",
+    srcs = [
+        "_m2-datepicker.scss",
+    ],
+    deps = [
+        "//src/material/core/style:elevation",
+        "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
+    ],
+)
+
+sass_library(
     name = "theme",
     srcs = [
         "_datepicker-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/button:icon_button_theme",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
         "//src/material/core/typography",
     ],
 )
@@ -40,8 +64,8 @@ sass_binary(
     name = "datepicker_content_css",
     src = "datepicker-content.scss",
     deps = [
+        ":m2",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -49,10 +73,10 @@ sass_binary(
     name = "calendar_css",
     src = "calendar.scss",
     deps = [
+        ":m2",
         "//src/cdk:sass_lib",
         "//src/material/core/focus-indicators",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -60,10 +84,10 @@ sass_binary(
     name = "calendar_body_css",
     src = "calendar-body.scss",
     deps = [
+        ":m2",
         "//src/cdk:sass_lib",
         "//src/material/core/style:button_common",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -71,9 +95,9 @@ sass_binary(
     name = "datepicker_toggle_css",
     src = "datepicker-toggle.scss",
     deps = [
+        ":m2",
         "//src/cdk:sass_lib",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 
@@ -86,11 +110,11 @@ sass_binary(
     name = "date_range_input_css",
     src = "date-range-input.scss",
     deps = [
+        ":m2",
         "//src/cdk:sass_lib",
         "//src/material/core/style:variables",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
-        "//src/material/core/tokens/m2/mat",
     ],
 )
 

@@ -1,0 +1,109 @@
+@use '../m2/palette';
+@use '../m2/theming';
+@use '../m2/typography';
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:meta';
+
+$_placeholder-color-palette: theming.define-palette(palette.$red-palette);
+
+// Indicates whether we're building internally. Used for backwards compatibility.
+$private-is-internal-build: false;
+
+// Placeholder color config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-color-config: (
+  primary: $_placeholder-color-palette,
+  accent: $_placeholder-color-palette,
+  warn: $_placeholder-color-palette,
+  is-dark: false,
+  foreground: palette.$light-theme-foreground-palette,
+  background: palette.$light-theme-background-palette,
+);
+
+$_placeholder-typography-level-config: typography.typography-config-level-from-mdc(body1);
+
+// Placeholder typography config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-typography-config: (
+  font-family: 'Roboto, sans-serif',
+  headline-1: $_placeholder-typography-level-config,
+  headline-2: $_placeholder-typography-level-config,
+  headline-3: $_placeholder-typography-level-config,
+  headline-4: $_placeholder-typography-level-config,
+  headline-5: $_placeholder-typography-level-config,
+  headline-6: $_placeholder-typography-level-config,
+  subtitle-1: $_placeholder-typography-level-config,
+  subtitle-2: $_placeholder-typography-level-config,
+  body-1: $_placeholder-typography-level-config,
+  body-2: $_placeholder-typography-level-config,
+  caption: $_placeholder-typography-level-config,
+  button: $_placeholder-typography-level-config,
+  overline: $_placeholder-typography-level-config,
+  subheading-1: $_placeholder-typography-level-config,
+  title: $_placeholder-typography-level-config,
+);
+
+// Placeholder density config that can be passed to token getter functions when generating token
+// slots.
+$placeholder-density-config: 0;
+
+/// Inherited function from MDC that computes which contrast tone to use on top of a color.
+/// This is used only in a narrow set of use cases when generating M2 button tokens to maintain
+/// backwards compatibility.
+/// @param {Color} $value Color for which we're calculating the contrast tone.
+/// @param {Boolean} $is-dark Whether the current theme is dark.
+/// @return {Map} Either `dark` or `light`.
+@function contrast-tone($value, $is-dark) {
+  @if ($value == 'dark') {
+    @return 'light';
+  }
+
+  @if ($value == 'light') {
+    @return 'dark';
+  }
+
+  // Fallback if the app is using a non-color palette (e.g. CSS variable based).
+  @if (meta.type-of($value) != 'color') {
+    @return if($is-dark, 'light', 'dark');
+  }
+
+  $minimum-contrast: 3.1;
+  $light-contrast: _contrast($value, #fff);
+  $dark-contrast: _contrast($value, rgba(0, 0, 0, 0.87));
+
+  @if ($light-contrast < $minimum-contrast) and ($dark-contrast > $light-contrast) {
+    @return 'dark';
+  }
+
+  @return 'light';
+}
+
+@function _linear-channel-value($channel-value) {
+  $normalized-channel-value: math.div($channel-value, 255);
+
+  @if ($normalized-channel-value < 0.03928) {
+    @return math.div($normalized-channel-value, 12.92);
+  }
+
+  @return math.pow(math.div($normalized-channel-value + 0.055, 1.055), 2.4);
+}
+
+// Calculate the luminance for a color.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _luminance($color) {
+  $red: _linear-channel-value(color.red($color));
+  $green: _linear-channel-value(color.green($color));
+  $blue: _linear-channel-value(color.blue($color));
+
+  @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
+}
+
+// Calculate the contrast ratio between two colors.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+@function _contrast($back, $front) {
+  $back-lum: _luminance($back) + 0.05;
+  $fore-lum: _luminance($front) + 0.05;
+
+  @return math.div(math.max($back-lum, $fore-lum), math.min($back-lum, $fore-lum));
+}

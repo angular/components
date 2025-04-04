@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../core/tokens/m2/mat/table' as tokens-mat-table;
+@use './m2-table';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
@@ -13,9 +13,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-table.$prefix,
-        tokens-mat-table.get-unthemable-tokens()
-      );
+        m2-table.$prefix, m2-table.get-unthemable-tokens());
     }
   }
 }
@@ -26,9 +24,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-table.$prefix,
-        tokens-mat-table.get-color-tokens($theme)
-      );
+        m2-table.$prefix, m2-table.get-color-tokens($theme));
     }
   }
 }
@@ -39,9 +35,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-table.$prefix,
-        tokens-mat-table.get-typography-tokens($theme)
-      );
+        m2-table.$prefix, m2-table.get-typography-tokens($theme));
     }
   }
 }
@@ -52,9 +46,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-table.$prefix,
-        tokens-mat-table.get-density-tokens($theme)
-      );
+        m2-table.$prefix, m2-table.get-density-tokens($theme));
     }
   }
 }
@@ -63,8 +55,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-table.$prefix,
-      tokens: tokens-mat-table.get-token-slots(),
+      namespace: m2-table.$prefix,
+      tokens: m2-table.get-token-slots(),
     ),
   );
 }
@@ -98,8 +90,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-table.$prefix,
-      map.get($tokens, tokens-mat-table.$prefix)
+      m2-table.$prefix,
+      map.get($tokens, m2-table.$prefix)
     );
   }
 }

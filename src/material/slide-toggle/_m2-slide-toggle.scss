@@ -1,0 +1,167 @@
+@use '../core/style/elevation';
+@use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, switch);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+@function get-unthemable-tokens() {
+  // visible-track-opacity and hidden-track-opacity:
+  // The hidden and visible track represent whichever track is visible or
+  // hidden in the ui. This could be the .mdc-switch__track :before or
+  // :after depending on whether the switch is selected or unselected.
+  //
+  // The m2 slide-toggle uses transforms to hide & show the tracks while
+  // the m3 slide-toggle uses opacity.
+  @return (
+    disabled-handle-opacity: null,
+    disabled-selected-handle-opacity: 0.38,
+    disabled-selected-icon-opacity: 0.38,
+    disabled-track-opacity: 0.12,
+    disabled-unselected-handle-opacity: 0.38,
+    disabled-unselected-icon-opacity: 0.38,
+    disabled-unselected-track-outline-color: transparent,
+    disabled-unselected-track-outline-width: 1px,
+    handle-height: 20px,
+    handle-shape: 10px,
+    handle-width: 20px,
+    hidden-track-opacity: 1,
+    hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
+    pressed-handle-size: 20px,
+    selected-focus-state-layer-opacity: 0.12,
+    selected-handle-horizontal-margin: 0,
+    selected-handle-size: 20px,
+    selected-hover-state-layer-opacity: 0.04,
+    selected-icon-size: 18px,
+    selected-pressed-handle-horizontal-margin: 0,
+    selected-pressed-state-layer-opacity: 0.1,
+    selected-track-outline-color: transparent,
+    selected-track-outline-width: 1px,
+    selected-with-icon-handle-horizontal-margin: 0,
+    track-height: 14px,
+    track-outline-color: transparent,
+    track-outline-width: 1px,
+    track-shape: 7px,
+    track-width: 36px,
+    unselected-focus-state-layer-opacity: 0.12,
+    unselected-handle-horizontal-margin: 0,
+    unselected-handle-size: 20px,
+    unselected-hover-state-layer-opacity: 0.04,
+    unselected-icon-size: 18px,
+    unselected-pressed-handle-horizontal-margin: 0,
+    unselected-pressed-state-layer-opacity: 0.1,
+    unselected-with-icon-handle-horizontal-margin: 0,
+    visible-track-opacity: 1,
+    visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
+    with-icon-handle-size: 20px,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $on-surface: if($is-dark, #f5f5f5, #424242);
+  $hairline: if($is-dark, #616161, #e0e0e0);
+  $on-surface-variant: if($is-dark, #9e9e9e, #616161);
+  $on-surface-state-content: if($is-dark, #fafafa, #212121);
+  $disabled-handle-color: if($is-dark, #000, #424242);
+  $icon-color: if($is-dark, #212121, #fff);
+
+  // The default for tokens that rely on the theme will use the primary palette
+  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
+
+  // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mat-surface-color, #fff)`
+  // which made it basically hardcoded to #fff. Should it be based on the theme?
+  @return map.merge(
+      $theme-color-tokens,
+      (
+        disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
+        disabled-selected-handle-color: $disabled-handle-color,
+        disabled-selected-icon-color: $icon-color,
+        disabled-selected-track-color: $on-surface,
+        disabled-unselected-handle-color: $disabled-handle-color,
+        disabled-unselected-icon-color: $icon-color,
+        disabled-unselected-track-color: $on-surface,
+        handle-elevation-shadow: elevation.get-box-shadow(1),
+        handle-surface-color: #fff,
+        label-text-color: inspection.get-theme-color($theme, foreground, text),
+        selected-icon-color: $icon-color,
+        unselected-hover-handle-color: $on-surface-state-content,
+        unselected-focus-handle-color: $on-surface-state-content,
+        unselected-focus-state-layer-color: $on-surface,
+        unselected-focus-track-color: $hairline,
+        unselected-icon-color: $icon-color,
+        unselected-handle-color: $on-surface-variant,
+        unselected-hover-state-layer-color: $on-surface,
+        unselected-hover-track-color: $hairline,
+        unselected-pressed-handle-color: $on-surface-state-content,
+        unselected-pressed-track-color: $hairline,
+        unselected-pressed-state-layer-color: $on-surface,
+        unselected-track-color: $hairline,
+      )
+  );
+}
+
+// Generates the mapping for the properties that change based on the slide toggle color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+  $palette-color: inspection.get-theme-color($theme, $palette-name, if($is-dark, 300, 600));
+  $state-content: inspection.get-theme-color($theme, $palette-name, if($is-dark, 200, 900));
+  $inverse: inspection.get-theme-color($theme, $palette-name, if($is-dark, 600, 300));
+
+  @return (
+    selected-focus-state-layer-color: $palette-color,
+    selected-handle-color: $palette-color,
+    selected-hover-state-layer-color: $palette-color,
+    selected-pressed-state-layer-color: $palette-color,
+    selected-focus-handle-color: $state-content,
+    selected-hover-handle-color: $state-content,
+    selected-pressed-handle-color: $state-content,
+    selected-focus-track-color: $inverse,
+    selected-hover-track-color: $inverse,
+    selected-pressed-track-color: $inverse,
+    selected-track-color: $inverse,
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  @return (
+    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
+    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
+    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+
+  @return (
+    // The diameter of the handle ripple.
+    state-layer-size: map.get((
+      0: 40px,
+      -1: 36px,
+      -2: 32px,
+      -3: 28px,
+    ), $scale)
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+    get-unthemable-tokens(),
+    get-color-tokens(m2-utils.$placeholder-color-config),
+    get-typography-tokens(m2-utils.$placeholder-typography-config),
+    get-density-tokens(m2-utils.$placeholder-density-config)
+  );
+}

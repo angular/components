@@ -5,7 +5,7 @@
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/tree' as tokens-mat-tree;
+@use './m2-tree';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -20,8 +20,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-tree.$prefix,
-        tokens-mat-tree.get-color-tokens($theme)
+        m2-tree.$prefix,
+        m2-tree.get-color-tokens($theme)
       );
     }
   }
@@ -36,8 +36,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-tree.$prefix,
-        tokens-mat-tree.get-typography-tokens($theme)
+        m2-tree.$prefix,
+        m2-tree.get-typography-tokens($theme)
       );
     }
   }
@@ -51,8 +51,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-tree.$prefix,
-        tokens-mat-tree.get-density-tokens($theme)
+        m2-tree.$prefix,
+        m2-tree.get-density-tokens($theme)
       );
     }
   }
@@ -62,8 +62,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-tree.$prefix,
-      tokens: tokens-mat-tree.get-token-slots(),
+      namespace: m2-tree.$prefix,
+      tokens: m2-tree.get-token-slots(),
     ),
   );
 }
@@ -97,8 +97,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-tree.$prefix,
-      map.get($tokens, tokens-mat-tree.$prefix)
+      m2-tree.$prefix,
+      map.get($tokens, m2-tree.$prefix)
     );
   }
 }

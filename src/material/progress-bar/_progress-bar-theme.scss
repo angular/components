@@ -3,7 +3,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/linear-progress' as tokens-mat-linear-progress;
+@use './m2-progress-bar';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-progress-bar.
@@ -15,8 +15,8 @@
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-linear-progress.$prefix,
-        tokens-mat-linear-progress.get-unthemable-tokens()
+        m2-progress-bar.$prefix,
+        m2-progress-bar.get-unthemable-tokens()
       );
     }
   }
@@ -24,8 +24,8 @@
 
 @mixin _palette-styles($theme, $palette-name) {
   @include token-utils.create-token-values-mixed(
-    tokens-mat-linear-progress.$prefix,
-    tokens-mat-linear-progress.get-color-tokens($theme, $palette-name)
+    m2-progress-bar.$prefix,
+    m2-progress-bar.get-color-tokens($theme, $palette-name)
   );
 }
 
@@ -66,8 +66,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-linear-progress.$prefix,
-      tokens: tokens-mat-linear-progress.get-token-slots(),
+      namespace: m2-progress-bar.$prefix,
+      tokens: m2-progress-bar.get-token-slots(),
     ),
   );
 }
@@ -106,6 +106,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $tokens: token-utils.get-tokens-for($tokens, tokens-mat-linear-progress.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-linear-progress.$prefix, $tokens);
+  $tokens: token-utils.get-tokens-for($tokens, m2-progress-bar.$prefix, $options...);
+  @include token-utils.create-token-values(m2-progress-bar.$prefix, $tokens);
 }

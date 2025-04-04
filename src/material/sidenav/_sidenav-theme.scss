@@ -1,10 +1,10 @@
 @use 'sass:map';
-@use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/theming/validation';
-@use '../core/tokens/m2/mat/sidenav' as tokens-mat-sidenav;
-@use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
+@use './m2-sidenav';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -12,9 +12,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-sidenav.$prefix,
-        tokens-mat-sidenav.get-unthemable-tokens()
-      );
+        m2-sidenav.$prefix, m2-sidenav.get-unthemable-tokens());
     }
   }
 }
@@ -25,9 +23,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-sidenav.$prefix,
-        tokens-mat-sidenav.get-color-tokens($theme)
-      );
+        m2-sidenav.$prefix, m2-sidenav.get-color-tokens($theme));
     }
   }
 }
@@ -50,8 +46,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-sidenav.$prefix,
-      tokens: tokens-mat-sidenav.get-token-slots(),
+      namespace: m2-sidenav.$prefix,
+      tokens: m2-sidenav.get-token-slots(),
     ),
   );
 }
@@ -85,8 +81,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-sidenav.$prefix,
-      map.get($tokens, tokens-mat-sidenav.$prefix)
+      m2-sidenav.$prefix,
+      map.get($tokens, m2-sidenav.$prefix)
     );
   }
 }

@@ -3,7 +3,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mat/badge' as tokens-mat-badge;
+@use './m2-badge';
 @use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
 
@@ -16,8 +16,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-unthemable-tokens()
+        m2-badge.$prefix,
+        m2-badge.get-unthemable-tokens()
       );
     }
   }
@@ -34,22 +34,22 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-color-tokens($theme)
+        m2-badge.$prefix,
+        m2-badge.get-color-tokens($theme)
       );
     }
 
     .mat-badge-accent {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-badge.$prefix,
-        tokens-mat-badge.private-get-color-palette-color-tokens($theme, accent)
+        m2-badge.$prefix,
+        m2-badge.private-get-color-palette-color-tokens($theme, accent)
       );
     }
 
     .mat-badge-warn {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-badge.$prefix,
-        tokens-mat-badge.private-get-color-palette-color-tokens($theme, warn)
+        m2-badge.$prefix,
+        m2-badge.private-get-color-palette-color-tokens($theme, warn)
       );
     }
   }
@@ -63,8 +63,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-badge.$prefix,
-        tokens-mat-badge.get-typography-tokens($theme)
+        m2-badge.$prefix,
+        m2-badge.get-typography-tokens($theme)
       );
     }
   }
@@ -83,8 +83,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-badge.$prefix,
-      tokens: tokens-mat-badge.get-token-slots(),
+      namespace: m2-badge.$prefix,
+      tokens: m2-badge.get-token-slots(),
     ),
   );
 }
@@ -123,6 +123,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-badge-tokens: token-utils.get-tokens-for($tokens, tokens-mat-badge.$prefix, $options...);
-  @include token-utils.create-token-values(tokens-mat-badge.$prefix, $mat-badge-tokens);
+  $mat-badge-tokens: token-utils.get-tokens-for($tokens, m2-badge.$prefix, $options...);
+  @include token-utils.create-token-values(m2-badge.$prefix, $mat-badge-tokens);
 }
