@@ -1,4 +1,5 @@
 @use '@angular/cdk';
+@use '../button/m2-icon-button';
 @use '../button/m2-outlined-button';
 @use '../button/m2-text-button';
 @use '../core/style/variables';
@@ -19,7 +20,13 @@ $height-mobile-portrait: 56px !default;
     background: token-utils.slot(container-background-color);
     color: token-utils.slot(container-text-color);
 
-    &, h1, h2, h3, h4, h5, h6 {
+    &,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       font-family: token-utils.slot(title-text-font);
       font-size: token-utils.slot(title-text-size);
       line-height: token-utils.slot(title-text-line-height);
@@ -55,26 +62,33 @@ $height-mobile-portrait: 56px !default;
   .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
     $color-token: null;
 
-    @include token-utils.use-tokens(
-        $token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
       $color-token: token-utils.slot(container-text-color);
     }
 
-    @include token-utils.use-tokens(
-        m2-text-button.$prefix, m2-text-button.get-token-slots()) {
+    @include token-utils.use-tokens(m2-text-button.$prefix, m2-text-button.get-token-slots()) {
       $token: token-utils.get-token-variable-name(label-text-color);
       #{$token}: #{$color-token};
     }
 
     @include token-utils.use-tokens(
-        m2-outlined-button.$prefix, m2-outlined-button.get-token-slots()) {
+      m2-outlined-button.$prefix,
+      m2-outlined-button.get-token-slots()
+    ) {
       $token: token-utils.get-token-variable-name(label-text-color);
+      #{$token}: #{$color-token};
+    }
+
+    @include token-utils.use-tokens(m2-icon-button.$prefix, m2-icon-button.get-token-slots()) {
+      // Update icon button color to match label text color for consistency while overriding.
+      $token: token-utils.get-token-variable-name(icon-color);
       #{$token}: #{$color-token};
     }
   }
 }
 
-.mat-toolbar-row, .mat-toolbar-single-row {
+.mat-toolbar-row,
+.mat-toolbar-single-row {
   display: flex;
   box-sizing: border-box;
 
