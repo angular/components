@@ -536,18 +536,6 @@ export class MatAutocompleteTrigger
 
       if (!value) {
         this._clearPreviousSelectedOption(null, false);
-      } else if (this.panelOpen && !this.autocomplete.requireSelection) {
-        // Note that we don't reset this when `requireSelection` is enabled,
-        // because the option will be reset when the panel is closed.
-        const selectedOption = this.autocomplete.options?.find(option => option.selected);
-
-        if (selectedOption) {
-          const display = this._getDisplayValue(selectedOption.value);
-
-          if (value !== display) {
-            selectedOption.deselect(false);
-          }
-        }
       }
 
       if (this._canOpen() && this._hasFocus()) {
@@ -559,6 +547,20 @@ export class MatAutocompleteTrigger
         const valueOnAttach = this._valueOnLastKeydown ?? this._element.nativeElement.value;
         this._valueOnLastKeydown = null;
         this._openPanelInternal(valueOnAttach);
+      }
+
+       if (value && this.panelOpen && !this.autocomplete.requireSelection) {
+        // Note that we don't reset this when `requireSelection` is enabled,
+        // because the option will be reset when the panel is closed.
+        const selectedOption = this.autocomplete.options?.find(option => option.selected);
+
+        if (selectedOption) {
+          const display = this._getDisplayValue(selectedOption.value);
+
+          if (value !== display) {
+            selectedOption.deselect(false);
+          }
+        }
       }
     }
   }
