@@ -5,7 +5,7 @@
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 // Note: in M3 the "protected" button is called "elevated".
-$prefix: (mat, protected-button);
+$prefix: (mat, button-protected);
 
 /// Generates custom tokens for the mat-raised-button.
 /// @param {Map} $systems The MDC system tokens

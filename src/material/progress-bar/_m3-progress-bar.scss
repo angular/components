@@ -2,7 +2,7 @@
 @use '../core/tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, linear-progress);
+$prefix: (mat, progress-bar);
 
 /// Generates the tokens for MDC linear-progress
 /// @param {Map} $systems The MDC system tokens

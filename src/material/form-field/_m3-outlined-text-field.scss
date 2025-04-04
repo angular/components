@@ -3,7 +3,7 @@
 @use '../core/style/sass-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, outlined-text-field);
+$prefix: (mat, form-field-outlined);
 
 /// Generates the tokens for MDC outlined-text-field
 /// @param {Map} $systems The MDC system tokens
