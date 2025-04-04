@@ -71,7 +71,7 @@ npm_repositories()
 
 git_repository(
     name = "devinfra",
-    commit = "b9bcdb3f9dff85fbfe8d1ca1d95531ddfe475f80",
+    commit = "492cc1f5295d3ededcd6b226354a1e2924c64246",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
