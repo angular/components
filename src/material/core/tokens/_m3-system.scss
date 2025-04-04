@@ -130,13 +130,6 @@
 
   $sys-colors: _generate-sys-colors($ref, $type);
 
-  // Manually insert a subset of palette values that are used directly by components
-  // instead of system variables.
-  $sys-colors: map.set($sys-colors,
-    'neutral-variant20', map.get($ref, md-ref-palette, neutral-variant20));
-  $sys-colors: map.set($sys-colors,
-    'neutral10', map.get($ref, md-ref-palette, neutral10));
-
   & {
     @each $name, $value in $sys-colors {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
@@ -145,14 +138,19 @@
 }
 
 @function _generate-sys-colors($ref, $type) {
+  $palette-colors: definitions.md-ref-palette-values($ref);
+  @each $name, $value in $palette-colors {
+    $palette-colors: map.set($palette-colors, $name, map.get($ref, md-ref-palette, $name))
+  }
+
   $light-sys-colors: definitions.md-sys-color-values-light($ref);
   @if ($type == light) {
-    @return $light-sys-colors;
+    @return map.merge($palette-colors, $light-sys-colors);
   }
 
   $dark-sys-colors: definitions.md-sys-color-values-dark($ref);
   @if ($type == dark) {
-    @return $dark-sys-colors;
+    @return map.merge($palette-colors, $dark-sys-colors);
   }
 
   @if ($type == color-scheme) {
@@ -162,7 +160,7 @@
       $light-dark-sys-colors:
           map.set($light-dark-sys-colors, $name, light-dark($light-value, $dark-value));
     }
-    @return $light-dark-sys-colors;
+    @return map.merge($palette-colors, $light-dark-sys-colors);
   }
 
   @error 'Unknown theme-type provided: #{$type}';
@@ -246,14 +244,8 @@
         _create-system-app-vars-map(definitions.md-sys-state-values()),
     'md-sys-shape':
         _create-system-app-vars-map(definitions.md-sys-shape-values()),
-    // Add a subset of palette-specific colors used by components instead of system values
     'md-ref-palette':
-        _create-system-app-vars-map(
-          (
-            neutral10: '', // Form field native select option text color
-            neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
-          )
-        ),
+        _create-system-app-vars-map(definitions.md-ref-palette-values()),
   );
 
   @return sass-utils.deep-merge-all(
