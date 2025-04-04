@@ -34,6 +34,7 @@ export type ListboxInputs<V> = ListNavigationInputs<OptionPattern<V>> &
   ListTypeaheadInputs &
   ListFocusInputs<OptionPattern<V>> & {
     disabled: SignalLike<boolean>;
+    readonly: SignalLike<boolean>;
   };
 
 /** Controls the state of a listbox. */
@@ -94,6 +95,15 @@ export class ListboxPattern<V> {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
+    if (this.inputs.readonly()) {
+      return manager
+        .on(this.prevKey, () => this.prev())
+        .on(this.nextKey, () => this.next())
+        .on('Home', () => this.first())
+        .on('End', () => this.last())
+        .on(this.typeaheadRegexp, e => this.search(e.key));
+    }
+
     if (!this.followFocus()) {
       manager
         .on(this.prevKey, () => this.prev())
@@ -150,15 +160,17 @@ export class ListboxPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    if (this.inputs.multi()) {
-      manager
-        .on(e => this.goto(e, {toggle: true}))
-        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
-    } else {
-      manager.on(e => this.goto(e, {toggleOne: true}));
+    if (this.inputs.readonly()) {
+      manager.on(e => this.goto(e));
     }
 
-    return manager;
+    if (this.inputs.multi()) {
+      return manager
+        .on(e => this.goto(e, {toggle: true}))
+        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
+    }
+
+    return manager.on(e => this.goto(e, {toggleOne: true}));
   });
 
   constructor(readonly inputs: ListboxInputs<V>) {

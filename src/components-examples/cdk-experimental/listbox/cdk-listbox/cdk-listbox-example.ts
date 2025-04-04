@@ -30,6 +30,7 @@ export class CdkListboxExample {
   wrap = new FormControl(true, {nonNullable: true});
   multi = new FormControl(false, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
+  readonly = new FormControl(false, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});
 
   fruits = [

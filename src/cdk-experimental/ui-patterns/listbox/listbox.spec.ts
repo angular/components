@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {signal, WritableSignal} from '@angular/core';
 import {ListboxInputs, ListboxPattern} from './listbox';
 import {OptionPattern} from './option';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
@@ -33,6 +33,7 @@ describe('Listbox Pattern', () => {
       activeIndex: inputs.activeIndex ?? signal(0),
       typeaheadDelay: inputs.typeaheadDelay ?? signal(0.5),
       wrap: inputs.wrap ?? signal(true),
+      readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
       skipDisabled: inputs.skipDisabled ?? signal(true),
       multi: inputs.multi ?? signal(false),
@@ -148,6 +149,18 @@ describe('Listbox Pattern', () => {
       listbox.onKeydown(end());
       expect(listbox.inputs.activeIndex()).toBe(8);
     });
+
+    it('should be able to navigate in readonly mode', () => {
+      const {listbox} = getDefaultPatterns();
+      listbox.onKeydown(down());
+      expect(listbox.inputs.activeIndex()).toBe(1);
+      listbox.onKeydown(up());
+      expect(listbox.inputs.activeIndex()).toBe(0);
+      listbox.onKeydown(end());
+      expect(listbox.inputs.activeIndex()).toBe(8);
+      listbox.onKeydown(home());
+      expect(listbox.inputs.activeIndex()).toBe(0);
+    });
   });
 
   describe('Keyboard Selection', () => {
@@ -178,6 +191,22 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.activeIndex()).toBe(0);
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
+
+      it('should not be able to change selection when in readonly mode', () => {
+        const {listbox} = getDefaultPatterns({
+          value: signal(['Apple']),
+          readonly: signal(true),
+          multi: signal(false),
+          selectionMode: signal('follow'),
+        });
+
+        expect(listbox.inputs.activeIndex()).toBe(0);
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+
+        listbox.onKeydown(down());
+        expect(listbox.inputs.activeIndex()).toBe(1);
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
     });
 
     describe('explicit focus & single select', () => {
@@ -206,6 +235,17 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(enter());
         expect(listbox.inputs.value()).toEqual(['Apricot']);
+      });
+
+      it('should not be able to change selection when in readonly mode', () => {
+        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        readonly.set(true);
+        listbox.onKeydown(space());
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(down());
+        listbox.onKeydown(enter());
+        expect(listbox.inputs.value()).toEqual([]);
       });
     });
 
@@ -276,6 +316,29 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(end({control: true, shift: true}));
         expect(listbox.inputs.value()).toEqual(['Cantaloupe', 'Cherry', 'Clementine', 'Cranberry']);
+      });
+
+      it('should not be able to change selection when in readonly mode', () => {
+        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        readonly.set(true);
+        listbox.onKeydown(space());
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(down());
+        listbox.onKeydown(enter());
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(down({shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(end({control: true, shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+
+        listbox.onKeydown(home({control: true, shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
       });
     });
 
@@ -360,6 +423,19 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(end({control: true, shift: true}));
         expect(listbox.inputs.value()).toEqual(['Cantaloupe', 'Cherry', 'Clementine', 'Cranberry']);
+      });
+
+      it('should not be able to change selection when in readonly mode', () => {
+        const readonly = listbox.inputs.readonly as WritableSignal<boolean>;
+        readonly.set(true);
+        listbox.onKeydown(down());
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+
+        listbox.onKeydown(up());
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+
+        listbox.onKeydown(space({control: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
   });

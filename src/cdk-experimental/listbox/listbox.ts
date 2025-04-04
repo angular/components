@@ -89,6 +89,9 @@ export class CdkListbox<V> {
   /** Whether the listbox is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
+  /** Whether the listbox is readonly. */
+  readonly = input(false, {transform: booleanAttribute});
+
   /** The values of the current selected items. */
   value = model<V[]>([]);
 
