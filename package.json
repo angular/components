@@ -65,8 +65,8 @@
     "date-fns": "^4.1.0",
     "luxon": "^3.0.0",
     "moment": "^2.29.1",
-    "rxjs-tslint-rules": "^4.34.8",
     "rxjs": "^6.6.7",
+    "rxjs-tslint-rules": "^4.34.8",
     "tslib": "^2.3.1",
     "zone.js": "~0.15.0"
   },
@@ -223,6 +223,11 @@
         }
       },
       "@angular/localize": {
+        "dependencies": {
+          "@nginfra/angular-linking": "1.0.6"
+        }
+      },
+      "@angular/platform-server": {
         "dependencies": {
           "@nginfra/angular-linking": "1.0.6"
         }

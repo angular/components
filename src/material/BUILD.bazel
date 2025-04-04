@@ -184,6 +184,14 @@ ng_package(
         "//src/material/tree:theme",
     ],
     nested_packages = ["//src/material/schematics:npm_package"],
+    package_deps = [
+        ":node_modules/@angular/cdk",
+    ],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [get_legacy_label(t) for t in MATERIAL_TARGETS + MATERIAL_TESTING_TARGETS],
 )

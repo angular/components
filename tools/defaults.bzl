@@ -47,6 +47,7 @@ def npm_sass_library(**kwargs):
 def ng_package(
         name,
         package_name,
+        package_deps = [],
         srcs = [],
         deps = [],
         externals = PKG_EXTERNALS,
@@ -104,7 +105,8 @@ def ng_package(
     ng_package_interop(
         name = "pkg",
         src = ":%s" % name,
-        interop_deps = [d.replace("_legacy", "") for d in deps],
+        visibility = visibility,
+        interop_deps = [d.replace("_legacy", "") for d in deps] + package_deps,
         package_name = package_name,
     )
 

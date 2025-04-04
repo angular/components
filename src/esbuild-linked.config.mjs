@@ -7,6 +7,7 @@
  */
 
 export default {
+  conditions: ['ng-linked', 'module'],
+  tsconfig: import.meta.dirname + '/bazel-tsconfig-build.json',
   resolveExtensions: ['.js'],
-  format: 'esm',
 };

@@ -45,7 +45,6 @@ ng_project(
         ":version",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
         "//src/material/core:ripple",
         "//src/material/core/animation",
         "//src/material/core/common-behaviors",

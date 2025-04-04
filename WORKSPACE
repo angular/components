@@ -167,9 +167,10 @@ npm_translate_lock(
         "@angular/animations": "node ../../@nginfra/angular-linking/index.mjs",
         "@angular/common": "node ../../@nginfra/angular-linking/index.mjs",
         "@angular/forms": "node ../../@nginfra/angular-linking/index.mjs",
-        "@angular/platform-browser": "node ../../@nginfra/angular-linking/index.mjs",
-        "@angular/router": "node ../../@nginfra/angular-linking/index.mjs",
         "@angular/localize": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/platform-browser": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/platform-server": "node ../../@nginfra/angular-linking/index.mjs",
+        "@angular/router": "node ../../@nginfra/angular-linking/index.mjs",
     },
     data = [
         "//:package.json",
@@ -191,6 +192,17 @@ npm_translate_lock(
         "//src/youtube-player:package.json",
     ],
     npmrc = "//:.npmrc",
+    package_visibility = {
+        "@angular/cdk": ["//integration:__subpackages__"],
+        "@angular/cdk-experimental": ["//integration:__subpackages__"],
+        "@angular/material": ["//integration:__subpackages__"],
+        "@angular/material-experimental": ["//integration:__subpackages__"],
+        "@angular/google-maps": ["//integration:__subpackages__"],
+        "@angular/youtube-player": ["//integration:__subpackages__"],
+        "@angular/material-moment-adapter": ["//integration:__subpackages__"],
+        "@angular/material-date-fns-adapter": ["//integration:__subpackages__"],
+        "@angular/material-luxon-adapter": ["//integration:__subpackages__"],
+    },
     pnpm_lock = "//:pnpm-lock.yaml",
     update_pnpm_lock = True,
     verify_node_modules_ignored = "//:.bazelignore",
@@ -238,7 +250,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "devinfra",
-    commit = "b9bcdb3f9dff85fbfe8d1ca1d95531ddfe475f80",
+    commit = "492cc1f5295d3ededcd6b226354a1e2924c64246",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
@@ -252,7 +264,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "92127883c3a3714e63782a51bac1a7c03ec8b0f5",
+    commit = "60d0dbdf18224f5167da1a43f4de9c4cb717b593",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
