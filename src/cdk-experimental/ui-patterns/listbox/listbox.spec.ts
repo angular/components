@@ -35,7 +35,7 @@ describe('Listbox Pattern', () => {
       wrap: inputs.wrap ?? signal(true),
       disabled: inputs.disabled ?? signal(false),
       skipDisabled: inputs.skipDisabled ?? signal(true),
-      multiselectable: inputs.multiselectable ?? signal(false),
+      multi: inputs.multi ?? signal(false),
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
@@ -155,7 +155,7 @@ describe('Listbox Pattern', () => {
       it('should select an option on navigation', () => {
         const {listbox} = getDefaultPatterns({
           value: signal(['Apple']),
-          multiselectable: signal(false),
+          multi: signal(false),
           selectionMode: signal('follow'),
         });
 
@@ -187,7 +187,7 @@ describe('Listbox Pattern', () => {
         listbox = getDefaultPatterns({
           value: signal([]),
           selectionMode: signal('explicit'),
-          multiselectable: signal(false),
+          multi: signal(false),
         }).listbox;
       });
 
@@ -216,7 +216,7 @@ describe('Listbox Pattern', () => {
         listbox = getDefaultPatterns({
           value: signal([]),
           selectionMode: signal('explicit'),
-          multiselectable: signal(true),
+          multi: signal(true),
         }).listbox;
       });
 
@@ -285,7 +285,7 @@ describe('Listbox Pattern', () => {
       beforeEach(() => {
         listbox = getDefaultPatterns({
           value: signal(['Apple']),
-          multiselectable: signal(true),
+          multi: signal(true),
           selectionMode: signal('follow'),
         }).listbox;
       });

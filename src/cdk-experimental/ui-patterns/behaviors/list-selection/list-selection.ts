@@ -25,7 +25,7 @@ export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> {
   items: SignalLike<T[]>;
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable: SignalLike<boolean>;
+  multi: SignalLike<boolean>;
 
   /** The current value of the list selection. */
   value: WritableSignalLike<V[]>;
@@ -54,7 +54,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       return;
     }
 
-    if (!this.inputs.multiselectable()) {
+    if (!this.inputs.multi()) {
       this.deselectAll();
     }
 
@@ -86,7 +86,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Selects all items in the list. */
   selectAll() {
-    if (!this.inputs.multiselectable()) {
+    if (!this.inputs.multi()) {
       return; // Should we log a warning?
     }
 
