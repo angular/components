@@ -3,7 +3,7 @@
 @use '../core/tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, outlined-button);
+$prefix: (mat, button-outlined);
 
 /// Generates custom tokens for the mat-outlined-button.
 /// @param {Map} $systems The MDC system tokens

@@ -162,8 +162,8 @@ describe('M3 theme', () => {
         }
       `);
 
-      expect(css).toContain('--mat-filled-text-field-caret-color: magenta');
-      expect(css).not.toContain('--mat-outline-text-field-caret-color: magenta');
+      expect(css).toContain('--mat-form-field-filled-caret-color: magenta');
+      expect(css).not.toContain('--mat-form-field-outlined-caret-color: magenta');
       expectNoWarning(/`filled-caret-color` is deprecated/);
     });
 
@@ -174,8 +174,8 @@ describe('M3 theme', () => {
         }
       `);
 
-      expect(css).toContain('--mat-filled-text-field-caret-color: magenta');
-      expect(css).toContain('--mat-outlined-text-field-caret-color: magenta');
+      expect(css).toContain('--mat-form-field-filled-caret-color: magenta');
+      expect(css).toContain('--mat-form-field-outlined-caret-color: magenta');
       expectWarning(
         /Token `caret-color` is deprecated. Please use one of the following alternatives: filled-caret-color, outlined-caret-color/,
       );

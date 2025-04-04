@@ -4,7 +4,7 @@
 @use '../core/tokens/m2-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, outlined-card);
+$prefix: (mat, card-outlined);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
