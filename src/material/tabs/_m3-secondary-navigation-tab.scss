@@ -1,0 +1,17 @@
+@use '../core/tokens/m3-utils';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, secondary-navigation-tab);
+
+/// Generates the tokens for MDC tab
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC tab
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: (
+    container-height: if($exclude-hardcoded, null, 48px),
+  );
+
+  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+}

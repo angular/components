@@ -60,31 +60,31 @@
 @mixin mat-private-button-ripple($prefix, $slots) {
   @include token-utils.use-tokens($prefix, $slots) {
     .mat-ripple-element {
-      @include token-utils.create-token-slot(background-color, ripple-color);
+      background-color: token-utils.slot(ripple-color);
     }
 
     .mat-mdc-button-persistent-ripple::before {
-      @include token-utils.create-token-slot(background-color, state-layer-color);
+      background-color: token-utils.slot(state-layer-color);
     }
 
     &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
-      @include token-utils.create-token-slot(background-color, disabled-state-layer-color);
+      background-color: token-utils.slot(disabled-state-layer-color);
     }
 
     &:hover > .mat-mdc-button-persistent-ripple::before {
-      @include token-utils.create-token-slot(opacity, hover-state-layer-opacity);
+      opacity: token-utils.slot(hover-state-layer-opacity);
     }
 
     &.cdk-program-focused,
     &.cdk-keyboard-focused,
     &.mat-mdc-button-disabled-interactive:focus {
       > .mat-mdc-button-persistent-ripple::before {
-        @include token-utils.create-token-slot(opacity, focus-state-layer-opacity);
+        opacity: token-utils.slot(focus-state-layer-opacity);
       }
     }
 
     &:active > .mat-mdc-button-persistent-ripple::before {
-      @include token-utils.create-token-slot(opacity, pressed-state-layer-opacity);
+      opacity: token-utils.slot(pressed-state-layer-opacity);
     }
   }
 }
@@ -112,7 +112,7 @@
 // Adds an elevation shadow to a button.
 @mixin mat-private-button-elevation($token-name) {
   // MDC outputs a variable that is the same as the token name, but suffixed with `-shadow`.
-  box-shadow: token-utils.get-token-variable($token-name + '-shadow');
+  box-shadow: token-utils.slot($token-name + '-shadow');
 }
 
 @mixin mat-private-button-touch-target($is-square, $prefix, $slots) {
@@ -132,19 +132,19 @@
     }
 
     @include token-utils.use-tokens($prefix, $slots) {
-      @include token-utils.create-token-slot(display, touch-target-display);
+      display: token-utils.slot(touch-target-display);
     }
   }
 }
 
 @mixin mat-private-button-horizontal-layout($prefix, $slots, $has-with-icon-padding) {
   @include token-utils.use-tokens($prefix, $slots) {
-    $icon-spacing: token-utils.get-token-variable(icon-spacing, true);
-    $icon-offset: token-utils.get-token-variable(icon-offset, true);
+    $icon-spacing: token-utils.slot(icon-spacing, true);
+    $icon-offset: token-utils.slot(icon-offset, true);
 
     @if ($has-with-icon-padding) {
       $with-icon-horizontal-padding:
-        token-utils.get-token-variable(with-icon-horizontal-padding, true);
+        token-utils.slot(with-icon-horizontal-padding, true);
 
       // stylelint-disable-next-line selector-class-pattern
       &:has(.material-icons, mat-icon, [matButtonIcon]) {

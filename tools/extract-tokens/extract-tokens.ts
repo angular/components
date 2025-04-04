@@ -97,6 +97,7 @@ function extractTokens(themePath: string): Token[] {
   // console in JSON format. This call captures it so it can be parsed.
   // Note: this is using the synchronous `compileString`, even though the Sass docs claim the async
   // version is faster. From local testing the synchronous version was faster (~2s versus ~5s).
+  console.error(pathToFileURL(absoluteThemePath));
   compileString(toCompile, {
     loadPaths: [srcPath],
     url: pathToFileURL(absoluteThemePath),

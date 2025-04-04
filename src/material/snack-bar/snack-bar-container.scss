@@ -1,10 +1,13 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/snack-bar' as tokens-mat-snack-bar;
-@use '../core/tokens/m2/mat/text-button' as tokens-mat-text-button;
+@use './m2-snack-bar';
+@use '../button/m2-text-button';
 @use '../core/tokens/token-utils';
 @use '../core/style/elevation';
 
 $_side-padding: 8px;
+
+$token-prefix: m2-snack-bar.$prefix;
+$token-slots: m2-snack-bar.get-token-slots();
 
 @keyframes _mat-snack-bar-enter {
   from {
@@ -87,14 +90,11 @@ $_side-padding: 8px;
     outline: solid 1px;
   }
 
-  @include token-utils.use-tokens(
-    tokens-mat-snack-bar.$prefix,
-    tokens-mat-snack-bar.get-token-slots()
-  ) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-snack-bar-container & {
-      @include token-utils.create-token-slot(color, supporting-text-color);
-      @include token-utils.create-token-slot(border-radius, container-shape);
-      @include token-utils.create-token-slot(background-color, container-color);
+      color: token-utils.slot(supporting-text-color);
+      border-radius: token-utils.slot(container-shape);
+      background-color: token-utils.slot(container-color);
     }
   }
 }
@@ -111,15 +111,12 @@ $_side-padding: 8px;
     padding-right: 16px;
   }
 
-  @include token-utils.use-tokens(
-    tokens-mat-snack-bar.$prefix,
-    tokens-mat-snack-bar.get-token-slots()
-  ) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     .mat-mdc-snack-bar-container & {
-      @include token-utils.create-token-slot(font-family, supporting-text-font);
-      @include token-utils.create-token-slot(font-size, supporting-text-size);
-      @include token-utils.create-token-slot(font-weight, supporting-text-weight);
-      @include token-utils.create-token-slot(line-height, supporting-text-line-height);
+      font-family: token-utils.slot(supporting-text-font);
+      font-size: token-utils.slot(supporting-text-size);
+      font-weight: token-utils.slot(supporting-text-weight);
+      line-height: token-utils.slot(supporting-text-line-height);
     }
   }
 }
@@ -147,16 +144,13 @@ $_side-padding: 8px;
     // MDC's `action-label-text-color` should be able to do this, but the button theme has a
     // higher specificity so it ends up overriding it. Define our own variable that we can
     // use to control the color instead.
-    @include token-utils.use-tokens(
-      tokens-mat-snack-bar.$prefix,
-      tokens-mat-snack-bar.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(color, button-color);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(button-color);
     }
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values-mixed(tokens-mat-text-button.$prefix, (
+  @include token-utils.create-token-values-mixed(m2-text-button.$prefix, (
     state-layer-color: currentColor,
     ripple-color: currentColor,
   ));

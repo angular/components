@@ -1,7 +1,7 @@
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/card' as tokens-mat-card;
-@use '../core/tokens/m2/mat/elevated-card' as tokens-mat-elevated-card;
-@use '../core/tokens/m2/mat/outlined-card' as tokens-mat-outlined-card;
+@use './m2-card';
+@use './m2-elevated-card';
+@use './m2-outlined-card';
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -18,13 +18,11 @@ $mat-card-default-padding: 16px !default;
   border-width: 0;
 
   @include token-utils.use-tokens(
-    tokens-mat-elevated-card.$prefix,
-    tokens-mat-elevated-card.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(border-color, container-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(box-shadow, container-elevation);
+      m2-elevated-card.$prefix, m2-elevated-card.get-token-slots()) {
+    background-color: token-utils.slot(container-color);
+    border-color: token-utils.slot(container-color);
+    border-radius: token-utils.slot(container-shape);
+    box-shadow: token-utils.slot(container-elevation);
   }
 
   // Transparent card border for high-contrast mode.
@@ -41,24 +39,20 @@ $mat-card-default-padding: 16px !default;
     box-sizing: border-box;
 
     @include token-utils.use-tokens(
-      tokens-mat-elevated-card.$prefix,
-      tokens-mat-elevated-card.get-token-slots()
-    ) {
-      @include token-utils.create-token-slot(border-radius, container-shape);
+        m2-elevated-card.$prefix, m2-elevated-card.get-token-slots()) {
+      border-radius: token-utils.slot(container-shape);
     }
   }
 }
 
 .mat-mdc-card-outlined {
   @include token-utils.use-tokens(
-    tokens-mat-outlined-card.$prefix,
-    tokens-mat-outlined-card.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(border-width, outline-width);
-    @include token-utils.create-token-slot(border-color, outline-color);
-    @include token-utils.create-token-slot(box-shadow, container-elevation);
+      m2-outlined-card.$prefix, m2-outlined-card.get-token-slots()) {
+    background-color: token-utils.slot(container-color);
+    border-radius: token-utils.slot(container-shape);
+    border-width: token-utils.slot(outline-width);
+    border-color: token-utils.slot(outline-color);
+    box-shadow: token-utils.slot(container-elevation);
   }
 
   // Outlined card already displays border in high-contrast mode.
@@ -101,22 +95,22 @@ $mat-card-default-padding: 16px !default;
 }
 
 // Add slots for custom Angular Material card tokens.
-@include token-utils.use-tokens(tokens-mat-card.$prefix, tokens-mat-card.get-token-slots()) {
+@include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
   .mat-mdc-card-title {
-    @include token-utils.create-token-slot(font-family, title-text-font);
-    @include token-utils.create-token-slot(line-height, title-text-line-height);
-    @include token-utils.create-token-slot(font-size, title-text-size);
-    @include token-utils.create-token-slot(letter-spacing, title-text-tracking);
-    @include token-utils.create-token-slot(font-weight, title-text-weight);
+    font-family: token-utils.slot(title-text-font);
+    line-height: token-utils.slot(title-text-line-height);
+    font-size: token-utils.slot(title-text-size);
+    letter-spacing: token-utils.slot(title-text-tracking);
+    font-weight: token-utils.slot(title-text-weight);
   }
 
   .mat-mdc-card-subtitle {
-    @include token-utils.create-token-slot(color, subtitle-text-color);
-    @include token-utils.create-token-slot(font-family, subtitle-text-font);
-    @include token-utils.create-token-slot(line-height, subtitle-text-line-height);
-    @include token-utils.create-token-slot(font-size, subtitle-text-size);
-    @include token-utils.create-token-slot(letter-spacing, subtitle-text-tracking);
-    @include token-utils.create-token-slot(font-weight, subtitle-text-weight);
+    color: token-utils.slot(subtitle-text-color);
+    font-family: token-utils.slot(subtitle-text-font);
+    line-height: token-utils.slot(subtitle-text-line-height);
+    font-size: token-utils.slot(subtitle-text-size);
+    letter-spacing: token-utils.slot(subtitle-text-tracking);
+    font-weight: token-utils.slot(subtitle-text-weight);
   }
 }
 

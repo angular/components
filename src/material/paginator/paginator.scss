@@ -1,5 +1,5 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/paginator' as tokens-mat-paginator;
+@use './m2-paginator';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 
@@ -14,34 +14,29 @@ $touch-target-height: 48px;
 $range-label-margin: 0 32px 0 24px;
 $button-icon-size: 28px;
 
+$token-prefix: m2-paginator.$prefix;
+$token-slots: m2-paginator.get-token-slots();
+
 .mat-mdc-paginator {
   display: block;
 
-  @include token-utils.use-tokens(
-    tokens-mat-paginator.$prefix,
-    tokens-mat-paginator.get-token-slots()
-  ) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     @include vendor-prefixes.smooth-font();
-    @include token-utils.create-token-slot(color, container-text-color);
-    @include token-utils.create-token-slot(background-color, container-background-color);
-    @include token-utils.create-token-slot(font-family, container-text-font);
-    @include token-utils.create-token-slot(line-height, container-text-line-height);
-    @include token-utils.create-token-slot(font-size, container-text-size);
-    @include token-utils.create-token-slot(font-weight, container-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
+    color: token-utils.slot(container-text-color);
+    background-color: token-utils.slot(container-background-color);
+    font-family: token-utils.slot(container-text-font);
+    line-height: token-utils.slot(container-text-line-height);
+    font-size: token-utils.slot(container-text-size);
+    font-weight: token-utils.slot(container-text-weight);
+    letter-spacing: token-utils.slot(container-text-tracking);
 
     // Apply custom form-field density for paginator.
-    @include token-utils.create-token-slot(
-      --mat-form-field-container-height,
-      form-field-container-height
-    );
-    @include token-utils.create-token-slot(
-      --mat-form-field-container-vertical-padding,
-      form-field-container-vertical-padding
-    );
+    --mat-form-field-container-height: #{token-utils.slot(form-field-container-height)};
+    --mat-form-field-container-vertical-padding: #{
+        token-utils.slot(form-field-container-vertical-padding)};
 
     .mat-mdc-select-value {
-      @include token-utils.create-token-slot(font-size, select-trigger-text-size);
+      font-size: #{token-utils.slot(select-trigger-text-size)};
     }
   }
 
@@ -72,11 +67,8 @@ $button-icon-size: 28px;
   flex-wrap: wrap;
   width: 100%;
 
-  @include token-utils.use-tokens(
-    tokens-mat-paginator.$prefix,
-    tokens-mat-paginator.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(min-height, container-size);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    min-height: token-utils.slot(container-size);
   }
 }
 
@@ -113,14 +105,11 @@ $button-icon-size: 28px;
   display: inline-block;
   width: $button-icon-size;
 
-  @include token-utils.use-tokens(
-    tokens-mat-paginator.$prefix,
-    tokens-mat-paginator.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(fill, enabled-icon-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    fill: token-utils.slot(enabled-icon-color);
 
     .mat-mdc-icon-button[aria-disabled] & {
-      @include token-utils.create-token-slot(fill, disabled-icon-color);
+      fill: token-utils.slot(disabled-icon-color);
     }
   }
 
@@ -146,11 +135,8 @@ $button-icon-size: 28px;
 }
 
 .mat-mdc-paginator-touch-target {
-  @include token-utils.use-tokens(
-    tokens-mat-paginator.$prefix,
-    tokens-mat-paginator.get-token-slots()
-  ) {
-    @include token-utils.create-token-slot(display, touch-target-display);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    display: token-utils.slot(touch-target-display);
   }
 
   position: absolute;

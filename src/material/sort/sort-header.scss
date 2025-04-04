@@ -1,4 +1,4 @@
-@use '../core/tokens/m2/mat/sort' as tokens-mat-sort;
+@use './m2-sort';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private';
 
@@ -77,8 +77,8 @@
   opacity: 0;
   overflow: visible;
 
-  @include token-utils.use-tokens(tokens-mat-sort.$prefix, tokens-mat-sort.get-token-slots()) {
-    @include token-utils.create-token-slot(color, arrow-color);
+  @include token-utils.use-tokens(m2-sort.$prefix, m2-sort.get-token-slots()) {
+    color: token-utils.slot(arrow-color);
   }
 
   .mat-sort-header.cdk-keyboard-focused &,

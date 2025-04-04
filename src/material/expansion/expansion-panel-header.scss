@@ -1,7 +1,10 @@
 @use '@angular/cdk';
-@use '../core/tokens/m2/mat/expansion' as tokens-mat-expansion;
+@use './m2-expansion';
 @use '../core/tokens/token-utils';
 @use './expansion-variables';
+
+$token-prefix: m2-expansion.$prefix;
+$token-slots: m2-expansion.get-token-slots();
 
 .mat-expansion-panel-header {
   display: flex;
@@ -19,40 +22,39 @@
     border-radius: inherit;
   }
 
-  @include token-utils.use-tokens(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-    @include token-utils.create-token-slot(height, header-collapsed-state-height);
-    @include token-utils.create-token-slot(font-family, header-text-font);
-    @include token-utils.create-token-slot(font-size, header-text-size);
-    @include token-utils.create-token-slot(font-weight, header-text-weight);
-    @include token-utils.create-token-slot(line-height, header-text-line-height);
-    @include token-utils.create-token-slot(letter-spacing, header-text-tracking);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    height: token-utils.slot(header-collapsed-state-height);
+    font-family: token-utils.slot(header-text-font);
+    font-size: token-utils.slot(header-text-size);
+    font-weight: token-utils.slot(header-text-weight);
+    line-height: token-utils.slot(header-text-line-height);
+    letter-spacing: token-utils.slot(header-text-tracking);
 
     &.mat-expanded {
-      @include token-utils.create-token-slot(height, header-expanded-state-height);
+      height: token-utils.slot(header-expanded-state-height);
     }
 
     &[aria-disabled='true'] {
-      @include token-utils.create-token-slot(color, header-disabled-state-text-color);
+      color: token-utils.slot(header-disabled-state-text-color);
     }
 
     &:not([aria-disabled='true']) {
       cursor: pointer;
 
       .mat-expansion-panel:not(.mat-expanded) &:hover {
-        @include token-utils.create-token-slot(background, header-hover-state-layer-color);
+        background: token-utils.slot(header-hover-state-layer-color);
 
         // Disable the hover on touch devices since it can appear like it is stuck. We can't use
         // `@media (hover)` above, because the desktop support browser support isn't great.
         @media (hover: none) {
-          @include token-utils.create-token-slot(background, container-background-color);
+          background: token-utils.slot(container-background-color);
         }
       }
 
       // The `.mat-expansion-panel` here is redundant, but we need the additional specificity.
       .mat-expansion-panel &.cdk-keyboard-focused,
       .mat-expansion-panel &.cdk-program-focused {
-        @include token-utils.create-token-slot(background, header-focus-state-layer-color);
+        background: token-utils.slot(header-focus-state-layer-color);
       }
     }
   }
@@ -113,9 +115,8 @@
 }
 
 .mat-expansion-panel-header-title {
-  @include token-utils.use-tokens(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-    @include token-utils.create-token-slot(color, header-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(header-text-color);
   }
 }
 
@@ -140,9 +141,8 @@
 .mat-expansion-panel-header-description {
   flex-grow: 2;
 
-  @include token-utils.use-tokens(
-    tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-    @include token-utils.create-token-slot(color, header-description-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(header-description-color);
   }
 }
 
@@ -166,10 +166,9 @@
     transform: rotate(45deg);
     vertical-align: middle;
 
-    @include token-utils.use-tokens(
-      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-      @include token-utils.create-token-slot(color, header-indicator-color);
-      @include token-utils.create-token-slot(display, legacy-header-indicator-display,
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(header-indicator-color);
+      display: token-utils.slot(legacy-header-indicator-display,
         inline-block);
     }
   }
@@ -186,10 +185,9 @@
     // Ideally we'd make the container `inline-flex`, but that affects M2.
     vertical-align: middle;
 
-    @include token-utils.use-tokens(
-      tokens-mat-expansion.$prefix, tokens-mat-expansion.get-token-slots()) {
-      @include token-utils.create-token-slot(fill, header-indicator-color);
-      @include token-utils.create-token-slot(display, header-indicator-display, none);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      fill: token-utils.slot(header-indicator-color);
+      display: token-utils.slot(header-indicator-display, none);
     }
   }
 }

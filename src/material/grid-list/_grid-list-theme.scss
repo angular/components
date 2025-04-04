@@ -3,7 +3,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/typography/typography';
-@use '../core/tokens/m2/mat/grid-list' as tokens-mat-grid-list;
+@use './m2-grid-list';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 
@@ -28,9 +28,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-grid-list.$prefix,
-        tokens-mat-grid-list.get-typography-tokens($theme)
-      );
+        m2-grid-list.$prefix, m2-grid-list.get-typography-tokens($theme));
     }
   }
 }
@@ -46,8 +44,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-grid-list.$prefix,
-      tokens: tokens-mat-grid-list.get-token-slots(),
+      namespace: m2-grid-list.$prefix,
+      tokens: m2-grid-list.get-token-slots(),
     ),
   );
 }
@@ -81,8 +79,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-grid-list.$prefix,
-      map.get($tokens, tokens-mat-grid-list.$prefix)
+      m2-grid-list.$prefix,
+      map.get($tokens, m2-grid-list.$prefix)
     );
   }
 }

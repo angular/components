@@ -1,6 +1,6 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m2/mat/form-field' as tokens-mat-form-field;
+@use './m2-form-field';
 @use './form-field-subscript';
 @use './form-field-focus-overlay';
 @use './form-field-high-contrast';
@@ -45,17 +45,17 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
+  @include token-utils.use-tokens(
+      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
     @include vendor-prefixes.smooth-font();
-    @include token-utils.create-token-slot(font-family, container-text-font);
-    @include token-utils.create-token-slot(line-height, container-text-line-height);
-    @include token-utils.create-token-slot(font-size, container-text-size);
-    @include token-utils.create-token-slot(letter-spacing, container-text-tracking);
-    @include token-utils.create-token-slot(font-weight, container-text-weight);
+    font-family: token-utils.slot(container-text-font);
+    line-height: token-utils.slot(container-text-line-height);
+    font-size: token-utils.slot(container-text-size);
+    letter-spacing: token-utils.slot(container-text-tracking);
+    font-weight: token-utils.slot(container-text-weight);
 
     .mdc-text-field--outlined {
-      $token-value: token-utils.get-token-variable(outlined-label-text-populated-size);
+      $token-value: token-utils.slot(outlined-label-text-populated-size);
 
       // For the non-upgraded notch label (i.e. when rendered on the server), also
       // use the correct typography.
@@ -115,36 +115,36 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-prefix {
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
-    @include token-utils.create-token-slot(color, leading-icon-color);
+  @include token-utils.use-tokens(
+      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    color: token-utils.slot(leading-icon-color);
 
     .mat-form-field-disabled & {
-      @include token-utils.create-token-slot(color, disabled-leading-icon-color);
+      color: token-utils.slot(disabled-leading-icon-color);
     }
   }
 }
 
 .mat-mdc-form-field-icon-suffix {
-  @include token-utils.use-tokens(tokens-mat-form-field.$prefix,
-    tokens-mat-form-field.get-token-slots()) {
-    @include token-utils.create-token-slot(color, trailing-icon-color);
+  @include token-utils.use-tokens(
+      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    color: token-utils.slot(trailing-icon-color);
 
     .mat-form-field-disabled & {
-      @include token-utils.create-token-slot(color, disabled-trailing-icon-color);
+      color: token-utils.slot(disabled-trailing-icon-color);
     }
 
     .mat-form-field-invalid & {
-      @include token-utils.create-token-slot(color, error-trailing-icon-color);
+      color: token-utils.slot(error-trailing-icon-color);
     }
 
     .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled)
       .mat-mdc-text-field-wrapper:hover & {
-      @include token-utils.create-token-slot(color, error-hover-trailing-icon-color);
+      color: token-utils.slot(error-hover-trailing-icon-color);
     }
 
     .mat-form-field-invalid.mat-focused .mat-mdc-text-field-wrapper & {
-      @include token-utils.create-token-slot(color, error-focus-trailing-icon-color);
+      color: token-utils.slot(error-focus-trailing-icon-color);
     }
   }
 }

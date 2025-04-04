@@ -3,7 +3,7 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/style/variables';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/select' as tokens-mat-select;
+@use './m2-select';
 
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
@@ -12,6 +12,9 @@ $mat-select-placeholder-arrow-space: 2 *
   ($mat-select-arrow-size + $mat-select-arrow-margin);
 $leading-width: 12px !default;
 $scale: 0.75 !default;
+
+$token-prefix: m2-select.$prefix;
+$token-slots: m2-select.get-token-slots();
 
 @keyframes _mat-select-enter {
   from {
@@ -40,33 +43,30 @@ $scale: 0.75 !default;
   width: 100%;
   outline: none;
 
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
     @include vendor-prefixes.smooth-font();
-    @include token-utils.create-token-slot(color, enabled-trigger-text-color);
-    @include token-utils.create-token-slot(font-family, trigger-text-font);
-    @include token-utils.create-token-slot(line-height, trigger-text-line-height);
-    @include token-utils.create-token-slot(font-size, trigger-text-size);
-    @include token-utils.create-token-slot(font-weight, trigger-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, trigger-text-tracking);
+    color: token-utils.slot(enabled-trigger-text-color);
+    font-family: token-utils.slot(trigger-text-font);
+    line-height: token-utils.slot(trigger-text-line-height);
+    font-size: token-utils.slot(trigger-text-size);
+    font-weight: token-utils.slot(trigger-text-weight);
+    letter-spacing: token-utils.slot(trigger-text-tracking);
   }
 }
-@include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   div.mat-mdc-select-panel {
-    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+    box-shadow: token-utils.slot(container-elevation-shadow);
   }
 }
 
 .mat-mdc-select-disabled {
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, disabled-trigger-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(disabled-trigger-text-color);
   }
 
   .mat-mdc-select-placeholder {
-    @include token-utils.use-tokens(
-      tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-      @include token-utils.create-token-slot(color, disabled-trigger-text-color);
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      color: token-utils.slot(disabled-trigger-text-color);
     }
   }
 }
@@ -111,8 +111,8 @@ $scale: 0.75 !default;
 
 .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid .mat-mdc-select-arrow,
 .mat-form-field-invalid:not(.mat-form-field-disabled) .mat-mdc-form-field-infix::after {
-  @include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, invalid-arrow-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(invalid-arrow-color);
   }
 }
 
@@ -121,16 +121,15 @@ $scale: 0.75 !default;
   height: $mat-select-arrow-size;
   position: relative;
 
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, enabled-arrow-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(enabled-arrow-color);
 
     .mat-mdc-form-field.mat-focused & {
-      @include token-utils.create-token-slot(color, focused-arrow-color);
+      color: token-utils.slot(focused-arrow-color);
     }
 
     .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-disabled & {
-      @include token-utils.create-token-slot(color, disabled-arrow-color);
+      color: token-utils.slot(disabled-arrow-color);
     }
   }
 
@@ -168,9 +167,8 @@ div.mat-mdc-select-panel {
   // Workaround in case other MDC menu surface styles bleed in.
   position: static;
 
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(background-color, panel-background-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    background-color: token-utils.slot(panel-background-color);
   }
 
   @include cdk.high-contrast {
@@ -209,9 +207,8 @@ div.mat-mdc-select-panel {
       math.div(variables.$swift-ease-out-duration, 3)
       variables.$swift-ease-out-timing-function;
 
-  @include token-utils.use-tokens(
-    tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
-    @include token-utils.create-token-slot(color, placeholder-text-color);
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    color: token-utils.slot(placeholder-text-color);
   }
 
   .mat-mdc-form-field:not(.mat-form-field-animations-enabled) &,
@@ -277,8 +274,8 @@ div.mat-mdc-select-panel {
   visibility: hidden;
 }
 
-@include token-utils.use-tokens(tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots) {
   .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
-    @include token-utils.create-token-slot(transform, arrow-transform);
+    transform: token-utils.slot(arrow-transform);
   }
 }

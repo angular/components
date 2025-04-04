@@ -3,9 +3,16 @@
 @use '../core/style/private' as style-private;
 @use '../core/style/vendor-prefixes';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use '../core/tokens/m2/mat/extended-fab' as tokens-mat-extended-fab;
-@use '../core/tokens/m2/mat/fab' as tokens-mat-fab;
-@use '../core/tokens/m2/mat/fab-small' as tokens-mat-fab-small;
+@use './m2-extended-fab';
+@use './m2-fab';
+@use './m2-fab-small';
+
+$extended-fab-token-prefix: m2-extended-fab.$prefix;
+$extended-fab-token-slots: m2-extended-fab.get-token-slots();
+$fab-token-prefix: m2-fab.$prefix;
+$fab-token-slots: m2-fab.get-token-slots();
+$fab-small-token-prefix: m2-fab-small.$prefix;
+$fab-small-token-slots: m2-fab-small.get-token-slots();
 
 .mat-mdc-fab-base {
   @include vendor-prefixes.user-select(none);
@@ -96,38 +103,38 @@
 
 @mixin _fab-elevation($mat-tokens) {
   @include token-utils.use-tokens($mat-tokens...) {
-    @include token-utils.create-token-slot(box-shadow, container-elevation-shadow);
+    box-shadow: token-utils.slot(container-elevation-shadow);
 
     &:hover {
-      @include token-utils.create-token-slot(box-shadow, hover-container-elevation-shadow);
+      box-shadow: token-utils.slot(hover-container-elevation-shadow);
     }
 
     &:focus {
-      @include token-utils.create-token-slot(box-shadow, focus-container-elevation-shadow);
+      box-shadow: token-utils.slot(focus-container-elevation-shadow);
     }
 
     &:active, &:focus:active {
-      @include token-utils.create-token-slot(box-shadow, pressed-container-elevation-shadow);
+      box-shadow: token-utils.slot(pressed-container-elevation-shadow);
     }
   }
 }
 
 @mixin _fab-structure($mat-tokens) {
   @include token-utils.use-tokens($mat-tokens...) {
-    @include token-utils.create-token-slot(background-color, container-color);
-    @include token-utils.create-token-slot(border-radius, container-shape);
+    background-color: token-utils.slot(container-color);
+    border-radius: token-utils.slot(container-shape);
   }
 
   @include token-utils.use-tokens($mat-tokens...) {
-    @include token-utils.create-token-slot(color, foreground-color, inherit);
+    color: token-utils.slot(foreground-color, inherit);
   }
 
   @include _fab-elevation($mat-tokens);
 
   @include button-base.mat-private-button-disabled {
     @include token-utils.use-tokens($mat-tokens...) {
-      @include token-utils.create-token-slot(color, disabled-state-foreground-color);
-      @include token-utils.create-token-slot(background-color, disabled-state-container-color);
+      color: token-utils.slot(disabled-state-foreground-color);
+      background-color: token-utils.slot(disabled-state-container-color);
     }
   }
 
@@ -136,22 +143,18 @@
 }
 
 .mat-mdc-fab {
-  @include _fab-structure(
-    (tokens-mat-fab.$prefix, tokens-mat-fab.get-token-slots()),
-  );
+  @include _fab-structure(($fab-token-prefix, $fab-token-slots));
 }
 
 .mat-mdc-mini-fab {
   width: 40px;
   height: 40px;
 
-  @include _fab-structure(
-    (tokens-mat-fab-small.$prefix, tokens-mat-fab-small.get-token-slots()),
-  );
+  @include _fab-structure(($fab-small-token-prefix, $fab-small-token-slots));
 }
 
 .mat-mdc-extended-fab {
-  $mat-tokens: (tokens-mat-extended-fab.$prefix, tokens-mat-extended-fab.get-token-slots());
+  $mat-tokens: ($extended-fab-token-prefix, $extended-fab-token-slots);
 
   // Before tokens MDC included the font smoothing automatically, but with
   // tokens it doesn't. We add it since it can cause tiny differences in
@@ -165,12 +168,12 @@
   line-height: normal;
 
   @include token-utils.use-tokens($mat-tokens...) {
-    @include token-utils.create-token-slot(height, container-height);
-    @include token-utils.create-token-slot(border-radius, container-shape);
-    @include token-utils.create-token-slot(font-family, label-text-font);
-    @include token-utils.create-token-slot(font-size, label-text-size);
-    @include token-utils.create-token-slot(font-weight, label-text-weight);
-    @include token-utils.create-token-slot(letter-spacing, label-text-tracking);
+    height: token-utils.slot(container-height);
+    border-radius: token-utils.slot(container-shape);
+    font-family: token-utils.slot(label-text-font);
+    font-size: token-utils.slot(label-text-size);
+    font-weight: token-utils.slot(label-text-weight);
+    letter-spacing: token-utils.slot(label-text-tracking);
   }
 
   @include _fab-elevation($mat-tokens);

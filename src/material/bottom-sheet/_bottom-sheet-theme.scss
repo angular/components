@@ -5,7 +5,7 @@
 @use '../core/theming/validation';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m2/mat/bottom-sheet' as tokens-mat-bottom-sheet;
+@use './m2-bottom-sheet';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -13,8 +13,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-bottom-sheet.$prefix,
-        tokens-mat-bottom-sheet.get-unthemable-tokens()
+        m2-bottom-sheet.$prefix,
+        m2-bottom-sheet.get-unthemable-tokens()
       );
     }
   }
@@ -26,8 +26,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-bottom-sheet.$prefix,
-        tokens-mat-bottom-sheet.get-color-tokens($theme)
+        m2-bottom-sheet.$prefix,
+        m2-bottom-sheet.get-color-tokens($theme)
       );
     }
   }
@@ -39,8 +39,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-bottom-sheet.$prefix,
-        tokens-mat-bottom-sheet.get-typography-tokens($theme)
+        m2-bottom-sheet.$prefix,
+        m2-bottom-sheet.get-typography-tokens($theme)
       );
     }
   }
@@ -57,8 +57,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-bottom-sheet.$prefix,
-      tokens: tokens-mat-bottom-sheet.get-token-slots(),
+      namespace: m2-bottom-sheet.$prefix,
+      tokens: m2-bottom-sheet.get-token-slots(),
     ),
   );
 }
@@ -92,8 +92,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-bottom-sheet.$prefix,
-      map.get($tokens, tokens-mat-bottom-sheet.$prefix)
+      m2-bottom-sheet.$prefix,
+      map.get($tokens, m2-bottom-sheet.$prefix)
     );
   }
 }

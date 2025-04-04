@@ -1,16 +1,16 @@
 @use 'sass:map';
-@use '../core/theming/theming';
-@use '../core/theming/inspection';
-@use '../core/theming/validation';
-@use '../core/typography/typography';
-@use '../core/tokens/m2/mat/toolbar' as tokens-mat-toolbar;
-@use '../core/tokens/token-utils';
 @use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/theming/validation';
+@use '../core/tokens/token-utils';
+@use '../core/typography/typography';
+@use './m2-toolbar';
 
 @mixin _palette-styles($theme, $palette-name) {
   @include token-utils.create-token-values-mixed(
-    tokens-mat-toolbar.$prefix,
-    tokens-mat-toolbar.private-get-color-palette-color-tokens(
+    m2-toolbar.$prefix,
+    m2-toolbar.private-get-color-palette-color-tokens(
       $background-color: inspection.get-theme-color($theme, $palette-name),
       $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
     )
@@ -26,8 +26,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-toolbar.$prefix,
-        tokens-mat-toolbar.get-color-tokens($theme)
+        m2-toolbar.$prefix,
+        m2-toolbar.get-color-tokens($theme)
       );
     }
 
@@ -56,8 +56,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-toolbar.$prefix,
-        tokens-mat-toolbar.get-typography-tokens($theme)
+        m2-toolbar.$prefix,
+        m2-toolbar.get-typography-tokens($theme)
       );
     }
   }
@@ -69,8 +69,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        tokens-mat-toolbar.$prefix,
-        tokens-mat-toolbar.get-density-tokens($theme)
+        m2-toolbar.$prefix,
+        m2-toolbar.get-density-tokens($theme)
       );
     }
   }
@@ -80,8 +80,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: tokens-mat-toolbar.$prefix,
-      tokens: tokens-mat-toolbar.get-token-slots(),
+      namespace: m2-toolbar.$prefix,
+      tokens: m2-toolbar.get-token-slots(),
     ),
   );
 }
@@ -117,8 +117,8 @@
   );
   @if ($tokens != ()) {
     @include token-utils.create-token-values(
-      tokens-mat-toolbar.$prefix,
-      map.get($tokens, tokens-mat-toolbar.$prefix)
+      m2-toolbar.$prefix,
+      map.get($tokens, m2-toolbar.$prefix)
     );
   }
 }
