@@ -4,6 +4,11 @@ load("//tools:defaults.bzl", "http_server", "protractor_web_test_suite", "sass_b
 load("//tools:defaults2.bzl", "ng_project", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("//src/cdk:config.bzl", "CDK_TARGETS")
+load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
+load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
+load("//src/material:config.bzl", "MATERIAL_TARGETS")
+load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -86,6 +91,8 @@ js_binary(
 
 esbuild(
     name = "client_bundle",
+    srcs = ["//src:build-tsconfig"],
+    config = "//src:esbuild-linked-config",
     entry_points = [":main.js"],
     platform = "browser",
     target = "es2016",
@@ -96,6 +103,8 @@ esbuild(
 
 esbuild(
     name = "prerender_bundle",
+    srcs = ["//src:build-tsconfig"],
+    config = "//src:esbuild-linked-config",
     entry_point = ":prerender.js",
     platform = "node",
     # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.

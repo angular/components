@@ -42,6 +42,16 @@ ng_package(
         "package.json",
         ":sass_lib",
     ],
+    package_deps = [
+        ":node_modules/@angular/material",
+        ":node_modules/@angular/cdk",
+        ":node_modules/@angular/cdk-experimental",
+    ],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [get_legacy_label(t) for t in MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS],
 )

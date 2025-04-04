@@ -22,7 +22,13 @@
     "@angular/common": "0.0.0-NG",
     "@angular/forms": "0.0.0-NG",
     "@angular/platform-browser": "0.0.0-NG",
-    "@angular/material": "0.0.0-PLACEHOLDER"
+    "@angular/material": "0.0.0-PLACEHOLDER",
+    "@angular/cdk-experimental": "0.0.0-PLACEHOLDER"
+  },
+  "devDependencies": {
+    "@angular/material": "workspace:*",
+    "@angular/cdk": "workspace:*",
+    "@angular/cdk-experimental": "workspace:*"
   },
   "dependencies": {
     "tslib": "^2.3.0"

@@ -5,6 +5,7 @@ load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load("//tools/dgeni:index.bzl", "dgeni_api_docs")
 load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -35,6 +36,11 @@ ts_config(
 copy_to_bin(
     name = "package_json",
     srcs = ["package.json"],
+)
+
+js_library(
+    name = "esbuild-linked-config",
+    srcs = ["esbuild-linked.config.mjs"],
 )
 
 dgeni_api_docs(

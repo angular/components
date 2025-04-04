@@ -63,6 +63,11 @@ ng_package(
         "//src/cdk/schematics:npm_package",
     ],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [get_legacy_label(t) for t in CDK_TARGETS],
 )
 

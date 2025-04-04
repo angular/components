@@ -45,5 +45,10 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/material-date-fns-adapter/schematics:npm_package"],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [":material-date-fns-adapter_legacy"],
 )
