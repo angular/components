@@ -53,7 +53,7 @@ export class AnimationDurations {
 
 // @public
 export interface AnimationsConfig {
-    animationsDisabled: boolean;
+    animationsDisabled?: boolean;
 }
 
 // @public
