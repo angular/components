@@ -8,13 +8,13 @@ load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_te
 load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
 load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = "http_server")
 load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
-load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
 load("//tools:defaults2.bzl", "spec_bundle", _karma_web_test_suite = "karma_web_test_suite")
+load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -190,21 +190,7 @@ def node_integration_test(setup_chromium = False, node_repository = "nodejs", **
         **kwargs
     )
 
-def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, **kwargs):
-    bootstrap = [
-        # This matches the ZoneJS bundles used in default CLI projects. See:
-        # https://github.com/angular/angular-cli/blob/main/packages/schematics/angular/application/files/src/polyfills.ts.template#L58
-        # https://github.com/angular/angular-cli/blob/main/packages/schematics/angular/application/files/src/test.ts.template#L3
-        # Note `zone.js/dist/zone.js` is aliased in the CLI to point to the evergreen
-        # output that does not include legacy patches. See: https://github.com/angular/angular/issues/35157.
-        # TODO: Consider adding the legacy patches when testing Saucelabs/Browserstack with Bazel.
-        # CLI loads the legacy patches conditionally for ES5 legacy browsers. See:
-        # https://github.com/angular/angular-cli/blob/277bad3895cbce6de80aa10a05c349b10d9e09df/packages/angular_devkit/build_angular/src/angular-cli-files/models/webpack-configs/common.ts#L141
-        "@npm//:node_modules/zone.js/bundles/zone.umd.js",
-        "@npm//:node_modules/zone.js/bundles/zone-testing.umd.js",
-        "@npm//:node_modules/reflect-metadata/Reflect.js",
-    ] + kwargs.pop("bootstrap", [])
-
+def ng_web_test_suite(deps = [], static_css = [], **kwargs):
     # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
     # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
     # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
@@ -212,6 +198,8 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
     static_css = static_css + [
         "//src/material/prebuilt-themes:azure-blue",
     ]
+
+    bootstrap = []
 
     # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
     # Since some of our tests depend on CSS files which are not part of the `ng_project` rule,
@@ -226,7 +214,7 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
         native.genrule(
             name = css_id,
             srcs = [css_label],
-            outs = ["%s.css.js" % css_id],
+            outs = ["%s.css.init.js" % css_id],
             output_to_bindir = True,
             cmd = """
         files=($(execpaths %s))
@@ -244,8 +232,8 @@ def ng_web_test_suite(deps = [], static_css = [], exclude_init_script = False, *
 
     karma_web_test_suite(
         # Depend on our custom test initialization script. This needs to be the first dependency.
-        deps = deps if exclude_init_script else ["//test:angular_test_init"] + deps,
-        bootstrap = bootstrap,
+        deps = deps,
+        bootstrap = ["//test:angular_test_init"] + bootstrap,
         **kwargs
     )
 

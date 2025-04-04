@@ -65,6 +65,7 @@ async function main() {
     format: 'iife',
     target: 'es2015',
     outfile: outFile,
+    treeShaking: false,
     plugins: [esbuildResolvePlugin, esbuildLinkerPlugin],
     stdin: {contents: specEntryPointFile, resolveDir: projectDir},
   });
@@ -131,7 +132,7 @@ async function compileProjectWithNgtsc() {
 async function createEntryPointSpecFile() {
   const testFiles = glob.sync('**/*.spec.js', {absolute: true, cwd: legacyOutputDir});
 
-  let specEntryPointFile = `import './test/angular-test-init-spec.ts';`;
+  let specEntryPointFile = `import './test/angular-test.init.ts';`;
   let i = 0;
   const testNamespaces = [];
 

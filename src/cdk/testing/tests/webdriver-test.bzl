@@ -12,13 +12,13 @@ def webdriver_test(name, deps, tags = [], **kwargs):
         tags = tags + ["manual"],
         data = [
             ":%s_bundle" % name,
-            "@npm//@angular/build-tooling/bazel/browsers/chromium",
+            "@rules_browsers//src/browsers/chromium",
         ],
         env = {
-            "CHROMIUM_BIN": "$(CHROMIUM)",
+            "CHROME_HEADLESS_BIN": "$(CHROME-HEADLESS-SHELL)",
             "CHROMEDRIVER": "$(CHROMEDRIVER)",
         },
-        toolchains = ["@npm//@angular/build-tooling/bazel/browsers/chromium:toolchain_alias"],
+        toolchains = ["@rules_browsers//src/browsers/chromium:toolchain_alias"],
         **kwargs
     )
 

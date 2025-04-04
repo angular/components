@@ -16,10 +16,12 @@ ts_project(
     name = "angular_test_init",
     testonly = True,
     # This file *must* end with "spec" in order for "karma_web_test_suite" to load it.
-    srcs = ["angular-test-init-spec.ts"],
+    srcs = ["angular-test.init.ts"],
     tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser-dynamic",
+        "//:node_modules/reflect-metadata",
+        "//:node_modules/zone.js",
     ],
 )

@@ -21,7 +21,7 @@ const projectRoot = path.resolve(__dirname, '../../../');
 const port = process.env['TEST_SERVER_PORT'];
 
 const chromeDriver = path.join(projectRoot, process.env['CHROMEDRIVER']!);
-const chromiumBin = path.join(projectRoot, process.env['CHROMIUM_BIN']!);
+const chromiumBin = path.join(projectRoot, process.env['CHROME_HEADLESS_BIN']!);
 
 setDefaultService(
   new ServiceBuilder(chromeDriver).enableVerboseLogging().loggingTo('/tmp/test.txt').build(),
