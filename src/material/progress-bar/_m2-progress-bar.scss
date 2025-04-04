@@ -5,7 +5,7 @@
 @use 'sass:meta';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, linear-progress);
+$prefix: (mat, progress-bar);
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.

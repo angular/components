@@ -3,7 +3,7 @@
 @use '../core/tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, elevated-card);
+$prefix: (mat, card-elevated);
 
 /// Generates the tokens for MDC elevated-card
 /// @param {Map} $systems The MDC system tokens

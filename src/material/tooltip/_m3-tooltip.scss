@@ -2,7 +2,7 @@
 @use 'sass:map';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, plain-tooltip);
+$prefix: (mat, tooltip);
 
 /// Generates the tokens for MDC plain-tooltip
 /// @param {Map} $systems The MDC system tokens

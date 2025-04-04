@@ -4,7 +4,7 @@
 @use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, extended-fab);
+$prefix: (mat, fab-extended);
 
 @function get-unthemable-tokens() {
   @return (
