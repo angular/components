@@ -272,34 +272,40 @@ describe('Key managers', () => {
         });
       });
 
-      describe('with `vertical` direction', function (this: KeyEventTestContext) {
+      describe('with `vertical` direction', () => {
+        let context: KeyEventTestContext = {} as KeyEventTestContext;
+
         beforeEach(() => {
           keyManager.withVerticalOrientation();
-          this.nextKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-          this.prevKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
+          context.nextKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+          context.prevKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
         });
 
-        runDirectionalKeyTests.call(this);
+        runDirectionalKeyTests.call(context);
       });
 
-      describe('with `ltr` direction', function (this: KeyEventTestContext) {
+      describe('with `ltr` direction', () => {
+        let context: KeyEventTestContext = {} as KeyEventTestContext;
+
         beforeEach(() => {
           keyManager.withHorizontalOrientation('ltr');
-          this.nextKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
-          this.prevKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
+          context.nextKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
+          context.prevKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
         });
 
-        runDirectionalKeyTests.call(this);
+        runDirectionalKeyTests.call(context);
       });
 
-      describe('with `rtl` direction', function (this: KeyEventTestContext) {
+      describe('with `rtl` direction', () => {
+        let context: KeyEventTestContext = {} as KeyEventTestContext;
+
         beforeEach(() => {
           keyManager.withHorizontalOrientation('rtl');
-          this.nextKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
-          this.prevKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
+          context.nextKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
+          context.prevKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
         });
 
-        runDirectionalKeyTests.call(this);
+        runDirectionalKeyTests.call(context);
       });
 
       /**
