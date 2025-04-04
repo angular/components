@@ -62,3 +62,10 @@ mat-icon {
     }
   }
 }
+
+// Makes button icon not cut off/shrink making the icon visible to fix b/250063405
+.mat-mdc-button-base .mat-icon {
+  flex-shrink: 0;
+  // stylelint-disable material/no-prefixes
+  min-height: min-content;
+}
