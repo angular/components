@@ -44,7 +44,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
-    '[attr.aria-multiselectable]': 'pattern.multiselectable()',
+    '[attr.aria-multiselectable]': 'pattern.multi()',
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(pointerdown)': 'pattern.onPointerdown($event)',
@@ -69,7 +69,7 @@ export class CdkListbox<V> {
   orientation = input<'vertical' | 'horizontal'>('vertical');
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable = input(false, {transform: booleanAttribute});
+  multi = input(false, {transform: booleanAttribute});
 
   /** Whether focus should wrap when navigating. */
   wrap = input(true, {transform: booleanAttribute});

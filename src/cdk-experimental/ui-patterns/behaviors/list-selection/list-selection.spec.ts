@@ -51,7 +51,7 @@ describe('List Selection', () => {
       items,
       navigation,
       value: signal<V[]>([]),
-      multiselectable: signal(true),
+      multi: signal(true),
       selectionMode: signal('explicit'),
       ...args,
     });
@@ -83,7 +83,7 @@ describe('List Selection', () => {
       const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
       const selection = getSelection(items, nav, {
-        multiselectable: signal(false),
+        multi: signal(false),
       });
 
       selection.select(); // [0]

@@ -63,7 +63,7 @@ export class ListboxPattern<V> {
   activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
-  multiselectable: SignalLike<boolean>;
+  multi: SignalLike<boolean>;
 
   /** The number of items in the listbox. */
   setsize = computed(() => this.navigation.inputs.items().length);
@@ -112,7 +112,7 @@ export class ListboxPattern<V> {
         .on(this.typeaheadRegexp, e => this.search(e.key, {selectOne: true}));
     }
 
-    if (this.inputs.multiselectable()) {
+    if (this.inputs.multi()) {
       manager
         .on(Modifier.Shift, ' ', () => this._updateSelection({selectFromAnchor: true}))
         .on(Modifier.Shift, 'Enter', () => this._updateSelection({selectFromAnchor: true}))
@@ -123,17 +123,17 @@ export class ListboxPattern<V> {
         .on(Modifier.Ctrl, 'A', () => this._updateSelection({selectAll: true}));
     }
 
-    if (!this.followFocus() && this.inputs.multiselectable()) {
+    if (!this.followFocus() && this.inputs.multi()) {
       manager.on(' ', () => this._updateSelection({toggle: true}));
       manager.on('Enter', () => this._updateSelection({toggle: true}));
     }
 
-    if (!this.followFocus() && !this.inputs.multiselectable()) {
+    if (!this.followFocus() && !this.inputs.multi()) {
       manager.on(' ', () => this._updateSelection({toggleOne: true}));
       manager.on('Enter', () => this._updateSelection({toggleOne: true}));
     }
 
-    if (this.inputs.multiselectable() && this.followFocus()) {
+    if (this.inputs.multi() && this.followFocus()) {
       manager
         .on(Modifier.Ctrl, this.prevKey, () => this.prev())
         .on(Modifier.Ctrl, this.nextKey, () => this.next())
@@ -150,7 +150,7 @@ export class ListboxPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    if (this.inputs.multiselectable()) {
+    if (this.inputs.multi()) {
       manager
         .on(e => this.goto(e, {toggle: true}))
         .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
@@ -164,7 +164,7 @@ export class ListboxPattern<V> {
   constructor(readonly inputs: ListboxInputs<V>) {
     this.disabled = inputs.disabled;
     this.orientation = inputs.orientation;
-    this.multiselectable = inputs.multiselectable;
+    this.multi = inputs.multi;
 
     this.navigation = new ListNavigation(inputs);
     this.selection = new ListSelection({...inputs, navigation: this.navigation});
