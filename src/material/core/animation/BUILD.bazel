@@ -7,5 +7,6 @@ ng_project(
     srcs = ["animation.ts"],
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk/layout",
     ],
 )
