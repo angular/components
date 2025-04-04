@@ -137,6 +137,8 @@ export class ListboxPattern<V> {
       manager
         .on(Modifier.Ctrl, this.prevKey, () => this.prev())
         .on(Modifier.Ctrl, this.nextKey, () => this.next())
+        .on(Modifier.Ctrl, ' ', () => this._updateSelection({toggle: true}))
+        .on(Modifier.Ctrl, 'Enter', () => this._updateSelection({toggle: true}))
         .on(Modifier.Ctrl, 'Home', () => this.first()) // TODO: Not in spec but prob should be.
         .on(Modifier.Ctrl, 'End', () => this.last()); // TODO: Not in spec but prob should be.
     }
