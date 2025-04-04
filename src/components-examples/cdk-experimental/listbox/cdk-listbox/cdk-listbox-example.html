@@ -2,6 +2,7 @@
   <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
@@ -33,8 +34,9 @@
 <ul
   cdkListbox
   [wrap]="wrap.value"
-  [disabled]="disabled.value"
   [multi]="multi.value"
+  [readonly]="readonly.value"
+  [disabled]="disabled.value"
   [skipDisabled]="skipDisabled.value"
   [orientation]="orientation"
   [focusMode]="focusMode"

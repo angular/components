@@ -34,6 +34,7 @@ export type ListboxInputs<V> = ListNavigationInputs<OptionPattern<V>> &
   ListTypeaheadInputs &
   ListFocusInputs<OptionPattern<V>> & {
     disabled: SignalLike<boolean>;
+    readonly: SignalLike<boolean>;
   };
 
 /** Controls the state of a listbox. */
@@ -55,6 +56,9 @@ export class ListboxPattern<V> {
 
   /** Whether the listbox is disabled. */
   disabled: SignalLike<boolean>;
+
+  /** Whether the listbox is readonly. */
+  readonly: SignalLike<boolean>;
 
   /** The tabindex of the listbox. */
   tabindex = computed(() => this.focusManager.getListTabindex());
@@ -93,6 +97,15 @@ export class ListboxPattern<V> {
   /** The keydown event manager for the listbox. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
+
+    if (this.readonly()) {
+      return manager
+        .on(this.prevKey, () => this.prev())
+        .on(this.nextKey, () => this.next())
+        .on('Home', () => this.first())
+        .on('End', () => this.last())
+        .on(this.typeaheadRegexp, e => this.search(e.key));
+    }
 
     if (!this.followFocus()) {
       manager
@@ -150,19 +163,22 @@ export class ListboxPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    if (this.inputs.multi()) {
-      manager
-        .on(e => this.goto(e, {toggle: true}))
-        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
-    } else {
-      manager.on(e => this.goto(e, {toggleOne: true}));
+    if (this.readonly()) {
+      return manager.on(e => this.goto(e));
     }
 
-    return manager;
+    if (this.inputs.multi()) {
+      return manager
+        .on(e => this.goto(e, {toggle: true}))
+        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
+    }
+
+    return manager.on(e => this.goto(e, {toggleOne: true}));
   });
 
   constructor(readonly inputs: ListboxInputs<V>) {
     this.disabled = inputs.disabled;
+    this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
 

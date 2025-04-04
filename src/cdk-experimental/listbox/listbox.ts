@@ -42,6 +42,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     'role': 'listbox',
     'class': 'cdk-listbox',
     '[attr.tabindex]': 'pattern.tabindex()',
+    '[attr.aria-readonly]': 'pattern.readonly()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-orientation]': 'pattern.orientation()',
     '[attr.aria-multiselectable]': 'pattern.multi()',
@@ -88,6 +89,9 @@ export class CdkListbox<V> {
 
   /** Whether the listbox is disabled. */
   disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the listbox is readonly. */
+  readonly = input(false, {transform: booleanAttribute});
 
   /** The values of the current selected items. */
   value = model<V[]>([]);
