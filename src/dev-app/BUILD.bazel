@@ -1,16 +1,20 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:defaults.bzl", "devmode_esbuild", "esbuild_config", "http_server", "sass_binary")
-load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
-load("//tools/angular:index.bzl", "LINKER_PROCESSED_FW_PACKAGES")
+load("//tools:defaults.bzl", "http_server", "sass_binary")
 load("//tools:defaults2.bzl", "ng_project")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
 
 ng_project(
     name = "dev-app",
     srcs = [
         "dev-app.ts",
         "main.ts",
+        "polyfills.ts",
         "routes.ts",
     ],
     deps = [
@@ -91,24 +95,25 @@ ng_project(
     ],
 )
 
-esbuild_config(
-    name = "esbuild_config",
-    config_file = "esbuild.config.mjs",
-)
-
-devmode_esbuild(
+esbuild(
     name = "bundles",
-    config = ":esbuild_config",
-    entry_points = [":main.ts"] + ["%s:index.ts" % e for e in ALL_EXAMPLES],
+    srcs = [
+        "//src:build-tsconfig",
+    ],
+    bundle = True,
+    config = "//src:esbuild-linked-config",
+    entry_points = [
+        ":main.js",
+        ":polyfills.js",
+    ] + ["%s:index.js" % e for e in ALL_EXAMPLES],
+    minify = True,
     platform = "browser",
     splitting = True,
     # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
     # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
     target = "es2016",
-    # Note: We add all linker-processed FW packages as dependencies here so that ESBuild will
-    # map all framework packages to their linker-processed bundles from `tools/angular`.
-    deps = LINKER_PROCESSED_FW_PACKAGES + [
-        ":dev-app_legacy",
+    deps = ALL_EXAMPLES + [
+        ":dev-app",
     ],
 )
 

@@ -39,6 +39,11 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/google-maps/schematics:npm_package"],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [":google-maps_legacy"],
 )
 

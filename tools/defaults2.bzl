@@ -56,12 +56,13 @@ def ng_project(
     # if False and not testonly:
     #    _make_tsec_test(kwargs["name"])
 
-def jasmine_test(data = [], args = [], **kwargs):
+def jasmine_test(name, data = [], args = [], external = [], **kwargs):
     # Create relative path to root, from current package dir. Necessary as
     # we change the `chdir` below to the package directory.
     relative_to_root = "/".join([".."] * len(native.package_name().split("/")))
 
     _jasmine_test(
+        name = name,
         node_modules = "//:node_modules",
         chdir = native.package_name(),
         fixed_args = [
@@ -80,7 +81,12 @@ def karma_web_test_suite(name, tags = [], deps = [], browsers = None, **kwargs):
     spec_bundle_amd(
         name = "%s_bundle" % name,
         workspace_name = "angular_material",
+        srcs = ["//src:build-tsconfig"],
         deps = deps,
+        config = {
+            "resolveExtensions": [".js"],
+            "tsconfig": "./src/bazel-tsconfig-build.json",
+        },
     )
 
     test_tags = ["partial-compilation-integration"] + tags

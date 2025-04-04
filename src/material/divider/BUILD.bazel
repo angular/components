@@ -72,7 +72,6 @@ ng_project(
     assets = [":css"],
     deps = [
         "//:node_modules/@angular/core",
-        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
     ],
 )

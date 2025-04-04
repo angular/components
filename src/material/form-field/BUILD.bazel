@@ -119,7 +119,6 @@ ng_project(
         "//:node_modules/@angular/forms",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
-        "//src/material:node_modules/@angular/cdk",
         "//src/material/core",
         "//src/material/form-field/directives",
     ],

@@ -47,5 +47,10 @@ ng_package(
     srcs = ["package.json"],
     nested_packages = ["//src/material-luxon-adapter/schematics:npm_package"],
     tags = ["release-package"],
+    visibility = [
+        "//:__pkg__",
+        "//goldens:__pkg__",
+        "//integration:__subpackages__",
+    ],
     deps = [":material-luxon-adapter_legacy"],
 )

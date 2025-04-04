@@ -27,8 +27,6 @@ setDefaultService(
   new ServiceBuilder(chromeDriver).enableVerboseLogging().loggingTo('/tmp/test.txt').build(),
 );
 
-process.env['CHROMEDRIVER_EXE'] = chromeDriver;
-
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
 // browser-side script passed to `By.js`.
 declare const kagekiri: {
