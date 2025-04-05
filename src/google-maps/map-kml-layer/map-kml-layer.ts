@@ -117,7 +117,9 @@ export class MapKmlLayer implements OnInit, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.kmlLayer = new layerConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.kmlLayer.setMap(map);
       this._eventManager.setTarget(this.kmlLayer);
       this.kmlLayerInitialized.emit(this.kmlLayer);
@@ -138,40 +140,50 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getDefaultViewport
    */
   getDefaultViewport(): google.maps.LatLngBounds | null {
-    this._assertInitialized();
-    return this.kmlLayer.getDefaultViewport();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.kmlLayer!.getDefaultViewport();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getMetadata
    */
   getMetadata(): google.maps.KmlLayerMetadata | null {
-    this._assertInitialized();
-    return this.kmlLayer.getMetadata();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.kmlLayer!.getMetadata();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getStatus
    */
   getStatus(): google.maps.KmlLayerStatus {
-    this._assertInitialized();
-    return this.kmlLayer.getStatus();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.kmlLayer!.getStatus();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getUrl
    */
   getUrl(): string {
-    this._assertInitialized();
-    return this.kmlLayer.getUrl();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.kmlLayer!.getUrl();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.getZIndex
    */
   getZIndex(): number {
-    this._assertInitialized();
-    return this.kmlLayer.getZIndex();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.kmlLayer!.getZIndex();
   }
 
   private _combineOptions(): Observable<google.maps.KmlLayerOptions> {
@@ -189,7 +201,9 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
       if (this.kmlLayer) {
-        this._assertInitialized();
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
         this.kmlLayer.setOptions(options);
       }
     });
@@ -198,20 +212,20 @@ export class MapKmlLayer implements OnInit, OnDestroy {
   private _watchForUrlChanges() {
     this._url.pipe(takeUntil(this._destroyed)).subscribe(url => {
       if (url && this.kmlLayer) {
-        this._assertInitialized();
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
         this.kmlLayer.setUrl(url);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {kmlLayer: google.maps.KmlLayer} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.kmlLayer) {
-        throw Error(
-          'Cannot interact with a Google Map KmlLayer before it has been ' +
-            'initialized. Please wait for the KmlLayer to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapKmlLayer) {
+  if (!ctx.kmlLayer) {
+    throw Error(
+      'Cannot interact with a Google Map KmlLayer before it has been ' +
+        'initialized. Please wait for the KmlLayer to load before trying to interact with it.',
+    );
   }
 }

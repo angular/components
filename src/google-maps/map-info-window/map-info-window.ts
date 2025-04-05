@@ -160,8 +160,10 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * See developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.close
    */
   close() {
-    this._assertInitialized();
-    this.infoWindow.close();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.infoWindow!.close();
   }
 
   /**
@@ -169,8 +171,10 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getContent
    */
   getContent(): string | Node | null {
-    this._assertInitialized();
-    return this.infoWindow.getContent() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.infoWindow!.getContent() || null;
   }
 
   /**
@@ -179,8 +183,10 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * #InfoWindow.getPosition
    */
   getPosition(): google.maps.LatLng | null {
-    this._assertInitialized();
-    return this.infoWindow.getPosition() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.infoWindow!.getPosition() || null;
   }
 
   /**
@@ -188,8 +194,10 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getZIndex
    */
   getZIndex(): number {
-    this._assertInitialized();
-    return this.infoWindow.getZIndex();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.infoWindow!.getZIndex();
   }
 
   /**
@@ -215,7 +223,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    * then the position property of the options input is used instead.
    */
   open(anchor?: MapAnchorPoint, shouldFocus?: boolean, content?: string | Element | Text): void {
-    this._assertInitialized();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
 
     if ((typeof ngDevMode === 'undefined' || ngDevMode) && anchor && !anchor.getAnchor) {
       throw new Error(
@@ -230,14 +240,14 @@ export class MapInfoWindow implements OnInit, OnDestroy {
     // Note that when the window is opened for the first time, the anchor will always be
     // undefined. If that's the case, we have to allow it to open in order to handle the
     // case where the window doesn't have an anchor, but is placed at a particular position.
-    if (this.infoWindow.get('anchor') !== anchorObject || !anchorObject) {
+    if (this.infoWindow!.get('anchor') !== anchorObject || !anchorObject) {
       // If no explicit content is provided, it is taken from the DOM node.
       // If it is, we need to hide it so it doesn't take up space on the page.
       this._elementRef.nativeElement.style.display = content ? 'none' : '';
       if (content) {
-        this.infoWindow.setContent(content);
+        this.infoWindow!.setContent(content);
       }
-      this.infoWindow.open({
+      this.infoWindow!.open({
         map: this._googleMap.googleMap,
         anchor: anchorObject,
         shouldFocus,
@@ -260,29 +270,31 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroy)).subscribe(options => {
-      this._assertInitialized();
-      this.infoWindow.setOptions(options);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
+      this.infoWindow!.setOptions(options);
     });
   }
 
   private _watchForPositionChanges() {
     this._position.pipe(takeUntil(this._destroy)).subscribe(position => {
       if (position) {
-        this._assertInitialized();
-        this.infoWindow.setPosition(position);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.infoWindow!.setPosition(position);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {infoWindow: google.maps.InfoWindow} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.infoWindow) {
-        throw Error(
-          'Cannot interact with a Google Map Info Window before it has been ' +
-            'initialized. Please wait for the Info Window to load before trying to interact with ' +
-            'it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapInfoWindow) {
+  if (!ctx.infoWindow) {
+    throw Error(
+      'Cannot interact with a Google Map Info Window before it has been ' +
+        'initialized. Please wait for the Info Window to load before trying to interact with ' +
+        'it.',
+    );
   }
 }

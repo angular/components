@@ -196,7 +196,9 @@ export class MapCircle implements OnInit, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.circle = new circleConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.circle.setMap(map);
       this._eventManager.setTarget(this.circle);
       this.circleInitialized.emit(this.circle);
@@ -218,8 +220,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getBounds
    */
   getBounds(): google.maps.LatLngBounds | null {
-    this._assertInitialized();
-    return this.circle.getBounds();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getBounds();
   }
 
   /**
@@ -227,8 +231,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getCenter
    */
   getCenter(): google.maps.LatLng | null {
-    this._assertInitialized();
-    return this.circle.getCenter();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getCenter();
   }
 
   /**
@@ -236,8 +242,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getDraggable
    */
   getDraggable(): boolean {
-    this._assertInitialized();
-    return this.circle.getDraggable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getDraggable();
   }
 
   /**
@@ -245,8 +253,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getEditable
    */
   getEditable(): boolean {
-    this._assertInitialized();
-    return this.circle.getEditable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getEditable();
   }
 
   /**
@@ -254,8 +264,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getRadius
    */
   getRadius(): number {
-    this._assertInitialized();
-    return this.circle.getRadius();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getRadius();
   }
 
   /**
@@ -263,8 +275,10 @@ export class MapCircle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getVisible
    */
   getVisible(): boolean {
-    this._assertInitialized();
-    return this.circle.getVisible();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.circle!.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.CircleOptions> {
@@ -282,16 +296,20 @@ export class MapCircle implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
-      this._assertInitialized();
-      this.circle.setOptions(options);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
+      this.circle!.setOptions(options);
     });
   }
 
   private _watchForCenterChanges() {
     this._center.pipe(takeUntil(this._destroyed)).subscribe(center => {
       if (center) {
-        this._assertInitialized();
-        this.circle.setCenter(center);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.circle!.setCenter(center);
       }
     });
   }
@@ -299,20 +317,20 @@ export class MapCircle implements OnInit, OnDestroy {
   private _watchForRadiusChanges() {
     this._radius.pipe(takeUntil(this._destroyed)).subscribe(radius => {
       if (radius !== undefined) {
-        this._assertInitialized();
-        this.circle.setRadius(radius);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.circle!.setRadius(radius);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {circle: google.maps.Circle} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.circle) {
-        throw Error(
-          'Cannot interact with a Google Map Circle before it has been ' +
-            'initialized. Please wait for the Circle to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapCircle) {
+  if (!ctx.circle) {
+    throw Error(
+      'Cannot interact with a Google Map Circle before it has been ' +
+        'initialized. Please wait for the Circle to load before trying to interact with it.',
+    );
   }
 }

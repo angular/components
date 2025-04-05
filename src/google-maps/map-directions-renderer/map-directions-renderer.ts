@@ -103,7 +103,9 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.directionsRenderer = new rendererConstructor(this._combineOptions());
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.directionsRenderer.setMap(map);
       this._eventManager.setTarget(this.directionsRenderer);
       this.directionsRendererInitialized.emit(this.directionsRenderer);
@@ -132,8 +134,10 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
    * #DirectionsRenderer.getDirections
    */
   getDirections(): google.maps.DirectionsResult | null {
-    this._assertInitialized();
-    return this.directionsRenderer.getDirections();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.directionsRenderer!.getDirections();
   }
 
   /**
@@ -141,8 +145,10 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
    * #DirectionsRenderer.getPanel
    */
   getPanel(): Node | null {
-    this._assertInitialized();
-    return this.directionsRenderer.getPanel();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.directionsRenderer!.getPanel();
   }
 
   /**
@@ -150,8 +156,10 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
    * #DirectionsRenderer.getRouteIndex
    */
   getRouteIndex(): number {
-    this._assertInitialized();
-    return this.directionsRenderer.getRouteIndex();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.directionsRenderer!.getRouteIndex();
   }
 
   private _combineOptions(): google.maps.DirectionsRendererOptions {
@@ -162,18 +170,14 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
       map: this._googleMap.googleMap,
     };
   }
+}
 
-  private _assertInitialized(): asserts this is {
-    directionsRenderer: google.maps.DirectionsRenderer;
-  } {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.directionsRenderer) {
-        throw Error(
-          'Cannot interact with a Google Map Directions Renderer before it has been ' +
-            'initialized. Please wait for the Directions Renderer to load before trying ' +
-            'to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapDirectionsRenderer) {
+  if (!ctx.directionsRenderer) {
+    throw Error(
+      'Cannot interact with a Google Map Directions Renderer before it has been ' +
+        'initialized. Please wait for the Directions Renderer to load before trying ' +
+        'to interact with it.',
+    );
   }
 }

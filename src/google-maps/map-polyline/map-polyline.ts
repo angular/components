@@ -173,7 +173,9 @@ export class MapPolyline implements OnInit, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.polyline = new polylineConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.polyline.setMap(map);
       this._eventManager.setTarget(this.polyline);
       this.polylineInitialized.emit(this.polyline);
@@ -194,32 +196,40 @@ export class MapPolyline implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getDraggable
    */
   getDraggable(): boolean {
-    this._assertInitialized();
-    return this.polyline.getDraggable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polyline!.getDraggable();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getEditable
    */
   getEditable(): boolean {
-    this._assertInitialized();
-    return this.polyline.getEditable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polyline!.getEditable();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getPath
    */
   getPath(): google.maps.MVCArray<google.maps.LatLng> {
-    this._assertInitialized();
-    return this.polyline.getPath();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polyline!.getPath();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getVisible
    */
   getVisible(): boolean {
-    this._assertInitialized();
-    return this.polyline.getVisible();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polyline!.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.PolylineOptions> {
@@ -236,28 +246,30 @@ export class MapPolyline implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
-      this._assertInitialized();
-      this.polyline.setOptions(options);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
+      this.polyline!.setOptions(options);
     });
   }
 
   private _watchForPathChanges() {
     this._path.pipe(takeUntil(this._destroyed)).subscribe(path => {
       if (path) {
-        this._assertInitialized();
-        this.polyline.setPath(path);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.polyline!.setPath(path);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {polyline: google.maps.Polyline} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.polyline) {
-        throw Error(
-          'Cannot interact with a Google Map Polyline before it has been ' +
-            'initialized. Please wait for the Polyline to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapPolyline) {
+  if (!ctx.polyline) {
+    throw Error(
+      'Cannot interact with a Google Map Polyline before it has been ' +
+        'initialized. Please wait for the Polyline to load before trying to interact with it.',
+    );
   }
 }

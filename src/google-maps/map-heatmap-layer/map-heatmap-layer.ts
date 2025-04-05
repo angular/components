@@ -116,7 +116,9 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.heatmap = new heatmapConstructor(this._combineOptions());
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.heatmap.setMap(map);
       this.heatmapInitialized.emit(this.heatmap);
     });
@@ -145,8 +147,10 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
    * See: developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayer
    */
   getData(): HeatmapData {
-    this._assertInitialized();
-    return this.heatmap.getData();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.heatmap!.getData();
   }
 
   /** Creates a combined options object using the passed-in options and the individual inputs. */
@@ -176,21 +180,18 @@ export class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
 
     return result;
   }
-
-  /** Asserts that the heatmap object has been initialized. */
-  private _assertInitialized(): asserts this is {heatmap: google.maps.visualization.HeatmapLayer} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.heatmap) {
-        throw Error(
-          'Cannot interact with a Google Map HeatmapLayer before it has been ' +
-            'initialized. Please wait for the heatmap to load before trying to interact with it.',
-        );
-      }
-    }
-  }
 }
 
 /** Asserts that an object is a `LatLngLiteral`. */
 function isLatLngLiteral(value: any): value is google.maps.LatLngLiteral {
   return value && typeof value.lat === 'number' && typeof value.lng === 'number';
+}
+
+function assertInitialized(ctx: MapHeatmapLayer) {
+  if (!ctx.heatmap) {
+    throw Error(
+      'Cannot interact with a Google Map HeatmapLayer before it has been ' +
+        'initialized. Please wait for the heatmap to load before trying to interact with it.',
+    );
+  }
 }

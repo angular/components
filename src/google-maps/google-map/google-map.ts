@@ -351,8 +351,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral,
     padding?: number | google.maps.Padding,
   ) {
-    this._assertInitialized();
-    this.googleMap.fitBounds(bounds, padding);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.googleMap!.fitBounds(bounds, padding);
   }
 
   /**
@@ -360,8 +362,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panBy
    */
   panBy(x: number, y: number) {
-    this._assertInitialized();
-    this.googleMap.panBy(x, y);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.googleMap!.panBy(x, y);
   }
 
   /**
@@ -369,8 +373,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panTo
    */
   panTo(latLng: google.maps.LatLng | google.maps.LatLngLiteral) {
-    this._assertInitialized();
-    this.googleMap.panTo(latLng);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.googleMap!.panTo(latLng);
   }
 
   /**
@@ -381,8 +387,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     latLngBounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral,
     padding?: number | google.maps.Padding,
   ) {
-    this._assertInitialized();
-    this.googleMap.panToBounds(latLngBounds, padding);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.googleMap!.panToBounds(latLngBounds, padding);
   }
 
   /**
@@ -390,8 +398,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getBounds
    */
   getBounds(): google.maps.LatLngBounds | null {
-    this._assertInitialized();
-    return this.googleMap.getBounds() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getBounds() || null;
   }
 
   /**
@@ -399,8 +409,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getCenter
    */
   getCenter(): google.maps.LatLng | undefined {
-    this._assertInitialized();
-    return this.googleMap.getCenter();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getCenter();
   }
 
   /**
@@ -408,8 +420,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getClickableIcons
    */
   getClickableIcons(): boolean | undefined {
-    this._assertInitialized();
-    return this.googleMap.getClickableIcons();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getClickableIcons();
   }
 
   /**
@@ -417,8 +431,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getHeading
    */
   getHeading(): number | undefined {
-    this._assertInitialized();
-    return this.googleMap.getHeading();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getHeading();
   }
 
   /**
@@ -426,8 +442,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getMapTypeId
    */
   getMapTypeId(): google.maps.MapTypeId | string | undefined {
-    this._assertInitialized();
-    return this.googleMap.getMapTypeId();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getMapTypeId();
   }
 
   /**
@@ -435,8 +453,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getProjection
    */
   getProjection(): google.maps.Projection | null {
-    this._assertInitialized();
-    return this.googleMap.getProjection() || null;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getProjection() || null;
   }
 
   /**
@@ -444,8 +464,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getStreetView
    */
   getStreetView(): google.maps.StreetViewPanorama {
-    this._assertInitialized();
-    return this.googleMap.getStreetView();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getStreetView();
   }
 
   /**
@@ -453,8 +475,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getTilt
    */
   getTilt(): number | undefined {
-    this._assertInitialized();
-    return this.googleMap.getTilt();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getTilt();
   }
 
   /**
@@ -462,8 +486,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getZoom
    */
   getZoom(): number | undefined {
-    this._assertInitialized();
-    return this.googleMap.getZoom();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.getZoom();
   }
 
   /**
@@ -471,8 +497,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.controls
    */
   get controls(): google.maps.MVCArray<Node>[] {
-    this._assertInitialized();
-    return this.googleMap.controls;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.controls;
   }
 
   /**
@@ -480,8 +508,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.data
    */
   get data(): google.maps.Data {
-    this._assertInitialized();
-    return this.googleMap.data;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.data;
   }
 
   /**
@@ -489,8 +519,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mapTypes
    */
   get mapTypes(): google.maps.MapTypeRegistry {
-    this._assertInitialized();
-    return this.googleMap.mapTypes;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.mapTypes;
   }
 
   /**
@@ -498,8 +530,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.overlayMapTypes
    */
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null> {
-    this._assertInitialized();
-    return this.googleMap.overlayMapTypes;
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.googleMap!.overlayMapTypes;
   }
 
   /** Returns a promise that resolves when the map has been initialized. */
@@ -533,15 +567,14 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       mapId: this.mapId || options.mapId,
     };
   }
+}
 
-  /** Asserts that the map has been initialized. */
-  private _assertInitialized(): asserts this is {googleMap: google.maps.Map} {
-    if (!this.googleMap && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error(
-        'Cannot access Google Map information before the API has been initialized. ' +
-          'Please wait for the API to load before trying to interact with it.',
-      );
-    }
+function assertInitialized(ctx: GoogleMap) {
+  if (!ctx.googleMap) {
+    throw Error(
+      'Cannot access Google Map information before the API has been initialized. ' +
+        'Please wait for the API to load before trying to interact with it.',
+    );
   }
 }
 

@@ -182,7 +182,9 @@ export class MapRectangle implements OnInit, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.rectangle = new rectangleConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.rectangle.setMap(map);
       this._eventManager.setTarget(this.rectangle);
       this.rectangleInitialized.emit(this.rectangle);
@@ -203,8 +205,10 @@ export class MapRectangle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getBounds
    */
   getBounds(): google.maps.LatLngBounds | null {
-    this._assertInitialized();
-    return this.rectangle.getBounds();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.rectangle!.getBounds();
   }
 
   /**
@@ -212,8 +216,10 @@ export class MapRectangle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getDraggable
    */
   getDraggable(): boolean {
-    this._assertInitialized();
-    return this.rectangle.getDraggable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.rectangle!.getDraggable();
   }
 
   /**
@@ -221,8 +227,10 @@ export class MapRectangle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getEditable
    */
   getEditable(): boolean {
-    this._assertInitialized();
-    return this.rectangle.getEditable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.rectangle!.getEditable();
   }
 
   /**
@@ -230,8 +238,10 @@ export class MapRectangle implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getVisible
    */
   getVisible(): boolean {
-    this._assertInitialized();
-    return this.rectangle.getVisible();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.rectangle!.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.RectangleOptions> {
@@ -248,28 +258,30 @@ export class MapRectangle implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
-      this._assertInitialized();
-      this.rectangle.setOptions(options);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
+      this.rectangle!.setOptions(options);
     });
   }
 
   private _watchForBoundsChanges() {
     this._bounds.pipe(takeUntil(this._destroyed)).subscribe(bounds => {
       if (bounds) {
-        this._assertInitialized();
-        this.rectangle.setBounds(bounds);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.rectangle!.setBounds(bounds);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {rectangle: google.maps.Rectangle} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.rectangle) {
-        throw Error(
-          'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
-            'Please wait for the Rectangle to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapRectangle) {
+  if (!ctx.rectangle) {
+    throw Error(
+      'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
+        'Please wait for the Rectangle to load before trying to interact with it.',
+    );
   }
 }

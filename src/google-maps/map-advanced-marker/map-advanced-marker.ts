@@ -226,7 +226,9 @@ export class MapAdvancedMarker
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.advancedMarker = new advancedMarkerConstructor(this._combineOptions());
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.advancedMarker.map = map;
       this._eventManager.setTarget(this.advancedMarker);
       this.markerInitialized.next(this.advancedMarker);
@@ -268,7 +270,9 @@ export class MapAdvancedMarker
   }
 
   getAnchor(): google.maps.marker.AdvancedMarkerElement {
-    this._assertInitialized();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
     return this.advancedMarker;
   }
 
@@ -292,16 +296,13 @@ export class MapAdvancedMarker
       map: this._googleMap.googleMap,
     };
   }
+}
 
-  /** Asserts that the map has been initialized. */
-  private _assertInitialized(): asserts this is {marker: google.maps.marker.AdvancedMarkerElement} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.advancedMarker) {
-        throw Error(
-          'Cannot interact with a Google Map Marker before it has been ' +
-            'initialized. Please wait for the Marker to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapAdvancedMarker) {
+  if (!ctx.advancedMarker) {
+    throw Error(
+      'Cannot interact with a Google Map Marker before it has been ' +
+        'initialized. Please wait for the Marker to load before trying to interact with it.',
+    );
   }
 }
