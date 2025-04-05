@@ -56,7 +56,7 @@ $token-slots: m2-datepicker.get-token-slots();
   @include token-utils.use-tokens($token-prefix, $token-slots) {
     font-size: token-utils.slot(calendar-period-button-text-size);
     font-weight: token-utils.slot(calendar-period-button-text-weight);
-    --mat-text-button-label-text-color: #{token-utils.slot(calendar-period-button-text-color)};
+    --mat-button-text-label-text-color: #{token-utils.slot(calendar-period-button-text-color)};
   }
 }
 
