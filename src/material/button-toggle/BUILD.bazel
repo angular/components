@@ -13,7 +13,7 @@ package(default_visibility = ["//visibility:public"])
 sass_library(
     name = "m3",
     srcs = [
-        "_m3-standard-button-toggle.scss",
+        "_m3-button-toggle.scss",
     ],
     deps = [
         "//src/material/core/style:sass_utils",
@@ -24,8 +24,7 @@ sass_library(
 sass_library(
     name = "m2",
     srcs = [
-        "_m2-legacy-button-toggle.scss",
-        "_m2-standard-button-toggle.scss",
+        "_m2-button-toggle.scss",
     ],
     deps = [
         "//src/material/core/style:elevation",

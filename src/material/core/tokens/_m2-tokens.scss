@@ -1,7 +1,7 @@
 @use '../../autocomplete/m2-autocomplete';
 @use '../../badge/m2-badge';
 @use '../../bottom-sheet/m2-bottom-sheet';
-@use '../../button-toggle/m2-standard-button-toggle';
+@use '../../button-toggle/m2-button-toggle';
 @use '../../button/m2-button';
 @use '../../button/m2-fab';
 @use '../../button/m2-icon-button';
@@ -99,6 +99,7 @@
     _get-tokens-for-module($theme, m2-badge),
     _get-tokens-for-module($theme, m2-bottom-sheet),
     _get-tokens-for-module($theme, m2-button),
+    _get-tokens-for-module($theme, m2-button-toggle),
     _get-tokens-for-module($theme, m2-card),
     _get-tokens-for-module($theme, m2-checkbox),
     _get-tokens-for-module($theme, m2-chip),
@@ -133,7 +134,6 @@
     _get-tokens-for-module($theme, m2-slider),
     _get-tokens-for-module($theme, m2-snack-bar),
     _get-tokens-for-module($theme, m2-sort),
-    _get-tokens-for-module($theme, m2-standard-button-toggle),
     _get-tokens-for-module($theme, m2-stepper),
     _get-tokens-for-module($theme, m2-tab-header),
     _get-tokens-for-module($theme, m2-tab-header-with-background),

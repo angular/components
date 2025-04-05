@@ -1,7 +1,7 @@
 @use '../../autocomplete/m3-autocomplete';
 @use '../../badge/m3-badge';
 @use '../../bottom-sheet/m3-bottom-sheet';
-@use '../../button-toggle/m3-standard-button-toggle';
+@use '../../button-toggle/m3-button-toggle';
 @use '../../button/m3-button';
 @use '../../button/m3-fab';
 @use '../../button/m3-icon-button';
@@ -423,6 +423,7 @@ $system-variables-prefix) {
     m3-autocomplete.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-badge.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-bottom-sheet.get-tokens($systems, $exclude-hardcoded, $token-slots),
+    m3-button-toggle.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
@@ -458,7 +459,6 @@ $system-variables-prefix) {
     m3-slider.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-snack-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-sort.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-standard-button-toggle.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-stepper.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-tab-header.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-tab-indicator.get-tokens($systems, $exclude-hardcoded, $token-slots),
