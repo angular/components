@@ -6,6 +6,7 @@
 @use '../../button/m3-fab';
 @use '../../button/m3-fab-small';
 @use '../../button/m3-filled-button';
+@use '../../card/m3-filled-card';
 @use '../../button/m3-icon-button';
 @use '../../button/m3-outlined-button';
 @use '../../button/m3-protected-button';
@@ -441,6 +442,7 @@ $system-variables-prefix) {
     m3-fab-small.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-fab.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-filled-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
+    m3-filled-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-filled-text-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-form-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-full-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
