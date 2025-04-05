@@ -26,25 +26,25 @@ $_density-tokens: (
     (mat, chip): (
       container-height: (32px, 28px, 24px),
     ),
-    (mat, circular-progress): (),
+    (mat, progress-spinner): (),
     (mat, datepicker): (),
     (mat, dialog): (),
     (mat, divider): (),
-    (mat, elevated-card): (),
+    (mat, card-elevated): (),
     (mat, expansion): (
       header-collapsed-state-height: (48px, 44px, 40px, 36px),
       header-expanded-state-height: (64px, 60px, 56px, 48px),
     ),
-    (mat, extended-fab): (),
+    (mat, fab-extended): (),
     (mat, fab): (
       touch-target-display: (block, block, none, none),
     ),
     (mat, fab-small): (),
-    (mat, filled-button): (
+    (mat, button-filled): (
       touch-target-display: (block, block, none, none),
       container-height: (40px, 36px, 32px, 28px),
     ),
-    (mat, filled-text-field): (),
+    (mat, form-field-filled): (),
     (mat, form-field): (
       container-height: (56px, 52px, 48px, 44px, 40px, 36px),
       filled-label-display: (block, block, none, none, none, none),
@@ -52,7 +52,7 @@ $_density-tokens: (
       filled-with-label-container-padding-top: (24px, 22px, 12px, 10px, 8px, 6px),
       filled-with-label-container-padding-bottom: (8px, 6px, 12px, 10px, 8px, 6px),
     ),
-    (mat, full-pseudo-checkbox): (),
+    (mat, pseudo-checkbox-full): (),
     (mat, grid-list): (),
     (mat, icon): (),
     (mat, icon-button): (
@@ -60,7 +60,7 @@ $_density-tokens: (
       // The size caps out at 24px, because anything lower will be smaller than the icon.
       state-layer-size: (40px, 36px, 32px, 28px, 24px, 24px),
     ),
-    (mat, linear-progress): (),
+    (mat, progress-bar): (),
     (mat, list): (
       list-item-leading-icon-start-space: (16px, 12px, 8px, 4px),
       list-item-leading-icon-end-space: (16px, 12px, 8px, 4px),
@@ -69,23 +69,23 @@ $_density-tokens: (
       list-item-three-line-container-height: (88px, 84px, 80px, 76px, 72px, 56px),
     ),
     (mat, menu): (),
-    (mat, minimal-pseudo-checkbox): (),
+    (mat, pseudo-checkbox-minimal): (),
     (mat, optgroup): (),
     (mat, option): (),
-    (mat, outlined-button): (
+    (mat, button-outlined): (
       container-height: (40px, 36px, 32px, 28px),
       touch-target-display: (block, block, none, none),
     ),
-    (mat, outlined-card): (),
-    (mat, outlined-text-field): (),
+    (mat, card-outlined): (),
+    (mat, form-field-outlined): (),
     (mat, paginator): (
       container-size: (56px, 52px, 48px, 40px),
       form-field-container-height: (40px, 40px, 40px, 40px, 40px, 36px),
       form-field-container-vertical-padding: (8px, 8px, 8px, 8px, 8px, 6px),
       touch-target-display: (block, block, none, none),
     ),
-    (mat, plain-tooltip): (),
-    (mat, protected-button): (
+    (mat, tooltip): (),
+    (mat, button-protected): (
       touch-target-display: (block, block, none, none),
       container-height: (40px, 36px, 32px, 28px),
     ),
@@ -94,37 +94,34 @@ $_density-tokens: (
       state-layer-size: (40px, 36px, 32px, 28px),
     ),
     (mat, ripple): (),
-    (mat, secondary-navigation-tab): (
+    (mat, tab): (
       container-height: (48px, 44px, 40px, 36px, 32px),
     ),
     (mat, select): (
       arrow-transform: (translateY(-8px), translateY(-8px), none),
     ),
     (mat, sidenav): (),
-    (mat, slide-toggle): (),
     (mat, slider): (),
     (mat, snack-bar): (),
     (mat, sort): (),
-    (mat, standard-button-toggle): (
+    (mat, button-toggle): (
       height: (40px, 40px, 40px, 36px, 24px),
     ),
     (mat, stepper): (
       header-height: (72px, 68px, 64px, 60px, 42px),
     ),
-    (mat, switch): (),
-    (mat, tab-header): (),
-    (mat, tab-indicator): (),
+    (mat, slide-toggle): (),
     (mat, table): (
       header-container-height: (56px, 52px, 48px, 44px, 40px),
       footer-container-height: (52px, 48px, 44px, 40px, 36px),
       row-item-container-height: (52px, 48px, 44px, 40px, 36px),
     ),
-    (mat, text-button): (
+    (mat, button-text): (
       touch-target-display: (block, block, none, none),
       container-height: (40px, 36px, 32px, 28px),
     ),
     (mat, timepicker): (),
-    (mat, tonal-button): (
+    (mat, button-tonal): (
       container-height: (40px, 36px, 32px, 28px),
       touch-target-display: (block, block, none, none),
     ),
