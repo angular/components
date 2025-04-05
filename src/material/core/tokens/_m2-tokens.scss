@@ -43,8 +43,7 @@
 @use '../option/m2-optgroup';
 @use '../option/m2-option';
 @use '../ripple/m2-ripple';
-@use '../selection/pseudo-checkbox/m2-full-pseudo-checkbox';
-@use '../selection/pseudo-checkbox/m2-minimal-pseudo-checkbox';
+@use '../selection/pseudo-checkbox/m2-pseudo-checkbox';
 @use '../style/sass-utils';
 @use '../theming/inspection';
 @use 'sass:map';
@@ -108,19 +107,18 @@
     _get-tokens-for-module($theme, m2-fab),
     _get-tokens-for-module($theme, m2-filled-text-field),
     _get-tokens-for-module($theme, m2-form-field),
-    _get-tokens-for-module($theme, m2-full-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-grid-list),
     _get-tokens-for-module($theme, m2-icon),
     _get-tokens-for-module($theme, m2-icon-button),
     _get-tokens-for-module($theme, m2-list),
     _get-tokens-for-module($theme, m2-menu),
-    _get-tokens-for-module($theme, m2-minimal-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-optgroup),
     _get-tokens-for-module($theme, m2-option),
     _get-tokens-for-module($theme, m2-outlined-text-field),
     _get-tokens-for-module($theme, m2-paginator),
     _get-tokens-for-module($theme, m2-progress-bar),
     _get-tokens-for-module($theme, m2-progress-spinner),
+    _get-tokens-for-module($theme, m2-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-radio),
     _get-tokens-for-module($theme, m2-ripple),
     _get-tokens-for-module($theme, m2-secondary-navigation-tab),

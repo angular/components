@@ -43,8 +43,7 @@
 @use '../option/m3-optgroup';
 @use '../option/m3-option';
 @use '../ripple/m3-ripple';
-@use '../selection/pseudo-checkbox/m3-full-pseudo-checkbox';
-@use '../selection/pseudo-checkbox/m3-minimal-pseudo-checkbox';
+@use '../selection/pseudo-checkbox/m3-pseudo-checkbox';
 @use '../style/sass-utils';
 @use './density';
 @use './format-tokens';
@@ -433,19 +432,18 @@ $system-variables-prefix) {
     m3-fab.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-filled-text-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-form-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-full-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-grid-list.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-icon-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-icon.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-list.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-menu.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-minimal-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-optgroup.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-option.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-outlined-text-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-paginator.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-progress-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-progress-spinner.get-tokens($systems, $exclude-hardcoded, $token-slots),
+    m3-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-radio.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-ripple.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-secondary-navigation-tab.get-tokens($systems, $exclude-hardcoded, $token-slots),

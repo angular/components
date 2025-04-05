@@ -3,18 +3,13 @@
 @use '../../theming/validation';
 @use '../../style/sass-utils';
 @use '../../tokens/token-utils';
-@use './m2-full-pseudo-checkbox';
-@use './m2-minimal-pseudo-checkbox';
+@use './m2-pseudo-checkbox';
 
 @mixin _palette-styles($theme, $palette-name) {
   @include sass-utils.current-selector-or-root() {
     @include token-utils.create-token-values-mixed(
-      m2-full-pseudo-checkbox.$prefix,
-      m2-full-pseudo-checkbox.get-color-tokens($theme, $palette-name)
-    );
-    @include token-utils.create-token-values-mixed(
-      m2-minimal-pseudo-checkbox.$prefix,
-      m2-minimal-pseudo-checkbox.get-color-tokens($theme, $palette-name)
+      m2-pseudo-checkbox.$prefix,
+      m2-pseudo-checkbox.get-color-tokens($theme, $palette-name)
     );
   }
 }
@@ -23,14 +18,10 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for(
-    $tokens, m2-full-pseudo-checkbox.$prefix, $options...);
-  $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for(
-    $tokens, m2-minimal-pseudo-checkbox.$prefix, $options...);
+  $mat-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+    $tokens, m2-pseudo-checkbox.$prefix, $options...);
   @include token-utils.create-token-values-mixed(
-    m2-full-pseudo-checkbox.$prefix, $mat-full-pseudo-checkbox-tokens);
-  @include token-utils.create-token-values-mixed(
-    m2-minimal-pseudo-checkbox.$prefix, $mat-minimal-pseudo-checkbox-tokens);
+      m2-pseudo-checkbox.$prefix, $mat-pseudo-checkbox-tokens);
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -41,19 +32,10 @@
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
-  $full-pseudo-checkbox-tokens: m2-full-pseudo-checkbox.get-token-slots();
-  $minimal-pseudo-checkbox-tokens: m2-minimal-pseudo-checkbox.get-token-slots();
-
   @return (
     (
-      namespace: m2-full-pseudo-checkbox.$prefix,
-      tokens: $full-pseudo-checkbox-tokens,
-      prefix: 'full-',
-    ),
-    (
-      namespace: m2-minimal-pseudo-checkbox.$prefix,
-      tokens: $minimal-pseudo-checkbox-tokens,
-      prefix: 'minimal-',
+      namespace: m2-pseudo-checkbox.$prefix,
+      tokens: m2-pseudo-checkbox.get-token-slots(),
     ),
   );
 }

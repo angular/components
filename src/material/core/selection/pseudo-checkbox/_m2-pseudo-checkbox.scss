@@ -18,12 +18,14 @@ $prefix: (mat, pseudo-checkbox-full);
   $checkmark-color: inspection.get-theme-color($theme, background, background);
 
   @return (
-    selected-icon-color: inspection.get-theme-color($theme, $palette-name),
-    selected-checkmark-color: $checkmark-color,
-    unselected-icon-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    disabled-selected-checkmark-color: $checkmark-color,
-    disabled-unselected-icon-color: $disabled-color,
-    disabled-selected-icon-color: $disabled-color,
+    full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
+    full-selected-checkmark-color: $checkmark-color,
+    full-unselected-icon-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    full-disabled-selected-checkmark-color: $checkmark-color,
+    full-disabled-unselected-icon-color: $disabled-color,
+    full-disabled-selected-icon-color: $disabled-color,
+    minimal-selected-checkmark-color: inspection.get-theme-color($theme, $palette-name),
+    minimal-disabled-selected-checkmark-color: if($is-dark, #686868, #b0b0b0),
   );
 }
 
