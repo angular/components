@@ -1,0 +1,234 @@
+@use 'sass:meta';
+@use 'sass:map';
+@use '../core/tokens/m2-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
+@use '../core/style/sass-utils';
+@use '../core/style/elevation';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, button);
+
+// Tokens that can't be configured through Angular Material's current theming API,
+// but may be in a future version of the theming API.
+@function get-unthemable-tokens() {
+  @return (
+    filled-container-shape: 4px,
+    filled-horizontal-padding: 16px,
+    filled-icon-offset: -4px,
+    filled-icon-spacing: 8px,
+    outlined-container-shape: 4px,
+    outlined-horizontal-padding: 15px, // Normally it's 16px, but -1px for the outline.
+    outlined-icon-offset: -4px,
+    outlined-icon-spacing: 8px,
+    outlined-keep-touch-target: false,
+    outlined-outline-width: 1px,
+    protected-container-elevation-shadow: elevation.get-box-shadow(2),
+    protected-container-shape: 4px,
+    protected-disabled-container-elevation-shadow: elevation.get-box-shadow(0),
+    protected-focus-container-elevation-shadow: elevation.get-box-shadow(4),
+    protected-horizontal-padding: 16px,
+    protected-hover-container-elevation-shadow: elevation.get-box-shadow(4),
+    protected-icon-offset: -4px,
+    protected-icon-spacing: 8px,
+    protected-pressed-container-elevation-shadow: elevation.get-box-shadow(8),
+    text-container-shape: 4px,
+    text-horizontal-padding: 8px,
+    text-icon-offset: 0,
+    text-icon-spacing: 8px,
+    text-with-icon-horizontal-padding: 8px,
+    tonal-container-shape: 4px,
+    tonal-horizontal-padding: 16px,
+    tonal-icon-offset: -4px,
+    tonal-icon-spacing: 8px,
+  );
+}
+
+// Tokens that can be configured through Angular Material's color theming API.
+@function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $outline: if(m2-utils.$private-is-internal-build,
+    rgba(if($is-dark, #fff, #000), 0.12),
+    inspection.get-theme-color($theme, foreground, divider)
+  );
+
+  @return (
+    filled-container-color: inspection.get-theme-color($theme, background, card),
+    filled-disabled-container-color: inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+    filled-disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    filled-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    filled-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    filled-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    filled-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    filled-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    filled-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    filled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    outlined-disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    outlined-disabled-outline-color: $outline,
+    outlined-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    outlined-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    outlined-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    outlined-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    outlined-outline-color: $outline,
+    outlined-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    outlined-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    outlined-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    protected-container-color: inspection.get-theme-color($theme, background, card),
+    protected-disabled-container-color: inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+    protected-disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    protected-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    protected-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    protected-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    protected-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    protected-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    protected-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    protected-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    text-disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    text-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    text-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    text-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    text-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    text-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    text-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    text-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    tonal-container-color: inspection.get-theme-color($theme, background, card),
+    tonal-disabled-container-color: inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+    tonal-disabled-label-text-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    tonal-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    tonal-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    tonal-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    tonal-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    tonal-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    tonal-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    tonal-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+  );
+}
+
+// Generates the mapping for the properties that change based on the button palette color.
+@function private-get-color-palette-color-tokens($theme, $palette-name) {
+  $color: inspection.get-theme-color($theme, $palette-name);
+  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
+  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  $container-color: inspection.get-theme-color($theme, $palette-name, default);
+  $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $ripple-opacity: 0.1;
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  @if (m2-utils.$private-is-internal-build or
+      meta.type-of($contrast-color) != 'color') {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+    $container-color: inspection.get-theme-color($theme, $palette-name);
+    $contrast-tone: m2-utils.contrast-tone($container-color, $is-dark);
+    $color: if($contrast-tone == 'dark', #000, #fff);
+    $state-layer-color: $color;
+    $ripple-color: rgba($color, 0.1);
+    $label-text-color: if($contrast-tone == 'dark', #000, #fff);
+  }
+
+  // outlined-outline-color:
+  // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
+  // there are a bunch of tests internally that depend on it. We should remove this and clean
+  // up the screenshots separately.
+  @return (
+    filled-container-color: $container-color,
+    filled-label-text-color: $label-text-color,
+    filled-ripple-color: $ripple-color,
+    filled-state-layer-color: $state-layer-color,
+    outlined-label-text-color: inspection.get-theme-color($theme, $palette-name, default),
+    outlined-outline-color: map.get(get-color-tokens($theme), outline-color),
+    outlined-ripple-color: if(meta.type-of($color) == color, rgba($color, $ripple-opacity), inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+    outlined-state-layer-color: $color,
+    protected-container-color: $container-color,
+    protected-label-text-color: $label-text-color,
+    protected-ripple-color: $ripple-color,
+    protected-state-layer-color: $state-layer-color,
+    text-label-text-color: inspection.get-theme-color($theme, $palette-name),
+    text-ripple-color: if(meta.type-of($color) == color, rgba($color, $ripple-opacity), inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+    text-state-layer-color: $color,
+    tonal-container-color: inspection.get-theme-color($theme, $palette-name, default),
+    tonal-label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
+    tonal-ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1),
+    tonal-state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
+  );
+}
+
+// Tokens that can be configured through Angular Material's typography theming API.
+@function get-typography-tokens($theme) {
+  $font-family: inspection.get-theme-typography($theme, button, font-family);
+  $font-size: inspection.get-theme-typography($theme, button, font-size);
+  $font-weight: inspection.get-theme-typography($theme, button, font-weight);
+  $letter-spacing: inspection.get-theme-typography($theme, button, letter-spacing);
+  $text-transform: none;
+
+  @return (
+    filled-label-text-font: $font-family,
+    filled-label-text-size: $font-size,
+    filled-label-text-tracking: $letter-spacing,
+    filled-label-text-transform: none,
+    filled-label-text-weight: $font-weight,
+    outlined-label-text-font: $font-family,
+    outlined-label-text-size: $font-size,
+    outlined-label-text-tracking: $letter-spacing,
+    outlined-label-text-transform: none,
+    outlined-label-text-weight: $font-weight,
+    protected-label-text-font: $font-family,
+    protected-label-text-size: $font-size,
+    protected-label-text-tracking: $letter-spacing,
+    protected-label-text-transform: none,
+    protected-label-text-weight: $font-weight,
+    text-label-text-font: $font-family,
+    text-label-text-size: $font-size,
+    text-label-text-tracking: $letter-spacing,
+    text-label-text-transform: none,
+    text-label-text-weight: $font-weight,
+    tonal-label-text-font: $font-family,
+    tonal-label-text-size: $font-size,
+    tonal-label-text-tracking: $letter-spacing,
+    tonal-label-text-transform: none,
+    tonal-label-text-weight: $font-weight,
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $sizes: (
+    0: 36px,
+    -1: 32px,
+    -2: 28px,
+    -3: 24px,
+  );
+
+  $height: map.get($sizes, $scale);
+  $touch-target-display: if($scale < -1, none, block);
+
+  @return (
+    filled-container-height: $height,
+    filled-touch-target-display: $touch-target-display,
+    outlined-container-height: $height,
+    outlined-touch-target-display: $touch-target-display,
+    protected-container-height: $height,
+    protected-touch-target-display: $touch-target-display,
+    text-container-height: $height,
+    text-touch-target-display: $touch-target-display,
+    tonal-container-height: $height,
+    tonal-touch-target-display: $touch-target-display,
+  );
+}
+
+// Combines the tokens generated by the above functions into a single map with placeholder values.
+// This is used to create token slots.
+@function get-token-slots() {
+  @return sass-utils.deep-merge-all(
+      get-unthemable-tokens(),
+      get-color-tokens(m2-utils.$placeholder-color-config),
+      get-typography-tokens(m2-utils.$placeholder-typography-config),
+      get-density-tokens(m2-utils.$placeholder-density-config)
+  );
+}

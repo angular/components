@@ -57,35 +57,37 @@
   }
 }
 
-@mixin mat-private-button-ripple($prefix, $slots) {
-  @include token-utils.use-tokens($prefix, $slots) {
-    .mat-ripple-element {
-      background-color: token-utils.slot(ripple-color);
-    }
+@mixin mat-private-button-ripple(
+    $ripple-color-token, $state-layer-color-token, $disabled-state-layer-color-token,
+    $hover-state-layer-opacity-token, $focus-state-layer-opacity-token,
+    $pressed-state-layer-opacity-token
+) {
+  .mat-ripple-element {
+    background-color: token-utils.slot($ripple-color-token);
+  }
 
-    .mat-mdc-button-persistent-ripple::before {
-      background-color: token-utils.slot(state-layer-color);
-    }
+  .mat-mdc-button-persistent-ripple::before {
+    background-color: token-utils.slot($state-layer-color-token);
+  }
 
-    &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
-      background-color: token-utils.slot(disabled-state-layer-color);
-    }
+  &.mat-mdc-button-disabled .mat-mdc-button-persistent-ripple::before {
+    background-color: token-utils.slot($disabled-state-layer-color-token);
+  }
 
-    &:hover > .mat-mdc-button-persistent-ripple::before {
-      opacity: token-utils.slot(hover-state-layer-opacity);
-    }
+  &:hover > .mat-mdc-button-persistent-ripple::before {
+    opacity: token-utils.slot($hover-state-layer-opacity-token);
+  }
 
-    &.cdk-program-focused,
-    &.cdk-keyboard-focused,
-    &.mat-mdc-button-disabled-interactive:focus {
-      > .mat-mdc-button-persistent-ripple::before {
-        opacity: token-utils.slot(focus-state-layer-opacity);
-      }
+  &.cdk-program-focused,
+  &.cdk-keyboard-focused,
+  &.mat-mdc-button-disabled-interactive:focus {
+    > .mat-mdc-button-persistent-ripple::before {
+      opacity: token-utils.slot($focus-state-layer-opacity-token);
     }
+  }
 
-    &:active > .mat-mdc-button-persistent-ripple::before {
-      opacity: token-utils.slot(pressed-state-layer-opacity);
-    }
+  &:active > .mat-mdc-button-persistent-ripple::before {
+    opacity: token-utils.slot($pressed-state-layer-opacity-token);
   }
 }
 
@@ -109,17 +111,12 @@
   }
 }
 
-// Adds an elevation shadow to a button.
-@mixin mat-private-button-elevation($token-name) {
-  // MDC outputs a variable that is the same as the token name, but suffixed with `-shadow`.
-  box-shadow: token-utils.slot($token-name + '-shadow');
-}
-
-@mixin mat-private-button-touch-target($is-square, $prefix, $slots) {
+@mixin mat-private-button-touch-target($is-square, $touch-target-display-token) {
   .mat-mdc-button-touch-target {
     position: absolute;
     top: 50%;
     height: 48px;
+    display: token-utils.slot($touch-target-display-token);
 
     @if $is-square {
       left: 50%;
@@ -130,52 +127,44 @@
       right: 0;
       transform: translateY(-50%);
     }
-
-    @include token-utils.use-tokens($prefix, $slots) {
-      display: token-utils.slot(touch-target-display);
-    }
   }
 }
 
-@mixin mat-private-button-horizontal-layout($prefix, $slots, $has-with-icon-padding) {
-  @include token-utils.use-tokens($prefix, $slots) {
-    $icon-spacing: token-utils.slot(icon-spacing, true);
-    $icon-offset: token-utils.slot(icon-offset, true);
+@mixin mat-private-button-horizontal-layout(
+    $icon-spacing-token, $icon-offset-token, $with-icon-horizontal-padding-token: null) {
+  $icon-spacing: token-utils.slot($icon-spacing-token, true);
+  $icon-offset: token-utils.slot($icon-offset-token, true);
 
-    @if ($has-with-icon-padding) {
-      $with-icon-horizontal-padding:
-        token-utils.slot(with-icon-horizontal-padding, true);
-
-      // stylelint-disable-next-line selector-class-pattern
-      &:has(.material-icons, mat-icon, [matButtonIcon]) {
-        padding: 0 $with-icon-horizontal-padding;
-      }
+  @if ($with-icon-horizontal-padding-token) {
+    // stylelint-disable-next-line selector-class-pattern
+    &:has(.material-icons, mat-icon, [matButtonIcon]) {
+      padding: 0 token-utils.slot($with-icon-horizontal-padding-token, true);
     }
+  }
 
-    // MDC expects button icons to contain this HTML content:
-    // ```html
-    //   <span class="mdc-button__icon material-icons">favorite</span>
-    // ```
-    // However, Angular Material expects a `mat-icon` instead. The following
-    // styles will lay out the icons appropriately.
-    & > .mat-icon {
-      margin-right: $icon-spacing;
-      margin-left: $icon-offset;
+  // MDC expects button icons to contain this HTML content:
+  // ```html
+  //   <span class="mdc-button__icon material-icons">favorite</span>
+  // ```
+  // However, Angular Material expects a `mat-icon` instead. The following
+  // styles will lay out the icons appropriately.
+  & > .mat-icon {
+    margin-right: $icon-spacing;
+    margin-left: $icon-offset;
 
-      [dir='rtl'] & {
-        margin-right: $icon-offset;
-        margin-left: $icon-spacing;
-      }
-    }
-
-    .mdc-button__label + .mat-icon {
+    [dir='rtl'] & {
       margin-right: $icon-offset;
       margin-left: $icon-spacing;
+    }
+  }
 
-      [dir='rtl'] & {
-        margin-right: $icon-spacing;
-        margin-left: $icon-offset;
-      }
+  .mdc-button__label + .mat-icon {
+    margin-right: $icon-offset;
+    margin-left: $icon-spacing;
+
+    [dir='rtl'] & {
+      margin-right: $icon-spacing;
+      margin-left: $icon-offset;
     }
   }
 }

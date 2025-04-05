@@ -1,6 +1,5 @@
 @use '@angular/cdk';
-@use '../button/m2-outlined-button';
-@use '../button/m2-text-button';
+@use '../button/m2-button';
 @use '../core/style/variables';
 @use '../core/tokens/token-utils';
 @use './m2-toolbar';
@@ -55,21 +54,13 @@ $height-mobile-portrait: 56px !default;
   .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
     $color-token: null;
 
-    @include token-utils.use-tokens(
-        $token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
       $color-token: token-utils.slot(container-text-color);
     }
 
-    @include token-utils.use-tokens(
-        m2-text-button.$prefix, m2-text-button.get-token-slots()) {
-      $token: token-utils.get-token-variable-name(label-text-color);
-      #{$token}: #{$color-token};
-    }
-
-    @include token-utils.use-tokens(
-        m2-outlined-button.$prefix, m2-outlined-button.get-token-slots()) {
-      $token: token-utils.get-token-variable-name(label-text-color);
-      #{$token}: #{$color-token};
+    @include token-utils.use-tokens(m2-button.$prefix, m2-button.get-token-slots()) {
+      #{token-utils.get-token-variable-name(text-label-text-color)}: #{$color-token};
+      #{token-utils.get-token-variable-name(outlined-label-text-color)}: #{$color-token};
     }
   }
 }

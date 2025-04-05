@@ -13,15 +13,9 @@ package(default_visibility = ["//visibility:public"])
 sass_library(
     name = "m3",
     srcs = [
-        "_m3-extended-fab.scss",
+        "_m3-button.scss",
         "_m3-fab.scss",
-        "_m3-fab-small.scss",
-        "_m3-filled-button.scss",
         "_m3-icon-button.scss",
-        "_m3-outlined-button.scss",
-        "_m3-protected-button.scss",
-        "_m3-text-button.scss",
-        "_m3-tonal-button.scss",
     ],
     deps = [
         "//src/material/core/style:sass_utils",
@@ -32,15 +26,9 @@ sass_library(
 sass_library(
     name = "m2",
     srcs = [
-        "_m2-extended-fab.scss",
+        "_m2-button.scss",
         "_m2-fab.scss",
-        "_m2-fab-small.scss",
-        "_m2-filled-button.scss",
         "_m2-icon-button.scss",
-        "_m2-outlined-button.scss",
-        "_m2-protected-button.scss",
-        "_m2-text-button.scss",
-        "_m2-tonal-button.scss",
     ],
     deps = [
         "//src/material/core/style:elevation",

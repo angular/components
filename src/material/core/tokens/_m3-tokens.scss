@@ -2,15 +2,9 @@
 @use '../../badge/m3-badge';
 @use '../../bottom-sheet/m3-bottom-sheet';
 @use '../../button-toggle/m3-standard-button-toggle';
-@use '../../button/m3-extended-fab';
+@use '../../button/m3-button';
 @use '../../button/m3-fab';
-@use '../../button/m3-fab-small';
-@use '../../button/m3-filled-button';
 @use '../../button/m3-icon-button';
-@use '../../button/m3-outlined-button';
-@use '../../button/m3-protected-button';
-@use '../../button/m3-text-button';
-@use '../../button/m3-tonal-button';
 @use '../../card/m3-card';
 @use '../../card/m3-elevated-card';
 @use '../../card/m3-outlined-card';
@@ -429,6 +423,7 @@ $system-variables-prefix) {
     m3-autocomplete.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-badge.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-bottom-sheet.get-tokens($systems, $exclude-hardcoded, $token-slots),
+    m3-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-chip.get-tokens($systems, $exclude-hardcoded, $token-slots),
@@ -437,10 +432,7 @@ $system-variables-prefix) {
     m3-divider.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-elevated-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-expansion.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-extended-fab.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-fab-small.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-fab.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-filled-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-filled-text-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-form-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-full-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
@@ -452,13 +444,11 @@ $system-variables-prefix) {
     m3-minimal-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-optgroup.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-option.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-outlined-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-outlined-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-outlined-text-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-paginator.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-progress-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-progress-spinner.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-protected-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-radio.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-ripple.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-secondary-navigation-tab.get-tokens($systems, $exclude-hardcoded, $token-slots),
@@ -473,9 +463,7 @@ $system-variables-prefix) {
     m3-tab-header.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-tab-indicator.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-table.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-text-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-timepicker.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tonal-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-toolbar.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-tooltip.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-tree.get-tokens($systems, $exclude-hardcoded, $token-slots),

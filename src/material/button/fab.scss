@@ -3,16 +3,7 @@
 @use '../core/style/private' as style-private;
 @use '../core/style/vendor-prefixes';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use './m2-extended-fab';
 @use './m2-fab';
-@use './m2-fab-small';
-
-$extended-fab-token-prefix: m2-extended-fab.$prefix;
-$extended-fab-token-slots: m2-extended-fab.get-token-slots();
-$fab-token-prefix: m2-fab.$prefix;
-$fab-token-slots: m2-fab.get-token-slots();
-$fab-small-token-prefix: m2-fab-small.$prefix;
-$fab-small-token-slots: m2-fab-small.get-token-slots();
 
 .mat-mdc-fab-base {
   @include vendor-prefixes.user-select(none);
@@ -101,8 +92,11 @@ $fab-small-token-slots: m2-fab-small.get-token-slots();
   }
 }
 
-@mixin _fab-elevation($mat-tokens) {
-  @include token-utils.use-tokens($mat-tokens...) {
+@include token-utils.use-tokens(m2-fab.$prefix, m2-fab.get-token-slots()) {
+  .mat-mdc-fab {
+    background-color: token-utils.slot(container-color);
+    border-radius: token-utils.slot(container-shape);
+    color: token-utils.slot(foreground-color, inherit);
     box-shadow: token-utils.slot(container-elevation-shadow);
 
     &:hover {
@@ -116,100 +110,112 @@ $fab-small-token-slots: m2-fab-small.get-token-slots();
     &:active, &:focus:active {
       box-shadow: token-utils.slot(pressed-container-elevation-shadow);
     }
-  }
-}
 
-@mixin _fab-structure($mat-tokens) {
-  @include token-utils.use-tokens($mat-tokens...) {
-    background-color: token-utils.slot(container-color);
-    border-radius: token-utils.slot(container-shape);
-  }
-
-  @include token-utils.use-tokens($mat-tokens...) {
-    color: token-utils.slot(foreground-color, inherit);
-  }
-
-  @include _fab-elevation($mat-tokens);
-
-  @include button-base.mat-private-button-disabled {
-    @include token-utils.use-tokens($mat-tokens...) {
+    @include button-base.mat-private-button-disabled {
       color: token-utils.slot(disabled-state-foreground-color);
       background-color: token-utils.slot(disabled-state-container-color);
     }
+
+    @include button-base.mat-private-button-touch-target(true, touch-target-display);
+    @include button-base.mat-private-button-ripple(ripple-color, state-layer-color,
+      disabled-state-layer-color, hover-state-layer-opacity, focus-state-layer-opacity,
+      pressed-state-layer-opacity);
   }
 
-  @include button-base.mat-private-button-touch-target(true, $mat-tokens...);
-  @include button-base.mat-private-button-ripple($mat-tokens...);
-}
+  .mat-mdc-mini-fab {
+    width: 40px;
+    height: 40px;
+    background-color: token-utils.slot(small-container-color);
+    border-radius: token-utils.slot(small-container-shape);
+    color: token-utils.slot(small-foreground-color, inherit);
+    box-shadow: token-utils.slot(small-container-elevation-shadow);
 
-.mat-mdc-fab {
-  @include _fab-structure(($fab-token-prefix, $fab-token-slots));
-}
+    &:hover {
+      box-shadow: token-utils.slot(small-hover-container-elevation-shadow);
+    }
 
-.mat-mdc-mini-fab {
-  width: 40px;
-  height: 40px;
+    &:focus {
+      box-shadow: token-utils.slot(small-focus-container-elevation-shadow);
+    }
 
-  @include _fab-structure(($fab-small-token-prefix, $fab-small-token-slots));
-}
+    &:active, &:focus:active {
+      box-shadow: token-utils.slot(small-pressed-container-elevation-shadow);
+    }
 
-.mat-mdc-extended-fab {
-  $mat-tokens: ($extended-fab-token-prefix, $extended-fab-token-slots);
+    @include button-base.mat-private-button-disabled {
+      color: token-utils.slot(small-disabled-state-foreground-color);
+      background-color: token-utils.slot(small-disabled-state-container-color);
+    }
 
-  // Before tokens MDC included the font smoothing automatically, but with
-  // tokens it doesn't. We add it since it can cause tiny differences in
-  // screenshot tests and it generally looks better.
-  @include vendor-prefixes.smooth-font();
-  border-radius: 24px;
-  padding-left: 20px;
-  padding-right: 20px;
-  width: auto;
-  max-width: 100%;
-  line-height: normal;
-
-  @include token-utils.use-tokens($mat-tokens...) {
-    height: token-utils.slot(container-height);
-    border-radius: token-utils.slot(container-shape);
-    font-family: token-utils.slot(label-text-font);
-    font-size: token-utils.slot(label-text-size);
-    font-weight: token-utils.slot(label-text-weight);
-    letter-spacing: token-utils.slot(label-text-tracking);
+    @include button-base.mat-private-button-touch-target(true, small-touch-target-display);
+    @include button-base.mat-private-button-ripple(small-ripple-color, small-state-layer-color,
+      small-disabled-state-layer-color, small-hover-state-layer-opacity, small-focus-state-layer-opacity,
+      small-pressed-state-layer-opacity);
   }
 
-  @include _fab-elevation($mat-tokens);
+  .mat-mdc-extended-fab {
+    // Before tokens MDC included the font smoothing automatically, but with
+    // tokens it doesn't. We add it since it can cause tiny differences in
+    // screenshot tests and it generally looks better.
+    @include vendor-prefixes.smooth-font();
+    border-radius: 24px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: auto;
+    max-width: 100%;
+    line-height: normal;
+    box-shadow: token-utils.slot(extended-container-elevation-shadow);
+    height: token-utils.slot(extended-container-height);
+    border-radius: token-utils.slot(extended-container-shape);
+    font-family: token-utils.slot(extended-label-text-font);
+    font-size: token-utils.slot(extended-label-text-size);
+    font-weight: token-utils.slot(extended-label-text-weight);
+    letter-spacing: token-utils.slot(extended-label-text-tracking);
 
-  @include button-base.mat-private-button-disabled {
-    // Necessary for interactive disabled buttons.
-    &, &:focus {
-      box-shadow: none;
+    &:hover {
+      box-shadow: token-utils.slot(extended-hover-container-elevation-shadow);
+    }
+
+    &:focus {
+      box-shadow: token-utils.slot(extended-focus-container-elevation-shadow);
+    }
+
+    &:active, &:focus:active {
+      box-shadow: token-utils.slot(extended-pressed-container-elevation-shadow);
+    }
+
+    @include button-base.mat-private-button-disabled {
+      // Necessary for interactive disabled buttons.
+      &, &:focus {
+        box-shadow: none;
+      }
+    }
+
+    // stylelint-disable selector-class-pattern
+    // For Extended FAB with text label followed by icon.
+    // We are checking for the a button class because white this is a FAB it
+    // uses the same template as button.
+    [dir='rtl'] & .mdc-button__label + .mat-icon,
+    [dir='rtl'] & .mdc-button__label + .material-icons,
+    > .mat-icon,
+    > .material-icons {
+      margin-left: -8px;
+      margin-right: 12px;
+    }
+
+    .mdc-button__label + .mat-icon,
+    .mdc-button__label + .material-icons,
+    [dir='rtl'] & > .mat-icon,
+    [dir='rtl'] & > .material-icons {
+      margin-left: 12px;
+      margin-right: -8px;
+    }
+    // stylelint-enable selector-class-pattern
+
+    // All FABs are square except the extended ones so we
+    // need to set the touch target back to full-width.
+    .mat-mdc-button-touch-target {
+      width: 100%;
     }
   }
-
-  // stylelint-disable selector-class-pattern
-  // For Extended FAB with text label followed by icon.
-  // We are checking for the a button class because white this is a FAB it
-  // uses the same template as button.
-  [dir='rtl'] & .mdc-button__label + .mat-icon,
-  [dir='rtl'] & .mdc-button__label + .material-icons,
-  > .mat-icon,
-  > .material-icons {
-    margin-left: -8px;
-    margin-right: 12px;
-  }
-
-  .mdc-button__label + .mat-icon,
-  .mdc-button__label + .material-icons,
-  [dir='rtl'] & > .mat-icon,
-  [dir='rtl'] & > .material-icons {
-    margin-left: 12px;
-    margin-right: -8px;
-  }
-  // stylelint-enable selector-class-pattern
-
-  // All FABs are square except the extended ones so we
-  // need to set the touch target back to full-width.
-  .mat-mdc-button-touch-target {
-    width: 100%;
-  }
 }
-
