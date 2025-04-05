@@ -11,7 +11,7 @@
     @for (keyword of keywords(); track keyword) {
       <mat-chip-row (removed)="removeKeyword(keyword)">
         {{keyword}}
-        <button matChipRemove aria-label="'remove ' + keyword">
+        <button matChipRemove [attr.aria-label]="'remove ' + keyword">
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip-row>
