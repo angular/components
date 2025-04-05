@@ -8,6 +8,7 @@
 @use './m2-card';
 @use './m2-elevated-card';
 @use './m2-outlined-card';
+@use './m2-filled-card';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -21,6 +22,10 @@
       @include token-utils.create-token-values-mixed(
         m2-outlined-card.$prefix,
         m2-outlined-card.get-unthemable-tokens()
+      );
+      @include token-utils.create-token-values-mixed(
+        m2-filled-card.$prefix,
+        m2-filled-card.get-unthemable-tokens()
       );
       @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
@@ -44,6 +49,10 @@
         m2-outlined-card.get-color-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
+        m2-filled-card.$prefix,
+        m2-filled-card.get-color-tokens($theme)
+      );
+      @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-color-tokens($theme)
       );
@@ -65,6 +74,10 @@
         m2-outlined-card.get-typography-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
+        m2-filled-card.$prefix,
+        m2-filled-card.get-typography-tokens($theme)
+      );
+      @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-typography-tokens($theme)
       );
@@ -84,6 +97,10 @@
       @include token-utils.create-token-values-mixed(
         m2-outlined-card.$prefix,
         m2-outlined-card.get-density-tokens($theme)
+      );
+      @include token-utils.create-token-values-mixed(
+        m2-filled-card.$prefix,
+        m2-filled-card.get-density-tokens($theme)
       );
       @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
@@ -110,6 +127,11 @@
       tokens: m2-outlined-card.get-token-slots(),
       prefix: 'outlined-',
     ),
+    (
+      namespace: m2-filled-card.$prefix,
+      tokens: m2-filled-card.get-token-slots(),
+      prefix: 'filled-',
+    )
   );
 }
 
@@ -148,6 +170,10 @@
     @include token-utils.create-token-values(
       m2-outlined-card.$prefix,
       map.get($tokens, m2-outlined-card.$prefix)
+    );
+    @include token-utils.create-token-values(
+      m2-filled-card.$prefix,
+      map.get($tokens, m2-filled-card.$prefix)
     );
     @include token-utils.create-token-values(
       m2-card.$prefix,

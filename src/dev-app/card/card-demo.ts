@@ -10,14 +10,14 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardAppearance, MatCardModule} from '@angular/material/card';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   selector: 'card-demo',
   templateUrl: 'card-demo.html',
   styleUrl: 'card-demo.css',
   encapsulation: ViewEncapsulation.None,
-  imports: [MatCardModule, MatButtonModule, MatCheckboxModule, FormsModule],
+  imports: [MatCardModule, MatButtonModule, MatRadioModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardDemo {
@@ -28,7 +28,4 @@ export class CardDemo {
               As of some one gently rapping, rapping at my chamber door.
               “’Tis some visitor,” I muttered, “tapping at my chamber door—
               Only this and nothing more.”`;
-  toggleAppearance() {
-    this.appearance = this.appearance == 'raised' ? 'outlined' : 'raised';
-  }
 }
