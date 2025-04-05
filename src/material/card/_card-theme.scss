@@ -6,22 +6,12 @@
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
 @use './m2-card';
-@use './m2-elevated-card';
-@use './m2-outlined-card';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-elevated-card.$prefix,
-        m2-elevated-card.get-unthemable-tokens()
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-outlined-card.$prefix,
-        m2-outlined-card.get-unthemable-tokens()
-      );
       @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-unthemable-tokens()
@@ -36,14 +26,6 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-elevated-card.$prefix,
-        m2-elevated-card.get-color-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-outlined-card.$prefix,
-        m2-outlined-card.get-color-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-color-tokens($theme)
       );
@@ -56,14 +38,6 @@
     @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-elevated-card.$prefix,
-        m2-elevated-card.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-outlined-card.$prefix,
-        m2-outlined-card.get-typography-tokens($theme)
-      );
       @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-typography-tokens($theme)
@@ -78,14 +52,6 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-elevated-card.$prefix,
-        m2-elevated-card.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-outlined-card.$prefix,
-        m2-outlined-card.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         m2-card.$prefix,
         m2-card.get-density-tokens($theme)
       );
@@ -99,16 +65,6 @@
     (
       namespace: m2-card.$prefix,
       tokens: m2-card.get-token-slots(),
-    ),
-    (
-      namespace: m2-elevated-card.$prefix,
-      tokens: m2-elevated-card.get-token-slots(),
-      prefix: 'elevated-',
-    ),
-    (
-      namespace: m2-outlined-card.$prefix,
-      tokens: m2-outlined-card.get-token-slots(),
-      prefix: 'outlined-',
     ),
   );
 }
@@ -141,14 +97,6 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-elevated-card.$prefix,
-      map.get($tokens, m2-elevated-card.$prefix)
-    );
-    @include token-utils.create-token-values(
-      m2-outlined-card.$prefix,
-      map.get($tokens, m2-outlined-card.$prefix)
-    );
     @include token-utils.create-token-values(
       m2-card.$prefix,
       map.get($tokens, m2-card.$prefix)

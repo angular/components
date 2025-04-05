@@ -6,8 +6,6 @@
 @use '../../button/m2-fab';
 @use '../../button/m2-icon-button';
 @use '../../card/m2-card';
-@use '../../card/m2-elevated-card';
-@use '../../card/m2-outlined-card';
 @use '../../checkbox/m2-checkbox';
 @use '../../chips/m2-chip';
 @use '../../datepicker/m2-datepicker';
@@ -106,7 +104,6 @@
     _get-tokens-for-module($theme, m2-datepicker),
     _get-tokens-for-module($theme, m2-dialog),
     _get-tokens-for-module($theme, m2-divider),
-    _get-tokens-for-module($theme, m2-elevated-card),
     _get-tokens-for-module($theme, m2-expansion),
     _get-tokens-for-module($theme, m2-fab),
     _get-tokens-for-module($theme, m2-filled-text-field),
@@ -120,7 +117,6 @@
     _get-tokens-for-module($theme, m2-minimal-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-optgroup),
     _get-tokens-for-module($theme, m2-option),
-    _get-tokens-for-module($theme, m2-outlined-card),
     _get-tokens-for-module($theme, m2-outlined-text-field),
     _get-tokens-for-module($theme, m2-paginator),
     _get-tokens-for-module($theme, m2-progress-bar),

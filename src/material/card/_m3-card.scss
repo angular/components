@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
+@use '../core/style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, card);
@@ -15,9 +16,27 @@ $prefix: (mat, card);
     m3-utils.generate-typography-tokens($systems, title-text, title-large),
     m3-utils.generate-typography-tokens($systems, subtitle-text, title-medium),
     (
-      subtitle-text-color: map.get($systems, md-sys-color, on-surface)
-    )
+      subtitle-text-color: map.get($systems, md-sys-color, on-surface),
+      elevated-container-color: map.get($systems, md-sys-color, surface-container-low),
+      elevated-container-elevation: map.get($systems, md-sys-elevation, level1),
+      elevated-container-shape: map.get($systems, md-sys-shape, corner-medium),
+      outlined-container-color: map.get($systems, md-sys-color, surface),
+      outlined-container-elevation: map.get($systems, md-sys-elevation, level0),
+      outlined-container-shape: map.get($systems, md-sys-shape, corner-medium),
+      outlined-outline-color: map.get($systems, md-sys-color, outline-variant),
+      outlined-outline-width: if($exclude-hardcoded, null, 1px),
+    ),
   );
+
+  $elevated-elevation: map.get($tokens, elevated-container-elevation);
+  @if ($elevated-elevation != null) {
+    $tokens: map.set($tokens, elevated-container-elevation, elevation.get-box-shadow($elevated-elevation));
+  }
+
+  $outlined-elevation: map.get($tokens, outlined-container-elevation);
+  @if ($outlined-elevation != null) {
+    $tokens: map.set($tokens, outlined-container-elevation, elevation.get-box-shadow($outlined-elevation));
+  }
 
   @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }
