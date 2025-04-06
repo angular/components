@@ -6,7 +6,7 @@
     @for (keyword of templateKeywords(); track keyword) {
       <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
         {{keyword}}
-      <button matChipRemove aria-label="'remove template form' + keyword">
+      <button matChipRemove [attr.aria-label]="'remove template form' + keyword">
         <mat-icon>cancel</mat-icon>
       </button>
       </mat-chip-row>

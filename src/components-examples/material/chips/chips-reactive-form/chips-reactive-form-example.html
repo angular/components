@@ -6,7 +6,7 @@
     @for (keyword of reactiveKeywords(); track keyword) {
       <mat-chip-row (removed)="removeReactiveKeyword(keyword)">
         {{keyword}}
-      <button matChipRemove aria-label="'remove reactive form' + keyword">
+      <button matChipRemove [attr.aria-label]="'remove reactive form' + keyword">
         <mat-icon>cancel</mat-icon>
       </button>
       </mat-chip-row>
