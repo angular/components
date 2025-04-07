@@ -53,17 +53,17 @@ $prefix: (mat, button);
     outlined-ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, primary), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
     outlined-state-layer-color: map.get($systems, md-sys-color, primary),
     protected-container-color: map.get($systems, md-sys-color, surface),
-    protected-container-elevation: map.get($systems, md-sys-elevation, level1),
+    protected-container-elevation-shadow: map.get($systems, md-sys-elevation, level1),
     protected-container-height: if($exclude-hardcoded, null, 40px),
     protected-container-shape: map.get($systems, md-sys-shape, corner-full),
     protected-disabled-container-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    protected-disabled-container-elevation: map.get($systems, md-sys-elevation, level0),
+    protected-disabled-container-elevation-shadow: map.get($systems, md-sys-elevation, level0),
     protected-disabled-label-text-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     protected-disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    protected-focus-container-elevation: map.get($systems, md-sys-elevation, level1),
+    protected-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level1),
     protected-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     protected-horizontal-padding: m3-utils.hardcode(24px, $exclude-hardcoded),
-    protected-hover-container-elevation: map.get($systems, md-sys-elevation, level2),
+    protected-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level2),
     protected-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     protected-icon-offset: m3-utils.hardcode(-8px, $exclude-hardcoded),
     protected-icon-spacing: m3-utils.hardcode(8px, $exclude-hardcoded),
@@ -72,7 +72,7 @@ $prefix: (mat, button);
     protected-label-text-size: map.get($systems, md-sys-typescale, label-large-size),
     protected-label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
     protected-label-text-weight: map.get($systems, md-sys-typescale, label-large-weight),
-    protected-pressed-container-elevation: map.get($systems, md-sys-elevation, level1),
+    protected-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level1),
     protected-pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
     protected-ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, primary), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
     protected-state-layer-color: map.get($systems, md-sys-color, primary),
@@ -173,18 +173,18 @@ $prefix: (mat, button);
   );
 
   $elevation-tokens: (
-    protected-container-elevation,
-    protected-disabled-container-elevation,
-    protected-focus-container-elevation,
-    protected-hover-container-elevation,
-    protected-pressed-container-elevation,
+    protected-container-elevation-shadow,
+    protected-disabled-container-elevation-shadow,
+    protected-focus-container-elevation-shadow,
+    protected-hover-container-elevation-shadow,
+    protected-pressed-container-elevation-shadow,
   );
 
   @each $token in $elevation-tokens {
     $elevation: map.get($tokens, $token);
 
     @if ($elevation != null) {
-      $tokens: map.set($tokens, $token + -shadow, elevation.get-box-shadow($elevation));
+      $tokens: map.set($tokens, $token, elevation.get-box-shadow($elevation));
     }
   }
 

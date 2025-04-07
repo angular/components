@@ -104,14 +104,19 @@ $prefix: (mat, slide-toggle);
     visible-track-opacity: m3-utils.hardcode(1, $exclude-hardcoded),
     visible-track-transition: m3-utils.hardcode(opacity 75ms, $exclude-hardcoded),
     with-icon-handle-size: m3-utils.hardcode(24px, $exclude-hardcoded),
+    handle-elevation-shadow: map.get($systems, md-sys-elevation, level0),
+    disabled-handle-elevation-shadow: map.get($systems, md-sys-elevation, level0),
   );
-  $elevation-tokens: (handle-elevation, disabled-handle-elevation);
+  $elevation-tokens: (
+    handle-elevation-shadow,
+    disabled-handle-elevation-shadow
+  );
 
   @each $token in $elevation-tokens {
     $elevation: map.get($tokens, $token);
 
     @if ($elevation != null) {
-      $tokens: map.set($tokens, $token + -shadow, elevation.get-box-shadow($elevation));
+      $tokens: map.set($tokens, $token, elevation.get-box-shadow($elevation));
     }
   }
 
