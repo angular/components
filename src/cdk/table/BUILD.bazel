@@ -43,6 +43,7 @@ ts_project(
     deps = [
         ":table",
         "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
         "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/collections",
