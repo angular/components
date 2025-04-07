@@ -116,8 +116,7 @@ $_enable-form-field-will-change-reset: true;
   // is disabled, but now there's no token for it so we need to implement it ourselves.
   .mat-form-field-disabled .mdc-text-field__input {
     @include vendor-prefixes.input-placeholder {
-      @include token-utils.use-tokens(
-          m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+      @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
         color: token-utils.slot(disabled-input-text-placeholder-color);
       }
     }

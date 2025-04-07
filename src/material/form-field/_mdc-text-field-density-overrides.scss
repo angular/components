@@ -9,8 +9,7 @@
 // specification. In order to support density, we need to adjust the vertical spacing to be
 // based on the density scale.
 @mixin private-text-field-density-overrides() {
-  @include token-utils.use-tokens(
-      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+  @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
     $height: token-utils.slot(container-height);
 
     .mat-mdc-form-field-infix {

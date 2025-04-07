@@ -12,9 +12,7 @@ package(default_visibility = ["//visibility:public"])
 sass_library(
     name = "m3",
     srcs = [
-        "_m3-filled-text-field.scss",
         "_m3-form-field.scss",
-        "_m3-outlined-text-field.scss",
     ],
     deps = [
         "//src/material/core/style:sass_utils",
@@ -25,9 +23,7 @@ sass_library(
 sass_library(
     name = "m2",
     srcs = [
-        "_m2-filled-text-field.scss",
         "_m2-form-field.scss",
-        "_m2-outlined-text-field.scss",
     ],
     deps = [
         "//src/material/core/style:elevation",

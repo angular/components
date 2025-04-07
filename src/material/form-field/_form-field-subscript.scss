@@ -72,8 +72,7 @@
   .mat-mdc-form-field-error {
     display: block;
 
-    @include token-utils.use-tokens(
-        m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
       color: token-utils.slot(error-text-color);
     }
   }

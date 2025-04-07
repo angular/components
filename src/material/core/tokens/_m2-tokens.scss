@@ -12,9 +12,7 @@
 @use '../../dialog/m2-dialog';
 @use '../../divider/m2-divider';
 @use '../../expansion/m2-expansion';
-@use '../../form-field/m2-filled-text-field';
 @use '../../form-field/m2-form-field';
-@use '../../form-field/m2-outlined-text-field';
 @use '../../grid-list/m2-grid-list';
 @use '../../icon/m2-icon';
 @use '../../list/m2-list';
@@ -105,7 +103,6 @@
     _get-tokens-for-module($theme, m2-divider),
     _get-tokens-for-module($theme, m2-expansion),
     _get-tokens-for-module($theme, m2-fab),
-    _get-tokens-for-module($theme, m2-filled-text-field),
     _get-tokens-for-module($theme, m2-form-field),
     _get-tokens-for-module($theme, m2-grid-list),
     _get-tokens-for-module($theme, m2-icon),
@@ -114,7 +111,6 @@
     _get-tokens-for-module($theme, m2-menu),
     _get-tokens-for-module($theme, m2-optgroup),
     _get-tokens-for-module($theme, m2-option),
-    _get-tokens-for-module($theme, m2-outlined-text-field),
     _get-tokens-for-module($theme, m2-paginator),
     _get-tokens-for-module($theme, m2-progress-bar),
     _get-tokens-for-module($theme, m2-progress-spinner),

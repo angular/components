@@ -1,138 +1,157 @@
 @use '@angular/cdk';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use './m2-filled-text-field';
-@use './m2-outlined-text-field';
+@use './m2-form-field';
 
-$filled-token-prefix: m2-filled-text-field.$prefix;
-$filled-token-slots: m2-filled-text-field.get-token-slots();
-$outlined-token-prefix: m2-outlined-text-field.$prefix;
-$outlined-token-slots: m2-outlined-text-field.get-token-slots();
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
 
 // Includes the structural styles for the form field inherited from MDC.
 @mixin private-text-field-structure {
-  .mdc-text-field {
-    display: inline-flex;
-    align-items: baseline;
-    padding: 0 16px;
-    position: relative;
-    box-sizing: border-box;
-    overflow: hidden;
-    will-change: opacity, transform, color;
+  @include token-utils.use-tokens($token-prefix, $token-slots) {
+    .mdc-text-field {
+      display: inline-flex;
+      align-items: baseline;
+      padding: 0 16px;
+      position: relative;
+      box-sizing: border-box;
+      overflow: hidden;
+      will-change: opacity, transform, color;
 
-    // TODO(crisbeto): The filled form field overrides these while the outlined doesn't.
-    // The correct thing to do would be to remove them from here and have the one based on the
-    // token in the outlined appearance. We keep them as is for now to avoid screenshot diffs.
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-
-  .mdc-text-field__input {
-    width: 100%;
-    min-width: 0;
-    border: none;
-    border-radius: 0;
-    background: none;
-    padding: 0;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-
-    // TODO(crisbeto): this height gets overwritten eventually, but there are some internal
-    // tests that depend on this being here in weird ways so we're keeping it around for now.
-    height: 28px;
-
-    // Note that while this style and the `-ms-clear` are identical, we can't combine
-    // them because if one of them isn't supported, it'll invalidate the whole rule.
-    &::-webkit-calendar-picker-indicator {
-      display: none;
+      // TODO(crisbeto): The filled form field overrides these while the outlined doesn't.
+      // The correct thing to do would be to remove them from here and have the one based on the
+      // token in the outlined appearance. We keep them as is for now to avoid screenshot diffs.
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
-    &::-ms-clear {
-      display: none;
-    }
+    .mdc-text-field__input {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      border-radius: 0;
+      background: none;
+      padding: 0;
+      -moz-appearance: none;
+      -webkit-appearance: none;
 
-    &:focus {
-      outline: none;
-    }
+      // TODO(crisbeto): this height gets overwritten eventually, but there are some internal
+      // tests that depend on this being here in weird ways so we're keeping it around for now.
+      height: 28px;
 
-    &:invalid {
-      box-shadow: none;
-    }
-
-    @include vendor-prefixes.input-placeholder {
-      opacity: 0;
-    }
-
-    .mdc-text-field--no-label &,
-    .mdc-text-field--focused & {
-      @include vendor-prefixes.input-placeholder {
-        opacity: 1;
+      // Note that while this style and the `-ms-clear` are identical, we can't combine
+      // them because if one of them isn't supported, it'll invalidate the whole rule.
+      &::-webkit-calendar-picker-indicator {
+        display: none;
       }
-    }
 
-    .mdc-text-field--disabled:not(.mdc-text-field--no-label) &.mat-mdc-input-disabled-interactive {
+      &::-ms-clear {
+        display: none;
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:invalid {
+        box-shadow: none;
+      }
+
       @include vendor-prefixes.input-placeholder {
         opacity: 0;
       }
-    }
 
-    .mdc-text-field--outlined &,
-    .mdc-text-field--filled.mdc-text-field--no-label & {
-      height: 100%;
-    }
+      .mdc-text-field--no-label &,
+      .mdc-text-field--focused & {
+        @include vendor-prefixes.input-placeholder {
+          opacity: 1;
+        }
+      }
 
-    .mdc-text-field--outlined & {
-      display: flex;
-      border: none !important;
-      background-color: transparent;
-    }
+      .mdc-text-field--disabled:not(.mdc-text-field--no-label) &.mat-mdc-input-disabled-interactive {
+        @include vendor-prefixes.input-placeholder {
+          opacity: 0;
+        }
+      }
 
-    .mdc-text-field--disabled & {
-      pointer-events: auto;
-    }
+      .mdc-text-field--outlined &,
+      .mdc-text-field--filled.mdc-text-field--no-label & {
+        height: 100%;
+      }
 
-    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
-      @include _input-tokens('.mdc-text-field--filled');
-    }
+      .mdc-text-field--outlined & {
+        display: flex;
+        border: none !important;
+        background-color: transparent;
+      }
 
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-      @include _input-tokens('.mdc-text-field--outlined');
-    }
-
-    @include cdk.high-contrast {
       .mdc-text-field--disabled & {
-        background-color: Window;
+        pointer-events: auto;
+      }
+
+      .mdc-text-field--filled:not(.mdc-text-field--disabled) & {
+        color: token-utils.slot(filled-input-text-color);
+        caret-color: token-utils.slot(filled-caret-color);
+
+        @include vendor-prefixes.input-placeholder {
+          color: token-utils.slot(filled-input-text-placeholder-color);
+        }
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) & {
+        color: token-utils.slot(outlined-input-text-color);
+        caret-color: token-utils.slot(outlined-caret-color);
+
+        @include vendor-prefixes.input-placeholder {
+          color: token-utils.slot(outlined-input-text-placeholder-color);
+        }
+      }
+
+      .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
+        caret-color: token-utils.slot(filled-error-caret-color);
+      }
+
+      .mdc-text-field--outlined.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
+        caret-color: token-utils.slot(outlined-error-caret-color);
+      }
+
+      .mdc-text-field--filled.mdc-text-field--disabled & {
+        color: token-utils.slot(filled-disabled-input-text-color);
+      }
+
+      .mdc-text-field--outlined.mdc-text-field--disabled & {
+        color: token-utils.slot(outlined-disabled-input-text-color);
+      }
+
+      @include cdk.high-contrast {
+        .mdc-text-field--disabled & {
+          background-color: Window;
+        }
       }
     }
-  }
 
-  .mdc-text-field--filled {
-    height: 56px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-
-    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
-      border-top-left-radius: token-utils.slot(container-shape);
-      border-top-right-radius: token-utils.slot(container-shape);
+    .mdc-text-field--filled {
+      height: 56px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: token-utils.slot(filled-container-shape);
+      border-top-right-radius: token-utils.slot(filled-container-shape);
 
       &:not(.mdc-text-field--disabled) {
-        background-color: token-utils.slot(container-color);
+        background-color: token-utils.slot(filled-container-color);
       }
 
       &.mdc-text-field--disabled {
-        background-color: token-utils.slot(disabled-container-color);
+        background-color: token-utils.slot(filled-disabled-container-color);
       }
     }
-  }
 
-  .mdc-text-field--outlined {
-    height: 56px;
-    overflow: visible;
-
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-      $shape-var: token-utils.slot(container-shape);
+    .mdc-text-field--outlined {
+      height: 56px;
+      overflow: visible;
+      $shape-var: token-utils.slot(outlined-container-shape);
       padding-right: max(16px, #{$shape-var});
       padding-left: max(16px, calc(#{$shape-var} + 4px));
 
@@ -141,424 +160,405 @@ $outlined-token-slots: m2-outlined-text-field.get-token-slots();
         padding-left: max(16px, #{$shape-var});
       }
     }
-  }
 
-  .mdc-floating-label {
-    position: absolute;
-    left: 0;
-    transform-origin: left top;
-    line-height: 1.15rem;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: text;
-    overflow: hidden;
-    will-change: transform;
+    .mdc-floating-label {
+      position: absolute;
+      left: 0;
+      transform-origin: left top;
+      line-height: 1.15rem;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: text;
+      overflow: hidden;
+      will-change: transform;
 
-    [dir='rtl'] & {
+      [dir='rtl'] & {
+        right: 0;
+        left: auto;
+        transform-origin: right top;
+        text-align: right;
+      }
+
+      .mdc-text-field & {
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+
+      .mdc-notched-outline & {
+        display: inline-block;
+        position: relative;
+        max-width: 100%;
+      }
+
+      .mdc-text-field--outlined & {
+        left: 4px;
+        right: auto;
+      }
+
+      [dir='rtl'] .mdc-text-field--outlined & {
+        left: auto;
+        right: 4px;
+      }
+
+      .mdc-text-field--filled & {
+        left: 16px;
+        right: auto;
+      }
+
+      [dir='rtl'] .mdc-text-field--filled & {
+        left: auto;
+        right: 16px;
+      }
+
+      .mdc-text-field--disabled & {
+        cursor: default;
+
+        @include cdk.high-contrast {
+          z-index: 1;
+        }
+      }
+
+      .mdc-text-field--filled.mdc-text-field--no-label & {
+        display: none;
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled) & {
+        color: token-utils.slot(filled-label-text-color);
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused & {
+        color: token-utils.slot(filled-focus-label-text-color);
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover & {
+        color: token-utils.slot(filled-hover-label-text-color);
+      }
+
+      mdc-text-field--filled.mdc-text-field--disabled & {
+        color: token-utils.slot(filled-disabled-label-text-color);
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid & {
+        color: token-utils.slot(filled-error-label-text-color);
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid.mdc-text-field--focused & {
+        color: token-utils.slot(filled-error-focus-label-text-color);
+      }
+
+      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
+        color: token-utils.slot(filled-error-hover-label-text-color);
+      }
+
+      mdc-text-field--filled & {
+        font-family: token-utils.slot(filled-label-text-font);
+        font-size: token-utils.slot(filled-label-text-size);
+        font-weight: token-utils.slot(filled-label-text-weight);
+        letter-spacing: token-utils.slot(filled-label-text-tracking);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) & {
+        color: token-utils.slot(outlined-label-text-color);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused & {
+        color: token-utils.slot(outlined-focus-label-text-color);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover & {
+        color: token-utils.slot(outlined-hover-label-text-color);
+      }
+
+      .mdc-text-field--outlined.mdc-text-field--disabled & {
+        color: token-utils.slot(outlined-disabled-label-text-color);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid & {
+        color: token-utils.slot(outlined-error-label-text-color);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid.mdc-text-field--focused & {
+        color: token-utils.slot(outlined-error-focus-label-text-color);
+      }
+
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
+        color: token-utils.slot(outlined-error-hover-label-text-color);
+      }
+
+      .mdc-text-field--outlined & {
+        font-family: token-utils.slot(outlined-label-text-font);
+        font-size: token-utils.slot(outlined-label-text-size);
+        font-weight: token-utils.slot(outlined-label-text-weight);
+        letter-spacing: token-utils.slot(outlined-label-text-tracking);
+      }
+    }
+
+    .mdc-floating-label--float-above {
+      cursor: auto;
+      transform: translateY(-106%) scale(0.75);
+
+      .mdc-text-field--filled & {
+        transform: translateY(-106%) scale(0.75);
+      }
+
+      .mdc-text-field--outlined & {
+        transform: translateY(-37.25px) scale(1);
+        font-size: 0.75rem;
+      }
+
+      .mdc-notched-outline & {
+        text-overflow: clip;
+      }
+
+      .mdc-notched-outline--upgraded & {
+        max-width: 133.3333333333%;
+      }
+
+      .mdc-text-field--outlined.mdc-notched-outline--upgraded &,
+      .mdc-text-field--outlined .mdc-notched-outline--upgraded & {
+        transform: translateY(-34.75px) scale(0.75);
+      }
+
+      .mdc-text-field--outlined.mdc-notched-outline--upgraded &,
+      .mdc-text-field--outlined .mdc-notched-outline--upgraded & {
+        font-size: 1rem;
+      }
+    }
+
+    .mdc-floating-label--required {
+      &:not(.mdc-floating-label--hide-required-marker)::after {
+        margin-left: 1px;
+        margin-right: 0;
+        content: '*';
+
+        [dir='rtl'] & {
+          margin-left: 0;
+          margin-right: 1px;
+        }
+      }
+    }
+
+    .mdc-notched-outline {
+      display: flex;
+      position: absolute;
+      top: 0;
       right: 0;
-      left: auto;
-      transform-origin: right top;
-      text-align: right;
-    }
-
-    .mdc-text-field & {
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-
-    .mdc-notched-outline & {
-      display: inline-block;
-      position: relative;
+      left: 0;
+      box-sizing: border-box;
+      width: 100%;
       max-width: 100%;
-    }
+      height: 100%;
+      text-align: left;
+      pointer-events: none;
 
-    .mdc-text-field--outlined & {
-      left: 4px;
-      right: auto;
-    }
+      [dir='rtl'] & {
+        text-align: right;
+      }
 
-    [dir='rtl'] .mdc-text-field--outlined & {
-      left: auto;
-      right: 4px;
-    }
-
-    .mdc-text-field--filled & {
-      left: 16px;
-      right: auto;
-    }
-
-    [dir='rtl'] .mdc-text-field--filled & {
-      left: auto;
-      right: 16px;
-    }
-
-    .mdc-text-field--disabled & {
-      cursor: default;
-
-      @include cdk.high-contrast {
+      .mdc-text-field--outlined & {
         z-index: 1;
       }
     }
 
-    .mdc-text-field--filled.mdc-text-field--no-label & {
-      display: none;
-    }
+    .mat-mdc-notch-piece {
+      box-sizing: border-box;
+      height: 100%;
+      pointer-events: none;
+      border-top: 1px solid;
+      border-bottom: 1px solid;
 
-    @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
-      @include _floating-label-tokens('.mdc-text-field--filled');
-    }
-
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-      @include _floating-label-tokens('.mdc-text-field--outlined');
-    }
-  }
-
-  .mdc-floating-label--float-above {
-    cursor: auto;
-    transform: translateY(-106%) scale(0.75);
-
-    .mdc-text-field--filled & {
-      transform: translateY(-106%) scale(0.75);
-    }
-
-    .mdc-text-field--outlined & {
-      transform: translateY(-37.25px) scale(1);
-      font-size: 0.75rem;
-    }
-
-    .mdc-notched-outline & {
-      text-overflow: clip;
-    }
-
-    .mdc-notched-outline--upgraded & {
-      max-width: 133.3333333333%;
-    }
-
-    .mdc-text-field--outlined.mdc-notched-outline--upgraded &,
-    .mdc-text-field--outlined .mdc-notched-outline--upgraded & {
-      transform: translateY(-34.75px) scale(0.75);
-    }
-
-    .mdc-text-field--outlined.mdc-notched-outline--upgraded &,
-    .mdc-text-field--outlined .mdc-notched-outline--upgraded & {
-      font-size: 1rem;
-    }
-  }
-
-  .mdc-floating-label--required {
-    &:not(.mdc-floating-label--hide-required-marker)::after {
-      margin-left: 1px;
-      margin-right: 0;
-      content: '*';
-
-      [dir='rtl'] & {
-        margin-left: 0;
-        margin-right: 1px;
+      .mdc-text-field--focused & {
+        border-width: 2px;
       }
-    }
-  }
 
-  .mdc-notched-outline {
-    display: flex;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    text-align: left;
-    pointer-events: none;
-
-    [dir='rtl'] & {
-      text-align: right;
-    }
-
-    .mdc-text-field--outlined & {
-      z-index: 1;
-    }
-  }
-
-  .mat-mdc-notch-piece {
-    box-sizing: border-box;
-    height: 100%;
-    pointer-events: none;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-
-    .mdc-text-field--focused & {
-      border-width: 2px;
-    }
-
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
       // Moved out into variables because the selectors we inherited were too long.
       $enabled-selector: '.mdc-text-field--outlined:not(.mdc-text-field--disabled)';
       $hover-selector: ':not(.mdc-text-field--focused):hover';
 
       #{$enabled-selector} & {
-        border-color: token-utils.slot(outline-color);
-        border-width: token-utils.slot(outline-width);
+        border-color: token-utils.slot(outlined-outline-color);
+        border-width: token-utils.slot(outlined-outline-width);
       }
 
       #{$enabled-selector}#{$hover-selector} & {
-        border-color: token-utils.slot(hover-outline-color);
+        border-color: token-utils.slot(outlined-hover-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--focused & {
-        border-color: token-utils.slot(focus-outline-color);
+        border-color: token-utils.slot(outlined-focus-outline-color);
       }
 
       .mdc-text-field--outlined.mdc-text-field--disabled & {
-        border-color: token-utils.slot(disabled-outline-color);
+        border-color: token-utils.slot(outlined-disabled-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid & {
-        border-color: token-utils.slot(error-outline-color);
+        border-color: token-utils.slot(outlined-error-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid#{$hover-selector} .mdc-notched-outline & {
-        border-color: token-utils.slot(error-hover-outline-color);
+        border-color: token-utils.slot(outlined-error-hover-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--invalid.mdc-text-field--focused & {
-        border-color: token-utils.slot(error-focus-outline-color);
+        border-color: token-utils.slot(outlined-error-focus-outline-color);
       }
 
       #{$enabled-selector}.mdc-text-field--focused .mdc-notched-outline & {
-        border-width: token-utils.slot(focus-outline-width);
-      }
-    }
-  }
-
-  .mdc-notched-outline__leading {
-    border-left: 1px solid;
-    border-right: none;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-      border-top-left-radius: token-utils.slot(container-shape);
-      border-bottom-left-radius: token-utils.slot(container-shape);
-
-      .mdc-text-field--outlined .mdc-notched-outline & {
-        $shape-var: token-utils.slot(container-shape);
-        width: max(12px, #{$shape-var});
+        border-width: token-utils.slot(outlined-focus-outline-width);
       }
     }
 
-    [dir='rtl'] & {
-      border-left: none;
-      border-right: 1px solid;
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
-
-      @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-        border-top-right-radius: token-utils.slot(container-shape);
-        border-bottom-right-radius: token-utils.slot(container-shape);
-      }
-    }
-  }
-
-  .mdc-notched-outline__trailing {
-    flex-grow: 1;
-    border-left: none;
-    border-right: 1px solid;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-      border-top-right-radius: token-utils.slot(container-shape);
-      border-bottom-right-radius: token-utils.slot(container-shape);
-    }
-
-    [dir='rtl'] & {
+    .mdc-notched-outline__leading {
       border-left: 1px solid;
       border-right: none;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+      border-top-left-radius: token-utils.slot(outlined-container-shape);
+      border-bottom-left-radius: token-utils.slot(outlined-container-shape);
 
-      @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
-        border-top-left-radius: token-utils.slot(container-shape);
-        border-bottom-left-radius: token-utils.slot(container-shape);
+      .mdc-text-field--outlined .mdc-notched-outline & {
+        $shape-var: token-utils.slot(outlined-container-shape);
+        width: max(12px, #{$shape-var});
+      }
+
+      [dir='rtl'] & {
+        border-left: none;
+        border-right: 1px solid;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: token-utils.slot(outlined-container-shape);
+        border-bottom-right-radius: token-utils.slot(outlined-container-shape);
       }
     }
-  }
 
-  .mdc-notched-outline__notch {
-    flex: 0 0 auto;
-    width: auto;
+    .mdc-notched-outline__trailing {
+      flex-grow: 1;
+      border-left: none;
+      border-right: 1px solid;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: token-utils.slot(outlined-container-shape);
+      border-bottom-right-radius: token-utils.slot(outlined-container-shape);
 
-    @include token-utils.use-tokens($outlined-token-prefix, $outlined-token-slots) {
+      [dir='rtl'] & {
+        border-left: 1px solid;
+        border-right: none;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: token-utils.slot(outlined-container-shape);
+        border-bottom-left-radius: token-utils.slot(outlined-container-shape);
+      }
+    }
+
+    .mdc-notched-outline__notch {
+      flex: 0 0 auto;
+      width: auto;
+
       .mdc-text-field--outlined .mdc-notched-outline & {
-        $shape-var: token-utils.slot(container-shape);
+        $shape-var: token-utils.slot(outlined-container-shape);
         max-width: min(
           var(--mat-form-field-notch-max-width, 100%),
           calc(100% - max(12px, #{$shape-var}) * 2)
         );
       }
+
+      .mdc-text-field--outlined .mdc-notched-outline--notched & {
+        padding-top: 1px;
+      }
+
+      .mdc-text-field--focused.mdc-text-field--outlined .mdc-notched-outline--notched & {
+        padding-top: 2px;
+      }
+
+      .mdc-notched-outline--notched & {
+        padding-left: 0;
+        padding-right: 8px;
+        border-top: none;
+        --mat-form-field-notch-max-width: 100%;
+      }
+
+      [dir='rtl'] .mdc-notched-outline--notched & {
+        padding-left: 8px;
+        padding-right: 0;
+      }
+
+      .mdc-notched-outline--no-label & {
+        display: none;
+      }
     }
 
-    .mdc-text-field--outlined .mdc-notched-outline--notched & {
-      padding-top: 1px;
-    }
+    .mdc-line-ripple {
+      &::before,
+      &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-bottom-style: solid;
+        content: '';
+      }
 
-    .mdc-text-field--focused.mdc-text-field--outlined .mdc-notched-outline--notched & {
-      padding-top: 2px;
-    }
+      &::before {
+        z-index: 1;
+        border-bottom-width: token-utils.slot(filled-active-indicator-height);
 
-    .mdc-notched-outline--notched & {
-      padding-left: 0;
-      padding-right: 8px;
-      border-top: none;
-      --mat-form-field-notch-max-width: 100%;
-    }
-
-    [dir='rtl'] .mdc-notched-outline--notched & {
-      padding-left: 8px;
-      padding-right: 0;
-    }
-
-    .mdc-notched-outline--no-label & {
-      display: none;
-    }
-  }
-
-  .mdc-line-ripple {
-    &::before,
-    &::after {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      border-bottom-style: solid;
-      content: '';
-    }
-
-    &::before {
-      z-index: 1;
-
-      @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
         $enabled-field: '.mdc-text-field--filled:not(.mdc-text-field--disabled)';
 
-        border-bottom-width: token-utils.slot(active-indicator-height);
-
         #{$enabled-field} & {
-          border-bottom-color: token-utils.slot(active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-active-indicator-color);
         }
 
         #{$enabled-field}:not(.mdc-text-field--focused):hover & {
-          border-bottom-color: token-utils.slot(hover-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-hover-active-indicator-color);
         }
 
         .mdc-text-field--filled.mdc-text-field--disabled & {
-          border-bottom-color: token-utils.slot(disabled-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-disabled-active-indicator-color);
         }
 
         #{$enabled-field}.mdc-text-field--invalid & {
-          border-bottom-color: token-utils.slot(error-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-error-active-indicator-color);
         }
 
         #{$enabled-field}.mdc-text-field--invalid:not(.mdc-text-field--focused):hover & {
-          border-bottom-color: token-utils.slot(error-hover-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-error-hover-active-indicator-color);
         }
       }
-    }
 
-    &::after {
-      transform: scaleX(0);
-      opacity: 0;
-      z-index: 2;
+      &::after {
+        transform: scaleX(0);
+        opacity: 0;
+        z-index: 2;
 
-      @include token-utils.use-tokens($filled-token-prefix, $filled-token-slots) {
         .mdc-text-field--filled & {
-          border-bottom-width: token-utils.slot(focus-active-indicator-height);
+          border-bottom-width: token-utils.slot(filled-focus-active-indicator-height);
         }
 
         .mdc-text-field--filled:not(.mdc-text-field--disabled) & {
-          border-bottom-color: token-utils.slot(focus-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-focus-active-indicator-color);
         }
 
         .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
-          border-bottom-color: token-utils.slot(error-focus-active-indicator-color);
+          border-bottom-color: token-utils.slot(filled-error-focus-active-indicator-color);
         }
       }
     }
-  }
 
-  .mdc-line-ripple--active::after {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-
-  .mdc-line-ripple--deactivating::after {
-    opacity: 0;
-  }
-
-  .mdc-text-field--disabled {
-    pointer-events: none;
-  }
-}
-
-// Includes the tokens for the floating label for a specific form field variant.
-@mixin _floating-label-tokens($selector) {
-  $enabled-field: '#{$selector}:not(.mdc-text-field--disabled)';
-
-  #{$enabled-field} & {
-    color: token-utils.slot(label-text-color);
-  }
-
-  #{$enabled-field}.mdc-text-field--focused & {
-    color: token-utils.slot(focus-label-text-color);
-  }
-
-  #{$enabled-field}:not(.mdc-text-field--focused):hover & {
-    color: token-utils.slot(hover-label-text-color);
-  }
-
-  #{$selector}.mdc-text-field--disabled & {
-    color: token-utils.slot(disabled-label-text-color);
-  }
-
-  #{$enabled-field}.mdc-text-field--invalid & {
-    color: token-utils.slot(error-label-text-color);
-  }
-
-  #{$enabled-field}.mdc-text-field--invalid.mdc-text-field--focused & {
-    color: token-utils.slot(error-focus-label-text-color);
-  }
-
-  #{$enabled-field}.mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
-    color: token-utils.slot(error-hover-label-text-color);
-  }
-
-  #{$selector} & {
-    font-family: token-utils.slot(label-text-font);
-    font-size: token-utils.slot(label-text-size);
-    font-weight: token-utils.slot(label-text-weight);
-    letter-spacing: token-utils.slot(label-text-tracking);
-  }
-}
-
-// Includes the tokens for the input for a specific form field variant.
-@mixin _input-tokens($selector) {
-  #{$selector}:not(.mdc-text-field--disabled) & {
-    color: token-utils.slot(input-text-color);
-    caret-color: token-utils.slot(caret-color);
-
-    @include vendor-prefixes.input-placeholder {
-      color: token-utils.slot(input-text-placeholder-color);
+    .mdc-line-ripple--active::after {
+      transform: scaleX(1);
+      opacity: 1;
     }
-  }
 
-  #{$selector}.mdc-text-field--invalid:not(.mdc-text-field--disabled) & {
-    caret-color: token-utils.slot(error-caret-color);
-  }
+    .mdc-line-ripple--deactivating::after {
+      opacity: 0;
+    }
 
-  #{$selector}.mdc-text-field--disabled & {
-    color: token-utils.slot(disabled-input-text-color);
+    .mdc-text-field--disabled {
+      pointer-events: none;
+    }
   }
 }
 
