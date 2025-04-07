@@ -14,6 +14,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
+import {By} from '@angular/platform-browser';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {BehaviorSubject, Observable, combineLatest, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -375,6 +376,15 @@ describe('CdkTable', () => {
     expect(colgroupsAndCols[2].parentNode!.nodeName.toLowerCase()).toBe('table');
     expect(colgroupsAndCols.map(e => e.nodeName.toLowerCase())).toEqual(['colgroup', 'col', 'col']);
   }));
+
+  it('should not throw if `renderRows` is called too early', () => {
+    // Note that we don't call `detectChanges` here, because we're testing specifically
+    // what happens when `renderRows` is called before the first change detection run.
+    const fixture = createComponent(SimpleCdkTableApp);
+    const table = fixture.debugElement.query(By.directive(CdkTable))
+      .componentInstance as CdkTable<unknown>;
+    expect(() => table.renderRows()).not.toThrow();
+  });
 
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [

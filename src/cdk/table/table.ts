@@ -307,7 +307,7 @@ export class CdkTable<T>
   private _document = inject(DOCUMENT);
 
   /** Latest data provided by the data source. */
-  protected _data: readonly T[];
+  protected _data: readonly T[] | undefined;
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -621,10 +621,6 @@ export class CdkTable<T>
 
     this._isServer = !this._platform.isBrowser;
     this._isNativeHtmlTable = this._elementRef.nativeElement.nodeName === 'TABLE';
-  }
-
-  ngOnInit() {
-    this._setupStickyStyler();
 
     // Set up the trackBy function so that it uses the `RenderRow` as its identity by default. If
     // the user has provided a custom trackBy, return the result of that function as evaluated
@@ -632,6 +628,10 @@ export class CdkTable<T>
     this._dataDiffer = this._differs.find([]).create((_i: number, dataRow: RenderRow<T>) => {
       return this.trackBy ? this.trackBy(dataRow.dataIndex, dataRow.data) : dataRow;
     });
+  }
+
+  ngOnInit() {
+    this._setupStickyStyler();
 
     this._viewportRuler
       .change()
@@ -980,6 +980,10 @@ export class CdkTable<T>
     // new cache while unused ones can be picked up by garbage collection.
     const prevCachedRenderRows = this._cachedRenderRowsMap;
     this._cachedRenderRowsMap = new Map();
+
+    if (!this._data) {
+      return renderRows;
+    }
 
     // For each data object, get the list of rows that should be rendered, represented by the
     // respective `RenderRow` object which is the pair of `data` and `CdkRowDef`.
