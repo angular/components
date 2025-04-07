@@ -29,10 +29,7 @@
 @use '../../sort/m2-sort';
 @use '../../stepper/m2-stepper';
 @use '../../table/m2-table';
-@use '../../tabs/m2-secondary-navigation-tab';
-@use '../../tabs/m2-tab-header';
-@use '../../tabs/m2-tab-header-with-background';
-@use '../../tabs/m2-tab-indicator';
+@use '../../tabs/m2-tabs';
 @use '../../timepicker/m2-timepicker';
 @use '../../toolbar/m2-toolbar';
 @use '../../tooltip/m2-tooltip';
@@ -117,7 +114,6 @@
     _get-tokens-for-module($theme, m2-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-radio),
     _get-tokens-for-module($theme, m2-ripple),
-    _get-tokens-for-module($theme, m2-secondary-navigation-tab),
     _get-tokens-for-module($theme, m2-select),
     _get-tokens-for-module($theme, m2-sidenav),
     _get-tokens-for-module($theme, m2-slide-toggle),
@@ -125,9 +121,7 @@
     _get-tokens-for-module($theme, m2-snack-bar),
     _get-tokens-for-module($theme, m2-sort),
     _get-tokens-for-module($theme, m2-stepper),
-    _get-tokens-for-module($theme, m2-tab-header),
-    _get-tokens-for-module($theme, m2-tab-header-with-background),
-    _get-tokens-for-module($theme, m2-tab-indicator),
+    _get-tokens-for-module($theme, m2-tabs),
     _get-tokens-for-module($theme, m2-table),
     _get-tokens-for-module($theme, m2-timepicker),
     _get-tokens-for-module($theme, m2-toolbar),

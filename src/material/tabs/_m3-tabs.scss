@@ -1,0 +1,58 @@
+@use '../core/tokens/m3-utils';
+@use '../core/style/sass-utils';
+@use 'sass:map';
+
+// The prefix used to generate the fully qualified name for tokens in this file.
+$prefix: (mat, tab);
+
+/// Generates the tokens for MDC tab
+/// @param {Map} $systems The MDC system tokens
+/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
+/// @param {Map} $token-slots Possible token slots
+/// @return {Map} A set of tokens for the MDC tab
+@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+  $tokens: sass-utils.merge-all(
+      m3-utils.generate-typography-tokens($systems, label-text, title-small),
+      (
+        active-focus-indicator-color: map.get($systems, md-sys-color, primary),
+        active-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+        active-hover-indicator-color: map.get($systems, md-sys-color, primary),
+        active-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+        active-indicator-color: map.get($systems, md-sys-color, primary),
+        active-indicator-height: m3-utils.hardcode(2px, $exclude-hardcoded),
+        active-indicator-shape: m3-utils.hardcode(0, $exclude-hardcoded),
+        active-label-text-color: map.get($systems, md-sys-color, on-surface),
+        active-ripple-color: map.get($systems, md-sys-color, on-surface),
+        container-height: if($exclude-hardcoded, null, 48px),
+        divider-color: map.get($systems, md-sys-color, surface-variant),
+        divider-height: m3-utils.hardcode(1px, $exclude-hardcoded),
+        inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
+        inactive-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
+        inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
+        inactive-ripple-color: map.get($systems, md-sys-color, on-surface),
+        pagination-icon-color: map.get($systems, md-sys-color, on-surface),
+      ),
+  );
+
+  $variant-tokens: (
+    // Color variants
+    primary: (), // Default, no overrides needed
+    secondary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, secondary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, secondary),
+      active-indicator-color: map.get($systems, md-sys-color, secondary),
+    ),
+    tertiary: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, tertiary),
+      active-hover-indicator-color: map.get($systems, md-sys-color, tertiary),
+      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    ),
+    error: (
+      active-focus-indicator-color: map.get($systems, md-sys-color, error),
+      active-hover-indicator-color: map.get($systems, md-sys-color, error),
+      active-indicator-color: map.get($systems, md-sys-color, error),
+    )
+  );
+
+  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}

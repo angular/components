@@ -29,9 +29,7 @@
 @use '../../sort/m3-sort';
 @use '../../stepper/m3-stepper';
 @use '../../table/m3-table';
-@use '../../tabs/m3-secondary-navigation-tab';
-@use '../../tabs/m3-tab-header';
-@use '../../tabs/m3-tab-indicator';
+@use '../../tabs/m3-tabs';
 @use '../../timepicker/m3-timepicker';
 @use '../../toolbar/m3-toolbar';
 @use '../../tooltip/m3-tooltip';
@@ -442,7 +440,7 @@ $system-variables-prefix) {
     m3-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-radio.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-ripple.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-secondary-navigation-tab.get-tokens($systems, $exclude-hardcoded, $token-slots),
+    m3-tabs.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-select.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-sidenav.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-slide-toggle.get-tokens($systems, $exclude-hardcoded, $token-slots),
@@ -450,8 +448,6 @@ $system-variables-prefix) {
     m3-snack-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-sort.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-stepper.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tab-header.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tab-indicator.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-table.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-timepicker.get-tokens($systems, $exclude-hardcoded, $token-slots),
     m3-toolbar.get-tokens($systems, $exclude-hardcoded, $token-slots),

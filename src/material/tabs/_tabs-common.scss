@@ -1,8 +1,5 @@
 @use '../core/style/vendor-prefixes';
-@use './m2-tab-indicator';
-@use './m2-secondary-navigation-tab';
-@use './m2-tab-header';
-@use './m2-tab-header-with-background';
+@use './m2-tabs';
 @use '../core/tokens/token-utils';
 
 $mat-tab-animation-duration: 500ms !default;
@@ -101,17 +98,11 @@ $mat-tab-animation-duration: 500ms !default;
   // Tabs might be `button` elements so we have to reset the user agent styling.
   background: none;
 
-  @include token-utils.use-tokens(
-    m2-secondary-navigation-tab.$prefix,
-    m2-secondary-navigation-tab.get-token-slots()
-  ) {
+  @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
     height: token-utils.slot(container-height);
   }
 
-  @include token-utils.use-tokens(
-    m2-tab-header.$prefix,
-    m2-tab-header.get-token-slots()
-  ) {
+  @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
     font-family: token-utils.slot(label-text-font);
     font-size: token-utils.slot(label-text-size);
     letter-spacing: token-utils.slot(label-text-tracking);
@@ -127,20 +118,14 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   .mdc-tab-indicator__content--underline {
-    @include token-utils.use-tokens(
-      m2-tab-indicator.$prefix,
-      m2-tab-indicator.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       border-color: token-utils.slot(active-indicator-color);
       border-top-width: token-utils.slot(active-indicator-height);
       border-radius: token-utils.slot(active-indicator-shape);
     }
   }
 
-  @include token-utils.use-tokens(
-    m2-tab-header.$prefix,
-    m2-tab-header.get-token-slots()
-  ) {
+  @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
     &:hover .mdc-tab__text-label {
       color: token-utils.slot(inactive-hover-label-text-color);
     }
@@ -198,10 +183,7 @@ $mat-tab-animation-duration: 500ms !default;
       pointer-events: none;
     }
 
-    @include token-utils.use-tokens(
-      m2-tab-header.$prefix,
-      m2-tab-header.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       .mdc-tab__ripple::before,
       .mat-ripple-element {
         background-color: token-utils.slot(disabled-ripple-color);
@@ -222,19 +204,13 @@ $mat-tab-animation-duration: 500ms !default;
     opacity: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens(
-      m2-tab-header.$prefix,
-      m2-tab-header.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       background-color: token-utils.slot(inactive-ripple-color);
     }
   }
 
   .mdc-tab__text-label {
-    @include token-utils.use-tokens(
-      m2-tab-header.$prefix,
-      m2-tab-header.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       color: token-utils.slot(inactive-label-text-color);
     }
 
@@ -269,10 +245,7 @@ $mat-tab-animation-duration: 500ms !default;
   .mat-ripple-element {
     opacity: 0.12;
 
-    @include token-utils.use-tokens(
-      m2-tab-header.$prefix,
-      m2-tab-header.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       background-color: token-utils.slot(inactive-ripple-color);
     }
   }
@@ -313,10 +286,7 @@ $mat-tab-animation-duration: 500ms !default;
     .mat-ripple-element {
       opacity: 0.12;
 
-      @include token-utils.use-tokens(
-        m2-tab-header.$prefix,
-        m2-tab-header.get-token-slots()
-      ) {
+      @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
         background-color: token-utils.slot(inactive-ripple-color);
       }
     }
@@ -350,10 +320,7 @@ $mat-tab-animation-duration: 500ms !default;
     height: 8px;
     width: 8px;
 
-    @include token-utils.use-tokens(
-      m2-tab-header.$prefix,
-      m2-tab-header.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       border-color: token-utils.slot(pagination-icon-color);
     }
   }
@@ -401,10 +368,7 @@ $mat-tab-animation-duration: 500ms !default;
   // list, but it ended up being hugely breaking internally.
   .cdk-drop-list &,
   &.cdk-drop-list {
-    @include token-utils.use-tokens(
-      m2-secondary-navigation-tab.$prefix,
-      m2-secondary-navigation-tab.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       min-height: token-utils.slot(container-height);
     }
   }
@@ -418,10 +382,7 @@ $mat-tab-animation-duration: 500ms !default;
   flex-grow: 1;
   overflow: hidden;
   z-index: 1;
-  @include token-utils.use-tokens(
-    m2-tab-header.$prefix,
-    m2-tab-header.get-token-slots()
-  ) {
+  @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
     border-bottom-style: solid;
     border-bottom-width: token-utils.slot(divider-height);
     border-bottom-color: token-utils.slot(divider-color);
@@ -439,10 +400,7 @@ $mat-tab-animation-duration: 500ms !default;
 
 @mixin paginated-tab-header-with-background($header-selector, $tab-selector) {
   &.mat-tabs-with-background {
-    @include token-utils.use-tokens(
-      m2-tab-header-with-background.$prefix,
-      m2-tab-header-with-background.get-token-slots()
-    ) {
+    @include token-utils.use-tokens(m2-tabs.$prefix, m2-tabs.get-token-slots()) {
       // Note that these selectors target direct descendants so
       // that the styles don't apply to any nested tab groups.
       > #{$header-selector}, > .mat-mdc-tab-header-pagination {
