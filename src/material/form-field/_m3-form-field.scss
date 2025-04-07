@@ -15,20 +15,25 @@ $prefix: (mat, form-field);
     m3-utils.generate-typography-tokens($systems, container-text, body-large),
     m3-utils.generate-typography-tokens($systems, subscript-text, body-small),
     (
-      disabled-input-text-placeholder-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      disabled-input-text-placeholder-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       state-layer-color: map.get($systems, md-sys-color, on-surface),
       error-text-color: map.get($systems, md-sys-color, error),
       select-option-text-color: map.get($systems, md-ref-palette, neutral10),
-      select-disabled-option-text-color: sass-utils.safe-color-change(map.get($systems, md-ref-palette, neutral10), $alpha: 0.38),
+      select-disabled-option-text-color:
+          sass-utils.safe-color-change(map.get($systems, md-ref-palette, neutral10), $alpha: 0.38),
       enabled-select-arrow-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-select-arrow-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      disabled-select-arrow-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       focus-state-layer-opacity: m3-utils.hardcode(0, $exclude-hardcoded),
       focus-select-arrow-color: map.get($systems, md-sys-color, primary),
       leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-leading-icon-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      disabled-leading-icon-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-trailing-icon-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      disabled-trailing-icon-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       error-focus-trailing-icon-color: map.get($systems, md-sys-color, error),
       error-hover-trailing-icon-color: map.get($systems, md-sys-color, on-error-container),
       error-trailing-icon-color: map.get($systems, md-sys-color, error),
@@ -37,14 +42,19 @@ $prefix: (mat, form-field);
       filled-caret-color: map.get($systems, md-sys-color, primary),
       filled-container-color: map.get($systems, md-sys-color, surface-variant),
       filled-container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-      filled-disabled-active-indicator-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      filled-disabled-container-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.04),
-      filled-disabled-input-text-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      filled-disabled-label-text-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      filled-disabled-active-indicator-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      filled-disabled-container-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.04),
+      filled-disabled-input-text-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      filled-disabled-label-text-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
       filled-error-active-indicator-color: map.get($systems, md-sys-color, error),
       filled-error-focus-active-indicator-color: map.get($systems, md-sys-color, error),
       filled-error-focus-label-text-color: map.get($systems, md-sys-color, error),
-      filled-error-hover-active-indicator-color: map.get($systems, md-sys-color, on-error-container),
+      filled-error-hover-active-indicator-color:
+          map.get($systems, md-sys-color, on-error-container),
       filled-error-hover-label-text-color: map.get($systems, md-sys-color, on-error-container),
       filled-error-label-text-color: map.get($systems, md-sys-color, error),
       filled-focus-active-indicator-color: map.get($systems, md-sys-color, primary),
@@ -61,9 +71,12 @@ $prefix: (mat, form-field);
       filled-label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
       outlined-caret-color: map.get($systems, md-sys-color, primary),
       outlined-container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-      outlined-disabled-input-text-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      outlined-disabled-label-text-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      outlined-disabled-outline-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
+      outlined-disabled-input-text-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      outlined-disabled-label-text-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+      outlined-disabled-outline-color:
+          sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
       outlined-error-focus-label-text-color: map.get($systems, md-sys-color, error),
       outlined-error-focus-outline-color: map.get($systems, md-sys-color, error),
       outlined-error-hover-label-text-color: map.get($systems, md-sys-color, on-error-container),

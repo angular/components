@@ -37,21 +37,29 @@ $prefix: (mat, button-toggle);
 
   @return (
     background-color: inspection.get-theme-color($theme, background, card),
-    disabled-selected-state-background-color:inspection.get-theme-color($theme, background, selected-disabled-button),
+    disabled-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-disabled-button),
     disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
     disabled-state-background-color: inspection.get-theme-color($theme, background, card),
     disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
     divider-color: $divider-color,
-    legacy-disabled-selected-state-background-color: inspection.get-theme-color($theme, background, selected-disabled-button),
-    legacy-disabled-state-background-color: inspection.get-theme-color($theme, background, disabled-button-toggle),
-    legacy-disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
-    legacy-selected-state-background-color: inspection.get-theme-color($theme, background, selected-button),
-    legacy-selected-state-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    legacy-disabled-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-disabled-button),
+    legacy-disabled-state-background-color:
+        inspection.get-theme-color($theme, background, disabled-button-toggle),
+    legacy-disabled-state-text-color:
+        inspection.get-theme-color($theme, foreground, disabled-button),
+    legacy-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-button),
+    legacy-selected-state-text-color:
+        inspection.get-theme-color($theme, foreground, secondary-text),
     legacy-state-layer-color: inspection.get-theme-color($theme, background, focused-button),
     legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
-    selected-state-background-color: inspection.get-theme-color($theme, background, selected-button),
+    selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-button),
     selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    state-layer-color: sass-utils.safe-color-change(inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
+    state-layer-color: sass-utils.safe-color-change(
+        inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
     text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }

@@ -30,12 +30,14 @@ $prefix: (mat, card);
 
   $elevated-elevation: map.get($tokens, elevated-container-elevation);
   @if ($elevated-elevation != null) {
-    $tokens: map.set($tokens, elevated-container-elevation, elevation.get-box-shadow($elevated-elevation));
+    $tokens: map.set($tokens, elevated-container-elevation,
+        elevation.get-box-shadow($elevated-elevation));
   }
 
   $outlined-elevation: map.get($tokens, outlined-container-elevation);
   @if ($outlined-elevation != null) {
-    $tokens: map.set($tokens, outlined-container-elevation, elevation.get-box-shadow($outlined-elevation));
+    $tokens: map.set($tokens, outlined-container-elevation,
+        elevation.get-box-shadow($outlined-elevation));
   }
 
   @return m3-utils.namespace($prefix, $tokens, $token-slots);

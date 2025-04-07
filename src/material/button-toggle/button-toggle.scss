@@ -278,7 +278,8 @@ $legacy-border-radius: 2px !default;
         // In high contrast mode, we use a border for the checked state because backgrounds
         // can either be opaque or transparent. We set the border height to a value that is larger
         // than usual button toggles are. This allows us to keep this high contrast style in the
-        // base component style, instead of making it dependent on height determined through density.
+        // base component style, instead of making it dependent on height determined through
+        // density.
         border-bottom: solid 500px;
       }
     }
@@ -291,7 +292,8 @@ $legacy-border-radius: 2px !default;
 
     // Disable pointer events for the ripple container, because the container will overlay the user
     // content and we don't want to prevent mouse clicks that should toggle the state.
-    // Pointer events can be safely disabled because the ripple trigger element is the label element.
+    // Pointer events can be safely disabled because the ripple trigger element is the label
+    // element.
     pointer-events: none;
   }
 

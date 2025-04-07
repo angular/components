@@ -80,26 +80,33 @@ $prefix: (mat, form-field);
     filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
     filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     filled-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-disabled-label-text-color:sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    filled-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
     filled-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    filled-disabled-input-text-color:sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    filled-input-text-placeholder-color:sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    filled-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    filled-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     filled-error-hover-label-text-color: $warn-color,
     filled-error-focus-label-text-color: $warn-color,
     filled-error-label-text-color: $warn-color,
     filled-error-caret-color: $warn-color,
     filled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.42),
-    filled-disabled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    filled-disabled-active-indicator-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
     filled-hover-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
     filled-error-active-indicator-color: $warn-color,
     filled-error-focus-active-indicator-color: $warn-color,
     filled-error-hover-active-indicator-color: $warn-color,
     outlined-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     outlined-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-disabled-label-text-color:sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    outlined-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
     outlined-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    outlined-disabled-input-text-color:sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    outlined-input-text-placeholder-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    outlined-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    outlined-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     outlined-error-caret-color: $warn-color,
     outlined-error-focus-label-text-color: $warn-color,
     outlined-error-label-text-color: $warn-color,

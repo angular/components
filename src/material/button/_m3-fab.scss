@@ -16,8 +16,10 @@ $prefix: (mat, fab);
     container-color: map.get($systems, md-sys-color, primary-container),
     container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     container-shape: map.get($systems, md-sys-shape, corner-large),
-    disabled-state-container-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    disabled-state-foreground-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    disabled-state-container-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
+    disabled-state-foreground-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     extended-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     extended-container-height: if($exclude-hardcoded, null, 56px),
     extended-container-shape: map.get($systems, md-sys-shape, corner-large),
@@ -35,12 +37,16 @@ $prefix: (mat, fab);
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-primary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+    ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-primary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
     small-container-color: map.get($systems, md-sys-color, primary-container),
     small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     small-container-shape: map.get($systems, md-sys-shape, corner-medium),
-    small-disabled-state-container-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    small-disabled-state-foreground-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    small-disabled-state-container-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
+    small-disabled-state-foreground-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     small-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     small-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     small-foreground-color: map.get($systems, md-sys-color, on-primary-container),
@@ -48,7 +54,9 @@ $prefix: (mat, fab);
     small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
     small-pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    small-ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-primary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+    small-ripple-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-primary-container),
+        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
     small-state-layer-color: map.get($systems, md-sys-color, on-primary-container),
     state-layer-color: map.get($systems, md-sys-color, on-primary-container),
   );
@@ -91,7 +99,9 @@ $prefix: (mat, fab);
       hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-secondary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+      ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-secondary-container),
+          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
       small-container-color: map.get($systems, md-sys-color, secondary-container),
       small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
       small-container-shape: map.get($systems, md-sys-shape, corner-medium),
@@ -101,8 +111,11 @@ $prefix: (mat, fab);
       small-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
       small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-      small-ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-secondary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+      small-pressed-state-layer-opacity:
+          map.get($systems, md-sys-state, pressed-state-layer-opacity),
+      small-ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-secondary-container),
+          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
       small-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
       state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
     ),
@@ -122,7 +135,9 @@ $prefix: (mat, fab);
       hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
       hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-tertiary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+      ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-tertiary-container),
+          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
       small-container-color: map.get($systems, md-sys-color, tertiary-container),
       small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
       small-container-shape: map.get($systems, md-sys-shape, corner-medium),
@@ -132,7 +147,9 @@ $prefix: (mat, fab);
       small-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
       small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
       small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-ripple-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-tertiary-container), $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
+      small-ripple-color: sass-utils.safe-color-change(
+          map.get($systems, md-sys-color, on-tertiary-container),
+          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
       small-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
       state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
     )

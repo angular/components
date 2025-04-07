@@ -37,8 +37,10 @@ $prefix: (mat, fab);
 
   @return (
     container-color: inspection.get-theme-color($theme, background, card),
-    disabled-state-container-color:inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    disabled-state-foreground-color:inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    disabled-state-container-color:
+        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+    disabled-state-foreground-color:
+        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
     disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     foreground-color: inspection.get-theme-color($theme, foreground, base),
@@ -46,8 +48,10 @@ $prefix: (mat, fab);
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     small-container-color: inspection.get-theme-color($theme, background, card),
-    small-disabled-state-container-color: inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    small-disabled-state-foreground-color: inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    small-disabled-state-container-color:
+        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+    small-disabled-state-foreground-color:
+        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
     small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     small-foreground-color: inspection.get-theme-color($theme, foreground, base),

@@ -81,7 +81,8 @@
         text-icon-spacing, text-icon-offset, text-with-icon-horizontal-padding);
     @include button-base.mat-private-button-ripple(
         text-ripple-color, text-state-layer-color, text-disabled-state-layer-color,
-        text-hover-state-layer-opacity, text-focus-state-layer-opacity, text-pressed-state-layer-opacity);
+        text-hover-state-layer-opacity, text-focus-state-layer-opacity,
+        text-pressed-state-layer-opacity);
     @include button-base.mat-private-button-touch-target(false, text-touch-target-display);
   }
 
@@ -99,7 +100,8 @@
         filled-icon-spacing, filled-icon-offset);
     @include button-base.mat-private-button-ripple(
         filled-ripple-color, filled-state-layer-color, filled-disabled-state-layer-color,
-        filled-hover-state-layer-opacity, filled-focus-state-layer-opacity, filled-pressed-state-layer-opacity);
+        filled-hover-state-layer-opacity, filled-focus-state-layer-opacity,
+        filled-pressed-state-layer-opacity);
     @include button-base.mat-private-button-touch-target(false, filled-touch-target-display);
 
     &:not(:disabled) {
@@ -134,7 +136,8 @@
         protected-icon-spacing, protected-icon-offset);
     @include button-base.mat-private-button-ripple(
         protected-ripple-color, protected-state-layer-color, protected-disabled-state-layer-color,
-        protected-hover-state-layer-opacity, protected-focus-state-layer-opacity, protected-pressed-state-layer-opacity);
+        protected-hover-state-layer-opacity, protected-focus-state-layer-opacity,
+        protected-pressed-state-layer-opacity);
     @include button-base.mat-private-button-touch-target(false, protected-touch-target-display);
 
     &:not(:disabled) {

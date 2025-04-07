@@ -13,12 +13,15 @@ $prefix: (mat, pseudo-checkbox-full);
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
     full-disabled-selected-checkmark-color: map.get($systems, md-sys-color, surface),
-    full-disabled-selected-icon-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    full-disabled-unselected-icon-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    full-disabled-selected-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    full-disabled-unselected-icon-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     full-selected-checkmark-color: map.get($systems, md-sys-color, on-primary),
     full-selected-icon-color: map.get($systems, md-sys-color, primary),
     full-unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    minimal-disabled-selected-checkmark-color: sass-utils.safe-color-change(map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
+    minimal-disabled-selected-checkmark-color: sass-utils.safe-color-change(
+        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     minimal-selected-checkmark-color: map.get($systems, md-sys-color, primary),
   );
 

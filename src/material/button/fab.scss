@@ -149,8 +149,8 @@
 
     @include button-base.mat-private-button-touch-target(true, small-touch-target-display);
     @include button-base.mat-private-button-ripple(small-ripple-color, small-state-layer-color,
-      small-disabled-state-layer-color, small-hover-state-layer-opacity, small-focus-state-layer-opacity,
-      small-pressed-state-layer-opacity);
+      small-disabled-state-layer-color, small-hover-state-layer-opacity,
+      small-focus-state-layer-opacity, small-pressed-state-layer-opacity);
   }
 
   .mat-mdc-extended-fab {
@@ -158,7 +158,6 @@
     // tokens it doesn't. We add it since it can cause tiny differences in
     // screenshot tests and it generally looks better.
     @include vendor-prefixes.smooth-font();
-    border-radius: 24px;
     padding-left: 20px;
     padding-right: 20px;
     width: auto;
