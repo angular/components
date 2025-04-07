@@ -316,7 +316,7 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
     _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
     _contentRowDefs: QueryList<CdkRowDef<T>>;
-    protected _data: readonly T[];
+    protected _data: readonly T[] | undefined;
     get dataSource(): CdkTableDataSourceInput<T>;
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
     // (undocumented)
