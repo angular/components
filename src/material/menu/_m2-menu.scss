@@ -31,13 +31,16 @@ $prefix: (mat, menu);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
     if($is-dark, 0.08, 0.04));
+  $disabled-background: inspection.get-theme-color($theme, foreground, disabled-button);
   $text-color: inspection.get-theme-color($theme, foreground, text);
 
   @return (
     item-label-text-color: $text-color,
     item-icon-color: $text-color,
     item-hover-state-layer-color: $active-state-layer-color,
+    item-disabled-hover-state-layer-color: $disabled-background,
     item-focus-state-layer-color: $active-state-layer-color,
+    item-disabled-focus-state-layer-color: $disabled-background,
     container-color: inspection.get-theme-color($theme, background, card),
     divider-color: inspection.get-theme-color($theme, foreground, divider),
   );

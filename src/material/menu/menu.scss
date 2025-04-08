@@ -165,7 +165,9 @@ mat-menu {
     // The class selector isn't specific enough to overide the link pseudo selectors so we need
     // to target them specifically, otherwise the item color might be overwritten by the user
     // agent resets of the app.
-    &, &:visited, &:link {
+    &,
+    &:visited,
+    &:link {
       color: token-utils.slot(item-label-text-color);
     }
 
@@ -191,6 +193,19 @@ mat-menu {
       left: 0;
       bottom: 0;
       right: 0;
+    }
+    @include token-utils.use-tokens($token-prefix, $token-slots) {
+      &.mat-mdc-menu-item-disabled-interactive {
+        &:hover {
+          background-color: token-utils.slot(item-disabled-hover-state-layer-color);
+        }
+
+        &.cdk-program-focused,
+        &.cdk-keyboard-focused,
+        &.mat-mdc-menu-item-highlighted {
+          background-color: token-utils.slot(item-disabled-focus-state-layer-color);
+        }
+      }
     }
   }
 
