@@ -30,21 +30,25 @@ $_density-tokens: (
     (mat, datepicker): (),
     (mat, dialog): (),
     (mat, divider): (),
-    (mat, card-elevated): (),
     (mat, expansion): (
       header-collapsed-state-height: (48px, 44px, 40px, 36px),
       header-expanded-state-height: (64px, 60px, 56px, 48px),
     ),
-    (mat, fab-extended): (),
     (mat, fab): (
       touch-target-display: (block, block, none, none),
     ),
-    (mat, fab-small): (),
-    (mat, button-filled): (
-      touch-target-display: (block, block, none, none),
-      container-height: (40px, 36px, 32px, 28px),
+    (mat, button): (
+      filled-touch-target-display: (block, block, none, none),
+      filled-container-height: (40px, 36px, 32px, 28px),
+      outlined-container-height: (40px, 36px, 32px, 28px),
+      outlined-touch-target-display: (block, block, none, none),
+      protected-touch-target-display: (block, block, none, none),
+      protected-container-height: (40px, 36px, 32px, 28px),
+      text-touch-target-display: (block, block, none, none),
+      text-container-height: (40px, 36px, 32px, 28px),
+      tonal-container-height: (40px, 36px, 32px, 28px),
+      tonal-touch-target-display: (block, block, none, none),
     ),
-    (mat, form-field-filled): (),
     (mat, form-field): (
       container-height: (56px, 52px, 48px, 44px, 40px, 36px),
       filled-label-display: (block, block, none, none, none, none),
@@ -52,7 +56,6 @@ $_density-tokens: (
       filled-with-label-container-padding-top: (24px, 22px, 12px, 10px, 8px, 6px),
       filled-with-label-container-padding-bottom: (8px, 6px, 12px, 10px, 8px, 6px),
     ),
-    (mat, pseudo-checkbox-full): (),
     (mat, grid-list): (),
     (mat, icon): (),
     (mat, icon-button): (
@@ -69,15 +72,8 @@ $_density-tokens: (
       list-item-three-line-container-height: (88px, 84px, 80px, 76px, 72px, 56px),
     ),
     (mat, menu): (),
-    (mat, pseudo-checkbox-minimal): (),
     (mat, optgroup): (),
     (mat, option): (),
-    (mat, button-outlined): (
-      container-height: (40px, 36px, 32px, 28px),
-      touch-target-display: (block, block, none, none),
-    ),
-    (mat, card-outlined): (),
-    (mat, form-field-outlined): (),
     (mat, paginator): (
       container-size: (56px, 52px, 48px, 40px),
       form-field-container-height: (40px, 40px, 40px, 40px, 40px, 36px),
@@ -85,10 +81,6 @@ $_density-tokens: (
       touch-target-display: (block, block, none, none),
     ),
     (mat, tooltip): (),
-    (mat, button-protected): (
-      touch-target-display: (block, block, none, none),
-      container-height: (40px, 36px, 32px, 28px),
-    ),
     (mat, radio): (
       touch-target-display: (block, block, none, none),
       state-layer-size: (40px, 36px, 32px, 28px),
@@ -116,15 +108,7 @@ $_density-tokens: (
       footer-container-height: (52px, 48px, 44px, 40px, 36px),
       row-item-container-height: (52px, 48px, 44px, 40px, 36px),
     ),
-    (mat, button-text): (
-      touch-target-display: (block, block, none, none),
-      container-height: (40px, 36px, 32px, 28px),
-    ),
     (mat, timepicker): (),
-    (mat, button-tonal): (
-      container-height: (40px, 36px, 32px, 28px),
-      touch-target-display: (block, block, none, none),
-    ),
     (mat, toolbar): (
       standard-height: (64px, 60px, 56px, 52px),
       mobile-height: (56px, 52px, 48px, 44px),
