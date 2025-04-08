@@ -9,6 +9,7 @@ import {
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {CdkScrollable, ScrollDispatcher, ScrollingModule} from './public-api';
 import {dispatchFakeEvent} from '../testing/private';
+import {filter} from 'rxjs/operators';
 
 describe('ScrollDispatcher', () => {
   beforeEach(waitForAsync(() => {
@@ -106,7 +107,10 @@ describe('ScrollDispatcher', () => {
     it('should not register the same scrollable twice', () => {
       const scrollable = fixture.componentInstance.scrollable;
       const scrollSpy = jasmine.createSpy('scroll spy');
-      const scrollSubscription = scroll.scrolled(0).subscribe(scrollSpy);
+      const scrollSubscription = scroll
+        .scrolled(0)
+        .pipe(filter(target => target === scrollable))
+        .subscribe(scrollSpy);
 
       expect(scroll.scrollContainers.has(scrollable)).toBe(true);
 
@@ -118,6 +122,18 @@ describe('ScrollDispatcher', () => {
 
       expect(scrollSpy).not.toHaveBeenCalled();
       scrollSubscription.unsubscribe();
+    });
+
+    it('should register a capturing scroll event on the document', () => {
+      const spy = spyOn(document, 'addEventListener').and.callThrough();
+      const subscription = scroll.scrolled(0).subscribe();
+
+      expect(spy).toHaveBeenCalledWith(
+        'scroll',
+        jasmine.any(Function),
+        jasmine.objectContaining({capture: true}),
+      );
+      subscription.unsubscribe();
     });
   });
 
