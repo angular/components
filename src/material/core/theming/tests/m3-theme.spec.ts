@@ -39,11 +39,6 @@ function intersection<T>(set: Set<T>, ...sets: Set<T>[]): Set<T> {
   return new Set([...set].filter(i => sets.every(s => s.has(i))));
 }
 
-/** Expects the given warning to be reported in Sass. */
-function expectWarning(message: RegExp) {
-  expect(getMatchingWarning(message)).withContext('Expected warning to be printed.').toBeDefined();
-}
-
 /** Expects the given warning not to be reported in Sass. */
 function expectNoWarning(message: RegExp) {
   expect(getMatchingWarning(message))
