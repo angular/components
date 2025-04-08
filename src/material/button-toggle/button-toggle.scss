@@ -4,8 +4,7 @@
 @use '../core/style/layout-common';
 @use '../core/style/elevation';
 @use '../core/tokens/token-utils';
-@use './m2-legacy-button-toggle';
-@use './m2-standard-button-toggle';
+@use './m2-button-toggle';
 
 $standard-padding: 12px !default;
 $legacy-padding: 16px !default;
@@ -18,170 +17,147 @@ $legacy-height: 36px !default;
 $standard-border-radius: 4px !default;
 $legacy-border-radius: 2px !default;
 
-$_legacy-tokens: (
-  m2-legacy-button-toggle.$prefix,
-  m2-legacy-button-toggle.get-token-slots()
-);
+@include token-utils.use-tokens(m2-button-toggle.$prefix, m2-button-toggle.get-token-slots()) {
+  .mat-button-toggle-standalone,
+  .mat-button-toggle-group {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: token-utils.slot(legacy-shape);
 
-$_standard-tokens: (
-  m2-standard-button-toggle.$prefix,
-  m2-standard-button-toggle.get-token-slots()
-);
+    // Fixes the ripples not being clipped to the border radius on Safari.
+    transform: translateZ(0);
 
-.mat-button-toggle-standalone,
-.mat-button-toggle-group {
-  position: relative;
-  display: inline-flex;
-  flex-direction: row;
-  white-space: nowrap;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
+    @include elevation.overridable-elevation(2);
 
-  // Fixes the ripples not being clipped to the border radius on Safari.
-  transform: translateZ(0);
-
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    border-radius: token-utils.slot(shape);
+    @include cdk.high-contrast {
+      outline: solid 1px;
+    }
   }
 
-  @include elevation.overridable-elevation(2);
-
-  @include cdk.high-contrast {
-    outline: solid 1px;
-  }
-}
-
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-.mat-button-toggle-group-appearance-standard {
-  @include token-utils.use-tokens($_standard-tokens...) {
+  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
+  .mat-button-toggle-group-appearance-standard {
     border-radius: token-utils.slot(shape);
     border: solid 1px token-utils.slot(divider-color);
 
     .mat-pseudo-checkbox {
       --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
-          token-utils.slot(selected-state-text-color)};
+        token-utils.slot(selected-state-text-color)};
+    }
+
+    &:not([class*='mat-elevation-z']) {
+      box-shadow: none;
+    }
+
+    @include cdk.high-contrast {
+      outline: 0;
     }
   }
 
-  &:not([class*='mat-elevation-z']) {
-    box-shadow: none;
+  .mat-button-toggle-vertical {
+    flex-direction: column;
+
+    .mat-button-toggle-label-content {
+      // Vertical button toggles shouldn't be an inline-block, because the toggles should
+      // fill the available width in the group.
+      display: block;
+    }
   }
 
-  @include cdk.high-contrast {
-    outline: 0;
-  }
-}
-
-.mat-button-toggle-vertical {
-  flex-direction: column;
-
-  .mat-button-toggle-label-content {
-    // Vertical button toggles shouldn't be an inline-block, because the toggles should
-    // fill the available width in the group.
-    display: block;
-  }
-}
-
-.mat-button-toggle {
-  white-space: nowrap;
-  position: relative;
-
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    color: token-utils.slot(text-color);
-    font-family: token-utils.slot(label-text-font);
-    font-size: token-utils.slot(label-text-size);
-    line-height: token-utils.slot(label-text-line-height);
-    font-weight: token-utils.slot(label-text-weight);
-    letter-spacing: token-utils.slot(label-text-tracking);
+  .mat-button-toggle {
+    white-space: nowrap;
+    position: relative;
+    color: token-utils.slot(legacy-text-color);
+    font-family: token-utils.slot(legacy-label-text-font);
+    font-size: token-utils.slot(legacy-label-text-size);
+    line-height: token-utils.slot(legacy-label-text-line-height);
+    font-weight: token-utils.slot(legacy-label-text-weight);
+    letter-spacing: token-utils.slot(legacy-label-text-tracking);
 
     --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
-        token-utils.slot(selected-state-text-color)};
+      token-utils.slot(legacy-selected-state-text-color)};
 
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
-      opacity: token-utils.slot(focus-state-layer-opacity);
+      opacity: token-utils.slot(legacy-focus-state-layer-opacity);
+    }
+
+    // Fixes SVG icons that get thrown off because of the `vertical-align` on the parent.
+    .mat-icon svg {
+      vertical-align: top;
     }
   }
 
-  // Fixes SVG icons that get thrown off because of the `vertical-align` on the parent.
-  .mat-icon svg {
-    vertical-align: top;
+  .mat-button-toggle-checkbox-wrapper {
+    display: inline-block;
+    justify-content: flex-start;
+    align-items: center;
+    width: 0;
+    height: $_checkmark-size;
+    line-height: $_checkmark-size;
+    overflow: hidden;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: $legacy-padding;
+
+    // Uses a 3d transform, because otherwise Safari has some some of rendering
+    // artifact that adds a small gap between the two parts of the checkmark.
+    transform: translate3d(0, -50%, 0);
+
+    [dir='rtl'] & {
+      left: auto;
+      right: $legacy-padding;
+    }
+
+    .mat-button-toggle-appearance-standard & {
+      left: $standard-padding;
+    }
+
+    [dir='rtl'] .mat-button-toggle-appearance-standard & {
+      left: auto;
+      right: $standard-padding;
+    }
+
+    .mat-button-toggle-checked & {
+      width: $_checkmark-size;
+    }
+
+    .mat-button-toggle-animations-enabled & {
+      transition: width $_checkmark-transition;
+    }
+
+    // Disable the transition in vertical mode since it looks weird.
+    // There should be a limited amount of usages anyway.
+    .mat-button-toggle-vertical & {
+      transition: none;
+    }
   }
-}
 
-.mat-button-toggle-checkbox-wrapper {
-  display: inline-block;
-  justify-content: flex-start;
-  align-items: center;
-  width: 0;
-  height: $_checkmark-size;
-  line-height: $_checkmark-size;
-  overflow: hidden;
-  box-sizing: border-box;
-  position: absolute;
-  top: 50%;
-  left: $legacy-padding;
-
-  // Uses a 3d transform, because otherwise Safari has some some of rendering
-  // artifact that adds a small gap between the two parts of the checkmark.
-  transform: translate3d(0, -50%, 0);
-
-  [dir='rtl'] & {
-    left: auto;
-    right: $legacy-padding;
+  .mat-button-toggle-checked {
+    color: token-utils.slot(legacy-selected-state-text-color);
+    background-color: token-utils.slot(legacy-selected-state-background-color);
   }
 
-  .mat-button-toggle-appearance-standard & {
-    left: $standard-padding;
-  }
-
-  [dir='rtl'] .mat-button-toggle-appearance-standard & {
-    left: auto;
-    right: $standard-padding;
-  }
-
-  .mat-button-toggle-checked & {
-    width: $_checkmark-size;
-  }
-
-  .mat-button-toggle-animations-enabled & {
-    transition: width $_checkmark-transition;
-  }
-
-  // Disable the transition in vertical mode since it looks weird.
-  // There should be a limited amount of usages anyway.
-  .mat-button-toggle-vertical & {
-    transition: none;
-  }
-}
-
-.mat-button-toggle-checked {
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    color: token-utils.slot(selected-state-text-color);
-    background-color: token-utils.slot(selected-state-background-color);
-  }
-}
-
-.mat-button-toggle-disabled {
-  pointer-events: none;
-
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    color: token-utils.slot(disabled-state-text-color);
-    background-color: token-utils.slot(disabled-state-background-color);
+  .mat-button-toggle-disabled {
+    pointer-events: none;
+    color: token-utils.slot(legacy-disabled-state-text-color);
+    background-color: token-utils.slot(legacy-disabled-state-background-color);
     --mat-pseudo-checkbox-minimal-disabled-selected-checkmark-color: #{
-        token-utils.slot(disabled-state-text-color)};
+      token-utils.slot(legacy-disabled-state-text-color)};
 
     &.mat-button-toggle-checked {
-      background-color: token-utils.slot(disabled-selected-state-background-color);
+      background-color: token-utils.slot(legacy-disabled-selected-state-background-color);
     }
   }
-}
 
-.mat-button-toggle-disabled-interactive {
-  pointer-events: auto;
-}
+  .mat-button-toggle-disabled-interactive {
+    pointer-events: auto;
+  }
 
-.mat-button-toggle-appearance-standard {
-  @include token-utils.use-tokens($_standard-tokens...) {
+  .mat-button-toggle-appearance-standard {
     $divider-color: token-utils.slot(divider-color);
     color: token-utils.slot(text-color);
     background-color: token-utils.slot(background-color);
@@ -217,7 +193,7 @@ $_standard-tokens: (
 
       .mat-pseudo-checkbox {
         --mat-pseudo-checkbox-minimal-disabled-selected-checkmark-color: #{
-            token-utils.slot(disabled-selected-state-text-color)};
+          token-utils.slot(disabled-selected-state-text-color)};
       }
 
       &.mat-button-toggle-checked {
@@ -241,145 +217,136 @@ $_standard-tokens: (
     &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
       opacity: token-utils.slot(focus-state-layer-opacity);
     }
-  }
 
-  // On touch devices the hover state will linger on the element after the user has tapped.
-  // Disable it, because it can be confused with focus. We target the :hover state explicitly,
-  // because we still want to preserve the keyboard focus state for hybrid devices that have
-  // a keyboard and a touchscreen.
-  @media (hover: none) {
-    &:hover .mat-button-toggle-focus-overlay {
-      display: none;
+    // On touch devices the hover state will linger on the element after the user has tapped.
+    // Disable it, because it can be confused with focus. We target the :hover state explicitly,
+    // because we still want to preserve the keyboard focus state for hybrid devices that have
+    // a keyboard and a touchscreen.
+    @media (hover: none) {
+      &:hover .mat-button-toggle-focus-overlay {
+        display: none;
+      }
     }
   }
-}
 
-.mat-button-toggle-label-content {
-  @include vendor-prefixes.user-select(none);
-  display: inline-block;
-  padding: 0 $legacy-padding;
+  .mat-button-toggle-label-content {
+    @include vendor-prefixes.user-select(none);
+    display: inline-block;
+    padding: 0 $legacy-padding;
+    line-height: token-utils.slot(legacy-height);
 
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    line-height: token-utils.slot(height);
-  }
+    // Prevents IE from shifting the content on click.
+    position: relative;
 
-  // Prevents IE from shifting the content on click.
-  position: relative;
-
-  .mat-button-toggle-appearance-standard & {
-    padding: 0 $standard-padding;
-
-    @include token-utils.use-tokens($_standard-tokens...) {
+    .mat-button-toggle-appearance-standard & {
+      padding: 0 $standard-padding;
       line-height: token-utils.slot(height);
     }
   }
-}
 
-.mat-button-toggle-label-content > * {
-  vertical-align: middle;
-}
-
-// Overlay to be used as a tint.
-.mat-button-toggle-focus-overlay {
-  @include layout-common.fill;
-  border-radius: inherit;
-
-  // Disable pointer events to prevent it from hijacking user events.
-  pointer-events: none;
-  opacity: 0;
-
-  @include token-utils.use-tokens($_legacy-tokens...) {
-    background-color: token-utils.slot(state-layer-color);
+  .mat-button-toggle-label-content > * {
+    vertical-align: middle;
   }
-}
 
-@include cdk.high-contrast {
-  // Changing the background color for the selected item won't be visible in high contrast mode.
-  // We fall back to using the overlay to draw a brighter, semi-transparent tint on top instead.
-  // It uses a border, because the browser will render it using a brighter color.
-  .mat-button-toggle-checked {
-    .mat-button-toggle-focus-overlay {
-      border-bottom: solid 500px;
-      opacity: 0.5;
-      height: 0;
-    }
+  // Overlay to be used as a tint.
+  .mat-button-toggle-focus-overlay {
+    @include layout-common.fill;
+    border-radius: inherit;
 
-    &:hover .mat-button-toggle-focus-overlay {
-      opacity: 0.6;
-    }
+    // Disable pointer events to prevent it from hijacking user events.
+    pointer-events: none;
+    opacity: 0;
+    background-color: token-utils.slot(legacy-state-layer-color);
+  }
 
-    &.mat-button-toggle-appearance-standard .mat-button-toggle-focus-overlay {
-      // In high contrast mode, we use a border for the checked state because backgrounds
-      // can either be opaque or transparent. We set the border height to a value that is larger
-      // than usual button toggles are. This allows us to keep this high contrast style in the
-      // base component style, instead of making it dependent on height determined through density.
-      border-bottom: solid 500px;
+  @include cdk.high-contrast {
+    // Changing the background color for the selected item won't be visible in high contrast mode.
+    // We fall back to using the overlay to draw a brighter, semi-transparent tint on top instead.
+    // It uses a border, because the browser will render it using a brighter color.
+    .mat-button-toggle-checked {
+      .mat-button-toggle-focus-overlay {
+        border-bottom: solid 500px;
+        opacity: 0.5;
+        height: 0;
+      }
+
+      &:hover .mat-button-toggle-focus-overlay {
+        opacity: 0.6;
+      }
+
+      &.mat-button-toggle-appearance-standard .mat-button-toggle-focus-overlay {
+        // In high contrast mode, we use a border for the checked state because backgrounds
+        // can either be opaque or transparent. We set the border height to a value that is larger
+        // than usual button toggles are. This allows us to keep this high contrast style in the
+        // base component style, instead of making it dependent on height determined through
+        // density.
+        border-bottom: solid 500px;
+      }
     }
   }
-}
 
-// Increase specificity because ripple styles are part of the `mat-core` mixin and can
-// potentially overwrite the absolute position of the container.
-.mat-button-toggle .mat-button-toggle-ripple {
-  @include layout-common.fill;
+  // Increase specificity because ripple styles are part of the `mat-core` mixin and can
+  // potentially overwrite the absolute position of the container.
+  .mat-button-toggle .mat-button-toggle-ripple {
+    @include layout-common.fill;
 
-  // Disable pointer events for the ripple container, because the container will overlay the user
-  // content and we don't want to prevent mouse clicks that should toggle the state.
-  // Pointer events can be safely disabled because the ripple trigger element is the label element.
-  pointer-events: none;
-}
-
-.mat-button-toggle-button {
-  $checkmark-spacing: $_checkmark-size + $_checkmark-margin;
-  border: 0;
-  background: none;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  outline: none;
-  width: 100%; // Stretch the button in case the consumer set a custom width.
-  cursor: pointer;
-
-  .mat-button-toggle-animations-enabled & {
-    transition: padding $_checkmark-transition;
+    // Disable pointer events for the ripple container, because the container will overlay the user
+    // content and we don't want to prevent mouse clicks that should toggle the state.
+    // Pointer events can be safely disabled because the ripple trigger element is the label
+    // element.
+    pointer-events: none;
   }
 
-  // Disable the transition in vertical mode since it looks weird.
-  // There should be a limited amount of usages anyway.
-  .mat-button-toggle-vertical & {
-    transition: none;
-  }
-
-  .mat-button-toggle-disabled & {
-    cursor: default;
-  }
-
-  // Remove the extra focus outline that is added by Firefox on native buttons.
-  &::-moz-focus-inner {
+  .mat-button-toggle-button {
+    $checkmark-spacing: $_checkmark-size + $_checkmark-margin;
     border: 0;
-  }
+    background: none;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    outline: none;
+    width: 100%; // Stretch the button in case the consumer set a custom width.
+    cursor: pointer;
 
-  // Note that we use padding and `position: absolute` to show/hide the checkmark, instead of
-  // just transitioning it between `width: 18px` and `width: 0`, because it was being shown/hidden
-  // with `@if` before the transition was added and leaving it in the DOM while hidden can break
-  // some pre-existing layouts.
-  &:has(.mat-button-toggle-checkbox-wrapper) {
-    .mat-button-toggle-checked & {
-      padding-left: $checkmark-spacing;
+    .mat-button-toggle-animations-enabled & {
+      transition: padding $_checkmark-transition;
     }
 
-    [dir='rtl'] .mat-button-toggle-checked & {
-      padding-left: 0;
-      padding-right: $checkmark-spacing;
+    // Disable the transition in vertical mode since it looks weird.
+    // There should be a limited amount of usages anyway.
+    .mat-button-toggle-vertical & {
+      transition: none;
     }
+
+    .mat-button-toggle-disabled & {
+      cursor: default;
+    }
+
+    // Remove the extra focus outline that is added by Firefox on native buttons.
+    &::-moz-focus-inner {
+      border: 0;
+    }
+
+    // Note that we use padding and `position: absolute` to show/hide the checkmark, instead of
+    // just transitioning it between `width: 18px` and `width: 0`, because it was being shown/hidden
+    // with `@if` before the transition was added and leaving it in the DOM while hidden can break
+    // some pre-existing layouts.
+    &:has(.mat-button-toggle-checkbox-wrapper) {
+      .mat-button-toggle-checked & {
+        padding-left: $checkmark-spacing;
+      }
+
+      [dir='rtl'] .mat-button-toggle-checked & {
+        padding-left: 0;
+        padding-right: $checkmark-spacing;
+      }
+    }
+
   }
 
-}
-
-// Change the border-radius of the focus indicator to match the
-// radius of the button-toggle-group or standalone button-toggle.
-@include token-utils.use-tokens($_standard-tokens...) {
+  // Change the border-radius of the focus indicator to match the
+  // radius of the button-toggle-group or standalone button-toggle.
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
     --mat-focus-indicator-border-radius: #{token-utils.slot(shape)};
   }

@@ -14,8 +14,6 @@ sass_library(
     name = "m3",
     srcs = [
         "_m3-card.scss",
-        "_m3-elevated-card.scss",
-        "_m3-outlined-card.scss",
     ],
     deps = [
         "//src/material/core/style:sass_utils",
@@ -27,8 +25,6 @@ sass_library(
     name = "m2",
     srcs = [
         "_m2-card.scss",
-        "_m2-elevated-card.scss",
-        "_m2-outlined-card.scss",
     ],
     deps = [
         "//src/material/core/style:elevation",

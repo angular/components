@@ -39,11 +39,6 @@ function intersection<T>(set: Set<T>, ...sets: Set<T>[]): Set<T> {
   return new Set([...set].filter(i => sets.every(s => s.has(i))));
 }
 
-/** Expects the given warning to be reported in Sass. */
-function expectWarning(message: RegExp) {
-  expect(getMatchingWarning(message)).withContext('Expected warning to be printed.').toBeDefined();
-}
-
 /** Expects the given warning not to be reported in Sass. */
 function expectNoWarning(message: RegExp) {
   expect(getMatchingWarning(message))
@@ -165,20 +160,6 @@ describe('M3 theme', () => {
       expect(css).toContain('--mat-form-field-filled-caret-color: magenta');
       expect(css).not.toContain('--mat-form-field-outlined-caret-color: magenta');
       expectNoWarning(/`filled-caret-color` is deprecated/);
-    });
-
-    it('should allow overriding ambiguous token value without using prefix, but warn', () => {
-      const css = transpile(`
-        div {
-          @include mat.form-field-overrides((caret-color: magenta));
-        }
-      `);
-
-      expect(css).toContain('--mat-form-field-filled-caret-color: magenta');
-      expect(css).toContain('--mat-form-field-outlined-caret-color: magenta');
-      expectWarning(
-        /Token `caret-color` is deprecated. Please use one of the following alternatives: filled-caret-color, outlined-caret-color/,
-      );
     });
 
     it('should error on invalid token name', () => {

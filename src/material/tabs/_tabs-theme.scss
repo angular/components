@@ -1,13 +1,11 @@
 @use '../core/style/sass-utils';
-@use './m2-secondary-navigation-tab';
-@use './m2-tab-indicator';
-@use './m2-tab-header';
-@use './m2-tab-header-with-background';
+@use './m2-tabs';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
+@use 'sass:map';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-tab.
@@ -18,21 +16,7 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-secondary-navigation-tab.$prefix,
-        m2-secondary-navigation-tab.get-unthemable-tokens()
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-indicator.$prefix,
-        m2-tab-indicator.get-unthemable-tokens()
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header.$prefix,
-        m2-tab-header.get-unthemable-tokens()
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header-with-background.$prefix,
-        m2-tab-header-with-background.get-unthemable-tokens()
-      );
+          m2-tabs.$prefix, m2-tabs.get-unthemable-tokens());
     }
   }
 }
@@ -48,51 +32,50 @@
   } @else {
     .mat-mdc-tab-group,
     .mat-mdc-tab-nav-bar {
-      @include _palette-styles($theme, primary);
+      @include token-utils.create-token-values-mixed(
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, primary,
+            $exclude: (background-color, foreground-color)));
 
       &.mat-accent {
-        @include _palette-styles($theme, accent);
+        @include token-utils.create-token-values-mixed(
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, accent,
+            $exclude: (background-color, foreground-color)));
       }
 
       &.mat-warn {
-        @include _palette-styles($theme, warn);
+        @include token-utils.create-token-values-mixed(
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, warn,
+            $exclude: (background-color, foreground-color)));
       }
 
       &.mat-background-primary {
-        @include _background-styles($theme, primary);
+        $tokens: m2-tabs.get-color-tokens($theme, primary);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+              background-color: map.get($tokens, background-color),
+              foreground-color: map.get($tokens, foreground-color),
+            ));
       }
 
       &.mat-background-accent {
-        @include _background-styles($theme, accent);
+        $tokens: m2-tabs.get-color-tokens($theme, accent);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+            background-color: map.get($tokens, background-color),
+            foreground-color: map.get($tokens, foreground-color),
+          ));
       }
 
       &.mat-background-warn {
-        @include _background-styles($theme, warn);
+        $tokens: m2-tabs.get-color-tokens($theme, warn);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+            background-color: map.get($tokens, background-color),
+            foreground-color: map.get($tokens, foreground-color),
+          ));
       }
     }
   }
-}
-
-@mixin _background-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
-    m2-tab-header-with-background.$prefix,
-    m2-tab-header-with-background.get-color-tokens($theme, $palette-name)
-  );
-}
-
-@mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
-    m2-secondary-navigation-tab.$prefix,
-    m2-secondary-navigation-tab.get-color-tokens($theme, $palette-name)
-  );
-  @include token-utils.create-token-values-mixed(
-    m2-tab-indicator.$prefix,
-    m2-tab-indicator.get-color-tokens($theme, $palette-name)
-  );
-  @include token-utils.create-token-values-mixed(
-    m2-tab-header.$prefix,
-    m2-tab-header.get-color-tokens($theme, $palette-name)
-  );
 }
 
 /// Outputs typography theme styles for the mat-tab.
@@ -103,21 +86,7 @@
   } @else {
     .mat-mdc-tab-header {
       @include token-utils.create-token-values-mixed(
-        m2-secondary-navigation-tab.$prefix,
-        m2-secondary-navigation-tab.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-indicator.$prefix,
-        m2-tab-indicator.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header.$prefix,
-        m2-tab-header.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header-with-background.$prefix,
-        m2-tab-header-with-background.get-typography-tokens($theme)
-      );
+        m2-tabs.$prefix, m2-tabs.get-typography-tokens($theme));
     }
   }
 }
@@ -130,48 +99,17 @@
   } @else {
     .mat-mdc-tab-header {
       @include token-utils.create-token-values-mixed(
-        m2-secondary-navigation-tab.$prefix,
-        m2-secondary-navigation-tab.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-indicator.$prefix,
-        m2-tab-indicator.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header.$prefix,
-        m2-tab-header.get-density-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-tab-header-with-background.$prefix,
-        m2-tab-header-with-background.get-density-tokens($theme)
-      );
+        m2-tabs.$prefix, m2-tabs.get-density-tokens($theme));
     }
   }
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
-  $tab-tokens: m2-secondary-navigation-tab.get-token-slots();
-  $tab-indicator-tokens: m2-tab-indicator.get-token-slots();
-  $tab-header-tokens: m2-tab-header.get-token-slots();
-  $tab-header-with-background-tokens: m2-tab-header-with-background.get-token-slots();
-
   @return (
     (
-      namespace: m2-secondary-navigation-tab.$prefix,
-      tokens: $tab-tokens,
-    ),
-    (
-      namespace: m2-tab-indicator.$prefix,
-      tokens: $tab-indicator-tokens,
-    ),
-    (
-      namespace: m2-tab-header.$prefix,
-      tokens: $tab-header-tokens,
-    ),
-    (
-      namespace: m2-tab-header-with-background.$prefix,
-      tokens: $tab-header-with-background-tokens,
+      namespace: m2-tabs.$prefix,
+      tokens: m2-tabs.get-token-slots(),
     ),
   );
 }
@@ -210,29 +148,9 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mdc-tab-indicator-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-tab-indicator.$prefix,
-    $options...
-  );
-  $mat-tab-header-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-tab-header.$prefix,
-    $options...
-  );
-  // Don't pass $options here, because the mdc-tab doesn't have color variants,
-  // only the mdc-tab-indicator and mat-tab-header do.
-  $mdc-secondary-navigation-tab-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-secondary-navigation-tab.$prefix
-  );
-  @include token-utils.create-token-values(
-    m2-secondary-navigation-tab.$prefix,
-    $mdc-secondary-navigation-tab-tokens
-  );
-  @include token-utils.create-token-values(
-    m2-tab-indicator.$prefix,
-    $mdc-tab-indicator-tokens
-  );
-  @include token-utils.create-token-values(m2-tab-header.$prefix, $mat-tab-header-tokens);
+  $tabs-tokens: token-utils.get-tokens-for($tokens, m2-tabs.$prefix, $options...);
+  $tabs-tokens-without-options: token-utils.get-tokens-for($tokens, m2-tabs.$prefix);
+
+  @include token-utils.create-token-values(m2-tabs.$prefix, $tabs-tokens-without-options);
+  @include token-utils.create-token-values(m2-tabs.$prefix, $tabs-tokens);
 }

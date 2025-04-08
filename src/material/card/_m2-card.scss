@@ -1,6 +1,7 @@
 @use '../core/tokens/m2-utils';
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
+@use '../core/style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, card);
@@ -8,12 +9,21 @@ $prefix: (mat, card);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    elevated-container-shape: 4px,
+    outlined-container-shape: 4px,
+    outlined-outline-width: 1px,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
+    elevated-container-color: inspection.get-theme-color($theme, background, card),
+    elevated-container-elevation: elevation.get-box-shadow(1),
+    outlined-container-color: inspection.get-theme-color($theme, background, card),
+    outlined-container-elevation: elevation.get-box-shadow(0),
+    outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
     subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
   );
 }

@@ -12,9 +12,12 @@ $prefix: (mat, button-toggle);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    shape: 4px,
-    hover-state-layer-opacity: 0.04,
     focus-state-layer-opacity: 0.12,
+    hover-state-layer-opacity: 0.04,
+    legacy-focus-state-layer-opacity: 1,
+    legacy-height: 36px,
+    legacy-shape: 2px,
+    shape: 4px,
   );
 }
 
@@ -33,19 +36,31 @@ $prefix: (mat, button-toggle);
       $theme-divider-color);
 
   @return (
-    text-color: inspection.get-theme-color($theme, foreground, text),
     background-color: inspection.get-theme-color($theme, background, card),
+    disabled-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-disabled-button),
+    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
+    disabled-state-background-color: inspection.get-theme-color($theme, background, card),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
+    divider-color: $divider-color,
+    legacy-disabled-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-disabled-button),
+    legacy-disabled-state-background-color:
+        inspection.get-theme-color($theme, background, disabled-button-toggle),
+    legacy-disabled-state-text-color:
+        inspection.get-theme-color($theme, foreground, disabled-button),
+    legacy-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-button),
+    legacy-selected-state-text-color:
+        inspection.get-theme-color($theme, foreground, secondary-text),
+    legacy-state-layer-color: inspection.get-theme-color($theme, background, focused-button),
+    legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
+    selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-button),
+    selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
     state-layer-color: sass-utils.safe-color-change(
         inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
-    selected-state-background-color: inspection.get-theme-color(
-        $theme, background, selected-button),
-    selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
-    disabled-state-background-color: inspection.get-theme-color($theme, background, card),
-    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    disabled-selected-state-background-color:
-      inspection.get-theme-color($theme, background, selected-disabled-button),
-    divider-color: $divider-color,
+    text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
@@ -57,6 +72,11 @@ $prefix: (mat, button-toggle);
     label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
     label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
     label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    legacy-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    legacy-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    legacy-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    legacy-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    legacy-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 

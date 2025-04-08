@@ -12,11 +12,22 @@ $prefix: (mat, fab);
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 50%,
     container-elevation-shadow: elevation.get-box-shadow(6),
+    container-shape: 50%,
+    extended-container-elevation-shadow: elevation.get-box-shadow(6),
+    extended-container-height: 48px,
+    extended-container-shape: 24px,
+    extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
     focus-container-elevation-shadow: elevation.get-box-shadow(8),
     hover-container-elevation-shadow: elevation.get-box-shadow(8),
     pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    small-container-elevation-shadow: elevation.get-box-shadow(6),
+    small-container-shape: 50%,
+    small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
   );
 }
 
@@ -36,6 +47,18 @@ $prefix: (mat, fab);
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    small-container-color: inspection.get-theme-color($theme, background, card),
+    small-disabled-state-container-color:
+        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+    small-disabled-state-foreground-color:
+        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+    small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    small-foreground-color: inspection.get-theme-color($theme, foreground, base),
+    small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
 }
@@ -68,14 +91,23 @@ $prefix: (mat, fab);
   @return (
     container-color: inspection.get-theme-color($theme, $palette-name, default),
     foreground-color: $foreground-color,
-    state-layer-color: $state-layer-color,
     ripple-color: $ripple-color,
+    small-container-color: inspection.get-theme-color($theme, $palette-name, default),
+    small-foreground-color: $foreground-color,
+    small-ripple-color: $ripple-color,
+    small-state-layer-color: $state-layer-color,
+    state-layer-color: $state-layer-color,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  @return ();
+  @return (
+    extended-label-text-font: inspection.get-theme-typography($theme, button, font-family),
+    extended-label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    extended-label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
+    extended-label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
@@ -83,6 +115,7 @@ $prefix: (mat, fab);
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   @return (
+    small-touch-target-display: if($density-scale < -1, none, block),
     touch-target-display: if($density-scale < -1, none, block),
   );
 }

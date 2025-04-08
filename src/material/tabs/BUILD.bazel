@@ -13,9 +13,7 @@ package(default_visibility = ["//visibility:public"])
 sass_library(
     name = "m3",
     srcs = [
-        "_m3-secondary-navigation-tab.scss",
-        "_m3-tab-header.scss",
-        "_m3-tab-indicator.scss",
+        "_m3-tabs.scss",
     ],
     deps = [
         "//src/material/core/style:sass_utils",
@@ -26,10 +24,7 @@ sass_library(
 sass_library(
     name = "m2",
     srcs = [
-        "_m2-secondary-navigation-tab.scss",
-        "_m2-tab-header.scss",
-        "_m2-tab-header-with-background.scss",
-        "_m2-tab-indicator.scss",
+        "_m2-tabs.scss",
     ],
     deps = [
         "//src/material/core/style:elevation",

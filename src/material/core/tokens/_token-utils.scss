@@ -223,7 +223,6 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 @mixin batch-create-token-values($overrides: (), $namespace-configs...) {
   @include sass-utils.current-selector-or-root() {
     $prefixed-name-data: ();
-    $unprefixed-name-data: ();
     $all-names: ();
 
     @each $config in $namespace-configs {
@@ -233,29 +232,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
       @each $name, $value in $tokens {
         $prefixed-name: $prefix + $name;
         $all-names: list.append($all-names, $prefixed-name, $separator: comma);
-        @if map.has-key($prefixed-name-data, $prefixed-name) {
-          @error #{
-          'Error overriding token: Ambiguous token name `'
-        }#{
-          $prefixed-name
-        }#{
-          '` exists in multiple namespaces: `('
-        }#{
-          list.nth(map.get($prefixed-name-data, $prefixed-name), 1)
-        }#{
-          ')` and `('
-        }#{
-          $namespace
-        }#{
-          ')`'
-        };
-        }
         $prefixed-name-data: map.set($prefixed-name-data, $prefixed-name, ($namespace, $name));
-        $unprefixed-data: map.has-key($unprefixed-name-data, $name) and
-          map.get($unprefixed-name-data, $name) or
-          ();
-        $unprefixed-data: list.append($unprefixed-data, ($namespace, $prefixed-name));
-        $unprefixed-name-data: map.set($unprefixed-name-data, $name, $unprefixed-data);
       }
     }
 
@@ -270,28 +247,6 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
             $name: $value,
           )
         );
-      } @else if (map.has-key($unprefixed-name-data, $name)) {
-        $datalist: map.get($unprefixed-name-data, $name);
-        $prefixed-names: ();
-        @each $data in $datalist {
-          $namespace: list.nth($data, 1);
-          $prefixed-names: list.append($prefixed-names, list.nth($data, 2), $separator: comma);
-          @include create-token-values(
-            $namespace,
-            (
-              $name: $value,
-            )
-          );
-        }
-        @warn #{
-        'Token `'
-      }#{
-        $name
-      }#{
-        '` is deprecated. Please use one of the following alternatives: '
-      }#{
-        $prefixed-names
-      };
       } @else {
         @error #{'Invalid token name `'}#{$name}#{'`. '}#{'Valid tokens are: '}#{$all-names};
       }

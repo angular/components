@@ -12,8 +12,7 @@
 @use 'ripple/m2-ripple';
 @use 'option/m2-option';
 @use 'option/m2-optgroup';
-@use 'selection/pseudo-checkbox/m2-full-pseudo-checkbox';
-@use 'selection/pseudo-checkbox/m2-minimal-pseudo-checkbox';
+@use 'selection/pseudo-checkbox/m2-pseudo-checkbox';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -72,8 +71,7 @@
   $ripple-tokens: m2-ripple.get-token-slots();
   $option-tokens: m2-option.get-token-slots();
   $optgroup-tokens: m2-optgroup.get-token-slots();
-  $full-pseudo-checkbox-tokens: m2-full-pseudo-checkbox.get-token-slots();
-  $minimal-pseudo-checkbox-tokens: m2-minimal-pseudo-checkbox.get-token-slots();
+  $pseudo-checkbox-tokens: m2-pseudo-checkbox.get-token-slots();
 
   @return (
     (namespace: m2-app.$prefix, tokens: $app-tokens, prefix: 'app-'),
@@ -81,15 +79,10 @@
     (namespace: m2-option.$prefix, tokens: $option-tokens, prefix: 'option-'),
     (namespace: m2-optgroup.$prefix, tokens: $optgroup-tokens, prefix: 'optgroup-'),
     (
-      namespace: m2-full-pseudo-checkbox.$prefix,
-      tokens: $full-pseudo-checkbox-tokens,
-      prefix: 'pseudo-checkbox-full-'
+      namespace: m2-pseudo-checkbox.$prefix,
+      tokens: m2-pseudo-checkbox.get-token-slots(),
+      prefix: 'pseudo-checkbox-'
     ),
-    (
-      namespace: m2-minimal-pseudo-checkbox.$prefix,
-      tokens: $minimal-pseudo-checkbox-tokens,
-      prefix: 'pseudo-checkbox-minimal-'
-    )
   );
 }
 
@@ -132,14 +125,9 @@
     m2-optgroup.$prefix,
     $options...
   );
-  $mat-full-pseudo-checkbox-tokens: token-utils.get-tokens-for(
+  $mat-pseudo-checkbox-tokens: token-utils.get-tokens-for(
     $tokens,
-    m2-full-pseudo-checkbox.$prefix,
-    $options...
-  );
-  $mat-minimal-pseudo-checkbox-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-minimal-pseudo-checkbox.$prefix,
+    m2-pseudo-checkbox.$prefix,
     $options...
   );
 
@@ -148,11 +136,7 @@
   @include token-utils.create-token-values(m2-option.$prefix, $mat-option-tokens);
   @include token-utils.create-token-values(m2-optgroup.$prefix, $mat-optgroup-tokens);
   @include token-utils.create-token-values(
-    m2-full-pseudo-checkbox.$prefix,
-    $mat-full-pseudo-checkbox-tokens
-  );
-  @include token-utils.create-token-values(
-    m2-minimal-pseudo-checkbox.$prefix,
-    $mat-minimal-pseudo-checkbox-tokens
+    m2-pseudo-checkbox.$prefix,
+    $mat-pseudo-checkbox-tokens
   );
 }

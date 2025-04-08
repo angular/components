@@ -1,6 +1,6 @@
 @use '@angular/cdk';
 @use './m2-snack-bar';
-@use '../button/m2-text-button';
+@use '../button/m2-button';
 @use '../core/tokens/token-utils';
 @use '../core/style/elevation';
 
@@ -150,9 +150,9 @@ $token-slots: m2-snack-bar.get-token-slots();
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values-mixed(m2-text-button.$prefix, (
-    state-layer-color: currentColor,
-    ripple-color: currentColor,
+  @include token-utils.create-token-values-mixed(m2-button.$prefix, (
+    text-state-layer-color: currentColor,
+    text-ripple-color: currentColor,
   ));
 
   .mat-ripple-element {

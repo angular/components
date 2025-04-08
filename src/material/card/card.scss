@@ -1,7 +1,5 @@
 @use '../core/tokens/token-utils';
 @use './m2-card';
-@use './m2-elevated-card';
-@use './m2-outlined-card';
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -9,56 +7,47 @@ $mat-card-header-size: 40px !default;
 // Default padding for text content within a card.
 $mat-card-default-padding: 16px !default;
 
-.mat-mdc-card {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  position: relative;
-  border-style: solid;
-  border-width: 0;
-
-  @include token-utils.use-tokens(
-      m2-elevated-card.$prefix, m2-elevated-card.get-token-slots()) {
-    background-color: token-utils.slot(container-color);
-    border-color: token-utils.slot(container-color);
-    border-radius: token-utils.slot(container-shape);
-    box-shadow: token-utils.slot(container-elevation);
-  }
-
-  // Transparent card border for high-contrast mode.
-  &::after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: solid 1px transparent;
-    content: '';
-    display: block;
-    pointer-events: none;
+@include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
+  .mat-mdc-card {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
+    position: relative;
+    border-style: solid;
+    border-width: 0;
+    background-color: token-utils.slot(elevated-container-color);
+    border-color: token-utils.slot(elevated-container-color);
+    border-radius: token-utils.slot(elevated-container-shape);
+    box-shadow: token-utils.slot(elevated-container-elevation);
 
-    @include token-utils.use-tokens(
-        m2-elevated-card.$prefix, m2-elevated-card.get-token-slots()) {
-      border-radius: token-utils.slot(container-shape);
+    // Transparent card border for high-contrast mode.
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: solid 1px transparent;
+      content: '';
+      display: block;
+      pointer-events: none;
+      box-sizing: border-box;
+      border-radius: token-utils.slot(elevated-container-shape);
     }
   }
-}
 
-.mat-mdc-card-outlined {
-  @include token-utils.use-tokens(
-      m2-outlined-card.$prefix, m2-outlined-card.get-token-slots()) {
-    background-color: token-utils.slot(container-color);
-    border-radius: token-utils.slot(container-shape);
-    border-width: token-utils.slot(outline-width);
-    border-color: token-utils.slot(outline-color);
-    box-shadow: token-utils.slot(container-elevation);
-  }
+  .mat-mdc-card-outlined {
+    background-color: token-utils.slot(outlined-container-color);
+    border-radius: token-utils.slot(outlined-container-shape);
+    border-width: token-utils.slot(outlined-outline-width);
+    border-color: token-utils.slot(outlined-outline-color);
+    box-shadow: token-utils.slot(outlined-container-elevation);
 
-  // Outlined card already displays border in high-contrast mode.
-  // Overwriting styles set above to remove a duplicate border.
-  &::after {
-    border: none;
+    // Outlined card already displays border in high-contrast mode.
+    // Overwriting styles set above to remove a duplicate border.
+    &::after {
+      border: none;
+    }
   }
 }
 

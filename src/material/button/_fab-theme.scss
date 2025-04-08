@@ -2,9 +2,7 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
-@use './m2-extended-fab';
 @use './m2-fab';
-@use './m2-fab-small';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 
@@ -20,14 +18,6 @@
         m2-fab.$prefix,
         m2-fab.get-unthemable-tokens()
       );
-      @include token-utils.create-token-values-mixed(
-        m2-fab-small.$prefix,
-        m2-fab-small.get-unthemable-tokens()
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-extended-fab.$prefix,
-        m2-extended-fab.get-unthemable-tokens()
-      );
     }
   }
 }
@@ -42,16 +32,6 @@
   @include token-utils.create-token-values-mixed(m2-fab.$prefix, $mat-tokens);
 }
 
-@mixin _fab-small-variant($theme, $palette) {
-  $mat-tokens: if(
-    $palette,
-    m2-fab-small.private-get-color-palette-color-tokens($theme, $palette),
-    m2-fab-small.get-color-tokens($theme)
-  );
-
-  @include token-utils.create-token-values-mixed(m2-fab-small.$prefix, $mat-tokens);
-}
-
 /// Outputs color theme styles for the mat-fab.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {ArgList} Additional optional arguments (only supported for M3 themes):
@@ -63,13 +43,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include _fab-variant($theme, null);
-      @include _fab-small-variant($theme, null);
-      @include token-utils.create-token-values-mixed(
-        m2-extended-fab.$prefix,
-        m2-extended-fab.get-color-tokens($theme)
-      );
 
-      .mat-mdc-fab {
+      .mat-mdc-fab, .mat-mdc-mini-fab {
         &.mat-primary {
           @include _fab-variant($theme, primary);
         }
@@ -80,20 +55,6 @@
 
         &.mat-warn {
           @include _fab-variant($theme, warn);
-        }
-      }
-
-      .mat-mdc-mini-fab {
-        &.mat-primary {
-          @include _fab-small-variant($theme, primary);
-        }
-
-        &.mat-accent {
-          @include _fab-small-variant($theme, accent);
-        }
-
-        &.mat-warn {
-          @include _fab-small-variant($theme, warn);
         }
       }
     }
@@ -108,16 +69,8 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-extended-fab.$prefix,
-        m2-extended-fab.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
         m2-fab.$prefix,
         m2-fab.get-typography-tokens($theme)
-      );
-      @include token-utils.create-token-values-mixed(
-        m2-fab-small.$prefix,
-        m2-fab-small.get-typography-tokens($theme)
       );
     }
   }
@@ -134,10 +87,6 @@
         m2-fab.$prefix,
         m2-fab.get-density-tokens($theme)
       );
-      @include token-utils.create-token-values-mixed(
-        m2-fab-small.$prefix,
-        m2-fab-small.get-density-tokens($theme)
-      );
     }
   }
 }
@@ -146,18 +95,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-extended-fab.$prefix,
-      tokens: m2-extended-fab.get-token-slots(),
-      prefix: 'extended-',
-    ),
-    (
       namespace: m2-fab.$prefix,
       tokens: m2-fab.get-token-slots(),
-    ),
-    (
-      namespace: m2-fab-small.$prefix,
-      tokens: m2-fab-small.get-token-slots(),
-      prefix: 'small-',
     ),
   );
 }
@@ -196,21 +135,6 @@
   @include validation.selector-defined(
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
-  $mdc-extended-fab-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-extended-fab.$prefix,
-    $options...
-  );
   $mat-fab-tokens: token-utils.get-tokens-for($tokens, m2-fab.$prefix, $options...);
-  $mat-fab-small-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-fab-small.$prefix,
-    $options...
-  );
-  @include token-utils.create-token-values(
-    m2-extended-fab.$prefix,
-    $mdc-extended-fab-tokens
-  );
   @include token-utils.create-token-values(m2-fab.$prefix, $mat-fab-tokens);
-  @include token-utils.create-token-values(m2-fab-small.$prefix, $mat-fab-small-tokens);
 }

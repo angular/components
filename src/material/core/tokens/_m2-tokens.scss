@@ -1,30 +1,18 @@
-@use 'sass:map';
-@use 'sass:meta';
 @use '../../autocomplete/m2-autocomplete';
 @use '../../badge/m2-badge';
 @use '../../bottom-sheet/m2-bottom-sheet';
-@use '../../button-toggle/m2-standard-button-toggle';
-@use '../../button/m2-extended-fab';
+@use '../../button-toggle/m2-button-toggle';
+@use '../../button/m2-button';
 @use '../../button/m2-fab';
-@use '../../button/m2-fab-small';
-@use '../../button/m2-filled-button';
 @use '../../button/m2-icon-button';
-@use '../../button/m2-outlined-button';
-@use '../../button/m2-protected-button';
-@use '../../button/m2-text-button';
-@use '../../button/m2-tonal-button';
 @use '../../card/m2-card';
-@use '../../card/m2-elevated-card';
-@use '../../card/m2-outlined-card';
 @use '../../checkbox/m2-checkbox';
 @use '../../chips/m2-chip';
 @use '../../datepicker/m2-datepicker';
 @use '../../dialog/m2-dialog';
 @use '../../divider/m2-divider';
 @use '../../expansion/m2-expansion';
-@use '../../form-field/m2-filled-text-field';
 @use '../../form-field/m2-form-field';
-@use '../../form-field/m2-outlined-text-field';
 @use '../../grid-list/m2-grid-list';
 @use '../../icon/m2-icon';
 @use '../../list/m2-list';
@@ -41,10 +29,7 @@
 @use '../../sort/m2-sort';
 @use '../../stepper/m2-stepper';
 @use '../../table/m2-table';
-@use '../../tabs/m2-secondary-navigation-tab';
-@use '../../tabs/m2-tab-header';
-@use '../../tabs/m2-tab-header-with-background';
-@use '../../tabs/m2-tab-indicator';
+@use '../../tabs/m2-tabs';
 @use '../../timepicker/m2-timepicker';
 @use '../../toolbar/m2-toolbar';
 @use '../../tooltip/m2-tooltip';
@@ -53,10 +38,11 @@
 @use '../option/m2-optgroup';
 @use '../option/m2-option';
 @use '../ripple/m2-ripple';
-@use '../selection/pseudo-checkbox/m2-full-pseudo-checkbox';
-@use '../selection/pseudo-checkbox/m2-minimal-pseudo-checkbox';
+@use '../selection/pseudo-checkbox/m2-pseudo-checkbox';
 @use '../style/sass-utils';
 @use '../theming/inspection';
+@use 'sass:map';
+@use 'sass:meta';
 
 /// Gets the tokens for the given theme, m2 tokens module, and theming system.
 /// @param {Map} $theme The Angular Material theme object to generate token values from.
@@ -104,54 +90,40 @@
     _get-tokens-for-module($theme, m2-autocomplete),
     _get-tokens-for-module($theme, m2-badge),
     _get-tokens-for-module($theme, m2-bottom-sheet),
+    _get-tokens-for-module($theme, m2-button),
+    _get-tokens-for-module($theme, m2-button-toggle),
     _get-tokens-for-module($theme, m2-card),
     _get-tokens-for-module($theme, m2-checkbox),
     _get-tokens-for-module($theme, m2-chip),
     _get-tokens-for-module($theme, m2-datepicker),
     _get-tokens-for-module($theme, m2-dialog),
     _get-tokens-for-module($theme, m2-divider),
-    _get-tokens-for-module($theme, m2-elevated-card),
     _get-tokens-for-module($theme, m2-expansion),
-    _get-tokens-for-module($theme, m2-extended-fab),
     _get-tokens-for-module($theme, m2-fab),
-    _get-tokens-for-module($theme, m2-fab-small),
-    _get-tokens-for-module($theme, m2-filled-button),
-    _get-tokens-for-module($theme, m2-filled-text-field),
     _get-tokens-for-module($theme, m2-form-field),
-    _get-tokens-for-module($theme, m2-full-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-grid-list),
     _get-tokens-for-module($theme, m2-icon),
     _get-tokens-for-module($theme, m2-icon-button),
     _get-tokens-for-module($theme, m2-list),
     _get-tokens-for-module($theme, m2-menu),
-    _get-tokens-for-module($theme, m2-minimal-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-optgroup),
     _get-tokens-for-module($theme, m2-option),
-    _get-tokens-for-module($theme, m2-outlined-button),
-    _get-tokens-for-module($theme, m2-outlined-card),
-    _get-tokens-for-module($theme, m2-outlined-text-field),
     _get-tokens-for-module($theme, m2-paginator),
     _get-tokens-for-module($theme, m2-progress-bar),
     _get-tokens-for-module($theme, m2-progress-spinner),
-    _get-tokens-for-module($theme, m2-protected-button),
+    _get-tokens-for-module($theme, m2-pseudo-checkbox),
     _get-tokens-for-module($theme, m2-radio),
     _get-tokens-for-module($theme, m2-ripple),
-    _get-tokens-for-module($theme, m2-secondary-navigation-tab),
     _get-tokens-for-module($theme, m2-select),
     _get-tokens-for-module($theme, m2-sidenav),
     _get-tokens-for-module($theme, m2-slide-toggle),
     _get-tokens-for-module($theme, m2-slider),
     _get-tokens-for-module($theme, m2-snack-bar),
     _get-tokens-for-module($theme, m2-sort),
-    _get-tokens-for-module($theme, m2-standard-button-toggle),
     _get-tokens-for-module($theme, m2-stepper),
-    _get-tokens-for-module($theme, m2-tab-header),
-    _get-tokens-for-module($theme, m2-tab-header-with-background),
-    _get-tokens-for-module($theme, m2-tab-indicator),
+    _get-tokens-for-module($theme, m2-tabs),
     _get-tokens-for-module($theme, m2-table),
-    _get-tokens-for-module($theme, m2-text-button),
     _get-tokens-for-module($theme, m2-timepicker),
-    _get-tokens-for-module($theme, m2-tonal-button),
     _get-tokens-for-module($theme, m2-toolbar),
     _get-tokens-for-module($theme, m2-tooltip),
     _get-tokens-for-module($theme, m2-tree),

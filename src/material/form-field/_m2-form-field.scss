@@ -1,10 +1,12 @@
-@use 'sass:math';
-@use 'sass:map';
-@use '../core/tokens/m2-utils';
-@use '../core/style/sass-utils';
-@use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/m2/palette' as m2-palette;
+@use '../core/style/sass-utils';
+@use '../core/theming/inspection';
+@use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
@@ -12,13 +14,33 @@ $prefix: (mat, form-field);
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
-  @return ();
+  @return (
+    filled-active-indicator-height: 1px,
+    filled-focus-active-indicator-height: 2px,
+    filled-container-shape: 4px,
+    outlined-outline-width: 1px,
+    outlined-focus-outline-width: 2px,
+    outlined-container-shape: 4px,
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
+  $surface: inspection.get-theme-color($theme, background, card);
+  $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
+  $on-surface: if($is-dark, #fff, #000);
+
+  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
+  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
+  $on-surface: if($is-dark, #fff, #000);
+  $text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, text, 1));
+  $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, disabled-text, 1));
+  $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
+    inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
@@ -45,19 +67,64 @@ $prefix: (mat, form-field);
     // are the same).
     leading-icon-color: unset,
     disabled-leading-icon-color: unset,
-
     trailing-icon-color: unset,
     disabled-trailing-icon-color: unset,
     error-focus-trailing-icon-color: unset,
     error-hover-trailing-icon-color: unset,
     error-trailing-icon-color: unset,
-
     enabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
     disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
-
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
+    filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
+    filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
+    filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    filled-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    filled-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    filled-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    filled-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    filled-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    filled-error-hover-label-text-color: $warn-color,
+    filled-error-focus-label-text-color: $warn-color,
+    filled-error-label-text-color: $warn-color,
+    filled-error-caret-color: $warn-color,
+    filled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.42),
+    filled-disabled-active-indicator-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    filled-hover-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+    filled-error-active-indicator-color: $warn-color,
+    filled-error-focus-active-indicator-color: $warn-color,
+    filled-error-hover-active-indicator-color: $warn-color,
+    outlined-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    outlined-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    outlined-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    outlined-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    outlined-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    outlined-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    outlined-error-caret-color: $warn-color,
+    outlined-error-focus-label-text-color: $warn-color,
+    outlined-error-label-text-color: $warn-color,
+    outlined-error-hover-label-text-color: $warn-color,
+    outlined-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
+    outlined-disabled-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    outlined-hover-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+    outlined-error-focus-outline-color: $warn-color,
+    outlined-error-hover-outline-color: $warn-color,
+    outlined-error-outline-color: $warn-color,
   ));
+}
+
+@function _variable-safe-mix($first-color, $second-color, $amount) {
+  @if (meta.type-of($first-color) == color and meta.type-of($second-color) == color) {
+    @return color.mix($first-color, $second-color, $amount);
+  }
+  @return $first-color;
 }
 
 // Generates the mapping for the properties that change based on the form field color.
@@ -66,6 +133,12 @@ $prefix: (mat, form-field);
 
   @return (
     focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    filled-caret-color: $palette-color,
+    filled-focus-active-indicator-color: $palette-color,
+    filled-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    outlined-caret-color: $palette-color,
+    outlined-focus-outline-color: $palette-color,
+    outlined-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
   );
 }
 
@@ -96,6 +169,14 @@ $prefix: (mat, form-field);
     subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
     subscript-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
     subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
+    filled-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    filled-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    filled-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    filled-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    outlined-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    outlined-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    outlined-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    outlined-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
