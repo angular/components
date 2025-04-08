@@ -1,16 +1,16 @@
-load("//tools:defaults.bzl", "ng_module", "ng_web_test_suite")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_web_test_suite")
+load("//tools:defaults2.bzl", "ng_project", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ng_module(
+ng_project(
     name = "deferred-content",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "@npm//@angular/core",
+        "//:node_modules/@angular/core",
     ],
 )
 
@@ -21,10 +21,8 @@ ts_project(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
     ),
-    interop_deps = [
-        ":deferred-content",
-    ],
     deps = [
+        ":deferred-content",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
     ],

@@ -10,13 +10,8 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-<<<<<<< HEAD
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "//src/cdk-experimental/ui-patterns/listbox",
-=======
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like:signal-like_rjs",
-        "//src/cdk-experimental/ui-patterns/listbox:listbox_rjs",
-        "//src/cdk-experimental/ui-patterns/tabs:tabs_rjs",
->>>>>>> a9685f503 (Migrated build targets to `ts_project`)
+        "//src/cdk-experimental/ui-patterns/tabs",
     ],
 )

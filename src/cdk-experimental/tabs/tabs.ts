@@ -15,6 +15,7 @@ import {
   ElementRef,
   inject,
   input,
+  signal,
   model,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -126,6 +127,7 @@ export class CdkTablist {
     ...this,
     items: this.tabs,
     textDirection: this.textDirection,
+    value: signal<string[]>([]),
   });
 }
 
@@ -172,6 +174,7 @@ export class CdkTab {
   pattern: TabPattern = new TabPattern({
     ...this,
     id: () => this._id,
+    value: () => this._id,
     element: () => this._elementRef.nativeElement,
     tablist: this.tablist,
     tabpanel: this.tabpanel,
