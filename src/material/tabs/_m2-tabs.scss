@@ -29,13 +29,13 @@ $prefix: (mat, tab);
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
+@function get-color-tokens($theme, $palette-name: primary, $exclude: ()) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $inactive-label-text-color: inspection.get-theme-color($theme, foreground, text, 0.6);
   $active-label-text-color: inspection.get-theme-color($theme, $palette-name, default);
   $ripple-color: inspection.get-theme-color($theme, $palette-name, default);
 
-  @return (
+  $tokens: (
     disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
     pagination-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
 
@@ -56,6 +56,12 @@ $prefix: (mat, tab);
     background-color: inspection.get-theme-color($theme, $palette-name, default),
     foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
+
+  @each $token in $exclude {
+    $tokens: map.remove($tokens, $token);
+  }
+
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.

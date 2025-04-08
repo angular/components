@@ -5,6 +5,7 @@
 @use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
+@use 'sass:map';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-tab.
@@ -32,16 +33,46 @@
     .mat-mdc-tab-group,
     .mat-mdc-tab-nav-bar {
       @include token-utils.create-token-values-mixed(
-          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, primary));
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, primary,
+            $exclude: (background-color, foreground-color)));
 
-      &.mat-accent, &.mat-background-accent {
+      &.mat-accent {
         @include token-utils.create-token-values-mixed(
-            m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, accent));
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, accent,
+            $exclude: (background-color, foreground-color)));
       }
 
-      &.mat-warn, &.mat-background-warn {
+      &.mat-warn {
         @include token-utils.create-token-values-mixed(
-            m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, warn));
+          m2-tabs.$prefix, m2-tabs.get-color-tokens($theme, warn,
+            $exclude: (background-color, foreground-color)));
+      }
+
+      &.mat-background-primary {
+        $tokens: m2-tabs.get-color-tokens($theme, primary);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+              background-color: map.get($tokens, background-color),
+              foreground-color: map.get($tokens, foreground-color),
+            ));
+      }
+
+      &.mat-background-accent {
+        $tokens: m2-tabs.get-color-tokens($theme, accent);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+            background-color: map.get($tokens, background-color),
+            foreground-color: map.get($tokens, foreground-color),
+          ));
+      }
+
+      &.mat-background-warn {
+        $tokens: m2-tabs.get-color-tokens($theme, warn);
+        @include token-utils.create-token-values-mixed(
+            m2-tabs.$prefix, (
+            background-color: map.get($tokens, background-color),
+            foreground-color: map.get($tokens, foreground-color),
+          ));
       }
     }
   }
@@ -118,5 +149,8 @@
     'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
   );
   $tabs-tokens: token-utils.get-tokens-for($tokens, m2-tabs.$prefix, $options...);
+  $tabs-tokens-without-options: token-utils.get-tokens-for($tokens, m2-tabs.$prefix);
+
+  @include token-utils.create-token-values(m2-tabs.$prefix, $tabs-tokens-without-options);
   @include token-utils.create-token-values(m2-tabs.$prefix, $tabs-tokens);
 }
