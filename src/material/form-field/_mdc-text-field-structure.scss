@@ -228,35 +228,35 @@ $token-slots: m2-form-field.get-token-slots();
         display: none;
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled) & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled) & {
         color: token-utils.slot(filled-label-text-color);
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused & {
         color: token-utils.slot(filled-focus-label-text-color);
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover & {
         color: token-utils.slot(filled-hover-label-text-color);
       }
 
-      mdc-text-field--filled.mdc-text-field--disabled & {
+      .mdc-text-field--filled.mdc-text-field--disabled & {
         color: token-utils.slot(filled-disabled-label-text-color);
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid & {
         color: token-utils.slot(filled-error-label-text-color);
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid.mdc-text-field--focused & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid.mdc-text-field--focused & {
         color: token-utils.slot(filled-error-focus-label-text-color);
       }
 
-      mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
+      .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid:not(.mdc-text-field--disabled):hover & {
         color: token-utils.slot(filled-error-hover-label-text-color);
       }
 
-      mdc-text-field--filled & {
+      .mdc-text-field--filled & {
         font-family: token-utils.slot(filled-label-text-font);
         font-size: token-utils.slot(filled-label-text-size);
         font-weight: token-utils.slot(filled-label-text-weight);
