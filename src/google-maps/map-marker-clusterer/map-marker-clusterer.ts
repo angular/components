@@ -160,7 +160,9 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
   }
 
   private async _watchForMarkerChanges() {
-    this._assertInitialized();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
     const initialMarkers: Marker[] = [];
     const markers = await this._getInternalMarkers(this._markers.toArray());
 
@@ -168,12 +170,14 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
       this._currentMarkers.add(marker);
       initialMarkers.push(marker);
     }
-    this.markerClusterer.addMarkers(initialMarkers);
+    this.markerClusterer!.addMarkers(initialMarkers);
 
     this._markersSubscription.unsubscribe();
     this._markersSubscription = this._markers.changes.subscribe(
       async (markerComponents: MarkerDirective[]) => {
-        this._assertInitialized();
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
         const newMarkers = new Set<Marker>(await this._getInternalMarkers(markerComponents));
         const markersToAdd: Marker[] = [];
         const markersToRemove: Marker[] = [];
@@ -188,9 +192,9 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
             markersToRemove.push(marker);
           }
         }
-        this.markerClusterer.addMarkers(markersToAdd, true);
-        this.markerClusterer.removeMarkers(markersToRemove, true);
-        this.markerClusterer.render();
+        this.markerClusterer!.addMarkers(markersToAdd, true);
+        this.markerClusterer!.removeMarkers(markersToRemove, true);
+        this.markerClusterer!.render();
         for (const marker of markersToRemove) {
           this._currentMarkers.delete(marker);
         }
@@ -209,21 +213,19 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
   private _getInternalMarkers(markers: MarkerDirective[]): Promise<Marker[]> {
     return Promise.all(markers.map(marker => marker._resolveMarker()));
   }
+}
 
-  private _assertInitialized(): asserts this is {markerClusterer: MarkerClusterer} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this._googleMap.googleMap) {
-        throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-            'Please wait for the API to load before trying to interact with it.',
-        );
-      }
-      if (!this.markerClusterer) {
-        throw Error(
-          'Cannot interact with a MarkerClusterer before it has been initialized. ' +
-            'Please wait for the MarkerClusterer to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapMarkerClusterer) {
+  if (!ctx['_googleMap'].googleMap) {
+    throw Error(
+      'Cannot access Google Map information before the API has been initialized. ' +
+        'Please wait for the API to load before trying to interact with it.',
+    );
+  }
+  if (!ctx.markerClusterer) {
+    throw Error(
+      'Cannot interact with a MarkerClusterer before it has been initialized. ' +
+        'Please wait for the MarkerClusterer to load before trying to interact with it.',
+    );
   }
 }

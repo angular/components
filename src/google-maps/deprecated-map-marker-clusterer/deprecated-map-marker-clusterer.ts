@@ -244,7 +244,9 @@ export class DeprecatedMapMarkerClusterer
             return new MarkerClusterer(map, [], this._combineOptions());
           });
 
-          this._assertInitialized();
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            assertInitialized(this);
+          }
           this._eventManager.setTarget(this.markerClusterer);
           this.markerClustererInitialized.emit(this.markerClusterer);
         });
@@ -352,103 +354,143 @@ export class DeprecatedMapMarkerClusterer
   }
 
   fitMapToMarkers(padding: number | google.maps.Padding) {
-    this._assertInitialized();
-    this.markerClusterer.fitMapToMarkers(padding);
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    this.markerClusterer!.fitMapToMarkers(padding);
   }
 
   getAverageCenter(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getAverageCenter();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getAverageCenter();
   }
 
   getBatchSizeIE(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getBatchSizeIE();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getBatchSizeIE();
   }
 
   getCalculator(): Calculator {
-    this._assertInitialized();
-    return this.markerClusterer.getCalculator();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getCalculator();
   }
 
   getClusterClass(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getClusterClass();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getClusterClass();
   }
 
   getClusters(): Cluster[] {
-    this._assertInitialized();
-    return this.markerClusterer.getClusters();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getClusters();
   }
 
   getEnableRetinaIcons(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getEnableRetinaIcons();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getEnableRetinaIcons();
   }
 
   getGridSize(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getGridSize();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getGridSize();
   }
 
   getIgnoreHidden(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getIgnoreHidden();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getIgnoreHidden();
   }
 
   getImageExtension(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getImageExtension();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getImageExtension();
   }
 
   getImagePath(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getImagePath();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getImagePath();
   }
 
   getImageSizes(): number[] {
-    this._assertInitialized();
-    return this.markerClusterer.getImageSizes();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getImageSizes();
   }
 
   getMaxZoom(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getMaxZoom();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getMaxZoom();
   }
 
   getMinimumClusterSize(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getMinimumClusterSize();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getMinimumClusterSize();
   }
 
   getStyles(): ClusterIconStyle[] {
-    this._assertInitialized();
-    return this.markerClusterer.getStyles();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getStyles();
   }
 
   getTitle(): string {
-    this._assertInitialized();
-    return this.markerClusterer.getTitle();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getTitle();
   }
 
   getTotalClusters(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getTotalClusters();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getTotalClusters();
   }
 
   getTotalMarkers(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getTotalMarkers();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getTotalMarkers();
   }
 
   getZIndex(): number {
-    this._assertInitialized();
-    return this.markerClusterer.getZIndex();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getZIndex();
   }
 
   getZoomOnClick(): boolean {
-    this._assertInitialized();
-    return this.markerClusterer.getZoomOnClick();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.markerClusterer!.getZoomOnClick();
   }
 
   private _combineOptions(): MarkerClustererOptions {
@@ -477,7 +519,9 @@ export class DeprecatedMapMarkerClusterer
   }
 
   private _watchForMarkerChanges() {
-    this._assertInitialized();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
 
     this._ngZone.runOutsideAngular(() => {
       this._getInternalMarkers(this._markers).then(markers => {
@@ -486,14 +530,16 @@ export class DeprecatedMapMarkerClusterer
           this._currentMarkers.add(marker);
           initialMarkers.push(marker);
         }
-        this.markerClusterer.addMarkers(initialMarkers);
+        this.markerClusterer!.addMarkers(initialMarkers);
       });
     });
 
     this._markers.changes
       .pipe(takeUntil(this._destroy))
       .subscribe((markerComponents: MapMarker[]) => {
-        this._assertInitialized();
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
         this._ngZone.runOutsideAngular(() => {
           this._getInternalMarkers(markerComponents).then(markers => {
             const newMarkers = new Set(markers);
@@ -510,9 +556,9 @@ export class DeprecatedMapMarkerClusterer
                 markersToRemove.push(marker);
               }
             }
-            this.markerClusterer.addMarkers(markersToAdd, true);
-            this.markerClusterer.removeMarkers(markersToRemove, true);
-            this.markerClusterer.repaint();
+            this.markerClusterer!.addMarkers(markersToAdd, true);
+            this.markerClusterer!.removeMarkers(markersToRemove, true);
+            this.markerClusterer!.repaint();
             for (const marker of markersToRemove) {
               this._currentMarkers.delete(marker);
             }
@@ -526,15 +572,13 @@ export class DeprecatedMapMarkerClusterer
   ): Promise<google.maps.Marker[]> {
     return Promise.all(markers.map(markerComponent => markerComponent._resolveMarker()));
   }
+}
 
-  private _assertInitialized(): asserts this is {markerClusterer: MarkerClustererInstance} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.markerClusterer) {
-        throw Error(
-          'Cannot interact with a MarkerClusterer before it has been initialized. ' +
-            'Please wait for the MarkerClusterer to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: DeprecatedMapMarkerClusterer) {
+  if (!ctx.markerClusterer) {
+    throw Error(
+      'Cannot interact with a MarkerClusterer before it has been initialized. ' +
+        'Please wait for the MarkerClusterer to load before trying to interact with it.',
+    );
   }
 }

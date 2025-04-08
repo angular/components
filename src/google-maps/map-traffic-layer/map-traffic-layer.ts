@@ -88,7 +88,9 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
   ) {
     this._ngZone.runOutsideAngular(() => {
       this.trafficLayer = new layerConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.trafficLayer.setMap(map);
       this.trafficLayerInitialized.emit(this.trafficLayer);
       this._watchForAutoRefreshChanges();
@@ -114,17 +116,19 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
     this._combineOptions()
       .pipe(takeUntil(this._destroyed))
       .subscribe(options => {
-        this._assertInitialized();
-        this.trafficLayer.setOptions(options);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.trafficLayer!.setOptions(options);
       });
   }
+}
 
-  private _assertInitialized(): asserts this is {trafficLayer: google.maps.TrafficLayer} {
-    if (!this.trafficLayer) {
-      throw Error(
-        'Cannot interact with a Google Map Traffic Layer before it has been initialized. ' +
-          'Please wait for the Traffic Layer to load before trying to interact with it.',
-      );
-    }
+function assertInitialized(ctx: MapTrafficLayer) {
+  if (!ctx.trafficLayer) {
+    throw Error(
+      'Cannot interact with a Google Map Traffic Layer before it has been initialized. ' +
+        'Please wait for the Traffic Layer to load before trying to interact with it.',
+    );
   }
 }
