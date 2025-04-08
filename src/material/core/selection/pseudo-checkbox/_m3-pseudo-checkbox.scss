@@ -3,7 +3,7 @@
 @use '../../tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, pseudo-checkbox-full);
+$prefix: (mat, pseudo-checkbox);
 
 /// Generates custom tokens for the full variant of mat-pseudo-checkbox.
 /// @param {Map} $systems The MDC system tokens

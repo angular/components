@@ -71,8 +71,7 @@
   $ripple-tokens: m2-ripple.get-token-slots();
   $option-tokens: m2-option.get-token-slots();
   $optgroup-tokens: m2-optgroup.get-token-slots();
-  $full-pseudo-checkbox-tokens: m2-full-pseudo-checkbox.get-token-slots();
-  $minimal-pseudo-checkbox-tokens: m2-minimal-pseudo-checkbox.get-token-slots();
+  $pseudo-checkbox-tokens: m2-pseudo-checkbox.get-token-slots();
 
   @return (
     (namespace: m2-app.$prefix, tokens: $app-tokens, prefix: 'app-'),
