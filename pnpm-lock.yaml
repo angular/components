@@ -6284,6 +6284,7 @@ packages:
 
   /bignumber.js@9.2.0:
     resolution: {integrity: sha512-JocpCSOixzy5XFJi2ub6IMmV/G9i8Lrm2lZvwBv9xPdglmZM0ufDVBbjbrfU/zuLvBfD7Bv2eYxz9i+OHTgkew==, tarball: https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.2.0.tgz}
+    deprecated: pkg version number incorrect
     dev: true
 
   /binary-extensions@2.3.0:
