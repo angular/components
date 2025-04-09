@@ -1,30 +1,3 @@
-<a name="20.0.0-next.6"></a>
-# 20.0.0-next.6 "abelsonite-avocado" (2025-04-09)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b1cc0501e](https://github.com/angular/components/commit/b1cc0501e969362d8c051568eee98767442cc3fd) | fix | **table:** error if data is accessed too early ([#30817](https://github.com/angular/components/pull/30817)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [82f0fa6fa](https://github.com/angular/components/commit/82f0fa6fa750779a04687d2564537e672a326b90) | feat | **core:** handle prefers-reduced-motion automatically ([#30796](https://github.com/angular/components/pull/30796)) |
-### cdk-experimental
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6ac4c1ae2](https://github.com/angular/components/commit/6ac4c1ae2ca67564eef15e11f5b4363c5262747e) | feat | **listbox:** readonly mode ([#30803](https://github.com/angular/components/pull/30803)) |
-| [2e34b20cb](https://github.com/angular/components/commit/2e34b20cb7d2ede488c5df4ca858684524ef8073) | fix | **ui-patterns:** add missing event handlers ([#30786](https://github.com/angular/components/pull/30786)) |
-### material-angular-io
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3a1a0b368](https://github.com/angular/components/commit/3a1a0b3685866103d297b80b1b6bbb27b95fb307) | fix | streamline directive and component metadata handling in dgeni ([#30661](https://github.com/angular/components/pull/30661)) |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [5229fe0a0](https://github.com/angular/components/commit/5229fe0a0824a94baf1c595b798ae11fd19f1a09) | fix | rename hardcoded tokens that were renamed ([#30807](https://github.com/angular/components/pull/30807)) |
-| [9bf4be9e2](https://github.com/angular/components/commit/9bf4be9e231add2698324f020ef2c8c3c28769cc) | fix | rename token prefixes to match components ([#30802](https://github.com/angular/components/pull/30802)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="19.2.9"></a>
 # 19.2.9 "abellaite-apron" (2025-04-09)
 ### cdk
