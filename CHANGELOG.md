@@ -1,3 +1,12 @@
+<a name="19.2.9"></a>
+# 19.2.9 "abellaite-apron" (2025-04-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [111b0c65a](https://github.com/angular/components/commit/111b0c65a26e4fe0f7db41a00f53ba20105aa888) | fix | **table:** error if data is accessed too early ([#30817](https://github.com/angular/components/pull/30817)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.8"></a>
 # 19.2.8 "sapphire-kraken" (2025-04-02)
 ### cdk
