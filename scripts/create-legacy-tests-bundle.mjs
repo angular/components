@@ -7,7 +7,7 @@ import fs from 'fs';
 import glob from 'glob';
 import module from 'module';
 import {dirname, join, relative} from 'path';
-import sass from 'sass';
+import * as sass from 'sass';
 import url from 'url';
 import tsNode from 'ts-node';
 
@@ -65,6 +65,7 @@ async function main() {
     format: 'iife',
     target: 'es2015',
     outfile: outFile,
+    treeShaking: false,
     plugins: [esbuildResolvePlugin, esbuildLinkerPlugin],
     stdin: {contents: specEntryPointFile, resolveDir: projectDir},
   });
@@ -85,22 +86,26 @@ async function main() {
  */
 async function compileSassFiles() {
   const sassFiles = glob.sync('src/**/!(_*|theme).scss', {cwd: projectDir, absolute: true});
-  const sassTasks = [];
+  const writeTasks = [];
 
+  let count = 0;
   for (const file of sassFiles) {
     const outRelativePath = relative(projectDir, file).replace(/\.scss$/, '.css');
     const outPath = join(projectDir, outRelativePath);
-    const task = renderSassFileAsync(file).then(async content => {
+    const content = renderSassFile(file).css;
+
+    count++;
+    console.error(`Compiled ${count}/${sassFiles.length} files`);
+
+    writeTasks.push(async () => {
       console.info('Compiled, now writing:', outRelativePath);
       await fs.promises.mkdir(dirname(outPath), {recursive: true});
       await fs.promises.writeFile(outPath, content);
     });
-
-    sassTasks.push(task);
   }
 
-  // Wait for all Sass compilations to finish.
-  await Promise.all(sassTasks);
+  // Start all writes and wait for them to finish.
+  await Promise.all(writeTasks.map(task => task()));
 }
 
 /**
@@ -131,7 +136,7 @@ async function compileProjectWithNgtsc() {
 async function createEntryPointSpecFile() {
   const testFiles = glob.sync('**/*.spec.js', {absolute: true, cwd: legacyOutputDir});
 
-  let specEntryPointFile = `import './test/angular-test-init-spec.ts';`;
+  let specEntryPointFile = `import './test/angular-test.init.ts';`;
   let i = 0;
   const testNamespaces = [];
 
@@ -155,14 +160,12 @@ async function createEntryPointSpecFile() {
   return specEntryPointFile;
 }
 
-/** Helper function to render a Sass file asynchronously using promises. */
-async function renderSassFileAsync(inputFile) {
-  return sass
-    .compileAsync(inputFile, {
-      loadPaths: [nodeModulesDir, projectDir],
-      importers: [localPackageSassImporter],
-    })
-    .then(result => result.css);
+/** Helper function to render a Sass file. */
+function renderSassFile(inputFile) {
+  return sass.compile(inputFile, {
+    loadPaths: [nodeModulesDir, projectDir],
+    importers: [localPackageSassImporter],
+  });
 }
 
 /**

@@ -29,21 +29,6 @@ module.exports = config => {
       },
     ],
     files: [
-      {pattern: 'node_modules/reflect-metadata/Reflect.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/bundles/zone.umd.min.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/bundles/proxy.umd.min.js', included: true, watched: false},
-      {pattern: 'node_modules/zone.js/bundles/sync-test.umd.js', included: true, watched: false},
-      {
-        pattern: 'node_modules/zone.js/bundles/jasmine-patch.umd.min.js',
-        included: true,
-        watched: false,
-      },
-      {pattern: 'node_modules/zone.js/bundles/async-test.umd.js', included: true, watched: false},
-      {
-        pattern: 'node_modules/zone.js/bundles/fake-async-test.umd.js',
-        included: true,
-        watched: false,
-      },
       {
         pattern: 'node_modules/moment/min/moment-with-locales.min.js',
         included: false,
