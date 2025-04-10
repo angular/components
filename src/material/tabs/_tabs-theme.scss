@@ -1,5 +1,6 @@
 @use '../core/style/sass-utils';
 @use './m2-tabs';
+@use './m3-tabs';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
@@ -95,7 +96,7 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(m3-tabs.$prefix, m3-tabs.get-density-tokens($theme));
   } @else {
     .mat-mdc-tab-header {
       @include token-utils.create-token-values-mixed(
@@ -129,6 +130,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tabs') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

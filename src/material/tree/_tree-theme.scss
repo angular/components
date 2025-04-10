@@ -6,6 +6,7 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use './m2-tree';
+@use './m3-tree';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -45,7 +46,7 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(m3-tree.$prefix, m3-tree.get-density-tokens($theme));
   } @else {
     $density-scale: inspection.get-theme-density($theme);
 
@@ -76,6 +77,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tree') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use './m2-paginator';
+@use './m3-paginator';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/theming/theming';
@@ -47,7 +48,8 @@
   );
 
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-paginator.$prefix, m3-paginator.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(

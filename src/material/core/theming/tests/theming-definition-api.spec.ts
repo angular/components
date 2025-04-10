@@ -78,7 +78,6 @@ describe('theming definition api', () => {
         'typography-system-variables-prefix',
         'typography-tokens',
         'density-scale',
-        'density-tokens',
         'base-tokens',
       ]);
       expect(vars['version']).toBe('1');
@@ -169,13 +168,13 @@ describe('theming definition api', () => {
             scale: -2
           )
         ));
-        $data: map.get($theme, $internals);
         :root {
-          --size: #{map.get($data, density-tokens, (mat, checkbox), state-layer-size)};
+          @include mat.checkbox-density($theme);
         }
       `);
       const vars = getRootVars(css);
-      expect(vars['size']).toBe('32px');
+      expect(vars['mat-checkbox-touch-target-display']).toBe('none');
+      expect(vars['mat-checkbox-state-layer-size']).toBe('32px');
     });
 
     it('should throw for invalid system config', () => {
@@ -294,11 +293,7 @@ describe('theming definition api', () => {
         }
       `);
       const vars = getRootVars(css);
-      expect(vars['keys'].split(', ')).toEqual([
-        'theme-version',
-        'density-scale',
-        'density-tokens',
-      ]);
+      expect(vars['keys'].split(', ')).toEqual(['theme-version', 'density-scale']);
     });
   });
 });

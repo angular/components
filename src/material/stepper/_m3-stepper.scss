@@ -1,6 +1,9 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, stepper);
@@ -76,4 +79,14 @@ $prefix: (mat, stepper);
   );
 
   @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    header-height: list.nth((72px, 68px, 64px, 60px, 42px), $index),
+  );
 }

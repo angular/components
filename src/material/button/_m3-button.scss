@@ -1,7 +1,10 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/style/sass-utils';
 @use '../core/style/elevation';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, button);
@@ -14,7 +17,6 @@ $prefix: (mat, button);
 @function get-tokens($systems, $exclude-hardcoded, $token-slots) {
   $tokens: (
     filled-container-color: map.get($systems, md-sys-color, primary),
-    filled-container-height: if($exclude-hardcoded, null, 40px),
     filled-container-shape: map.get($systems, md-sys-shape, corner-full),
     filled-disabled-container-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
@@ -37,7 +39,6 @@ $prefix: (mat, button);
         map.get($systems, md-sys-color, on-primary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)    ),
     filled-state-layer-color: map.get($systems, md-sys-color, on-primary),
-    outlined-container-height: if($exclude-hardcoded, null, 40px),
     outlined-container-shape: map.get($systems, md-sys-shape, corner-full),
     outlined-disabled-label-text-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
@@ -64,7 +65,6 @@ $prefix: (mat, button);
     outlined-state-layer-color: map.get($systems, md-sys-color, primary),
     protected-container-color: map.get($systems, md-sys-color, surface),
     protected-container-elevation-shadow: map.get($systems, md-sys-elevation, level1),
-    protected-container-height: if($exclude-hardcoded, null, 40px),
     protected-container-shape: map.get($systems, md-sys-shape, corner-full),
     protected-disabled-container-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
@@ -91,7 +91,6 @@ $prefix: (mat, button);
         map.get($systems, md-sys-color, primary),
         $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
     protected-state-layer-color: map.get($systems, md-sys-color, primary),
-    text-container-height: if($exclude-hardcoded, null, 40px),
     text-container-shape: map.get($systems, md-sys-shape, corner-full),
     text-disabled-label-text-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
@@ -113,7 +112,6 @@ $prefix: (mat, button);
     text-state-layer-color: map.get($systems, md-sys-color, primary),
     text-with-icon-horizontal-padding: m3-utils.hardcode(16px, $exclude-hardcoded),
     tonal-container-color: map.get($systems, md-sys-color, secondary-container),
-    tonal-container-height: if($exclude-hardcoded, null, 40px),
     tonal-container-shape: map.get($systems, md-sys-shape, corner-full),
     tonal-disabled-container-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
@@ -240,4 +238,23 @@ $prefix: (mat, button);
 
 
   @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    filled-touch-target-display: list.nth((block, block, none, none), $index),
+    filled-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    outlined-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    outlined-touch-target-display: list.nth((block, block, none, none), $index),
+    protected-touch-target-display: list.nth((block, block, none, none), $index),
+    protected-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    text-touch-target-display: list.nth((block, block, none, none), $index),
+    text-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    tonal-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    tonal-touch-target-display: list.nth((block, block, none, none), $index),
+  );
 }

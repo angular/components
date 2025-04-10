@@ -41,7 +41,6 @@
 @use '../ripple/m3-ripple';
 @use '../selection/pseudo-checkbox/m3-pseudo-checkbox';
 @use '../style/sass-utils';
-@use './density';
 @use './format-tokens';
 @use './m2-tokens';
 @use './m3';
@@ -153,16 +152,6 @@ $_cached-token-slots: null;
     ),
     get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
   );
-
-  // Strip out tokens that are systemized by our made up density system.
-  @each $namespace, $tokens in $result {
-    @each $token, $value in $tokens {
-      @if density.is-systemized($namespace, $token) and not $include-density {
-        $tokens: map.remove($tokens, $token);
-      }
-    }
-    $result: map.set($result, $namespace, $tokens);
-  }
 
   @return $result;
 }
@@ -385,13 +374,6 @@ $system-variables-prefix) {
   @return generate-tokens((
     md-sys-typescale: $sys-typeface
   ));
-}
-
-/// Generates a set of namespaced density tokens for all components.
-/// @param {String|Number} $scale The regular font-weight
-/// @return {Map} A map of namespaced density tokens
-@function generate-density-tokens($scale) {
-  @return density.get-tokens-for-scale($scale);
 }
 
 /// Generates a set of namespaced tokens not related to color, typography, or density for all

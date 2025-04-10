@@ -1,6 +1,9 @@
 @use '../core/tokens/m3-utils';
 @use '../core/style/sass-utils';
 @use 'sass:map';
+@use 'sass:list';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, tab);
@@ -23,7 +26,6 @@ $prefix: (mat, tab);
         active-indicator-shape: m3-utils.hardcode(0, $exclude-hardcoded),
         active-label-text-color: map.get($systems, md-sys-color, on-surface),
         active-ripple-color: map.get($systems, md-sys-color, on-surface),
-        container-height: if($exclude-hardcoded, null, 48px),
         divider-color: map.get($systems, md-sys-color, surface-variant),
         divider-height: m3-utils.hardcode(1px, $exclude-hardcoded),
         inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
@@ -55,4 +57,14 @@ $prefix: (mat, tab);
   );
 
   @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    container-height: list.nth((48px, 44px, 40px, 36px, 32px), $index),
+  );
 }

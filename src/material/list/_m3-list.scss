@@ -1,5 +1,8 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, list);
@@ -50,7 +53,6 @@ $prefix: (mat, list);
     list-item-leading-avatar-size: if($exclude-hardcoded, null, 40px),
     list-item-leading-icon-color: map.get($systems, md-sys-color, on-surface-variant),
     list-item-leading-icon-size: if($exclude-hardcoded, null, 24px),
-    list-item-one-line-container-height: if($exclude-hardcoded, null, 56px),
     list-item-selected-trailing-icon-color: map.get($systems, md-sys-color, primary),
     list-item-supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
     list-item-supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
@@ -59,7 +61,6 @@ $prefix: (mat, list);
     list-item-supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
     list-item-supporting-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
     list-item-supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    list-item-three-line-container-height: if($exclude-hardcoded, null, 88px),
     list-item-trailing-icon-color: map.get($systems, md-sys-color, on-surface-variant),
     list-item-trailing-icon-size: if($exclude-hardcoded, null, 24px),
     list-item-trailing-supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
@@ -71,8 +72,21 @@ $prefix: (mat, list);
         map.get($systems, md-sys-typescale, label-small-tracking),
     list-item-trailing-supporting-text-weight:
         map.get($systems, md-sys-typescale, label-small-weight),
-    list-item-two-line-container-height: if($exclude-hardcoded, null, 72px),
   );
 
   @return m3-utils.namespace($prefix, $tokens, $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    list-item-leading-icon-start-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
+    list-item-leading-icon-end-space: list.nth((16px, 12px, 8px, 4px, 4px, 4px), $index),
+    list-item-one-line-container-height: list.nth((48px, 44px, 40px, 36px, 32px, 24px), $index),
+    list-item-two-line-container-height: list.nth((64px, 60px, 56px, 52px, 48px, 48px), $index),
+    list-item-three-line-container-height: list.nth((88px, 84px, 80px, 76px, 72px, 56px), $index),
+  );
 }

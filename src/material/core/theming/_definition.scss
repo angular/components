@@ -121,7 +121,6 @@ $theme-version: 1;
     $internals: (
       theme-version: $theme-version,
       density-scale: $density-scale,
-      density-tokens: m3-tokens.generate-density-tokens($density-scale)
     )
   );
 }

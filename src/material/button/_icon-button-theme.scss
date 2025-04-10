@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'sass:math';
 @use './m2-icon-button';
+@use './m3-icon-button';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use '../core/theming/theming';
@@ -74,7 +75,8 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-icon-button.$prefix, m3-icon-button.get-density-tokens($theme));
   } @else {
     $icon-size: 24px;
     $density-scale: inspection.get-theme-density($theme);
@@ -137,6 +139,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
