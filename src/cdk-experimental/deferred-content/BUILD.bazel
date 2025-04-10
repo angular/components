@@ -5,10 +5,11 @@ package(default_visibility = ["//visibility:public"])
 
 ng_project(
     name = "deferred-content",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "deferred-content.ts",
+        "index.ts",
+        "public-api.ts",
+    ],
     deps = [
         "//:node_modules/@angular/core",
     ],
@@ -17,10 +18,9 @@ ng_project(
 ts_project(
     name = "unit_test_sources",
     testonly = True,
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
-    ),
+    srcs = [
+        "deferred-content.spec.ts",
+    ],
     deps = [
         ":deferred-content",
         "//:node_modules/@angular/core",

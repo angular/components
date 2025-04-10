@@ -4,10 +4,11 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "tabs",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
+    srcs = [
+        "tab.ts",
+        "tablist.ts",
+        "tabpanel.ts",
+    ],
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
