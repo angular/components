@@ -21,9 +21,6 @@ interface SelectOptions {
   toggle?: boolean;
   toggleOne?: boolean;
   selectOne?: boolean;
-  selectAll?: boolean;
-  selectFromAnchor?: boolean;
-  selectFromActive?: boolean;
 }
 
 /** The required inputs for the tablist. */
@@ -184,15 +181,6 @@ export class TablistPattern {
     }
     if (opts?.selectOne) {
       this.selection.selectOne();
-    }
-    if (opts?.selectAll) {
-      this.selection.selectAll();
-    }
-    if (opts?.selectFromAnchor) {
-      this.selection.selectFromPrevSelectedItem();
-    }
-    if (opts?.selectFromActive) {
-      this.selection.selectFromActive();
     }
   }
 
