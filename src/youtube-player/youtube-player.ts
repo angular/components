@@ -32,6 +32,8 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
+import {trustedResourceUrl} from 'safevalues';
+import {setScriptSrc} from 'safevalues/dom';
 import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPattern} from 'rxjs';
 import {takeUntil, switchMap} from 'rxjs/operators';
 import {PlaceholderImageQuality, YouTubePlayerPlaceholder} from './youtube-player-placeholder';
@@ -743,7 +745,7 @@ function loadApi(nonce: string | null): void {
   }
 
   // We can use `document` directly here, because this logic doesn't run outside the browser.
-  const url = 'https://www.youtube.com/iframe_api';
+  const url = trustedResourceUrl`https://www.youtube.com/iframe_api`;
   const script = document.createElement('script');
   const callback = (event: Event) => {
     script.removeEventListener('load', callback);
@@ -759,7 +761,7 @@ function loadApi(nonce: string | null): void {
   };
   script.addEventListener('load', callback);
   script.addEventListener('error', callback);
-  (script as any).src = url;
+  setScriptSrc(script, url);
   script.async = true;
 
   if (nonce) {
