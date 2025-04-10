@@ -44,16 +44,9 @@ sass_library(
 )
 
 sass_library(
-    name = "density",
-    srcs = ["_density.scss"],
-    deps = ["//src/material/core/theming"],
-)
-
-sass_library(
     name = "m3_tokens",
     srcs = ["_m3-tokens.scss"],
     deps = [
-        ":density",
         ":format_tokens",
         ":m2_tokens",
         "//src/material/autocomplete:m3",
@@ -105,7 +98,6 @@ sass_library(
     name = "m2_tokens",
     srcs = ["_m2-tokens.scss"],
     deps = [
-        ":density",
         ":format_tokens",
         "//src/material/autocomplete:m2",
         "//src/material/badge:m2",

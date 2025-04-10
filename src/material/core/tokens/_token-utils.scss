@@ -198,6 +198,10 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
     @return ();
   }
   $values: map.get($tokens, $prefix);
+  @if ($values == null) {
+    @return ();
+  }
+
   $color-variant: map.get($options, color-variant);
   $emit-overrides-only: map.get($options, emit-overrides-only);
   @if $color-variant == null {
@@ -214,6 +218,7 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
 
     @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
   }
+
   @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
 }
 

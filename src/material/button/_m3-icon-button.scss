@@ -1,6 +1,9 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/style/sass-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, icon-button);
@@ -24,7 +27,6 @@ $prefix: (mat, icon-button);
     disabled-icon-color: sass-utils.safe-color-change(
         map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
     icon-size: if($exclude-hardcoded, null, 24px),
-    state-layer-size: if($exclude-hardcoded, null, 40px),
     icon-color: map.get($systems, md-sys-color, on-surface-variant),
   );
 
@@ -64,4 +66,16 @@ $prefix: (mat, icon-button);
   );
 
   @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    touch-target-display: list.nth((block, block, none, none, none, none), $index),
+    // The size caps out at 24px, because anything lower will be smaller than the icon.
+    state-layer-size: list.nth((40px, 36px, 32px, 28px, 24px, 24px), $index),
+  );
 }

@@ -6,6 +6,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-toolbar';
+@use './m3-toolbar';
 
 @mixin _palette-styles($theme, $palette-name) {
   @include token-utils.create-token-values-mixed(
@@ -65,7 +66,8 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-toolbar.$prefix, m3-toolbar.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -96,6 +98,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-toolbar') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

@@ -3,6 +3,7 @@
 @use '../core/theming/inspection';
 @use '../core/theming/validation';
 @use './m2-fab';
+@use './m3-fab';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 
@@ -80,7 +81,7 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(m3-fab.$prefix, m3-fab.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -116,6 +117,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-fab') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

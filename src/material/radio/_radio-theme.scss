@@ -5,6 +5,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-radio';
+@use './m3-radio';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-radio.
@@ -73,7 +74,7 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(m3-radio.$prefix, m3-radio.get-density-tokens($theme));
   } @else {
     $density-scale: inspection.get-theme-density($theme);
 
@@ -111,6 +112,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

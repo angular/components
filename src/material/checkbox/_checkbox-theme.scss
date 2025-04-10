@@ -5,6 +5,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-checkbox';
+@use './m3-checkbox';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-checkbox.
@@ -75,7 +76,8 @@
   $density-scale: inspection.get-theme-density($theme);
 
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-checkbox.$prefix, m3-checkbox.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -111,6 +113,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-checkbox') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

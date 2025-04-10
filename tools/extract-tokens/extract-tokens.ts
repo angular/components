@@ -203,6 +203,7 @@ function getTokenExtractionCode(
   const str = '__privateSassString';
   const stringJoin = '__privateStringJoin';
   const m3Tokens = '___privateM3Tokens';
+  const m3System = '___privateM3System';
   const palettes = '___privatePalettes';
   const sassUtils = '__privateSassUtils';
   const inferTokenType = '__privateInferFromValue';
@@ -216,6 +217,7 @@ function getTokenExtractionCode(
     @use 'sass:math' as ${math};
     @use 'sass:string' as ${str};
     @use '${join(corePath, 'tokens/m3-tokens')}' as ${m3Tokens};
+    @use '${join(corePath, 'tokens/m3-system')}' as ${m3System};
     @use '${join(corePath, 'theming/palettes')}' as ${palettes};
     @use '${join(corePath, 'style/sass-utils')}' as ${sassUtils};
 
@@ -233,7 +235,7 @@ function getTokenExtractionCode(
     $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
       ${palettes}.$azure-palette, ${palettes}.$azure-palette, 'mat-sys');
     $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'mat-sys');
-    $__all-density: ${m3Tokens}.generate-density-tokens(0);
+    $__all-density: ${m3System}.get-density-tokens(0);
     $__all-base: ${m3Tokens}.generate-base-tokens();
     $__results: ();
     $__override-tokens: ${defineOverrides}();
@@ -290,7 +292,7 @@ function getTokenExtractionCode(
       $color: ${map}.get($__all-color, $namespace) or ();
       $base: ${map}.get($__all-base, $namespace) or ();
       $typography: ${map}.get($__all-typography, $namespace) or ();
-      $density: ${map}.get($__all-density, $namespace) or ();
+      $density: ${map}.get($__all-density, $namespace) or ();\
 
       @each $name, $resolved-value in $tokens {
         $color-value: ${map}.get($color, $name);
@@ -301,18 +303,18 @@ function getTokenExtractionCode(
         $type: '';
         $value: null;
 
-        @if ($base-value) {
-          $type: base;
-          $value: $base-value;
+        @if ($density-value) {
+          $type: density;
+          $value: $density-value;
         } @else if ($typography-value) {
           $type: typography;
           $value: $typography-value;
-        } @else if ($density-value) {
-          $type: density;
-          $value: $density-value;
-        } @else {
+        } @else if ($color-value) {
           $type: color;
           $value: $color-value;
+        } @else {
+          $type: base;
+          $value: $base-value;
         }
 
         // If the token has a value, but could not be found in the token maps, try to infer its type

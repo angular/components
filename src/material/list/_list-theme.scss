@@ -9,6 +9,7 @@
 @use '../core/typography/typography';
 @use '../radio/m2-radio';
 @use './m2-list';
+@use './m3-list';
 
 @mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
@@ -103,7 +104,7 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(m3-list.$prefix, m3-list.get-density-tokens($theme));
   } @else {
     $density-scale: inspection.get-theme-density($theme);
 
@@ -194,6 +195,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

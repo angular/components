@@ -6,6 +6,7 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use './m2-expansion';
+@use './m3-expansion';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -45,7 +46,8 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-expansion.$prefix, m3-expansion.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -72,6 +74,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-expansion') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

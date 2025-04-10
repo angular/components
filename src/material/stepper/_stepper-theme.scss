@@ -5,6 +5,7 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use './m2-stepper';
+@use './m3-stepper';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for mat-stepper.
@@ -67,7 +68,8 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-stepper.$prefix, m3-stepper.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -103,6 +105,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-stepper') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

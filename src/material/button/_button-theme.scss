@@ -5,6 +5,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-button';
+@use './m3-button';
 
 @mixin _button-variant($theme, $palette) {
   $mat-tokens: if(
@@ -91,7 +92,8 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-button.$prefix, m3-button.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -127,6 +129,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

@@ -5,6 +5,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-button-toggle';
+@use './m3-button-toggle';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-button-toggle.
@@ -59,7 +60,8 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, density));
+    @include token-utils.create-token-values(
+        m3-button-toggle.$prefix, m3-button-toggle.get-density-tokens($theme));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -97,6 +99,9 @@
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
     @if inspection.get-theme-version($theme) == 1 {
       @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @if inspection.theme-has($theme, density) {
+        @include density($theme);
+      }
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

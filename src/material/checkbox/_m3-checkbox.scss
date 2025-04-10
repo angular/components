@@ -1,6 +1,9 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
+@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, checkbox);
@@ -37,7 +40,6 @@ $prefix: (mat, checkbox);
     selected-pressed-state-layer-color: map.get($systems, md-sys-color, on-surface),
     selected-pressed-state-layer-opacity:
         map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    state-layer-size: if($exclude-hardcoded, null, 40px),
     unselected-focus-icon-color: map.get($systems, md-sys-color, on-surface),
     unselected-focus-state-layer-color: map.get($systems, md-sys-color, on-surface),
     unselected-focus-state-layer-opacity:
@@ -87,4 +89,15 @@ $prefix: (mat, checkbox);
   );
 
   @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($theme) {
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    touch-target-display: list.nth((block, block, none, none), $index),
+    state-layer-size: list.nth((40px, 36px, 32px, 28px), $index)
+  );
 }
