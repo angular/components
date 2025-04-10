@@ -5,8 +5,10 @@ load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
 load("@devinfra//bazel/spec-bundling:index_rjs.bzl", _spec_bundle = "spec_bundle")
 load("@rules_browsers//src/wtr:index.bzl", "wtr_test")
+load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
 
 spec_bundle = _spec_bundle
+http_server = _http_server
 
 def npm_package(**kwargs):
     _npm_package(**kwargs)

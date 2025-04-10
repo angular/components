@@ -1,7 +1,7 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
-load("//tools:defaults.bzl", "http_server", "protractor_web_test_suite", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "protractor_web_test_suite", "sass_binary")
+load("//tools:defaults2.bzl", "http_server", "ng_project", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
@@ -165,8 +165,6 @@ ts_project(
 
 protractor_web_test_suite(
     name = "hydration_e2e_tests",
-    configuration = ":protractor.conf.js",
-    on_prepare = ":start-devserver.js",
     server = ":server",
     tags = ["e2e"],
     deps = [
