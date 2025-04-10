@@ -6,6 +6,15 @@
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection</mat-label>
+    <mat-select [(value)]="selection" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Orientation</mat-label>
     <mat-select [(value)]="orientation">
       <mat-option value="vertical">Vertical</mat-option>
@@ -34,6 +43,7 @@
 <ul
   cdkListbox
   [wrap]="wrap.value"
+  [value]="selection"
   [multi]="multi.value"
   [readonly]="readonly.value"
   [disabled]="disabled.value"

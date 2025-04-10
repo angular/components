@@ -7,15 +7,16 @@
  */
 
 import {
-  AfterViewInit,
   booleanAttribute,
   computed,
   contentChildren,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import {ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
@@ -50,9 +51,10 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(pointerdown)': 'pattern.onPointerdown($event)',
+    '(focusin)': 'onFocus()',
   },
 })
-export class CdkListbox<V> implements AfterViewInit {
+export class CdkListbox<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -107,14 +109,27 @@ export class CdkListbox<V> implements AfterViewInit {
     textDirection: this.textDirection,
   });
 
-  ngAfterViewInit() {
-    if (this.value().length) {
-      // TODO(wagnermaciel): Write a test case specifically for this.
-      const item = this.items().find(item => this.value().includes(item.value()));
-      if (item) {
-        this.activeIndex.set(item.index());
+  /** Whether the listbox has received focus yet. */
+  private touched = signal(false);
+
+  /** Whether the options in the listbox have been initialized. */
+  private isViewInitialized = signal(false);
+
+  constructor() {
+    effect(() => {
+      if (this.isViewInitialized() && !this.touched()) {
+        const index = this.items().findIndex(i => this.value().includes(i.value()));
+        this.activeIndex.set(Math.max(index, 0));
       }
-    }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.isViewInitialized.set(true);
+  }
+
+  onFocus() {
+    this.touched.set(true);
   }
 }
 
@@ -144,6 +159,7 @@ export class CdkOption<V> {
   /** A unique identifier for the option. */
   protected id = computed(() => this._generatedId);
 
+  /** The value of the option. */
   protected value = input.required<V>();
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
