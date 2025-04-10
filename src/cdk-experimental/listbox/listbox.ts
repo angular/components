@@ -7,6 +7,7 @@
  */
 
 import {
+  AfterViewInit,
   booleanAttribute,
   computed,
   contentChildren,
@@ -54,7 +55,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(focusin)': 'onFocus()',
   },
 })
-export class CdkListbox<V> {
+export class CdkListbox<V> implements AfterViewInit {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -110,14 +111,14 @@ export class CdkListbox<V> {
   });
 
   /** Whether the listbox has received focus yet. */
-  private touched = signal(false);
+  private _touched = signal(false);
 
   /** Whether the options in the listbox have been initialized. */
-  private isViewInitialized = signal(false);
+  private _isViewInitialized = signal(false);
 
   constructor() {
     effect(() => {
-      if (this.isViewInitialized() && !this.touched()) {
+      if (this._isViewInitialized() && !this._touched()) {
         const index = this.items().findIndex(i => this.value().includes(i.value()));
         this.activeIndex.set(Math.max(index, 0));
       }
@@ -125,11 +126,11 @@ export class CdkListbox<V> {
   }
 
   ngAfterViewInit() {
-    this.isViewInitialized.set(true);
+    this._isViewInitialized.set(true);
   }
 
   onFocus() {
-    this.touched.set(true);
+    this._touched.set(true);
   }
 }
 
