@@ -298,6 +298,7 @@
 
   @return sass-utils.deep-merge-all(
       m3-tokens.generate-tokens($app-vars, true, true),
+      get-density-tokens(0),
   );
 }
 
