@@ -26,6 +26,7 @@ interface SelectOptions {
   selectAll?: boolean;
   selectFromAnchor?: boolean;
   selectFromActive?: boolean;
+  toggleFromAnchor?: boolean;
 }
 
 /** Represents the required inputs for a listbox. */
@@ -167,13 +168,28 @@ export class ListboxPattern<V> {
       return manager.on(e => this.goto(e));
     }
 
-    if (this.inputs.multi()) {
-      return manager
-        .on(e => this.goto(e, {toggle: true}))
-        .on(Modifier.Shift, e => this.goto(e, {selectFromActive: true}));
+    if (!this.multi() && this.followFocus()) {
+      return manager.on(e => this.goto(e, {selectOne: true}));
     }
 
-    return manager.on(e => this.goto(e, {toggleOne: true}));
+    if (!this.multi() && !this.followFocus()) {
+      return manager.on(e => this.goto(e, {toggle: true}));
+    }
+
+    if (this.multi() && this.followFocus()) {
+      return manager
+        .on(e => this.goto(e, {selectOne: true}))
+        .on(Modifier.Ctrl, e => this.goto(e, {toggle: true}))
+        .on(Modifier.Shift, e => this.goto(e, {toggleFromAnchor: true}));
+    }
+
+    if (this.multi() && !this.followFocus()) {
+      return manager
+        .on(e => this.goto(e, {toggle: true}))
+        .on(Modifier.Shift, e => this.goto(e, {toggleFromAnchor: true}));
+    }
+
+    return manager;
   });
 
   constructor(readonly inputs: ListboxInputs<V>) {
@@ -269,6 +285,9 @@ export class ListboxPattern<V> {
     }
     if (opts?.selectFromActive) {
       this.selection.selectFromActive();
+    }
+    if (opts?.toggleFromAnchor) {
+      this.selection.toggleFromPrevSelectedItem();
     }
   }
 
