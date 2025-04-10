@@ -88,6 +88,8 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
+    protected _trapFocus(): void;
+    // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatBottomSheetContainer, "mat-bottom-sheet-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatBottomSheetContainer, never>;

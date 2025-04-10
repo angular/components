@@ -58,7 +58,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     // (undocumented)
     protected _document: Document;
     // (undocumented)
-    protected _elementRef: ElementRef<any>;
+    protected _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     protected _focusTrapFactory: FocusTrapFactory;
     // (undocumented)
@@ -69,7 +69,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig> extends B
     _recaptureFocus(): void;
     // (undocumented)
     _removeAriaLabelledBy(id: string): void;
-    protected _trapFocus(): void;
+    protected _trapFocus(options?: FocusOptions): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkDialogContainer<any>, "cdk-dialog-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
