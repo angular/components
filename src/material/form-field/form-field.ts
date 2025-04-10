@@ -316,6 +316,9 @@ export class MatFormField
   // Unique id for the hint label.
   readonly _hintLabelId = this._idGenerator.getId('mat-mdc-hint-');
 
+  // Ids obtained from the error and hint fields
+  private _describedByIds: string[] | undefined;
+
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
     return this._explicitFormFieldControl || this._formFieldControl;
@@ -717,7 +720,22 @@ export class MatFormField
         ids.push(...this._errorChildren.map(error => error.id));
       }
 
-      this._control.setDescribedByIds(ids);
+      const existingDescribedBy = this._control.describedByIds;
+      let toAssign: string[];
+
+      // In some cases there might be some `aria-describedby` IDs that were assigned directly,
+      // like by the `AriaDescriber` (see #30011). Attempt to preserve them by taking the previous
+      // attribute value and filtering out the IDs that came from the previous `setDescribedByIds`
+      // call. Note the `|| ids` here allows us to avoid duplicating IDs on the first render.
+      if (existingDescribedBy) {
+        const exclude = this._describedByIds || ids;
+        toAssign = ids.concat(existingDescribedBy.filter(id => id && !exclude.includes(id)));
+      } else {
+        toAssign = ids;
+      }
+
+      this._control.setDescribedByIds(toAssign);
+      this._describedByIds = ids;
     }
   }
 

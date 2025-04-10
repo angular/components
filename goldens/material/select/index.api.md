@@ -266,6 +266,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     customTrigger: MatSelectTrigger;
     // (undocumented)
     protected _defaultOptions: MatSelectConfig | null;
+    get describedByIds(): string[];
     protected readonly _destroy: Subject<void>;
     readonly disableAutomaticLabeling = true;
     disabled: boolean;
