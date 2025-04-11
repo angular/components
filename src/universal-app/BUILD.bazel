@@ -144,10 +144,10 @@ http_server(
     name = "server",
     srcs = [
         ":debug_prerender_bin",
-        "@npm//zone.js",
+        "//:node_modules/zone.js",
     ],
     additional_root_paths = [
-        "npm/node_modules",
+        "angular_material/",
     ],
     tags = ["manual"],
     deps = [

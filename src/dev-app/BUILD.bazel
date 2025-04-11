@@ -1,8 +1,8 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
 load("//tools:defaults.bzl", "sass_binary")
 load("//tools:defaults2.bzl", "http_server", "ng_project")
 load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 
 package(default_visibility = ["//visibility:public"])
@@ -153,10 +153,9 @@ filegroup(
         ":theme",
         ":theme_m3",
         ":variables",
+        "//:node_modules/moment",
+        "//:node_modules/zone.js",
         "//src/dev-app/icon:icon_demo_assets",
-        "@npm//:node_modules/moment/min/moment-with-locales.min.js",
-        "@npm//:node_modules/rxjs/bundles/rxjs.umd.min.js",
-        "@npm//:node_modules/zone.js/bundles/zone.umd.js",
     ],
 )
 
@@ -164,10 +163,7 @@ http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
-        "npm/node_modules",
-        # Needed for compatibility with "pkg_web" which always uses the tree
-        # artifact output as workspace root.
-        "angular_material",
+        "angular_material/",
     ],
     enable_dev_ui = True,
     # List of environment variables that will be made available as `window.<NAME>` in the
@@ -184,14 +180,20 @@ http_server(
 
 # Target that builds a static web package of the dev-app. The web package can be
 # deployed on static hosting services (such as firebase).
-pkg_web(
+npm_package(
     name = "web_package",
     srcs = [
         ":bundles",
         ":dev_app_static_files",
     ],
-    additional_root_paths = [
-        "npm/node_modules",
+    out = "web_package",
+    exclude_srcs_patterns = [
+        "node_modules/.aspect_rules_js/**",
+    ],
+    include_srcs_packages = ["**"],
+    root_paths = [
+        ".",
+        "",
     ],
     tags = ["manual"],
 )
