@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Platform} from '../../platform';
 import {ViewportRuler} from '../../scrolling';
@@ -12,42 +12,34 @@ describe('BlockScrollStrategy', () => {
   let overlayRef: OverlayRef;
   let componentPortal: ComponentPortal<FocacciaMsg>;
   let forceScrollElement: HTMLElement;
+  let overlayContainer: OverlayContainer;
 
   beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({imports: [OverlayModule, PortalModule, FocacciaMsg]});
+
+    const overlay = TestBed.inject(Overlay);
+    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.block()});
+
+    viewport = TestBed.inject(ViewportRuler);
+    platform = TestBed.inject(Platform);
+    overlayContainer = TestBed.inject(OverlayContainer);
+    overlayRef = overlay.create(overlayConfig);
+    componentPortal = new ComponentPortal(FocacciaMsg);
     documentElement = document.documentElement!;
-
-    // Ensure a clean state for every test.
     documentElement.classList.remove('cdk-global-scrollblock');
-
-    TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, FocacciaMsg],
-    });
+    forceScrollElement = document.createElement('div');
+    document.body.appendChild(forceScrollElement);
+    forceScrollElement.style.width = '100px';
+    forceScrollElement.style.height = '3000px';
+    forceScrollElement.style.background = 'rebeccapurple';
   }));
 
-  beforeEach(inject(
-    [Overlay, ViewportRuler, Platform],
-    (overlay: Overlay, viewportRuler: ViewportRuler, _platform: Platform) => {
-      let overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.block()});
-
-      overlayRef = overlay.create(overlayConfig);
-      componentPortal = new ComponentPortal(FocacciaMsg);
-
-      viewport = viewportRuler;
-      forceScrollElement = document.createElement('div');
-      document.body.appendChild(forceScrollElement);
-      forceScrollElement.style.width = '100px';
-      forceScrollElement.style.height = '3000px';
-      forceScrollElement.style.background = 'rebeccapurple';
-      platform = _platform;
-    },
-  ));
-
-  afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
+  afterEach(() => {
     overlayRef.dispose();
     forceScrollElement.remove();
     window.scroll(0, 0);
-    container.getContainerElement().remove();
-  }));
+    overlayContainer.getContainerElement().remove();
+  });
 
   it(
     'should toggle scroll blocking along the y axis',

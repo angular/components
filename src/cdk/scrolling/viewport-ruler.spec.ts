@@ -1,6 +1,5 @@
-import {TestBed, fakeAsync, inject, tick} from '@angular/core/testing';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {dispatchFakeEvent} from '../testing/private';
-import {ScrollingModule} from './public-api';
 import {ViewportRuler} from './viewport-ruler';
 
 describe('ViewportRuler', () => {
@@ -14,17 +13,10 @@ describe('ViewportRuler', () => {
   veryLargeElement.style.width = '6000px';
   veryLargeElement.style.height = '6000px';
 
-  beforeEach(() =>
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      providers: [ViewportRuler],
-    }),
-  );
-
-  beforeEach(inject([ViewportRuler], (v: ViewportRuler) => {
-    viewportRuler = v;
+  beforeEach(() => {
+    viewportRuler = TestBed.inject(ViewportRuler);
     scrollTo(0, 0);
-  }));
+  });
 
   it('should get the viewport size', () => {
     let size = viewportRuler.getViewportSize();

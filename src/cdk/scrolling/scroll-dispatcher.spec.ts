@@ -1,32 +1,26 @@
-import {
-  inject,
-  TestBed,
-  waitForAsync,
-  fakeAsync,
-  ComponentFixture,
-  tick,
-} from '@angular/core/testing';
+import {TestBed, waitForAsync, fakeAsync, ComponentFixture, tick} from '@angular/core/testing';
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import {CdkScrollable, ScrollDispatcher, ScrollingModule} from './public-api';
 import {dispatchFakeEvent} from '../testing/private';
 
 describe('ScrollDispatcher', () => {
+  let scroll: ScrollDispatcher;
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ScrollingModule, ScrollingComponent, NestedScrollingComponent],
     });
+
+    scroll = TestBed.inject(ScrollDispatcher);
   }));
 
   describe('Basic usage', () => {
-    let scroll: ScrollDispatcher;
     let fixture: ComponentFixture<ScrollingComponent>;
 
-    beforeEach(inject([ScrollDispatcher], (s: ScrollDispatcher) => {
-      scroll = s;
-
+    beforeEach(() => {
       fixture = TestBed.createComponent(ScrollingComponent);
       fixture.detectChanges();
-    }));
+    });
 
     it('should be registered with the scrollable directive with the scroll service', () => {
       const componentScrollable = fixture.componentInstance.scrollable;
@@ -122,17 +116,14 @@ describe('ScrollDispatcher', () => {
   });
 
   describe('Nested scrollables', () => {
-    let scroll: ScrollDispatcher;
     let fixture: ComponentFixture<NestedScrollingComponent>;
     let element: ElementRef<HTMLElement>;
 
-    beforeEach(inject([ScrollDispatcher], (s: ScrollDispatcher) => {
-      scroll = s;
-
+    beforeEach(() => {
       fixture = TestBed.createComponent(NestedScrollingComponent);
       fixture.detectChanges();
       element = fixture.componentInstance.interestingElement;
-    }));
+    });
 
     it('should be able to identify the containing scrollables of an element', () => {
       const scrollContainers = scroll.getAncestorScrollContainers(element);

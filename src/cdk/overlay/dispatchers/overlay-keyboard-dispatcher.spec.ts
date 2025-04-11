@@ -1,7 +1,7 @@
 import {ESCAPE} from '../../keycodes';
 import {ComponentPortal} from '../../portal';
 import {ApplicationRef, Component} from '@angular/core';
-import {TestBed, inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '../../testing/private';
 import {Overlay, OverlayModule} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';
@@ -12,18 +12,10 @@ describe('OverlayKeyboardDispatcher', () => {
   let overlay: Overlay;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponent],
-    });
-
-    inject(
-      [ApplicationRef, OverlayKeyboardDispatcher, Overlay],
-      (ar: ApplicationRef, kbd: OverlayKeyboardDispatcher, o: Overlay) => {
-        appRef = ar;
-        keyboardDispatcher = kbd;
-        overlay = o;
-      },
-    )();
+    TestBed.configureTestingModule({imports: [OverlayModule, TestComponent]});
+    appRef = TestBed.inject(ApplicationRef);
+    keyboardDispatcher = TestBed.inject(OverlayKeyboardDispatcher);
+    overlay = TestBed.inject(Overlay);
   });
 
   it('should track overlays in order as they are attached and detached', () => {

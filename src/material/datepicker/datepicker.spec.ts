@@ -21,7 +21,7 @@ import {
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {Component, Directive, Provider, Type, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {
   FormControl,
   FormsModule,
@@ -1408,18 +1408,16 @@ describe('MatDatepicker', () => {
         subscription.unsubscribe();
       }));
 
-      it('should re-render when the i18n labels change', inject(
-        [MatDatepickerIntl],
-        (intl: MatDatepickerIntl) => {
-          const toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
+      it('should re-render when the i18n labels change', () => {
+        const intl = TestBed.inject(MatDatepickerIntl);
+        const toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
-          intl.openCalendarLabel = 'Open the calendar, perhaps?';
-          intl.changes.next();
-          fixture.detectChanges();
+        intl.openCalendarLabel = 'Open the calendar, perhaps?';
+        intl.changes.next();
+        fixture.detectChanges();
 
-          expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
-        },
-      ));
+        expect(toggle.getAttribute('aria-label')).toBe('Open the calendar, perhaps?');
+      });
 
       it('should toggle the active state of the datepicker toggle', fakeAsync(() => {
         const toggle = fixture.debugElement.query(By.css('mat-datepicker-toggle'))!.nativeElement;

@@ -1,7 +1,7 @@
 import {ComponentPortal, PortalModule} from '../../portal';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '../../scrolling';
 import {Component, ElementRef} from '@angular/core';
-import {TestBed, fakeAsync, inject} from '@angular/core/testing';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {Overlay, OverlayConfig, OverlayContainer, OverlayModule, OverlayRef} from '../index';
 
@@ -10,6 +10,8 @@ describe('CloseScrollStrategy', () => {
   let componentPortal: ComponentPortal<MozarellaMsg>;
   let scrolledSubject = new Subject<CdkScrollable | undefined>();
   let scrollPosition: number;
+  let overlayContainer: OverlayContainer;
+  let overlay: Overlay;
 
   beforeEach(fakeAsync(() => {
     scrollPosition = 0;
@@ -31,18 +33,18 @@ describe('CloseScrollStrategy', () => {
         },
       ],
     });
-  }));
 
-  beforeEach(inject([Overlay], (overlay: Overlay) => {
-    let overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
+    overlayContainer = TestBed.inject(OverlayContainer);
+    overlay = TestBed.inject(Overlay);
+    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
     overlayRef = overlay.create(overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
   }));
 
-  afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
+  afterEach(() => {
     overlayRef.dispose();
-    container.getContainerElement().remove();
-  }));
+    overlayContainer.getContainerElement().remove();
+  });
 
   it('should detach the overlay as soon as the user scrolls', () => {
     overlayRef.attach(componentPortal);
@@ -72,64 +74,58 @@ describe('CloseScrollStrategy', () => {
     expect(overlayRef.detach).not.toHaveBeenCalled();
   });
 
-  it('should be able to reposition the overlay up to a certain threshold before closing', inject(
-    [Overlay],
-    (overlay: Overlay) => {
-      overlayRef.dispose();
+  it('should be able to reposition the overlay up to a certain threshold before closing', () => {
+    overlayRef.dispose();
 
-      overlayRef = overlay.create({
-        scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
-      });
+    overlayRef = overlay.create({
+      scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
+    });
 
-      overlayRef.attach(componentPortal);
-      spyOn(overlayRef, 'updatePosition');
-      spyOn(overlayRef, 'detach');
+    overlayRef.attach(componentPortal);
+    spyOn(overlayRef, 'updatePosition');
+    spyOn(overlayRef, 'detach');
 
-      for (let i = 0; i < 50; i++) {
-        scrollPosition++;
-        scrolledSubject.next();
-      }
-
-      expect(overlayRef.updatePosition).toHaveBeenCalledTimes(50);
-      expect(overlayRef.detach).not.toHaveBeenCalled();
-
+    for (let i = 0; i < 50; i++) {
       scrollPosition++;
       scrolledSubject.next();
+    }
 
-      expect(overlayRef.detach).toHaveBeenCalledTimes(1);
-    },
-  ));
+    expect(overlayRef.updatePosition).toHaveBeenCalledTimes(50);
+    expect(overlayRef.detach).not.toHaveBeenCalled();
 
-  it('should not close if the user starts scrolling away and comes back', inject(
-    [Overlay],
-    (overlay: Overlay) => {
-      overlayRef.dispose();
-      scrollPosition = 100;
+    scrollPosition++;
+    scrolledSubject.next();
 
-      overlayRef = overlay.create({
-        scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
-      });
+    expect(overlayRef.detach).toHaveBeenCalledTimes(1);
+  });
 
-      overlayRef.attach(componentPortal);
-      spyOn(overlayRef, 'updatePosition');
-      spyOn(overlayRef, 'detach');
+  it('should not close if the user starts scrolling away and comes back', () => {
+    overlayRef.dispose();
+    scrollPosition = 100;
 
-      // Scroll down 30px.
-      for (let i = 0; i < 30; i++) {
-        scrollPosition++;
-        scrolledSubject.next();
-      }
+    overlayRef = overlay.create({
+      scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
+    });
 
-      // Scroll back up 30px.
-      for (let i = 0; i < 30; i++) {
-        scrollPosition--;
-        scrolledSubject.next();
-      }
+    overlayRef.attach(componentPortal);
+    spyOn(overlayRef, 'updatePosition');
+    spyOn(overlayRef, 'detach');
 
-      expect(overlayRef.updatePosition).toHaveBeenCalledTimes(60);
-      expect(overlayRef.detach).not.toHaveBeenCalled();
-    },
-  ));
+    // Scroll down 30px.
+    for (let i = 0; i < 30; i++) {
+      scrollPosition++;
+      scrolledSubject.next();
+    }
+
+    // Scroll back up 30px.
+    for (let i = 0; i < 30; i++) {
+      scrollPosition--;
+      scrolledSubject.next();
+    }
+
+    expect(overlayRef.updatePosition).toHaveBeenCalledTimes(60);
+    expect(overlayRef.detach).not.toHaveBeenCalled();
+  });
 });
 
 /** Simple component that we can attach to the overlay. */

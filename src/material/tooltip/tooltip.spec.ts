@@ -25,7 +25,6 @@ import {
   TestBed,
   fakeAsync,
   flush,
-  inject,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
@@ -72,14 +71,9 @@ describe('MatTooltip', () => {
       ],
     });
 
-    inject(
-      [OverlayContainer, FocusMonitor, Platform],
-      (oc: OverlayContainer, fm: FocusMonitor, pl: Platform) => {
-        overlayContainerElement = oc.getContainerElement();
-        focusMonitor = fm;
-        platform = pl;
-      },
-    )();
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    focusMonitor = TestBed.inject(FocusMonitor);
+    platform = TestBed.inject(Platform);
   }));
 
   describe('basic usage', () => {
