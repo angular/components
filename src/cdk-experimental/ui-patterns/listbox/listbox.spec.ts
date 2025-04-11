@@ -13,9 +13,12 @@ import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
 
 type TestInputs = ListboxInputs<string>;
-type TestOption = OptionPattern<string>;
+type TestOption = OptionPattern<string> & {
+  disabled: WritableSignal<boolean>;
+};
 type TestListbox = ListboxPattern<string>;
 
+const a = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 65, 'A', mods);
 const up = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 38, 'ArrowUp', mods);
 const down = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 40, 'ArrowDown', mods);
 const left = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 37, 'ArrowLeft', mods);
@@ -24,6 +27,7 @@ const home = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 36, 'Home',
 const end = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 35, 'End', mods);
 const space = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 32, ' ', mods);
 const enter = (mods?: ModifierKeys) => createKeyboardEvent('keydown', 13, 'Enter', mods);
+const shift = () => createKeyboardEvent('keydown', 16, 'Shift', {shift: true});
 
 describe('Listbox Pattern', () => {
   function getListbox(inputs: Partial<TestInputs> & Pick<TestInputs, 'items'>) {
@@ -56,7 +60,7 @@ describe('Listbox Pattern', () => {
         listbox: signal(listbox),
         element: signal(element),
       });
-    });
+    }) as TestOption[];
   }
 
   function getPatterns(values: string[], inputs: Partial<TestInputs> = {}) {
@@ -253,13 +257,16 @@ describe('Listbox Pattern', () => {
 
     describe('explicit focus & multi select', () => {
       let listbox: TestListbox;
+      let options: TestOption[];
 
       beforeEach(() => {
-        listbox = getDefaultPatterns({
+        const patterns = getDefaultPatterns({
           value: signal([]),
           selectionMode: signal('explicit'),
           multi: signal(true),
-        }).listbox;
+        });
+        listbox = patterns.listbox;
+        options = patterns.options();
       });
 
       it('should select an option on Space', () => {
@@ -279,35 +286,62 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
       });
 
-      it('should toggle the selected state of the next option on Shift + ArrowDown', () => {
+      it('should select a range of options on Shift + ArrowDown/ArrowUp', () => {
+        listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
         listbox.onKeydown(down({shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Apricot', 'Banana']);
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
-      it('should toggle the selected state of the next option on Shift + ArrowUp', () => {
-        listbox.onKeydown(down());
-        listbox.onKeydown(down());
+      it('should not allow wrapping while Shift is held down', () => {
+        listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
-        listbox.onKeydown(up({shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Apricot', 'Apple']);
+        expect(listbox.inputs.value()).toEqual([]);
       });
 
-      it('should select contiguous items from the most recently selected item to the focused item on Shift + Space (or Enter)', () => {
+      it('should select a range of options on Shift + Space (or Enter)', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(space()); // Apricot
         listbox.onKeydown(down());
         listbox.onKeydown(down());
+        listbox.onKeydown(shift());
         listbox.onKeydown(space({shift: true}));
         expect(listbox.inputs.value()).toEqual(['Apricot', 'Banana', 'Blackberry']);
+      });
+
+      it('should deselect options outside the range on subsequent on Shift + Space (or Enter)', () => {
+        listbox.onKeydown(down());
+        listbox.onKeydown(down());
+        listbox.onKeydown(space());
+        expect(listbox.inputs.value()).toEqual(['Banana']);
+
+        listbox.onKeydown(down());
+        listbox.onKeydown(down());
+        listbox.onKeydown(shift());
+        listbox.onKeydown(space({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry']);
+
+        listbox.onKeydown(up());
+        listbox.onKeydown(up());
+        listbox.onKeydown(up());
+        listbox.onKeydown(up());
+        listbox.onKeydown(shift());
+        listbox.onKeydown(space({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
 
       it('should select the focused option and all options up to the first option on Ctrl + Shift + Home', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         listbox.onKeydown(down());
+        listbox.onKeydown(shift());
         listbox.onKeydown(home({control: true, shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana', 'Blackberry']);
+        expect(listbox.inputs.value()).toEqual(['Blackberry', 'Banana', 'Apricot', 'Apple']);
       });
 
       it('should select the focused option and all options down to the last option on Ctrl + Shift + End', () => {
@@ -316,6 +350,7 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down());
         listbox.onKeydown(down());
         listbox.onKeydown(down());
+        listbox.onKeydown(shift());
         listbox.onKeydown(end({control: true, shift: true}));
         expect(listbox.inputs.value()).toEqual(['Cantaloupe', 'Cherry', 'Clementine', 'Cranberry']);
       });
@@ -330,6 +365,7 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(enter());
         expect(listbox.inputs.value()).toEqual([]);
 
+        listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
         expect(listbox.inputs.value()).toEqual([]);
 
@@ -342,17 +378,57 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(home({control: true, shift: true}));
         expect(listbox.inputs.value()).toEqual([]);
       });
+
+      it('should not change the selected state of disabled options on Shift + ArrowUp / ArrowDown', () => {
+        (listbox.inputs.skipDisabled as WritableSignal<boolean>).set(false);
+        options[1].disabled.set(true);
+        listbox.onKeydown(shift());
+        listbox.onKeydown(down({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onKeydown(down({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Banana']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
+
+      it('should select all options on Ctrl + A', () => {
+        expect(listbox.inputs.value()).toEqual([]);
+        listbox.onKeydown(a({control: true}));
+        expect(listbox.inputs.value()).toEqual([
+          'Apple',
+          'Apricot',
+          'Banana',
+          'Blackberry',
+          'Blueberry',
+          'Cantaloupe',
+          'Cherry',
+          'Clementine',
+          'Cranberry',
+        ]);
+      });
+
+      it('should deselect all options on Ctrl + A if all options are selected', () => {
+        expect(listbox.inputs.value()).toEqual([]);
+        listbox.onKeydown(a({control: true}));
+        listbox.onKeydown(a({control: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
     });
 
     describe('follows focus & multi select', () => {
       let listbox: TestListbox;
+      let options: TestOption[];
 
       beforeEach(() => {
-        listbox = getDefaultPatterns({
+        const patterns = getDefaultPatterns({
           value: signal(['Apple']),
           multi: signal(true),
           selectionMode: signal('follow'),
-        }).listbox;
+        });
+        listbox = patterns.listbox;
+        options = patterns.options();
       });
 
       it('should select an option on navigation', () => {
@@ -385,36 +461,61 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.value()).toEqual(['Apple', 'Banana']);
       });
 
-      it('should toggle the selected state of the next option on Shift + ArrowDown', () => {
+      it('should select a range of options on Shift + ArrowDown/ArrowUp', () => {
+        listbox.onKeydown(shift());
         listbox.onKeydown(down({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
         listbox.onKeydown(down({shift: true}));
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
+        listbox.onKeydown(up({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
-      it('should toggle the selected state of the next option on Shift + ArrowUp', () => {
-        listbox.onKeydown(down());
-        listbox.onKeydown(down());
+      it('should not allow wrapping while Shift is held down', () => {
+        listbox.selection.deselectAll();
+        listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
-        listbox.onKeydown(up({shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
+        expect(listbox.inputs.value()).toEqual([]);
       });
 
-      it('should select contiguous items from the most recently selected item to the focused item on Shift + Space (or Enter)', () => {
+      it('should select a range of options on Shift + Space (or Enter)', () => {
+        listbox.onKeydown(down());
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
-        listbox.onKeydown(down()); // Blackberry
-        listbox.onKeydown(down({control: true}));
-        listbox.onKeydown(down({control: true}));
+        listbox.onKeydown(shift());
         listbox.onKeydown(space({shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Blackberry', 'Blueberry', 'Cantaloupe']);
+        expect(listbox.inputs.value()).toEqual(['Apricot', 'Banana', 'Blackberry']);
+      });
+
+      it('should deselect options outside the range on subsequent on Shift + Space (or Enter)', () => {
+        listbox.onKeydown(down());
+        listbox.onKeydown(down());
+        expect(listbox.inputs.value()).toEqual(['Banana']);
+
+        listbox.onKeydown(down({control: true}));
+        listbox.onKeydown(down({control: true}));
+        listbox.onKeydown(shift());
+        listbox.onKeydown(space({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry']);
+
+        listbox.onKeydown(up({control: true}));
+        listbox.onKeydown(up({control: true}));
+        listbox.onKeydown(up({control: true}));
+        listbox.onKeydown(up({control: true}));
+        listbox.onKeydown(shift());
+        listbox.onKeydown(space({shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
 
       it('should select the focused option and all options up to the first option on Ctrl + Shift + Home', () => {
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down());
+        listbox.onKeydown(shift());
         listbox.onKeydown(home({control: true, shift: true}));
-        expect(listbox.inputs.value()).toEqual(['Blackberry', 'Apple', 'Apricot', 'Banana']);
+        expect(listbox.inputs.value()).toEqual(['Blackberry', 'Banana', 'Apricot', 'Apple']);
       });
 
       it('should select the focused option and all options down to the last option on Ctrl + Shift + End', () => {
@@ -423,6 +524,7 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down({control: true}));
         listbox.onKeydown(down());
+        listbox.onKeydown(shift());
         listbox.onKeydown(end({control: true, shift: true}));
         expect(listbox.inputs.value()).toEqual(['Cantaloupe', 'Cherry', 'Clementine', 'Cranberry']);
       });
@@ -437,6 +539,24 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
         listbox.onKeydown(space({control: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
+
+      it('should not select disabled options', () => {
+        options[2].disabled.set(true);
+        (listbox.inputs.skipDisabled as WritableSignal<boolean>).set(false);
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onKeydown(down());
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
+        listbox.onKeydown(down());
+        expect(listbox.inputs.value()).toEqual([]);
+        listbox.onKeydown(down());
+        expect(listbox.inputs.value()).toEqual(['Blackberry']);
+      });
+
+      it('should deselect all except one option on Ctrl + A if all options are selected', () => {
+        listbox.onKeydown(a({control: true}));
+        listbox.onKeydown(a({control: true}));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
@@ -509,19 +629,22 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('explicit'),
         });
         listbox.onPointerdown(click(options, 2));
+        listbox.onKeydown(shift());
         listbox.onPointerdown(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
       });
 
-      it('should deselect options from anchor on shift + click', () => {
+      it('should deselect options outside the range on subsequent shift + clicks', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('explicit'),
         });
         listbox.onPointerdown(click(options, 2));
-        listbox.onPointerdown(click(options, 5));
-        listbox.onPointerdown(click(options, 2, {shift: true}));
-        expect(listbox.inputs.value()).toEqual([]);
+        listbox.onKeydown(shift());
+        listbox.onPointerdown(click(options, 5, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
+        listbox.onPointerdown(click(options, 0, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
       });
     });
 
@@ -563,36 +686,103 @@ describe('Listbox Pattern', () => {
         expect(listbox.inputs.value()).toEqual([]);
       });
 
-      it('should select options from anchor on shift + click', () => {
+      it('should select a range of options on shift + click', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('follow'),
         });
         listbox.onPointerdown(click(options, 2));
+        listbox.onKeydown(shift());
         listbox.onPointerdown(click(options, 5, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
       });
 
-      it('should deselect options from anchor on shift + click', () => {
+      it('should deselect options outside the range on subsequent shift + clicks', () => {
         const {listbox, options} = getDefaultPatterns({
           multi: signal(true),
           selectionMode: signal('follow'),
         });
         listbox.onPointerdown(click(options, 2));
-        listbox.onPointerdown(click(options, 5, {control: true}));
+        listbox.onKeydown(shift());
+        listbox.onPointerdown(click(options, 5, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
+        listbox.onPointerdown(click(options, 0, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
+      });
+
+      it('should select a range up to but not including a disabled option on shift + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          skipDisabled: signal(false),
+          selectionMode: signal('follow'),
+        });
+        options()[2].disabled.set(true);
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+
+        listbox.onKeydown(shift());
         listbox.onPointerdown(click(options, 2, {shift: true}));
-        expect(listbox.inputs.value()).toEqual([]);
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
+        expect(listbox.inputs.activeIndex()).toEqual(2);
+      });
+
+      it('should do nothing on click if the option is disabled', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          skipDisabled: signal(true),
+          selectionMode: signal('follow'),
+        });
+        options()[2].disabled.set(true);
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onKeydown(down({control: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onPointerdown(click(options, 2));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
 
     it('should only navigate when readonly', () => {
-      const {listbox, options} = getDefaultPatterns({readonly: signal(true)});
+      const {listbox, options} = getDefaultPatterns({
+        readonly: signal(true),
+        selectionMode: signal('follow'),
+      });
       listbox.onPointerdown(click(options, 0));
       expect(listbox.inputs.value()).toEqual([]);
       listbox.onPointerdown(click(options, 1));
       expect(listbox.inputs.value()).toEqual([]);
       listbox.onPointerdown(click(options, 2));
       expect(listbox.inputs.value()).toEqual([]);
+    });
+
+    it('should maintain the range selection between pointer and keyboard', () => {
+      const {listbox, options} = getDefaultPatterns({
+        multi: signal(true),
+        selectionMode: signal('follow'),
+      });
+      listbox.onPointerdown(click(options, 2));
+      listbox.onKeydown(down({control: true}));
+      listbox.onKeydown(down({control: true}));
+
+      listbox.onKeydown(shift());
+      listbox.onKeydown(space({shift: true}));
+      expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry']);
+      listbox.onPointerdown(click(options, 0, {shift: true}));
+      expect(listbox.inputs.value()).toEqual(['Banana', 'Apricot', 'Apple']);
+    });
+
+    it('should select a range from the currently focused option', () => {
+      const {listbox, options} = getDefaultPatterns({
+        multi: signal(true),
+        selectionMode: signal('follow'),
+      });
+      listbox.onPointerdown(click(options, 0));
+      expect(listbox.inputs.value()).toEqual(['Apple']);
+      listbox.onKeydown(down({control: true}));
+      listbox.onKeydown(down({control: true}));
+      listbox.onKeydown(shift());
+      listbox.onPointerdown(click(options, 4, {shift: true}));
+      expect(listbox.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry', 'Blueberry']);
     });
   });
 });
