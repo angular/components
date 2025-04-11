@@ -115,29 +115,56 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
     this._selectFromIndex(this.inputs.navigation.prevActiveIndex());
   }
 
-  /** Selects the items in the list starting at the given index. */
-  private _selectFromIndex(index: number) {
-    if (index === -1) {
-      return;
-    }
-
-    const upper = Math.max(this.inputs.navigation.inputs.activeIndex(), index);
-    const lower = Math.min(this.inputs.navigation.inputs.activeIndex(), index);
-
-    for (let i = lower; i <= upper; i++) {
-      this.select(this.inputs.items()[i]);
-    }
-  }
-
   /** Sets the selection to only the current active item. */
   selectOne() {
     this.deselectAll();
     this.select();
   }
 
+  /** Toggles the items in the list starting at the last selected item. */
+  toggleFromPrevSelectedItem() {
+    const prevIndex = this.inputs.items().findIndex(i => this.previousValue() === i.value());
+    const currIndex = this.inputs.navigation.inputs.activeIndex();
+    const currValue = this.inputs.items()[currIndex].value();
+    const items = this._getItemsFromIndex(prevIndex);
+
+    const operation = this.inputs.value().includes(currValue)
+      ? this.deselect.bind(this)
+      : this.select.bind(this);
+
+    for (const item of items) {
+      operation(item);
+    }
+  }
+
   /** Sets the anchor to the current active index. */
   private _anchor() {
     const item = this.inputs.items()[this.inputs.navigation.inputs.activeIndex()];
     this.previousValue.set(item.value());
+  }
+
+  /** Selects the items in the list starting at the given index. */
+  private _selectFromIndex(index: number) {
+    const items = this._getItemsFromIndex(index);
+
+    for (const item of items) {
+      this.select(item);
+    }
+  }
+
+  /** Returns all items from the given index to the current active index. */
+  private _getItemsFromIndex(index: number) {
+    if (index === -1) {
+      return [];
+    }
+
+    const upper = Math.max(this.inputs.navigation.inputs.activeIndex(), index);
+    const lower = Math.min(this.inputs.navigation.inputs.activeIndex(), index);
+
+    const items = [];
+    for (let i = lower; i <= upper; i++) {
+      items.push(this.inputs.items()[i]);
+    }
+    return items;
   }
 }
