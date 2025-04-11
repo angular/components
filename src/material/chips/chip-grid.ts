@@ -415,6 +415,16 @@ export class MatChipGrid
     }
   }
 
+  /** When called, propagates the changes and update the immediately */
+  _change() {
+    if (!this.disabled) {
+      // Timeout is needed to wait for the focus() event trigger on chip input.
+      setTimeout(() => {
+        this._propagateChanges();
+      });
+    }
+  }
+
   /**
    * Removes the `tabindex` from the chip grid and resets it back afterwards, allowing the
    * user to tab out of it. This prevents the grid from capturing focus and redirecting
