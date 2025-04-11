@@ -43,6 +43,7 @@ $token-slots: m2-form-field.get-token-slots();
       // TODO(crisbeto): this height gets overwritten eventually, but there are some internal
       // tests that depend on this being here in weird ways so we're keeping it around for now.
       height: 28px;
+      min-height: 28px;
 
       // Note that while this style and the `-ms-clear` are identical, we can't combine
       // them because if one of them isn't supported, it'll invalidate the whole rule.
