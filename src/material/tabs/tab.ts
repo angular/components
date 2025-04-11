@@ -24,18 +24,13 @@ import {
   inject,
 } from '@angular/core';
 import {MatTabContent} from './tab-content';
-import {MAT_TAB, MatTabLabel} from './tab-label';
+import {MatTabLabel} from './tab-label';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject} from 'rxjs';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
-import {type MatTabGroup} from './tab-group';
-
-/**
- * Used to provide a tab group to a tab without causing a circular dependency.
- * @docs-private
- */
-export const MAT_TAB_GROUP = new InjectionToken<MatTabGroup>('MAT_TAB_GROUP');
+import {MAT_TAB, MatTabBase} from './tab-token';
+import {MAT_TAB_GROUP} from './tab-group-token';
 
 @Component({
   selector: 'mat-tab',
@@ -57,7 +52,7 @@ export const MAT_TAB_GROUP = new InjectionToken<MatTabGroup>('MAT_TAB_GROUP');
     '[attr.id]': 'null',
   },
 })
-export class MatTab implements OnInit, OnChanges, OnDestroy {
+export class MatTab implements MatTabBase, OnInit, OnChanges, OnDestroy {
   private _viewContainerRef = inject(ViewContainerRef);
   _closestTabGroup = inject(MAT_TAB_GROUP, {optional: true});
 
@@ -79,11 +74,10 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
   @ContentChild(MatTabContent, {read: TemplateRef, static: true})
-  // The value will be set in `ngAfterViewInit`.
   private _explicitContent?: TemplateRef<unknown>;
 
   /** Template inside the MatTab view that contains an `<ng-content>`. */
-  @ViewChild(TemplateRef, {static: true}) _implicitContent: TemplateRef<unknown>;
+  @ViewChild(TemplateRef, {static: true}) _implicitContent?: TemplateRef<unknown>;
 
   /** Plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';
@@ -155,7 +149,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this._contentPortal = new TemplatePortal(
-      this._explicitContent || this._implicitContent,
+      this._explicitContent || this._implicitContent!,
       this._viewContainerRef,
     );
   }
