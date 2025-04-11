@@ -125,35 +125,11 @@ yarn_install(
     yarn_lock = "//:yarn.lock",
 )
 
-load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
-
-npm_bazel_protractor_dependencies()
-
-# Setup web testing. We need to setup a browser because the web testing rules for TypeScript need
-# a reference to a registered browser (ideally that's a hermetic version of a browser)
-load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
-
-web_test_repositories()
-
 # Setup the Sass rule repositories.
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
 sass_repositories(
     yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
-)
-
-# Setup repositories for browsers provided by the shared dev-infra package.
-load(
-    "@npm//@angular/build-tooling/bazel/browsers:browser_repositories.bzl",
-    _dev_infra_browser_repositories = "browser_repositories",
-)
-
-_dev_infra_browser_repositories()
-
-load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
-
-esbuild_repositories(
-    npm_repository = "npm",
 )
 
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
