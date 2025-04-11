@@ -1,28 +1,27 @@
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {inject, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {StyleManager} from './style-manager';
 
 describe('StyleManager', () => {
   let styleManager: StyleManager;
 
-  beforeEach(() =>
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [StyleManager],
-    }),
-  );
+    });
 
-  beforeEach(inject([StyleManager], (sm: StyleManager) => {
-    styleManager = sm;
-  }));
+    styleManager = TestBed.inject(StyleManager);
+  });
 
   afterEach(() => {
     const links = document.head.querySelectorAll('link');
-    for (const link of Array.prototype.slice.call(links)) {
+
+    Array.from(links).forEach(link => {
       if (link.className.includes('style-manager-')) {
-        document.head.removeChild(link);
+        link.remove();
       }
-    }
+    });
   });
 
   it('should add stylesheet to head', () => {

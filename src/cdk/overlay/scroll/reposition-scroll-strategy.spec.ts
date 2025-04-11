@@ -1,4 +1,4 @@
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '../../portal';
@@ -14,6 +14,7 @@ import {
 describe('RepositionScrollStrategy', () => {
   let overlayRef: OverlayRef;
   let overlay: Overlay;
+  let overlayContainer: OverlayContainer;
   let componentPortal: ComponentPortal<PastaMsg>;
   let scrolledSubject = new Subject();
 
@@ -29,17 +30,16 @@ describe('RepositionScrollStrategy', () => {
         },
       ],
     });
-  }));
 
-  beforeEach(inject([Overlay], (o: Overlay) => {
-    overlay = o;
+    overlay = TestBed.inject(Overlay);
+    overlayContainer = TestBed.inject(OverlayContainer);
     componentPortal = new ComponentPortal(PastaMsg);
   }));
 
-  afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
+  afterEach(() => {
     overlayRef.dispose();
-    container.getContainerElement().remove();
-  }));
+    overlayContainer.getContainerElement().remove();
+  });
 
   it('should update the overlay position when the page is scrolled', () => {
     const overlayConfig = new OverlayConfig({

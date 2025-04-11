@@ -8,7 +8,7 @@
 
 import {normalizePassiveListenerOptions} from '../platform';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {EMPTY} from 'rxjs';
 import {AutofillEvent, AutofillMonitor} from './autofill';
 import {TextFieldModule} from './text-field-module';
@@ -21,13 +21,7 @@ describe('AutofillMonitor', () => {
   let testComponent: Inputs;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TextFieldModule, Inputs],
-    });
-  });
-
-  beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
-    autofillMonitor = afm;
+    autofillMonitor = TestBed.inject(AutofillMonitor);
     fixture = TestBed.createComponent(Inputs);
     testComponent = fixture.componentInstance;
     fixture.detectChanges();
@@ -36,7 +30,7 @@ describe('AutofillMonitor', () => {
       spyOn(input.nativeElement, 'addEventListener');
       spyOn(input.nativeElement, 'removeEventListener');
     }
-  }));
+  });
 
   it('should add monitored class and listener upon monitoring', () => {
     const inputEl = testComponent.input1.nativeElement;
@@ -173,19 +167,13 @@ describe('cdkAutofill', () => {
   let testComponent: InputWithCdkAutofilled;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [TextFieldModule, InputWithCdkAutofilled],
-    });
-  });
-
-  beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
-    autofillMonitor = afm;
+    autofillMonitor = TestBed.inject(AutofillMonitor);
     spyOn(autofillMonitor, 'monitor').and.returnValue(EMPTY);
     spyOn(autofillMonitor, 'stopMonitoring');
     fixture = TestBed.createComponent(InputWithCdkAutofilled);
     testComponent = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should monitor host element on init', () => {
     expect(autofillMonitor.monitor).toHaveBeenCalledWith(testComponent.input);
