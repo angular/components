@@ -249,7 +249,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "devinfra",
-    commit = "b45dfa77df2021b23eeda5928ca6cd8bb89b21e7",
+    commit = "cddc66a76ac0183790bc7a9fc1e5cf9f87512375",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
@@ -302,7 +302,7 @@ esbuild_register_toolchains(
 
 git_repository(
     name = "rules_browsers",
-    commit = "7e23dc705680369a323f520909d3984ae794965e",
+    commit = "c8246bb6d8bba4e2ae23fc39c7b0cec651953e6d",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
