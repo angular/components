@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {SignalLike} from '../signal-like/signal-like';
 import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
 
@@ -36,6 +36,9 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
 
+  /** Whether the user is actively typing a typeahead search query. */
+  isTyping = computed(() => this._query().length > 0);
+
   /** Keeps track of the characters that typeahead search is being called with. */
   private _query = signal('');
 
@@ -49,6 +52,10 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** Performs a typeahead search, appending the given character to the search string. */
   search(char: string) {
     if (char.length !== 1) {
+      return;
+    }
+
+    if (!this.isTyping() && char === ' ') {
       return;
     }
 

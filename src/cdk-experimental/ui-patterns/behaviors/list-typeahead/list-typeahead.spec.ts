@@ -27,117 +27,65 @@ describe('List Typeahead', () => {
     );
   }
 
+  let items: SignalLike<TestItem[]>;
+  let typeahead: ListTypeahead<TestItem>;
+  let navigation: ListNavigation<TestItem>;
+
+  beforeEach(() => {
+    items = getItems(5);
+    navigation = new ListNavigation({
+      items,
+      wrap: signal(false),
+      activeIndex: signal(0),
+      skipDisabled: signal(false),
+      textDirection: signal('ltr'),
+      orientation: signal('vertical'),
+    });
+    typeahead = new ListTypeahead({
+      navigation,
+      typeaheadDelay: signal(0.5),
+    });
+  });
+
   describe('#search', () => {
     it('should navigate to an item', () => {
-      const items = getItems(5);
-      const activeIndex = signal(0);
-      const navigation = new ListNavigation({
-        items,
-        activeIndex,
-        wrap: signal(false),
-        skipDisabled: signal(false),
-        textDirection: signal('ltr'),
-        orientation: signal('vertical'),
-      });
-      const typeahead = new ListTypeahead({
-        navigation,
-        typeaheadDelay: signal(0.5),
-      });
-
       typeahead.search('i');
-      expect(activeIndex()).toBe(1);
+      expect(navigation.inputs.activeIndex()).toBe(1);
 
       typeahead.search('t');
       typeahead.search('e');
       typeahead.search('m');
       typeahead.search(' ');
       typeahead.search('3');
-      expect(activeIndex()).toBe(3);
+      expect(navigation.inputs.activeIndex()).toBe(3);
     });
 
     it('should reset after a delay', fakeAsync(() => {
-      const items = getItems(5);
-      const activeIndex = signal(0);
-      const navigation = new ListNavigation({
-        items,
-        activeIndex,
-        wrap: signal(false),
-        skipDisabled: signal(false),
-        textDirection: signal('ltr'),
-        orientation: signal('vertical'),
-      });
-      const typeahead = new ListTypeahead({
-        navigation,
-        typeaheadDelay: signal(0.5),
-      });
-
       typeahead.search('i');
-      expect(activeIndex()).toBe(1);
+      expect(navigation.inputs.activeIndex()).toBe(1);
 
       tick(500);
 
       typeahead.search('i');
-      expect(activeIndex()).toBe(2);
+      expect(navigation.inputs.activeIndex()).toBe(2);
     }));
 
     it('should skip disabled items', () => {
-      const items = getItems(5);
-      const activeIndex = signal(0);
-      const navigation = new ListNavigation({
-        items,
-        activeIndex,
-        wrap: signal(false),
-        skipDisabled: signal(true),
-        textDirection: signal('ltr'),
-        orientation: signal('vertical'),
-      });
-      const typeahead = new ListTypeahead({
-        navigation,
-        typeaheadDelay: signal(0.5),
-      });
       items()[1].disabled.set(true);
-
+      (navigation.inputs.skipDisabled as WritableSignalLike<boolean>).set(true);
       typeahead.search('i');
-      expect(activeIndex()).toBe(2);
+      console.log(typeahead.inputs.navigation.inputs.items().map(i => i.disabled()));
+      expect(navigation.inputs.activeIndex()).toBe(2);
     });
 
     it('should not skip disabled items', () => {
-      const items = getItems(5);
-      const activeIndex = signal(0);
-      const navigation = new ListNavigation({
-        items,
-        activeIndex,
-        wrap: signal(false),
-        skipDisabled: signal(false),
-        textDirection: signal('ltr'),
-        orientation: signal('vertical'),
-      });
-      const typeahead = new ListTypeahead({
-        navigation,
-        typeaheadDelay: signal(0.5),
-      });
       items()[1].disabled.set(true);
-
+      (navigation.inputs.skipDisabled as WritableSignalLike<boolean>).set(false);
       typeahead.search('i');
-      expect(activeIndex()).toBe(1);
+      expect(navigation.inputs.activeIndex()).toBe(1);
     });
 
     it('should ignore keys like shift', () => {
-      const items = getItems(5);
-      const activeIndex = signal(0);
-      const navigation = new ListNavigation({
-        items,
-        activeIndex,
-        wrap: signal(false),
-        skipDisabled: signal(false),
-        textDirection: signal('ltr'),
-        orientation: signal('vertical'),
-      });
-      const typeahead = new ListTypeahead({
-        navigation,
-        typeaheadDelay: signal(0.5),
-      });
-
       typeahead.search('i');
       typeahead.search('t');
       typeahead.search('e');
@@ -147,7 +95,18 @@ describe('List Typeahead', () => {
       typeahead.search('m');
       typeahead.search(' ');
       typeahead.search('2');
-      expect(activeIndex()).toBe(2);
+      expect(navigation.inputs.activeIndex()).toBe(2);
+    });
+
+    it('should not allow a query to begin with a space', () => {
+      typeahead.search(' ');
+      typeahead.search('i');
+      typeahead.search('t');
+      typeahead.search('e');
+      typeahead.search('m');
+      typeahead.search(' ');
+      typeahead.search('3');
+      expect(navigation.inputs.activeIndex()).toBe(3);
     });
   });
 });
