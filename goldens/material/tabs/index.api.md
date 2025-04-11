@@ -35,13 +35,13 @@ export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
 export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner;
 
 // @public
-export const MAT_TAB: InjectionToken<any>;
+export const MAT_TAB: InjectionToken<MatTabBase>;
 
 // @public
 export const MAT_TAB_CONTENT: InjectionToken<MatTabContent>;
 
 // @public
-export const MAT_TAB_GROUP: InjectionToken<any>;
+export const MAT_TAB_GROUP: InjectionToken<MatTabGroupBase>;
 
 // @public
 export const MAT_TAB_LABEL: InjectionToken<MatTabLabel>;
@@ -143,17 +143,17 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 }
 
 // @public (undocumented)
-export class MatTab implements OnInit, OnChanges, OnDestroy {
+export class MatTab implements MatTabBase, OnInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     ariaLabel: string;
     ariaLabelledby: string;
     bodyClass: string | string[];
     // (undocumented)
-    _closestTabGroup: any;
+    _closestTabGroup: MatTabGroupBase | null;
     get content(): TemplatePortal | null;
     disabled: boolean;
     id: string | null;
-    _implicitContent: TemplateRef<any>;
+    _implicitContent?: TemplateRef<unknown>;
     isActive: boolean;
     labelClass: string | string[];
     // (undocumented)
@@ -174,6 +174,10 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, never>;
+}
+
+// @public
+export interface MatTabBase {
 }
 
 // @public
@@ -231,7 +235,7 @@ export class MatTabChangeEvent {
 export class MatTabContent {
     constructor(...args: unknown[]);
     // (undocumented)
-    template: TemplateRef<any>;
+    template: TemplateRef<unknown>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabContent, "[matTabContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -322,6 +326,10 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
 }
 
 // @public
+export interface MatTabGroupBase {
+}
+
+// @public
 export interface MatTabGroupBaseHeader {
     // (undocumented)
     _alignInkBarToSelectedTab(): void;
@@ -368,7 +376,7 @@ export type MatTabHeaderPosition = 'above' | 'below';
 // @public
 export class MatTabLabel extends CdkPortal {
     // (undocumented)
-    _closestTab: any;
+    _closestTab: MatTabBase | null;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatTabLabel, "[mat-tab-label], [matTabLabel]", never, {}, {}, never, never, true, never>;
     // (undocumented)
