@@ -1,38 +1,17 @@
-load("@bazel_skylib//lib:dicts.bzl", "dicts")
-load("//tools:integration.bzl", "CLI_PROJECT_MAPPINGS")
-load("//tools:defaults.bzl", "node_integration_test")
+load("//tools:integration.bzl", "LOCAL_NPM_PACKAGES", "integration_test")
 
-npmPackageMappings = dicts.add(
-    dicts.omit(
-        CLI_PROJECT_MAPPINGS,
-        # Exclude typescript, because Yarn PnP hasn't been updated to support versions 5.0+ yet.
-        [
-            "@npm//:typescript_archive",
-            "typescript",
-        ],
-    ),
-    {
-        "//src/cdk:npm_package_archive": "@angular/cdk",
-        "//src/material:npm_package_archive": "@angular/material",
-        "//src/material-experimental:npm_package_archive": "@angular/material-experimental",
-    },
-)
-
-node_integration_test(
+integration_test(
     name = "test",
     srcs = glob(["**/*"]),
     commands = [
-        "yarn install --no-immutable",
-        "yarn build",
+        "node .yarn/releases/yarn-4.7.0.cjs install --no-immutable",
+        "node .yarn/releases/yarn-4.7.0.cjs build",
     ],
     environment = {
-        # Yarn berry needs a temporary directory that is writeable in the sandbox.
-        # We acquire a temporary directory for it.
-        "HOME": "<TMP>",
         # Set `CI` to silence `yarn berry` and make the output readable.
         "CI": "true",
     },
-    npm_packages = npmPackageMappings,
+    npm_packages = LOCAL_NPM_PACKAGES,
     tags = [
         # This test relies on `yarn` so there needs to be internet access.
         "requires-network",
