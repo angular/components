@@ -13830,7 +13830,7 @@ packages:
     resolution: {integrity: sha512-zIsuhjYvJCjfsfjoim2ab6gLKFYAnTiDSJGh0cC3T44L/4kNLL90hBG2BzrXPrHA3f8Ms8FSJ1mljKH5dVR1cw==}
     dev: false
 
-  /sass-loader@16.0.5(sass@1.86.0)(webpack@5.98.0):
+  /sass-loader@16.0.5(sass@1.86.1)(webpack@5.98.0):
     resolution: {integrity: sha512-oL+CMBXrj6BZ/zOq4os+UECPL+bWqt6OAC6DWS8Ln8GZRcMDjlJ4JC3FBDuHJdYaFWIdKNIBYmtZtK2MaMkNIw==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
