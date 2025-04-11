@@ -4,7 +4,6 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
 load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
-load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
@@ -20,7 +19,6 @@ npmPackageSubstitutions = select({
 
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
-integration_test = _integration_test
 extract_tokens = _extract_tokens
 karma_web_test_suite = _karma_web_test_suite
 
@@ -157,41 +155,6 @@ def protractor_web_test_suite(name, deps, **kwargs):
             "//:node_modules/protractor",
             "//:node_modules/selenium-webdriver",
         ],
-        **kwargs
-    )
-
-def node_integration_test(setup_chromium = False, node_repository = "nodejs", **kwargs):
-    """Macro for defining an integration test with `node` and `yarn` being
-      declared as global tools.
-
-      By default the default Node version of the workspace is being used."""
-
-    data = kwargs.pop("data", [])
-    toolchains = kwargs.pop("toolchains", [])
-    environment = kwargs.pop("environment", {})
-    tool_mappings = kwargs.pop("tool_mappings", {})
-
-    # Setup Yarn and Node as tools in a way that allows for them to be overridden.
-    tool_mappings = dict({
-        "//:yarn_vendored": "yarn",
-        "@%s_toolchains//:resolved_toolchain" % node_repository: "node",
-    }, **tool_mappings)
-
-    # If Chromium should be configured, add it to the runfiles and expose its binaries
-    # through test environment variables. The variables are auto-detected by e.g. Karma.
-    if setup_chromium:
-        data.append("@npm//@angular/build-tooling/bazel/browsers/chromium")
-        toolchains.append("@npm//@angular/build-tooling/bazel/browsers/chromium:toolchain_alias")
-        environment.update({
-            "CHROMEDRIVER_BIN": "$(CHROMEDRIVER)",
-            "CHROME_BIN": "$(CHROMIUM)",
-        })
-
-    integration_test(
-        data = data,
-        environment = environment,
-        toolchains = toolchains,
-        tool_mappings = tool_mappings,
         **kwargs
     )
 

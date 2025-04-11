@@ -1,6 +1,7 @@
 {
   "name": "yarn-pnp-compat",
   "version": "0.0.0",
+  "packageManager": "yarn@4.7.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,34 +11,32 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "file:../../node_modules/@angular/animations",
-    "@angular/cdk": "file:../../dist/releases/cdk",
-    "@angular/common": "file:../../node_modules/@angular/common",
-    "@angular/compiler": "file:../../node_modules/@angular/compiler",
-    "@angular/core": "file:../../node_modules/@angular/core",
-    "@angular/forms": "file:../../node_modules/@angular/forms",
-    "@angular/material": "file:../../dist/releases/material",
-    "@angular/material-experimental": "file:../../dist/releases/material-experimental",
-    "@angular/platform-browser": "file:../../node_modules/@angular/platform-browser",
-    "@angular/router": "file:../../node_modules/@angular/router",
+    "@angular/animations": "20.0.0-next.5",
+    "@angular/cdk": "next",
+    "@angular/common": "20.0.0-next.5",
+    "@angular/compiler": "20.0.0-next.5",
+    "@angular/core": "20.0.0-next.5",
+    "@angular/forms": "20.0.0-next.5",
+    "@angular/material": "next",
+    "@angular/platform-browser": "20.0.0-next.5",
+    "@angular/router": "20.0.0-next.5",
     "rxjs": "^7.5.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "file:../../node_modules/@angular-devkit/build-angular",
-    "@angular/cli": "file:../../node_modules/@angular/cli",
-    "@angular/compiler-cli": "file:../../node_modules/@angular/compiler-cli",
-    "@types/jasmine": "~3.10.0",
-    "@types/node": "^16.10.9",
-    "browserslist": "^4.21.7",
-    "jasmine-core": "~4.0.0",
-    "karma": "~6.3.0",
+    "@angular-devkit/build-angular": "20.0.0-next.4",
+    "@angular/cli": "20.0.0-next.4",
+    "@angular/compiler-cli": "20.0.0-next.5",
+    "@types/jasmine": "~5.1.7",
+    "@types/node": "22.14.0",
+    "glob": "^7.2.0",
+    "jasmine-core": "~5.6.0",
+    "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.1.0",
+    "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~5.8.2"
-  },
-  "packageManager": "yarn@4.7.0"
+    "typescript": "5.8.2"
+  }
 }

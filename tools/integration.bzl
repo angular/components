@@ -1,53 +1,44 @@
-load("//:packages.bzl", "ANGULAR_PACKAGES")
+load("//:packages.bzl", "ANGULAR_COMPONENTS_SCOPED_PACKAGES")
+load("@devinfra//bazel/integration:index.bzl", _integration_test = "integration_test")
 
-"""File which manages the NPM packages from the workspace `@npm` repository which
-  should be available to integration tests"""
-
-def _get_archive_label_of_package(package_name):
-    return package_name.replace("/", "_").replace("@", "") + "_archive"
-
-CLI_PROJECT_PACKAGES = [pkg.module_name for pkg in ANGULAR_PACKAGES] + [
-    "@angular/cli",
-    "@angular/compiler-cli",
-    "@angular-devkit/build-angular",
-    "typescript",
-    "rxjs",
-]
-
-CLI_PROJECT_MAPPINGS = {
-    "@npm//:%s" % _get_archive_label_of_package(pkg): pkg
-    for pkg in CLI_PROJECT_PACKAGES
+LOCAL_NPM_PACKAGES = {
+    "//src/%s:npm_package_archive" % (pkg[len("@angular/"):]): pkg
+    for pkg in ANGULAR_COMPONENTS_SCOPED_PACKAGES
 }
 
-# Packages for which archives should be made available, allowing for consumption
-# in integration tests as mappings for the `npm_packages` attribute.
-INTEGRATION_TEST_PACKAGES = CLI_PROJECT_PACKAGES + [
-    # additional packages for integration tests, not commonly part of CLI apps.
-]
+def integration_test(
+        data = [],
+        environment = {},
+        tool_mappings = {},
+        toolchains = [],
+        setup_chromium = False,
+        node_repository = "nodejs",
+        **kwargs):
+    """Configures an integration test, simulating a real end-user."""
 
-def create_npm_package_archive_build_file():
-    """Creates the contents of a `BUILD.bazel` file for exposing NPM package tarballs
-      for the integration test packages configured in the constant.
+    # Expose pnpm and Node as hermetic tools.
+    test_tool_mappings = dict({
+        "@pnpm//:pnpm": "pnpm",
+        "@%s_toolchains//:resolved_toolchain" % node_repository: "node",
+    }, **tool_mappings)
+    test_data = data + []
+    test_toolchains = toolchains + []
+    test_environment = dict({}, **environment)
 
-      The `BUILD.bazel` file contents are supposed to be placed into the `@npm//`
-      workspace top-level BUILD file. This is necessary because all files of a NPM
-      package are not accessible outside from the `@npm//` workspace.
-      """
+    # If Chromium should be configured, add it to the runfiles and expose its binaries
+    # through test environment variables. The variables are auto-detected by e.g. Karma.
+    if setup_chromium:
+        test_data.append("@rules_browsers//src/browsers/chromium")
+        test_toolchains.append("@rules_browsers//src/browsers/chromium:toolchain_alias")
+        test_environment.update({
+            "CHROMEDRIVER_BIN": "$(CHROMEDRIVER)",
+            "CHROME_BIN": "$(CHROME-HEADLESS-SHELL)",
+        })
 
-    result = """load("@rules_pkg//:pkg.bzl", "pkg_tar")"""
-
-    for pkg in INTEGRATION_TEST_PACKAGES:
-        label_name = _get_archive_label_of_package(pkg)
-        last_segment = pkg.split("/")[-1]
-
-        result += """
-pkg_tar(
-    name = "{label_name}",
-    srcs = ["//{name}:{last_segment}__all_files"],
-    extension = "tar.gz",
-    package_dir = "package/",
-    strip_prefix = "/external/npm/node_modules/{name}",
-    tags = ["manual"],
-)""".format(name = pkg, label_name = label_name, last_segment = last_segment)
-
-    return result
+    _integration_test(
+        data = test_data,
+        environment = test_environment,
+        toolchains = test_toolchains,
+        tool_mappings = test_tool_mappings,
+        **kwargs
+    )
