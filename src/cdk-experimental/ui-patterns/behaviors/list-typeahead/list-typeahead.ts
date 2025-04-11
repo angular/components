@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {SignalLike} from '../signal-like/signal-like';
 import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
 
@@ -36,8 +36,10 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
 
+  isTyping = computed(() => this._query().length > 0);
+
   /** Keeps track of the characters that typeahead search is being called with. */
-  query = signal('');
+  private _query = signal('');
 
   /** The index where that the typeahead search was initiated from. */
   private _startIndex = signal<number | undefined>(undefined);
@@ -52,12 +54,16 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       return;
     }
 
+    if (!this.isTyping() && char === ' ') {
+      return;
+    }
+
     if (this._startIndex() === undefined) {
       this._startIndex.set(this.navigation.inputs.activeIndex());
     }
 
     clearTimeout(this.timeout);
-    this.query.update(q => q + char.toLowerCase());
+    this._query.update(q => q + char.toLowerCase());
     const item = this._getItem();
 
     if (item) {
@@ -65,7 +71,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     this.timeout = setTimeout(() => {
-      this.query.set('');
+      this._query.set('');
       this._startIndex.set(undefined);
     }, this.inputs.typeaheadDelay() * 1000);
   }
@@ -88,6 +94,6 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       }
     }
 
-    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this.query()));
+    return focusableItems.find(i => i.searchTerm().toLowerCase().startsWith(this._query()));
   }
 }
