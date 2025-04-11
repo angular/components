@@ -46,13 +46,15 @@ describe('Listbox Pattern', () => {
 
   function getOptions(listbox: TestListbox, values: string[]): TestOption[] {
     return values.map((value, index) => {
+      const element = document.createElement('div');
+      element.role = 'option';
       return new OptionPattern({
         value: signal(value),
         id: signal(`option-${index}`),
         disabled: signal(false),
         searchTerm: signal(value),
         listbox: signal(listbox),
-        element: signal({focus: () => {}} as HTMLElement),
+        element: signal(element),
       });
     });
   }
@@ -437,6 +439,160 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(space({control: true}));
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
+    });
+  });
+
+  describe('Pointer Events', () => {
+    function click(options: WritableSignal<TestOption[]>, index: number, mods?: ModifierKeys) {
+      return {
+        target: options()[index].element(),
+        shiftKey: mods?.shift,
+        ctrlKey: mods?.control,
+      } as unknown as PointerEvent;
+    }
+
+    describe('follows focus & single select', () => {
+      it('should select a single option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(false),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
+    });
+
+    describe('explicit focus & single select', () => {
+      it('should select an unselected option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(false),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
+
+      it('should deselect a selected option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(false),
+          value: signal(['Apple']),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
+    });
+
+    describe('explicit focus & multi select', () => {
+      it('should select an unselected option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+      });
+
+      it('should deselect a selected option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          value: signal(['Apple']),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
+
+      it('should select options from anchor on shift + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 2));
+        listbox.onPointerdown(click(options, 5, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
+      });
+
+      it('should deselect options from anchor on shift + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('explicit'),
+        });
+        listbox.onPointerdown(click(options, 2));
+        listbox.onPointerdown(click(options, 5));
+        listbox.onPointerdown(click(options, 2, {shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
+    });
+
+    describe('follows focus & multi select', () => {
+      it('should select a single option on click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onPointerdown(click(options, 1));
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
+        listbox.onPointerdown(click(options, 2));
+        expect(listbox.inputs.value()).toEqual(['Banana']);
+      });
+
+      it('should select an unselected option on ctrl + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onPointerdown(click(options, 1, {control: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
+        listbox.onPointerdown(click(options, 2, {control: true}));
+        expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana']);
+      });
+
+      it('should deselect a selected option on ctrl + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 0));
+        expect(listbox.inputs.value()).toEqual(['Apple']);
+        listbox.onPointerdown(click(options, 0, {control: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
+
+      it('should select options from anchor on shift + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 2));
+        listbox.onPointerdown(click(options, 5, {shift: true}));
+        expect(listbox.inputs.value()).toEqual(['Banana', 'Blackberry', 'Blueberry', 'Cantaloupe']);
+      });
+
+      it('should deselect options from anchor on shift + click', () => {
+        const {listbox, options} = getDefaultPatterns({
+          multi: signal(true),
+          selectionMode: signal('follow'),
+        });
+        listbox.onPointerdown(click(options, 2));
+        listbox.onPointerdown(click(options, 5, {control: true}));
+        listbox.onPointerdown(click(options, 2, {shift: true}));
+        expect(listbox.inputs.value()).toEqual([]);
+      });
+    });
+
+    it('should only navigate when readonly', () => {
+      const {listbox, options} = getDefaultPatterns({readonly: signal(true)});
+      listbox.onPointerdown(click(options, 0));
+      expect(listbox.inputs.value()).toEqual([]);
+      listbox.onPointerdown(click(options, 1));
+      expect(listbox.inputs.value()).toEqual([]);
+      listbox.onPointerdown(click(options, 2));
+      expect(listbox.inputs.value()).toEqual([]);
     });
   });
 });
