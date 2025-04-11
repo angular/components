@@ -8,7 +8,6 @@ import {
   fakeAsync,
   flush,
   flushMicrotasks,
-  inject,
   tick,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
@@ -306,21 +305,20 @@ describe('MatSlideToggle without forms', () => {
       expect(document.activeElement).toBe(buttonElement);
     }));
 
-    it('should not manually move focus to underlying when focus comes from mouse or touch', fakeAsync(
-      inject([FocusMonitor], (focusMonitor: FocusMonitor) => {
-        expect(document.activeElement).not.toBe(buttonElement);
+    it('should not manually move focus to underlying when focus comes from mouse or touch', fakeAsync(() => {
+      const focusMonitor = TestBed.inject(FocusMonitor);
+      expect(document.activeElement).not.toBe(buttonElement);
 
-        focusMonitor.focusVia(slideToggleElement, 'mouse');
-        fixture.detectChanges();
-        flush();
-        expect(document.activeElement).not.toBe(buttonElement);
+      focusMonitor.focusVia(slideToggleElement, 'mouse');
+      fixture.detectChanges();
+      flush();
+      expect(document.activeElement).not.toBe(buttonElement);
 
-        focusMonitor.focusVia(slideToggleElement, 'touch');
-        fixture.detectChanges();
-        flush();
-        expect(document.activeElement).not.toBe(buttonElement);
-      }),
-    ));
+      focusMonitor.focusVia(slideToggleElement, 'touch');
+      fixture.detectChanges();
+      flush();
+      expect(document.activeElement).not.toBe(buttonElement);
+    }));
 
     it('should set a element class if labelPosition is set to before', fakeAsync(() => {
       const formField = slideToggleElement.querySelector('.mdc-form-field')!;

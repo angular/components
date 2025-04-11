@@ -1,5 +1,5 @@
 import {Component, signal} from '@angular/core';
-import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -28,9 +28,7 @@ describe('MatSelectHarness', () => {
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
-    inject([OverlayContainer], (oc: OverlayContainer) => {
-      overlayContainer = oc;
-    })();
+    overlayContainer = TestBed.inject(OverlayContainer);
   });
 
   afterEach(() => {

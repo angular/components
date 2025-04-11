@@ -5,7 +5,7 @@ import {
   TestRequest,
 } from '@angular/common/http/testing';
 import {Component, ErrorHandler, Provider, Type, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, inject, tick, waitForAsync} from '@angular/core/testing';
+import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {FAKE_SVGS} from './fake-svgs';
 import {MatIcon} from './icon';
@@ -1375,11 +1375,9 @@ describe('MatIcon without HttpClientModule', () => {
       imports: [MatIconModule],
       declarations: [IconFromSvgName],
     });
-  }));
 
-  beforeEach(inject([MatIconRegistry, DomSanitizer], (mir: MatIconRegistry, ds: DomSanitizer) => {
-    iconRegistry = mir;
-    sanitizer = ds;
+    iconRegistry = TestBed.inject(MatIconRegistry);
+    sanitizer = TestBed.inject(DomSanitizer);
   }));
 
   it('should throw an error when trying to load a remote icon', () => {

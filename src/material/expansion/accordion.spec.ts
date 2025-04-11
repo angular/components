@@ -6,7 +6,7 @@ import {
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {TestBed, inject, waitForAsync} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatAccordion,
@@ -30,9 +30,7 @@ describe('MatAccordion', () => {
       ],
     });
 
-    inject([FocusMonitor], (fm: FocusMonitor) => {
-      focusMonitor = fm;
-    })();
+    focusMonitor = TestBed.inject(FocusMonitor);
   }));
 
   it('should ensure only one item is expanded at a time', () => {

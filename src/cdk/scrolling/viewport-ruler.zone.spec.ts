@@ -1,8 +1,7 @@
 import {NgZone, provideZoneChangeDetection} from '@angular/core';
-import {TestBed, inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
-import {ScrollingModule} from './scrolling-module';
 import {ViewportRuler} from './viewport-ruler';
 
 describe('ViewportRuler', () => {
@@ -14,18 +13,12 @@ describe('ViewportRuler', () => {
   veryLargeElement.style.width = '6000px';
   veryLargeElement.style.height = '6000px';
 
-  beforeEach(() =>
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule],
-      providers: [provideZoneChangeDetection(), ViewportRuler],
-    }),
-  );
-
-  beforeEach(inject([ViewportRuler, NgZone], (v: ViewportRuler, n: NgZone) => {
-    viewportRuler = v;
-    ngZone = n;
+  beforeEach(() => {
+    TestBed.configureTestingModule({providers: [provideZoneChangeDetection()]});
+    viewportRuler = TestBed.inject(ViewportRuler);
+    ngZone = TestBed.inject(NgZone);
     scrollTo(0, 0);
-  }));
+  });
 
   describe('changed event', () => {
     it('should run the resize event outside the NgZone', () => {

@@ -2,7 +2,7 @@ import {TAB} from '../../keycodes';
 import {Platform} from '../../platform';
 import {DOCUMENT} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, inject, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   createMouseEvent,
@@ -60,19 +60,17 @@ describe('FocusMonitor', () => {
         },
       ],
     });
-  });
 
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
     fixture = TestBed.createComponent(PlainButton);
     fixture.detectChanges();
 
     buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
-    focusMonitor = fm;
+    focusMonitor = TestBed.inject(FocusMonitor);
 
     changeHandler = jasmine.createSpy('focus origin change handler');
     focusMonitor.monitor(buttonElement).subscribe(changeHandler);
     patchElementFocus(buttonElement);
-  }));
+  });
 
   it('manually registered element should receive focus classes', fakeAsync(() => {
     buttonElement.focus();
@@ -479,19 +477,17 @@ describe('FocusMonitor with "eventual" detection', () => {
         },
       ],
     });
-  });
 
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
     fixture = TestBed.createComponent(PlainButton);
     fixture.detectChanges();
 
     buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
-    focusMonitor = fm;
+    focusMonitor = TestBed.inject(FocusMonitor);
 
     changeHandler = jasmine.createSpy('focus origin change handler');
     focusMonitor.monitor(buttonElement).subscribe(changeHandler);
     patchElementFocus(buttonElement);
-  }));
+  });
 
   it('should not clear the focus origin, even after a few seconds', fakeAsync(() => {
     dispatchKeyboardEvent(document, 'keydown', TAB);
@@ -712,8 +708,8 @@ describe('cdkMonitorFocus', () => {
     let childElement: HTMLElement;
     let focusMonitor: FocusMonitor;
 
-    beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
-      focusMonitor = fm;
+    beforeEach(() => {
+      focusMonitor = TestBed.inject(FocusMonitor);
       fixture = TestBed.createComponent(
         ComplexComponentWithMonitorSubtreeFocusAndMonitorElementFocus,
       );
@@ -724,7 +720,7 @@ describe('cdkMonitorFocus', () => {
 
       patchElementFocus(parentElement);
       patchElementFocus(childElement);
-    }));
+    });
 
     it('should add keyboard focus classes on both elements when child is focused via keyboard', fakeAsync(() => {
       focusMonitor.focusVia(childElement, 'keyboard');
@@ -828,15 +824,12 @@ describe('FocusMonitor observable stream', () => {
       imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}],
     });
-  });
-
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
     fixture = TestBed.createComponent(PlainButton);
-    focusMonitor = fm;
+    focusMonitor = TestBed.inject(FocusMonitor);
     fixture.detectChanges();
     buttonElement = fixture.debugElement.nativeElement.querySelector('button');
     patchElementFocus(buttonElement);
-  }));
+  });
 
   it('should not emit on the server', fakeAsync(() => {
     fakePlatform.isBrowser = false;
@@ -865,16 +858,13 @@ describe('FocusMonitor input label detection', () => {
     TestBed.configureTestingModule({
       imports: [A11yModule, CheckboxWithLabel],
     });
-  });
-
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
     fixture = TestBed.createComponent(CheckboxWithLabel);
-    focusMonitor = fm;
+    focusMonitor = TestBed.inject(FocusMonitor);
     fixture.detectChanges();
     inputElement = fixture.nativeElement.querySelector('input');
     labelElement = fixture.nativeElement.querySelector('label');
     patchElementFocus(inputElement);
-  }));
+  });
 
   it('should detect label click focus as `mouse`', fakeAsync(() => {
     const spy = jasmine.createSpy('monitor spy');

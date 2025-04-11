@@ -6,7 +6,7 @@ import {
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, inject, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
@@ -15,6 +15,9 @@ import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
+  let adapter: DateAdapter<Date>;
+  let intl: MatDatepickerIntl;
+
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],
@@ -27,6 +30,9 @@ describe('MatCalendar', () => {
         CalendarWithSelectableMinDate,
       ],
     });
+
+    adapter = TestBed.inject(DateAdapter);
+    intl = TestBed.inject(MatDatepickerIntl);
   }));
 
   describe('standard calendar', () => {
@@ -48,7 +54,7 @@ describe('MatCalendar', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it(`should update today's date`, inject([DateAdapter], (adapter: DateAdapter<Date>) => {
+    it(`should update today's date`, () => {
       let fakeToday = new Date(2018, 0, 1);
       spyOn(adapter, 'today').and.callFake(() => fakeToday);
 
@@ -67,7 +73,7 @@ describe('MatCalendar', () => {
       todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
       expect(todayCell).not.toBeNull();
       expect(todayCell.innerHTML.trim()).toBe('10');
-    }));
+    });
 
     it('should be in month view with specified month active', () => {
       expect(calendarInstance.currentView).toBe('month');
@@ -117,20 +123,17 @@ describe('MatCalendar', () => {
       expect(normalizedYear.getFullYear()).toEqual(2017);
     });
 
-    it('should re-render when the i18n labels have changed', inject(
-      [MatDatepickerIntl],
-      (intl: MatDatepickerIntl) => {
-        const button = fixture.debugElement.nativeElement.querySelector(
-          '.mat-calendar-period-button',
-        );
+    it('should re-render when the i18n labels have changed', () => {
+      const button = fixture.debugElement.nativeElement.querySelector(
+        '.mat-calendar-period-button',
+      );
 
-        intl.switchToMultiYearViewLabel = 'Go to multi-year view?';
-        intl.changes.next();
-        fixture.detectChanges();
+      intl.switchToMultiYearViewLabel = 'Go to multi-year view?';
+      intl.changes.next();
+      fixture.detectChanges();
 
-        expect(button.getAttribute('aria-label')).toBe('Go to multi-year view?');
-      },
-    ));
+      expect(button.getAttribute('aria-label')).toBe('Go to multi-year view?');
+    });
 
     it('should set all buttons to be `type="button"`', () => {
       const invalidButtons = calendarElement.querySelectorAll('button:not([type="button"])');
@@ -282,51 +285,42 @@ describe('MatCalendar', () => {
       });
     });
 
-    it('should re-render the month view when the locale changes', inject(
-      [DateAdapter],
-      (adapter: DateAdapter<Date>) => {
-        fixture.detectChanges();
-        spyOn(calendarInstance.monthView, '_init').and.callThrough();
+    it('should re-render the month view when the locale changes', () => {
+      fixture.detectChanges();
+      spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
-        adapter.setLocale('bg-BG');
-        fixture.detectChanges();
+      adapter.setLocale('bg-BG');
+      fixture.detectChanges();
 
-        expect(calendarInstance.monthView._init).toHaveBeenCalled();
-      },
-    ));
+      expect(calendarInstance.monthView._init).toHaveBeenCalled();
+    });
 
-    it('should re-render the year view when the locale changes', inject(
-      [DateAdapter],
-      (adapter: DateAdapter<Date>) => {
-        periodButton.click();
-        fixture.detectChanges();
+    it('should re-render the year view when the locale changes', () => {
+      periodButton.click();
+      fixture.detectChanges();
 
-        (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
-        fixture.detectChanges();
+      (calendarElement.querySelector('.mat-calendar-body-active') as HTMLElement).click();
+      fixture.detectChanges();
 
-        spyOn(calendarInstance.yearView, '_init').and.callThrough();
+      spyOn(calendarInstance.yearView, '_init').and.callThrough();
 
-        adapter.setLocale('bg-BG');
-        fixture.detectChanges();
+      adapter.setLocale('bg-BG');
+      fixture.detectChanges();
 
-        expect(calendarInstance.yearView._init).toHaveBeenCalled();
-      },
-    ));
+      expect(calendarInstance.yearView._init).toHaveBeenCalled();
+    });
 
-    it('should re-render the multi-year view when the locale changes', inject(
-      [DateAdapter],
-      (adapter: DateAdapter<Date>) => {
-        periodButton.click();
-        fixture.detectChanges();
+    it('should re-render the multi-year view when the locale changes', () => {
+      periodButton.click();
+      fixture.detectChanges();
 
-        spyOn(calendarInstance.multiYearView, '_init').and.callThrough();
+      spyOn(calendarInstance.multiYearView, '_init').and.callThrough();
 
-        adapter.setLocale('bg-BG');
-        fixture.detectChanges();
+      adapter.setLocale('bg-BG');
+      fixture.detectChanges();
 
-        expect(calendarInstance.multiYearView._init).toHaveBeenCalled();
-      },
-    ));
+      expect(calendarInstance.multiYearView._init).toHaveBeenCalled();
+    });
   });
 
   describe('calendar with min and max date', () => {

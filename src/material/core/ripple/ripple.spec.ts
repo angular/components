@@ -8,7 +8,7 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -48,15 +48,13 @@ describe('MatRipple', () => {
         RippleWithDomRemovalOnClick,
       ],
     });
-  });
 
-  beforeEach(inject([Platform], (p: Platform) => {
-    platform = p;
+    platform = TestBed.inject(Platform);
 
     // Set body margin to 0 during tests so it doesn't mess up position calculations.
     originalBodyMargin = document.body.style.margin;
     document.body.style.margin = '0';
-  }));
+  });
 
   afterEach(() => {
     document.body.style.margin = originalBodyMargin!;

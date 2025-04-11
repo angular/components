@@ -9,7 +9,7 @@
 import {LayoutModule} from './layout-module';
 import {BreakpointObserver, BreakpointState} from './breakpoints-observer';
 import {MediaMatcher} from './media-matcher';
-import {fakeAsync, TestBed, inject, flush, tick} from '@angular/core/testing';
+import {fakeAsync, TestBed, flush, tick} from '@angular/core/testing';
 import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {skip, take} from 'rxjs/operators';
@@ -23,15 +23,9 @@ describe('BreakpointObserver', () => {
       imports: [LayoutModule],
       providers: [{provide: MediaMatcher, useClass: FakeMediaMatcher}],
     });
+    breakpointObserver = TestBed.inject(BreakpointObserver);
+    mediaMatcher = TestBed.inject(MediaMatcher) as unknown as FakeMediaMatcher;
   }));
-
-  beforeEach(inject(
-    [BreakpointObserver, MediaMatcher],
-    (bm: BreakpointObserver, mm: FakeMediaMatcher) => {
-      breakpointObserver = bm;
-      mediaMatcher = mm;
-    },
-  ));
 
   afterEach(() => {
     mediaMatcher.clear();

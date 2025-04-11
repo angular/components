@@ -30,7 +30,6 @@ import {
   TestBed,
   fakeAsync,
   flush,
-  inject,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
@@ -73,9 +72,7 @@ describe('MatAutocomplete', () => {
       declarations: [component],
     });
 
-    inject([OverlayContainer], (oc: OverlayContainer) => {
-      overlayContainerElement = oc.getContainerElement();
-    })();
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
 
     return TestBed.createComponent<T>(component);
   }

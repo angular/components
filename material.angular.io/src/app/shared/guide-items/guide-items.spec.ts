@@ -1,4 +1,4 @@
-import {TestBed, inject, waitForAsync} from '@angular/core/testing';
+import {TestBed, waitForAsync} from '@angular/core/testing';
 import {GuideItems} from './guide-items';
 
 describe('GuideItems', () => {
@@ -7,10 +7,6 @@ describe('GuideItems', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({});
     guideItems = TestBed.inject(GuideItems);
-  }));
-
-  beforeEach(inject([GuideItems], (gi: GuideItems) => {
-    guideItems = gi;
   }));
 
   it('should get a list of all guide items', () => {

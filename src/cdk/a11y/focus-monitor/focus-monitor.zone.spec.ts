@@ -1,7 +1,7 @@
 import {Platform} from '../../platform';
 import {patchElementFocus} from '../../testing/private';
 import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, inject, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {A11yModule} from '../a11y-module';
 import {FocusMonitor} from './focus-monitor';
 
@@ -17,15 +17,12 @@ describe('FocusMonitor observable stream Zone.js integration', () => {
       imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}, provideZoneChangeDetection()],
     });
-  });
-
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
     fixture = TestBed.createComponent(PlainButton);
-    focusMonitor = fm;
+    focusMonitor = TestBed.inject(FocusMonitor);
     fixture.detectChanges();
     buttonElement = fixture.debugElement.nativeElement.querySelector('button');
     patchElementFocus(buttonElement);
-  }));
+  });
 
   it('should emit inside the NgZone', fakeAsync(() => {
     const spy = jasmine.createSpy('zone spy');

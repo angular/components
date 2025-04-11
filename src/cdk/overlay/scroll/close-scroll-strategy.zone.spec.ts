@@ -1,6 +1,6 @@
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
-import {TestBed, fakeAsync, inject} from '@angular/core/testing';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {Overlay} from '../overlay';
 import {OverlayConfig} from '../overlay-config';
@@ -14,6 +14,7 @@ describe('CloseScrollStrategy Zone.js integration', () => {
   let componentPortal: ComponentPortal<MozarellaMsg>;
   let scrolledSubject = new Subject<CdkScrollable | undefined>();
   let scrollPosition: number;
+  let overlayContainer: OverlayContainer;
 
   beforeEach(fakeAsync(() => {
     scrollPosition = 0;
@@ -36,18 +37,18 @@ describe('CloseScrollStrategy Zone.js integration', () => {
         },
       ],
     });
-  }));
 
-  beforeEach(inject([Overlay], (overlay: Overlay) => {
-    let overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
+    const overlay = TestBed.inject(Overlay);
+    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
     overlayRef = overlay.create(overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
+    overlayContainer = TestBed.inject(OverlayContainer);
   }));
 
-  afterEach(inject([OverlayContainer], (container: OverlayContainer) => {
+  afterEach(() => {
     overlayRef.dispose();
-    container.getContainerElement().remove();
-  }));
+    overlayContainer.getContainerElement().remove();
+  });
 
   it('should detach inside the NgZone', () => {
     const spy = jasmine.createSpy('detachment spy');

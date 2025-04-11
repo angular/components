@@ -4,7 +4,7 @@ import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, Directive, ElementRef, Provider, signal, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
   FormGroup,
@@ -209,12 +209,7 @@ describe('MatDateRangeInput', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();
     const {rangeInput, end} = fixture.componentInstance;
-    let focusMonitor: FocusMonitor;
-
-    inject([FocusMonitor], (fm: FocusMonitor) => {
-      focusMonitor = fm;
-    })();
-
+    const focusMonitor = TestBed.inject(FocusMonitor);
     expect(rangeInput.shouldLabelFloat).toBe(false);
 
     focusMonitor!.focusVia(end, 'keyboard');
@@ -518,12 +513,9 @@ describe('MatDateRangeInput', () => {
   it('should pass the range input value through to the calendar', fakeAsync(() => {
     const fixture = createComponent(StandardRangePicker);
     const {start, end} = fixture.componentInstance.range.controls;
-    let overlayContainerElement: HTMLElement;
+    const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     start.setValue(new Date(2020, 1, 2));
     end.setValue(new Date(2020, 1, 5));
-    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-      overlayContainerElement = overlayContainer.getContainerElement();
-    })();
     fixture.detectChanges();
     tick();
 
@@ -547,12 +539,10 @@ describe('MatDateRangeInput', () => {
   it("should have aria-desciredby on start and end date cells that point to the <input/>'s accessible name", fakeAsync(() => {
     const fixture = createComponent(StandardRangePicker);
     const {start, end} = fixture.componentInstance.range.controls;
-    let overlayContainerElement: HTMLElement;
+    const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+
     start.setValue(new Date(2020, 1, 2));
     end.setValue(new Date(2020, 1, 5));
-    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-      overlayContainerElement = overlayContainer.getContainerElement();
-    })();
     fixture.detectChanges();
     tick();
 
@@ -605,7 +595,7 @@ describe('MatDateRangeInput', () => {
 
   it('should pass the comparison range through to the calendar', fakeAsync(() => {
     const fixture = createComponent(StandardRangePicker);
-    let overlayContainerElement: HTMLElement;
+    const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
 
     // Set startAt to guarantee that the calendar opens on the proper month.
     fixture.componentInstance.comparisonStart = fixture.componentInstance.startAt = new Date(
@@ -615,9 +605,6 @@ describe('MatDateRangeInput', () => {
     );
     fixture.componentInstance.comparisonEnd = new Date(2020, 1, 5);
     fixture.changeDetectorRef.markForCheck();
-    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
-      overlayContainerElement = overlayContainer.getContainerElement();
-    })();
     fixture.detectChanges();
 
     fixture.componentInstance.rangePicker.open();

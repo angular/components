@@ -1,6 +1,6 @@
 import {DOCUMENT} from '@angular/common';
-import {waitForAsync, inject, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef, inject as inject_1} from '@angular/core';
+import {waitForAsync, TestBed} from '@angular/core/testing';
+import {Component, NgModule, ViewChild, ViewContainerRef, inject} from '@angular/core';
 import {PortalModule, CdkPortal} from '../portal';
 import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
 import {TemplatePortalDirective} from '../portal/portal-directives';
@@ -58,10 +58,8 @@ describe('FullscreenOverlayContainer', () => {
         },
       ],
     });
-  }));
 
-  beforeEach(inject([Overlay], (o: Overlay) => {
-    overlay = o;
+    overlay = TestBed.inject(Overlay);
   }));
 
   afterEach(() => {
@@ -116,7 +114,7 @@ describe('FullscreenOverlayContainer', () => {
   imports: [TemplatePortalDirective],
 })
 class TestComponentWithTemplatePortals {
-  viewContainerRef = inject_1(ViewContainerRef);
+  viewContainerRef = inject(ViewContainerRef);
 
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 }

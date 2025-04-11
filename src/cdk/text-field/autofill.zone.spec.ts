@@ -1,5 +1,5 @@
 import {Component, ElementRef, NgZone, ViewChild, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AutofillMonitor} from './autofill';
 import {TextFieldModule} from './text-field-module';
 
@@ -9,14 +9,8 @@ describe('AutofillMonitor Zone.js integration', () => {
   let testComponent: Inputs;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideZoneChangeDetection()],
-      imports: [TextFieldModule, Inputs],
-    });
-  });
-
-  beforeEach(inject([AutofillMonitor], (afm: AutofillMonitor) => {
-    autofillMonitor = afm;
+    TestBed.configureTestingModule({providers: [provideZoneChangeDetection()]});
+    autofillMonitor = TestBed.inject(AutofillMonitor);
     fixture = TestBed.createComponent(Inputs);
     testComponent = fixture.componentInstance;
     fixture.detectChanges();
@@ -25,7 +19,7 @@ describe('AutofillMonitor Zone.js integration', () => {
       spyOn(input.nativeElement, 'addEventListener');
       spyOn(input.nativeElement, 'removeEventListener');
     }
-  }));
+  });
 
   it('should emit on stream inside the NgZone', () => {
     const inputEl = testComponent.input1.nativeElement;

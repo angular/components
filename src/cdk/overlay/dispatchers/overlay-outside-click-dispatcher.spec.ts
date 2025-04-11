@@ -1,5 +1,5 @@
 import {ApplicationRef, Component} from '@angular/core';
-import {TestBed, inject} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {filter, take} from 'rxjs/operators';
 import {ComponentPortal} from '../../portal';
 import {dispatchFakeEvent, dispatchMouseEvent} from '../../testing/private';
@@ -12,18 +12,10 @@ describe('OverlayOutsideClickDispatcher', () => {
   let overlay: Overlay;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [OverlayModule, TestComponent],
-    });
-
-    inject(
-      [ApplicationRef, OverlayOutsideClickDispatcher, Overlay],
-      (ar: ApplicationRef, ocd: OverlayOutsideClickDispatcher, o: Overlay) => {
-        appRef = ar;
-        outsideClickDispatcher = ocd;
-        overlay = o;
-      },
-    )();
+    TestBed.configureTestingModule({imports: [OverlayModule, TestComponent]});
+    appRef = TestBed.inject(ApplicationRef);
+    outsideClickDispatcher = TestBed.inject(OverlayOutsideClickDispatcher);
+    overlay = TestBed.inject(Overlay);
   });
 
   it('should track overlays in order as they are attached and detached', () => {

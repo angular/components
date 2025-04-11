@@ -1,14 +1,7 @@
 import {Directionality} from '../bidi';
 import {A, ESCAPE} from '../keycodes';
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  inject,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../testing/private';
@@ -50,17 +43,12 @@ describe('Overlay directives', () => {
         },
       ],
     });
-  });
 
-  beforeEach(() => {
+    overlay = TestBed.inject(Overlay);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
     fixture.detectChanges();
   });
-
-  beforeEach(inject([OverlayContainer, Overlay], (oc: OverlayContainer, o: Overlay) => {
-    overlay = o;
-    overlayContainerElement = oc.getContainerElement();
-  }));
 
   /** Returns the current open overlay pane element. */
   function getPaneElement() {
