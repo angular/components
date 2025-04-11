@@ -1,0 +1,58 @@
+<div class="example-tablist-controls">
+  <mat-checkbox [formControl]="wrap">Wrap</mat-checkbox>
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Orientation</mat-label>
+    <mat-select [(value)]="orientation">
+      <mat-option value="vertical">Vertical</mat-option>
+      <mat-option value="horizontal">Horizontal</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection strategy</mat-label>
+    <mat-select [(value)]="selectionMode">
+      <mat-option value="explicit">Explicit</mat-option>
+      <mat-option value="follow">Follow Focus</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving Tabindex</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- #docregion tabs -->
+<div cdkTabs class="example-tabs">
+  <ul
+    cdkTabList
+    class="example-tablist"
+    [wrap]="wrap.value"
+    [disabled]="disabled.value"
+    [skipDisabled]="skipDisabled.value"
+    [orientation]="orientation"
+    [focusMode]="focusMode"
+    [selectionMode]="selectionMode"
+  >
+    <li cdkTab value="tab-1" class="example-tab">tab 1</li>
+    <li cdkTab value="tab-2" class="example-tab">tab 2</li>
+    <li cdkTab value="tab-3" class="example-tab">tab 3</li>
+  </ul>
+
+  <div cdkTabPanel value="tab-1" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 1</ng-template>
+  </div>
+  <div cdkTabPanel value="tab-2" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 2</ng-template>
+  </div>
+  <div cdkTabPanel value="tab-3" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 3</ng-template>
+  </div>
+</div>
+<!-- #enddocregion tabs -->

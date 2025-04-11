@@ -1,0 +1,18 @@
+load("//tools:defaults2.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "tabs",
+    srcs = [
+        "index.ts",
+        "public-api.ts",
+        "tabs.ts",
+    ],
+    deps = [
+        "//src/cdk-experimental/deferred-content",
+        "//src/cdk-experimental/ui-patterns",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+    ],
+)
