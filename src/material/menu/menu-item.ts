@@ -37,8 +37,9 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-mdc-menu-item-highlighted]': '_highlighted',
     '[class.mat-mdc-menu-item-submenu-trigger]': '_triggersSubmenu',
     '[attr.tabindex]': '_getTabIndex()',
-    '[attr.aria-disabled]': 'disabled',
+    '[attr.aria-disabled]': 'disabled && disabledInteractive ? "true" : null',
     '[attr.disabled]': 'disabled || null',
+    '[class.mat-mdc-menu-item-disabled-interactive]': 'disabledInteractive',
     '(click)': '_checkDisabled($event)',
     '(mouseenter)': '_handleMouseEnter()',
   },
@@ -62,6 +63,10 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
 
   /** Whether ripples are disabled on the menu item. */
   @Input({transform: booleanAttribute}) disableRipple: boolean = false;
+
+  /** Whether the menu item should remain interactive when it is disabled. */
+  @Input({transform: booleanAttribute})
+  disabledInteractive: boolean = false;
 
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
@@ -117,7 +122,7 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
 
   /** Used to set the `tabindex`. */
   _getTabIndex(): string {
-    return this.disabled ? '-1' : '0';
+    return this.disabled && !this.disabledInteractive ? '-1' : '0';
   }
 
   /** Returns the host DOM element. */
