@@ -11,37 +11,37 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {ListSelectionItem} from '../behaviors/list-selection/list-selection';
 import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import {ListFocusItem} from '../behaviors/list-focus/list-focus';
-import {TabpanelPattern} from './tabpanel';
-import {TablistPattern} from './tablist';
+import {TabPanelPattern} from './tabpanel';
+import {TabListPattern} from './tablist';
 
 /** The required inputs to tabs. */
 export interface TabInputs extends ListNavigationItem, ListSelectionItem<string>, ListFocusItem {
-  tablist: SignalLike<TablistPattern>;
-  tabpanel: SignalLike<TabpanelPattern>;
+  tablist: SignalLike<TabListPattern>;
+  tabpanel: SignalLike<TabPanelPattern | undefined>;
 }
 
 /** A tab in a tablist. */
 export class TabPattern {
-  /** A unique identifier for the tab. */
+  /** A global unique identifier for the tab. */
   id: SignalLike<string>;
 
-  /** The value of the tab. */
-  value = () => this.id();
+  /** A local unique identifier for the tab. */
+  value: SignalLike<string>;
 
   /** Whether the tab is selected. */
   selected = computed(() => this.tablist().selection.inputs.value().includes(this.value()));
 
   /** A Tabpanel Id controlled by the tab. */
-  controls = computed(() => this.tabpanel().id());
+  controls = computed(() => this.tabpanel()?.id());
 
   /** Whether the tab is disabled. */
   disabled: SignalLike<boolean>;
 
   /** A reference to the parent tablist. */
-  tablist: SignalLike<TablistPattern>;
+  tablist: SignalLike<TabListPattern>;
 
   /** A reference to the corresponding tabpanel. */
-  tabpanel: SignalLike<TabpanelPattern>;
+  tabpanel: SignalLike<TabPanelPattern | undefined>;
 
   /** The tabindex of the tab. */
   tabindex = computed(() => this.tablist().focusManager.getItemTabindex(this));
@@ -51,6 +51,7 @@ export class TabPattern {
 
   constructor(inputs: TabInputs) {
     this.id = inputs.id;
+    this.value = inputs.value;
     this.tablist = inputs.tablist;
     this.tabpanel = inputs.tabpanel;
     this.element = inputs.element;

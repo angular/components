@@ -21,8 +21,8 @@ import {
 import {Directionality} from '@angular/cdk/bidi';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
 import {TabPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tab';
-import {TablistPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tablist';
-import {TabpanelPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tabpanel';
+import {TabListPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tablist';
+import {TabPanelPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tabpanel';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 
@@ -30,19 +30,19 @@ import {_IdGenerator} from '@angular/cdk/a11y';
  * A Tabs container.
  *
  * Represents a set of layered sections of content. The CdkTabs is a container meant to be used with
- * CdkTablist, CdkTab, and CdkTabpanel as follows:
+ * CdkTabList, CdkTab, and CdkTabPanel as follows:
  *
  * ```html
  * <div cdkTabs>
- *   <ul cdkTablist>
+ *   <ul cdkTabList>
  *     <li cdkTab>Tab 1</li>
  *     <li cdkTab>Tab 2</li>
  *     <li cdkTab>Tab 3</li>
  *   </ul>
  *
- *   <div cdkTabpanel>Tab content 1</div>
- *   <div cdkTabpanel>Tab content 2</div>
- *   <div cdkTabpanel>Tab content 3</div>
+ *   <div cdkTabPanel>Tab content 1</div>
+ *   <div cdkTabPanel>Tab content 2</div>
+ *   <div cdkTabPanel>Tab content 3</div>
  * </div>
  * ```
  */
@@ -57,24 +57,24 @@ export class CdkTabs {
   /** The CdkTabs nested inside of the container. */
   private readonly _cdkTabs = contentChildren(CdkTab, {descendants: true});
 
-  /** The CdkTabpanels nested inside of the container. */
-  private readonly _cdkTabpanels = contentChildren(CdkTabpanel, {descendants: true});
+  /** The CdkTabPanels nested inside of the container. */
+  private readonly _cdkTabPanels = contentChildren(CdkTabPanel, {descendants: true});
 
   /** The Tab UIPattern of the child Tabs. */
   tabs = computed(() => this._cdkTabs().map(tab => tab.pattern));
 
-  /** The Tabpanel UIPattern of the child Tabpanels. */
-  tabpanels = computed(() => this._cdkTabpanels().map(tabpanel => tabpanel.pattern));
+  /** The TabPanel UIPattern of the child TabPanels. */
+  tabpanels = computed(() => this._cdkTabPanels().map(tabpanel => tabpanel.pattern));
 }
 
 /**
- * A Tablist container.
+ * A TabList container.
  *
  * Controls a list of CdkTab(s).
  */
 @Directive({
-  selector: '[cdkTablist]',
-  exportAs: 'cdkTablist',
+  selector: '[cdkTabList]',
+  exportAs: 'cdkTabList',
   host: {
     'role': 'tablist',
     'class': 'cdk-tablist',
@@ -86,11 +86,11 @@ export class CdkTabs {
     '(pointerdown)': 'pattern.onPointerdown($event)',
   },
 })
-export class CdkTablist {
+export class CdkTabList {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
-  /** The CdkTabs nested inside of the CdkTablist. */
+  /** The CdkTabs nested inside of the CdkTabList. */
   private readonly _cdkTabs = contentChildren(CdkTab);
 
   /** A signal wrapper for directionality. */
@@ -122,8 +122,8 @@ export class CdkTablist {
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);
 
-  /** The Tablist UIPattern. */
-  pattern: TablistPattern = new TablistPattern({
+  /** The TabList UIPattern. */
+  pattern: TabListPattern = new TabListPattern({
     ...this,
     items: this.tabs,
     textDirection: this.textDirection,
@@ -131,7 +131,7 @@ export class CdkTablist {
   });
 }
 
-/** A selectable tab in a tablist. */
+/** A selectable tab in a TabList. */
 @Directive({
   selector: '[cdkTab]',
   exportAs: 'cdkTab',
@@ -152,37 +152,39 @@ export class CdkTab {
   /** The parent CdkTabs. */
   private readonly _cdkTabs = inject(CdkTabs);
 
-  /** The parent CdkTablist. */
-  private readonly _cdkTablist = inject(CdkTablist);
+  /** The parent CdkTabList. */
+  private readonly _cdkTabList = inject(CdkTabList);
 
-  /** A unique identifier for the tab. */
+  /** A global unique identifier for the tab. */
   private readonly _id = inject(_IdGenerator).getId('cdk-tab-');
 
-  /** The position of the tab in the list. */
-  protected index = computed(() => this._cdkTabs.tabs().findIndex(tab => tab.id() === this._id));
+  /** The parent TabList UIPattern. */
+  protected tablist = computed(() => this._cdkTabList.pattern);
 
-  /** The parent Tablist UIPattern. */
-  protected tablist = computed(() => this._cdkTablist.pattern);
-
-  /** The Tabpanel UIPattern associated with the tab */
-  protected tabpanel = computed(() => this._cdkTabs.tabpanels()[this.index()]);
+  /** The TabPanel UIPattern associated with the tab */
+  protected tabpanel = computed(() =>
+    this._cdkTabs.tabpanels().find(tabpanel => tabpanel.value() === this.value()),
+  );
 
   /** Whether a tab is disabled. */
   disabled = input(false, {transform: booleanAttribute});
+
+  /** A local unique identifier for the tab. */
+  value = input.required<string>();
 
   /** The Tab UIPattern. */
   pattern: TabPattern = new TabPattern({
     ...this,
     id: () => this._id,
-    value: () => this._id,
     element: () => this._elementRef.nativeElement,
     tablist: this.tablist,
     tabpanel: this.tabpanel,
+    value: this.value,
   });
 }
 
 /**
- * A Tabpanel container for the resources of layered content associated with a tab.
+ * A TabPanel container for the resources of layered content associated with a tab.
  *
  * If a tabpanel is hidden due to its corresponding tab is not activated, the `inert` attribute
  * will be applied to the tabpanel element to remove it from the accessibility tree and stop
@@ -190,8 +192,8 @@ export class CdkTab {
  * and a proper styling is required.
  */
 @Directive({
-  selector: '[cdkTabpanel]',
-  exportAs: 'cdkTabpanel',
+  selector: '[cdkTabPanel]',
+  exportAs: 'cdkTabPanel',
   host: {
     'role': 'tabpanel',
     'tabindex': '0',
@@ -206,26 +208,24 @@ export class CdkTab {
     },
   ],
 })
-export class CdkTabpanel {
+export class CdkTabPanel {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
   /** The parent CdkTabs. */
   private readonly _cdkTabs = inject(CdkTabs);
 
-  /** A unique identifier for the tab. */
+  /** A global unique identifier for the tab. */
   private readonly _id = inject(_IdGenerator).getId('cdk-tabpanel-');
 
-  /** The position of the tabpanel in the tabs. */
-  protected index = computed(() =>
-    this._cdkTabs.tabpanels().findIndex(tabpanel => tabpanel.id() === this._id),
-  );
-
   /** The Tab UIPattern associated with the tabpanel */
-  protected tab = computed(() => this._cdkTabs.tabs()[this.index()]);
+  protected tab = computed(() => this._cdkTabs.tabs().find(tab => tab.value() === this.value()));
 
-  /** The Tabpanel UIPattern. */
-  pattern: TabpanelPattern = new TabpanelPattern({
+  /** A local unique identifier for the tabpanel. */
+  value = input.required<string>();
+
+  /** The TabPanel UIPattern. */
+  pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
     id: () => this._id,
     tab: this.tab,
@@ -237,11 +237,11 @@ export class CdkTabpanel {
 }
 
 /**
- * A Tabcontent container for the lazy-loaded content.
+ * A TabContent container for the lazy-loaded content.
  */
 @Directive({
-  selector: 'ng-template[cdkTabcontent]',
-  exportAs: 'cdTabcontent',
+  selector: 'ng-template[cdkTabContent]',
+  exportAs: 'cdTabContent',
   hostDirectives: [DeferredContent],
 })
-export class CdkTabcontent {}
+export class CdkTabContent {}

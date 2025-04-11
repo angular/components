@@ -31,7 +31,7 @@ export type TablistInputs = ListNavigationInputs<TabPattern> &
   };
 
 /** Controls the state of a tablist. */
-export class TablistPattern {
+export class TabListPattern {
   /** Controls navigation for the tablist. */
   navigation: ListNavigation<TabPattern>;
 

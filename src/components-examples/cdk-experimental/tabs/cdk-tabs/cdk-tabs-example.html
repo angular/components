@@ -31,7 +31,7 @@
 <!-- #docregion tabs -->
 <div cdkTabs class="example-tabs">
   <ul
-    cdkTablist
+    cdkTabList
     class="example-tablist"
     [wrap]="wrap.value"
     [disabled]="disabled.value"
@@ -40,19 +40,19 @@
     [focusMode]="focusMode"
     [selectionMode]="selectionMode"
   >
-    <li cdkTab class="example-tab">tab 1</li>
-    <li cdkTab class="example-tab">tab 2</li>
-    <li cdkTab class="example-tab">tab 3</li>
+    <li cdkTab value="tab-1" class="example-tab">tab 1</li>
+    <li cdkTab value="tab-2" class="example-tab">tab 2</li>
+    <li cdkTab value="tab-3" class="example-tab">tab 3</li>
   </ul>
 
-  <div cdkTabpanel class="example-tabpanel">
-    <ng-template cdkTabcontent>Tabpanel 1</ng-template>
+  <div cdkTabPanel value="tab-1" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 1</ng-template>
   </div>
-  <div cdkTabpanel class="example-tabpanel">
-    <ng-template cdkTabcontent>Tabpanel 2</ng-template>
+  <div cdkTabPanel value="tab-2" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 2</ng-template>
   </div>
-  <div cdkTabpanel class="example-tabpanel">
-    <ng-template cdkTabcontent>Tabpanel 3</ng-template>
+  <div cdkTabPanel value="tab-3" class="example-tabpanel">
+    <ng-template cdkTabContent>Tabpanel 3</ng-template>
   </div>
 </div>
 <!-- #enddocregion tabs -->

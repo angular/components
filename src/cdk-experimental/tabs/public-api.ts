@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {CdkTabs, CdkTablist, CdkTab, CdkTabpanel, CdkTabcontent} from './tabs';
+export {CdkTabs, CdkTabList, CdkTab, CdkTabPanel, CdkTabContent} from './tabs';
