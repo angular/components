@@ -1,5 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_config")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
@@ -22,16 +21,6 @@ exports_files([
     "bazel-tsconfig-test.json",
     "README.md",
 ])
-
-ts_config(
-    name = "tsconfig-test",
-    src = "bazel-tsconfig-test.json",
-    deps = [
-        "bazel-tsconfig-build.json",
-        "//:node_modules/@types/jasmine",
-        "//:node_modules/@types/node",
-    ],
-)
 
 copy_to_bin(
     name = "package_json",
@@ -67,16 +56,17 @@ ts_project(
     srcs = ["dev-mode-types.d.ts"],
 )
 
-ts_config(
-    name = "tsec_config",
-    src = "tsconfig-tsec.json",
-    deps = [
-        ":bazel-tsconfig-build.json",
-        "//goldens:tsec-exemption.json",
-    ],
-)
+# TODO(devversion): Look into a replacement.
+#ts_config(
+#    name = "tsec_config",
+#    src = "tsconfig-tsec.json",
+#    deps = [
+#        ":bazel-tsconfig-build.json",
+#        "//goldens:tsec-exemption.json",
+#    ],
+#)
 
-rules_js_tsconfig(
+ts_config(
     name = "build-tsconfig",
     src = "bazel-tsconfig-build.json",
     deps = [
@@ -84,7 +74,7 @@ rules_js_tsconfig(
     ],
 )
 
-rules_js_tsconfig(
+ts_config(
     name = "test-tsconfig",
     src = "bazel-tsconfig-test.json",
     deps = [
