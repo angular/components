@@ -36,6 +36,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** The navigation controller of the parent list. */
   navigation: ListNavigation<T>;
 
+  /** Whether the user is actively typing a typeahead search query. */
   isTyping = computed(() => this._query().length > 0);
 
   /** Keeps track of the characters that typeahead search is being called with. */
