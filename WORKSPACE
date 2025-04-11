@@ -102,7 +102,6 @@ rules_js_register_toolchains(
 )
 
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
-load("//tools:integration.bzl", "create_npm_package_archive_build_file")
 
 yarn_install(
     name = "npm",
@@ -120,8 +119,6 @@ yarn_install(
     #  1. Missing Windows support currently.
     #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
-    # Add archive targets for some NPM packages that are needed in integration tests.
-    manual_build_file_contents = create_npm_package_archive_build_file(),
     package_json = "//:package.json",
     quiet = False,
     yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
@@ -203,6 +200,7 @@ npm_translate_lock(
         "@angular/material-luxon-adapter": ["//integration:__subpackages__"],
     },
     pnpm_lock = "//:pnpm-lock.yaml",
+    pnpm_version = "9.14.1",
     update_pnpm_lock = True,
     verify_node_modules_ignored = "//:.bazelignore",
     yarn_lock = "//:yarn.lock",
@@ -249,7 +247,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "devinfra",
-    commit = "cddc66a76ac0183790bc7a9fc1e5cf9f87512375",
+    commit = "c4f7d3cdec164044284139182b709dfd4be339ed",
     remote = "https://github.com/angular/dev-infra.git",
 )
 
