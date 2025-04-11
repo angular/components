@@ -2,11 +2,9 @@
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
-load("@io_bazel_rules_sass//:defs.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary", _sass_library = "sass_library")
+load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
-load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
-load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
@@ -24,8 +22,6 @@ npmPackageSubstitutions = select({
 markdown_to_html = _markdown_to_html
 integration_test = _integration_test
 extract_tokens = _extract_tokens
-esbuild = _esbuild
-esbuild_config = _esbuild_config
 karma_web_test_suite = _karma_web_test_suite
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
@@ -38,9 +34,6 @@ def sass_binary(sourcemap = False, include_paths = [], **kwargs):
 
 def sass_library(**kwargs):
     _sass_library(**kwargs)
-
-def npm_sass_library(**kwargs):
-    _npm_sass_library(**kwargs)
 
 def ng_package(
         name,
@@ -246,28 +239,5 @@ def ng_web_test_suite(deps = [], static_css = [], **kwargs):
         # Depend on our custom test initialization script. This needs to be the first dependency.
         deps = deps,
         bootstrap = ["//test:angular_test_init"] + bootstrap,
-        **kwargs
-    )
-
-# TODO: Rename once devmode and prodmode have been combined.
-def devmode_esbuild(name, deps, testonly = False, **kwargs):
-    """Extension of the default `@bazel/esbuild` rule so that only devmode ESM output
-    is requested. This is done to speed up local development because the ESBuild rule
-    by default requests all possible output flavors/modes."""
-    extract_js_module_output(
-        name = "%s_devmode_deps" % name,
-        deps = deps,
-        testonly = testonly,
-        forward_linker_mappings = True,
-        include_external_npm_packages = True,
-        include_default_files = False,
-        include_declarations = False,
-        provider = "JSModuleInfo",
-    )
-
-    _esbuild(
-        name = name,
-        deps = ["%s_devmode_deps" % name],
-        testonly = testonly,
         **kwargs
     )
