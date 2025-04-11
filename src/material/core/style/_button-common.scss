@@ -1,3 +1,4 @@
+@use './icon-common';
 @use './vendor-prefixes';
 
 // Mixin overriding default button styles like the gray background, the border, and the outline.
@@ -13,5 +14,12 @@
   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Firefox
   &::-moz-focus-inner {
     border: 0;
+  }
+}
+
+// Makes button icon not cut off/shrink making the icon visible to fix b/250063405
+@mixin button-icon-no-shrink {
+  .mat-mdc-button-base {
+    @include icon-common.icon-no-shrink();
   }
 }
