@@ -1,7 +1,7 @@
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@npm2//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "http_server", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "http_server", "ng_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -18,7 +18,6 @@ devserverIndexHtmlDependencies = [
 
 exports_files([
     "protractor.conf.js",
-    "start-devserver.js",
     "devserver-configure.js",
 ])
 

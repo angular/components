@@ -6,7 +6,6 @@ load("@io_bazel_rules_sass//:defs.bzl", _npm_sass_library = "npm_sass_library", 
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("@npm//@angular/build-tooling/bazel/integration:index.bzl", _integration_test = "integration_test")
 load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
-load("@npm//@angular/build-tooling/bazel/http-server:index.bzl", _http_server = "http_server")
 load("@npm//@angular/build-tooling/bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
@@ -14,7 +13,7 @@ load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
 load("//tools:defaults2.bzl", "spec_bundle", _karma_web_test_suite = "karma_web_test_suite")
-load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
+load("@rules_browsers//src/protractor_test:index.bzl", "protractor_test")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -27,7 +26,6 @@ integration_test = _integration_test
 extract_tokens = _extract_tokens
 esbuild = _esbuild
 esbuild_config = _esbuild_config
-http_server = _http_server
 karma_web_test_suite = _karma_web_test_suite
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
@@ -148,10 +146,24 @@ def protractor_web_test_suite(name, deps, **kwargs):
         external = ["protractor", "selenium-webdriver"],
     )
 
-    _protractor_web_test_suite(
+    protractor_test(
         name = name,
-        browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
-        deps = ["%s_bundle" % name],
+        deps = [":%s_bundle" % name],
+        extra_config = {
+            "useAllAngular2AppRoots": True,
+            "allScriptsTimeout": 120000,
+            "getPageTimeout": 120000,
+            "jasmineNodeOpts": {
+                "defaultTimeoutInterval": 120000,
+            },
+            # Since we want to use async/await we don't want to mix up with selenium's promise
+            # manager. In order to enforce this, we disable the promise manager.
+            "SELENIUM_PROMISE_MANAGER": False,
+        },
+        data = [
+            "//:node_modules/protractor",
+            "//:node_modules/selenium-webdriver",
+        ],
         **kwargs
     )
 

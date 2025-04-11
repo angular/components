@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("//tools:defaults.bzl", "http_server", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "sass_binary")
+load("//tools:defaults2.bzl", "http_server", "ng_project")
 load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
