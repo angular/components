@@ -133,9 +133,13 @@ export class ListboxPattern<V> {
         .on(Modifier.Shift, 'Enter', () => this._updateSelection({selectFromAnchor: true}))
         .on(Modifier.Shift, this.prevKey, () => this.prev({toggle: true}))
         .on(Modifier.Shift, this.nextKey, () => this.next({toggle: true}))
-        .on(Modifier.Ctrl | Modifier.Shift, 'Home', () => this.first({selectFromActive: true}))
-        .on(Modifier.Ctrl | Modifier.Shift, 'End', () => this.last({selectFromActive: true}))
-        .on(Modifier.Ctrl, 'A', () => this._updateSelection({selectAll: true}))
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => this._updateSelection({selectAll: true}))
+        .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
+          this.first({selectFromActive: true}),
+        )
+        .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'End', () =>
+          this.last({selectFromActive: true}),
+        )
         .on(Modifier.Shift, this.dynamicSpaceKey, () =>
           this._updateSelection({selectFromAnchor: true}),
         );
@@ -153,12 +157,12 @@ export class ListboxPattern<V> {
 
     if (this.inputs.multi() && this.followFocus()) {
       manager
-        .on(Modifier.Ctrl, this.prevKey, () => this.prev())
-        .on(Modifier.Ctrl, this.nextKey, () => this.next())
-        .on(Modifier.Ctrl, ' ', () => this._updateSelection({toggle: true}))
-        .on(Modifier.Ctrl, 'Enter', () => this._updateSelection({toggle: true}))
-        .on(Modifier.Ctrl, 'Home', () => this.first()) // TODO: Not in spec but prob should be.
-        .on(Modifier.Ctrl, 'End', () => this.last()); // TODO: Not in spec but prob should be.
+        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.prev())
+        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.next())
+        .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this._updateSelection({toggle: true}))
+        .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => this._updateSelection({toggle: true}))
+        .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => this.first()) // TODO: Not in spec but prob should be.
+        .on([Modifier.Ctrl, Modifier.Meta], 'End', () => this.last()); // TODO: Not in spec but prob should be.
     }
 
     return manager;
