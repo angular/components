@@ -76,11 +76,11 @@ describe('MatSnackBarHarness', () => {
   it('should be able to get aria-live of snack-bar', async () => {
     fixture.componentInstance.openCustom();
     let snackBar = await loader.getHarness(MatSnackBarHarness);
-    expect(await snackBar.getAriaLive()).toBe('assertive');
-
-    fixture.componentInstance.openCustom({politeness: 'polite'});
-    snackBar = await loader.getHarness(MatSnackBarHarness);
     expect(await snackBar.getAriaLive()).toBe('polite');
+
+    fixture.componentInstance.openCustom({politeness: 'assertive'});
+    snackBar = await loader.getHarness(MatSnackBarHarness);
+    expect(await snackBar.getAriaLive()).toBe('assertive');
 
     fixture.componentInstance.openCustom({politeness: 'off'});
     snackBar = await loader.getHarness(MatSnackBarHarness);
