@@ -28,7 +28,7 @@ import {
   AfterViewInit,
   NgZone,
 } from '@angular/core';
-import {MAT_TAB_GROUP, MatTab} from './tab';
+import {MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
 import {ThemePalette, MatRipple, _animationsDisabled} from '../core';
 import {merge, Subscription} from 'rxjs';
@@ -39,6 +39,7 @@ import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
+import {MAT_TAB_GROUP} from './tab-group-token';
 
 /** @docs-private */
 export interface MatTabGroupBaseHeader {
