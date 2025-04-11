@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "esbuild")
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -41,8 +41,6 @@ esbuild(
     target = "es2015",
     deps = [
         ":m3_theme_lib",
-        "//src/material:sass_lib",
-        "//src/material-experimental:sass_lib",
     ],
 )
 
