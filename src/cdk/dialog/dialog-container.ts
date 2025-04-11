@@ -73,7 +73,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
   implements OnDestroy
 {
-  protected _elementRef = inject(ElementRef);
+  protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _focusTrapFactory = inject(FocusTrapFactory);
   readonly _config: C;
   private _interactivityChecker = inject(InteractivityChecker);
@@ -254,7 +254,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * Moves the focus inside the focus trap. When autoFocus is not set to 'dialog', if focus
    * cannot be moved then focus will go to the dialog container.
    */
-  protected _trapFocus() {
+  protected _trapFocus(options?: FocusOptions) {
     if (this._isDestroyed) {
       return;
     }
@@ -274,23 +274,23 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
             // if the focus isn't inside the dialog already, because it's possible that the consumer
             // turned off `autoFocus` in order to move focus themselves.
             if (!this._containsFocus()) {
-              element.focus();
+              element.focus(options);
             }
             break;
           case true:
           case 'first-tabbable':
-            const focusedSuccessfully = this._focusTrap?.focusInitialElement();
+            const focusedSuccessfully = this._focusTrap?.focusInitialElement(options);
             // If we weren't able to find a focusable element in the dialog, then focus the dialog
             // container instead.
             if (!focusedSuccessfully) {
-              this._focusDialogContainer();
+              this._focusDialogContainer(options);
             }
             break;
           case 'first-heading':
-            this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]');
+            this._focusByCssSelector('h1, h2, h3, h4, h5, h6, [role="heading"]', options);
             break;
           default:
-            this._focusByCssSelector(this._config.autoFocus!);
+            this._focusByCssSelector(this._config.autoFocus!, options);
             break;
         }
       },
@@ -345,10 +345,10 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   /** Focuses the dialog container. */
-  private _focusDialogContainer() {
+  private _focusDialogContainer(options?: FocusOptions) {
     // Note that there is no focus method when rendering on the server.
     if (this._elementRef.nativeElement.focus) {
-      this._elementRef.nativeElement.focus();
+      this._elementRef.nativeElement.focus(options);
     }
   }
 
