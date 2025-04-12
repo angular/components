@@ -31,23 +31,23 @@
   },
   "dependencies": {
     "@angular/animations": "^20.0.0-next.4",
-    "@angular/cdk": "^20.0.0-next.4",
-    "@angular/cdk-experimental": "^20.0.0-next.4",
+    "@angular/cdk": "workspace:*",
+    "@angular/cdk-experimental": "workspace:*",
     "@angular/common": "^20.0.0-next.4",
     "@angular/compiler": "^20.0.0-next.4",
-    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#e904af2636dc19b7d774a1d8e8b123ea2dfeb2b3",
+    "@angular/components-examples": "workspace:*",
     "@angular/core": "^20.0.0-next.4",
     "@angular/forms": "^20.0.0-next.4",
-    "@angular/google-maps": "^20.0.0-next.4",
+    "@angular/google-maps": "workspace:*",
     "@angular/localize": "^20.0.0-next.4",
-    "@angular/material": "^20.0.0-next.4",
-    "@angular/material-experimental": "^20.0.0-next.4",
-    "@angular/material-moment-adapter": "^20.0.0-next.4",
+    "@angular/material": "workspace:*",
+    "@angular/material-experimental": "workspace:*",
+    "@angular/material-moment-adapter": "workspace:*",
     "@angular/platform-browser": "^20.0.0-next.4",
     "@angular/platform-browser-dynamic": "^20.0.0-next.4",
     "@angular/router": "^20.0.0-next.4",
     "@angular/ssr": "^20.0.0-next.3",
-    "@angular/youtube-player": "^20.0.0-next.4",
+    "@angular/youtube-player": "workspace:*",
     "@stackblitz/sdk": "^1.5.2",
     "moment": "^2.29.1",
     "path-normalize": "^6.0.13",
@@ -67,9 +67,9 @@
     "@angular/compiler-cli": "^20.0.0-next.4",
     "@bazel/bazelisk": "^1.12.1",
     "@stylistic/eslint-plugin": "^2.6.2",
-    "@types/jasmine": "^3.7.7",
-    "@types/node": "^18.11.9",
-    "@types/shelljs": "~0.8.8",
+    "@types/jasmine": "5.1.7",
+    "@types/node": "^22.14.1",
+    "@types/shelljs": "0.8.15",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
     "eslint": "^8.56.0",
@@ -78,9 +78,9 @@
     "eslint-plugin-jsdoc": "^48.2.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "firebase-tools": "^11.0.1",
-    "jasmine-core": "^3.7.1",
-    "jasmine-spec-reporter": "^6.0.0",
-    "karma": "~6.4.1",
+    "jasmine-core": "5.6.0",
+    "jasmine-spec-reporter": "7.0.0",
+    "karma": "~6.4.4",
     "karma-chrome-launcher": "^3.1.1",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-firefox-launcher": "^2.1.0",
@@ -91,22 +91,9 @@
     "lighthouse-logger": "~1.2.0",
     "npm-run-all": "^4.1.5",
     "protractor": "^7.0.0",
-    "puppeteer": "^24.1.0",
-    "sass": "^1.70.0",
+    "sass": "1.86.3",
     "shelljs": "^0.8.4",
-    "ts-node": "^8.10.2",
+    "ts-node": "10.9.2",
     "typescript": "~5.8.2"
-  },
-  "packageManager": "yarn@4.7.0",
-  "dependenciesMeta": {
-    "esbuild": {
-      "built": true
-    },
-    "puppeteer": {
-      "built": true
-    },
-    "re2": {
-      "built": true
-    }
   }
 }

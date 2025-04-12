@@ -1,5 +1,6 @@
 packages:
   - .
+  - material.angular.io
   - integration
   - src/cdk
   - src/cdk-experimental
