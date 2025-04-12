@@ -6,14 +6,10 @@ const {StacktraceOption} = require('jasmine-spec-reporter/built/configuration');
 const {SpecReporter} = require('jasmine-spec-reporter');
 const path = require('path');
 
-// TODO(bazel): drop non-bazel
-const isBazel = !!process.env['TEST_TARGET'];
-if (isBazel) {
-  // Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
-  // runfiles tree so that subprocesses spawned in a different working directory can still find them.
-  process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
-  process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
-}
+// Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
+// runfiles tree so that subprocesses spawned in a different working directory can still find them.
+process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
+process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
 
 /**
  * @type { import("protractor").Config }
@@ -25,9 +21,7 @@ const config = {
   capabilities: {
     'browserName': 'chrome',
     chromeOptions: {
-      binary: isBazel
-        ? path.resolve(process.env.CHROME_BIN)
-        : require('puppeteer').executablePath(),
+      binary: path.resolve(process.env.CHROME_BIN),
       args: [
         '--no-sandbox',
         '--headless',
