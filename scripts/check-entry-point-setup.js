@@ -22,6 +22,7 @@ const packagesDir = join(__dirname, '../src');
  * as entry-points.
  */
 const excludeGlobs = [
+  '**/node_modules/**',
   'cdk/testing/private',
   'cdk/private',
   '*/schematics/**',
