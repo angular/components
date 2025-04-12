@@ -28,6 +28,8 @@ if (require.main === module) {
   const [
     // Path that refers to the package where the current Bazel target is defined.
     bazelLabelPackagePath,
+    // Execroot path to the `bazel-bin`.
+    binDirPath,
     // Path that is relative to the execroot and is the output directory for the docs.
     outputDirPath,
     // Remaining arguments that will be used to compute the entry points that need to be parsed.
@@ -90,7 +92,7 @@ if (require.main === module) {
     // as the Angular packages which might be needed for doc items. e.g. if a class implements
     // the "AfterViewInit" interface from "@angular/core". This needs to be relative to the
     // "baseUrl" that has been specified for the "tsParser" compiler options.
-    tsParser.options.paths!['*'] = [relative(packagePath, 'external/npm/node_modules/*')];
+    tsParser.options.paths!['*'] = [relative(packagePath, join(binDirPath, `node_modules/*`))];
 
     // Since our base directory is the Bazel execroot, we need to make sure that Dgeni can
     // find all templates needed to output the API docs.

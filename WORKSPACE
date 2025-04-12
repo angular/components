@@ -103,26 +103,18 @@ rules_js_register_toolchains(
 
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
+# TODO(devversion): Remove this once `ng_package` is ported over to `rules_js`.
 yarn_install(
     name = "npm",
-    # We add the postinstall patches file here so that Yarn will rerun whenever
-    # the file is modified.
     data = [
-        "//:.yarn/releases/yarn-1.22.17.cjs",
-        "//:.yarnrc",
-        "//:tools/postinstall/apply-patches.js",
-        "//:tools/postinstall/patches/@angular+bazel+20.0.0-next.3.patch",
-        "//:tools/postinstall/patches/@angular+build-tooling+0.0.0-1ebf18a3a60b182a3dbad12e9a149fd93af5c29b.patch",
-        "//:tools/postinstall/patches/tsec+0.2.2.patch",
+        "//tools/bazel/legacy-rnjs:.yarn/patches/@angular-bazel-https-67c38b3c32.patch",
+        "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
+        "//tools/bazel/legacy-rnjs:.yarnrc.yml",
     ],
-    # Currently disabled due to:
-    #  1. Missing Windows support currently.
-    #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
-    package_json = "//:package.json",
-    quiet = False,
-    yarn = "//:.yarn/releases/yarn-1.22.17.cjs",
-    yarn_lock = "//:yarn.lock",
+    package_json = "//tools/bazel/legacy-rnjs:package.json",
+    yarn = "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
+    yarn_lock = "//tools/bazel/legacy-rnjs:yarn.lock",
 )
 
 # Setup the Sass rule repositories.
@@ -177,9 +169,7 @@ npm_translate_lock(
     },
     pnpm_lock = "//:pnpm-lock.yaml",
     pnpm_version = "9.14.1",
-    update_pnpm_lock = True,
     verify_node_modules_ignored = "//:.bazelignore",
-    yarn_lock = "//:yarn.lock",
 )
 
 load("@npm2//:repositories.bzl", "npm_repositories")
