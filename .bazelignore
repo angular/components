@@ -1,24 +1,21 @@
+dist
 node_modules
 
 integration/harness-e2e-cli/.angular
 integration/harness-e2e-cli/node_modules
-
 integration/ng-update-v13/.angular
 integration/ng-update-v13/node_modules
-
 integration/ng-add/.angular
 integration/ng-add/node_modules
-
 integration/ng-add-standalone/.angular
 integration/ng-add-standalone/node_modules
-
 integration/yarn-pnp-compat/.angular
 integration/yarn-pnp-compat/.yarn/cache
 integration/yarn-pnp-compat/.yarn/unplugged
 integration/yarn-pnp-compat/.yarn/install-state.gz
 integration/yarn-pnp-compat/node_modules
-
 integration/node_modules
+
 src/cdk-experimental/node_modules
 src/cdk/node_modules
 src/components-examples/node_modules
@@ -32,3 +29,5 @@ src/material-moment-adapter/node_modules
 src/material/node_modules
 src/universal-app/node_modules
 src/youtube-player/node_modules
+
+tools/bazel/legacy-rnjs/node_modules

@@ -98,7 +98,7 @@ def ts_project(
         visibility = None,
         # TODO: Switch this flag as we no longer depend on `interop_deps`.
         ignore_strict_deps = True,
-        enable_runtime_rnjs_interop = True,
+        enable_runtime_rnjs_interop = False,
         rule_impl = _ts_project,
         **kwargs):
     # Pull in the `rules_nodejs` variants of dependencies we know are "hybrid". This
