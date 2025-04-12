@@ -1,16 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '../../dialog';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatTestDialogOpener, MatTestDialogOpenerModule} from './dialog-opener';
+import {MatTestDialogOpener} from './dialog-opener';
 
 describe('MatTestDialogOpener', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTestDialogOpenerModule, NoopAnimationsModule, ExampleComponent],
-    });
-  }));
-
   it('should open a dialog when created', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatTestDialogOpener.withComponent(ExampleComponent));
     flush();

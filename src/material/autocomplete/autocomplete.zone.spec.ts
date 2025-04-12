@@ -13,9 +13,8 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
-import {MatOption} from '../core';
+import {MATERIAL_ANIMATIONS, MatOption} from '../core';
 import {MatFormField, MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatAutocomplete} from './autocomplete';
@@ -32,10 +31,13 @@ describe('MatAutocomplete Zone.js integration', () => {
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,
-        NoopAnimationsModule,
         OverlayModule,
       ],
-      providers: [provideZoneChangeDetection(), ...providers],
+      providers: [
+        provideZoneChangeDetection(),
+        ...providers,
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
       declarations: [component],
     });
 

@@ -11,7 +11,6 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable} from 'rxjs';
 import {
   MAT_TABS_CONFIG,
@@ -21,13 +20,13 @@ import {
   MatTabHeaderPosition,
   MatTabsModule,
 } from './index';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatTabsModule,
-        NoopAnimationsModule,
         SimpleTabsTestApp,
         SimpleDynamicTabsTestApp,
         BindedTabsTestApp,
@@ -43,6 +42,7 @@ describe('MatTabGroup', () => {
         NestedTabGroupWithLabel,
         TabsWithClassesTestApp,
       ],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
   }));
 

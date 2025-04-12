@@ -4,12 +4,11 @@ import {ComponentHarness, HarnessLoader, HarnessPredicate, parallel} from '@angu
 import {createFakeEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatError, MatFormField, MatHint, MatLabel, MatPrefix, MatSuffix} from '../../form-field';
 import {MatAutocomplete, MatAutocompleteTrigger} from '../../autocomplete';
 import {MatInput} from '../../input';
 import {MatSelect} from '../../select';
-import {MatNativeDateModule, MatOption} from '../../core';
+import {MATERIAL_ANIMATIONS, MatNativeDateModule, MatOption} from '../../core';
 import {
   MatDateRangeInput,
   MatDateRangePicker,
@@ -31,12 +30,8 @@ describe('MatFormFieldHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        MatNativeDateModule,
-        FormFieldHarnessTest,
-        MatDatepickerModule,
-      ],
+      imports: [MatNativeDateModule, FormFieldHarnessTest, MatDatepickerModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     fixture = TestBed.createComponent(FormFieldHarnessTest);

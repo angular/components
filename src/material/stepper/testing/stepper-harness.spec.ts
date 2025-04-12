@@ -5,7 +5,6 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatStepperModule} from '../../stepper';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatStepperHarness} from './stepper-harness';
 import {MatStepperNextHarness, MatStepperPreviousHarness} from './stepper-button-harnesses';
 import {StepperOrientation} from './step-harness-filters';
@@ -16,7 +15,6 @@ describe('MatStepperHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule, StepperHarnessTest],
       providers: [
         {
           provide: STEPPER_GLOBAL_OPTIONS,

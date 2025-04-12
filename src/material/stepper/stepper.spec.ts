@@ -45,11 +45,10 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {MatRipple, ThemePalette} from '../core';
+import {MATERIAL_ANIMATIONS, MatRipple, ThemePalette} from '../core';
 import {MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable, Subject, merge} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {MatStepHeader, MatStepperModule} from './index';
@@ -1828,8 +1827,12 @@ function createComponent<T>(
   declarations = [component],
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
-    imports: [MatStepperModule, NoopAnimationsModule, ReactiveFormsModule, ...imports],
-    providers: [{provide: Directionality, useFactory: () => dir}, ...providers],
+    imports: [MatStepperModule, ReactiveFormsModule, ...imports],
+    providers: [
+      {provide: Directionality, useFactory: () => dir},
+      {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ...providers,
+    ],
     declarations,
   });
 

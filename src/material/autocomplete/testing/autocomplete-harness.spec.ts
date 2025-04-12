@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {MatAutocompleteModule} from '../module';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatAutocompleteHarness} from './autocomplete-harness';
 
@@ -11,10 +10,6 @@ describe('MatAutocompleteHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatAutocompleteModule, AutocompleteHarnessTest],
-    });
-
     fixture = TestBed.createComponent(AutocompleteHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

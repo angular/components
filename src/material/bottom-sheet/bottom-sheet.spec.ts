@@ -30,12 +30,12 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 import {MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, MatBottomSheet} from './bottom-sheet';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetModule} from './bottom-sheet-module';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatBottomSheet', () => {
   let bottomSheet: MatBottomSheet;
@@ -50,7 +50,6 @@ describe('MatBottomSheet', () => {
     TestBed.configureTestingModule({
       imports: [
         MatBottomSheetModule,
-        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         ComponentWithTemplateRef,
         ContentElementDialog,
@@ -60,7 +59,10 @@ describe('MatBottomSheet', () => {
         BottomSheetWithInjectedData,
         ShadowDomComponent,
       ],
-      providers: [{provide: Location, useClass: SpyLocation}],
+      providers: [
+        {provide: Location, useClass: SpyLocation},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
 
     bottomSheet = TestBed.inject(MatBottomSheet);
@@ -877,7 +879,8 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule, ComponentThatProvidesMatBottomSheet],
+      imports: [MatBottomSheetModule, ComponentThatProvidesMatBottomSheet],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     parentBottomSheet = TestBed.inject(MatBottomSheet);
@@ -957,13 +960,11 @@ describe('MatBottomSheet with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [
-        MatBottomSheetModule,
-        NoopAnimationsModule,
-        ComponentWithChildViewContainer,
-        DirectiveWithViewContainer,
+      imports: [MatBottomSheetModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      providers: [
+        {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      providers: [{provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
 
     bottomSheet = TestBed.inject(MatBottomSheet);

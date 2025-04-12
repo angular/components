@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSidenavModule} from '../../sidenav';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawerContainerHarness} from './drawer-container-harness';
 import {MatDrawerContentHarness} from './drawer-content-harness';
 import {MatDrawerHarness} from './drawer-harness';
@@ -17,10 +16,6 @@ describe('MatSidenavHarness', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [MatSidenavModule, NoopAnimationsModule, DrawerHarnessTest],
-      });
-
       fixture = TestBed.createComponent(DrawerHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);
@@ -109,10 +104,6 @@ describe('MatSidenavHarness', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [MatSidenavModule, NoopAnimationsModule, SidenavHarnessTest],
-      });
-
       fixture = TestBed.createComponent(SidenavHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);

@@ -1,7 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
 describe('MatSidenav', () => {
@@ -9,7 +8,6 @@ describe('MatSidenav', () => {
     TestBed.configureTestingModule({
       imports: [
         MatSidenavModule,
-        NoopAnimationsModule,
         SidenavWithFixedPosition,
         IndirectDescendantSidenav,
         NestedSidenavContainers,

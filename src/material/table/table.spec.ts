@@ -12,7 +12,6 @@ import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSort, MatSortHeader, MatSortModule} from '../sort';
 import {MatPaginator, MatPaginatorModule} from '../paginator';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MatTable', () => {
   beforeEach(waitForAsync(() => {
@@ -21,7 +20,6 @@ describe('MatTable', () => {
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        NoopAnimationsModule,
         MatTableApp,
         MatTableWithWhenRowApp,
         ArrayDataSourceMatTableApp,

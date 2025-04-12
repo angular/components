@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTooltipModule} from '../module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTooltipHarness} from './tooltip-harness';
 
 describe('MatTooltipHarness', () => {
@@ -16,10 +15,6 @@ describe('MatTooltipHarness', () => {
   });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTooltipModule, NoopAnimationsModule, TooltipHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TooltipHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

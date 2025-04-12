@@ -9,10 +9,10 @@ import {
   inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarModule} from './module';
 import {MatSnackBar} from './snack-bar';
 import {MatSnackBarConfig} from './snack-bar-config';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatSnackBar Zone.js integration', () => {
   let snackBar: MatSnackBar;
@@ -20,13 +20,11 @@ describe('MatSnackBar Zone.js integration', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatSnackBarModule,
-        NoopAnimationsModule,
-        ComponentWithChildViewContainer,
-        DirectiveWithViewContainer,
+      imports: [MatSnackBarModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      providers: [
+        provideZoneChangeDetection(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      providers: [provideZoneChangeDetection()],
     });
 
     snackBar = TestBed.inject(MatSnackBar);

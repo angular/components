@@ -15,9 +15,8 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
-import {ErrorStateMatcher, MatNativeDateModule} from '../core';
+import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../core';
 import {MatFormField, MatFormFieldModule, MatLabel} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatDateRangeInput} from './date-range-input';
@@ -33,12 +32,14 @@ describe('MatDateRangeInput', () => {
         MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
-        NoopAnimationsModule,
         ReactiveFormsModule,
         MatNativeDateModule,
         component,
       ],
-      providers,
+      providers: [
+        ...providers,
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
 
     return TestBed.createComponent(component);

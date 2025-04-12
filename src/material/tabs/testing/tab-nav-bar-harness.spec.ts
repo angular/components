@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTabsModule} from '../module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabNavBarHarness} from './tab-nav-bar-harness';
 
 describe('MatTabNavBarHarness', () => {
@@ -11,10 +10,6 @@ describe('MatTabNavBarHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, NoopAnimationsModule, TabNavBarHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TabNavBarHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

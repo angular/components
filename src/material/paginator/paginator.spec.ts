@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing'
 import {ThemePalette} from '../core';
 import {MatSelect} from '../select';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatPaginator,
   MatPaginatorIntl,
@@ -15,7 +14,7 @@ import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './pagin
 describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatPaginatorModule, NoopAnimationsModule],
+      imports: [MatPaginatorModule],
       providers: [MatPaginatorIntl, ...providers],
       declarations: [type],
     });

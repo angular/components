@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {DateAdapter, provideNativeDateAdapter} from '../../core';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTimepicker, MatTimepickerInput, MatTimepickerToggle} from '../../timepicker';
 import {MatTimepickerToggleHarness} from './timepicker-toggle-harness';
 
@@ -12,11 +11,7 @@ describe('MatTimepickerToggleHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideNativeDateAdapter()],
-      imports: [NoopAnimationsModule, TimepickerHarnessTest],
-    });
-
+    TestBed.configureTestingModule({providers: [provideNativeDateAdapter()]});
     const adapter = TestBed.inject(DateAdapter);
     adapter.setLocale('en-US');
     fixture = TestBed.createComponent(TimepickerHarnessTest);

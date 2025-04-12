@@ -12,7 +12,6 @@ import {
   inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_SNACK_BAR_DATA,
   MatSnackBar,
@@ -22,6 +21,7 @@ import {
   SimpleSnackBar,
 } from './index';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from './snack-bar';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatSnackBar', () => {
   let snackBar: MatSnackBar;
@@ -41,11 +41,11 @@ describe('MatSnackBar', () => {
     TestBed.configureTestingModule({
       imports: [
         MatSnackBarModule,
-        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         BurritosNotification,
         DirectiveWithViewContainer,
       ],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     snackBar = TestBed.inject(MatSnackBar);
@@ -515,12 +515,10 @@ describe('MatSnackBar', () => {
   it('should be able to override the default config', fakeAsync(() => {
     viewContainerFixture.destroy();
 
-    TestBed.resetTestingModule()
-      .overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
-        deps: [],
-        useFactory: () => ({panelClass: 'custom-class'}),
-      })
-      .configureTestingModule({imports: [MatSnackBarModule, NoopAnimationsModule]});
+    TestBed.resetTestingModule().overrideProvider(MAT_SNACK_BAR_DEFAULT_OPTIONS, {
+      deps: [],
+      useFactory: () => ({panelClass: 'custom-class'}),
+    });
 
     snackBar = TestBed.inject(MatSnackBar);
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
@@ -674,12 +672,7 @@ describe('MatSnackBar with parent MatSnackBar', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatSnackBarModule,
-        NoopAnimationsModule,
-        ComponentThatProvidesMatSnackBar,
-        DirectiveWithViewContainer,
-      ],
+      imports: [MatSnackBarModule, ComponentThatProvidesMatSnackBar, DirectiveWithViewContainer],
     });
 
     parentSnackBar = TestBed.inject(MatSnackBar);
@@ -749,12 +742,7 @@ describe('MatSnackBar Positioning', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatSnackBarModule,
-        NoopAnimationsModule,
-        ComponentWithChildViewContainer,
-        DirectiveWithViewContainer,
-      ],
+      imports: [MatSnackBarModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
     });
 
     snackBar = TestBed.inject(MatSnackBar);

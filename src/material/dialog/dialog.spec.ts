@@ -38,7 +38,6 @@ import {
   tick,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {CLOSE_ANIMATION_DURATION, OPEN_ANIMATION_DURATION} from './dialog-container';
 import {
@@ -53,6 +52,7 @@ import {
   MatDialogState,
   MatDialogTitle,
 } from './index';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatDialog', () => {
   let dialog: MatDialog;
@@ -68,7 +68,6 @@ describe('MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         ComponentWithTemplateRef,
         PizzaMsg,
@@ -80,6 +79,7 @@ describe('MatDialog', () => {
       ],
       providers: [
         {provide: Location, useClass: SpyLocation},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         {
           provide: ScrollDispatcher,
           useFactory: () => ({
@@ -1871,7 +1871,7 @@ describe('MatDialog with a parent MatDialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, NoopAnimationsModule, ComponentThatProvidesMatDialog],
+      imports: [MatDialogModule, ComponentThatProvidesMatDialog],
       providers: [
         {
           provide: OverlayContainer,
@@ -1881,6 +1881,7 @@ describe('MatDialog with a parent MatDialog', () => {
           },
         },
         {provide: Location, useClass: SpyLocation},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
     });
 
@@ -1979,13 +1980,11 @@ describe('MatDialog with default options', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        NoopAnimationsModule,
-        ComponentWithChildViewContainer,
-        DirectiveWithViewContainer,
+      imports: [MatDialogModule, ComponentWithChildViewContainer, DirectiveWithViewContainer],
+      providers: [
+        {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      providers: [{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: defaultConfig}],
     });
 
     dialog = TestBed.inject(MatDialog);

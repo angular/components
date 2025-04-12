@@ -1,10 +1,9 @@
 import {Component, ElementRef, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '../core';
+import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../core';
 import {MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerModule} from './datepicker-module';
 
@@ -17,10 +16,10 @@ describe('MatDatepickerActions', () => {
         MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
-        NoopAnimationsModule,
         ReactiveFormsModule,
         MatNativeDateModule,
       ],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     return TestBed.createComponent(component);

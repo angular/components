@@ -18,16 +18,16 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDrawer, MatDrawerContainer, MatSidenavModule} from './index';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatDrawer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
       imports: [
         MatSidenavModule,
         A11yModule,
-        NoopAnimationsModule,
         BasicTestApp,
         DrawerContainerNoDrawerTestApp,
         DrawerSetToOpenedFalse,
@@ -894,7 +894,6 @@ describe('MatDrawerContainer', () => {
       imports: [
         MatSidenavModule,
         A11yModule,
-        NoopAnimationsModule,
         DrawerContainerTwoDrawerTestApp,
         DrawerDelayed,
         DrawerSetToOpenedTrue,
