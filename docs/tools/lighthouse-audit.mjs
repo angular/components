@@ -3,7 +3,7 @@
 
 import lighthouse from 'lighthouse';
 import logger from 'lighthouse-logger';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import fs from 'fs';
 import path from 'path';
 import {write as lighthouseWrite, OutputMode} from 'lighthouse/cli/printer.js';
