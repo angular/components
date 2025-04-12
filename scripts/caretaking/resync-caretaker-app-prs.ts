@@ -1,5 +1,4 @@
 import {Octokit} from '@octokit/rest';
-import * as fetch from 'node-fetch';
 
 const apiBaseUrl = 'https://test-jperrott.firebaseio.com/pulls';
 const github = new Octokit({auth: process.env['TOKEN']});
@@ -22,7 +21,7 @@ async function resync() {
 
   let syncedCount = 0;
   for (let pull of pulls) {
-    await fetch.default(`${apiBaseUrl}/${pull.base.repo.full_name}/${pull.number}/github.json`, {
+    await fetch(`${apiBaseUrl}/${pull.base.repo.full_name}/${pull.number}/github.json`, {
       method: 'patch',
       body: JSON.stringify({
         'branch': pull.base.ref,
