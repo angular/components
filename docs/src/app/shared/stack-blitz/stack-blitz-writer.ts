@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, NgZone, inject} from '@angular/core';
 import type {ExampleData} from '@angular/components-examples';
-import {Observable, firstValueFrom} from 'rxjs';
+import {Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
 
 import stackblitz from '@stackblitz/sdk';
@@ -170,7 +170,7 @@ export class StackBlitzWriter {
       this._fileCache.set(fileUrl, stream);
     }
 
-    return firstValueFrom(stream);
+    return stream.toPromise();
   }
 
   private _replaceExamplePlaceholders(

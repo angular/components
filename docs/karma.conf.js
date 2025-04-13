@@ -3,14 +3,10 @@
 const {customLaunchers} = require('./karma-custom-launchers');
 const path = require('path');
 
-// TODO(bazel): drop non-bazel
-const isBazel = !!process.env['TEST_TARGET'];
-if (isBazel) {
-  // Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
-  // runfiles tree so that subprocesses spawned in a different working directory can still find them.
-  process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
-  process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
-}
+// Resolve CHROME_BIN and CHROMEDRIVER_BIN from relative paths to absolute paths within the
+// runfiles tree so that subprocesses spawned in a different working directory can still find them.
+process.env.CHROME_BIN = path.resolve(process.env.CHROME_BIN);
+process.env.CHROMEDRIVER_BIN = path.resolve(process.env.CHROMEDRIVER_BIN);
 
 module.exports = function (config) {
   config.set({
@@ -37,12 +33,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: [isBazel ? 'ChromeHeadlessNoSandbox' : 'ChromeHeadlessLocal'],
+    browsers: ['ChromeHeadlessNoSandbox'],
     singleRun: false,
     customLaunchers: customLaunchers,
   });
-
-  if (process.env['TRAVIS']) {
-    config.browsers = [isBazel ? 'ChromeHeadlessNoSandbox' : 'ChromeHeadlessCI', 'FirefoxHeadless'];
-  }
 };
