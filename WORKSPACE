@@ -139,8 +139,7 @@ npm_translate_lock(
     },
     data = [
         "//:package.json",
-        "//:patches/@angular__compiler-cli.patch",
-        "//:patches/@angular__core.patch",
+        "//:patches/@angular-devkit__architect-cli.patch",
         "//:pnpm-workspace.yaml",
         "//integration:package.json",
         "//src/cdk:package.json",
@@ -159,15 +158,42 @@ npm_translate_lock(
     ],
     npmrc = "//:.npmrc",
     package_visibility = {
-        "@angular/cdk": ["//integration:__subpackages__"],
-        "@angular/cdk-experimental": ["//integration:__subpackages__"],
-        "@angular/material": ["//integration:__subpackages__"],
-        "@angular/material-experimental": ["//integration:__subpackages__"],
-        "@angular/google-maps": ["//integration:__subpackages__"],
-        "@angular/youtube-player": ["//integration:__subpackages__"],
-        "@angular/material-moment-adapter": ["//integration:__subpackages__"],
-        "@angular/material-date-fns-adapter": ["//integration:__subpackages__"],
-        "@angular/material-luxon-adapter": ["//integration:__subpackages__"],
+        "@angular/cdk": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/cdk-experimental": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-experimental": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/google-maps": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/youtube-player": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-moment-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-date-fns-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
+        "@angular/material-luxon-adapter": [
+            "//integration:__subpackages__",
+            "//docs:__subpackages__",
+        ],
     },
     pnpm_lock = "//:pnpm-lock.yaml",
     pnpm_version = "9.14.1",

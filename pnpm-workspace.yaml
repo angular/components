@@ -1,5 +1,6 @@
 packages:
   - .
+  - docs
   - integration
   - src/cdk
   - src/cdk-experimental
@@ -14,3 +15,26 @@ packages:
   - src/material-moment-adapter
   - src/universal-app
   - src/youtube-player
+
+catalog:
+  '@angular-devkit/architect-cli': 0.1902.7
+  '@angular-devkit/architect': 0.1902.7
+  '@angular-devkit/build-angular': 19.2.7
+  '@angular-devkit/core': 19.2.7
+  '@angular-devkit/schematics': 19.2.7
+  '@angular/animations': 19.2.6
+  '@angular/build': 19.2.7
+  '@angular/cli': 19.2.7
+  '@angular/common': 19.2.6
+  '@angular/compiler-cli': 19.2.6
+  '@angular/compiler': 19.2.6
+  '@angular/core': 19.2.6
+  '@angular/ssr': 19.2.7
+  '@angular/forms': 19.2.6
+  '@angular/localize': 19.2.6
+  '@angular/platform-browser': 19.2.6
+  '@angular/platform-browser-dynamic': 19.2.6
+  '@angular/platform-server': 19.2.6
+  '@angular/router': 19.2.6
+  '@schematics/angular': 19.2.7
+  'rxjs': ^6.6.7

@@ -118,15 +118,28 @@ setTimeout(async function () {
   console.log('Origin:', origin);
 
   try {
-    for (const {url, minScores} of MIN_SCORES_PER_PAGE) {
-      await new Promise((resolve, reject) => {
-        const cp = sh.exec(`${lighthouseAuditCmd} ${origin}/${url} ${formatScores(minScores)}`, {
-          async: true,
-        });
+    const tests = [];
+    const batchSize = 5;
 
-        cp.on('error', reject);
-        cp.on('exit', err => (err ? reject : resolve)(err));
-      });
+    // Execute in batches to speed up this test.
+    for (let i = 0; i < MIN_SCORES_PER_PAGE.length; i += batchSize) {
+      const pages = MIN_SCORES_PER_PAGE.slice(i, i + batchSize);
+
+      for (const {url, minScores} of pages) {
+        tests.push(
+          new Promise((resolve, reject) => {
+            const cp = sh.exec(
+              `${lighthouseAuditCmd} ${origin}/${url} ${formatScores(minScores)}`,
+              {async: true},
+            );
+
+            cp.on('error', reject);
+            cp.on('exit', err => (err ? reject : resolve)(err));
+          }),
+        );
+      }
+
+      await Promise.all(tests);
     }
 
     process.exit(0);

@@ -1,7 +1,10 @@
 load("//tools:defaults.bzl", "ng_package", "ng_web_test_suite")
 load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
 
 ng_project(
     name = "material-moment-adapter",
@@ -45,6 +48,9 @@ ng_package(
     package_name = "@angular/material-moment-adapter",
     srcs = ["package.json"],
     nested_packages = ["//src/material-moment-adapter/schematics:npm_package"],
+    package_deps = [
+        ":node_modules/@angular/material",
+    ],
     tags = ["release-package"],
     visibility = [
         "//:__pkg__",

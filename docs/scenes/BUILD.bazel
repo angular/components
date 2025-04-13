@@ -1,4 +1,4 @@
-load("//:defs.bzl", "ng_app")
+load("//docs:defs.bzl", "ng_app")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -6,8 +6,8 @@ package(default_visibility = ["//visibility:public"])
 ng_app(
     name = "scenes",
     deps = [
-        "//:node_modules/@angular/components-examples",
-        "//:node_modules/@stackblitz/sdk",
-        "//:node_modules/moment",
+        "//docs:node_modules/@angular/components-examples",
+        "//docs:node_modules/@stackblitz/sdk",
+        "//docs:node_modules/moment",
     ],
 )

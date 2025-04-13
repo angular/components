@@ -1,8 +1,8 @@
-diff --git bin/architect.js bin/architect.js
-index 27b74b3..96b16a4 100644
---- bin/architect.js
-+++ bin/architect.js
-@@ -198,8 +198,6 @@ async function main(args) {
+diff --git a/bin/architect.js b/bin/architect.js
+index 604bd506793d3e437247c0eadc8c67a300b1d5dd..fca7969e7f38990d8c1c49432c3f8b3b8a32e0af 100755
+--- a/bin/architect.js
++++ b/bin/architect.js
+@@ -208,8 +208,6 @@ async function main(args) {
      // Show usage of deprecated options
      registry.useXDeprecatedProvider((msg) => logger.warn(msg));
      const { workspace } = await core_1.workspaces.readWorkspace(configFilePath, core_1.workspaces.createWorkspaceHost(new node_2.NodeJsSyncHost()));

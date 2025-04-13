@@ -19,6 +19,7 @@
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true,
+    "skipLibCheck": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
