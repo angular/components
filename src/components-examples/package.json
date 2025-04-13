@@ -34,6 +34,13 @@
     "@angular/material-luxon-adapter": "0.0.0-PLACEHOLDER",
     "@angular/material-date-fns-adapter": "0.0.0-PLACEHOLDER"
   },
+  "devDependencies": {
+    "@angular/cdk": "workspace:*",
+    "@angular/cdk-experimental": "workspace:*",
+    "@angular/material": "workspace:*",
+    "@angular/material-experimental": "workspace:*",
+    "@angular/material-moment-adapter": "workspace:*"
+  },
   "dependencies": {
     "tslib": "^2.3.0"
   }
