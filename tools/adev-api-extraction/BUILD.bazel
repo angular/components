@@ -1,0 +1,72 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", "esbuild_esm_bundle")
+load("//tools:defaults2.bzl", "ts_project")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+
+package(default_visibility = ["//visibility:public"])
+
+esbuild_esm_bundle(
+    name = "bin",
+    entry_point = ":index.ts",
+    external = [
+        "@angular/compiler-cli",
+        "typescript",
+    ],
+    output = "bin.mjs",
+    platform = "node",
+    target = "es2022",
+    deps = [
+        ":extract_api_to_json_lib",
+        "@npm//@angular/compiler-cli",
+        "@npm//typescript",
+    ],
+)
+
+ts_project(
+    name = "extract_api_to_json_lib",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
+    ),
+    resolve_json_module = True,
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@angular/compiler",
+        "//:node_modules/@angular/compiler-cli",
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/node",
+        "//:node_modules/typescript",
+    ],
+)
+
+# Action binary for the api_gen bazel rule.
+nodejs_binary(
+    name = "extract_api_to_json",
+    data = [
+        ":bin",
+        "@npm//@angular/compiler",
+        "@npm//@angular/compiler-cli",
+        "@npm//typescript",
+    ],
+    entry_point = "bin.mjs",
+    # Note: Using the linker here as we need it for ESM. The linker is not
+    # super reliably when running concurrently on Windows- but we have existing
+    # actions using the linker. An alternative would be to:
+    #   - bundle the Angular compiler into a CommonJS bundle
+    #   - use the patched resolution- but also patch the ESM imports (similar to how FW does it).
+    visibility = ["//visibility:public"],
+)
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["**/*"]),
+)
+
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = ["//:node_modules/@types/node"],
+)
