@@ -57,10 +57,9 @@ import {
   Validators,
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ErrorStateMatcher, MatOption, MatOptionSelectionChange} from '../core';
+import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
 import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
 import {MAT_SELECT_CONFIG, MatSelectConfig} from '../select';
 import {MatSelectModule} from './index';
@@ -93,10 +92,10 @@ describe('MatSelect', () => {
         MatSelectModule,
         ReactiveFormsModule,
         FormsModule,
-        NoopAnimationsModule,
         OverlayModule,
       ],
       providers: [
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         {provide: Directionality, useFactory: () => (dir = {value: 'ltr', change: EMPTY})},
         {
           provide: ScrollDispatcher,
@@ -2940,13 +2939,7 @@ describe('MatSelect', () => {
     it('should default to global floating label type', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [
-          MatFormFieldModule,
-          MatSelectModule,
-          ReactiveFormsModule,
-          FormsModule,
-          NoopAnimationsModule,
-        ],
+        imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule, FormsModule],
         providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}],
         declarations: [FloatLabelSelect],
       });
@@ -3330,7 +3323,7 @@ describe('MatSelect', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
+        imports: [MatSelectModule, ReactiveFormsModule, FormsModule],
         declarations: [SelectInsideFormGroup],
         providers: [{provide: ErrorStateMatcher, useValue: errorStateMatcher}],
       });

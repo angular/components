@@ -35,10 +35,9 @@ import {
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {MatOption, MatOptionSelectionChange} from '../core';
+import {MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
 import {MatFormField, MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
 import {
@@ -65,10 +64,12 @@ describe('MatAutocomplete', () => {
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,
-        NoopAnimationsModule,
         OverlayModule,
       ],
-      providers,
+      providers: [
+        ...providers,
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
       declarations: [component],
     });
 

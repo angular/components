@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatMenuModule} from '../module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatMenuHarness} from './menu-harness';
 
 describe('MatMenuHarness', () => {
@@ -12,10 +11,6 @@ describe('MatMenuHarness', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [MatMenuModule, NoopAnimationsModule, MenuHarnessTest],
-      });
-
       fixture = TestBed.createComponent(MenuHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);
@@ -92,10 +87,6 @@ describe('MatMenuHarness', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [MatMenuModule, NoopAnimationsModule, NestedMenuHarnessTest],
-      });
-
       fixture = TestBed.createComponent(NestedMenuHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);

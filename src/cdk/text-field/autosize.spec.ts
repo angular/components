@@ -9,7 +9,6 @@ import {
 } from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchFakeEvent} from '../testing/private';
 import {CdkTextareaAutosize} from './autosize';
 import {TextFieldModule} from './text-field-module';
@@ -24,7 +23,6 @@ describe('CdkTextareaAutosize', () => {
       imports: [
         FormsModule,
         TextFieldModule,
-        NoopAnimationsModule,
         AutosizeTextAreaWithContent,
         AutosizeTextAreaWithValue,
         AutosizeTextareaWithNgModel,

@@ -13,8 +13,8 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MatDialog, MatDialogModule, MatDialogRef} from '../dialog';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatDialog', () => {
   let dialog: MatDialog;
@@ -28,7 +28,6 @@ describe('MatDialog', () => {
     TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
-        NoopAnimationsModule,
         ComponentWithChildViewContainer,
         PizzaMsg,
         DirectiveWithViewContainer,
@@ -36,6 +35,7 @@ describe('MatDialog', () => {
       providers: [
         provideZoneChangeDetection(),
         {provide: Location, useClass: SpyLocation},
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         {
           provide: ScrollDispatcher,
           useFactory: () => ({

@@ -3,9 +3,8 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {DateAdapter, MatNativeDateModule} from '../../core';
+import {DateAdapter, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
 import {MatDatepickerModule} from '../../datepicker';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendarHarness} from './calendar-harness';
 import {MatDatepickerInputHarness} from './datepicker-input-harness';
 
@@ -15,15 +14,9 @@ describe('MatDatepickerInputHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        MatNativeDateModule,
-        MatDatepickerModule,
-        FormsModule,
-        DatepickerInputHarnessTest,
-      ],
+      imports: [MatNativeDateModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
-
     fixture = TestBed.createComponent(DatepickerInputHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

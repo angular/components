@@ -2,9 +2,8 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '../../core';
+import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
 import {MatDatepickerModule} from '../../datepicker';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendarHarness} from './calendar-harness';
 import {MatDatepickerToggleHarness} from './datepicker-toggle-harness';
 
@@ -14,14 +13,9 @@ describe('MatDatepickerToggleHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        MatNativeDateModule,
-        MatDatepickerModule,
-        DatepickerToggleHarnessTest,
-      ],
+      imports: [MatNativeDateModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
-
     fixture = TestBed.createComponent(DatepickerToggleHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

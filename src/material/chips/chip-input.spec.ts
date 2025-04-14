@@ -10,7 +10,6 @@ import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {MatFormFieldModule} from '../form-field';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
@@ -20,6 +19,7 @@ import {
   MatChipsDefaultOptions,
   MatChipsModule,
 } from './index';
+import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatChipInput', () => {
   let fixture: ComponentFixture<TestChipInput>;
@@ -31,7 +31,7 @@ describe('MatChipInput', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [PlatformModule, MatChipsModule, MatFormFieldModule, NoopAnimationsModule],
+      imports: [PlatformModule, MatChipsModule, MatFormFieldModule],
       providers: [
         {
           provide: Directionality,
@@ -42,6 +42,7 @@ describe('MatChipInput', () => {
             };
           },
         },
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
       declarations: [TestChipInput],
     });
@@ -216,13 +217,14 @@ describe('MatChipInput', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatChipsModule, MatFormFieldModule, PlatformModule, NoopAnimationsModule],
+        imports: [MatChipsModule, MatFormFieldModule, PlatformModule],
         declarations: [TestChipInput],
         providers: [
           {
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
             useValue: {separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions,
           },
+          {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         ],
       });
 

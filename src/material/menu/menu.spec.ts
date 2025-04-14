@@ -29,7 +29,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {MatRipple} from '../core';
+import {MATERIAL_ANIMATIONS, MatRipple} from '../core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
@@ -63,10 +63,14 @@ describe('MatMenu', () => {
     component: Type<T>,
     providers: Provider[] = [],
     declarations: any[] = [],
+    imports: Type<unknown>[] = [],
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      providers,
-      imports: [MatMenuModule, NoopAnimationsModule],
+      providers: [
+        ...providers,
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
+      imports: [MatMenuModule, ...imports],
       declarations: [component, ...declarations],
     });
 
@@ -262,7 +266,9 @@ describe('MatMenu', () => {
   }));
 
   it('should move focus to another item if the active item is destroyed', fakeAsync(() => {
-    const fixture = createComponent(MenuWithRepeatedItems, [], [FakeIcon]);
+    // TODO(crisbeto): figure out why NoopAnimationsModule is necessary
+    // here and our token isn't enough. Likely indicates an issue.
+    const fixture = createComponent(MenuWithRepeatedItems, [], [FakeIcon], [NoopAnimationsModule]);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -2582,12 +2588,13 @@ describe('MatMenu', () => {
 describe('MatMenu default overrides', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule, NoopAnimationsModule],
+      imports: [MatMenuModule],
       providers: [
         {
           provide: MAT_MENU_DEFAULT_OPTIONS,
           useValue: {overlapTrigger: true, xPosition: 'before', yPosition: 'above'},
         },
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
       declarations: [SimpleMenu, FakeIcon],
     });

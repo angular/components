@@ -4,9 +4,9 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MATERIAL_ANIMATIONS} from '../../core';
 import {MatFormFieldModule} from '../../form-field';
 import {MatSelectModule} from '../module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSelectHarness} from './select-harness';
 
 describe('MatSelectHarness', () => {
@@ -16,15 +16,8 @@ describe('MatSelectHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatSelectModule,
-        MatFormFieldModule,
-        NoopAnimationsModule,
-        ReactiveFormsModule,
-        SelectHarnessTest,
-      ],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
-
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

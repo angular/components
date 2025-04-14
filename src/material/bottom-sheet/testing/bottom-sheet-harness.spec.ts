@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatBottomSheet, MatBottomSheetConfig, MatBottomSheetModule} from '../../bottom-sheet';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatBottomSheetHarness} from './bottom-sheet-harness';
 
 describe('MatBottomSheetHarness', () => {
@@ -11,10 +10,6 @@ describe('MatBottomSheetHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule, BottomSheetHarnessTest],
-    });
-
     fixture = TestBed.createComponent(BottomSheetHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

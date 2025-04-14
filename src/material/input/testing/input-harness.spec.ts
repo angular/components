@@ -5,7 +5,6 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '../module';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputHarness} from './input-harness';
 
 describe('MatInputHarness', () => {
@@ -13,10 +12,6 @@ describe('MatInputHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatInputModule, FormsModule, InputHarnessTest],
-    });
-
     fixture = TestBed.createComponent(InputHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

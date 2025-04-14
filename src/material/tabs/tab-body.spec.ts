@@ -13,7 +13,6 @@ import {
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatRippleModule} from '../core';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 
@@ -24,14 +23,7 @@ describe('MatTabBody', () => {
   beforeEach(waitForAsync(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
-      imports: [
-        PortalModule,
-        MatRippleModule,
-        NoopAnimationsModule,
-        MatTabBody,
-        MatTabBodyPortal,
-        SimpleTabBodyApp,
-      ],
+      imports: [PortalModule, MatRippleModule, MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
       providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
     });
   }));
@@ -130,13 +122,7 @@ describe('MatTabBody', () => {
 
   it('should mark the tab body content as a scrollable container', () => {
     TestBed.resetTestingModule().configureTestingModule({
-      imports: [
-        PortalModule,
-        MatRippleModule,
-        NoopAnimationsModule,
-        ScrollingModule,
-        SimpleTabBodyApp,
-      ],
+      imports: [PortalModule, MatRippleModule, ScrollingModule, SimpleTabBodyApp],
     });
 
     const fixture = TestBed.createComponent(SimpleTabBodyApp);

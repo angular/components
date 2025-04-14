@@ -1,9 +1,8 @@
 import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
-import {DateAdapter, provideNativeDateAdapter} from '../../core';
+import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../../core';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTimepicker, MatTimepickerInput} from '../../timepicker';
 import {MatTimepickerHarness} from './timepicker-harness';
 import {MatTimepickerInputHarness} from './timepicker-input-harness';
@@ -14,10 +13,11 @@ describe('MatTimepickerHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideNativeDateAdapter()],
-      imports: [NoopAnimationsModule, TimepickerHarnessTest],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
     });
-
     const adapter = TestBed.inject(DateAdapter);
     adapter.setLocale('en-US');
     fixture = TestBed.createComponent(TimepickerHarnessTest);

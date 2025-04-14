@@ -9,8 +9,8 @@ import {
   MatSnackBarConfig,
   MatSnackBarLabel,
 } from '../../snack-bar';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSnackBarHarness} from './snack-bar-harness';
+import {MATERIAL_ANIMATIONS} from '../../core';
 
 describe('MatSnackBarHarness', () => {
   let fixture: ComponentFixture<SnackbarHarnessTest>;
@@ -18,7 +18,7 @@ describe('MatSnackBarHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     fixture = TestBed.createComponent(SnackbarHarnessTest);

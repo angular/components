@@ -30,11 +30,10 @@ import {
   ReactiveFormsModule,
   Validator,
 } from '@angular/forms';
-import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '../core';
+import {MAT_DATE_LOCALE, MATERIAL_ANIMATIONS, MatNativeDateModule, NativeDateModule} from '../core';
 import {MatFormField, MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {DEC, JAN, JUL, JUN, SEP} from '../testing';
 import {MatDatepicker} from './datepicker';
@@ -64,11 +63,13 @@ describe('MatDatepicker', () => {
         MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
-        NoopAnimationsModule,
         ReactiveFormsModule,
         ...imports,
       ],
-      providers,
+      providers: [
+        ...providers,
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ],
       declarations: [component, ...declarations],
     });
 

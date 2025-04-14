@@ -29,7 +29,6 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {
   MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -351,7 +350,7 @@ describe('MatTooltip', () => {
 
     it('should be able to disable tooltip interactivity', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
+        imports: [MatTooltipModule, OverlayModule],
         declarations: [TooltipDemoWithoutPositionBinding],
         providers: [
           {

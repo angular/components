@@ -2,7 +2,6 @@ import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatGridListModule} from '../../grid-list';
 import {MatGridListHarness} from './grid-list-harness';
 import {MatGridTileHarness} from './grid-tile-harness';
@@ -12,10 +11,6 @@ describe('MatGridListHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatGridListModule, NoopAnimationsModule, GridListHarnessTest],
-    });
-
     fixture = TestBed.createComponent(GridListHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);

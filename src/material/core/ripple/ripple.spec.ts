@@ -7,9 +7,8 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Provider, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRipple,
@@ -18,6 +17,7 @@ import {
   RippleGlobalOptions,
   RippleState,
 } from './index';
+import {MATERIAL_ANIMATIONS} from '../animation/animation';
 
 describe('MatRipple', () => {
   let fixture: ComponentFixture<any>;
@@ -494,14 +494,17 @@ describe('MatRipple', () => {
     function createTestComponent(
       rippleConfig: RippleGlobalOptions,
       testComponent: any = BasicRippleContainer,
-      extraImports: any[] = [],
+      extraProviders: Provider[] = [],
     ) {
       // Reset the previously configured testing module to be able set new providers.
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatRippleModule, ...extraImports, testComponent],
-        providers: [{provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig}],
+        imports: [MatRippleModule, testComponent],
+        providers: [
+          {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: rippleConfig},
+          ...extraProviders,
+        ],
       });
 
       fixture = TestBed.createComponent(testComponent);
@@ -585,10 +588,12 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
 
-    it('should not mutate the global options when NoopAnimationsModule is present', () => {
+    it('should not mutate the global options when animations are disabled', () => {
       const options: RippleGlobalOptions = {};
 
-      createTestComponent(options, RippleContainerWithoutBindings, [NoopAnimationsModule]);
+      createTestComponent(options, RippleContainerWithoutBindings, [
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+      ]);
 
       expect(options.animation).toBeFalsy();
     });
@@ -600,7 +605,8 @@ describe('MatRipple', () => {
     beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [NoopAnimationsModule, MatRippleModule, BasicRippleContainer],
+        imports: [MatRippleModule, BasicRippleContainer],
+        providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
       });
 
       fixture = TestBed.createComponent(BasicRippleContainer);

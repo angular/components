@@ -9,8 +9,8 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '../../dialog';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDialogHarness} from './dialog-harness';
+import {MATERIAL_ANIMATIONS} from '../../core';
 
 describe('MatDialogHarness', () => {
   let fixture: ComponentFixture<DialogHarnessTest>;
@@ -18,7 +18,7 @@ describe('MatDialogHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     fixture = TestBed.createComponent(DialogHarnessTest);

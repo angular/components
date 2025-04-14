@@ -1,7 +1,6 @@
 import {Component, inject, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DateAdapter, provideNativeDateAdapter} from '../core';
+import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
   dispatchFakeEvent,
@@ -1274,8 +1273,11 @@ describe('MatTimepicker', () => {
 
   function configureTestingModule(additionalProviders: Provider[] = []): void {
     TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-      providers: [provideNativeDateAdapter(), ...additionalProviders],
+      providers: [
+        provideNativeDateAdapter(),
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+        ...additionalProviders,
+      ],
     });
     adapter = TestBed.inject(DateAdapter);
     adapter.setLocale('en-US');

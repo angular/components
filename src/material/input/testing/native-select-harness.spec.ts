@@ -4,7 +4,6 @@ import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '../module';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatNativeSelectHarness} from './native-select-harness';
 
 describe('MatNativeSelectHarness', () => {
@@ -12,10 +11,6 @@ describe('MatNativeSelectHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatInputModule, FormsModule, SelectHarnessTest],
-    });
-
     fixture = TestBed.createComponent(SelectHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
