@@ -133,6 +133,7 @@
     "parse5": "^7.1.2",
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.4",
+    "prettier": "^3.5.3",
     "protractor": "^7.0.0",
     "reflect-metadata": "^0.1.13",
     "requirejs": "^2.3.6",
