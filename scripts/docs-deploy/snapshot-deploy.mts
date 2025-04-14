@@ -1,20 +1,13 @@
 import {DeploymentInfo, deployToSite, isProductionDeployment} from './deploy-to-site.mjs';
 
-import {buildDocsContentPackage} from '../build-docs-content.mjs';
-import {cloneDocsRepositoryForMajor} from './clone-docs-repo.mjs';
-import {installBuiltPackagesInRepo} from './install-built-packages.mjs';
-import {installDepsAndBuildDocsSite} from './utils.mjs';
-import {performDefaultSnapshotBuild} from '../build-packages-dist.mjs';
 import {runMonitoringTests} from './monitoring/index.mjs';
+import {buildDocsSite, projectDir} from './utils.mjs';
 
 export type DeploymentConfig = {
   /**
    * Optional hook running before building the docs-app for deployment.
-   *
-   * Runs after the docs-content and local packages have been installed
-   * in the docs repository.
    */
-  prebuild?: (docsRepoDir: string) => Promise<void> | void;
+  prebuild?: (workspaceDir: string) => Promise<void> | void;
 };
 
 /**
@@ -48,32 +41,17 @@ export async function buildAndDeployWithSnapshots(
     console.log(`  - ${target.projectId}:${target.site.firebaseSiteId} | ${target.site.remoteUrl}`);
   }
 
-  // Clone the docs repo.
-  const docsRepoDir = await cloneDocsRepositoryForMajor(major);
-
-  // Build the release output.
-  const builtPackages = performDefaultSnapshotBuild();
-
-  // Build the docs-content NPM package (not included in the default snapshot build)
-  builtPackages.push(buildDocsContentPackage());
-
-  // Install the release output, together with the examples into the
-  // the docs repository.
-  await installBuiltPackagesInRepo(docsRepoDir, builtPackages);
-
   // Run the prebuild hook if available.
-  await options.prebuild?.(docsRepoDir);
+  await options.prebuild?.(projectDir);
 
-  // Install yarn dependencies and build the production output.
-  // Lockfile freezing needs to be disabled since we updated the `package.json`
-  // to point to our locally-built package artifacts.
-  await installDepsAndBuildDocsSite(docsRepoDir, {frozenLockfile: false});
+  // Build the production output (we always use HEAD packages).
+  await buildDocsSite();
 
   // Deploy all targets to Firebase.
   for (const target of targets) {
-    await deployToSite(docsRepoDir, firebaseServiceKey, target);
+    await deployToSite(projectDir, firebaseServiceKey, target);
   }
 
   // Run post monitoring tests for production deployments.
-  await runMonitoringTests(docsRepoDir, targets.filter(isProductionDeployment));
+  await runMonitoringTests(targets.filter(isProductionDeployment));
 }

@@ -18,7 +18,7 @@ interface VersionEntry {
 type VersionList = VersionEntry[];
 
 /** Path to the `versions.json` file in the docs-app. */
-const relativeVersionFilePath = 'src/assets/versions.json';
+const relativeVersionFilePath = 'docs/src/assets/versions.json';
 
 /**
  * List of hard-coded major versions which have an archived docs-site,
@@ -33,8 +33,8 @@ const hardcodedOldMajorsWithoutLtsTag = [5, 6, 7, 8, 9, 10, 11];
  * Updates the versions list file in the specified docs repo to reflect
  * the current active release trains and archived LTS versions.
  */
-export async function updateVersionsFile(docsRepoDir: string, active: ActiveReleaseTrains) {
-  const versionFilePath = path.join(docsRepoDir, relativeVersionFilePath);
+export async function updateVersionsFile(workspaceDir: string, active: ActiveReleaseTrains) {
+  const versionFilePath = path.join(workspaceDir, relativeVersionFilePath);
   const {release} = await getConfig([assertValidReleaseConfig]);
   const ltsBranches = await fetchLongTermSupportBranchesFromNpm(release);
 
