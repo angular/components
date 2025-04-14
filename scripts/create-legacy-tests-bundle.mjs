@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import {createEsbuildAngularOptimizePlugin} from '@angular/build-tooling/shared-scripts/angular-optimization/esbuild-plugin.mjs';
+import babel from '@babel/core';
 import child_process from 'child_process';
 import esbuild from 'esbuild';
 import fs from 'fs';
 import glob from 'glob';
 import module from 'module';
+import path from 'path';
 import {dirname, join, relative} from 'path';
 import * as sass from 'sass';
 import url from 'url';
@@ -48,15 +49,10 @@ async function main() {
   await compileProjectWithNgtsc();
 
   const specEntryPointFile = await createEntryPointSpecFile();
-  const esbuildLinkerPlugin = await createEsbuildAngularOptimizePlugin({
-    enableLinker: {
-      filterPaths: /fesm2022/,
-      linkerOptions: {
-        linkerJitMode: true,
-      },
-    },
-  });
-  const esbuildResolvePlugin = await createResolveEsbuildPlugin();
+
+  // Copy tsconfig so that ESBuild can leverage its path mappings.
+  const esbuildTsconfig = path.join(legacyOutputDir, 'tsconfig-esbuild.json');
+  await fs.promises.cp(path.join(packagesDir, 'bazel-tsconfig-build.json'), esbuildTsconfig);
 
   const result = await esbuild.build({
     bundle: true,
@@ -66,7 +62,9 @@ async function main() {
     target: 'es2015',
     outfile: outFile,
     treeShaking: false,
-    plugins: [esbuildResolvePlugin, esbuildLinkerPlugin],
+    logLevel: 'info',
+    tsconfig: esbuildTsconfig,
+    plugins: [createLinkerEsbuildPlugin()],
     stdin: {contents: specEntryPointFile, resolveDir: projectDir},
   });
 
@@ -168,46 +166,24 @@ function renderSassFile(inputFile) {
   });
 }
 
-/**
- * Creates an ESBuild plugin which maps `@angular/<..>` module names to their
- * locally-built output (for the packages which are built as part of this repo).
- */
-async function createResolveEsbuildPlugin() {
+/** Plugin that links node modules using the Angular compiler CLI. */
+function createLinkerEsbuildPlugin() {
   return {
-    name: 'ng-resolve-esbuild',
+    name: 'ng-link-esbuild',
     setup: build => {
-      build.onResolve({filter: /@angular\//}, async args => {
-        const pkgName = args.path.slice('@angular/'.length);
-        let resolvedPath = join(legacyOutputDir, pkgName);
-        let stats = await statGraceful(resolvedPath);
+      build.onLoad({filter: /fesm2022/}, async args => {
+        const filePath = args.path;
+        const content = await fs.promises.readFile(filePath, 'utf8');
+        const {code} = await babel.transformAsync(content, {
+          filename: filePath,
+          compact: false,
+          plugins: [['@angular/compiler-cli/linker/babel', {linkerJitMode: true}]],
+        });
 
-        // If the resolved path points to a directory, resolve the contained `index.js` file
-        if (stats && stats.isDirectory()) {
-          resolvedPath = join(resolvedPath, 'index.js');
-          stats = await statGraceful(resolvedPath);
-        }
-        // If the resolved path does not exist, check with an explicit JS extension.
-        else if (stats === null) {
-          resolvedPath += '.js';
-          stats = await statGraceful(resolvedPath);
-        }
-
-        return stats !== null ? {path: resolvedPath} : undefined;
+        return {contents: code};
       });
     },
   };
-}
-
-/**
- * Retrieves the `fs.Stats` results for the given path gracefully.
- * If the file does not exist, returns `null`.
- */
-async function statGraceful(path) {
-  try {
-    return await fs.promises.stat(path);
-  } catch {
-    return null;
-  }
 }
 
 main().catch(e => {
