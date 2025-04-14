@@ -22,7 +22,7 @@ run --nolegacy_external_runfiles
 test --nolegacy_external_runfiles
 
 # This flag is needed to so that the bazel cache is not invalidated
-# when running bazel via `yarn bazel`.
+# when running bazel via `pnpm bazel`.
 build --incompatible_strict_action_env
 
 # Do not build runfile forests by default. If an execution strategy relies on runfile
