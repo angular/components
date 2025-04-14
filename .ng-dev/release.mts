@@ -23,7 +23,6 @@ export const releasePackages = [
 
 /** Configuration for the `ng-dev release` command. */
 export const release: ReleaseConfig = {
-  rulesJsInteropMode: true,
   releaseNotes: {
     useReleaseTitle: true,
     groupOrder: releasePackages,
