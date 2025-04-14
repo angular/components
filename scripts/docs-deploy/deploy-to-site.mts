@@ -40,7 +40,7 @@ export async function deployToSite(
   info: DeploymentInfo,
 ) {
   const firebase = async (...cmd: string[]) =>
-    $`yarn --cwd ${projectPath} firebase --non-interactive ${cmd}`;
+    $`pnpm --dir=${projectPath}/docs firebase --non-interactive ${cmd}`;
 
   // Setup GCP service key for the docs-app deployment.
   // https://firebase.google.com/docs/admin/setup.
