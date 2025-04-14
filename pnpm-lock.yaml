@@ -159,8 +159,8 @@ importers:
         specifier: 'catalog:'
         version: 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#1fa3a08b6a111de820da092799319ed47c058849
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849(encoding@0.1.13)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a9e4627eb45742d81068087a5b57a676104fe053
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)
       '@angular/platform-browser-dynamic':
         specifier: 'catalog:'
         version: 19.2.6(psc6mh36hoeifmdbkjuftrz4du)
@@ -470,7 +470,7 @@ importers:
         version: 0.1902.7(patch_hash=6yxjg7dhfbtwlh5fb7noiwxhxa)(chokidar@4.0.1)
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+        version: 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1)
       '@angular-eslint/builder':
         specifier: 19.3.0
         version: 19.3.0(chokidar@4.0.1)(eslint@8.57.1)(typescript@5.8.2)
@@ -992,9 +992,9 @@ packages:
       '@angular/compiler': 19.2.6
       '@angular/compiler-cli': 19.2.6
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849}
-    version: 0.0.0-fa81be50e9a2ea7c9b68819ac5f69f4cc5ff7605
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053}
+    version: 0.0.0-35131fc980ce5451fb89d8c033efc827ad39ca68
     hasBin: true
 
   '@angular/platform-browser-dynamic@19.2.6':
@@ -1980,8 +1980,8 @@ packages:
     resolution: {integrity: sha512-4Qrry4vIToth5mqduVslltWVsyb7DR8OhnkBA3F7XiE0jgQsiuUfwp/RB2F559aXnRbwcfmjvP4jSuEaGcjrCQ==}
     engines: {node: '>=12.0.0'}
 
-  '@google-cloud/spanner@7.17.1':
-    resolution: {integrity: sha512-+dTR6wvb2jANVxNe2bF048QCOVRGbesHe8Tm0OFRhvCgv3ot31JFGPyRKukD7y3jAFSBqyX0bIUV9GVNk4oRPQ==}
+  '@google-cloud/spanner@7.19.1':
+    resolution: {integrity: sha512-a7WlM4T3g5hslSBxQpsCxlH2IGgeVVEnDP5/v51kNlKv/W5PhBMqaHanodkUjbjegsQNlWAkqLClzIwtldfSXg==}
     engines: {node: '>=14.0.0'}
 
   '@grpc/grpc-js@1.12.5':
@@ -2460,12 +2460,12 @@ packages:
   '@octokit/core@3.6.0':
     resolution: {integrity: sha512-7RKRKuA4xTjMhY+eG3jthb3hlZCsOwg3rztWh75Xc+ShDWOfDDATWbeZpAHBNRpm4Tv9WgBMOy1zEJYXG6NJ7Q==}
 
-  '@octokit/core@6.1.3':
-    resolution: {integrity: sha512-z+j7DixNnfpdToYsOutStDgeRzJSMnbj8T1C/oQjB6Aa+kRfNjs/Fn7W6c8bmlt6mfy3FkgeKBRnDjxQow5dow==}
+  '@octokit/core@6.1.5':
+    resolution: {integrity: sha512-vvmsN0r7rguA+FySiCsbaTTobSftpIDIpPW81trAmsv9TGxg3YCujAxRYp/Uy8xmDgYCzzgulG62H7KYUFmeIg==}
     engines: {node: '>= 18'}
 
-  '@octokit/endpoint@10.1.2':
-    resolution: {integrity: sha512-XybpFv9Ms4hX5OCHMZqyODYqGTZ3H6K6Vva+M9LR7ib/xr1y1ZnlChYv9H680y77Vd/i/k+thXApeRASBQkzhA==}
+  '@octokit/endpoint@10.1.4':
+    resolution: {integrity: sha512-OlYOlZIsfEVZm5HCSR8aSg02T2lbUWOsCQoPKfTXJwDzcHQBrVBGdGXb89dv2Kw2ToZaRtudp8O3ZIYoaOjKlA==}
     engines: {node: '>= 18'}
 
   '@octokit/endpoint@6.0.12':
@@ -2474,8 +2474,8 @@ packages:
   '@octokit/graphql@4.8.0':
     resolution: {integrity: sha512-0gv+qLSBLKF0z8TKaSKTsS39scVKF9dbMxJpj3U0vC7wjNWFuIpL/z76Qe2fiuCbDRcJSavkXsVtMS6/dtQQsg==}
 
-  '@octokit/graphql@8.1.2':
-    resolution: {integrity: sha512-bdlj/CJVjpaz06NBpfHhp4kGJaRZfz7AzC+6EwUImRtrwIw8dIgJ63Xg0OzV9pRn3rIzrt5c2sa++BL0JJ8GLw==}
+  '@octokit/graphql@8.2.2':
+    resolution: {integrity: sha512-Yi8hcoqsrXGdt0yObxbebHXFOiUA+2v3n53epuOg1QUgOB6c4XzvisBNVXJSl8RYA5KrDuSL2yq9Qmqe5N0ryA==}
     engines: {node: '>= 18'}
 
   '@octokit/openapi-types@12.11.0':
@@ -2484,8 +2484,14 @@ packages:
   '@octokit/openapi-types@23.0.1':
     resolution: {integrity: sha512-izFjMJ1sir0jn0ldEKhZ7xegCTj/ObmEDlEfpFrx4k/JyZSMRHbO3/rBwgE7f3m2DHt+RrNGIVw4wSmwnm3t/g==}
 
-  '@octokit/plugin-paginate-rest@11.4.0':
-    resolution: {integrity: sha512-ttpGck5AYWkwMkMazNCZMqxKqIq1fJBNxBfsFwwfyYKTf914jKkLF0POMS3YkPBwp5g1c2Y4L79gDz01GhSr1g==}
+  '@octokit/openapi-types@24.2.0':
+    resolution: {integrity: sha512-9sIH3nSUttelJSXUrmGzl7QUBFul0/mB8HRYl3fOlgHbIWG+WnYDXU3v/2zMtAvuzZ/ed00Ei6on975FhBfzrg==}
+
+  '@octokit/openapi-types@25.0.0':
+    resolution: {integrity: sha512-FZvktFu7HfOIJf2BScLKIEYjDsw6RKc7rBJCdvCTfKsVnx2GEB/Nbzjr29DUdb7vQhlzS/j8qDzdditP0OC6aw==}
+
+  '@octokit/plugin-paginate-rest@11.6.0':
+    resolution: {integrity: sha512-n5KPteiF7pWKgBIBJSk8qzoZWcUkza2O6A0za97pMGVrGfPdltxrfmfF5GucHYvHGZD8BdaZmmHGz5cX/3gdpw==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@octokit/core': '>=6'
@@ -2520,26 +2526,32 @@ packages:
   '@octokit/request-error@2.1.0':
     resolution: {integrity: sha512-1VIvgXxs9WHSjicsRwq8PlR2LR2x6DwsJAaFgzdi0JfJoGSO8mYI/cHJQ+9FbN21aa+DrgNLnwObmyeSC8Rmpg==}
 
-  '@octokit/request-error@6.1.6':
-    resolution: {integrity: sha512-pqnVKYo/at0NuOjinrgcQYpEbv4snvP3bKMRqHaD9kIsk9u1LCpb2smHZi8/qJfgeNqLo5hNW4Z7FezNdEo0xg==}
+  '@octokit/request-error@6.1.8':
+    resolution: {integrity: sha512-WEi/R0Jmq+IJKydWlKDmryPcmdYSVjL3ekaiEL1L9eo1sUnqMJ+grqmC9cjk7CA7+b2/T397tO5d8YLOH3qYpQ==}
     engines: {node: '>= 18'}
 
   '@octokit/request@5.6.3':
     resolution: {integrity: sha512-bFJl0I1KVc9jYTe9tdGGpAMPy32dLBXXo1dS/YwSCTL/2nd9XeHsY616RE3HPXDVk+a+dBuzyz5YdlXwcDTr2A==}
 
-  '@octokit/request@9.2.0':
-    resolution: {integrity: sha512-kXLfcxhC4ozCnAXy2ff+cSxpcF0A1UqxjvYMqNuPIeOAzJbVWQ+dy5G2fTylofB/gTbObT8O6JORab+5XtA1Kw==}
+  '@octokit/request@9.2.3':
+    resolution: {integrity: sha512-Ma+pZU8PXLOEYzsWf0cn/gY+ME57Wq8f49WTXA8FMHp2Ps9djKw//xYJ1je8Hm0pR2lU9FUGeJRWOtxq6olt4w==}
     engines: {node: '>= 18'}
 
   '@octokit/rest@18.3.5':
     resolution: {integrity: sha512-ZPeRms3WhWxQBEvoIh0zzf8xdU2FX0Capa7+lTca8YHmRsO3QNJzf1H3PcuKKsfgp91/xVDRtX91sTe1kexlbw==}
 
-  '@octokit/rest@21.1.0':
-    resolution: {integrity: sha512-93iLxcKDJboUpmnUyeJ6cRIi7z7cqTZT1K7kRK4LobGxwTwpsa+2tQQbRQNGy7IFDEAmrtkf4F4wBj3D5rVlJQ==}
+  '@octokit/rest@21.1.1':
+    resolution: {integrity: sha512-sTQV7va0IUVZcntzy1q3QqPm/r8rWtDCqpRAmb8eXXnKkjoQEtFe3Nt5GTVsHft+R6jJoHeSiVLcgcvhtue/rg==}
     engines: {node: '>= 18'}
+
+  '@octokit/types@13.10.0':
+    resolution: {integrity: sha512-ifLaO34EbbPj0Xgro4G5lP5asESjwHracYJvVaPIyXMuiuXLlhic3S47cBdTb+jfODkTE5YtGCLt3Ay3+J97sA==}
 
   '@octokit/types@13.7.0':
     resolution: {integrity: sha512-BXfRP+3P3IN6fd4uF3SniaHKOO4UXWBfkdR3vA8mIvaoO/wLjGN5qivUtW0QRitBHHMcfC41SLhNVYIZZE+wkA==}
+
+  '@octokit/types@14.0.0':
+    resolution: {integrity: sha512-VVmZP0lEhbo2O1pdq63gZFiGCKkm8PPp8AUOijlwPO6hojEVjspA0MWKP7E4hbvGxzFKNqKr6p0IYtOH/Wf/zA==}
 
   '@octokit/types@6.41.0':
     resolution: {integrity: sha512-eJ2jbzjdijiL3B4PrSQaSjuF2sPEQPVCPzBvTHJD9Nz+9dw2SGH4K4xeQJ77YfTq5bRQ+bD8wT11JbeDPmxmGg==}
@@ -3216,8 +3228,9 @@ packages:
   '@types/stack-trace@0.0.33':
     resolution: {integrity: sha512-O7in6531Bbvlb2KEsJ0dq0CHZvc3iWSR5ZYMtvGgnHA56VgriAN/AU2LorfmcvAl2xc9N5fbCTRyMRRl8nd74g==}
 
-  '@types/supports-color@8.1.3':
-    resolution: {integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==}
+  '@types/supports-color@10.0.0':
+    resolution: {integrity: sha512-Kpp/hhA8/pcxqBBKmOCIgvwCOJAI5y6TWTHhhqnB6KmuYlKtixKgN/Z7VzhShdgONe2jYREnTQbsrb3E0nt/OQ==}
+    deprecated: This is a stub types definition. supports-color provides its own type definitions, so you do not need this installed.
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -9663,6 +9676,11 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
+  yaml@2.7.1:
+    resolution: {integrity: sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
   yargs-parser@18.1.3:
     resolution: {integrity: sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==}
     engines: {node: '>=6'}
@@ -9746,13 +9764,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)':
+  '@angular-devkit/build-angular@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
       '@angular-devkit/build-webpack': 0.1902.7(chokidar@4.0.1)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.1)))(webpack@5.98.0(esbuild@0.25.1))
       '@angular-devkit/core': 19.2.7(chokidar@4.0.1)
-      '@angular/build': 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
+      '@angular/build': 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.1)
       '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
       '@babel/core': 7.26.10
       '@babel/generator': 7.26.10
@@ -9765,7 +9783,7 @@ snapshots:
       '@babel/runtime': 7.26.10
       '@discoveryjs/json-ext': 0.6.3
       '@ngtools/webpack': 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(typescript@5.8.2)(webpack@5.98.0(esbuild@0.25.1))
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0))
+      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))
       ansi-colors: 4.1.3
       autoprefixer: 10.4.20(postcss@8.5.2)
       babel-loader: 9.2.1(@babel/core@7.26.10)(webpack@5.98.0(esbuild@0.25.1))
@@ -10010,7 +10028,7 @@ snapshots:
       - '@angular/compiler-cli'
       - supports-color
 
-  '@angular/build@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)':
+  '@angular/build@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(chokidar@4.0.1)(jiti@1.21.6)(karma@6.4.4)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.1)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
@@ -10021,7 +10039,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.26.10)
       '@inquirer/confirm': 5.1.6(@types/node@22.14.1)
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0))
+      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))
       beasties: 0.3.2
       browserslist: 4.24.4
       esbuild: 0.25.1
@@ -10039,7 +10057,7 @@ snapshots:
       semver: 7.7.1
       source-map-support: 0.5.21
       typescript: 5.8.2
-      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
+      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1)
       watchpack: 2.4.2
     optionalDependencies:
       '@angular/localize': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)
@@ -10251,19 +10269,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849(encoding@0.1.13)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)':
     dependencies:
-      '@google-cloud/spanner': 7.17.1(encoding@0.1.13)(supports-color@10.0.0)
-      '@octokit/rest': 21.1.0
+      '@google-cloud/spanner': 7.19.1(encoding@0.1.13)(supports-color@10.0.0)
+      '@octokit/rest': 21.1.1
       '@types/semver': 7.5.8
-      '@types/supports-color': 8.1.3
+      '@types/supports-color': 10.0.0
       '@yarnpkg/lockfile': 1.1.0
       chalk: 5.3.0
       semver: 7.7.1
       supports-color: 10.0.0
       typed-graphqlify: 3.1.6
       typescript: 5.8.2
-      yaml: 2.7.0
+      which: 5.0.0
+      yaml: 2.7.1
     transitivePeerDependencies:
       - encoding
 
@@ -11349,7 +11368,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google-cloud/spanner@7.17.1(encoding@0.1.13)(supports-color@10.0.0)':
+  '@google-cloud/spanner@7.19.1(encoding@0.1.13)(supports-color@10.0.0)':
     dependencies:
       '@google-cloud/common': 5.0.2(encoding@0.1.13)(supports-color@10.0.0)
       '@google-cloud/precise-date': 4.0.0
@@ -11850,19 +11869,19 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/core@6.1.3':
+  '@octokit/core@6.1.5':
     dependencies:
       '@octokit/auth-token': 5.1.1
-      '@octokit/graphql': 8.1.2
-      '@octokit/request': 9.2.0
-      '@octokit/request-error': 6.1.6
-      '@octokit/types': 13.7.0
+      '@octokit/graphql': 8.2.2
+      '@octokit/request': 9.2.3
+      '@octokit/request-error': 6.1.8
+      '@octokit/types': 14.0.0
       before-after-hook: 3.0.2
       universal-user-agent: 7.0.2
 
-  '@octokit/endpoint@10.1.2':
+  '@octokit/endpoint@10.1.4':
     dependencies:
-      '@octokit/types': 13.7.0
+      '@octokit/types': 14.0.0
       universal-user-agent: 7.0.2
 
   '@octokit/endpoint@6.0.12':
@@ -11879,20 +11898,24 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/graphql@8.1.2':
+  '@octokit/graphql@8.2.2':
     dependencies:
-      '@octokit/request': 9.2.0
-      '@octokit/types': 13.7.0
+      '@octokit/request': 9.2.3
+      '@octokit/types': 14.0.0
       universal-user-agent: 7.0.2
 
   '@octokit/openapi-types@12.11.0': {}
 
   '@octokit/openapi-types@23.0.1': {}
 
-  '@octokit/plugin-paginate-rest@11.4.0(@octokit/core@6.1.3)':
+  '@octokit/openapi-types@24.2.0': {}
+
+  '@octokit/openapi-types@25.0.0': {}
+
+  '@octokit/plugin-paginate-rest@11.6.0(@octokit/core@6.1.5)':
     dependencies:
-      '@octokit/core': 6.1.3
-      '@octokit/types': 13.7.0
+      '@octokit/core': 6.1.5
+      '@octokit/types': 13.10.0
 
   '@octokit/plugin-paginate-rest@2.21.3(@octokit/core@3.6.0(encoding@0.1.13))':
     dependencies:
@@ -11903,13 +11926,13 @@ snapshots:
     dependencies:
       '@octokit/core': 3.6.0(encoding@0.1.13)
 
-  '@octokit/plugin-request-log@5.3.1(@octokit/core@6.1.3)':
+  '@octokit/plugin-request-log@5.3.1(@octokit/core@6.1.5)':
     dependencies:
-      '@octokit/core': 6.1.3
+      '@octokit/core': 6.1.5
 
-  '@octokit/plugin-rest-endpoint-methods@13.3.0(@octokit/core@6.1.3)':
+  '@octokit/plugin-rest-endpoint-methods@13.3.0(@octokit/core@6.1.5)':
     dependencies:
-      '@octokit/core': 6.1.3
+      '@octokit/core': 6.1.5
       '@octokit/types': 13.7.0
 
   '@octokit/plugin-rest-endpoint-methods@4.13.5(@octokit/core@3.6.0(encoding@0.1.13))':
@@ -11924,9 +11947,9 @@ snapshots:
       deprecation: 2.3.1
       once: 1.4.0
 
-  '@octokit/request-error@6.1.6':
+  '@octokit/request-error@6.1.8':
     dependencies:
-      '@octokit/types': 13.7.0
+      '@octokit/types': 14.0.0
 
   '@octokit/request@5.6.3(encoding@0.1.13)':
     dependencies:
@@ -11939,11 +11962,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/request@9.2.0':
+  '@octokit/request@9.2.3':
     dependencies:
-      '@octokit/endpoint': 10.1.2
-      '@octokit/request-error': 6.1.6
-      '@octokit/types': 13.7.0
+      '@octokit/endpoint': 10.1.4
+      '@octokit/request-error': 6.1.8
+      '@octokit/types': 14.0.0
       fast-content-type-parse: 2.0.1
       universal-user-agent: 7.0.2
 
@@ -11956,16 +11979,24 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/rest@21.1.0':
+  '@octokit/rest@21.1.1':
     dependencies:
-      '@octokit/core': 6.1.3
-      '@octokit/plugin-paginate-rest': 11.4.0(@octokit/core@6.1.3)
-      '@octokit/plugin-request-log': 5.3.1(@octokit/core@6.1.3)
-      '@octokit/plugin-rest-endpoint-methods': 13.3.0(@octokit/core@6.1.3)
+      '@octokit/core': 6.1.5
+      '@octokit/plugin-paginate-rest': 11.6.0(@octokit/core@6.1.5)
+      '@octokit/plugin-request-log': 5.3.1(@octokit/core@6.1.5)
+      '@octokit/plugin-rest-endpoint-methods': 13.3.0(@octokit/core@6.1.5)
+
+  '@octokit/types@13.10.0':
+    dependencies:
+      '@octokit/openapi-types': 24.2.0
 
   '@octokit/types@13.7.0':
     dependencies:
       '@octokit/openapi-types': 23.0.1
+
+  '@octokit/types@14.0.0':
+    dependencies:
+      '@octokit/openapi-types': 25.0.0
 
   '@octokit/types@6.41.0':
     dependencies:
@@ -12600,7 +12631,9 @@ snapshots:
 
   '@types/stack-trace@0.0.33': {}
 
-  '@types/supports-color@8.1.3': {}
+  '@types/supports-color@10.0.0':
+    dependencies:
+      supports-color: 10.0.0
 
   '@types/tough-cookie@4.0.5': {}
 
@@ -12759,9 +12792,9 @@ snapshots:
     dependencies:
       vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2)
 
-  '@vitejs/plugin-basic-ssl@1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0))':
+  '@vitejs/plugin-basic-ssl@1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))':
     dependencies:
-      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0)
+      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1)
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -20211,7 +20244,7 @@ snapshots:
       terser: 5.39.0
       yaml: 1.10.2
 
-  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0):
+  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1):
     dependencies:
       esbuild: 0.25.1
       postcss: 8.5.3
@@ -20223,7 +20256,7 @@ snapshots:
       less: 4.2.2
       sass: 1.85.0
       terser: 5.39.0
-      yaml: 2.7.0
+      yaml: 2.7.1
 
   vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2):
     dependencies:
@@ -20239,7 +20272,7 @@ snapshots:
       terser: 5.39.0
       yaml: 1.10.2
 
-  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.0):
+  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1):
     dependencies:
       esbuild: 0.25.1
       postcss: 8.5.3
@@ -20251,7 +20284,7 @@ snapshots:
       less: 4.2.2
       sass: 1.86.3
       terser: 5.39.0
-      yaml: 2.7.0
+      yaml: 2.7.1
 
   vm2@3.9.19:
     dependencies:
@@ -20574,6 +20607,8 @@ snapshots:
   yaml@1.10.2: {}
 
   yaml@2.7.0: {}
+
+  yaml@2.7.1: {}
 
   yargs-parser@18.1.3:
     dependencies:
