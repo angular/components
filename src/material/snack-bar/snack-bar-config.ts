@@ -24,7 +24,7 @@ export type MatSnackBarVerticalPosition = 'top' | 'bottom';
  */
 export class MatSnackBarConfig<D = any> {
   /** The politeness level for the MatAriaLiveAnnouncer announcement. */
-  politeness?: AriaLivePoliteness = 'assertive';
+  politeness?: AriaLivePoliteness = 'polite';
 
   /**
    * Message to be announced by the LiveAnnouncer. When opening a snackbar without a custom
