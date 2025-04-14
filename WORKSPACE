@@ -12,16 +12,6 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.4/rules_nodejs-5.8.4.tar.gz"],
 )
 
-# Add sass rules
-http_archive(
-    name = "io_bazel_rules_sass",
-    sha256 = "1c89680ca9cbbba33cb9cd462eb328e5782e14c0aa1286b794c71b5333385407",
-    strip_prefix = "rules_sass-1.68.0",
-    urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.68.0.zip",
-    ],
-)
-
 # Add skylib which contains common Bazel utilities. Note that `rules_nodejs` would also
 # bring in the skylib repository but with an older version that does not support shorthands
 # for declaring Bazel build setting flags.
@@ -108,11 +98,6 @@ yarn_install(
     yarn = "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
     yarn_lock = "//tools/bazel/legacy-rnjs:yarn.lock",
 )
-
-# Setup the Sass rule repositories.
-load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
-
-sass_repositories()
 
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
@@ -295,3 +280,13 @@ rules_browsers_setup_1()
 load("@rules_browsers//setup:step_2.bzl", "rules_browsers_setup_2")
 
 rules_browsers_setup_2()
+
+git_repository(
+    name = "rules_sass",
+    commit = "a32f75ce6fa0c5370bd3f29a5306478c681ad124",
+    remote = "https://github.com/devversion/rules_sass.git",
+)
+
+load("@rules_sass//src/toolchain:repositories.bzl", "setup_rules_sass")
+
+setup_rules_sass()
