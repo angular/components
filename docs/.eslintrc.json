@@ -10,8 +10,7 @@
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:@stylistic/disable-legacy"
       ],
@@ -80,11 +79,10 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {
-        "@angular-eslint/template/accessibility-alt-text": "error",
-        "@angular-eslint/template/accessibility-elements-content": "error",
-        "@angular-eslint/template/accessibility-label-for": "error",
-        "@angular-eslint/template/accessibility-table-scope": "error",
-        "@angular-eslint/template/accessibility-valid-aria": "error",
+        "@angular-eslint/template/alt-text": "error",
+        "@angular-eslint/template/elements-content": "error",
+        "@angular-eslint/template/table-scope": "error",
+        "@angular-eslint/template/valid-aria": "error",
         "@angular-eslint/template/click-events-have-key-events": "error",
         "@angular-eslint/template/mouse-events-have-key-events": "error",
         "@angular-eslint/template/no-autofocus": "error",
