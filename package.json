@@ -172,6 +172,11 @@
           "clonedeep": "*"
         }
       },
+      "grpc-gcp": {
+        "dependencies": {
+          "protobufjs": "7.4.0"
+        }
+      },
       "@angular-eslint/eslint-plugin-template@19.3.0": {
         "peerDependencies": {
           "@typescript-eslint/parser": "*",
