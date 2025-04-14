@@ -25,11 +25,11 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Building dev-app
         run: |
-          yarn -s bazel build //src/dev-app:web_package --symlink_prefix=dist/
+          pnpm -s bazel build //src/dev-app:web_package --symlink_prefix=dist/
           cp -R dist/bin/src/dev-app/web_package dist/dev-app-web-pkg
 
       - name: Configure Firebase deploy target

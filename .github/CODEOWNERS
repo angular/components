@@ -4,7 +4,6 @@
 /.husky/                            @angular/dev-infra-components
 /.ng-dev/                           @angular/dev-infra-components
 /.vscode/                           @angular/dev-infra-components
-/.yarn/                             @angular/dev-infra-components
 /scripts/                           @angular/dev-infra-components
 /test/                              @angular/dev-infra-components
 

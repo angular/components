@@ -13,7 +13,7 @@ module.exports = {
   goldenFile: '../goldens/ts-circular-deps.json',
   glob: `./**/*.ts`,
   // Command that will be displayed if the golden needs to be updated.
-  approveCommand: 'yarn ts-circular-deps:approve',
+  approveCommand: 'pnpm ts-circular-deps:approve',
   ignoreTypeOnlyChecks: true,
   resolveModule,
 };

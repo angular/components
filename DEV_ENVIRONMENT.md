@@ -1,30 +1,25 @@
 # Developer guide: getting your environment set up
-1. Make sure you have both `node` and `yarn` installed.
+1. Make sure you have both `node` and `pnpm@9` installed.
    We recommend using `nvm` to manage your node versions.
-2. angular/components uses Bazel which requires certain Bash and UNIX tools.
-   - On Windows: Follow the [instructions](https://bazel.build/install/windows#installing-compilers-and-language-runtimes)
-   to install [`MSYS2`](https://www.msys2.org/) and the listed "Common MSYS2 packages".
-   Afterwards create an environment variable `BAZEL_SH` and its value to be `C:\msys64\usr\bin\bash.exe`.
-   Alternatively, you can also use [Chocolately](https://bazel.build/install/windows#chocolately) which will install latest available version of Bazel and its dependencies.
-   - On Ubuntu: Make sure `gcc` is installed, you can check if `gcc` is installed on your machine by running `which gcc`, if the command returns a path then the compiler is installed, otherwise can be installed with `sudo apt-get install build-essential`.
+2. If you are on Windows, see [the extra steps needed for contributing on Windows](#windows)
 3. Fork the `angular/components` repo on GitHub.
 4. Clone your fork to your machine with `git clone`.
    Recommendation: name your git remotes `upstream` for `angular/components`
    and `<your-username>` for your fork. Also see the [team git shortcuts](https://github.com/angular/components/wiki/Team-git----bash-shortcuts).
-5. From the root of the project, run `yarn` to install the dependencies.
+5. From the root of the project, run `pnpm` to install the dependencies.
 
 
-To build angular/components in release mode, run `yarn build`. The output can be found under `dist/releases`.
+To build angular/components in release mode, run `pnpm build`. The output can be found under `dist/releases`.
 
-To bring up a local server, run `yarn dev-app`. This will automatically watch for changes
+To bring up a local server, run `pnpm dev-app`. This will automatically watch for changes
 and rebuild. The browser should refresh automatically when changes are made.
 
 ### Running tests
-To run unit tests, run `yarn test <target>`. The `target` can be either a short name (e.g. `yarn test button`) or an explicit path `yarn test src/cdk/stepper`.
-To run the e2e tests, run `yarn e2e`.
-To run lint, run `yarn lint`.
+To run unit tests, run `pnpm test <target>`. The `target` can be either a short name (e.g. `pnpm test button`) or an explicit path `pnpm test src/cdk/stepper`.
+To run the e2e tests, run `pnpm e2e`.
+To run lint, run `pnpm lint`.
 
-You can debug unit tests by running `yarn test` with the `--debug` option. This will allow you to
+You can debug unit tests by running `pnpm test` with the `--debug` option. This will allow you to
 manually connect a browser to the Karma server.
 
 ### Getting Packages from Build Artifacts
@@ -42,9 +37,9 @@ archive names are of the format `<package-name>-pr<pr-number>-<sha>.tgz` (for ex
 `material-pr12345-a1b2c3d.tgz`).
 
 One can use the URL to the `.tgz` file for each package to install them as dependencies in a
-project they need to test the Pull Request changes against. [Yarn](https://yarnpkg.com/lang/en/docs/cli/add)
-supports installing dependencies from URLs to `.tgz` files. As an example, update the dependencies
-in `package.json` to point to the artifact URLs and then run `yarn` to install the packages:
+project they need to test the Pull Request changes against. Pnpm or Yarn support installing
+dependencies from URLs to `.tgz` files. As an example, update the dependencies in `package.json`
+to point to the artifact URLs and then run `pnpm` to install the packages:
 
 ```json
 "dependencies": {
@@ -65,7 +60,7 @@ packages locally and test them by either of the following ways:
 
 ### Approving public API changes
 If you're making changes to a public API, they need to be propagated to our public API golden files.
-To save the changes you can run `yarn approve-api <target>` and to review the changes, you can look
+To save the changes you can run `pnpm approve-api <target>` and to review the changes, you can look
 at the file under `goldens/<package>/<entry-point>.api.md`.
 
 
@@ -98,3 +93,17 @@ dev-app within your `.bashrc` or `.zshrc` file.
 ```bash
 export GOOGLE_MAPS_KEY=<api-key>
 ```
+
+## Windows
+
+To contribute to Angular using a Windows machine, you need to use the [Windows Linux Subsystem](https://learn.microsoft.com/en-us/windows/wsl/about) (also known as WSL).
+Installing WSL on your machine requires a few extra steps, but we believe it's generally useful for developing on Windows:
+
+1.  Run `wsl --install` from Powershell (as administrator).
+2.  Restart your machine.
+3.  Enter the WSL environment by running: `wsl`.
+4.  Continue with the developer guide as if you were on a native Linux system.
+
+For a more detailed guide, refer to the official Microsoft documentation: [Installing WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
+
+**Note:** Angular continues to support native Windows development via the `ng` CLI and rigorously tests on Windows for every code change. This recommendation specifically applies to contributing to the Angular codebase itself.

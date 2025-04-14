@@ -1,17 +1,11 @@
 /**
  * Script that sets up the Angular snapshot github builds. We set up the snapshot builds by
- * overwriting the versions in the "package.json" and taking advantage of Yarn's resolutions
- * feature. Yarn resolutions will be used to flatten nested Angular packages because by default
- * Yarn does not flatten any dependency. See:
+ * overwriting the versions in the "package.json" and taking advantage of pnpm's override
+ * feature. Pnpm overrides will be used to flatten transitive Angular packages.
  *
  *  node_modules/compiler@snapshot
  *  node_modules/compiler-cli@snapshot
  *    node_modules/compiler@7.0.1
- *
- * Note that we cannot just use Yarn's `--flat` option because that would mean that it tries
- * to flatten **all** dependencies and could cause unexpected results. We **only** want to
- * explicitly flatten out all `@angular/*` dependencies. This can be achieved with resolutions.
- * Read more here: https://yarnpkg.com/lang/en/docs/package-json/#toc-resolutions
  */
 
 /**
@@ -47,10 +41,6 @@ const packageJsonPath = join(projectDir, 'package.json');
 const packageJson = require(packageJsonPath);
 const packageSuffix = tag ? ` (${tag})` : '';
 
-// Initialize the "resolutions" property in case it is not present in the "package.json" yet.
-// See: https://yarnpkg.com/lang/en/docs/package-json/#toc-resolutions for the API.
-packageJson['resolutions'] = packageJson['resolutions'] || {};
-
 const packagesToConsider = Object.keys({
   ...packageJson.dependencies,
   ...packageJson.devDependencies,
@@ -79,9 +69,9 @@ console.log(`  ${packagesToUpdate.map(p => `${p.name}${packageSuffix}`).join('\n
 packagesToUpdate.forEach(({name, repoName}) => {
   const buildsUrl = `github:angular/${repoName}${tag ? `#${tag}` : ''}`;
 
-  // Add resolutions for each package in the format "**/{PACKAGE}" so that all
+  // Add overrides for each package in the format "**/{PACKAGE}" so that all
   // nested versions of that specific Angular package will have the same version.
-  packageJson.resolutions[`**/${name}`] = buildsUrl;
+  packageJson.pnpm.overrides[`**/${name}`] = buildsUrl;
 
   // Since the resolutions only cover the version of all nested installs, we also need
   // to explicitly set the version for the package listed in the project "package.json".

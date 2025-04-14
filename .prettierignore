@@ -1,5 +1,4 @@
 # Generated files for infrastructure.
-.yarn/releases/*.cjs
 .prettierrc
 
 # These schematic ng-generate files are template files that cannot be formatted.
