@@ -21,7 +21,7 @@ export TEST_PLATFORM="browserstack"
 node ./scripts/create-legacy-tests-bundle.mjs
 
 # Run Karma
-yarn karma start ./test/karma.conf.js --single-run
+pnpm karma start ./test/karma.conf.js --single-run
 
 # Wait for all sub processes to terminate properly.
 wait

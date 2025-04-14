@@ -45,7 +45,7 @@ export const release: ReleaseConfig = {
   npmPackages: releasePackages.map(pkg => ({name: `@angular/${pkg}`})),
   buildPackages: async () => {
     // The `performNpmReleaseBuild` function is loaded at runtime as loading of the
-    // script results in an invocation of Bazel for any `yarn ng-dev` command.
+    // script results in an invocation of Bazel for any `pnpm ng-dev` command.
     const {performNpmReleaseBuild} = await import('../scripts/build-packages-dist.mjs');
     return performNpmReleaseBuild();
   },

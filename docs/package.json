@@ -15,7 +15,6 @@
     "e2e": "ng e2e",
     "build": "ng build",
     "build:scenes": "ng build scenes",
-    "build:content": "yarn upgrade @angular/components-examples",
     "build:sm": "ng build --configuration production --source-map",
     "prod-build": "ng build --configuration production",
     "publish-prod": "bash ./tools/deploy.sh stable prod",
@@ -27,7 +26,7 @@
   },
   "engines": {
     "node": "^20.11.1 || >=22.0.0",
-    "npm": "Please use yarn instead of NPM to install dependencies"
+    "npm": "Please use pnpm instead of NPM to install dependencies"
   },
   "dependencies": {
     "@angular/animations": "catalog:",

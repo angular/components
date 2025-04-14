@@ -29,13 +29,13 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
-        # Angular snapshots must be set up first so that the yarn install properly
-        # updates the yarn.lock as expected with the changes
+        # Angular snapshots must be set up first so that the pnpm install properly
+        # updates the lock file as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
-        run: yarn install
+        run: pnpm install
       - name: Run Browser tests
-        run: yarn bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
+        run: pnpm bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
       - uses: ./.github/actions/slack
         if: ${{ failure() && github.event_name == 'push' }}
         with:
@@ -56,15 +56,15 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Setting up Angular snapshot builds
-        # Angular snapshots must be set up first so that the yarn install properly
-        # updates the yarn.lock as expected with the changes
+        # Angular snapshots must be set up first so that the pnpm install properly
+        # updates the lock files as expected with the changes
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
-        run: yarn install
+        run: pnpm install
       - name: Run linker tests using AOT
-        run: yarn test-linker-aot
+        run: pnpm test-linker-aot
       - name: Run linker tests using JIT
-        run: yarn test-linker-jit
+        run: pnpm test-linker-jit
       - uses: ./.github/actions/slack
         if: ${{ failure() && github.event_name == 'push' }}
         with:
@@ -83,9 +83,9 @@ jobs:
       - name: Disable AppArmor
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Check Docs Site
-        run: yarn ci-docs-monitor-test
+        run: ppnpm ci-docs-monitor-test
       - uses: ./.github/actions/slack
         if: ${{ failure() && github.event_name == 'push' }}
         with:

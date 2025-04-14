@@ -18,7 +18,7 @@ const projectDirPath = join(__dirname, '../');
 cd(projectDirPath);
 
 /** Path to the bazel-bin directory. */
-const bazelBinPath = exec(`yarn -s bazel info bazel-bin`).stdout.trim();
+const bazelBinPath = exec(`pnpm -s bazel info bazel-bin`).stdout.trim();
 
 /** Output path for the Bazel dev-app web package target. */
 const webPackagePath = join(bazelBinPath, 'src/dev-app/web_package');
@@ -27,7 +27,7 @@ const webPackagePath = join(bazelBinPath, 'src/dev-app/web_package');
 const distPath = join(projectDirPath, 'dist/dev-app-web-pkg');
 
 // Build web package output.
-exec('yarn -s bazel build //src/dev-app:web_package');
+exec('pnpm -s bazel build //src/dev-app:web_package');
 
 // Clear previous deployment artifacts.
 rm('-Rf', distPath);
@@ -43,4 +43,4 @@ cp('-R', webPackagePath, distPath);
 chmod('-R', 'u+w', distPath);
 
 // Run the Firebase CLI to deploy the hosting target.
-exec(`yarn -s firebase deploy --only hosting`);
+exec(`pnpm -s firebase deploy --only hosting`);
