@@ -1,0 +1,87 @@
+diff --git a/src/ng_module/partial_compilation.bzl b/src/ng_module/partial_compilation.bzl
+index 5fd9a73d0118485c93cf39be7a2330ebe6c24243..c155cea264f524b2289917c48af3043870163c13 100644
+--- a/src/ng_module/partial_compilation.bzl
++++ b/src/ng_module/partial_compilation.bzl
+@@ -16,10 +16,10 @@ ng_partial_compilation_flag = rule(
+ )
+ 
+ def _partial_compilation_transition_impl(_settings, _attr):
+-    return {"@npm//@angular/bazel/src:partial_compilation": True}
++    return {"@rules_angular//src/ng_project/config:partial_compilation": True}
+ 
+ partial_compilation_transition = transition(
+     implementation = _partial_compilation_transition_impl,
+     inputs = [],
+-    outputs = ["@npm//@angular/bazel/src:partial_compilation"],
++    outputs = ["@rules_angular//src/ng_project/config:partial_compilation"],
+ )
+diff --git a/src/ng_package/packager.mjs b/src/ng_package/packager.mjs
+index 20604c595be4b5bb0fea0bae0aeb2c2a1f4b83eb..265c2cf00aacf29844bdd1154ba2400f40810bc0 100755
+--- a/src/ng_package/packager.mjs
++++ b/src/ng_package/packager.mjs
+@@ -8,7 +8,7 @@
+ import * as fs from 'fs';
+ import * as path from 'path';
+ import { globSync } from 'tinyglobby';
+-import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports';
++import { analyzeFileAndEnsureNoCrossImports } from './cross_entry_points_imports.mjs';
+ /**
+  * List of known `package.json` fields which provide information about
+  * supported package formats and their associated entry paths.
+@@ -28,19 +28,19 @@ function main(args) {
+     const params = fs.readFileSync(paramFilePath, 'utf-8').split('\n').map(unquoteParameter);
+     const [
+     // Output directory for the npm package.
+-    outputDirExecPath, 
++    outputDirExecPath,
+     // The package segment of the ng_package rule's label (e.g. 'package/common').
+-    owningPackageName, 
++    owningPackageName,
+     // JSON data capturing metadata of the package being built. See `PackageMetadata`.
+-    metadataArg, 
++    metadataArg,
+     // Path to the package's README.md.
+-    readmeMd, 
++    readmeMd,
+     // Path to the package's LICENSE file.
+-    licenseFile, 
++    licenseFile,
+     // List of individual ES2022 modules
+-    esm2022Arg, 
++    esm2022Arg,
+     // List of static files that should be copied into the package.
+-    staticFilesArg, 
++    staticFilesArg,
+     // List of side-effectful entry-points
+     sideEffectEntryPointsArg,] = params;
+     const esm2022 = JSON.parse(esm2022Arg);
+@@ -111,7 +111,7 @@ function main(args) {
+     fesmFiles.forEach((f) => copyFile(path.join(metadata.fesmBundlesOut.path, f), path.join('fesm2022', f)));
+     // Copy all dts files (and their potential shared chunks) into the package output.
+     const dtsFiles = globSync('**/*', { cwd: metadata.dtsBundlesOut.path });
+-    dtsFiles.forEach((f) => 
++    dtsFiles.forEach((f) =>
+     // TODO(devversion): Put all types under `/types/` folder. Breaking change in v20.
+     copyFile(path.join(metadata.dtsBundlesOut.path, f), f));
+     for (const file of staticFiles) {
+@@ -236,7 +236,7 @@ function main(args) {
+         }
+         const sideEffects = packageJson.sideEffects;
+         const neededSideEffects = sideEffectEntryPoints.map((entryPointModule) => `./${metadata.entryPoints[entryPointModule].fesm2022RelativePath}`);
+-        const missingSideEffects = neededSideEffects.filter((p) => 
++        const missingSideEffects = neededSideEffects.filter((p) =>
+         // It's missing, if the whole package is marked as having no side effects.
+         sideEffects === false ||
+             // Alternatively, it's missing if the explicit list doesn't contain the pattern.
+diff --git a/src/ng_package/rollup.config.js b/src/ng_package/rollup.config.js
+index 22a4d89fb9b1f43b2092ed5ee18e1865f6d7e7cc..cdf42e39e8d7e96c91ec3765237de816958f1da7 100644
+--- a/src/ng_package/rollup.config.js
++++ b/src/ng_package/rollup.config.js
+@@ -188,7 +188,6 @@ if (dtsMode) {
+     nodeResolve({
+       mainFields: ['es2020', 'es2015', 'module', 'browser'],
+       jail: process.cwd(),
+-      customResolveOptions: {moduleDirectory: nodeModulesRoot},
+     }),
+     commonjs({ignoreGlobal: true}),
+     sourcemaps(),
