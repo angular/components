@@ -158,8 +158,8 @@ importers:
         specifier: 'catalog:'
         version: 20.0.0-next.5(@angular/compiler-cli@20.0.0-next.5(@angular/compiler@20.0.0-next.5)(typescript@5.8.2))(@angular/compiler@20.0.0-next.5)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#1fa3a08b6a111de820da092799319ed47c058849
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849(encoding@0.1.13)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a9e4627eb45742d81068087a5b57a676104fe053
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 20.0.0-next.5(7ldc76mrnn32nlj5qb6nodvy7i)
@@ -1017,9 +1017,9 @@ packages:
       '@angular/compiler': 20.0.0-next.5
       '@angular/compiler-cli': 20.0.0-next.5
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849}
-    version: 0.0.0-fa81be50e9a2ea7c9b68819ac5f69f4cc5ff7605
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053}
+    version: 0.0.0-35131fc980ce5451fb89d8c033efc827ad39ca68
     hasBin: true
 
   '@angular/platform-browser-dynamic@20.0.0-next.5':
@@ -1956,6 +1956,10 @@ packages:
     resolution: {integrity: sha512-j8yRSSqswWi1QqUGKVEKOG03Q7qOoZP6/h2zN2YO+F5h2+DHU0bSrHCK9Y7lo2DI9fBd8qGAw795sf+3Jva4yA==}
     engines: {node: '>=10'}
 
+  '@google-cloud/promisify@4.0.0':
+    resolution: {integrity: sha512-Orxzlfb9c67A15cq2JQEyVc7wEsmFBmHjZWZYQMUyJ1qivXyMwdyNOs9odi79hze+2zqdTtu1E19IM/FtqZ10g==}
+    engines: {node: '>=14'}
+
   '@google-cloud/promisify@4.1.0':
     resolution: {integrity: sha512-G/FQx5cE/+DqBbOpA5jKsegGwdPniU6PuIEMt+qxWgFxvxuFOzVmp6zYchtYuwAWV5/8Dgs0yAmjvNZv3uXLQg==}
     engines: {node: '>=18'}
@@ -1968,8 +1972,8 @@ packages:
     resolution: {integrity: sha512-4Qrry4vIToth5mqduVslltWVsyb7DR8OhnkBA3F7XiE0jgQsiuUfwp/RB2F559aXnRbwcfmjvP4jSuEaGcjrCQ==}
     engines: {node: '>=12.0.0'}
 
-  '@google-cloud/spanner@7.17.1':
-    resolution: {integrity: sha512-+dTR6wvb2jANVxNe2bF048QCOVRGbesHe8Tm0OFRhvCgv3ot31JFGPyRKukD7y3jAFSBqyX0bIUV9GVNk4oRPQ==}
+  '@google-cloud/spanner@7.19.1':
+    resolution: {integrity: sha512-a7WlM4T3g5hslSBxQpsCxlH2IGgeVVEnDP5/v51kNlKv/W5PhBMqaHanodkUjbjegsQNlWAkqLClzIwtldfSXg==}
     engines: {node: '>=14.0.0'}
 
   '@grpc/grpc-js@1.13.2':
@@ -2522,8 +2526,8 @@ packages:
   '@octokit/rest@18.3.5':
     resolution: {integrity: sha512-ZPeRms3WhWxQBEvoIh0zzf8xdU2FX0Capa7+lTca8YHmRsO3QNJzf1H3PcuKKsfgp91/xVDRtX91sTe1kexlbw==}
 
-  '@octokit/rest@21.1.0':
-    resolution: {integrity: sha512-93iLxcKDJboUpmnUyeJ6cRIi7z7cqTZT1K7kRK4LobGxwTwpsa+2tQQbRQNGy7IFDEAmrtkf4F4wBj3D5rVlJQ==}
+  '@octokit/rest@21.1.1':
+    resolution: {integrity: sha512-sTQV7va0IUVZcntzy1q3QqPm/r8rWtDCqpRAmb8eXXnKkjoQEtFe3Nt5GTVsHft+R6jJoHeSiVLcgcvhtue/rg==}
     engines: {node: '>= 18'}
 
   '@octokit/types@13.10.0':
@@ -3123,8 +3127,9 @@ packages:
   '@types/stack-trace@0.0.33':
     resolution: {integrity: sha512-O7in6531Bbvlb2KEsJ0dq0CHZvc3iWSR5ZYMtvGgnHA56VgriAN/AU2LorfmcvAl2xc9N5fbCTRyMRRl8nd74g==}
 
-  '@types/supports-color@8.1.3':
-    resolution: {integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==}
+  '@types/supports-color@10.0.0':
+    resolution: {integrity: sha512-Kpp/hhA8/pcxqBBKmOCIgvwCOJAI5y6TWTHhhqnB6KmuYlKtixKgN/Z7VzhShdgONe2jYREnTQbsrb3E0nt/OQ==}
+    deprecated: This is a stub types definition. supports-color provides its own type definitions, so you do not need this installed.
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -9544,11 +9549,6 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  yaml@2.7.0:
-    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.7.1:
     resolution: {integrity: sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==}
     engines: {node: '>= 14'}
@@ -10112,19 +10112,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/1fa3a08b6a111de820da092799319ed47c058849(encoding@0.1.13)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)':
     dependencies:
-      '@google-cloud/spanner': 7.17.1(encoding@0.1.13)(supports-color@10.0.0)
-      '@octokit/rest': 21.1.0
+      '@google-cloud/spanner': 7.19.1(encoding@0.1.13)(supports-color@10.0.0)
+      '@octokit/rest': 21.1.1
       '@types/semver': 7.7.0
-      '@types/supports-color': 8.1.3
+      '@types/supports-color': 10.0.0
       '@yarnpkg/lockfile': 1.1.0
       chalk: 5.4.1
       semver: 7.7.1
       supports-color: 10.0.0
       typed-graphqlify: 3.1.6
       typescript: 5.8.2
-      yaml: 2.7.0
+      which: 5.0.0
+      yaml: 2.7.1
     transitivePeerDependencies:
       - encoding
 
@@ -11086,6 +11087,8 @@ snapshots:
 
   '@google-cloud/promisify@2.0.4': {}
 
+  '@google-cloud/promisify@4.0.0': {}
+
   '@google-cloud/promisify@4.1.0': {}
 
   '@google-cloud/pubsub@2.19.4(encoding@0.1.13)':
@@ -11131,12 +11134,12 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google-cloud/spanner@7.17.1(encoding@0.1.13)(supports-color@10.0.0)':
+  '@google-cloud/spanner@7.19.1(encoding@0.1.13)(supports-color@10.0.0)':
     dependencies:
       '@google-cloud/common': 5.0.2(encoding@0.1.13)(supports-color@10.0.0)
       '@google-cloud/precise-date': 4.0.0
       '@google-cloud/projectify': 4.0.0
-      '@google-cloud/promisify': 4.1.0
+      '@google-cloud/promisify': 4.0.0
       '@grpc/proto-loader': 0.7.13
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/context-async-hooks': 1.30.1(@opentelemetry/api@1.9.0)
@@ -11737,7 +11740,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@octokit/rest@21.1.0':
+  '@octokit/rest@21.1.1':
     dependencies:
       '@octokit/core': 6.1.4
       '@octokit/plugin-paginate-rest': 11.6.0(@octokit/core@6.1.4)
@@ -12342,7 +12345,9 @@ snapshots:
 
   '@types/stack-trace@0.0.33': {}
 
-  '@types/supports-color@8.1.3': {}
+  '@types/supports-color@10.0.0':
+    dependencies:
+      supports-color: 10.0.0
 
   '@types/tough-cookie@4.0.5': {}
 
@@ -20214,8 +20219,6 @@ snapshots:
   yallist@5.0.0: {}
 
   yaml@1.10.2: {}
-
-  yaml@2.7.0: {}
 
   yaml@2.7.1: {}
 
