@@ -85,7 +85,6 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
   }
 
   .cdk-overlay-backdrop {
-    // TODO(jelbourn): reuse sidenav fullscreen mixin.
     position: absolute;
     top: 0;
     bottom: 0;
@@ -99,6 +98,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     @include _conditional-layer($wrap-customizable-styles) {
       z-index: $overlay-backdrop-z-index;
       transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
+    }
+
+    @media (prefers-reduced-motion) {
+      transition-duration: 1ms;
     }
   }
 
