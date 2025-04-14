@@ -15,7 +15,6 @@
     "pnpm": "^9.15.6"
   },
   "scripts": {
-    "postinstall": "patch-package --patch-dir tools/postinstall/patches && node tools/postinstall/apply-patches.js",
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
     "ng-dev:stamp": "pnpm -s ng-dev release build-env-stamp --additional-stamping-script=tools/bazel-additional-stamp.mjs",
     "build": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only ./scripts/build-packages-dist-main.mts",
@@ -133,7 +132,6 @@
     "minimatch": "^3.0.4",
     "node-fetch": "^2.6.0",
     "parse5": "^7.1.2",
-    "patch-package": "^6.5.1",
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.4",
     "protractor": "^7.0.0",
