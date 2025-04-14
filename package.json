@@ -80,7 +80,7 @@
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
-    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#1fa3a08b6a111de820da092799319ed47c058849",
+    "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#a9e4627eb45742d81068087a5b57a676104fe053",
     "@angular/platform-browser-dynamic": "catalog:",
     "@angular/platform-server": "catalog:",
     "@angular/router": "catalog:",
