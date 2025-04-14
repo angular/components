@@ -77,7 +77,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: 1a909c412e18115c8ddcb6fa32e2db83
+packageExtensionsChecksum: 72a13a339233d81de546102b258f31dd
 
 patchedDependencies:
   '@angular-devkit/architect-cli@0.1902.7':
@@ -15733,6 +15733,7 @@ snapshots:
   grpc-gcp@1.0.1:
     dependencies:
       '@grpc/grpc-js': 1.12.5
+      protobufjs: 7.4.0
 
   gtoken@5.3.2(encoding@0.1.13):
     dependencies:
