@@ -7,6 +7,6 @@ import {FormatConfig} from '@angular/ng-dev';
 export const format: FormatConfig = {
   buildifier: true,
   prettier: {
-    matchers: ['**/*.{js,ts,mts,mjs,json}', '!.yarn/**'],
+    matchers: ['**/*.{js,ts,mts,mjs,json}'],
   },
 };

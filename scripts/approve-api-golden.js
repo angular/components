@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const path = require('path');
 const {guessPackageName} = require('./util');
 const projectDir = path.join(__dirname, '../');
-const bazel = process.env['BAZEL'] || 'yarn bazel';
+const bazel = process.env['BAZEL'] || 'pnpm -s bazel';
 
 if (process.argv.length < 3) {
   console.error(chalk.red('No package name has been passed in for API golden approval.'));

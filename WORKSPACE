@@ -120,9 +120,7 @@ yarn_install(
 # Setup the Sass rule repositories.
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
-sass_repositories(
-    yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
-)
+sass_repositories()
 
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 

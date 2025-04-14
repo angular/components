@@ -25,25 +25,25 @@ jobs:
         with:
           cache-node-modules: true
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Checking package externals
         run: |
           bazel build //:package_externals
-          yarn check-package-externals $(bazel info bazel-bin)/package_externals.json
+          pnpm check-package-externals $(bazel info bazel-bin)/package_externals.json
       - name: Checking entry-points configuration
         run: |
           bazel build //:entry_points_manifest
-          yarn check-entry-point-setup $(bazel info bazel-bin)/entry_points_manifest.json
+          pnpm check-entry-point-setup $(bazel info bazel-bin)/entry_points_manifest.json
       - name: Check OWNERS file
-        run: yarn ownerslint
+        run: pnpm ownerslint
       - name: Check for component id collisions
-        run: yarn detect-component-id-collisions
+        run: pnpm detect-component-id-collisions
       - name: Check style lint
-        run: yarn stylelint
+        run: pnpm stylelint
       - name: Check code lint
-        run: yarn tslint
+        run: pnpm tslint
       - name: Check for circular dependencies
-        run: yarn -s ts-circular-deps:check
+        run: pnpm -s ts-circular-deps:check
       - uses: ./.github/actions/slack
         if: failure()
         with:
@@ -64,9 +64,9 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Check API Goldens
-        run: yarn bazel test goldens/...
+        run: pnpm bazel test goldens/...
       - uses: ./.github/actions/slack
         if: failure()
         with:
@@ -87,9 +87,9 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run e2e tests
-        run: yarn e2e --flaky_test_attempts=2
+        run: pnpm e2e --flaky_test_attempts=2
       - uses: ./.github/actions/slack
         if: failure()
         with:
@@ -110,9 +110,9 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run integration tests
-        run: yarn integration-tests
+        run: pnpm integration-tests
         continue-on-error: true
       - uses: ./.github/actions/slack
         if: failure()
@@ -134,9 +134,9 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run linker AOT tests
-        run: yarn test-linker-aot
+        run: pnpm test-linker-aot
       - uses: ./.github/actions/slack
         if: failure()
         with:
@@ -157,9 +157,9 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run linker JIT tests
-        run: yarn test-linker-jit
+        run: pnpm test-linker-jit
       - uses: ./.github/actions/slack
         if: failure()
         with:
@@ -180,7 +180,7 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run tests
         run: bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
         env:
@@ -205,7 +205,7 @@ jobs:
         with:
           google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Run tests
         run: bazel build --build_tag_filters=-docs-package,-release-package -- src/...
       - uses: ./.github/actions/slack
@@ -226,15 +226,15 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build and Verify Release Output
-        run: yarn build-and-check-release-output
+        run: pnpm build-and-check-release-output
       - name: Verify tooling setup
-        run: yarn check-tooling-setup
+        run: pnpm check-tooling-setup
       - name: Build Docs Content
-        run: yarn build-docs-content
+        run: pnpm build-docs-content
       - name: Build Docs Content
-        run: yarn build-docs-content
+        run: pnpm build-docs-content
       - name: Publish Snapshots
         run: ./scripts/circleci/publish-snapshots.sh
         env:
@@ -261,13 +261,13 @@ jobs:
       - name: Setup Bazel RBE
         uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build and Verify Release Output
-        run: yarn build-and-check-release-output
+        run: pnpm build-and-check-release-output
       - name: Verify tooling setup
-        run: yarn check-tooling-setup
+        run: pnpm check-tooling-setup
       - name: Deploy the docs app
-        run: yarn ci-push-deploy-docs-app
+        run: pnpm ci-push-deploy-docs-app
         env:
           CIRCLE_BRANCH: ${{ github.ref_name }}
           CIRCLE_SHA1: ${{ github.sha }}
@@ -291,7 +291,7 @@ jobs:
         with:
           cache-node-modules: true
       - name: Install node modules
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Browserstack Variables
