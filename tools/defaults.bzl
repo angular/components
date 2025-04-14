@@ -2,7 +2,7 @@
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
-load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
+load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
@@ -25,8 +25,12 @@ karma_web_test_suite = _karma_web_test_suite
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(
         sourcemap = sourcemap,
-        include_paths = include_paths + ["external/npm/node_modules"],
-        compiler = "//tools/sass:compiler",
+        include_paths = include_paths,
+        module_mappings = {
+            "@angular/cdk": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/cdk",
+            "@angular/material": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material",
+            "@angular/material-experimental": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material-experimental",
+        },
         **kwargs
     )
 

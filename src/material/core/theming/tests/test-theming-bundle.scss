@@ -1,7 +1,7 @@
 // Imports the theming bundle. Needs to be an absolute bin-dir import path as on Windows,
 // runfiles are not symlinked, so the Sass compilation happens in the workspace directory
 // with the include paths being set to the `bazel-bin` directory.
-@use 'src/material' as mat;
+@use '../../../index' as mat;
 
 // Disable theme style duplication warnings. This test intentionally generates
 // the same themes multiple times.
