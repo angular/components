@@ -16,23 +16,23 @@ def _extract_tokens(ctx):
     expected_outputs = [output_file_name]
 
     # Pass the necessary information like the package name and files to the script.
-    args.add(ctx.label.package, output_file_name)
+    args.add(ctx.label.package)
+    args.add(output_file_name.short_path)
 
     for input_file in input_files:
-        args.add(input_file.path)
+        args.add(input_file.short_path)
 
     # Run the token extraction executable. Note that we specify the outputs because Bazel
     # can throw an error if the script didn't generate the required outputs.
     ctx.actions.run(
         inputs = input_files,
         env = {
-            # Not needed as we operate with source files; not inside `bazel-bin`.
-            "JS_BINARY__NO_CD_BINDIR": "1",
+            "BAZEL_BINDIR": ctx.bin_dir.path,
         },
         executable = ctx.executable._extract_tokens,
         outputs = expected_outputs,
         arguments = [args],
-        progress_message = "ExtractTokens",
+        progress_message = "Extracting theme tokens %s:%s" % (ctx.label.package, ctx.attr.name),
     )
 
     return DefaultInfo(files = depset(expected_outputs))
