@@ -17,8 +17,6 @@ describe('Navigation focus service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NavigationFocus],
-      declarations: [NavigationFocusTest, RouteTest],
       providers: [
         provideRouter([
           {path: '', component: RouteTest},
@@ -123,13 +121,12 @@ describe('Navigation focus service', () => {
     <button id="target2">Target 2</button>
     <button class="no-id" focusOnNavigation>Target 3</button>
   `,
-  standalone: false,
+  imports: [NavigationFocus],
 })
 class NavigationFocusTest {}
 
 @Component({
   selector: 'route-test',
   template: '',
-  standalone: false,
 })
 class RouteTest {}
