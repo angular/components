@@ -73,7 +73,7 @@ catalogs:
 overrides:
   typescript: 5.8.2
 
-packageExtensionsChecksum: f1c6e54cc4efadd0137841ba2f31f8ec
+packageExtensionsChecksum: f0e296dde7b086a53d76f809f69eba61
 
 patchedDependencies:
   '@angular-devkit/architect-cli@0.2000.0-next.5':
@@ -15395,6 +15395,7 @@ snapshots:
   grpc-gcp@1.0.1:
     dependencies:
       '@grpc/grpc-js': 1.13.2
+      protobufjs: 7.4.0
 
   gtoken@5.3.2(encoding@0.1.13):
     dependencies:
