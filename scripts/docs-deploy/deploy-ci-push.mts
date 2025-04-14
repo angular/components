@@ -62,7 +62,7 @@ async function main() {
       // For the stable deployment, we want to update the versions file which is loaded
       // by all docs sites (archives, rc, next etc.). The source of truth for all versions
       // shown in the "docs version picker" is the versions file deployed in stable.
-      prebuild: docsRepoDir => updateVersionsFile(docsRepoDir, active),
+      prebuild: workspaceDir => updateVersionsFile(workspaceDir, active),
     });
     return;
   }

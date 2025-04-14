@@ -2,9 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {fileURLToPath} from 'url';
 
-import {InstallOptions, installDepsForDocsSite} from './docs-deps-install.mjs';
-
-import {$} from 'zx';
+import {$, cd} from 'zx';
 
 /** Absolute path to the `angular/components` project root. */
 export const projectDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -50,10 +48,13 @@ export async function getPackageJsonOfProject(
 }
 
 /**
- * Installs dependencies in the specified docs repository and builds the
- * production site output.
+ * Builds the docs site in production.
  */
-export async function installDepsAndBuildDocsSite(repoPath: string, options: InstallOptions) {
-  await installDepsForDocsSite(repoPath, options);
-  await $`yarn --cwd ${repoPath} prod-build`;
+export async function buildDocsSite() {
+  cd(projectDir);
+  await $`pnpm bazel build --config=snapshot-build //docs:build.production`;
+  await $`rm -Rf docs/dist`;
+  await $`mkdir -p docs/dist`;
+  await $`cp -R dist/bin/docs/material-angular-io.production docs/dist`;
+  await $`chmod -R u+w docs/dist/material-angular-io.production`;
 }
