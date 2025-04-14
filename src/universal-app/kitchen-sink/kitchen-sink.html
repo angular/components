@@ -110,6 +110,14 @@
   <mat-datepicker #departureDate></mat-datepicker>
 </mat-form-field>
 
+<h2>Timepicker</h2>
+<mat-form-field>
+  <mat-label>Pick a time</mat-label>
+  <input matInput [matTimepicker]="timePicker">
+  <mat-timepicker #timePicker/>
+  <mat-timepicker-toggle [for]="timePicker" matSuffix/>
+</mat-form-field>
+
 <h2>Dialog</h2>
 <button matButton="elevated" (click)="openDialog()">Open dialog</button>
 

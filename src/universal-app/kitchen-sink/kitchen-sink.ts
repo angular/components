@@ -56,6 +56,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {YouTubePlayer} from '@angular/youtube-player';
@@ -177,6 +178,7 @@ export class TestEntryComponent {}
     MatTableModule,
     MatStepperModule,
     ScrollingModule,
+    MatTimepickerModule,
     ExperimentalScrollingModule,
 
     // CDK Modules
