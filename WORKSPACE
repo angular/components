@@ -107,7 +107,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 yarn_install(
     name = "npm",
     data = [
-        "//tools/bazel/legacy-rnjs:.yarn/patches/@angular-bazel-https-67c38b3c32.patch",
+        "//tools/bazel/legacy-rnjs:.yarn/patches/@angular-bazel-https-c46f484fb8.patch",
         "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
         "//tools/bazel/legacy-rnjs:.yarnrc.yml",
     ],
