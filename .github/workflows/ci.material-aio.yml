@@ -5,8 +5,6 @@ on:
     branches:
       - main
       - '[0-9]+.[0-9]+.x'
-    paths:
-      - 'material.angular.io/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,11 +25,11 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Linting
-        run: pnpm --cwd=docs bazel test --test_tag_filters=lint //...
+        run: pnpm bazel test --test_tag_filters=lint //docs/...
 
   build:
     runs-on: ubuntu-latest
@@ -41,11 +39,11 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Build
-        run: pnpm -s --cwd=docs bazel build //...
+        run: pnpm -s build //docs/...
 
   test:
     runs-on: ubuntu-latest
@@ -55,11 +53,11 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Tests
-        run: pnpm --cwd=docs bazel test --test_tag_filters=-lint,-e2e,-audit //...
+        run: pnpm bazel test --test_tag_filters=-lint,-e2e,-audit //docs/...
       - name: Store Test Logs
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
         if: always()
@@ -76,11 +74,11 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Lighthouse Audit
-        run: pnpm -s --cwd=docs bazel test --test_tag_filters=audit //...
+        run: pnpm -s bazel test --test_tag_filters=audit //docs/...
       - name: Store Audit Logs
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
         if: always()
