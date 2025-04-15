@@ -191,7 +191,7 @@
       },
       "@angular/animations": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         },
         "peerDependencies": {
           "@angular/common": "*"
@@ -199,32 +199,32 @@
       },
       "@angular/common": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       },
       "@angular/forms": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       },
       "@angular/platform-browser": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       },
       "@angular/router": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       },
       "@angular/localize": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       },
       "@angular/platform-server": {
         "dependencies": {
-          "@nginfra/angular-linking": "1.0.6"
+          "@nginfra/angular-linking": "1.0.10"
         }
       }
     },
