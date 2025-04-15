@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html")
-load("//tools:defaults2.bzl", "ng_project", "ts_project")
+load("//tools:defaults.bzl", "markdown_to_html")
+load("//tools:defaults2.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -31,7 +31,7 @@ ts_project(
     ],
 )
 
-karma_web_test_suite(
+ng_web_test_suite(
     name = "unit_tests",
     deps = [":unit_test_sources"],
 )
