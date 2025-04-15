@@ -77,7 +77,7 @@ overrides:
   string-width: 4.2.3
   wrap-ansi: 7.0.0
 
-packageExtensionsChecksum: 72a13a339233d81de546102b258f31dd
+packageExtensionsChecksum: fe8bce93d98409238ccc38138dd78e9e
 
 patchedDependencies:
   '@angular-devkit/architect-cli@0.1902.7':
@@ -2383,8 +2383,8 @@ packages:
     resolution: {integrity: sha512-zM0mVWSXE0a0h9aKACLwKmD6nHcRiKrPpCfvaKqG1CqDEyjEawId0ocXxVzPMCAm6kkWr2P025msfxXEnt8UGQ==}
     engines: {node: '>= 10'}
 
-  '@nginfra/angular-linking@1.0.6':
-    resolution: {integrity: sha512-DYrj4ul41hSN1IvvVYmvxAu3JIOfn4QK1le4u61kyCecMQP0zxW2jBD3pw11Ymd6PmsK7QxaqKY0BWiXEevAjA==}
+  '@nginfra/angular-linking@1.0.10':
+    resolution: {integrity: sha512-31zx+PCN8tBlC0FYUuCxS4uVPJLAlBhi4UVp6QgoQG44RsOHKTmcRORMVSJdPLRgRuCJkY45kj+PE3AxsgiUKA==}
     peerDependencies:
       '@angular/compiler-cli': '*'
 
@@ -10032,7 +10032,7 @@ snapshots:
     dependencies:
       '@angular/common': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7)
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@angular/compiler-cli'
@@ -10222,7 +10222,7 @@ snapshots:
   '@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7)':
     dependencies:
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -10260,7 +10260,7 @@ snapshots:
       '@angular/common': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7)
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.6(@angular/animations@19.2.6(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)))(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -10272,7 +10272,7 @@ snapshots:
       '@angular/compiler': 19.2.6
       '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
       '@babel/core': 7.26.9
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       '@types/babel__core': 7.20.5
       fast-glob: 3.3.3
       yargs: 17.7.2
@@ -10308,7 +10308,7 @@ snapshots:
     dependencies:
       '@angular/common': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7)
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       tslib: 2.8.1
     optionalDependencies:
       '@angular/animations': 19.2.6(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))
@@ -10322,7 +10322,7 @@ snapshots:
       '@angular/compiler': 19.2.6
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.6(@angular/animations@19.2.6(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)))(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       rxjs: 6.6.7
       tslib: 2.8.1
       xhr2: 0.2.1
@@ -10335,7 +10335,7 @@ snapshots:
       '@angular/common': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7)
       '@angular/core': 19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)
       '@angular/platform-browser': 19.2.6(@angular/animations@19.2.6(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0)))(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))
-      '@nginfra/angular-linking': 1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
+      '@nginfra/angular-linking': 1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))
       rxjs: 6.6.7
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -11756,11 +11756,14 @@ snapshots:
       '@napi-rs/nice-win32-x64-msvc': 1.0.1
     optional: true
 
-  '@nginfra/angular-linking@1.0.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))':
+  '@nginfra/angular-linking@1.0.10(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))':
     dependencies:
       '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
       '@babel/core': 7.26.10
+      '@types/babel__core': 7.20.5
+      '@types/node': 22.14.1
       tinyglobby: 0.2.12
+      typescript: 5.8.2
     transitivePeerDependencies:
       - supports-color
 
