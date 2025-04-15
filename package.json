@@ -226,6 +226,11 @@
         "dependencies": {
           "@nginfra/angular-linking": "1.0.10"
         }
+      },
+      "@angular/build": {
+        "peerDependencies": {
+          "tslib": "^2.3.0"
+        }
       }
     },
     "patchedDependencies": {

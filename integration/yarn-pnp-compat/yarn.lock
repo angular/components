@@ -394,6 +394,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/platform-browser-dynamic@npm:20.0.0-next.5":
+  version: 20.0.0-next.5
+  resolution: "@angular/platform-browser-dynamic@npm:20.0.0-next.5"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": 20.0.0-next.5
+    "@angular/compiler": 20.0.0-next.5
+    "@angular/core": 20.0.0-next.5
+    "@angular/platform-browser": 20.0.0-next.5
+  checksum: 10/a04d52075b7913636eb327dc8068161372787ddfeaba79668a81a4766c1e1d231f748d8c1e360b0b16a33c5ea887d29f67e46f93750b7d85bafa97081f306983
+  languageName: node
+  linkType: hard
+
 "@angular/platform-browser@npm:20.0.0-next.5":
   version: 20.0.0-next.5
   resolution: "@angular/platform-browser@npm:20.0.0-next.5"
@@ -10436,6 +10450,7 @@ __metadata:
     "@angular/forms": "npm:20.0.0-next.5"
     "@angular/material": "npm:next"
     "@angular/platform-browser": "npm:20.0.0-next.5"
+    "@angular/platform-browser-dynamic": "npm:20.0.0-next.5"
     "@angular/router": "npm:20.0.0-next.5"
     "@types/jasmine": "npm:~5.1.7"
     "@types/node": "npm:22.14.0"
