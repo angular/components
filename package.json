@@ -55,7 +55,9 @@
   },
   "version": "19.2.9",
   "dependencies": {
-    "@angular-devkit/architect-cli": "0.1902.7",
+    "@angular-devkit/core": "catalog:",
+    "@angular-devkit/schematics": "catalog:",
+    "@angular-devkit/architect-cli": "catalog:",
     "@angular/animations": "catalog:",
     "@angular/common": "catalog:",
     "@angular/compiler": "catalog:",
@@ -73,11 +75,6 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "catalog:",
-    "@angular-devkit/core": "catalog:",
-    "@angular-devkit/schematics": "catalog:",
-    "@angular/build": "catalog:",
-    "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
     "@angular/localize": "catalog:",
     "@angular/ng-dev": "https://github.com/angular/dev-infra-private-ng-dev-builds.git#a9e4627eb45742d81068087a5b57a676104fe053",

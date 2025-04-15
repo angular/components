@@ -24,9 +24,6 @@ catalogs:
     '@angular/animations':
       specifier: 19.2.6
       version: 19.2.6
-    '@angular/build':
-      specifier: 19.2.7
-      version: 19.2.7
     '@angular/cli':
       specifier: 19.2.7
       version: 19.2.7
@@ -89,8 +86,14 @@ importers:
   .:
     dependencies:
       '@angular-devkit/architect-cli':
-        specifier: 0.1902.7
+        specifier: 'catalog:'
         version: 0.1902.7(patch_hash=6yxjg7dhfbtwlh5fb7noiwxhxa)(chokidar@4.0.1)
+      '@angular-devkit/core':
+        specifier: 'catalog:'
+        version: 19.2.7(chokidar@4.0.1)
+      '@angular-devkit/schematics':
+        specifier: 'catalog:'
+        version: 19.2.7(chokidar@4.0.1)
       '@angular/animations':
         specifier: 'catalog:'
         version: 19.2.6(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))
@@ -137,21 +140,6 @@ importers:
         specifier: ~0.15.0
         version: 0.15.0
     devDependencies:
-      '@angular-devkit/build-angular':
-        specifier: 'catalog:'
-        version: 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))(yaml@1.10.2)
-      '@angular-devkit/core':
-        specifier: 'catalog:'
-        version: 19.2.7(chokidar@4.0.1)
-      '@angular-devkit/schematics':
-        specifier: 'catalog:'
-        version: 19.2.7(chokidar@4.0.1)
-      '@angular/build':
-        specifier: 'catalog:'
-        version: 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(tslib@2.8.1)(typescript@5.8.2)(yaml@1.10.2)
-      '@angular/cli':
-        specifier: 'catalog:'
-        version: 19.2.7(@types/node@22.14.1)(chokidar@4.0.1)
       '@angular/compiler-cli':
         specifier: 'catalog:'
         version: 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
@@ -7939,7 +7927,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   q@1.5.1:
@@ -7947,7 +7934,6 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
-
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qjobs@1.2.0:
@@ -9864,95 +9850,6 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-angular@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(protractor@7.0.0)(typescript@5.8.2)(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))(yaml@1.10.2)':
-    dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
-      '@angular-devkit/build-webpack': 0.1902.7(chokidar@4.0.1)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.1)))(webpack@5.98.0(esbuild@0.25.1))
-      '@angular-devkit/core': 19.2.7(chokidar@4.0.1)
-      '@angular/build': 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(tslib@2.8.1)(typescript@5.8.2)(yaml@1.10.2)
-      '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
-      '@babel/core': 7.26.10
-      '@babel/generator': 7.26.10
-      '@babel/helper-annotate-as-pure': 7.25.9
-      '@babel/helper-split-export-declaration': 7.24.7
-      '@babel/plugin-transform-async-generator-functions': 7.26.8(@babel/core@7.26.10)
-      '@babel/plugin-transform-async-to-generator': 7.25.9(@babel/core@7.26.10)
-      '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.26.10)
-      '@babel/preset-env': 7.26.9(@babel/core@7.26.10)
-      '@babel/runtime': 7.26.10
-      '@discoveryjs/json-ext': 0.6.3
-      '@ngtools/webpack': 19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(typescript@5.8.2)(webpack@5.98.0(esbuild@0.25.1))
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))
-      ansi-colors: 4.1.3
-      autoprefixer: 10.4.20(postcss@8.5.2)
-      babel-loader: 9.2.1(@babel/core@7.26.10)(webpack@5.98.0(esbuild@0.25.1))
-      browserslist: 4.24.4
-      copy-webpack-plugin: 12.0.2(webpack@5.98.0(esbuild@0.25.1))
-      css-loader: 7.1.2(webpack@5.98.0(esbuild@0.25.1))
-      esbuild-wasm: 0.25.1
-      fast-glob: 3.3.3
-      http-proxy-middleware: 3.0.3
-      istanbul-lib-instrument: 6.0.3
-      jsonc-parser: 3.3.1
-      karma-source-map-support: 1.4.0
-      less: 4.2.2
-      less-loader: 12.2.0(less@4.2.2)(webpack@5.98.0(esbuild@0.25.1))
-      license-webpack-plugin: 4.0.2(webpack@5.98.0(esbuild@0.25.1))
-      loader-utils: 3.3.1
-      mini-css-extract-plugin: 2.9.2(webpack@5.98.0(esbuild@0.25.1))
-      open: 10.1.0
-      ora: 5.4.1
-      picomatch: 4.0.2
-      piscina: 4.8.0
-      postcss: 8.5.2
-      postcss-loader: 8.1.1(postcss@8.5.2)(typescript@5.8.2)(webpack@5.98.0(esbuild@0.25.1))
-      resolve-url-loader: 5.0.0
-      rxjs: 7.8.1
-      sass: 1.85.0
-      sass-loader: 16.0.5(sass@1.85.0)(webpack@5.98.0(esbuild@0.25.1))
-      semver: 7.7.1
-      source-map-loader: 5.0.0(webpack@5.98.0(esbuild@0.25.1))
-      source-map-support: 0.5.21
-      terser: 5.39.0
-      tree-kill: 1.2.2
-      tslib: 2.8.1
-      typescript: 5.8.2
-      webpack: 5.98.0(esbuild@0.25.1)
-      webpack-dev-middleware: 7.4.2(webpack@5.98.0(esbuild@0.25.1))
-      webpack-dev-server: 5.2.0(webpack@5.98.0(esbuild@0.25.1))
-      webpack-merge: 6.0.1
-      webpack-subresource-integrity: 5.1.0(webpack@5.98.0(esbuild@0.25.1))
-    optionalDependencies:
-      '@angular/localize': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)
-      '@angular/platform-server': 19.2.6(6dzib5m27ou7hhtuxzetp2avl4)
-      '@angular/ssr': 19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4))
-      esbuild: 0.25.1
-      karma: 6.4.3
-      protractor: 7.0.0
-    transitivePeerDependencies:
-      - '@angular/compiler'
-      - '@rspack/core'
-      - '@swc/core'
-      - '@types/node'
-      - bufferutil
-      - chokidar
-      - debug
-      - html-webpack-plugin
-      - jiti
-      - lightningcss
-      - node-sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - tsx
-      - uglify-js
-      - utf-8-validate
-      - vite
-      - webpack-cli
-      - yaml
-
   '@angular-devkit/build-webpack@0.1902.7(chokidar@4.0.1)(webpack-dev-server@5.2.0(webpack@5.98.0(esbuild@0.25.1)))(webpack@5.98.0(esbuild@0.25.1))':
     dependencies:
       '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
@@ -10079,112 +9976,6 @@ snapshots:
       less: 4.2.2
       lmdb: 3.2.6
       postcss: 8.5.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - chokidar
-      - jiti
-      - lightningcss
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
-  '@angular/build@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(less@4.2.2)(postcss@8.5.2)(terser@5.39.0)(tslib@2.8.1)(typescript@5.8.2)(yaml@1.10.2)':
-    dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
-      '@angular/compiler': 19.2.6
-      '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
-      '@babel/core': 7.26.10
-      '@babel/helper-annotate-as-pure': 7.25.9
-      '@babel/helper-split-export-declaration': 7.24.7
-      '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.26.10)
-      '@inquirer/confirm': 5.1.6(@types/node@22.14.1)
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))
-      beasties: 0.3.2
-      browserslist: 4.24.4
-      esbuild: 0.25.1
-      fast-glob: 3.3.3
-      https-proxy-agent: 5.0.0(supports-color@10.0.0)
-      istanbul-lib-instrument: 6.0.3
-      listr2: 8.2.5
-      magic-string: 0.30.17
-      mrmime: 2.0.1
-      parse5-html-rewriting-stream: 7.0.0
-      picomatch: 4.0.2
-      piscina: 4.8.0
-      rollup: 4.34.8
-      sass: 1.85.0
-      semver: 7.7.1
-      source-map-support: 0.5.21
-      tslib: 2.8.1
-      typescript: 5.8.2
-      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@1.10.2)
-      watchpack: 2.4.2
-    optionalDependencies:
-      '@angular/localize': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)
-      '@angular/platform-server': 19.2.6(6dzib5m27ou7hhtuxzetp2avl4)
-      '@angular/ssr': 19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4))
-      karma: 6.4.3
-      less: 4.2.2
-      lmdb: 3.2.6
-      postcss: 8.5.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - chokidar
-      - jiti
-      - lightningcss
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
-  '@angular/build@19.2.7(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)(@angular/localize@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/ssr@19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4)))(@types/node@22.14.1)(jiti@1.21.6)(karma@6.4.3)(less@4.2.2)(postcss@8.5.3)(terser@5.39.0)(tslib@2.8.1)(typescript@5.8.2)(yaml@1.10.2)':
-    dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@angular-devkit/architect': 0.1902.7(chokidar@4.0.1)
-      '@angular/compiler': 19.2.6
-      '@angular/compiler-cli': 19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2)
-      '@babel/core': 7.26.10
-      '@babel/helper-annotate-as-pure': 7.25.9
-      '@babel/helper-split-export-declaration': 7.24.7
-      '@babel/plugin-syntax-import-attributes': 7.26.0(@babel/core@7.26.10)
-      '@inquirer/confirm': 5.1.6(@types/node@22.14.1)
-      '@vitejs/plugin-basic-ssl': 1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))
-      beasties: 0.3.2
-      browserslist: 4.24.4
-      esbuild: 0.25.1
-      fast-glob: 3.3.3
-      https-proxy-agent: 5.0.0(supports-color@10.0.0)
-      istanbul-lib-instrument: 6.0.3
-      listr2: 8.2.5
-      magic-string: 0.30.17
-      mrmime: 2.0.1
-      parse5-html-rewriting-stream: 7.0.0
-      picomatch: 4.0.2
-      piscina: 4.8.0
-      rollup: 4.34.8
-      sass: 1.85.0
-      semver: 7.7.1
-      source-map-support: 0.5.21
-      tslib: 2.8.1
-      typescript: 5.8.2
-      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@1.10.2)
-      watchpack: 2.4.2
-    optionalDependencies:
-      '@angular/localize': 19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/compiler@19.2.6)
-      '@angular/platform-server': 19.2.6(6dzib5m27ou7hhtuxzetp2avl4)
-      '@angular/ssr': 19.2.7(@angular/common@19.2.6(@angular/compiler-cli@19.2.6(@angular/compiler@19.2.6)(typescript@5.8.2))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(rxjs@6.6.7))(@angular/core@19.2.6(@angular/compiler@19.2.6)(rxjs@6.6.7)(zone.js@0.15.0))(@angular/platform-server@19.2.6(6dzib5m27ou7hhtuxzetp2avl4))(@angular/router@19.2.6(6mwbn2u7isl72gfbduwj4nwoh4))
-      karma: 6.4.3
-      less: 4.2.2
-      lmdb: 3.2.6
-      postcss: 8.5.3
     transitivePeerDependencies:
       - '@types/node'
       - chokidar
@@ -12804,10 +12595,6 @@ snapshots:
       eslint-visitor-keys: 4.2.0
 
   '@ungap/structured-clone@1.3.0': {}
-
-  '@vitejs/plugin-basic-ssl@1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2))':
-    dependencies:
-      vite: 6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2)
 
   '@vitejs/plugin-basic-ssl@1.2.0(vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1))':
     dependencies:
@@ -20250,20 +20037,6 @@ snapshots:
       unist-util-stringify-position: 1.1.2
       vfile-message: 1.1.1
 
-  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@1.10.2):
-    dependencies:
-      esbuild: 0.25.1
-      postcss: 8.5.3
-      rollup: 4.34.9
-    optionalDependencies:
-      '@types/node': 22.14.1
-      fsevents: 2.3.3
-      jiti: 1.21.6
-      less: 4.2.2
-      sass: 1.85.0
-      terser: 5.39.0
-      yaml: 1.10.2
-
   vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.1):
     dependencies:
       esbuild: 0.25.1
@@ -20277,20 +20050,6 @@ snapshots:
       sass: 1.85.0
       terser: 5.39.0
       yaml: 2.7.1
-
-  vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.85.1)(terser@5.39.0)(yaml@1.10.2):
-    dependencies:
-      esbuild: 0.25.1
-      postcss: 8.5.3
-      rollup: 4.34.9
-    optionalDependencies:
-      '@types/node': 22.14.1
-      fsevents: 2.3.3
-      jiti: 1.21.6
-      less: 4.2.2
-      sass: 1.85.1
-      terser: 5.39.0
-      yaml: 1.10.2
 
   vite@6.2.5(@types/node@22.14.1)(jiti@1.21.6)(less@4.2.2)(sass@1.86.3)(terser@5.39.0)(yaml@2.7.1):
     dependencies:
