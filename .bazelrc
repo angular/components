@@ -30,6 +30,9 @@ build --incompatible_strict_action_env
 # and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df
 build --nobuild_runfile_links
 
+# Prevents the npm package extract from occuring or caching on RBE which overwhelms our quota
+build --modify_execution_info=NpmPackageExtract=+no-remote
+
 ###############################
 # Output control              #
 ###############################
