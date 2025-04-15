@@ -243,16 +243,16 @@ describe('MatBadge', () => {
       badgeHostNativeElement = badgeHostDebugElement.nativeElement;
     });
 
-    it('should insert the description inline after the host', () => {
+    it('should insert description as next sibling for host', () => {
       testComponent.description.set('Extra info');
       fixture.detectChanges();
 
-      const inlineDescription = badgeHostNativeElement.querySelector('.cdk-visually-hidden')!;
+      const inlineDescription = badgeHostNativeElement.nextSibling!;
       expect(inlineDescription)
         .withContext('A visually hidden description element should exist')
         .toBeDefined();
       expect(inlineDescription.textContent)
-        .withContext('The badge host next sibling should contain its description')
+        .withContext('The badge next sibling should contain its description')
         .toBe('Extra info');
 
       testComponent.description.set('Different info');
@@ -263,13 +263,33 @@ describe('MatBadge', () => {
         .toBe('Different info');
     });
 
-    it('should not apply aria-describedby for non-interactive hosts', () => {
+    it('should not apply aria-describedby for non-interactive host', () => {
       testComponent.description.set('Extra info');
       fixture.detectChanges();
 
       expect(badgeHostNativeElement.hasAttribute('aria-description'))
         .withContext('Non-interactive hosts should not have aria-describedby')
         .toBeFalse();
+    });
+
+    it('should not insert description as next sibling if description is not provided', () => {
+      fixture.detectChanges();
+
+      expect(badgeHostNativeElement.nextSibling).toBeFalsy();
+    });
+
+    it('should not create multiple description elements if description changes', () => {
+      testComponent.description.set('one');
+      fixture.detectChanges();
+
+      let siblings = fixture.nativeElement.querySelectorAll('.cdk-visually-hidden');
+      expect(siblings.length).toBe(1);
+
+      testComponent.description.set('two');
+      fixture.detectChanges();
+
+      siblings = fixture.nativeElement.querySelectorAll('.cdk-visually-hidden');
+      expect(siblings.length).toBe(1);
     });
   });
 });
