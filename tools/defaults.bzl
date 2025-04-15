@@ -9,8 +9,7 @@ load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
 load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
-load("//tools:defaults2.bzl", "spec_bundle", _karma_web_test_suite = "karma_web_test_suite")
-load("@rules_browsers//src/protractor_test:index.bzl", "protractor_test")
+load("//tools:defaults2.bzl", _ng_web_test_suite = "ng_web_test_suite")
 
 npmPackageSubstitutions = select({
     "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
@@ -20,7 +19,7 @@ npmPackageSubstitutions = select({
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
 extract_tokens = _extract_tokens
-karma_web_test_suite = _karma_web_test_suite
+ng_web_test_suite = _ng_web_test_suite
 
 def sass_binary(sourcemap = False, include_paths = [], **kwargs):
     _sass_binary(
@@ -120,91 +119,5 @@ def pkg_npm(name, visibility = None, **kwargs):
         validate = False,
         substitutions = npmPackageSubstitutions,
         visibility = visibility,
-        **kwargs
-    )
-
-    pkg_tar(
-        name = name + "_archive",
-        srcs = [":%s" % name],
-        package_dir = "package/",
-        extension = "tar.gz",
-        strip_prefix = "./%s" % name,
-        # Target should not build on CI unless it is explicitly requested.
-        tags = ["manual"],
-        visibility = visibility,
-    )
-
-def protractor_web_test_suite(name, deps, **kwargs):
-    spec_bundle(
-        name = "%s_bundle" % name,
-        deps = deps,
-        external = ["protractor", "selenium-webdriver"],
-    )
-
-    protractor_test(
-        name = name,
-        deps = [":%s_bundle" % name],
-        extra_config = {
-            "useAllAngular2AppRoots": True,
-            "allScriptsTimeout": 120000,
-            "getPageTimeout": 120000,
-            "jasmineNodeOpts": {
-                "defaultTimeoutInterval": 120000,
-            },
-            # Since we want to use async/await we don't want to mix up with selenium's promise
-            # manager. In order to enforce this, we disable the promise manager.
-            "SELENIUM_PROMISE_MANAGER": False,
-        },
-        data = [
-            "//:node_modules/protractor",
-            "//:node_modules/selenium-webdriver",
-        ],
-        **kwargs
-    )
-
-def ng_web_test_suite(deps = [], static_css = [], **kwargs):
-    # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
-    # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
-    # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
-    # prebuilt theme will be also added to CDK test suites but shouldn't affect anything.
-    static_css = static_css + [
-        "//src/material/prebuilt-themes:azure-blue",
-    ]
-
-    bootstrap = []
-
-    # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
-    # Since some of our tests depend on CSS files which are not part of the `ng_project` rule,
-    # we need to somehow load static CSS files within Karma (e.g. overlay prebuilt). Those styles
-    # are required for successful test runs. Since the `karma_web_test_suite` rule currently only
-    # allows JS files to be included and served within Karma, we need to create a JS file that
-    # loads the given CSS file.
-    for css_label in static_css:
-        css_id = "static-css-file-%s" % (css_label.replace("/", "_").replace(":", "-"))
-        bootstrap.append(":%s" % css_id)
-
-        native.genrule(
-            name = css_id,
-            srcs = [css_label],
-            outs = ["%s.css.init.js" % css_id],
-            output_to_bindir = True,
-            cmd = """
-        files=($(execpaths %s))
-        # Escape all double-quotes so that the content can be safely inlined into the
-        # JS template. Note that it needs to be escaped a second time because the string
-        # will be evaluated first in Bash and will then be stored in the JS output.
-        css_content=$$(cat $${files[0]} | sed 's/"/\\\\"/g')
-        js_template='var cssElement = document.createElement("style"); \
-                    cssElement.type = "text/css"; \
-                    cssElement.innerHTML = "'"$$css_content"'"; \
-                    document.head.appendChild(cssElement);'
-         echo "$$js_template" > $@
-      """ % css_label,
-        )
-
-    karma_web_test_suite(
-        # Depend on our custom test initialization script. This needs to be the first dependency.
-        deps = deps,
-        bootstrap = ["//test:angular_test_init"] + bootstrap,
         **kwargs
     )
