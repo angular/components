@@ -175,6 +175,9 @@ importers:
       '@bazel/buildifier':
         specifier: 6.1.2
         version: 6.1.2
+      '@bazel/ibazel':
+        specifier: ^0.25.0
+        version: 0.25.0
       '@bazel/runfiles':
         specifier: 5.8.1
         version: 5.8.1
@@ -1579,6 +1582,10 @@ packages:
 
   '@bazel/buildifier@6.1.2':
     resolution: {integrity: sha512-psKePmRkP6acwyePOhXP67R/wdwN7BGJxHqp1j5myaO24feMsaXyyiO+oW49x8YAwOpKVSCujVzkTwX2auAc0A==}
+    hasBin: true
+
+  '@bazel/ibazel@0.25.0':
+    resolution: {integrity: sha512-dtosfsuZCSaqlUe5EyxNdaN7Gow0Y+ZJixdlciytcSieUcB/1lXPFTx6OihxhjgtTHkeFovlQ/QbvArRPnk+nQ==}
     hasBin: true
 
   '@bazel/runfiles@5.8.1':
@@ -10859,6 +10866,8 @@ snapshots:
   '@bazel/bazelisk@1.12.1': {}
 
   '@bazel/buildifier@6.1.2': {}
+
+  '@bazel/ibazel@0.25.0': {}
 
   '@bazel/runfiles@5.8.1': {}
 
