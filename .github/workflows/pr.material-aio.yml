@@ -3,8 +3,6 @@ name: 'PR (material.angular.io)'
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'material.angular.io/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,7 +23,7 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Linting
@@ -39,7 +37,7 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Build
@@ -53,7 +51,7 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Tests
@@ -74,7 +72,7 @@ jobs:
       - name: Setup Bazel
         uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Lighthouse Audit
