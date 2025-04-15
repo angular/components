@@ -9,9 +9,7 @@ import {projectDir, sites} from '../utils.mjs';
  * specified remote URL is properly functioning.
  */
 export async function runMonitorTests(remoteUrl: string) {
-  cd(path.join(projectDir, 'docs'));
-
-  await $`node ./tools/audit-docs.js ${remoteUrl}`;
+  await $`pnpm bazel run //docs:audit_tool -- ${remoteUrl}`;
 }
 
 /** Runs the monitoring tests for the stable release train. */

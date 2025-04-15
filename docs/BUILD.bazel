@@ -1,5 +1,5 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library", "js_test")
 load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("//docs:defs.bzl", "ng_app")
 
@@ -46,20 +46,42 @@ ng_app(
     ],
 )
 
-js_test(
-    name = "audit",
-    args = [
-        "$(location //docs:build.production)",
+js_library(
+    name = "audit_lib",
+    srcs = [
+        "tools/audit-docs.js",
+        "tools/lighthouse-audit.mjs",
     ],
     data = [
-        "tools/lighthouse-audit.mjs",
-        "//docs:build.production",
         "//docs:node_modules/light-server",
         "//docs:node_modules/lighthouse",
         "//docs:node_modules/lighthouse-logger",
         "//docs:node_modules/puppeteer-core",
         "//docs:node_modules/shelljs",
         "@rules_browsers//src/browsers/chromium",
+    ],
+)
+
+js_binary(
+    name = "audit_tool",
+    data = [":audit_lib"],
+    entry_point = "tools/audit-docs.js",
+    env = {
+        "CHROMIUM_BIN": "$(CHROME-HEADLESS-SHELL)",
+    },
+    toolchains = [
+        "@rules_browsers//src/browsers/chromium:toolchain_alias",
+    ],
+)
+
+js_test(
+    name = "audit",
+    args = [
+        "$(location //docs:build.production)",
+    ],
+    data = [
+        ":audit_lib",
+        "//docs:build.production",
     ],
     entry_point = "tools/audit-docs.js",
     env = {
