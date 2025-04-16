@@ -1,4 +1,3 @@
-load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
@@ -6,26 +5,11 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "sass_lib",
     srcs = [
-        "compiler-main.ts",
         "local-sass-importer.ts",
     ],
     tsconfig = "//tools:tsconfig",
     deps = [
-        "//:node_modules/@bazel/worker",
         "//:node_modules/@types/node",
-        "//:node_modules/@types/yargs",
         "//:node_modules/sass",
-        "//:node_modules/yargs",
     ],
-)
-
-js_binary(
-    name = "compiler",
-    data = [":sass_lib"],
-    entry_point = "compiler-main.js",
-    env = {
-        # TODO(devversion): Replace `rules_sass` with modernized standalone ruleset.
-        # e.g. https://github.com/devversion/rules_sass.
-        "BAZEL_BINDIR": ".",
-    },
 )
