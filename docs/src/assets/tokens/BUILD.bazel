@@ -1,0 +1,10 @@
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+
+copy_to_directory(
+    name = "tokens",
+    srcs = ["//src/material:tokens"],
+    replace_prefixes = {
+        "src/material/": "",
+    },
+    visibility = ["//docs:__pkg__"],
+)
