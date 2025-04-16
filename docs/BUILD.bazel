@@ -43,6 +43,7 @@ ng_app(
         "//docs:node_modules/@stackblitz/sdk",
         "//docs:node_modules/moment",
         "//docs:node_modules/path-normalize",
+        "//src/material:tokens",
     ],
 )
 
