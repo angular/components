@@ -285,6 +285,17 @@ export class MatDateRangeInput<D>
   }
 
   /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  get describedByIds(): string[] {
+    const element = this._elementRef.nativeElement;
+    const existingDescribedBy = element.getAttribute('aria-describedby');
+
+    return existingDescribedBy?.split(' ') || [];
+  }
+
+  /**
    * Implemented as a part of `MatFormFieldControl`.
    * @docs-private
    */

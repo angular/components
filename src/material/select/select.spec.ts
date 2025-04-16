@@ -225,6 +225,16 @@ describe('MatSelect', () => {
           expect(select.getAttribute('aria-describedby')).toBe('test');
         });
 
+        it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+          select.setAttribute('aria-describedby', 'custom');
+          fixture.componentInstance.hint = 'test';
+          fixture.changeDetectorRef.markForCheck();
+          fixture.detectChanges();
+          const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+
+          expect(select.getAttribute('aria-describedby')).toBe(`${hint.getAttribute('id')} custom`);
+        }));
+
         it('should be able to override the tabindex', () => {
           fixture.componentInstance.tabIndexOverride = 3;
           fixture.changeDetectorRef.markForCheck();

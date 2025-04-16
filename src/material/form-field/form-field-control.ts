@@ -75,6 +75,9 @@ export abstract class MatFormFieldControl<T> {
    */
   readonly disableAutomaticLabeling?: boolean;
 
+  /** Gets the list of element IDs that currently describe this control. */
+  readonly describedByIds?: string[];
+
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;
 

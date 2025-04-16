@@ -114,9 +114,6 @@ export class MatInput
   private _cleanupIosKeyup: (() => void) | undefined;
   private _cleanupWebkitWheel: (() => void) | undefined;
 
-  /** `aria-describedby` IDs assigned by the form field. */
-  private _formFieldDescribedBy: string[] | undefined;
-
   /** Whether the component is being rendered on the server. */
   readonly _isServer: boolean;
 
@@ -554,28 +551,22 @@ export class MatInput
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  setDescribedByIds(ids: string[]) {
+  get describedByIds(): string[] {
     const element = this._elementRef.nativeElement;
     const existingDescribedBy = element.getAttribute('aria-describedby');
-    let toAssign: string[];
 
-    // In some cases there might be some `aria-describedby` IDs that were assigned directly,
-    // like by the `AriaDescriber` (see #30011). Attempt to preserve them by taking the previous
-    // attribute value and filtering out the IDs that came from the previous `setDescribedByIds`
-    // call. Note the `|| ids` here allows us to avoid duplicating IDs on the first render.
-    if (existingDescribedBy) {
-      const exclude = this._formFieldDescribedBy || ids;
-      toAssign = ids.concat(
-        existingDescribedBy.split(' ').filter(id => id && !exclude.includes(id)),
-      );
-    } else {
-      toAssign = ids;
-    }
+    return existingDescribedBy?.split(' ') || [];
+  }
 
-    this._formFieldDescribedBy = ids;
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  setDescribedByIds(ids: string[]) {
+    const element = this._elementRef.nativeElement;
 
-    if (toAssign.length) {
-      element.setAttribute('aria-describedby', toAssign.join(' '));
+    if (ids.length) {
+      element.setAttribute('aria-describedby', ids.join(' '));
     } else {
       element.removeAttribute('aria-describedby');
     }

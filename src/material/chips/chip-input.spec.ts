@@ -156,6 +156,38 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.classList).toContain('mat-mdc-chip-input');
       expect(inputNativeElement.classList).toContain('mdc-text-field__input');
     });
+
+    it('should set `aria-describedby` to the id of the mat-hint', () => {
+      expect(inputNativeElement.getAttribute('aria-describedby')).toBeNull();
+
+      fixture.componentInstance.hint = 'test';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+
+      expect(inputNativeElement.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
+      expect(inputNativeElement.getAttribute('aria-describedby')).toMatch(/^mat-mdc-hint-\w+\d+$/);
+    });
+
+    it('should support user binding to `aria-describedby`', () => {
+      inputNativeElement.setAttribute('aria-describedby', 'test');
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(inputNativeElement.getAttribute('aria-describedby')).toBe('test');
+    });
+
+    it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
+      inputNativeElement.setAttribute('aria-describedby', 'custom');
+      fixture.componentInstance.hint = 'test';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+
+      expect(inputNativeElement.getAttribute('aria-describedby')).toBe(
+        `${hint.getAttribute('id')} custom`,
+      );
+    }));
   });
 
   describe('[addOnBlur]', () => {
@@ -291,7 +323,7 @@ describe('MatChipInput', () => {
 
 @Component({
   template: `
-    <mat-form-field>
+    <mat-form-field [hintLabel]="hint">
       <mat-chip-grid #chipGrid [required]="required">
         <mat-chip-row>Hello</mat-chip-row>
         <input
@@ -311,6 +343,7 @@ class TestChipInput {
   placeholder = '';
   required = false;
   disabledInteractive = false;
+  hint: string;
 
   add(_: MatChipInputEvent) {}
 }

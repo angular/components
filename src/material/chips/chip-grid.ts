@@ -353,6 +353,14 @@ export class MatChipGrid
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
+  get describedByIds(): string[] {
+    return this._chipInput?.describedByIds || [];
+  }
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   setDescribedByIds(ids: string[]) {
     // We must keep this up to date to handle the case where ids are set
     // before the chip input is registered.
