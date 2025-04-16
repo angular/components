@@ -58,11 +58,6 @@ build:release --stamp
 build:snapshot-build --workspace_status_command="pnpm -s ng-dev:stamp --mode=snapshot"
 build:snapshot-build --stamp
 
-####################################
-# Bazel custom flags               #
-####################################
-build --flag_alias=partial_compilation=@rules_angular//src/ng_project/config:partial_compilation
-
 ##################################
 # Always enable Ivy compilation  #
 ##################################
