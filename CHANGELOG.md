@@ -1,3 +1,31 @@
+<a name="20.0.0-next.7"></a>
+# 20.0.0-next.7 "metal-keys" (2025-04-16)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [91a0cf9b02](https://github.com/angular/components/commit/91a0cf9b02ba34d3775ba7ec73a88a1a1624cc7f) | fix | **overlay:** disable overlay animation with prefers-reduced-motion ([#30858](https://github.com/angular/components/pull/30858)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5dcbba70a9](https://github.com/angular/components/commit/5dcbba70a959e1ceacbef6b9f3db26e48e82696d) | fix | **bottom-sheet:** page jumping if backdrop-filter is applied ([#30840](https://github.com/angular/components/pull/30840)) |
+| [92bcc67c2d](https://github.com/angular/components/commit/92bcc67c2d2be8c9560c0e1ab59598b20f7753da) | fix | **core:** include density tokens in system theme ([#30845](https://github.com/angular/components/pull/30845)) |
+| [a5aade2df3](https://github.com/angular/components/commit/a5aade2df3a34532924365c3ac797e4b343633f6) | fix | **form-field:** preserve aria-describedby set externally across all form controls ([#30699](https://github.com/angular/components/pull/30699)) |
+| [8b033742b6](https://github.com/angular/components/commit/8b033742b68c08b733e2df4caf0fe0ced61db57a) | fix | **snack-bar:** change politeness level ([#30851](https://github.com/angular/components/pull/30851)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [18ddea3307](https://github.com/angular/components/commit/18ddea33077d5c7c805f6dcf8f6e31f7d1863dd2) | fix | use safevalues ([#30773](https://github.com/angular/components/pull/30773)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9caed2a8a7](https://github.com/angular/components/commit/9caed2a8a7b0433383b19526cadbf20325685040) | feat | **ui-patterns:** tabs ui pattern ([#30568](https://github.com/angular/components/pull/30568)) |
+| [184ceee3a1](https://github.com/angular/components/commit/184ceee3a1abd829f303c606a05403b97a93a1b6) | fix | **listbox:** ignore spaces during typeahead ([#30766](https://github.com/angular/components/pull/30766)) |
+| [a7df65f3e0](https://github.com/angular/components/commit/a7df65f3e0faf6c3dca96876d99df67c4e2f42b4) | fix | **listbox:** use meta as alternative to ctrl ([#30852](https://github.com/angular/components/pull/30852)) |
+| [ae8f9dd282](https://github.com/angular/components/commit/ae8f9dd2828107af387062bae1aad03a9c8d6204) | fix | **ui-patterns:** fix lint and build config ([#30877](https://github.com/angular/components/pull/30877)) |
+| [10890983c8](https://github.com/angular/components/commit/10890983c8b91a5d5280e85b158b1a28eedda951) | fix | **ui-patterns:** listbox pointer event handler ([#30843](https://github.com/angular/components/pull/30843)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.10"></a>
 # 19.2.10 "plastic-monkey" (2025-04-16)
 ### cdk
