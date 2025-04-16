@@ -237,7 +237,7 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.getOffsetToRenderedContentStart()).toBe(10);
     }));
 
-    it('should set content offset to bottom of content', fakeAsync(async () => {
+    it('should set content offset to bottom of content', fakeAsync(() => {
       finishInit(fixture);
       const contentSize = viewport.measureRenderedContentSize();
 
@@ -245,7 +245,6 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setRenderedContentOffset(contentSize + 10, 'to-end');
       flush();
-      await fixture.whenStable();
 
       expect(viewport.getOffsetToRenderedContentStart()).toBe(10);
     }));
@@ -1066,7 +1065,7 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(0);
     }));
 
-    it('should set content offset to bottom of content', fakeAsync(async () => {
+    it('should set content offset to bottom of content', fakeAsync(() => {
       finishInit(fixture);
       const contentSize = viewport.measureRenderedContentSize();
 
@@ -1074,7 +1073,6 @@ describe('CdkVirtualScrollViewport', () => {
 
       viewport.setRenderedContentOffset(contentSize + 10, 'to-end');
       flush();
-      await fixture.whenStable();
 
       expect(viewport.getOffsetToRenderedContentStart()).toBe(0);
     }));

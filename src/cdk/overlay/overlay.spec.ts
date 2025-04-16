@@ -955,7 +955,6 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
-      await viewContainerFixture.whenStable();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.classList)
@@ -968,7 +967,6 @@ describe('Overlay', () => {
       expect(pane.classList)
         .withContext('Expected class not to be removed immediately')
         .toContain('custom-panel-class');
-      await viewContainerFixture.whenStable();
 
       pane.children[0].remove();
       await new Promise(r => setTimeout(r));

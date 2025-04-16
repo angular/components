@@ -17,13 +17,12 @@ describe('MatTestDialogOpener', () => {
     );
   });
 
-  it('should pass data to the component', async () => {
+  it('should pass data to the component', () => {
     const config = {data: 'test'};
     const fixture = TestBed.createComponent(
       MatTestDialogOpener.withComponent(ExampleComponent, config),
     );
     fixture.detectChanges();
-    await fixture.whenStable();
     const dialogContainer = document.querySelector('mat-dialog-container');
     expect(dialogContainer!.innerHTML).toContain('Data: test');
   });
