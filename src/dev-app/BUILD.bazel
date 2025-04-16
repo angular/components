@@ -107,6 +107,8 @@ esbuild(
     ] + ["%s:index.js" % e for e in ALL_EXAMPLES],
     minify = True,
     platform = "browser",
+    sourcemap = "linked",
+    sources_content = True,
     splitting = True,
     # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
     # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
