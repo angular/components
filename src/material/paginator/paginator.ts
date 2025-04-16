@@ -137,8 +137,7 @@ export class MatPaginator implements OnInit, OnDestroy {
     return this._pageIndex;
   }
   set pageIndex(value: number) {
-    this._pageIndex = Math.max(value || 0, 0);
-    this._changeDetectorRef.markForCheck();
+    this._navigate(value);
   }
   private _pageIndex = 0;
 
@@ -306,11 +305,8 @@ export class MatPaginator implements OnInit, OnDestroy {
     // Current page needs to be updated to reflect the new page size. Navigate to the page
     // containing the previous page's first item.
     const startIndex = this.pageIndex * this.pageSize;
-    const previousPageIndex = this.pageIndex;
-
-    this.pageIndex = Math.floor(startIndex / pageSize) || 0;
     this.pageSize = pageSize;
-    this._emitPageEvent(previousPageIndex);
+    this.pageIndex = Math.floor(startIndex / pageSize) || 0;
   }
 
   /** Checks whether the buttons for going forwards should be disabled. */
@@ -361,11 +357,11 @@ export class MatPaginator implements OnInit, OnDestroy {
 
   /** Navigates to a specific page index. */
   private _navigate(index: number) {
-    const previousIndex = this.pageIndex;
-
-    if (index !== previousIndex) {
-      this.pageIndex = index;
-      this._emitPageEvent(previousIndex);
+    if (index !== this.pageIndex) {
+      const previousPageIndex = this._pageIndex;
+      this._pageIndex = Math.max(index || 0, 0);
+      this._changeDetectorRef.markForCheck();
+      this._emitPageEvent(previousPageIndex);
     }
   }
 

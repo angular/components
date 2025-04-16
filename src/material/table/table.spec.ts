@@ -566,6 +566,18 @@ describe('MatTable', () => {
         ['a_10', 'b_10', 'c_10'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
+
+      component.paginator.pageIndex = 0;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['a_5', 'b_5', 'c_5'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
     }));
 
     it('should sort strings with numbers larger than MAX_SAFE_INTEGER correctly', () => {
