@@ -1,3 +1,16 @@
+<a name="19.2.10"></a>
+# 19.2.10 "plastic-monkey" (2025-04-16)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [604e4d6c98](https://github.com/angular/components/commit/604e4d6c98bc9cff5bad28353d5464e5c7861a9b) | fix | **overlay:** disable overlay animation with prefers-reduced-motion ([#30858](https://github.com/angular/components/pull/30858)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ef723db2e0](https://github.com/angular/components/commit/ef723db2e0d8c1414ad94093f056d305a14a29ef) | fix | **bottom-sheet:** page jumping if backdrop-filter is applied ([#30840](https://github.com/angular/components/pull/30840)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.9"></a>
 # 19.2.9 "abellaite-apron" (2025-04-09)
 ### cdk
