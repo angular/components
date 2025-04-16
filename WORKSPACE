@@ -283,7 +283,7 @@ rules_browsers_setup_2()
 
 git_repository(
     name = "rules_sass",
-    commit = "a32f75ce6fa0c5370bd3f29a5306478c681ad124",
+    commit = "3cd198e291caf21ba8f7105d53963dd3df62ef6d",
     remote = "https://github.com/devversion/rules_sass.git",
 )
 
