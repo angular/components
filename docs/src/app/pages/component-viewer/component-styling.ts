@@ -2,7 +2,7 @@ import {Component, inject, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 import {ComponentViewer} from './component-viewer';
 import {DocItem} from '../../shared/documentation-items/documentation-items';
@@ -24,7 +24,11 @@ class TokenService {
   private _cache: Record<string, Observable<StyleOverridesData>> = {};
 
   getTokenData(item: DocItem): Observable<StyleOverridesData> {
-    const url = `/docs-content/tokens/${item.packageName}/${item.id}/${item.id}.json`;
+    if (item.packageName !== 'material') {
+      console.error('Requested styling token data for package without token data.');
+      return of({example: null, themes: []});
+    }
+    const url = `/assets/tokens/tokens/${item.id}/${item.id}.json`;
 
     if (this._cache[url]) {
       return this._cache[url];
