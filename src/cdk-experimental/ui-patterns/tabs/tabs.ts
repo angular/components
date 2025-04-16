@@ -6,14 +6,67 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {computed, signal} from '@angular/core';
+
 import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
 import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
-import {TabPattern} from './tab';
-import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
-import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
-import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
-import {computed, signal} from '@angular/core';
+import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
+import {
+  ListNavigation,
+  ListNavigationInputs,
+  ListNavigationItem,
+} from '../behaviors/list-navigation/list-navigation';
+import {
+  ListSelection,
+  ListSelectionInputs,
+  ListSelectionItem,
+} from '../behaviors/list-selection/list-selection';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
+
+/** The required inputs to tabs. */
+export interface TabInputs extends ListNavigationItem, ListSelectionItem<string>, ListFocusItem {
+  tablist: SignalLike<TabListPattern>;
+  tabpanel: SignalLike<TabPanelPattern | undefined>;
+}
+
+/** A tab in a tablist. */
+export class TabPattern {
+  /** A global unique identifier for the tab. */
+  id: SignalLike<string>;
+
+  /** A local unique identifier for the tab. */
+  value: SignalLike<string>;
+
+  /** Whether the tab is selected. */
+  selected = computed(() => this.tablist().selection.inputs.value().includes(this.value()));
+
+  /** A Tabpanel Id controlled by the tab. */
+  controls = computed(() => this.tabpanel()?.id());
+
+  /** Whether the tab is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** A reference to the parent tablist. */
+  tablist: SignalLike<TabListPattern>;
+
+  /** A reference to the corresponding tabpanel. */
+  tabpanel: SignalLike<TabPanelPattern | undefined>;
+
+  /** The tabindex of the tab. */
+  tabindex = computed(() => this.tablist().focusManager.getItemTabindex(this));
+
+  /** The html element that should receive focus. */
+  element: SignalLike<HTMLElement>;
+
+  constructor(inputs: TabInputs) {
+    this.id = inputs.id;
+    this.value = inputs.value;
+    this.tablist = inputs.tablist;
+    this.tabpanel = inputs.tabpanel;
+    this.element = inputs.element;
+    this.disabled = inputs.disabled;
+  }
+}
 
 /** The selection operations that the tablist can perform. */
 interface SelectOptions {
@@ -29,6 +82,34 @@ export type TabListInputs = ListNavigationInputs<TabPattern> &
   ListFocusInputs<TabPattern> & {
     disabled: SignalLike<boolean>;
   };
+
+/** The required inputs for the tabpanel. */
+export interface TabPanelInputs {
+  id: SignalLike<string>;
+  tab: SignalLike<TabPattern | undefined>;
+  value: SignalLike<string>;
+}
+
+/** A tabpanel associated with a tab. */
+export class TabPanelPattern {
+  /** A global unique identifier for the tabpanel. */
+  id: SignalLike<string>;
+
+  /** A local unique identifier for the tabpanel. */
+  value: SignalLike<string>;
+
+  /** A reference to the corresponding tab. */
+  tab: SignalLike<TabPattern | undefined>;
+
+  /** Whether the tabpanel is hidden. */
+  hidden = computed(() => !this.tab()?.selected());
+
+  constructor(inputs: TabPanelInputs) {
+    this.id = inputs.id;
+    this.value = inputs.value;
+    this.tab = inputs.tab;
+  }
+}
 
 /** Controls the state of a tablist. */
 export class TabListPattern {
