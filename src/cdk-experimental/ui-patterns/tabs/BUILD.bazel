@@ -5,9 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "tabs",
     srcs = [
-        "tab.ts",
-        "tablist.ts",
-        "tabpanel.ts",
+        "tabs.ts",
     ],
     deps = [
         "//:node_modules/@angular/core",

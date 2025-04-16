@@ -2,10 +2,12 @@
 CDK_EXPERIMENTAL_ENTRYPOINTS = [
     "column-resize",
     "combobox",
+    "deferred-content",
     "listbox",
     "popover-edit",
     "scrolling",
     "selection",
+    "tabs",
     "table-scroll-container",
     "ui-patterns",
 ]

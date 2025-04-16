@@ -6,6 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
+import {_IdGenerator} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   booleanAttribute,
   computed,
@@ -16,16 +19,11 @@ import {
   ElementRef,
   inject,
   input,
-  signal,
   model,
+  signal,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
-import {TabPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tab';
-import {TabListPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tablist';
-import {TabPanelPattern} from '@angular/cdk-experimental/ui-patterns/tabs/tabpanel';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {_IdGenerator} from '@angular/cdk/a11y';
+import {TabListPattern, TabPanelPattern, TabPattern} from '../ui-patterns';
 
 /**
  * A Tabs container.
