@@ -7,6 +7,10 @@
 
 .mat-mdc-button-base {
   text-decoration: none;
+  // Makes button icon not cut off/shrink vertically making the icon visible to fix b/250063405
+  & .mat-icon {
+    min-height: min-content;
+  }
 }
 
 .mdc-button {
