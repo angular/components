@@ -72,20 +72,16 @@ describe('MatToolbar', () => {
       }).toThrowError(/attempting to combine different/i);
     });
 
-    it('should throw an error if a toolbar-row is added later', async () => {
+    it('should throw an error if a toolbar-row is added later', () => {
       const fixture = TestBed.createComponent(ToolbarMixedRowModes);
 
-      await expectAsync(
-        (async () => {
-          fixture.componentInstance.showToolbarRow.set(false);
-          fixture.detectChanges();
-          await fixture.whenStable();
+      expect(() => {
+        fixture.componentInstance.showToolbarRow.set(false);
+        fixture.detectChanges();
 
-          fixture.componentInstance.showToolbarRow.set(true);
-          fixture.detectChanges();
-          await fixture.whenStable();
-        })(),
-      ).toBeRejectedWithError(/attempting to combine different/i);
+        fixture.componentInstance.showToolbarRow.set(true);
+        fixture.detectChanges();
+      }).toThrowError(/attempting to combine different/i);
     });
 
     it('should pick up indirect descendant rows', () => {

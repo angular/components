@@ -6,7 +6,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  inject as inject_1,
+  inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -217,16 +217,13 @@ describe('FocusTrap', () => {
       fixture.componentInstance.showTrappedRegion = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      expect(getActiveElement().id).toBe('auto-capture-target');
 
-      fixture.whenStable().then(() => {
-        expect(getActiveElement().id).toBe('auto-capture-target');
+      fixture.componentInstance.showTrappedRegion = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        fixture.componentInstance.showTrappedRegion = false;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-
-        expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-      });
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
     }));
 
     it('should capture focus if auto capture is enabled later on', waitForAsync(() => {
@@ -243,16 +240,13 @@ describe('FocusTrap', () => {
       fixture.componentInstance.autoCaptureEnabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      expect(getActiveElement().id).toBe('auto-capture-target');
 
-      fixture.whenStable().then(() => {
-        expect(getActiveElement().id).toBe('auto-capture-target');
+      fixture.componentInstance.showTrappedRegion = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        fixture.componentInstance.showTrappedRegion = false;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-
-        expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-      });
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
     }));
 
     it('should automatically capture and return focus on init / destroy inside the shadow DOM', waitForAsync(() => {
@@ -270,16 +264,13 @@ describe('FocusTrap', () => {
       fixture.componentInstance.showTrappedRegion = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      expect(getActiveElement().id).toBe('auto-capture-target');
 
-      fixture.whenStable().then(() => {
-        expect(getActiveElement().id).toBe('auto-capture-target');
+      fixture.componentInstance.showTrappedRegion = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        fixture.componentInstance.showTrappedRegion = false;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-
-        expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-      });
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
     }));
 
     it('should capture focus if auto capture is enabled later on inside the shadow DOM', waitForAsync(() => {
@@ -300,16 +291,13 @@ describe('FocusTrap', () => {
       fixture.componentInstance.autoCaptureEnabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
+      expect(getActiveElement().id).toBe('auto-capture-target');
 
-      fixture.whenStable().then(() => {
-        expect(getActiveElement().id).toBe('auto-capture-target');
+      fixture.componentInstance.showTrappedRegion = false;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        fixture.componentInstance.showTrappedRegion = false;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-
-        expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-      });
+      expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
     }));
   });
 
@@ -473,7 +461,7 @@ class FocusTrapWithoutFocusableElements {
   imports: [A11yModule, PortalModule],
 })
 class FocusTrapInsidePortal {
-  viewContainerRef = inject_1(ViewContainerRef);
+  viewContainerRef = inject(ViewContainerRef);
 
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
