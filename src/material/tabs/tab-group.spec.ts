@@ -102,20 +102,14 @@ describe('MatTabGroup', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      setTimeout(() => {
-        component.selectedIndex = 1;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
+      component.selectedIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
 
-        setTimeout(() => {
-          component.selectedIndex = 0;
-          fixture.changeDetectorRef.markForCheck();
-          fixture.detectChanges();
-          fixture.whenStable().then(() => {
-            expect(component.selectedIndex).toBe(0);
-          });
-        }, 1);
-      }, 1);
+      component.selectedIndex = 0;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(component.selectedIndex).toBe(0);
     }));
 
     it('should change tabs based on selectedIndex', fakeAsync(() => {

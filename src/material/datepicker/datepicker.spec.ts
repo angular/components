@@ -388,34 +388,28 @@ describe('MatDatepicker', () => {
         }),
       );
 
-      it(
-        'pressing enter on the currently selected date should close the calendar without ' +
-          'firing selectedChanged',
-        fakeAsync(() => {
-          const spy = jasmine.createSpy('selectionChanged spy');
-          const selectedSubscription = model.selectionChanged.subscribe(spy);
+      it('pressing enter on the currently selected date should close the calendar without firing selectedChanged', fakeAsync(() => {
+        const spy = jasmine.createSpy('selectionChanged spy');
+        const selectedSubscription = model.selectionChanged.subscribe(spy);
 
-          testComponent.datepicker.open();
-          fixture.detectChanges();
-          tick();
-          flush();
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        tick();
+        flush();
 
-          let calendarBodyEl = document.querySelector('.mat-calendar-body') as HTMLElement;
-          expect(calendarBodyEl).not.toBeNull();
-          expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
+        let calendarBodyEl = document.querySelector('.mat-calendar-body') as HTMLElement;
+        expect(calendarBodyEl).not.toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
 
-          dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
-          fixture.detectChanges();
-          flush();
+        dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
+        fixture.detectChanges();
+        flush();
 
-          fixture.whenStable().then(() => {
-            expect(spy).not.toHaveBeenCalled();
-            expect(document.querySelector('.mat-datepicker-dialog')).toBeNull();
-            expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
-            selectedSubscription.unsubscribe();
-          });
-        }),
-      );
+        expect(spy).not.toHaveBeenCalled();
+        expect(document.querySelector('.mat-datepicker-dialog')).toBeNull();
+        expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
+        selectedSubscription.unsubscribe();
+      }));
 
       it('startAt should fallback to input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
@@ -884,15 +878,10 @@ describe('MatDatepicker', () => {
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithNgModel, [MatNativeDateModule]);
         fixture.detectChanges();
-
-        fixture.whenStable().then(() => {
-          fixture.detectChanges();
-
-          testComponent = fixture.componentInstance;
-          model = fixture.debugElement
-            .query(By.directive(MatDatepicker))
-            .injector.get(MatDateSelectionModel);
-        });
+        testComponent = fixture.componentInstance;
+        model = fixture.debugElement
+          .query(By.directive(MatDatepicker))
+          .injector.get(MatDateSelectionModel);
       }));
 
       afterEach(fakeAsync(() => {

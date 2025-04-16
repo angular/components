@@ -441,7 +441,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
-    it('should not show if hide is called before delay finishes', waitForAsync(() => {
+    it('should not show if hide is called before delay finishes', () => {
       assertTooltipInstance(tooltipDirective, false);
 
       const tooltipDelay = 1000;
@@ -453,10 +453,8 @@ describe('MatTooltip', () => {
       expect(overlayContainerElement.textContent).toContain('');
       tooltipDirective.hide();
 
-      fixture.whenStable().then(() => {
-        expect(tooltipDirective._isTooltipVisible()).toBe(false);
-      });
-    }));
+      expect(tooltipDirective._isTooltipVisible()).toBe(false);
+    });
 
     it('should not show tooltip if message is not present or empty', () => {
       assertTooltipInstance(tooltipDirective, false);

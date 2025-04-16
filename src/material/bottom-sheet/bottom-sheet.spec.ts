@@ -648,24 +648,18 @@ describe('MatBottomSheet', () => {
       expect(focusTrapAnchors.length).toBeGreaterThan(0);
     }));
 
-    it(
-      'should focus the first tabbable element of the bottom sheet on open when' +
-        'autoFocus is set to "first-tabbable"',
-      async () => {
-        bottomSheet.open(PizzaMsg, {
-          viewContainerRef: testViewContainerRef,
-          autoFocus: 'first-tabbable',
-        });
+    it('should focus the first tabbable element of the bottom sheet on open when autoFocus is set to "first-tabbable"', () => {
+      bottomSheet.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        autoFocus: 'first-tabbable',
+      });
 
-        viewContainerFixture.detectChanges();
-        await viewContainerFixture.whenStable();
-        viewContainerFixture.detectChanges();
+      viewContainerFixture.detectChanges();
 
-        expect(document.activeElement!.tagName)
-          .withContext('Expected first tabbable element (input) in the dialog to be focused.')
-          .toBe('INPUT');
-      },
-    );
+      expect(document.activeElement!.tagName)
+        .withContext('Expected first tabbable element (input) in the dialog to be focused.')
+        .toBe('INPUT');
+    });
 
     it('should focus the bottom sheet element on open when autoFocus is set to "dialog"', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {

@@ -925,20 +925,18 @@ describe('MatChipGrid', () => {
       flush();
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        expect(errorTestComponent.form.submitted)
-          .withContext('Expected form to have been submitted')
-          .toBe(true);
-        expect(containerEl.classList)
-          .withContext('Expected container to have the invalid CSS class.')
-          .toContain('mat-form-field-invalid');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .withContext('Expected one error message to have been rendered.')
-          .toBe(1);
-        expect(chipGridEl.getAttribute('aria-invalid'))
-          .withContext('Expected aria-invalid to be set to "true".')
-          .toBe('true');
-      });
+      expect(errorTestComponent.form.submitted)
+        .withContext('Expected form to have been submitted')
+        .toBe(true);
+      expect(containerEl.classList)
+        .withContext('Expected container to have the invalid CSS class.')
+        .toContain('mat-form-field-invalid');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .withContext('Expected one error message to have been rendered.')
+        .toBe(1);
+      expect(chipGridEl.getAttribute('aria-invalid'))
+        .withContext('Expected aria-invalid to be set to "true".')
+        .toBe('true');
       flush();
     }));
 
@@ -947,36 +945,32 @@ describe('MatChipGrid', () => {
       flush();
       fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        expect(containerEl.classList)
-          .withContext('Expected container to have the invalid CSS class.')
-          .toContain('mat-form-field-invalid');
-        expect(containerEl.querySelectorAll('mat-error').length)
-          .withContext('Expected one error message to have been rendered.')
-          .toBe(1);
-        expect(containerEl.querySelectorAll('mat-hint').length)
-          .withContext('Expected no hints to be shown.')
-          .toBe(0);
+      expect(containerEl.classList)
+        .withContext('Expected container to have the invalid CSS class.')
+        .toContain('mat-form-field-invalid');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .withContext('Expected one error message to have been rendered.')
+        .toBe(1);
+      expect(containerEl.querySelectorAll('mat-hint').length)
+        .withContext('Expected no hints to be shown.')
+        .toBe(0);
 
-        errorTestComponent.formControl.setValue('something');
-        flush();
-        fixture.detectChanges();
+      errorTestComponent.formControl.setValue('something');
+      flush();
+      fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(containerEl.classList).not.toContain(
-            'mat-form-field-invalid',
-            'Expected container not to have the invalid class when valid.',
-          );
-          expect(containerEl.querySelectorAll('mat-error').length)
-            .withContext('Expected no error messages when the input is valid.')
-            .toBe(0);
-          expect(containerEl.querySelectorAll('mat-hint').length)
-            .withContext('Expected one hint to be shown once the input is valid.')
-            .toBe(1);
-        });
+      expect(containerEl.classList).not.toContain(
+        'mat-form-field-invalid',
+        'Expected container not to have the invalid class when valid.',
+      );
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .withContext('Expected no error messages when the input is valid.')
+        .toBe(0);
+      expect(containerEl.querySelectorAll('mat-hint').length)
+        .withContext('Expected one hint to be shown once the input is valid.')
+        .toBe(1);
 
-        flush();
-      });
+      flush();
     }));
 
     it('should set the proper aria-live attribute on the error messages', () => {

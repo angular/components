@@ -1255,13 +1255,13 @@ describe('MatMenu', () => {
       expect(destroyCount).withContext('Expected ngOnDestroy to have been called').toBe(2);
     }));
 
-    it('should focus the first menu item when opening a lazy menu via keyboard', async () => {
+    it('should focus the first menu item when opening a lazy menu via keyboard', () => {
       const fixture = createComponent(SimpleLazyMenu);
-      fixture.autoDetectChanges();
+      fixture.detectChanges();
 
       // A click without a mousedown before it is considered a keyboard open.
       fixture.componentInstance.triggerEl.nativeElement.click();
-      await fixture.whenStable();
+      fixture.detectChanges();
 
       const item = document.querySelector('.mat-mdc-menu-panel [mat-menu-item]')!;
 
