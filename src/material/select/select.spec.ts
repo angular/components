@@ -178,30 +178,16 @@ describe('MatSelect', () => {
           fixture.detectChanges();
 
           const labelId = fixture.nativeElement.querySelector('label').id;
-          const valueId = fixture.nativeElement.querySelector('.mat-mdc-select-value').id;
 
-          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId} myLabelId`);
+          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} myLabelId`);
         });
 
-        it('should set aria-labelledby to the value and label IDs', () => {
+        it('should set aria-labelledby to the label ID', () => {
           fixture.detectChanges();
 
           const labelId = fixture.nativeElement.querySelector('label').id;
-          const valueId = fixture.nativeElement.querySelector('.mat-mdc-select-value').id;
-          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId}`);
+          expect(select.getAttribute('aria-labelledby')).toBe(labelId);
         });
-
-        it('should trim the trigger aria-labelledby when there is no label', fakeAsync(() => {
-          fixture.componentInstance.hasLabel = false;
-          fixture.changeDetectorRef.markForCheck();
-          fixture.detectChanges();
-          flush();
-          fixture.detectChanges();
-
-          // Note that we assert that there are no spaces around the value.
-          const valueId = fixture.nativeElement.querySelector('.mat-mdc-select-value').id;
-          expect(select.getAttribute('aria-labelledby')).toBe(`${valueId}`);
-        }));
 
         it('should set the tabindex of the select to 0 by default', () => {
           expect(select.getAttribute('tabindex')).toEqual('0');
@@ -295,17 +281,6 @@ describe('MatSelect', () => {
           fixture.componentInstance.control.enable();
           fixture.detectChanges();
           expect(select.getAttribute('tabindex')).toEqual('0');
-        });
-
-        it('should set `aria-labelledby` to the value ID if there is no form field', () => {
-          fixture.destroy();
-
-          const labelFixture = TestBed.createComponent(SelectWithChangeEvent);
-          labelFixture.detectChanges();
-          select = labelFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-          const valueId = labelFixture.nativeElement.querySelector('.mat-mdc-select-value').id;
-
-          expect(select.getAttribute('aria-labelledby')?.trim()).toBe(valueId);
         });
 
         it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {

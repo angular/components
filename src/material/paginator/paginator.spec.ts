@@ -106,11 +106,9 @@ describe('MatPaginator', () => {
       expect(getNextButton(fixture).getAttribute('aria-label')).toBe('Next page');
 
       const select = fixture.nativeElement.querySelector('.mat-mdc-select');
-      const selectLabelIds = select.getAttribute('aria-labelledby')?.split(/\s/g) as string[];
-      const selectLabelTexts = selectLabelIds?.map(labelId => {
-        return fixture.nativeElement.querySelector(`#${labelId}`)?.textContent?.trim();
-      });
-      expect(selectLabelTexts).toContain('Items per page:');
+      const selectLabelId = select.getAttribute('aria-labelledby').trim();
+      const selectLabelText = fixture.nativeElement.querySelector(`#${selectLabelId}`)?.textContent;
+      expect(selectLabelText).toContain('Items per page:');
     });
 
     it('should re-render when the i18n labels change', () => {
