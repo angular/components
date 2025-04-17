@@ -21,6 +21,7 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  HOST_TAG_NAME,
   Injector,
   Input,
   NgZone,
@@ -90,6 +91,7 @@ export interface MatChipEvent {
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
   _changeDetectorRef = inject(ChangeDetectorRef);
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _tagName = inject(HOST_TAG_NAME);
   protected _ngZone = inject(NgZone);
   private _focusMonitor = inject(FocusMonitor);
   private _globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {
@@ -256,10 +258,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   ngOnInit() {
     // This check needs to happen in `ngOnInit` so the overridden value of
     // `basicChipAttrName` coming from base classes can be picked up.
-    const element = this._elementRef.nativeElement;
     this._isBasicChip =
-      element.hasAttribute(this.basicChipAttrName) ||
-      element.tagName.toLowerCase() === this.basicChipAttrName;
+      this._elementRef.nativeElement.hasAttribute(this.basicChipAttrName) ||
+      this._tagName.toLowerCase() === this.basicChipAttrName;
   }
 
   ngAfterViewInit() {
