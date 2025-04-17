@@ -680,7 +680,7 @@ $light-theme-background-palette: (
   card:       white,
   dialog:     white,
   disabled-button: rgba(black, 0.12),
-  raised-button: white,
+  raised-button: white, // no longer used (use "card" instead)
   focused-button: $dark-focused,
   selected-button: map.get($grey-palette, 300),
   selected-disabled-button: map.get($grey-palette, 400),
@@ -699,7 +699,7 @@ $dark-theme-background-palette: (
   card:       map.get($grey-palette, 800),
   dialog:     map.get($grey-palette, 800),
   disabled-button: rgba(white, 0.12),
-  raised-button: map.get($grey-palette, 800),
+  raised-button: map.get($grey-palette, 800),  // no longer used in button (use "card" instead)
   focused-button: $light-focused,
   selected-button: map.get($grey-palette, 900),
   selected-disabled-button: map.get($grey-palette, 800),
