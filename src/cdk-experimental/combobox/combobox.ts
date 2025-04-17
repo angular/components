@@ -23,6 +23,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  HOST_TAG_NAME,
   InjectionToken,
   Injector,
   Input,
@@ -60,6 +61,7 @@ export const CDK_COMBOBOX = new InjectionToken<CdkCombobox>('CDK_COMBOBOX');
   providers: [{provide: CDK_COMBOBOX, useExisting: CdkCombobox}],
 })
 export class CdkCombobox<T = unknown> implements OnDestroy {
+  private readonly _tagName = inject(HOST_TAG_NAME);
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _overlay = inject(Overlay);
   protected readonly _viewContainerRef = inject(ViewContainerRef);
@@ -245,8 +247,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy {
 
   private _isTextTrigger() {
     // TODO: Should check if the trigger is contenteditable.
-    const tagName = this._elementRef.nativeElement.tagName.toLowerCase();
-    return tagName === 'input' || tagName === 'textarea' ? true : false;
+    const tagName = this._tagName.toLowerCase();
+    return tagName === 'input' || tagName === 'textarea';
   }
 
   private _getOverlayConfig() {
