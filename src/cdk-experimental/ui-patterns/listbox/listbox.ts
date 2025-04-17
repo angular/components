@@ -20,9 +20,7 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
 /** The selection operations that the listbox can perform. */
 interface SelectOptions {
   toggle?: boolean;
-  toggleOne?: boolean;
   selectOne?: boolean;
-  toggleAll?: boolean;
   selectRange?: boolean;
   anchor?: boolean;
 }
@@ -314,14 +312,8 @@ export class ListboxPattern<V> {
     if (opts.toggle) {
       this.selection.toggle();
     }
-    if (opts.toggleOne) {
-      this.selection.toggleOne();
-    }
     if (opts.selectOne) {
       this.selection.selectOne();
-    }
-    if (opts.toggleAll) {
-      this.selection.toggleAll();
     }
     if (opts.selectRange) {
       this.selection.selectRange();
