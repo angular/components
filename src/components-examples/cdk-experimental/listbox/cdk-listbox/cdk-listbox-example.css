@@ -6,7 +6,7 @@
 }
 
 .example-listbox {
-  gap: 8px;
+  gap: 4px;
   margin: 0;
   padding: 8px;
   max-height: 50vh;
@@ -16,6 +16,7 @@
   list-style: none;
   flex-direction: column;
   overflow: scroll;
+  user-select: none;
 }
 
 .example-listbox[aria-orientation='horizontal'] {
@@ -40,21 +41,43 @@
   padding: 16px;
   display: flex;
   cursor: pointer;
+  position: relative;
   align-items: center;
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.example-option:hover,
+.example-option[aria-disabled='false']:hover,
 .example-option[tabindex='0'] {
   outline: 1px solid var(--mat-sys-outline);
   background: var(--mat-sys-surface-container);
 }
 
-.example-option:focus-within {
+.example-option[aria-disabled='false']:focus-within {
   outline: 2px solid var(--mat-sys-primary);
   background: var(--mat-sys-surface-container);
 }
 
-.example-option[aria-selected='true'] {
+.example-option[aria-disabled='false'][aria-selected='true'] {
   background-color: var(--mat-sys-secondary-container);
+}
+
+.example-option[aria-disabled='true']:focus-within,
+.example-option[aria-disabled='true'][tabindex='0'] {
+  outline: 2px solid var(--mat-sys-outline);
+}
+
+.example-option[aria-disabled='true'] span {
+  opacity: 0.3;
+}
+
+.example-option[aria-disabled='true']::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-on-surface);
+  opacity: var(--mat-sys-focus-state-layer-opacity);
 }

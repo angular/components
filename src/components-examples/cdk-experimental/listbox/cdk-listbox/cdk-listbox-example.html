@@ -6,6 +6,15 @@
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Disabled Options</mat-label>
+    <mat-select [(value)]="disabledOptions" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Orientation</mat-label>
     <mat-select [(value)]="orientation">
       <mat-option value="vertical">Vertical</mat-option>
@@ -46,8 +55,19 @@
   <label class="example-label" id="fruit-example-label">List of Fruits</label>
 
   @for (fruit of fruits; track fruit) {
-    <li class="example-option" [value]="fruit" cdkOption #option="cdkOption">
-      <mat-pseudo-checkbox [state]="option.pattern.selected() ? 'checked' : 'unchecked'"></mat-pseudo-checkbox>
+    @let optionDisabled = disabledOptions.includes(fruit);
+
+    <li
+      class="example-option"
+      [disabled]="optionDisabled"
+      [value]="fruit"
+      cdkOption
+      #option="cdkOption"
+    >
+      <mat-pseudo-checkbox
+        [disabled]="optionDisabled"
+        [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+      ></mat-pseudo-checkbox>
       <span>{{ fruit }}</span>
     </li>
   }

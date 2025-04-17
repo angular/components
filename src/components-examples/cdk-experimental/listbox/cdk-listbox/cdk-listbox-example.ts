@@ -27,8 +27,10 @@ export class CdkListboxExample {
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'explicit';
 
+  disabledOptions: string[] = ['Banana', 'Cantaloupe'];
+
   wrap = new FormControl(true, {nonNullable: true});
-  multi = new FormControl(false, {nonNullable: true});
+  multi = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});
   readonly = new FormControl(false, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});

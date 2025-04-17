@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
@@ -41,45 +41,47 @@ export class ListNavigation<T extends ListNavigationItem> {
   /** The last index that was active. */
   prevActiveIndex = signal(0);
 
+  /** The current active item. */
+  activeItem = computed(() => this.inputs.items()[this.inputs.activeIndex()]);
+
   constructor(readonly inputs: ListNavigationInputs<T>) {}
 
   /** Navigates to the given item. */
-  goto(item: T) {
-    if (this.isFocusable(item)) {
+  goto(item?: T): boolean {
+    if (item && this.isFocusable(item)) {
       this.prevActiveIndex.set(this.inputs.activeIndex());
       const index = this.inputs.items().indexOf(item);
       this.inputs.activeIndex.set(index);
+      return true;
     }
+    return false;
   }
 
   /** Navigates to the next item in the list. */
-  next() {
-    this._advance(1);
+  next(): boolean {
+    return this._advance(1);
   }
 
   /** Navigates to the previous item in the list. */
-  prev() {
-    this._advance(-1);
+  prev(): boolean {
+    return this._advance(-1);
   }
 
   /** Navigates to the first item in the list. */
-  first() {
+  first(): boolean {
     const item = this.inputs.items().find(i => this.isFocusable(i));
-
-    if (item) {
-      this.goto(item);
-    }
+    return item ? this.goto(item) : false;
   }
 
   /** Navigates to the last item in the list. */
-  last() {
+  last(): boolean {
     const items = this.inputs.items();
     for (let i = items.length - 1; i >= 0; i--) {
       if (this.isFocusable(items[i])) {
-        this.goto(items[i]);
-        return;
+        return this.goto(items[i]);
       }
     }
+    return false;
   }
 
   /** Returns true if the given item can be navigated to. */
@@ -88,7 +90,7 @@ export class ListNavigation<T extends ListNavigationItem> {
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */
-  private _advance(delta: 1 | -1) {
+  private _advance(delta: 1 | -1): boolean {
     const items = this.inputs.items();
     const itemCount = items.length;
     const startIndex = this.inputs.activeIndex();
@@ -100,9 +102,10 @@ export class ListNavigation<T extends ListNavigationItem> {
     // when the index goes out of bounds.
     for (let i = step(startIndex); i !== startIndex && i < itemCount && i >= 0; i = step(i)) {
       if (this.isFocusable(items[i])) {
-        this.goto(items[i]);
-        return;
+        return this.goto(items[i]);
       }
     }
+
+    return false;
   }
 }

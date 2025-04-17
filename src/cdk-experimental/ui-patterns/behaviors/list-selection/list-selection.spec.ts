@@ -157,6 +157,36 @@ describe('List Selection', () => {
     });
   });
 
+  describe('#toggleOne', () => {
+    it('should select an unselected item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      selection.toggleOne(); // [0]
+      expect(selection.inputs.value()).toEqual([0]);
+    });
+
+    it('should deselect a selected item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      selection.select(); // [0]
+      selection.toggleOne(); // []
+      expect(selection.inputs.value().length).toBe(0);
+    });
+
+    it('should only leave one item selected', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      selection.select(); // [0]
+      nav.next();
+      selection.toggleOne(); // [1]
+      expect(selection.inputs.value()).toEqual([1]);
+    });
+  });
+
   describe('#selectAll', () => {
     it('should select all items', () => {
       const items = getItems([0, 1, 2, 3, 4]);
@@ -185,7 +215,71 @@ describe('List Selection', () => {
     });
   });
 
-  describe('#selectFromAnchor', () => {
+  describe('#toggleAll', () => {
+    it('should select all items', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([0, 1, 2, 3, 4]);
+    });
+
+    it('should deselect all if all items are selected', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      selection.selectAll();
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([]);
+    });
+
+    it('should ignore disabled items when determining if all items are selected', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      items()[0].disabled.set(true);
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([1, 2, 3, 4]);
+      selection.toggleAll();
+      expect(selection.inputs.value()).toEqual([]);
+    });
+  });
+
+  describe('#selectOne', () => {
+    it('should select a single item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      selection.selectOne(); // [0]
+      nav.next();
+      selection.selectOne(); // [1]
+      expect(selection.inputs.value()).toEqual([1]);
+    });
+
+    it('should not select disabled items', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      items()[0].disabled.set(true);
+
+      selection.select(); // []
+      expect(selection.inputs.value()).toEqual([]);
+    });
+
+    it('should do nothing to already selected items', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      selection.selectOne(); // [0]
+      selection.selectOne(); // [0]
+
+      expect(selection.inputs.value()).toEqual([0]);
+    });
+  });
+
+  describe('#selectRange', () => {
     it('should select all items from an anchor at a lower index', () => {
       const items = getItems([0, 1, 2, 3, 4]);
       const nav = getNavigation(items);
@@ -194,7 +288,7 @@ describe('List Selection', () => {
       selection.select(); // [0]
       nav.next();
       nav.next();
-      selection.selectFromPrevSelectedItem(); // [0, 1, 2]
+      selection.selectRange(); // [0, 1, 2]
 
       expect(selection.inputs.value()).toEqual([0, 1, 2]);
     });
@@ -209,10 +303,98 @@ describe('List Selection', () => {
       selection.select(); // [3]
       nav.prev();
       nav.prev();
-      selection.selectFromPrevSelectedItem(); // [3, 1, 2]
+      selection.selectRange(); // [3, 2, 1]
 
-      // TODO(wagnermaciel): Order the values when inserting them.
-      expect(selection.inputs.value()).toEqual([3, 1, 2]);
+      expect(selection.inputs.value()).toEqual([3, 2, 1]);
+    });
+
+    it('should deselect items within the range when the range is changed', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      nav.next();
+      nav.next();
+      selection.select(); // [2]
+      expect(selection.inputs.value()).toEqual([2]);
+
+      nav.next();
+      nav.next();
+      selection.selectRange(); // [2, 3, 4]
+      expect(selection.inputs.value()).toEqual([2, 3, 4]);
+
+      nav.first();
+      selection.selectRange(); // [2, 1, 0]
+      expect(selection.inputs.value()).toEqual([2, 1, 0]);
+    });
+
+    it('should not select a disabled item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      items()[1].disabled.set(true);
+
+      selection.select(); // [0]
+      expect(selection.inputs.value()).toEqual([0]);
+
+      nav.next();
+      selection.selectRange(); // [0]
+      expect(selection.inputs.value()).toEqual([0]);
+
+      nav.next();
+      selection.selectRange(); // [0, 2]
+      expect(selection.inputs.value()).toEqual([0, 2]);
+    });
+
+    it('should not deselect a disabled item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      selection.select(items()[1]);
+      items()[1].disabled.set(true);
+
+      selection.select(); // [0]
+      expect(selection.inputs.value()).toEqual([1, 0]);
+
+      nav.next();
+      nav.next();
+      selection.selectRange(); // [0, 1, 2]
+      expect(selection.inputs.value()).toEqual([1, 0, 2]);
+
+      nav.prev();
+      nav.prev();
+      selection.selectRange(); // [0]
+      expect(selection.inputs.value()).toEqual([1, 0]);
+    });
+  });
+
+  describe('#beginRangeSelection', () => {
+    it('should set where a range is starting from', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+
+      nav.next();
+      nav.next();
+      selection.beginRangeSelection();
+      expect(selection.inputs.value()).toEqual([]);
+      nav.next();
+      nav.next();
+      selection.selectRange(); // [2, 3, 4]
+      expect(selection.inputs.value()).toEqual([2, 3, 4]);
+    });
+
+    it('should be able to select a range starting on a disabled item', () => {
+      const items = getItems([0, 1, 2, 3, 4]);
+      const nav = getNavigation(items);
+      const selection = getSelection(items, nav);
+      items()[0].disabled.set(true);
+      selection.beginRangeSelection(0);
+      nav.next();
+      nav.next();
+      selection.selectRange();
+      expect(selection.inputs.value()).toEqual([1, 2]);
     });
   });
 });

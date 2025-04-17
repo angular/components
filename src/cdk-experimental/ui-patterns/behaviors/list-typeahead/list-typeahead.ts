@@ -50,13 +50,13 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   }
 
   /** Performs a typeahead search, appending the given character to the search string. */
-  search(char: string) {
+  search(char: string): boolean {
     if (char.length !== 1) {
-      return;
+      return false;
     }
 
     if (!this.isTyping() && char === ' ') {
-      return;
+      return false;
     }
 
     if (this._startIndex() === undefined) {
@@ -75,6 +75,8 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
       this._query.set('');
       this._startIndex.set(undefined);
     }, this.inputs.typeaheadDelay() * 1000);
+
+    return true;
   }
 
   /**

@@ -74,7 +74,6 @@ describe('List Typeahead', () => {
       items()[1].disabled.set(true);
       (navigation.inputs.skipDisabled as WritableSignalLike<boolean>).set(true);
       typeahead.search('i');
-      console.log(typeahead.inputs.navigation.inputs.items().map(i => i.disabled()));
       expect(navigation.inputs.activeIndex()).toBe(2);
     });
 

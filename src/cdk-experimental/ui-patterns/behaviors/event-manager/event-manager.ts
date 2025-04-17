@@ -47,6 +47,7 @@ export enum ModifierKey {
   Shift = 0b10,
   Alt = 0b100,
   Meta = 0b1000,
+  Any = 'Any',
 }
 
 export type ModifierInputs = ModifierKey | ModifierKey[];
@@ -99,5 +100,10 @@ export function getModifiers(event: EventWithModifiers): number {
 export function hasModifiers(event: EventWithModifiers, modifiers: ModifierInputs): boolean {
   const eventModifiers = getModifiers(event);
   const modifiersList = Array.isArray(modifiers) ? modifiers : [modifiers];
+
+  if (modifiersList.includes(ModifierKey.Any)) {
+    return true;
+  }
+
   return modifiersList.some(modifiers => eventModifiers === modifiers);
 }
