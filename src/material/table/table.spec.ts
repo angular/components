@@ -542,15 +542,26 @@ describe('MatTable', () => {
       for (let i = 0; i < 100; i++) {
         component.underlyingDataSource.addData();
       }
-      fixture.detectChanges();
-      flushMicrotasks(); // Resolve promise that updates paginator's length
-      expectTableToMatchContent(tableElement, [
-        ['Column A', 'Column B', 'Column C'],
+      const firstPage = [
         ['a_1', 'b_1', 'c_1'],
         ['a_2', 'b_2', 'c_2'],
         ['a_3', 'b_3', 'c_3'],
         ['a_4', 'b_4', 'c_4'],
         ['a_5', 'b_5', 'c_5'],
+      ];
+      const secondPage = [
+        ['a_6', 'b_6', 'c_6'],
+        ['a_7', 'b_7', 'c_7'],
+        ['a_8', 'b_8', 'c_8'],
+        ['a_9', 'b_9', 'c_9'],
+        ['a_10', 'b_10', 'c_10'],
+      ];
+
+      fixture.detectChanges();
+      flushMicrotasks(); // Resolve promise that updates paginator's length
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ...firstPage,
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
@@ -559,11 +570,26 @@ describe('MatTable', () => {
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
-        ['a_6', 'b_6', 'c_6'],
-        ['a_7', 'b_7', 'c_7'],
-        ['a_8', 'b_8', 'c_8'],
-        ['a_9', 'b_9', 'c_9'],
-        ['a_10', 'b_10', 'c_10'],
+        ...secondPage,
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      component.paginator.pageIndex = 0;
+      fixture.detectChanges();
+      // Expect no changes from before since the data source has not been told to check and
+      // the paginator did not send an Output based on the change.
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ...secondPage,
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      // Use data source's `forceEmit` to update data based on the latest state in the paginator.
+      component.dataSource.forceEmit();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ...firstPage,
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
     }));

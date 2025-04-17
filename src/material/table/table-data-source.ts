@@ -53,6 +53,9 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
   /** Used to react to internal changes of the paginator that are made by the data source itself. */
   private readonly _internalPageChanges = new Subject<void>();
 
+  /** Stream that will force the data source to emit new data. */
+  private readonly _forceEmit = new BehaviorSubject<boolean>(true);
+
   /**
    * Subscription to the changes that should trigger an update to the table's rendered rows, such
    * as filtering, sorting, pagination, or base data changes.
@@ -244,6 +247,16 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
   }
 
   /**
+   * Forces the data source to emit data to the table based on the current state of the sort
+   * and paginator. This may be necessary if the state of the paginator or sort components have
+   * been changed programmatically through their Inputs, which do not emit Output events that
+   * would otherwise notify a change.
+   */
+  forceEmit(): void {
+    this._forceEmit.next(true);
+  }
+
+  /**
    * Subscribe to changes that should trigger an update to the table's rendered rows. When the
    * changes occur, process the current state of the filter, sort, and pagination along with
    * the provided base data and send it to the table for rendering.
@@ -267,7 +280,7 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
       : observableOf(null);
     const dataStream = this._data;
     // Watch for base data or filter changes to provide a filtered set of data.
-    const filteredData = combineLatest([dataStream, this._filter]).pipe(
+    const filteredData = combineLatest([dataStream, this._filter, this._forceEmit]).pipe(
       map(([data]) => this._filterData(data)),
     );
     // Watch for filtered data or sort changes to provide an ordered set of data.
