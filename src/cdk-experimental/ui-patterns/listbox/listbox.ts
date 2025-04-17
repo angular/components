@@ -255,33 +255,33 @@ export class ListboxPattern<V> {
 
   /** Navigates to the first option in the listbox. */
   first(opts?: SelectOptions) {
-    this.navigate(opts, () => this.navigation.first());
+    this._navigate(opts, () => this.navigation.first());
   }
 
   /** Navigates to the last option in the listbox. */
   last(opts?: SelectOptions) {
-    this.navigate(opts, () => this.navigation.last());
+    this._navigate(opts, () => this.navigation.last());
   }
 
   /** Navigates to the next option in the listbox. */
   next(opts?: SelectOptions) {
-    this.navigate(opts, () => this.navigation.next());
+    this._navigate(opts, () => this.navigation.next());
   }
 
   /** Navigates to the previous option in the listbox. */
   prev(opts?: SelectOptions) {
-    this.navigate(opts, () => this.navigation.prev());
+    this._navigate(opts, () => this.navigation.prev());
   }
 
   /** Navigates to the given item in the listbox. */
   goto(event: PointerEvent, opts?: SelectOptions) {
     const item = this._getItem(event);
-    this.navigate(opts, () => this.navigation.goto(item));
+    this._navigate(opts, () => this.navigation.goto(item));
   }
 
   /** Handles typeahead search navigation for the listbox. */
   search(char: string, opts?: SelectOptions) {
-    this.navigate(opts, () => this.typeahead.search(char));
+    this._navigate(opts, () => this.typeahead.search(char));
   }
 
   /**
@@ -293,7 +293,7 @@ export class ListboxPattern<V> {
    * Handles boilerplate calling of focus & selection operations. Also ensures these
    * additional operations are only called if the navigation operation moved focus to a new option.
    */
-  private navigate(opts: SelectOptions = {}, operation: () => boolean) {
+  private _navigate(opts: SelectOptions = {}, operation: () => boolean) {
     if (opts?.selectRange) {
       this.wrap.set(false);
       this.selection.rangeStartIndex.set(this.anchorIndex());
