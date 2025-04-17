@@ -9,6 +9,7 @@
   text-decoration: none;
   // Makes button icon not cut off/shrink making the icon visible to fix b/411228600
   & .mat-icon {
+    // stylelint-disable material/no-prefixes
     min-height: fit-content;
     flex-shrink: 0;
   }
