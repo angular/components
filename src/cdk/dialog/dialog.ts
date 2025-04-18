@@ -7,26 +7,43 @@
  */
 
 import {
-  TemplateRef,
+  ComponentRef,
+  EventEmitter,
   Injectable,
   Injector,
   OnDestroy,
-  Type,
   StaticProvider,
-  ComponentRef,
+  TemplateRef,
+  Type,
   inject,
+  signal,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '../portal';
-import {of as observableOf, Observable, Subject, defer} from 'rxjs';
-import {DialogRef} from './dialog-ref';
-import {DialogConfig} from './dialog-config';
-import {Directionality} from '../bidi';
-import {_IdGenerator} from '../a11y';
-import {ComponentType, Overlay, OverlayRef, OverlayConfig, OverlayContainer} from '../overlay';
+import {Observable, Subject, defer} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+import {_IdGenerator} from '../a11y';
+import {Direction, Directionality} from '../bidi';
+import {ComponentType, Overlay, OverlayConfig, OverlayContainer, OverlayRef} from '../overlay';
+import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '../portal';
+import {DialogConfig} from './dialog-config';
+import {DialogRef} from './dialog-ref';
 
-import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
 import {CdkDialogContainer} from './dialog-container';
+import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
+
+function getDirectionality(value: Direction): Directionality {
+  const valueSignal = signal(value);
+  const change = new EventEmitter<Direction>();
+  return {
+    valueSignal,
+    get value() {
+      return valueSignal();
+    },
+    change,
+    ngOnDestroy() {
+      change.complete();
+    },
+  };
+}
 
 @Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
@@ -317,7 +334,7 @@ export class Dialog implements OnDestroy {
     ) {
       providers.push({
         provide: Directionality,
-        useValue: {value: config.direction, change: observableOf()},
+        useValue: getDirectionality(config.direction),
       });
     }
 
