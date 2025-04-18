@@ -175,7 +175,9 @@ export class MapPolygon implements OnInit, OnDestroy {
     // user has subscribed to.
     this._ngZone.runOutsideAngular(() => {
       this.polygon = new polygonConstructor(options);
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.polygon.setMap(map);
       this._eventManager.setTarget(this.polygon);
       this.polygonInitialized.emit(this.polygon);
@@ -196,40 +198,50 @@ export class MapPolygon implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getDraggable
    */
   getDraggable(): boolean {
-    this._assertInitialized();
-    return this.polygon.getDraggable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polygon!.getDraggable();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getEditable
    */
   getEditable(): boolean {
-    this._assertInitialized();
-    return this.polygon.getEditable();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polygon!.getEditable();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getPath
    */
   getPath(): google.maps.MVCArray<google.maps.LatLng> {
-    this._assertInitialized();
-    return this.polygon.getPath();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polygon!.getPath();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getPaths
    */
   getPaths(): google.maps.MVCArray<google.maps.MVCArray<google.maps.LatLng>> {
-    this._assertInitialized();
-    return this.polygon.getPaths();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polygon!.getPaths();
   }
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.getVisible
    */
   getVisible(): boolean {
-    this._assertInitialized();
-    return this.polygon.getVisible();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.polygon!.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.PolygonOptions> {
@@ -246,28 +258,30 @@ export class MapPolygon implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
-      this._assertInitialized();
-      this.polygon.setOptions(options);
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
+      this.polygon!.setOptions(options);
     });
   }
 
   private _watchForPathChanges() {
     this._paths.pipe(takeUntil(this._destroyed)).subscribe(paths => {
       if (paths) {
-        this._assertInitialized();
-        this.polygon.setPaths(paths);
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+          assertInitialized(this);
+        }
+        this.polygon!.setPaths(paths);
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {polygon: google.maps.Polygon} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.polygon) {
-        throw Error(
-          'Cannot interact with a Google Map Polygon before it has been ' +
-            'initialized. Please wait for the Polygon to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapPolygon) {
+  if (!ctx.polygon) {
+    throw Error(
+      'Cannot interact with a Google Map Polygon before it has been ' +
+        'initialized. Please wait for the Polygon to load before trying to interact with it.',
+    );
   }
 }
