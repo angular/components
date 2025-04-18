@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
