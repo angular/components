@@ -3,8 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatBottomSheetHarness} from '@angular/material/bottom-sheet/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {BottomSheetHarnessExample} from './bottom-sheet-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MATERIAL_ANIMATIONS} from '@angular/material/core';
 
 describe('BottomSheetHarnessExample', () => {
   let fixture: ComponentFixture<BottomSheetHarnessExample>;
@@ -12,7 +11,7 @@ describe('BottomSheetHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatBottomSheetModule, NoopAnimationsModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
     fixture = TestBed.createComponent(BottomSheetHarnessExample);
     fixture.detectChanges();

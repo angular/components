@@ -2,9 +2,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatMenuHarness} from '@angular/material/menu/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
-import {MatMenuModule} from '@angular/material/menu';
+import {MATERIAL_ANIMATIONS} from '@angular/material/core';
 import {MenuHarnessExample} from './menu-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MenuHarnessExample', () => {
   let fixture: ComponentFixture<MenuHarnessExample>;
@@ -12,7 +11,7 @@ describe('MenuHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule, NoopAnimationsModule, MenuHarnessExample],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
     fixture = TestBed.createComponent(MenuHarnessExample);
     fixture.detectChanges();
