@@ -198,7 +198,8 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
         value: this.inputElement.value,
         chipInput: this,
       });
-
+      this._chipGrid._change();
+      this._chipGrid.stateChanges.next();
       event?.preventDefault();
     }
   }
