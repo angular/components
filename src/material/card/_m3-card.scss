@@ -25,6 +25,9 @@ $prefix: (mat, card);
       outlined-container-shape: map.get($systems, md-sys-shape, corner-medium),
       outlined-outline-color: map.get($systems, md-sys-color, outline-variant),
       outlined-outline-width: if($exclude-hardcoded, null, 1px),
+      filled-container-color: map.get($systems, md-sys-color, surface-container-highest),
+      filled-container-elevation: map.get($systems, md-sys-elevation, level0),
+      filled-container-shape: map.get($systems, md-sys-shape, corner-medium),
     ),
   );
 

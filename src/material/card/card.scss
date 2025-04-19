@@ -51,6 +51,14 @@ $mat-card-default-padding: 16px !default;
   }
 }
 
+.mat-mdc-card-filled {
+  @include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
+    background-color: token-utils.slot(filled-container-color);
+    border-radius: token-utils.slot(filled-container-shape);
+    box-shadow: token-utils.slot(filled-container-elevation);
+  }
+}
+
 .mdc-card__media {
   position: relative;
   box-sizing: border-box;
