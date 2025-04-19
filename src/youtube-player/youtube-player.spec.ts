@@ -10,8 +10,10 @@ import {
 } from './youtube-player';
 import {PlaceholderImageQuality} from './youtube-player-placeholder';
 
+declare var window: Window;
+
 const VIDEO_ID = 'a12345';
-const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
+const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0} as unknown as typeof YT;
 const TEST_PROVIDERS: (Provider | EnvironmentProviders)[] = [
   {
     provide: YOUTUBE_PLAYER_CONFIG,
@@ -56,7 +58,7 @@ describe('YoutubePlayer', () => {
     });
 
     afterEach(() => {
-      (window as any).YT = undefined;
+      window.YT = undefined;
       window.onYouTubeIframeAPIReady = undefined;
     });
 
@@ -540,17 +542,17 @@ describe('YoutubePlayer', () => {
     let api: typeof YT;
 
     beforeEach(() => {
-      api = window.YT;
-      (window as any).YT = undefined;
+      api = window.YT!;
+      window.YT = undefined;
     });
 
     afterEach(() => {
-      (window as any).YT = undefined;
+      window.YT = undefined;
       window.onYouTubeIframeAPIReady = undefined;
     });
 
     it('waits until the api is ready before initializing', () => {
-      (window.YT as any) = YT_LOADING_STATE_MOCK;
+      window.YT = YT_LOADING_STATE_MOCK;
       TestBed.configureTestingModule({providers: TEST_PROVIDERS});
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
@@ -560,7 +562,7 @@ describe('YoutubePlayer', () => {
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
 
-      window.YT = api!;
+      window.YT = api;
       window.onYouTubeIframeAPIReady!();
 
       expect(playerCtorSpy).toHaveBeenCalledWith(
@@ -585,7 +587,7 @@ describe('YoutubePlayer', () => {
 
       expect(playerCtorSpy).not.toHaveBeenCalled();
 
-      window.YT = api!;
+      window.YT = api;
       window.onYouTubeIframeAPIReady!();
 
       expect(spy).toHaveBeenCalled();
@@ -601,7 +603,7 @@ describe('YoutubePlayer', () => {
     });
 
     afterEach(() => {
-      fixture = testComponent = (window as any).YT = window.onYouTubeIframeAPIReady = undefined!;
+      fixture = testComponent = window.YT = window.onYouTubeIframeAPIReady = undefined!;
     });
 
     it('should show a placeholder', () => {
