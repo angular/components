@@ -11,7 +11,6 @@ import {
   ChangeDetectorRef,
   Directive,
   inject,
-  Injectable,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -26,7 +25,7 @@ import {_getEventTarget} from '../platform';
 import {merge, partition} from 'rxjs';
 import {skip, takeUntil, skipWhile} from 'rxjs/operators';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {CdkMenuTriggerBase, MENU_TRIGGER} from './menu-trigger-base';
+import {CdkMenuTriggerBase, MENU_TRIGGER, MenuTracker} from './menu-trigger-base';
 
 /** The preferred menu positions for the context menu. */
 const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position => {
@@ -36,24 +35,6 @@ const CONTEXT_MENU_POSITIONS = STANDARD_DROPDOWN_BELOW_POSITIONS.map(position =>
   const offsetY = position.overlayY === 'top' ? 2 : -2;
   return {...position, offsetX, offsetY};
 });
-
-/** Tracks the last open context menu trigger across the entire application. */
-@Injectable({providedIn: 'root'})
-export class ContextMenuTracker {
-  /** The last open context menu trigger. */
-  private static _openContextMenuTrigger?: CdkContextMenuTrigger;
-
-  /**
-   * Close the previous open context menu and set the given one as being open.
-   * @param trigger The trigger for the currently open Context Menu.
-   */
-  update(trigger: CdkContextMenuTrigger) {
-    if (ContextMenuTracker._openContextMenuTrigger !== trigger) {
-      ContextMenuTracker._openContextMenuTrigger?.close();
-      ContextMenuTracker._openContextMenuTrigger = trigger;
-    }
-  }
-}
 
 /** The coordinates where the context menu should open. */
 export type ContextMenuCoordinates = {x: number; y: number};
@@ -87,8 +68,8 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   /** The directionality of the page. */
   private readonly _directionality = inject(Directionality, {optional: true});
 
-  /** The app's context menu tracking registry */
-  private readonly _contextMenuTracker = inject(ContextMenuTracker);
+  /** The app's menu tracking registry */
+  private readonly _menuTracker = inject(MenuTracker);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -128,7 +109,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
       // resulting in multiple stacked context menus being displayed.
       event.stopPropagation();
 
-      this._contextMenuTracker.update(this);
+      this._menuTracker.update(this);
       this._open(event, {x: event.clientX, y: event.clientY});
 
       // A context menu can be triggered via a mouse right click or a keyboard shortcut.

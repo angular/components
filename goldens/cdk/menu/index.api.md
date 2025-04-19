@@ -229,6 +229,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
 // @public
 export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected childMenu?: Menu;
+    abstract close(): void;
     readonly closed: EventEmitter<void>;
     protected readonly destroyed: Subject<void>;
     protected getMenuContentPortal(): TemplatePortal<any>;
@@ -272,15 +273,6 @@ export type ContextMenuCoordinates = {
     x: number;
     y: number;
 };
-
-// @public
-export class ContextMenuTracker {
-    update(trigger: CdkContextMenuTrigger): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ContextMenuTracker, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ContextMenuTracker>;
-}
 
 // @public
 export interface FocusableElement {
@@ -356,6 +348,15 @@ export interface MenuStackCloseEvent {
 // @public
 export interface MenuStackItem {
     menuStack?: MenuStack;
+}
+
+// @public
+export class MenuTracker {
+    update(trigger: CdkMenuTriggerBase): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MenuTracker, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<MenuTracker>;
 }
 
 // @public
