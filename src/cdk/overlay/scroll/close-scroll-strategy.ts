@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {NgZone} from '@angular/core';
+import {Injector, NgZone} from '@angular/core';
 import {ScrollStrategy, getMatScrollStrategyAlreadyAttachedError} from './scroll-strategy';
 import {Subscription} from 'rxjs';
 import {ScrollDispatcher, ViewportRuler} from '../../scrolling';
@@ -18,6 +18,23 @@ import type {OverlayRef} from '../overlay-ref';
 export interface CloseScrollStrategyConfig {
   /** Amount of pixels the user has to scroll before the overlay is closed. */
   threshold?: number;
+}
+
+/**
+ * Creates a scroll strategy that closes the overlay when the user starts to scroll.
+ * @param injector Injector used to resolve dependencies of the scroll strategy.
+ * @param config Configuration options for the scroll strategy.
+ */
+export function createCloseScrollStrategy(
+  injector: Injector,
+  config?: CloseScrollStrategyConfig,
+): CloseScrollStrategy {
+  return new CloseScrollStrategy(
+    injector.get(ScrollDispatcher),
+    injector.get(NgZone),
+    injector.get(ViewportRuler),
+    config,
+  );
 }
 
 /**

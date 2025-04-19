@@ -8,6 +8,11 @@
 
 import {ScrollStrategy} from './scroll-strategy';
 
+/** Creates a scroll strategy that does nothing. */
+export function createNoopScrollStrategy(): NoopScrollStrategy {
+  return new NoopScrollStrategy();
+}
+
 /** Scroll strategy that doesn't do anything. */
 export class NoopScrollStrategy implements ScrollStrategy {
   /** Does nothing, as this scroll strategy is a no-op. */

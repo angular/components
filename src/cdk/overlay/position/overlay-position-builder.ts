@@ -6,24 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '../../platform';
-import {ViewportRuler} from '../../scrolling';
-
-import {Injectable, inject, DOCUMENT} from '@angular/core';
-import {OverlayContainer} from '../overlay-container';
+import {Injectable, Injector, inject} from '@angular/core';
 import {
+  createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './flexible-connected-position-strategy';
-import {GlobalPositionStrategy} from './global-position-strategy';
+import {createGlobalPositionStrategy, GlobalPositionStrategy} from './global-position-strategy';
 
 /** Builder for overlay position strategy. */
 @Injectable({providedIn: 'root'})
 export class OverlayPositionBuilder {
-  private _viewportRuler = inject(ViewportRuler);
-  private _document = inject(DOCUMENT);
-  private _platform = inject(Platform);
-  private _overlayContainer = inject(OverlayContainer);
+  private _injector = inject(Injector);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -32,7 +26,7 @@ export class OverlayPositionBuilder {
    * Creates a global position strategy.
    */
   global(): GlobalPositionStrategy {
-    return new GlobalPositionStrategy();
+    return createGlobalPositionStrategy(this._injector);
   }
 
   /**
@@ -42,12 +36,6 @@ export class OverlayPositionBuilder {
   flexibleConnectedTo(
     origin: FlexibleConnectedPositionStrategyOrigin,
   ): FlexibleConnectedPositionStrategy {
-    return new FlexibleConnectedPositionStrategy(
-      origin,
-      this._viewportRuler,
-      this._document,
-      this._platform,
-      this._overlayContainer,
-    );
+    return createFlexibleConnectedPositionStrategy(this._injector, origin);
   }
 }
