@@ -7,8 +7,17 @@
  */
 
 import {ContentObserver} from '../../observers';
-import {DOCUMENT} from '@angular/common';
-import {Directive, ElementRef, Injectable, Input, NgZone, OnDestroy, inject} from '@angular/core';
+
+import {
+  Directive,
+  ElementRef,
+  Injectable,
+  Input,
+  NgZone,
+  OnDestroy,
+  inject,
+  DOCUMENT,
+} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {
   AriaLivePoliteness,

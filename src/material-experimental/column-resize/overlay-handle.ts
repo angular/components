@@ -14,8 +14,9 @@ import {
   ViewChild,
   ViewEncapsulation,
   inject,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {
   CdkColumnDef,
   _CoalescedStyleScheduler,

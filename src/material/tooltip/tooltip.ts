@@ -30,8 +30,9 @@ import {
   inject,
   afterNextRender,
   Injector,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';

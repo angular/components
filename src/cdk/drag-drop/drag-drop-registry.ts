@@ -18,8 +18,9 @@ import {
   WritableSignal,
   inject,
   signal,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {_CdkPrivateStyleLoader} from '../private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import type {DropListRef} from './drop-list-ref';

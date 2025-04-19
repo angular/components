@@ -4,9 +4,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {CdkListboxModule} from '@angular/cdk/listbox';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {CdkTableModule, DataSource} from '@angular/cdk/table';
-import {DOCUMENT} from '@angular/common';
+
 import {CdkPopoverEditCdkTableExample} from '@angular/components-examples/cdk-experimental/popover-edit';
-import {Component, ElementRef, InjectionToken, inject} from '@angular/core';
+import {Component, ElementRef, InjectionToken, inject, DOCUMENT} from '@angular/core';
 import {
   GoogleMap,
   MapBicyclingLayer,

@@ -1,4 +1,4 @@
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {Clipboard} from './clipboard';
 import {PendingCopy} from './pending-copy';

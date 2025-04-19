@@ -7,8 +7,8 @@
  */
 
 import {ScrollDispatcher, ViewportRuler} from '../../scrolling';
-import {DOCUMENT} from '@angular/common';
-import {Injectable, NgZone, inject} from '@angular/core';
+
+import {Injectable, NgZone, inject, DOCUMENT} from '@angular/core';
 import {BlockScrollStrategy} from './block-scroll-strategy';
 import {CloseScrollStrategy, CloseScrollStrategyConfig} from './close-scroll-strategy';
 import {NoopScrollStrategy} from './noop-scroll-strategy';

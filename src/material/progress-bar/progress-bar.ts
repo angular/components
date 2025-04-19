@@ -22,8 +22,9 @@ import {
   inject,
   numberAttribute,
   Renderer2,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {_animationsDisabled, ThemePalette} from '../core';
 
 /** Last animation end data. */

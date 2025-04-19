@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {Injectable, OnDestroy, inject} from '@angular/core';
+import {Injectable, OnDestroy, inject, DOCUMENT} from '@angular/core';
 import type {OverlayRef} from '../overlay-ref';
 
 /**

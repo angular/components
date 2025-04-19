@@ -29,7 +29,7 @@ import {
 } from '@angular/cdk/overlay';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   afterNextRender,
   AfterViewInit,
@@ -54,6 +54,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  DOCUMENT,
 } from '@angular/core';
 import {MatButton} from '../button';
 import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
