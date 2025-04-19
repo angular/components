@@ -1,6 +1,5 @@
-import {DOCUMENT} from '@angular/common';
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef, inject} from '@angular/core';
+import {Component, NgModule, ViewChild, ViewContainerRef, inject, DOCUMENT} from '@angular/core';
 import {PortalModule, CdkPortal} from '../portal';
 import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
 import {TemplatePortalDirective} from '../portal/portal-directives';

@@ -18,8 +18,9 @@ import {
   booleanAttribute,
   inject,
   Renderer2,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {Platform} from '../platform';
 import {_CdkPrivateStyleLoader} from '../private';
 import {auditTime} from 'rxjs/operators';

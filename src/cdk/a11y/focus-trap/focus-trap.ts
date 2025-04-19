@@ -7,7 +7,7 @@
  */
 
 import {Platform, _getFocusedElementPierceShadowDom} from '../../platform';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentInit,
   Directive,
@@ -23,6 +23,7 @@ import {
   afterNextRender,
   booleanAttribute,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '../../private';

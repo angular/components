@@ -7,7 +7,7 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {DOCUMENT} from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +17,7 @@ import {
   ViewEncapsulation,
   inject,
   ɵNoopNgZone,
+  DOCUMENT,
 } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';

@@ -21,7 +21,7 @@ import {
 } from '../collections';
 import {Platform} from '../platform';
 import {ViewportRuler} from '../scrolling';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -50,6 +50,7 @@ import {
   inject,
   Injector,
   HostAttributeToken,
+  DOCUMENT,
 } from '@angular/core';
 import {
   BehaviorSubject,

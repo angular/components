@@ -22,7 +22,7 @@ import {
   DomPortal,
   TemplatePortal,
 } from '../portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -38,6 +38,7 @@ import {
   ViewEncapsulation,
   afterNextRender,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {DialogConfig} from './dialog-config';
 

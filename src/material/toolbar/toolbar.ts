@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -19,6 +19,7 @@ import {
   QueryList,
   ViewEncapsulation,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 
 @Directive({

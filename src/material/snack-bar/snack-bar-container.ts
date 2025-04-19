@@ -15,7 +15,7 @@ import {
   DomPortal,
   TemplatePortal,
 } from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -30,6 +30,7 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
+  DOCUMENT,
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';

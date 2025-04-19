@@ -9,7 +9,7 @@
 import {FocusMonitor, _IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
-import {DOCUMENT} from '@angular/common';
+
 import {
   AfterContentInit,
   AfterViewInit,
@@ -33,6 +33,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,

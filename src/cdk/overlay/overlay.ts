@@ -8,7 +8,7 @@
 
 import {Directionality} from '../bidi';
 import {DomPortalOutlet} from '../portal';
-import {DOCUMENT, Location} from '@angular/common';
+import {Location} from '@angular/common';
 import {
   ApplicationRef,
   Injectable,
@@ -18,6 +18,7 @@ import {
   EnvironmentInjector,
   inject,
   RendererFactory2,
+  DOCUMENT,
 } from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {_CdkPrivateStyleLoader} from '../private';

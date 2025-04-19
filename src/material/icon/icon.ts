@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
   booleanAttribute,
@@ -21,6 +20,7 @@ import {
   OnInit,
   ViewEncapsulation,
   HostAttributeToken,
+  DOCUMENT,
 } from '@angular/core';
 import {ThemePalette} from '../core';
 import {Subscription} from 'rxjs';

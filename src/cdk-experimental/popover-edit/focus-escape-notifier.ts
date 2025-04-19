@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import {Injectable, NgZone, inject, DOCUMENT} from '@angular/core';
+
 import {FocusTrap, InteractivityChecker} from '@angular/cdk/a11y';
 import {Observable, Subject} from 'rxjs';
 

@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
-import {inject, InjectionToken} from '@angular/core';
+import {inject, InjectionToken, DOCUMENT} from '@angular/core';
 
 /**
  * Injection token used to inject the document into Directionality.

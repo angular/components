@@ -14,8 +14,9 @@ import {
   ViewContainerRef,
   ChangeDetectorRef,
   inject,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {Directionality} from '@angular/cdk/bidi';
 import {Overlay} from '@angular/cdk/overlay';
 import {

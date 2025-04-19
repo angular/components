@@ -7,10 +7,9 @@
  */
 
 import {Platform} from '../platform';
-import {Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, RendererFactory2, inject, DOCUMENT} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
-import {DOCUMENT} from '@angular/common';
 
 /** Time in ms to throttle the resize events by default. */
 export const DEFAULT_RESIZE_TIME = 20;

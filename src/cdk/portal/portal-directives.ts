@@ -20,8 +20,9 @@ import {
   Input,
   inject,
   NgModuleRef,
+  DOCUMENT,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+
 import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} from './portal';
 
 /**

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DOCUMENT} from '@angular/common';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {
   ErrorHandler,
@@ -17,6 +16,7 @@ import {
   Optional,
   SecurityContext,
   SkipSelf,
+  DOCUMENT,
 } from '@angular/core';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';

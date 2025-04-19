@@ -7,7 +7,7 @@
  */
 
 import {DomPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
+
 import {
   ApplicationRef,
   ChangeDetectorRef,
@@ -18,6 +18,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 
