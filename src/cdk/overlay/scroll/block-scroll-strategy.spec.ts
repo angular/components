@@ -149,6 +149,57 @@ describe('BlockScrollStrategy', () => {
     }),
   );
 
+  it(
+    `should't do anything if the page isn't scrollable while zoomed out`,
+    skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
+      forceScrollElement.style.display = 'none';
+      document.body.style.zoom = '75%';
+      overlayRef.attach(componentPortal);
+      expect(document.body.scrollWidth).toBeGreaterThan(window.innerWidth);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      overlayRef.detach();
+      document.body.style.zoom = '100%';
+
+      document.documentElement.style.zoom = '75%';
+      overlayRef.attach(componentPortal);
+      expect(document.body.scrollWidth).toBeGreaterThan(window.innerWidth);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      document.documentElement.style.zoom = '100%';
+    }),
+  );
+
+  it(
+    `should add cdk-global-scrollblock while zoomed in`,
+    skipIOS(() => {
+      if (platform.FIREFOX) {
+        // style.zoom is only supported from Firefox 126
+        return;
+      }
+
+      forceScrollElement.style.width = window.innerWidth - 20 + 'px';
+      forceScrollElement.style.height = window.innerHeight - 20 + 'px';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).not.toContain('cdk-global-scrollblock');
+      overlayRef.detach();
+
+      document.body.style.zoom = '200%';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).toContain('cdk-global-scrollblock');
+      document.body.style.zoom = '100%';
+      overlayRef.detach();
+
+      document.documentElement.style.zoom = '200%';
+      overlayRef.attach(componentPortal);
+      expect(documentElement.classList).toContain('cdk-global-scrollblock');
+      document.documentElement.style.zoom = '100%';
+    }),
+  );
+
   it('should keep the content width', () => {
     forceScrollElement.style.width = '100px';
 
