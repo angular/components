@@ -7,17 +7,12 @@ import {
 } from '@angular/material/sidenav/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {SidenavHarnessExample} from './sidenav-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('SidenavHarnessExample', () => {
   let fixture: ComponentFixture<SidenavHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-    });
-
     fixture = TestBed.createComponent(SidenavHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

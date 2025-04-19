@@ -3,16 +3,12 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatInputHarness} from '@angular/material/input/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {InputHarnessExample} from './input-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('InputHarnessExample', () => {
   let fixture: ComponentFixture<InputHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-    });
     fixture = TestBed.createComponent(InputHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

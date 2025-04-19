@@ -3,9 +3,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatDatepickerInputHarness} from '@angular/material/datepicker/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {DatepickerHarnessExample} from './datepicker-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '@angular/material/core';
 
 describe('DatepickerHarnessExample', () => {
   let fixture: ComponentFixture<DatepickerHarnessExample>;
@@ -13,7 +11,8 @@ describe('DatepickerHarnessExample', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatDatepickerModule, NoopAnimationsModule, MatNativeDateModule],
+      imports: [MatNativeDateModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
     fixture = TestBed.createComponent(DatepickerHarnessExample);
     fixture.detectChanges();

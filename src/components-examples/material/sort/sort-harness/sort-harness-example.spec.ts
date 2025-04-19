@@ -3,16 +3,12 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatSortHarness} from '@angular/material/sort/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {SortHarnessExample} from './sort-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('SortHarnessExample', () => {
   let fixture: ComponentFixture<SortHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-    });
     fixture = TestBed.createComponent(SortHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

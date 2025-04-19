@@ -3,7 +3,6 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatFormFieldHarness} from '@angular/material/form-field/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {FormFieldHarnessExample} from './form-field-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputHarness} from '@angular/material/input/testing';
 
 describe('FormFieldHarnessExample', () => {
@@ -11,9 +10,6 @@ describe('FormFieldHarnessExample', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule],
-    });
     fixture = TestBed.createComponent(FormFieldHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
