@@ -43,6 +43,9 @@ export class CdkDragPreview<T = any> implements OnDestroy {
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input({transform: booleanAttribute}) matchSize: boolean = false;
 
+  /** Whether the preview should snap the starting position centered under the cursor. */
+  @Input({transform: booleanAttribute}) snapToCursor: boolean = false;
+
   constructor(...args: unknown[]);
 
   constructor() {
