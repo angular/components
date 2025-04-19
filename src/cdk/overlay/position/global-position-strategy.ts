@@ -6,11 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Injector} from '@angular/core';
 import {OverlayRef} from '../overlay-ref';
 import {PositionStrategy} from './position-strategy';
 
 /** Class to be added to the overlay pane wrapper. */
 const wrapperClass = 'cdk-global-overlay-wrapper';
+
+/**
+ * Creates a global position strategy.
+ * @param injector Injector used to resolve dependencies for the strategy.
+ */
+export function createGlobalPositionStrategy(_injector: Injector): GlobalPositionStrategy {
+  // Note: `injector` is unused, but we may need it in
+  // the future which would introduce a breaking change.
+  return new GlobalPositionStrategy();
+}
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an

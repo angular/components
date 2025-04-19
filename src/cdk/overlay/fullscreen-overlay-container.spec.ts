@@ -23,7 +23,7 @@ describe('FullscreenOverlayContainer', () => {
             // stubs here, we should reconsider whether to use a Proxy instead. Avoiding a proxy for
             // now since it isn't supported on IE. See:
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
-            fakeDocument = {
+            return {
               body: document.body,
               head: document.head,
               fullscreenElement: document.createElement('div'),
@@ -51,19 +51,14 @@ describe('FullscreenOverlayContainer', () => {
               createTextNode: (...args: [string]) => document.createTextNode(...args),
               createComment: (...args: [string]) => document.createComment(...args),
             };
-
-            return fakeDocument;
           },
         },
       ],
     });
 
     overlay = TestBed.inject(Overlay);
+    fakeDocument = TestBed.inject(DOCUMENT);
   }));
-
-  afterEach(() => {
-    fakeDocument = null;
-  });
 
   it('should open an overlay inside a fullscreen element and move it to the body', () => {
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);

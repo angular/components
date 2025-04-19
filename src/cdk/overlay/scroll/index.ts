@@ -14,7 +14,8 @@ export {ScrollStrategyOptions} from './scroll-strategy-options';
 export {
   RepositionScrollStrategy,
   RepositionScrollStrategyConfig,
+  createRepositionScrollStrategy,
 } from './reposition-scroll-strategy';
-export {CloseScrollStrategy} from './close-scroll-strategy';
-export {NoopScrollStrategy} from './noop-scroll-strategy';
-export {BlockScrollStrategy} from './block-scroll-strategy';
+export {CloseScrollStrategy, createCloseScrollStrategy} from './close-scroll-strategy';
+export {NoopScrollStrategy, createNoopScrollStrategy} from './noop-scroll-strategy';
+export {BlockScrollStrategy, createBlockScrollStrategy} from './block-scroll-strategy';
