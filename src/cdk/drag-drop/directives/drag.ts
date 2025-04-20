@@ -279,6 +279,11 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     this._dragRef.reset();
   }
 
+  /** Resets drag item to end of boundary element. */
+  resetToBoundary() {
+    this._dragRef.resetToBoundary();
+  }
+
   /**
    * Gets the pixel coordinates of the draggable outside of a drop container.
    */
