@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
-import {ElementRef} from '@angular/core';
+import {DOCUMENT, ElementRef, Injector} from '@angular/core';
 import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '../../scrolling';
 import {
   ConnectedOverlayPositionChange,
@@ -43,6 +43,24 @@ export type FlexibleConnectedPositionStrategyOrigin =
 
 /** Equivalent of `DOMRect` without some of the properties we don't care about. */
 type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
+
+/**
+ * Creates a flexible position strategy.
+ * @param injector Injector used to resolve dependnecies for the position strategy.
+ * @param origin Origin relative to which to position the overlay.
+ */
+export function createFlexibleConnectedPositionStrategy(
+  injector: Injector,
+  origin: FlexibleConnectedPositionStrategyOrigin,
+): FlexibleConnectedPositionStrategy {
+  return new FlexibleConnectedPositionStrategy(
+    origin,
+    injector.get(ViewportRuler),
+    injector.get(DOCUMENT),
+    injector.get(Platform),
+    injector.get(OverlayContainer),
+  );
+}
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an

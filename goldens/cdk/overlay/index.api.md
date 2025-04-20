@@ -198,6 +198,27 @@ export class ConnectionPositionPair {
 }
 
 // @public
+export function createBlockScrollStrategy(injector: Injector): BlockScrollStrategy;
+
+// @public
+export function createCloseScrollStrategy(injector: Injector, config?: CloseScrollStrategyConfig): CloseScrollStrategy;
+
+// @public
+export function createFlexibleConnectedPositionStrategy(injector: Injector, origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
+
+// @public
+export function createGlobalPositionStrategy(_injector: Injector): GlobalPositionStrategy;
+
+// @public
+export function createNoopScrollStrategy(): NoopScrollStrategy;
+
+// @public
+export function createOverlayRef(injector: Injector, config?: OverlayConfig): OverlayRef;
+
+// @public
+export function createRepositionScrollStrategy(injector: Injector, config?: RepositionScrollStrategyConfig): RepositionScrollStrategy;
+
+// @public
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     constructor(connectedTo: FlexibleConnectedPositionStrategyOrigin, _viewportRuler: ViewportRuler, _document: Document, _platform: Platform, _overlayContainer: OverlayContainer);
     apply(): void;

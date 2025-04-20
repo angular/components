@@ -6,14 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ScrollDispatcher, ViewportRuler} from '../../scrolling';
-
-import {Injectable, NgZone, inject, DOCUMENT} from '@angular/core';
-import {BlockScrollStrategy} from './block-scroll-strategy';
-import {CloseScrollStrategy, CloseScrollStrategyConfig} from './close-scroll-strategy';
+import {Injectable, Injector, inject} from '@angular/core';
+import {createBlockScrollStrategy} from './block-scroll-strategy';
+import {CloseScrollStrategyConfig, createCloseScrollStrategy} from './close-scroll-strategy';
 import {NoopScrollStrategy} from './noop-scroll-strategy';
 import {
-  RepositionScrollStrategy,
+  createRepositionScrollStrategy,
   RepositionScrollStrategyConfig,
 } from './reposition-scroll-strategy';
 
@@ -25,11 +23,7 @@ import {
  */
 @Injectable({providedIn: 'root'})
 export class ScrollStrategyOptions {
-  private _scrollDispatcher = inject(ScrollDispatcher);
-  private _viewportRuler = inject(ViewportRuler);
-  private _ngZone = inject(NgZone);
-
-  private _document = inject(DOCUMENT);
+  private _injector = inject(Injector);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -41,11 +35,10 @@ export class ScrollStrategyOptions {
    * Close the overlay as soon as the user scrolls.
    * @param config Configuration to be used inside the scroll strategy.
    */
-  close = (config?: CloseScrollStrategyConfig) =>
-    new CloseScrollStrategy(this._scrollDispatcher, this._ngZone, this._viewportRuler, config);
+  close = (config?: CloseScrollStrategyConfig) => createCloseScrollStrategy(this._injector, config);
 
   /** Block scrolling. */
-  block = () => new BlockScrollStrategy(this._viewportRuler, this._document);
+  block = () => createBlockScrollStrategy(this._injector);
 
   /**
    * Update the overlay's position on scroll.
@@ -53,5 +46,5 @@ export class ScrollStrategyOptions {
    * Allows debouncing the reposition calls.
    */
   reposition = (config?: RepositionScrollStrategyConfig) =>
-    new RepositionScrollStrategy(this._scrollDispatcher, this._viewportRuler, this._ngZone, config);
+    createRepositionScrollStrategy(this._injector, config);
 }

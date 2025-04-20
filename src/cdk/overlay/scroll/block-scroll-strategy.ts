@@ -6,12 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {DOCUMENT, Injector} from '@angular/core';
 import {ScrollStrategy} from './scroll-strategy';
 import {ViewportRuler} from '../../scrolling';
 import {coerceCssPixelValue} from '../../coercion';
 import {supportsScrollBehavior} from '../../platform';
 
 const scrollBehaviorSupported = supportsScrollBehavior();
+
+/**
+ * Creates a scroll strategy that prevents the user from scrolling while the overlay is open.
+ * @param injector Injector used to resolve dependencies of the scroll strategy.
+ * @param config Configuration options for the scroll strategy.
+ */
+export function createBlockScrollStrategy(injector: Injector): BlockScrollStrategy {
+  return new BlockScrollStrategy(injector.get(ViewportRuler), injector.get(DOCUMENT));
+}
 
 /**
  * Strategy that will prevent the user from scrolling while the overlay is visible.

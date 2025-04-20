@@ -19,6 +19,7 @@ import {
   inject,
   RendererFactory2,
   DOCUMENT,
+  Renderer2,
 } from '@angular/core';
 import {_IdGenerator} from '../a11y';
 import {_CdkPrivateStyleLoader} from '../private';
@@ -31,6 +32,56 @@ import {OverlayPositionBuilder} from './position/overlay-position-builder';
 import {ScrollStrategyOptions} from './scroll/index';
 
 /**
+ * Creates an overlay.
+ * @param injector Injector to use when resolving the overlay's dependencies.
+ * @param config Configuration applied to the overlay.
+ * @returns Reference to the created overlay.
+ */
+export function createOverlayRef(injector: Injector, config?: OverlayConfig): OverlayRef {
+  // This is done in the overlay container as well, but we have it here
+  // since it's common to mock out the overlay container in tests.
+  injector.get(_CdkPrivateStyleLoader).load(_CdkOverlayStyleLoader);
+
+  const overlayContainer = injector.get(OverlayContainer);
+  const doc = injector.get(DOCUMENT);
+  const idGenerator = injector.get(_IdGenerator);
+  const appRef = injector.get(ApplicationRef);
+  const directionality = injector.get(Directionality);
+
+  const host = doc.createElement('div');
+  const pane = doc.createElement('div');
+
+  pane.id = idGenerator.getId('cdk-overlay-');
+  pane.classList.add('cdk-overlay-pane');
+  host.appendChild(pane);
+  overlayContainer.getContainerElement().appendChild(host);
+
+  const portalOutlet = new DomPortalOutlet(pane, appRef, injector);
+  const overlayConfig = new OverlayConfig(config);
+  const renderer =
+    injector.get(Renderer2, null, {optional: true}) ||
+    injector.get(RendererFactory2).createRenderer(null, null);
+
+  overlayConfig.direction = overlayConfig.direction || directionality.value;
+
+  return new OverlayRef(
+    portalOutlet,
+    host,
+    pane,
+    overlayConfig,
+    injector.get(NgZone),
+    injector.get(OverlayKeyboardDispatcher),
+    doc,
+    injector.get(Location),
+    injector.get(OverlayOutsideClickDispatcher),
+    config?.disableAnimations ??
+      injector.get(ANIMATION_MODULE_TYPE, null, {optional: true}) === 'NoopAnimations',
+    injector.get(EnvironmentInjector),
+    renderer,
+  );
+}
+
+/**
  * Service to create Overlays. Overlays are dynamically added pieces of floating UI, meant to be
  * used as a low-level building block for other components. Dialogs, tooltips, menus,
  * selects, etc. can all be built using overlays. The service should primarily be used by authors
@@ -41,21 +92,8 @@ import {ScrollStrategyOptions} from './scroll/index';
 @Injectable({providedIn: 'root'})
 export class Overlay {
   scrollStrategies = inject(ScrollStrategyOptions);
-  private _overlayContainer = inject(OverlayContainer);
   private _positionBuilder = inject(OverlayPositionBuilder);
-  private _keyboardDispatcher = inject(OverlayKeyboardDispatcher);
   private _injector = inject(Injector);
-  private _ngZone = inject(NgZone);
-  private _document = inject(DOCUMENT);
-  private _directionality = inject(Directionality);
-  private _location = inject(Location);
-  private _outsideClickDispatcher = inject(OverlayOutsideClickDispatcher);
-  private _animationsModuleType = inject(ANIMATION_MODULE_TYPE, {optional: true});
-  private _idGenerator = inject(_IdGenerator);
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
-
-  private _appRef: ApplicationRef;
-  private _styleLoader = inject(_CdkPrivateStyleLoader);
 
   constructor(...args: unknown[]);
   constructor() {}
@@ -66,31 +104,7 @@ export class Overlay {
    * @returns Reference to the created overlay.
    */
   create(config?: OverlayConfig): OverlayRef {
-    // This is done in the overlay container as well, but we have it here
-    // since it's common to mock out the overlay container in tests.
-    this._styleLoader.load(_CdkOverlayStyleLoader);
-
-    const host = this._createHostElement();
-    const pane = this._createPaneElement(host);
-    const portalOutlet = this._createPortalOutlet(pane);
-    const overlayConfig = new OverlayConfig(config);
-
-    overlayConfig.direction = overlayConfig.direction || this._directionality.value;
-
-    return new OverlayRef(
-      portalOutlet,
-      host,
-      pane,
-      overlayConfig,
-      this._ngZone,
-      this._keyboardDispatcher,
-      this._document,
-      this._location,
-      this._outsideClickDispatcher,
-      config?.disableAnimations ?? this._animationsModuleType === 'NoopAnimations',
-      this._injector.get(EnvironmentInjector),
-      this._renderer,
-    );
+    return createOverlayRef(this._injector, config);
   }
 
   /**
@@ -100,45 +114,5 @@ export class Overlay {
    */
   position(): OverlayPositionBuilder {
     return this._positionBuilder;
-  }
-
-  /**
-   * Creates the DOM element for an overlay and appends it to the overlay container.
-   * @returns Newly-created pane element
-   */
-  private _createPaneElement(host: HTMLElement): HTMLElement {
-    const pane = this._document.createElement('div');
-
-    pane.id = this._idGenerator.getId('cdk-overlay-');
-    pane.classList.add('cdk-overlay-pane');
-    host.appendChild(pane);
-
-    return pane;
-  }
-
-  /**
-   * Creates the host element that wraps around an overlay
-   * and can be used for advanced positioning.
-   * @returns Newly-create host element.
-   */
-  private _createHostElement(): HTMLElement {
-    const host = this._document.createElement('div');
-    this._overlayContainer.getContainerElement().appendChild(host);
-    return host;
-  }
-
-  /**
-   * Create a DomPortalOutlet into which the overlay content can be loaded.
-   * @param pane The DOM element to turn into a portal outlet.
-   * @returns A portal outlet for the given DOM element.
-   */
-  private _createPortalOutlet(pane: HTMLElement): DomPortalOutlet {
-    // We have to resolve the ApplicationRef later in order to allow people
-    // to use overlay-based providers during app initialization.
-    if (!this._appRef) {
-      this._appRef = this._injector.get<ApplicationRef>(ApplicationRef);
-    }
-
-    return new DomPortalOutlet(pane, this._appRef, this._injector);
   }
 }
