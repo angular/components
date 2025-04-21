@@ -1,23 +1,21 @@
-import {importProvidersFrom} from '@angular/core';
-
 import {AppComponent} from './app/app.component';
-import {MatNativeDateModule} from '@angular/material/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {provideNativeDateAdapter, MATERIAL_ANIMATIONS} from '@angular/material/core';
 import {routes} from './app/app-routes';
-import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
-import {DOCUMENT} from '@angular/common';
+import {bootstrapApplication} from '@angular/platform-browser';
 import {SceneOverlayContainer} from './app/scene-overlay-container';
-import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {provideRouter} from '@angular/router';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(BrowserModule, MatNativeDateModule, NoopAnimationsModule),
+    provideNativeDateAdapter(),
     {
       provide: OverlayContainer,
-      useFactory: (doc: any, platform: Platform) => new SceneOverlayContainer(doc, platform),
-      deps: [DOCUMENT, Platform],
+      useClass: SceneOverlayContainer,
+    },
+    {
+      provide: MATERIAL_ANIMATIONS,
+      useValue: {animationsDisabled: true},
     },
     provideRouter(routes),
   ],
