@@ -6,7 +6,7 @@ load(
 )
 load("//tools:defaults.bzl", "ng_package", "sass_library")
 load("//tools:defaults2.bzl", "ts_project")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 

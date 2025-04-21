@@ -54,7 +54,6 @@ load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-
 NODE_VERSION = "22.11.0"
 
 NODE_REPOSITORIES = {
@@ -77,7 +76,7 @@ rules_js_register_toolchains(
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
-    name = "npm2",
+    name = "npm",
     custom_postinstalls = {
         "@angular/animations": "node ../../@nginfra/angular-linking/index.mjs",
         "@angular/common": "node ../../@nginfra/angular-linking/index.mjs",
@@ -150,7 +149,7 @@ npm_translate_lock(
     verify_node_modules_ignored = "//:.bazelignore",
 )
 
-load("@npm2//:repositories.bzl", "npm_repositories")
+load("@npm//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
 

@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library", "js_test")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//docs:defs.bzl", "ng_app")
 
 package(default_visibility = ["//visibility:public"])
