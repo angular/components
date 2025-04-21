@@ -31,5 +31,3 @@ src/material-moment-adapter/node_modules
 src/material/node_modules
 src/universal-app/node_modules
 src/youtube-player/node_modules
-
-tools/bazel/legacy-rnjs/node_modules
