@@ -3,17 +3,37 @@ load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
 load("@devinfra//bazel/spec-bundling:index_rjs.bzl", _spec_bundle = "spec_bundle")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
+load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
 load("@rules_browsers//src/protractor_test:index.bzl", "protractor_test")
 load("//tools/bazel:module_name.bzl", "compute_module_name")
 load("//tools/bazel:ts_project_interop.bzl", _ts_project = "ts_project")
 load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
+load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 
 spec_bundle = _spec_bundle
 http_server = _http_server
 ng_web_test_suite = _ng_web_test_suite
 
-def npm_package(**kwargs):
-    _npm_package(**kwargs)
+def npm_package(name, srcs = [], **kwargs):
+    _text_replace(
+        name = "%s_substituted" % name,
+        srcs = srcs,
+        substitutions = select({
+            "//tools:stamp": NPM_PACKAGE_SUBSTITUTIONS,
+            "//conditions:default": NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS,
+        }),
+    )
+    _npm_package(
+        name = name,
+        srcs = srcs + [
+            "%s_substituted" % name,
+        ],
+        replace_prefixes = {
+            "%s_substituted" % name: "/",
+        },
+        allow_overwrites = True,
+        **kwargs
+    )
 
 def ts_project(
         name,
