@@ -3,7 +3,7 @@ load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
 load(":config.bzl", "ALL_EXAMPLES")
 load("//tools:defaults2.bzl", "ng_project")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
