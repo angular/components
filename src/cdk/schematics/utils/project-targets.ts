@@ -9,6 +9,17 @@
 import {JsonValue, workspaces} from '@angular-devkit/core';
 import {SchematicsException} from '@angular-devkit/schematics';
 
+/** Possible names of CLI builders used to configure the project. */
+const PROJECT_BUILDERS = new Set([
+  '@angular-devkit/build-angular:browser-esbuild',
+  '@angular-devkit/build-angular:application',
+  '@angular-devkit/build-angular:browser',
+  '@angular/build:application',
+]);
+
+/** Possible name of CLI builders used to run tests in the project. */
+const TEST_BUILDERS = new Set(['@angular-devkit/build-angular:karma', '@angular/build:karma']);
+
 /** Resolves the architect options for the build target of the given project. */
 export function getProjectTargetOptions(
   project: workspaces.ProjectDefinition,
@@ -29,24 +40,14 @@ export function getProjectTargetOptions(
 export function getProjectBuildTargets(
   project: workspaces.ProjectDefinition,
 ): workspaces.TargetDefinition[] {
-  return getTargetsByBuilderName(
-    project,
-    builder =>
-      builder === '@angular-devkit/build-angular:application' ||
-      builder === '@angular-devkit/build-angular:browser' ||
-      builder === '@angular-devkit/build-angular:browser-esbuild' ||
-      builder === '@angular/build:application',
-  );
+  return getTargetsByBuilderName(project, builder => !!builder && PROJECT_BUILDERS.has(builder));
 }
 
 /** Gets all of the default CLI-provided testing targets in a project. */
 export function getProjectTestTargets(
   project: workspaces.ProjectDefinition,
 ): workspaces.TargetDefinition[] {
-  return getTargetsByBuilderName(
-    project,
-    builder => builder === '@angular-devkit/build-angular:karma',
-  );
+  return getTargetsByBuilderName(project, builder => !!builder && TEST_BUILDERS.has(builder));
 }
 
 /** Gets all targets from the given project that pass a predicate check. */
