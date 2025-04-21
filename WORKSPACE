@@ -12,9 +12,7 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.4/rules_nodejs-5.8.4.tar.gz"],
 )
 
-# Add skylib which contains common Bazel utilities. Note that `rules_nodejs` would also
-# bring in the skylib repository but with an older version that does not support shorthands
-# for declaring Bazel build setting flags.
+# Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
     sha256 = "a9c5d3a22461ed7063aa7b088f9c96fa0aaaa8b6984b601f84d705adc47d8a58",
@@ -56,7 +54,6 @@ load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 NODE_VERSION = "22.11.0"
 
@@ -69,12 +66,6 @@ NODE_REPOSITORIES = {
     "22.11.0-linux_amd64": ("node-v22.11.0-linux-x64.tar.xz", "node-v22.11.0-linux-x64", "83bf07dd343002a26211cf1fcd46a9d9534219aad42ee02847816940bf610a72"),
     "22.11.0-windows_amd64": ("node-v22.11.0-win-x64.zip", "node-v22.11.0-win-x64", "905373a059aecaf7f48c1ce10ffbd5334457ca00f678747f19db5ea7d256c236"),
 }
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_repositories = NODE_REPOSITORIES,
-    node_version = NODE_VERSION,
-)
 
 load("@aspect_rules_js//js:toolchains.bzl", "rules_js_register_toolchains")
 
