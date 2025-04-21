@@ -12,9 +12,7 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.4/rules_nodejs-5.8.4.tar.gz"],
 )
 
-# Add skylib which contains common Bazel utilities. Note that `rules_nodejs` would also
-# bring in the skylib repository but with an older version that does not support shorthands
-# for declaring Bazel build setting flags.
+# Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
     sha256 = "a9c5d3a22461ed7063aa7b088f9c96fa0aaaa8b6984b601f84d705adc47d8a58",
@@ -56,8 +54,6 @@ load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
-
 NODE_VERSION = "22.11.0"
 
 NODE_REPOSITORIES = {
@@ -70,12 +66,6 @@ NODE_REPOSITORIES = {
     "22.11.0-windows_amd64": ("node-v22.11.0-win-x64.zip", "node-v22.11.0-win-x64", "905373a059aecaf7f48c1ce10ffbd5334457ca00f678747f19db5ea7d256c236"),
 }
 
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_repositories = NODE_REPOSITORIES,
-    node_version = NODE_VERSION,
-)
-
 load("@aspect_rules_js//js:toolchains.bzl", "rules_js_register_toolchains")
 
 rules_js_register_toolchains(
@@ -83,26 +73,10 @@ rules_js_register_toolchains(
     node_version = NODE_VERSION,
 )
 
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
-
-# TODO(devversion): Remove this once `ng_package` is ported over to `rules_js`.
-yarn_install(
-    name = "npm",
-    data = [
-        "//tools/bazel/legacy-rnjs:.yarn/patches/@angular-bazel-https-c46f484fb8.patch",
-        "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
-        "//tools/bazel/legacy-rnjs:.yarnrc.yml",
-    ],
-    exports_directories_only = False,
-    package_json = "//tools/bazel/legacy-rnjs:package.json",
-    yarn = "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
-    yarn_lock = "//tools/bazel/legacy-rnjs:yarn.lock",
-)
-
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
-    name = "npm2",
+    name = "npm",
     custom_postinstalls = {
         "@angular/animations": "node ../../@nginfra/angular-linking/index.mjs",
         "@angular/common": "node ../../@nginfra/angular-linking/index.mjs",
@@ -175,7 +149,7 @@ npm_translate_lock(
     verify_node_modules_ignored = "//:.bazelignore",
 )
 
-load("@npm2//:repositories.bzl", "npm_repositories")
+load("@npm//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
 
@@ -230,7 +204,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "514eda9ec00a6745dc11b2a62d7be2634199171e",
+    commit = "005c80615934c891d729d5efc1ae661f9e3210c4",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 

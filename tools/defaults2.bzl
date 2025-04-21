@@ -3,10 +3,10 @@ load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
 load("@devinfra//bazel/spec-bundling:index_rjs.bzl", _spec_bundle = "spec_bundle")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
+load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
+load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
 load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
 load("@rules_browsers//src/protractor_test:index.bzl", "protractor_test")
-load("//tools/bazel:module_name.bzl", "compute_module_name")
-load("//tools/bazel:ts_project_interop.bzl", _ts_project = "ts_project")
 load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 
@@ -37,21 +37,34 @@ def npm_package(name, srcs = [], **kwargs):
 
 def ts_project(
         name,
+        deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
+        visibility = None,
+        # TODO: Switch this flag as we no longer depend on `interop_deps`.
+        ignore_strict_deps = True,
         **kwargs):
     if tsconfig == None and native.package_name().startswith("src"):
         tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
 
     _ts_project(
-        name,
+        name = name,
         source_map = source_map,
-        module_name = compute_module_name(testonly),
         testonly = testonly,
+        declaration = True,
         tsconfig = tsconfig,
+        visibility = visibility,
+        deps = deps,
         **kwargs
     )
+
+    if not ignore_strict_deps:
+        strict_deps_test(
+            name = "%s_strict_deps_test" % name,
+            srcs = kwargs.get("srcs", []),
+            deps = deps,
+        )
 
     # TODO(devversion): Partner with ISE team to support `rules_js` here.
     # if False and not testonly:
@@ -59,22 +72,34 @@ def ts_project(
 
 def ng_project(
         name,
+        deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
+        visibility = None,
+        # TODO: Switch this flag as we no longer depend on `interop_deps`.
+        ignore_strict_deps = True,
         **kwargs):
     if tsconfig == None and native.package_name().startswith("src"):
         tsconfig = "//src:test-tsconfig" if testonly else "//src:build-tsconfig"
 
-    _ts_project(
-        name,
+    _ng_project(
+        name = name,
         source_map = source_map,
-        module_name = compute_module_name(testonly),
-        rule_impl = _ng_project,
         testonly = testonly,
+        declaration = True,
         tsconfig = tsconfig,
+        visibility = visibility,
+        deps = deps,
         **kwargs
     )
+
+    if not ignore_strict_deps:
+        strict_deps_test(
+            name = "%s_strict_deps_test" % name,
+            srcs = kwargs.get("srcs", []),
+            deps = deps,
+        )
 
     # TODO(devversion): Partner with ISE team to support `rules_js` here.
     # if False and not testonly:
