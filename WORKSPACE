@@ -83,22 +83,6 @@ rules_js_register_toolchains(
     node_version = NODE_VERSION,
 )
 
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
-
-# TODO(devversion): Remove this once `ng_package` is ported over to `rules_js`.
-yarn_install(
-    name = "npm",
-    data = [
-        "//tools/bazel/legacy-rnjs:.yarn/patches/@angular-bazel-https-c46f484fb8.patch",
-        "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
-        "//tools/bazel/legacy-rnjs:.yarnrc.yml",
-    ],
-    exports_directories_only = False,
-    package_json = "//tools/bazel/legacy-rnjs:package.json",
-    yarn = "//tools/bazel/legacy-rnjs:.yarn/releases/yarn-4.5.0.cjs",
-    yarn_lock = "//tools/bazel/legacy-rnjs:yarn.lock",
-)
-
 load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
 
 npm_translate_lock(
