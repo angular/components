@@ -86,6 +86,7 @@ interface MatSortHeaderColumnDef {
     '(mouseleave)': '_recentlyCleared.set(null)',
     '[attr.aria-sort]': '_getAriaSortAttribute()',
     '[class.mat-sort-header-disabled]': '_isDisabled()',
+    '[style.--mat-sort-header-opacity]': 'showSortIcon ? 0.54 : 0',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -151,6 +152,10 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   @Input({transform: booleanAttribute})
   disableClear: boolean;
 
+  /** Overrides the show sort icon value of the containing MatSort for this MatSortable. */
+  @Input({transform: booleanAttribute})
+  showSortIcon: boolean;
+
   constructor(...args: unknown[]);
 
   constructor() {
@@ -169,6 +174,10 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
 
     if (defaultOptions?.arrowPosition) {
       this.arrowPosition = defaultOptions?.arrowPosition;
+    }
+
+    if (defaultOptions?.showSortIcon) {
+      this.showSortIcon = defaultOptions.showSortIcon;
     }
   }
 

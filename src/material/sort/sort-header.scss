@@ -52,7 +52,7 @@
 
   to {
     transform: translateY(-25%);
-    opacity: 0;
+    opacity: var(--mat-sort-header-opacity);
   }
 }
 
@@ -64,7 +64,7 @@
 
   to {
     transform: translateY(25%) rotate(180deg);
-    opacity: 0;
+    opacity: var(--mat-sort-header-opacity);
   }
 }
 
@@ -74,7 +74,7 @@
   width: 12px;
   position: relative;
   transition: transform $timing, opacity $timing;
-  opacity: 0;
+  opacity: var(--mat-sort-header-opacity);
   overflow: visible;
 
   @include token-utils.use-tokens(m2-sort.$prefix, m2-sort.get-token-slots()) {

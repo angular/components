@@ -420,6 +420,40 @@ describe('MatSort', () => {
       expect(containerB.classList.contains('mat-sort-header-position-before')).toBe(true);
     });
   });
+
+  describe('with default showSortIcon', () => {
+    let fixture: ComponentFixture<MatSortWithoutInputs>;
+
+    const getComputedStyleProp = (el: Element | null, prop: string): any =>
+      el ? getComputedStyle(el).getPropertyValue(prop) : undefined;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatSortModule, MatTableModule, CdkTableModule, MatSortWithoutInputs],
+        providers: [
+          {
+            provide: MAT_SORT_DEFAULT_OPTIONS,
+            useValue: {
+              showSortIcon: true,
+            },
+          },
+        ],
+      });
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MatSortWithoutInputs);
+      fixture.detectChanges();
+    });
+
+    it('should show sort icons by default', () => {
+      const containerA = fixture.nativeElement.querySelector('#defaultA .mat-sort-header-arrow');
+      const containerB = fixture.nativeElement.querySelector('#defaultB .mat-sort-header-arrow');
+
+      expect(getComputedStyleProp(containerA, 'opacity')?.toString()).toBe('0.54');
+      expect(getComputedStyleProp(containerB, 'opacity')?.toString()).toBe('0.54');
+    });
+  });
 });
 
 /**

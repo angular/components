@@ -57,6 +57,8 @@ export interface MatSortDefaultOptions {
   disableClear?: boolean;
   /** Position of the arrow that displays when sorted. */
   arrowPosition?: SortHeaderArrowPosition;
+  /** Show sort icons by default. */
+  showSortIcon?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-sort`. */
