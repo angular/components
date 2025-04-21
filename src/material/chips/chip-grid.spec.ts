@@ -867,6 +867,50 @@ describe('MatChipGrid', () => {
     });
   });
 
+  describe('error message when multiple form field controls', () => {
+    let fixture: ComponentFixture<ChipGridWithMultipleControls>;
+    let errorTestComponent: ChipGridWithMultipleControls;
+    let containerEl: HTMLElement;
+    let chipGridEl: HTMLElement;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(ChipGridWithMultipleControls);
+      flush();
+      fixture.detectChanges();
+
+      errorTestComponent = fixture.componentInstance;
+      containerEl = fixture.debugElement.query(By.css('mat-form-field'))!.nativeElement;
+      chipGridEl = fixture.debugElement.query(By.css('mat-chip-grid'))!.nativeElement;
+    }));
+
+    it('should display an error message when the grid is touched and invalid when multiple controls in mat form field', fakeAsync(() => {
+      expect(errorTestComponent.chipCtrl.invalid)
+        .withContext('Expected form control to be invalid')
+        .toBe(true);
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .withContext('Expected no error message')
+        .toBe(0);
+
+      expect(containerEl.classList)
+        .withContext('Expected container not to have the invalid CSS class.')
+        .not.toContain('mat-form-field-invalid');
+
+      errorTestComponent.chipCtrl.markAsTouched();
+      fixture.detectChanges();
+      tick();
+
+      expect(containerEl.classList)
+        .withContext('Expected container to have the invalid CSS class.')
+        .toContain('mat-form-field-invalid');
+      expect(containerEl.querySelectorAll('mat-error').length)
+        .withContext('Expected one error message to have been rendered.')
+        .toBe(1);
+      expect(chipGridEl.getAttribute('aria-invalid'))
+        .withContext('Expected aria-invalid to be set to "true".')
+        .toBe('true');
+    }));
+  });
+
   describe('error messages', () => {
     let fixture: ComponentFixture<ChipGridWithFormErrorMessages>;
     let errorTestComponent: ChipGridWithFormErrorMessages;
@@ -1227,4 +1271,37 @@ class ChipGridWithRemove {
   removeChip(event: MatChipEvent) {
     this.chips.splice(event.chip.value, 1);
   }
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+    <input
+          matInput
+          type="text"
+          placeholder="New item..."
+          [matChipInputFor]="chipGrid"
+        />
+
+      <mat-chip-grid #chipGrid  required [formControl]="chipCtrl">
+        @for (i of chips; track i) {
+          <mat-chip-row [value]="i" >
+            Chip {{i + 1}}
+            <span matChipRemove>Remove</span>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+
+      <mat-error data-test-id="errors">
+            @if (chipCtrl.errors?.['required']) {
+              {{ 'Error occurs' }}
+            }
+          </mat-error>
+    </mat-form-field>
+  `,
+  standalone: false,
+})
+class ChipGridWithMultipleControls {
+  chipCtrl = new FormControl();
+  chips = [0, 1, 2, 3, 4];
 }

@@ -42,7 +42,7 @@
   [class.mdc-text-field--outlined]="_hasOutline()"
   [class.mdc-text-field--no-label]="!_hasFloatingLabel()"
   [class.mdc-text-field--disabled]="_control.disabled"
-  [class.mdc-text-field--invalid]="_control.errorState"
+  [class.mdc-text-field--invalid]="_control.errorState || otherFormFieldControlsErrorState"
   (click)="_control.onContainerClick($event)"
 >
   @if (!_hasOutline() && !_control.disabled) {
@@ -96,9 +96,8 @@
 </div>
 
 <div
-    class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
-    [class.mat-mdc-form-field-subscript-dynamic-size]="subscriptSizing === 'dynamic'"
->
+  class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
+  [class.mat-mdc-form-field-subscript-dynamic-size]="subscriptSizing === 'dynamic'">
   @let subscriptMessageType = _getSubscriptMessageType();
 
   <!-- 
@@ -106,10 +105,11 @@
     as having it appear post render will not consistently work. We also do not want to add
     additional divs as it causes styling regressions.
     -->
-  <div aria-atomic="true" aria-live="polite" 
-      [class.mat-mdc-form-field-error-wrapper]="subscriptMessageType === 'error'"
-      [class.mat-mdc-form-field-hint-wrapper]="subscriptMessageType === 'hint'"
-    >
+  <div
+    aria-atomic="true"
+    aria-live="polite"
+    [class.mat-mdc-form-field-error-wrapper]="subscriptMessageType === 'error'"
+    [class.mat-mdc-form-field-hint-wrapper]="subscriptMessageType === 'hint'">
     @switch (subscriptMessageType) {
       @case ('error') {
         <ng-content select="mat-error, [matError]"></ng-content>

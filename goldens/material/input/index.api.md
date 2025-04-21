@@ -72,6 +72,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _forceDisplayInfixLabel(): boolean | 0;
     // (undocumented)
     _formFieldControl: MatFormFieldControl<any>;
+    // (undocumented)
+    _formFieldControls: QueryList<MatFormFieldControl<any>>;
     getConnectedOverlayOrigin(): ElementRef;
     getLabelId: i0.Signal<string | null>;
     _getSubscriptMessageType(): 'error' | 'hint';
@@ -114,6 +116,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     ngOnDestroy(): void;
     // (undocumented)
     _notchedOutline: MatFormFieldNotchedOutline | undefined;
+    get otherFormFieldControls(): MatFormFieldControl<any>[];
+    get otherFormFieldControlsErrorState(): boolean;
     // (undocumented)
     _prefixChildren: QueryList<MatPrefix>;
     _refreshOutlineNotchWidth(): void;
@@ -132,7 +136,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _textSuffixContainer: ElementRef<HTMLElement>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_formFieldControls", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
 }

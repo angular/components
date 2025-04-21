@@ -149,7 +149,7 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     // Note that these classes reuse the same names as the non-MDC version, because they can be
     // considered a public API since custom form controls may use them to style themselves.
     // See https://github.com/angular/components/pull/20502#discussion_r486124901.
-    '[class.mat-form-field-invalid]': '_control.errorState',
+    '[class.mat-form-field-invalid]': '_control.errorState || otherFormFieldControlsErrorState',
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
@@ -219,6 +219,9 @@ export class MatFormField
   });
 
   @ContentChild(_MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
+  @ContentChildren(_MatFormFieldControl, {descendants: true}) _formFieldControls: QueryList<
+    MatFormFieldControl<any>
+  >;
   @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
   @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
   @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren: QueryList<MatError>;
@@ -327,12 +330,23 @@ export class MatFormField
     this._explicitFormFieldControl = value;
   }
 
+  /** Gets the other form field controls if any */
+  get otherFormFieldControls(): MatFormFieldControl<any>[] {
+    return this._formFieldControls.filter(control => control.id !== this._control.id);
+  }
+
+  /** Gets the error state of other form field controls if any */
+  get otherFormFieldControlsErrorState(): boolean {
+    return this.otherFormFieldControls.some(control => control.errorState);
+  }
+
   private _destroyed = new Subject<void>();
   private _isFocused: boolean | null = null;
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _previousControl: MatFormFieldControl<unknown> | null = null;
   private _previousControlValidatorFn: ValidatorFn | null = null;
   private _stateChanges: Subscription | undefined;
+  private _otherControlStateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
   protected readonly _animationsDisabled = _animationsDisabled();
@@ -412,6 +426,7 @@ export class MatFormField
   ngOnDestroy() {
     this._outlineLabelOffsetResizeObserver?.disconnect();
     this._stateChanges?.unsubscribe();
+    this._otherControlStateChanges?.unsubscribe();
     this._valueChanges?.unsubscribe();
     this._describedByChanges?.unsubscribe();
     this._destroyed.next();
@@ -465,6 +480,16 @@ export class MatFormField
       this._updateFocusState();
       this._changeDetectorRef.markForCheck();
     });
+
+    if (this.otherFormFieldControls.length) {
+      this._otherControlStateChanges?.unsubscribe();
+      this.otherFormFieldControls.map(control => {
+        const subscription = control.stateChanges.subscribe(() =>
+          this._changeDetectorRef.markForCheck(),
+        );
+        this._otherControlStateChanges?.add(subscription);
+      });
+    }
 
     // Updating the `aria-describedby` touches the DOM. Only do it if it actually needs to change.
     this._describedByChanges?.unsubscribe();
@@ -632,7 +657,9 @@ export class MatFormField
 
   /** Gets the type of subscript message to render (error or hint). */
   _getSubscriptMessageType(): 'error' | 'hint' {
-    return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState
+    return this._errorChildren &&
+      this._errorChildren.length > 0 &&
+      (this._control.errorState || this.otherFormFieldControlsErrorState)
       ? 'error'
       : 'hint';
   }
