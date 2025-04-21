@@ -1,7 +1,6 @@
 # Re-export of Bazel rules with repository-wide defaults
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
-load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
 load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
@@ -100,24 +99,4 @@ def ng_package(
         visibility = visibility,
         interop_deps = [d.replace("_legacy", "") for d in deps] + package_deps,
         package_name = package_name,
-    )
-
-def pkg_npm(name, visibility = None, **kwargs):
-    _pkg_npm(
-        name = name,
-        # We never set a `package_name` for NPM packages, neither do we enable validation.
-        # This is necessary because the source targets of the NPM packages all have
-        # package names set and setting a similar `package_name` on the NPM package would
-        # result in duplicate linker mappings that will conflict. e.g. consider the following
-        # scenario: We have a `ts_library` for `@angular/cdk`. We will configure a package
-        # name for the target so that it can be resolved in NodeJS executions from `node_modules`.
-        # If we'd also set a `package_name` for the associated `pkg_npm` target, there would be
-        # two mappings for `@angular/cdk` and the linker will complain. For a better development
-        # experience, we want the mapping to resolve to the direct outputs of the `ts_library`
-        # instead of requiring tests and other targets to assemble the NPM package first.
-        package_name = None,
-        validate = False,
-        substitutions = npmPackageSubstitutions,
-        visibility = visibility,
-        **kwargs
     )
