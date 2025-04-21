@@ -51,7 +51,6 @@ def ts_project(
     _ts_project(
         name = name,
         source_map = source_map,
-        module_name = compute_module_name(testonly),
         testonly = testonly,
         declaration = True,
         tsconfig = tsconfig,
