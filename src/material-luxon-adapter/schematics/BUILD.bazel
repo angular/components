@@ -1,6 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "pkg_npm")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults2.bzl", "npm_package", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -26,9 +25,9 @@ ts_project(
 )
 
 # This package is intended to be combined into the main @angular/material-luxon-adapter package as a dep.
-pkg_npm(
+npm_package(
     name = "npm_package",
-    deps = [
+    srcs = [
         ":schematics",
         ":schematics_assets",
     ],
