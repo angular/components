@@ -1,7 +1,6 @@
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//tools:defaults.bzl", "ng_package")
 load("//tools:defaults2.bzl", "ts_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
 load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
@@ -29,5 +28,5 @@ ng_package(
         "//integration:__subpackages__",
         "//src/material-experimental:__subpackages__",
     ],
-    deps = [get_legacy_label(t) for t in CDK_EXPERIMENTAL_TARGETS],
+    deps = CDK_EXPERIMENTAL_TARGETS,
 )

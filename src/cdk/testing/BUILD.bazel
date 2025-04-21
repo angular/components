@@ -38,7 +38,7 @@ ng_web_test_suite(
 e2e_test_suite(
     name = "protractor_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:e2e_test_sources_legacy",
+        "//src/cdk/testing/tests:e2e_test_sources",
     ],
 )
 
