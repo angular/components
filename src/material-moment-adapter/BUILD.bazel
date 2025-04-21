@@ -57,5 +57,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":material-moment-adapter_legacy"],
+    deps = [":material-moment-adapter"],
 )
