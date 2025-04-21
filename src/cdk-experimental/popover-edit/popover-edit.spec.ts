@@ -1044,6 +1044,103 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
   }
 });
 
+@Component({
+  template: `
+  <div #table [dir]="direction">
+    <table cdk-table editable [dataSource]="dataSource" [multiTemplateDataRows]="true">
+      <ng-container cdkColumnDef="before">
+        <td cdk-cell *cdkCellDef="let element">
+          just a cell
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="name">
+        <td cdk-cell *cdkCellDef="let element"
+            ${POPOVER_EDIT_DIRECTIVE_NAME}>
+          ${CELL_TEMPLATE}
+
+          <ng-template #nameEdit>
+            ${NAME_EDIT_TEMPLATE}
+          </ng-template>
+
+          <span *cdkIfRowHovered>
+            <button cdkEditOpen>Edit</button>
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="weight">
+        <td cdk-cell *cdkCellDef="let element"
+            ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
+          {{element.weight}}
+
+          <ng-template #weightEdit>
+            ${WEIGHT_EDIT_TEMPLATE}
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="skip">
+        <td cdk-cell *cdkCellDef="let element" colspan="3"></td>
+      </ng-container>
+
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: ['skip'];"
+          class="cdk-popover-edit-skip-focus"></tr>
+    </table>
+  <div>
+  `,
+  standalone: false,
+})
+class CdkTableWithSkipRows extends BaseTestComponent {
+  displayedColumns = ['before', 'name', 'weight'];
+  dataSource: ElementDataSource;
+
+  renderData() {
+    this.dataSource = new ElementDataSource();
+    this.cdr.markForCheck();
+  }
+}
+
+describe('CDK Popover Edit - with focus ignore rows', () => {
+  let component: CdkTableWithSkipRows;
+  let fixture: ComponentFixture<CdkTableWithSkipRows>;
+
+  const dispatchKey = (cell: HTMLElement, keyCode: number) =>
+    dispatchKeyboardEvent(cell, 'keydown', keyCode);
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [CdkTableModule, CdkPopoverEditModule, FormsModule, BidiModule],
+      declarations: [CdkTableWithSkipRows],
+    });
+    fixture = TestBed.createComponent(CdkTableWithSkipRows);
+    component = fixture.componentInstance;
+    component.renderData();
+    fixture.detectChanges();
+    tick(10);
+    fixture.detectChanges();
+  }));
+
+  it('skips ignored rows when moving focus up', () => {
+    const rows = component.getRows();
+
+    getCells(rows[4])[1].focus();
+
+    dispatchKey(getCells(rows[4])[1], UP_ARROW);
+    expect(document.activeElement).toBe(getCells(rows[2])[1]);
+  });
+
+  it('skips ignored rows when moving focus down', () => {
+    const rows = component.getRows();
+
+    getCells(rows[0])[1].focus();
+
+    dispatchKey(getCells(rows[0])[1], DOWN_ARROW);
+    expect(document.activeElement).toBe(getCells(rows[2])[1]);
+  });
+});
+
 interface ChemicalElement {
   name: string;
   weight: number;
