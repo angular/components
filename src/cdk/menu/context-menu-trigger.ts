@@ -12,13 +12,15 @@ import {
   Directive,
   inject,
   Injectable,
+  Injector,
   Input,
   OnDestroy,
 } from '@angular/core';
 import {Directionality} from '../bidi';
 import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   STANDARD_DROPDOWN_BELOW_POSITIONS,
 } from '../overlay';
@@ -81,15 +83,9 @@ export type ContextMenuCoordinates = {x: number; y: number};
   ],
 })
 export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestroy {
-  /** The CDK overlay service. */
-  private readonly _overlay = inject(Overlay);
-
-  /** The directionality of the page. */
+  private readonly _injector = inject(Injector);
   private readonly _directionality = inject(Directionality, {optional: true});
-
-  /** The app's context menu tracking registry */
   private readonly _contextMenuTracker = inject(ContextMenuTracker);
-
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
   /** Whether the context menu is disabled. */
@@ -161,9 +157,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
   private _getOverlayPositionStrategy(
     coordinates: ContextMenuCoordinates,
   ): FlexibleConnectedPositionStrategy {
-    return this._overlay
-      .position()
-      .flexibleConnectedTo(coordinates)
+    return createFlexibleConnectedPositionStrategy(this._injector, coordinates)
       .withLockedPosition()
       .withGrowAfterOpen()
       .withPositions(this.menuPosition ?? CONTEXT_MENU_POSITIONS);
@@ -244,7 +238,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
         ).setOrigin(coordinates);
         this.overlayRef.updatePosition();
       } else {
-        this.overlayRef = this._overlay.create(this._getOverlayConfig(coordinates));
+        this.overlayRef = createOverlayRef(this._injector, this._getOverlayConfig(coordinates));
       }
 
       this.overlayRef.attach(this.getMenuContentPortal());
