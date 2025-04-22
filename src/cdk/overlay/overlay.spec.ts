@@ -1,5 +1,3 @@
-import {Direction, Directionality} from '../bidi';
-import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {
@@ -21,6 +19,8 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Direction, Directionality} from '../bidi';
+import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {dispatchFakeEvent} from '../testing/private';
 import {
   Overlay,
@@ -950,6 +950,7 @@ describe('Overlay', () => {
       const overlayRef = overlay.create(config);
 
       overlayRef.attach(componentPortal);
+      await viewContainerFixture.whenStable();
 
       const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       expect(pane.classList)
@@ -960,6 +961,7 @@ describe('Overlay', () => {
       expect(pane.classList)
         .withContext('Expected class not to be removed immediately')
         .toContain('custom-panel-class');
+      await viewContainerFixture.whenStable();
 
       expect(pane.classList)
         .not.withContext('Expected class to be removed on stable')
