@@ -30,7 +30,7 @@ import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
   ConnectedPosition,
-  Overlay,
+  createRepositionScrollStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
@@ -60,6 +60,7 @@ import {
   ViewEncapsulation,
   HostAttributeToken,
   Renderer2,
+  Injector,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -97,8 +98,8 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -109,9 +110,10 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
  * @breaking-change 21.0.0
  */
 export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  overlay: Overlay,
+  _overlay: unknown,
 ): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector);
 }
 
 /** Object that can be used to configure the default options for the select module. */
@@ -151,7 +153,7 @@ export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT
  */
 export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER = {
   provide: MAT_SELECT_SCROLL_STRATEGY,
-  deps: [Overlay],
+  deps: [] as any[],
   useFactory: MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };
 

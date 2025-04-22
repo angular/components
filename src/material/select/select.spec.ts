@@ -15,7 +15,7 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {CloseScrollStrategy, Overlay, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -30,6 +30,7 @@ import {
   Component,
   DebugElement,
   ElementRef,
+  Injector,
   OnInit,
   Provider,
   QueryList,
@@ -1779,9 +1780,7 @@ describe('MatSelect', () => {
           providers: [
             {
               provide: MAT_SELECT_SCROLL_STRATEGY,
-              useFactory: (overlay: Overlay) => (): CloseScrollStrategy =>
-                overlay.scrollStrategies.close(),
-              deps: [Overlay],
+              useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
             },
             {
               provide: ScrollDispatcher,
