@@ -66,10 +66,10 @@ export class MatDialogRef<T, R = any> {
 
   constructor(
     private _ref: DialogRef<R, T>,
-    config: MatDialogConfig,
+    private _config: MatDialogConfig,
     public _containerInstance: MatDialogContainer,
   ) {
-    this.disableClose = config.disableClose;
+    this.disableClose = _config.disableClose;
     this.id = _ref.id;
 
     // Used to target panels specifically tied to dialogs.
@@ -121,6 +121,12 @@ export class MatDialogRef<T, R = any> {
    * @param dialogResult Optional result to return to the dialog opener.
    */
   close(dialogResult?: R): void {
+    const closePredicate = this._config.closePredicate;
+
+    if (closePredicate && !closePredicate(dialogResult, this._config, this.componentInstance)) {
+      return;
+    }
+
     this._result = dialogResult;
 
     // Transition the backdrop in parallel to the dialog.

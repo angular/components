@@ -141,6 +141,8 @@ export class MatDialog implements OnDestroy {
       positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
       // Disable closing since we need to sync it up to the animation ourselves.
       disableClose: true,
+      // Closing is tied to our animation so the close predicate has to be implemented separately.
+      closePredicate: undefined,
       // Disable closing on destroy, because this service cleans up its open dialogs as well.
       // We want to do the cleanup here, rather than the CDK service, because the CDK destroys
       // the dialogs immediately whereas we want it to wait for the animations to finish.

@@ -9,6 +9,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
+import { DialogConfig } from '@angular/cdk/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
@@ -138,6 +139,7 @@ export class MatDialogConfig<D = any> {
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
     closeOnNavigation?: boolean;
+    closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = MatDialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     data?: D | null;
     delayFocusTrap?: boolean;
     direction?: Direction;
@@ -203,7 +205,7 @@ export class MatDialogModule {
 
 // @public
 export class MatDialogRef<T, R = any> {
-    constructor(_ref: DialogRef<R, T>, config: MatDialogConfig, _containerInstance: MatDialogContainer);
+    constructor(_ref: DialogRef<R, T>, _config: MatDialogConfig, _containerInstance: MatDialogContainer);
     addPanelClass(classes: string | string[]): this;
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;

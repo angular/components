@@ -13,6 +13,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { Dialog } from '@angular/cdk/dialog';
+import { DialogConfig } from '@angular/cdk/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { EventEmitter } from '@angular/core';
