@@ -22,7 +22,14 @@ import {Observable, Subject, defer} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {_IdGenerator} from '../a11y';
 import {Direction, Directionality} from '../bidi';
-import {ComponentType, Overlay, OverlayConfig, OverlayContainer, OverlayRef} from '../overlay';
+import {
+  ComponentType,
+  createGlobalPositionStrategy,
+  createOverlayRef,
+  OverlayConfig,
+  OverlayContainer,
+  OverlayRef,
+} from '../overlay';
 import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '../portal';
 import {DialogConfig} from './dialog-config';
 import {DialogRef} from './dialog-ref';
@@ -47,7 +54,6 @@ function getDirectionality(value: Direction): Directionality {
 
 @Injectable({providedIn: 'root'})
 export class Dialog implements OnDestroy {
-  private _overlay = inject(Overlay);
   private _injector = inject(Injector);
   private _defaultOptions = inject<DialogConfig>(DEFAULT_DIALOG_CONFIG, {optional: true});
   private _parentDialog = inject(Dialog, {optional: true, skipSelf: true});
@@ -131,7 +137,7 @@ export class Dialog implements OnDestroy {
     }
 
     const overlayConfig = this._getOverlayConfig(config);
-    const overlayRef = this._overlay.create(overlayConfig);
+    const overlayRef = createOverlayRef(this._injector, overlayConfig);
     const dialogRef = new DialogRef(overlayRef, config);
     const dialogContainer = this._attachContainer(overlayRef, dialogRef, config);
 
@@ -195,7 +201,7 @@ export class Dialog implements OnDestroy {
     const state = new OverlayConfig({
       positionStrategy:
         config.positionStrategy ||
-        this._overlay.position().global().centerHorizontally().centerVertically(),
+        createGlobalPositionStrategy(this._injector).centerHorizontally().centerVertically(),
       scrollStrategy: config.scrollStrategy || this._scrollStrategy(),
       panelClass: config.panelClass,
       hasBackdrop: config.hasBackdrop,
