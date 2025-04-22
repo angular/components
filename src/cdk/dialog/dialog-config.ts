@@ -51,6 +51,17 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   /** Whether the dialog closes with the escape key or pointer events outside the panel element. */
   disableClose?: boolean = false;
 
+  /** Function used to determine whether the dialog is allowed to close. */
+  closePredicate?: <
+    Result = unknown,
+    Component = unknown,
+    Config extends DialogConfig = DialogConfig,
+  >(
+    result: Result | undefined,
+    config: Config,
+    componentInstance: Component | null,
+  ) => boolean;
+
   /** Width of the dialog. */
   width?: string = '';
 

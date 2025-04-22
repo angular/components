@@ -689,6 +689,35 @@ describe('Dialog', () => {
     expect(dialog.getDialogById('pizza')).toBe(dialogRef);
   });
 
+  it('should recapture focus to the first tabbable element when clicking on the backdrop', fakeAsync(() => {
+    // When testing focus, all of the elements must be in the DOM.
+    document.body.appendChild(overlayContainerElement);
+
+    dialog.open(PizzaMsg, {
+      disableClose: true,
+      viewContainerRef: testViewContainerRef,
+    });
+
+    viewContainerFixture.detectChanges();
+    flushMicrotasks();
+
+    const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    const input = overlayContainerElement.querySelector('input') as HTMLInputElement;
+
+    expect(document.activeElement).withContext('Expected input to be focused on open').toBe(input);
+
+    input.blur(); // Programmatic clicks might not move focus so we simulate it.
+    backdrop.click();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(document.activeElement)
+      .withContext('Expected input to stay focused after click')
+      .toBe(input);
+
+    overlayContainerElement.remove();
+  }));
+
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', fakeAsync(() => {
       dialog.open(PizzaMsg, {
@@ -776,6 +805,169 @@ describe('Dialog', () => {
         );
       }),
     );
+  });
+
+  describe('closePredicate option', () => {
+    function getDialogs() {
+      return overlayContainerElement.querySelectorAll('cdk-dialog-container');
+    }
+
+    it('should determine whether closing via the backdrop is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.closed.subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should determine whether closing via the escape key is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.closed.subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should determine whether closing via the `close` method is allowed', fakeAsync(() => {
+      let canClose = false;
+      const closedSpy = jasmine.createSpy('closed spy');
+      const ref = dialog.open(PizzaMsg, {
+        closePredicate: () => canClose,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      ref.closed.subscribe(closedSpy);
+      viewContainerFixture.detectChanges();
+
+      expect(getDialogs().length).toBe(1);
+
+      ref.close();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(1);
+      expect(closedSpy).not.toHaveBeenCalled();
+
+      canClose = true;
+      ref.close('hello');
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+      expect(closedSpy).toHaveBeenCalledWith('hello');
+    }));
+
+    it('should not be closed by `closeAll` if not allowed by the predicate', fakeAsync(() => {
+      let canClose = false;
+      const config = {closePredicate: () => canClose};
+      const spy = jasmine.createSpy('afterAllClosed spy');
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+      dialog.open(PizzaMsg, config);
+      viewContainerFixture.detectChanges();
+
+      const subscription = dialog.afterAllClosed.subscribe(spy);
+      expect(getDialogs().length).toBe(3);
+      expect(dialog.openDialogs.length).toBe(3);
+
+      dialog.closeAll();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(3);
+      expect(dialog.openDialogs.length).toBe(3);
+      expect(spy).not.toHaveBeenCalled();
+
+      canClose = true;
+      dialog.closeAll();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(getDialogs().length).toBe(0);
+      expect(dialog.openDialogs.length).toBe(0);
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      subscription.unsubscribe();
+    }));
+
+    it('should recapture focus to the first tabbable element when clicking on the backdrop while the `closePredicate` is blocking the close sequence', fakeAsync(() => {
+      // When testing focus, all of the elements must be in the DOM.
+      document.body.appendChild(overlayContainerElement);
+
+      dialog.open(PizzaMsg, {
+        closePredicate: () => false,
+        viewContainerRef: testViewContainerRef,
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      const backdrop = overlayContainerElement.querySelector(
+        '.cdk-overlay-backdrop',
+      ) as HTMLElement;
+      const input = overlayContainerElement.querySelector('input') as HTMLInputElement;
+
+      expect(document.activeElement)
+        .withContext('Expected input to be focused on open')
+        .toBe(input);
+
+      input.blur(); // Programmatic clicks might not move focus so we simulate it.
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(document.activeElement)
+        .withContext('Expected input to stay focused after click')
+        .toBe(input);
+
+      overlayContainerElement.remove();
+    }));
   });
 
   describe('hasBackdrop option', () => {
@@ -1273,6 +1465,10 @@ class PizzaMsg {
     <h2>This is the title</h2>
   `,
   imports: [DialogModule],
+  host: {
+    // Avoids conflicting ID warning
+    'id': 'content-element-dialog',
+  },
 })
 class ContentElementDialog {
   closeButtonAriaLabel: string;
@@ -1299,6 +1495,10 @@ class DialogWithInjectedData {
 @Component({
   template: '<p>Pasta</p>',
   imports: [DialogModule],
+  host: {
+    // Avoids conflicting ID warning
+    'id': 'dialog-without-focusable',
+  },
 })
 class DialogWithoutFocusableElements {}
 
