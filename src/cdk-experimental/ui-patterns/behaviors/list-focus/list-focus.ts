@@ -81,11 +81,10 @@ export class ListFocus<T extends ListFocusItem> {
     if (this.inputs.focusMode() === 'activedescendant') {
       return -1;
     }
-    const index = this.inputs.items().indexOf(item);
-    return this.inputs.activeIndex() === index ? 0 : -1;
+    return this.activeItem() === item ? 0 : -1;
   }
 
-  /** Focuses the current active item. */
+  /** Moves focus to the given item if it is focusable. */
   focus(item: T): boolean {
     if (this.isListDisabled() || !this.isFocusable(item)) {
       return false;

@@ -127,6 +127,4 @@ describe('List Focus', () => {
       expect(focusManager.isFocusable(items[2])).toBeTrue();
     });
   });
-
-  describe('#focus', () => {});
 });
