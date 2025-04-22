@@ -1,9 +1,16 @@
-import {Component} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Platform} from '../../platform';
 import {ViewportRuler} from '../../scrolling';
-import {Overlay, OverlayContainer, OverlayModule, OverlayRef, OverlayConfig} from '../index';
+import {
+  OverlayContainer,
+  OverlayModule,
+  OverlayRef,
+  OverlayConfig,
+  createBlockScrollStrategy,
+  createOverlayRef,
+} from '../index';
 
 describe('BlockScrollStrategy', () => {
   let platform: Platform;
@@ -17,13 +24,13 @@ describe('BlockScrollStrategy', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({imports: [OverlayModule, PortalModule, FocacciaMsg]});
 
-    const overlay = TestBed.inject(Overlay);
-    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.block()});
+    const injector = TestBed.inject(Injector);
+    const overlayConfig = new OverlayConfig({scrollStrategy: createBlockScrollStrategy(injector)});
 
     viewport = TestBed.inject(ViewportRuler);
     platform = TestBed.inject(Platform);
     overlayContainer = TestBed.inject(OverlayContainer);
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(FocacciaMsg);
     documentElement = document.documentElement!;
     documentElement.classList.remove('cdk-global-scrollblock');

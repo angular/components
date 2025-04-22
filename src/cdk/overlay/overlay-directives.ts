@@ -14,6 +14,7 @@ import {
   ElementRef,
   EventEmitter,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnChanges,
@@ -28,16 +29,21 @@ import {
 import {_getEventTarget} from '../platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
-import {Overlay} from './overlay';
+import {createOverlayRef} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {ConnectedOverlayPositionChange} from './position/connected-position';
 import {
   ConnectedPosition,
+  createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './position/flexible-connected-position-strategy';
-import {RepositionScrollStrategy, ScrollStrategy} from './scroll/index';
+import {
+  createRepositionScrollStrategy,
+  RepositionScrollStrategy,
+  ScrollStrategy,
+} from './scroll/index';
 
 /** Default set of positions for the overlay. Follows the behavior of a dropdown. */
 const defaultPositionList: ConnectedPosition[] = [
@@ -73,8 +79,8 @@ export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY = new InjectionToken<() => Sc
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -103,8 +109,8 @@ export class CdkOverlayOrigin {
   exportAs: 'cdkConnectedOverlay',
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-  private _overlay = inject(Overlay);
   private _dir = inject(Directionality, {optional: true});
+  private _injector = inject(Injector);
 
   private _overlayRef: OverlayRef | undefined;
   private _templatePortal: TemplatePortal;
@@ -293,7 +299,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this.positions = defaultPositionList;
     }
 
-    const overlayRef = (this._overlayRef = this._overlay.create(this._buildConfig()));
+    const overlayRef = (this._overlayRef = createOverlayRef(this._injector, this._buildConfig()));
     this._attachSubscription = overlayRef.attachments().subscribe(() => this.attach.emit());
     this._detachSubscription = overlayRef.detachments().subscribe(() => this.detach.emit());
     overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
@@ -379,7 +385,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
   private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
-    const strategy = this._overlay.position().flexibleConnectedTo(this._getOrigin());
+    const strategy = createFlexibleConnectedPositionStrategy(this._injector, this._getOrigin());
     this._updatePositionStrategy(strategy);
     return strategy;
   }
@@ -463,9 +469,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
  * @breaking-change 21.0.0
  */
 export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(
-  overlay: Overlay,
+  overlay: unknown,
 ): () => RepositionScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector);
 }
 
 /**
@@ -475,6 +482,5 @@ export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(
  */
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER = {
   provide: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY,
-  deps: [Overlay],
   useFactory: CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY,
 };

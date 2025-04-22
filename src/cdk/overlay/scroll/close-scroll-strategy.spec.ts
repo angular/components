@@ -1,9 +1,16 @@
 import {ComponentPortal, PortalModule} from '../../portal';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '../../scrolling';
-import {Component, ElementRef} from '@angular/core';
+import {Component, ElementRef, Injector} from '@angular/core';
 import {TestBed, fakeAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
-import {Overlay, OverlayConfig, OverlayContainer, OverlayModule, OverlayRef} from '../index';
+import {
+  createCloseScrollStrategy,
+  createOverlayRef,
+  OverlayConfig,
+  OverlayContainer,
+  OverlayModule,
+  OverlayRef,
+} from '../index';
 
 describe('CloseScrollStrategy', () => {
   let overlayRef: OverlayRef;
@@ -11,7 +18,7 @@ describe('CloseScrollStrategy', () => {
   let scrolledSubject = new Subject<CdkScrollable | undefined>();
   let scrollPosition: number;
   let overlayContainer: OverlayContainer;
-  let overlay: Overlay;
+  let injector: Injector;
 
   beforeEach(fakeAsync(() => {
     scrollPosition = 0;
@@ -35,9 +42,9 @@ describe('CloseScrollStrategy', () => {
     });
 
     overlayContainer = TestBed.inject(OverlayContainer);
-    overlay = TestBed.inject(Overlay);
-    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
-    overlayRef = overlay.create(overlayConfig);
+    injector = TestBed.inject(Injector);
+    const overlayConfig = new OverlayConfig({scrollStrategy: createCloseScrollStrategy(injector)});
+    overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
   }));
 
@@ -77,8 +84,8 @@ describe('CloseScrollStrategy', () => {
   it('should be able to reposition the overlay up to a certain threshold before closing', () => {
     overlayRef.dispose();
 
-    overlayRef = overlay.create({
-      scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
+    overlayRef = createOverlayRef(injector, {
+      scrollStrategy: createCloseScrollStrategy(injector, {threshold: 50}),
     });
 
     overlayRef.attach(componentPortal);
@@ -103,8 +110,8 @@ describe('CloseScrollStrategy', () => {
     overlayRef.dispose();
     scrollPosition = 100;
 
-    overlayRef = overlay.create({
-      scrollStrategy: overlay.scrollStrategies.close({threshold: 50}),
+    overlayRef = createOverlayRef(injector, {
+      scrollStrategy: createCloseScrollStrategy(injector, {threshold: 50}),
     });
 
     overlayRef.attach(componentPortal);

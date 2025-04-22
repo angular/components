@@ -15,8 +15,9 @@ import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
   ConnectedOverlayPositionChange,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   OverlayContainer,
   OverlayModule,
@@ -28,17 +29,17 @@ const DEFAULT_HEIGHT = 30;
 const DEFAULT_WIDTH = 60;
 
 describe('FlexibleConnectedPositionStrategy', () => {
-  let overlay: Overlay;
   let overlayContainer: OverlayContainer;
   let overlayRef: OverlayRef;
   let viewport: ViewportRuler;
+  let injector: Injector;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ScrollingModule, OverlayModule, PortalModule, TestOverlay],
     });
 
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
     overlayContainer = TestBed.inject(OverlayContainer);
     viewport = TestBed.inject(ViewportRuler);
   });
@@ -52,24 +53,24 @@ describe('FlexibleConnectedPositionStrategy', () => {
   });
 
   function attachOverlay(config: OverlayConfig) {
-    overlayRef = overlay.create(config);
+    overlayRef = createOverlayRef(injector, config);
     overlayRef.attach(new ComponentPortal(TestOverlay));
     TestBed.inject(ApplicationRef).tick();
   }
 
   it('should throw when attempting to attach to multiple different overlays', () => {
     const origin = document.createElement('div');
-    const positionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        {
-          overlayX: 'start',
-          overlayY: 'top',
-          originX: 'start',
-          originY: 'bottom',
-        },
-      ]);
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      injector,
+      origin,
+    ).withPositions([
+      {
+        overlayX: 'start',
+        overlayY: 'top',
+        originX: 'start',
+        originY: 'bottom',
+      },
+    ]);
 
     // Needs to be in the DOM for IE not to throw an "Unspecified error".
     document.body.appendChild(origin);
@@ -82,17 +83,17 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   it('should not throw when trying to apply after being disposed', () => {
     const origin = document.createElement('div');
-    const positionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        {
-          overlayX: 'start',
-          overlayY: 'top',
-          originX: 'start',
-          originY: 'bottom',
-        },
-      ]);
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      injector,
+      origin,
+    ).withPositions([
+      {
+        overlayX: 'start',
+        overlayY: 'top',
+        originX: 'start',
+        originY: 'bottom',
+      },
+    ]);
 
     // Needs to be in the DOM for IE not to throw an "Unspecified error".
     document.body.appendChild(origin);
@@ -106,17 +107,17 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   it('should not throw when trying to re-apply the last position after being disposed', () => {
     const origin = document.createElement('div');
-    const positionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        {
-          overlayX: 'start',
-          overlayY: 'top',
-          originX: 'start',
-          originY: 'bottom',
-        },
-      ]);
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      injector,
+      origin,
+    ).withPositions([
+      {
+        overlayX: 'start',
+        overlayY: 'top',
+        originX: 'start',
+        originY: 'bottom',
+      },
+    ]);
 
     // Needs to be in the DOM for IE not to throw an "Unspecified error".
     document.body.appendChild(origin);
@@ -141,9 +142,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     overlayContainer.getContainerElement().style.top = '-100px';
 
     attachOverlay({
-      positionStrategy: overlay
-        .position()
-        .flexibleConnectedTo(originElement)
+      positionStrategy: createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush(false)
         .withPositions([
@@ -183,9 +182,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     originElement.style.left = '70px';
 
     attachOverlay({
-      positionStrategy: overlay
-        .position()
-        .flexibleConnectedTo(originElement)
+      positionStrategy: createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush(false)
         .withPositions([
@@ -206,19 +203,19 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
   it('should clean up after itself when disposed', () => {
     const origin = document.createElement('div');
-    const positionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(origin)
-      .withPositions([
-        {
-          overlayX: 'start',
-          overlayY: 'top',
-          originX: 'start',
-          originY: 'bottom',
-          offsetX: 10,
-          offsetY: 20,
-        },
-      ]);
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      injector,
+      origin,
+    ).withPositions([
+      {
+        overlayX: 'start',
+        overlayY: 'top',
+        originX: 'start',
+        originY: 'bottom',
+        offsetX: 10,
+        offsetY: 20,
+      },
+    ]);
 
     // Needs to be in the DOM for IE not to throw an "Unspecified error".
     document.body.appendChild(origin);
@@ -263,9 +260,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       // The origin and overlay elements need to be in the document body in order to have geometry.
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay
-        .position()
-        .flexibleConnectedTo(originElement)
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush(false);
     });
@@ -1248,9 +1243,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay
-        .position()
-        .flexibleConnectedTo(originElement)
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush();
     });
@@ -1573,7 +1566,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement);
     });
 
     afterEach(() => {
@@ -2482,20 +2475,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
       document.body.appendChild(scrollable);
       scrollable.appendChild(originElement);
 
-      // Create a strategy with knowledge of the scrollable container
-      const strategy = overlay
-        .position()
-        .flexibleConnectedTo(originElement)
-        .withPush(false)
-        .withPositions([
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top',
-          },
-        ]);
-
       const injector = Injector.create({
         parent: TestBed.inject(Injector),
         providers: [
@@ -2509,6 +2488,18 @@ describe('FlexibleConnectedPositionStrategy', () => {
           },
         ],
       });
+
+      // Create a strategy with knowledge of the scrollable container
+      const strategy = createFlexibleConnectedPositionStrategy(injector, originElement)
+        .withPush(false)
+        .withPositions([
+          {
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+        ]);
 
       runInInjectionContext(injector, () => {
         strategy.withScrollableContainers([new CdkScrollable()]);
@@ -2588,7 +2579,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement);
     });
 
     afterEach(() => {
@@ -2708,7 +2699,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay.position().flexibleConnectedTo(originElement);
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement);
     });
 
     afterEach(() => {
@@ -2766,9 +2757,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     beforeEach(() => {
       originElement = createPositionedBlockElement();
       document.body.appendChild(originElement);
-      positionStrategy = overlay
-        .position()
-        .flexibleConnectedTo(originElement)
+      positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
         .withFlexibleDimensions(false)
         .withPush(false);
     });

@@ -1,11 +1,11 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component, NgModule, ViewChild, ViewContainerRef, inject, DOCUMENT} from '@angular/core';
-import {PortalModule, CdkPortal} from '../portal';
-import {Overlay, OverlayContainer, OverlayModule, FullscreenOverlayContainer} from './index';
+import {Component, ViewChild, ViewContainerRef, inject, DOCUMENT, Injector} from '@angular/core';
+import {CdkPortal} from '../portal';
+import {OverlayContainer, FullscreenOverlayContainer, createOverlayRef} from './index';
 import {TemplatePortalDirective} from '../portal/portal-directives';
 
 describe('FullscreenOverlayContainer', () => {
-  let overlay: Overlay;
+  let injector: Injector;
   let fullscreenListeners: Set<Function>;
   let fakeDocument: any;
 
@@ -13,8 +13,11 @@ describe('FullscreenOverlayContainer', () => {
     fullscreenListeners = new Set();
 
     TestBed.configureTestingModule({
-      imports: [OverlayTestModule],
       providers: [
+        {
+          provide: OverlayContainer,
+          useClass: FullscreenOverlayContainer,
+        },
         {
           provide: DOCUMENT,
           useFactory: () => {
@@ -56,14 +59,14 @@ describe('FullscreenOverlayContainer', () => {
       ],
     });
 
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
     fakeDocument = TestBed.inject(DOCUMENT);
   }));
 
   it('should open an overlay inside a fullscreen element and move it to the body', () => {
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
     fixture.detectChanges();
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
     const fullscreenElement = fakeDocument.fullscreenElement;
 
     overlayRef.attach(fixture.componentInstance.templatePortal);
@@ -85,7 +88,7 @@ describe('FullscreenOverlayContainer', () => {
 
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);
     fixture.detectChanges();
-    const overlayRef = overlay.create();
+    const overlayRef = createOverlayRef(injector);
 
     overlayRef.attach(fixture.componentInstance.templatePortal);
     fixture.detectChanges();
@@ -104,7 +107,6 @@ describe('FullscreenOverlayContainer', () => {
 /** Test-bed component that contains a TempatePortal and an ElementRef. */
 @Component({
   template: `<ng-template cdk-portal>Cake</ng-template>`,
-  providers: [Overlay],
   imports: [TemplatePortalDirective],
 })
 class TestComponentWithTemplatePortals {
@@ -112,14 +114,3 @@ class TestComponentWithTemplatePortals {
 
   @ViewChild(CdkPortal) templatePortal: CdkPortal;
 }
-
-@NgModule({
-  imports: [OverlayModule, PortalModule, TestComponentWithTemplatePortals],
-  providers: [
-    {
-      provide: OverlayContainer,
-      useClass: FullscreenOverlayContainer,
-    },
-  ],
-})
-class OverlayTestModule {}

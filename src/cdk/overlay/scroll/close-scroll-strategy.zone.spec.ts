@@ -1,13 +1,18 @@
 import {ComponentPortal, PortalModule} from '../../portal';
-import {Component, NgZone, provideZoneChangeDetection} from '@angular/core';
+import {Component, Injector, NgZone, provideZoneChangeDetection} from '@angular/core';
 import {TestBed, fakeAsync} from '@angular/core/testing';
 import {Subject} from 'rxjs';
-import {Overlay} from '../overlay';
 import {OverlayConfig} from '../overlay-config';
 import {OverlayContainer} from '../overlay-container';
 import {OverlayModule} from '../overlay-module';
 import {OverlayRef} from '../overlay-ref';
-import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '../public-api';
+import {
+  CdkScrollable,
+  createCloseScrollStrategy,
+  createOverlayRef,
+  ScrollDispatcher,
+  ViewportRuler,
+} from '../public-api';
 
 describe('CloseScrollStrategy Zone.js integration', () => {
   let overlayRef: OverlayRef;
@@ -38,9 +43,9 @@ describe('CloseScrollStrategy Zone.js integration', () => {
       ],
     });
 
-    const overlay = TestBed.inject(Overlay);
-    const overlayConfig = new OverlayConfig({scrollStrategy: overlay.scrollStrategies.close()});
-    overlayRef = overlay.create(overlayConfig);
+    const injector = TestBed.inject(Injector);
+    const overlayConfig = new OverlayConfig({scrollStrategy: createCloseScrollStrategy(injector)});
+    overlayRef = createOverlayRef(injector, overlayConfig);
     componentPortal = new ComponentPortal(MozarellaMsg);
     overlayContainer = TestBed.inject(OverlayContainer);
   }));

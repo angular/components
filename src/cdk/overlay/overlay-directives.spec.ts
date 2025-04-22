@@ -1,6 +1,6 @@
 import {Directionality} from '../bidi';
 import {A, ESCAPE} from '../keycodes';
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Injector, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -8,7 +8,7 @@ import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../test
 import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
-  Overlay,
+  createCloseScrollStrategy,
   OverlayModule,
   ScrollDispatcher,
   ScrollStrategy,
@@ -19,12 +19,12 @@ import {
   ConnectionPositionPair,
 } from './position/connected-position';
 import {
+  createFlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategy,
   FlexibleConnectedPositionStrategyOrigin,
 } from './position/flexible-connected-position-strategy';
 
 describe('Overlay directives', () => {
-  let overlay: Overlay;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
   let dir: {value: string};
@@ -44,7 +44,6 @@ describe('Overlay directives', () => {
       ],
     });
 
-    overlay = TestBed.inject(Overlay);
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
     fixture.detectChanges();
@@ -70,9 +69,10 @@ describe('Overlay directives', () => {
   });
 
   it('can change positionStrategy via input', () => {
-    const expectedPositionStrategy = overlay
-      .position()
-      .flexibleConnectedTo(document.body)
+    const expectedPositionStrategy = createFlexibleConnectedPositionStrategy(
+      TestBed.inject(Injector),
+      document.body,
+    )
       .withFlexibleDimensions(true)
       .withPositions([{originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top'}]);
     fixture.componentInstance.isOpen = true;
@@ -705,7 +705,9 @@ describe('Overlay directives', () => {
 
     it('should emit when detached externally', () => {
       expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
-      fixture.componentInstance.scrollStrategy = overlay.scrollStrategies.close();
+      fixture.componentInstance.scrollStrategy = createCloseScrollStrategy(
+        TestBed.inject(Injector),
+      );
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
