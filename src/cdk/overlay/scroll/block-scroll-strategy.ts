@@ -96,8 +96,8 @@ export class BlockScrollStrategy implements ScrollStrategy {
       return false;
     }
 
-    const body = this._document.body;
+    const rootElement = this._document.documentElement;
     const viewport = this._viewportRuler.getViewportSize();
-    return body.scrollHeight > viewport.height || body.scrollWidth > viewport.width;
+    return rootElement.scrollHeight > viewport.height || rootElement.scrollWidth > viewport.width;
   }
 }
