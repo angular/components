@@ -1,4 +1,4 @@
-import {Component, inject, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
@@ -28,7 +28,7 @@ import {MatTimepickerToggle} from './timepicker-toggle';
 import {MAT_TIMEPICKER_CONFIG, MatTimepickerOption} from './util';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {Overlay} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {Subject} from 'rxjs';
 
 describe('MatTimepicker', () => {
@@ -463,10 +463,7 @@ describe('MatTimepicker', () => {
         },
         {
           provide: MAT_TIMEPICKER_SCROLL_STRATEGY,
-          useFactory: () => {
-            const overlay = inject(Overlay);
-            return () => overlay.scrollStrategies.close();
-          },
+          useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
         },
       ]);
 

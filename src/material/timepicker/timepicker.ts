@@ -42,7 +42,13 @@ import {
   MatOptionParentComponent,
 } from '../core';
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay, OverlayRef, ScrollStrategy} from '@angular/cdk/overlay';
+import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
+  OverlayRef,
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {_getEventTarget} from '@angular/cdk/platform';
 import {ENTER, ESCAPE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
@@ -69,8 +75,8 @@ export const MAT_TIMEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -95,7 +101,6 @@ export const MAT_TIMEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   ],
 })
 export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
-  private _overlay = inject(Overlay);
   private _dir = inject(Directionality, {optional: true});
   private _viewContainerRef = inject(ViewContainerRef);
   private _injector = inject(Injector);
@@ -316,9 +321,10 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
       return this._overlayRef;
     }
 
-    const positionStrategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this._input()!.getOverlayOrigin())
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this._input()!.getOverlayOrigin(),
+    )
       .withFlexibleDimensions(false)
       .withPush(false)
       .withTransformOriginOn('.mat-timepicker-panel')
@@ -338,7 +344,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
         },
       ]);
 
-    this._overlayRef = this._overlay.create({
+    this._overlayRef = createOverlayRef(this._injector, {
       positionStrategy,
       scrollStrategy: this._scrollStrategyFactory(),
       direction: this._dir || 'ltr',
