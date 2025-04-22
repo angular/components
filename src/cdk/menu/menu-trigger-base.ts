@@ -18,7 +18,12 @@ import {
 } from '@angular/core';
 import {Menu} from './menu-interface';
 import {MENU_STACK, MenuStack} from './menu-stack';
-import {ConnectedPosition, Overlay, OverlayRef, ScrollStrategy} from '../overlay';
+import {
+  ConnectedPosition,
+  createRepositionScrollStrategy,
+  OverlayRef,
+  ScrollStrategy,
+} from '../overlay';
 import {TemplatePortal} from '../portal';
 import {merge, Subject} from 'rxjs';
 
@@ -31,8 +36,8 @@ export const MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
