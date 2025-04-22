@@ -15,9 +15,11 @@ import {
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
-  Overlay,
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
@@ -32,6 +34,7 @@ import {
   EventEmitter,
   inject,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
@@ -54,8 +57,8 @@ export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -65,8 +68,9 @@ export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
-export function MAT_MENU_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
+export function MAT_MENU_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector);
 }
 
 /**
@@ -76,12 +80,9 @@ export function MAT_MENU_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => Scroll
  */
 export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_MENU_SCROLL_STRATEGY,
-  deps: [Overlay],
+  deps: [] as any[],
   useFactory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
 };
-
-/** Options for binding a passive event listener. */
-const passiveEventListenerOptions = {passive: true};
 
 /**
  * Default top padding of the menu panel.
@@ -108,13 +109,13 @@ const PANELS_TO_TRIGGERS = new WeakMap<MatMenuPanel, MatMenuTrigger>();
   exportAs: 'matMenuTrigger',
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
-  private _overlay = inject(Overlay);
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
   private _viewContainerRef = inject(ViewContainerRef);
   private _menuItemInstance = inject(MatMenuItem, {optional: true, self: true})!;
   private _dir = inject(Directionality, {optional: true});
   private _focusMonitor = inject(FocusMonitor);
   private _ngZone = inject(NgZone);
+  private _injector = inject(Injector);
   private _scrollStrategy = inject(MAT_MENU_SCROLL_STRATEGY);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _animationsDisabled = _animationsDisabled();
@@ -235,7 +236,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
           this._openedBy = 'touch';
         }
       },
-      passiveEventListenerOptions,
+      {passive: true},
     );
   }
 
@@ -420,7 +421,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         menu,
         config.positionStrategy as FlexibleConnectedPositionStrategy,
       );
-      this._overlayRef = this._overlay.create(config);
+      this._overlayRef = createOverlayRef(this._injector, config);
       this._overlayRef.keydownEvents().subscribe(event => {
         if (this.menu instanceof MatMenu) {
           this.menu._handleKeydown(event);
@@ -437,9 +438,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   private _getOverlayConfig(menu: MatMenuPanel): OverlayConfig {
     return new OverlayConfig({
-      positionStrategy: this._overlay
-        .position()
-        .flexibleConnectedTo(this._element)
+      positionStrategy: createFlexibleConnectedPositionStrategy(this._injector, this._element)
         .withLockedPosition()
         .withGrowAfterOpen()
         .withTransformOriginOn('.mat-menu-panel, .mat-mdc-menu-panel'),
