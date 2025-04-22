@@ -187,13 +187,13 @@ export class TabListPattern {
     this.disabled = inputs.disabled;
     this.orientation = inputs.orientation;
 
-    this.navigation = new ListNavigation(inputs);
+    this.focusManager = new ListFocus(inputs);
+    this.navigation = new ListNavigation({...inputs, focusManager: this.focusManager});
     this.selection = new ListSelection({
       ...inputs,
-      navigation: this.navigation,
       multi: signal(false),
+      focusManager: this.focusManager,
     });
-    this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
   }
 
   /** Handles keydown events for the tablist. */
@@ -213,28 +213,24 @@ export class TabListPattern {
   /** Navigates to the first option in the tablist. */
   first(opts?: SelectOptions) {
     this.navigation.first();
-    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the last option in the tablist. */
   last(opts?: SelectOptions) {
     this.navigation.last();
-    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the next option in the tablist. */
   next(opts?: SelectOptions) {
     this.navigation.next();
-    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
   /** Navigates to the previous option in the tablist. */
   prev(opts?: SelectOptions) {
     this.navigation.prev();
-    this.focusManager.focus();
     this._updateSelection(opts);
   }
 
@@ -244,7 +240,6 @@ export class TabListPattern {
 
     if (item) {
       this.navigation.goto(item);
-      this.focusManager.focus();
       this._updateSelection(opts);
     }
   }

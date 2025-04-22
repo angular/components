@@ -10,7 +10,7 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
@@ -22,8 +22,6 @@ ts_project(
     deps = [
         ":list-focus",
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
 
