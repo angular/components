@@ -18,7 +18,6 @@ import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
@@ -42,7 +41,7 @@ export const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 // @public @deprecated
 export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: any[];
     useFactory: typeof MAT_MENU_SCROLL_STRATEGY_FACTORY;
 };
 

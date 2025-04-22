@@ -10,7 +10,7 @@ import {
   RIGHT_ARROW,
   TAB,
 } from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
@@ -18,6 +18,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  Injector,
   Input,
   OnDestroy,
   Output,
@@ -775,8 +776,7 @@ describe('MatMenu', () => {
         {provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject})},
         {
           provide: MAT_MENU_SCROLL_STRATEGY,
-          deps: [Overlay],
-          useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+          useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
         },
       ],
       [FakeIcon],
