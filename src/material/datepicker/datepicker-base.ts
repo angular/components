@@ -21,8 +21,12 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
+  createBlockScrollStrategy,
+  createFlexibleConnectedPositionStrategy,
+  createGlobalPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   OverlayRef,
   ScrollStrategy,
@@ -82,8 +86,8 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -93,8 +97,9 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
+export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector);
 }
 
 /** Possible positions for the datepicker dropdown along the X axis. */
@@ -110,7 +115,7 @@ export type DatepickerDropdownPositionY = 'above' | 'below';
  */
 export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-  deps: [Overlay],
+  deps: [] as any[],
   useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
 };
 
@@ -390,7 +395,7 @@ export abstract class MatDatepickerBase<
   >
   implements MatDatepickerPanel<C, S, D>, OnDestroy, OnChanges
 {
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dir = inject(Directionality, {optional: true});
@@ -564,8 +569,6 @@ export abstract class MatDatepickerBase<
 
   /** Emits when the datepicker's state changes. */
   readonly stateChanges = new Subject<void>();
-
-  private _injector = inject(Injector);
 
   private readonly _changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -760,7 +763,8 @@ export abstract class MatDatepickerBase<
       MatDatepickerContent,
       this._viewContainerRef,
     );
-    const overlayRef = (this._overlayRef = this._overlay.create(
+    const overlayRef = (this._overlayRef = createOverlayRef(
+      this._injector,
       new OverlayConfig({
         positionStrategy: isDialog ? this._getDialogStrategy() : this._getDropdownStrategy(),
         hasBackdrop: true,
@@ -769,7 +773,9 @@ export abstract class MatDatepickerBase<
           this._backdropHarnessClass,
         ],
         direction: this._dir || 'ltr',
-        scrollStrategy: isDialog ? this._overlay.scrollStrategies.block() : this._scrollStrategy(),
+        scrollStrategy: isDialog
+          ? createBlockScrollStrategy(this._injector)
+          : this._scrollStrategy(),
         panelClass: `mat-datepicker-${isDialog ? 'dialog' : 'popup'}`,
         disableAnimations: this._animationsDisabled,
       }),
@@ -825,14 +831,15 @@ export abstract class MatDatepickerBase<
 
   /** Gets a position strategy that will open the calendar as a dropdown. */
   private _getDialogStrategy() {
-    return this._overlay.position().global().centerHorizontally().centerVertically();
+    return createGlobalPositionStrategy(this._injector).centerHorizontally().centerVertically();
   }
 
   /** Gets a position strategy that will open the calendar as a dropdown. */
   private _getDropdownStrategy() {
-    const strategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this.datepickerInput.getConnectedOverlayOrigin())
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this.datepickerInput.getConnectedOverlayOrigin(),
+    )
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)

@@ -33,7 +33,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { Portal } from '@angular/cdk/portal';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
@@ -94,12 +93,12 @@ export const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelec
 export const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public @deprecated
-export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
+export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy;
 
 // @public @deprecated
 export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: any[];
     useFactory: typeof MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY;
 };
 
