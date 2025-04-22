@@ -1,6 +1,6 @@
 load("//tools:defaults.bzl", "sass_binary")
 load("//tools:defaults2.bzl", "http_server", "ng_project")
-load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
