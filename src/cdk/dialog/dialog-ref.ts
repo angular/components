@@ -37,7 +37,10 @@ export class DialogRef<R = unknown, C = unknown> {
   readonly componentRef: ComponentRef<C> | null;
 
   /** Instance of the container that is rendering out the dialog content. */
-  readonly containerInstance: BasePortalOutlet & {_closeInteractionType?: FocusOrigin};
+  readonly containerInstance: BasePortalOutlet & {
+    _closeInteractionType?: FocusOrigin;
+    _recaptureFocus?: () => void;
+  };
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined;
@@ -78,8 +81,12 @@ export class DialogRef<R = unknown, C = unknown> {
     });
 
     this.backdropClick.subscribe(() => {
-      if (!this.disableClose) {
+      if (!this.disableClose && this._canClose()) {
         this.close(undefined, {focusOrigin: 'mouse'});
+      } else {
+        // Clicking on the backdrop will move focus out of dialog.
+        // Recapture it if closing via the backdrop is disabled.
+        this.containerInstance._recaptureFocus?.();
       }
     });
 
@@ -97,7 +104,7 @@ export class DialogRef<R = unknown, C = unknown> {
    * @param options Additional options to customize the closing behavior.
    */
   close(result?: R, options?: DialogCloseOptions): void {
-    if (this.containerInstance) {
+    if (this._canClose(result)) {
       const closedSubject = this.closed as Subject<R | undefined>;
       this.containerInstance._closeInteractionType = options?.focusOrigin || 'program';
       // Drop the detach subscription first since it can be triggered by the
@@ -138,5 +145,15 @@ export class DialogRef<R = unknown, C = unknown> {
   removePanelClass(classes: string | string[]): this {
     this.overlayRef.removePanelClass(classes);
     return this;
+  }
+
+  /** Whether the dialog is allowed to close. */
+  private _canClose(result?: R): boolean {
+    const config = this.config as DialogConfig<unknown, unknown, BasePortalOutlet>;
+
+    return (
+      !!this.containerInstance &&
+      (!config.closePredicate || config.closePredicate(result, config, this.componentInstance))
+    );
   }
 }

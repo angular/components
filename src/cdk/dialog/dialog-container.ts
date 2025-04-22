@@ -13,7 +13,6 @@ import {
   FocusTrapFactory,
   InteractivityChecker,
 } from '../a11y';
-import {OverlayRef} from '../overlay';
 import {Platform, _getFocusedElementPierceShadowDom} from '../platform';
 import {
   BasePortalOutlet,
@@ -79,7 +78,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   readonly _config: C;
   private _interactivityChecker = inject(InteractivityChecker);
   protected _ngZone = inject(NgZone);
-  private _overlayRef = inject(OverlayRef);
   private _focusMonitor = inject(FocusMonitor);
   private _renderer = inject(Renderer2);
 
@@ -146,7 +144,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
 
   protected _contentAttached() {
     this._initializeFocusTrap();
-    this._handleBackdropClicks();
     this._captureInitialFocus();
   }
 
@@ -348,9 +345,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   /** Focuses the dialog container. */
   private _focusDialogContainer(options?: FocusOptions) {
     // Note that there is no focus method when rendering on the server.
-    if (this._elementRef.nativeElement.focus) {
-      this._elementRef.nativeElement.focus(options);
-    }
+    this._elementRef.nativeElement.focus?.(options);
   }
 
   /** Returns whether focus is inside the dialog. */
@@ -371,16 +366,5 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
         this._elementFocusedBeforeDialogWasOpened = _getFocusedElementPierceShadowDom();
       }
     }
-  }
-
-  /** Sets up the listener that handles clicks on the dialog backdrop. */
-  private _handleBackdropClicks() {
-    // Clicking on the backdrop will move focus out of dialog.
-    // Recapture it if closing via the backdrop is disabled.
-    this._overlayRef.backdropClick().subscribe(() => {
-      if (this._config.disableClose) {
-        this._recaptureFocus();
-      }
-    });
   }
 }

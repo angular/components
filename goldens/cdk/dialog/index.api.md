@@ -121,6 +121,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
     closeOnDestroy?: boolean;
     closeOnNavigation?: boolean;
     closeOnOverlayDetachments?: boolean;
+    closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = DialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     container?: Type<C> | {
         type: Type<C>;
         providers: (config: DialogConfig<D, R, C>) => StaticProvider[];
@@ -171,6 +172,7 @@ export class DialogRef<R = unknown, C = unknown> {
     readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>;
     readonly containerInstance: BasePortalOutlet & {
         _closeInteractionType?: FocusOrigin;
+        _recaptureFocus?: () => void;
     };
     disableClose: boolean | undefined;
     readonly id: string;
