@@ -7,9 +7,9 @@
  */
 
 import {Dialog} from '@angular/cdk/dialog';
-import {Overlay} from '@angular/cdk/overlay';
+import {createBlockScrollStrategy, createGlobalPositionStrategy} from '@angular/cdk/overlay';
 import {ComponentType} from '@angular/cdk/portal';
-import {Injectable, TemplateRef, InjectionToken, OnDestroy, inject} from '@angular/core';
+import {Injectable, TemplateRef, InjectionToken, OnDestroy, inject, Injector} from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
@@ -25,7 +25,7 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomShee
  */
 @Injectable({providedIn: 'root'})
 export class MatBottomSheet implements OnDestroy {
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _parentBottomSheet = inject(MatBottomSheet, {optional: true, skipSelf: true});
   private _animationsDisabled = _animationsDisabled();
   private _defaultOptions = inject<MatBottomSheetConfig>(MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, {
@@ -89,8 +89,10 @@ export class MatBottomSheet implements OnDestroy {
       closeOnOverlayDetachments: false,
       maxWidth: '100%',
       container: MatBottomSheetContainer,
-      scrollStrategy: _config.scrollStrategy || this._overlay.scrollStrategies.block(),
-      positionStrategy: this._overlay.position().global().centerHorizontally().bottom('0'),
+      scrollStrategy: _config.scrollStrategy || createBlockScrollStrategy(this._injector),
+      positionStrategy: createGlobalPositionStrategy(this._injector)
+        .centerHorizontally()
+        .bottom('0'),
       disableAnimations: this._animationsDisabled,
       templateContext: () => ({bottomSheetRef: ref}),
       providers: (cdkRef, _cdkConfig, container) => {
