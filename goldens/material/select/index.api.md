@@ -35,7 +35,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -52,12 +51,12 @@ export const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 // @public @deprecated
 export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: any[];
     useFactory: typeof MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY;
 };
 
 // @public @deprecated
-export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
+export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(_overlay: unknown): () => ScrollStrategy;
 
 // @public
 export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
