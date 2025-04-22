@@ -1,19 +1,20 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {
-  Overlay,
   OverlayContainer,
   OverlayModule,
   OverlayRef,
   OverlayConfig,
   ScrollDispatcher,
+  createRepositionScrollStrategy,
+  createOverlayRef,
 } from '../index';
 
 describe('RepositionScrollStrategy', () => {
+  let injector: Injector;
   let overlayRef: OverlayRef;
-  let overlay: Overlay;
   let overlayContainer: OverlayContainer;
   let componentPortal: ComponentPortal<PastaMsg>;
   let scrolledSubject = new Subject();
@@ -31,7 +32,7 @@ describe('RepositionScrollStrategy', () => {
       ],
     });
 
-    overlay = TestBed.inject(Overlay);
+    injector = TestBed.inject(Injector);
     overlayContainer = TestBed.inject(OverlayContainer);
     componentPortal = new ComponentPortal(PastaMsg);
   }));
@@ -43,10 +44,10 @@ describe('RepositionScrollStrategy', () => {
 
   it('should update the overlay position when the page is scrolled', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(injector),
     });
 
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     overlayRef.attach(componentPortal);
     spyOn(overlayRef, 'updatePosition');
 
@@ -59,10 +60,10 @@ describe('RepositionScrollStrategy', () => {
 
   it('should not be updating the position after the overlay is detached', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(injector),
     });
 
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     overlayRef.attach(componentPortal);
     spyOn(overlayRef, 'updatePosition');
 
@@ -74,10 +75,10 @@ describe('RepositionScrollStrategy', () => {
 
   it('should not be updating the position after the overlay is destroyed', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(injector),
     });
 
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     overlayRef.attach(componentPortal);
     spyOn(overlayRef, 'updatePosition');
 
@@ -89,12 +90,12 @@ describe('RepositionScrollStrategy', () => {
 
   it('should be able to close the overlay once it is out of view', () => {
     const overlayConfig = new OverlayConfig({
-      scrollStrategy: overlay.scrollStrategies.reposition({
+      scrollStrategy: createRepositionScrollStrategy(injector, {
         autoClose: true,
       }),
     });
 
-    overlayRef = overlay.create(overlayConfig);
+    overlayRef = createOverlayRef(injector, overlayConfig);
     overlayRef.attach(componentPortal);
     spyOn(overlayRef, 'updatePosition');
     spyOn(overlayRef, 'detach');
