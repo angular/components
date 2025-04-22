@@ -1,6 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -16,6 +16,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   OnDestroy,
   OnInit,
   Provider,
@@ -3203,8 +3204,7 @@ describe('MatAutocomplete', () => {
         },
         {
           provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
-          useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
-          deps: [Overlay],
+          useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
         },
       ]);
 
