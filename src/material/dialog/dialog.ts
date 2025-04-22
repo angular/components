@@ -6,11 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentType, Overlay, ScrollStrategy} from '@angular/cdk/overlay';
+import {
+  ComponentType,
+  createBlockScrollStrategy,
+  createGlobalPositionStrategy,
+  ScrollStrategy,
+} from '@angular/cdk/overlay';
 import {
   ComponentRef,
   Injectable,
   InjectionToken,
+  Injector,
   OnDestroy,
   TemplateRef,
   Type,
@@ -39,8 +45,8 @@ export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.block();
+      const injector = inject(Injector);
+      return () => createBlockScrollStrategy(injector);
     },
   },
 );
@@ -50,11 +56,11 @@ export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
  */
 @Injectable({providedIn: 'root'})
 export class MatDialog implements OnDestroy {
-  private _overlay = inject(Overlay);
   private _defaultOptions = inject<MatDialogConfig>(MAT_DIALOG_DEFAULT_OPTIONS, {optional: true});
   private _scrollStrategy = inject(MAT_DIALOG_SCROLL_STRATEGY);
   private _parentDialog = inject(MatDialog, {optional: true, skipSelf: true});
   private _idGenerator = inject(_IdGenerator);
+  private _injector = inject(Injector);
   protected _dialog = inject(Dialog);
   private _animationsDisabled = _animationsDisabled();
 
@@ -138,7 +144,9 @@ export class MatDialog implements OnDestroy {
 
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {
       ...config,
-      positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
+      positionStrategy: createGlobalPositionStrategy(this._injector)
+        .centerHorizontally()
+        .centerVertically(),
       // Disable closing since we need to sync it up to the animation ourselves.
       disableClose: true,
       // Closing is tied to our animation so the close predicate has to be implemented separately.

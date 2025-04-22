@@ -1,7 +1,7 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -238,10 +238,9 @@ describe('MatDialog', () => {
   }));
 
   it('should dispatch the beforeClosed and afterClosed events when the overlay is detached externally', fakeAsync(() => {
-    const overlay = TestBed.inject(Overlay);
     const dialogRef = dialog.open(PizzaMsg, {
       viewContainerRef: testViewContainerRef,
-      scrollStrategy: overlay.scrollStrategies.close(),
+      scrollStrategy: createCloseScrollStrategy(TestBed.inject(Injector)),
     });
     const beforeClosedCallback = jasmine.createSpy('beforeClosed callback');
     const afterCloseCallback = jasmine.createSpy('afterClosed callback');
