@@ -8,7 +8,13 @@
 
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {ComponentType, Overlay, OverlayConfig, OverlayRef} from '@angular/cdk/overlay';
+import {
+  ComponentType,
+  createGlobalPositionStrategy,
+  createOverlayRef,
+  OverlayConfig,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import {
   ComponentRef,
   EmbeddedViewRef,
@@ -50,7 +56,6 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS = new InjectionToken<MatSnackBarConfi
  */
 @Injectable({providedIn: 'root'})
 export class MatSnackBar implements OnDestroy {
-  private _overlay = inject(Overlay);
   private _live = inject(LiveAnnouncer);
   private _injector = inject(Injector);
   private _breakpointObserver = inject(BreakpointObserver);
@@ -274,7 +279,7 @@ export class MatSnackBar implements OnDestroy {
     const overlayConfig = new OverlayConfig();
     overlayConfig.direction = config.direction;
 
-    let positionStrategy = this._overlay.position().global();
+    const positionStrategy = createGlobalPositionStrategy(this._injector);
     // Set horizontal position.
     const isRtl = config.direction === 'rtl';
     const isLeft =
@@ -298,7 +303,7 @@ export class MatSnackBar implements OnDestroy {
 
     overlayConfig.positionStrategy = positionStrategy;
     overlayConfig.disableAnimations = this._animationsDisabled;
-    return this._overlay.create(overlayConfig);
+    return createOverlayRef(this._injector, overlayConfig);
   }
 
   /**
