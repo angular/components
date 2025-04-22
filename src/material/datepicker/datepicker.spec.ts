@@ -9,7 +9,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {Overlay} from '@angular/cdk/overlay';
+import {createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -20,7 +20,15 @@ import {
   dispatchMouseEvent,
   typeInElement,
 } from '@angular/cdk/testing/private';
-import {Component, Directive, Provider, Type, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Directive,
+  Injector,
+  Provider,
+  Type,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {
   FormControl,
@@ -508,8 +516,7 @@ describe('MatDatepicker', () => {
             },
             {
               provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-              deps: [Overlay],
-              useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+              useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
             },
           ],
         );
