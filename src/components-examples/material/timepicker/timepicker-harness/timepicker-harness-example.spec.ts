@@ -3,15 +3,17 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {MatTimepickerInputHarness} from '@angular/material/timepicker/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TimepickerHarnessExample} from './timepicker-harness-example';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
+import {DateAdapter, MATERIAL_ANIMATIONS, MatNativeDateModule} from '@angular/material/core';
 
 describe('TimepickerHarnessExample', () => {
   let fixture: ComponentFixture<TimepickerHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [NoopAnimationsModule, MatNativeDateModule]});
+    TestBed.configureTestingModule({
+      imports: [MatNativeDateModule],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+    });
     TestBed.inject(DateAdapter).setLocale('en-US'); // Set the locale to en-US to guarantee consistent tests.
     fixture = TestBed.createComponent(TimepickerHarnessExample);
     fixture.detectChanges();
