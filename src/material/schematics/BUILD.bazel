@@ -1,4 +1,4 @@
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("//tools:defaults2.bzl", "jasmine_test", "npm_package", "ts_project")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
