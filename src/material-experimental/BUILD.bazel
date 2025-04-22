@@ -6,7 +6,8 @@ load(
 )
 load("//tools:defaults.bzl", "ng_package", "sass_library")
 load("//tools:defaults2.bzl", "ts_project")
-load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
+load("@npm2//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -52,5 +53,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS,
+    deps = [get_legacy_label(t) for t in MATERIAL_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TESTING_TARGETS],
 )

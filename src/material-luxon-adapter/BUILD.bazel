@@ -52,5 +52,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":material-luxon-adapter"],
+    deps = [":material-luxon-adapter_legacy"],
 )

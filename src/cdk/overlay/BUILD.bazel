@@ -94,7 +94,7 @@ ts_project(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources",
+        ":e2e_test_sources_legacy",
     ],
 )
 

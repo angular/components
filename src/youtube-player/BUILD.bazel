@@ -64,7 +64,7 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":youtube-player"],
+    deps = [":youtube-player_legacy"],
 )
 
 ts_project(

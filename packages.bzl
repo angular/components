@@ -20,9 +20,9 @@ PKG_GROUP_REPLACEMENTS = {
 # the peer dependencies and versions, primarily in `package.json`s.
 NPM_PACKAGE_SUBSTITUTIONS = dict(PKG_GROUP_REPLACEMENTS, **{
     # Peer dependency version on the Angular framework.
-    "0.0.0-NG": "{{STABLE_FRAMEWORK_PEER_DEP_RANGE}}",
+    "0.0.0-NG": "{STABLE_FRAMEWORK_PEER_DEP_RANGE}",
     # Version of the local package being built, generated via the `--workspace_status_command` flag.
-    "0.0.0-PLACEHOLDER": "{{STABLE_PROJECT_VERSION}}",
+    "0.0.0-PLACEHOLDER": "{STABLE_PROJECT_VERSION}",
 })
 
 NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS = dict(NPM_PACKAGE_SUBSTITUTIONS, **{
