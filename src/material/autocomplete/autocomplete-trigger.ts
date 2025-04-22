@@ -12,8 +12,10 @@ import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
-  Overlay,
   OverlayConfig,
   OverlayRef,
   PositionStrategy,
@@ -29,6 +31,7 @@ import {
   ElementRef,
   EnvironmentInjector,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnChanges,
@@ -88,8 +91,8 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition();
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector);
     },
   },
 );
@@ -99,8 +102,9 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
-export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition();
+export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector);
 }
 
 /**
@@ -110,7 +114,7 @@ export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () =
  */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
-  deps: [Overlay],
+  deps: [] as any[],
   useFactory: MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY,
 };
 
@@ -142,7 +146,7 @@ export class MatAutocompleteTrigger
 {
   private _environmentInjector = inject(EnvironmentInjector);
   private _element = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
   private _zone = inject(NgZone);
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -794,7 +798,7 @@ export class MatAutocompleteTrigger
       this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef, {
         id: this._formField?.getLabelId(),
       });
-      overlayRef = this._overlay.create(this._getOverlayConfig());
+      overlayRef = createOverlayRef(this._injector, this._getOverlayConfig());
       this._overlayRef = overlayRef;
       this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
         if (this.panelOpen && overlayRef) {
@@ -916,9 +920,10 @@ export class MatAutocompleteTrigger
 
   private _getOverlayPosition(): PositionStrategy {
     // Set default Overlay Position
-    const strategy = this._overlay
-      .position()
-      .flexibleConnectedTo(this._getConnectedElement())
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this._getConnectedElement(),
+    )
       .withFlexibleDimensions(false)
       .withPush(false);
 
