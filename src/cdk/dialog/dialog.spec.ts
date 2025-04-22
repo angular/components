@@ -1,6 +1,11 @@
 import {Directionality} from '../bidi';
 import {A, ESCAPE} from '../keycodes';
-import {Overlay, OverlayContainer, ScrollDispatcher} from '../overlay';
+import {
+  createCloseScrollStrategy,
+  createGlobalPositionStrategy,
+  OverlayContainer,
+  ScrollDispatcher,
+} from '../overlay';
 import {_supportsShadowDom} from '../platform';
 import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../testing/private';
 import {Location} from '@angular/common';
@@ -37,7 +42,6 @@ describe('Dialog', () => {
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
   let mockLocation: SpyLocation;
-  let overlay: Overlay;
   let scrolledSubject = new Subject();
 
   beforeEach(fakeAsync(() => {
@@ -66,7 +70,6 @@ describe('Dialog', () => {
 
     dialog = TestBed.inject(Dialog);
     mockLocation = TestBed.inject(Location) as SpyLocation;
-    overlay = TestBed.inject(Overlay);
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
 
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
@@ -452,7 +455,7 @@ describe('Dialog', () => {
 
   it('should be able to customize the position strategy', () => {
     dialog.open(PizzaMsg, {
-      positionStrategy: overlay.position().global().top('100px'),
+      positionStrategy: createGlobalPositionStrategy(TestBed.inject(Injector)).top('100px'),
     });
 
     viewContainerFixture.detectChanges();
@@ -555,12 +558,13 @@ describe('Dialog', () => {
 
   it('should close the dialog when detached externally', fakeAsync(() => {
     const closeSpy = jasmine.createSpy('closed');
+    const injector = TestBed.inject(Injector);
     dialog
-      .open(PizzaMsg, {scrollStrategy: overlay.scrollStrategies.close()})
+      .open(PizzaMsg, {scrollStrategy: createCloseScrollStrategy(injector)})
       .closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
     dialog
-      .open(PizzaMsg, {scrollStrategy: overlay.scrollStrategies.close()})
+      .open(PizzaMsg, {scrollStrategy: createCloseScrollStrategy(injector)})
       .closed.subscribe(closeSpy);
     viewContainerFixture.detectChanges();
 
