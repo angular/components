@@ -50,5 +50,5 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":material-date-fns-adapter"],
+    deps = [":material-date-fns-adapter_legacy"],
 )

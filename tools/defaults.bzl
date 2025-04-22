@@ -2,7 +2,7 @@
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
-load("@rules_angular//src/ng_package:index.bzl", _ng_package = "ng_package")
+load("@npm//@angular/bazel:index.bzl", _ng_package = "ng_package")
 load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//:pkg-externals.bzl", "PKG_EXTERNALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
@@ -64,17 +64,21 @@ def ng_package(
         externals = externals,
         srcs = srcs + [":license_copied"],
         deps = deps,
-        package = package_name,
+        # We never set a `package_name` for NPM packages, neither do we enable validation.
+        # This is necessary because the source targets of the NPM packages all have
+        # package names set and setting a similar `package_name` on the NPM package would
+        # result in duplicate linker mappings that will conflict. e.g. consider the following
+        # scenario: We have a `ts_library` for `@angular/cdk`. We will configure a package
+        # name for the target so that it can be resolved in NodeJS executions from `node_modules`.
+        # If we'd also set a `package_name` for the associated `pkg_npm` target, there would be
+        # two mappings for `@angular/cdk` and the linker will complain. For a better development
+        # experience, we want the mapping to resolve to the direct outputs of the `ts_library`
+        # instead of requiring tests and other targets to assemble the NPM package first.
+        package_name = None,
+        validate = False,
         readme_md = readme_md,
         substitutions = npmPackageSubstitutions,
         visibility = visibility,
-        rollup_runtime_deps = [
-            "//:node_modules/@rollup/plugin-commonjs",
-            "//:node_modules/@rollup/plugin-node-resolve",
-            "//:node_modules/magic-string",
-            "//:node_modules/rollup-plugin-dts",
-            "//:node_modules/rollup-plugin-sourcemaps2",
-        ],
         **kwargs
     )
 
@@ -93,6 +97,6 @@ def ng_package(
         name = "pkg",
         src = ":%s" % name,
         visibility = visibility,
-        interop_deps = deps + package_deps,
+        interop_deps = [d.replace("_legacy", "") for d in deps] + package_deps,
         package_name = package_name,
     )
