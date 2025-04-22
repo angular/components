@@ -39,10 +39,12 @@ import {Directionality} from '@angular/cdk/bidi';
 import {
   ConnectedPosition,
   ConnectionPositionPair,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
   OriginConnectionPosition,
-  Overlay,
   OverlayConnectionPosition,
   OverlayRef,
   ScrollDispatcher,
@@ -82,8 +84,8 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
   {
     providedIn: 'root',
     factory: () => {
-      const overlay = inject(Overlay);
-      return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
+      const injector = inject(Injector);
+      return () => createRepositionScrollStrategy(injector, {scrollThrottle: SCROLL_THROTTLE_MS});
     },
   },
 );
@@ -93,8 +95,9 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
-  return () => overlay.scrollStrategies.reposition({scrollThrottle: SCROLL_THROTTLE_MS});
+export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy {
+  const injector = inject(Injector);
+  return () => createRepositionScrollStrategy(injector, {scrollThrottle: SCROLL_THROTTLE_MS});
 }
 
 /**
@@ -104,7 +107,7 @@ export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => Scr
  */
 export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
   provide: MAT_TOOLTIP_SCROLL_STRATEGY,
-  deps: [Overlay],
+  deps: [] as any[],
   useFactory: MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY,
 };
 
@@ -525,13 +528,13 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .get(ScrollDispatcher)
       .getAncestorScrollContainers(this._elementRef);
 
-    const overlay = this._injector.get(Overlay);
     const panelClass = `${this._cssClassPrefix}-${PANEL_CLASS}`;
 
     // Create connected position strategy that listens for scroll events to reposition.
-    const strategy = overlay
-      .position()
-      .flexibleConnectedTo(this.positionAtOrigin ? origin || this._elementRef : this._elementRef)
+    const strategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this.positionAtOrigin ? origin || this._elementRef : this._elementRef,
+    )
       .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
       .withFlexibleDimensions(false)
       .withViewportMargin(this._viewportMargin)
@@ -549,7 +552,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       }
     });
 
-    this._overlayRef = overlay.create({
+    this._overlayRef = createOverlayRef(this._injector, {
       direction: this._dir,
       positionStrategy: strategy,
       panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,

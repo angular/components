@@ -19,7 +19,6 @@ import { NumberInput } from '@angular/cdk/coercion';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OriginConnectionPosition } from '@angular/cdk/overlay';
-import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConnectionPosition } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -37,12 +36,12 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions;
 export const MAT_TOOLTIP_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public @deprecated
-export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
+export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy;
 
 // @public @deprecated
 export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
+    deps: any[];
     useFactory: typeof MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY;
 };
 
