@@ -44,7 +44,7 @@ ng_package(
         "//goldens:__pkg__",
         "//integration:__subpackages__",
     ],
-    deps = [":google-maps_legacy"],
+    deps = [":google-maps"],
 )
 
 filegroup(
