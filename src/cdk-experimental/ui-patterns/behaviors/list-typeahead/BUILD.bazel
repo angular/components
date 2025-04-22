@@ -11,7 +11,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
@@ -23,8 +23,7 @@ ts_project(
     deps = [
         ":list-typeahead",
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
-        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus:unit_test_sources",
     ],
 )
 

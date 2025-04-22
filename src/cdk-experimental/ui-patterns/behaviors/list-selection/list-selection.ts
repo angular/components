@@ -8,22 +8,16 @@
 
 import {signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
-import {ListNavigation, ListNavigationItem} from '../list-navigation/list-navigation';
+import {ListFocus, ListFocusItem} from '../list-focus/list-focus';
 
 /** Represents an item in a collection, such as a listbox option, than can be selected. */
-export interface ListSelectionItem<V> extends ListNavigationItem {
+export interface ListSelectionItem<V> extends ListFocusItem {
   /** The value of the item. */
   value: SignalLike<V>;
-
-  /** Whether an item is disabled. */
-  disabled: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a collection that contains selectable items. */
 export interface ListSelectionInputs<T extends ListSelectionItem<V>, V> {
-  /** The items in the list. */
-  items: SignalLike<T[]>;
-
   /** Whether multiple items in the list can be selected at once. */
   multi: SignalLike<boolean>;
 
@@ -42,16 +36,11 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
   /** The end index to use for range selection. */
   rangeEndIndex = signal<number>(0);
 
-  /** The navigation controller of the parent list. */
-  navigation: ListNavigation<T>;
-
-  constructor(readonly inputs: ListSelectionInputs<T, V> & {navigation: ListNavigation<T>}) {
-    this.navigation = inputs.navigation;
-  }
+  constructor(readonly inputs: ListSelectionInputs<T, V> & {focusManager: ListFocus<T>}) {}
 
   /** Selects the item at the current active index. */
-  select(item?: T, opts = {anchor: true}) {
-    item = item ?? this.inputs.navigation.activeItem();
+  select(item?: ListSelectionItem<V>, opts = {anchor: true}) {
+    item = item ?? this.inputs.focusManager.activeItem();
 
     if (item.disabled() || this.inputs.value().includes(item.value())) {
       return;
@@ -61,7 +50,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       this.deselectAll();
     }
 
-    const index = this.inputs.items().findIndex(i => i === item);
+    const index = this.inputs.focusManager.inputs.items().findIndex(i => i === item);
     if (opts.anchor) {
       this.beginRangeSelection(index);
     }
@@ -70,7 +59,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Deselects the item at the current active index. */
   deselect(item?: T) {
-    item = item ?? this.inputs.navigation.activeItem();
+    item = item ?? this.inputs.focusManager.activeItem();
 
     if (!item.disabled()) {
       this.inputs.value.update(values => values.filter(value => value !== item.value()));
@@ -79,13 +68,13 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Toggles the item at the current active index. */
   toggle() {
-    const item = this.inputs.navigation.activeItem();
+    const item = this.inputs.focusManager.activeItem();
     this.inputs.value().includes(item.value()) ? this.deselect() : this.select();
   }
 
   /** Toggles only the item at the current active index. */
   toggleOne() {
-    const item = this.inputs.navigation.activeItem();
+    const item = this.inputs.focusManager.activeItem();
     this.inputs.value().includes(item.value()) ? this.deselect() : this.selectOne();
   }
 
@@ -95,7 +84,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       return; // Should we log a warning?
     }
 
-    for (const item of this.inputs.items()) {
+    for (const item of this.inputs.focusManager.inputs.items()) {
       this.select(item, {anchor: false});
     }
 
@@ -104,7 +93,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Deselects all items in the list. */
   deselectAll() {
-    for (const item of this.inputs.items()) {
+    for (const item of this.inputs.focusManager.inputs.items()) {
       this.deselect(item);
     }
   }
@@ -114,7 +103,7 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
    * items in the list if all items are already selected.
    */
   toggleAll() {
-    const selectableValues = this.inputs
+    const selectableValues = this.inputs.focusManager.inputs
       .items()
       .filter(i => !i.disabled())
       .map(i => i.value());
@@ -137,10 +126,10 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
    * selected range that are now outside of the selected range
    */
   selectRange(opts = {anchor: true}) {
-    const isStartOfRange = this.navigation.prevActiveIndex() === this.rangeStartIndex();
+    const isStartOfRange = this.inputs.focusManager.prevActiveIndex() === this.rangeStartIndex();
 
     if (isStartOfRange && opts.anchor) {
-      this.beginRangeSelection(this.navigation.prevActiveIndex());
+      this.beginRangeSelection(this.inputs.focusManager.prevActiveIndex());
     }
 
     const itemsInRange = this._getItemsFromIndex(this.rangeStartIndex());
@@ -158,13 +147,13 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
     if (itemsInRange.length) {
       const item = itemsInRange.pop();
-      const index = this.inputs.items().findIndex(i => i === item);
+      const index = this.inputs.focusManager.inputs.items().findIndex(i => i === item);
       this.rangeEndIndex.set(index);
     }
   }
 
   /** Marks the given index as the start of a range selection. */
-  beginRangeSelection(index: number = this.navigation.inputs.activeIndex()) {
+  beginRangeSelection(index: number = this.inputs.focusManager.inputs.activeIndex()) {
     this.rangeStartIndex.set(index);
     this.rangeEndIndex.set(index);
   }
@@ -175,15 +164,15 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
       return [];
     }
 
-    const upper = Math.max(this.inputs.navigation.inputs.activeIndex(), index);
-    const lower = Math.min(this.inputs.navigation.inputs.activeIndex(), index);
+    const upper = Math.max(this.inputs.focusManager.inputs.activeIndex(), index);
+    const lower = Math.min(this.inputs.focusManager.inputs.activeIndex(), index);
 
     const items = [];
     for (let i = lower; i <= upper; i++) {
-      items.push(this.inputs.items()[i]);
+      items.push(this.inputs.focusManager.inputs.items()[i]);
     }
 
-    if (this.inputs.navigation.inputs.activeIndex() < index) {
+    if (this.inputs.focusManager.inputs.activeIndex() < index) {
       return items.reverse();
     }
 

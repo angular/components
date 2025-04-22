@@ -8,13 +8,13 @@
 
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../signal-like/signal-like';
-import {ListNavigationItem, ListNavigation} from '../list-navigation/list-navigation';
+import {ListFocus, ListFocusItem} from '../list-focus/list-focus';
 
 /**
  * Represents an item in a collection, such as a listbox option, than can be navigated to by
  * typeahead.
  */
-export interface ListTypeaheadItem extends ListNavigationItem {
+export interface ListTypeaheadItem extends ListFocusItem {
   /** The text used by the typeahead search. */
   searchTerm: SignalLike<string>;
 }
@@ -33,8 +33,8 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** A reference to the timeout for resetting the typeahead search. */
   timeout?: ReturnType<typeof setTimeout> | undefined;
 
-  /** The navigation controller of the parent list. */
-  navigation: ListNavigation<T>;
+  /** The focus controller of the parent list. */
+  focusManager: ListFocus<T>;
 
   /** Whether the user is actively typing a typeahead search query. */
   isTyping = computed(() => this._query().length > 0);
@@ -45,8 +45,8 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   /** The index where that the typeahead search was initiated from. */
   private _startIndex = signal<number | undefined>(undefined);
 
-  constructor(readonly inputs: ListTypeaheadInputs & {navigation: ListNavigation<T>}) {
-    this.navigation = inputs.navigation;
+  constructor(readonly inputs: ListTypeaheadInputs & {focusManager: ListFocus<T>}) {
+    this.focusManager = inputs.focusManager;
   }
 
   /** Performs a typeahead search, appending the given character to the search string. */
@@ -60,7 +60,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     if (this._startIndex() === undefined) {
-      this._startIndex.set(this.navigation.inputs.activeIndex());
+      this._startIndex.set(this.focusManager.inputs.activeIndex());
     }
 
     clearTimeout(this.timeout);
@@ -68,7 +68,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     const item = this._getItem();
 
     if (item) {
-      this.navigation.goto(item);
+      this.focusManager.focus(item);
     }
 
     this.timeout = setTimeout(() => {
@@ -84,15 +84,15 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
    * current query starting from the the current anchor index.
    */
   private _getItem() {
-    let items = this.navigation.inputs.items();
+    let items = this.focusManager.inputs.items();
     const after = items.slice(this._startIndex()! + 1);
     const before = items.slice(0, this._startIndex()!);
-    items = this.navigation.inputs.wrap() ? after.concat(before) : after; // TODO: Always wrap?
-    items.push(this.navigation.inputs.items()[this._startIndex()!]);
+    items = after.concat(before);
+    items.push(this.inputs.focusManager.inputs.items()[this._startIndex()!]);
 
     const focusableItems = [];
     for (const item of items) {
-      if (this.navigation.isFocusable(item)) {
+      if (this.focusManager.isFocusable(item)) {
         focusableItems.push(item);
       }
     }

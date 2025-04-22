@@ -26,7 +26,7 @@ interface SelectOptions {
 }
 
 /** Represents the required inputs for a listbox. */
-export type ListboxInputs<V> = ListNavigationInputs<OptionPattern<V>> &
+export type ListboxInputs<V> = ListNavigationInputs &
   ListSelectionInputs<OptionPattern<V>, V> &
   ListTypeaheadInputs &
   ListFocusInputs<OptionPattern<V>> & {
@@ -67,7 +67,7 @@ export class ListboxPattern<V> {
   multi: SignalLike<boolean>;
 
   /** The number of items in the listbox. */
-  setsize = computed(() => this.navigation.inputs.items().length);
+  setsize = computed(() => this.inputs.items().length);
 
   /** Whether the listbox selection follows focus. */
   followFocus = computed(() => this.inputs.selectionMode() === 'follow');
@@ -229,13 +229,14 @@ export class ListboxPattern<V> {
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
 
+    this.focusManager = new ListFocus(inputs);
+    this.selection = new ListSelection({...inputs, focusManager: this.focusManager});
+    this.typeahead = new ListTypeahead({...inputs, focusManager: this.focusManager});
     this.navigation = new ListNavigation({
       ...inputs,
+      focusManager: this.focusManager,
       wrap: computed(() => this.wrap() && this.inputs.wrap()),
     });
-    this.selection = new ListSelection({...inputs, navigation: this.navigation});
-    this.typeahead = new ListTypeahead({...inputs, navigation: this.navigation});
-    this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
   }
 
   /** Handles keydown events for the listbox. */
@@ -300,7 +301,6 @@ export class ListboxPattern<V> {
     const moved = operation();
 
     if (moved) {
-      this.focusManager.focus();
       this._updateSelection(opts);
     }
 

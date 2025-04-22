@@ -44,7 +44,7 @@ export class OptionPattern<V> {
   index = computed(
     () =>
       this.listbox()
-        ?.navigation.inputs.items()
+        ?.focusManager.inputs.items()
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
