@@ -1,3 +1,17 @@
+<a name="19.2.11"></a>
+# 19.2.11 "dopamine-dumpling" (2025-04-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0509a99d27](https://github.com/angular/components/commit/0509a99d27655b170611903754282b7240e23cf5) | fix | **overlay:** scroll was blocked when zoomed out even if scrolling wasn't an option ([#30762](https://github.com/angular/components/pull/30762)) |
+| [14afce23b6](https://github.com/angular/components/commit/14afce23b6d67f8c3a5284aef5c6fa6d6937e429) | fix | **schematics:** account for new karma builder ([#30907](https://github.com/angular/components/pull/30907)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4d0dcc49f8](https://github.com/angular/components/commit/4d0dcc49f8d58852963dabab0ab18c98b72d7c0c) | fix | **list:** update documentation ([#30883](https://github.com/angular/components/pull/30883)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-next.7"></a>
 # 20.0.0-next.7 "metal-keys" (2025-04-16)
 ### cdk
