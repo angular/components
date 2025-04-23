@@ -70,6 +70,9 @@ ng_package(
         ":node_modules/@angular/material-experimental",
         ":node_modules/@angular/material-moment-adapter",
     ],
+    replace_prefixes = {
+        "docs-content/": "/",
+    },
     tags = ["docs-package"],
     visibility = ["//:__pkg__"],
     deps = [":components-examples"] + ALL_EXAMPLES,
