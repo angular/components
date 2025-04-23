@@ -67,7 +67,7 @@ describe('Listbox Pattern', () => {
     const options = signal<TestOption[]>([]);
     const listbox = getListbox({...inputs, items: options});
     options.set(getOptions(listbox, values));
-    return {listbox, options};
+    return {listbox, options: options()};
   }
 
   function getDefaultPatterns(inputs: Partial<TestInputs> = {}) {
@@ -266,7 +266,7 @@ describe('Listbox Pattern', () => {
           multi: signal(true),
         });
         listbox = patterns.listbox;
-        options = patterns.options();
+        options = patterns.options;
       });
 
       it('should select an option on Space', () => {
@@ -428,7 +428,7 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('follow'),
         });
         listbox = patterns.listbox;
-        options = patterns.options();
+        options = patterns.options;
       });
 
       it('should select an option on navigation', () => {
@@ -563,9 +563,9 @@ describe('Listbox Pattern', () => {
   });
 
   describe('Pointer Events', () => {
-    function click(options: WritableSignal<TestOption[]>, index: number, mods?: ModifierKeys) {
+    function click(options: TestOption[], index: number, mods?: ModifierKeys) {
       return {
-        target: options()[index].element(),
+        target: options[index].element(),
         shiftKey: mods?.shift,
         ctrlKey: mods?.control,
       } as unknown as PointerEvent;
@@ -716,7 +716,7 @@ describe('Listbox Pattern', () => {
           skipDisabled: signal(false),
           selectionMode: signal('follow'),
         });
-        options()[2].disabled.set(true);
+        options[2].disabled.set(true);
         listbox.onPointerdown(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
@@ -732,7 +732,7 @@ describe('Listbox Pattern', () => {
           skipDisabled: signal(true),
           selectionMode: signal('follow'),
         });
-        options()[2].disabled.set(true);
+        options[2].disabled.set(true);
         listbox.onPointerdown(click(options, 0));
         expect(listbox.inputs.value()).toEqual(['Apple']);
         listbox.onKeydown(down({control: true}));
@@ -783,6 +783,52 @@ describe('Listbox Pattern', () => {
       listbox.onKeydown(shift());
       listbox.onPointerdown(click(options, 4, {shift: true}));
       expect(listbox.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry', 'Blueberry']);
+    });
+  });
+
+  describe('#setDefaultState', () => {
+    it('should set the active index to the first option', () => {
+      const {listbox} = getDefaultPatterns();
+      listbox.setDefaultState();
+      expect(listbox.inputs.activeIndex()).toBe(0);
+    });
+
+    it('should set the active index to the first focusable option', () => {
+      const {listbox, options} = getDefaultPatterns({
+        skipDisabled: signal(true),
+      });
+      options[0].disabled.set(true);
+      listbox.setDefaultState();
+      expect(listbox.inputs.activeIndex()).toBe(1);
+    });
+
+    it('should set the active index to the first selected option', () => {
+      const {listbox} = getDefaultPatterns({
+        value: signal(['Banana']),
+        skipDisabled: signal(true),
+      });
+      listbox.setDefaultState();
+      expect(listbox.inputs.activeIndex()).toBe(2);
+    });
+
+    it('should set the active index to the first focusable selected option', () => {
+      const {listbox, options} = getDefaultPatterns({
+        value: signal(['Banana', 'Blackberry']),
+        skipDisabled: signal(true),
+      });
+      options[2].disabled.set(true);
+      listbox.setDefaultState();
+      expect(listbox.inputs.activeIndex()).toBe(3);
+    });
+
+    it('should set the active index to the first option if no selected option is focusable', () => {
+      const {listbox, options} = getDefaultPatterns({
+        value: signal(['Banana']),
+        skipDisabled: signal(true),
+      });
+      options[2].disabled.set(true);
+      listbox.setDefaultState();
+      expect(listbox.inputs.activeIndex()).toBe(0);
     });
   });
 });

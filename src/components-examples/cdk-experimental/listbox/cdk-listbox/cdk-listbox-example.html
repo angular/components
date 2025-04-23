@@ -6,6 +6,15 @@
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selection</mat-label>
+    <mat-select [(value)]="selection" multiple>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Disabled Options</mat-label>
     <mat-select [(value)]="disabledOptions" multiple>
       @for (fruit of fruits; track fruit) {
@@ -42,6 +51,7 @@
 <!-- #docregion listbox -->
 <ul
   cdkListbox
+  [value]="selection"
   [wrap]="wrap.value"
   [multi]="multi.value"
   [readonly]="readonly.value"
