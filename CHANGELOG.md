@@ -1,3 +1,28 @@
+<a name="20.0.0-next.8"></a>
+# 20.0.0-next.8 "glutamate-gyoza" (2025-04-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cf619601a8](https://github.com/angular/components/commit/cf619601a8b58aa44bcbbb4793d4ee8a9d9de3ec) | feat | **drag-drop:** introduce `resetToBoundary` ([#30436](https://github.com/angular/components/pull/30436)) |
+| [a2ab84da17](https://github.com/angular/components/commit/a2ab84da1788075dadcf653c007abe9f9ac00e43) | fix | **dialog:** provide proper shaped Directionality ([#30898](https://github.com/angular/components/pull/30898)) |
+| [1dd643e208](https://github.com/angular/components/commit/1dd643e20880a5116809416b5d3efa942ed11dc6) | fix | **overlay:** scroll was blocked when zoomed out even if scrolling wasn't an option ([#30762](https://github.com/angular/components/pull/30762)) |
+| [22876a904e](https://github.com/angular/components/commit/22876a904e755f829af77f44aff0711964f9b344) | fix | **schematics:** account for new karma builder ([#30907](https://github.com/angular/components/pull/30907)) |
+| [08f4acfefd](https://github.com/angular/components/commit/08f4acfefd57bcc213e34ac399f04c3923c53e26) | perf | **overlay:** add tree-shakeable alternatives for overlay APIs ([#30904](https://github.com/angular/components/pull/30904)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [204b289588](https://github.com/angular/components/commit/204b289588106d90c991f26a50c23c80c68d4fc3) | fix | **list:** update documentation ([#30883](https://github.com/angular/components/pull/30883)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e0446ecfcb](https://github.com/angular/components/commit/e0446ecfcb3d74a73f8b4799cb17d2098ba6c433) | fix | **listbox:** change shift+nav behavior ([#30854](https://github.com/angular/components/pull/30854)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [48894ad557](https://github.com/angular/components/commit/48894ad5570e3dfdbd3e2128ebcd88c206d80733) | fix | use DI token for tag name ([#30892](https://github.com/angular/components/pull/30892)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.11"></a>
 # 19.2.11 "dopamine-dumpling" (2025-04-23)
 ### cdk
