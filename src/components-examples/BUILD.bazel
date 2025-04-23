@@ -3,8 +3,7 @@ load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
 load(":config.bzl", "ALL_EXAMPLES")
 load("//tools:defaults2.bzl", "ng_project")
-load("//tools/bazel:legacy_target.bzl", "get_legacy_label")
-load("@npm2//:defs.bzl", "npm_link_all_packages")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -71,9 +70,12 @@ ng_package(
         ":node_modules/@angular/material-experimental",
         ":node_modules/@angular/material-moment-adapter",
     ],
+    replace_prefixes = {
+        "docs-content/": "/",
+    },
     tags = ["docs-package"],
     visibility = ["//:__pkg__"],
-    deps = [":components-examples_legacy"] + [get_legacy_label(t) for t in ALL_EXAMPLES],
+    deps = [":components-examples"] + ALL_EXAMPLES,
 )
 
 genrule(

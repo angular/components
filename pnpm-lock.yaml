@@ -184,10 +184,10 @@ importers:
         version: 18.3.5(encoding@0.1.13)
       '@rollup/plugin-commonjs':
         specifier: ^21.0.0
-        version: 21.1.0(rollup@2.79.1)
+        version: 21.1.0(rollup@2.79.2)
       '@rollup/plugin-node-resolve':
         specifier: ^13.1.3
-        version: 13.3.0(rollup@2.79.1)
+        version: 13.3.0(rollup@2.79.2)
       '@schematics/angular':
         specifier: 'catalog:'
         version: 19.2.7(chokidar@4.0.1)
@@ -287,6 +287,9 @@ importers:
       karma-sourcemap-loader:
         specifier: ^0.3.8
         version: 0.3.8
+      magic-string:
+        specifier: 0.30.17
+        version: 0.30.17
       marked:
         specifier: ^2.0.0
         version: 2.1.3
@@ -319,7 +322,13 @@ importers:
         version: 2.3.6
       rollup:
         specifier: ^2.66.1
-        version: 2.79.1
+        version: 2.79.2
+      rollup-plugin-dts:
+        specifier: 6.2.1
+        version: 6.2.1(rollup@2.79.2)(typescript@5.8.2)
+      rollup-plugin-sourcemaps2:
+        specifier: 0.5.0
+        version: 0.5.0(@types/node@22.14.1)(rollup@2.79.2)
       sass:
         specifier: ^1.80.6
         version: 1.85.1
@@ -2724,6 +2733,15 @@ packages:
     engines: {node: '>= 8.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0
+
+  '@rollup/pluginutils@5.1.4':
+    resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/rollup-android-arm-eabi@4.34.8':
     resolution: {integrity: sha512-q217OSE8DTp8AFHuNHXo0Y86e1wtlfVrXiAlwkIvGRQv9zbc6mE3sjIVfwI8sYUyNxwOg0j/Vm1RKM04JcWLJw==}
@@ -8193,8 +8211,25 @@ packages:
     resolution: {integrity: sha512-s+pyvQeIKIZ0dx5iJiQk1tPLJAWln39+MI5jtM8wnyws+G5azk+dMnMX0qfbqNetKKNgcWWOdi0sfm+FbQbgdQ==}
     engines: {node: '>=10.0.0'}
 
-  rollup@2.79.1:
-    resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
+  rollup-plugin-dts@6.2.1:
+    resolution: {integrity: sha512-sR3CxYUl7i2CHa0O7bA45mCrgADyAQ0tVtGSqi3yvH28M+eg1+g5d7kQ9hLvEz5dorK3XVsH5L2jwHLQf72DzA==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      rollup: ^3.29.4 || ^4
+      typescript: 5.8.2
+
+  rollup-plugin-sourcemaps2@0.5.0:
+    resolution: {integrity: sha512-ozRq2fRuJYkA2cRT1CxaWNovtdBbrlXMK/vKIm5Q7rLUHx4jF21jZu1plO+VNOWPDAn+q1CaIAWKQL5QGej6Bw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@types/node': '>=18.0.0'
+      rollup: '>=4'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  rollup@2.79.2:
+    resolution: {integrity: sha512-fS6iqSPZDs3dr/y7Od6y5nha8dW1YnbgtsyotCVvoFGKbERG++CVRFv1meyGDE1SNItQA8BrnCw7ScdAhRJ3XQ==}
     engines: {node: '>=10.0.0'}
     hasBin: true
 
@@ -11939,33 +11974,41 @@ snapshots:
       - bare-buffer
       - supports-color
 
-  '@rollup/plugin-commonjs@21.1.0(rollup@2.79.1)':
+  '@rollup/plugin-commonjs@21.1.0(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 3.1.0(rollup@2.79.1)
+      '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 7.2.3
       is-reference: 1.2.1
       magic-string: 0.25.9
       resolve: 1.22.10
-      rollup: 2.79.1
+      rollup: 2.79.2
 
-  '@rollup/plugin-node-resolve@13.3.0(rollup@2.79.1)':
+  '@rollup/plugin-node-resolve@13.3.0(rollup@2.79.2)':
     dependencies:
-      '@rollup/pluginutils': 3.1.0(rollup@2.79.1)
+      '@rollup/pluginutils': 3.1.0(rollup@2.79.2)
       '@types/resolve': 1.17.1
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.10
-      rollup: 2.79.1
+      rollup: 2.79.2
 
-  '@rollup/pluginutils@3.1.0(rollup@2.79.1)':
+  '@rollup/pluginutils@3.1.0(rollup@2.79.2)':
     dependencies:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.1
-      rollup: 2.79.1
+      rollup: 2.79.2
+
+  '@rollup/pluginutils@5.1.4(rollup@2.79.2)':
+    dependencies:
+      '@types/estree': 1.0.6
+      estree-walker: 2.0.2
+      picomatch: 4.0.2
+    optionalDependencies:
+      rollup: 2.79.2
 
   '@rollup/rollup-android-arm-eabi@4.34.8':
     optional: true
@@ -18526,7 +18569,22 @@ snapshots:
 
   robots-parser@3.0.1: {}
 
-  rollup@2.79.1:
+  rollup-plugin-dts@6.2.1(rollup@2.79.2)(typescript@5.8.2):
+    dependencies:
+      magic-string: 0.30.17
+      rollup: 2.79.2
+      typescript: 5.8.2
+    optionalDependencies:
+      '@babel/code-frame': 7.26.2
+
+  rollup-plugin-sourcemaps2@0.5.0(@types/node@22.14.1)(rollup@2.79.2):
+    dependencies:
+      '@rollup/pluginutils': 5.1.4(rollup@2.79.2)
+      rollup: 2.79.2
+    optionalDependencies:
+      '@types/node': 22.14.1
+
+  rollup@2.79.2:
     optionalDependencies:
       fsevents: 2.3.3
 
