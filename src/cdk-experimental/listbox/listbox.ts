@@ -7,14 +7,17 @@
  */
 
 import {
+  AfterViewInit,
   booleanAttribute,
   computed,
   contentChildren,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import {ListboxPattern, OptionPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
@@ -29,9 +32,9 @@ import {_IdGenerator} from '@angular/cdk/a11y';
  *
  * ```html
  * <ul cdkListbox>
- *   <li cdkOption>Item 1</li>
- *   <li cdkOption>Item 2</li>
- *   <li cdkOption>Item 3</li>
+ *   <li [value]="1" cdkOption>Item 1</li>
+ *   <li [value]="2" cdkOption>Item 2</li>
+ *   <li [value]="3" cdkOption>Item 3</li>
  * </ul>
  * ```
  */
@@ -49,9 +52,10 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(pointerdown)': 'pattern.onPointerdown($event)',
+    '(focusin)': 'onFocus()',
   },
 })
-export class CdkListbox<V> {
+export class CdkListbox<V> implements AfterViewInit {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -105,6 +109,28 @@ export class CdkListbox<V> {
     items: this.items,
     textDirection: this.textDirection,
   });
+
+  /** Whether the listbox has received focus yet. */
+  private _touched = signal(false);
+
+  /** Whether the options in the listbox have been initialized. */
+  private _isViewInitialized = signal(false);
+
+  constructor() {
+    effect(() => {
+      if (this._isViewInitialized() && !this._touched()) {
+        this.pattern.setDefaultState();
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this._isViewInitialized.set(true);
+  }
+
+  onFocus() {
+    this._touched.set(true);
+  }
 }
 
 /** A selectable option in a CdkListbox. */
@@ -133,6 +159,7 @@ export class CdkOption<V> {
   /** A unique identifier for the option. */
   protected id = computed(() => this._generatedId);
 
+  /** The value of the option. */
   protected value = input.required<V>();
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not

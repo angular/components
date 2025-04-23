@@ -282,6 +282,36 @@ export class ListboxPattern<V> {
   }
 
   /**
+   * Sets the listbox to it's default initial state.
+   *
+   * Sets the active index of the listbox to the first focusable selected
+   * item if one exists. Otherwise, sets focus to the first focusable item.
+   *
+   * This method should be called once the listbox and it's options are properly initialized,
+   * meaning the ListboxPattern and OptionPatterns should have references to each other before this
+   * is called.
+   */
+  setDefaultState() {
+    let firstItem: OptionPattern<V> | null = null;
+
+    for (const item of this.inputs.items()) {
+      if (this.focusManager.isFocusable(item)) {
+        if (!firstItem) {
+          firstItem = item;
+        }
+        if (item.selected()) {
+          this.inputs.activeIndex.set(item.index());
+          return;
+        }
+      }
+    }
+
+    if (firstItem) {
+      this.inputs.activeIndex.set(firstItem.index());
+    }
+  }
+
+  /**
    * Safely performs a navigation operation.
    *
    * Handles conditionally disabling wrapping for when a navigation

@@ -75,7 +75,7 @@ export class ListFocus<T extends ListFocusItem> {
 
   /** Returns the tabindex for the given item. */
   getItemTabindex(item: T): -1 | 0 {
-    if (this.inputs.disabled()) {
+    if (this.isListDisabled()) {
       return -1;
     }
     if (this.inputs.focusMode() === 'activedescendant') {
