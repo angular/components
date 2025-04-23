@@ -1,0 +1,50 @@
+# This workflow runs whenever the ADEV build workflow has completed. Deployment happens
+# as part of a dedicated second workflow to avoid security issues where the building would
+# otherwise occur in an authorized context where secrets could be leaked.
+#
+# More details can be found here:
+# https://securitylab.github.com/research/github-actions-preventing-pwn-requests/.
+
+name: Deploying docs preview to Firebase
+
+on:
+  workflow_run:
+    workflows: ['Build docs for preview deployment']
+    types: [completed]
+
+permissions:
+  # Needed in order to be able to comment on the pull request.
+  pull-requests: write
+  # Needed in order to checkout the repository
+  contents: read
+  # Needed in order to retrieve the artifacts from the previous job
+  actions: read
+
+env:
+  PREVIEW_PROJECT: ng-dev-previews
+  PREVIEW_SITE: ng-dev-previews-comp
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          token: '${{secrets.GITHUB_TOKEN}}'
+
+      - name: Configure Firebase deploy target
+        working-directory: ./
+        run: |
+          # We can use `npx` as the Firebase deploy actions uses it too.
+          npx -y firebase-tools@latest target:clear --config docs/firebase.json --project ${{env.PREVIEW_PROJECT}} hosting mat-aio
+          npx -y firebase-tools@latest target:apply --config docs/firebase.json --project ${{env.PREVIEW_PROJECT}} hosting mat-aio ${{env.PREVIEW_SITE}}
+
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@b9bcdb3f9dff85fbfe8d1ca1d95531ddfe475f80
+        with:
+          github-token: '${{secrets.GITHUB_TOKEN}}'
+          workflow-artifact-name: 'docs-preview'
+          firebase-config-dir: './docs'
+          firebase-public-dir: './bin/docs/material-angular-io.production'
+          firebase-project-id: '${{env.PREVIEW_PROJECT}}'
+          firebase-service-key: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
