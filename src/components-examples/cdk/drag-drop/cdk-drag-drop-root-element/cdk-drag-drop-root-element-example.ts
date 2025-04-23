@@ -6,8 +6,9 @@ import {
   ViewContainerRef,
   OnDestroy,
   inject,
+  Injector,
 } from '@angular/core';
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {createGlobalPositionStrategy, createOverlayRef, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CdkDrag} from '@angular/cdk/drag-drop';
 
@@ -21,7 +22,7 @@ import {CdkDrag} from '@angular/cdk/drag-drop';
   imports: [CdkDrag],
 })
 export class CdkDragDropRootElementExample implements AfterViewInit, OnDestroy {
-  private _overlay = inject(Overlay);
+  private _injector = inject(Injector);
   private _viewContainerRef = inject(ViewContainerRef);
 
   @ViewChild(TemplateRef) _dialogTemplate: TemplateRef<any>;
@@ -30,8 +31,10 @@ export class CdkDragDropRootElementExample implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this._portal = new TemplatePortal(this._dialogTemplate, this._viewContainerRef);
-    this._overlayRef = this._overlay.create({
-      positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
+    this._overlayRef = createOverlayRef(this._injector, {
+      positionStrategy: createGlobalPositionStrategy(this._injector)
+        .centerHorizontally()
+        .centerVertically(),
       hasBackdrop: true,
     });
     this._overlayRef.backdropClick().subscribe(() => this._overlayRef.detach());

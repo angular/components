@@ -1,7 +1,6 @@
 import {MutationObserverFactory} from '../../observers';
-import {Overlay} from '../../overlay';
 import {ComponentPortal} from '../../portal';
-import {Component, inject} from '@angular/core';
+import {Component, inject, Injector} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule} from '../index';
@@ -11,10 +10,10 @@ import {
   LIVE_ANNOUNCER_ELEMENT_TOKEN,
   LiveAnnouncerDefaultOptions,
 } from './live-announcer-tokens';
+import {createOverlayRef} from '@angular/cdk/overlay';
 
 describe('LiveAnnouncer', () => {
   let announcer: LiveAnnouncer;
-  let overlay: Overlay;
   let ariaLiveElement: Element;
   let fixture: ComponentFixture<TestApp>;
 
@@ -26,7 +25,6 @@ describe('LiveAnnouncer', () => {
     );
 
     beforeEach(fakeAsync(() => {
-      overlay = TestBed.inject(Overlay);
       announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
       fixture = TestBed.createComponent(TestApp);
@@ -172,7 +170,7 @@ describe('LiveAnnouncer', () => {
 
     it('should add aria-owns to open aria-modal elements', fakeAsync(() => {
       const portal = new ComponentPortal(TestModal);
-      const overlayRef = overlay.create();
+      const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
       fixture.detectChanges();
@@ -192,7 +190,7 @@ describe('LiveAnnouncer', () => {
 
     it('should expand aria-owns of open aria-modal elements', fakeAsync(() => {
       const portal = new ComponentPortal(TestModal);
-      const overlayRef = overlay.create();
+      const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
       const modal = componentRef.location.nativeElement;
       fixture.detectChanges();

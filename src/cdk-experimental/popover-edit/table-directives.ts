@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {FocusTrap} from '@angular/cdk/a11y';
-import {OverlayRef, OverlaySizeConfig, PositionStrategy} from '@angular/cdk/overlay';
+import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
+  OverlayRef,
+  OverlaySizeConfig,
+  PositionStrategy,
+} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   afterNextRender,
@@ -15,6 +22,7 @@ import {
   ElementRef,
   EmbeddedViewRef,
   inject,
+  Injector,
   ListenerOptions,
   NgZone,
   OnDestroy,
@@ -240,6 +248,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   protected readonly services = inject(EditServices);
   protected readonly elementRef = inject(ElementRef);
   protected readonly viewContainerRef = inject(ViewContainerRef);
+  private _injector = inject(Injector);
 
   /** The edit lens template shown over the cell on edit. */
   template: TemplateRef<any> | null = null;
@@ -344,11 +353,11 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   }
 
   private _createEditOverlay(): void {
-    this.overlayRef = this.services.overlay.create({
+    this.overlayRef = createOverlayRef(this._injector, {
       disposeOnNavigation: true,
       panelClass: this.panelClass(),
       positionStrategy: this._getPositionStrategy(),
-      scrollStrategy: this.services.overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(this._injector),
       direction: this.services.directionality,
     });
 
@@ -402,9 +411,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
 
   private _getPositionStrategy(): PositionStrategy {
     const cells = this._getOverlayCells();
-    return this.services.overlay
-      .position()
-      .flexibleConnectedTo(cells[0])
+    return createFlexibleConnectedPositionStrategy(this._injector, cells[0])
       .withGrowAfterOpen()
       .withPush()
       .withViewportMargin(16)
