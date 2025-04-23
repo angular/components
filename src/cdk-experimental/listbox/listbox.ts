@@ -140,6 +140,7 @@ export class CdkListbox<V> implements AfterViewInit {
   host: {
     'role': 'option',
     'class': 'cdk-option',
+    '[class.cdk-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
