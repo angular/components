@@ -6,28 +6,16 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
+import {SignalLike} from '../signal-like/signal-like';
+import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 
 /** Represents an item in a collection, such as a listbox option, than can be navigated to. */
-export interface ListNavigationItem {
-  /** Whether an item is disabled. */
-  disabled: SignalLike<boolean>;
-}
+export interface ListNavigationItem extends ListFocusItem {}
 
 /** Represents the required inputs for a collection that has navigable items. */
-export interface ListNavigationInputs<T extends ListNavigationItem> {
+export interface ListNavigationInputs<T extends ListNavigationItem> extends ListFocusInputs<T> {
   /** Whether focus should wrap when navigating. */
   wrap: SignalLike<boolean>;
-
-  /** The items in the list. */
-  items: SignalLike<T[]>;
-
-  /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled: SignalLike<boolean>;
-
-  /** The current index that has been navigated to. */
-  activeIndex: WritableSignalLike<number>;
 
   /** Whether the list is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -38,23 +26,11 @@ export interface ListNavigationInputs<T extends ListNavigationItem> {
 
 /** Controls navigation for a list of items. */
 export class ListNavigation<T extends ListNavigationItem> {
-  /** The last index that was active. */
-  prevActiveIndex = signal(0);
-
-  /** The current active item. */
-  activeItem = computed(() => this.inputs.items()[this.inputs.activeIndex()]);
-
-  constructor(readonly inputs: ListNavigationInputs<T>) {}
+  constructor(readonly inputs: ListNavigationInputs<T> & {focusManager: ListFocus<T>}) {}
 
   /** Navigates to the given item. */
   goto(item?: T): boolean {
-    if (item && this.isFocusable(item)) {
-      this.prevActiveIndex.set(this.inputs.activeIndex());
-      const index = this.inputs.items().indexOf(item);
-      this.inputs.activeIndex.set(index);
-      return true;
-    }
-    return false;
+    return item ? this.inputs.focusManager.focus(item) : false;
   }
 
   /** Navigates to the next item in the list. */
@@ -69,7 +45,7 @@ export class ListNavigation<T extends ListNavigationItem> {
 
   /** Navigates to the first item in the list. */
   first(): boolean {
-    const item = this.inputs.items().find(i => this.isFocusable(i));
+    const item = this.inputs.items().find(i => this.inputs.focusManager.isFocusable(i));
     return item ? this.goto(item) : false;
   }
 
@@ -77,16 +53,11 @@ export class ListNavigation<T extends ListNavigationItem> {
   last(): boolean {
     const items = this.inputs.items();
     for (let i = items.length - 1; i >= 0; i--) {
-      if (this.isFocusable(items[i])) {
+      if (this.inputs.focusManager.isFocusable(items[i])) {
         return this.goto(items[i]);
       }
     }
     return false;
-  }
-
-  /** Returns true if the given item can be navigated to. */
-  isFocusable(item: T): boolean {
-    return !item.disabled() || !this.inputs.skipDisabled();
   }
 
   /** Advances to the next or previous focusable item in the list based on the given delta. */
@@ -101,7 +72,7 @@ export class ListNavigation<T extends ListNavigationItem> {
     // in the case that all options are disabled. If wrapping is disabled, the loop terminates
     // when the index goes out of bounds.
     for (let i = step(startIndex); i !== startIndex && i < itemCount && i >= 0; i = step(i)) {
-      if (this.isFocusable(items[i])) {
+      if (this.inputs.focusManager.isFocusable(items[i])) {
         return this.goto(items[i]);
       }
     }

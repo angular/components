@@ -6,107 +6,91 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
-import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
-import {ListNavigationItem, ListNavigation, ListNavigationInputs} from './list-navigation';
+import {signal, WritableSignal} from '@angular/core';
+import {ListNavigation, ListNavigationInputs, ListNavigationItem} from './list-navigation';
+import {getListFocus} from '../list-focus/list-focus.spec';
+
+type TestItem = ListNavigationItem & {
+  disabled: WritableSignal<boolean>;
+};
+type TestInputs = Partial<ListNavigationInputs<ListNavigationItem>> & {
+  numItems?: number;
+};
+
+function getNavigation(inputs: TestInputs = {}): ListNavigation<ListNavigationItem> {
+  const focusManager = getListFocus(inputs);
+  return new ListNavigation({
+    focusManager,
+    ...focusManager.inputs,
+    wrap: signal(false),
+    textDirection: signal('ltr'),
+    orientation: signal('vertical'),
+    ...inputs,
+  });
+}
 
 describe('List Navigation', () => {
-  interface TestItem extends ListNavigationItem {
-    disabled: WritableSignalLike<boolean>;
-  }
-
-  function getItems(length: number): SignalLike<TestItem[]> {
-    return signal(
-      Array.from({length}).map((_, i) => ({
-        index: signal(i),
-        disabled: signal(false),
-      })),
-    );
-  }
-
-  function getNavigation<T extends TestItem>(
-    items: SignalLike<T[]>,
-    args: Partial<ListNavigationInputs<T>> = {},
-  ): ListNavigation<T> {
-    return new ListNavigation({
-      items,
-      wrap: signal(false),
-      activeIndex: signal(0),
-      skipDisabled: signal(false),
-      textDirection: signal('ltr'),
-      orientation: signal('vertical'),
-      ...args,
-    });
-  }
-
   describe('#goto', () => {
     it('should navigate to an item', () => {
-      const items = getItems(5);
-      const nav = getNavigation(items);
-
+      const nav = getNavigation();
       expect(nav.inputs.activeIndex()).toBe(0);
-      nav.goto(items()[3]);
+      nav.goto(nav.inputs.items()[3]);
       expect(nav.inputs.activeIndex()).toBe(3);
     });
   });
 
   describe('#next', () => {
     it('should navigate next', () => {
-      const nav = getNavigation(getItems(3));
+      const nav = getNavigation();
       nav.next(); // 0 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
     it('should wrap', () => {
-      const nav = getNavigation(getItems(3), {
-        wrap: signal(true),
-      });
-
+      const nav = getNavigation({wrap: signal(true)});
       nav.next(); // 0 -> 1
       nav.next(); // 1 -> 2
-      nav.next(); // 2 -> 0
-
+      nav.next(); // 2 -> 3
+      nav.next(); // 3 -> 4
+      nav.next(); // 4 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should not wrap', () => {
-      const nav = getNavigation(getItems(3), {
-        wrap: signal(false),
-      });
-
+      const nav = getNavigation({wrap: signal(false)});
       nav.next(); // 0 -> 1
       nav.next(); // 1 -> 2
-      nav.next(); // 2 -> 2
-
-      expect(nav.inputs.activeIndex()).toBe(2);
+      nav.next(); // 2 -> 3
+      nav.next(); // 3 -> 4
+      nav.next(); // 4 -> 4
+      expect(nav.inputs.activeIndex()).toBe(4);
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(true),
-      });
-      nav.inputs.items()[1].disabled.set(true);
-
+      const nav = getNavigation({skipDisabled: signal(true)});
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
       nav.next(); // 0 -> 2
       expect(nav.inputs.activeIndex()).toBe(2);
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(false),
-      });
-      nav.inputs.items()[1].disabled.set(true);
-
+      const nav = getNavigation({skipDisabled: signal(false)});
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
       nav.next(); // 0 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
     it('should wrap and skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         wrap: signal(true),
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[2].disabled.set(true);
+      const items = nav.inputs.items() as TestItem[];
+      items[2].disabled.set(true);
+      items[3].disabled.set(true);
+      items[4].disabled.set(true);
 
       nav.next(); // 0 -> 1
       nav.next(); // 1 -> 0
@@ -115,18 +99,18 @@ describe('List Navigation', () => {
     });
 
     it('should do nothing if other items are disabled', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(true),
-      });
-      nav.inputs.items()[1].disabled.set(true);
-      nav.inputs.items()[2].disabled.set(true);
-
+      const nav = getNavigation({skipDisabled: signal(true)});
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
+      items[2].disabled.set(true);
+      items[3].disabled.set(true);
+      items[4].disabled.set(true);
       nav.next(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should do nothing if there are no other items to navigate to', () => {
-      const nav = getNavigation(getItems(1));
+      const nav = getNavigation({numItems: 1});
       nav.next(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
@@ -134,79 +118,73 @@ describe('List Navigation', () => {
 
   describe('#prev', () => {
     it('should navigate prev', () => {
-      const nav = getNavigation(getItems(3), {
-        activeIndex: signal(2),
-      });
+      const nav = getNavigation({activeIndex: signal(2)});
       nav.prev(); // 2 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
     it('should wrap', () => {
-      const nav = getNavigation(getItems(3), {
-        wrap: signal(true),
-      });
-      nav.prev(); // 0 -> 2
-      expect(nav.inputs.activeIndex()).toBe(2);
+      const nav = getNavigation({wrap: signal(true)});
+      nav.prev(); // 0 -> 4
+      expect(nav.inputs.activeIndex()).toBe(4);
     });
 
     it('should not wrap', () => {
-      const nav = getNavigation(getItems(3), {
-        wrap: signal(false),
-      });
+      const nav = getNavigation({wrap: signal(false)});
       nav.prev(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         activeIndex: signal(2),
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[1].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
       nav.prev(); // 2 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         activeIndex: signal(2),
         skipDisabled: signal(false),
       });
-      nav.inputs.items()[1].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
       nav.prev(); // 2 -> 1
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
     it('should wrap and skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         wrap: signal(true),
         activeIndex: signal(2),
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[0].disabled.set(true);
-
-      nav.prev(); // 2 -> 1
-      nav.prev(); // 1 -> 2
-
-      expect(nav.inputs.activeIndex()).toBe(2);
+      const items = nav.inputs.items() as TestItem[];
+      items[0].disabled.set(true);
+      items[1].disabled.set(true);
+      nav.prev(); // 2 -> 4
+      expect(nav.inputs.activeIndex()).toBe(4);
     });
 
     it('should do nothing if other items are disabled', () => {
-      const nav = getNavigation(getItems(3), {
-        activeIndex: signal(2),
+      const nav = getNavigation({
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[0].disabled.set(true);
-      nav.inputs.items()[1].disabled.set(true);
-
-      nav.prev(); // 2 -> 2
-      expect(nav.inputs.activeIndex()).toBe(2);
+      const items = nav.inputs.items() as TestItem[];
+      items[1].disabled.set(true);
+      items[2].disabled.set(true);
+      items[3].disabled.set(true);
+      items[4].disabled.set(true);
+      nav.prev(); // 0 -> 0
+      expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should do nothing if there are no other items to navigate to', () => {
-      const nav = getNavigation(getItems(1));
+      const nav = getNavigation({numItems: 1});
       nav.prev(); // 0 -> 0
       expect(nav.inputs.activeIndex()).toBe(0);
     });
@@ -214,32 +192,29 @@ describe('List Navigation', () => {
 
   describe('#first', () => {
     it('should navigate to the first item', () => {
-      const nav = getNavigation(getItems(3), {
-        activeIndex: signal(2),
-      });
-
+      const nav = getNavigation({activeIndex: signal(2)});
       nav.first();
       expect(nav.inputs.activeIndex()).toBe(0);
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         activeIndex: signal(2),
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[0].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[0].disabled.set(true);
       nav.first();
       expect(nav.inputs.activeIndex()).toBe(1);
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         activeIndex: signal(2),
         skipDisabled: signal(false),
       });
-      nav.inputs.items()[0].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[0].disabled.set(true);
       nav.first();
       expect(nav.inputs.activeIndex()).toBe(0);
     });
@@ -247,63 +222,29 @@ describe('List Navigation', () => {
 
   describe('#last', () => {
     it('should navigate to the last item', () => {
-      const nav = getNavigation(getItems(3));
+      const nav = getNavigation();
       nav.last();
-      expect(nav.inputs.activeIndex()).toBe(2);
+      expect(nav.inputs.activeIndex()).toBe(4);
     });
 
     it('should skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         skipDisabled: signal(true),
       });
-      nav.inputs.items()[2].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[4].disabled.set(true);
       nav.last();
-      expect(nav.inputs.activeIndex()).toBe(1);
+      expect(nav.inputs.activeIndex()).toBe(3);
     });
 
     it('should not skip disabled items', () => {
-      const nav = getNavigation(getItems(3), {
+      const nav = getNavigation({
         skipDisabled: signal(false),
       });
-      nav.inputs.items()[2].disabled.set(true);
-
+      const items = nav.inputs.items() as TestItem[];
+      items[4].disabled.set(true);
       nav.last();
-      expect(nav.inputs.activeIndex()).toBe(2);
-    });
-  });
-
-  describe('#isFocusable', () => {
-    it('should return true for enabled items', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(true),
-      });
-
-      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
-      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
-    });
-
-    it('should return false for disabled items', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(true),
-      });
-      nav.inputs.items()[1].disabled.set(true);
-
-      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(nav.isFocusable(nav.inputs.items()[1])).toBeFalse();
-      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
-    });
-
-    it('should return true for disabled items if skip disabled is false', () => {
-      const nav = getNavigation(getItems(3), {
-        skipDisabled: signal(false),
-      });
-      nav.inputs.items()[1].disabled.set(true);
-
-      expect(nav.isFocusable(nav.inputs.items()[0])).toBeTrue();
-      expect(nav.isFocusable(nav.inputs.items()[1])).toBeTrue();
-      expect(nav.isFocusable(nav.inputs.items()[2])).toBeTrue();
+      expect(nav.inputs.activeIndex()).toBe(4);
     });
   });
 });

@@ -28,9 +28,8 @@ interface SelectOptions {
 /** Represents the required inputs for a listbox. */
 export type ListboxInputs<V> = ListNavigationInputs<OptionPattern<V>> &
   ListSelectionInputs<OptionPattern<V>, V> &
-  ListTypeaheadInputs &
+  ListTypeaheadInputs<OptionPattern<V>> &
   ListFocusInputs<OptionPattern<V>> & {
-    disabled: SignalLike<boolean>;
     readonly: SignalLike<boolean>;
   };
 
@@ -52,7 +51,7 @@ export class ListboxPattern<V> {
   orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the listbox is disabled. */
-  disabled: SignalLike<boolean>;
+  disabled = computed(() => this.focusManager.isListDisabled());
 
   /** Whether the listbox is readonly. */
   readonly: SignalLike<boolean>;
@@ -224,18 +223,18 @@ export class ListboxPattern<V> {
   });
 
   constructor(readonly inputs: ListboxInputs<V>) {
-    this.disabled = inputs.disabled;
     this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
     this.multi = inputs.multi;
 
+    this.focusManager = new ListFocus(inputs);
+    this.selection = new ListSelection({...inputs, focusManager: this.focusManager});
+    this.typeahead = new ListTypeahead({...inputs, focusManager: this.focusManager});
     this.navigation = new ListNavigation({
       ...inputs,
+      focusManager: this.focusManager,
       wrap: computed(() => this.wrap() && this.inputs.wrap()),
     });
-    this.selection = new ListSelection({...inputs, navigation: this.navigation});
-    this.typeahead = new ListTypeahead({...inputs, navigation: this.navigation});
-    this.focusManager = new ListFocus({...inputs, navigation: this.navigation});
   }
 
   /** Handles keydown events for the listbox. */
@@ -300,7 +299,6 @@ export class ListboxPattern<V> {
     const moved = operation();
 
     if (moved) {
-      this.focusManager.focus();
       this._updateSelection(opts);
     }
 
