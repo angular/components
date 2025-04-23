@@ -114,6 +114,7 @@ export class CdkListbox<V> {
   host: {
     'role': 'option',
     'class': 'cdk-option',
+    '[class.cdk-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',

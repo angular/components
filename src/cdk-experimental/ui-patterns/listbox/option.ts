@@ -48,6 +48,9 @@ export class OptionPattern<V> {
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
+  /** Whether the option is active. */
+  active = computed(() => this.listbox()?.focusManager.activeItem() === this);
+
   /** Whether the option is selected. */
   selected = computed(() => this.listbox()?.selection.inputs.value().includes(this.value()));
 

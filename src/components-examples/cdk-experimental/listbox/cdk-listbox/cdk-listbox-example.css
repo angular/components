@@ -46,8 +46,8 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.example-option[aria-disabled='false']:hover,
-.example-option[tabindex='0'] {
+.example-option.cdk-active,
+.example-option[aria-disabled='false']:hover {
   outline: 1px solid var(--mat-sys-outline);
   background: var(--mat-sys-surface-container);
 }
@@ -61,8 +61,8 @@
   background-color: var(--mat-sys-secondary-container);
 }
 
-.example-option[aria-disabled='true']:focus-within,
-.example-option[aria-disabled='true'][tabindex='0'] {
+.example-option.cdk-active[aria-disabled='true'],
+.example-option[aria-disabled='true']:focus-within {
   outline: 2px solid var(--mat-sys-outline);
 }
 
