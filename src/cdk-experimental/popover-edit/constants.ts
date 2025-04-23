@@ -23,3 +23,6 @@ export const EDIT_PANE_CLASS = 'cdk-edit-pane';
 
 /** Selector for finding the edit lens pane. */
 export const EDIT_PANE_SELECTOR = `.${EDIT_PANE_CLASS}, .mat-edit-pane`;
+
+/** Selector for table rows that should be skipped when moving focus. */
+export const SKIP_ROW_FOCUS_SELECTOR = '.cdk-popover-edit-skip-focus, .mat-popover-edit-skip-focus';
