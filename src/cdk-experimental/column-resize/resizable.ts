@@ -23,7 +23,12 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal} from '@angular/cdk/portal';
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
 import {merge, Subject} from 'rxjs';
 import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
@@ -64,7 +69,6 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly eventDispatcher: HeaderRowEventDispatcher;
   protected abstract readonly injector: Injector;
   protected abstract readonly ngZone: NgZone;
-  protected abstract readonly overlay: Overlay;
   protected abstract readonly resizeNotifier: ColumnResizeNotifierSource;
   protected abstract readonly resizeStrategy: ResizeStrategy;
   protected abstract readonly styleScheduler: _CoalescedStyleScheduler;
@@ -72,6 +76,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly changeDetectorRef: ChangeDetectorRef;
 
   protected readonly columnSizeStore = inject(ColumnSizeStore, {optional: true});
+  private _injector = inject(Injector);
 
   private _viewInitialized = false;
   private _isDestroyed = false;
@@ -146,9 +151,10 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     // over both cells and extending it down the table as needed.
 
     const isRtl = this.directionality.value === 'rtl';
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.elementRef.nativeElement!)
+    const positionStrategy = createFlexibleConnectedPositionStrategy(
+      this._injector,
+      this.elementRef.nativeElement!,
+    )
       .withFlexibleDimensions(false)
       .withGrowAfterOpen(false)
       .withPush(false)
@@ -162,12 +168,12 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
         },
       ]);
 
-    return this.overlay.create({
+    return createOverlayRef(this._injector, {
       // Always position the overlay based on left-indexed coordinates.
       direction: 'ltr',
       disposeOnNavigation: true,
       positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      scrollStrategy: createRepositionScrollStrategy(this._injector),
       width: '16px',
     });
   }

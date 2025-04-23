@@ -18,7 +18,6 @@ import {
 } from '@angular/core';
 
 import {Directionality} from '@angular/cdk/bidi';
-import {Overlay} from '@angular/cdk/overlay';
 import {
   CdkColumnDef,
   _CoalescedStyleScheduler,
@@ -50,7 +49,6 @@ export class MatDefaultResizable extends AbstractMatResizable {
   protected readonly eventDispatcher = inject(HeaderRowEventDispatcher);
   protected readonly injector = inject(Injector);
   protected readonly ngZone = inject(NgZone);
-  protected readonly overlay = inject(Overlay);
   protected readonly resizeNotifier = inject(ColumnResizeNotifierSource);
   protected readonly resizeStrategy = inject(ResizeStrategy);
   protected readonly styleScheduler = inject<_CoalescedStyleScheduler>(_COALESCED_STYLE_SCHEDULER);
