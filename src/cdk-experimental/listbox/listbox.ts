@@ -111,14 +111,14 @@ export class CdkListbox<V> implements AfterViewInit {
   });
 
   /** Whether the listbox has received focus yet. */
-  private _touched = signal(false);
+  private _hasFocused = signal(false);
 
   /** Whether the options in the listbox have been initialized. */
   private _isViewInitialized = signal(false);
 
   constructor() {
     effect(() => {
-      if (this._isViewInitialized() && !this._touched()) {
+      if (this._isViewInitialized() && !this._hasFocused()) {
         this.pattern.setDefaultState();
       }
     });
@@ -129,7 +129,7 @@ export class CdkListbox<V> implements AfterViewInit {
   }
 
   onFocus() {
-    this._touched.set(true);
+    this._hasFocused.set(true);
   }
 }
 
