@@ -742,3 +742,10 @@ $_avatar-trailing-padding: 8px;
 .mat-mdc-chip-action:focus .mat-focus-indicator::before {
   content: '';
 }
+
+// Prevents icon from being cut off when text spacing is increased.
+// .mat-mdc-chip-remove selector necessary for remove button with icon.
+// Fixes b/250063405.
+.mdc-evolution-chip__icon, .mat-mdc-chip-remove .mat-icon {
+  min-height: fit-content;
+}
