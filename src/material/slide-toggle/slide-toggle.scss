@@ -405,13 +405,7 @@ $token-slots: m2-slide-toggle.get-token-slots();
     }
 
     .mdc-switch:hover & {
-      opacity: 0.04;
       transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
-    }
-
-    // Needs a little more specificity so the :hover styles don't override it.
-    .mat-mdc-slide-toggle.mat-mdc-slide-toggle-focused .mdc-switch & {
-      opacity: 0.12;
     }
 
     @include token-utils.use-tokens($token-prefix, $token-slots) {
@@ -420,10 +414,12 @@ $token-slots: m2-slide-toggle.get-token-slots();
       #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
       .mdc-switch--unselected:enabled:hover:not(:focus) & {
         background: token-utils.slot(unselected-hover-state-layer-color);
+        opacity: token-utils.slot(unselected-hover-state-layer-opacity);
       }
 
       .mdc-switch--unselected:enabled:focus & {
         background: token-utils.slot(unselected-focus-state-layer-color);
+        opacity: token-utils.slot(unselected-focus-state-layer-opacity);
       }
 
       .mdc-switch--unselected:enabled:active & {
@@ -434,10 +430,12 @@ $token-slots: m2-slide-toggle.get-token-slots();
 
       .mdc-switch--selected:enabled:hover:not(:focus) & {
         background: token-utils.slot(selected-hover-state-layer-color);
+        opacity: token-utils.slot(selected-hover-state-layer-opacity);
       }
 
       .mdc-switch--selected:enabled:focus & {
         background: token-utils.slot(selected-focus-state-layer-color);
+        opacity: token-utils.slot(selected-focus-state-layer-opacity);
       }
 
       .mdc-switch--selected:enabled:active & {
