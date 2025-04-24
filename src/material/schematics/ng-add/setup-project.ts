@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {chain, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {chain, noop, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {getProjectFromWorkspace, getProjectStyleFile} from '@angular/cdk/schematics';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {ProjectType} from '@schematics/angular/utility/workspace-models';
@@ -29,7 +29,7 @@ export default function (options: Schema): Rule {
         addThemeToAppStyles(options),
         addFontsToIndex(options),
         addMaterialAppStyles(options),
-        addTypographyClass(options),
+        options.typography ? addTypographyClass(options) : noop(),
       ]);
     }
     context.logger.warn(
