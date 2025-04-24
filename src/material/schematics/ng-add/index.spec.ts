@@ -1,4 +1,4 @@
-import {normalize, workspaces, logging} from '@angular-devkit/core';
+import {normalize, logging} from '@angular-devkit/core';
 import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
@@ -8,7 +8,7 @@ import {
   getProjectTargetOptions,
 } from '@angular/cdk/schematics';
 import {createTestApp, createTestLibrary, getFileContent} from '../../../cdk/schematics/testing';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace} from '@schematics/angular/utility';
 import {COLLECTION_PATH} from '../paths';
 import {addPackageToPackageJson} from './package-config';
 
@@ -39,7 +39,7 @@ describe('ng-add schematic', () => {
   });
 
   /** Expects the given file to be in the styles of the specified workspace project. */
-  function expectProjectStyleFile(project: workspaces.ProjectDefinition, filePath: string) {
+  function expectProjectStyleFile(project: ProjectDefinition, filePath: string) {
     expect(getProjectTargetOptions(project, 'build')['styles'])
       .withContext(`Expected "${filePath}" to be added to the project styles in the workspace.`)
       .toContain(filePath);
@@ -84,7 +84,7 @@ describe('ng-add schematic', () => {
 
   it('should add default theme', async () => {
     const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
     expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
@@ -99,7 +99,7 @@ describe('ng-add schematic', () => {
       {...baseOptions, theme: 'custom'},
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
     const expectedStylesPath = normalize(`/${project.root}/src/styles.scss`);
 
@@ -119,7 +119,7 @@ describe('ng-add schematic', () => {
       {...baseOptions, theme: 'custom'},
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
     const expectedStylesPath = normalize(`/${project.root}/src/custom-theme.scss`);
 
@@ -131,7 +131,7 @@ describe('ng-add schematic', () => {
 
   it('should add font links', async () => {
     const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
     const indexFiles = getProjectIndexFiles(project);
@@ -156,7 +156,7 @@ describe('ng-add schematic', () => {
 
   it('should add material app styles', async () => {
     const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
     const defaultStylesPath = getProjectStyleFile(project)!;
@@ -268,7 +268,7 @@ describe('ng-add schematic', () => {
       writeStyleFileToWorkspace(appTree, existingThemePath);
 
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
       const styles = getProjectTargetOptions(project, 'build')['styles'];
 
@@ -284,7 +284,7 @@ describe('ng-add schematic', () => {
       writeStyleFileToWorkspace(appTree, './projects/material/custom-theme.scss');
 
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
       const styles = getProjectTargetOptions(project, 'build')['styles'];
 
@@ -299,7 +299,7 @@ describe('ng-add schematic', () => {
       writeStyleFileToWorkspace(appTree, defaultPrebuiltThemePath);
 
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
       const styles = getProjectTargetOptions(project, 'build')['styles'];
 
@@ -332,7 +332,7 @@ describe('ng-add schematic', () => {
       },
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
     const indexFiles = getProjectIndexFiles(project);
@@ -363,7 +363,7 @@ describe('ng-add schematic', () => {
       },
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
     const indexFiles = getProjectIndexFiles(project);
     expect(indexFiles.length).toBe(1);
@@ -393,7 +393,7 @@ describe('ng-add schematic', () => {
       },
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
     const indexFiles = getProjectIndexFiles(project);
     expect(indexFiles.length).toBe(1);
@@ -423,7 +423,7 @@ describe('ng-add schematic', () => {
       },
       appTree,
     );
-    const workspace = await getWorkspace(tree);
+    const workspace = await readWorkspace(tree);
     const project = getProjectFromWorkspace(workspace, baseOptions.project);
     const indexFiles = getProjectIndexFiles(project);
     expect(indexFiles.length).toBe(1);
@@ -473,7 +473,7 @@ describe('ng-add schematic', () => {
 
     it('should add a theme', async () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
       expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
@@ -481,7 +481,7 @@ describe('ng-add schematic', () => {
 
     it('should add material app styles', async () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
       const defaultStylesPath = getProjectStyleFile(project)!;
@@ -533,7 +533,7 @@ describe('ng-add schematic', () => {
 
     it('should add a theme', async () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
       expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');
@@ -541,7 +541,7 @@ describe('ng-add schematic', () => {
 
     it('should add material app styles', async () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
       const defaultStylesPath = getProjectStyleFile(project)!;
@@ -584,7 +584,7 @@ describe('ng-add schematic', () => {
 
     it('should add a theme', async () => {
       const tree = await runner.runSchematic('ng-add-setup-project', baseOptions, appTree);
-      const workspace = await getWorkspace(tree);
+      const workspace = await readWorkspace(tree);
       const project = getProjectFromWorkspace(workspace, baseOptions.project);
 
       expectProjectStyleFile(project, '@angular/material/prebuilt-themes/azure-blue.css');

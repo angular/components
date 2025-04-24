@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {JsonValue, workspaces} from '@angular-devkit/core';
+import {JsonValue} from '@angular-devkit/core';
 import {SchematicsException} from '@angular-devkit/schematics';
+import {ProjectDefinition, TargetDefinition} from '@schematics/angular/utility';
 
 /** Possible names of CLI builders used to configure the project. */
 const PROJECT_BUILDERS = new Set([
@@ -22,7 +23,7 @@ const TEST_BUILDERS = new Set(['@angular-devkit/build-angular:karma', '@angular/
 
 /** Resolves the architect options for the build target of the given project. */
 export function getProjectTargetOptions(
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
   buildTarget: string,
 ): Record<string, JsonValue | undefined> {
   const options = project.targets?.get(buildTarget)?.options;
@@ -37,24 +38,20 @@ export function getProjectTargetOptions(
 }
 
 /** Gets all of the default CLI-provided build targets in a project. */
-export function getProjectBuildTargets(
-  project: workspaces.ProjectDefinition,
-): workspaces.TargetDefinition[] {
+export function getProjectBuildTargets(project: ProjectDefinition): TargetDefinition[] {
   return getTargetsByBuilderName(project, builder => !!builder && PROJECT_BUILDERS.has(builder));
 }
 
 /** Gets all of the default CLI-provided testing targets in a project. */
-export function getProjectTestTargets(
-  project: workspaces.ProjectDefinition,
-): workspaces.TargetDefinition[] {
+export function getProjectTestTargets(project: ProjectDefinition): TargetDefinition[] {
   return getTargetsByBuilderName(project, builder => !!builder && TEST_BUILDERS.has(builder));
 }
 
 /** Gets all targets from the given project that pass a predicate check. */
 function getTargetsByBuilderName(
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
   predicate: (name: string | undefined) => boolean,
-): workspaces.TargetDefinition[] {
+): TargetDefinition[] {
   return Array.from(project.targets.keys())
     .filter(name => predicate(project.targets.get(name)?.builder))
     .map(name => project.targets.get(name)!);

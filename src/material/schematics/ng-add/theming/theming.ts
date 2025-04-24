@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {normalize, logging, workspaces} from '@angular-devkit/core';
+import {normalize, logging} from '@angular-devkit/core';
 import {
   chain,
   noop,
@@ -25,7 +25,7 @@ import {
   getProjectBuildTargets,
 } from '@angular/cdk/schematics';
 import {InsertChange} from '@schematics/angular/utility/change';
-import {getWorkspace, updateWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace, updateWorkspace} from '@schematics/angular/utility';
 import {join} from 'path';
 import {Schema} from '../schema';
 import {createCustomTheme} from './create-custom-theme';
@@ -49,7 +49,7 @@ export function addThemeToAppStyles(options: Schema): Rule {
 /** Adds the global typography class to the body element. */
 export function addTypographyClass(options: Schema): Rule {
   return async (host: Tree) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const projectIndexFiles = getProjectIndexFiles(project);
 
@@ -70,7 +70,7 @@ async function insertCustomTheme(
   host: Tree,
   logger: logging.LoggerApi,
 ): Promise<Rule> {
-  const workspace = await getWorkspace(host);
+  const workspace = await readWorkspace(host);
   const project = getProjectFromWorkspace(workspace, projectName);
   const stylesPath = getProjectStyleFile(project, 'scss');
   const themeContent = createCustomTheme(projectName);
@@ -172,7 +172,7 @@ function addThemeStyleToTarget(
  * this function can either throw or just show a warning.
  */
 function validateDefaultTargetBuilder(
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
   targetName: 'build' | 'test',
   logger: logging.LoggerApi,
 ) {

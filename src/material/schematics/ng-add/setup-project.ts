@@ -8,7 +8,7 @@
 
 import {chain, noop, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {getProjectFromWorkspace, getProjectStyleFile} from '@angular/cdk/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {readWorkspace} from '@schematics/angular/utility';
 import {ProjectType} from '@schematics/angular/utility/workspace-models';
 import {addFontsToIndex} from './fonts/material-fonts';
 import {Schema} from './schema';
@@ -21,7 +21,7 @@ import {addThemeToAppStyles, addTypographyClass} from './theming/theming';
  */
 export default function (options: Schema): Rule {
   return async (host: Tree, context: SchematicContext) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
 
     if (project.extensions['projectType'] === ProjectType.Application) {
@@ -48,7 +48,7 @@ export default function (options: Schema): Rule {
  */
 function addMaterialAppStyles(options: Schema) {
   return async (host: Tree, context: SchematicContext) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const styleFilePath = getProjectStyleFile(project);
     const logger = context.logger;
