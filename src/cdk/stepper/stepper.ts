@@ -261,7 +261,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   protected readonly _destroyed = new Subject<void>();
 
   /** Used for managing keyboard focus. */
-  private _keyManager: FocusKeyManager<FocusableOption>;
+  private _keyManager: FocusKeyManager<FocusableOption> | undefined;
 
   /** Full list of steps inside the stepper, including inside nested steppers. */
   @ContentChildren(CdkStep, {descendants: true}) _steps: QueryList<CdkStep>;
@@ -384,9 +384,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
       .withHomeAndEnd()
       .withVerticalOrientation(this._orientation === 'vertical');
 
+    // The selected index may have changed between when the component was created and when the
+    // key manager was initialized. Use `updateActiveItem` so it's correct, but it doesn't steal
+    // away focus from the user.
+    this._keyManager.updateActiveItem(this.selectedIndex);
+
     (this._dir ? (this._dir.change as Observable<Direction>) : observableOf<Direction>())
       .pipe(startWith(this._layoutDirection()), takeUntil(this._destroyed))
-      .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
+      .subscribe(direction => this._keyManager?.withHorizontalOrientation(direction));
 
     this._keyManager.updateActiveItem(this._selectedIndex);
 
@@ -526,9 +531,11 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     // lost when the active step content is hidden. We can't be more granular with the check
     // (e.g. checking whether focus is inside the active step), because we don't have a
     // reference to the elements that are rendering out the content.
-    this._containsFocus()
-      ? this._keyManager.setActiveItem(newIndex)
-      : this._keyManager.updateActiveItem(newIndex);
+    if (this._keyManager) {
+      this._containsFocus()
+        ? this._keyManager.setActiveItem(newIndex)
+        : this._keyManager.updateActiveItem(newIndex);
+    }
 
     this._selectedIndex = newIndex;
     this.selectedIndexChange.emit(this._selectedIndex);
@@ -541,14 +548,14 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     const manager = this._keyManager;
 
     if (
-      manager.activeItemIndex != null &&
+      manager?.activeItemIndex != null &&
       !hasModifier &&
       (keyCode === SPACE || keyCode === ENTER)
     ) {
       this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
     } else {
-      manager.setFocusOrigin('keyboard').onKeydown(event);
+      manager?.setFocusOrigin('keyboard').onKeydown(event);
     }
   }
 
