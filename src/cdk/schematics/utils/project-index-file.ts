@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Path, workspaces} from '@angular-devkit/core';
+import {Path} from '@angular-devkit/core';
 import {getProjectBuildTargets} from './project-targets';
+import {ProjectDefinition} from '@schematics/angular/utility';
 
 /** Gets the path of the index file in the given project. */
-export function getProjectIndexFiles(project: workspaces.ProjectDefinition): Path[] {
+export function getProjectIndexFiles(project: ProjectDefinition): Path[] {
   const paths = getProjectBuildTargets(project)
     .filter(t => t.options?.['index'])
     .map(t => t.options!['index'] as Path);

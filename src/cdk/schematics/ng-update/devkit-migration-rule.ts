@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {workspaces} from '@angular-devkit/core';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {NodePackageInstallTask} from '@angular-devkit/schematics/tasks';
+import {ProjectDefinition} from '@schematics/angular/utility';
 
 import {UpdateProject} from '../update-tool';
 import {WorkspacePath} from '../update-tool/file-system';
@@ -141,7 +141,7 @@ export function createMigrationSchematicRule(
 
     /** Runs the migrations for the specified workspace project. */
     function runMigrations(
-      project: workspaces.ProjectDefinition,
+      project: ProjectDefinition,
       projectName: string,
       tsconfigPath: WorkspacePath,
       additionalStylesheetPaths: string[],

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {strings, template as interpolateTemplate, workspaces} from '@angular-devkit/core';
+import {template as interpolateTemplate} from '@angular-devkit/core';
 import {
   apply,
   applyTemplates,
@@ -18,13 +18,14 @@ import {
   noop,
   Rule,
   SchematicsException,
+  strings,
   Tree,
   url,
 } from '@angular-devkit/schematics';
 import {FileSystemSchematicContext} from '@angular-devkit/schematics/tools';
 import {Schema as ComponentOptions, Style} from '@schematics/angular/component/schema';
 import {InsertChange} from '@schematics/angular/utility/change';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace} from '@schematics/angular/utility';
 import {buildRelativePath, findModuleFromOptions} from '@schematics/angular/utility/find-module';
 import {parseName} from '@schematics/angular/utility/parse-name';
 import {validateHtmlSelector} from '@schematics/angular/utility/validation';
@@ -40,7 +41,7 @@ import {getDefaultComponentOptions, isStandaloneSchematic} from './schematic-opt
  * Build a default project path for generating.
  * @param project The project to build the path for.
  */
-function buildDefaultPath(project: workspaces.ProjectDefinition): string {
+function buildDefaultPath(project: ProjectDefinition): string {
   const root = project.sourceRoot ? `/${project.sourceRoot}/` : `/${project.root}/src/`;
 
   const projectDirName =
@@ -156,7 +157,7 @@ export function buildComponent(
 ): Rule {
   return async (host, ctx) => {
     const context = ctx as FileSystemSchematicContext;
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const defaultComponentOptions = getDefaultComponentOptions(project);
 

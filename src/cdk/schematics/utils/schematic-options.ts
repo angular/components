@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {isJsonObject, JsonObject, workspaces} from '@angular-devkit/core';
+import {isJsonObject, JsonObject} from '@angular-devkit/core';
 import {Schema, Style} from '@schematics/angular/component/schema';
 import {isStandaloneApp} from '@schematics/angular/utility/ng-ast-utils';
 import {getProjectMainFile} from './project-main-file';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {ProjectDefinition, readWorkspace} from '@schematics/angular/utility';
 import {getProjectFromWorkspace} from './get-project';
 import {Tree} from '@angular-devkit/schematics';
 
@@ -21,7 +21,7 @@ import {Tree} from '@angular-devkit/schematics';
  * This is necessary because the Angular CLI only exposes the default values for the "--style",
  * "--inlineStyle", "--skipTests" and "--inlineTemplate" options to the "component" schematic.
  */
-export function getDefaultComponentOptions(project: workspaces.ProjectDefinition): Partial<Schema> {
+export function getDefaultComponentOptions(project: ProjectDefinition): Partial<Schema> {
   // Note: Not all options which are available when running "ng new" will be stored in the
   // workspace config. List of options which will be available in the configuration:
   // angular/angular-cli/blob/main/packages/schematics/angular/application/index.ts#L109-L131
@@ -49,7 +49,7 @@ export async function isStandaloneSchematic(host: Tree, options: Schema): Promis
   }
 
   // If the `--standalone` flag isn't passed and there isn't a default, infer based on the project.
-  const workspace = await getWorkspace(host);
+  const workspace = await readWorkspace(host);
   const project = getProjectFromWorkspace(workspace, options.project);
 
   // Legacy projects might not have a `build` target, but they're likely
@@ -67,7 +67,7 @@ export async function isStandaloneSchematic(host: Tree, options: Schema): Promis
  * CLI workspace configuration.
  */
 function getDefaultComponentOption<T>(
-  project: workspaces.ProjectDefinition,
+  project: ProjectDefinition,
   optionNames: string[],
   fallbackValue: T,
 ): T {

@@ -12,13 +12,13 @@ import {
   getProjectFromWorkspace,
   getProjectIndexFiles,
 } from '@angular/cdk/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import {readWorkspace} from '@schematics/angular/utility';
 import {Schema} from '../schema';
 
 /** Adds the Material Design fonts to the index HTML file. */
 export function addFontsToIndex(options: Schema): Rule {
   return async (host: Tree) => {
-    const workspace = await getWorkspace(host);
+    const workspace = await readWorkspace(host);
     const project = getProjectFromWorkspace(workspace, options.project);
     const projectIndexFiles = getProjectIndexFiles(project);
 

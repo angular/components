@@ -7,7 +7,7 @@
  */
 
 import {SchematicContext, Tree} from '@angular-devkit/schematics';
-import {workspaces} from '@angular-devkit/core';
+import {ProjectDefinition} from '@schematics/angular/utility';
 import {Constructor, Migration, PostMigrationAction} from '../update-tool/migration';
 import {TargetVersion} from '../update-tool/target-version';
 
@@ -17,7 +17,7 @@ export type DevkitContext = {
   /** Name of the project the migrations run against. */
   projectName: string;
   /** Workspace project the migrations run against. */
-  project: workspaces.ProjectDefinition;
+  project: ProjectDefinition;
   /** Whether the migrations run for a test target. */
   isTestTarget: boolean;
 };
