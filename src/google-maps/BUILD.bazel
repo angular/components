@@ -14,6 +14,15 @@ rules_js_tsconfig(
     ],
 )
 
+rules_js_tsconfig(
+    name = "tsconfig",
+    src = "tsconfig-build.json",
+    deps = [
+        "//:node_modules/@types/google.maps",
+        "//src:build-tsconfig",
+    ],
+)
+
 ng_project(
     name = "google-maps",
     srcs = glob(
@@ -22,6 +31,7 @@ ng_project(
             "**/*.spec.ts",
         ],
     ),
+    tsconfig = ":tsconfig",
     deps = [
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
