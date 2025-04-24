@@ -1,6 +1,5 @@
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("//tools:defaults.bzl", "jasmine_test", "sass_binary", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 

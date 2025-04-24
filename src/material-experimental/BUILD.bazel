@@ -4,8 +4,7 @@ load(
     "MATERIAL_EXPERIMENTAL_TARGETS",
     "MATERIAL_EXPERIMENTAL_TESTING_TARGETS",
 )
-load("//tools:defaults.bzl", "ng_package", "sass_library")
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 package(default_visibility = ["//visibility:public"])
