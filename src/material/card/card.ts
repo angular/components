@@ -16,7 +16,7 @@ import {
   inject,
 } from '@angular/core';
 
-export type MatCardAppearance = 'outlined' | 'raised';
+export type MatCardAppearance = 'outlined' | 'raised' | 'filled';
 
 /** Object that can be used to configure the default options for the card module. */
 export interface MatCardConfig {
@@ -41,6 +41,8 @@ export const MAT_CARD_CONFIG = new InjectionToken<MatCardConfig>('MAT_CARD_CONFI
     'class': 'mat-mdc-card mdc-card',
     '[class.mat-mdc-card-outlined]': 'appearance === "outlined"',
     '[class.mdc-card--outlined]': 'appearance === "outlined"',
+    '[class.mat-mdc-card-filled]': 'appearance === "filled"',
+    '[class.mdc-card--filled]': 'appearance === "filled"',
   },
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,

@@ -32,7 +32,7 @@ export class MatCardActions {
 }
 
 // @public (undocumented)
-export type MatCardAppearance = 'outlined' | 'raised';
+export type MatCardAppearance = 'outlined' | 'raised' | 'filled';
 
 // @public
 export class MatCardAvatar {
