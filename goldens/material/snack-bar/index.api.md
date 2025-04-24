@@ -104,6 +104,8 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     // @deprecated
     attachDomPortal: (portal: DomPortal) => void;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
+    // (undocumented)
+    readonly _elementRef: ElementRef<HTMLElement>;
     enter(): void;
     exit(): Observable<void>;
     _label: ElementRef;

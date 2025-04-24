@@ -41,6 +41,7 @@ import {
   forwardRef,
   inject,
 } from '@angular/core';
+import {coerceArray} from '@angular/cdk/coercion';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   MatOption,
@@ -207,6 +208,9 @@ export class MatAutocompleteTrigger
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
+
+  /** Classes to apply to the panel. Exposed as a public property for internal usage. */
+  readonly _overlayPanelClass = coerceArray(this._defaults?.overlayPanelClass || []);
 
   /**
    * Event handler for when the window is blurred. Needs to be an
@@ -905,7 +909,7 @@ export class MatAutocompleteTrigger
       direction: this._dir ?? undefined,
       hasBackdrop: this._defaults?.hasBackdrop,
       backdropClass: this._defaults?.backdropClass,
-      panelClass: this._defaults?.overlayPanelClass,
+      panelClass: this._overlayPanelClass,
       disableAnimations: this._animationsDisabled,
     });
   }
