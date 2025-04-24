@@ -2,10 +2,46 @@ import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {COLLECTION_PATH} from '../paths';
 import {createTestApp, getFileContent} from '../testing';
-import {addPackageToPackageJson} from './package-config';
 
 interface PackageJson {
   dependencies: Record<string, string>;
+}
+
+/**
+ * Sorts the keys of the given object.
+ * @returns A new object instance with sorted keys
+ */
+function sortObjectByKeys(obj: Record<string, string>) {
+  return Object.keys(obj)
+    .sort()
+    .reduce(
+      (result, key) => {
+        result[key] = obj[key];
+        return result;
+      },
+      {} as Record<string, string>,
+    );
+}
+
+/** Adds a package to the package.json in the given host tree. */
+export function addPackageToPackageJson(host: Tree, pkg: string, version: string): Tree {
+  if (host.exists('package.json')) {
+    const sourceText = host.read('package.json')!.toString('utf-8');
+    const json = JSON.parse(sourceText) as PackageJson;
+
+    if (!json.dependencies) {
+      json.dependencies = {};
+    }
+
+    if (!json.dependencies[pkg]) {
+      json.dependencies[pkg] = version;
+      json.dependencies = sortObjectByKeys(json.dependencies);
+    }
+
+    host.overwrite('package.json', JSON.stringify(json, null, 2));
+  }
+
+  return host;
 }
 
 describe('CDK ng-add', () => {
