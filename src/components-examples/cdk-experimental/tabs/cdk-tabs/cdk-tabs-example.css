@@ -25,7 +25,6 @@
   list-style: none;
   flex-direction: row;
   justify-content: center;
-  overflow: scroll;
 }
 
 .example-tablist[aria-orientation='vertical'] {
@@ -43,6 +42,11 @@
   display: block;
 }
 
+.example-tablist[aria-disabled='true'] {
+  background-color: var(--mat-sys-surface-dim);
+  pointer-events: none;
+}
+
 .example-tab {
   gap: 16px;
   padding: 16px;
@@ -52,8 +56,8 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.example-tab:hover,
-.example-tab[tabindex='0'] {
+.example-tablist:focus-within .example-tab:hover,
+.example-tablist:focus-within .example-tab.cdk-active {
   outline: 1px solid var(--mat-sys-outline);
   background: var(--mat-sys-surface-container);
 }
@@ -65,6 +69,11 @@
 
 .example-tab[aria-selected='true'] {
   background-color: var(--mat-sys-secondary-container);
+}
+
+.example-tab[aria-disabled='true'] {
+  background-color: var(--mat-sys-surface-dim);
+  pointer-events: none;
 }
 
 .example-tabpanel {

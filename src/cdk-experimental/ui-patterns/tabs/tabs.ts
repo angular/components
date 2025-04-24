@@ -37,6 +37,9 @@ export class TabPattern {
   /** A local unique identifier for the tab. */
   value: SignalLike<string>;
 
+  /** Whether the tab is active. */
+  active = computed(() => this.tablist()?.focusManager.activeItem() === this);
+
   /** Whether the tab is selected. */
   selected = computed(() => this.tablist().selection.inputs.value().includes(this.value()));
 

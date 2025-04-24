@@ -137,6 +137,7 @@ export class CdkTabList {
   host: {
     'role': 'tab',
     'class': 'cdk-tab',
+    '[class.cdk-active]': 'pattern.active()',
     '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
