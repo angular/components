@@ -197,6 +197,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     _onTouched: () => void;
     openPanel(): void;
     readonly optionSelections: Observable<MatOptionSelectionChange>;
+    readonly _overlayPanelClass: string[];
     get panelClosingActions(): Observable<MatOptionSelectionChange | null>;
     get panelOpen(): boolean;
     position: 'auto' | 'above' | 'below';

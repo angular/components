@@ -72,6 +72,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     // (undocumented)
+    _overlayPanelClass: string[] | undefined;
+    // (undocumented)
     _overlayRef: OverlayRef | null;
     get position(): TooltipPosition;
     set position(value: TooltipPosition);

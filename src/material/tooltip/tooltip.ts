@@ -215,6 +215,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
+  _overlayPanelClass: string[] | undefined; // Used for styling internally.
 
   private _portal: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
@@ -525,6 +526,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       .getAncestorScrollContainers(this._elementRef);
 
     const overlay = this._injector.get(Overlay);
+    const panelClass = `${this._cssClassPrefix}-${PANEL_CLASS}`;
 
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = overlay
@@ -550,7 +552,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._overlayRef = overlay.create({
       direction: this._dir,
       positionStrategy: strategy,
-      panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
+      panelClass: this._overlayPanelClass ? [...this._overlayPanelClass, panelClass] : panelClass,
       scrollStrategy: this._injector.get(MAT_TOOLTIP_SCROLL_STRATEGY)(),
       disableAnimations: this._animationsDisabled,
     });
