@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_project")
 load("//integration/module-tests:index.bzl", "module_test")
 
 ts_project(

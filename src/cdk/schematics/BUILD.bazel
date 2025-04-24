@@ -1,5 +1,5 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("//tools:defaults2.bzl", "jasmine_test", "npm_package", "ts_project")
+load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = [":__subpackages__"])

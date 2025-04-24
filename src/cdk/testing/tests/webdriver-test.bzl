@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "jasmine_test", "spec_bundle")
+load("//tools:defaults.bzl", "jasmine_test", "spec_bundle")
 load("@rules_browsers//src/server_test:index.bzl", "server_test")
 
 def webdriver_test(name, deps, tags = [], **kwargs):
