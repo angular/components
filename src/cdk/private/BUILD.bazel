@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "markdown_to_html", "sass_binary")
-load("//tools:defaults2.bzl", "ng_project")
+load("//tools:defaults.bzl", "markdown_to_html", "ng_project", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 

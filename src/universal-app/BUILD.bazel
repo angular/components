@@ -1,7 +1,6 @@
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
-load("//tools:defaults.bzl", "sass_binary")
-load("//tools:defaults2.bzl", "http_server", "ng_project", "protractor_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "http_server", "ng_project", "protractor_web_test_suite", "sass_binary", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
