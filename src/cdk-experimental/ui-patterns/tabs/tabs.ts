@@ -137,6 +137,7 @@ export class TabListPattern {
   /** The id of the current active tab. */
   activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
+  /** Whether selection should follow focus. */
   followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** The key used to navigate to the previous tab in the tablist. */
@@ -157,33 +158,20 @@ export class TabListPattern {
 
   /** The keydown event manager for the tablist. */
   keydown = computed(() => {
-    const manager = new KeyboardEventManager();
-
-    if (this.followFocus()) {
-      manager
-        .on(this.prevKey, () => this.prev({selectOne: true}))
-        .on(this.nextKey, () => this.next({selectOne: true}))
-        .on('Home', () => this.first({selectOne: true}))
-        .on('End', () => this.last({selectOne: true}));
-    } else {
-      manager
-        .on(this.prevKey, () => this.prev())
-        .on(this.nextKey, () => this.next())
-        .on('Home', () => this.first())
-        .on('End', () => this.last())
-        .on(' ', () => this._updateSelection({selectOne: true}))
-        .on('Enter', () => this._updateSelection({selectOne: true}));
-    }
+    const manager = new KeyboardEventManager()
+      .on(this.prevKey, () => this.prev({selectOne: this.followFocus()}))
+      .on(this.nextKey, () => this.next({selectOne: this.followFocus()}))
+      .on('Home', () => this.first({selectOne: this.followFocus()}))
+      .on('End', () => this.last({selectOne: this.followFocus()}))
+      .on(' ', () => this.selection.selectOne())
+      .on('Enter', () => this.selection.selectOne());
 
     return manager;
   });
 
   /** The pointerdown event manager for the tablist. */
   pointerdown = computed(() => {
-    const manager = new PointerEventManager();
-    manager.on(e => this.goto(e, {selectOne: true}));
-
-    return manager;
+    return new PointerEventManager().on(e => this.goto(e, {selectOne: true}));
   });
 
   constructor(readonly inputs: TabListInputs) {
