@@ -458,15 +458,16 @@ $token-slots: m2-form-field.get-token-slots();
     }
 
     .mdc-notched-outline__notch {
+      $min-value: 'calc(100% - max(12px, #{token-utils.slot(outlined-container-shape)}) * 2)';
       flex: 0 0 auto;
       width: auto;
 
       .mdc-text-field--outlined .mdc-notched-outline & {
-        $shape-var: token-utils.slot(outlined-container-shape);
-        max-width: min(
-          var(--mat-form-field-notch-max-width, 100%),
-          calc(100% - max(12px, #{$shape-var}) * 2)
-        );
+        max-width: min(var(--mat-form-field-notch-max-width, 100%), #{$min-value});
+      }
+
+      .mdc-text-field--outlined .mdc-notched-outline--notched & {
+        max-width: min(100%, #{$min-value});
       }
 
       .mdc-text-field--outlined .mdc-notched-outline--notched & {
@@ -481,7 +482,6 @@ $token-slots: m2-form-field.get-token-slots();
         padding-left: 0;
         padding-right: 8px;
         border-top: none;
-        --mat-form-field-notch-max-width: 100%;
       }
 
       [dir='rtl'] .mdc-notched-outline--notched & {
