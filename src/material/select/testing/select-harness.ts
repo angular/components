@@ -12,8 +12,8 @@ import {
   MatOptgroupHarness,
   OptionHarnessFilters,
   OptgroupHarnessFilters,
-} from '../../core/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+} from '@angular/material/core/testing';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {SelectHarnessFilters} from './select-harness-filters';
 
 /** Harness for interacting with a mat-select in tests. */
@@ -34,13 +34,13 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
     this: ComponentHarnessConstructor<T>,
     options: SelectHarnessFilters = {},
   ): HarnessPredicate<T> {
-    return new HarnessPredicate(this, options).addOption(
-      'disabled',
-      options.disabled,
-      async (harness, disabled) => {
+    return new HarnessPredicate(this, options)
+      .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
-      },
-    );
+      })
+      .addOption('label', options.label, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getLabel(), label);
+      });
   }
 
   /** Gets a boolean promise indicating if the select is disabled. */
@@ -72,6 +72,11 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
   async getValueText(): Promise<string> {
     const value = await this.locatorFor(`.${this._prefix}-select-value`)();
     return value.text();
+  }
+
+  /** Gets the floating label text for the select, if it exists. */
+  async getLabel(): Promise<string | null> {
+    return await this._getFloatingLabelText();
   }
 
   /** Focuses the select and returns a void promise that indicates when the action is complete. */

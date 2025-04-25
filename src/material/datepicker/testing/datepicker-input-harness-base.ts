@@ -7,7 +7,7 @@
  */
 
 import {ComponentHarnessConstructor, HarnessPredicate} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
 import {DatepickerInputHarnessFilters} from './datepicker-harness-filters';
 
 /** Sets up the filter predicates for a datepicker input harness. */
@@ -21,6 +21,9 @@ export function getInputPredicate<T extends MatDatepickerInputHarnessBase>(
     })
     .addOption('placeholder', options.placeholder, (harness, placeholder) => {
       return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
+    })
+    .addOption('label', options.label, (harness, label) => {
+      return HarnessPredicate.stringMatches(harness.getLabel(), label);
     });
 }
 
@@ -34,6 +37,11 @@ export abstract class MatDatepickerInputHarnessBase extends MatFormFieldControlH
   /** Whether the input is required. */
   async isRequired(): Promise<boolean> {
     return (await this.host()).getProperty<boolean>('required');
+  }
+
+  /** Gets the floating label text for the input, if it exists. */
+  async getLabel(): Promise<string | null> {
+    return await this._getFloatingLabelText();
   }
 
   /** Gets the value of the input. */

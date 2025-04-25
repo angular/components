@@ -25,7 +25,13 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: NativeSelectHarnessFilters = {}): HarnessPredicate<MatNativeSelectHarness> {
-    return new HarnessPredicate(MatNativeSelectHarness, options);
+    return new HarnessPredicate(MatNativeSelectHarness, options).addOption(
+      'label',
+      options.label,
+      (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getLabel(), label);
+      },
+    );
   }
 
   /** Gets a boolean promise indicating if the select is disabled. */
@@ -53,6 +59,11 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
   async getId(): Promise<string> {
     // We're guaranteed to have an id, because the `matNativeControl` always assigns one.
     return await (await this.host()).getProperty<string>('id');
+  }
+
+  /** Gets the floating label text for the input, if it exists. */
+  async getLabel(): Promise<string | null> {
+    return await this._getFloatingLabelText();
   }
 
   /** Focuses the select and returns a void promise that indicates when the action is complete. */
