@@ -39,7 +39,6 @@ export class MatRecycleRows {}
   exportAs: 'matTable',
   // Note that according to MDN, the `caption` element has to be projected as the **first**
   // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
-  // We can't reuse `CDK_TABLE_TEMPLATE` because it's incompatible with local compilation mode.
   template: `
     <ng-content select="caption"/>
     <ng-content select="colgroup, col"/>

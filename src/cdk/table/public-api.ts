@@ -11,9 +11,7 @@ export * from './cell';
 export * from './coalesced-style-scheduler';
 export * from './row';
 export * from './table-module';
-export * from './sticky-styler';
 export * from './sticky-position-listener';
-export * from './can-stick';
 export * from './text-column';
 export * from './tokens';
 

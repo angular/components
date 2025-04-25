@@ -185,45 +185,6 @@ export class NoDataRowOutlet implements RowOutlet {
 }
 
 /**
- * The table template that can be used by the mat-table. Should not be used outside of the
- * material library.
- * @docs-private
- */
-export const CDK_TABLE_TEMPLATE =
-  // Note that according to MDN, the `caption` element has to be projected as the **first**
-  // element in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
-  `
-  <ng-content select="caption"/>
-  <ng-content select="colgroup, col"/>
-
-  <!--
-    Unprojected content throws a hydration error so we need this to capture it.
-    It gets removed on the client so it doesn't affect the layout.
-  -->
-  @if (_isServer) {
-    <ng-content/>
-  }
-
-  @if (_isNativeHtmlTable) {
-    <thead role="rowgroup">
-      <ng-container headerRowOutlet/>
-    </thead>
-    <tbody role="rowgroup">
-      <ng-container rowOutlet/>
-      <ng-container noDataRowOutlet/>
-    </tbody>
-    <tfoot role="rowgroup">
-      <ng-container footerRowOutlet/>
-    </tfoot>
-  } @else {
-    <ng-container headerRowOutlet/>
-    <ng-container rowOutlet/>
-    <ng-container noDataRowOutlet/>
-    <ng-container footerRowOutlet/>
-  }
-`;
-
-/**
  * Interface used to conveniently type the possible context interfaces for the render row.
  * @docs-private
  */
@@ -265,7 +226,36 @@ export interface RenderRow<T> {
 @Component({
   selector: 'cdk-table, table[cdk-table]',
   exportAs: 'cdkTable',
-  template: CDK_TABLE_TEMPLATE,
+  template: `
+    <ng-content select="caption"/>
+    <ng-content select="colgroup, col"/>
+
+    <!--
+      Unprojected content throws a hydration error so we need this to capture it.
+      It gets removed on the client so it doesn't affect the layout.
+    -->
+    @if (_isServer) {
+      <ng-content/>
+    }
+
+    @if (_isNativeHtmlTable) {
+      <thead role="rowgroup">
+        <ng-container headerRowOutlet/>
+      </thead>
+      <tbody role="rowgroup">
+        <ng-container rowOutlet/>
+        <ng-container noDataRowOutlet/>
+      </tbody>
+      <tfoot role="rowgroup">
+        <ng-container footerRowOutlet/>
+      </tfoot>
+    } @else {
+      <ng-container headerRowOutlet/>
+      <ng-container rowOutlet/>
+      <ng-container noDataRowOutlet/>
+      <ng-container footerRowOutlet/>
+    }
+  `,
   styleUrl: 'table.css',
   host: {
     'class': 'cdk-table',
