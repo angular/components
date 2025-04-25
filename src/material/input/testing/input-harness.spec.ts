@@ -39,6 +39,11 @@ describe('MatInputHarness', () => {
     expect(inputs.length).toBe(1);
   });
 
+  it('should load input with a specific label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Favorite food'}));
+    expect(inputs.length).toBe(1);
+  });
+
   it('should load input with a value that matches a regex', async () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness.with({value: /shi$/}));
     expect(inputs.length).toBe(1);
@@ -231,6 +236,7 @@ describe('MatInputHarness', () => {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>Favorite food</mat-label>
       <input matInput placeholder="Favorite food" value="Sushi" name="favorite-food">
     </mat-form-field>
 

@@ -7,9 +7,10 @@
  */
 
 import {BaseHarnessFilters} from '@angular/cdk/testing';
+import {MatFormFieldControlHarnessFilters} from '@angular/material/form-field/testing/control';
 
 /** A set of criteria that can be used to filter a list of `MatNativeSelectHarness` instances. */
-export interface NativeSelectHarnessFilters extends BaseHarnessFilters {}
+export interface NativeSelectHarnessFilters extends MatFormFieldControlHarnessFilters {}
 
 /** A set of criteria that can be used to filter a list of `MatNativeOptionHarness` instances. */
 export interface NativeOptionHarnessFilters extends BaseHarnessFilters {

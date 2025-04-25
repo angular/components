@@ -11,6 +11,7 @@ import {
   MatEndDate,
   MatStartDate,
 } from '../../datepicker';
+import {MatFormFieldModule} from '../../form-field';
 import {MatCalendarHarness} from './calendar-harness';
 import {
   MatDateRangeInputHarness,
@@ -34,7 +35,14 @@ describe('matDateRangeInputHarness', () => {
 
   it('should load all date range input harnesses', async () => {
     const inputs = await loader.getAllHarnesses(MatDateRangeInputHarness);
-    expect(inputs.length).toBe(2);
+    expect(inputs.length).toBe(3);
+  });
+
+  it('should load date range input with a specific label', async () => {
+    const inputs = await loader.getAllHarnesses(
+      MatDateRangeInputHarness.with({label: 'Date range'}),
+    );
+    expect(inputs.length).toBe(1);
   });
 
   it('should get whether the input is disabled', async () => {
@@ -261,6 +269,14 @@ describe('matDateRangeInputHarness', () => {
       <input matStartDate>
       <input matEndDate>
     </mat-date-range-input>
+
+    <mat-form-field>
+      <mat-label>Date range</mat-label>
+      <mat-date-range-input basic>
+      <input matStartDate>
+      <input matEndDate>
+    </mat-date-range-input>
+    </mat-form-field>
   `,
   imports: [
     MatNativeDateModule,
@@ -268,6 +284,7 @@ describe('matDateRangeInputHarness', () => {
     MatStartDate,
     MatEndDate,
     MatDateRangePicker,
+    MatFormFieldModule,
     FormsModule,
   ],
 })
