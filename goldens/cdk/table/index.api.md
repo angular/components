@@ -13,7 +13,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
-import { Injector } from '@angular/core';
 import { IterableChangeRecord } from '@angular/core';
 import { IterableChanges } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
@@ -57,20 +56,10 @@ export abstract class BaseRowDef implements OnChanges {
 }
 
 // @public
-export interface CanStick {
-    hasStickyChanged(): boolean;
-    resetStickyChanged(): void;
-    sticky: boolean;
-}
-
-// @public
 export const CDK_ROW_TEMPLATE = "<ng-container cdkCellOutlet></ng-container>";
 
 // @public
 export const CDK_TABLE: InjectionToken<any>;
-
-// @public
-export const CDK_TABLE_TEMPLATE = "\n  <ng-content select=\"caption\"/>\n  <ng-content select=\"colgroup, col\"/>\n\n  <!--\n    Unprojected content throws a hydration error so we need this to capture it.\n    It gets removed on the client so it doesn't affect the layout.\n  -->\n  @if (_isServer) {\n    <ng-content/>\n  }\n\n  @if (_isNativeHtmlTable) {\n    <thead role=\"rowgroup\">\n      <ng-container headerRowOutlet/>\n    </thead>\n    <tbody role=\"rowgroup\">\n      <ng-container rowOutlet/>\n      <ng-container noDataRowOutlet/>\n    </tbody>\n    <tfoot role=\"rowgroup\">\n      <ng-container footerRowOutlet/>\n    </tfoot>\n  } @else {\n    <ng-container headerRowOutlet/>\n    <ng-container rowOutlet/>\n    <ng-container noDataRowOutlet/>\n    <ng-container footerRowOutlet/>\n  }\n";
 
 // @public
 export class CdkCell extends BaseCdkCell {
@@ -526,13 +515,7 @@ export class _Schedule {
 }
 
 // @public
-export const STICKY_DIRECTIONS: StickyDirection[];
-
-// @public
 export const STICKY_POSITIONING_LISTENER: InjectionToken<StickyPositioningListener>;
-
-// @public
-export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
 // @public (undocumented)
 export type StickyOffset = number | null | undefined;
@@ -547,24 +530,6 @@ export interface StickyPositioningListener {
 
 // @public (undocumented)
 export type StickySize = number | null | undefined;
-
-// @public
-export class StickyStyler {
-    constructor(_isNativeHtmlTable: boolean, _stickCellCss: string, direction: Direction, _coalescedStyleScheduler: _CoalescedStyleScheduler, _isBrowser?: boolean, _needsPositionStickyOnElement?: boolean, _positionListener?: StickyPositioningListener | undefined, _tableInjector?: Injector | undefined);
-    _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number, isBorderElement: boolean): void;
-    clearStickyPositioning(rows: HTMLElement[], stickyDirections: StickyDirection[]): void;
-    destroy(): void;
-    // (undocumented)
-    direction: Direction;
-    _getCalculatedZIndex(element: HTMLElement): string;
-    _getCellWidths(row: HTMLElement, recalculateCellWidths?: boolean): number[];
-    _getStickyEndColumnPositions(widths: number[], stickyStates: boolean[]): number[];
-    _getStickyStartColumnPositions(widths: number[], stickyStates: boolean[]): number[];
-    _removeStickyStyle(element: HTMLElement, stickyDirections: StickyDirection[]): void;
-    stickRows(rowsToStick: HTMLElement[], stickyStates: boolean[], position: 'top' | 'bottom'): void;
-    updateStickyColumns(rows: HTMLElement[], stickyStartStates: boolean[], stickyEndStates: boolean[], recalculateCellWidths?: boolean, replay?: boolean): void;
-    updateStickyFooterContainer(tableElement: Element, stickyStates: boolean[]): void;
-}
 
 // @public (undocumented)
 export interface StickyUpdate {
