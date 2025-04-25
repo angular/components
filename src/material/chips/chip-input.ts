@@ -23,6 +23,7 @@ import {MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 /** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
@@ -65,8 +66,22 @@ export interface MatChipInputEvent {
     '[attr.readonly]': '_getReadonlyAttribute()',
     '[attr.required]': '_chipGrid && _chipGrid.required || null',
   },
+  providers: [
+    {
+      // Note: we primarily provide the chip input as a CVA in order to have full control over
+      // how some attributes like `disabled` are set. This is necessary to properly support
+      // `disabledInteractive`.
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MatChipInput,
+      multi: true,
+    },
+  ],
 })
-export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
+export class MatChipInput
+  implements MatChipTextControl, ControlValueAccessor, OnChanges, OnDestroy
+{
+  private _onTouched: (() => void) | undefined;
+  private _onChange: ((value: any) => void) | undefined;
   protected _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
   /** Whether the control is focused. */
@@ -112,7 +127,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Whether the input is disabled. */
   @Input({transform: booleanAttribute})
   get disabled(): boolean {
-    return this._disabled || (this._chipGrid && this._chipGrid.disabled);
+    return this._disabled || !!this._chipGrid?.disabled;
   }
   set disabled(value: boolean) {
     this._disabled = value;
@@ -134,8 +149,6 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
   /** The native input element to which this directive is attached. */
   readonly inputElement!: HTMLInputElement;
-
-  constructor(...args: unknown[]);
 
   constructor() {
     const defaultOptions = inject<MatChipsDefaultOptions>(MAT_CHIPS_DEFAULT_OPTIONS);
@@ -182,6 +195,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     if (!this._chipGrid.focused) {
       this._chipGrid._blur();
     }
+    this._onTouched?.();
     this._chipGrid.stateChanges.next();
   }
 
@@ -206,6 +220,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   _onInput() {
     // Let chip list know whenever the value changes.
     this._chipGrid.stateChanges.next();
+    this._onChange?.(this.inputElement.value);
   }
 
   /** Focuses the input. */
@@ -216,6 +231,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
   /** Clears the input */
   clear(): void {
     this.inputElement.value = '';
+    this._onChange?.('');
   }
 
   /**
@@ -239,6 +255,38 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     } else {
       element.removeAttribute('aria-describedby');
     }
+  }
+
+  /**
+   * Implemented as a part of ControlValueAccessor.
+   * @docs-private
+   */
+  writeValue(value: any): void {
+    this.inputElement.value = value;
+  }
+
+  /**
+   * Implemented as a part of ControlValueAccessor.
+   * @docs-private
+   */
+  registerOnChange(fn: any): void {
+    this._onChange = fn;
+  }
+
+  /**
+   * Implemented as a part of ControlValueAccessor.
+   * @docs-private
+   */
+  registerOnTouched(fn: () => void): void {
+    this._onTouched = fn;
+  }
+
+  /**
+   * Implemented as a part of ControlValueAccessor.
+   * @docs-private
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   /** Checks whether a keycode is one of the configured separators. */

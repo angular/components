@@ -241,8 +241,8 @@ export class MatChipGridChange {
 }
 
 // @public
-export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
-    constructor(...args: unknown[]);
+export class MatChipInput implements MatChipTextControl, ControlValueAccessor, OnChanges, OnDestroy {
+    constructor();
     addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
@@ -283,9 +283,13 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
     _onInput(): void;
     placeholder: string;
     readonly: boolean;
+    registerOnChange(fn: any): void;
+    registerOnTouched(fn: () => void): void;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
     // (undocumented)
     setDescribedByIds(ids: string[]): void;
+    setDisabledState(isDisabled: boolean): void;
+    writeValue(value: any): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipGrid": { "alias": "matChipInputFor"; "required": false; }; "addOnBlur": { "alias": "matChipInputAddOnBlur"; "required": false; }; "separatorKeyCodes": { "alias": "matChipInputSeparatorKeyCodes"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "id": { "alias": "id"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "readonly": { "alias": "readonly"; "required": false; }; "disabledInteractive": { "alias": "matChipInputDisabledInteractive"; "required": false; }; }, { "chipEnd": "matChipInputTokenEnd"; }, never, never, true, never>;
     // (undocumented)
