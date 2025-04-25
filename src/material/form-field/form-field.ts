@@ -794,10 +794,8 @@ export class MatFormField
       textPrefixContainerWidth +
       iconSuffixContainerWidth +
       textSuffixContainerWidth;
-    this._elementRef.nativeElement.style.setProperty(
-      '--mat-form-field-notch-max-width',
-      `calc(100% - ${prefixAndSuffixWidth}px)`,
-    );
+
+    this._notchedOutline?._setMaxWidth(prefixAndSuffixWidth);
   }
 
   /** Checks whether the form field is attached to the DOM. */
