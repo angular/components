@@ -659,15 +659,36 @@ $fallbacks: m3-chip.get-tokens();
     left: 0;
     pointer-events: none;
   }
+  
+}
 
+// Targets .mdc-evolution-chip__cell
+.mat-mdc-chip-action .mat-focus-indicator::before,
+// Targets mdc-evolution-chip__icon
+.mat-mdc-chip-action.mat-focus-indicator::before {
   // For the chip element, default inset/offset values are necessary to ensure that
   // the focus indicator is sufficiently contrastive and renders appropriately.
-  .mat-focus-indicator::before {
-    $default-border-width: focus-indicators-private.$default-border-width;
-    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
-    $offset: calc(#{$border-width} + 2px);
-    margin: calc(#{$offset} * -1);
-  }
+  $default-border-width: focus-indicators-private.$default-border-width;
+  $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
+  $offset: calc(#{$border-width} + 2px);
+
+  content: '';
+  display: block;
+  position: absolute;
+  padding: $offset;
+  margin: calc(#{$offset} * -1);
+  border-width: $border-width;
+  border: solid;
+  border-color: var(--mat-focus-indicator-border-color), black;
+  opacity: 0;
+  height: auto;
+}
+
+// The chip has multiple focus targets so we have to put the indicator on
+// a separate element, rather than on the focusable element itself.
+.mat-mdc-chip-action:focus .mat-focus-indicator::before,
+.mat-mdc-chip-action.mat-focus-indicator:focus::before {
+  opacity: 1;
 }
 
 .mat-mdc-chip-edit, .mat-mdc-chip-remove {
@@ -723,12 +744,6 @@ $fallbacks: m3-chip.get-tokens();
   @include cdk.high-contrast {
     outline-width: 3px;
   }
-}
-
-// The chip has multiple focus targets so we have to put the indicator on
-// a separate element, rather than on the focusable element itself.
-.mat-mdc-chip-action:focus .mat-focus-indicator::before {
-  content: '';
 }
 
 // Prevents icon from being cut off when text spacing is increased.
