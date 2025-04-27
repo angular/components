@@ -17,13 +17,11 @@ import {
   DOCUMENT,
 } from '@angular/core';
 
-import {
-  CdkColumnDef,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
-} from '@angular/cdk/table';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {Directionality} from '@angular/cdk/bidi';
 import {
+  _COALESCED_STYLE_SCHEDULER,
+  _CoalescedStyleScheduler,
   ColumnResize,
   ColumnResizeNotifierSource,
   HeaderRowEventDispatcher,

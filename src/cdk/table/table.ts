@@ -62,7 +62,6 @@ import {
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
-import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from './coalesced-style-scheduler';
 import {
   BaseRowDef,
   CdkCellOutlet,
@@ -270,7 +269,6 @@ export interface RenderRow<T> {
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
-    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
     // Prevent nested tables from seeing this table's StickyPositioningListener.
     {provide: STICKY_POSITIONING_LISTENER, useValue: null},
   ],
@@ -286,9 +284,6 @@ export class CdkTable<T>
   private _platform = inject(Platform);
   protected readonly _viewRepeater =
     inject<_ViewRepeater<T, RenderRow<T>, RowContext<T>>>(_VIEW_REPEATER_STRATEGY);
-  protected readonly _coalescedStyleScheduler = inject<_CoalescedStyleScheduler>(
-    _COALESCED_STYLE_SCHEDULER,
-  );
   private readonly _viewportRuler = inject(ViewportRuler);
   protected readonly _stickyPositioningListener = inject<StickyPositioningListener>(
     STICKY_POSITIONING_LISTENER,
@@ -1381,10 +1376,9 @@ export class CdkTable<T>
     this._stickyStyler = new StickyStyler(
       this._isNativeHtmlTable,
       this.stickyCssClass,
-      direction,
-      this._coalescedStyleScheduler,
       this._platform.isBrowser,
       this.needsPositionStickyOnElement,
+      direction,
       this._stickyPositioningListener,
       this._injector,
     );

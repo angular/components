@@ -29,7 +29,7 @@ import {
   createRepositionScrollStrategy,
   OverlayRef,
 } from '@angular/cdk/overlay';
-import {CdkColumnDef, _CoalescedStyleScheduler} from '@angular/cdk/table';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {merge, Subject} from 'rxjs';
 import {distinctUntilChanged, filter, take, takeUntil} from 'rxjs/operators';
 
@@ -43,6 +43,7 @@ import {ColumnSizeStore} from './column-size-store';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
 import {ResizeStrategy} from './resize-strategy';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
 
