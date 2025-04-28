@@ -18,8 +18,7 @@ describe('MatInputHarness', () => {
   });
 
   it('should load all input harnesses', async () => {
-    const inputs = await loader.getAllHarnesses(MatInputHarness);
-    expect(inputs.length).toBe(7);
+    expect(await loader.countHarnesses(MatInputHarness)).toBe(7);
   });
 
   it('should load input with specific id', async () => {

@@ -134,9 +134,12 @@ are used to create `ComponentHarness` instances for elements under this root ele
 | `getChildLoader(selector: string): Promise<HarnessLoader>` | Searches for an element matching the given selector below the root element of this `HarnessLoader`, and returns a new `HarnessLoader` rooted at the first matching element |
 | `getAllChildLoaders(selector: string): Promise<HarnessLoader[]>` | Acts like `getChildLoader`, but returns an array of `HarnessLoader` instances, one for each matching element, rather than just the first matching element |
 | `getHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T> \| HarnessPredicate<T>): Promise<T>` | Searches for an instance of the given `ComponentHarness` class or `HarnessPredicate` below the root element of this `HarnessLoader` and returns an instance of the harness corresponding to the first matching element |
+| `getHarnessAtIndex<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T> \| HarnessPredicate<T>, index: number): Promise<T>` | Acts like `getHarness`, but returns an instance of the harness corresponding to the matching element with the given index (zero-indexed) |
 | `getAllHarnesses<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T> \| HarnessPredicate<T>): Promise<T[]>` | Acts like `getHarness`, but returns an array of harness instances, one for each matching element, rather than just the first matching element  |
+| `countHarnesses<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T> \| HarnessPredicate<T>): Promise<number>` | Counts the number of instances of the given `ComponentHarness` class or `HarnessPredicate` below the root element of this `HarnessLoader`, and returns the result. |
+| `hasHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T> \| HarnessPredicate<T>): Promise<boolean>` | Returns true if an instance of the given `ComponentHarness` class or `HarnessPredicate` exists below the root element of this `HarnessLoader` |
 
-Calls to `getHarness` and `getAllHarnesses` can either take `ComponentHarness` subclass or a
+Calls to the harness functions can either take `ComponentHarness` subclass or a
 `HarnessPredicate`. `HarnessPredicate` applies additional restrictions to the search (e.g. searching
 for a button that has some particular text, etc). The
 [details of `HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) are discussed in

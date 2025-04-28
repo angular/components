@@ -123,8 +123,28 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `HarnessLoader` interface.
+  async getHarnessAtIndex<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+    offset: number,
+  ): Promise<T> {
+    if (offset < 0) {
+      throw Error('Index must not be negative');
+    }
+    const harnesses = await this.locatorForAll(query)();
+    if (offset >= harnesses.length) {
+      throw Error(`No harness was located at index ${offset}`);
+    }
+    return harnesses[offset];
+  }
+
+  // Implemented as part of the `HarnessLoader` interface.
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
     return this.locatorForAll(query)();
+  }
+
+  // Implemented as part of the `HarnessLoader` interface.
+  async countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number> {
+    return (await this.locatorForAll(query)()).length;
   }
 
   // Implemented as part of the `HarnessLoader` interface.
