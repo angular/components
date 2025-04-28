@@ -295,8 +295,6 @@ export class CdkTable<T> implements AfterContentInit, AfterContentChecked, Colle
     addRowDef(rowDef: CdkRowDef<T>): void;
     // (undocumented)
     protected readonly _changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    protected readonly _coalescedStyleScheduler: _CoalescedStyleScheduler;
     readonly contentChanged: EventEmitter<void>;
     _contentColumnDefs: QueryList<CdkColumnDef>;
     _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
@@ -415,20 +413,6 @@ export interface CellDef {
 }
 
 // @public
-export const _COALESCED_STYLE_SCHEDULER: InjectionToken<_CoalescedStyleScheduler>;
-
-// @public
-export class _CoalescedStyleScheduler {
-    constructor(...args: unknown[]);
-    schedule(task: () => unknown): void;
-    scheduleEnd(task: () => unknown): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<_CoalescedStyleScheduler, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<_CoalescedStyleScheduler>;
-}
-
-// @public
 export class DataRowOutlet implements RowOutlet {
     constructor(...args: unknown[]);
     // (undocumented)
@@ -504,14 +488,6 @@ export interface RowContext<T> extends CdkCellOutletMultiRowContext<T>, CdkCellO
 export interface RowOutlet {
     // (undocumented)
     viewContainer: ViewContainerRef;
-}
-
-// @public
-export class _Schedule {
-    // (undocumented)
-    endTasks: (() => unknown)[];
-    // (undocumented)
-    tasks: (() => unknown)[];
 }
 
 // @public

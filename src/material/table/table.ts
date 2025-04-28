@@ -9,8 +9,6 @@
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 import {
   CdkTable,
-  _CoalescedStyleScheduler,
-  _COALESCED_STYLE_SCHEDULER,
   CDK_TABLE,
   STICKY_POSITIONING_LISTENER,
   HeaderRowOutlet,
@@ -77,7 +75,6 @@ export class MatRecycleRows {}
   providers: [
     {provide: CdkTable, useExisting: MatTable},
     {provide: CDK_TABLE, useExisting: MatTable},
-    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
     // TODO(michaeljamesparsons) Abstract the view repeater strategy to a directive API so this code
     //  is only included in the build if used.
     {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},

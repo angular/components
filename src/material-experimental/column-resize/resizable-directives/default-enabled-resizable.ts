@@ -18,12 +18,10 @@ import {
 } from '@angular/core';
 
 import {Directionality} from '@angular/cdk/bidi';
+import {CdkColumnDef} from '@angular/cdk/table';
 import {
-  CdkColumnDef,
-  _CoalescedStyleScheduler,
   _COALESCED_STYLE_SCHEDULER,
-} from '@angular/cdk/table';
-import {
+  _CoalescedStyleScheduler,
   ColumnResize,
   ColumnResizeNotifierSource,
   HeaderRowEventDispatcher,

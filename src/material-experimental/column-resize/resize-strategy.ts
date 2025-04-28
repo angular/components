@@ -7,7 +7,6 @@
  */
 
 import {Injectable, Provider} from '@angular/core';
-import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from '@angular/cdk/table';
 
 import {
   ResizeStrategy,

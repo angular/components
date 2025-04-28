@@ -12,7 +12,6 @@
  */
 import {afterNextRender, Injector} from '@angular/core';
 import {Direction} from '../bidi';
-import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 import {StickyPositioningListener} from './sticky-position-listener';
 
 export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
@@ -62,12 +61,11 @@ export class StickyStyler {
   constructor(
     private _isNativeHtmlTable: boolean,
     private _stickCellCss: string,
-    public direction: Direction,
-    private _coalescedStyleScheduler: _CoalescedStyleScheduler,
     private _isBrowser = true,
     private readonly _needsPositionStickyOnElement = true,
-    private readonly _positionListener?: StickyPositioningListener,
-    private readonly _tableInjector?: Injector,
+    public direction: Direction,
+    private readonly _positionListener: StickyPositioningListener,
+    private readonly _tableInjector: Injector,
   ) {
     this._borderCellCss = {
       'top': `${_stickCellCss}-border-elem-top`,
@@ -100,13 +98,18 @@ export class StickyStyler {
     }
 
     // Coalesce with sticky row/column updates (and potentially other changes like column resize).
-    this._afterNextRender({
-      write: () => {
-        for (const element of elementsToClear) {
-          this._removeStickyStyle(element, stickyDirections);
-        }
+    afterNextRender(
+      {
+        write: () => {
+          for (const element of elementsToClear) {
+            this._removeStickyStyle(element, stickyDirections);
+          }
+        },
       },
-    });
+      {
+        injector: this._tableInjector,
+      },
+    );
   }
 
   /**
@@ -162,48 +165,55 @@ export class StickyStyler {
       });
     }
 
-    this._afterNextRender({
-      earlyRead: () => {
-        cellWidths = this._getCellWidths(firstRow, recalculateCellWidths);
+    afterNextRender(
+      {
+        earlyRead: () => {
+          cellWidths = this._getCellWidths(firstRow, recalculateCellWidths);
 
-        startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
-        endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
-      },
-      write: () => {
-        for (const row of rows) {
-          for (let i = 0; i < numCells; i++) {
-            const cell = row.children[i] as HTMLElement;
-            if (stickyStartStates[i]) {
-              this._addStickyStyle(cell, start, startPositions[i], i === lastStickyStart);
-            }
+          startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
+          endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
+        },
+        write: () => {
+          for (const row of rows) {
+            for (let i = 0; i < numCells; i++) {
+              const cell = row.children[i] as HTMLElement;
+              if (stickyStartStates[i]) {
+                this._addStickyStyle(cell, start, startPositions[i], i === lastStickyStart);
+              }
 
-            if (stickyEndStates[i]) {
-              this._addStickyStyle(cell, end, endPositions[i], i === firstStickyEnd);
+              if (stickyEndStates[i]) {
+                this._addStickyStyle(cell, end, endPositions[i], i === firstStickyEnd);
+              }
             }
           }
-        }
 
-        if (this._positionListener && cellWidths.some(w => !!w)) {
-          this._positionListener.stickyColumnsUpdated({
-            sizes:
-              lastStickyStart === -1
-                ? []
-                : cellWidths
-                    .slice(0, lastStickyStart + 1)
-                    .map((width, index) => (stickyStartStates[index] ? width : null)),
-          });
-          this._positionListener.stickyEndColumnsUpdated({
-            sizes:
-              firstStickyEnd === -1
-                ? []
-                : cellWidths
-                    .slice(firstStickyEnd)
-                    .map((width, index) => (stickyEndStates[index + firstStickyEnd] ? width : null))
-                    .reverse(),
-          });
-        }
+          if (this._positionListener && cellWidths.some(w => !!w)) {
+            this._positionListener.stickyColumnsUpdated({
+              sizes:
+                lastStickyStart === -1
+                  ? []
+                  : cellWidths
+                      .slice(0, lastStickyStart + 1)
+                      .map((width, index) => (stickyStartStates[index] ? width : null)),
+            });
+            this._positionListener.stickyEndColumnsUpdated({
+              sizes:
+                firstStickyEnd === -1
+                  ? []
+                  : cellWidths
+                      .slice(firstStickyEnd)
+                      .map((width, index) =>
+                        stickyEndStates[index + firstStickyEnd] ? width : null,
+                      )
+                      .reverse(),
+            });
+          }
+        },
       },
-    });
+      {
+        injector: this._tableInjector,
+      },
+    );
   }
 
   /**
@@ -236,54 +246,59 @@ export class StickyStyler {
 
     // Coalesce with other sticky row updates (top/bottom), sticky columns updates
     // (and potentially other changes like column resize).
-    this._afterNextRender({
-      earlyRead: () => {
-        for (let rowIndex = 0, stickyOffset = 0; rowIndex < rows.length; rowIndex++) {
-          if (!states[rowIndex]) {
-            continue;
+    afterNextRender(
+      {
+        earlyRead: () => {
+          for (let rowIndex = 0, stickyOffset = 0; rowIndex < rows.length; rowIndex++) {
+            if (!states[rowIndex]) {
+              continue;
+            }
+
+            stickyOffsets[rowIndex] = stickyOffset;
+            const row = rows[rowIndex];
+            elementsToStick[rowIndex] = this._isNativeHtmlTable
+              ? (Array.from(row.children) as HTMLElement[])
+              : [row];
+
+            const height = this._retrieveElementSize(row).height;
+            stickyOffset += height;
+            stickyCellHeights[rowIndex] = height;
+          }
+        },
+        write: () => {
+          const borderedRowIndex = states.lastIndexOf(true);
+
+          for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            if (!states[rowIndex]) {
+              continue;
+            }
+
+            const offset = stickyOffsets[rowIndex];
+            const isBorderedRowIndex = rowIndex === borderedRowIndex;
+            for (const element of elementsToStick[rowIndex]) {
+              this._addStickyStyle(element, position, offset, isBorderedRowIndex);
+            }
           }
 
-          stickyOffsets[rowIndex] = stickyOffset;
-          const row = rows[rowIndex];
-          elementsToStick[rowIndex] = this._isNativeHtmlTable
-            ? (Array.from(row.children) as HTMLElement[])
-            : [row];
-
-          const height = this._retrieveElementSize(row).height;
-          stickyOffset += height;
-          stickyCellHeights[rowIndex] = height;
-        }
+          if (position === 'top') {
+            this._positionListener?.stickyHeaderRowsUpdated({
+              sizes: stickyCellHeights,
+              offsets: stickyOffsets,
+              elements: elementsToStick,
+            });
+          } else {
+            this._positionListener?.stickyFooterRowsUpdated({
+              sizes: stickyCellHeights,
+              offsets: stickyOffsets,
+              elements: elementsToStick,
+            });
+          }
+        },
       },
-      write: () => {
-        const borderedRowIndex = states.lastIndexOf(true);
-
-        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-          if (!states[rowIndex]) {
-            continue;
-          }
-
-          const offset = stickyOffsets[rowIndex];
-          const isBorderedRowIndex = rowIndex === borderedRowIndex;
-          for (const element of elementsToStick[rowIndex]) {
-            this._addStickyStyle(element, position, offset, isBorderedRowIndex);
-          }
-        }
-
-        if (position === 'top') {
-          this._positionListener?.stickyHeaderRowsUpdated({
-            sizes: stickyCellHeights,
-            offsets: stickyOffsets,
-            elements: elementsToStick,
-          });
-        } else {
-          this._positionListener?.stickyFooterRowsUpdated({
-            sizes: stickyCellHeights,
-            offsets: stickyOffsets,
-            elements: elementsToStick,
-          });
-        }
+      {
+        injector: this._tableInjector,
       },
-    });
+    );
   }
 
   /**
@@ -298,19 +313,24 @@ export class StickyStyler {
     }
 
     // Coalesce with other sticky updates (and potentially other changes like column resize).
-    this._afterNextRender({
-      write: () => {
-        const tfoot = tableElement.querySelector('tfoot')!;
+    afterNextRender(
+      {
+        write: () => {
+          const tfoot = tableElement.querySelector('tfoot')!;
 
-        if (tfoot) {
-          if (stickyStates.some(state => !state)) {
-            this._removeStickyStyle(tfoot, ['bottom']);
-          } else {
-            this._addStickyStyle(tfoot, 'bottom', 0, false);
+          if (tfoot) {
+            if (stickyStates.some(state => !state)) {
+              this._removeStickyStyle(tfoot, ['bottom']);
+            } else {
+              this._addStickyStyle(tfoot, 'bottom', 0, false);
+            }
           }
-        }
+        },
       },
-    });
+      {
+        injector: this._tableInjector,
+      },
+    );
   }
 
   /** Triggered by the table's OnDestroy hook. */
@@ -558,21 +578,6 @@ export class StickyStyler {
         this._updatedStickyColumnsParamsToReplay = [];
         this._stickyColumnsReplayTimeout = null;
       }, 0);
-    }
-  }
-
-  /**
-   * Invoke afterNextRender with the table's injector, falling back to CoalescedStyleScheduler
-   * if the injector was not provided.
-   */
-  private _afterNextRender(spec: {earlyRead?: () => void; write: () => void}) {
-    if (this._tableInjector) {
-      afterNextRender(spec, {injector: this._tableInjector});
-    } else {
-      this._coalescedStyleScheduler.schedule(() => {
-        spec.earlyRead?.();
-        spec.write();
-      });
     }
   }
 }
