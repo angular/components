@@ -247,7 +247,7 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     get animationDuration(): string;
     set animationDuration(value: string | number);
     // (undocumented)
-    _animationMode: "NoopAnimations" | "BrowserAnimations" | null;
+    protected _animationsDisabled(): boolean;
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
