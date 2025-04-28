@@ -99,8 +99,7 @@ export class MatTabGroup
   private _tabsSubscription = Subscription.EMPTY;
   private _tabLabelSubscription = Subscription.EMPTY;
   private _tabBodySubscription = Subscription.EMPTY;
-
-  _animationsDisabled = _animationsDisabled();
+  private _diAnimationsDisabled = _animationsDisabled();
 
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
@@ -576,6 +575,14 @@ export class MatTabGroup
     if (isCenter) {
       this._tabBodies?.forEach((body, i) => body._setActiveClass(i === this._selectedIndex));
     }
+  }
+
+  protected _animationsDisabled(): boolean {
+    return (
+      this._diAnimationsDisabled ||
+      this.animationDuration === '0' ||
+      this.animationDuration === '0ms'
+    );
   }
 }
 
