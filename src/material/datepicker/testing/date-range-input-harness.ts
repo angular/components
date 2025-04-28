@@ -93,7 +93,7 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
 
   /** Gets the floating label text for the range input, if it exists. */
   async getLabel(): Promise<string | null> {
-    // Copied from MatFormFieldControlHarness since this class cannot extend two classes
+    // Copied from MatFormFieldControlHarnessBase since this class cannot extend two classes
     const documentRootLocator = await this.documentRootLocatorFactory();
     const labelId = await (await this.host()).getAttribute('aria-labelledby');
     const hostId = await (await this.host()).getAttribute('id');

@@ -12,11 +12,16 @@ import {ComponentHarness} from '@angular/cdk/testing';
  * Base class for custom form-field control harnesses. Harnesses for
  * custom controls with form-fields need to implement this interface.
  */
-export abstract class MatFormFieldControlHarness extends ComponentHarness {
+export abstract class MatFormFieldControlHarness extends ComponentHarness {}
+
+/**
+ * Shared behavior for `MatFormFieldControlHarness` implementations
+ */
+export abstract class MatFormFieldControlHarnessBase extends MatFormFieldControlHarness {
   private readonly floatingLabelSelector = '.mdc-floating-label';
 
   /** Gets the text content of the floating label, if it exists. */
-  protected async _getFloatingLabelText(): Promise<string | null> {
+  public async getLabel(): Promise<string | null> {
     const documentRootLocator = await this.documentRootLocatorFactory();
     const labelId = await (await this.host()).getAttribute('aria-labelledby');
     const hostId = await (await this.host()).getAttribute('id');

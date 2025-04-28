@@ -248,9 +248,9 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     return this.locatorForOptional(query)();
   }
 
- /**
-   * Searches for an instance of the component corresponding to the given harness type and index 
-   * under the `HarnessEnvironment`'s root element, and returns a `ComponentHarness` for that 
+  /**
+   * Searches for an instance of the component corresponding to the given harness type and index
+   * under the `HarnessEnvironment`'s root element, and returns a `ComponentHarness` for that
    * instance. The index specifies the offset of the component to find. If no matching
    * component is found at that index, an error is thrown.
    * @param query A query for a harness to create

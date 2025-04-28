@@ -7,12 +7,12 @@
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
+import {MatFormFieldControlHarnessBase} from '@angular/material/form-field/testing/control';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {InputHarnessFilters} from './input-harness-filters';
 
 /** Harness for interacting with a standard Material inputs in tests. */
-export class MatInputHarness extends MatFormFieldControlHarness {
+export class MatInputHarness extends MatFormFieldControlHarnessBase {
   private readonly _documentRootLocator = this.documentRootLocatorFactory();
 
   // TODO: We do not want to handle `select` elements with `matNativeControl` because
@@ -97,11 +97,6 @@ export class MatInputHarness extends MatFormFieldControlHarness {
     // The input directive always assigns a unique id to the input in
     // case no id has been explicitly specified.
     return await (await this.host()).getProperty<string>('id');
-  }
-
-  /** Gets the floating label text for the input, if it exists. */
-  async getLabel(): Promise<string | null> {
-    return await this._getFloatingLabelText();
   }
 
   /**

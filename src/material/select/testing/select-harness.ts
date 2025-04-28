@@ -13,11 +13,11 @@ import {
   OptionHarnessFilters,
   OptgroupHarnessFilters,
 } from '@angular/material/core/testing';
-import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
+import {MatFormFieldControlHarnessBase} from '@angular/material/form-field/testing/control';
 import {SelectHarnessFilters} from './select-harness-filters';
 
 /** Harness for interacting with a mat-select in tests. */
-export class MatSelectHarness extends MatFormFieldControlHarness {
+export class MatSelectHarness extends MatFormFieldControlHarnessBase {
   static hostSelector = '.mat-mdc-select';
   private _prefix = 'mat-mdc';
   private _optionClass = MatOptionHarness;
@@ -72,11 +72,6 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
   async getValueText(): Promise<string> {
     const value = await this.locatorFor(`.${this._prefix}-select-value`)();
     return value.text();
-  }
-
-  /** Gets the floating label text for the select, if it exists. */
-  async getLabel(): Promise<string | null> {
-    return await this._getFloatingLabelText();
   }
 
   /** Focuses the select and returns a void promise that indicates when the action is complete. */

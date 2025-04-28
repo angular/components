@@ -7,7 +7,7 @@
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarnessBase} from '../../form-field/testing/control';
 import {MatNativeOptionHarness} from './native-option-harness';
 import {
   NativeOptionHarnessFilters,
@@ -15,7 +15,7 @@ import {
 } from './native-select-harness-filters';
 
 /** Harness for interacting with a native `select` in tests. */
-export class MatNativeSelectHarness extends MatFormFieldControlHarness {
+export class MatNativeSelectHarness extends MatFormFieldControlHarnessBase {
   static hostSelector = 'select[matNativeControl]';
 
   /**
@@ -59,11 +59,6 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
   async getId(): Promise<string> {
     // We're guaranteed to have an id, because the `matNativeControl` always assigns one.
     return await (await this.host()).getProperty<string>('id');
-  }
-
-  /** Gets the floating label text for the input, if it exists. */
-  async getLabel(): Promise<string | null> {
-    return await this._getFloatingLabelText();
   }
 
   /** Focuses the select and returns a void promise that indicates when the action is complete. */

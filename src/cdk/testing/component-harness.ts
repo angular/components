@@ -542,7 +542,7 @@ export abstract class ContentContainerComponentHarness<S extends string = string
     return (await this.getRootHarnessLoader()).getAllHarnesses(query);
   }
 
- /**
+  /**
    * Returns the number of matching harnesses for the given query within the current harness's
    * content.
    *
