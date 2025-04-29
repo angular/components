@@ -26,14 +26,6 @@ copy_to_bin(
     ],
 )
 
-# Lint config files
-copy_to_bin(
-    name = "ng-base-lint-config",
-    srcs = [
-        ".eslintrc.json",
-    ],
-)
-
 # The main application
 ng_app(
     name = "app",

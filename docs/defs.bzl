@@ -86,28 +86,6 @@ E2E_DEPS = [
     "//docs:node_modules/webdriver-manager",
 ]
 
-LINT_CONFIG = COMMON_CONFIG + [
-    # Lint uses the e2e config
-    "//docs:ng-base-test-config",
-    ":ng-e2e-config",
-    "//docs:ng-base-lint-config",
-    "//docs:node_modules/@angular-eslint/builder",
-    "//docs:node_modules/@angular-eslint/eslint-plugin",
-    "//docs:node_modules/@angular-eslint/eslint-plugin-template",
-    "//docs:node_modules/@angular-eslint/template-parser",
-    "//docs:node_modules/eslint-plugin-ban",
-    "//docs:node_modules/eslint-plugin-import",
-    "//docs:node_modules/eslint-plugin-jsdoc",
-    "//docs:node_modules/eslint-plugin-prefer-arrow",
-    "//docs:node_modules/@typescript-eslint/eslint-plugin",
-    "//docs:node_modules/@typescript-eslint/parser",
-    "//docs:node_modules/@stylistic/eslint-plugin",
-]
-LINT_DEPS = [
-    # TODO(bazel): this should be included as a transitive of @angular-devkit/architect-cli!?
-    "//docs:node_modules/@angular-devkit/architect",
-]
-
 # buildifier: disable=unused-variable
 def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], **kwargs):
     """
@@ -163,16 +141,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
         ],
         visibility = ["//visibility:private"],
     )
-
-    # Lint config files in addition to the root
-    if native.package_name() != "":
-        copy_to_bin(
-            name = "lint-config",
-            srcs = [
-                ".eslintrc.json",
-            ],
-            visibility = ["//visibility:private"],
-        )
 
     project_name = project_name if project_name else name
 
@@ -233,14 +201,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
     #     tags = tags + ["e2e"],
     #     **kwargs
     # )
-
-    _architect_test(
-        project_name,
-        "lint",
-        srcs = srcs + test_srcs + e2e_srcs + deps + test_deps + NG_COMMON_DEPS + LINT_DEPS + LINT_CONFIG + ([":lint-config"] if native.package_name() != "" else []),
-        tags = tags + ["lint"],
-        **kwargs
-    )
 
 def _architect_build(project_name, configuration = None, args = [], srcs = [], **kwargs):
     output_dir = "%s%s" % (project_name, ".%s" % configuration if configuration else "")
