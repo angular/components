@@ -1,3 +1,6 @@
+@use '../core/tokens/token-utils';
+@use './m2-table';
+
 // Flex-based table structure
 $header-row-height: 56px;
 $row-height: 48px;
@@ -9,12 +12,18 @@ $row-horizontal-padding: 24px;
     display: block;
   }
 
-  mat-header-row {
-    min-height: $header-row-height;
-  }
+  @include token-utils.use-tokens(m2-table.$prefix, m2-table.get-token-slots()) {
+    mat-header-row {
+      min-height: token-utils.slot(header-container-height, $header-row-height);
+    }
 
-  mat-row, mat-footer-row {
-    min-height: $row-height;
+    mat-row {
+      min-height: token-utils.slot(row-item-container-height, $row-height);
+    }
+
+    mat-footer-row {
+      min-height: token-utils.slot(footer-container-height, $row-height);
+    }
   }
 
   mat-row, mat-header-row, mat-footer-row {
