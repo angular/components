@@ -1,6 +1,6 @@
 import {Component, OnDestroy, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatAnchor, MatIconAnchor} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 
 import {SECTIONS} from '../documentation-items/documentation-items';
@@ -17,8 +17,8 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
   imports: [
-    MatButton,
-    MatIconButton,
+    MatAnchor,
+    MatIconAnchor,
     RouterLink,
     RouterLinkActive,
     VersionPicker,

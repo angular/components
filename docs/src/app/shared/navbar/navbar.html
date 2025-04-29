@@ -2,12 +2,12 @@
 <nav class="docs-navbar-header" aria-label="Top Toolbar">
   @if (skipLinkHidden) {
     <div class="skip-link-wrapper" [class.cdk-visually-hidden]="skipLinkHidden">
-      <a matButton="elevated" [href]="skipLinkHref" (focus)="skipLinkHidden = false" (blur)="skipLinkHidden = true" color="accent">
+      <a mat-raised-button [href]="skipLinkHref" (focus)="skipLinkHidden = false" (blur)="skipLinkHidden = true" color="accent">
         Skip to main content
       </a>
     </div>
   }
-  <a matButton="text" routerLink="/" aria-label="Angular Material">
+  <a mat-button routerLink="/" aria-label="Angular Material">
     <app-logo matButtonIcon/>
     Material
 
@@ -17,30 +17,30 @@
   </a>
 
   @for (key of sectionKeys; track key) {
-    <a matButton="text" class="docs-navbar-hide-small"
+    <a mat-button class="docs-navbar-hide-small"
        [routerLink]="key"
        routerLinkActive="docs-navbar-header-item-selected">{{sections[key].name}}</a>
   }
-  <a matButton="text" class="docs-navbar-hide-small" routerLink="guides" routerLinkActive="docs-navbar-header-item-selected">Guides</a>
+  <a mat-button class="docs-navbar-hide-small" routerLink="guides" routerLinkActive="docs-navbar-header-item-selected">Guides</a>
   <div class="flex-spacer"></div>
   <version-picker/>
   <theme-picker/>
-  <a matButton="text" class="docs-navbar-hide-small" href="https://github.com/angular/components"
+  <a mat-button class="docs-navbar-hide-small" href="https://github.com/angular/components"
      aria-label="GitHub Repository">
     <span matButtonIcon [ngTemplateOutlet]="githubIcon"></span>
     GitHub
   </a>
-  <a matIconButton class="docs-navbar-show-small"
+  <a mat-icon-button class="docs-navbar-show-small"
      href="https://github.com/angular/components" aria-label="GitHub Repository">
      <ng-container [ngTemplateOutlet]="githubIcon"/>
   </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small" aria-label="Section Nav Bar">
   @for (key of sectionKeys; track key) {
-    <a matButton="text" class="docs-navbar-link"
+    <a mat-button class="docs-navbar-link"
       [routerLink]="key">{{sections[key].name}}</a>
   }
-  <a matButton="text" class="docs-navbar-link" routerLink="guides">Guides</a>
+  <a mat-button class="docs-navbar-link" routerLink="guides">Guides</a>
 </nav>
 
 
