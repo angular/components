@@ -1,5 +1,14 @@
 import {browser, by, element, ExpectedConditions} from 'protractor';
 
+declare global {
+  interface Window {
+    ngDevMode: {
+      hydratedComponents: number;
+      componentsSkippedHydration: number;
+    };
+  }
+}
+
 describe('hydration e2e', () => {
   beforeEach(async () => {
     await browser.waitForAngularEnabled(false);
@@ -27,7 +36,7 @@ async function getHydrationState() {
     hydratedComponents: number;
     componentsSkippedHydration: number;
   }>(() => ({
-    hydratedComponents: (window as any).ngDevMode.hydratedComponents,
-    componentsSkippedHydration: (window as any).ngDevMode.componentsSkippedHydration,
+    hydratedComponents: window.ngDevMode.hydratedComponents,
+    componentsSkippedHydration: window.ngDevMode.componentsSkippedHydration,
   }));
 }

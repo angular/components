@@ -62,8 +62,15 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {YouTubePlayer} from '@angular/youtube-player';
 import {Observable, of as observableOf} from 'rxjs';
 
-export class TableDataSource extends DataSource<any> {
-  connect(): Observable<any> {
+interface ElementItem {
+  position: number;
+  name: string;
+  weight: number;
+  symbol: string;
+}
+
+export class TableDataSource extends DataSource<ElementItem> {
+  connect(): Observable<ElementItem[]> {
     return observableOf([
       {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
       {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
