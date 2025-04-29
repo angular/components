@@ -1,29 +1,37 @@
-import {Directive, ElementRef, HostBinding, OnDestroy, inject} from '@angular/core';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {Directive, ElementRef, OnDestroy, inject} from '@angular/core';
 import {NavigationFocusService} from './navigation-focus.service';
 
 let uid = 0;
 @Directive({
   selector: '[focusOnNavigation]',
+  host: {
+    'tabindex': '-1',
+    '[style.outline]': '"none"',
+  },
 })
 export class NavigationFocus implements OnDestroy {
-  private el = inject(ElementRef);
-  private navigationFocusService = inject(NavigationFocusService);
-
-  @HostBinding('tabindex') readonly tabindex = '-1';
-  @HostBinding('style.outline') readonly outline = 'none';
+  private _navigationFocusService = inject(NavigationFocusService);
 
   constructor() {
-    const el = this.el;
+    const element = inject(ElementRef).nativeElement as HTMLElement;
 
-    if (!el.nativeElement.id) {
-      el.nativeElement.id = `skip-link-target-${uid++}`;
+    if (!element.id) {
+      element.id = `skip-link-target-${uid++}`;
     }
-    this.navigationFocusService.requestFocusOnNavigation(el.nativeElement);
-    this.navigationFocusService.requestSkipLinkFocus(el.nativeElement);
+    this._navigationFocusService.requestFocusOnNavigation(element);
+    this._navigationFocusService.requestSkipLinkFocus(element);
   }
 
   ngOnDestroy() {
-    this.navigationFocusService.relinquishFocusOnNavigation(this.el.nativeElement);
-    this.navigationFocusService.relinquishSkipLinkFocus(this.el.nativeElement);
+    this._navigationFocusService.relinquishFocusOnNavigation(this.el.nativeElement);
+    this._navigationFocusService.relinquishSkipLinkFocus(this.el.nativeElement);
   }
 }

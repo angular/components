@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Injectable, inject} from '@angular/core';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {SECTIONS} from '../../shared/documentation-items/documentation-items';
@@ -8,7 +16,7 @@ import {SECTIONS} from '../../shared/documentation-items/documentation-items';
  */
 @Injectable({providedIn: 'root'})
 export class CanActivateComponentSidenav {
-  private router = inject(Router);
+  private _router = inject(Router);
 
   canActivate(route: ActivatedRouteSnapshot) {
     // Searches if the section defined in the base UrlSegment is a valid section from the
@@ -18,7 +26,7 @@ export class CanActivateComponentSidenav {
       return true;
     }
 
-    this.router.navigateByUrl('/');
+    this._router.navigateByUrl('/');
     return false;
   }
 }

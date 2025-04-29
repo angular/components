@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, Input, NgZone, inject} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
 import {MatIconButton} from '@angular/material/button';
@@ -12,9 +20,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   imports: [MatIconButton, MatTooltip, MatIcon],
 })
 export class StackBlitzButton {
-  private stackBlitzWriter = inject(StackBlitzWriter);
-  private ngZone = inject(NgZone);
-  private snackBar = inject(MatSnackBar);
+  private _stackBlitzWriter = inject(StackBlitzWriter);
+  private _ngZone = inject(NgZone);
+  private _snackBar = inject(MatSnackBar);
 
   exampleData: ExampleData | undefined;
 
@@ -43,7 +51,7 @@ export class StackBlitzButton {
     if (this._openStackBlitzFn) {
       this._openStackBlitzFn();
     } else {
-      this.snackBar.open(
+      this._snackBar.open(
         'StackBlitz is not ready yet. Please try again in a few seconds.',
         undefined,
         {duration: 5000},
@@ -52,9 +60,9 @@ export class StackBlitzButton {
   }
 
   private _prepareStackBlitzForExample(exampleId: string, data: ExampleData): void {
-    this.ngZone.runOutsideAngular(async () => {
+    this._ngZone.runOutsideAngular(async () => {
       const isTest = exampleId.includes('harness');
-      this._openStackBlitzFn = await this.stackBlitzWriter.createStackBlitzForExample(
+      this._openStackBlitzFn = await this._stackBlitzWriter.createStackBlitzForExample(
         exampleId,
         data,
         isTest,

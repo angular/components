@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, inject, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
@@ -46,16 +54,18 @@ class TokenService {
   imports: [AsyncPipe, TokenTable],
 })
 export class ComponentStyling {
-  private componentViewer = inject(ComponentViewer);
-  private tokenService = inject(TokenService);
-  private domSanitizer = inject(DomSanitizer);
-  protected docItem = this.componentViewer.componentDocItem;
-  protected dataStream = this.docItem.pipe(switchMap(item => this.tokenService.getTokenData(item)));
+  private _componentViewer = inject(ComponentViewer);
+  private _tokenService = inject(TokenService);
+  private _domSanitizer = inject(DomSanitizer);
+  protected docItem = this._componentViewer.componentDocItem;
+  protected dataStream = this.docItem.pipe(
+    switchMap(item => this._tokenService.getTokenData(item)),
+  );
   protected hasDataStream = this.dataStream.pipe(
     map(data => data.themes.length > 0 && data.themes.some(d => d.tokens.length > 0)),
   );
 
   protected exampleStream = this.dataStream.pipe(
-    map(data => (data.example ? this.domSanitizer.bypassSecurityTrustHtml(data.example) : null)),
+    map(data => (data.example ? this._domSanitizer.bypassSecurityTrustHtml(data.example) : null)),
   );
 }

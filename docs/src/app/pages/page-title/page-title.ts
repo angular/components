@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Injectable, inject} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
@@ -6,7 +14,7 @@ import {Title} from '@angular/platform-browser';
  */
 @Injectable({providedIn: 'root'})
 export class ComponentPageTitle {
-  private bodyTitle = inject(Title);
+  private _bodyTitle = inject(Title);
 
   _title = '';
   _originalTitle = 'Angular Material UI component library';
@@ -22,6 +30,6 @@ export class ComponentPageTitle {
     } else {
       title = this._originalTitle;
     }
-    this.bodyTitle.setTitle(title);
+    this._bodyTitle.setTitle(title);
   }
 }

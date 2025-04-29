@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {
   AfterViewInit,
   Component,
@@ -59,12 +67,12 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
 
   private _scrollContainer: HTMLElement | Window | null = null;
   private _urlFragment = '';
-  private subscriptions = new Subscription();
+  private _subscriptions = new Subscription();
 
   constructor() {
     const _router = this._router;
 
-    this.subscriptions.add(
+    this._subscriptions.add(
       this._navigationFocusService.navigationEndEvents.subscribe(() => {
         const rootUrl = _router.url.split('#')[0];
         if (rootUrl !== this._rootUrl) {
@@ -73,7 +81,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
       }),
     );
 
-    this.subscriptions.add(
+    this._subscriptions.add(
       this._route.fragment.subscribe(fragment => {
         if (fragment != null) {
           this._urlFragment = fragment;
@@ -98,10 +106,10 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
           : window;
 
         if (this._scrollContainer) {
-          this.subscriptions.add(
+          this._subscriptions.add(
             fromEvent(this._scrollContainer, 'scroll')
               .pipe(debounceTime(10))
-              .subscribe(() => this.onScroll()),
+              .subscribe(() => this._onScroll()),
           );
         }
       });
@@ -113,7 +121,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this._subscriptions.unsubscribe();
   }
 
   updateScrollPosition(): void {
@@ -144,7 +152,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /** Gets the scroll offset of the scroll container */
-  private getScrollOffset(): number | void {
+  private _getScrollOffset(): number | void {
     const {top} = this._element.nativeElement.getBoundingClientRect();
     const container = this._scrollContainer;
 
@@ -157,8 +165,8 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private onScroll(): void {
-    const scrollOffset = this.getScrollOffset();
+  private _onScroll(): void {
+    const scrollOffset = this._getScrollOffset();
     let hasChanged = false;
 
     if (scrollOffset == null) {

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {
   ComponentType,
   ComponentPortal,
@@ -83,6 +91,7 @@ export class DocViewer implements OnDestroy {
       // Resolving and creating components dynamically in Angular happens synchronously, but since
       // we want to emit the output if the components are actually rendered completely, we wait
       // until the Angular zone becomes stable.
+      // tslint:disable-next-line:no-zone-dependencies
       this._ngZone.onStable
         .pipe(take(1))
         .subscribe(() => this.contentRendered.next(this._elementRef.nativeElement));
@@ -94,7 +103,7 @@ export class DocViewer implements OnDestroy {
   /** The document text. It should not be HTML encoded. */
   textContent = '';
 
-  private static initExampleViewer(
+  private static _initExampleViewer(
     exampleViewerComponent: ExampleViewer,
     example: string,
     file: string | null,
@@ -122,8 +131,8 @@ export class DocViewer implements OnDestroy {
   private _fetchDocument(url: string) {
     this._documentFetchSubscription?.unsubscribe();
     this._documentFetchSubscription = this._docFetcher.fetchDocument(url).subscribe(
-      document => this.updateDocument(document),
-      error => this.showError(url, error),
+      document => this._updateDocument(document),
+      error => this._showError(url, error),
     );
   }
 
@@ -131,7 +140,7 @@ export class DocViewer implements OnDestroy {
    * Updates the displayed document.
    * @param rawDocument The raw document content to show.
    */
-  private updateDocument(rawDocument: string) {
+  private _updateDocument(rawDocument: string) {
     // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
     // "/components/button/api#my-section". This is necessary because otherwise these fragment
     // links would redirect to "/#my-section".
@@ -153,13 +162,14 @@ export class DocViewer implements OnDestroy {
     // Resolving and creating components dynamically in Angular happens synchronously, but since
     // we want to emit the output if the components are actually rendered completely, we wait
     // until the Angular zone becomes stable.
+    // tslint:disable-next-line:no-zone-dependencies
     this._ngZone.onStable
       .pipe(take(1))
       .subscribe(() => this.contentRendered.next(this._elementRef.nativeElement));
   }
 
   /** Show an error that occurred when fetching a document. */
-  private showError(url: string, error: HttpErrorResponse) {
+  private _showError(url: string, error: HttpErrorResponse) {
     console.error(error);
     this._elementRef.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
   }
@@ -177,7 +187,7 @@ export class DocViewer implements OnDestroy {
       const exampleViewer = portalHost.attach(examplePortal);
       const exampleViewerComponent = exampleViewer.instance as ExampleViewer;
       if (example !== null) {
-        DocViewer.initExampleViewer(exampleViewerComponent, example, file, region);
+        DocViewer._initExampleViewer(exampleViewerComponent, example, file, region);
       }
       this._portalHosts.push(portalHost);
     });
