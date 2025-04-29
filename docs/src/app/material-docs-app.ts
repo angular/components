@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnDestroy, ViewEncapsulation, inject} from '@angular/core';
 
 import {AnalyticsService} from './shared/analytics/analytics';
@@ -20,13 +28,13 @@ import {CookiePopup} from './shared/cookie-popup/cookie-popup';
   imports: [NavBar, RouterOutlet, CookiePopup],
 })
 export class MaterialDocsApp implements OnDestroy {
-  private subscriptions = new Subscription();
+  private _subscriptions = new Subscription();
 
   constructor() {
     const analytics = inject(AnalyticsService);
     const navigationFocusService = inject(NavigationFocusService);
 
-    this.subscriptions.add(
+    this._subscriptions.add(
       navigationFocusService.navigationEndEvents
         .pipe(
           map(e => e.urlAfterRedirects),
@@ -45,7 +53,7 @@ export class MaterialDocsApp implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this._subscriptions.unsubscribe();
   }
 }
 

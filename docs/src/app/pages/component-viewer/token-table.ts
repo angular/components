@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {ChangeDetectionStrategy, Component, computed, input, signal} from '@angular/core';
 import {TitleCasePipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';

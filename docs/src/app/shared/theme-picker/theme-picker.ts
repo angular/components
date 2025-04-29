@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,7 +37,7 @@ export class ThemePicker implements OnInit, OnDestroy {
   styleManager = inject(StyleManager);
   private _themeStorage = inject(ThemeStorage);
   private _activatedRoute = inject(ActivatedRoute);
-  private liveAnnouncer = inject(LiveAnnouncer);
+  private _liveAnnouncer = inject(LiveAnnouncer);
 
   private _queryParamSubscription = Subscription.EMPTY;
   currentTheme: DocsSiteTheme | undefined;
@@ -104,7 +112,7 @@ export class ThemePicker implements OnInit, OnDestroy {
     }
 
     if (this.currentTheme) {
-      this.liveAnnouncer.announce(`${theme.displayName} theme selected.`, 'polite', 3000);
+      this._liveAnnouncer.announce(`${theme.displayName} theme selected.`, 'polite', 3000);
       this._themeStorage.storeTheme(this.currentTheme);
     }
   }

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, OnDestroy, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';

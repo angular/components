@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
@@ -5,15 +13,6 @@ import {MatIcon} from '@angular/material/icon';
 /**
  * Header link is a component that handles normalizing
  * the anchor jump tags with the current route url.
- *
- * For example:
- *
- *    <a href="#foo">Foo</a>
- *
- * would result in the wrong url, this component
- * combines the current route with that jump link:
- *
- *    <a href="/guide#foo">Foo</a>
  */
 @Component({
   selector: 'header-link',

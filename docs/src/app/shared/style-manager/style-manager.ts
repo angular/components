@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Injectable} from '@angular/core';
 
 /**
@@ -17,10 +25,7 @@ export class StyleManager {
    * Remove the stylesheet with the specified key.
    */
   removeStyle(key: string) {
-    const existingLinkElement = getExistingLinkElementByKey(key);
-    if (existingLinkElement) {
-      document.head.removeChild(existingLinkElement);
-    }
+    getExistingLinkElementByKey(key)?.remove();
   }
 }
 

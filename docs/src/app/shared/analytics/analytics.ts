@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Injectable} from '@angular/core';
 
 import {environment} from '../../../environments/environment';
@@ -25,7 +33,7 @@ declare global {
  */
 @Injectable({providedIn: 'root'})
 export class AnalyticsService {
-  private previousUrl: string | undefined;
+  private _previousUrl: string | undefined;
 
   constructor() {
     this._installGlobalSiteTag();
@@ -52,10 +60,10 @@ export class AnalyticsService {
 
   private _sendPage(url: string) {
     // Won't re-send if the url hasn't changed.
-    if (url === this.previousUrl) {
+    if (url === this._previousUrl) {
       return;
     }
-    this.previousUrl = url;
+    this._previousUrl = url;
     this._legacyGa('mat.set', 'page', url);
     this._legacyGa('ng.set', 'page', url);
     this._legacyGa('mat.send', 'pageview');

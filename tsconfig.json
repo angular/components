@@ -54,7 +54,8 @@
     "test/**/*.ts",
     "tools/**/*.ts",
     "integration/**/*.ts",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "docs/**/*.ts"
   ],
   "exclude": [
     // Exclude files that depend on Node APIs because those depend on the Node types and therefore

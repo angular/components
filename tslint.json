@@ -99,7 +99,7 @@
               "!moduleId": ".*",
               "encapsulation": "\\.None$"
             },
-            "excludeFiles": ["**/dev-app/**"]
+            "excludeFiles": ["**/dev-app/**", "**/docs/**"]
           },
           // Enforce OnPush & standalone even in the dev-app.
           {
@@ -107,7 +107,8 @@
             "properties": {
               "changeDetection": "\\.OnPush$",
               "!standalone": ".*"
-            }
+            },
+            "excludeFiles": ["**/docs/**"]
           }
         ],
         "Directive": [

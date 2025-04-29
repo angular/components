@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
 import {Component, ElementRef, inject, Input, OnInit, Type, viewChildren} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Clipboard} from '@angular/cdk/clipboard';
