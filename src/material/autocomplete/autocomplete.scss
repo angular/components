@@ -14,8 +14,9 @@ div.mat-mdc-autocomplete-panel {
   padding: 8px 0;
   box-sizing: border-box;
 
-  // Workaround in case other MDC menu surface styles bleed in.
-  position: static;
+  // Necessary so the `offsetParent` of the nested `mat-option` is the
+  // panel which is required for scroll calculations (see #30974).
+  position: relative;
 
   @include token-utils.use-tokens(
     tokens-mat-autocomplete.$prefix, tokens-mat-autocomplete.get-token-slots()) {

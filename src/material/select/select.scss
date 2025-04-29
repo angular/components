@@ -165,8 +165,9 @@ div.mat-mdc-select-panel {
   border-radius: 4px;
   box-sizing: border-box;
 
-  // Workaround in case other MDC menu surface styles bleed in.
-  position: static;
+  // Necessary so the `offsetParent` of the nested `mat-option` is the
+  // panel which is required for scroll calculations (see #30974).
+  position: relative;
 
   @include token-utils.use-tokens(
     tokens-mat-select.$prefix, tokens-mat-select.get-token-slots()) {
@@ -187,10 +188,6 @@ div.mat-mdc-select-panel {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     transform-origin: bottom center;
-  }
-
-  .mat-mdc-option {
-    --mdc-list-list-item-container-color: var(--mat-select-panel-background-color);
   }
 }
 

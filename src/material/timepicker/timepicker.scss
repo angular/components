@@ -36,6 +36,10 @@ mat-timepicker {
   padding: 8px 0;
   box-sizing: border-box;
 
+  // Necessary so the `offsetParent` of the nested `mat-option` is the
+  // panel which is required for scroll calculations (see #30974).
+  position: relative;
+
   @include token-utils.use-tokens(
     tokens-mat-timepicker.$prefix, tokens-mat-timepicker.get-token-slots()) {
     @include token-utils.create-token-slot(border-bottom-left-radius, container-shape);
