@@ -57,7 +57,6 @@
   "dependencies": {
     "@angular-devkit/core": "catalog:",
     "@angular-devkit/schematics": "catalog:",
-    "@angular-devkit/architect-cli": "catalog:",
     "@angular/animations": "catalog:",
     "@angular/common": "catalog:",
     "@angular/compiler": "catalog:",
@@ -217,9 +216,6 @@
           "@nginfra/angular-linking": "1.0.9"
         }
       }
-    },
-    "patchedDependencies": {
-      "@angular-devkit/architect-cli@0.2000.0-next.5": "patches/@angular-devkit__architect-cli.patch"
     }
   }
 }
