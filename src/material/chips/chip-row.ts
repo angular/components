@@ -60,6 +60,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '(focus)': '_handleFocus()',
+    '(click)': '_handleClick($event)',
     '(dblclick)': '_handleDoubleclick($event)',
   },
   providers: [
@@ -92,6 +93,15 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   /** The projected chip edit input. */
   @ContentChild(MatChipEditInput) contentEditInput?: MatChipEditInput;
 
+  /**
+   * Set on a mousedown when the chip is already focused via mouse or keyboard.
+   *
+   * This allows us to ensure chip is already focused when deciding whether to enter the
+   * edit mode on a subsequent click. Otherwise, the chip appears focused when handling the
+   * first click event.
+   */
+  private _alreadyFocused = false;
+
   _isEditing = false;
 
   constructor(...args: unknown[]);
@@ -104,6 +114,19 @@ export class MatChipRow extends MatChip implements AfterViewInit {
       if (this._isEditing && !this._editStartPending) {
         this._onEditFinish();
       }
+      this._alreadyFocused = false;
+    });
+  }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+
+    // Sets _alreadyFocused (ahead of click) when chip already has focus.
+    this._ngZone.runOutsideAngular(() => {
+      this._elementRef.nativeElement.addEventListener(
+        'mousedown',
+        () => (this._alreadyFocused = this._hasFocus()),
+      );
     });
   }
 
@@ -132,6 +155,16 @@ export class MatChipRow extends MatChip implements AfterViewInit {
       event.stopPropagation();
     } else {
       super._handleKeydown(event);
+    }
+  }
+
+  _handleClick(event: MouseEvent) {
+    if (!this.disabled && this.editable && !this._isEditing && this._alreadyFocused) {
+      // Ensure click event not picked up unintentionally by other listeners, as
+      // once editing starts, the source element is detached from DOM.
+      event.preventDefault();
+      event.stopPropagation();
+      this._startEditing(event);
     }
   }
 
