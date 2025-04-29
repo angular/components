@@ -51,7 +51,7 @@ export class MatSnackBar implements OnDestroy {
     get _openedSnackBarRef(): MatSnackBarRef<unknown> | null;
     set _openedSnackBarRef(value: MatSnackBarRef<unknown> | null);
     openFromComponent<T, D = unknown>(component: ComponentType<T>, config?: MatSnackBarConfig<D>): MatSnackBarRef<T>;
-    openFromTemplate(template: TemplateRef<unknown>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<unknown>>;
+    openFromTemplate<C = unknown>(template: TemplateRef<C>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<C>>;
     simpleSnackBarComponent: typeof SimpleSnackBar;
     snackBarContainerComponent: typeof MatSnackBarContainer;
     // (undocumented)

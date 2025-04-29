@@ -61,14 +61,14 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 }
 
 // @public
-export class MatStepContent {
+export class MatStepContent<C = unknown> {
     constructor(...args: unknown[]);
     // (undocumented)
-    _template: TemplateRef<unknown>;
+    _template: TemplateRef<C>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepContent, "ng-template[matStepContent]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatStepContent<any>, "ng-template[matStepContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatStepContent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatStepContent<any>, never>;
 }
 
 // @public (undocumented)

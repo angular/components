@@ -51,7 +51,7 @@ import {MAT_TAB_GROUP} from './tab-group-token';
     '[attr.id]': 'null',
   },
 })
-export class MatTab implements MatTabBase, OnInit, OnChanges, OnDestroy {
+export class MatTab<C = unknown> implements MatTabBase, OnInit, OnChanges, OnDestroy {
   private _viewContainerRef = inject(ViewContainerRef);
   _closestTabGroup = inject(MAT_TAB_GROUP, {optional: true});
 
@@ -73,10 +73,10 @@ export class MatTab implements MatTabBase, OnInit, OnChanges, OnDestroy {
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
   @ContentChild(MatTabContent, {read: TemplateRef, static: true})
-  private _explicitContent?: TemplateRef<unknown>;
+  private _explicitContent?: TemplateRef<C>;
 
   /** Template inside the MatTab view that contains an `<ng-content>`. */
-  @ViewChild(TemplateRef, {static: true}) _implicitContent?: TemplateRef<unknown>;
+  @ViewChild(TemplateRef, {static: true}) _implicitContent?: TemplateRef<C>;
 
   /** Plain text label for the tab, used when there is no template label. */
   @Input('label') textLabel: string = '';

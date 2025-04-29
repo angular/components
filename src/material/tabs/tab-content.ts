@@ -20,8 +20,8 @@ export const MAT_TAB_CONTENT = new InjectionToken<MatTabContent>('MatTabContent'
   selector: '[matTabContent]',
   providers: [{provide: MAT_TAB_CONTENT, useExisting: MatTabContent}],
 })
-export class MatTabContent {
-  template = inject<TemplateRef<unknown>>(TemplateRef);
+export class MatTabContent<C = unknown> {
+  template = inject<TemplateRef<C>>(TemplateRef);
 
   constructor(...args: unknown[]);
   constructor() {}

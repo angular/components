@@ -14,8 +14,8 @@ import {Directive, TemplateRef, inject} from '@angular/core';
 @Directive({
   selector: 'ng-template[matStepContent]',
 })
-export class MatStepContent {
-  _template = inject<TemplateRef<unknown>>(TemplateRef);
+export class MatStepContent<C = unknown> {
+  _template = inject<TemplateRef<C>>(TemplateRef);
 
   constructor(...args: unknown[]);
   constructor() {}

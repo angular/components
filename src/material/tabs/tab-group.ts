@@ -39,7 +39,7 @@ import {MatTabBody} from './tab-body';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
-import {MAT_TAB_GROUP} from './tab-group-token';
+import {MAT_TAB_GROUP, MatTabGroupBase} from './tab-group-token';
 
 /** @docs-private */
 export interface MatTabGroupBaseHeader {
@@ -92,7 +92,7 @@ const ENABLE_BACKGROUND_INPUT = true;
   ],
 })
 export class MatTabGroup
-  implements AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy
+  implements MatTabGroupBase, AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy
 {
   readonly _elementRef = inject(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);

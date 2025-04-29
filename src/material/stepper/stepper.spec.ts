@@ -1822,7 +1822,7 @@ function asyncValidator(minLength: number, validationTrigger: Subject<void>): As
 function createComponent<T>(
   component: Type<T>,
   providers: Provider[] = [],
-  imports: unknown[] = [],
+  imports: Type<unknown>[] = [],
   encapsulation?: ViewEncapsulation,
   declarations = [component],
 ): ComponentFixture<T> {

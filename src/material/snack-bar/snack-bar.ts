@@ -112,10 +112,10 @@ export class MatSnackBar implements OnDestroy {
    * @param template Template to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromTemplate(
-    template: TemplateRef<unknown>,
+  openFromTemplate<C = unknown>(
+    template: TemplateRef<C>,
     config?: MatSnackBarConfig,
-  ): MatSnackBarRef<EmbeddedViewRef<unknown>> {
+  ): MatSnackBarRef<EmbeddedViewRef<C>> {
     return this._attach(template, config);
   }
 
