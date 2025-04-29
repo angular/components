@@ -1,5 +1,5 @@
 @use '../core/tokens/token-utils';
-@use './m2-table';
+@use '../core/tokens/m2/mat/table' as tokens-mat-table;
 
 // Flex-based table structure
 $header-row-height: 56px;
@@ -12,17 +12,18 @@ $row-horizontal-padding: 24px;
     display: block;
   }
 
-  @include token-utils.use-tokens(m2-table.$prefix, m2-table.get-token-slots()) {
+  @include token-utils.use-tokens(tokens-mat-table.$prefix, tokens-mat-table.get-token-slots()) {
     mat-header-row {
-      min-height: token-utils.slot(header-container-height, $header-row-height);
+      @include token-utils.create-token-slot(min-height, header-container-height,
+        $header-row-height);
     }
 
     mat-row {
-      min-height: token-utils.slot(row-item-container-height, $row-height);
+      @include token-utils.create-token-slot(min-height, row-item-container-height, $row-height);
     }
 
     mat-footer-row {
-      min-height: token-utils.slot(footer-container-height, $row-height);
+      @include token-utils.create-token-slot(min-height, footer-container-height, $row-height);
     }
   }
 
