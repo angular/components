@@ -95,6 +95,9 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     -webkit-tap-highlight-color: transparent;
     opacity: 0;
 
+    // Removes the tap delay on touch devices (see #30965).
+    touch-action: manipulation;
+
     @include _conditional-layer($wrap-customizable-styles) {
       z-index: $overlay-backdrop-z-index;
       transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
