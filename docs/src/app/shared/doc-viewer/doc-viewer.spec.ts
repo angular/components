@@ -220,7 +220,6 @@ class DocViewerTestComponent {
 }
 
 const FAKE_DOCS: {[key: string]: string} = {
-  /* eslint-disable @typescript-eslint/naming-convention */
   'http://material.angular.io/simple-doc.html': '<div>my docs page</div>',
   'http://material.angular.io/doc-with-example.html': `
       <div>Check out this example:</div>
@@ -259,7 +258,6 @@ const FAKE_DOCS: {[key: string]: string} = {
         data-docs-api-module-import-button="import {MatIconModule} from '@angular/material/icon';">
       </div>
     </div>`,
-  /* eslint-enable @typescript-eslint/naming-convention */
 };
 
 @Component({

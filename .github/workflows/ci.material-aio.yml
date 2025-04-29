@@ -17,20 +17,6 @@ defaults:
     shell: bash
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@e4bf37af223483ce00f9316d227fd62cd744dc4b
-      - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@e4bf37af223483ce00f9316d227fd62cd744dc4b
-      - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@e4bf37af223483ce00f9316d227fd62cd744dc4b
-      - name: Install node modules
-        run: pnpm install --frozen-lockfile
-      - name: Execute Linting
-        run: pnpm bazel test --test_tag_filters=lint //docs/...
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +43,7 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Tests
-        run: pnpm bazel test --test_tag_filters=-lint,-e2e,-audit //docs/...
+        run: pnpm bazel test --test_tag_filters=-e2e,-audit //docs/...
       - name: Store Test Logs
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
         if: always()

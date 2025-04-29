@@ -179,12 +179,6 @@
             ]
           }
         },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -288,12 +282,6 @@
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules"]
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": ["scenes/**/*.ts", "scenes/**/*.html"]
           }
         },
         "e2e": {
