@@ -21,7 +21,7 @@ import {MatRipple} from '@angular/material/core';
   styleUrls: ['./guide-list.scss'],
   imports: [NavigationFocus, RouterLink, MatCard, MatCardTitle, MatCardContent, Footer, MatRipple],
   host: {
-    'class': 'main-content',
+    'class': 'docs-main-content',
   },
 })
 export class GuideList implements OnInit {

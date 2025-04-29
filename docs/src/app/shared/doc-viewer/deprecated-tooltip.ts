@@ -12,7 +12,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 /** Shows the deprecation message for a specific field as a tooltip. */
 @Component({
   selector: 'deprecated-field',
-  template: `<div class="deprecated-content" [matTooltip]="message"></div>`,
+  template: `<div class="docs-deprecated-content" [matTooltip]="message"></div>`,
   imports: [MatTooltip],
 })
 export class DeprecatedFieldComponent {

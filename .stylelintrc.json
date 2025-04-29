@@ -137,7 +137,7 @@
     ],
     "linebreaks": "unix",
     "selector-class-pattern": [
-      "^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-|test-|youtube-player-)",
+      "^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-|test-|youtube-player-|docs-|scene-|hljs)",
       {
         "resolveNestedSelectors": true
       }

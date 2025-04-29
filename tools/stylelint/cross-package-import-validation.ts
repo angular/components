@@ -46,10 +46,10 @@ const ruleFn: Rule<boolean, unknown> = isEnabled => {
           join(dirname(root.source!.input.file!), specifier),
         );
 
-        const owningFilePackage = currentPath.match(packageNameRegex)![1];
-        const targetFilePackage = targetPath.match(packageNameRegex)![1];
+        const owningFilePackage = currentPath.match(packageNameRegex)?.[1];
+        const targetFilePackage = targetPath.match(packageNameRegex)?.[1];
 
-        if (owningFilePackage !== targetFilePackage) {
+        if (owningFilePackage && targetFilePackage && owningFilePackage !== targetFilePackage) {
           utils.report({
             result,
             ruleName,

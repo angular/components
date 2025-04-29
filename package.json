@@ -37,7 +37,7 @@
     "ownerslint": "ts-node --project scripts/tsconfig.json scripts/ownerslint.ts",
     "detect-component-id-collisions": "ts-node --project scripts/tsconfig.json scripts/detect-component-id-collisions.ts",
     "tslint": "tslint -c tslint.json --project ./tsconfig.json",
-    "stylelint": "stylelint \"src/**/*.+(css|scss)\" --config .stylelintrc.json",
+    "stylelint": "stylelint \"(src|docs)/**/*.+(css|scss)\" --config .stylelintrc.json",
     "resync-caretaker-app": "ts-node --project scripts/tsconfig.json scripts/caretaking/resync-caretaker-app-prs.ts",
     "ts-circular-deps:check": "pnpm -s ng-dev ts-circular-deps check --config ./src/circular-deps-test.conf.cjs",
     "ts-circular-deps:approve": "pnpm -s ng-dev ts-circular-deps approve --config ./src/circular-deps-test.conf.cjs",

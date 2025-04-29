@@ -47,7 +47,7 @@ export class CarouselItem implements FocusableOption {
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatIcon],
   host: {
-    '[class.animations-disabled]': 'animationsDisabled',
+    '[class.docs-animations-disabled]': 'animationsDisabled',
   },
 })
 export class Carousel implements AfterContentInit {

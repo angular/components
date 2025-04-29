@@ -54,7 +54,7 @@
     </div>
     <app-carousel [aria-label]="'Featured components'">
       @for (comp of getTopComponents(); track comp) {
-        <a carousel-item class="carousel-item docs-featured-components-carousel-item"
+        <a carousel-item class="docs-carousel-item docs-featured-components-carousel-item"
            routerLink="/components/{{comp}}">
           <div class="docs-homepage-img-container">
             <img alt="" src="../../../assets/screenshots/{{comp}}.scene.png" role="presentation">
@@ -78,7 +78,7 @@
     </div>
     <app-carousel aria-label="Guides">
       @for (guide of guideItems.getAllItems(); track guide) {
-        <a carousel-item class="carousel-item docs-homepage-guides-carousel-item"
+        <a carousel-item class="docs-carousel-item docs-homepage-guides-carousel-item"
            routerLink="/guide/{{guide.id}}"
            matRipple>
           <mat-card class="docs-homepage-guides-card" appearance="outlined">
