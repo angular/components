@@ -104,7 +104,6 @@ esbuild(
         ":main.js",
         ":polyfills.js",
     ] + ["%s:index.js" % e for e in ALL_EXAMPLES],
-    minify = True,
     platform = "browser",
     sourcemap = "linked",
     sources_content = True,
