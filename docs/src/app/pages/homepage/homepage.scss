@@ -53,7 +53,7 @@ a.docs-link:hover {
     font-size: 20px;
     font-weight: 300;
     line-height: 28px;
-    margin: 15px 0 25px 0;
+    margin: 15px 0 25px;
   }
 }
 
@@ -81,7 +81,7 @@ a.docs-link:hover {
     font-size: 16px;
     font-weight: 400;
     line-height: 28px;
-    margin: 0 0 24px 0;
+    margin: 0 0 24px;
     padding: 0;
   }
 
@@ -94,7 +94,7 @@ a.docs-link:hover {
   }
 }
 
-.carousel-item {
+.docs-carousel-item {
   width: 48%;
 
   & + & {
@@ -181,7 +181,7 @@ a.docs-link:hover {
       transition: 0.3s ease-in-out;
       width: 100%;
 
-      :host(.animations-disabled) & {
+      :host(.docs-animations-disabled) & {
         transition: none;
       }
     }
@@ -240,9 +240,7 @@ a.docs-link:hover {
   }
 }
 
-/**
-  * Rules for when the device is detected to be a small screen.
-  */
+// Rules for when the device is detected to be a small screen.
 @media (max-width: 720px) {
   .docs-header-start {
     margin: $margin-promotion-sections-small 0 0 0;

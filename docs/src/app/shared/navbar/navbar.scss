@@ -24,14 +24,14 @@
   color: inherit;
 }
 
-.github-logo,
+.docs-github-logo,
 app-logo {
   margin-right: 8px;
   width: 24px;
   height: 24px;
 }
 
-.flex-spacer {
+.docs-flex-spacer {
   flex-grow: 1;
 }
 
@@ -48,7 +48,7 @@ app-logo {
   display: none;
 }
 
-.skip-link-wrapper {
+.docs-skip-link-wrapper {
   position: absolute;
   top: 10px;
   left: 50%;
@@ -71,7 +71,7 @@ app-logo {
     display: flex;
   }
 
-  .github-logo {
+  .docs-github-logo {
     margin: 0;
   }
 }

@@ -1,19 +1,20 @@
-/** Adapted from https://github.com/atom-material/atom-material-syntax-light */
+// Adapted from https://github.com/atom-material/atom-material-syntax-light
+// stylelint-disable material/no-prefixes
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 1em;
-  background: #FAFAFA;
+  background: #fafafa;
   color: #37474f;
   -webkit-font-smoothing: antialiased;
   text-size-adjust: 100%;
-  font: 300 100%/1 Roboto Mono,monospace;
+  font: 300 100%/1 Roboto Mono, monospace;
   font-size: 14px;
 }
 
 .hljs > *::selection,
 .hljs-section {
-  background-color: #D6EDEA;
+  background-color: #d6edea;
 }
 
 .hljs-comment {
@@ -36,7 +37,7 @@
 .hljs-number,
 .hljs-variable,
 .hljs-template-variable {
-  color: #80CBC4;
+  color: #80cbc4;
 }
 
 .hljs-name,
@@ -53,7 +54,7 @@
 .hljs-built_in,
 .hljs-builtin-name,
 .hljs-link {
-  color: #6182B8;
+  color: #6182b8;
 }
 
 .hljs-params {
@@ -67,14 +68,14 @@
 }
 
 .hljs-deletion {
-  color: #E53935;
+  color: #e53935;
   display: inline-block;
   width: 100%;
 }
 
 .hljs-selector-id,
 .hljs-selector-class {
-  color: #8796B0;
+  color: #8796b0;
 }
 
 .hljs-emphasis {

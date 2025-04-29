@@ -1,7 +1,7 @@
 <div class="docs-example-viewer-wrapper">
   @if (view === 'snippet') {
     <div class="docs-example-viewer-source-compact">
-      <div class="button-bar">
+      <div class="docs-button-bar">
         <button mat-icon-button type="button" (click)="copySource(snippet())"
                 class="docs-example-source-copy docs-example-button" matTooltip="Copy snippet"
                 title="Copy example source" aria-label="Copy example source to clipboard">
@@ -64,7 +64,7 @@
         <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab" mat-stretch-tabs="false">
           @for (tabName of _getExampleTabNames(); track tabName) {
             <mat-tab [label]="tabName">
-              <div class="button-bar">
+              <div class="docs-button-bar">
                 <button mat-icon-button type="button" (click)="copySource(snippet(), selectedTab)"
                         class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
                         title="Copy example source" aria-label="Copy example source to clipboard">

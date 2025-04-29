@@ -1,9 +1,9 @@
 @use '@angular/material' as mat;
 @use '@angular/cdk';
+@use './styles/general';
 @use './styles/api';
 @use './styles/markdown';
 @use './styles/tables';
-@use './styles/general';
 
 html {
   background-color: var(--mat-sys-surface);
@@ -21,3 +21,8 @@ html {
 
   @include cdk.a11y-visually-hidden();
 }
+
+@include general.structural-styles;
+@include api.api-styles;
+@include markdown.markdown-styles;
+@include tables.table-styles;

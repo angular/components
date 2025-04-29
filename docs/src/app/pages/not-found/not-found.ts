@@ -17,7 +17,7 @@ import {RouterLink} from '@angular/router';
   styleUrls: ['./not-found.scss'],
   imports: [MatAnchor, RouterLink, Footer],
   host: {
-    'class': 'main-content',
+    'class': 'docs-main-content',
   },
 })
 export class NotFound {}

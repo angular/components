@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use '../../highlightjs/material-dark';
 
 html {
   @include mat.theme((

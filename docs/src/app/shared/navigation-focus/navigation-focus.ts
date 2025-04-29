@@ -18,10 +18,11 @@ let uid = 0;
   },
 })
 export class NavigationFocus implements OnDestroy {
+  private _element: HTMLElement;
   private _navigationFocusService = inject(NavigationFocusService);
 
   constructor() {
-    const element = inject(ElementRef).nativeElement as HTMLElement;
+    const element = (this._element = inject(ElementRef).nativeElement as HTMLElement);
 
     if (!element.id) {
       element.id = `skip-link-target-${uid++}`;
@@ -31,7 +32,7 @@ export class NavigationFocus implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._navigationFocusService.relinquishFocusOnNavigation(this.el.nativeElement);
-    this._navigationFocusService.relinquishSkipLinkFocus(this.el.nativeElement);
+    this._navigationFocusService.relinquishFocusOnNavigation(this._element);
+    this._navigationFocusService.relinquishSkipLinkFocus(this._element);
   }
 }

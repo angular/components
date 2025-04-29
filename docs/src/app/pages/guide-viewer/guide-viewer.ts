@@ -22,7 +22,7 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
   styleUrls: ['./guide-viewer.scss'],
   imports: [DocViewer, NavigationFocus, TableOfContents, Footer],
   host: {
-    'class': 'main-content',
+    'class': 'docs-main-content',
   },
 })
 export class GuideViewer implements OnInit {

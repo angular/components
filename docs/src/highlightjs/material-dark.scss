@@ -1,15 +1,15 @@
-/*
-Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  (c) Kelby Gassmanl <kelby.gassman@gmail.com>
-*/
+// Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme
+// (c) Kelby Gassmanl <kelby.gassman@gmail.com>
+// stylelint-disable material/no-prefixes
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 1em;
-  background: #2B2B2D;
-  color: #CDD3D8;
+  background: #2b2b2d;
+  color: #cdd3d8;
   -webkit-font-smoothing: antialiased;
   text-size-adjust: 100%;
-  font: 300 100%/1 Roboto Mono,monospace;
+  font: 300 100%/1 Roboto Mono, monospace;
   font-size: 14px;
 }
 
@@ -18,12 +18,12 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 }
 
 .hljs-comment {
-  color: #9E9E9E;
+  color: #9e9e9e;
   font-style: italic;
 }
 
 .hljs-selector-tag {
-  color: #C792EA;
+  color: #c792ea;
 }
 
 .hljs-string,
@@ -35,14 +35,14 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 .hljs-regexp,
 .hljs-variable,
 .hljs-template-variable {
-  color: #F77669;
+  color: #f77669;
 }
 
 .hljs-keyword {
-  color: #C792EA;
+  color: #c792ea;
 }
 .hljs-function > .hljs-title {
-  color: #75A5FF;
+  color: #75a5ff;
 }
 .hljs-tag {
   color: #ce93d8;
@@ -55,7 +55,7 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 }
 
 .hljs-attribute {
-  color: #80CBBF;
+  color: #80cbbf;
 }
 
 .hljs-symbol,
@@ -63,20 +63,20 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 .hljs-built_in,
 .hljs-builtin-name,
 .hljs-link {
-  color: #C792EA;
+  color: #c792ea;
 }
 
 .hljs-params {
-  color: #EEFFF7;
+  color: #eefff7;
 }
 
 
 .hljs-meta {
-  color: #75A5FF;
+  color: #75a5ff;
 }
 
 .hljs-title {
-  color: #75A5FF;
+  color: #75a5ff;
 }
 
 .hljs-section {
@@ -98,11 +98,11 @@ Orginal Style from https://github.com/Kelbster/highlightjs-material-dark-theme  
 }
 
 .hljs-selector-class {
-  color: #FFCB68;
+  color: #ffcb68;
 }
 
 .hljs-selector-id {
-  color: #F77669;
+  color: #f77669;
 }
 
 .hljs-emphasis {

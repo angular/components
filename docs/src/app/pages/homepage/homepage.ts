@@ -47,8 +47,8 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
     MatRipple,
   ],
   host: {
-    'class': 'main-content',
-    '[class.animations-disabled]': 'animationsDisabled',
+    'class': 'docs-main-content',
+    '[class.docs-animations-disabled]': 'animationsDisabled',
   },
 })
 export class Homepage implements OnInit {
