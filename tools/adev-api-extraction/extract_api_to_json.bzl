@@ -52,6 +52,9 @@ def _extract_api_to_json(ctx):
         executable = "_extract_api_to_json",
         outputs = [json_output],
         arguments = [args],
+        env = {
+            "BAZEL_BINDIR": ctx.bin_dir.path,
+        },
     )
 
     # The return value describes what the rule is producing. In this case we need to specify

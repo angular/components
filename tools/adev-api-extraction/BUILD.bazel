@@ -1,26 +1,8 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("//tools:defaults.bzl", "ts_project")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 
 package(default_visibility = ["//visibility:public"])
-
-esbuild(
-    name = "bin",
-    bundle = True,
-    entry_point = ":index.ts",
-    external = [
-        "typescript",
-    ],
-    format = "esm",
-    output = "bin.mjs",
-    platform = "node",
-    target = "es2022",
-    deps = [
-        ":extract_api_to_json_lib",
-        "//:node_modules/@angular/compiler-cli",
-    ],
-)
 
 ts_project(
     name = "extract_api_to_json_lib",
@@ -42,18 +24,13 @@ ts_project(
 )
 
 # Action binary for the api_gen bazel rule.
-nodejs_binary(
+js_binary(
     name = "extract_api_to_json",
     data = [
-        ":bin",
+        ":extract_api_to_json_lib",
         "//:node_modules/typescript",
     ],
-    entry_point = "bin.mjs",
-    # Note: Using the linker here as we need it for ESM. The linker is not
-    # super reliably when running concurrently on Windows- but we have existing
-    # actions using the linker. An alternative would be to:
-    #   - bundle the Angular compiler into a CommonJS bundle
-    #   - use the patched resolution- but also patch the ESM imports (similar to how FW does it).
+    entry_point = "index.js",
     visibility = ["//visibility:public"],
 )
 
@@ -63,7 +40,7 @@ filegroup(
     srcs = glob(["**/*"]),
 )
 
-rules_js_tsconfig(
+ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     deps = ["//:node_modules/@types/node"],
