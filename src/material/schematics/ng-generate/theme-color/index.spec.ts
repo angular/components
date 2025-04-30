@@ -27,6 +27,8 @@ describe('material-theme-color-schematic', () => {
   function transpileTheme(content: string): string {
     return compileString(
       `
+        @use 'sass:meta';
+
         ${content}
 
         html {
@@ -38,7 +40,7 @@ describe('material-theme-color-schematic', () => {
             ),
           ));
 
-          @if mixin-exists(high-contrast-overrides) {
+          @if meta.mixin-exists(high-contrast-overrides) {
             & {
               @include high-contrast-overrides(light);
             }
@@ -53,7 +55,7 @@ describe('material-theme-color-schematic', () => {
               ),
             ));
 
-            @if mixin-exists(high-contrast-overrides) {
+            @if meta.mixin-exists(high-contrast-overrides) {
               & {
                 @include high-contrast-overrides(dark);
               }
@@ -871,6 +873,7 @@ html {
   --mat-sys-surface: light-dark(#fff8f8, #191113);
   --mat-sys-surface-dim: light-dark(#e6d6d9, #191113);
   --mat-sys-surface-bright: light-dark(#fff8f8, #413739);
+  --mat-sys-surface-container-low: light-dark(#fff0f2, #22191c);
   --mat-sys-surface-container-lowest: light-dark(#ffffff, #140c0e);
   --mat-sys-surface-container: light-dark(#faeaed, #261d20);
   --mat-sys-surface-container-high: light-dark(#f5e4e7, #31282a);
@@ -1102,6 +1105,7 @@ html {
     --mat-sys-surface: light-dark(#fff8f8, #191113);
     --mat-sys-surface-dim: light-dark(#c4b5b8, #191113);
     --mat-sys-surface-bright: light-dark(#fff8f8, #584d50);
+    --mat-sys-surface-container-low: light-dark(#fdedef, #261d20);
     --mat-sys-surface-container-lowest: light-dark(#ffffff, #000000);
     --mat-sys-surface-container: light-dark(#efdfe1, #372e30);
     --mat-sys-surface-container-high: light-dark(#e0d1d3, #43393b);

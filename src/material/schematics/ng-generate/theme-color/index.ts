@@ -292,6 +292,7 @@ function getHighContrastOverides(colorScheme: DynamicScheme): Map<string, string
   overrides.set('surface', hexFromArgb(colorScheme.surface));
   overrides.set('surface-dim', hexFromArgb(colorScheme.surfaceDim));
   overrides.set('surface-bright', hexFromArgb(colorScheme.surfaceBright));
+  overrides.set('surface-container-low', hexFromArgb(colorScheme.surfaceContainerLow));
   overrides.set('surface-container-lowest', hexFromArgb(colorScheme.surfaceContainerLowest));
   overrides.set('surface-container', hexFromArgb(colorScheme.surfaceContainer));
   overrides.set('surface-container-high', hexFromArgb(colorScheme.surfaceContainerHigh));
@@ -596,6 +597,12 @@ function getColorSysVariablesCSS(
     'surface-bright',
     lightScheme.surfaceBright,
     darkScheme.surfaceBright,
+  );
+  css += createLightDarkVar(
+    leftSpacing,
+    'surface-container-low',
+    lightScheme.surfaceContainerLow,
+    darkScheme.surfaceContainerLow,
   );
   css += createLightDarkVar(
     leftSpacing,
