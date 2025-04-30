@@ -4,6 +4,7 @@
     "baseUrl": "./",
     "outDir": "../dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,

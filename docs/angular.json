@@ -14,15 +14,16 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "sourceMap": true,
+            "preserveSymlinks": true,
             "allowedCommonJsDependencies": ["moment", "path-normalize"],
             "outputPath": "dist/material-angular-io",
             "index": "src/index.html",
-            "polyfills": "src/polyfills.ts",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "assets": [
               {
                 "glob": "**/*",
@@ -74,9 +75,7 @@
               "includePaths": ["node_modules", "src", "src/styles"]
             },
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "optimization": false,
             "namedChunks": true
           },
@@ -88,14 +87,11 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "commonChunk": false,
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -130,7 +126,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
             "karmaConfig": "karma.conf.js",
             "tsConfig": "tsconfig.spec.json",
             "scripts": [],
@@ -205,19 +200,18 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/scenes",
             "index": "scenes/src/index.html",
-            "main": "scenes/src/main.ts",
-            "polyfills": "scenes/src/polyfills.ts",
+            "browser": "scenes/src/main.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "scenes/tsconfig.app.json",
             "assets": ["scenes/src/favicon.ico", "scenes/src/assets"],
             "styles": ["scenes/src/styles.scss"],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
+            "preserveSymlinks": true,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true
@@ -235,8 +229,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -273,7 +265,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "scenes/src/test.ts",
-            "polyfills": "scenes/src/polyfills.ts",
             "tsConfig": "scenes/tsconfig.spec.json",
             "karmaConfig": "scenes/karma.conf.js",
             "assets": ["scenes/src/favicon.ico", "scenes/src/assets"],

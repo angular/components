@@ -43,3 +43,15 @@ Run `pnpm bazel build //docs:build.production` to build the project.
 ## Running unit tests
 
 1. Run `pnpm bazel test //docs/...` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Scenes Development server
+
+1. Run `pnpm bazel run //docs/scenes:build.serve` for a dev server. Navigate to `http://localhost:4200/`.
+
+# Build
+
+Run `pnpm bazel build //docs/scenes:build.production` to build the project.
+
+## Running unit tests
+
+1. Run `pnpm bazel test //docs/scenes/...` to execute the unit tests via [Karma](https://karma-runner.github.io).

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import * as normalize from 'path-normalize';
+import normalize from 'path-normalize';
 
 /**
  * Normalizes the given path by:
