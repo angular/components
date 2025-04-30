@@ -46,7 +46,7 @@
     "integration-tests": "bazel test --test_tag_filters=-linker-integration-test --build_tests_only -- //integration/...",
     "test-linker-aot": "bazel test --partial_compilation --test_tag_filters=partial-compilation-integration,-firefox --build_tests_only -- //integration/... //src/...",
     "test-linker-jit": "bazel test --partial_compilation --test_tag_filters=partial-compilation-integration,-firefox --build_tests_only --//tools:force_partial_jit_compilation=True  -- //integration/... //src/...",
-    "check-tooling-setup": "pnpm tsc --project tools/tsconfig.json --noEmit && pnpm tsc --project scripts/tsconfig.json --noEmit && pnpm tsc --project .ng-dev/tsconfig.json --noEmit",
+    "check-tooling-setup": "pnpm tsc --project tools/tsconfig.json --noEmit && pnpm tsc --project tools/adev-api-extraction/tsconfig.json --noEmit && pnpm tsc --project scripts/tsconfig.json --noEmit && pnpm tsc --project .ng-dev/tsconfig.json --noEmit",
     "tsc": "node ./node_modules/typescript/bin/tsc",
     "ci-push-deploy-docs-app": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/deploy-ci-push.mts",
     "ci-docs-monitor-test": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only scripts/docs-deploy/monitoring/ci-test.mts",
