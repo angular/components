@@ -53,7 +53,7 @@ def _extract_api_to_json(ctx):
         outputs = [json_output],
         arguments = [args],
         env = {
-            "BAZEL_BINDIR": ctx.bin_dir.path,
+            "BAZEL_BINDIR": ".",
         },
     )
 
