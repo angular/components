@@ -45,6 +45,6 @@ jobs:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'docs-preview'
           firebase-config-dir: './docs'
-          firebase-public-dir: './docs/dist/material-angular-io.production'
+          firebase-public-dir: './docs/dist'
           firebase-project-id: '${{env.PREVIEW_PROJECT}}'
           firebase-service-key: '${{secrets.FIREBASE_PREVIEW_SERVICE_TOKEN}}'
