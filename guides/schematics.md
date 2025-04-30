@@ -8,7 +8,7 @@ creating Material applications easier.
 Schematics are included with both `@angular/cdk` and `@angular/material`. Once you install the npm
 packages, they will be available through the Angular CLI.
 
-Using the command below will install Angular Material, the [Component Dev Kit](https://material.angular.io/cdk) (CDK),
+Using the command below will install Angular Material, the [Component Dev Kit](https://material.angular.dev/cdk) (CDK),
 and [Angular Animations](https://angular.dev/guide/animations) in your project. Then it will run the
 installation schematic.
 
@@ -16,7 +16,7 @@ installation schematic.
 ng add @angular/material
 ```
 
-In case you just want to install the `@angular/cdk`, there are also schematics for the [Component Dev Kit](https://material.angular.io/cdk)
+In case you just want to install the `@angular/cdk`, there are also schematics for the [Component Dev Kit](https://material.angular.dev/cdk)
 
 ```
 ng add @angular/cdk

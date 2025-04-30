@@ -39,7 +39,7 @@ export class NavBar implements OnDestroy {
   private _navigationFocusService = inject(NavigationFocusService);
 
   private _subscriptions = new Subscription();
-  isNextVersion = location.hostname === 'next.material.angular.io';
+  isNextVersion = location.hostname === 'next.material.angular.dev';
   skipLinkHref: string | null | undefined;
   skipLinkHidden = true;
 

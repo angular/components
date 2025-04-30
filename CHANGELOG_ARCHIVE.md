@@ -1891,8 +1891,8 @@ And the same test with harnesses:
 ```
 
 Learn more about
-[Angular Material's component harnesses](https://material.angular.io/guide/using-component-harnesses)
-or [building your own with the CDK](https://v9.material.angular.io/cdk/testing/overview).
+[Angular Material's component harnesses](https://material.angular.dev/guide/using-component-harnesses)
+or [building your own with the CDK](https://v9.material.angular.dev/cdk/testing/overview).
 
 #### New `@angular/google-maps` package!
 
@@ -1911,7 +1911,7 @@ Big thanks to @mbehrlich for contributing this!
 #### New `cdk/clipboard` subpackage containing helpers for working with the clipboard.
 
 This new capability for `@angular/cdk` provides some convenient helpers for dealign with
-the clipboard. [See the documentation for more information](https://material.angular.io/cdk/clipboard).
+the clipboard. [See the documentation for more information](https://material.angular.dev/cdk/clipboard).
 
 Big thanks to @xkxx for contributing this!
 
@@ -3242,8 +3242,8 @@ It was always required, but is now correctly listed in the `package.json`.
 
 ### Highlights
 
-* Support for [Drag and Drop](https://material.angular.io/cdk/drag-drop/overview) in `@angular/cdk/drag-drop`.
-* Support for [Virtual Scrolling](https://material.angular.io/cdk/scrolling/overview) in `@angular/cdk/scrolling`.
+* Support for [Drag and Drop](https://material.angular.dev/cdk/drag-drop/overview) in `@angular/cdk/drag-drop`.
+* Support for [Virtual Scrolling](https://material.angular.dev/cdk/scrolling/overview) in `@angular/cdk/scrolling`.
 * Support for native `<select>` element in `<mat-form-field>` .
 * Added `<mat-action-list>`, a list where each item is a `<button>`.
 * Updated component styles throughout the library matching the 2018 Material Design Spec refresh.
@@ -4334,18 +4334,18 @@ You can view a beta version of the docs at https://beta-angular-material-io.fire
 
 ### Highlights
 
-* [`MatTree`](https://material.angular.io/components/tree/overview) component is now available, [@tinayuangao](https://github.com/tinayuangao) recently gave a [talk at ng-conf about the new component](https://www.youtube.com/watch?v=s0Vy3sLbeyA)
-* `<mat-table>` and `<cdk-table>` now native [`<table>` elements](https://material.angular.io/components/table/overview#applying-material-styles-to-native-table) in addition to the existing [`display: flex` based layout](https://material.angular.io/components/table/overview#tables-with-code-display-flex-code-)
-* `MatTable` now supports having an optional [footer row](https://material.angular.io/components/table/overview#footer_row)
-* [Schematics](https://material.angular.io/guides/schematics) are now available for Angular Material, [@jelbourn](https://github.com/jelbourn) recently gave a [talk at ng-conf about using schematics](https://www.youtube.com/watch?v=v__RuD9RX3I)
-* `MatTabs` content can now be [lazy loaded](https://material.angular.io/components/tabs/overview#lazy_loading)
-* [`MatBadge`](https://material.angular.io/components/badge/overview) and [`MatBottomSheet`](https://material.angular.io/components/bottom-sheet/overview) components are now available
-* `@angular/cdk/overlay` has a new positioning strategy available, [`FlexibleConnectedPositionStrategy`](https://material.angular.io/cdk/overlay/overview#position-strategies), which intelligently handles sizing and positioning to ensure that overlay contents always remain on the screen
+* [`MatTree`](https://material.angular.dev/components/tree/overview) component is now available, [@tinayuangao](https://github.com/tinayuangao) recently gave a [talk at ng-conf about the new component](https://www.youtube.com/watch?v=s0Vy3sLbeyA)
+* `<mat-table>` and `<cdk-table>` now native [`<table>` elements](https://material.angular.dev/components/table/overview#applying-material-styles-to-native-table) in addition to the existing [`display: flex` based layout](https://material.angular.dev/components/table/overview#tables-with-code-display-flex-code-)
+* `MatTable` now supports having an optional [footer row](https://material.angular.dev/components/table/overview#footer_row)
+* [Schematics](https://material.angular.dev/guides/schematics) are now available for Angular Material, [@jelbourn](https://github.com/jelbourn) recently gave a [talk at ng-conf about using schematics](https://www.youtube.com/watch?v=v__RuD9RX3I)
+* `MatTabs` content can now be [lazy loaded](https://material.angular.dev/components/tabs/overview#lazy_loading)
+* [`MatBadge`](https://material.angular.dev/components/badge/overview) and [`MatBottomSheet`](https://material.angular.dev/components/bottom-sheet/overview) components are now available
+* `@angular/cdk/overlay` has a new positioning strategy available, [`FlexibleConnectedPositionStrategy`](https://material.angular.dev/cdk/overlay/overview#position-strategies), which intelligently handles sizing and positioning to ensure that overlay contents always remain on the screen
 * `MatIcon` now allows SVG icons to be registered from strings
 * `@angular/cdk/keycodes` now includes most keycodes you might need for building a web application
 * 130+ bug fixes
-* Docs for v5 are now available at [v5.material.angular.io](https://v5.material.angular.io)
-* A version picker is available [material.angular.io](https://material.angular.io) to switch between docs versions
+* Docs for v5 are now available at [v5.material.angular.dev](https://v5.material.angular.dev)
+* A version picker is available [material.angular.dev](https://material.angular.dev) to switch between docs versions
 
 
 ### Upgrading to Angular Material 6.0
@@ -5526,7 +5526,7 @@ rather than being based on the existing config object.
 * **tabs:** fix accidentally setting `top` instead of `width` after removing Renderer use ([#8602](https://github.com/angular/material2/issues/8602)) ([6e865b7](https://github.com/angular/material2/commit/6e865b7))
 
 ### Features
-* The examples on [material.angular.io](https://material.angular.io) are now opened externally via
+* The examples on [material.angular.dev](https://material.angular.dev) are now opened externally via
 StackBlitz instead of Plunker.
 
 <!-- CHANGELOG SPLIT MARKER -->
@@ -5572,7 +5572,7 @@ StackBlitz instead of Plunker.
 * consistently coerce boolean and number properties ([#7283](https://github.com/angular/material2/issues/7283)) ([3ca801a](https://github.com/angular/material2/commit/3ca801a))
 * replace extendObject utility w/ object spread ([#7372](https://github.com/angular/material2/issues/7372)) ([ea54edb](https://github.com/angular/material2/commit/ea54edb))
 * using correct global name in rollup bundle ([#8407](https://github.com/angular/material2/issues/8407)) ([40be1f2](https://github.com/angular/material2/commit/40be1f2))
-* TypeScript interfaces are now documented on https://material.angular.io
+* TypeScript interfaces are now documented on https://material.angular.dev
 
 ### Features
 
@@ -6350,7 +6350,7 @@ initial release, code from Angular Material's `core/` have been moved for `a11y/
 re-exports these symbols, marked as deprecated. The re-exports will be removed in a subsequent
 release.
 * Initial version of data-table component. There is both a `<cdk-table>` (the core) and the
-`<md-table>` (with Material Design styles). See the documentation on material.angular.io for more
+`<md-table>` (with Material Design styles). See the documentation on material.angular.dev for more
 information.
 * Initial version of `<md-paginator>` and `<md-sort-header>` components, which can be used either
 with `<md-table>` or any other table.

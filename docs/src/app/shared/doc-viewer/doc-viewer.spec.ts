@@ -62,7 +62,7 @@ describe('DocViewer', () => {
 
   it('should correct hash based links', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    fixture.componentInstance.documentUrl = `http://material.angular.io/doc-with-links.html`;
+    fixture.componentInstance.documentUrl = `http://material.angular.dev/doc-with-links.html`;
     fixture.detectChanges();
 
     const url = fixture.componentInstance.documentUrl;
@@ -75,7 +75,7 @@ describe('DocViewer', () => {
 
   it('should preserve document element ids', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    const testUrl = 'http://material.angular.io/doc-with-element-ids.html';
+    const testUrl = 'http://material.angular.dev/doc-with-element-ids.html';
 
     fixture.componentInstance.documentUrl = testUrl;
     fixture.detectChanges();
@@ -88,7 +88,7 @@ describe('DocViewer', () => {
 
   it('should instantiate example viewer in snippet view with region', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    const testUrl = 'http://material.angular.io/snippet-example.html';
+    const testUrl = 'http://material.angular.dev/snippet-example.html';
 
     fixture.componentInstance.documentUrl = testUrl;
     fixture.detectChanges();
@@ -104,7 +104,7 @@ describe('DocViewer', () => {
 
   it('should instantiate example viewer in demo view', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    const testUrl = 'http://material.angular.io/demo-example.html';
+    const testUrl = 'http://material.angular.dev/demo-example.html';
 
     fixture.componentInstance.documentUrl = testUrl;
     fixture.detectChanges();
@@ -119,7 +119,7 @@ describe('DocViewer', () => {
 
   it('should instantiate example viewer in snippet view with whole snippet', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    const testUrl = 'http://material.angular.io/whole-snippet-example.html';
+    const testUrl = 'http://material.angular.dev/whole-snippet-example.html';
 
     fixture.componentInstance.documentUrl = testUrl;
     fixture.detectChanges();
@@ -142,7 +142,7 @@ describe('DocViewer', () => {
     const url = fixture.componentInstance.documentUrl;
     http.expectOne(url).flush(FAKE_DOCS[url]);
 
-    const errorUrl = 'http://material.angular.io/error-doc.html';
+    const errorUrl = 'http://material.angular.dev/error-doc.html';
 
     fixture.componentInstance.documentUrl = errorUrl;
     fixture.detectChanges();
@@ -151,14 +151,14 @@ describe('DocViewer', () => {
 
     expect(docViewer).not.toBeNull();
     expect(docViewer.nativeElement.innerHTML).toContain(
-      'Failed to load document: http://material.angular.io/error-doc.html',
+      'Failed to load document: http://material.angular.dev/error-doc.html',
     );
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   it('should show tooltip for deprecated symbol', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    fixture.componentInstance.documentUrl = `http://material.angular.io/deprecated.html`;
+    fixture.componentInstance.documentUrl = `http://material.angular.dev/deprecated.html`;
     fixture.detectChanges();
 
     const url = fixture.componentInstance.documentUrl;
@@ -188,7 +188,7 @@ describe('DocViewer', () => {
 
   it('should show copy icon button for module imports', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
-    fixture.componentInstance.documentUrl = `http://material.angular.io/copy-module-import.html`;
+    fixture.componentInstance.documentUrl = `http://material.angular.dev/copy-module-import.html`;
     fixture.detectChanges();
 
     const url = fixture.componentInstance.documentUrl;
@@ -216,24 +216,24 @@ describe('DocViewer', () => {
   imports: [DocViewer],
 })
 class DocViewerTestComponent {
-  documentUrl = 'http://material.angular.io/simple-doc.html';
+  documentUrl = 'http://material.angular.dev/simple-doc.html';
 }
 
 const FAKE_DOCS: {[key: string]: string} = {
-  'http://material.angular.io/simple-doc.html': '<div>my docs page</div>',
-  'http://material.angular.io/doc-with-example.html': `
+  'http://material.angular.dev/simple-doc.html': '<div>my docs page</div>',
+  'http://material.angular.dev/doc-with-example.html': `
       <div>Check out this example:</div>
       <div material-docs-example="some-example"></div>`,
-  'http://material.angular.io/doc-with-links.html': `<a href="#test">Test link</a>`,
-  'http://material.angular.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
-  'http://material.angular.io/snippet-example.html':
+  'http://material.angular.dev/doc-with-links.html': `<a href="#test">Test link</a>`,
+  'http://material.angular.dev/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
+  'http://material.angular.dev/snippet-example.html':
     '<div material-docs-example="some-example" file="some-example.html"' +
     ' region="some-region"></div>',
-  'http://material.angular.io/demo-example.html':
+  'http://material.angular.dev/demo-example.html':
     '<div material-docs-example="demo-example"></div>',
-  'http://material.angular.io/whole-snippet-example.html':
+  'http://material.angular.dev/whole-snippet-example.html':
     '<div material-docs-example="whole-snippet-example" file="whole-snippet-example.ts"></div>',
-  'http://material.angular.io/deprecated.html': `<div class="docs-api-class-deprecated-marker"
+  'http://material.angular.dev/deprecated.html': `<div class="docs-api-class-deprecated-marker"
         deprecated-message="deprecated class">Deprecated</div>
 
       <div class="docs-api-constant-deprecated-marker"
@@ -247,7 +247,7 @@ const FAKE_DOCS: {[key: string]: string} = {
 
       <div class="docs-api-deprecated-marker"
         deprecated-message="deprecated">Deprecated</div>`,
-  'http://material.angular.io/copy-module-import.html': `<div class="docs-api-module">
+  'http://material.angular.dev/copy-module-import.html': `<div class="docs-api-module">
       <p class="docs-api-module-import">
         <code>
           import {MatIconModule} from '@angular/material/icon';

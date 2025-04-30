@@ -102,10 +102,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   /**
    * Theme color of the background of the tab nav. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get backgroundColor(): ThemePalette {
@@ -131,10 +131,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   /**
    * Theme color of the nav bar. This API is supported in M2 themes only, it has
-   * no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette = 'primary';
 

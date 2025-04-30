@@ -1,1 +1,1 @@
-Please see the official documentation at https://material.angular.io/components/component/slide-toggle
+Please see the official documentation at https://material.angular.dev/components/component/slide-toggle

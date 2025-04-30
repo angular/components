@@ -51,4 +51,4 @@ badge determines interactivity based on whether the host element is focusable.
 When applying a badge to a `<mat-icon>`, it is important to know that `<mat-icon>` is
 `aria-hidden="true"` by default. If the combination of icon and badge communicates meaningful
 information, always surface this information in another way. [See the guidance on indicator
-icons for more information](https://material.angular.io/components/icon/overview#indicator-icons).
+icons for more information](https://material.angular.dev/components/icon/overview#indicator-icons).
