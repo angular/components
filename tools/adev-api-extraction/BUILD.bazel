@@ -7,7 +7,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "extract_api_to_json_lib",
     srcs = glob(
-        ["**/*.ts"],
+        ["**/*.mts"],
         exclude = [
             "**/*.spec.ts",
         ],
@@ -30,7 +30,7 @@ js_binary(
         ":extract_api_to_json_lib",
         "//:node_modules/typescript",
     ],
-    entry_point = "index.js",
+    entry_point = "index.mjs",
     visibility = ["//visibility:public"],
 )
 

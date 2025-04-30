@@ -19,7 +19,7 @@ import {
   NgtscProgram,
 } from '@angular/compiler-cli';
 import ts from 'typescript';
-import {EXAMPLES_PATH, interpolateCodeExamples} from './interpolate-code-examples';
+import {EXAMPLES_PATH, interpolateCodeExamples} from './interpolate-code-examples.mjs';
 
 function main() {
   const [paramFilePath] = process.argv.slice(2);

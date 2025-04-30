@@ -9,8 +9,9 @@
   "compilerOptions": {
     "strict": true,
     "types": ["node"],
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "declaration": true,
     "sourceMap": true
