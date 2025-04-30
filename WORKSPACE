@@ -88,7 +88,6 @@ npm_translate_lock(
     },
     data = [
         "//:package.json",
-        "//:patches/@angular-devkit__architect-cli.patch",
         "//:pnpm-workspace.yaml",
         "//integration:package.json",
         "//src/cdk:package.json",
@@ -204,7 +203,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "0a54fca16350cab2b823908f1725aec175fcfeb2",
+    commit = "84a8039330a4accc86f0b53c4ef5ff745c3e1bbe",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 

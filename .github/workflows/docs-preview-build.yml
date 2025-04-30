@@ -35,4 +35,4 @@ jobs:
           workflow-artifact-name: 'docs-preview'
           pull-number: '${{github.event.pull_request.number}}'
           artifact-build-revision: '${{github.event.pull_request.head.sha}}'
-          deploy-directory: './dist/bin/docs/material-angular-io.production'
+          deploy-directory: './dist/bin/docs/dist'

@@ -17,8 +17,6 @@ packages:
   - src/youtube-player
 
 catalog:
-  '@angular-devkit/architect-cli': 0.2000.0-next.5
-  '@angular-devkit/architect': 0.2000.0-next.5
   '@angular-devkit/build-angular': 20.0.0-next.5
   '@angular-devkit/core': 20.0.0-next.5
   '@angular-devkit/schematics': 20.0.0-next.5

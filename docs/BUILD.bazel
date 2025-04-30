@@ -1,3 +1,4 @@
+load("@rules_angular//src/architect:ng_config.bzl", "ng_config")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library", "js_test")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -12,9 +13,7 @@ npm_link_all_packages(name = "node_modules")
 copy_to_bin(
     name = "ng-base-config",
     srcs = [
-        "angular.json",
         "package.json",
-        "tsconfig.json",
     ],
 )
 
@@ -24,6 +23,10 @@ copy_to_bin(
     srcs = [
         "karma-custom-launchers.js",
     ],
+)
+
+ng_config(
+    name = "config",
 )
 
 # The main application
@@ -37,6 +40,11 @@ ng_app(
         "//docs:node_modules/path-normalize",
         "//docs/src/assets/tokens",
     ],
+)
+
+alias(
+    name = "serve",
+    actual = ":build.serve",
 )
 
 js_library(
