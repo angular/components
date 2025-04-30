@@ -19,9 +19,9 @@
     "publish-prod": "bash ./tools/deploy.sh stable prod",
     "publish-dev": "bash ./tools/deploy.sh",
     "publish-beta": "bash ./tools/deploy.sh stable beta",
-    "test:audit:localhost": "node tools/audit-docs dist/material-angular-io",
+    "test:audit:localhost": "node tools/audit-docs dist/material-angular-io/browser",
     "test:audit:bazel": "node tools/audit-docs $(bazel cquery --output=files //:build.production)",
-    "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io"
+    "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io/browser"
   },
   "engines": {
     "node": "^20.11.1 || >=22.0.0",

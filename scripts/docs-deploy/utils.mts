@@ -55,6 +55,5 @@ export async function buildDocsSite() {
   await $`pnpm bazel build --config=snapshot-build //docs:build.production`;
   await $`rm -Rf docs/dist`;
   await $`mkdir -p docs/dist`;
-  await $`cp -R dist/bin/docs/material-angular-io.production docs/dist`;
-  await $`chmod -R u+w docs/dist/material-angular-io.production`;
+  await $`cp -R dist/bin/docs/dist/browser docs/dist`;
 }

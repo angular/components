@@ -26,6 +26,7 @@ const sh = require('shelljs');
 sh.set('-e');
 
 const lightServer = require('light-server');
+const path = require('path');
 
 // Constants
 
@@ -97,7 +98,7 @@ if (!/https?:\/\//.test(urlOrDeployDir)) {
   lightServer({
     port,
     bind,
-    serve: urlOrDeployDir,
+    serve: path.join(urlOrDeployDir, 'browser'),
     quiet: true,
     noReload: true,
     historyindex: '/index.html',
