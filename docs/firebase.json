@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/firebase-config.json",
   "hosting": {
     "target": "mat-aio",
-    "public": "./dist/material-angular-io.production",
+    "public": "./dist",
     "cleanUrls": true,
     "rewrites": [
       {
