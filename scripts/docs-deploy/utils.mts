@@ -54,6 +54,6 @@ export async function buildDocsSite() {
   cd(projectDir);
   await $`pnpm bazel build --config=snapshot-build //docs:build.production`;
   await $`rm -Rf docs/dist`;
-  await $`mkdir -p docs/dist`;
   await $`cp -R dist/bin/docs/dist/browser docs/dist`;
+  await $`chmod u+w -R docs/dist`;
 }
