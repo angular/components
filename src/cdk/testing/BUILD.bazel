@@ -1,6 +1,7 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite", "ts_project")
 load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
+load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -46,4 +47,15 @@ webdriver_test(
     deps = [
         "//src/cdk/testing/tests:webdriver_test_sources",
     ],
+)
+
+extract_api_to_json(
+    name = "json_api",
+    srcs = [
+        ":source-files",
+    ],
+    entry_point = ":index.ts",
+    module_name = "@angular/cdk/testing",
+    output_name = "cdk_testing.json",
+    private_modules = [""],
 )

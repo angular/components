@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "ts_project")
+load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -18,4 +19,15 @@ ts_project(
 filegroup(
     name = "source-files",
     srcs = glob(["**/*.ts"]),
+)
+
+extract_api_to_json(
+    name = "json_api",
+    srcs = [
+        ":source-files",
+    ],
+    entry_point = ":index.ts",
+    module_name = "@angular/cdk//selenium-webdriver",
+    output_name = "cdk_testing_selenium_webdriver.json",
+    private_modules = [""],
 )

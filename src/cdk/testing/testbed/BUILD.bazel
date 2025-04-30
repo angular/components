@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
+load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -36,4 +37,15 @@ ts_project(
 ng_web_test_suite(
     name = "unit_tests",
     deps = [":unit_test_sources"],
+)
+
+extract_api_to_json(
+    name = "json_api",
+    srcs = [
+        ":source-files",
+    ],
+    entry_point = ":index.ts",
+    module_name = "@angular/cdk/testing/testbed",
+    output_name = "cdk_testing_testbed.json",
+    private_modules = [""],
 )

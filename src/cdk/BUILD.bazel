@@ -1,6 +1,7 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS", "CDK_ENTRYPOINTS_WITH_STYLES", "CDK_SCSS_LIBS", "CDK_TARGETS")
 load("//tools:defaults.bzl", "ng_package", "sass_library", "ts_project")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -59,7 +60,11 @@ ng_package(
     ] + prebuiltStyleTargets + CDK_SCSS_LIBS,
     nested_packages = [
         "//src/cdk/schematics:npm_package",
+        ":adev_assets",
     ],
+    replace_prefixes = {
+        "adev_assets/": "_adev_assets/",
+    },
     tags = ["release-package"],
     visibility = [
         "//:__pkg__",
@@ -74,4 +79,17 @@ filegroup(
     # Only secondary entry-points declare overview files currently. Entry-points
     # which contain a slash are not in the top-level and do not have an overview.
     srcs = ["//src/cdk/%s:overview" % ep for ep in CDK_ENTRYPOINTS if not "/" in ep],
+)
+
+copy_to_directory(
+    name = "adev_assets",
+    srcs = [
+        "//src/cdk/testing:json_api",
+        "//src/cdk/testing/protractor:json_api",
+        "//src/cdk/testing/selenium-webdriver:json_api",
+        "//src/cdk/testing/testbed:json_api",
+    ],
+    replace_prefixes = {
+        "**/": "",
+    },
 )
