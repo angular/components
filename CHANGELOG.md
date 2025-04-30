@@ -1,3 +1,28 @@
+<a name="19.2.12"></a>
+# 19.2.12 "francium-fork" (2025-04-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [63c5e0068](https://github.com/angular/components/commit/63c5e00685e5b6d3cc61b40aa72c165feb76f0eb) | fix | **overlay:** reduce touch interaction delay on backdrop ([#30971](https://github.com/angular/components/pull/30971)) |
+| [00dac592a](https://github.com/angular/components/commit/00dac592af2fff753c0f06b496bbf5792de874f0) | fix | **stepper:** resolve null pointer errors ([#30944](https://github.com/angular/components/pull/30944)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5fa518581](https://github.com/angular/components/commit/5fa51858118de3b06fddc505d03d047ef970b4b8) | fix | **chips:** icon cut off when text-spacing is increased ([#30867](https://github.com/angular/components/pull/30867)) |
+| [5efd099a3](https://github.com/angular/components/commit/5efd099a30a79f0da2c46a40a02e65ae5f6cea23) | fix | **schematics:** surface-container-low token not emitted ([#30985](https://github.com/angular/components/pull/30985)) |
+| [47ae20144](https://github.com/angular/components/commit/47ae201441b664f41adcc3837a0d3b0078e6c5c8) | fix | **table:** height tokens not applying to flex table ([#30978](https://github.com/angular/components/pull/30978)) |
+| [9a8d136d6](https://github.com/angular/components/commit/9a8d136d662b1ae48fa9a38a0faba7aa5105fbcc) | fix | **tabs:** flicker when animationDuration is set to zero ([#30966](https://github.com/angular/components/pull/30966)) ([#30968](https://github.com/angular/components/pull/30968)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [278f29e90](https://github.com/angular/components/commit/278f29e9098ed46a8940b25d6e4a6c3827bc70c7) | fix | implicitly include google.maps types instead of the triple slash workaround ([#30942](https://github.com/angular/components/pull/30942)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [33a721716](https://github.com/angular/components/commit/33a7217165d1310cab52ece64f322468c78535b5) | fix | ensure mat-option parents are the offsetParent ([#30977](https://github.com/angular/components/pull/30977)) ([#30980](https://github.com/angular/components/pull/30980)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.11"></a>
 # 19.2.11 "dopamine-dumpling" (2025-04-23)
 ### cdk
