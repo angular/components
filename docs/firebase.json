@@ -45,7 +45,7 @@
           {
             "key": "Content-Security-Policy",
             // Keep in sync with `angular.json`.
-            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://material.angular.dev https://material.angular.io https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
+            "value": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://*.angular.dev https://material.angular.io https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
           }
         ]
       },
