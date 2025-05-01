@@ -32,6 +32,8 @@ $prefix: (mat, stepper);
     header-icon-foreground-color: map.get($systems, md-sys-color, surface),
     header-edit-state-icon-background-color: map.get($systems, md-sys-color, primary),
     header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+    header-done-state-icon-background-color: map.get($systems, md-sys-color, primary),
+    header-done-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
     header-error-state-label-text-color: map.get($systems, md-sys-color, error),
     header-error-state-icon-foreground-color: map.get($systems, md-sys-color, error),
     header-error-state-icon-background-color:
@@ -55,24 +57,32 @@ $prefix: (mat, stepper);
     primary: (
       header-edit-state-icon-background-color: map.get($systems, md-sys-color, primary),
       header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
+      header-done-state-icon-background-color: map.get($systems, md-sys-color, primary),
+      header-done-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
       header-selected-state-icon-background-color: map.get($systems, md-sys-color, primary),
       header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-primary),
     ),
     secondary: (
       header-edit-state-icon-background-color: map.get($systems, md-sys-color, secondary),
       header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-secondary),
+      header-done-state-icon-background-color: map.get($systems, md-sys-color, secondary),
+      header-done-state-icon-foreground-color: map.get($systems, md-sys-color, on-secondary),
       header-selected-state-icon-background-color: map.get($systems, md-sys-color, secondary),
       header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-secondary),
     ),
     tertiary: (
       header-edit-state-icon-background-color: map.get($systems, md-sys-color, tertiary),
       header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-tertiary),
+      header-done-state-icon-background-color: map.get($systems, md-sys-color, tertiary),
+      header-done-state-icon-foreground-color: map.get($systems, md-sys-color, on-tertiary),
       header-selected-state-icon-background-color: map.get($systems, md-sys-color, tertiary),
       header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-tertiary),
     ),
     error: (
       header-edit-state-icon-background-color: map.get($systems, md-sys-color, error),
       header-edit-state-icon-foreground-color: map.get($systems, md-sys-color, on-error),
+      header-done-state-icon-background-color: map.get($systems, md-sys-color, error),
+      header-done-state-icon-foreground-color: map.get($systems, md-sys-color, on-error),
       header-selected-state-icon-background-color: map.get($systems, md-sys-color, error),
       header-selected-state-icon-foreground-color: map.get($systems, md-sys-color, on-error),
     )
