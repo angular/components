@@ -106,7 +106,7 @@
           "options": {
             "headers": {
               "--NOTE--": "Keep in sync with `firebase.json`",
-              "Content-Security-Policy": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://material.angular.io https://material.angular.dev https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
+              "Content-Security-Policy": "upgrade-insecure-requests; default-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: *; frame-src https://www.youtube.com; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.google-analytics.com https://www.googletagmanager.com; child-src 'self' blob:; connect-src 'self' https://material.angular.io https://*.angular.dev https://*.google-analytics.com https://stats.g.doubleclick.net https://api.github.com https://www.googletagmanager.com;"
             },
             "buildTarget": "material-angular-io:build"
           },
