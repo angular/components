@@ -1,3 +1,51 @@
+<a name="20.0.0-next.9"></a>
+# 20.0.0-next.9 "sodium-salamander" (2025-05-01)
+## Breaking Changes
+### cdk
+- * `CanStick` has been removed.
+  * `CDK_TABLE_TEMPLATE` has been removed.
+  * `StickyDirection` has been removed.
+  * `StickyStyler` has been removed.
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e456c751c](https://github.com/angular/components/commit/e456c751cdeff2f196e90933d4c99de317e70b31) | feat | **listbox:** add cdk-active class ([#30932](https://github.com/angular/components/pull/30932)) |
+| [96fa9fc55](https://github.com/angular/components/commit/96fa9fc5526e79127edf028eef88f547c8c93b88) | feat | **popover-edit:** Support skipping over annotated rows when the user moves focus up/down. ([#30916](https://github.com/angular/components/pull/30916)) |
+| [025010b64](https://github.com/angular/components/commit/025010b64c59b4aa2bfec8593f050e75fe3eefaa) | feat | **tabs:** add cdk-active class and update example styles ([#30950](https://github.com/angular/components/pull/30950)) |
+| [44e9ccbf5](https://github.com/angular/components/commit/44e9ccbf5080abade2d35478ad3c82451ac61585) | fix | **listbox:** initial listbox focus state ([#30764](https://github.com/angular/components/pull/30764)) |
+| [0e391700c](https://github.com/angular/components/commit/0e391700cb55786a74a3aa16757e90596eb55e6c) | fix | **tabs:** handle space and enter events ([#30889](https://github.com/angular/components/pull/30889)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cc61697fb](https://github.com/angular/components/commit/cc61697fb9cf234c0e6a4f95a587d377cdb23a4b) | fix | implicitly include google.maps types instead of the triple slash workaround ([#30942](https://github.com/angular/components/pull/30942)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [663585a1c](https://github.com/angular/components/commit/663585a1c4f539b946d12bc0d014c97f02d940d0) | feat | **card:** support filled variant ([#29868](https://github.com/angular/components/pull/29868)) |
+| [764a1ccd1](https://github.com/angular/components/commit/764a1ccd15f5f231058789eb98cdcf4e40dc69db) | feat | **dialog:** add closePredicate option |
+| [48644f56a](https://github.com/angular/components/commit/48644f56a134fd1c78847bae01ab9e35f6ad9320) | fix | **chips:** icon cut off when text-spacing is increased ([#30867](https://github.com/angular/components/pull/30867)) |
+| [86ea718e7](https://github.com/angular/components/commit/86ea718e7813d360a620df6bf1ddba77e93cdb6e) | fix | **schematics:** surface-container-low token not emitted ([#30985](https://github.com/angular/components/pull/30985)) |
+| [d3a8c5b89](https://github.com/angular/components/commit/d3a8c5b8921c057a7655b44e2e6fc7c282b66b0b) | fix | **slide-toggle:** opacity tokens not being used ([#30946](https://github.com/angular/components/pull/30946)) |
+| [0cf6ba107](https://github.com/angular/components/commit/0cf6ba1076dff1a7ec9f6e6c88f39a71751bb5d9) | fix | **stepper:** done icon tokens not emitted in M3 ([#30996](https://github.com/angular/components/pull/30996)) |
+| [50a9a9b9d](https://github.com/angular/components/commit/50a9a9b9daabc06e16a63f03668df2fde192ab44) | fix | **table:** height tokens not applying to flex table ([#30978](https://github.com/angular/components/pull/30978)) |
+| [c63b1fe7b](https://github.com/angular/components/commit/c63b1fe7b340796d21492b9ccc28e91df6464f37) | fix | **tabs:** flicker when animationDuration is set to zero ([#30966](https://github.com/angular/components/pull/30966)) |
+| [6c9678e69](https://github.com/angular/components/commit/6c9678e6902f13a841511df671efc724720cca1e) | perf | **form-field:** set notch outline variable only on relevant element ([#30955](https://github.com/angular/components/pull/30955)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [06821d85a](https://github.com/angular/components/commit/06821d85a0d75648fcc936c714f333908d5be017) | feat | **dialog:** add closePredicate option |
+| [e4a1f54d8](https://github.com/angular/components/commit/e4a1f54d80f8cf2ea05cd7153b798eb5e6c2bd03) | fix | **overlay:** reduce touch interaction delay on backdrop ([#30971](https://github.com/angular/components/pull/30971)) |
+| [87501e866](https://github.com/angular/components/commit/87501e8662e1bd551376cd452fdd181b4091751c) | fix | **schematics:** support project index file discovery for object-form and default ([#30967](https://github.com/angular/components/pull/30967)) |
+| [6bdea0b86](https://github.com/angular/components/commit/6bdea0b864e153ab501557aa480418c798c5c869) | fix | **stepper:** resolve null pointer errors ([#30944](https://github.com/angular/components/pull/30944)) |
+| [0f48b04dd](https://github.com/angular/components/commit/0f48b04dd340461811f974d112c05374a5fb1a4a) | fix | **table:** move out unused style scheduler ([#30963](https://github.com/angular/components/pull/30963)) |
+| [6ffe9c748](https://github.com/angular/components/commit/6ffe9c748ef85cea8c7af1018962d5807a78a8ee) | fix | **table:** remove private symbols from public API ([#30956](https://github.com/angular/components/pull/30956)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3465f9271](https://github.com/angular/components/commit/3465f9271811733fb623536af0e53cd529b4b2a9) | fix | ensure mat-option parents are the offsetParent ([#30977](https://github.com/angular/components/pull/30977)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.14"></a>
 # 19.2.14 "sodium-scallop" (2025-05-01)
 
