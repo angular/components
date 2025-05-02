@@ -43,15 +43,23 @@ export type HarnessQuery<T extends ComponentHarness> =
  * Since we don't know for sure which query will match, the result type if the union of the types
  * for all possible results.
  *
- * e.g.
+ * @usageNotes
+ * ### Example
+ *
  * The type:
- * `LocatorFnResult&lt;[
- *   ComponentHarnessConstructor&lt;MyHarness&gt;,
- *   HarnessPredicate&lt;MyOtherHarness&gt;,
+ * ```ts
+ * LocatorFnResult<[
+ *   ComponentHarnessConstructor<MyHarness>,
+ *   HarnessPredicate<MyOtherHarness>,
  *   string
- * ]&gt;`
+ * ]>
+ * ```
+ *
  * is equivalent to:
- * `MyHarness | MyOtherHarness | TestElement`.
+ *
+ * ```ts
+ * MyHarness | MyOtherHarness | TestElement
+ * ```
  */
 export type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = {
   [I in keyof T]: T[I] extends new (...args: any[]) => infer C // Map `ComponentHarnessConstructor<C>` to `C`.
@@ -545,8 +553,8 @@ export interface BaseHarnessFilters {
 }
 
 /**
- * A class used to associate a ComponentHarness class with predicates functions that can be used to
- * filter instances of the class.
+ * A class used to associate a ComponentHarness class with predicate functions that can be used to
+ * filter instances of the class to be matched.
  */
 export class HarnessPredicate<T extends ComponentHarness> {
   private _predicates: AsyncPredicate<T>[] = [];
