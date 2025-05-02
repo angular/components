@@ -29,7 +29,8 @@ import {_StructuralStylesLoader} from '../core';
     'class': 'mdc-evolution-chip__action mat-mdc-chip-action',
     '[class.mdc-evolution-chip__action--primary]': '_isPrimary',
     '[class.mdc-evolution-chip__action--presentational]': '!isInteractive',
-    '[class.mdc-evolution-chip__action--trailing]': '!_isPrimary',
+    '[class.mdc-evolution-chip__action--secondary]': '!_isPrimary',
+    '[class.mdc-evolution-chip__action--trailing]': '!_isPrimary && !_isLeading',
     '[attr.tabindex]': '_getTabindex()',
     '[attr.disabled]': '_getDisabledAttribute()',
     '[attr.aria-disabled]': 'disabled',
@@ -43,6 +44,7 @@ export class MatChipAction {
     _handlePrimaryActionInteraction(): void;
     remove(): void;
     disabled: boolean;
+    _edit(): void;
     _isEditing?: boolean;
   }>(MAT_CHIP);
 
@@ -51,6 +53,9 @@ export class MatChipAction {
 
   /** Whether this is the primary action in the chip. */
   _isPrimary = true;
+
+  /** Whether this is the leading action in the chip. */
+  _isLeading = false; // TODO(adolgachev): consolidate usage to secondary css class
 
   /** Whether the action is disabled. */
   @Input({transform: booleanAttribute})

@@ -160,6 +160,8 @@
 
       <mat-checkbox [(ngModel)]="disableInputs">Disabled</mat-checkbox>
       <mat-checkbox [(ngModel)]="editable">Editable</mat-checkbox>
+      <mat-checkbox [(ngModel)]="peopleWithAvatar">Show Avatar</mat-checkbox>
+      <mat-checkbox [(ngModel)]="showEditIcon">Show Edit Icon</mat-checkbox>
       <mat-checkbox [(ngModel)]="disabledInteractive">Disabled Interactive</mat-checkbox>
 
       <h4>Input is last child of chip grid</h4>
@@ -172,6 +174,14 @@
               [editable]="editable"
               (removed)="remove(person)"
               (edited)="edit(person, $event)">
+              @if (showEditIcon) {
+                <button matChipEdit aria-label="Edit contributor">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (peopleWithAvatar && person.avatar) {
+                <mat-chip-avatar>{{person.avatar}}</mat-chip-avatar>
+              }
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
                 <mat-icon>close</mat-icon>

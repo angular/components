@@ -270,7 +270,7 @@ describe('MatChipGrid', () => {
           fixture = createComponent(ChipGridWithRemove);
           flush();
           trailingActions = chipGridNativeElement.querySelectorAll(
-            '.mdc-evolution-chip__action--trailing',
+            '.mdc-evolution-chip__action--secondary',
           );
         }));
 
@@ -595,7 +595,7 @@ describe('MatChipGrid', () => {
       const fixture = createComponent(ChipGridWithRemove, undefined, [NoopAnimationsModule]);
       flush();
       const trailingActions = chipGridNativeElement.querySelectorAll<HTMLElement>(
-        '.mdc-evolution-chip__action--trailing',
+        '.mdc-evolution-chip__action--secondary',
       );
       const chip = chips.get(2)!;
       chip.focus();

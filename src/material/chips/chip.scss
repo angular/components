@@ -130,7 +130,18 @@ $fallbacks: m3-chip.get-tokens();
 
   // Moved out into variables, because the selectors are too long.
   $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
+  $with-leading: '.mdc-evolution-chip--with-leading-action';
   $with-trailing: '.mdc-evolution-chip--with-trailing-action';
+
+  .mat-mdc-standard-chip#{$with-leading} & {
+    padding-left: 0;
+    padding-right: $_action-padding;
+  }
+
+  [dir='rtl'] .mat-mdc-standard-chip#{$with-leading} & {
+    padding-left: $_action-padding;
+    padding-right: 0;
+  }
 
   .mat-mdc-standard-chip#{$with-trailing} & {
     padding-left: $_action-padding;
@@ -140,6 +151,11 @@ $fallbacks: m3-chip.get-tokens();
   [dir='rtl'] .mat-mdc-standard-chip#{$with-trailing} & {
     padding-left: 0;
     padding-right: $_action-padding;
+  }
+
+  .mat-mdc-standard-chip#{$with-leading}#{$with-trailing} & {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
@@ -173,7 +189,7 @@ $fallbacks: m3-chip.get-tokens();
   }
 }
 
-.mdc-evolution-chip__action--trailing {
+.mdc-evolution-chip__action--secondary {
   position: relative;
   overflow: visible;
 
@@ -198,7 +214,6 @@ $fallbacks: m3-chip.get-tokens();
     padding-left: $_trailing-action-padding;
     padding-right: $_trailing-action-padding;
   }
-
 
   .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
     padding-left: $_avatar-trailing-padding;
@@ -262,6 +277,7 @@ $fallbacks: m3-chip.get-tokens();
   // Moved out into variables, because the selectors are too long.
   $with-icon: '.mdc-evolution-chip--with-primary-icon';
   $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
+  $with-leading: '.mdc-evolution-chip--with-leading-action';
   $with-trailing: '.mdc-evolution-chip--with-trailing-action';
 
   .mdc-evolution-chip--selectable:not(.mdc-evolution-chip--selected):not(#{$with-icon}) & {
@@ -296,6 +312,10 @@ $fallbacks: m3-chip.get-tokens();
   [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
     padding-left: $_avatar-trailing-padding;
     padding-right: $_avatar-leading-padding;
+  }
+
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-leading} & {
+    padding-left: 0;
   }
 }
 
@@ -499,7 +519,7 @@ $fallbacks: m3-chip.get-tokens();
   }
 }
 
-.mat-mdc-chip-remove {
+.mat-mdc-chip-edit, .mat-mdc-chip-remove {
   opacity: token-utils.slot(chip-trailing-action-opacity, $fallbacks);
 
   &:focus {
@@ -650,7 +670,7 @@ $fallbacks: m3-chip.get-tokens();
   }
 }
 
-.mat-mdc-chip-remove {
+.mat-mdc-chip-edit, .mat-mdc-chip-remove {
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $offset: var(--mat-focus-indicator-border-width, #{$default-border-width});
@@ -714,6 +734,6 @@ $fallbacks: m3-chip.get-tokens();
 // Prevents icon from being cut off when text spacing is increased.
 // .mat-mdc-chip-remove selector necessary for remove button with icon.
 // Fixes b/250063405.
-.mdc-evolution-chip__icon, .mat-mdc-chip-remove .mat-icon {
+.mdc-evolution-chip__icon, .mat-mdc-chip-edit .mat-icon, .mat-mdc-chip-remove .mat-icon {
   min-height: fit-content;
 }
