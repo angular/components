@@ -33,6 +33,7 @@ export class CdkTabsExample {
   orientation: 'vertical' | 'horizontal' = 'horizontal';
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'follow';
+  tabSelection = 'tab-1';
 
   wrap = new FormControl(true, {nonNullable: true});
   disabled = new FormControl(false, {nonNullable: true});

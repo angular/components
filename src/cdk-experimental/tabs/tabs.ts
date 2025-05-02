@@ -20,7 +20,7 @@ import {
   inject,
   input,
   model,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {TabListPattern, TabPanelPattern, TabPattern} from '../ui-patterns';
@@ -97,6 +97,9 @@ export class CdkTabList {
   /** The CdkTabs nested inside of the CdkTabList. */
   private readonly _cdkTabs = contentChildren(CdkTab);
 
+  /** The internal tab selection state. */
+  private readonly _selection = linkedSignal(() => (this.tab() ? [this.tab()!] : []));
+
   /** A signal wrapper for directionality. */
   protected textDirection = toSignal(this._directionality.change, {
     initialValue: this._directionality.value,
@@ -126,13 +129,21 @@ export class CdkTabList {
   /** The current index that has been navigated to. */
   activeIndex = model<number>(0);
 
+  // TODO(ok7sai): Provides a default state when there is no pre-select tab.
+  /** The current selected tab. */
+  tab = model<string | undefined>();
+
   /** The TabList UIPattern. */
   pattern: TabListPattern = new TabListPattern({
     ...this,
     items: this.tabs,
     textDirection: this.textDirection,
-    value: signal<string[]>([]),
+    value: this._selection,
   });
+
+  constructor() {
+    effect(() => this.tab.set(this._selection()[0]));
+  }
 }
 
 /** A selectable tab in a TabList. */
