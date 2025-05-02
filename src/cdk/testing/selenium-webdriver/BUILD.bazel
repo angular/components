@@ -27,7 +27,7 @@ extract_api_to_json(
         ":source-files",
     ],
     entry_point = ":index.ts",
-    module_name = "@angular/cdk//selenium-webdriver",
+    module_name = "@angular/cdk/testing/selenium-webdriver",
     output_name = "cdk_testing_selenium_webdriver.json",
     private_modules = [""],
 )
