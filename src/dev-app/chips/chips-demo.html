@@ -172,6 +172,9 @@
               [editable]="editable"
               (removed)="remove(person)"
               (edited)="edit(person, $event)">
+              <button matChipEdit aria-label="Edit contributor">
+                <mat-icon>edit</mat-icon>
+              </button>
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
                 <mat-icon>close</mat-icon>

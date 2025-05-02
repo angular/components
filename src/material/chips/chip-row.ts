@@ -23,7 +23,8 @@ import {takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction} from './chip-action';
 import {MatChipEditInput} from './chip-edit-input';
-import {MAT_CHIP} from './tokens';
+import {MatChipEdit} from './chip-icons';
+import {MAT_CHIP, MAT_CHIP_EDIT} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
 export interface MatChipEditedEvent extends MatChipEvent {
@@ -41,15 +42,15 @@ export interface MatChipEditedEvent extends MatChipEvent {
   styleUrl: 'chip.css',
   host: {
     'class': 'mat-mdc-chip mat-mdc-chip-row mdc-evolution-chip',
-    '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
+    '[class.mat-mdc-chip-with-avatar]': '_hasLeadingIcon()',
     '[class.mat-mdc-chip-disabled]': 'disabled',
     '[class.mat-mdc-chip-editing]': '_isEditing',
     '[class.mat-mdc-chip-editable]': 'editable',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
-    '[class.mdc-evolution-chip--with-primary-graphic]': 'leadingIcon',
-    '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
-    '[class.mdc-evolution-chip--with-avatar]': 'leadingIcon',
+    '[class.mdc-evolution-chip--with-primary-graphic]': '_hasLeadingIcon()',
+    '[class.mdc-evolution-chip--with-primary-icon]': '_hasLeadingIcon()',
+    '[class.mdc-evolution-chip--with-avatar]': '_hasLeadingIcon()',
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[id]': 'id',
@@ -107,6 +108,11 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     });
   }
 
+  /** Returns whether the chip has a leading icon. */
+  _hasLeadingIcon() {
+    return !this._isEditing && !!(this.editIcon || this.leadingIcon);
+  }
+
   override _hasTrailingIcon() {
     // The trailing icon is hidden while editing.
     return !this._isEditing && super._hasTrailingIcon();
@@ -135,16 +141,26 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
-  _handleDoubleclick(event: MouseEvent) {
+  _handleDoubleclick(event: Event) {
     if (!this.disabled && this.editable) {
       this._startEditing(event);
     }
   }
 
-  private _startEditing(event: Event) {
+  override _edit(): void {
+    if (!this.disabled && this.editable) {
+      // markForCheck necessary for edit input to be rendered
+      this._changeDetectorRef.markForCheck();
+      this._startEditing();
+    }
+  }
+
+  private _startEditing(event?: Event) {
     if (
       !this.primaryAction ||
-      (this.removeIcon && this._getSourceAction(event.target as Node) === this.removeIcon)
+      (this.removeIcon &&
+        !!event &&
+        this._getSourceAction(event.target as Node) === this.removeIcon)
     ) {
       return;
     }
@@ -158,7 +174,7 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     afterNextRender(
       () => {
         this._getEditInput().initialize(value);
-        this._editStartPending = false;
+        setTimeout(() => this._ngZone.run(() => (this._editStartPending = false)));
       },
       {injector: this._injector},
     );

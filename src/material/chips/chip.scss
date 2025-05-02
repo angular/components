@@ -528,7 +528,7 @@ $token-slots: m2-chip.get-token-slots();
     }
   }
 
-  .mat-mdc-chip-remove {
+  .mat-mdc-chip-edit, .mat-mdc-chip-remove {
     opacity: token-utils.slot(trailing-action-opacity);
 
     &:focus {
@@ -680,7 +680,7 @@ $token-slots: m2-chip.get-token-slots();
   }
 }
 
-.mat-mdc-chip-remove {
+.mat-mdc-chip-edit, .mat-mdc-chip-remove {
   &::before {
     $default-border-width: focus-indicators-private.$default-border-width;
     $offset: var(--mat-focus-indicator-border-width, #{$default-border-width});
@@ -744,6 +744,6 @@ $token-slots: m2-chip.get-token-slots();
 // Prevents icon from being cut off when text spacing is increased.
 // .mat-mdc-chip-remove selector necessary for remove button with icon.
 // Fixes b/250063405.
-.mdc-evolution-chip__icon, .mat-mdc-chip-remove .mat-icon {
+.mdc-evolution-chip__icon, .mat-mdc-chip-edit .mat-icon, .mat-mdc-chip-remove .mat-icon {
   min-height: fit-content;
 }

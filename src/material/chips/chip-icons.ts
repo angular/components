@@ -9,7 +9,7 @@
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Directive} from '@angular/core';
 import {MatChipAction} from './chip-action';
-import {MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {MAT_CHIP_AVATAR, MAT_CHIP_EDIT, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
 
 /** Avatar image within a chip. */
 @Directive({
@@ -40,6 +40,53 @@ export class MatChipTrailingIcon extends MatChipAction {
   override isInteractive = false;
 
   override _isPrimary = false;
+}
+
+/**
+ * Directive to remove the parent chip when the trailing icon is clicked or
+ * when the ENTER key is pressed on it.
+ *
+ * Recommended for use with the Material Design "cancel" icon
+ * available at https://material.io/icons/#ic_cancel.
+ *
+ * Example:
+ *
+ * ```
+ * <mat-chip>
+ *   <mat-icon matChipEdit>cancel</mat-icon>
+ * </mat-chip>
+ * ```
+ */
+
+@Directive({
+  selector: '[matChipEdit]',
+  host: {
+    'class':
+      'mat-mdc-chip-edit mat-mdc-chip-avatar mat-focus-indicator ' +
+      'mdc-evolution-chip__icon mdc-evolution-chip__icon--primary',
+    'role': 'button',
+    '[attr.aria-hidden]': 'null',
+  },
+  providers: [{provide: MAT_CHIP_EDIT, useExisting: MatChipEdit}],
+})
+export class MatChipEdit extends MatChipAction {
+  override _isPrimary = false;
+
+  override _handleClick(event: MouseEvent): void {
+    if (!this.disabled) {
+      event.stopPropagation();
+      event.preventDefault();
+      this._parentChip._edit();
+    }
+  }
+
+  override _handleKeydown(event: KeyboardEvent) {
+    if ((event.keyCode === ENTER || event.keyCode === SPACE) && !this.disabled) {
+      event.stopPropagation();
+      event.preventDefault();
+      this._parentChip._edit();
+    }
+  }
 }
 
 /**

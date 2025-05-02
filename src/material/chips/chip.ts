@@ -44,8 +44,14 @@ import {
 } from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction} from './chip-action';
-import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
-import {MAT_CHIP, MAT_CHIP_AVATAR, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
+import {
+  MAT_CHIP,
+  MAT_CHIP_AVATAR,
+  MAT_CHIP_EDIT,
+  MAT_CHIP_REMOVE,
+  MAT_CHIP_TRAILING_ICON,
+} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip`. */
 export interface MatChipEvent {
@@ -132,6 +138,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** All trailing icons present in the chip. */
   @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
   protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
+
+  /** All edit icons present in the chip. */
+  @ContentChildren(MAT_CHIP_EDIT, {descendants: true})
+  protected _allEditIcons: QueryList<MatChipEdit>;
 
   /** All remove icons present in the chip. */
   @ContentChildren(MAT_CHIP_REMOVE, {descendants: true})
@@ -225,6 +235,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** The chip's leading icon. */
   @ContentChild(MAT_CHIP_AVATAR) leadingIcon: MatChipAvatar;
 
+  /** The chip's leading edit icon. */
+  @ContentChild(MAT_CHIP_EDIT) editIcon: MatChipEdit;
+
   /** The chip's trailing icon. */
   @ContentChild(MAT_CHIP_TRAILING_ICON) trailingIcon: MatChipTrailingIcon;
 
@@ -279,6 +292,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     this._actionChanges = merge(
       this._allLeadingIcons.changes,
       this._allTrailingIcons.changes,
+      this._allEditIcons.changes,
       this._allRemoveIcons.changes,
     ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
@@ -358,6 +372,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   _getActions(): MatChipAction[] {
     const result: MatChipAction[] = [];
 
+    if (this.editIcon) {
+      result.push(this.editIcon);
+    }
+
     if (this.primaryAction) {
       result.push(this.primaryAction);
     }
@@ -375,6 +393,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** Handles interactions with the primary action of the chip. */
   _handlePrimaryActionInteraction() {
+    // Empty here, but is overwritten in child classes.
+  }
+
+  /** Handles interactions with the edit action of the chip. */
+  _edit(event: Event) {
     // Empty here, but is overwritten in child classes.
   }
 
