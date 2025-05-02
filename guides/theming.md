@@ -11,7 +11,7 @@ If your application depends on a version before v19, or if your application's
 theme is applied using a theme config created with `mat.define-theme`, 
 `mat.define-light-theme`, or `mat.define-dark-theme`,
 then you can refer to the theming guides at 
-[v18.material.angular.io/guides](https://v18.material.angular.io/guides).
+[v18.material.angular.dev/guides](https://v18.material.angular.dev/guides).
 
 ## Getting Started
 
@@ -365,7 +365,7 @@ information to the user:
 }
 ```
 
-See the [Theme Variables](https://material.angular.io/guide/system-variables) guide for a
+See the [Theme Variables](https://material.angular.dev/guide/system-variables) guide for a
 comprehensive list of these variables, examples of where they are used, and how
 components can depend on them.
 

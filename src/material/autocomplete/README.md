@@ -1,1 +1,1 @@
-See documentation on [material.angular.io](https://material.angular.io/).
+See documentation on [material.angular.dev](https://material.angular.dev/).

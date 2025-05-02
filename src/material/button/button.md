@@ -13,7 +13,7 @@ There are several button variants, each applied as an attribute:
 |----------------------|--------------------------------------------------------------------------|
 | `matButton`          | Rectangular button that can contain text and icons                       |
 | `matIconButton`      | Smaller, circular button, meant to contain an icon and no text           |
-| `matFab`             | Rectangular button w/ elevation and rounded corners, meant to contain an icon. Can be [extended](https://material.angular.io/components/button/overview#extended-fab-buttons) to a rectangle to also fit a label               |
+| `matFab`             | Rectangular button w/ elevation and rounded corners, meant to contain an icon. Can be [extended](https://material.angular.dev/components/button/overview#extended-fab-buttons) to a rectangle to also fit a label               |
 | `matMiniFab`         | Smaller variant of `matFab`                                              |
 
 
@@ -75,9 +75,9 @@ with any assistive technology your application supports.
 #### Buttons with icons
 Buttons or links containing only icons (such as `matFab`, `matMiniFab`, and `matIconButton`)
 should be given a meaningful label via `aria-label` or `aria-labelledby`. [See the documentation
-for `MatIcon`](https://material.angular.io/components/icon) for more
+for `MatIcon`](https://material.angular.dev/components/icon) for more
 information on using icons in buttons. Additionally, to be fully accessible the icon should have a minimum touch-target of 48x48 to ensure that the icon is easily clickable particularly on mobile devices and small screens.
 
 #### Toggle buttons
-[See the documentation for `MatButtonToggle`](https://material.angular.io/components/button-toggle)
+[See the documentation for `MatButtonToggle`](https://material.angular.dev/components/button-toggle)
 for information on stateful toggle buttons.

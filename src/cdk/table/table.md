@@ -7,7 +7,7 @@ built. Because it enforces no opinions on these matters, developers have full co
 interaction patterns associated with the table.
 
 For a Material Design styled table, see the
-[documentation for `MatTable`](https://material.angular.io/components/table) which builds on
+[documentation for `MatTable`](https://material.angular.dev/components/table) which builds on
 top of the CDK data-table.
 
 <!-- example(cdk-table-basic) -->
@@ -204,5 +204,5 @@ selectors. For example, `<table cdk-table>` becomes `<cdk-table>`; `<tr cdk-row`
 ```
 
 For an example of how to render the structure as a table, see the
-[documentation for `<mat-table>`](https://material.angular.io/components/table) which includes
+[documentation for `<mat-table>`](https://material.angular.dev/components/table) which includes
 the style support for this approach.
