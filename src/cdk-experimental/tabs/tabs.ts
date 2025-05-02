@@ -34,15 +34,20 @@ import {TabListPattern, TabPanelPattern, TabPattern} from '../ui-patterns';
  * ```html
  * <div cdkTabs>
  *   <ul cdkTabList>
- *     <li cdkTab>Tab 1</li>
- *     <li cdkTab>Tab 2</li>
- *     <li cdkTab>Tab 3</li>
+ *     <li cdkTab value="tab1">Tab 1</li>
+ *     <li cdkTab value="tab2">Tab 2</li>
+ *     <li cdkTab value="tab3">Tab 3</li>
  *   </ul>
  *
- *   <div cdkTabPanel>Tab content 1</div>
- *   <div cdkTabPanel>Tab content 2</div>
- *   <div cdkTabPanel>Tab content 3</div>
- * </div>
+ *   <div cdkTabPanel value="tab1">
+ *      <ng-template cdkTabContent>Tab content 1</ng-template>
+ *   </div>
+ *   <div cdkTabPanel value="tab2">
+ *      <ng-template cdkTabContent>Tab content 2</ng-template>
+ *   </div>
+ *   <div cdkTabPanel value="tab3">
+ *      <ng-template cdkTabContent>Tab content 3</ng-template>
+ *   </div>
  * ```
  */
 @Directive({
