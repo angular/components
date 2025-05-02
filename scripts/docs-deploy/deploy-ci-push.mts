@@ -34,9 +34,9 @@ async function main() {
     const targets = [{projectId, description, site: sites.next}];
 
     // If the next release train is for a new major that is not published as part of the
-    // other active release trains, we also publish to e.g. `v14.material.angular.io`.
+    // other active release trains, we also publish to e.g. `v14.material.angular.dev`.
     // Note: If both `rc` and `next` have the same major, we want the `rc` release-train
-    // to take precedence and be responsible for the `<major>.material.angular.io` deploy.
+    // to take precedence and be responsible for the `<major>.material.angular.dev` deploy.
     if (major > (active.releaseCandidate ?? active.latest).version.major) {
       targets.push({projectId, description, site: sites.forMajor(major)});
     }
@@ -72,9 +72,9 @@ async function main() {
     const targets = [{projectId, description, site: sites.rc}];
 
     // If the RC is for a new major that `latest` does not publish yet, we will deploy
-    // the dedicated major site like `v13.material.angular.io` using the `rc` branch.
+    // the dedicated major site like `v13.material.angular.dev` using the `rc` branch.
     // Note: If both `rc` and `next` have the same major, we want the `rc` release-train
-    // to take precedence and be responsible for the `<major>.material.angular.io` deploy.
+    // to take precedence and be responsible for the `<major>.material.angular.dev` deploy.
     if (major > active.latest.version.major) {
       targets.push({projectId, description, site: sites.forMajor(major)});
     }
@@ -96,7 +96,7 @@ async function main() {
 
   // The `branchesForMajor` array will hold the most recent version branch for current major.
   // If the latest branch does not match the current one, we know that this is not the
-  // most recent minor and should not be re-deployed to e.g. `<major>.material.angular.io`.
+  // most recent minor and should not be re-deployed to e.g. `<major>.material.angular.dev`.
   if (branchesForMajor[0].name !== branchName) {
     console.log(
       `Skipping deployment as version branch is not the most recent ` +

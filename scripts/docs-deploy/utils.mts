@@ -17,12 +17,12 @@ export class SiteTarget {
 
 /** Object capturing all site targets for the docs-app. */
 export const sites = {
-  stable: new SiteTarget('latest-material-angular-io', 'https://material.angular.io'),
-  next: new SiteTarget('next-material-angular-io', 'https://next.material.angular.io'),
-  rc: new SiteTarget('rc-material-angular-io', 'https://rc.material.angular.io'),
+  stable: new SiteTarget('latest-material-angular-io', 'https://material.angular.dev'),
+  next: new SiteTarget('next-material-angular-io', 'https://next.material.angular.dev'),
+  rc: new SiteTarget('rc-material-angular-io', 'https://rc.material.angular.dev'),
 
   forMajor: (major: number) =>
-    new SiteTarget(`v${major}-material-angular-io`, `https://v${major}.material.angular.io`),
+    new SiteTarget(`v${major}-material-angular-io`, `https://v${major}.material.angular.dev`),
 };
 
 /** Optional Github access token. Can be used for querying the active release trains. */

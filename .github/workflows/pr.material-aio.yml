@@ -1,4 +1,4 @@
-name: 'PR (material.angular.io)'
+name: 'PR (material.angular.dev)'
 
 on:
   pull_request:
@@ -47,7 +47,7 @@ jobs:
         if: always()
         with:
           name: test-logs
-          path: material.angular.io/bazel-testlogs/
+          path: material.angular.dev/bazel-testlogs/
           retention-days: 14
 
   lighthouse:
@@ -68,5 +68,5 @@ jobs:
         if: always()
         with:
           name: lighthouse-logs
-          path: material.angular.io/bazel-testlogs/
+          path: material.angular.dev/bazel-testlogs/
           retention-days: 14

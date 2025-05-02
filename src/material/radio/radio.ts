@@ -79,10 +79,10 @@ export const MAT_RADIO_GROUP = new InjectionToken<MatRadioGroup>('MatRadioGroup'
 export interface MatRadioDefaultOptions {
   /**
    * Theme color of the radio button. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/radio/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/radio/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   color: ThemePalette;
 
@@ -174,10 +174,10 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
 
   /**
    * Theme color of the radio buttons in the group. This API is supported in M2
-   * themes only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/radio/styling.
+   * themes only, it has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/radio/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color: ThemePalette;
 
@@ -528,10 +528,10 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
 
   /**
    * Theme color of the radio button. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/radio/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/radio/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   get color(): ThemePalette {

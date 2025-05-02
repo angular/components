@@ -1,1 +1,1 @@
-Please see the official documentation at https://material.angular.io/components/component/card
+Please see the official documentation at https://material.angular.dev/components/component/card

@@ -21,19 +21,19 @@
         "items": [
           {
             "value": "azure-blue",
-            "label": "Azure/Blue         [Preview: https://material.angular.io?theme=azure-blue]"
+            "label": "Azure/Blue         [Preview: https://material.angular.dev?theme=azure-blue]"
           },
           {
             "value": "rose-red",
-            "label": "Rose/Red           [Preview: https://material.angular.io?theme=rose-red]"
+            "label": "Rose/Red           [Preview: https://material.angular.dev?theme=rose-red]"
           },
           {
             "value": "magenta-violet",
-            "label": "Magenta/Violet     [Preview: https://material.angular.io?theme=magenta-violet]"
+            "label": "Magenta/Violet     [Preview: https://material.angular.dev?theme=magenta-violet]"
           },
           {
             "value": "cyan-orange",
-            "label": "Cyan/Orange        [Preview: https://material.angular.io?theme=cyan-orange]"
+            "label": "Cyan/Orange        [Preview: https://material.angular.dev?theme=cyan-orange]"
           },
           {"value": "custom", "label": "Custom"}
         ]
