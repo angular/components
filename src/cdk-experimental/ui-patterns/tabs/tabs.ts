@@ -21,11 +21,15 @@ import {
   ListSelectionInputs,
   ListSelectionItem,
 } from '../behaviors/list-selection/list-selection';
+import {ExpansionControl, ExpansionPanel} from '../behaviors/expansion/expansion';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 /** The required inputs to tabs. */
 export interface TabInputs extends ListNavigationItem, ListSelectionItem<string>, ListFocusItem {
+  /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
+
+  /** The remote tabpanel controlled by the tab. */
   tabpanel: SignalLike<TabPanelPattern | undefined>;
 }
 
@@ -37,37 +41,69 @@ export class TabPattern {
   /** A local unique identifier for the tab. */
   value: SignalLike<string>;
 
-  /** Whether the tab is active. */
-  active = computed(() => this.tablist()?.focusManager.activeItem() === this);
-
-  /** Whether the tab is selected. */
-  selected = computed(() => this.tablist().selection.inputs.value().includes(this.value()));
-
-  /** A Tabpanel Id controlled by the tab. */
-  controls = computed(() => this.tabpanel()?.id());
-
   /** Whether the tab is disabled. */
   disabled: SignalLike<boolean>;
-
-  /** A reference to the parent tablist. */
-  tablist: SignalLike<TabListPattern>;
-
-  /** A reference to the corresponding tabpanel. */
-  tabpanel: SignalLike<TabPanelPattern | undefined>;
-
-  /** The tabindex of the tab. */
-  tabindex = computed(() => this.tablist().focusManager.getItemTabindex(this));
 
   /** The html element that should receive focus. */
   element: SignalLike<HTMLElement>;
 
-  constructor(inputs: TabInputs) {
+  /** Controls the expansion state for the tab.  */
+  expansionControl: ExpansionControl;
+
+  /** Whether the tab is active. */
+  active = computed(() => this.inputs.tablist().focusManager.activeItem() === this);
+
+  /** Whether the tab is selected. */
+  selected = computed(
+    () => !!this.inputs.tablist().selection.inputs.value().includes(this.value()),
+  );
+
+  /** A tabpanel Id controlled by the tab. */
+  controls = computed(() => this.expansionControl.controls());
+
+  /** The tabindex of the tab. */
+  tabindex = computed(() => this.inputs.tablist().focusManager.getItemTabindex(this));
+
+  constructor(readonly inputs: TabInputs) {
     this.id = inputs.id;
     this.value = inputs.value;
-    this.tablist = inputs.tablist;
-    this.tabpanel = inputs.tabpanel;
-    this.element = inputs.element;
     this.disabled = inputs.disabled;
+    this.element = inputs.element;
+    this.expansionControl = new ExpansionControl({
+      visible: this.selected,
+      expansionPanel: computed(() => inputs.tabpanel()?.expansionPanel),
+    });
+  }
+}
+
+/** The required inputs for the tabpanel. */
+export interface TabPanelInputs {
+  id: SignalLike<string>;
+  tab: SignalLike<TabPattern | undefined>;
+  value: SignalLike<string>;
+}
+
+/** A tabpanel associated with a tab. */
+export class TabPanelPattern {
+  /** A global unique identifier for the tabpanel. */
+  id: SignalLike<string>;
+
+  /** A local unique identifier for the tabpanel. */
+  value: SignalLike<string>;
+
+  /** Represents the expansion state for the tabpanel.  */
+  expansionPanel: ExpansionPanel;
+
+  /** Whether the tabpanel is hidden. */
+  hidden = computed(() => this.expansionPanel.hidden());
+
+  constructor(inputs: TabPanelInputs) {
+    this.id = inputs.id;
+    this.value = inputs.value;
+    this.expansionPanel = new ExpansionPanel({
+      id: inputs.id,
+      expansionControl: computed(() => inputs.tab()?.expansionControl),
+    });
   }
 }
 
@@ -85,34 +121,6 @@ export type TabListInputs = ListNavigationInputs<TabPattern> &
   ListFocusInputs<TabPattern> & {
     disabled: SignalLike<boolean>;
   };
-
-/** The required inputs for the tabpanel. */
-export interface TabPanelInputs {
-  id: SignalLike<string>;
-  tab: SignalLike<TabPattern | undefined>;
-  value: SignalLike<string>;
-}
-
-/** A tabpanel associated with a tab. */
-export class TabPanelPattern {
-  /** A global unique identifier for the tabpanel. */
-  id: SignalLike<string>;
-
-  /** A local unique identifier for the tabpanel. */
-  value: SignalLike<string>;
-
-  /** A reference to the corresponding tab. */
-  tab: SignalLike<TabPattern | undefined>;
-
-  /** Whether the tabpanel is hidden. */
-  hidden = computed(() => !this.tab()?.selected());
-
-  constructor(inputs: TabPanelInputs) {
-    this.id = inputs.id;
-    this.value = inputs.value;
-    this.tab = inputs.tab;
-  }
-}
 
 /** Controls the state of a tablist. */
 export class TabListPattern {
