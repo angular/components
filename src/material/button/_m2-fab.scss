@@ -61,28 +61,10 @@
 
 // Generates the mapping for the properties that change based on the FAB palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $foreground-color: null;
-  $state-layer-color: null;
-  $ripple-color: null;
   $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-
-  @if (m2-utils.$private-is-internal-build or
-      meta.type-of($contrast-color) != 'color') {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: m2-utils.contrast-tone($container-color, $is-dark);
-    $color: if($contrast-tone == 'dark', #000, #fff);
-    $foreground-color: $color;
-    $state-layer-color: $color;
-    $ripple-color: rgba($color, 0.1);
-  }
-  @else {
-    $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-    $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-    $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
-  }
+  $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
 
   @return (
     fab-container-color: inspection.get-theme-color($theme, $palette-name, default),
