@@ -19,7 +19,6 @@ import {
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 
@@ -46,15 +45,11 @@ export class CarouselItem implements FocusableOption {
   styleUrls: ['./carousel.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [MatIconButton, MatIcon],
-  host: {
-    '[class.docs-animations-disabled]': 'animationsDisabled',
-  },
 })
 export class Carousel implements AfterContentInit {
   readonly ariaLabel = input<string | undefined>(undefined, {alias: 'aria-label'});
   readonly items = contentChildren(CarouselItem);
   readonly list = viewChild.required<ElementRef<HTMLElement>>('list');
-  readonly animationsDisabled: boolean;
   position = 0;
   showPrevArrow = false;
   showNextArrow = true;
@@ -81,12 +76,6 @@ export class Carousel implements AfterContentInit {
         this._scrollToActiveItem();
       }
     }
-  }
-
-  constructor() {
-    const animationsModule = inject(ANIMATION_MODULE_TYPE, {optional: true});
-
-    this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 
   ngAfterContentInit(): void {

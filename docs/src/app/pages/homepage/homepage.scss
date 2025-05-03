@@ -180,10 +180,6 @@ a.docs-link:hover {
     img {
       transition: 0.3s ease-in-out;
       width: 100%;
-
-      :host(.docs-animations-disabled) & {
-        transition: none;
-      }
     }
 
     &:hover, &:focus {
