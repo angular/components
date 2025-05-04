@@ -74,7 +74,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet =
   /** Min-height of the dialog. If a number is provided, assumes pixel units. */
   minHeight?: number | string;
 
-  /** Max-width of the dialog. If a number is provided, assumes pixel units. Defaults to 80vw. */
+  /** Max-width of the dialog. If a number is provided, assumes pixel units. */
   maxWidth?: number | string;
 
   /** Max-height of the dialog. If a number is provided, assumes pixel units. */
