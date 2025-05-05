@@ -80,11 +80,11 @@ export class NavPattern<V> {
   /** The keydown event manager for the nav. */
   keydown = computed(() => {
     return new KeyboardEventManager()
-      .on(this.prevKey, () => this.prev({selectOne: true}))
-      .on(this.nextKey, () => this.next({selectOne: true}))
-      .on('Home', () => this.first({selectOne: true}))
-      .on('End', () => this.last({selectOne: true}))
-      .on(this.typeaheadRegexp, e => this.search(e.key, {selectOne: true}))
+      .on(this.prevKey, () => this.prev())
+      .on(this.nextKey, () => this.next())
+      .on('Home', () => this.first())
+      .on('End', () => this.last())
+      .on(this.typeaheadRegexp, e => this.search(e.key))
       .on(this.dynamicSpaceKey, () => this.selection.selectOne()) // Activate link
       .on('Enter', () => this.selection.selectOne()); // Activate link
   });
