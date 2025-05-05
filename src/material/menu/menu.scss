@@ -12,6 +12,11 @@ $token-slots: m2-menu.get-token-slots();
 mat-menu {
   display: none;
 }
+.mat-mdc-menu-trigger.stay-open-while-press[aria-expanded='true'] {
+  .mat-mdc-button-persistent-ripple:before {
+    opacity: var(--mat-icon-button-pressed-state-layer-opacity);
+  }
+}
 
 .mat-mdc-menu-content {
   margin: 0;
