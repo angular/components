@@ -30,4 +30,5 @@ extract_api_to_json(
     module_name = "@angular/cdk/testing/selenium-webdriver",
     output_name = "cdk_testing_selenium_webdriver.json",
     private_modules = [""],
+    repo = "angular/components",
 )
