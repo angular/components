@@ -9,7 +9,9 @@
 import {ViewContainerRef, Injector, StaticProvider, Type} from '@angular/core';
 import {Direction} from '../bidi';
 import {PositionStrategy, ScrollStrategy} from '../overlay';
+import {Observable} from 'rxjs';
 import {BasePortalOutlet} from '../portal';
+import {FocusOrigin} from '../a11y';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -17,8 +19,15 @@ export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 /** Valid ARIA roles for a dialog. */
 export type DialogRole = 'dialog' | 'alertdialog';
 
+/** Component that can be used as the container for the dialog. */
+export type DialogContainer = BasePortalOutlet & {
+  _focusTrapped?: Observable<void>;
+  _closeInteractionType?: FocusOrigin;
+  _recaptureFocus?: () => void;
+};
+
 /** Configuration for opening a modal dialog. */
-export class DialogConfig<D = unknown, R = unknown, C extends BasePortalOutlet = BasePortalOutlet> {
+export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = BasePortalOutlet> {
   /**
    * Where the attached component should live in Angular's *logical* component tree.
    * This affects what is available for injection and the change detection order for the
