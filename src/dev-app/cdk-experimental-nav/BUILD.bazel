@@ -1,0 +1,13 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "cdk-experimental-nav",
+    srcs = glob(["**/*.ts"]),
+    assets = ["cdk-nav-demo.html"],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/nav",
+    ],
+)

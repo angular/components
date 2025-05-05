@@ -3,7 +3,7 @@ load("//tools:defaults.bzl", "ng_project")
 package(default_visibility = ["//visibility:public"])
 
 ng_project(
-    name = "listbox",
+    name = "nav",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],

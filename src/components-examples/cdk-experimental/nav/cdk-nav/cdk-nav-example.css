@@ -1,0 +1,44 @@
+.example-nav {
+  border: 1px solid var(--mat-sys-outline);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  gap: 4px; /* Add gap like listbox */
+}
+
+.example-link {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  display: block; /* Ensure links take full width */
+  outline: none; /* Remove default browser focus outline */
+  position: relative; /* For potential future pseudo-elements */
+}
+
+/* Style for hover and keyboard focus (cdk-active) */
+.example-link.cdk-active:not([aria-disabled='true']),
+.example-link:hover:not([aria-disabled='true']) {
+  outline: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-container);
+}
+
+/* Style for focus-visible (programmatic/keyboard focus) */
+.example-link:focus-visible:not([aria-disabled='true']) {
+  outline: 2px solid var(--mat-sys-primary);
+  background: var(--mat-sys-surface-container);
+}
+
+/* Style for the selected link (using aria-current="page") */
+.example-link[aria-current='page']:not([aria-disabled='true']) {
+  background-color: var(--mat-sys-secondary-container);
+  font-weight: bold;
+}
+
+.example-link[aria-disabled='true'] {
+  color: var(--mat-sys-on-surface);
+  opacity: 0.3;
+  cursor: not-allowed;
+}
