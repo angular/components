@@ -1,7 +1,7 @@
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  $non-resizable-hover-divider: mat.get-theme-color($theme, foreground, base, 0.12);
+  $non-resizable-hover-divider: mat.get-theme-color($theme, foreground, base-12);
   $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
   $resizable-active-divider: mat.get-theme-color($theme, primary, 600);
 
