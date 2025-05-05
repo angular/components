@@ -187,6 +187,17 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     this._menuItemInstance?._setTriggersSubmenu(this.triggersSubmenu());
   }
+  private _pressedWhileOpen: boolean = false;
+  @Input()
+  set pressedWhileOpen(value: boolean) {
+    this._pressedWhileOpen = value;
+    if (value) {
+      this._element.nativeElement.classList.add('stay-open-while-press');
+    }
+  }
+  get pressedWhileOpen(): boolean {
+    return this._pressedWhileOpen;
+  }
   private _menu: MatMenuPanel | null;
 
   /** Data to be passed along to any lazily-rendered content. */
