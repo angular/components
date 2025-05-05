@@ -1,5 +1,3 @@
-@use 'sass:map';
-@use 'sass:math';
 @use './m2-icon-button';
 @use './m3-icon-button';
 @use '../core/style/sass-utils';
@@ -78,41 +76,11 @@
     @include token-utils.create-token-values(
         m3-icon-button.$prefix, m3-icon-button.get-density-tokens($theme));
   } @else {
-    $icon-size: 24px;
-    $density-scale: inspection.get-theme-density($theme);
-    $size-map: (
-      0: 48px,
-      -1: 44px,
-      -2: 40px,
-      -3: 36px,
-      -4: 32px,
-      -5: 28px,
-    );
-    $calculated-size: map.get($size-map, $density-scale);
-
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
         m2-icon-button.$prefix,
-        m2-icon-button.get-density-tokens(
-            $theme, $exclude: (state-layer-size))
+        m2-icon-button.get-density-tokens($theme)
       );
-    }
-
-    // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
-    .mat-mdc-icon-button.mat-mdc-button-base {
-      // Match the styles that used to be present. This is necessary for backwards
-      // compat to match the previous implementations selector count (two classes).
-      --mdc-icon-button-state-layer-size: #{$calculated-size};
-      --mat-icon-button-state-layer-size: #{$calculated-size};
-
-      // TODO: Switch calculated-size to "var(--mat-icon-button-state-layer-size)"
-      // Currently fails validation because the variable is "undefined"
-      // in the sass stack.
-      // TODO: Switch icon-size to "var(--mat-icon-button-icon-size)". Currently
-      // fails validation because the variable is "undefined" in the sass stack.
-      width: var(--mat-icon-button-state-layer-size);
-      height: var(--mat-icon-button-state-layer-size);
-      padding: math.div($calculated-size - $icon-size, 2);
     }
   }
 }

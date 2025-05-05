@@ -54,7 +54,7 @@ $prefix: (mat, icon-button);
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme, $exclude: ()) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
 
   $tokens: (
     touch-target-display: if($scale < -1, none, block),
