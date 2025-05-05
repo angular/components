@@ -157,6 +157,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     'class': 'mat-drawer',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
+    '[attr.tabindex]': '(!opened || mode === "side") ? null : -1',
     '[class.mat-drawer-end]': 'position === "end"',
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
@@ -165,7 +166,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // this was also done by the animations module which some internal tests seem to depend on.
     // Simulate it by toggling the `hidden` attribute instead.
     '[style.visibility]': '(!_container && !opened) ? "hidden" : null',
-    '[attr.tabindex]': 'mode === "side" ? null : "-1"',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
