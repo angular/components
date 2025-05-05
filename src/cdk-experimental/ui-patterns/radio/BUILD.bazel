@@ -1,0 +1,36 @@
+load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "radio",
+    srcs = [
+        "radio.ts",
+        "radio-group.ts",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
+        "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
+    ],
+)
+
+ts_project(
+    name = "unit_test_sources",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":radio",
+        "//:node_modules/@angular/core",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
