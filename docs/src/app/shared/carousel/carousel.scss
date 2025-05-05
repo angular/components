@@ -8,10 +8,6 @@ app-carousel {
   flex-direction: row;
   outline: none;
   transition: transform 0.5s ease-in-out;
-
-  .docs-animations-disabled & {
-    transition: none;
-  }
 }
 
 .docs-carousel-content-wrapper {
