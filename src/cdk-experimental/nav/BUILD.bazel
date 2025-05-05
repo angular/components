@@ -1,0 +1,17 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "listbox",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+    ],
+)
