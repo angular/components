@@ -32,9 +32,9 @@ $prefix: (mat, list);
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $foreground-text: inspection.get-theme-color($theme, foreground, text);
-  $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
-  $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
+  $foreground-text: inspection.get-theme-color($theme, foreground, on-surface);
+  $foreground-secondary-text: inspection.get-theme-color($theme, foreground, base-70-54);
+  $foreground-hint-text: inspection.get-theme-color($theme, foreground, base-50-38);
   $text-icon-on-background: sass-utils.safe-color-change(
       $foreground-base, $alpha: if($is-dark, 0.5, 0.38));
 

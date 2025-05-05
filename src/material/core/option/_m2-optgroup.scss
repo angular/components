@@ -14,7 +14,7 @@ $prefix: (mat, optgroup);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    label-text-color: inspection.get-theme-color($theme, foreground, text),
+    label-text-color: inspection.get-theme-color($theme, foreground, on-surface),
   );
 }
 

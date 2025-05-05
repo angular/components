@@ -89,7 +89,7 @@ $prefix: (mat, slide-toggle);
         disabled-unselected-track-color: $on-surface,
         handle-elevation-shadow: elevation.get-box-shadow(1),
         handle-surface-color: #fff,
-        label-text-color: inspection.get-theme-color($theme, foreground, text),
+        label-text-color: inspection.get-theme-color($theme, foreground, on-surface),
         selected-icon-color: $icon-color,
         unselected-hover-handle-color: $on-surface-state-content,
         unselected-focus-handle-color: $on-surface-state-content,

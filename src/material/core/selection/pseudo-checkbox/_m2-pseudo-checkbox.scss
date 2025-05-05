@@ -15,12 +15,12 @@ $prefix: (mat, pseudo-checkbox);
 @function get-color-tokens($theme, $palette-name: accent) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $disabled-color: if($is-dark, #686868, #b0b0b0);
-  $checkmark-color: inspection.get-theme-color($theme, background, background);
+  $checkmark-color: inspection.get-theme-color($theme, background, h303030-grey-50);
 
   @return (
     full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
     full-selected-checkmark-color: $checkmark-color,
-    full-unselected-icon-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    full-unselected-icon-color: inspection.get-theme-color($theme, foreground, base-70-54),
     full-disabled-selected-checkmark-color: $checkmark-color,
     full-disabled-unselected-icon-color: $disabled-color,
     full-disabled-selected-icon-color: $disabled-color,

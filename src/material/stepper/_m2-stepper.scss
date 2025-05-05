@@ -19,16 +19,17 @@ $prefix: (mat, stepper);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
-    container-color: inspection.get-theme-color($theme, background, card),
-    line-color: inspection.get-theme-color($theme, foreground, divider),
-    header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-label-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    container-color: inspection.get-theme-color($theme, background, surface),
+    line-color: inspection.get-theme-color($theme, foreground, base-12),
+    header-hover-state-layer-color: inspection.get-theme-color($theme, background, white-black-04),
+    header-focus-state-layer-color: inspection.get-theme-color($theme, background, white-black-04),
+    header-label-text-color: inspection.get-theme-color($theme, foreground, base-70-54),
     header-optional-label-text-color: inspection.get-theme-color(
-        $theme, foreground, secondary-text),
-    header-selected-state-label-text-color: inspection.get-theme-color($theme, foreground, text),
+        $theme, foreground, base-70-54),
+    header-selected-state-label-text-color:
+        inspection.get-theme-color($theme, foreground, on-surface),
     header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
-    header-icon-background-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    header-icon-background-color: inspection.get-theme-color($theme, foreground, base-70-54),
     header-error-state-icon-foreground-color: inspection.get-theme-color($theme, warn, text),
     header-error-state-icon-background-color: transparent,
   ));

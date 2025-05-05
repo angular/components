@@ -27,7 +27,7 @@ $prefix: (mat, form-field);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
+  $surface: inspection.get-theme-color($theme, background, surface);
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
@@ -36,17 +36,17 @@ $prefix: (mat, form-field);
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $on-surface: if($is-dark, #fff, #000);
   $text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, text, 1));
+    inspection.get-theme-color($theme, foreground, base));
   $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, disabled-text, 1));
+    inspection.get-theme-color($theme, foreground, base));
   $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, divider, 1));
+    inspection.get-theme-color($theme, foreground, base));
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     disabled-input-text-placeholder-color:
       inspection.get-theme-color($theme, foreground, icon, 0.38),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    state-layer-color: inspection.get-theme-color($theme, foreground, base-87),
     error-text-color: inspection.get-theme-color($theme, warn),
 
     // On dark themes we set the native `select` color to some shade of white,

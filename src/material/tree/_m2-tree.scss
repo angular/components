@@ -18,8 +18,8 @@ $prefix: (mat, tree);
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
 
   @return (
-    container-background-color: inspection.get-theme-color($theme, background, card),
-    node-text-color: inspection.get-theme-color($theme, foreground, text),
+    container-background-color: inspection.get-theme-color($theme, background, surface),
+    node-text-color: inspection.get-theme-color($theme, foreground, on-surface),
   );
 }
 

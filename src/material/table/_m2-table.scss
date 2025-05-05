@@ -20,9 +20,9 @@ $prefix: (mat, table);
   @return (
     background-color: inspection.get-theme-color($theme, background, 'card'),
 
-    header-headline-color: inspection.get-theme-color($theme, foreground, text),
-    row-item-label-text-color: inspection.get-theme-color($theme, foreground, text),
-    row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
+    header-headline-color: inspection.get-theme-color($theme, foreground, on-surface),
+    row-item-label-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    row-item-outline-color: inspection.get-theme-color($theme, foreground, base-12),
   );
 }
 

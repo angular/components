@@ -15,8 +15,8 @@ $prefix: (mat, sort);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $table-background: inspection.get-theme-color($theme, background, card);
-  $text-color: inspection.get-theme-color($theme, foreground, secondary-text);
+  $table-background: inspection.get-theme-color($theme, background, surface);
+  $text-color: inspection.get-theme-color($theme, foreground, base-70-54);
   $arrow-color: null;
 
   // Because the arrow is made up of multiple elements that are stacked on top of each other,

@@ -23,7 +23,7 @@ $prefix: (mat, button-toggle);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $theme-divider-color: inspection.get-theme-color($theme, foreground, divider);
+  $theme-divider-color: inspection.get-theme-color($theme, foreground, base-12);
 
   // By default the theme usually has an rgba color for the dividers, which can
   // stack up with the background of a button toggle. This can cause the border
@@ -32,35 +32,34 @@ $prefix: (mat, button-toggle);
   $divider-color: if(
       meta.type-of($theme-divider-color) == color,
       theming.private-rgba-to-hex(
-          $theme-divider-color, inspection.get-theme-color($theme, background, card)),
+          $theme-divider-color, inspection.get-theme-color($theme, background, surface)),
       $theme-divider-color);
 
   @return (
-    background-color: inspection.get-theme-color($theme, background, card),
+    background-color: inspection.get-theme-color($theme, background, surface),
     disabled-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-disabled-button),
-    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    disabled-state-background-color: inspection.get-theme-color($theme, background, card),
-    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
+        inspection.get-theme-color($theme, background, grey-800-400),
+    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    disabled-state-background-color: inspection.get-theme-color($theme, background, surface),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, base-30-26),
     divider-color: $divider-color,
     legacy-disabled-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-disabled-button),
+        inspection.get-theme-color($theme, background, grey-800-400),
     legacy-disabled-state-background-color:
-        inspection.get-theme-color($theme, background, disabled-button-toggle),
+        inspection.get-theme-color($theme, background, black-grey200),
     legacy-disabled-state-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button),
+        inspection.get-theme-color($theme, foreground, base-30-26),
     legacy-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-button),
+        inspection.get-theme-color($theme, background, grey-900-300),
     legacy-selected-state-text-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
-    legacy-state-layer-color: inspection.get-theme-color($theme, background, focused-button),
-    legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
+        inspection.get-theme-color($theme, foreground, base-70-54),
+    legacy-state-layer-color: inspection.get-theme-color($theme, background, white-black-12),
+    legacy-text-color: inspection.get-theme-color($theme, foreground, base-50-38),
     selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-button),
-    selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    state-layer-color: sass-utils.safe-color-change(
-        inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
-    text-color: inspection.get-theme-color($theme, foreground, text),
+        inspection.get-theme-color($theme, background, grey-900-300),
+    selected-state-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    state-layer-color: inspection.get-theme-color($theme, background, white-black),
+    text-color: inspection.get-theme-color($theme, foreground, on-surface),
   );
 }
 

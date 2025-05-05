@@ -31,12 +31,13 @@ $prefix: (mat, tab);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary, $exclude: ()) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $inactive-label-text-color: inspection.get-theme-color($theme, foreground, text, 0.6);
+  $inactive-label-text-color: inspection.get-theme-color($theme, foreground, base-60);
   $active-label-text-color: inspection.get-theme-color($theme, $palette-name, default);
   $ripple-color: inspection.get-theme-color($theme, $palette-name, default);
+  $disabled-ripple: inspection.get-theme-color($theme, foreground, base-50-38);
 
   $tokens: (
-    disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
+    disabled-ripple-color: inspection.get-theme-color($theme, foreground, base-50-38),
     pagination-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.

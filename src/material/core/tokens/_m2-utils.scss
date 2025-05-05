@@ -17,8 +17,8 @@ $placeholder-color-config: (
   accent: $_placeholder-color-palette,
   warn: $_placeholder-color-palette,
   is-dark: false,
-  foreground: palette.$light-theme-foreground-palette,
-  background: palette.$light-theme-background-palette,
+  foreground: palette.get-foreground-palette($is-dark: false),
+  background: palette.get-background-palette($is-dark: false),
 );
 
 $_placeholder-typography-level-config: typography.typography-config-level-from-mdc(body1);

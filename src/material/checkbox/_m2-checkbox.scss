@@ -28,11 +28,9 @@ $prefix: (mat, checkbox);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $palette-default: inspection.get-theme-color($theme, $palette-name, default);
-  $disabled-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.38);
+  $disabled-color: inspection.get-theme-color($theme, $palette-name, on-surface-38);
   $palette-selected: inspection.get-theme-color($theme, $palette-name);
-  $border-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
+  $border-color: inspection.get-theme-color($theme, $palette-name, on-surface-54);
   $active-border-color:
     m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
   $selected-checkmark-color: null;
@@ -49,8 +47,8 @@ $prefix: (mat, checkbox);
   }
 
   $tokens: (
-    disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
-    label-text-color: inspection.get-theme-color($theme, foreground, text),
+    disabled-label-color: inspection.get-theme-color($theme, foreground, base-50-38),
+    label-text-color: inspection.get-theme-color($theme, foreground, on-surface),
     disabled-selected-icon-color: $disabled-color,
     disabled-unselected-icon-color: $disabled-color,
     selected-checkmark-color: $selected-checkmark-color,

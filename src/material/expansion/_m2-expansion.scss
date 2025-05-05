@@ -20,16 +20,15 @@ $prefix: (mat, expansion);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    container-background-color: inspection.get-theme-color($theme, background, card),
-    container-text-color: inspection.get-theme-color($theme, foreground, text),
-    actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
-    header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-disabled-state-text-color: inspection.get-theme-color(
-        $theme, foreground, disabled-button),
-    header-text-color: inspection.get-theme-color($theme, foreground, text),
-    header-description-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    header-indicator-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    container-background-color: inspection.get-theme-color($theme, background, surface),
+    container-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    actions-divider-color: inspection.get-theme-color($theme, foreground, base-12),
+    header-hover-state-layer-color: inspection.get-theme-color($theme, background, white-black-04),
+    header-focus-state-layer-color: inspection.get-theme-color($theme, background, white-black-04),
+    header-disabled-state-text-color: inspection.get-theme-color($theme, foreground, base-30-26),
+    header-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    header-description-color: inspection.get-theme-color($theme, foreground, base-70-54),
+    header-indicator-color: inspection.get-theme-color($theme, foreground, base-70-54),
   );
 }
 

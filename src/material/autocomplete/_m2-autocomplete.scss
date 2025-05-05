@@ -18,7 +18,7 @@ $prefix: (mat, autocomplete);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    background-color: inspection.get-theme-color($theme, background, card)
+    background-color: inspection.get-theme-color($theme, background, surface)
   );
 }
 

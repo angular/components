@@ -605,8 +605,8 @@ $theme: mat.m2-define-dark-theme(...);
 $primary-default: mat.get-theme-color($theme, primary, default);
 $accent-a100: mat.get-theme-color($theme, accent, A100);
 $warn-500-contrast: mat.get-theme-color($theme, warn, 500-contrast);
-$foreground-text: mat.get-theme-color($theme, foreground, text);
-$background-card: mat.get-theme-color($theme, background, card);
+$foreground-text: mat.get-theme-color($theme, foreground, on-surface);
+$background-card: mat.get-theme-color(inspection.get-theme-color($theme, background, surface));
 $type: mat.get-theme-type($theme);
 $custom-background: if($type == dark, #030, #dfd);
 ```

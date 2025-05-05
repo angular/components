@@ -42,11 +42,11 @@ $private-default-overlap-color: #a8dab5;
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
-  $text-color: inspection.get-theme-color($theme, foreground, text);
-  $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
-  $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
-  $divider-color: inspection.get-theme-color($theme, foreground, divider);
-  $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
+  $text-color: inspection.get-theme-color($theme, foreground, on-surface);
+  $secondary-text-color: inspection.get-theme-color($theme, foreground, base-70-54);
+  $disabled-text-color: inspection.get-theme-color($theme, foreground, base-50-38);
+  $divider-color: inspection.get-theme-color($theme, foreground, base-12);
+  $hint-text-color: inspection.get-theme-color($theme, foreground, base-50-38);
   $preview-outline-color: $divider-color;
   $today-disabled-outline-color: null;
   $is-dark: inspection.get-theme-type($theme) == dark;
@@ -74,7 +74,7 @@ $private-default-overlap-color: #a8dab5;
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
     toggle-icon-color: $inactive-icon-color,
     calendar-body-label-text-color: $secondary-text-color,
-    calendar-period-button-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    calendar-period-button-text-color: inspection.get-theme-color($theme, foreground, base),
     calendar-period-button-icon-color: $inactive-icon-color,
     calendar-navigation-button-icon-color: $inactive-icon-color,
     calendar-header-divider-color: $divider-color,
@@ -93,7 +93,7 @@ $private-default-overlap-color: #a8dab5;
     range-input-disabled-state-separator-color: $disabled-text-color,
     range-input-disabled-state-text-color: $disabled-text-color,
 
-    calendar-container-background-color: inspection.get-theme-color($theme, background, card),
+    calendar-container-background-color: inspection.get-theme-color($theme, background, surface),
     calendar-container-text-color: $text-color,
   ));
 }
@@ -145,7 +145,7 @@ $private-default-overlap-color: #a8dab5;
     $active-disabled-color: color.adjust($palette-color, $alpha: -$_selected-fade-amount);
   }
   @else {
-    $active-disabled-color: inspection.get-theme-color($theme, foreground, disabled-button);
+    $active-disabled-color: inspection.get-theme-color($theme, foreground, base-30-26);
   }
 
   @return (

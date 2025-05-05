@@ -670,79 +670,84 @@ $blue-grey-palette: (
 // Alias for alternate spelling.
 $blue-gray-palette: $blue-grey-palette;
 
+@function get-foreground-palette($is-dark) {
+  $base: if($is-dark, white, black);
+  @return (
+    base:              $base,
+    base-10:           rgba($base, 0.1),
+    base-12:           rgba($base, 0.12),
+    base-38:           rgba($base, 0.38),
+    base-54:           rgba($base, 0.54),
+    base-60:           rgba($base, 0.6),
+    base-87:           rgba($base, 0.87),
+    base-08-04:        rgba($base, if($is-dark, 0.08, 0.04)),
+    base-30-26:        rgba($base, if($is-dark, 0.3, 0.26)),
+    base-30-38:        rgba($base, if($is-dark, 0.3, 0.38)),
+    base-50-38:        rgba($base, if($is-dark, 0.5, 0.38)),
+    base-70-54:        rgba($base, if($is-dark, 0.7, 0.54)),
+    elevation:         black,
+    icon:              if($is-dark, white, rgba(black, 0.54)),
+    on-surface:        if($is-dark, white, rgba(black, 0.87)),
 
-// Background palette for light themes.
-$light-theme-background-palette: (
-  status-bar: map.get($grey-palette, 300),
-  app-bar:    map.get($grey-palette, 100),
-  background: map.get($grey-palette, 50),
-  hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
-  card:       white,
-  dialog:     white,
-  disabled-button: rgba(black, 0.12),
-  raised-button: white,
-  focused-button: $dark-focused,
-  selected-button: map.get($grey-palette, 300),
-  selected-disabled-button: map.get($grey-palette, 400),
-  disabled-button-toggle: map.get($grey-palette, 200),
-  unselected-chip: map.get($grey-palette, 300),
-  disabled-list-option: map.get($grey-palette, 200),
-  tooltip: map.get($grey-palette, 700),
-);
+    // Unused in Angular Material, but provided for backwards compatibility
+    divider:           rgba($base, 0.12),
+    dividers:          rgba($base, 0.12),
+    disabled:          rgba($base, if($is-dark, 0.5, 0.38)),
+    disabled-button:   rgba($base, if($is-dark, 0.3, 0.26)),
+    disabled-text:     rgba($base, if($is-dark, 0.5, 0.38)),
+    hint-text:         rgba($base, if($is-dark, 0.5, 0.38)),
+    secondary-text:    rgba($base, if($is-dark, 0.7, 0.54)),
+    icons:             if($is-dark, white, rgba(black, 0.54)),
+    text:              if($is-dark, white, rgba(black, 0.87)),
+    slider-min:        if($is-dark, white, rgba(black, 0.87)),
+    slider-off:        rgba($base, if($is-dark, 0.3, 0.26)),
+    slider-off-active: rgba($base, if($is-dark, 0.3, 0.38)),
+  );
+}
 
-// Background palette for dark themes.
-$dark-theme-background-palette: (
-  status-bar: black,
-  app-bar:    map.get($grey-palette, 900),
-  background: #303030,
-  hover:      rgba(white, 0.04), // TODO(kara): check style with Material Design UX
-  card:       map.get($grey-palette, 800),
-  dialog:     map.get($grey-palette, 800),
-  disabled-button: rgba(white, 0.12),
-  raised-button: map.get($grey-palette, 800),
-  focused-button: $light-focused,
-  selected-button: map.get($grey-palette, 900),
-  selected-disabled-button: map.get($grey-palette, 800),
-  disabled-button-toggle: black,
-  unselected-chip: map.get($grey-palette, 700),
-  disabled-list-option: rgba(white, 0.12),
-  tooltip: map.get($grey-palette, 700),
-);
+@function get-background-palette($is-dark) {
+  $base: if($is-dark, white, black);
+  $grey-50: map.get($grey-palette, 50);
+  $grey-100: map.get($grey-palette, 100);
+  $grey-200: map.get($grey-palette, 200);
+  $grey-300: map.get($grey-palette, 300);
+  $grey-400: map.get($grey-palette, 400);
+  $grey-700: map.get($grey-palette, 700);
+  $grey-800: map.get($grey-palette, 800);
+  $grey-900: map.get($grey-palette, 900);
 
-// Foreground palette for light themes.
-$light-theme-foreground-palette: (
-  base:              black,
-  divider:           $dark-dividers,
-  dividers:          $dark-dividers,
-  disabled:          $dark-disabled-text,
-  disabled-button:   rgba(black, 0.26),
-  disabled-text:     $dark-disabled-text,
-  elevation:         black,
-  hint-text:         $dark-disabled-text,
-  secondary-text:    $dark-secondary-text,
-  icon:              rgba(black, 0.54),
-  icons:             rgba(black, 0.54),
-  text:              rgba(black, 0.87),
-  slider-min:        rgba(black, 0.87),
-  slider-off:        rgba(black, 0.26),
-  slider-off-active: rgba(black, 0.38),
-);
+  $surface:  if($is-dark, $grey-800, white);
+  $white-black: if($is-dark, white, black);
 
-// Foreground palette for dark themes.
-$dark-theme-foreground-palette: (
-  base:              white,
-  divider:           $light-dividers,
-  dividers:          $light-dividers,
-  disabled:          $light-disabled-text,
-  disabled-button:   rgba(white, 0.3),
-  disabled-text:     $light-disabled-text,
-  elevation:         black,
-  hint-text:         $light-disabled-text,
-  secondary-text:    $light-secondary-text,
-  icon:              white,
-  icons:             white,
-  text:              white,
-  slider-min:        white,
-  slider-off:        rgba(white, 0.3),
-  slider-off-active: rgba(white, 0.3),
-);
+  @return (
+    white-black: $white-black,
+    surface:  $surface,
+    surface-06:  rgba($surface, 0.6),
+    grey-900-100: if($is-dark, $grey-900, $grey-100),
+    h303030-grey-50: if($is-dark, #303030, $grey-50),
+    white-black-04: rgba($white-black, 0.04),
+    white-black-06: rgba($white-black, 0.06),
+    white-black-12: rgba($white-black, 0.12),
+    grey-900-300: if($is-dark, $grey-900, $grey-300),
+    grey-800-400: if($is-dark, $grey-900, $grey-300),
+    black-grey200: if($is-dark, black, $grey-200),
+    grey-700: $grey-700,
+
+    // Unused in Angular Material, but provided for backwards compatibility
+    card:                     $surface,
+    dialog:                   $surface,
+    raised-button:            $surface,
+    status-bar:               if($is-dark, black, $grey-300),
+    app-bar:                  if($is-dark, $grey-900, $grey-100),
+    background:               if($is-dark, #303030, $grey-50),
+    hover:                    rgba($white-black, 0.04),
+    disabled-button:          rgba($white-black, 0.12),
+    focused-button:           rgba($white-black, 0.12),
+    selected-button:          if($is-dark, $grey-900, $grey-300),
+    selected-disabled-button: if($is-dark, $grey-800, $grey-400),
+    disabled-button-toggle:   if($is-dark, black, $grey-200),
+    unselected-chip:          if($is-dark, $grey-700, $grey-300),
+    disabled-list-option:     if($is-dark, rgba(white, 0.12), $grey-200),
+    tooltip:                  $grey-700,
+  );
+}

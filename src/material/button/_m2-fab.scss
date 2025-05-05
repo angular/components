@@ -36,28 +36,28 @@ $prefix: (mat, fab);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, card),
+    container-color: inspection.get-theme-color($theme, background, surface),
     disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+        inspection.get-theme-color($theme, background, white-black-12),
     disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     foreground-color: inspection.get-theme-color($theme, foreground, base),
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    small-container-color: inspection.get-theme-color($theme, background, card),
+    ripple-color: inspection.get-theme-color($theme, foreground, base-10),
+    small-container-color: inspection.get-theme-color($theme, background, surface),
     small-disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+        inspection.get-theme-color($theme, background, white-black-12),
     small-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     small-foreground-color: inspection.get-theme-color($theme, foreground, base),
     small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    small-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
