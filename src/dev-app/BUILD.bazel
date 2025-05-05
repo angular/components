@@ -35,6 +35,7 @@ ng_project(
         "//src/dev-app/cdk-dialog",
         "//src/dev-app/cdk-experimental-combobox",
         "//src/dev-app/cdk-experimental-listbox",
+        "//src/dev-app/cdk-experimental-radio",
         "//src/dev-app/cdk-experimental-tabs",
         "//src/dev-app/cdk-listbox",
         "//src/dev-app/cdk-menu",

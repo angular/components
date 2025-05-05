@@ -1,0 +1,38 @@
+<div class="example-radio-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Disabled Options</mat-label>
+    <mat-select [(value)]="disabledOptions" multiple>
+      @for (flavor of flavors; track flavor) {
+        <mat-option [value]="flavor">{{flavor}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Orientation</mat-label>
+    <mat-select [(value)]="orientation">
+      <mat-option value="vertical">Vertical</mat-option>
+      <mat-option value="horizontal">Horizontal</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- #docregion radio-group -->
+<ul
+  cdkRadioGroup
+  [disabled]="disabled.value"
+  [orientation]="orientation"
+  class="example-radio-group"
+  aria-label="Select your favorite ice cream flavor"
+>
+  @for (flavor of flavors; track flavor) {
+    @let optionDisabled = disabledOptions.includes(flavor);
+    <li cdkRadioButton [value]="flavor" [disabled]="optionDisabled" class="example-radio-button">
+      <span class="example-radio-indicator"></span>
+      <span>{{ flavor }}</span>
+    </li>
+  }
+</ul>
+<!-- #enddocregion radio-group -->

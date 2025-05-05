@@ -3,16 +3,17 @@ load("//tools:defaults.bzl", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
-    name = "ui-patterns",
+    name = "radio",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
-        "//src/cdk-experimental/ui-patterns/listbox",
-        "//src/cdk-experimental/ui-patterns/radio",
-        "//src/cdk-experimental/ui-patterns/tabs",
     ],
 )
