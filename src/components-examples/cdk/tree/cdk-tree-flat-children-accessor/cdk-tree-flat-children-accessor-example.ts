@@ -55,17 +55,6 @@ export class CdkTreeFlatChildrenAccessorExample {
 
     return null;
   }
-
-  shouldRender(node: NestedFoodNode) {
-    let parent = this.getParentNode(node);
-    while (parent) {
-      if (!this.tree.isExpanded(parent)) {
-        return false;
-      }
-      parent = this.getParentNode(parent);
-    }
-    return true;
-  }
 }
 
 const EXAMPLE_DATA: NestedFoodNode[] = [

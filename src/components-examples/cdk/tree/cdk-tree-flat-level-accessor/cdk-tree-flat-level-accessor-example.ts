@@ -45,12 +45,6 @@ export class CdkTreeFlatLevelAccessorExample {
 
     return null;
   }
-
-  shouldRender(node: FlatFoodNode): boolean {
-    // This node should render if it is a root node or if all of its ancestors are expanded.
-    const parent = this.getParentNode(node);
-    return !parent || (!!this.tree?.isExpanded(parent) && this.shouldRender(parent));
-  }
 }
 
 const EXAMPLE_DATA: FlatFoodNode[] = [
