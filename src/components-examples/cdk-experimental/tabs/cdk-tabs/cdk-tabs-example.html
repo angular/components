@@ -26,6 +26,15 @@
       <mat-option value="activedescendant">Active Descendant</mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Tab selection</mat-label>
+    <mat-select [(value)]="tabSelection">
+      <mat-option value="tab-1">Tab 1</mat-option>
+      <mat-option value="tab-2">Tab 2</mat-option>
+      <mat-option value="tab-3">Tab 3</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <!-- #docregion tabs -->
@@ -39,6 +48,7 @@
     [orientation]="orientation"
     [focusMode]="focusMode"
     [selectionMode]="selectionMode"
+    [(tab)]="tabSelection"
   >
     <li cdkTab value="tab-1" class="example-tab">tab 1</li>
     <li cdkTab value="tab-2" class="example-tab" disabled="true">tab 2</li>
