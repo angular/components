@@ -9,9 +9,8 @@
 import {OverlayRef} from '../overlay';
 import {ESCAPE, hasModifierKey} from '../keycodes';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {DialogConfig} from './dialog-config';
+import {DialogConfig, DialogContainer} from './dialog-config';
 import {FocusOrigin} from '../a11y';
-import {BasePortalOutlet} from '../portal';
 import {ComponentRef} from '@angular/core';
 
 /** Additional options that can be passed in when closing a dialog. */
@@ -37,10 +36,7 @@ export class DialogRef<R = unknown, C = unknown> {
   readonly componentRef: ComponentRef<C> | null;
 
   /** Instance of the container that is rendering out the dialog content. */
-  readonly containerInstance: BasePortalOutlet & {
-    _closeInteractionType?: FocusOrigin;
-    _recaptureFocus?: () => void;
-  };
+  readonly containerInstance: DialogContainer;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined;
@@ -65,7 +61,7 @@ export class DialogRef<R = unknown, C = unknown> {
 
   constructor(
     readonly overlayRef: OverlayRef,
-    readonly config: DialogConfig<any, DialogRef<R, C>, BasePortalOutlet>,
+    readonly config: DialogConfig<any, DialogRef<R, C>, DialogContainer>,
   ) {
     this.disableClose = config.disableClose;
     this.backdropClick = overlayRef.backdropClick();
@@ -114,7 +110,7 @@ export class DialogRef<R = unknown, C = unknown> {
       closedSubject.next(result);
       closedSubject.complete();
       (this as {componentInstance: C}).componentInstance = (
-        this as {containerInstance: BasePortalOutlet}
+        this as {containerInstance: DialogContainer}
       ).containerInstance = null!;
     }
   }
@@ -149,7 +145,7 @@ export class DialogRef<R = unknown, C = unknown> {
 
   /** Whether the dialog is allowed to close. */
   private _canClose(result?: R): boolean {
-    const config = this.config as DialogConfig<unknown, unknown, BasePortalOutlet>;
+    const config = this.config as DialogConfig<unknown, unknown, DialogContainer>;
 
     return (
       !!this.containerInstance &&
