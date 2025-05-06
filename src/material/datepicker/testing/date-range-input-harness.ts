@@ -48,6 +48,8 @@ export class MatEndDateHarness extends MatDatepickerInputHarnessBase {
 export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
   static hostSelector = '.mat-date-range-input';
 
+  private readonly floatingLabelSelector = '.mdc-floating-label';
+
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatDateRangeInputHarness`
    * that meets certain criteria.
@@ -57,11 +59,13 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
   static with(
     options: DateRangeInputHarnessFilters = {},
   ): HarnessPredicate<MatDateRangeInputHarness> {
-    return new HarnessPredicate(MatDateRangeInputHarness, options).addOption(
-      'value',
-      options.value,
-      (harness, value) => HarnessPredicate.stringMatches(harness.getValue(), value),
-    );
+    return new HarnessPredicate(MatDateRangeInputHarness, options)
+      .addOption('value', options.value, (harness, value) =>
+        HarnessPredicate.stringMatches(harness.getValue(), value),
+      )
+      .addOption('label', options.label, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getLabel(), label);
+      });
   }
 
   /** Gets the combined value of the start and end inputs, including the separator. */
@@ -85,6 +89,31 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
   async getEndInput(): Promise<MatEndDateHarness> {
     // Don't pass in filters here since the end input is required and there can only be one.
     return this.locatorFor(MatEndDateHarness)();
+  }
+
+  /** Gets the floating label text for the range input, if it exists. */
+  async getLabel(): Promise<string | null> {
+    // Copied from MatFormFieldControlHarness since this class cannot extend two classes
+    const documentRootLocator = await this.documentRootLocatorFactory();
+    const labelId = await (await this.host()).getAttribute('aria-labelledby');
+    const hostId = await (await this.host()).getAttribute('id');
+
+    if (labelId) {
+      // First option, try to fetch the label using the `aria-labelledby`
+      // attribute.
+      const labelEl = await await documentRootLocator.locatorForOptional(
+        `${this.floatingLabelSelector}[id="${labelId}"]`,
+      )();
+      return labelEl ? labelEl.text() : null;
+    } else if (hostId) {
+      // Fallback option, try to match the id of the input with the `for`
+      // attribute of the label.
+      const labelEl = await await documentRootLocator.locatorForOptional(
+        `${this.floatingLabelSelector}[for="${hostId}"]`,
+      )();
+      return labelEl ? labelEl.text() : null;
+    }
+    return null;
   }
 
   /** Gets the separator text between the values of the two inputs. */
