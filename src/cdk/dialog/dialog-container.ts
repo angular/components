@@ -39,7 +39,8 @@ import {
   afterNextRender,
   inject,
 } from '@angular/core';
-import {DialogConfig} from './dialog-config';
+import {DialogConfig, DialogContainer} from './dialog-config';
+import {Observable, Subject} from 'rxjs';
 
 export function throwDialogContentAlreadyAttachedError() {
   throw Error('Attempting to attach dialog content after content is already attached');
@@ -71,7 +72,7 @@ export function throwDialogContentAlreadyAttachedError() {
 })
 export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   extends BasePortalOutlet
-  implements OnDestroy
+  implements DialogContainer, OnDestroy
 {
   protected _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _focusTrapFactory = inject(FocusTrapFactory);
@@ -81,12 +82,15 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   private _overlayRef = inject(OverlayRef);
   private _focusMonitor = inject(FocusMonitor);
   private _renderer = inject(Renderer2);
-
+  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
+  private _injector = inject(Injector);
   private _platform = inject(Platform);
   protected _document = inject(DOCUMENT, {optional: true})!;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+
+  _focusTrapped: Observable<void> = new Subject<void>();
 
   /** The class that traps and manages focus within the dialog. */
   private _focusTrap: FocusTrap | null = null;
@@ -108,10 +112,6 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
    * the rest are present.
    */
   _ariaLabelledByQueue: string[] = [];
-
-  protected readonly _changeDetectorRef = inject(ChangeDetectorRef);
-
-  private _injector = inject(Injector);
 
   private _isDestroyed = false;
 
@@ -158,6 +158,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   }
 
   ngOnDestroy() {
+    (this._focusTrapped as Subject<void>).complete();
     this._isDestroyed = true;
     this._restoreFocus();
   }
@@ -293,6 +294,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
             this._focusByCssSelector(this._config.autoFocus!, options);
             break;
         }
+        (this._focusTrapped as Subject<void>).next();
       },
       {injector: this._injector},
     );
