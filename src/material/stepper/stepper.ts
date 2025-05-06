@@ -131,7 +131,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
     '[class.mat-stepper-animating]': '_isAnimating()',
     '[style.--mat-stepper-animation-duration]': '_getAnimationDuration()',
     '[attr.aria-orientation]': 'orientation',
-    'role': 'tablist',
   },
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
