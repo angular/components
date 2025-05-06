@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal} from '@angular/core';
-
+import {computed} from '@angular/core';
 import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
 import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
@@ -190,7 +189,7 @@ export class TabListPattern {
     this.navigation = new ListNavigation({...inputs, focusManager: this.focusManager});
     this.selection = new ListSelection({
       ...inputs,
-      multi: signal(false),
+      multi: () => false,
       focusManager: this.focusManager,
     });
   }
