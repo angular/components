@@ -18,8 +18,43 @@ export interface ExpansionItem extends ListFocusItem {
   expansionId: SignalLike<string>;
 }
 
+export interface ExpansionControl extends ExpansionItem {}
+/**
+ * Controls a single item's expansion state and interactions,
+ * delegating actual state changes to an Expansion manager.
+ */
+export class ExpansionControl {
+  /** Whether this specific item is currently expanded. Derived from the Expansion manager. */
+  readonly isExpanded = computed(() => this.inputs.expansionManager.isExpanded(this));
+
+  /** Whether this item can be expanded. */
+  readonly isExpandable = computed(() => this.inputs.expansionManager.isExpandable(this));
+
+  constructor(readonly inputs: ExpansionItem & {expansionManager: ListExpansion<ExpansionItem>}) {
+    this.expansionId = inputs.expansionId;
+    this.expandable = inputs.expandable;
+    this.element = inputs.element;
+    this.disabled = inputs.disabled;
+  }
+
+  /** Requests the Expansopn manager to open this item. */
+  open() {
+    this.inputs.expansionManager.open(this);
+  }
+
+  /** Requests the Expansion manager to close this item. */
+  close() {
+    this.inputs.expansionManager.close(this);
+  }
+
+  /** Requests the Expansion manager to toggle this item. */
+  toggle() {
+    this.inputs.expansionManager.toggle(this);
+  }
+}
+
 /** Represents the required inputs for an expansion behavior. */
-export interface ExpansionInputs<T extends ExpansionItem> extends ListFocusInputs<T> {
+export interface ListExpansionInputs<T extends ExpansionItem> extends ListFocusInputs<T> {
   /** Whether multiple items can be expanded at once. */
   multiExpandable: SignalLike<boolean>;
 
@@ -28,14 +63,14 @@ export interface ExpansionInputs<T extends ExpansionItem> extends ListFocusInput
 }
 
 /** Manages the expansion state of a list of items. */
-export class Expansion<T extends ExpansionItem> {
+export class ListExpansion<T extends ExpansionItem> {
   /** A signal holding an array of ids of the currently expanded items. */
   expandedIds: WritableSignalLike<string[]>;
 
   /** The currently active (focused) item in the list. */
   activeItem = computed(() => this.inputs.focusManager.activeItem());
 
-  constructor(readonly inputs: ExpansionInputs<T> & {focusManager: ListFocus<T>}) {
+  constructor(readonly inputs: ListExpansionInputs<T> & {focusManager: ListFocus<T>}) {
     this.expandedIds = inputs.expandedIds ?? signal([]);
   }
 
@@ -81,7 +116,9 @@ export class Expansion<T extends ExpansionItem> {
 
   /** Checks whether the specified item is expandable / collapsible. */
   isExpandable(item: T) {
-    return this.inputs.focusManager.isFocusable(item) && item.expandable();
+    return (
+      !this.inputs.disabled() && this.inputs.focusManager.isFocusable(item) && item.expandable()
+    );
   }
 
   /** Checks whether the specified item is currently expanded. */

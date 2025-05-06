@@ -20,7 +20,12 @@ import {
   ListSelectionInputs,
   ListSelectionItem,
 } from '../behaviors/list-selection/list-selection';
-import {Expansion, ExpansionInputs, ExpansionItem} from '../behaviors/expansion/expansion';
+import {
+  ExpansionItem,
+  ExpansionControl,
+  ListExpansionInputs,
+  ListExpansion,
+} from '../behaviors/expansion/expansion';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 /** The required inputs to tabs. */
@@ -51,13 +56,13 @@ export class TabPattern {
   element: SignalLike<HTMLElement>;
 
   /** Whether this tab has expandable content. */
-  expandable = () => true;
+  expandable: SignalLike<boolean>;
 
   /** The unique identifier used by the expansion behavior. */
   expansionId: SignalLike<string>;
 
   /** Whether the tab is expanded. */
-  expanded = computed(() => this.inputs.tablist().expansionBehavior.isExpanded(this));
+  expanded: SignalLike<boolean>;
 
   /** Whether the tab is active. */
   active = computed(() => this.inputs.tablist().focusManager.activeItem() === this);
@@ -78,7 +83,15 @@ export class TabPattern {
     this.value = inputs.value;
     this.disabled = inputs.disabled;
     this.element = inputs.element;
-    this.expansionId = inputs.value;
+    const expansionControl = new ExpansionControl({
+      ...inputs,
+      expansionId: inputs.value,
+      expandable: () => true,
+      expansionManager: inputs.tablist().expansionManager,
+    });
+    this.expansionId = expansionControl.expansionId;
+    this.expandable = expansionControl.isExpandable;
+    this.expanded = expansionControl.isExpanded;
   }
 }
 
@@ -115,7 +128,7 @@ interface SelectOptions {
 export type TabListInputs = ListNavigationInputs<TabPattern> &
   Omit<ListSelectionInputs<TabPattern, string>, 'multi'> &
   ListFocusInputs<TabPattern> &
-  Omit<ExpansionInputs<TabPattern>, 'multiExpandable' | 'expandedIds'> & {
+  Omit<ListExpansionInputs<TabPattern>, 'multiExpandable' | 'expandedIds'> & {
     disabled: SignalLike<boolean>;
   };
 
@@ -131,7 +144,7 @@ export class TabListPattern {
   focusManager: ListFocus<TabPattern>;
 
   /** Controls expansion for the tablist. */
-  expansionBehavior: Expansion<TabPattern>;
+  expansionManager: ListExpansion<TabPattern>;
 
   /** Whether the tablist is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -193,7 +206,7 @@ export class TabListPattern {
       focusManager: this.focusManager,
     });
 
-    this.expansionBehavior = new Expansion({
+    this.expansionManager = new ListExpansion({
       ...inputs,
       multiExpandable: () => false,
       expandedIds: this.inputs.value,
@@ -253,7 +266,7 @@ export class TabListPattern {
   private _select(opts?: SelectOptions) {
     if (opts?.select) {
       this.selection.selectOne();
-      this.expansionBehavior.open();
+      this.expansionManager.open();
     }
   }
 
