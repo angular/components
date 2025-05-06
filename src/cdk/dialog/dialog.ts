@@ -16,14 +16,14 @@ import {
   ComponentRef,
   inject,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal} from '../portal';
+import {ComponentPortal, TemplatePortal} from '../portal';
 import {of as observableOf, Observable, Subject, defer} from 'rxjs';
 import {DialogRef} from './dialog-ref';
-import {DialogConfig} from './dialog-config';
+import {DialogConfig, DialogContainer} from './dialog-config';
 import {Directionality} from '../bidi';
 import {_IdGenerator} from '../a11y';
 import {ComponentType, Overlay, OverlayRef, OverlayConfig, OverlayContainer} from '../overlay';
-import {startWith} from 'rxjs/operators';
+import {startWith, take} from 'rxjs/operators';
 
 import {DEFAULT_DIALOG_CONFIG, DIALOG_DATA, DIALOG_SCROLL_STRATEGY} from './dialog-injectors';
 import {CdkDialogContainer} from './dialog-container';
@@ -118,14 +118,24 @@ export class Dialog implements OnDestroy {
     const dialogRef = new DialogRef(overlayRef, config);
     const dialogContainer = this._attachContainer(overlayRef, dialogRef, config);
 
-    (dialogRef as {containerInstance: BasePortalOutlet}).containerInstance = dialogContainer;
-    this._attachDialogContent(componentOrTemplateRef, dialogRef, dialogContainer, config);
+    (dialogRef as {containerInstance: DialogContainer}).containerInstance = dialogContainer;
 
     // If this is the first dialog that we're opening, hide all the non-overlay content.
     if (!this.openDialogs.length) {
-      this._hideNonDialogContentFromAssistiveTechnology();
+      // Resolve this ahead of time, because some internal apps
+      // mock it out and depend on it being synchronous.
+      const overlayContainer = this._overlayContainer.getContainerElement();
+
+      if (dialogContainer._focusTrapped) {
+        dialogContainer._focusTrapped.pipe(take(1)).subscribe(() => {
+          this._hideNonDialogContentFromAssistiveTechnology(overlayContainer);
+        });
+      } else {
+        this._hideNonDialogContentFromAssistiveTechnology(overlayContainer);
+      }
     }
 
+    this._attachDialogContent(componentOrTemplateRef, dialogRef, dialogContainer, config);
     (this.openDialogs as DialogRef<R, C>[]).push(dialogRef);
     dialogRef.closed.subscribe(() => this._removeOpenDialog(dialogRef, true));
     this.afterOpened.next(dialogRef);
@@ -209,14 +219,14 @@ export class Dialog implements OnDestroy {
     overlay: OverlayRef,
     dialogRef: DialogRef<R, C>,
     config: DialogConfig<D, DialogRef<R, C>>,
-  ): BasePortalOutlet {
+  ): DialogContainer {
     const userInjector = config.injector || config.viewContainerRef?.injector;
     const providers: StaticProvider[] = [
       {provide: DialogConfig, useValue: config},
       {provide: DialogRef, useValue: dialogRef},
       {provide: OverlayRef, useValue: overlay},
     ];
-    let containerType: Type<BasePortalOutlet>;
+    let containerType: Type<DialogContainer>;
 
     if (config.container) {
       if (typeof config.container === 'function') {
@@ -250,7 +260,7 @@ export class Dialog implements OnDestroy {
   private _attachDialogContent<R, D, C>(
     componentOrTemplateRef: ComponentType<C> | TemplateRef<C>,
     dialogRef: DialogRef<R, C>,
-    dialogContainer: BasePortalOutlet,
+    dialogContainer: DialogContainer,
     config: DialogConfig<D, DialogRef<R, C>>,
   ) {
     if (componentOrTemplateRef instanceof TemplateRef) {
@@ -292,7 +302,7 @@ export class Dialog implements OnDestroy {
   private _createInjector<R, D, C>(
     config: DialogConfig<D, DialogRef<R, C>>,
     dialogRef: DialogRef<R, C>,
-    dialogContainer: BasePortalOutlet,
+    dialogContainer: DialogContainer,
     fallbackInjector: Injector | undefined,
   ): Injector {
     const userInjector = config.injector || config.viewContainerRef?.injector;
@@ -355,9 +365,7 @@ export class Dialog implements OnDestroy {
   }
 
   /** Hides all of the content that isn't an overlay from assistive technology. */
-  private _hideNonDialogContentFromAssistiveTechnology() {
-    const overlayContainer = this._overlayContainer.getContainerElement();
-
+  private _hideNonDialogContentFromAssistiveTechnology(overlayContainer: HTMLElement) {
     // Ensure that the overlay container is attached to the DOM.
     if (overlayContainer.parentElement) {
       const siblings = overlayContainer.parentElement.children;
