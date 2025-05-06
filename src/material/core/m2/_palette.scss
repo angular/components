@@ -746,3 +746,60 @@ $dark-theme-foreground-palette: (
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
 );
+
+@function get-foreground-palette($is-dark) {
+  $base: if($is-dark, white, black);
+  @return (
+    base:              $base,
+    divider:           rgba($base, 0.12),
+    disabled:          rgba($base, if($is-dark, 0.5, 0.38)),
+    disabled-button:   rgba($base, if($is-dark, 0.3, 0.26)),
+    disabled-text:     rgba($base, if($is-dark, 0.5, 0.38)),
+    elevation:         black,
+    hint-text:         rgba($base, if($is-dark, 0.5, 0.38)),
+    secondary-text:    rgba($base, if($is-dark, 0.7, 0.54)),
+    text:              if($is-dark, white, rgba(black, 0.87)),
+
+    // Unused but provided for backwards compatibility
+    dividers:          rgba($base, 0.12),
+    icons:             if($is-dark, white, rgba(black, 0.54)),
+    slider-min:        if($is-dark, white, rgba(black, 0.87)),
+    slider-off:        rgba($base, if($is-dark, 0.3, 0.26)),
+    slider-off-active: rgba($base, if($is-dark, 0.3, 0.38)),
+  );
+}
+
+@function get-background-palette($is-dark) {
+  $base: if($is-dark, white, black);
+  $grey-50: map.get($grey-palette, 50);
+  $grey-100: map.get($grey-palette, 100);
+  $grey-200: map.get($grey-palette, 200);
+  $grey-300: map.get($grey-palette, 300);
+  $grey-400: map.get($grey-palette, 400);
+  $grey-700: map.get($grey-palette, 700);
+  $grey-800: map.get($grey-palette, 800);
+  $grey-900: map.get($grey-palette, 900);
+
+  $surface:  if($is-dark, $grey-800, white);
+  $white-black: if($is-dark, white, black);
+
+  @return (
+    card:                     $surface,
+    dialog:                   $surface,
+    status-bar:               if($is-dark, black, $grey-300),
+    app-bar:                  if($is-dark, $grey-900, $grey-100),
+    background:               if($is-dark, #303030, $grey-50),
+    hover:                    rgba($white-black, 0.04),
+    disabled-button:          rgba($white-black, 0.12),
+    focused-button:           rgba($white-black, 0.12),
+    selected-button:          if($is-dark, $grey-900, $grey-300),
+    unselected-chip:          if($is-dark, $grey-700, $grey-300),
+    disabled-list-option:     if($is-dark, rgba(white, 0.12), $grey-200),
+    tooltip:                  $grey-700,
+
+    // Unused but provided for backwards compatibility
+    raised-button:            $surface,
+    selected-disabled-button: if($is-dark, $grey-800, $grey-400),
+    disabled-button-toggle:   if($is-dark, black, $grey-200),
+  );
+}

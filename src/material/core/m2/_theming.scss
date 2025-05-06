@@ -119,8 +119,8 @@
     accent: $accent,
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: false,
-    foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette
+    foreground: palette.get-foreground-palette($is-dark: false),
+    background: palette.get-background-palette($is-dark: false),
   );
 }
 
@@ -132,8 +132,8 @@
     accent: $accent,
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: true,
-    foreground: palette.$dark-theme-foreground-palette,
-    background: palette.$dark-theme-background-palette
+    foreground: palette.get-foreground-palette($is-dark: true),
+    background: palette.get-background-palette($is-dark: true),
   );
 }
 
