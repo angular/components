@@ -46,4 +46,5 @@ extract_api_to_json(
     module_name = "@angular/cdk/testing/testbed",
     output_name = "cdk_testing_testbed.json",
     private_modules = [""],
+    repo = "angular/components",
 )

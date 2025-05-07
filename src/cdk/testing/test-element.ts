@@ -180,7 +180,10 @@ export interface TestElement {
   dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
 }
 
+/**
+ * Options that affect the text returned by `TestElement.text`.
+ */
 export interface TextOptions {
-  /** Optional selector for elements to exclude. */
+  /** Optional selector for elements whose content should be excluded from the text string. */
   exclude?: string;
 }
