@@ -1,3 +1,17 @@
+<a name="20.0.0-rc.0"></a>
+# 20.0.0-rc.0 "aluminium-axe" (2025-05-07)
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9a94bb76a](https://github.com/angular/components/commit/9a94bb76a755a01cd18f5f5a333502ca9d6ddd6d) | feat | **tabs:** support initial tab selection and add unit tests ([#31023](https://github.com/angular/components/pull/31023)) |
+| [1833aa32e](https://github.com/angular/components/commit/1833aa32e662968d6b62209d2934e609c2f0d24b) | feat | **ui-patterns:** add expansion behavior and refactor tabs ([#30962](https://github.com/angular/components/pull/30962)) |
+### docs
+| Commit | Type | Description |
+| -- | -- | -- |
+| [05302747d](https://github.com/angular/components/commit/05302747d407233127f9baf149d1110035f2a00b) | fix | Automatic scrolling fails on screens smaller than 721px due to flexbox behavior ([#31037](https://github.com/angular/components/pull/31037)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-next.10"></a>
 # 20.0.0-next.10 "sodium-swallow" (2025-05-01)
 
