@@ -96,7 +96,7 @@ export class MatChipHarness extends ContentContainerComponentHarness {
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
     // (undocumented)
-    protected _primaryAction: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    protected _primaryAction: () => Promise<_angular_cdk_testing.TestElement>;
     remove(): Promise<void>;
     static with<T extends MatChipHarness>(this: ComponentHarnessConstructor<T>, options?: ChipHarnessFilters): HarnessPredicate<T>;
 }

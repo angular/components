@@ -26,6 +26,7 @@ function main() {
   const rawParamLines = readFileSync(paramFilePath, {encoding: 'utf8'}).split('\n');
 
   const [
+    repo,
     moduleName,
     moduleLabel,
     serializedPrivateModules,
@@ -92,6 +93,7 @@ function main() {
   const normalized = moduleName.replace('@', '').replace(/[\/]/g, '_');
 
   const output = JSON.stringify({
+    repo,
     moduleLabel: moduleLabel || moduleName,
     moduleName: moduleName,
     normalizedModuleName: normalized,

@@ -4,7 +4,7 @@
 
 ```ts
 
-// @public
+// @public @deprecated
 export type AsyncFactoryFn<T> = () => Promise<T>;
 
 // @public
@@ -33,9 +33,9 @@ export abstract class ComponentHarness {
     host(): Promise<TestElement>;
     // (undocumented)
     protected readonly locatorFactory: LocatorFactory;
-    protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
-    protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
-    protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>>;
+    protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>[]>;
+    protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T> | null>;
     protected waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -48,30 +48,20 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
 
 // @public
 export abstract class ContentContainerComponentHarness<S extends string = string> extends ComponentHarness implements HarnessLoader {
-    // (undocumented)
     getAllChildLoaders(selector: S): Promise<HarnessLoader[]>;
-    // (undocumented)
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
-    // (undocumented)
     getChildLoader(selector: S): Promise<HarnessLoader>;
-    // (undocumented)
     getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
-    // (undocumented)
     getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
     protected getRootHarnessLoader(): Promise<HarnessLoader>;
-    // (undocumented)
     hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean>;
 }
 
 // @public
 export interface ElementDimensions {
-    // (undocumented)
     height: number;
-    // (undocumented)
     left: number;
-    // (undocumented)
     top: number;
-    // (undocumented)
     width: number;
 }
 
@@ -91,48 +81,31 @@ export function handleAutoChangeDetectionStatus(handler: (status: AutoChangeDete
 
 // @public
 export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
-    protected constructor(rawRootElement: E);
+    protected constructor(
+    rawRootElement: E);
     protected createComponentHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>, element: E): T;
     protected abstract createEnvironment(element: E): HarnessEnvironment<E>;
     protected abstract createTestElement(element: E): TestElement;
-    // (undocumented)
     documentRootLocatorFactory(): LocatorFactory;
-    // (undocumented)
     abstract forceStabilize(): Promise<void>;
-    // (undocumented)
     getAllChildLoaders(selector: string): Promise<HarnessLoader[]>;
-    // (undocumented)
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
     protected abstract getAllRawElements(selector: string): Promise<E[]>;
-    // (undocumented)
     getChildLoader(selector: string): Promise<HarnessLoader>;
     protected abstract getDocumentRoot(): E;
-    // (undocumented)
     getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
-    // (undocumented)
     getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
-    // (undocumented)
     harnessLoaderFor(selector: string): Promise<HarnessLoader>;
-    // (undocumented)
     harnessLoaderForAll(selector: string): Promise<HarnessLoader[]>;
-    // (undocumented)
     harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null>;
-    // (undocumented)
     hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean>;
-    // (undocumented)
-    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
-    // (undocumented)
-    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
-    // (undocumented)
-    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
-    // (undocumented)
+    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>>;
+    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>[]>;
+    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T> | null>;
     protected rawRootElement: E;
-    // (undocumented)
     get rootElement(): TestElement;
     set rootElement(element: TestElement);
-    // (undocumented)
     rootHarnessLoader(): Promise<HarnessLoader>;
-    // (undocumented)
     abstract waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -170,9 +143,9 @@ export interface LocatorFactory {
     harnessLoaderFor(selector: string): Promise<HarnessLoader>;
     harnessLoaderForAll(selector: string): Promise<HarnessLoader[]>;
     harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null>;
-    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
-    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
-    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>>;
+    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T>[]>;
+    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): () => Promise<LocatorFnResult<T> | null>;
     rootElement: TestElement;
     rootHarnessLoader(): Promise<HarnessLoader>;
     waitForTasksOutsideAngular(): Promise<void>;
@@ -322,7 +295,7 @@ export enum TestKey {
     UP_ARROW = 12
 }
 
-// @public (undocumented)
+// @public
 export interface TextOptions {
     exclude?: string;
 }

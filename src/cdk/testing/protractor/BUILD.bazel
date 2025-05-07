@@ -31,4 +31,5 @@ extract_api_to_json(
     module_name = "@angular/cdk/testing/protractor",
     output_name = "cdk_testing_protractor.json",
     private_modules = [""],
+    repo = "angular/components",
 )
