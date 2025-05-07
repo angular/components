@@ -1,3 +1,16 @@
+<a name="19.2.15"></a>
+# 19.2.15 "abuite-ant" (2025-05-07)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [85e448678](https://github.com/angular/components/commit/85e448678db1a37d3e93853513edc16f6b336044) | fix | **dialog:** avoid setting aria-hidden before focus has moved ([#31030](https://github.com/angular/components/pull/31030)) ([#31036](https://github.com/angular/components/pull/31036)) |
+### docs
+| Commit | Type | Description |
+| -- | -- | -- |
+| [02a893a6d](https://github.com/angular/components/commit/02a893a6de80089c1214283fbfb5e0ee62a8569f) | fix | Automatic scrolling fails on screens smaller than 721px due to flexbox behavior ([#31037](https://github.com/angular/components/pull/31037)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.14"></a>
 # 19.2.14 "sodium-scallop" (2025-05-01)
 
