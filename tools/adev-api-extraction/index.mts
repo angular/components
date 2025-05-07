@@ -92,26 +92,30 @@ function main() {
 
   const normalized = moduleName.replace('@', '').replace(/[\/]/g, '_');
 
-  const output = JSON.stringify({
-    repo,
-    moduleLabel: moduleLabel || moduleName,
-    moduleName: moduleName,
-    normalizedModuleName: normalized,
-    entries: combinedEntries,
-    symbols: [
-      // Symbols referenced, originating from other packages
-      ...apiDoc.symbols.entries(),
+  const output = JSON.stringify(
+    {
+      repo,
+      moduleLabel: moduleLabel || moduleName,
+      moduleName: moduleName,
+      normalizedModuleName: normalized,
+      entries: combinedEntries,
+      symbols: [
+        // Symbols referenced, originating from other packages
+        ...apiDoc.symbols.entries(),
 
-      // Exported symbols from the current package
-      ...apiDoc.entries.map(entry => [entry.name, moduleName]),
+        // Exported symbols from the current package
+        ...apiDoc.entries.map(entry => [entry.name, moduleName]),
 
-      // Also doing it for every member of classes/interfaces
-      ...apiDoc.entries.flatMap(entry => [
-        [entry.name, moduleName],
-        ...getEntriesFromMembers(entry).map(member => [member, moduleName]),
-      ]),
-    ],
-  } as EntryCollection);
+        // Also doing it for every member of classes/interfaces
+        ...apiDoc.entries.flatMap(entry => [
+          [entry.name, moduleName],
+          ...getEntriesFromMembers(entry).map(member => [member, moduleName]),
+        ]),
+      ],
+    } as EntryCollection,
+    null,
+    2,
+  );
 
   writeFileSync(outputFilenameExecRootRelativePath, output, {encoding: 'utf8'});
 }
