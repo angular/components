@@ -53,7 +53,8 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-color-variables: map.get($config, use-system-variables) or false;
 
-  $palettes: map.set($primary, tertiary, map.remove($tertiary, neutral, neutral-variant, secondary, error));
+  $palettes: map.set(
+      $primary, tertiary, map.remove($tertiary, neutral, neutral-variant, secondary, error));
 
   @return (
     $internals: (

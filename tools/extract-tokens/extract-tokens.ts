@@ -232,9 +232,9 @@ function getTokenExtractionCode(
       @error 'File must define a ${defineOverrides} function for docs extraction purposes';
     }
 
-    $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
-      ${palettes}.$azure-palette, 'mat-sys');
-    $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'mat-sys');
+    $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette, 'mat-sys');
+    $__all-typography: ${m3Tokens}.generate-typography-tokens((
+        plain: (font), brand: (font), bold: 100, medium: 100, regular: 100), 'mat-sys');
     $__all-density: ${m3System}.get-density-tokens(0);
     $__all-base: ${m3Tokens}.generate-base-tokens();
     $__results: ();
