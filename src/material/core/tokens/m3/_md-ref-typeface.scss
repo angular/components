@@ -3,12 +3,12 @@
 // Design system version: v0.161
 //
 
-@function values($exclude-hardcoded-values: false) {
+@function md-ref-typeface-values() {
   @return (
-    'brand': if($exclude-hardcoded-values, null, (Roboto)),
-    'plain': if($exclude-hardcoded-values, null, (Roboto)),
-    'weight-bold': if($exclude-hardcoded-values, null, 700),
-    'weight-medium': if($exclude-hardcoded-values, null, 500),
-    'weight-regular': if($exclude-hardcoded-values, null, 400)
+    brand: (Roboto),
+    plain: (Roboto),
+    weight-bold: 700,
+    weight-medium: 500,
+    weight-regular: 400
   );
 }

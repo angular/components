@@ -1,8 +1,8 @@
-@forward './md-ref-palette' as md-ref-palette-*;
-@forward './md-ref-typeface' as md-ref-typeface-*;
-@forward './md-sys-color' as md-sys-color-*;
-@forward './md-sys-elevation' as md-sys-elevation-*;
-@forward './md-sys-motion' as md-sys-motion-*;
-@forward './md-sys-shape' as md-sys-shape-*;
-@forward './md-sys-state' as md-sys-state-*;
-@forward './md-sys-typescale' as md-sys-typescale-*;
+@forward './md-ref-palette';
+@forward './md-ref-typeface';
+@forward './md-sys-color';
+@forward './md-sys-elevation';
+@forward './md-sys-motion';
+@forward './md-sys-shape';
+@forward './md-sys-state';
+@forward './md-sys-typescale';
