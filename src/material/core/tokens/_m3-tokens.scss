@@ -138,9 +138,6 @@ $_cached-token-slots: null;
   ), $systems);
   $exclude-hardcoded: not $include-non-systemized;
 
-  // DO NOT REMOVE
-  // This function is used internally.
-  $systems: format-tokens.private-format-tokens($systems);
   $token-slots: _get-token-slots();
 
   // TODO(mmalerba): Fill in remaining tokens.
@@ -164,170 +161,34 @@ $_cached-token-slots: null;
   @return $result;
 }
 
-@function _get-sys-color($type, $ref, $prefix) {
-  $mdc-sys-color: if($type == dark,
-    m3.md-sys-color-values-dark($ref),
-    m3.md-sys-color-values-light($ref));
+@function _get-sys-color($type, $palettes, $prefix) {
+  $sys-color: if($type == dark,
+    m3.md-sys-color-values-dark($palettes),
+    m3.md-sys-color-values-light($palettes));
 
   @if (sass-utils.$use-system-color-variables) {
-    $keys: (
-            'background',
-            'error',
-            'error-container',
-            'inverse-on-surface',
-            'inverse-primary',
-            'inverse-surface',
-            'on-background',
-            'on-error',
-            'on-error-container',
-            'on-primary',
-            'on-primary-container',
-            'on-primary-fixed',
-            'on-primary-fixed-variant',
-            'on-secondary',
-            'on-secondary-container',
-            'on-secondary-fixed',
-            'on-secondary-fixed-variant',
-            'on-surface',
-            'on-surface-variant',
-            'on-tertiary',
-            'on-tertiary-container',
-            'on-tertiary-fixed',
-            'on-tertiary-fixed-variant',
-            'outline',
-            'outline-variant',
-            'primary',
-            'primary-container',
-            'primary-fixed',
-            'primary-fixed-dim',
-            'scrim',
-            'secondary',
-            'secondary-container',
-            'secondary-fixed',
-            'secondary-fixed-dim',
-            'surface',
-            'surface-bright',
-            'surface-container',
-            'surface-container-high',
-            'surface-container-highest',
-            'surface-container-low',
-            'surface-container-lowest',
-            'surface-dim',
-            'surface-tint',
-            'surface-variant',
-            'tertiary',
-            'tertiary-container',
-            'tertiary-fixed',
-            'tertiary-fixed-dim'
-    );
-    @return map.merge(create-map($keys, $prefix), (
-      shadow: map.get($mdc-sys-color, shadow)
-    ));
+    $var-values: ();
+    @each $key in map.keys($sys-color) {
+      $var-values: map.set($var-values, $key, var(--#{$prefix}-#{$key}));
+    }
+    $var-values: map.set($var-values, shadow, map.get($sys-color, shadow));
+    @return $var-values;
   }
 
-  @return $mdc-sys-color;
+  @return $sys-color;
 }
 
 @function _get-sys-typeface($ref, $prefix) {
+  $sys-typography: m3.md-sys-typescale-values($ref);
   @if (sass-utils.$use-system-typography-variables) {
-    $keys: (
-            'body-large',
-            'body-large-font',
-            'body-large-line-height',
-            'body-large-size',
-            'body-large-tracking',
-            'body-large-weight',
-            'body-medium',
-            'body-medium-font',
-            'body-medium-line-height',
-            'body-medium-size',
-            'body-medium-tracking',
-            'body-medium-weight',
-            'body-small',
-            'body-small-font',
-            'body-small-line-height',
-            'body-small-size',
-            'body-small-tracking',
-            'body-small-weight',
-            'display-large',
-            'display-large-font',
-            'display-large-line-height',
-            'display-large-size',
-            'display-large-tracking',
-            'display-large-weight',
-            'display-medium',
-            'display-medium-font',
-            'display-medium-line-height',
-            'display-medium-size',
-            'display-medium-tracking',
-            'display-medium-weight',
-            'display-small',
-            'display-small-font',
-            'display-small-line-height',
-            'display-small-size',
-            'display-small-tracking',
-            'display-small-weight',
-            'headline-large',
-            'headline-large-font',
-            'headline-large-line-height',
-            'headline-large-size',
-            'headline-large-tracking',
-            'headline-large-weight',
-            'headline-medium',
-            'headline-medium-font',
-            'headline-medium-line-height',
-            'headline-medium-size',
-            'headline-medium-tracking',
-            'headline-medium-weight',
-            'headline-small',
-            'headline-small-font',
-            'headline-small-line-height',
-            'headline-small-size',
-            'headline-small-tracking',
-            'headline-small-weight',
-            'label-large',
-            'label-large-font',
-            'label-large-line-height',
-            'label-large-size',
-            'label-large-tracking',
-            'label-large-weight',
-            'label-large-weight-prominent',
-            'label-medium',
-            'label-medium-font',
-            'label-medium-line-height',
-            'label-medium-size',
-            'label-medium-tracking',
-            'label-medium-weight',
-            'label-medium-weight-prominent',
-            'label-small',
-            'label-small-font',
-            'label-small-line-height',
-            'label-small-size',
-            'label-small-tracking',
-            'label-small-weight',
-            'title-large',
-            'title-large-font',
-            'title-large-line-height',
-            'title-large-size',
-            'title-large-tracking',
-            'title-large-weight',
-            'title-medium',
-            'title-medium-font',
-            'title-medium-line-height',
-            'title-medium-size',
-            'title-medium-tracking',
-            'title-medium-weight',
-            'title-small',
-            'title-small-font',
-            'title-small-line-height',
-            'title-small-size',
-            'title-small-tracking',
-            'title-small-weight'
-    );
-
-    @return create-map($keys, $prefix);
+    $var-values: ();
+    @each $key in map.keys($sys-typography) {
+      $var-values: map.set($var-values, $key, var(--#{$prefix}-#{$key}));
+    }
+    @return $var-values;
   }
-  @return m3.md-sys-typescale-values($ref);
+
+  @return $sys-typography;
 }
 
 /// Generates a set of namespaced color tokens for all components.
@@ -337,14 +198,10 @@ $_cached-token-slots: null;
 /// @param {Map} $error The error palette
 /// @param {String} $system-variables-prefix The prefix of system tokens
 /// @return {Map} A map of namespaced color tokens
-@function generate-color-tokens($type, $primary, $tertiary, $error, $system-variables-prefix) {
-  $ref: (
-    md-ref-palette: generate-ref-palette-tokens($primary, $tertiary, $error)
-  );
+@function generate-color-tokens($type, $palettes, $system-variables-prefix) {
+  $sys-color: _get-sys-color($type, $palettes, $system-variables-prefix);
 
-  $sys-color: _get-sys-color($type, $ref, $system-variables-prefix);
-
-  @return generate-tokens(map.merge($ref, (
+  @return generate-tokens((
     md-sys-color: $sys-color,
     // Because the elevation values are always combined with color values to create the box shadow,
     // elevation needs to be part of the color dimension.
@@ -354,7 +211,7 @@ $_cached-token-slots: null;
     // TODO(mmalerba): If at some point we remove the need for these combined values, we can move
     //  state to the base dimension.
     md-sys-state: m3.md-sys-state-values(),
-  )));
+  ));
 }
 
 /// Generates a set of namespaced color tokens for all components.

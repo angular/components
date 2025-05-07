@@ -233,7 +233,7 @@ function getTokenExtractionCode(
     }
 
     $__all-color: ${m3Tokens}.generate-color-tokens(light, ${palettes}.$azure-palette,
-      ${palettes}.$azure-palette, ${palettes}.$azure-palette, 'mat-sys');
+      ${palettes}.$azure-palette, 'mat-sys');
     $__all-typography: ${m3Tokens}.generate-typography-tokens(font, 100, 100, 100, 100, 'mat-sys');
     $__all-density: ${m3System}.get-density-tokens(0);
     $__all-base: ${m3Tokens}.generate-base-tokens();
