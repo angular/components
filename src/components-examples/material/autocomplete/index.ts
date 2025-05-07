@@ -6,4 +6,5 @@ export {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-
 export {AutocompletePlainInputExample} from './autocomplete-plain-input/autocomplete-plain-input-example';
 export {AutocompleteSimpleExample} from './autocomplete-simple/autocomplete-simple-example';
 export {AutocompleteRequireSelectionExample} from './autocomplete-require-selection/autocomplete-require-selection-example';
+export {AutocompleteRevertToValueExample} from './autocomplete-revert-to-value/autocomplete-revert-to-value-example';
 export {AutocompleteHarnessExample} from './autocomplete-harness/autocomplete-harness-example';

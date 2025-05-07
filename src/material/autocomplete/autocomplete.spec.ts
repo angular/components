@@ -2859,6 +2859,95 @@ describe('MatAutocomplete', () => {
       expect(input.value).toBe('');
       expect(stateCtrl.value).toBe(null);
     }));
+
+    it('should revert to the provided value if requireSelection is enabled and revertToValue is provided', waitForAsync(async () => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = true;
+      fixture.componentInstance.revertToValue = {code: 'DE', name: 'Delaware'};
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      // Simulate opening the input and clicking the first option.
+      trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).toBe(false);
+      expect(input.value).toBe('Alabama');
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+
+      // Simulate pressing backspace while focus is still on the input.
+      dispatchFakeEvent(input, 'keydown');
+      input.value = 'Alabam';
+      fixture.detectChanges();
+      dispatchFakeEvent(input, 'input');
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      expect(trigger.panelOpen).toBe(true);
+      expect(input.value).toBe('Alabam');
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+
+      // Simulate clicking away.
+      input.blur();
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      expect(trigger.panelOpen).toBe(false);
+      expect(input.value).toBe('Delaware');
+      expect(stateCtrl.value).toEqual({code: 'DE', name: 'Delaware'});
+    }));
+
+    it('should keep the input value if requireSelection is disabled and revertToValue is provided', waitForAsync(async () => {
+      const input = fixture.nativeElement.querySelector('input');
+      const {stateCtrl, trigger} = fixture.componentInstance;
+      fixture.componentInstance.requireSelection = false;
+      fixture.componentInstance.revertToValue = {code: 'DE', name: 'Delaware'};
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      // Simulate opening the input and clicking the first option.
+      trigger.openPanel();
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      await new Promise(r => setTimeout(r));
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).toBe(false);
+      expect(input.value).toBe('Alabama');
+      expect(stateCtrl.value).toEqual({code: 'AL', name: 'Alabama'});
+
+      // Simulate pressing backspace while focus is still on the input.
+      dispatchFakeEvent(input, 'keydown');
+      input.value = 'Alabam';
+      fixture.detectChanges();
+      dispatchFakeEvent(input, 'input');
+      fixture.detectChanges();
+      await new Promise(r => setTimeout(r));
+
+      expect(trigger.panelOpen).toBe(true);
+      expect(input.value).toBe('Alabam');
+      expect(stateCtrl.value).toEqual('Alabam');
+
+      // Simulate clicking away.
+      input.blur();
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+
+      await new Promise(r => setTimeout(r));
+
+      expect(trigger.panelOpen).toBe(false);
+      expect(input.value).toBe('Alabam');
+      expect(stateCtrl.value).toEqual('Alabam');
+    }));
   });
 
   describe('panel closing', () => {
@@ -3997,6 +4086,7 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
     [displayWith]="displayFn"
     [disableRipple]="disableRipple"
     [requireSelection]="requireSelection"
+    [revertToValue]="revertToValue"
     [aria-label]="ariaLabel"
     [aria-labelledby]="ariaLabelledby"
     (opened)="openedSpy()"
@@ -4033,6 +4123,7 @@ class SimpleAutocomplete implements OnDestroy {
   autocompleteDisabled = false;
   hasLabel = true;
   requireSelection = false;
+  revertToValue: {code: string; name: string; height?: number; disabled?: boolean} | null = null;
   ariaLabel: string;
   ariaLabelledby: string;
   panelClass = 'class-one class-two';

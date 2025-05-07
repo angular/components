@@ -757,8 +757,13 @@ export class MatAutocompleteTrigger
       this._element.nativeElement.value !== this._valueOnAttach
     ) {
       this._clearPreviousSelectedOption(null);
-      this._assignOptionValue(null);
-      this._onChange(null);
+      if (panel.revertToValue) {
+        this._assignOptionValue(panel.revertToValue);
+        this._onChange(panel.revertToValue);
+      } else {
+        this._assignOptionValue(null);
+        this._onChange(null);
+      }
     }
 
     this.closePanel();

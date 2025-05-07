@@ -70,6 +70,12 @@ export interface MatAutocompleteDefaultOptions {
    */
   requireSelection?: boolean;
 
+  /**
+   * If requireSelection is true, this input can be used to specify the value to revert to when
+   * the user closes the autocomplete panel without selecting an option. Defaults to null.
+   */
+  revertToValue?: unknown | null;
+
   /** Class to be applied to the autocomplete's backdrop. */
   backdropClass?: string;
 
@@ -191,6 +197,12 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
    * interacting or selecting a value, the initial value will be kept.
    */
   @Input({transform: booleanAttribute}) requireSelection: boolean;
+
+  /**
+   * If requireSelection is true, this input can be used to specify the value to revert to when
+   * the user closes the autocomplete panel without selecting an option. Defaults to null.
+   */
+  @Input() revertToValue: unknown | null = null;
 
   /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
