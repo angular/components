@@ -22,17 +22,22 @@ export interface ExpansionItem extends ListFocusItem {
 export interface ExpansionInputs<T extends ExpansionItem> extends ListFocusInputs<T> {
   /** Whether multiple items can be expanded at once. */
   multiExpandable: SignalLike<boolean>;
+
+  /** An array of ids of the currently expanded items. */
+  expandedIds: WritableSignalLike<string[]>;
 }
 
 /** Manages the expansion state of a list of items. */
 export class Expansion<T extends ExpansionItem> {
   /** A signal holding an array of ids of the currently expanded items. */
-  expandedIds: WritableSignalLike<string[]> = signal([]);
+  expandedIds: WritableSignalLike<string[]>;
 
   /** The currently active (focused) item in the list. */
   activeItem = computed(() => this.inputs.focusManager.activeItem());
 
-  constructor(readonly inputs: ExpansionInputs<T> & {focusManager: ListFocus<T>}) {}
+  constructor(readonly inputs: ExpansionInputs<T> & {focusManager: ListFocus<T>}) {
+    this.expandedIds = inputs.expandedIds ?? signal([]);
+  }
 
   /** Opens the specified item, or the currently active item if none is specified. */
   open(item: T = this.activeItem()) {

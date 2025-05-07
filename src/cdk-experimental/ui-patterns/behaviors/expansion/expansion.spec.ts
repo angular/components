@@ -68,6 +68,7 @@ function getExpansion(inputs: TestInputs = {}): {
     skipDisabled: focusManager.inputs.skipDisabled,
     focusMode: focusManager.inputs.focusMode,
     multiExpandable: inputs.multiExpandable ?? signal(false),
+    expandedIds: signal([]),
     focusManager,
   });
 

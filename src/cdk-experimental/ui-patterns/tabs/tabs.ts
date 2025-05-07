@@ -78,7 +78,7 @@ export class TabPattern {
     this.value = inputs.value;
     this.disabled = inputs.disabled;
     this.element = inputs.element;
-    this.expansionId = inputs.id;
+    this.expansionId = inputs.value;
   }
 }
 
@@ -115,7 +115,7 @@ interface SelectOptions {
 export type TabListInputs = ListNavigationInputs<TabPattern> &
   Omit<ListSelectionInputs<TabPattern, string>, 'multi'> &
   ListFocusInputs<TabPattern> &
-  Omit<ExpansionInputs<TabPattern>, 'multiExpandable'> & {
+  Omit<ExpansionInputs<TabPattern>, 'multiExpandable' | 'expandedIds'> & {
     disabled: SignalLike<boolean>;
   };
 
@@ -196,6 +196,7 @@ export class TabListPattern {
     this.expansionBehavior = new Expansion({
       ...inputs,
       multiExpandable: () => false,
+      expandedIds: this.inputs.value,
       focusManager: this.focusManager,
     });
   }
