@@ -132,7 +132,13 @@
 @mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
   $sys-names: map-merge-all(
       m3.md-sys-color-values-light(palettes.$blue-palette),
-      m3.md-sys-typescale-values(),
+      m3.md-sys-typescale-values((
+        brand: (Roboto),
+        plain: (Roboto),
+        bold: 700,
+        medium: 500,
+        regular: 400
+      )),
       m3.md-sys-elevation-values(),
       m3.md-sys-shape-values(),
       m3.md-sys-state-values());
@@ -196,14 +202,6 @@
 
 @mixin system-level-typography($theme, $overrides: (), $prefix: null) {
   $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
-  $brand: map.get($font-definition, brand);
-  $plain: map.get($font-definition, plain);
-  $bold: map.get($font-definition, bold);
-  $medium: map.get($font-definition, medium);
-  $regular: map.get($font-definition, regular);
-  $ref: (md-ref-typeface:
-      m3-tokens.generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
-  );
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
@@ -211,7 +209,7 @@
   }
 
   & {
-    @each $name, $value in m3.md-sys-typescale-values($ref) {
+    @each $name, $value in m3.md-sys-typescale-values($font-definition) {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -265,7 +263,13 @@
     'md-sys-color':
         _create-system-app-vars-map(m3.md-sys-color-values-light(palettes.$blue-palette)),
     'md-sys-typescale':
-        _create-system-app-vars-map(m3.md-sys-typescale-values()),
+        _create-system-app-vars-map(m3.md-sys-typescale-values((
+          brand: (Roboto),
+          plain: (Roboto),
+          bold: 700,
+          medium: 500,
+          regular: 400
+        ))),
     'md-sys-elevation':
         _create-system-app-vars-map(m3.md-sys-elevation-values()),
     'md-sys-state':

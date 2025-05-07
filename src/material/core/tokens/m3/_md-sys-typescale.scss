@@ -10,137 +10,106 @@
 // Indicates whether alternative tokens should be used
 $_alternate-tokens: false;
 
-$_default: (
-  md-ref-typeface: md-ref-typeface.md-ref-typeface-values(),
-);
+@function md-sys-typescale-values($typography) {
+  $plain: map.get($typography, plain);
+  $brand: map.get($typography, brand);
+  $bold: map.get($typography, bold);
+  $medium: map.get($typography, medium);
+  $regular: map.get($typography, regular);
 
-@function md-sys-typescale-values($deps: $_default) {
   $values: (
-    body-large:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          1rem #{'/'} 1.5rem map.get($deps, 'md-ref-typeface', 'plain'),
-    body-large-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    body-large: $regular 1rem #{'/'} 1.5rem $plain,
+    body-large-font: $plain,
     body-large-line-height: 1.5rem,
     body-large-size: 1rem,
     body-large-tracking: 0.031rem,
-    body-large-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    body-medium:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          0.875rem #{'/'} 1.25rem map.get($deps, 'md-ref-typeface', 'plain'),
-    body-medium-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    body-large-weight: $regular,
+    body-medium: $regular 0.875rem #{'/'} 1.25rem $plain,
+    body-medium-font: $plain,
     body-medium-line-height: 1.25rem,
     body-medium-size: 0.875rem,
     body-medium-tracking: 0.016rem,
-    body-medium-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    body-small:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          0.75rem #{'/'} 1rem map.get($deps, 'md-ref-typeface', 'plain'),
-    body-small-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    body-medium-weight: $regular,
+    body-small: $regular 0.75rem #{'/'} 1rem $plain,
+    body-small-font: $plain,
     body-small-line-height: 1rem,
     body-small-size: 0.75rem,
     body-small-tracking: 0.025rem,
-    body-small-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    display-large:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          3.562rem #{'/'} 4rem map.get($deps, 'md-ref-typeface', 'brand'),
-    display-large-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    body-small-weight: $regular,
+    display-large: $regular 3.562rem #{'/'} 4rem $brand,
+    display-large-font: $brand,
     display-large-line-height: 4rem,
     display-large-size: 3.562rem,
     display-large-tracking: -0.016rem,
-    display-large-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    display-medium:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          2.812rem #{'/'} 3.25rem map.get($deps, 'md-ref-typeface', 'brand'),
-    display-medium-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    display-large-weight: $regular,
+    display-medium: $regular 2.812rem #{'/'} 3.25rem $brand,
+    display-medium-font: $brand,
     display-medium-line-height: 3.25rem,
     display-medium-size: 2.812rem,
     display-medium-tracking: 0,
-    display-medium-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    display-small:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          2.25rem #{'/'} 2.75rem map.get($deps, 'md-ref-typeface', 'brand'),
-    display-small-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    display-medium-weight: $regular,
+    display-small: $regular 2.25rem #{'/'} 2.75rem $brand,
+    display-small-font: $brand,
     display-small-line-height: 2.75rem,
     display-small-size: 2.25rem,
     display-small-tracking: 0,
-    display-small-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    headline-large:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          2rem #{'/'} 2.5rem map.get($deps, 'md-ref-typeface', 'brand'),
-    headline-large-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    display-small-weight: $regular,
+    headline-large: $regular 2rem #{'/'} 2.5rem $brand,
+    headline-large-font: $brand,
     headline-large-line-height: 2.5rem,
     headline-large-size: 2rem,
     headline-large-tracking: 0,
-    headline-large-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    headline-medium:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          1.75rem #{'/'} 2.25rem map.get($deps, 'md-ref-typeface', 'brand'),
-    headline-medium-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    headline-large-weight: $regular,
+    headline-medium: $regular 1.75rem #{'/'} 2.25rem $brand,
+    headline-medium-font: $brand,
     headline-medium-line-height: 2.25rem,
     headline-medium-size: 1.75rem,
     headline-medium-tracking: 0,
-    headline-medium-weight:
-      map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    headline-small:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          1.5rem #{'/'} 2rem map.get($deps, 'md-ref-typeface', 'brand'),
-    headline-small-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    headline-medium-weight: $regular,
+    headline-small: $regular 1.5rem #{'/'} 2rem $brand,
+    headline-small-font: $brand,
     headline-small-line-height: 2rem,
     headline-small-size: 1.5rem,
     headline-small-tracking: 0,
-    headline-small-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    label-large:
-          map.get($deps, 'md-ref-typeface', 'weight-medium')
-          0.875rem #{'/'} 1.25rem map.get($deps, 'md-ref-typeface', 'plain'),
-    label-large-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    headline-small-weight: $regular,
+    label-large: $medium 0.875rem #{'/'} 1.25rem $plain,
+    label-large-font: $plain,
     label-large-line-height: 1.25rem,
     label-large-size: 0.875rem,
     label-large-tracking: 0.006rem,
-    label-large-weight: map.get($deps, 'md-ref-typeface', 'weight-medium'),
-    label-large-weight-prominent:
-      map.get($deps, 'md-ref-typeface', 'weight-bold'),
-    label-medium:
-          map.get($deps, 'md-ref-typeface', 'weight-medium')
-          0.75rem #{'/'} 1rem map.get($deps, 'md-ref-typeface', 'plain'),
-    label-medium-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    label-large-weight: $medium,
+    label-large-weight-prominent: $bold,
+    label-medium: $medium 0.75rem #{'/'} 1rem $plain,
+    label-medium-font: $plain,
     label-medium-line-height: 1rem,
     label-medium-size: 0.75rem,
     label-medium-tracking: 0.031rem,
-    label-medium-weight: map.get($deps, 'md-ref-typeface', 'weight-medium'),
-    label-medium-weight-prominent:
-      map.get($deps, 'md-ref-typeface', 'weight-bold'),
-    label-small:
-          map.get($deps, 'md-ref-typeface', 'weight-medium')
-          0.688rem #{'/'} 1rem map.get($deps, 'md-ref-typeface', 'plain'),
-    label-small-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    label-medium-weight: $medium,
+    label-medium-weight-prominent: $bold,
+    label-small: $medium 0.688rem #{'/'} 1rem $plain,
+    label-small-font: $plain,
     label-small-line-height: 1rem,
     label-small-size: 0.688rem,
     label-small-tracking: 0.031rem,
-    label-small-weight: map.get($deps, 'md-ref-typeface', 'weight-medium'),
-    title-large:
-          map.get($deps, 'md-ref-typeface', 'weight-regular')
-          1.375rem #{'/'} 1.75rem map.get($deps, 'md-ref-typeface', 'brand'),
-    title-large-font: map.get($deps, 'md-ref-typeface', 'brand'),
+    label-small-weight: $medium,
+    title-large: $regular 1.375rem #{'/'} 1.75rem $brand,
+    title-large-font: $brand,
     title-large-line-height: 1.75rem,
     title-large-size: 1.375rem,
     title-large-tracking: 0,
-    title-large-weight: map.get($deps, 'md-ref-typeface', 'weight-regular'),
-    title-medium:
-          map.get($deps, 'md-ref-typeface', 'weight-medium')
-          1rem #{'/'} 1.5rem map.get($deps, 'md-ref-typeface', 'plain'),
-    title-medium-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    title-large-weight: $regular,
+    title-medium: $medium 1rem #{'/'} 1.5rem $plain,
+    title-medium-font: $plain,
     title-medium-line-height: 1.5rem,
     title-medium-size: 1rem,
     title-medium-tracking: 0.009rem,
-    title-medium-weight: map.get($deps, 'md-ref-typeface', 'weight-medium'),
-    title-small:
-          map.get($deps, 'md-ref-typeface', 'weight-medium')
-          0.875rem #{'/'} 1.25rem map.get($deps, 'md-ref-typeface', 'plain'),
-    title-small-font: map.get($deps, 'md-ref-typeface', 'plain'),
+    title-medium-weight: $medium,
+    title-small: $medium 0.875rem #{'/'} 1.25rem $plain,
+    title-small-font: $plain,
     title-small-line-height: 1.25rem,
     title-small-size: 0.875rem,
     title-small-tracking: 0.006rem,
-    title-small-weight: map.get($deps, 'md-ref-typeface', 'weight-medium')
+    title-small-weight: $medium
   );
 
   @if ($_alternate-tokens) {

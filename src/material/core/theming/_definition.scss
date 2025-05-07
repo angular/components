@@ -83,19 +83,20 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-typography-variables: map.get($config, use-system-variables) or false;
 
+  $typography: (
+    plain: $plain,
+    brand: $brand,
+    bold: $bold,
+    medium: $medium,
+    regular: $regular,
+  );
+
   @return (
     $internals: (
       theme-version: $theme-version,
-      font-definition: (
-        plain: $plain,
-        brand: $brand,
-        bold: $bold,
-        medium: $medium,
-        regular: $regular,
-      ),
+      font-definition: $typography,
       typography-system-variables-prefix: $system-variables-prefix,
-      typography-tokens: m3-tokens.generate-typography-tokens(
-          $brand, $plain, $bold, $medium, $regular, $system-variables-prefix)
+      typography-tokens: m3-tokens.generate-typography-tokens($typography, $system-variables-prefix)
     )
   );
 }

@@ -178,8 +178,8 @@ $_cached-token-slots: null;
   @return $sys-color;
 }
 
-@function _get-sys-typeface($ref, $prefix) {
-  $sys-typography: m3.md-sys-typescale-values($ref);
+@function _get-sys-typeface($typography, $prefix) {
+  $sys-typography: m3.md-sys-typescale-values($typography);
   @if (sass-utils.$use-system-typography-variables) {
     $var-values: ();
     @each $key in map.keys($sys-typography) {
@@ -222,12 +222,8 @@ $_cached-token-slots: null;
 /// @param {String|Number} $regular The regular font-weight
 /// @param {String} $system-variables-prefix The prefix of system tokens
 /// @return {Map} A map of namespaced typography tokens
-@function generate-typography-tokens($brand, $plain, $bold, $medium, $regular,
-$system-variables-prefix) {
-  $ref: (
-    md-ref-typeface: generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
-  );
-  $sys-typeface: _get-sys-typeface($ref, $system-variables-prefix);
+@function generate-typography-tokens($typography, $system-variables-prefix) {
+  $sys-typeface: _get-sys-typeface($typography, $system-variables-prefix);
   @return generate-tokens((
     md-sys-typescale: $sys-typeface
   ));
