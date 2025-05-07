@@ -171,8 +171,8 @@ export class TabListPattern {
       .on(this.nextKey, () => this.next({select: this.followFocus()}))
       .on('Home', () => this.first({select: this.followFocus()}))
       .on('End', () => this.last({select: this.followFocus()}))
-      .on(' ', () => this.select({select: true}))
-      .on('Enter', () => this.select({select: true}));
+      .on(' ', () => this._select({select: true}))
+      .on('Enter', () => this._select({select: true}));
   });
 
   /** The pointerdown event manager for the tablist. */
@@ -217,25 +217,25 @@ export class TabListPattern {
   /** Navigates to the first option in the tablist. */
   first(opts?: SelectOptions) {
     this.navigation.first();
-    this.select(opts);
+    this._select(opts);
   }
 
   /** Navigates to the last option in the tablist. */
   last(opts?: SelectOptions) {
     this.navigation.last();
-    this.select(opts);
+    this._select(opts);
   }
 
   /** Navigates to the next option in the tablist. */
   next(opts?: SelectOptions) {
     this.navigation.next();
-    this.select(opts);
+    this._select(opts);
   }
 
   /** Navigates to the previous option in the tablist. */
   prev(opts?: SelectOptions) {
     this.navigation.prev();
-    this.select(opts);
+    this._select(opts);
   }
 
   /** Navigates to the given item in the tablist. */
@@ -244,12 +244,12 @@ export class TabListPattern {
 
     if (item) {
       this.navigation.goto(item);
-      this.select(opts);
+      this._select(opts);
     }
   }
 
   /** Handles updating selection for the tablist. */
-  private select(opts?: SelectOptions) {
+  private _select(opts?: SelectOptions) {
     if (opts?.select) {
       this.selection.selectOne();
       this.expansionBehavior.open();

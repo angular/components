@@ -162,7 +162,7 @@ describe('Expansion', () => {
 
   describe('#openAll', () => {
     it('should open all focusable and expandable items when multiExpandable is true', () => {
-      const {expansion, items} = getExpansion({
+      const {expansion} = getExpansion({
         numItems: 3,
         multiExpandable: signal(true),
       });
@@ -191,7 +191,7 @@ describe('Expansion', () => {
     });
 
     it('should do nothing when multiExpandable is false', () => {
-      const {expansion, items} = getExpansion({
+      const {expansion} = getExpansion({
         numItems: 3,
         multiExpandable: signal(false),
       });
