@@ -46,56 +46,6 @@
 @use './m3';
 @use 'sass:map';
 
-/// Generates tokens for the given palette with the given prefix.
-/// @param {Map} $palette The palette to generate tokens for
-/// @param {String} $prefix The key prefix used to name the tokens
-/// @return {Map} A set of tokens for the given palette
-@function _generate-palette-tokens($palette, $prefix) {
-  $palette: map.remove($palette, neutral, neutral-variant);
-  $result: ();
-  @each $hue, $value in $palette {
-    $result: map.set($result, '#{$prefix}#{$hue}', $value);
-  }
-  @return $result;
-}
-
-/// Creates a set of `md-ref-palette` tokens from the given palettes. (See
-/// ./m3/definitions/_md-ref-palette.scss)
-/// @param {Map} $primary The primary palette
-/// @param {Map} $secondary The secondary palette
-/// @param {Map} $tertiary The tertiary palette
-/// @param {Map} $error The error palette
-/// @return {Map} A set of `md-ref-palette` tokens
-@function generate-ref-palette-tokens($primary, $tertiary, $error) {
-  @return sass-utils.merge-all(
-      (black: #000, white: #fff),
-      _generate-palette-tokens($primary, primary),
-      _generate-palette-tokens(map.get($primary, secondary), secondary),
-      _generate-palette-tokens($tertiary, tertiary),
-      _generate-palette-tokens(map.get($primary, neutral), neutral),
-      _generate-palette-tokens(map.get($primary, neutral-variant), neutral-variant),
-      _generate-palette-tokens($error, error),
-  );
-}
-
-/// Creates a set of `md-ref-typeface` tokens from the given palettes. (See
-/// ./m3/definitions/_md-ref-typeface.scss)
-/// @param {List|String} $brand The font-family to use for brand text
-/// @param {List|String} $plain The font-family to use for plain text
-/// @param {String} $bold The font-weight to use for bold text
-/// @param {String} $medium The font-weight to use for medium text
-/// @param {String} $regular The font-weight to use for regular text
-/// @return {Map} A set of `md-ref-typeface` tokens
-@function generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular) {
-  @return (
-    brand: $brand,
-    plain: $plain,
-    weight-bold: $bold,
-    weight-medium: $medium,
-    weight-regular: $regular,
-  );
-}
-
 $_cached-token-slots: null;
 
 /// Determines the token slots for all components.
