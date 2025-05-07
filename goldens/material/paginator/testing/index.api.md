@@ -24,9 +24,9 @@ export class MatPaginatorHarness extends ComponentHarness {
     // (undocumented)
     isPreviousPageDisabled(): Promise<boolean>;
     // (undocumented)
-    _rangeLabel: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement>;
+    _rangeLabel: () => Promise<_angular_cdk_testing.TestElement>;
     // (undocumented)
-    _select: _angular_cdk_testing.AsyncFactoryFn<MatSelectHarness | null>;
+    _select: () => Promise<MatSelectHarness | null>;
     setPageSize(size: number): Promise<void>;
     static with<T extends MatPaginatorHarness>(this: ComponentHarnessConstructor<T>, options?: PaginatorHarnessFilters): HarnessPredicate<T>;
 }

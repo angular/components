@@ -30,7 +30,7 @@ export class MatTreeNodeHarness extends ContentContainerComponentHarness<string>
     isExpanded(): Promise<boolean>;
     toggle(): Promise<void>;
     // (undocumented)
-    _toggle: _angular_cdk_testing.AsyncFactoryFn<_angular_cdk_testing.TestElement | null>;
+    _toggle: () => Promise<_angular_cdk_testing.TestElement | null>;
     static with(options?: TreeNodeHarnessFilters): HarnessPredicate<MatTreeNodeHarness>;
 }
 
