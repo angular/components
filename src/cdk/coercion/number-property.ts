@@ -8,7 +8,7 @@
 
 /**
  * Type describing the allowed values for a number input
- * @docs-private
+ * @nodoc
  */
 export type NumberInput = string | number | null | undefined;
 
@@ -24,7 +24,7 @@ export function coerceNumberProperty(value: any, fallbackValue = 0) {
 
 /**
  * Whether the provided value is considered a number.
- * @docs-private
+ * @nodoc
  */
 export function _isNumberValue(value: any): boolean {
   // parseFloat(value) handles most of the cases we're interested in (it treats null, empty string,

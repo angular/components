@@ -5,25 +5,25 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {
-  ElementRef,
-  NgZone,
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Injector,
-} from '@angular/core';
-import {Platform, normalizePassiveListenerOptions, _getEventTarget} from '@angular/cdk/platform';
 import {isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader} from '@angular/cdk/a11y';
 import {coerceElement} from '@angular/cdk/coercion';
+import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {RippleRef, RippleState, RippleConfig} from './ripple-ref';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Injector,
+  NgZone,
+  ViewEncapsulation,
+} from '@angular/core';
 import {RippleEventManager} from './ripple-event-manager';
+import {RippleConfig, RippleRef, RippleState} from './ripple-ref';
 
 /**
  * Interface that describes the target for launching ripples.
  * It defines the ripple configuration and disabled state for interaction ripples.
- * @docs-private
+ * @nodoc
  */
 export interface RippleTarget {
   /** Configuration for ripples that are launched on pointer down. */
@@ -80,7 +80,7 @@ export class _MatRippleStylesLoader {}
  * The constructor takes a reference to the ripple directive's host element and a map of DOM
  * event handlers to be installed on the element that triggers ripple animations.
  * This will eventually become a custom renderer once Angular support exists.
- * @docs-private
+ * @nodoc
  */
 export class RippleRenderer implements EventListenerObject {
   /** Element where the ripples are being added to. */
@@ -314,7 +314,7 @@ export class RippleRenderer implements EventListenerObject {
 
   /**
    * Handles all registered events.
-   * @docs-private
+   * @nodoc
    */
   handleEvent(event: Event) {
     if (event.type === 'mousedown') {

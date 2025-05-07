@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Provider} from '@angular/core';
 import {Subject} from 'rxjs';
 import {TREE_KEY_MANAGER} from './tree-key-manager';
 import {
@@ -13,7 +14,6 @@ import {
   TreeKeyManagerItem,
   TreeKeyManagerStrategy,
 } from './tree-key-manager-strategy';
-import {Provider} from '@angular/core';
 
 // NoopTreeKeyManager is a "noop" implementation of TreeKeyMangerStrategy. Methods are noops. Does
 // not emit to streams.
@@ -21,7 +21,7 @@ import {Provider} from '@angular/core';
 // Used for applications built before TreeKeyManager to opt-out of TreeKeyManager and revert to
 // legacy behavior.
 /**
- * @docs-private
+ * @nodoc
  *
  * Opt-out of Tree of key manager behavior.
  *
@@ -68,7 +68,7 @@ export class NoopTreeKeyManager<T extends TreeKeyManagerItem> implements TreeKey
 }
 
 /**
- * @docs-private
+ * @nodoc
  *
  * Opt-out of Tree of key manager behavior.
  *
@@ -89,7 +89,7 @@ export function NOOP_TREE_KEY_MANAGER_FACTORY<
 }
 
 /**
- * @docs-private
+ * @nodoc
  *
  * Opt-out of Tree of key manager behavior.
  *

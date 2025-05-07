@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   booleanAttribute,
   computed,
@@ -24,7 +26,6 @@ import {
   Signal,
   signal,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS} from '../core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -35,13 +36,12 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {MAT_FORM_FIELD} from '../form-field';
-import {MatTimepicker} from './timepicker';
-import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
 import {Subscription} from 'rxjs';
-import {DOWN_ARROW, ESCAPE, hasModifierKey, UP_ARROW} from '@angular/cdk/keycodes';
+import {DateAdapter, MAT_DATE_FORMATS} from '../core';
+import {MAT_FORM_FIELD} from '../form-field';
+import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
+import {MatTimepicker} from './timepicker';
 import {validateAdapter} from './util';
-import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 
 /**
  * Input that can be used to enter time and connect to a `mat-timepicker`.
@@ -147,7 +147,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Whether the input should be disabled through the template.
-   * @docs-private
+   * @nodoc
    */
   readonly disabledInput: InputSignalWithTransform<boolean, unknown> = input(false, {
     transform: booleanAttribute,
@@ -181,7 +181,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `ControlValueAccessor`.
-   * @docs-private
+   * @nodoc
    */
   writeValue(value: any): void {
     // Note that we need to deserialize here, rather than depend on the value change effect,
@@ -193,7 +193,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `ControlValueAccessor`.
-   * @docs-private
+   * @nodoc
    */
   registerOnChange(fn: (value: any) => void): void {
     this._onChange = fn;
@@ -201,7 +201,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `ControlValueAccessor`.
-   * @docs-private
+   * @nodoc
    */
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
@@ -209,7 +209,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `ControlValueAccessor`.
-   * @docs-private
+   * @nodoc
    */
   setDisabledState(isDisabled: boolean): void {
     this._accessorDisabled.set(isDisabled);
@@ -217,7 +217,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `Validator`.
-   * @docs-private
+   * @nodoc
    */
   validate(control: AbstractControl): ValidationErrors | null {
     return this._validator(control);
@@ -225,7 +225,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /**
    * Implemented as a part of `Validator`.
-   * @docs-private
+   * @nodoc
    */
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;

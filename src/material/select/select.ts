@@ -34,6 +34,7 @@ import {
   ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
+import {NgClass} from '@angular/common';
 import {
   AfterContentInit,
   booleanAttribute,
@@ -46,8 +47,10 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  HostAttributeToken,
   inject,
   InjectionToken,
+  Injector,
   Input,
   numberAttribute,
   OnChanges,
@@ -55,12 +58,10 @@ import {
   OnInit,
   Output,
   QueryList,
+  Renderer2,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  HostAttributeToken,
-  Renderer2,
-  Injector,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -70,6 +71,8 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
+import {defer, merge, Observable, Subject} from 'rxjs';
+import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {
   _animationsDisabled,
   _countGroupLabelsBeforeOption,
@@ -83,14 +86,11 @@ import {
   MatOptionSelectionChange,
 } from '../core';
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '../form-field';
-import {defer, merge, Observable, Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, take, takeUntil} from 'rxjs/operators';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
   getMatSelectNonFunctionValueError,
 } from './select-errors';
-import {NgClass} from '@angular/common';
 
 /** Injection token that determines the scroll handling while a select is open. */
 export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -105,7 +105,7 @@ export const MAT_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -147,7 +147,7 @@ export interface MatSelectConfig {
 export const MAT_SELECT_CONFIG = new InjectionToken<MatSelectConfig>('MAT_SELECT_CONFIG');
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -344,19 +344,19 @@ export class MatSelect
   /**
    * Emits whenever the component state changes and should cause the parent
    * form-field to update. Implemented as part of `MatFormFieldControl`.
-   * @docs-private
+   * @nodoc
    */
   readonly stateChanges = new Subject<void>();
 
   /**
    * Disable the automatic labeling to avoid issues like #27241.
-   * @docs-private
+   * @nodoc
    */
   readonly disableAutomaticLabeling = true;
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input('aria-describedby') userAriaDescribedBy: string;
 
@@ -605,7 +605,7 @@ export class MatSelect
   /**
    * Event that emits whenever the raw value of the select changes. This is here primarily
    * to facilitate the two-way binding for the `value` input.
-   * @docs-private
+   * @nodoc
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -1462,7 +1462,7 @@ export class MatSelect
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get describedByIds(): string[] {
     const element = this._elementRef.nativeElement;
@@ -1473,7 +1473,7 @@ export class MatSelect
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   setDescribedByIds(ids: string[]) {
     if (ids.length) {
@@ -1485,7 +1485,7 @@ export class MatSelect
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   onContainerClick() {
     this.focus();
@@ -1494,7 +1494,7 @@ export class MatSelect
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get shouldLabelFloat(): boolean {
     // Since the panel doesn't overlap the trigger, we

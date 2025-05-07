@@ -30,7 +30,7 @@ export interface ListSection<I> {
  * @template T A constructor type for a list item harness type used by this list harness.
  * @template C The list item harness type that `T` constructs.
  * @template F The filter type used filter list item harness of type `C`.
- * @docs-private
+ * @nodoc
  */
 export abstract class MatListHarnessBase<
   T extends ComponentHarnessConstructor<C> & {with: (options?: F) => HarnessPredicate<C>},

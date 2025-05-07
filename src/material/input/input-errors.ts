@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/** @docs-private */
+/** @nodoc */
 export function getMatInputUnsupportedTypeError(type: string): Error {
   return Error(`Input type "${type}" isn't supported by matInput.`);
 }

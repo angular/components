@@ -19,7 +19,7 @@ export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
 /**
  * Shallow-extends a stylesheet object with another stylesheet-like object.
  * Note that the keys in `source` have to be dash-cased.
- * @docs-private
+ * @nodoc
  */
 export function extendStyles(
   dest: CSSStyleDeclaration,
@@ -45,7 +45,7 @@ export function extendStyles(
  * Toggles whether the native drag interactions should be enabled for an element.
  * @param element Element on which to toggle the drag interactions.
  * @param enable Whether the drag interactions should be enabled.
- * @docs-private
+ * @nodoc
  */
 export function toggleNativeDragInteractions(element: HTMLElement, enable: boolean) {
   const userSelect = enable ? '' : 'none';
@@ -66,7 +66,7 @@ export function toggleNativeDragInteractions(element: HTMLElement, enable: boole
  * @param element Element whose visibility to toggle
  * @param enable Whether the element should be visible.
  * @param importantProperties Properties to be set as `!important`.
- * @docs-private
+ * @nodoc
  */
 export function toggleVisibility(
   element: HTMLElement,

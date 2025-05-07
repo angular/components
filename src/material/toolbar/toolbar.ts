@@ -13,13 +13,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  DOCUMENT,
   Directive,
   ElementRef,
   Input,
   QueryList,
   ViewEncapsulation,
   inject,
-  DOCUMENT,
 } from '@angular/core';
 
 @Directive({
@@ -92,7 +92,7 @@ export class MatToolbar implements AfterViewInit {
 
 /**
  * Throws an exception when attempting to combine the different toolbar row modes.
- * @docs-private
+ * @nodoc
  */
 export function throwToolbarMixedModesError() {
   throw Error(

@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, Input} from '@angular/core';
 import {
   CdkCell,
   CdkCellDef,
@@ -16,6 +15,7 @@ import {
   CdkHeaderCell,
   CdkHeaderCellDef,
 } from '@angular/cdk/table';
+import {Directive, Input} from '@angular/core';
 
 /**
  * Cell definition for the mat-table.
@@ -72,7 +72,7 @@ export class MatColumnDef extends CdkColumnDef {
    * Add "mat-column-" prefix in addition to "cdk-column-" prefix.
    * In the future, this will only add "mat-column-" and columnCssClassName
    * will change from type string[] to string.
-   * @docs-private
+   * @nodoc
    */
   protected override _updateColumnCssClassName() {
     super._updateColumnCssClassName();

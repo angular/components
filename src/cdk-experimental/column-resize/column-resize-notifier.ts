@@ -38,7 +38,7 @@ export interface ColumnSizeAction extends ColumnSize {
 
 /**
  * Originating source of column resize events within a table.
- * @docs-private
+ * @nodoc
  */
 @Injectable()
 export class ColumnResizeNotifierSource {

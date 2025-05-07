@@ -6,22 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   Directive,
   ElementRef,
   Input,
   booleanAttribute,
-  numberAttribute,
   inject,
+  numberAttribute,
 } from '@angular/core';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {MAT_CHIP} from './tokens';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
+import {MAT_CHIP} from './tokens';
 
 /**
  * Section within a chip.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[matChipAction]',

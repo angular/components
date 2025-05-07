@@ -8,6 +8,7 @@
 
 import {CdkDialogContainer} from '@angular/cdk/dialog';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +18,6 @@ import {
   inject,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {_animationsDisabled} from '../core';
 
 const ENTER_ANIMATION = '_mat-bottom-sheet-enter';
@@ -25,7 +25,7 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
 
 /**
  * Internal component that wraps user-provided bottom sheet content.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-bottom-sheet-container',

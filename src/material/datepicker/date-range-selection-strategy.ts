@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, InjectionToken, Optional, SkipSelf, FactoryProvider} from '@angular/core';
+import {FactoryProvider, Injectable, InjectionToken, Optional, SkipSelf} from '@angular/core';
 import {DateAdapter} from '../core';
 import {DateRange} from './date-selection-model';
 
@@ -132,7 +132,7 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -144,7 +144,7 @@ export function MAT_CALENDAR_RANGE_STRATEGY_PROVIDER_FACTORY(
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

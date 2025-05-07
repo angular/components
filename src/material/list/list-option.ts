@@ -8,6 +8,8 @@
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {NgTemplateOutlet} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,22 +29,20 @@ import {
 } from '@angular/core';
 import {ThemePalette} from '../core';
 import {MatListBase, MatListItemBase} from './list-base';
-import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 import {MatListItemLine, MatListItemTitle} from './list-item-sections';
-import {NgTemplateOutlet} from '@angular/common';
-import {CdkObserveContent} from '@angular/cdk/observers';
+import {LIST_OPTION, ListOption, MatListOptionTogglePosition} from './list-option-types';
 
 /**
  * Injection token that can be used to reference instances of an `SelectionList`. It serves
  * as alternative token to an actual implementation which would result in circular references.
- * @docs-private
+ * @nodoc
  */
 export const SELECTION_LIST = new InjectionToken<SelectionList>('SelectionList');
 
 /**
  * Interface describing the containing list of a list option. This is used to avoid
  * circular dependencies between the list-option and the selection list.
- * @docs-private
+ * @nodoc
  */
 export interface SelectionList extends MatListBase {
   multiple: boolean;
@@ -110,7 +110,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   /**
    * Emits when the selected state of the option has changed.
    * Use to facilitate two-data binding to the `selected` property.
-   * @docs-private
+   * @nodoc
    */
   @Output()
   readonly selectedChange: EventEmitter<boolean> = new EventEmitter<boolean>();

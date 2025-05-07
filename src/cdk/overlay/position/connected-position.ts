@@ -75,7 +75,7 @@ export class ConnectionPositionPair {
  *  |                        |
  *  --------------------------
  *
- *  @docs-private
+ *  @nodoc
  */
 export class ScrollingVisibility {
   isOriginClipped: boolean;
@@ -89,7 +89,7 @@ export class ConnectedOverlayPositionChange {
   constructor(
     /** The position used as a result of this change. */
     public connectionPair: ConnectionPositionPair,
-    /** @docs-private */
+    /** @nodoc */
     public scrollableViewProperties: ScrollingVisibility,
   ) {}
 }
@@ -98,7 +98,7 @@ export class ConnectedOverlayPositionChange {
  * Validates whether a vertical position property matches the expected values.
  * @param property Name of the property being validated.
  * @param value Value of the property being validated.
- * @docs-private
+ * @nodoc
  */
 export function validateVerticalPosition(property: string, value: VerticalConnectionPos) {
   if (value !== 'top' && value !== 'bottom' && value !== 'center') {
@@ -113,7 +113,7 @@ export function validateVerticalPosition(property: string, value: VerticalConnec
  * Validates whether a horizontal position property matches the expected values.
  * @param property Name of the property being validated.
  * @param value Value of the property being validated.
- * @docs-private
+ * @nodoc
  */
 export function validateHorizontalPosition(property: string, value: HorizontalConnectionPos) {
   if (value !== 'start' && value !== 'end' && value !== 'center') {

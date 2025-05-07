@@ -21,7 +21,7 @@ import { QueryList } from '@angular/core';
 // @public (undocumented)
 export const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions;
 
 // @public

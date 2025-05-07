@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusOrigin, _IdGenerator} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -19,6 +20,7 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  HostAttributeToken,
   InjectionToken,
   Injector,
   Input,
@@ -27,6 +29,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   afterNextRender,
@@ -34,10 +37,9 @@ import {
   forwardRef,
   inject,
   numberAttribute,
-  HostAttributeToken,
-  Renderer2,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Subscription} from 'rxjs';
 import {
   MatRipple,
   ThemePalette,
@@ -45,8 +47,6 @@ import {
   _StructuralStylesLoader,
   _animationsDisabled,
 } from '../core';
-import {Subscription} from 'rxjs';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /** Change event object emitted by radio button and radio group. */
 export class MatRadioChange<T = any> {
@@ -61,7 +61,7 @@ export class MatRadioChange<T = any> {
 /**
  * Provider Expression that allows mat-radio-group to register as a ControlValueAccessor. This
  * allows it to support [(ngModel)] and ngControl.
- * @docs-private
+ * @nodoc
  */
 export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -99,7 +99,7 @@ export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptio
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -157,7 +157,7 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
 
   /**
    * onTouch function registered via registerOnTouch (ControlValueAccessor).
-   * @docs-private
+   * @nodoc
    */
   onTouched: () => any = () => {};
 

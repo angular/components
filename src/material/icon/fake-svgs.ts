@@ -9,7 +9,7 @@
 /**
  * Fake URLs and associated SVG documents used by tests.
  * The ID attribute is used to load the icons, the name attribute is only used for testing.
- * @docs-private
+ * @nodoc
  */
 export const FAKE_SVGS = {
   cat: '<svg><path id="meow" name="meow"></path></svg>',

@@ -9,6 +9,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   Injectable,
   ListenerOptions,
   NgZone,
@@ -18,14 +19,13 @@ import {
   WritableSignal,
   inject,
   signal,
-  DOCUMENT,
 } from '@angular/core';
 
-import {_CdkPrivateStyleLoader} from '../private';
 import {Observable, Observer, Subject, merge} from 'rxjs';
-import type {DropListRef} from './drop-list-ref';
-import type {DragRef} from './drag-ref';
+import {_CdkPrivateStyleLoader} from '../private';
 import type {CdkDrag} from './directives/drag';
+import type {DragRef} from './drag-ref';
+import type {DropListRef} from './drop-list-ref';
 
 /** Event options that can be used to bind a capturing event. */
 const capturingEventOptions = {
@@ -40,7 +40,7 @@ const activeCapturingEventOptions = {
 
 /**
  * Component used to load the drag&drop reset styles.
- * @docs-private
+ * @nodoc
  */
 @Component({
   styleUrl: 'resets.css',
@@ -54,7 +54,7 @@ export class _ResetsLoader {}
 /**
  * Service that keeps track of all the drag item and drop container
  * instances, and manages global event listeners on the `document`.
- * @docs-private
+ * @nodoc
  */
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry implements OnDestroy {

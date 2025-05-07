@@ -150,6 +150,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     bodyClass: string | string[];
     // (undocumented)
     _closestTabGroup: any;
+    // (undocumented)
     get content(): TemplatePortal | null;
     disabled: boolean;
     id: string | null;
@@ -321,7 +322,7 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabGroup, never>;
 }
 
-// @public
+// @public (undocumented)
 export interface MatTabGroupBaseHeader {
     // (undocumented)
     _alignInkBarToSelectedTab(): void;

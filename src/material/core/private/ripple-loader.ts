@@ -6,24 +6,23 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Platform, _getEventTarget} from '@angular/cdk/platform';
 import {
+  DOCUMENT,
   Injectable,
   Injector,
   NgZone,
   OnDestroy,
   RendererFactory2,
   inject,
-  DOCUMENT,
 } from '@angular/core';
+import {_animationsDisabled} from '../animation/animation';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleRenderer,
   RippleTarget,
   defaultRippleAnimationConfig,
 } from '../ripple';
-import {Platform, _getEventTarget} from '@angular/cdk/platform';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_animationsDisabled} from '../animation/animation';
 
 /** The options for the MatRippleLoader's event listeners. */
 const eventListenerOptions = {capture: true};
@@ -53,7 +52,7 @@ const matRippleDisabled = 'mat-ripple-loader-disabled';
  * This service allows us to avoid eagerly creating & attaching MatRipples.
  * It works by creating & attaching a ripple only when a component is first interacted with.
  *
- * @docs-private
+ * @nodoc
  */
 @Injectable({providedIn: 'root'})
 export class MatRippleLoader implements OnDestroy {

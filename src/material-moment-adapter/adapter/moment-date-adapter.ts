@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, InjectionToken, inject} from '@angular/core';
+import {inject, Injectable, InjectionToken} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -45,7 +45,7 @@ export const MAT_MOMENT_DATE_ADAPTER_OPTIONS = new InjectionToken<MatMomentDateA
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

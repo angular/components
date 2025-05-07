@@ -8,16 +8,16 @@
 
 import {Direction, Directionality} from '../bidi';
 import {
-  CollectionViewer,
-  DataSource,
   _DisposeViewRepeaterStrategy,
   _RecycleViewRepeaterStrategy,
-  isDataSource,
   _VIEW_REPEATER_STRATEGY,
   _ViewRepeater,
   _ViewRepeaterItemChange,
   _ViewRepeaterItemInsertArgs,
   _ViewRepeaterOperation,
+  CollectionViewer,
+  DataSource,
+  isDataSource,
 } from '../collections';
 import {Platform} from '../platform';
 import {ViewportRuler} from '../scrolling';
@@ -25,15 +25,20 @@ import {ViewportRuler} from '../scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   Directive,
+  DOCUMENT,
   ElementRef,
   EmbeddedViewRef,
   EventEmitter,
+  HostAttributeToken,
+  inject,
+  Injector,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -46,11 +51,6 @@ import {
   TrackByFunction,
   ViewContainerRef,
   ViewEncapsulation,
-  booleanAttribute,
-  inject,
-  Injector,
-  HostAttributeToken,
-  DOCUMENT,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -72,6 +72,7 @@ import {
   CdkNoDataRow,
   CdkRowDef,
 } from './row';
+import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
 import {StickyStyler} from './sticky-styler';
 import {
   getTableDuplicateColumnNameError,
@@ -81,7 +82,6 @@ import {
   getTableUnknownColumnError,
   getTableUnknownDataSourceError,
 } from './table-errors';
-import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
 import {CDK_TABLE} from './tokens';
 
 /**
@@ -104,7 +104,7 @@ export type CdkTableDataSourceInput<T> = readonly T[] | DataSource<T> | Observab
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert data rows.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[rowOutlet]',
@@ -124,7 +124,7 @@ export class DataRowOutlet implements RowOutlet {
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert the header.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[headerRowOutlet]',
@@ -144,7 +144,7 @@ export class HeaderRowOutlet implements RowOutlet {
 
 /**
  * Provides a handle for the table to grab the view container's ng-container to insert the footer.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[footerRowOutlet]',
@@ -165,7 +165,7 @@ export class FooterRowOutlet implements RowOutlet {
 /**
  * Provides a handle for the table to grab the view
  * container's ng-container to insert the no data row.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[noDataRowOutlet]',
@@ -185,7 +185,7 @@ export class NoDataRowOutlet implements RowOutlet {
 
 /**
  * Interface used to conveniently type the possible context interfaces for the render row.
- * @docs-private
+ * @nodoc
  */
 export interface RowContext<T>
   extends CdkCellOutletMultiRowContext<T>,
@@ -193,7 +193,7 @@ export interface RowContext<T>
 
 /**
  * Class used to conveniently type the embedded view ref for rows with a context.
- * @docs-private
+ * @nodoc
  */
 abstract class RowViewRef<T> extends EmbeddedViewRef<RowContext<T>> {}
 
@@ -208,7 +208,7 @@ abstract class RowViewRef<T> extends EmbeddedViewRef<RowContext<T>> {}
  * `RenderRow` is * created. Once the list is complete and all data objects have been iterated
  * through, a diff is performed to determine the changes that need to be made to the rendered rows.
  *
- * @docs-private
+ * @nodoc
  */
 export interface RenderRow<T> {
   data: T;
@@ -557,7 +557,7 @@ export class CdkTable<T>
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    *
-   * @docs-private
+   * @nodoc
    */
   readonly viewChange = new BehaviorSubject<{start: number; end: number}>({
     start: 0,

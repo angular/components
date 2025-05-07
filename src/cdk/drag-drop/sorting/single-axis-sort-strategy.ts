@@ -7,16 +7,16 @@
  */
 
 import {Direction} from '../../bidi';
-import {DragDropRegistry} from '../drag-drop-registry';
-import {moveItemInArray} from '../drag-utils';
-import {combineTransforms} from '../dom/styling';
 import {adjustDomRect, getMutableClientRect, isInsideClientRect} from '../dom/dom-rect';
-import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
+import {combineTransforms} from '../dom/styling';
+import {DragDropRegistry} from '../drag-drop-registry';
 import type {DragRef} from '../drag-ref';
+import {moveItemInArray} from '../drag-utils';
+import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
 
 /**
  * Entry in the position cache for draggable items.
- * @docs-private
+ * @nodoc
  */
 interface CachedItemPosition<T> {
   /** Instance of the drag item. */
@@ -32,7 +32,7 @@ interface CachedItemPosition<T> {
 /**
  * Strategy that only supports sorting along a single axis.
  * Items are reordered using CSS transforms which allows for sorting to be animated.
- * @docs-private
+ * @nodoc
  */
 export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Root element container of the drop list. */

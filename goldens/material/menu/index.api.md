@@ -38,7 +38,7 @@ export const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 // @public
 export const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: any[];
@@ -104,6 +104,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // (undocumented)
     _setIsOpen(isOpen: boolean): void;
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
+    // (undocumented)
     templateRef: TemplateRef<any>;
     get xPosition(): MenuPositionX;
     set xPosition(value: MenuPositionX);

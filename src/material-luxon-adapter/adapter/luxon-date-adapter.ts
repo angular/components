@@ -9,10 +9,10 @@
 import {Injectable, InjectionToken, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
-  DateTime as LuxonDateTime,
-  Info as LuxonInfo,
-  DateTimeOptions as LuxonDateTimeOptions,
   CalendarSystem as LuxonCalendarSystem,
+  DateTime as LuxonDateTime,
+  DateTimeOptions as LuxonDateTimeOptions,
+  Info as LuxonInfo,
 } from 'luxon';
 
 /** Configurable options for the `LuxonDateAdapter`. */
@@ -46,7 +46,7 @@ export const MAT_LUXON_DATE_ADAPTER_OPTIONS = new InjectionToken<MatLuxonDateAda
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

@@ -9,7 +9,7 @@
 /**
  * Returns an error to be thrown when attempting to find an nonexistent column.
  * @param id Id whose lookup failed.
- * @docs-private
+ * @nodoc
  */
 export function getTableUnknownColumnError(id: string) {
   return Error(`Could not find column with id "${id}".`);
@@ -17,7 +17,7 @@ export function getTableUnknownColumnError(id: string) {
 
 /**
  * Returns an error to be thrown when two column definitions have the same name.
- * @docs-private
+ * @nodoc
  */
 export function getTableDuplicateColumnNameError(name: string) {
   return Error(`Duplicate column definition name provided: "${name}".`);
@@ -25,7 +25,7 @@ export function getTableDuplicateColumnNameError(name: string) {
 
 /**
  * Returns an error to be thrown when there are multiple rows that are missing a when function.
- * @docs-private
+ * @nodoc
  */
 export function getTableMultipleDefaultRowDefsError() {
   return Error(`There can only be one default row without a when predicate function.`);
@@ -33,7 +33,7 @@ export function getTableMultipleDefaultRowDefsError() {
 
 /**
  * Returns an error to be thrown when there are no matching row defs for a particular set of data.
- * @docs-private
+ * @nodoc
  */
 export function getTableMissingMatchingRowDefError(data: any) {
   return Error(
@@ -44,7 +44,7 @@ export function getTableMissingMatchingRowDefError(data: any) {
 
 /**
  * Returns an error to be thrown when there is no row definitions present in the content.
- * @docs-private
+ * @nodoc
  */
 export function getTableMissingRowDefsError() {
   return Error(
@@ -55,7 +55,7 @@ export function getTableMissingRowDefsError() {
 
 /**
  * Returns an error to be thrown when the data source does not match the compatible types.
- * @docs-private
+ * @nodoc
  */
 export function getTableUnknownDataSourceError() {
   return Error(`Provided data source did not match an array, Observable, or DataSource`);
@@ -63,7 +63,7 @@ export function getTableUnknownDataSourceError() {
 
 /**
  * Returns an error to be thrown when the text column cannot find a parent table to inject.
- * @docs-private
+ * @nodoc
  */
 export function getTableTextColumnMissingParentTableError() {
   return Error(`Text column could not find a parent table for registration.`);
@@ -71,7 +71,7 @@ export function getTableTextColumnMissingParentTableError() {
 
 /**
  * Returns an error to be thrown when a table text column doesn't have a name.
- * @docs-private
+ * @nodoc
  */
 export function getTableTextColumnMissingNameError() {
   return Error(`Table text column must have a name.`);

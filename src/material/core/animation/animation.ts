@@ -21,7 +21,7 @@ export const MATERIAL_ANIMATIONS = new InjectionToken<AnimationsConfig>('MATERIA
 /**
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
- * @docs-private
+ * @nodoc
  */
 export class AnimationCurves {
   static STANDARD_CURVE = 'cubic-bezier(0.4,0.0,0.2,1)';
@@ -33,7 +33,7 @@ export class AnimationCurves {
 /**
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
- * @docs-private
+ * @nodoc
  */
 export class AnimationDurations {
   static COMPLEX = '375ms';
@@ -43,7 +43,7 @@ export class AnimationDurations {
 
 /**
  * Returns whether animations have been disabled by DI. Must be called in a DI context.
- * @docs-private
+ * @nodoc
  */
 export function _animationsDisabled(): boolean {
   if (

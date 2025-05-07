@@ -8,6 +8,7 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
   booleanAttribute,
@@ -27,6 +28,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
 import {
   _animationsDisabled,
   _StructuralStylesLoader,
@@ -34,21 +36,19 @@ import {
   RippleGlobalOptions,
   ThemePalette,
 } from '../core';
-import {Subscription} from 'rxjs';
 import {
-  _MatThumb,
-  _MatTickMark,
   _MatSlider,
   _MatSliderRangeThumb,
   _MatSliderThumb,
   _MatSliderVisualThumb,
+  _MatThumb,
+  _MatTickMark,
+  MAT_SLIDER,
   MAT_SLIDER_RANGE_THUMB,
   MAT_SLIDER_THUMB,
-  MAT_SLIDER,
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
 import {MatSliderVisualThumb} from './slider-thumb';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 // TODO(wagnermaciel): maybe handle the following edge case:
 // 1. start dragging discrete slider
@@ -376,10 +376,10 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   // The value indicator tooltip text for the visual slider thumb(s).
 
-  /** @docs-private */
+  /** @nodoc */
   protected startValueIndicatorText: string = '';
 
-  /** @docs-private */
+  /** @nodoc */
   protected endValueIndicatorText: string = '';
 
   // Used to control the translateX of the visual slider thumb(s).

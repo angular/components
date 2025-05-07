@@ -22,13 +22,13 @@ import { QueryList } from '@angular/core';
 // @public
 export type FloatLabelType = 'always' | 'auto';
 
-// @public
+// @public (undocumented)
 export function getMatFormFieldDuplicatedHintError(align: string): Error;
 
-// @public
+// @public (undocumented)
 export function getMatFormFieldMissingControlError(): Error;
 
-// @public
+// @public (undocumented)
 export function getMatFormFieldPlaceholderConflictError(): Error;
 
 // @public

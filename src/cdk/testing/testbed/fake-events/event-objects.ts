@@ -13,7 +13,7 @@ let uniqueIds = 0;
 
 /**
  * Creates a browser MouseEvent with the specified options.
- * @docs-private
+ * @nodoc
  */
 export function createMouseEvent(
   type: string,
@@ -71,7 +71,7 @@ export function createMouseEvent(
  * For example, if pointer events for a multi-touch interaction are created, the non-primary
  * pointer touches would need to be represented by non-primary pointer events.
  *
- * @docs-private
+ * @nodoc
  */
 export function createPointerEvent(
   type: string,
@@ -104,7 +104,7 @@ export function createPointerEvent(
 
 /**
  * Creates a browser TouchEvent with the specified pointer coordinates.
- * @docs-private
+ * @nodoc
  */
 export function createTouchEvent(type: string, pageX = 0, pageY = 0, clientX = 0, clientY = 0) {
   // We cannot use the `TouchEvent` or `Touch` because Firefox and Safari lack support.
@@ -126,7 +126,7 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0, clientX = 0
 
 /**
  * Creates a keyboard event with the specified key and modifiers.
- * @docs-private
+ * @nodoc
  */
 export function createKeyboardEvent(
   type: string,
@@ -152,7 +152,7 @@ export function createKeyboardEvent(
 
 /**
  * Creates a fake event object with any desired event type.
- * @docs-private
+ * @nodoc
  */
 export function createFakeEvent(type: string, bubbles = false, cancelable = true, composed = true) {
   return new Event(type, {bubbles, cancelable, composed});

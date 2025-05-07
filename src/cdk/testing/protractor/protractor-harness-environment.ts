@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {by, ElementArrayFinder, ElementFinder, element as protractorElement} from 'protractor';
 import {HarnessEnvironment, HarnessLoader, TestElement} from '../../testing';
-import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
 /**
@@ -63,7 +63,7 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
    */
   async forceStabilize(): Promise<void> {}
 
-  /** @docs-private */
+  /** @nodoc */
   async waitForTasksOutsideAngular(): Promise<void> {
     // TODO: figure out how we can do this for the protractor environment.
     // https://github.com/angular/components/issues/17412

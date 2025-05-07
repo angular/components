@@ -5,7 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {takeUntil} from 'rxjs/operators';
+import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
+import {Directionality} from '@angular/cdk/bidi';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -13,29 +14,6 @@ import {
   NumberInput,
 } from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Directive,
-  ElementRef,
-  InjectionToken,
-  Input,
-  NgZone,
-  OnDestroy,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation,
-  inject,
-  afterNextRender,
-  Injector,
-  DOCUMENT,
-} from '@angular/core';
-import {NgClass} from '@angular/common';
-import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
-import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
 import {
   ConnectedPosition,
   ConnectionPositionPair,
@@ -51,8 +29,30 @@ import {
   ScrollStrategy,
   VerticalConnectionPos,
 } from '@angular/cdk/overlay';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {ComponentPortal} from '@angular/cdk/portal';
+import {NgClass} from '@angular/common';
+import {
+  afterNextRender,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Directive,
+  DOCUMENT,
+  ElementRef,
+  inject,
+  InjectionToken,
+  Injector,
+  Input,
+  NgZone,
+  OnDestroy,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
+} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
 /** Possible positions for a tooltip. */
@@ -72,7 +72,7 @@ export const SCROLL_THROTTLE_MS = 20;
 
 /**
  * Creates an error to be thrown if the user supplied an invalid tooltip position.
- * @docs-private
+ * @nodoc
  */
 export function getMatTooltipInvalidPositionError(position: string) {
   return Error(`Tooltip position "${position}" is invalid.`);
@@ -91,7 +91,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrate
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -101,7 +101,7 @@ export function MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => Sc
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -112,7 +112,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 };
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -966,7 +966,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
 /**
  * Internal component that wraps the tooltip's content.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-tooltip-component',

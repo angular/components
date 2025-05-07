@@ -16,8 +16,8 @@ import {
   inject,
 } from '@angular/core';
 
-import {MatButtonBase} from './button-base';
 import {ThemePalette} from '../core';
+import {MatButtonBase} from './button-base';
 
 /** Default FAB options that can be overridden. */
 export interface MatFabDefaultOptions {
@@ -41,7 +41,7 @@ export const MAT_FAB_DEFAULT_OPTIONS = new InjectionToken<MatFabDefaultOptions>(
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

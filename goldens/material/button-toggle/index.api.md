@@ -23,7 +23,7 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatButtonToggleDe
 // @public
 export const MAT_BUTTON_TOGGLE_GROUP: InjectionToken<MatButtonToggleGroup>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_BUTTON_TOGGLE_GROUP_DEFAULT_OPTIONS_FACTORY(): MatButtonToggleDefaultOptions;
 
 // @public

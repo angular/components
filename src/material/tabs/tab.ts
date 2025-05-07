@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {TemplatePortal} from '@angular/cdk/portal';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,16 +25,14 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
+import {Subject} from 'rxjs';
+import {_StructuralStylesLoader} from '../core';
 import {MatTabContent} from './tab-content';
 import {MAT_TAB, MatTabLabel} from './tab-label';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {Subject} from 'rxjs';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
 
 /**
  * Used to provide a tab group to a tab without causing a circular dependency.
- * @docs-private
+ * @nodoc
  */
 export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 
@@ -111,7 +111,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;
 
-  /** @docs-private */
+  /** @nodoc */
   get content(): TemplatePortal | null {
     return this._contentPortal;
   }
@@ -163,7 +163,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    * This has been extracted to a util because of TS 4 and VE.
    * View Engine doesn't support property rename inheritance.
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-   * @docs-private
+   * @nodoc
    */
   private _setTemplateLabelInput(value: MatTabLabel | undefined) {
     // Only update the label if the query managed to find one. This works around an issue where a

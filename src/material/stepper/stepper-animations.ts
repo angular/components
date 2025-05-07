@@ -8,7 +8,7 @@
 
 /**
  * Animations used by the Material steppers.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

@@ -398,7 +398,7 @@ export const LIVE_ANNOUNCER_DEFAULT_OPTIONS: InjectionToken<LiveAnnouncerDefault
 // @public (undocumented)
 export const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | null>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY(): null;
 
 // @public (undocumented)
@@ -462,10 +462,10 @@ export function removeAriaReferencedId(el: Element, attr: `aria-${string}`, id: 
 // @public
 export const TREE_KEY_MANAGER: InjectionToken<TreeKeyManagerFactory<any>>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function TREE_KEY_MANAGER_FACTORY<T extends TreeKeyManagerItem>(): TreeKeyManagerFactory<T>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export const TREE_KEY_MANAGER_FACTORY_PROVIDER: {
     provide: InjectionToken<TreeKeyManagerFactory<any>>;
     useFactory: typeof TREE_KEY_MANAGER_FACTORY;

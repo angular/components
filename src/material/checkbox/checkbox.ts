@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
+import {FocusableOption, _IdGenerator} from '@angular/cdk/a11y';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,6 +15,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostAttributeToken,
   Input,
   NgZone,
   OnChanges,
@@ -23,9 +25,8 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   forwardRef,
-  numberAttribute,
   inject,
-  HostAttributeToken,
+  numberAttribute,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -46,11 +47,10 @@ import {
   MAT_CHECKBOX_DEFAULT_OPTIONS_FACTORY,
   MatCheckboxDefaultOptions,
 } from './checkbox-config';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * Represents the different states that require custom transitions between them.
- * @docs-private
+ * @nodoc
  */
 export enum TransitionCheckState {
   /** The initial state of the component before any user interaction. */
@@ -233,7 +233,7 @@ export class MatCheckbox
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   _onTouched: () => any = () => {};
 

@@ -16,11 +16,11 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkHeaderCell, CdkCell} from './cell';
+import {CdkCell, CdkCellDef, CdkColumnDef, CdkHeaderCell, CdkHeaderCellDef} from './cell';
 import {CdkTable} from './table';
 import {
-  getTableTextColumnMissingParentTableError,
   getTableTextColumnMissingNameError,
+  getTableTextColumnMissingParentTableError,
 } from './table-errors';
 import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './tokens';
 
@@ -90,7 +90,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Alignment of the cell values. */
   @Input() justify: 'start' | 'end' | 'center' = 'start';
 
-  /** @docs-private */
+  /** @nodoc */
   @ViewChild(CdkColumnDef, {static: true}) columnDef: CdkColumnDef;
 
   /**
@@ -98,7 +98,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
    * column definition was provided in the same view as the table, which is not the case with this
    * component.
-   * @docs-private
+   * @nodoc
    */
   @ViewChild(CdkCellDef, {static: true}) cell: CdkCellDef;
 
@@ -107,7 +107,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
    * column definition was provided in the same view as the table, which is not the case with this
    * component.
-   * @docs-private
+   * @nodoc
    */
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell: CdkHeaderCellDef;
 

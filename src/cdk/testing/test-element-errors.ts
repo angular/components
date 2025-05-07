@@ -8,7 +8,7 @@
 
 /**
  * Returns an error which reports that no keys have been specified.
- * @docs-private
+ * @nodoc
  */
 export function getNoKeysSpecifiedError() {
   return Error('No keys have been specified.');

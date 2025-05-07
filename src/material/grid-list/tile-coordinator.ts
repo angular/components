@@ -8,7 +8,7 @@
 
 /**
  * Interface describing a tile.
- * @docs-private
+ * @nodoc
  */
 export interface Tile {
   /** Amount of rows that the tile takes up. */
@@ -32,7 +32,7 @@ export interface Tile {
  * decrements each value in the tracking array (indicating that the column is one cell closer to
  * being free).
  *
- * @docs-private
+ * @nodoc
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
@@ -176,7 +176,7 @@ export class TileCoordinator {
 
 /**
  * Simple data structure for tile position (row, col).
- * @docs-private
+ * @nodoc
  */
 export class TilePosition {
   constructor(

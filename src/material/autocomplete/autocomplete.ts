@@ -6,14 +6,18 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  inject,
   InjectionToken,
   Input,
   OnDestroy,
@@ -22,9 +26,8 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  booleanAttribute,
-  inject,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
 import {
   _animationsDisabled,
   MAT_OPTGROUP,
@@ -33,9 +36,6 @@ import {
   MatOption,
   ThemePalette,
 } from '../core';
-import {_IdGenerator, ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
-import {Subscription} from 'rxjs';
 
 /** Event object that is emitted when an autocomplete option is selected. */
 export class MatAutocompleteSelectedEvent {
@@ -93,7 +93,7 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<MatAutocomple
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -142,19 +142,19 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
   /** Latest trigger that opened the autocomplete. */
   _latestOpeningTrigger: unknown;
 
-  /** @docs-private Sets the theme color of the panel. */
+  /** @nodoc Sets the theme color of the panel. */
   _setColor(value: ThemePalette) {
     this._color = value;
     this._changeDetectorRef.markForCheck();
   }
-  /** @docs-private theme color of the panel */
+  /** @nodoc theme color of the panel */
   protected _color: ThemePalette;
 
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
 
-  /** @docs-private */
+  /** @nodoc */
   @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
 
   /** Element for the panel containing the autocomplete options. */
@@ -251,7 +251,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
 
   /**
    * Tells any descendant `mat-optgroup` to use the inert a11y pattern.
-   * @docs-private
+   * @nodoc
    */
   readonly inertGroups: boolean;
 

@@ -8,17 +8,17 @@
 
 import {DOWN_ARROW, hasModifierKey, ModifierKey} from '@angular/cdk/keycodes';
 import {
+  AfterViewInit,
+  booleanAttribute,
   Directive,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
-  AfterViewInit,
-  OnChanges,
   SimpleChanges,
-  booleanAttribute,
-  inject,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -27,14 +27,14 @@ import {
   Validator,
   ValidatorFn,
 } from '@angular/forms';
+import {Subject, Subscription} from 'rxjs';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '../core';
-import {Subscription, Subject} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
 import {
+  DateSelectionModelChange,
   ExtractDateTypeFromSelection,
   MatDateSelectionModel,
-  DateSelectionModelChange,
 } from './date-selection-model';
+import {createMissingDateImplError} from './datepicker-errors';
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
@@ -279,12 +279,12 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     this.stateChanges.complete();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   registerOnValidatorChange(fn: () => void): void {
     this._validatorOnChange = fn;
   }
 
-  /** @docs-private */
+  /** @nodoc */
   validate(c: AbstractControl): ValidationErrors | null {
     return this._validator ? this._validator(c) : null;
   }

@@ -8,18 +8,20 @@
 
 import {BooleanInput, coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
   ContentChildren,
   Directive,
   ElementRef,
   inject,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
   QueryList,
-  Injector,
 } from '@angular/core';
+import {merge, Subscription} from 'rxjs';
 import {
   _animationsDisabled,
   _StructuralStylesLoader,
@@ -29,13 +31,11 @@ import {
   RippleRenderer,
   RippleTarget,
 } from '../core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {Subscription, merge} from 'rxjs';
 import {
+  MatListItemAvatar,
+  MatListItemIcon,
   MatListItemLine,
   MatListItemTitle,
-  MatListItemIcon,
-  MatListItemAvatar,
 } from './list-item-sections';
 import {MAT_LIST_CONFIG} from './tokens';
 
@@ -44,7 +44,7 @@ import {MAT_LIST_CONFIG} from './tokens';
     '[attr.aria-disabled]': 'disabled',
   },
 })
-/** @docs-private */
+/** @nodoc */
 export abstract class MatListBase {
   _isNonInteractive: boolean = true;
 
@@ -81,7 +81,7 @@ export abstract class MatListBase {
     '[attr.disabled]': '(_isButtonElement && disabled) || null',
   },
 })
-/** @docs-private */
+/** @nodoc */
 export abstract class MatListItemBase implements AfterViewInit, OnDestroy, RippleTarget {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected _ngZone = inject(NgZone);
@@ -164,13 +164,13 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
 
   /**
    * Implemented as part of `RippleTarget`.
-   * @docs-private
+   * @nodoc
    */
   rippleConfig: RippleConfig & RippleGlobalOptions;
 
   /**
    * Implemented as part of `RippleTarget`.
-   * @docs-private
+   * @nodoc
    */
   get rippleDisabled(): boolean {
     return this.disableRipple || !!this.rippleConfig.disabled;

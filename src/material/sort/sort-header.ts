@@ -8,21 +8,23 @@
 
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   Input,
   OnDestroy,
   OnInit,
-  ViewEncapsulation,
-  booleanAttribute,
-  inject,
   signal,
-  ChangeDetectorRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {merge, Subscription} from 'rxjs';
+import {_animationsDisabled, _StructuralStylesLoader} from '../core';
 import {
   MAT_SORT_DEFAULT_OPTIONS,
   MatSort,
@@ -33,8 +35,6 @@ import {
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_animationsDisabled, _StructuralStylesLoader} from '../core';
 
 /**
  * Valid positions for the arrow to be in for its opacity and translation. If the state is a
@@ -42,7 +42,7 @@ import {_animationsDisabled, _StructuralStylesLoader} from '../core';
  * hint, the arrow will be in the center with a slight opacity. Active state means the arrow will
  * be fully opaque in the center.
  *
- * @docs-private
+ * @nodoc
  * @deprecated No longer being used, to be removed.
  * @breaking-change 21.0.0
  */
@@ -51,7 +51,7 @@ export type ArrowViewState = SortDirection | 'hint' | 'active';
 /**
  * States describing the arrow's animated position (animating fromState to toState).
  * If the fromState is not defined, there will be no animated transition to the toState.
- * @docs-private
+ * @nodoc
  * @deprecated No longer being used, to be removed.
  * @breaking-change 21.0.0
  */

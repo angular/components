@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken, ChangeDetectorRef, WritableSignal} from '@angular/core';
+import {ChangeDetectorRef, InjectionToken, WritableSignal} from '@angular/core';
 import {MatRipple, RippleGlobalOptions} from '../core';
 
 /**
@@ -28,28 +28,28 @@ export enum _MatTickMark {
  * Injection token that can be used for a `MatSlider` to provide itself as a
  * parent to the `MatSliderThumb` and `MatSliderRangeThumb`.
  * Used primarily to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER = new InjectionToken<{}>('_MatSlider');
 
 /**
  * Injection token that can be used to query for a `MatSliderThumb`.
  * Used primarily to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER_THUMB = new InjectionToken<{}>('_MatSliderThumb');
 
 /**
  * Injection token that can be used to query for a `MatSliderRangeThumb`.
  * Used primarily to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER_RANGE_THUMB = new InjectionToken<{}>('_MatSliderRangeThumb');
 
 /**
  * Injection token that can be used to query for a `MatSliderVisualThumb`.
  * Used primarily to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER_VISUAL_THUMB = new InjectionToken<{}>('_MatSliderVisualThumb');
 

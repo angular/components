@@ -34,6 +34,7 @@ import {
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
 
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {
   afterNextRender,
   AfterViewInit,
@@ -43,6 +44,7 @@ import {
   Component,
   ComponentRef,
   Directive,
+  DOCUMENT,
   ElementRef,
   EventEmitter,
   inject,
@@ -58,12 +60,11 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  DOCUMENT,
 } from '@angular/core';
-import {MatButton} from '../button';
-import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
+import {MatButton} from '../button';
+import {_animationsDisabled, DateAdapter, ThemePalette} from '../core';
 import {MatCalendar, MatCalendarView} from './calendar';
 import {MatCalendarCellClassFunction, MatCalendarUserEvent} from './calendar-body';
 import {
@@ -78,7 +79,6 @@ import {
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn} from './datepicker-input-base';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -93,7 +93,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStr
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -109,7 +109,7 @@ export type DatepickerDropdownPositionX = 'start' | 'end';
 export type DatepickerDropdownPositionY = 'above' | 'below';
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -124,7 +124,7 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  * MatCalendar directly as the content so we can control the initial focus. This also gives us a
  * place to put additional features of the overlay that are not part of the calendar itself in the
  * future. (e.g. confirmation buttons).
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-datepicker-content',

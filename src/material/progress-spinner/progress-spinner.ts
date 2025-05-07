@@ -6,19 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {NgTemplateOutlet} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   InjectionToken,
   Input,
+  numberAttribute,
   ViewChild,
   ViewEncapsulation,
-  numberAttribute,
-  inject,
 } from '@angular/core';
 import {_animationsDisabled, ThemePalette} from '../core';
-import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -52,7 +52,7 @@ export const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS =
   });
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

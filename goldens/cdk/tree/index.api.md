@@ -213,6 +213,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 // @public
 export class CdkTreeNodeDef<T> {
     constructor(...args: unknown[]);
+    // (undocumented)
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)

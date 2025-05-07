@@ -31,7 +31,7 @@ export interface CellDef {
   selector: '[cdkCellDef]',
 })
 export class CdkCellDef implements CellDef {
-  /** @docs-private */
+  /** @nodoc */
   template = inject<TemplateRef<any>>(TemplateRef);
 
   constructor(...args: unknown[]);
@@ -46,7 +46,7 @@ export class CdkCellDef implements CellDef {
   selector: '[cdkHeaderCellDef]',
 })
 export class CdkHeaderCellDef implements CellDef {
-  /** @docs-private */
+  /** @nodoc */
   template = inject<TemplateRef<any>>(TemplateRef);
 
   constructor(...args: unknown[]);
@@ -61,7 +61,7 @@ export class CdkHeaderCellDef implements CellDef {
   selector: '[cdkFooterCellDef]',
 })
 export class CdkFooterCellDef implements CellDef {
-  /** @docs-private */
+  /** @nodoc */
   template = inject<TemplateRef<any>>(TemplateRef);
 
   constructor(...args: unknown[]);
@@ -121,13 +121,13 @@ export class CdkColumnDef implements CanStick {
   }
   _stickyEnd: boolean = false;
 
-  /** @docs-private */
+  /** @nodoc */
   @ContentChild(CdkCellDef) cell: CdkCellDef;
 
-  /** @docs-private */
+  /** @nodoc */
   @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
 
-  /** @docs-private */
+  /** @nodoc */
   @ContentChild(CdkFooterCellDef) footerCell: CdkFooterCellDef;
 
   /**
@@ -139,7 +139,7 @@ export class CdkColumnDef implements CanStick {
 
   /**
    * Class name for cells in this column.
-   * @docs-private
+   * @nodoc
    */
   _columnCssClassName: string[];
 
@@ -163,7 +163,7 @@ export class CdkColumnDef implements CanStick {
    * column.
    * In the future, columnCssClassName will change from type string[] to string and this
    * will set a single string value.
-   * @docs-private
+   * @nodoc
    */
   protected _updateColumnCssClassName() {
     this._columnCssClassName = [`cdk-column-${this.cssClassFriendlyName}`];
@@ -173,7 +173,7 @@ export class CdkColumnDef implements CanStick {
    * This has been extracted to a util because of TS 4 and VE.
    * View Engine doesn't support property rename inheritance.
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-   * @docs-private
+   * @nodoc
    */
   protected _setNameInput(value: string) {
     // If the directive is set without a name (updated programmatically), then this setter will

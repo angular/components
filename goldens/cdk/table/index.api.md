@@ -73,6 +73,7 @@ export class CdkCell extends BaseCdkCell {
 // @public
 export class CdkCellDef implements CellDef {
     constructor(...args: unknown[]);
+    // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkCellDef, "[cdkCellDef]", never, {}, {}, never, never, true, never>;
@@ -122,11 +123,14 @@ export interface CdkCellOutletRowContext<T> {
 // @public
 export class CdkColumnDef implements CanStick {
     constructor(...args: unknown[]);
+    // (undocumented)
     cell: CdkCellDef;
     _columnCssClassName: string[];
     cssClassFriendlyName: string;
+    // (undocumented)
     footerCell: CdkFooterCellDef;
     hasStickyChanged(): boolean;
+    // (undocumented)
     headerCell: CdkHeaderCellDef;
     get name(): string;
     set name(name: string);
@@ -165,6 +169,7 @@ export class CdkFooterCell extends BaseCdkCell {
 // @public
 export class CdkFooterCellDef implements CellDef {
     constructor(...args: unknown[]);
+    // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkFooterCellDef, "[cdkFooterCellDef]", never, {}, {}, never, never, true, never>;
@@ -211,6 +216,7 @@ export class CdkHeaderCell extends BaseCdkCell {
 // @public
 export class CdkHeaderCellDef implements CellDef {
     constructor(...args: unknown[]);
+    // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkHeaderCellDef, "[cdkHeaderCellDef]", never, {}, {}, never, never, true, never>;
@@ -386,6 +392,7 @@ export class CdkTableModule {
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
     constructor(...args: unknown[]);
     cell: CdkCellDef;
+    // (undocumented)
     columnDef: CdkColumnDef;
     _createDefaultHeaderText(): string;
     dataAccessor: (data: T, name: string) => string;

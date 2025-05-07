@@ -56,7 +56,7 @@ export class MatListItemLine {
 export class MatListItemMeta {}
 
 /**
- * @docs-private
+ * @nodoc
  *
  * MDC uses the very intuitively named classes `.mdc-list-item__start` and `.mat-list-item__end` to
  * position content such as icons or checkboxes/radios that comes either before or after the text

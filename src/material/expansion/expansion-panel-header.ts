@@ -8,6 +8,7 @@
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -15,23 +16,22 @@ import {
   Component,
   Directive,
   ElementRef,
+  HostAttributeToken,
+  inject,
   Input,
   numberAttribute,
   OnDestroy,
   ViewEncapsulation,
-  inject,
-  HostAttributeToken,
 } from '@angular/core';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {_StructuralStylesLoader} from '../core';
 import {MatAccordionTogglePosition} from './accordion-base';
 import {
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
   MatExpansionPanel,
   MatExpansionPanelDefaultOptions,
-  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
-import {_StructuralStylesLoader} from '../core';
 
 /**
  * Header element of a `<mat-expansion-panel>`.
@@ -122,7 +122,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
 
   /**
    * Whether the associated panel is disabled. Implemented as a part of `FocusableOption`.
-   * @docs-private
+   * @nodoc
    */
   get disabled(): boolean {
     return this.panel.disabled;
@@ -198,7 +198,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
   /**
    * Focuses the panel header. Implemented as a part of `FocusableOption`.
    * @param origin Origin of the action that triggered the focus.
-   * @docs-private
+   * @nodoc
    */
   focus(origin?: FocusOrigin, options?: FocusOptions) {
     if (origin) {

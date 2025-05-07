@@ -15,26 +15,26 @@ import {
   OverlayConfig,
   OverlayRef,
 } from '@angular/cdk/overlay';
+import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {
   ComponentRef,
   EmbeddedViewRef,
+  inject,
   Injectable,
   InjectionToken,
   Injector,
   OnDestroy,
   TemplateRef,
-  inject,
 } from '@angular/core';
-import {SimpleSnackBar, TextOnlySnackBar} from './simple-snack-bar';
-import {MatSnackBarContainer} from './snack-bar-container';
-import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
-import {MatSnackBarRef} from './snack-bar-ref';
-import {ComponentPortal, TemplatePortal} from '@angular/cdk/portal';
 import {takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
+import {SimpleSnackBar, TextOnlySnackBar} from './simple-snack-bar';
+import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
+import {MatSnackBarContainer} from './snack-bar-container';
+import {MatSnackBarRef} from './snack-bar-ref';
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

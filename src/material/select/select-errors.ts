@@ -12,7 +12,7 @@
 /**
  * Returns an exception to be thrown when attempting to change a select's `multiple` option
  * after initialization.
- * @docs-private
+ * @nodoc
  */
 export function getMatSelectDynamicMultipleError(): Error {
   return Error('Cannot change `multiple` mode of select after initialization.');
@@ -22,7 +22,7 @@ export function getMatSelectDynamicMultipleError(): Error {
  * Returns an exception to be thrown when attempting to assign a non-array value to a select
  * in `multiple` mode. Note that `undefined` and `null` are still valid values to allow for
  * resetting the value.
- * @docs-private
+ * @nodoc
  */
 export function getMatSelectNonArrayValueError(): Error {
   return Error('Value must be an array in multiple-selection mode.');

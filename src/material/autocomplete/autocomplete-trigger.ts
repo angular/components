@@ -8,18 +8,19 @@
 
 import {addAriaReferencedId, removeAriaReferencedId} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
+import {coerceArray} from '@angular/cdk/coercion';
 import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {
   ConnectedPosition,
-  createFlexibleConnectedPositionStrategy,
-  createOverlayRef,
-  createRepositionScrollStrategy,
   FlexibleConnectedPositionStrategy,
   OverlayConfig,
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
 } from '@angular/cdk/overlay';
 import {_getEventTarget, _getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -44,8 +45,9 @@ import {
   forwardRef,
   inject,
 } from '@angular/core';
-import {coerceArray} from '@angular/cdk/coercion';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Observable, Subject, Subscription, defer, merge, of as observableOf} from 'rxjs';
+import {delay, filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
   MatOption,
   MatOptionSelectionChange,
@@ -54,8 +56,6 @@ import {
   _getOptionScrollPosition,
 } from '../core';
 import {MAT_FORM_FIELD, MatFormField} from '../form-field';
-import {Observable, Subject, Subscription, defer, merge, of as observableOf} from 'rxjs';
-import {delay, filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
   MatAutocomplete,
@@ -65,7 +65,7 @@ import {MatAutocompleteOrigin} from './autocomplete-origin';
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
- * @docs-private
+ * @nodoc
  */
 export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -75,7 +75,7 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
 
 /**
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
- * @docs-private
+ * @nodoc
  */
 export function getMatAutocompleteMissingPanelError(): Error {
   return Error(
@@ -98,7 +98,7 @@ export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollS
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -108,7 +108,7 @@ export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () 
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -253,7 +253,7 @@ export class MatAutocompleteTrigger
 
   /**
    * `autocomplete` attribute to be set on the input element.
-   * @docs-private
+   * @nodoc
    */
   @Input('autocomplete') autocompleteAttribute: string = 'off';
 

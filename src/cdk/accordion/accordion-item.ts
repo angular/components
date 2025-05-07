@@ -7,20 +7,20 @@
  */
 
 import {
-  Output,
+  booleanAttribute,
+  ChangeDetectorRef,
   Directive,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
-  ChangeDetectorRef,
-  booleanAttribute,
-  inject,
   OnInit,
+  Output,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
 import {_IdGenerator} from '../a11y';
 import {UniqueSelectionDispatcher} from '../collections';
 import {CDK_ACCORDION, CdkAccordion} from './accordion';
-import {Subscription} from 'rxjs';
 
 /**
  * A basic directive expected to be extended and decorated as a component.  Sets up all
@@ -52,7 +52,7 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
   /**
    * Emits whenever the expanded state of the accordion changes.
    * Primarily used to facilitate two-way binding.
-   * @docs-private
+   * @nodoc
    */
   @Output() readonly expandedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 

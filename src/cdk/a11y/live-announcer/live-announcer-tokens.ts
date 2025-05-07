@@ -23,7 +23,7 @@ export const LIVE_ANNOUNCER_ELEMENT_TOKEN = new InjectionToken<HTMLElement | nul
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

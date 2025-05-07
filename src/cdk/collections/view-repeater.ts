@@ -114,7 +114,7 @@ export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {
 
 /**
  * Injection token for {@link _ViewRepeater}. This token is for use by Angular Material only.
- * @docs-private
+ * @nodoc
  */
 export const _VIEW_REPEATER_STRATEGY = new InjectionToken<
   _ViewRepeater<unknown, unknown, _ViewRepeaterItemContext<unknown>>

@@ -16,7 +16,7 @@ export const MAT_DATE_LOCALE = new InjectionToken<{}>('MAT_DATE_LOCALE', {
 });
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

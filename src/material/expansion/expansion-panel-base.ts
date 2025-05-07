@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken} from '@angular/core';
 import {CdkAccordionItem} from '@angular/cdk/accordion';
+import {InjectionToken} from '@angular/core';
 
 /**
  * Base interface for a `MatExpansionPanel`.
- * @docs-private
+ * @nodoc
  */
 export interface MatExpansionPanelBase extends CdkAccordionItem {
   /** Whether the toggle indicator should be hidden. */

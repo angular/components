@@ -48,14 +48,14 @@ export const MAT_SELECT_CONFIG: InjectionToken<MatSelectConfig>;
 // @public
 export const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: any[];
     useFactory: typeof MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY;
 };
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(_overlay: unknown): () => ScrollStrategy;
 
 // @public

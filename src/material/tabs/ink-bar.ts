@@ -20,7 +20,7 @@ import {
 
 /**
  * Item inside a tab header relative to which the ink bar can be aligned.
- * @docs-private
+ * @nodoc
  */
 export interface MatInkBarItem extends OnInit, OnDestroy {
   elementRef: ElementRef<HTMLElement>;
@@ -37,7 +37,7 @@ const NO_TRANSITION_CLASS = 'mdc-tab-indicator--no-transition';
 
 /**
  * Abstraction around the MDC tab indicator that acts as the tab header's ink bar.
- * @docs-private
+ * @nodoc
  */
 export class MatInkBar {
   /** Item to which the ink bar is aligned currently. */
@@ -191,7 +191,7 @@ export interface _MatInkBarPositioner {
 
 /**
  * The default positioner function for the MatInkBar.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

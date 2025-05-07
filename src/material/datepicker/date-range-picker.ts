@@ -7,13 +7,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MatDatepickerBase, MatDatepickerContent, MatDatepickerControl} from './datepicker-base';
-import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 import {MAT_CALENDAR_RANGE_STRATEGY_PROVIDER} from './date-range-selection-strategy';
+import {DateRange, MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
+import {MatDatepickerBase, MatDatepickerContent, MatDatepickerControl} from './datepicker-base';
 
 /**
  * Input that can be associated with a date range picker.
- * @docs-private
+ * @nodoc
  */
 export interface MatDateRangePickerInput<D> extends MatDatepickerControl<D> {
   _getEndDateAccessibleName(): string | null;

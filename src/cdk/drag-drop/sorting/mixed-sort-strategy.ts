@@ -7,15 +7,15 @@
  */
 
 import {_getShadowRoot} from '../../platform';
-import {moveItemInArray} from '../drag-utils';
-import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
 import {DragDropRegistry} from '../drag-drop-registry';
 import type {DragRef} from '../drag-ref';
+import {moveItemInArray} from '../drag-utils';
+import {DropListSortStrategy, SortPredicate} from './drop-list-sort-strategy';
 
 /**
  * Strategy that only supports sorting on a list that might wrap.
  * Items are reordered by moving their DOM nodes around.
- * @docs-private
+ * @nodoc
  */
 export class MixedSortStrategy implements DropListSortStrategy {
   /** Root element container of the drop list. */

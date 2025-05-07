@@ -16,12 +16,12 @@ import {
   ContentChildren,
   DoCheck,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   Output,
   QueryList,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -30,10 +30,10 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
-import {MatFormFieldControl} from '../form-field';
 import {merge, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
+import {MatFormFieldControl} from '../form-field';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
@@ -91,7 +91,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   readonly controlType: string = 'mat-chip-grid';
 
@@ -108,19 +108,19 @@ export class MatChipGrid
 
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
-   * @docs-private
+   * @nodoc
    */
   _onTouched = () => {};
 
   /**
    * Function when changed. Set as part of ControlValueAccessor implementation.
-   * @docs-private
+   * @nodoc
    */
   _onChange: (value: any) => void = () => {};
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input({transform: booleanAttribute})
   override get disabled(): boolean {
@@ -134,7 +134,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get id(): string {
     return this._chipInput.id;
@@ -142,7 +142,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   override get empty(): boolean {
     return (
@@ -152,7 +152,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get placeholder(): string {
@@ -171,7 +171,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input({transform: booleanAttribute})
   get required(): boolean {
@@ -185,7 +185,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get shouldLabelFloat(): boolean {
     return !this.empty || this.focused;
@@ -193,7 +193,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get value(): any {
@@ -225,7 +225,7 @@ export class MatChipGrid
   /**
    * Emits whenever the raw value of the chip-grid changes. This is here primarily
    * to facilitate the two-way binding for the `value` input.
-   * @docs-private
+   * @nodoc
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -240,7 +240,7 @@ export class MatChipGrid
   /**
    * Emits whenever the component state changes and should cause the parent
    * form-field to update. Implemented as part of `MatFormFieldControl`.
-   * @docs-private
+   * @nodoc
    */
   readonly stateChanges = new Subject<void>();
 
@@ -315,7 +315,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   onContainerClick(event: MouseEvent) {
     if (!this.disabled && !this._originatesFromChip(event)) {
@@ -351,7 +351,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get describedByIds(): string[] {
     return this._chipInput?.describedByIds || [];
@@ -359,7 +359,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   setDescribedByIds(ids: string[]) {
     // We must keep this up to date to handle the case where ids are set
@@ -370,7 +370,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   writeValue(value: any): void {
     // The user is responsible for creating the child chips, so we just store the value.
@@ -379,7 +379,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   registerOnChange(fn: (value: any) => void): void {
     this._onChange = fn;
@@ -387,7 +387,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
@@ -395,7 +395,7 @@ export class MatChipGrid
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;

@@ -30,7 +30,7 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
  * @param getActiveElementId env specific closure to get active element
  * @param skipAsyncTests skip tests that rely on Angular framework stabilization
  *
- * @docs-private
+ * @nodoc
  */
 export function crossEnvironmentSpecs(
   getHarnessLoaderFromEnvironment: () => HarnessLoader,

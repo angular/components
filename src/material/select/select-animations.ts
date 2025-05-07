@@ -11,7 +11,7 @@
  * const containing the metadata for one animation.
  *
  * The values below match the implementation of the AngularJS Material mat-select animation.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

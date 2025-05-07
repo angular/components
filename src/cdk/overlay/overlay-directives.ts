@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Direction, Directionality} from '../bidi';
-import {ESCAPE, hasModifierKey} from '../keycodes';
-import {TemplatePortal} from '../portal';
 import {
+  booleanAttribute,
   Directive,
   ElementRef,
   EventEmitter,
+  inject,
   InjectionToken,
   Injector,
   Input,
@@ -23,12 +22,13 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
-  booleanAttribute,
-  inject,
 } from '@angular/core';
-import {_getEventTarget} from '../platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
+import {Direction, Directionality} from '../bidi';
+import {ESCAPE, hasModifierKey} from '../keycodes';
+import {_getEventTarget} from '../platform';
+import {TemplatePortal} from '../portal';
 import {createOverlayRef} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
@@ -464,7 +464,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -476,7 +476,7 @@ export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY(
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

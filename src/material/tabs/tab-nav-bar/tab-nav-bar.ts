@@ -5,6 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
+import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {CdkObserveContent} from '@angular/cdk/observers';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -14,34 +18,30 @@ import {
   ContentChildren,
   ElementRef,
   forwardRef,
+  HostAttributeToken,
+  inject,
   Input,
   numberAttribute,
   OnDestroy,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  inject,
-  HostAttributeToken,
 } from '@angular/core';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {startWith, takeUntil} from 'rxjs/operators';
 import {
+  _animationsDisabled,
+  _StructuralStylesLoader,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRipple,
   RippleConfig,
   RippleGlobalOptions,
   RippleTarget,
   ThemePalette,
-  _StructuralStylesLoader,
-  _animationsDisabled,
 } from '../../core';
-import {_IdGenerator, FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
-import {MatInkBar, InkBarItem} from '../ink-bar';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {startWith, takeUntil} from 'rxjs/operators';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
-import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
+import {InkBarItem, MatInkBar} from '../ink-bar';
 import {MatPaginatedTabHeader} from '../paginated-tab-header';
-import {CdkObserveContent} from '@angular/cdk/observers';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
 
 /**
  * Navigation component matching the styles of the tab group header.
@@ -290,13 +290,13 @@ export class MatTabLink
    * Ripple configuration for ripples that are launched on pointer down. The ripple config
    * is set to the global ripple options since we don't have any configurable options for
    * the tab link ripples.
-   * @docs-private
+   * @nodoc
    */
   rippleConfig: RippleConfig & RippleGlobalOptions;
 
   /**
    * Whether ripples are disabled on interaction.
-   * @docs-private
+   * @nodoc
    */
   get rippleDisabled(): boolean {
     return (

@@ -36,7 +36,7 @@ export const MAT_CHECKBOX_DEFAULT_OPTIONS = new InjectionToken<MatCheckboxDefaul
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

@@ -11,6 +11,7 @@ import {DomPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {
   ApplicationRef,
   ChangeDetectorRef,
+  DOCUMENT,
   Directive,
   InjectionToken,
   Injector,
@@ -18,7 +19,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   inject,
-  DOCUMENT,
 } from '@angular/core';
 import {Subject} from 'rxjs';
 
@@ -54,7 +54,7 @@ export class MatMenuContent implements OnDestroy {
 
   /**
    * Attaches the content with a particular context.
-   * @docs-private
+   * @nodoc
    */
   attach(context: any = {}) {
     if (!this._portal) {
@@ -90,7 +90,7 @@ export class MatMenuContent implements OnDestroy {
 
   /**
    * Detaches the content.
-   * @docs-private
+   * @nodoc
    */
   detach() {
     if (this._portal?.isAttached) {

@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
 // @public
 export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean;
 
 // @public

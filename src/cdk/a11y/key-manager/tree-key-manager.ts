@@ -7,9 +7,9 @@
  */
 
 import {InjectionToken, QueryList} from '@angular/core';
-import {coerceObservable} from '../../coercion/private';
 import {Observable, Subject, Subscription, isObservable, of as observableOf} from 'rxjs';
 import {take} from 'rxjs/operators';
+import {coerceObservable} from '../../coercion/private';
 import {
   TreeKeyManagerFactory,
   TreeKeyManagerItem,
@@ -412,7 +412,7 @@ export class TreeKeyManager<T extends TreeKeyManagerItem> implements TreeKeyMana
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -427,7 +427,7 @@ export const TREE_KEY_MANAGER = new InjectionToken<TreeKeyManagerFactory<any>>('
 });
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

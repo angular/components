@@ -15,7 +15,7 @@ interface ErrorStateMatcher extends _ErrorStateMatcher {}
 
 /**
  * Class that tracks the error state of a component.
- * @docs-private
+ * @nodoc
  */
 export class _ErrorStateTracker {
   /** Whether the tracker is currently in an error state. */

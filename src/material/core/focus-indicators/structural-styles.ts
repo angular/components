@@ -10,7 +10,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 
 /**
  * Component used to load structural styles for focus indicators.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'structural-styles',

@@ -28,6 +28,7 @@ import {
   ContentChild,
   ContentChildren,
   DoCheck,
+  DOCUMENT,
   ElementRef,
   EventEmitter,
   inject,
@@ -41,7 +42,6 @@ import {
   Renderer2,
   ViewChild,
   ViewEncapsulation,
-  DOCUMENT,
 } from '@angular/core';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
@@ -49,7 +49,7 @@ import {_animationsDisabled} from '../core';
 
 /**
  * Throws an exception when two MatDrawer are matching the same position.
- * @docs-private
+ * @nodoc
  */
 export function throwMatDuplicatedDrawerError(position: string) {
   throw Error(`A drawer was already declared for 'position="${position}"'`);
@@ -75,12 +75,12 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE = new InjectionToken<boolean>(
 
 /**
  * Used to provide a drawer container to a drawer while avoiding circular references.
- * @docs-private
+ * @nodoc
  */
 export const MAT_DRAWER_CONTAINER = new InjectionToken('MAT_DRAWER_CONTAINER');
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

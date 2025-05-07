@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {_animationsDisabled} from '../../animation/animation';
 
 /**
  * Possible states for a pseudo checkbox.
- * @docs-private
+ * @nodoc
  */
 export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
@@ -26,7 +26,7 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
  * interchangeable with `<mat-checkbox>` and should *not* be used if the user would directly
  * interact with the checkbox. The pseudo-checkbox should only be used as an implementation detail
  * of more complex components that appropriately handle selected / checked state.
- * @docs-private
+ * @nodoc
  */
 @Component({
   encapsulation: ViewEncapsulation.None,

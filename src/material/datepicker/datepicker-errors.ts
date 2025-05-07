@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/** @docs-private */
+/** @nodoc */
 export function createMissingDateImplError(provider: string) {
   return Error(
     `MatDatepicker: No provider found for ${provider}. You must add one of the following ` +

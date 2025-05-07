@@ -8,12 +8,15 @@
 
 import {_IdGenerator, AriaDescriber, InteractivityChecker} from '@angular/cdk/a11y';
 
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   Directive,
+  DOCUMENT,
   ElementRef,
+  HOST_TAG_NAME,
   inject,
   Input,
   NgZone,
@@ -21,11 +24,8 @@ import {
   OnInit,
   Renderer2,
   ViewEncapsulation,
-  HOST_TAG_NAME,
-  DOCUMENT,
 } from '@angular/core';
 import {_animationsDisabled, ThemePalette} from '../core';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /** Allowed position options for matBadgePosition */
 export type MatBadgePosition =
@@ -45,7 +45,7 @@ const BADGE_CONTENT_CLASS = 'mat-badge-content';
 
 /**
  * Component used to load the structural styles of the badge.
- * @docs-private
+ * @nodoc
  */
 @Component({
   styleUrl: 'badge.css',

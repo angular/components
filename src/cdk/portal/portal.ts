@@ -7,18 +7,18 @@
  */
 
 import {
-  TemplateRef,
-  ViewContainerRef,
-  ElementRef,
   ComponentRef,
+  ElementRef,
   EmbeddedViewRef,
   Injector,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
 import {
-  throwNullPortalOutletError,
-  throwPortalAlreadyAttachedError,
   throwNoPortalAttachedError,
   throwNullPortalError,
+  throwNullPortalOutletError,
+  throwPortalAlreadyAttachedError,
   throwPortalOutletAlreadyDisposedError,
   throwUnknownPortalTypeError,
 } from './portal-errors';
@@ -263,7 +263,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
     this._isDisposed = true;
   }
 
-  /** @docs-private */
+  /** @nodoc */
   setDisposeFn(fn: () => void) {
     this._disposeFn = fn;
   }

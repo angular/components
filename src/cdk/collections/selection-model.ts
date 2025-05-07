@@ -246,7 +246,7 @@ export class SelectionModel<T> {
 
 /**
  * Event emitted when the value of a MatSelectionModel has changed.
- * @docs-private
+ * @nodoc
  */
 export interface SelectionChange<T> {
   /** Model that dispatched the event. */
@@ -260,7 +260,7 @@ export interface SelectionChange<T> {
 /**
  * Returns an error that reports that multiple values are passed into a selection model
  * with a single value.
- * @docs-private
+ * @nodoc
  */
 export function getMultipleValuesInSingleSelectionError() {
   return Error('Cannot pass multiple values into SelectionModel with single-value mode.');

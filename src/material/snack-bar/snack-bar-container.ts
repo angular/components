@@ -22,6 +22,7 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
+  DOCUMENT,
   ElementRef,
   EmbeddedViewRef,
   inject,
@@ -30,7 +31,6 @@ import {
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
-  DOCUMENT,
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
@@ -41,7 +41,7 @@ const EXIT_ANIMATION = '_mat-snack-bar-exit';
 
 /**
  * Internal component that wraps user-provided snack bar content.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-snack-bar-container',

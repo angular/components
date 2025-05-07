@@ -181,7 +181,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
   /**
    * Apply the position to the element.
-   * @docs-private
+   * @nodoc
    */
   apply(): void {
     // Since the overlay ref applies the strategy asynchronously, it could
@@ -245,7 +245,7 @@ export class GlobalPositionStrategy implements PositionStrategy {
 
   /**
    * Cleans up the DOM changes from the position strategy.
-   * @docs-private
+   * @nodoc
    */
   dispose(): void {
     if (this._isDisposed || !this._overlayRef) {

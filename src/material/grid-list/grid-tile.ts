@@ -6,20 +6,20 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {
-  Component,
-  ViewEncapsulation,
-  ElementRef,
-  Input,
-  ContentChildren,
-  QueryList,
   AfterContentInit,
-  Directive,
   ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  Directive,
+  ElementRef,
   inject,
+  Input,
+  QueryList,
+  ViewEncapsulation,
 } from '@angular/core';
 import {MatLine, setLines} from '../core';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 @Component({
@@ -95,7 +95,7 @@ export class MatGridTileText implements AfterContentInit {
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[mat-grid-avatar], [matGridAvatar]',
@@ -105,7 +105,7 @@ export class MatGridAvatarCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: 'mat-grid-tile-header',
@@ -115,7 +115,7 @@ export class MatGridTileHeaderCssMatStyler {}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: 'mat-grid-tile-footer',

@@ -11,7 +11,7 @@ import {InjectionToken, Signal} from '@angular/core';
 /**
  * Describes a parent component that manages a list of options.
  * Contains properties that the options can inherit.
- * @docs-private
+ * @nodoc
  */
 export interface MatOptionParentComponent {
   disableRipple?: boolean | Signal<boolean>;

@@ -17,7 +17,7 @@ type Dimensions = Omit<DOMRect, 'x' | 'y' | 'toJSON'>;
  * @param element Dimensions of the element (from getBoundingClientRect)
  * @param scrollContainers Dimensions of element's scrolling containers (from getBoundingClientRect)
  * @returns Whether the element is scrolled out of view
- * @docs-private
+ * @nodoc
  */
 export function isElementScrolledOutsideView(element: Dimensions, scrollContainers: Dimensions[]) {
   return scrollContainers.some(containerBounds => {
@@ -35,7 +35,7 @@ export function isElementScrolledOutsideView(element: Dimensions, scrollContaine
  * @param element Dimensions of the element (from getBoundingClientRect)
  * @param scrollContainers Dimensions of element's scrolling containers (from getBoundingClientRect)
  * @returns Whether the element is clipped
- * @docs-private
+ * @nodoc
  */
 export function isElementClippedByScrolling(element: Dimensions, scrollContainers: Dimensions[]) {
   return scrollContainers.some(scrollContainerRect => {

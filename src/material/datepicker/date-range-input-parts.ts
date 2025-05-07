@@ -31,9 +31,9 @@ import {
 } from '@angular/forms';
 import {ErrorStateMatcher, _ErrorStateTracker} from '../core';
 import {_computeAriaAccessibleName} from './aria-accessible-name';
+import {MatDateRangeInput} from './date-range-input';
 import {DateRange, DateSelectionModelChange} from './date-selection-model';
 import {MatDatepickerInputBase} from './datepicker-input-base';
-import {MatDateRangeInput} from './date-range-input';
 
 /**
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
@@ -52,7 +52,7 @@ abstract class MatDateRangeInputPartBase<D>
 
   /**
    * Form control bound to this input part.
-   * @docs-private
+   * @nodoc
    */
   ngControl: NgControl;
 

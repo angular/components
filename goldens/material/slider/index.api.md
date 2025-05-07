@@ -42,6 +42,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     readonly _elementRef: ElementRef<HTMLElement>;
     // (undocumented)
     _endThumbTransform: string;
+    // (undocumented)
     protected endValueIndicatorText: string;
     _getInput(thumbPosition: _MatThumb): _MatSliderThumb | _MatSliderRangeThumb | undefined;
     _getThumb(thumbPosition: _MatThumb): _MatSliderVisualThumb;
@@ -106,6 +107,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     showTickMarks: boolean;
     // (undocumented)
     _startThumbTransform: string;
+    // (undocumented)
     protected startValueIndicatorText: string;
     get step(): number;
     set step(v: number);
@@ -161,6 +163,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
     _getDefaultValue(): number;
     getMaxPos(): number;
     getMinPos(): number;
+    // (undocumented)
     getSibling(): _MatSliderRangeThumb | undefined;
     _isEndThumb: boolean;
     _isLeftThumb: boolean;
@@ -207,12 +210,14 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // (undocumented)
     _clamp(v: number): number;
     protected readonly _destroyed: Subject<void>;
+    // (undocumented)
     get disabled(): boolean;
     set disabled(v: boolean);
     readonly dragEnd: EventEmitter<MatSliderDragEvent>;
     readonly dragStart: EventEmitter<MatSliderDragEvent>;
     // (undocumented)
     readonly _elementRef: ElementRef<HTMLInputElement>;
+    // (undocumented)
     get fillPercentage(): number;
     _fixValue(event: PointerEvent): void;
     // (undocumented)
@@ -221,7 +226,9 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     _getDefaultValue(): number;
     _hostElement: HTMLInputElement;
     _initialValue: string | undefined;
+    // (undocumented)
     initProps(): void;
+    // (undocumented)
     initUI(): void;
     // (undocumented)
     _initValue(): void;
@@ -229,8 +236,10 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     protected _isControlInitialized: boolean;
     _isFocused: boolean;
     _knobRadius: number;
+    // (undocumented)
     get max(): number;
     set max(v: number);
+    // (undocumented)
     get min(): number;
     set min(v: number);
     // (undocumented)

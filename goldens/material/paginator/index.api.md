@@ -53,14 +53,14 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 // @public
 export const MAT_PAGINATOR_DEFAULT_OPTIONS: InjectionToken<MatPaginatorDefaultOptions>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export const MAT_PAGINATOR_INTL_PROVIDER: {
     provide: typeof MatPaginatorIntl;
     deps: Optional[][];
     useFactory: typeof MAT_PAGINATOR_INTL_PROVIDER_FACTORY;
 };
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_PAGINATOR_INTL_PROVIDER_FACTORY(parentIntl: MatPaginatorIntl): MatPaginatorIntl;
 
 // @public

@@ -6,37 +6,37 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   Input,
   NgZone,
   OnDestroy,
   Renderer2,
   ViewChild,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
 import {MatRipple, RippleAnimationConfig, RippleRef, RippleState} from '../core';
 import {
-  _MatThumb,
   _MatSlider,
   _MatSliderThumb,
   _MatSliderVisualThumb,
+  _MatThumb,
   MAT_SLIDER,
   MAT_SLIDER_VISUAL_THUMB,
 } from './slider-interface';
-import {Platform} from '@angular/cdk/platform';
 
 /**
  * The visual slider thumb.
  *
  * Handles the slider thumb ripple states (hover, focus, and active),
  * and displaying the value tooltip on discrete sliders.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-slider-visual-thumb',

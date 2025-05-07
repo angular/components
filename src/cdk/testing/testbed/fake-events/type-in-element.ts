@@ -69,7 +69,7 @@ function getKeyboardEventCode(char: string): string {
 
 /**
  * Checks whether the given Element is a text input element.
- * @docs-private
+ * @nodoc
  */
 export function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
   const nodeName = element.nodeName.toLowerCase();
@@ -81,7 +81,7 @@ export function isTextInput(element: Element): element is HTMLInputElement | HTM
  * the `input` event, simulating the user typing.
  * @param element Element onto which to set the value.
  * @param keys The keys to send to the element.
- * @docs-private
+ * @nodoc
  */
 export function typeInElement(
   element: HTMLElement,
@@ -94,7 +94,7 @@ export function typeInElement(
  * @param element Element onto which to set the value.
  * @param modifiers Modifier keys that are held while typing.
  * @param keys The keys to send to the element.
- * @docs-private
+ * @nodoc
  */
 export function typeInElement(
   element: HTMLElement,
@@ -177,7 +177,7 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
 
 /**
  * Clears the text in an input or textarea element.
- * @docs-private
+ * @nodoc
  */
 export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
   triggerFocus(element as HTMLElement);

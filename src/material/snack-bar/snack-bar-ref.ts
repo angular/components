@@ -28,7 +28,7 @@ export class MatSnackBarRef<T> {
 
   /**
    * The instance of the component making up the content of the snack bar.
-   * @docs-private
+   * @nodoc
    */
   containerInstance: MatSnackBarContainer;
 

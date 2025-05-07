@@ -8,7 +8,7 @@
 
 /**
  * Throws an exception when an instance of the PointerFocusTracker is not provided.
- * @docs-private
+ * @nodoc
  */
 export function throwMissingPointerFocusTracker() {
   throw Error('expected an instance of PointerFocusTracker to be provided');
@@ -16,7 +16,7 @@ export function throwMissingPointerFocusTracker() {
 
 /**
  * Throws an exception when a reference to the parent menu is not provided.
- * @docs-private
+ * @nodoc
  */
 export function throwMissingMenuReference() {
   throw Error('expected a reference to the parent menu');

@@ -10,13 +10,13 @@ import {InjectionToken} from '@angular/core';
 
 /**
  * Injection token used to provide a grid list to a tile and to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const MAT_GRID_LIST = new InjectionToken<MatGridListBase>('MAT_GRID_LIST');
 
 /**
  * Base interface for a `MatGridList`.
- * @docs-private
+ * @nodoc
  */
 export interface MatGridListBase {
   cols: number;

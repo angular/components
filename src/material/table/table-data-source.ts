@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {MatPaginator, PageEvent} from '../paginator';
+import {_isNumberValue} from '@angular/cdk/coercion';
+import {DataSource} from '@angular/cdk/collections';
 import {
   BehaviorSubject,
   combineLatest,
@@ -16,10 +17,9 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {DataSource} from '@angular/cdk/collections';
-import {MatSort, Sort} from '../sort';
-import {_isNumberValue} from '@angular/cdk/coercion';
 import {map} from 'rxjs/operators';
+import {MatPaginator, PageEvent} from '../paginator';
+import {MatSort, Sort} from '../sort';
 
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
@@ -364,7 +364,7 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
 
   /**
    * Used by the MatTable. Called when it connects to the data source.
-   * @docs-private
+   * @nodoc
    */
   connect() {
     if (!this._renderChangesSubscription) {
@@ -376,7 +376,7 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
 
   /**
    * Used by the MatTable. Called when it disconnects from the data source.
-   * @docs-private
+   * @nodoc
    */
   disconnect() {
     this._renderChangesSubscription?.unsubscribe();

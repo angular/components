@@ -7,6 +7,7 @@
  */
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterViewInit,
   booleanAttribute,
@@ -21,7 +22,6 @@ import {
   Renderer2,
 } from '@angular/core';
 import {_animationsDisabled, _StructuralStylesLoader, MatRippleLoader, ThemePalette} from '../core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
 /**
  * Possible appearances for a `MatButton`.
@@ -143,7 +143,7 @@ export class MatButtonBase implements AfterViewInit, OnDestroy {
 
   /**
    * Backwards-compatibility input that handles pre-existing `[tabindex]` bindings.
-   * @docs-private
+   * @nodoc
    */
   @Input({alias: 'tabindex', transform: transformTabIndex})
   set _tabindex(value: number) {

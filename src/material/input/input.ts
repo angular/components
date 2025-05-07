@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
@@ -26,11 +27,10 @@ import {
   Renderer2,
   WritableSignal,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher, _ErrorStateTracker} from '../core';
-import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {Subject} from 'rxjs';
+import {_ErrorStateTracker, ErrorStateMatcher} from '../core';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '../form-field';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
 
@@ -128,31 +128,31 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   focused: boolean = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   readonly stateChanges: Subject<void> = new Subject<void>();
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   controlType: string = 'mat-input';
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   autofilled = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get disabled(): boolean {
@@ -172,7 +172,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get id(): string {
@@ -185,19 +185,19 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input() placeholder: string;
 
   /**
    * Name of the input.
-   * @docs-private
+   * @nodoc
    */
   @Input() name: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get required(): boolean {
@@ -242,13 +242,13 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input('aria-describedby') userAriaDescribedBy: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   @Input()
   get value(): string {
@@ -511,7 +511,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get empty(): boolean {
     return (
@@ -524,7 +524,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get shouldLabelFloat(): boolean {
     if (this._isNativeSelect) {
@@ -549,7 +549,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get describedByIds(): string[] {
     const element = this._elementRef.nativeElement;
@@ -560,7 +560,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   setDescribedByIds(ids: string[]) {
     const element = this._elementRef.nativeElement;
@@ -574,7 +574,7 @@ export class MatInput
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   onContainerClick() {
     // Do not re-focus the input element if the element is already focused. Otherwise it can happen
@@ -623,7 +623,7 @@ export class MatInput
    * a tooltip once enables the mouse wheel input for all number inputs as long as it exists. In
    * order to get reliable and intuitive behavior we apply a wheel event on our own thus making
    * sure increment and decrement by mouse wheel works every time.
-   * @docs-private
+   * @nodoc
    */
   private _ensureWheelDefaultBehavior(): void {
     this._cleanupWebkitWheel?.();

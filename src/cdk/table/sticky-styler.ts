@@ -8,7 +8,7 @@
 
 /**
  * Directions that can be used when setting sticky positioning.
- * @docs-private
+ * @nodoc
  */
 import {afterNextRender, Injector} from '@angular/core';
 import {Direction} from '../bidi';
@@ -24,13 +24,13 @@ interface UpdateStickyColumnsParams {
 
 /**
  * List of all possible directions that can be used for sticky positioning.
- * @docs-private
+ * @nodoc
  */
 export const STICKY_DIRECTIONS: StickyDirection[] = ['top', 'bottom', 'left', 'right'];
 
 /**
  * Applies and removes sticky positioning styles to the `CdkTable` rows and columns cells.
- * @docs-private
+ * @nodoc
  */
 export class StickyStyler {
   private _elemSizeCache = new WeakMap<HTMLElement, {width: number; height: number}>();

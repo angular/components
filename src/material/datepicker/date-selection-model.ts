@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
-import {DateAdapter} from '../core';
+import {FactoryProvider, Injectable, OnDestroy, Optional, SkipSelf} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
+import {DateAdapter} from '../core';
 
 /** A class representing a range of dates. */
 export class DateRange<D> {
@@ -29,13 +29,13 @@ export class DateRange<D> {
 
 /**
  * Conditionally picks the date type, if a DateRange is passed in.
- * @docs-private
+ * @nodoc
  */
 export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
 
 /**
  * Event emitted by the date selection model when its selection changes.
- * @docs-private
+ * @nodoc
  */
 export interface DateSelectionModelChange<S> {
   /** New value for the selection. */
@@ -50,7 +50,7 @@ export interface DateSelectionModelChange<S> {
 
 /**
  * A selection model containing a date selection.
- * @docs-private
+ * @nodoc
  */
 @Injectable()
 export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
@@ -103,7 +103,7 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
 
 /**
  * A selection model that contains a single date.
- * @docs-private
+ * @nodoc
  */
 @Injectable()
 export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
@@ -142,7 +142,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
 
 /**
  * A selection model that contains a date range.
- * @docs-private
+ * @nodoc
  */
 @Injectable()
 export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
@@ -212,7 +212,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -225,7 +225,7 @@ export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
 
 /**
  * Used to provide a single selection model to a component.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -236,7 +236,7 @@ export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
 };
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -249,7 +249,7 @@ export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
 
 /**
  * Used to provide a range selection model to a component.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

@@ -28,7 +28,7 @@ import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
-// @public
+// @public (undocumented)
 export function getMatInputUnsupportedTypeError(type: string): Error;
 
 // @public

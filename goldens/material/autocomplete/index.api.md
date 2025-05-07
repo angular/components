@@ -35,16 +35,16 @@ export function getMatAutocompleteMissingPanelError(): Error;
 // @public
 export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS: InjectionToken<MatAutocompleteDefaultOptions>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefaultOptions;
 
 // @public
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export function MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => ScrollStrategy;
 
-// @public @deprecated
+// @public @deprecated (undocumented)
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: any[];
@@ -113,6 +113,7 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
     // (undocumented)
     protected _skipPredicate(): boolean;
     _syncParentProperties(): void;
+    // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "displayWith": { "alias": "displayWith"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "autoSelectActiveOption": { "alias": "autoSelectActiveOption"; "required": false; }; "requireSelection": { "alias": "requireSelection"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "hideSingleSelectionIndicator": { "alias": "hideSingleSelectionIndicator"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"], true, never>;

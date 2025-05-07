@@ -6,41 +6,41 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {Platform} from '@angular/cdk/platform';
+import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
+  NgZone,
+  numberAttribute,
   OnDestroy,
   Output,
   QueryList,
   ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  inject,
-  numberAttribute,
   ViewChildren,
-  AfterViewInit,
-  NgZone,
+  ViewEncapsulation,
 } from '@angular/core';
-import {MAT_TAB_GROUP, MatTab} from './tab';
-import {MatTabHeader} from './tab-header';
-import {ThemePalette, MatRipple, _animationsDisabled} from '../core';
 import {merge, Subscription} from 'rxjs';
-import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {startWith} from 'rxjs/operators';
-import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {_animationsDisabled, MatRipple, ThemePalette} from '../core';
+import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabBody} from './tab-body';
-import {CdkPortalOutlet} from '@angular/cdk/portal';
+import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
+import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
-import {Platform} from '@angular/cdk/platform';
 
-/** @docs-private */
+/** @nodoc */
 export interface MatTabGroupBaseHeader {
   _alignInkBarToSelectedTab(): void;
   updatePagination(): void;

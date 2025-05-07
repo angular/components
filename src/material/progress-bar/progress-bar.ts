@@ -7,22 +7,22 @@
  */
 
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ViewEncapsulation,
-  ElementRef,
-  NgZone,
-  Input,
-  Output,
-  EventEmitter,
   AfterViewInit,
-  OnDestroy,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  InjectionToken,
-  inject,
-  numberAttribute,
-  Renderer2,
+  Component,
   DOCUMENT,
+  ElementRef,
+  EventEmitter,
+  inject,
+  InjectionToken,
+  Input,
+  NgZone,
+  numberAttribute,
+  OnDestroy,
+  Output,
+  Renderer2,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import {_animationsDisabled, ThemePalette} from '../core';
@@ -55,7 +55,7 @@ export const MAT_PROGRESS_BAR_DEFAULT_OPTIONS = new InjectionToken<MatProgressBa
 /**
  * Injection token used to provide the current location to `MatProgressBar`.
  * Used to handle server-side rendering and to stub out during unit tests.
- * @docs-private
+ * @nodoc
  */
 export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocation>(
   'mat-progress-bar-location',
@@ -64,14 +64,14 @@ export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocati
 
 /**
  * Stubbed out location for `MatProgressBar`.
- * @docs-private
+ * @nodoc
  */
 export interface MatProgressBarLocation {
   getPathname: () => string;
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

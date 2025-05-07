@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NgModule, Directive, ElementRef, QueryList} from '@angular/core';
+import {Directive, ElementRef, NgModule, QueryList} from '@angular/core';
 import {startWith} from 'rxjs/operators';
 import {MatCommonModule} from '../common-behaviors/common-module';
 
@@ -23,7 +23,7 @@ export class MatLine {}
 
 /**
  * Helper that takes a query list of lines and sets the correct class on the host.
- * @docs-private
+ * @nodoc
  */
 export function setLines(
   lines: QueryList<unknown>,

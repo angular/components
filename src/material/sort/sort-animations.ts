@@ -8,7 +8,7 @@
 
 /**
  * Animations used by MatSort.
- * @docs-private
+ * @nodoc
  * @deprecated No longer being used, to be removed.
  * @breaking-change 21.0.0
  */

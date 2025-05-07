@@ -17,7 +17,7 @@ import {
 
 /**
  * Utility to dispatch any event on a Node.
- * @docs-private
+ * @nodoc
  */
 export function dispatchEvent<T extends Event>(node: Node | Window, event: T): T {
   node.dispatchEvent(event);
@@ -26,7 +26,7 @@ export function dispatchEvent<T extends Event>(node: Node | Window, event: T): T
 
 /**
  * Shorthand to dispatch a fake event on a specified node.
- * @docs-private
+ * @nodoc
  */
 export function dispatchFakeEvent(node: Node | Window, type: string, bubbles?: boolean): Event {
   return dispatchEvent(node, createFakeEvent(type, bubbles));
@@ -35,7 +35,7 @@ export function dispatchFakeEvent(node: Node | Window, type: string, bubbles?: b
 /**
  * Shorthand to dispatch a keyboard event with a specified key code and
  * optional modifiers.
- * @docs-private
+ * @nodoc
  */
 export function dispatchKeyboardEvent(
   node: Node,
@@ -50,7 +50,7 @@ export function dispatchKeyboardEvent(
 
 /**
  * Shorthand to dispatch a mouse event on the specified coordinates.
- * @docs-private
+ * @nodoc
  */
 export function dispatchMouseEvent(
   node: Node,
@@ -70,7 +70,7 @@ export function dispatchMouseEvent(
 
 /**
  * Shorthand to dispatch a pointer event on the specified coordinates.
- * @docs-private
+ * @nodoc
  */
 export function dispatchPointerEvent(
   node: Node,
@@ -89,7 +89,7 @@ export function dispatchPointerEvent(
 
 /**
  * Shorthand to dispatch a touch event on the specified coordinates.
- * @docs-private
+ * @nodoc
  */
 export function dispatchTouchEvent(
   node: Node,

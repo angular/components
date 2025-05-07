@@ -34,6 +34,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
     detach(): void;
     dispose(): void;
     hasAttached(): boolean;
+    // (undocumented)
     setDisposeFn(fn: () => void): void;
 }
 

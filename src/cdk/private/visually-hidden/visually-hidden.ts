@@ -10,7 +10,7 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 
 /**
  * Component used to load the .cdk-visually-hidden styles.
- * @docs-private
+ * @nodoc
  */
 @Component({
   styleUrl: 'visually-hidden.css',

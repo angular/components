@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -15,8 +16,8 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW,
   SPACE,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -25,28 +26,27 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
   ViewEncapsulation,
-  OnDestroy,
   inject,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
-import {Directionality} from '@angular/cdk/bidi';
 import {
   MatCalendarBody,
   MatCalendarCell,
-  MatCalendarUserEvent,
   MatCalendarCellClassFunction,
+  MatCalendarUserEvent,
 } from './calendar-body';
-import {createMissingDateImplError} from './datepicker-errors';
-import {Subscription} from 'rxjs';
-import {startWith} from 'rxjs/operators';
 import {DateRange} from './date-selection-model';
+import {createMissingDateImplError} from './datepicker-errors';
 
 /**
  * An internal component used to display a single year in the datepicker.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-year-view',

@@ -95,7 +95,7 @@ apiDocsPackage.config(function (computePathsProcessor: any) {
 // Configure custom JsDoc tags.
 apiDocsPackage.config(function (parseTagsProcessor: any) {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
-    {name: 'docs-private'},
+    {name: 'nodoc'},
     {name: 'docs-public'},
     {name: 'docs-primary-export'},
     {name: 'breaking-change'},
@@ -112,7 +112,6 @@ apiDocsPackage.config(function (parseTagsProcessor: any) {
     {name: 'usageNotes'},
     {name: 'publicApi'},
     {name: 'ngModule', multi: true},
-    {name: 'nodoc'},
   ]);
 });
 

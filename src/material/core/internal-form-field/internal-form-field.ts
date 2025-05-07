@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 /**
  * Internal shared component used as a container in form field controls.
  * Not to be confused with `mat-form-field` which MDC calls a "text field".
- * @docs-private
+ * @nodoc
  */
 @Component({
   // Use a `div` selector to match the old markup closer.

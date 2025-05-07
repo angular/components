@@ -17,7 +17,7 @@ export type MatListOptionTogglePosition = 'before' | 'after';
 /**
  * Interface describing a list option. This is used to avoid circular
  * dependencies between the list-option and the styler directives.
- * @docs-private
+ * @nodoc
  */
 export interface ListOption {
   _getTogglePosition(): MatListOptionTogglePosition;
@@ -27,6 +27,6 @@ export interface ListOption {
  * Injection token that can be used to reference instances of an `ListOption`. It serves
  * as alternative token to an actual implementation which could result in undesired
  * retention of the class or circular references breaking runtime execution.
- * @docs-private
+ * @nodoc
  */
 export const LIST_OPTION = new InjectionToken<ListOption>('ListOption');

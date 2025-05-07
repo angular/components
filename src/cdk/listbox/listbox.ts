@@ -7,6 +7,26 @@
  */
 
 import {
+  AfterContentInit,
+  booleanAttribute,
+  ChangeDetectorRef,
+  ContentChildren,
+  Directive,
+  ElementRef,
+  forwardRef,
+  inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  Output,
+  QueryList,
+  Renderer2,
+  signal,
+} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {defer, merge, Observable, Subject} from 'rxjs';
+import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {
   _IdGenerator,
   ActiveDescendantKeyManager,
   Highlightable,
@@ -28,26 +48,6 @@ import {
   UP_ARROW,
 } from '../keycodes';
 import {Platform} from '../platform';
-import {
-  AfterContentInit,
-  booleanAttribute,
-  ChangeDetectorRef,
-  ContentChildren,
-  Directive,
-  ElementRef,
-  forwardRef,
-  inject,
-  Input,
-  NgZone,
-  OnDestroy,
-  Output,
-  QueryList,
-  Renderer2,
-  signal,
-} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {defer, merge, Observable, Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
 
 /**
  * An implementation of SelectionModel that internally always represents the selection as a
@@ -195,7 +195,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /**
    * No-op implemented as a part of `Highlightable`.
-   * @docs-private
+   * @nodoc
    */
   setActiveStyles() {
     // If the listbox is using `aria-activedescendant` the option won't have focus so the
@@ -207,7 +207,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
 
   /**
    * No-op implemented as a part of `Highlightable`.
-   * @docs-private
+   * @nodoc
    */
   setInactiveStyles() {}
 
@@ -585,7 +585,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /**
    * Registers a callback to be invoked when the listbox's value changes from user input.
    * @param fn The callback to register
-   * @docs-private
+   * @nodoc
    */
   registerOnChange(fn: (value: readonly T[]) => void): void {
     this._onChange = fn;
@@ -594,7 +594,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /**
    * Registers a callback to be invoked when the listbox is blurred by the user.
    * @param fn The callback to register
-   * @docs-private
+   * @nodoc
    */
   registerOnTouched(fn: () => {}): void {
     this._onTouched = fn;
@@ -603,7 +603,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /**
    * Sets the listbox's value.
    * @param value The new value of the listbox
-   * @docs-private
+   * @nodoc
    */
   writeValue(value: readonly T[]): void {
     this._setSelection(value);
@@ -613,7 +613,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   /**
    * Sets the disabled state of the listbox.
    * @param isDisabled The new disabled state
-   * @docs-private
+   * @nodoc
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;

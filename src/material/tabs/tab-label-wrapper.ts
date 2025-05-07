@@ -11,7 +11,7 @@ import {InkBarItem} from './ink-bar';
 
 /**
  * Used in the `mat-tab-group` view to display tab labels.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[matTabLabelWrapper]',

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {CdkObserveContent} from '@angular/cdk/observers';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -21,18 +22,17 @@ import {
   ViewEncapsulation,
   booleanAttribute,
 } from '@angular/core';
-import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {MatRipple} from '../core';
 import {MatInkBar} from './ink-bar';
 import {MatPaginatedTabHeader} from './paginated-tab-header';
-import {CdkObserveContent} from '@angular/cdk/observers';
-import {MatRipple} from '../core';
+import {MatTabLabelWrapper} from './tab-label-wrapper';
 
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
  * an ink bar that follows the currently selected tab. When the tabs list's width exceeds the
  * width of the header container, then arrows will be displayed to allow the user to scroll
  * left and right across the header.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-tab-header',

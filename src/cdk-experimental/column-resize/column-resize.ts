@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   Directive,
@@ -17,15 +18,14 @@ import {
   OnDestroy,
   Renderer2,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
 import {merge, Subject} from 'rxjs';
 import {mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '../popover-edit';
 
 import {ColumnResizeNotifier, ColumnResizeNotifierSource} from './column-resize-notifier';
-import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './selectors';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
+import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './selectors';
 
 const HOVER_OR_ACTIVE_CLASS = 'cdk-column-resize-hover-or-active';
 const WITH_RESIZED_COLUMN_CLASS = 'cdk-column-resize-with-resized-column';
@@ -65,7 +65,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   /** The id attribute of the table, if specified. */
   id?: string;
 
-  /** @docs-private Whether a call to updateStickyColumnStyles is pending after a resize. */
+  /** @nodoc Whether a call to updateStickyColumnStyles is pending after a resize. */
   _flushPending = false;
 
   /**

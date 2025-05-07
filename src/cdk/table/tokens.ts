@@ -10,7 +10,7 @@ import {InjectionToken} from '@angular/core';
 
 /**
  * Used to provide a table to some of the sub-components without causing a circular dependency.
- * @docs-private
+ * @nodoc
  */
 export const CDK_TABLE = new InjectionToken<any>('CDK_TABLE');
 

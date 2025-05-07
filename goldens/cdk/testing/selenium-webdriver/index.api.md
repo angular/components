@@ -46,6 +46,7 @@ export class SeleniumWebDriverHarnessEnvironment extends HarnessEnvironment<() =
     protected getDocumentRoot(): () => webdriver.WebElement;
     static getNativeElement(el: TestElement): webdriver.WebElement;
     static loader(driver: webdriver.WebDriver, options?: WebDriverHarnessEnvironmentOptions): HarnessLoader;
+    // (undocumented)
     waitForTasksOutsideAngular(): Promise<void>;
 }
 

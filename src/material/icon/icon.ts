@@ -11,20 +11,20 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   ElementRef,
   ErrorHandler,
+  HostAttributeToken,
   inject,
   InjectionToken,
   Input,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
-  HostAttributeToken,
-  DOCUMENT,
 } from '@angular/core';
-import {ThemePalette} from '../core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
+import {ThemePalette} from '../core';
 
 import {MatIconRegistry} from './icon-registry';
 
@@ -50,7 +50,7 @@ export const MAT_ICON_DEFAULT_OPTIONS = new InjectionToken<MatIconDefaultOptions
 /**
  * Injection token used to provide the current location to `MatIcon`.
  * Used to handle server-side rendering and to stub out during unit tests.
- * @docs-private
+ * @nodoc
  */
 export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-location', {
   providedIn: 'root',
@@ -59,14 +59,14 @@ export const MAT_ICON_LOCATION = new InjectionToken<MatIconLocation>('mat-icon-l
 
 /**
  * Stubbed out location for `MatIcon`.
- * @docs-private
+ * @nodoc
  */
 export interface MatIconLocation {
   getPathname: () => string;
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

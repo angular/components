@@ -80,7 +80,7 @@ export enum MatListItemType {
 
 /**
  * Shared behavior among the harnesses for the various `MatListItem` flavors.
- * @docs-private
+ * @nodoc
  */
 export abstract class MatListItemHarnessBase extends ContentContainerComponentHarness<MatListItemSection> {
   private _lines = this.locatorForAll('.mat-mdc-list-item-line');

@@ -10,13 +10,13 @@ import type {DragRef} from '../drag-ref';
 
 /**
  * Function that is used to determine whether an item can be sorted into a particular index.
- * @docs-private
+ * @nodoc
  */
 export type SortPredicate<T> = (index: number, item: T) => boolean;
 
 /**
  * Strategy used to sort and position items within a drop list.
- * @docs-private
+ * @nodoc
  */
 export interface DropListSortStrategy {
   start(items: readonly DragRef[]): void;

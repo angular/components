@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {InjectionToken} from '@angular/core';
 import {CdkAccordion} from '@angular/cdk/accordion';
+import {InjectionToken} from '@angular/core';
 
 /** MatAccordion's display modes. */
 export type MatAccordionDisplayMode = 'default' | 'flat';
@@ -17,7 +17,7 @@ export type MatAccordionTogglePosition = 'before' | 'after';
 
 /**
  * Base interface for a `MatAccordion`.
- * @docs-private
+ * @nodoc
  */
 export interface MatAccordionBase extends CdkAccordion {
   /** Whether the expansion indicator should be hidden. */

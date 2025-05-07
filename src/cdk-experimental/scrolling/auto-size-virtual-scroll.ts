@@ -67,7 +67,7 @@ export class ItemSizeAverager {
 
 /** Virtual scrolling strategy for lists with items of unknown or dynamic size. */
 export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   scrolledIndexChange = new Observable<number>(() => {
     // TODO(mmalerba): Implement.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -135,14 +135,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._viewport = null;
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     if (this._viewport) {
       this._updateRenderedContentAfterScroll();
     }
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     if (this._viewport) {
       this._renderContentForCurrentOffset();
@@ -150,14 +150,14 @@ export class AutoSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onContentRendered() {
     if (this._viewport) {
       this._checkRenderedContentSize();
     }
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() {
     if (this._viewport) {
       this._checkRenderedContentOffset();

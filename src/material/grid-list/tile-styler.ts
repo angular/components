@@ -25,7 +25,7 @@ export interface TileStyleTarget {
 /**
  * Sets the style properties for an individual tile, given the position calculated by the
  * Tile Coordinator.
- * @docs-private
+ * @nodoc
  */
 export abstract class TileStyler {
   _gutterSize: string;
@@ -137,7 +137,7 @@ export abstract class TileStyler {
   /**
    * Sets the vertical placement of the tile in the list.
    * This method will be implemented by each type of TileStyler.
-   * @docs-private
+   * @nodoc
    */
   abstract setRowStyles(
     tile: MatGridTile,
@@ -149,7 +149,7 @@ export abstract class TileStyler {
   /**
    * Calculates the computed height and returns the correct style property to set.
    * This method can be implemented by each type of TileStyler.
-   * @docs-private
+   * @nodoc
    */
   getComputedHeight(): [string, string] | null {
     return null;
@@ -158,7 +158,7 @@ export abstract class TileStyler {
   /**
    * Called when the tile styler is swapped out with a different one. To be used for cleanup.
    * @param list Grid list that the styler was attached to.
-   * @docs-private
+   * @nodoc
    */
   abstract reset(list: TileStyleTarget): void;
 }
@@ -166,7 +166,7 @@ export abstract class TileStyler {
 /**
  * This type of styler is instantiated when the user passes in a fixed row height.
  * Example `<mat-grid-list cols="3" rowHeight="100px">`
- * @docs-private
+ * @nodoc
  */
 export class FixedTileStyler extends TileStyler {
   constructor(public fixedRowHeight: string) {
@@ -209,7 +209,7 @@ export class FixedTileStyler extends TileStyler {
 /**
  * This type of styler is instantiated when the user passes in a width:height ratio
  * for the row height.  Example `<mat-grid-list cols="3" rowHeight="3:1">`
- * @docs-private
+ * @nodoc
  */
 export class RatioTileStyler extends TileStyler {
   /** Ratio width:height given by user to determine row height. */
@@ -269,7 +269,7 @@ export class RatioTileStyler extends TileStyler {
  * In other words, the row height will reflect the total height of the container divided
  * by the number of rows.  Example `<mat-grid-list cols="3" rowHeight="fit">`
  *
- * @docs-private
+ * @nodoc
  */
 export class FitTileStyler extends TileStyler {
   setRowStyles(tile: MatGridTile, rowIndex: number): void {

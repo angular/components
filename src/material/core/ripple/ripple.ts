@@ -11,17 +11,16 @@ import {
   Directive,
   ElementRef,
   InjectionToken,
+  Injector,
   Input,
   NgZone,
   OnDestroy,
   OnInit,
-  Injector,
   inject,
 } from '@angular/core';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {_animationsDisabled} from '../animation/animation';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
-import {_animationsDisabled} from '../animation/animation';
 
 /** Configurable options for `matRipple`. */
 export interface RippleGlobalOptions {
@@ -130,7 +129,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** Options that are set globally for all ripples. */
   private _globalOptions: RippleGlobalOptions;
 
-  /** @docs-private Whether ripple directive is initialized and the input bindings are set. */
+  /** @nodoc Whether ripple directive is initialized and the input bindings are set. */
   _isInitialized: boolean = false;
 
   constructor(...args: unknown[]);
@@ -168,7 +167,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 
   /**
    * Ripple configuration from the directive's input values.
-   * @docs-private Implemented as part of RippleTarget
+   * @nodoc Implemented as part of RippleTarget
    */
   get rippleConfig(): RippleConfig {
     return {
@@ -186,7 +185,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 
   /**
    * Whether ripples on pointer-down are disabled or not.
-   * @docs-private Implemented as part of RippleTarget
+   * @nodoc Implemented as part of RippleTarget
    */
   get rippleDisabled(): boolean {
     return this.disabled || !!this._globalOptions.disabled;

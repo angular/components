@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Platform} from '../platform';
-import {Injectable, NgZone, OnDestroy, RendererFactory2, inject, DOCUMENT} from '@angular/core';
+import {DOCUMENT, Injectable, NgZone, OnDestroy, RendererFactory2, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {auditTime} from 'rxjs/operators';
+import {Platform} from '../platform';
 
 /** Time in ms to throttle the resize events by default. */
 export const DEFAULT_RESIZE_TIME = 20;
@@ -22,7 +22,7 @@ export interface ViewportScrollPosition {
 
 /**
  * Simple utility for getting the bounds of the browser viewport.
- * @docs-private
+ * @nodoc
  */
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {

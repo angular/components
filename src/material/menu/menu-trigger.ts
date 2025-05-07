@@ -44,12 +44,12 @@ import {
 } from '@angular/core';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
+import {_animationsDisabled} from '../core';
 import {MatMenu, MenuCloseReason} from './menu';
 import {throwMatMenuRecursiveError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
 import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {_animationsDisabled} from '../core';
 
 /** Injection token that determines the scroll handling while the menu is open. */
 export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
@@ -64,7 +64,7 @@ export const MAT_MENU_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -74,7 +74,7 @@ export function MAT_MENU_SCROLL_STRATEGY_FACTORY(_overlay: unknown): () => Scrol
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

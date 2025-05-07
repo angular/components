@@ -9,7 +9,7 @@
 /**
  * Throws an exception for the case when menu's x-position value isn't valid.
  * In other words, it doesn't match 'before' or 'after'.
- * @docs-private
+ * @nodoc
  */
 export function throwMatMenuInvalidPositionX() {
   throw Error(`xPosition value must be either 'before' or after'.
@@ -19,7 +19,7 @@ export function throwMatMenuInvalidPositionX() {
 /**
  * Throws an exception for the case when menu's y-position value isn't valid.
  * In other words, it doesn't match 'above' or 'below'.
- * @docs-private
+ * @nodoc
  */
 export function throwMatMenuInvalidPositionY() {
   throw Error(`yPosition value must be either 'above' or below'.
@@ -29,7 +29,7 @@ export function throwMatMenuInvalidPositionY() {
 /**
  * Throws an exception for the case when a menu is assigned
  * to a trigger that is placed inside the same menu.
- * @docs-private
+ * @nodoc
  */
 export function throwMatMenuRecursiveError() {
   throw Error(

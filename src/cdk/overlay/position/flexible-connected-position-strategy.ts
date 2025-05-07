@@ -6,9 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {PositionStrategy} from './position-strategy';
 import {DOCUMENT, ElementRef, Injector} from '@angular/core';
-import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '../../scrolling';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {coerceArray, coerceCssPixelValue} from '../../coercion';
+import {Platform} from '../../platform';
+import {CdkScrollable, ViewportRuler, ViewportScrollPosition} from '../../scrolling';
+import {OverlayContainer} from '../overlay-container';
+import {OverlayRef} from '../overlay-ref';
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
@@ -16,12 +20,8 @@ import {
   validateHorizontalPosition,
   validateVerticalPosition,
 } from './connected-position';
-import {Observable, Subscription, Subject} from 'rxjs';
-import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
-import {coerceCssPixelValue, coerceArray} from '../../coercion';
-import {Platform} from '../../platform';
-import {OverlayContainer} from '../overlay-container';
-import {OverlayRef} from '../overlay-ref';
+import {PositionStrategy} from './position-strategy';
+import {isElementClippedByScrolling, isElementScrolledOutsideView} from './scroll-clip';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -217,7 +217,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    *  - If pushing is enabled, take the position that went off-screen the least and push it
    *      on-screen.
    *  - If none of the previous criteria were met, use the position that goes off-screen the least.
-   * @docs-private
+   * @nodoc
    */
   apply(): void {
     // We shouldn't do anything if the strategy was disposed or we're on the server.

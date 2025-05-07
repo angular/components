@@ -13,7 +13,7 @@ import {TestElement} from './test-element';
  * An async function that returns a promise when called.
  * @deprecated This was just an alias for `() => Promise<T>`. Use that instead.
  * @breaking-change 21.0.0 Remove this alias.
- * @docs-private
+ * @nodoc
  */
 export type AsyncFactoryFn<T> = () => Promise<T>;
 

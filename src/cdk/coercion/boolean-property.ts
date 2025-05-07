@@ -8,7 +8,7 @@
 
 /**
  * Type describing the allowed values for a boolean input.
- * @docs-private
+ * @nodoc
  */
 export type BooleanInput = string | boolean | null | undefined;
 

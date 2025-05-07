@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  Input,
   IterableChanges,
   IterableDiffer,
   IterableDiffers,
@@ -19,7 +20,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  Input,
   booleanAttribute,
   inject,
 } from '@angular/core';
@@ -273,7 +273,7 @@ export interface CdkCellOutletMultiRowContext<T> {
 
 /**
  * Outlet for rendering cells inside of a row or header row.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[cdkCellOutlet]',

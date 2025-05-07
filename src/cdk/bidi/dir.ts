@@ -40,7 +40,7 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
   /** Event emitted when the direction changes. */
   @Output('dirChange') readonly change = new EventEmitter<Direction>();
 
-  /** @docs-private */
+  /** @nodoc */
   @Input()
   get dir(): Direction {
     return this.valueSignal();

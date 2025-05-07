@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_IdGenerator, CdkMonitorFocus, FocusOrigin} from '@angular/cdk/a11y';
+import {CdkMonitorFocus, FocusOrigin, _IdGenerator} from '@angular/cdk/a11y';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -19,13 +19,13 @@ import {
   SimpleChanges,
   ViewEncapsulation,
   booleanAttribute,
-  signal,
   inject,
+  signal,
 } from '@angular/core';
 import {ControlContainer, NgControl, Validators} from '@angular/forms';
+import {Subject, Subscription, merge} from 'rxjs';
 import {DateAdapter, ThemePalette} from '../core';
 import {MAT_FORM_FIELD, MatFormFieldControl} from '../form-field';
-import {Subject, Subscription, merge} from 'rxjs';
 import type {MatEndDate, MatStartDate} from './date-range-input-parts';
 import {MatDateRangePickerInput} from './date-range-picker';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
@@ -97,7 +97,7 @@ export class MatDateRangeInput<D>
   /**
    * Implemented as a part of `MatFormFieldControl`.
    * Set the placeholder attribute on `matStartDate` and `matEndDate`.
-   * @docs-private
+   * @nodoc
    */
   get placeholder() {
     const start = this._startInput?._getPlaceholder() || '';
@@ -250,7 +250,7 @@ export class MatDateRangeInput<D>
   /**
    * Implemented as a part of `MatFormFieldControl`.
    * TODO(crisbeto): change type to `AbstractControlDirective` after #18206 lands.
-   * @docs-private
+   * @nodoc
    */
   ngControl: NgControl | null;
 
@@ -259,7 +259,7 @@ export class MatDateRangeInput<D>
 
   /**
    * Disable the automatic labeling to avoid issues like #27241.
-   * @docs-private
+   * @nodoc
    */
   readonly disableAutomaticLabeling = true;
 
@@ -286,7 +286,7 @@ export class MatDateRangeInput<D>
 
   /**
    * Implemented as part of MatFormFieldControl.
-   * @docs-private
+   * @nodoc
    */
   get describedByIds(): string[] {
     const element = this._elementRef.nativeElement;
@@ -297,7 +297,7 @@ export class MatDateRangeInput<D>
 
   /**
    * Implemented as a part of `MatFormFieldControl`.
-   * @docs-private
+   * @nodoc
    */
   setDescribedByIds(ids: string[]): void {
     this._ariaDescribedBy = ids.length ? ids.join(' ') : null;
@@ -305,7 +305,7 @@ export class MatDateRangeInput<D>
 
   /**
    * Implemented as a part of `MatFormFieldControl`.
-   * @docs-private
+   * @nodoc
    */
   onContainerClick(): void {
     if (!this.focused && !this.disabled) {

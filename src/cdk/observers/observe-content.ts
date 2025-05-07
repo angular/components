@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {NumberInput, coerceElement, coerceNumberProperty} from '../coercion';
 import {
   AfterContentInit,
   Directive,
@@ -23,6 +22,7 @@ import {
 } from '@angular/core';
 import {Observable, Observer, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
+import {NumberInput, coerceElement, coerceNumberProperty} from '../coercion';
 
 // Angular may add, remove, or edit comment nodes during change detection. We don't care about
 // these changes because they don't affect the user-preceived content, and worse it can cause
@@ -53,7 +53,7 @@ function shouldIgnoreRecord(record: MutationRecord) {
 
 /**
  * Factory that creates a new MutationObserver and allows us to stub it out in unit tests.
- * @docs-private
+ * @nodoc
  */
 @Injectable({providedIn: 'root'})
 export class MutationObserverFactory {

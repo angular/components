@@ -34,7 +34,7 @@ import {_animationsDisabled} from '../core';
 
 /**
  * The portal host directive for the contents of the tab.
- * @docs-private
+ * @nodoc
  */
 @Directive({selector: '[matTabBodyHost]'})
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
@@ -106,7 +106,7 @@ export type MatTabBodyOriginState = 'left' | 'right';
 
 /**
  * Wrapper for the contents of a tab.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-tab-body',

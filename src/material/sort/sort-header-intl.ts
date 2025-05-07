@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Injectable, SkipSelf, Optional} from '@angular/core';
+import {Injectable, Optional, SkipSelf} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
@@ -23,7 +23,7 @@ export class MatSortHeaderIntl {
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -32,7 +32,7 @@ export function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSortHeaderI
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {
   booleanAttribute,
   ChangeDetectorRef,
@@ -25,20 +26,19 @@ import {
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {
-  _MatThumb,
-  MatSliderDragEvent,
   _MatSlider,
   _MatSliderRangeThumb,
   _MatSliderThumb,
+  _MatThumb,
+  MAT_SLIDER,
   MAT_SLIDER_RANGE_THUMB,
   MAT_SLIDER_THUMB,
-  MAT_SLIDER,
+  MatSliderDragEvent,
 } from './slider-interface';
-import {Platform} from '@angular/cdk/platform';
 
 /**
  * Provider that allows the slider thumb to register as a ControlValueAccessor.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -48,7 +48,7 @@ export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
 
 /**
  * Provider that allows the range slider thumb to register as a ControlValueAccessor.
- * @docs-private
+ * @nodoc
  */
 export const MAT_SLIDER_RANGE_THUMB_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -136,7 +136,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   /**
    * The current translateX in px of the slider visual thumb.
-   * @docs-private
+   * @nodoc
    */
   get translateX(): number {
     if (this._slider.min >= this._slider.max) {
@@ -155,11 +155,11 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 
   /**
    * Indicates whether this thumb is the start or end thumb.
-   * @docs-private
+   * @nodoc
    */
   thumbPosition: _MatThumb = _MatThumb.END;
 
-  /** @docs-private */
+  /** @nodoc */
   get min(): number {
     return numberAttribute(this._hostElement.min, 0);
   }
@@ -168,7 +168,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._cdr.detectChanges();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   get max(): number {
     return numberAttribute(this._hostElement.max, 0);
   }
@@ -185,7 +185,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._cdr.detectChanges();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   get disabled(): boolean {
     return booleanAttribute(this._hostElement.disabled);
   }
@@ -206,7 +206,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     return (this.value - this._slider.min) / (this._slider.max - this._slider.min);
   }
 
-  /** @docs-private */
+  /** @nodoc */
   get fillPercentage(): number {
     if (!this._slider._cachedWidth) {
       return this._slider._isRtl ? 1 : 0;
@@ -303,7 +303,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this.dragEnd.complete();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   initProps(): void {
     this._updateWidthInactive();
 
@@ -319,7 +319,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     this._initValue();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   initUI(): void {
     this._updateThumbUIByValue();
   }
@@ -559,7 +559,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /**
    * Sets the input's value.
    * @param value The new value of the input
-   * @docs-private
+   * @nodoc
    */
   writeValue(value: any): void {
     if (this._isControlInitialized || value !== null) {
@@ -570,7 +570,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /**
    * Registers a callback to be invoked when the input's value changes from user input.
    * @param fn The callback to register
-   * @docs-private
+   * @nodoc
    */
   registerOnChange(fn: any): void {
     this._onChangeFn = fn;
@@ -580,7 +580,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /**
    * Registers a callback to be invoked when the input is blurred by the user.
    * @param fn The callback to register
-   * @docs-private
+   * @nodoc
    */
   registerOnTouched(fn: any): void {
     this._onTouchedFn = fn;
@@ -589,7 +589,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   /**
    * Sets the disabled state of the slider.
    * @param isDisabled The new disabled state
-   * @docs-private
+   * @nodoc
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -615,7 +615,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
 export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRangeThumb {
   override readonly _cdr = inject(ChangeDetectorRef);
 
-  /** @docs-private */
+  /** @nodoc */
   getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
       this._sibling = this._slider._getInput(this._isEndThumb ? _MatThumb.START : _MatThumb.END) as
@@ -628,7 +628,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   /**
    * Returns the minimum translateX position allowed for this slider input's visual thumb.
-   * @docs-private
+   * @nodoc
    */
   getMinPos(): number {
     const sibling = this.getSibling();
@@ -640,7 +640,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
 
   /**
    * Returns the maximum translateX position allowed for this slider input's visual thumb.
-   * @docs-private
+   * @nodoc
    */
   getMaxPos(): number {
     const sibling = this.getSibling();
@@ -813,7 +813,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   /**
    * Sets the input's value.
    * @param value The new value of the input
-   * @docs-private
+   * @nodoc
    */
   override writeValue(value: any): void {
     if (this._isControlInitialized || value !== null) {

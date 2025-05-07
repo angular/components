@@ -8,31 +8,31 @@
 
 import {_IdGenerator, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {
-  Component,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ElementRef,
-  ChangeDetectorRef,
   AfterViewChecked,
-  OnDestroy,
-  Input,
-  Output,
-  EventEmitter,
-  QueryList,
-  ViewChild,
   booleanAttribute,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
   inject,
+  Input,
   isSignal,
+  OnDestroy,
+  Output,
+  QueryList,
   Signal,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {Subject} from 'rxjs';
-import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
-import {MatOptionParentComponent, MAT_OPTION_PARENT_COMPONENT} from './option-parent';
+import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
 import {MatRipple} from '../ripple/ripple';
 import {MatPseudoCheckbox} from '../selection/pseudo-checkbox/pseudo-checkbox';
-import {_StructuralStylesLoader} from '../focus-indicators/structural-styles';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {MAT_OPTGROUP, MatOptgroup} from './optgroup';
+import {MAT_OPTION_PARENT_COMPONENT, MatOptionParentComponent} from './option-parent';
 
 /** Event object emitted by MatOption when selected or deselected. */
 export class MatOptionSelectionChange<T = any> {
@@ -297,7 +297,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
  * @param optionIndex Index of the option at which to start counting.
  * @param options Flat list of all of the options.
  * @param optionGroups Flat list of all of the option groups.
- * @docs-private
+ * @nodoc
  */
 export function _countGroupLabelsBeforeOption(
   optionIndex: number,
@@ -327,7 +327,7 @@ export function _countGroupLabelsBeforeOption(
  * @param optionHeight Height of the options.
  * @param currentScrollPosition Current scroll position of the panel.
  * @param panelHeight Height of the panel.
- * @docs-private
+ * @nodoc
  */
 export function _getOptionScrollPosition(
   optionOffset: number,

@@ -6,21 +6,21 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {EventEmitter, TemplateRef, InjectionToken} from '@angular/core';
-import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {Direction} from '@angular/cdk/bidi';
 import {FocusOrigin} from '@angular/cdk/a11y';
+import {Direction} from '@angular/cdk/bidi';
+import {EventEmitter, InjectionToken, TemplateRef} from '@angular/core';
 import {MatMenuContent} from './menu-content';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /**
  * Injection token used to provide the parent menu to menu-specific components.
- * @docs-private
+ * @nodoc
  */
 export const MAT_MENU_PANEL = new InjectionToken<MatMenuPanel>('MAT_MENU_PANEL');
 
 /**
  * Interface for a custom menu panel that can be used with `matMenuTriggerFor`.
- * @docs-private
+ * @nodoc
  */
 export interface MatMenuPanel<T = any> {
   xPosition: MenuPositionX;

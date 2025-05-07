@@ -6,20 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
   ENTER,
+  ESCAPE,
   HOME,
   LEFT_ARROW,
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW,
   SPACE,
-  ESCAPE,
+  UP_ARROW,
   hasModifierKey,
 } from '@angular/cdk/keycodes';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -27,31 +29,29 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
-  ViewEncapsulation,
-  ViewChild,
-  OnDestroy,
-  SimpleChanges,
   OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
   inject,
 } from '@angular/core';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
-import {Directionality} from '@angular/cdk/bidi';
 import {
   MatCalendarBody,
   MatCalendarCell,
-  MatCalendarUserEvent,
   MatCalendarCellClassFunction,
+  MatCalendarUserEvent,
 } from './calendar-body';
-import {createMissingDateImplError} from './datepicker-errors';
-import {Subscription} from 'rxjs';
-import {startWith} from 'rxjs/operators';
-import {DateRange} from './date-selection-model';
 import {
-  MatDateRangeSelectionStrategy,
   MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatDateRangeSelectionStrategy,
 } from './date-range-selection-strategy';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {DateRange} from './date-selection-model';
+import {createMissingDateImplError} from './datepicker-errors';
 
 const DAYS_PER_WEEK = 7;
 
@@ -59,7 +59,7 @@ let uniqueIdCounter = 0;
 
 /**
  * An internal component used to display a single month in the datepicker.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'mat-month-view',

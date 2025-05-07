@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {coerceNumberProperty, NumberInput} from '../coercion';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
+import {coerceNumberProperty, NumberInput} from '../coercion';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
@@ -17,7 +17,7 @@ import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
   private readonly _scrolledIndexChange = new Subject<number>();
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   scrolledIndexChange: Observable<number> = this._scrolledIndexChange.pipe(distinctUntilChanged());
 
   /** The attached viewport. */
@@ -76,23 +76,23 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
     this._updateRenderedRange();
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onContentScrolled() {
     this._updateRenderedRange();
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onDataLengthChanged() {
     this._updateTotalContentSize();
     this._updateRenderedRange();
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onContentRendered() {
     /* no-op */
   }
 
-  /** @docs-private Implemented as part of VirtualScrollStrategy. */
+  /** @nodoc Implemented as part of VirtualScrollStrategy. */
   onRenderedOffsetChanged() {
     /* no-op */
   }

@@ -8,7 +8,7 @@
 
 /**
  * Default parameters for the animation for backwards compatibility.
- * @docs-private
+ * @nodoc
  * @deprecated Will stop being exported.
  * @breaking-change 21.0.0
  */
@@ -18,7 +18,7 @@ export const _defaultParams = {
 
 /**
  * Animations used by MatDialog.
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

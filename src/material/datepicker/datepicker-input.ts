@@ -6,24 +6,24 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, forwardRef, Input, OnDestroy, signal, inject} from '@angular/core';
+import {Directive, ElementRef, forwardRef, inject, Input, OnDestroy, signal} from '@angular/core';
 import {NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidatorFn, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
 import {ThemePalette} from '../core';
 import {MAT_FORM_FIELD} from '../form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '../input';
-import {Subscription} from 'rxjs';
 import {DateSelectionModelChange} from './date-selection-model';
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
 import {_MatFormFieldPartial, DateFilterFn, MatDatepickerInputBase} from './datepicker-input-base';
 
-/** @docs-private */
+/** @nodoc */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatDatepickerInput),
   multi: true,
 };
 
-/** @docs-private */
+/** @nodoc */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatDatepickerInput),

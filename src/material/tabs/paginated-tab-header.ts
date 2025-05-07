@@ -65,7 +65,7 @@ export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRe
 
 /**
  * Base class for a tab header that supported pagination.
- * @docs-private
+ * @nodoc
  */
 @Directive()
 export abstract class MatPaginatedTabHeader

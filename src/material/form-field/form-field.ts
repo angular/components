@@ -131,7 +131,7 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
  * is configured to use type information to rename properties, because it can't figure out which
  * class properties are coming from. This interface seems to work around the issue while preserving
  * our type safety (alternative being using `any` everywhere).
- * @docs-private
+ * @nodoc
  */
 interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
 

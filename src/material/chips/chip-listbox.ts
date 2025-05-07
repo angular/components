@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   booleanAttribute,
@@ -24,11 +25,10 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
-import {TAB} from '@angular/cdk/keycodes';
 import {MatChip, MatChipEvent} from './chip';
+import {MatChipAction} from './chip-action';
 import {MatChipOption, MatChipSelectionChange} from './chip-option';
 import {MatChipSet} from './chip-set';
-import {MatChipAction} from './chip-action';
 import {MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
 
 /** Change event object that is emitted when the chip listbox value has changed. */
@@ -44,7 +44,7 @@ export class MatChipListboxChange {
 /**
  * Provider Expression that allows mat-chip-listbox to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
- * @docs-private
+ * @nodoc
  */
 export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -88,13 +88,13 @@ export class MatChipListbox
 {
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
-   * @docs-private
+   * @nodoc
    */
   _onTouched = () => {};
 
   /**
    * Function when changed. Set as part of ControlValueAccessor implementation.
-   * @docs-private
+   * @nodoc
    */
   _onChange: (value: any) => void = () => {};
 
@@ -247,7 +247,7 @@ export class MatChipListbox
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   writeValue(value: any): void {
     if (value != null) {
@@ -259,7 +259,7 @@ export class MatChipListbox
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   registerOnChange(fn: (value: any) => void): void {
     this._onChange = fn;
@@ -267,7 +267,7 @@ export class MatChipListbox
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   registerOnTouched(fn: () => void): void {
     this._onTouched = fn;
@@ -275,7 +275,7 @@ export class MatChipListbox
 
   /**
    * Implemented as part of ControlValueAccessor.
-   * @docs-private
+   * @nodoc
    */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;

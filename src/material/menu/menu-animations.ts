@@ -10,7 +10,7 @@
  * Animations used by the mat-menu component.
  * Animation duration and timing values are based on:
  * https://material.io/guidelines/components/menus.html#menus-usage
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -122,13 +122,13 @@ export const matMenuAnimations: {
 /**
  * @deprecated
  * @breaking-change 8.0.0
- * @docs-private
+ * @nodoc
  */
 export const fadeInItems = matMenuAnimations.fadeInItems;
 
 /**
  * @deprecated
  * @breaking-change 8.0.0
- * @docs-private
+ * @nodoc
  */
 export const transformMenu = matMenuAnimations.transformMenu;

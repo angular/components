@@ -8,7 +8,7 @@
 
 /**
  * Throws an exception when attempting to attach a null portal to a host.
- * @docs-private
+ * @nodoc
  */
 export function throwNullPortalError() {
   throw Error('Must provide a portal to attach');
@@ -16,7 +16,7 @@ export function throwNullPortalError() {
 
 /**
  * Throws an exception when attempting to attach a portal to a host that is already attached.
- * @docs-private
+ * @nodoc
  */
 export function throwPortalAlreadyAttachedError() {
   throw Error('Host already has a portal attached');
@@ -24,7 +24,7 @@ export function throwPortalAlreadyAttachedError() {
 
 /**
  * Throws an exception when attempting to attach a portal to an already-disposed host.
- * @docs-private
+ * @nodoc
  */
 export function throwPortalOutletAlreadyDisposedError() {
   throw Error('This PortalOutlet has already been disposed');
@@ -32,7 +32,7 @@ export function throwPortalOutletAlreadyDisposedError() {
 
 /**
  * Throws an exception when attempting to attach an unknown portal type.
- * @docs-private
+ * @nodoc
  */
 export function throwUnknownPortalTypeError() {
   throw Error(
@@ -43,7 +43,7 @@ export function throwUnknownPortalTypeError() {
 
 /**
  * Throws an exception when attempting to attach a portal to a null host.
- * @docs-private
+ * @nodoc
  */
 export function throwNullPortalOutletError() {
   throw Error('Attempting to attach a portal to a null PortalOutlet');
@@ -51,7 +51,7 @@ export function throwNullPortalOutletError() {
 
 /**
  * Throws an exception when attempting to detach a portal that is not attached.
- * @docs-private
+ * @nodoc
  */
 export function throwNoPortalAttachedError() {
   throw Error('Attempting to detach a portal that is not attached to a host');

@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directionality} from '../bidi';
-import {Directive, ElementRef, Input, numberAttribute, OnDestroy, inject} from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
+import {Directive, ElementRef, inject, Input, numberAttribute, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Directionality} from '../bidi';
 import {CdkTree, CdkTreeNode} from './tree';
 
 /** Regex used to split a string on its CSS units. */
@@ -101,7 +101,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
    * This has been extracted to a util because of TS 4 and VE.
    * View Engine doesn't support property rename inheritance.
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-   * @docs-private
+   * @nodoc
    */
   protected _setLevelInput(value: number) {
     // Set to null as the fallback value so that _setPadding can fall back to the node level if the
@@ -115,7 +115,7 @@ export class CdkTreeNodePadding<T, K = T> implements OnDestroy {
    * This has been extracted to a util because of TS 4 and VE.
    * View Engine doesn't support property rename inheritance.
    * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-   * @docs-private
+   * @nodoc
    */
   protected _setIndentInput(indent: number | string) {
     let value = indent;

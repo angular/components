@@ -9,7 +9,7 @@
 import {Injectable, InjectionToken, NgZone, inject} from '@angular/core';
 
 /**
- * @docs-private
+ * @nodoc
  */
 export class _Schedule {
   tasks: (() => unknown)[] = [];
@@ -26,7 +26,7 @@ export const _COALESCED_STYLE_SCHEDULER = new InjectionToken<_CoalescedStyleSche
  * This can significantly improve performance when separate consecutive functions are
  * reading from the CSSDom and then mutating it.
  *
- * @docs-private
+ * @nodoc
  */
 @Injectable()
 export class _CoalescedStyleScheduler {

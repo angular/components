@@ -6,48 +6,48 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
+import {Direction} from '@angular/cdk/bidi';
+import {
+  DOWN_ARROW,
+  ESCAPE,
+  hasModifierKey,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  UP_ARROW,
+} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  afterNextRender,
+  AfterRenderRef,
+  booleanAttribute,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   ElementRef,
   EventEmitter,
+  inject,
   InjectionToken,
+  Injector,
   Input,
   OnDestroy,
+  OnInit,
   Output,
-  TemplateRef,
   QueryList,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  OnInit,
-  ChangeDetectorRef,
-  booleanAttribute,
-  afterNextRender,
-  AfterRenderRef,
-  inject,
-  Injector,
 } from '@angular/core';
-import {_IdGenerator, FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
-import {
-  ESCAPE,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  DOWN_ARROW,
-  UP_ARROW,
-  hasModifierKey,
-} from '@angular/cdk/keycodes';
 import {merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap} from 'rxjs/operators';
-import {MatMenuItem} from './menu-item';
-import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
-import {MenuPositionX, MenuPositionY} from './menu-positions';
-import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
-import {MatMenuContent, MAT_MENU_CONTENT} from './menu-content';
 import {_animationsDisabled} from '../core';
+import {MAT_MENU_CONTENT, MatMenuContent} from './menu-content';
+import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
+import {MatMenuItem} from './menu-item';
+import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
+import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /** Reason why the menu was closed. */
 export type MenuCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -83,7 +83,7 @@ export const MAT_MENU_DEFAULT_OPTIONS = new InjectionToken<MatMenuDefaultOptions
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -199,7 +199,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     this.setPositionClasses();
   }
 
-  /** @docs-private */
+  /** @nodoc */
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
   /**
@@ -211,7 +211,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   /**
    * Menu content that will be rendered lazily.
-   * @docs-private
+   * @nodoc
    */
   @ContentChild(MAT_MENU_CONTENT) lazyContent: MatMenuContent;
 
@@ -353,7 +353,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   /*
    * Registers a menu item with the menu.
-   * @docs-private
+   * @nodoc
    * @deprecated No longer being used. To be removed.
    * @breaking-change 9.0.0
    */
@@ -361,7 +361,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
 
   /**
    * Removes an item from the menu.
-   * @docs-private
+   * @nodoc
    * @deprecated No longer being used. To be removed.
    * @breaking-change 9.0.0
    */
@@ -446,7 +446,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    * consumers to add specific styling based on the position.
    * @param posX Position of the menu along the x axis.
    * @param posY Position of the menu along the y axis.
-   * @docs-private
+   * @nodoc
    */
   setPositionClasses(posX: MenuPositionX = this.xPosition, posY: MenuPositionY = this.yPosition) {
     this._classList = {

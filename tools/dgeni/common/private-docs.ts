@@ -58,9 +58,9 @@ function _isInternalMember(memberDoc: MemberDoc): boolean {
   return INTERNAL_METHODS.includes(memberDoc.name);
 }
 
-/** Whether the given doc has a @docs-private tag set. */
+/** Whether the given doc has a @nodoc tag set. */
 function _hasDocsPrivateTag(doc: ApiDoc): boolean {
-  return hasJsDocTag(doc, 'docs-private');
+  return hasJsDocTag(doc, 'nodoc');
 }
 
 /**

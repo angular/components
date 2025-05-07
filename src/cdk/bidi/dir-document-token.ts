@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, InjectionToken, DOCUMENT} from '@angular/core';
+import {DOCUMENT, inject, InjectionToken} from '@angular/core';
 
 /**
  * Injection token used to inject the document into Directionality.
@@ -21,7 +21,7 @@ import {inject, InjectionToken, DOCUMENT} from '@angular/core';
  * This token is defined in a separate file from Directionality as a workaround for
  * https://github.com/angular/angular/issues/22559
  *
- * @docs-private
+ * @nodoc
  */
 export const DIR_DOCUMENT = new InjectionToken<Document>('cdk-dir-doc', {
   providedIn: 'root',
@@ -29,7 +29,7 @@ export const DIR_DOCUMENT = new InjectionToken<Document>('cdk-dir-doc', {
 });
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

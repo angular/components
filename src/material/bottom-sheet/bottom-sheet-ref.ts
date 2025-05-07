@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ComponentRef} from '@angular/core';
 import {DialogRef} from '@angular/cdk/dialog';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ComponentRef} from '@angular/core';
 import {merge, Observable, Subject} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatBottomSheetConfig} from './bottom-sheet-config';
@@ -33,7 +33,7 @@ export class MatBottomSheetRef<T = any, R = any> {
 
   /**
    * Instance of the component into which the bottom sheet content is projected.
-   * @docs-private
+   * @nodoc
    */
   containerInstance: MatBottomSheetContainer;
 

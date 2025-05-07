@@ -27,6 +27,7 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
+  DOCUMENT,
   ElementRef,
   EmbeddedViewRef,
   Injector,
@@ -37,10 +38,9 @@ import {
   ViewEncapsulation,
   afterNextRender,
   inject,
-  DOCUMENT,
 } from '@angular/core';
-import {DialogConfig, DialogContainer} from './dialog-config';
 import {Observable, Subject} from 'rxjs';
+import {DialogConfig, DialogContainer} from './dialog-config';
 
 export function throwDialogContentAlreadyAttachedError() {
   throw Error('Attempting to attach dialog content after content is already attached');
@@ -48,7 +48,7 @@ export function throwDialogContentAlreadyAttachedError() {
 
 /**
  * Internal component that wraps user-provided dialog content.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: 'cdk-dialog-container',

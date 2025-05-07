@@ -77,7 +77,7 @@ export const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS = new InjectionToken<MatButtonTog
 );
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -101,7 +101,7 @@ export const MAT_BUTTON_TOGGLE_GROUP = new InjectionToken<MatButtonToggleGroup>(
 /**
  * Provider Expression that allows mat-button-toggle-group to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
- * @docs-private
+ * @nodoc
  */
 export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -207,7 +207,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /**
    * Event that emits whenever the value of the group changes.
    * Used to facilitate two-way data binding.
-   * @docs-private
+   * @nodoc
    */
   @Output() readonly valueChange = new EventEmitter<any>();
 

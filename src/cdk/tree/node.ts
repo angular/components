@@ -36,7 +36,7 @@ export class CdkTreeNodeOutletContext<T> {
   inputs: [{name: 'when', alias: 'cdkTreeNodeDefWhen'}],
 })
 export class CdkTreeNodeDef<T> {
-  /** @docs-private */
+  /** @nodoc */
   template = inject<TemplateRef<any>>(TemplateRef);
 
   /**

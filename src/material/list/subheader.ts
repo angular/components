@@ -10,7 +10,7 @@ import {Directive} from '@angular/core';
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
- * @docs-private
+ * @nodoc
  */
 @Directive({
   selector: '[mat-subheader], [matSubheader]',

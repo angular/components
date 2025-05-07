@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
   AfterViewChecked,
@@ -14,6 +16,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -22,11 +25,12 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  inject,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
 import {Subject, Subscription} from 'rxjs';
-import {MatCalendarUserEvent, MatCalendarCellClassFunction} from './calendar-body';
+import {MatButton, MatIconButton} from '../button';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../core';
+import {MatCalendarCellClassFunction, MatCalendarUserEvent} from './calendar-body';
+import {DateRange, MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
@@ -37,14 +41,10 @@ import {
   yearsPerPage,
 } from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
-import {MatIconButton, MatButton} from '../button';
-import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
-import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
 
 /**
  * Possible views for the calendar.
- * @docs-private
+ * @nodoc
  */
 export type MatCalendarView = 'month' | 'year' | 'multi-year';
 

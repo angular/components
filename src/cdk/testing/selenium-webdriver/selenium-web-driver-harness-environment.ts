@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {HarnessEnvironment, HarnessLoader, TestElement} from '../../testing';
 import * as webdriver from 'selenium-webdriver';
+import {HarnessEnvironment, HarnessLoader, TestElement} from '../../testing';
 import {SeleniumWebDriverElement} from './selenium-web-driver-element';
 
 /**
@@ -114,7 +114,7 @@ export class SeleniumWebDriverHarnessEnvironment extends HarnessEnvironment<
     await this.rawRootElement().getDriver().executeAsyncScript(whenStable);
   }
 
-  /** @docs-private */
+  /** @nodoc */
   async waitForTasksOutsideAngular(): Promise<void> {
     // TODO: figure out how we can do this for the webdriver environment.
     //  https://github.com/angular/components/issues/17412

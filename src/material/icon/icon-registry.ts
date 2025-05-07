@@ -8,6 +8,7 @@
 
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {
+  DOCUMENT,
   ErrorHandler,
   Inject,
   Injectable,
@@ -16,7 +17,6 @@ import {
   Optional,
   SecurityContext,
   SkipSelf,
-  DOCUMENT,
 } from '@angular/core';
 import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';
@@ -26,7 +26,7 @@ import {TrustedHTML, trustedHTMLFromString} from './trusted-types';
 /**
  * Returns an exception to be thrown in the case when attempting to
  * load an icon with a name that cannot be found.
- * @docs-private
+ * @nodoc
  */
 export function getMatIconNameNotFoundError(iconName: string): Error {
   return Error(`Unable to find icon with the name "${iconName}"`);
@@ -35,7 +35,7 @@ export function getMatIconNameNotFoundError(iconName: string): Error {
 /**
  * Returns an exception to be thrown when the consumer attempts to use
  * `<mat-icon>` without including @angular/common/http.
- * @docs-private
+ * @nodoc
  */
 export function getMatIconNoHttpProviderError(): Error {
   return Error(
@@ -47,7 +47,7 @@ export function getMatIconNoHttpProviderError(): Error {
 /**
  * Returns an exception to be thrown when a URL couldn't be sanitized.
  * @param url URL that was attempted to be sanitized.
- * @docs-private
+ * @nodoc
  */
 export function getMatIconFailedToSanitizeUrlError(url: SafeResourceUrl): Error {
   return Error(
@@ -59,7 +59,7 @@ export function getMatIconFailedToSanitizeUrlError(url: SafeResourceUrl): Error 
 /**
  * Returns an exception to be thrown when a HTML string couldn't be sanitized.
  * @param literal HTML that was attempted to be sanitized.
- * @docs-private
+ * @nodoc
  */
 export function getMatIconFailedToSanitizeLiteralError(literal: SafeHtml): Error {
   return Error(
@@ -94,7 +94,7 @@ export interface SafeResourceUrlWithIconOptions {
 
 /**
  * Configuration for an icon, including the URL and possibly the cached SVG element.
- * @docs-private
+ * @nodoc
  */
 class SvgIconConfig {
   svgElement: SVGElement | null;
@@ -729,7 +729,7 @@ export class MatIconRegistry implements OnDestroy {
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -744,7 +744,7 @@ export function ICON_REGISTRY_PROVIDER_FACTORY(
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

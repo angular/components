@@ -29,7 +29,7 @@ export class MatStepperIntl {
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */
@@ -38,7 +38,7 @@ export function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepperIntl) {
 }
 
 /**
- * @docs-private
+ * @nodoc
  * @deprecated No longer used, will be removed.
  * @breaking-change 21.0.0
  */

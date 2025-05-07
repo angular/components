@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {BACKSPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   Directive,
@@ -18,11 +19,10 @@ import {
   booleanAttribute,
   inject,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {MatFormField, MAT_FORM_FIELD} from '../form-field';
-import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './tokens';
+import {MAT_FORM_FIELD, MatFormField} from '../form-field';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
 
 /** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
@@ -220,7 +220,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
 
   /**
    * Implemented as part of MatChipTextControl.
-   * @docs-private
+   * @nodoc
    */
   get describedByIds(): string[] {
     const element = this._elementRef.nativeElement;

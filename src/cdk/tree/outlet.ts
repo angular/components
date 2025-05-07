@@ -10,7 +10,7 @@ import {Directive, InjectionToken, ViewContainerRef, inject} from '@angular/core
 /**
  * Injection token used to provide a `CdkTreeNode` to its outlet.
  * Used primarily to avoid circular imports.
- * @docs-private
+ * @nodoc
  */
 export const CDK_TREE_NODE_OUTLET_NODE = new InjectionToken<{}>('CDK_TREE_NODE_OUTLET_NODE');
 

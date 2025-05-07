@@ -11,7 +11,7 @@ import {DrawerHarnessFilters} from './drawer-harness-filters';
 
 /**
  * Base class for the drawer harness functionality.
- * @docs-private
+ * @nodoc
  */
 export class MatDrawerHarnessBase extends ContentContainerComponentHarness<string> {
   /** Whether the drawer is open. */

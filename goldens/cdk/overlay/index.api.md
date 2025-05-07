@@ -159,6 +159,7 @@ export class ConnectedOverlayPositionChange {
     connectionPair: ConnectionPositionPair,
     scrollableViewProperties: ScrollingVisibility);
     connectionPair: ConnectionPositionPair;
+    // (undocumented)
     scrollableViewProperties: ScrollingVisibility;
 }
 

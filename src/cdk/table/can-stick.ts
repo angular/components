@@ -10,7 +10,7 @@
  * Interface for a mixin to provide a directive with a function that checks if the sticky input has
  * been changed since the last time the function was called. Essentially adds a dirty-check to the
  * sticky value.
- * @docs-private
+ * @nodoc
  */
 export interface CanStick {
   /** Whether sticky positioning should be applied. */

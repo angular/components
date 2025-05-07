@@ -6,28 +6,28 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {Platform} from '@angular/cdk/platform';
+import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {NgClass} from '@angular/common';
 import {
+  afterNextRender,
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  inject,
+  Injector,
   Input,
-  Output,
-  ViewEncapsulation,
   NgZone,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
-  AfterViewChecked,
-  inject,
-  afterNextRender,
-  Injector,
+  Output,
   Renderer2,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
-import {_IdGenerator} from '@angular/cdk/a11y';
-import {NgClass} from '@angular/common';
-import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
 import {MatDatepickerIntl} from './datepicker-intl';
 
@@ -44,7 +44,7 @@ let uniqueIdCounter = 0;
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
- * @docs-private
+ * @nodoc
  */
 export class MatCalendarCell<D = any> {
   readonly id = uniqueIdCounter++;
@@ -83,7 +83,7 @@ const passiveEventOptions = {passive: true};
 
 /**
  * An internal component used to display calendar data in a table.
- * @docs-private
+ * @nodoc
  */
 @Component({
   selector: '[mat-calendar-body]',
