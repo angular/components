@@ -83,27 +83,12 @@ describe('theming definition api', () => {
       expect(vars['version']).toBe('1');
       expect(vars['type']).toBe('light');
       expect(vars['palettes'].split(', ')).toEqual([
-        '0',
-        '10',
-        '20',
-        '25',
-        '30',
-        '35',
-        '40',
-        '50',
-        '60',
-        '70',
-        '80',
-        '90',
-        '95',
-        '98',
-        '99',
-        '100',
+        'primary',
         'secondary',
+        'tertiary',
         'neutral',
         'neutral-variant',
         'error',
-        'tertiary',
       ]);
       expect(vars['density']).toBe('0');
       expect(vars['base-tokens']).toBe('true');
@@ -129,7 +114,7 @@ describe('theming definition api', () => {
           --token-primary: #{map.get($data, color-tokens, (mat, theme), primary)};
           --token-secondary: #{map.get($data, color-tokens, (mat, theme), secondary)};
           --token-tertiary: #{map.get($data, color-tokens, (mat, theme), tertiary)};
-          --palette-primary: #{map.get($data, palettes, 50)};
+          --palette-primary: #{map.get($data, palettes, primary, 50)};
           --palette-secondary: #{map.get($data, palettes, secondary, 50)};
           --palette-tertiary: #{map.get($data, palettes, tertiary, 50)};
           --type: #{map.get($data, theme-type)};

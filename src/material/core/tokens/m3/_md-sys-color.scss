@@ -6,7 +6,7 @@
 @use 'sass:map';
 
 // Indicates whether alternative tokens should be used
-$_alternate-tokens: true;
+$_alternate-tokens: false;
 
 @function md-sys-color-values-dark($palettes) {
   $values: (

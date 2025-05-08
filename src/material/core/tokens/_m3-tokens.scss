@@ -152,6 +152,10 @@ $_cached-token-slots: null;
 
   @return generate-tokens((
     md-sys-color: $sys-color,
+    md-ref-palette: (
+      neutral-10: map.get($palettes, neutral, 10),
+      neutral-variant20: map.get($palettes, neutral-variant, 20),
+    ),
     // Because the elevation values are always combined with color values to create the box shadow,
     // elevation needs to be part of the color dimension.
     md-sys-elevation: m3.md-sys-elevation-values(),
