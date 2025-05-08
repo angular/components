@@ -160,6 +160,7 @@
 
       <mat-checkbox [(ngModel)]="disableInputs">Disabled</mat-checkbox>
       <mat-checkbox [(ngModel)]="editable">Editable</mat-checkbox>
+      <mat-checkbox [(ngModel)]="peopleWithAvatar">Show Avatar</mat-checkbox>
       <mat-checkbox [(ngModel)]="showEditIcon">Show Edit Icon</mat-checkbox>
       <mat-checkbox [(ngModel)]="disabledInteractive">Disabled Interactive</mat-checkbox>
 
@@ -177,6 +178,9 @@
                 <button matChipEdit aria-label="Edit contributor">
                   <mat-icon>edit</mat-icon>
                 </button>
+              }
+              @if (peopleWithAvatar && person.avatar) {
+                <mat-icon matChipAvatar>{{person.avatar}}</mat-icon>
               }
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
