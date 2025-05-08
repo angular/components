@@ -19,6 +19,7 @@
 @use '../style/sass-utils';
 @use '../theming/config-validation';
 @use '../theming/definition';
+@use '../theming/palettes';
 @use './m3';
 @use './m3-tokens';
 @use 'sass:list';
@@ -130,8 +131,14 @@
 /// change the primary color to red, use `mat.theme-overrides((primary: red));`
 @mixin theme-overrides($overrides, $prefix: definition.$system-fallback-prefix) {
   $sys-names: map-merge-all(
-      m3.md-sys-color-values-light(),
-      m3.md-sys-typescale-values(),
+      m3.md-sys-color-values-light(palettes.$blue-palette),
+      m3.md-sys-typescale-values((
+        brand: (Roboto),
+        plain: (Roboto),
+        bold: 700,
+        medium: 500,
+        regular: 400
+      )),
       m3.md-sys-elevation-values(),
       m3.md-sys-shape-values(),
       m3.md-sys-state-values());
@@ -147,35 +154,20 @@
 
 @mixin system-level-colors($theme, $overrides: (), $prefix: null) {
   $palettes: map.get($theme, _mat-theming-internals-do-not-access, palettes);
-  $base-palettes: (
-    neutral: map.get($palettes, neutral),
-    neutral-variant: map.get($palettes, neutral-variant),
-    secondary: map.get($palettes, secondary),
-    error: map.get($palettes, error),
-  );
-
   $type: map.get($theme, _mat-theming-internals-do-not-access, theme-type);
-  $primary: map.merge(map.get($palettes, primary), $base-palettes);
-  $tertiary: map.merge(map.get($palettes, tertiary), $base-palettes);
-  $error: map.get($palettes, error);
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
         color-system-variables-prefix) or definition.$system-level-prefix;
   }
 
-  $ref: (
-    md-ref-palette: m3-tokens.generate-ref-palette-tokens($primary, $tertiary, $error)
-  );
 
-  $sys-colors: _generate-sys-colors($ref, $type);
+  $sys-colors: _generate-sys-colors($palettes, $type);
 
   // Manually insert a subset of palette values that are used directly by components
   // instead of system variables.
-  $sys-colors: map.set($sys-colors,
-    'neutral-variant20', map.get($ref, md-ref-palette, neutral-variant20));
-  $sys-colors: map.set($sys-colors,
-    'neutral10', map.get($ref, md-ref-palette, neutral10));
+  $sys-colors: map.set($sys-colors, neutral-variant20, map.get($palettes, neutral-variant, 20));
+  $sys-colors: map.set($sys-colors, neutral10, map.get($palettes, neutral, 10));
 
   & {
     @each $name, $value in $sys-colors {
@@ -184,13 +176,13 @@
   }
 }
 
-@function _generate-sys-colors($ref, $type) {
-  $light-sys-colors: m3.md-sys-color-values-light($ref);
+@function _generate-sys-colors($palettes, $type) {
+  $light-sys-colors: m3.md-sys-color-values-light($palettes);
   @if ($type == light) {
     @return $light-sys-colors;
   }
 
-  $dark-sys-colors: m3.md-sys-color-values-dark($ref);
+  $dark-sys-colors: m3.md-sys-color-values-dark($palettes);
   @if ($type == dark) {
     @return $dark-sys-colors;
   }
@@ -210,14 +202,6 @@
 
 @mixin system-level-typography($theme, $overrides: (), $prefix: null) {
   $font-definition: map.get($theme, _mat-theming-internals-do-not-access, font-definition);
-  $brand: map.get($font-definition, brand);
-  $plain: map.get($font-definition, plain);
-  $bold: map.get($font-definition, bold);
-  $medium: map.get($font-definition, medium);
-  $regular: map.get($font-definition, regular);
-  $ref: (md-ref-typeface:
-      m3-tokens.generate-ref-typeface-tokens($brand, $plain, $bold, $medium, $regular)
-  );
 
   @if (not $prefix) {
     $prefix: map.get($theme, _mat-theming-internals-do-not-access,
@@ -225,7 +209,7 @@
   }
 
   & {
-    @each $name, $value in m3.md-sys-typescale-values($ref) {
+    @each $name, $value in m3.md-sys-typescale-values($font-definition) {
       --#{$prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
@@ -275,11 +259,19 @@
 // system fallback variables referencing Material's system keys.
 // Includes density token fallbacks where density is 0.
 @function create-system-fallbacks() {
+  $palettes: m3.md-sys-color-values-light(palettes.$blue-palette);
+  $palettes: map.set($palettes, primary, palettes.$blue-palette);
   $app-vars: (
     'md-sys-color':
-        _create-system-app-vars-map(m3.md-sys-color-values-light()),
+        _create-system-app-vars-map(m3.md-sys-color-values-light($palettes)),
     'md-sys-typescale':
-        _create-system-app-vars-map(m3.md-sys-typescale-values()),
+        _create-system-app-vars-map(m3.md-sys-typescale-values((
+          brand: (Roboto),
+          plain: (Roboto),
+          bold: 700,
+          medium: 500,
+          regular: 400
+        ))),
     'md-sys-elevation':
         _create-system-app-vars-map(m3.md-sys-elevation-values()),
     'md-sys-state':
