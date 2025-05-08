@@ -1049,6 +1049,12 @@ export class CdkTree<T, K = T>
     );
   }
 
+  private _shouldFlattenNodeRender(node: T): boolean {
+    const key = this._getExpansionKey(node);
+    const parent = this._parents.get(key);
+    return !parent || (this.isExpanded(parent) && this._shouldFlattenNodeRender(parent));
+  }
+
   /**
    * Converts children for certain tree configurations.
    *
@@ -1095,10 +1101,12 @@ export class CdkTree<T, K = T>
       // with the TreeControl, and so no conversions are necessary. Otherwise,
       // we've already confirmed that the data model matches up with the
       // desired node type here.
-      return observableOf({renderNodes: nodes, flattenedNodes: nodes}).pipe(
-        tap(({flattenedNodes}) => {
-          this._calculateParents(flattenedNodes);
-        }),
+      return observableOf(nodes).pipe(
+        tap(nodes => this._calculateParents(nodes)),
+        map(nodes => ({
+          renderNodes: nodes.filter(node => this._shouldFlattenNodeRender(node)),
+          flattenedNodes: nodes,
+        })),
       );
     } else {
       // clear previously generated data so we don't keep end up retaining data overtime causing
