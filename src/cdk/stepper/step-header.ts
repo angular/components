@@ -12,7 +12,7 @@ import {FocusableOption} from '../a11y';
 @Directive({
   selector: '[cdkStepHeader]',
   host: {
-    'role': 'tab',
+    'role': 'button',
   },
 })
 export class CdkStepHeader implements FocusableOption {
