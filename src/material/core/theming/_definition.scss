@@ -53,21 +53,22 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-color-variables: map.get($config, use-system-variables) or false;
 
+  $palettes: (
+    primary: map.remove($primary, neutral, neutral-variant, secondary),
+    secondary: map.get($primary, secondary),
+    tertiary: map.remove($tertiary, neutral, neutral-variant, secondary, error),
+    neutral: map.get($primary, neutral),
+    neutral-variant: map.get($primary, neutral-variant),
+    error: map.get($primary, error),
+  );
+
   @return (
     $internals: (
       theme-version: $theme-version,
       theme-type: $type,
-      palettes: (
-        primary: map.remove($primary, neutral, neutral-variant, secondary),
-        secondary: map.get($primary, secondary),
-        tertiary: map.remove($tertiary, neutral, neutral-variant, secondary),
-        neutral: map.get($primary, neutral),
-        neutral-variant: map.get($primary, neutral-variant),
-        error: map.get($primary, error),
-      ),
+      palettes: $palettes,
       color-system-variables-prefix: $system-variables-prefix,
-      color-tokens: m3-tokens.generate-color-tokens(
-          $type, $primary, $tertiary, map.get($primary, error), $system-variables-prefix)
+      color-tokens: m3-tokens.generate-color-tokens($type, $palettes, $system-variables-prefix)
     )
   );
 }
@@ -89,19 +90,20 @@ $theme-version: 1;
   $system-variables-prefix: map.get($config, system-variables-prefix) or $system-level-prefix;
   sass-utils.$use-system-typography-variables: map.get($config, use-system-variables) or false;
 
+  $typography: (
+    plain: $plain,
+    brand: $brand,
+    bold: $bold,
+    medium: $medium,
+    regular: $regular,
+  );
+
   @return (
     $internals: (
       theme-version: $theme-version,
-      font-definition: (
-        plain: $plain,
-        brand: $brand,
-        bold: $bold,
-        medium: $medium,
-        regular: $regular,
-      ),
+      font-definition: $typography,
       typography-system-variables-prefix: $system-variables-prefix,
-      typography-tokens: m3-tokens.generate-typography-tokens(
-          $brand, $plain, $bold, $medium, $regular, $system-variables-prefix)
+      typography-tokens: m3-tokens.generate-typography-tokens($typography, $system-variables-prefix)
     )
   );
 }
