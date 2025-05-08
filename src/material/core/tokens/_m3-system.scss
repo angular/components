@@ -259,9 +259,11 @@
 // system fallback variables referencing Material's system keys.
 // Includes density token fallbacks where density is 0.
 @function create-system-fallbacks() {
+  $palettes: m3.md-sys-color-values-light(palettes.$blue-palette);
+  $palettes: map.set($palettes, primary, palettes.$blue-palette);
   $app-vars: (
     'md-sys-color':
-        _create-system-app-vars-map(m3.md-sys-color-values-light(palettes.$blue-palette)),
+        _create-system-app-vars-map(m3.md-sys-color-values-light($palettes)),
     'md-sys-typescale':
         _create-system-app-vars-map(m3.md-sys-typescale-values((
           brand: (Roboto),
