@@ -23,8 +23,7 @@ import {takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipAction} from './chip-action';
 import {MatChipEditInput} from './chip-edit-input';
-import {MatChipEdit} from './chip-icons';
-import {MAT_CHIP, MAT_CHIP_EDIT} from './tokens';
+import {MAT_CHIP} from './tokens';
 
 /** Represents an event fired on an individual `mat-chip` when it is edited. */
 export interface MatChipEditedEvent extends MatChipEvent {
