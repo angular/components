@@ -11,7 +11,7 @@ import '@angular/localize/init';
 
 import {provideHttpClient} from '@angular/common/http';
 import {
-  provideExperimentalZonelessChangeDetection,
+  provideZonelessChangeDetection,
   // tslint:disable-next-line:no-zone-dependencies -- Allow manual testing of dev-app with zones
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -62,7 +62,7 @@ function bootstrap(): void {
       {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useExisting: DevAppRippleOptions},
       {provide: Directionality, useClass: DevAppDirectionality},
       cachedAppState.zoneless
-        ? provideExperimentalZonelessChangeDetection()
+        ? provideZonelessChangeDetection()
         : provideZoneChangeDetection({eventCoalescing: true, runCoalescing: true}),
     ],
   });
