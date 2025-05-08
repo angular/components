@@ -148,11 +148,9 @@ export class MatChipRow extends MatChip implements AfterViewInit {
   }
 
   override _edit(): void {
-    if (!this.disabled && this.editable) {
-      // markForCheck necessary for edit input to be rendered
-      this._changeDetectorRef.markForCheck();
-      this._startEditing();
-    }
+    // markForCheck necessary for edit input to be rendered
+    this._changeDetectorRef.markForCheck();
+    this._startEditing();
   }
 
   private _startEditing(event?: Event) {

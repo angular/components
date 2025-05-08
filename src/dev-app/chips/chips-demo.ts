@@ -52,6 +52,7 @@ export class ChipsDemo {
   listboxesWithAvatar = false;
   disableInputs = false;
   editable = false;
+  showEditIcon = false;
   disabledInteractive = false;
   message = '';
 
