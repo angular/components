@@ -52,36 +52,36 @@ function renameMdcTokens(): Rule {
 // Renames Angular Material component token CSS variables that were renamed so that the base
 // component's name came first or otherwise renamed to match our terminology instead of MDC's.
 function renameComponentTokens(): Rule {
-  const replacements = [
-    {oldStr: '--mat-circular-progress', newStr: '--mat-progress-spinner'},
-    {oldStr: '--mat-elevated-card', newStr: '--mat-card-elevated'},
-    {oldStr: '--mat-extended-fab', newStr: '--mat-fab-extended'},
-    {oldStr: '--mat-filled-button', newStr: '--mat-button-filled'},
-    {oldStr: '--mat-filled-text-field', newStr: '--mat-form-field-filled'},
-    {oldStr: '--mat-full-pseudo-checkbox', newStr: '--mat-pseudo-checkbox-full'},
-    {oldStr: '--mat-legacy-button-toggle', newStr: '--mat-button-toggle-legacy'},
-    {oldStr: '--mat-linear-progress', newStr: '--mat-progress-bar'},
-    {oldStr: '--mat-minimal-pseudo-checkbox', newStr: '--mat-pseudo-checkbox-minimal'},
-    {oldStr: '--mat-outlined-button', newStr: '--mat-button-outlined'},
-    {oldStr: '--mat-outlined-card', newStr: '--mat-card-outlined'},
-    {oldStr: '--mat-outlined-text-field', newStr: '--mat-form-field-outlined'},
-    {oldStr: '--mat-plain-tooltip', newStr: '--mat-tooltip'},
-    {oldStr: '--mat-protected-button', newStr: '--mat-button-protected'},
-    {oldStr: '--mat-secondary-navigation-tab', newStr: '--mat-tab'},
-    {oldStr: '--mat-standard-button-toggle', newStr: '--mat-button-toggle'},
-    {oldStr: '--mat-switch', newStr: '--mat-slide-toggle'},
-    {oldStr: '--mat-tab-header', newStr: '--mat-tab'},
-    {oldStr: '--mat-tab-header-with-background', newStr: '--mat-tab'},
-    {oldStr: '--mat-tab-indicator', newStr: '--mat-tab'},
-    {oldStr: '--mat-text-button', newStr: '--mat-button-text'},
-    {oldStr: '--mat-tonal-button', newStr: '--mat-button-tonal'},
+  const tokenPrefixes = [
+    {old: '--mat-circular-progress', replacement: '--mat-progress-spinner'},
+    {old: '--mat-elevated-card', replacement: '--mat-card-elevated'},
+    {old: '--mat-extended-fab', replacement: '--mat-fab-extended'},
+    {old: '--mat-filled-button', replacement: '--mat-button-filled'},
+    {old: '--mat-filled-text-field', replacement: '--mat-form-field-filled'},
+    {old: '--mat-full-pseudo-checkbox', replacement: '--mat-pseudo-checkbox-full'},
+    {old: '--mat-legacy-button-toggle', replacement: '--mat-button-toggle-legacy'},
+    {old: '--mat-linear-progress', replacement: '--mat-progress-bar'},
+    {old: '--mat-minimal-pseudo-checkbox', replacement: '--mat-pseudo-checkbox-minimal'},
+    {old: '--mat-outlined-button', replacement: '--mat-button-outlined'},
+    {old: '--mat-outlined-card', replacement: '--mat-card-outlined'},
+    {old: '--mat-outlined-text-field', replacement: '--mat-form-field-outlined'},
+    {old: '--mat-plain-tooltip', replacement: '--mat-tooltip'},
+    {old: '--mat-protected-button', replacement: '--mat-button-protected'},
+    {old: '--mat-secondary-navigation-tab', replacement: '--mat-tab'},
+    {old: '--mat-standard-button-toggle', replacement: '--mat-button-toggle'},
+    {old: '--mat-switch', replacement: '--mat-slide-toggle'},
+    {old: '--mat-tab-header', replacement: '--mat-tab'},
+    {old: '--mat-tab-header-with-background', replacement: '--mat-tab'},
+    {old: '--mat-tab-indicator', replacement: '--mat-tab'},
+    {old: '--mat-text-button', replacement: '--mat-button-text'},
+    {old: '--mat-tonal-button', replacement: '--mat-button-tonal'},
   ];
   return tree => {
     tree.visit(path => {
       const content = tree.readText(path);
       let updatedContent = content;
-      for (const replacement of replacements) {
-        updatedContent = updatedContent.replace(replacement.oldStr, replacement.newStr);
+      for (const tokenPrefix of tokenPrefixes) {
+        updatedContent = updatedContent.replace(tokenPrefix.old, tokenPrefix.replacement);
       }
       if (content !== updatedContent) {
         tree.overwrite(path, updatedContent);
