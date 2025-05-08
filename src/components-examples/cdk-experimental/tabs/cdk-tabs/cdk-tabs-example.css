@@ -67,7 +67,8 @@
   background: var(--mat-sys-surface-container);
 }
 
-.example-tab[aria-selected='true'] {
+.example-tab[aria-selected='true'],
+.example-tablist:focus-within .example-tab.cdk-active[aria-selected='true'] {
   background-color: var(--mat-sys-secondary-container);
 }
 
