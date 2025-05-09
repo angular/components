@@ -20,7 +20,7 @@ $prefix: (mat, paginator);
 
   @return (
     container-text-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.87),
-    container-background-color: inspection.get-theme-color($theme, background, card),
+    container-background-color: inspection.get-theme-color($theme, background, surface),
     enabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.54),
     disabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.12),
   );

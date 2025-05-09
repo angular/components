@@ -52,65 +52,65 @@ $prefix: (mat, button);
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $outline: if(m2-utils.$private-is-internal-build,
     rgba(if($is-dark, #fff, #000), 0.12),
-    inspection.get-theme-color($theme, foreground, divider)
+    inspection.get-theme-color($theme, foreground, base-12)
   );
 
   @return (
-    filled-container-color: inspection.get-theme-color($theme, background, card),
+    filled-container-color: inspection.get-theme-color($theme, background, surface),
     filled-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base-12),
     filled-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     filled-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     filled-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     filled-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    filled-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    filled-label-text-color: inspection.get-theme-color($theme, foreground, base),
     filled-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    filled-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    filled-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     filled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     outlined-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     outlined-disabled-outline-color: $outline,
     outlined-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     outlined-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     outlined-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    outlined-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    outlined-label-text-color: inspection.get-theme-color($theme, foreground, base),
     outlined-outline-color: $outline,
     outlined-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    outlined-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    outlined-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     outlined-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    protected-container-color: inspection.get-theme-color($theme, background, card),
+    protected-container-color: inspection.get-theme-color($theme, background, surface),
     protected-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base-12),
     protected-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     protected-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     protected-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     protected-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    protected-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    protected-label-text-color: inspection.get-theme-color($theme, foreground, base),
     protected-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    protected-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    protected-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     protected-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     text-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     text-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     text-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     text-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    text-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    text-label-text-color: inspection.get-theme-color($theme, foreground, base),
     text-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    text-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    text-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     text-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    tonal-container-color: inspection.get-theme-color($theme, background, card),
+    tonal-container-color: inspection.get-theme-color($theme, background, surface),
     tonal-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base-12),
     tonal-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base-50-38),
     tonal-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     tonal-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
     tonal-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    tonal-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    tonal-label-text-color: inspection.get-theme-color($theme, foreground, base-87),
     tonal-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    tonal-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    tonal-ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     tonal-state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
 }
@@ -153,7 +153,7 @@ $prefix: (mat, button);
         if(
           meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
           rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+          inspection.get-theme-color($theme, foreground, base-10)),
     outlined-state-layer-color: inspection.get-theme-color($theme, $palette-name),
     protected-container-color: $container-color,
     protected-label-text-color: $label-text-color,
@@ -163,7 +163,7 @@ $prefix: (mat, button);
     text-ripple-color:
         if(meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
           rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+          inspection.get-theme-color($theme, foreground, base-10)),
     text-state-layer-color: inspection.get-theme-color($theme, $palette-name),
     tonal-container-color: inspection.get-theme-color($theme, $palette-name, default),
     tonal-label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1),

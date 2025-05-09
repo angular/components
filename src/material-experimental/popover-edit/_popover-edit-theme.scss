@@ -78,7 +78,7 @@
   .mat-edit-pane {
     @include mat.private-theme-elevation(2, $theme);
     background: $background-color;
-    color: mat.get-theme-color($theme, foreground, text);
+    color: mat.get-theme-color($theme, foreground, on-surface);
     display: block;
     padding: 16px 24px;
 

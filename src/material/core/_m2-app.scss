@@ -17,8 +17,8 @@ $prefix: (mat, app);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $tokens: (
-    background-color: inspection.get-theme-color($theme, background, background),
-    text-color: inspection.get-theme-color($theme, foreground, text),
+    background-color: inspection.get-theme-color($theme, background, h303030-grey-50),
+    text-color: inspection.get-theme-color($theme, foreground, on-surface),
   );
 
   @for $zValue from 0 through 24 {

@@ -23,17 +23,15 @@ $prefix: (mat, sidenav);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) ==  dark;
-  $scrim-opacity: 0.6;
-  $scrim-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, background, card), $alpha: $scrim-opacity);
-  $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
+  $scrim-color: inspection.get-theme-color($theme, background, surface-06);
+  $fallback-scrim-color: inspection.get-theme-color($theme, background, white-black-06);
 
   @return (
-    container-divider-color: inspection.get-theme-color($theme, foreground, divider),
-    container-background-color: inspection.get-theme-color($theme, background, dialog),
-    container-text-color: inspection.get-theme-color($theme, foreground, text),
-    content-background-color: inspection.get-theme-color($theme, background, background),
-    content-text-color: inspection.get-theme-color($theme, foreground, text),
+    container-divider-color: inspection.get-theme-color($theme, foreground, base-12),
+    container-background-color: inspection.get-theme-color($theme, background, surface),
+    container-text-color: inspection.get-theme-color($theme, foreground, on-surface),
+    content-background-color: inspection.get-theme-color($theme, background, h303030-grey-50),
+    content-text-color: inspection.get-theme-color($theme, foreground, on-surface),
 
     // We use invert() here to have the darken the background color expected to be used.
     // If the background is light, we use a dark backdrop. If the background is dark, we

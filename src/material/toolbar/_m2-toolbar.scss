@@ -16,8 +16,8 @@ $prefix: (mat, toolbar);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return private-get-color-palette-color-tokens(
-    $background-color: inspection.get-theme-color($theme, background, app-bar),
-    $text-color: inspection.get-theme-color($theme, foreground, text),
+    $background-color: inspection.get-theme-color($theme, background, grey-900-100),
+    $text-color: inspection.get-theme-color($theme, foreground, on-surface),
   );
 }
 
