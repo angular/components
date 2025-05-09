@@ -20,6 +20,7 @@ import {MatIconModule} from '@angular/material/icon';
 
 export interface Person {
   name: string;
+  avatar?: string;
 }
 
 export interface DemoColor {
@@ -52,6 +53,8 @@ export class ChipsDemo {
   listboxesWithAvatar = false;
   disableInputs = false;
   editable = false;
+  peopleWithAvatar = false;
+  showEditIcon = false;
   disabledInteractive = false;
   message = '';
 
@@ -75,12 +78,12 @@ export class ChipsDemo {
   selectedPeople = null;
 
   people: Person[] = [
-    {name: 'Kara'},
-    {name: 'Jeremy'},
-    {name: 'Topher'},
-    {name: 'Elad'},
-    {name: 'Kristiyan'},
-    {name: 'Paul'},
+    {name: 'Kara', avatar: 'K'},
+    {name: 'Jeremy', avatar: 'J'},
+    {name: 'Topher', avatar: 'T'},
+    {name: 'Elad', avatar: 'E'},
+    {name: 'Kristiyan', avatar: 'K'},
+    {name: 'Paul', avatar: 'P'},
   ];
 
   availableColors: DemoColor[] = [

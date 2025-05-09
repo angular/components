@@ -43,6 +43,7 @@ export class MatChipAction {
     _handlePrimaryActionInteraction(): void;
     remove(): void;
     disabled: boolean;
+    _edit(): void;
     _isEditing?: boolean;
   }>(MAT_CHIP);
 

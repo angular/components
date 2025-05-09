@@ -13,7 +13,7 @@ import {MatChip} from './chip';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './tokens';
 import {MatChipEditInput} from './chip-edit-input';
 import {MatChipGrid} from './chip-grid';
-import {MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
+import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {MatChipInput} from './chip-input';
 import {MatChipListbox} from './chip-listbox';
 import {MatChipRow} from './chip-row';
@@ -24,6 +24,7 @@ import {MatChipAction} from './chip-action';
 const CHIP_DECLARATIONS = [
   MatChip,
   MatChipAvatar,
+  MatChipEdit,
   MatChipEditInput,
   MatChipGrid,
   MatChipInput,
