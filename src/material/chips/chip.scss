@@ -670,6 +670,7 @@ $fallbacks: m3-chip.get-tokens();
   // the focus indicator is sufficiently contrastive and renders appropriately.
   $default-border-width: focus-indicators-private.$default-border-width;
   $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
+  $default-border-color: var(--mat-focus-indicator-border-color, #{focus-indicators-private.$default-border-color});
   $offset: calc(#{$border-width} + 2px);
 
   content: '';
@@ -679,7 +680,7 @@ $fallbacks: m3-chip.get-tokens();
   margin: calc(#{$offset} * -1);
   border-width: $border-width;
   border: solid;
-  border-color: var(--mat-focus-indicator-border-color), black;
+  border-color: $default-border-color;
   opacity: 0;
   height: auto;
 }
