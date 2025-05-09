@@ -669,8 +669,9 @@ $fallbacks: m3-chip.get-tokens();
   // For the chip element, default inset/offset values are necessary to ensure that
   // the focus indicator is sufficiently contrastive and renders appropriately.
   $default-border-width: focus-indicators-private.$default-border-width;
+  // stylelint-disable-next-line max-line-length
+  $border-color: var(--mat-focus-indicator-border-color, #{focus-indicators-private.$default-border-color});
   $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
-  $default-border-color: var(--mat-focus-indicator-border-color, #{focus-indicators-private.$default-border-color});
   $offset: calc(#{$border-width} + 2px);
 
   content: '';
@@ -680,7 +681,7 @@ $fallbacks: m3-chip.get-tokens();
   margin: calc(#{$offset} * -1);
   border-width: $border-width;
   border: solid;
-  border-color: $default-border-color;
+  border-color: $border-color;
   opacity: 0;
   height: auto;
 }
