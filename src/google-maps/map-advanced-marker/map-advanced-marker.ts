@@ -160,7 +160,7 @@ export class MapAdvancedMarker
    * This event is fired when the AdvancedMarkerElement is right-clicked.
    */
   @Output() readonly mapRightclick: Observable<google.maps.MapMouseEvent> =
-    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('rightclick');
+    this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('contextmenu');
 
   /**
    * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
