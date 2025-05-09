@@ -2,39 +2,59 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "automerge": false,
   "baseBranches": ["main"],
-  "enabledManagers": ["npm", "bazel", "github-actions"],
   "stopUpdatingLabel": "action: merge",
-  "labels": ["target: patch"],
+  "labels": ["action: review"],
   "dependencyDashboard": true,
   "rangeStrategy": "pin",
-  "pinDigests": true,
-  "prHourlyLimit": 2,
+  "prHourlyLimit": 3,
+  "commitBody": "See associated pull request for more information.",
+  "timezone": "America/Tijuana",
   "rebaseWhen": "behind-base-branch",
   "semanticCommits": "enabled",
   "semanticCommitScope": "",
   "semanticCommitType": "build",
   "separateMajorMinor": false,
-  "ignorePaths": ["integration/**"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "node"
+    },
+    {
       "enabled": false,
-      "matchPackageNames": ["*"]
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["major"]
     },
     {
-      "matchPackageNames": ["@angular/ng-dev", "@angular/build-tooling", "angular/dev-infra"],
-      "groupName": "angular shared dev-infra code",
-      "enabled": true
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "schedule": ["after 10:00pm on monday", "before 04:00am on tuesday"]
     },
     {
-      "groupName": "bazel setup",
-      "enabled": true,
-      "matchPackageNames": ["/^@bazel/.*/", "/^build_bazel.*/"]
+      "matchBaseBranches": ["main"],
+      "followTag": "next",
+      "groupName": "cross-repo Angular dependencies (next)",
+      "schedule": ["at any time"],
+      "matchPackageNames": [
+        "@angular/{/,}**",
+        "angular/{/,}**",
+        "@angular-devkit{/,}**",
+        "@schematics/{/,}**"
+      ]
     },
     {
       "matchFileNames": [".github/workflows/scorecard.yml"],
       "groupName": "scorecard action dependencies",
       "groupSlug": "scorecard-action",
       "matchPackageNames": ["*"]
+    },
+    {
+      "matchCurrentVersion": "0.0.0-PLACEHOLDER",
+      "enabled": false
     }
   ]
 }
