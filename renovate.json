@@ -5,7 +5,7 @@
   "stopUpdatingLabel": "action: merge",
   "labels": ["action: review"],
   "dependencyDashboard": true,
-  "rangeStrategy": "pin",
+  "rangeStrategy": "replace",
   "prHourlyLimit": 3,
   "commitBody": "See associated pull request for more information.",
   "timezone": "America/Tijuana",
