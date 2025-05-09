@@ -5,7 +5,13 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  provideCheckNoChangesConfig,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -20,6 +26,7 @@ describe('MatAccordion', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatExpansionModule,
         AccordionWithHideToggle,

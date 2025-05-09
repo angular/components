@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, provideCheckNoChangesConfig, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -12,6 +12,7 @@ describe('MatCheckboxHarness', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [MatCheckboxModule, ReactiveFormsModule, CheckboxHarnessTest],
     });
 

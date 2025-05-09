@@ -37,6 +37,7 @@ import {
   ViewChild,
   ViewChildren,
   inject,
+  provideCheckNoChangesConfig,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -96,6 +97,7 @@ describe('MatSelect', () => {
         OverlayModule,
       ],
       providers: [
+        provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         {provide: Directionality, useFactory: () => (dir = {value: 'ltr', change: EMPTY})},
         {

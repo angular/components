@@ -32,6 +32,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
   inject,
+  provideCheckNoChangesConfig,
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -1829,6 +1830,7 @@ function createComponent<T>(
   TestBed.configureTestingModule({
     imports: [MatStepperModule, ReactiveFormsModule, ...imports],
     providers: [
+      provideCheckNoChangesConfig({exhaustive: false}),
       {provide: Directionality, useFactory: () => dir},
       {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ...providers,

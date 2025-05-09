@@ -3,12 +3,14 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatCheckboxHarness} from '@angular/material/checkbox/testing';
 import {CheckboxHarnessExample} from './checkbox-harness-example';
+import {provideCheckNoChangesConfig} from '@angular/core';
 
 describe('CheckboxHarnessExample', () => {
   let fixture: ComponentFixture<CheckboxHarnessExample>;
   let loader: HarnessLoader;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({providers: [provideCheckNoChangesConfig({exhaustive: false})]});
     fixture = TestBed.createComponent(CheckboxHarnessExample);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);

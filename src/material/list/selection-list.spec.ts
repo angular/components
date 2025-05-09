@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DebugElement,
+  provideCheckNoChangesConfig,
   QueryList,
   ViewChildren,
 } from '@angular/core';
@@ -44,6 +45,7 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [provideCheckNoChangesConfig({exhaustive: false})],
         imports: [
           MatListModule,
           SelectionListWithListOptions,
@@ -1277,6 +1279,7 @@ describe('MatSelectionList without forms', () => {
 describe('MatSelectionList with forms', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatListModule,
         FormsModule,
