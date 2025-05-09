@@ -14,13 +14,13 @@
   "peerDependencies": {
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
-    "date-fns": ">2.20.0 <5.0"
+    "date-fns": "4.1.0"
   },
   "devDependencies": {
     "@angular/material": "workspace:*"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "2.8.1"
   },
   "ng-update": {
     "packageGroup": "NG_UPDATE_PACKAGE_GROUP"

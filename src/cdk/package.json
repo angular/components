@@ -47,11 +47,11 @@
   "peerDependencies": {
     "@angular/core": "0.0.0-NG",
     "@angular/common": "0.0.0-NG",
-    "rxjs": "^6.5.3 || ^7.4.0"
+    "rxjs": "7.8.2"
   },
   "dependencies": {
-    "parse5": "^7.1.2",
-    "tslib": "^2.3.0"
+    "parse5": "7.2.1",
+    "tslib": "2.8.1"
   },
   "schematics": "./schematics/collection.json",
   "ng-update": {

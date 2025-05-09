@@ -3421,7 +3421,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jasmine@npm:~5.1.7":
+"@types/jasmine@npm:5.1.7":
   version: 5.1.7
   resolution: "@types/jasmine@npm:5.1.7"
   checksum: 10/ce117e3dea932d8f7d643ef30a39dd1e95a97f26073ab1b697871570cbe7071fca6cf53501710998c429062dbd35c916edd0e75015b1328fc0a6d7a28ef7fef0
@@ -5642,6 +5642,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:7.2.3, glob@npm:^7.1.3, glob@npm:^7.1.7":
+  version: 7.2.3
+  resolution: "glob@npm:7.2.3"
+  dependencies:
+    fs.realpath: "npm:^1.0.0"
+    inflight: "npm:^1.0.4"
+    inherits: "npm:2"
+    minimatch: "npm:^3.1.1"
+    once: "npm:^1.3.0"
+    path-is-absolute: "npm:^1.0.0"
+  checksum: 10/59452a9202c81d4508a43b8af7082ca5c76452b9fcc4a9ab17655822e6ce9b21d4f8fbadabe4fe3faef448294cec249af305e2cd824b7e9aaf689240e5e96a7b
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
@@ -5655,20 +5669,6 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: 10/698dfe11828b7efd0514cd11e573eaed26b2dff611f0400907281ce3eab0c1e56143ef9b35adc7c77ecc71fba74717b510c7c223d34ca8a98ec81777b293d4ac
-  languageName: node
-  linkType: hard
-
-"glob@npm:^7.1.3, glob@npm:^7.1.7, glob@npm:^7.2.0":
-  version: 7.2.3
-  resolution: "glob@npm:7.2.3"
-  dependencies:
-    fs.realpath: "npm:^1.0.0"
-    inflight: "npm:^1.0.4"
-    inherits: "npm:2"
-    minimatch: "npm:^3.1.1"
-    once: "npm:^1.3.0"
-    path-is-absolute: "npm:^1.0.0"
-  checksum: 10/59452a9202c81d4508a43b8af7082ca5c76452b9fcc4a9ab17655822e6ce9b21d4f8fbadabe4fe3faef448294cec249af305e2cd824b7e9aaf689240e5e96a7b
   languageName: node
   linkType: hard
 
@@ -6294,17 +6294,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jasmine-core@npm:5.6.0":
+  version: 5.6.0
+  resolution: "jasmine-core@npm:5.6.0"
+  checksum: 10/0171a28634c6d9667278a628483bc9c6a075512078e74d208ae9172525e108d386621915449b30abe008d1bd86568a7f057cfc170be2286da5e21c4d5f2eba8e
+  languageName: node
+  linkType: hard
+
 "jasmine-core@npm:^3.6.0":
   version: 3.99.1
   resolution: "jasmine-core@npm:3.99.1"
   checksum: 10/b2bc829ff90aa700dee9a769d59f3ddba7cf6ecbcd3334e8e0a7b17834f43c9c80f78267c015bc0de333ddeff0c12afb3304cc812eeb32295a285a3d9badd19b
-  languageName: node
-  linkType: hard
-
-"jasmine-core@npm:~5.6.0":
-  version: 5.6.0
-  resolution: "jasmine-core@npm:5.6.0"
-  checksum: 10/0171a28634c6d9667278a628483bc9c6a075512078e74d208ae9172525e108d386621915449b30abe008d1bd86568a7f057cfc170be2286da5e21c4d5f2eba8e
   languageName: node
   linkType: hard
 
@@ -6427,7 +6427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-chrome-launcher@npm:~3.1.0":
+"karma-chrome-launcher@npm:3.1.1":
   version: 3.1.1
   resolution: "karma-chrome-launcher@npm:3.1.1"
   dependencies:
@@ -6436,7 +6436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-coverage@npm:~2.0.3":
+"karma-coverage@npm:2.0.3":
   version: 2.0.3
   resolution: "karma-coverage@npm:2.0.3"
   dependencies:
@@ -6450,7 +6450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine-html-reporter@npm:~1.7.0":
+"karma-jasmine-html-reporter@npm:1.7.0":
   version: 1.7.0
   resolution: "karma-jasmine-html-reporter@npm:1.7.0"
   peerDependencies:
@@ -6461,7 +6461,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine@npm:~4.0.0":
+"karma-jasmine@npm:4.0.2":
   version: 4.0.2
   resolution: "karma-jasmine@npm:4.0.2"
   dependencies:
@@ -6481,7 +6481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma@npm:~6.4.4":
+"karma@npm:6.4.4":
   version: 6.4.4
   resolution: "karma@npm:6.4.4"
   dependencies:
@@ -8351,7 +8351,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.2, rxjs@npm:^7.5.5":
+"rxjs@npm:7.8.2":
   version: 7.8.2
   resolution: "rxjs@npm:7.8.2"
   dependencies:
@@ -9820,19 +9820,19 @@ __metadata:
     "@angular/material": "npm:next"
     "@angular/platform-browser": "npm:20.0.0-next.5"
     "@angular/router": "npm:20.0.0-next.5"
-    "@types/jasmine": "npm:~5.1.7"
+    "@types/jasmine": "npm:5.1.7"
     "@types/node": "npm:22.14.0"
-    glob: "npm:^7.2.0"
-    jasmine-core: "npm:~5.6.0"
-    karma: "npm:~6.4.4"
-    karma-chrome-launcher: "npm:~3.1.0"
-    karma-coverage: "npm:~2.0.3"
-    karma-jasmine: "npm:~4.0.0"
-    karma-jasmine-html-reporter: "npm:~1.7.0"
-    rxjs: "npm:^7.5.5"
-    tslib: "npm:^2.3.0"
+    glob: "npm:7.2.3"
+    jasmine-core: "npm:5.6.0"
+    karma: "npm:6.4.4"
+    karma-chrome-launcher: "npm:3.1.1"
+    karma-coverage: "npm:2.0.3"
+    karma-jasmine: "npm:4.0.2"
+    karma-jasmine-html-reporter: "npm:1.7.0"
+    rxjs: "npm:7.8.2"
+    tslib: "npm:2.8.1"
     typescript: "npm:5.8.2"
-    zone.js: "npm:~0.15.0"
+    zone.js: "npm:0.15.0"
   languageName: unknown
   linkType: soft
 
@@ -9850,7 +9850,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zone.js@npm:~0.15.0":
+"zone.js@npm:0.15.0":
   version: 0.15.0
   resolution: "zone.js@npm:0.15.0"
   checksum: 10/99b9381edcf1ca3da147375a9776f8ad5e6570b9e2cbd33095284a67904d94b5083448440ffcb8ec1e418a505020de0e37837db04d6a0303e111b054a8b752a2

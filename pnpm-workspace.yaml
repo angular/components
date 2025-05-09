@@ -35,4 +35,4 @@ catalog:
   '@angular/platform-server': 20.0.0-rc.0
   '@angular/router': 20.0.0-rc.0
   '@schematics/angular': 20.0.0-rc.0
-  'rxjs': ^6.6.7
+  'rxjs': 6.6.7

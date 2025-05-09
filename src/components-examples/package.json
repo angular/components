@@ -42,6 +42,6 @@
     "@angular/material-moment-adapter": "workspace:*"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "2.8.1"
   }
 }
