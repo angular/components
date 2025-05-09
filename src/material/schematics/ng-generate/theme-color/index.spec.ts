@@ -1091,7 +1091,7 @@ html {
 
     /* Tertiary palette variables */
     --mat-sys-tertiary: light-dark(#4d1f00, #ffece4);
-    --mat-sys-on-tertiary: light-dark(#4d1f00, #ffece4);
+    --mat-sys-on-tertiary: light-dark(#ffffff, #000000);
     --mat-sys-tertiary-container: light-dark(#7a3500, #ffb184);
     --mat-sys-on-tertiary-container: light-dark(#ffffff, #190600);
     --mat-sys-tertiary-fixed: light-dark(#7a3500, #ffdbc9);
