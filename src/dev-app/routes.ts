@@ -51,6 +51,11 @@ export const DEV_APP_ROUTES: Routes = [
       import('./cdk-experimental-listbox/cdk-listbox-demo').then(m => m.CdkExperimentalListboxDemo),
   },
   {
+    path: 'cdk-experimental-nav',
+    loadComponent: () =>
+      import('./cdk-experimental-nav/cdk-nav-demo').then(m => m.CdkExperimentalNavDemo),
+  },
+  {
     path: 'cdk-experimental-tabs',
     loadComponent: () =>
       import('./cdk-experimental-tabs/cdk-tabs-demo').then(m => m.CdkExperimentalTabsDemo),
