@@ -57,10 +57,10 @@
   },
   "peerDependencies": {
     "@angular/cdk": "0.0.0-PLACEHOLDER",
-    "@angular/core": "0.0.0-NG",
-    "@angular/common": "0.0.0-NG",
-    "@angular/forms": "0.0.0-NG",
-    "@angular/platform-browser": "0.0.0-NG",
+    "@angular/core": "20.0.0-rc.0",
+    "@angular/common": "20.0.0-rc.0",
+    "@angular/forms": "20.0.0-rc.0",
+    "@angular/platform-browser": "20.0.0-rc.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
