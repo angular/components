@@ -699,7 +699,7 @@ describe('MatTabHeader', () => {
       spyOn(TestBed.inject(MutationObserverFactory), 'create').and.callFake(
         (callback: Function) => {
           mutationCallbacks.push(callback);
-          return {observe: () => {}, disconnect: () => {}} as any;
+          return {observe: () => {}, disconnect: () => {}} as unknown as MutationObserver;
         },
       );
 

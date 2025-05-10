@@ -146,7 +146,7 @@ class SimpleTabBodyApp implements AfterViewInit {
   position: number;
 
   @ViewChild(MatTabBody) tabBody: MatTabBody;
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template: TemplateRef<unknown>;
 
   private readonly _viewContainerRef = inject(ViewContainerRef);
 
