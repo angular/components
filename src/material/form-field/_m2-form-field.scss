@@ -30,17 +30,9 @@ $prefix: (mat, form-field);
   $surface: inspection.get-theme-color($theme, background, card);
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $on-surface: if($is-dark, #fff, #000);
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $on-surface: if($is-dark, #fff, #000);
-  $text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, text, 1));
-  $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, disabled-text, 1));
-  $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, divider, 1));
+  $text-color-base: inspection.get-theme-color($theme, foreground, text, 1);
+  $disabled-text-color-base: inspection.get-theme-color($theme, foreground, disabled-text, 1);
+  $divider-base: inspection.get-theme-color($theme, foreground, divider, 1);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
@@ -76,8 +68,8 @@ $prefix: (mat, form-field);
     disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
-    filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
-    filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
+    filled-container-color: _variable-safe-mix($text-color-base, $surface, 4%),
+    filled-disabled-container-color: _variable-safe-mix($text-color-base, $surface, 2%),
     filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     filled-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
     filled-disabled-label-text-color:
