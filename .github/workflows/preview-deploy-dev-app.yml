@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.0.0
+      - uses: actions/checkout@722adc63f1aa60a57ec37892e133b1d319cae598 # v2.0.0
 
       - name: Configure Firebase deploy target
         run: |
