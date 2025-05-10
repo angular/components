@@ -7,7 +7,7 @@
  */
 
 import {Signal, WritableSignal, signal} from '@angular/core';
-import {Expansion, ExpansionInputs, ExpansionItem} from './expansion';
+import {ListExpansion, ListExpansionInputs, ExpansionItem} from './expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 import {getListFocus as getListFocusManager} from '../list-focus/list-focus.spec';
 
@@ -20,7 +20,7 @@ type TestItem = ListFocusItem &
     expansionId: WritableSignal<string>;
   };
 
-type TestInputs = Partial<Omit<ExpansionInputs<TestItem>, 'items' | 'focusManager'>> &
+type TestInputs = Partial<Omit<ListExpansionInputs<TestItem>, 'items' | 'focusManager'>> &
   Partial<
     Pick<ListFocusInputs<TestItem>, 'focusMode' | 'disabled' | 'activeIndex' | 'skipDisabled'>
   > & {
@@ -44,7 +44,7 @@ function createItems(length: number): WritableSignal<TestItem[]> {
 }
 
 function getExpansion(inputs: TestInputs = {}): {
-  expansion: Expansion<TestItem>;
+  expansion: ListExpansion<TestItem>;
   items: TestItem[];
   focusManager: ListFocus<TestItem>;
 } {
@@ -61,7 +61,7 @@ function getExpansion(inputs: TestInputs = {}): {
 
   const focusManager = getListFocusManager(listFocusManagerInputs as any) as ListFocus<TestItem>;
 
-  const expansion = new Expansion<TestItem>({
+  const expansion = new ListExpansion<TestItem>({
     items: items,
     activeIndex: focusManager.inputs.activeIndex,
     disabled: focusManager.inputs.disabled,
