@@ -205,8 +205,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     setRenderedContentOffset(offset: number, to?: 'to-start' | 'to-end'): void;
     setRenderedRange(range: ListRange): void;
     setTotalContentSize(size: number): void;
-    _totalContentHeight: string;
-    _totalContentWidth: string;
+    _totalContentHeight: i0.WritableSignal<string>;
+    _totalContentWidth: i0.WritableSignal<string>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkVirtualScrollViewport, "cdk-virtual-scroll-viewport", never, { "orientation": { "alias": "orientation"; "required": false; }; "appendOnly": { "alias": "appendOnly"; "required": false; }; }, { "scrolledIndexChange": "scrolledIndexChange"; }, never, ["*"], true, never>;
     // (undocumented)

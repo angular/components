@@ -7,7 +7,13 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ErrorHandler,
+  provideCheckNoChangesConfig,
+  ViewChild,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -24,7 +30,10 @@ import {MATERIAL_ANIMATIONS} from '../core';
 describe('MatDrawer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+      providers: [
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+        provideCheckNoChangesConfig({exhaustive: false}),
+      ],
       imports: [
         MatSidenavModule,
         A11yModule,
@@ -891,6 +900,7 @@ describe('MatDrawer', () => {
 describe('MatDrawerContainer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatSidenavModule,
         A11yModule,

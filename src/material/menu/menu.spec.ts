@@ -22,6 +22,7 @@ import {
   Input,
   OnDestroy,
   Output,
+  provideCheckNoChangesConfig,
   Provider,
   QueryList,
   TemplateRef,
@@ -68,6 +69,7 @@ describe('MatMenu', () => {
   ): ComponentFixture<T> {
     TestBed.configureTestingModule({
       providers: [
+        provideCheckNoChangesConfig({exhaustive: false}),
         ...providers,
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],

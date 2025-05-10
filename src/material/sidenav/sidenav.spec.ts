@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, provideCheckNoChangesConfig, ViewChild} from '@angular/core';
 import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
@@ -6,6 +6,7 @@ import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 describe('MatSidenav', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatSidenavModule,
         SidenavWithFixedPosition,
