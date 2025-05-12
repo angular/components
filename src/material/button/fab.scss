@@ -30,7 +30,8 @@
     transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
-  @include button-base.mat-private-button-interactive();
+  // Due to the shape of the FAB, inheriting the shape looks off. Disable it explicitly.
+  @include button-base.mat-private-button-interactive($focus-indicator-inherits-shape: false);
   @include style-private.private-animation-noop();
 
   &::before {
