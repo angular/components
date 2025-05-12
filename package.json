@@ -89,7 +89,7 @@
     "@material/material-color-utilities": "^0.3.0",
     "@octokit/rest": "18.3.5",
     "@rollup/plugin-commonjs": "^28.0.0",
-    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "@schematics/angular": "catalog:",
     "@types/babel__core": "^7.1.18",
     "@types/fs-extra": "^9.0.13",
