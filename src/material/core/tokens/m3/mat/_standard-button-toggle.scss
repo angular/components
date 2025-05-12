@@ -14,7 +14,7 @@ $prefix: (mat, standard-button-toggle);
   $tokens: sass-utils.merge-all(
     token-definition.generate-typography-tokens($systems, label-text, label-large),
   (
-    shape: map.get($systems, md-sys-shape, corner-full),
+    shape: map.get($systems, md-sys-shape, corner-extra-large),
     hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
     focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
     text-color: map.get($systems, md-sys-color, on-surface),
