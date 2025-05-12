@@ -132,8 +132,8 @@ importers:
         specifier: 'catalog:'
         version: 20.0.0-rc.0(@angular/compiler-cli@20.0.0-rc.0(@angular/compiler@20.0.0-rc.0)(typescript@5.8.2))(@angular/compiler@20.0.0-rc.0)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a9e4627eb45742d81068087a5b57a676104fe053
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#aa535e2d49ecfb0fbd230b192cb97c3d193ca3ee
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/aa535e2d49ecfb0fbd230b192cb97c3d193ca3ee(encoding@0.1.13)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 20.0.0-rc.0(xwl3y7jq725dltcxzk3jyzuc6u)
@@ -907,9 +907,9 @@ packages:
       '@angular/compiler': 20.0.0-rc.0
       '@angular/compiler-cli': 20.0.0-rc.0
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053}
-    version: 0.0.0-35131fc980ce5451fb89d8c033efc827ad39ca68
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/aa535e2d49ecfb0fbd230b192cb97c3d193ca3ee':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/aa535e2d49ecfb0fbd230b192cb97c3d193ca3ee}
+    version: 0.0.0-47ce326218e10e67066c27f618129ac8a13a7033
     hasBin: true
 
   '@angular/platform-browser-dynamic@20.0.0-rc.0':
@@ -1910,8 +1910,8 @@ packages:
     resolution: {integrity: sha512-4Qrry4vIToth5mqduVslltWVsyb7DR8OhnkBA3F7XiE0jgQsiuUfwp/RB2F559aXnRbwcfmjvP4jSuEaGcjrCQ==}
     engines: {node: '>=12.0.0'}
 
-  '@google-cloud/spanner@7.19.1':
-    resolution: {integrity: sha512-a7WlM4T3g5hslSBxQpsCxlH2IGgeVVEnDP5/v51kNlKv/W5PhBMqaHanodkUjbjegsQNlWAkqLClzIwtldfSXg==}
+  '@google-cloud/spanner@7.21.0':
+    resolution: {integrity: sha512-SrlHgXmSaEbGhdimxcB0FgNsW9J931JBBveoGW43clQHVNcDJuKRoG+240inbSRZoW8JIwwEHToXYU5YGO3VGg==}
     engines: {node: '>=14.0.0'}
 
   '@grpc/grpc-js@1.13.2':
@@ -9584,9 +9584,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a9e4627eb45742d81068087a5b57a676104fe053(encoding@0.1.13)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/aa535e2d49ecfb0fbd230b192cb97c3d193ca3ee(encoding@0.1.13)':
     dependencies:
-      '@google-cloud/spanner': 7.19.1(encoding@0.1.13)(supports-color@10.0.0)
+      '@google-cloud/spanner': 7.21.0(encoding@0.1.13)(supports-color@10.0.0)
       '@octokit/rest': 21.1.1
       '@types/semver': 7.7.0
       '@types/supports-color': 10.0.0
@@ -10678,7 +10678,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@google-cloud/spanner@7.19.1(encoding@0.1.13)(supports-color@10.0.0)':
+  '@google-cloud/spanner@7.21.0(encoding@0.1.13)(supports-color@10.0.0)':
     dependencies:
       '@google-cloud/common': 5.0.2(encoding@0.1.13)(supports-color@10.0.0)
       '@google-cloud/precise-date': 4.0.0
