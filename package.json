@@ -134,7 +134,7 @@
     "protractor": "^7.0.0",
     "reflect-metadata": "^0.1.13",
     "requirejs": "^2.3.6",
-    "rollup": "^2.66.1",
+    "rollup": "^4.0.0",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-sourcemaps2": "0.5.0",
     "sass": "^1.80.6",
