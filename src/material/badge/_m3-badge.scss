@@ -1,81 +1,53 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, badge);
 
 /// Generates custom tokens for the mat-badge.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-badge
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, error, $color-variant);
+  }
+
   $tokens: (
-    background-color: map.get($systems, md-sys-color, error),
-    text-color: map.get($systems, md-sys-color, on-error),
-    disabled-state-background-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, error),
-      $alpha: 0.38),
-    disabled-state-text-color: map.get($systems, md-sys-color, on-error),
-    text-font: map.get($systems, md-sys-typescale, label-small-font),
-    text-size: map.get($systems, md-sys-typescale, label-small-size),
-    text-weight: map.get($systems, md-sys-typescale, label-small-weight),
-    small-size-text-size: m3-utils.hardcode(0, $exclude-hardcoded),
-    container-shape: map.get($systems, md-sys-shape, corner-full),
-    container-size: m3-utils.hardcode(16px, $exclude-hardcoded),
-    line-height: m3-utils.hardcode(16px, $exclude-hardcoded),
-    legacy-container-size: m3-utils.hardcode(unset, $exclude-hardcoded),
-    legacy-small-size-container-size: m3-utils.hardcode(unset, $exclude-hardcoded),
-    small-size-container-size: m3-utils.hardcode(6px, $exclude-hardcoded),
-    small-size-line-height: m3-utils.hardcode(6px, $exclude-hardcoded),
-    container-padding: m3-utils.hardcode(0 4px, $exclude-hardcoded),
-    small-size-container-padding: m3-utils.hardcode(0, $exclude-hardcoded),
-    container-offset: m3-utils.hardcode(-12px 0, $exclude-hardcoded),
-    small-size-container-offset: m3-utils.hardcode(-6px 0, $exclude-hardcoded),
-    container-overlap-offset: m3-utils.hardcode(-12px, $exclude-hardcoded),
-    small-size-container-overlap-offset: m3-utils.hardcode(-6px, $exclude-hardcoded),
-
-    // This size isn't in the M3 spec so we emit the same values as for `medium`.
-    large-size-container-size: m3-utils.hardcode(16px, $exclude-hardcoded),
-    large-size-line-height: m3-utils.hardcode(16px, $exclude-hardcoded),
-    large-size-container-offset: m3-utils.hardcode(-12px 0, $exclude-hardcoded),
-    large-size-container-overlap-offset: m3-utils.hardcode(-12px, $exclude-hardcoded),
-    large-size-text-size: map.get($systems, md-sys-typescale, label-small-size),
-    large-size-container-padding: m3-utils.hardcode(0 4px, $exclude-hardcoded),
-    legacy-large-size-container-size: m3-utils.hardcode(unset, $exclude-hardcoded),
+    base: (
+      container-shape: map.get($system, corner-full),
+      container-size: 16px,
+      legacy-container-size: unset,
+      legacy-small-size-container-size: unset,
+      small-size-container-size: 6px,
+      container-padding: 0 4px,
+      small-size-container-padding: 0,
+      container-offset: -12px 0,
+      small-size-container-offset: -6px 0,
+      container-overlap-offset: -12px,
+      small-size-container-overlap-offset: -6px,
+      large-size-container-size: 16px,
+      large-size-container-offset: -12px 0,
+      large-size-container-overlap-offset: -12px,
+      large-size-container-padding: 0 4px,
+      legacy-large-size-container-size: unset,
+    ),
+    color: (
+      background-color: map.get($system, error),
+      text-color: map.get($system, on-error),
+      disabled-state-background-color: m3-utils.color-with-opacity(map.get($system, error), 38%),
+      disabled-state-text-color: map.get($system, on-error),
+    ),
+    typography: (
+      text-font: map.get($system, label-small-font),
+      text-size: map.get($system, label-small-size),
+      text-weight: map.get($system, label-small-weight),
+      large-size-text-size: map.get($system, label-small-size),
+      small-size-text-size: 0,
+      line-height: 16px,
+      small-size-line-height: 6px,
+      large-size-line-height: 16px,
+    ),
+    density: (),
   );
 
-  $variant-tokens: (
-    primary: (
-      background-color: map.get($systems, md-sys-color, primary),
-      text-color: map.get($systems, md-sys-color, on-primary),
-      disabled-state-background-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, primary),
-        $alpha: 0.38,
-      ),
-      disabled-state-text-color: map.get($systems, md-sys-color, on-primary),
-    ),
-    secondary: (
-      background-color: map.get($systems, md-sys-color, secondary),
-      text-color: map.get($systems, md-sys-color, on-secondary),
-      disabled-state-background-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, secondary),
-        $alpha: 0.38,
-      ),
-      disabled-state-text-color: map.get($systems, md-sys-color, on-secondary),
-    ),
-    tertiary: (
-      background-color: map.get($systems, md-sys-color, tertiary),
-      text-color: map.get($systems, md-sys-color, on-tertiary),
-      disabled-state-background-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, tertiary),
-        $alpha: 0.38,
-      ),
-      disabled-state-text-color: map.get($systems, md-sys-color, on-tertiary),
-    ),
-    error: () // Default, no overrides needed
-  );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return $tokens;
 }

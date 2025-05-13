@@ -69,16 +69,22 @@ describe('theming definition api', () => {
       `);
       const vars = getRootVars(css);
       expect(vars['keys'].split(', ')).toEqual([
-        'theme-version',
-        'theme-type',
-        'palettes',
+        'base-tokens',
         'color-system-variables-prefix',
         'color-tokens',
+        'density-scale',
         'font-definition',
+        'md-sys-color',
+        'md-sys-elevation',
+        'md-sys-motion',
+        'md-sys-shape',
+        'md-sys-state',
+        'md-sys-typescale',
+        'palettes',
+        'theme-type',
+        'theme-version',
         'typography-system-variables-prefix',
         'typography-tokens',
-        'density-scale',
-        'base-tokens',
       ]);
       expect(vars['version']).toBe('1');
       expect(vars['type']).toBe('light');
@@ -241,59 +247,6 @@ describe('theming definition api', () => {
       expect(() => transpile(`$theme: mat.define-theme((density: (scale: 10)))`)).toThrowError(
         /Expected \$config\.density\.scale to be one of:.*Got: 10/,
       );
-    });
-  });
-
-  describe('define-colors', () => {
-    it('should omit non-color info', () => {
-      const css = transpile(`
-        $theme: mat.define-colors();
-        $data: map.get($theme, $internals);
-        :root {
-          --keys: #{map.keys($data)};
-        }
-      `);
-      const vars = getRootVars(css);
-      expect(vars['keys'].split(', ')).toEqual([
-        'theme-version',
-        'theme-type',
-        'palettes',
-        'color-system-variables-prefix',
-        'color-tokens',
-      ]);
-    });
-  });
-
-  describe('define-typography', () => {
-    it('should omit non-typography info', () => {
-      const css = transpile(`
-        $theme: mat.define-typography();
-        $data: map.get($theme, $internals);
-        :root {
-          --keys: #{map.keys($data)};
-        }
-      `);
-      const vars = getRootVars(css);
-      expect(vars['keys'].split(', ')).toEqual([
-        'theme-version',
-        'font-definition',
-        'typography-system-variables-prefix',
-        'typography-tokens',
-      ]);
-    });
-  });
-
-  describe('define-density', () => {
-    it('should omit non-density info', () => {
-      const css = transpile(`
-        $theme: mat.define-density();
-        $data: map.get($theme, $internals);
-        :root {
-          --keys: #{map.keys($data)};
-        }
-      `);
-      const vars = getRootVars(css);
-      expect(vars['keys'].split(', ')).toEqual(['theme-version', 'density-scale']);
     });
   });
 });
