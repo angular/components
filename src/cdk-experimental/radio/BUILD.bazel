@@ -27,6 +27,7 @@ ts_project(
         ":radio",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
+        "//:node_modules/axe-core",
     ],
 )
 
