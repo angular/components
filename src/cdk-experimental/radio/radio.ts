@@ -8,7 +8,6 @@
 
 import {
   afterRenderEffect,
-  AfterViewInit,
   booleanAttribute,
   computed,
   contentChildren,
@@ -103,9 +102,6 @@ export class CdkRadioGroup<V> {
 
   /** Whether the radio group has received focus yet. */
   private _hasFocused = signal(false);
-
-  /** Whether the radio buttons in the group have been initialized. */
-  private _isViewInitialized = signal(false);
 
   constructor() {
     afterRenderEffect(() => {
