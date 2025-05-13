@@ -9,16 +9,29 @@
 $_tokens: null;
 $_component-prefix: null;
 $_system-fallbacks: m3-system.create-system-fallbacks();
+$_direct-system-fallbacks: ();
 
 // Sets the token prefix and map to use when creating token slots.
-@mixin use-tokens($prefix, $tokens) {
+@mixin use-tokens($prefix, $tokens, $direct-system-fallbacks: null) {
   $_component-prefix: $prefix !global;
   $_tokens: $tokens !global;
+
+  // Direct system fallbacks are a map of base, color, typography, and density tokens. To simplify
+  // lookup, flatten these token groups into a single map.
+  @if $direct-system-fallbacks {
+    $_direct-system-fallbacks: () !global;
+    @each $tokens in map.values($direct-system-fallbacks) {
+      @each $token, $value in $tokens {
+        $_direct-system-fallbacks: map.set($_direct-system-fallbacks, $token, $value) !global;
+      }
+    }
+  }
 
   @content;
 
   $_component-prefix: null !global;
   $_tokens: null !global;
+  $_direct-system-fallbacks: () !global;
 }
 
 // Combines a prefix and a string to generate a CSS variable name for a token.
@@ -88,6 +101,14 @@ $_system-fallbacks: m3-system.create-system-fallbacks();
   // If the $fallback is `true`, this is the component's signal to use the current token map value
   @if ($fallback == true) {
     $fallback: map.get($_tokens, $token);
+  }
+
+  $direct-sys-fallback: map.get($_direct-system-fallbacks, $token);
+  @if ($direct-sys-fallback) {
+    @if (sass-utils.is-css-var-name($direct-sys-fallback)) {
+      @return _create-var($direct-sys-fallback, $fallback);
+    }
+    @return $direct-sys-fallback;
   }
 
   // Check whether there's a system-level fallback. If not, return the optional

@@ -3,7 +3,7 @@
 @use '../style/validation';
 @use './m2-inspection';
 
-$_internals: _mat-theming-internals-do-not-access;
+$internals: _mat-theming-internals-do-not-access;
 
 $_m3-typescales: (
   display-large,
@@ -30,7 +30,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @return {Boolean|Null} true if the theme has errors, else null.
 @function _validate-theme-object($theme) {
   $err: validation.validate-type($theme, 'map') or
-        map.get($theme, $_internals, theme-version) == null;
+        map.get($theme, $internals, theme-version) == null;
   @return if($err, true, null);
 }
 
@@ -40,7 +40,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @return {Number} The version number of the theme (0 if unknown).
 @function get-theme-version($theme) {
   $err: _validate-theme-object($theme);
-  @return if($err, 0, map.get($theme, $_internals, theme-version) or 0);
+  @return if($err, 0, map.get($theme, $internals, theme-version) or 0);
 }
 
 /// Gets the type of theme represented by a theme object (light or dark).
@@ -55,12 +55,14 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @if not theme-has($theme, color) {
       @error 'Color information is not available on this theme.';
     }
-    @return map.get($theme, $_internals, theme-type) or light;
+    @return map.get($theme, $internals, theme-type) or light;
   }
   @else {
     @error #{'Unrecognized theme version:'} $version;
   }
 }
+
+
 
 /// Gets a color from a theme object. This function take a different amount of arguments depending
 /// on if it's working with an M2 or M3 theme:
@@ -119,7 +121,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
-  $color-roles: map.get($theme, $_internals, color-tokens, (mat, theme));
+  $color-roles: map.get($theme, $internals, color-tokens, (mat, theme));
   $result: map.get($color-roles, $color-role-name);
   @if not $result {
     @error #{'Valid color roles are: #{map.keys($color-roles)}. Got:'} $color-role-name;
@@ -141,7 +143,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
-  $palettes: map.get($theme, $_internals, palettes);
+  $palettes: map.get($theme, $internals, palettes);
   $palette: map.get($palettes, $palette-name);
   @if not $palette {
     $supported-palettes: map.keys($palettes);
@@ -185,7 +187,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
       font-weight: '-weight'
     ), $property);
     $token-name: '#{$typescale}#{$property-key}';
-    @return map.get($theme, $_internals, typography-tokens, (mat, typography), $token-name);
+    @return map.get($theme, $internals, typography-tokens, (mat, typography), $token-name);
   }
   @else {
     @error #{'Unrecognized theme version:'} $version;
@@ -204,7 +206,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @if not theme-has($theme, density) {
       @error 'Density information is not available on this theme.';
     }
-    @return map.get($theme, $_internals, density-scale);
+    @return map.get($theme, $internals, density-scale);
   }
   @else {
     @error #{'Unrecognized theme version:'} $version;
@@ -222,18 +224,18 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   @else if $version == 1 {
     @if $system == base {
-      @return map.get($theme, $_internals, base-tokens) != null;
+      @return map.get($theme, $internals, base-tokens) != null;
     }
     @if $system == color {
-      @return map.get($theme, $_internals, color-tokens) != null and
-        map.get($theme, $_internals, theme-type) != null and
-        map.get($theme, $_internals, palettes) != null;
+      @return map.get($theme, $internals, color-tokens) != null and
+        map.get($theme, $internals, theme-type) != null and
+        map.get($theme, $internals, palettes) != null;
     }
     @if $system == typography {
-      @return map.get($theme, $_internals, typography-tokens) != null;
+      @return map.get($theme, $internals, typography-tokens) != null;
     }
     @if $system == density {
-      @return map.get($theme, $_internals, density-scale) != null;
+      @return map.get($theme, $internals, density-scale) != null;
     }
     @error 'Valid systems are: base, color, typography, density. Got:' $system;
   }
@@ -259,19 +261,19 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   @else if $version == 1 {
     @each $system in $systems {
       @if $system == base {
-        $theme: map.deep-remove($theme, $_internals, base-tokens);
+        $theme: map.deep-remove($theme, $internals, base-tokens);
       }
       @else if $system == color {
-        $theme: map.deep-remove($theme, $_internals, color-tokens);
-        $theme: map.deep-remove($theme, $_internals, theme-type);
-        $theme: map.deep-remove($theme, $_internals, palettes);
+        $theme: map.deep-remove($theme, $internals, color-tokens);
+        $theme: map.deep-remove($theme, $internals, theme-type);
+        $theme: map.deep-remove($theme, $internals, palettes);
       }
       @else if $system == typography {
-        $theme: map.deep-remove($theme, $_internals, typography-tokens);
+        $theme: map.deep-remove($theme, $internals, typography-tokens);
       }
       @else if $system == density {
-        $theme: map.deep-remove($theme, $_internals, density-scale);
-        $theme: map.deep-remove($theme, $_internals, density-tokens);
+        $theme: map.deep-remove($theme, $internals, density-scale);
+        $theme: map.deep-remove($theme, $internals, density-tokens);
       }
     }
     @return $theme;
@@ -297,7 +299,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   $result: ();
   @each $system in $systems {
-    $result: map.deep-merge($result, map.get($theme, $_internals, '#{$system}-tokens') or ());
+    $result: map.deep-merge($result, map.get($theme, $internals, '#{$system}-tokens') or ());
   }
 
   @return $result;

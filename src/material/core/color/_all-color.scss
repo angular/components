@@ -7,7 +7,7 @@
     @error 'No color configuration specified.';
   }
 
-  @include all-theme.all-component-themes(
+  @include all-theme.all-component-colors(
       inspection.theme-remove($theme, base, typography, density));
 }
 
