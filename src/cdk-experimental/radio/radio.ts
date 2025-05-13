@@ -72,7 +72,7 @@ export class CdkRadioGroup<V> implements AfterViewInit {
   protected items = computed(() => this._cdkRadioButtons().map(radio => radio.pattern));
 
   /** Whether the radio group is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('vertical');
+  orientation = input<'vertical' | 'horizontal'>('horizontal');
 
   /** Whether focus should wrap when navigating. */
   wrap = input(false, {transform: booleanAttribute}); // Radio groups typically don't wrap
@@ -95,14 +95,12 @@ export class CdkRadioGroup<V> implements AfterViewInit {
   /** The internal selection state for the radio group. */
   private readonly _value = linkedSignal(() => (this.value() ? [this.value()!] : []));
 
-  /** The current index that has been navigated to. */
-  activeIndex = model<number>(0);
-
   /** The RadioGroup UIPattern. */
   pattern: RadioGroupPattern<V> = new RadioGroupPattern<V>({
     ...this,
     items: this.items,
     value: this._value,
+    activeIndex: signal(0),
     textDirection: this.textDirection,
   });
 
@@ -140,6 +138,7 @@ export class CdkRadioGroup<V> implements AfterViewInit {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-checked]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
+    '[id]': 'pattern.id()',
   },
 })
 export class CdkRadioButton<V> {
