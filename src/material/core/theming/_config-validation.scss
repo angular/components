@@ -3,7 +3,6 @@
 @use 'sass:meta';
 @use 'sass:string';
 @use '../style/validation';
-@use './palettes';
 
 /// Creates an error message by finding `$config` in the existing message and appending a suffix to
 /// it.
@@ -33,18 +32,35 @@
   @if not meta.type-of($palette) == 'map' {
     @return true;
   }
-  $keys: map.keys($palette);
-  $expected-keys: map.keys(palettes.$red-palette);
-  @if validation.validate-allowed-values($keys, $expected-keys...) or
-      validation.validate-required-values($keys, $expected-keys...) {
+
+  // check for supporting palettes
+  $expected-palette-keys: (secondary, neutral, neutral-variant, error);
+  $primary-keys: map.keys($palette);
+  @if validation.validate-required-values($primary-keys, $expected-palette-keys...) {
     @return true;
   }
-  $nv-keys: map.keys(map.get($palette, neutral-variant));
-  $expected-nv-keys: map.keys(map.get(palettes.$red-palette, neutral-variant));
-  @if validation.validate-allowed-values($nv-keys, $expected-nv-keys...) or
-      validation.validate-required-values($nv-keys, $expected-nv-keys...) {
+
+  $expected-color-slot-keys: (0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100);
+  $additional-neutral-keys: (4, 6, 12, 17, 22, 24, 87, 92, 94, 96);
+  $expected-neutral-keys: list.join($expected-color-slot-keys, $additional-neutral-keys);
+
+  // check primary color palette slots
+  @if validation.validate-required-values($primary-keys, $expected-color-slot-keys...) {
     @return true;
   }
+
+  // check remaining palette color slots
+  @each $color-palette in $expected-palette-keys {
+    $keys: map.keys(map.get($palette, $color-palette));
+    @if $color-palette == neutral and
+        validation.validate-required-values($keys, $expected-neutral-keys...) {
+      @return true;
+    }
+    @else if validation.validate-required-values($keys, $expected-color-slot-keys...) {
+      @return true;
+    }
+  }
+
   @return null;
 }
 
