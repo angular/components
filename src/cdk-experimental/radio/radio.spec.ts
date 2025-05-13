@@ -18,11 +18,11 @@ const colors = {
 };
 
 // TODO: Move this to a separate folder/file so it can be reused across components.
-async function getAccessibilityViolationsReport(root: HTMLElement): Promise<string | null> {
+async function runAccessibilityChecks(root: HTMLElement): Promise<void> {
   const results = await axe.run(root);
 
   if (!results.violations.length) {
-    return null;
+    return;
   }
 
   const reportLines: string[] = [];
@@ -74,7 +74,7 @@ async function getAccessibilityViolationsReport(root: HTMLElement): Promise<stri
     }
   });
 
-  return reportLines.join('\n');
+  fail(reportLines.join('\n'));
 }
 
 describe('CdkRadioGroup', () => {
@@ -178,11 +178,7 @@ describe('CdkRadioGroup', () => {
   }
 
   afterEach(async () => {
-    const report = await getAccessibilityViolationsReport(radioGroupElement);
-
-    if (report) {
-      fail(report);
-    }
+    await runAccessibilityChecks(radioGroupElement);
   });
 
   describe('ARIA attributes and roles', () => {
