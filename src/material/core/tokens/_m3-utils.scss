@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:meta';
+@use 'sass:string';
 
 /// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
 /// @param {List} $prefix The token prefix for the given tokens.
@@ -82,4 +83,38 @@
       map.get($systems, md-sys-typescale, #{$typography-level}-#{$prop}));
   }
   @return $result;
+}
+
+// Replaces color tokens in the map with those defined as the variant color.
+@function replace-colors-with-variant($system, $color, $variant) {
+  $system: map.set($system, on-#{$color}, map.get($system, on-#{$variant}));
+  $system: map.set($system, on-#{$color}-container, map.get($system, on-#{$variant}-container));
+  $system: map.set($system, #{$color}, map.get($system, #{$variant}));
+  $system: map.set($system, #{$color}-container, map.get($system, #{$variant}-container));
+  @return $system;
+}
+
+// Gets the theme's system values as a flat map.
+@function get-system($theme) {
+  $system: ();
+  $system: map.merge($system,
+      map.get($theme, _mat-theming-internals-do-not-access, md-sys-color));
+  $system: map.merge($system,
+      map.get($theme, _mat-theming-internals-do-not-access, md-sys-elevation));
+  $system: map.merge($system,
+      map.get($theme, _mat-theming-internals-do-not-access, md-sys-shape));
+  $system: map.merge($system,
+      map.get($theme, _mat-theming-internals-do-not-access, md-sys-state));
+  $system: map.merge($system,
+      map.get($theme, _mat-theming-internals-do-not-access, md-sys-typescale));
+  @return $system;
+}
+
+// Returns the color with an opacity value using color-mix. If the color is a variable name, it
+// will wrap it with `var()`.
+@function color-with-opacity($color, $opacity) {
+  @if (meta.type-of($color) == string and string.index($color, '--') == 1) {
+    $color: var($color);
+  }
+  @return color-mix(in srgb, #{$color} #{$opacity}, transparent);
 }

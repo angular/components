@@ -125,6 +125,47 @@
   @include timepicker-theme.base($theme);
 }
 
+@mixin all-component-colors($theme) {
+  @include core-theme.color($theme);
+  @include card-theme.color($theme);
+  @include progress-bar-theme.color($theme);
+  @include tooltip-theme.color($theme);
+  @include form-field-theme.color($theme);
+  @include input-theme.color($theme);
+  @include select-theme.color($theme);
+  @include autocomplete-theme.color($theme);
+  @include dialog-theme.color($theme);
+  @include chips-theme.color($theme);
+  @include slide-toggle-theme.color($theme);
+  @include radio-theme.color($theme);
+  @include slider-theme.color($theme);
+  @include menu-theme.color($theme);
+  @include list-theme.color($theme);
+  @include paginator-theme.color($theme);
+  @include tabs-theme.color($theme);
+  @include checkbox-theme.color($theme);
+  @include button-theme.color($theme);
+  @include icon-button-theme.color($theme);
+  @include fab-theme.color($theme);
+  @include snack-bar-theme.color($theme);
+  @include table-theme.color($theme);
+  @include progress-spinner-theme.color($theme);
+  @include badge-theme.color($theme);
+  @include bottom-sheet-theme.color($theme);
+  @include button-toggle-theme.color($theme);
+  @include datepicker-theme.color($theme);
+  @include divider-theme.color($theme);
+  @include expansion-theme.color($theme);
+  @include grid-list-theme.color($theme);
+  @include icon-theme.color($theme);
+  @include sidenav-theme.color($theme);
+  @include stepper-theme.color($theme);
+  @include sort-theme.color($theme);
+  @include toolbar-theme.color($theme);
+  @include tree-theme.color($theme);
+  @include timepicker-theme.color($theme);
+}
+
 // @deprecated Use `all-component-themes`.
 @mixin angular-material-theme($theme) {
   @include all-component-themes($theme);

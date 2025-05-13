@@ -323,7 +323,7 @@ function getTokenExtractionCode(
           $fallback-type: ${inferTokenType}($name, $resolved-value);
 
           @if ($fallback-type == null) {
-            @error 'Cannot determine type of token "#{$name}". Token extraction script needs to be updated.';
+            $fallback-type: base;
           }
 
           $type: $fallback-type;

@@ -106,6 +106,11 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDef
   'MAT_FORM_FIELD_DEFAULT_OPTIONS',
 );
 
+/** Styles that are to be applied to the label elements in the outlined appearance. */
+type OutlinedLabelStyles =
+  | [floatingLabelTransform: string, notchedOutlineWidth: number | null]
+  | null;
+
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
 
@@ -567,27 +572,27 @@ export class MatFormField
    * trigger the label offset update.
    */
   private _syncOutlineLabelOffset() {
-    // Whenever the prefix changes, schedule an update of the label offset.
-    // TODO(mmalerba): Split this into separate `afterRender` calls using the `EarlyRead` and
-    //  `Write` phases.
-    afterRenderEffect(() => {
-      if (this._appearanceSignal() === 'outline') {
-        this._updateOutlineLabelOffset();
-        if (!globalThis.ResizeObserver) {
-          return;
+    afterRenderEffect({
+      earlyRead: () => {
+        if (this._appearanceSignal() !== 'outline') {
+          this._outlineLabelOffsetResizeObserver?.disconnect();
+          return null;
         }
 
         // Setup a resize observer to monitor changes to the size of the prefix / suffix and
         // readjust the label offset.
-        this._outlineLabelOffsetResizeObserver ||= new globalThis.ResizeObserver(() =>
-          this._updateOutlineLabelOffset(),
-        );
-        for (const el of this._prefixSuffixContainers()) {
-          this._outlineLabelOffsetResizeObserver.observe(el, {box: 'border-box'});
+        if (globalThis.ResizeObserver) {
+          this._outlineLabelOffsetResizeObserver ||= new globalThis.ResizeObserver(() => {
+            this._writeOutlinedLabelStyles(this._getOutlinedLabelOffset());
+          });
+          for (const el of this._prefixSuffixContainers()) {
+            this._outlineLabelOffsetResizeObserver.observe(el, {box: 'border-box'});
+          }
         }
-      } else {
-        this._outlineLabelOffsetResizeObserver?.disconnect();
-      }
+
+        return this._getOutlinedLabelOffset();
+      },
+      write: labelStyles => this._writeOutlinedLabelStyles(labelStyles()),
     });
   }
 
@@ -740,7 +745,7 @@ export class MatFormField
   }
 
   /**
-   * Updates the horizontal offset of the label in the outline appearance. In the outline
+   * Calculates the horizontal offset of the label in the outline appearance. In the outline
    * appearance, the notched-outline and label are not relative to the infix container because
    * the outline intends to surround prefixes, suffixes and the infix. This means that the
    * floating label by default overlaps prefixes in the docked state. To avoid this, we need to
@@ -748,22 +753,20 @@ export class MatFormField
    * not need to do this because they use a fixed width for prefixes. Hence, they can simply
    * incorporate the horizontal offset into their default text-field styles.
    */
-  private _updateOutlineLabelOffset() {
+  private _getOutlinedLabelOffset(): OutlinedLabelStyles {
     const dir = this._dir.valueSignal();
     if (!this._hasOutline() || !this._floatingLabel) {
-      return;
+      return null;
     }
-    const floatingLabel = this._floatingLabel.element;
     // If no prefix is displayed, reset the outline label offset from potential
     // previous label offset updates.
-    if (!(this._iconPrefixContainer || this._textPrefixContainer)) {
-      floatingLabel.style.transform = '';
-      return;
+    if (!this._iconPrefixContainer && !this._textPrefixContainer) {
+      return ['', null];
     }
     // If the form field is not attached to the DOM yet (e.g. in a tab), we defer
     // the label offset update until the zone stabilizes.
     if (!this._isAttachedToDom()) {
-      return;
+      return null;
     }
     const iconPrefixContainer = this._iconPrefixContainer?.nativeElement;
     const textPrefixContainer = this._textPrefixContainer?.nativeElement;
@@ -783,19 +786,33 @@ export class MatFormField
     // Update the translateX of the floating label to account for the prefix container,
     // but allow the CSS to override this setting via a CSS variable when the label is
     // floating.
-    floatingLabel.style.transform = `var(
-        --mat-mdc-form-field-label-transform,
-        ${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset})
-    )`;
+    const floatingLabelTransform =
+      'var(--mat-mdc-form-field-label-transform, ' +
+      `${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset}))`;
 
     // Prevent the label from overlapping the suffix when in resting position.
-    const prefixAndSuffixWidth =
+    const notchedOutlineWidth =
       iconPrefixContainerWidth +
       textPrefixContainerWidth +
       iconSuffixContainerWidth +
       textSuffixContainerWidth;
 
-    this._notchedOutline?._setMaxWidth(prefixAndSuffixWidth);
+    return [floatingLabelTransform, notchedOutlineWidth];
+  }
+
+  /** Writes the styles produced by `_getOutlineLabelOffset` synchronously to the DOM. */
+  private _writeOutlinedLabelStyles(styles: OutlinedLabelStyles): void {
+    if (styles !== null) {
+      const [floatingLabelTransform, notchedOutlineWidth] = styles;
+
+      if (this._floatingLabel) {
+        this._floatingLabel.element.style.transform = floatingLabelTransform;
+      }
+
+      if (notchedOutlineWidth !== null) {
+        this._notchedOutline?._setMaxWidth(notchedOutlineWidth);
+      }
+    }
   }
 
   /** Checks whether the form field is attached to the DOM. */
