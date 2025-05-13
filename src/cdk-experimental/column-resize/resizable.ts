@@ -46,6 +46,7 @@ import {ResizeStrategy} from './resize-strategy';
 import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
+const RESIZE_DISABLED_CLASS = 'cdk-resizable-resize-disabled';
 
 /**
  * Base class for Resizable directives which are applied to column headers to make those columns
@@ -188,11 +189,18 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
       .pipe(takeUntilDestroyed)
       .subscribe(hoveringRow => {
         if (hoveringRow) {
-          if (!this.overlayRef) {
-            this.overlayRef = this._createOverlayForHandle();
-          }
+          const tooBigToResize =
+            this.maxWidthPxInternal < Number.MAX_SAFE_INTEGER &&
+            element.offsetWidth > this.maxWidthPxInternal;
+          element.classList.toggle(RESIZE_DISABLED_CLASS, tooBigToResize);
 
-          this._showHandleOverlay();
+          if (!tooBigToResize) {
+            if (!this.overlayRef) {
+              this.overlayRef = this._createOverlayForHandle();
+            }
+
+            this._showHandleOverlay();
+          }
         } else if (this.overlayRef) {
           // todo - can't detach during an active resize - need to work that out
           this.overlayRef.detach();
