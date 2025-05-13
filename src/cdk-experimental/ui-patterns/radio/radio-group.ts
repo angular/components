@@ -21,7 +21,7 @@ interface SelectOptions {
 }
 
 /** Represents the required inputs for a radio group. */
-export type RadioGroupInputs<V> = ListNavigationInputs<RadioButtonPattern<V>> &
+export type RadioGroupInputs<V> = Omit<ListNavigationInputs<RadioButtonPattern<V>>, 'wrap'> &
   // Radio groups are always single-select.
   Omit<ListSelectionInputs<RadioButtonPattern<V>, V>, 'multi' | 'selectionMode'> &
   ListFocusInputs<RadioButtonPattern<V>> & {
@@ -115,12 +115,15 @@ export class RadioGroupPattern<V> {
     this.orientation = inputs.orientation;
 
     this.focusManager = new ListFocus(inputs);
-    this.navigation = new ListNavigation({...inputs, focusManager: this.focusManager});
+    this.navigation = new ListNavigation({
+      ...inputs,
+      wrap: () => false,
+      focusManager: this.focusManager,
+    });
     this.selection = new ListSelection({
       ...inputs,
-      // Radio groups are always single-select and selection follows focus.
-      multi: signal(false),
-      selectionMode: signal('follow'),
+      multi: () => false,
+      selectionMode: () => 'follow',
       focusManager: this.focusManager,
     });
   }

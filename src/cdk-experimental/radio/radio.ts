@@ -7,12 +7,12 @@
  */
 
 import {
+  afterRenderEffect,
   AfterViewInit,
   booleanAttribute,
   computed,
   contentChildren,
   Directive,
-  effect,
   ElementRef,
   inject,
   input,
@@ -56,7 +56,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(focusin)': 'onFocus()',
   },
 })
-export class CdkRadioGroup<V> implements AfterViewInit {
+export class CdkRadioGroup<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -73,9 +73,6 @@ export class CdkRadioGroup<V> implements AfterViewInit {
 
   /** Whether the radio group is vertically or horizontally oriented. */
   orientation = input<'vertical' | 'horizontal'>('horizontal');
-
-  /** Whether focus should wrap when navigating. */
-  wrap = input(false, {transform: booleanAttribute}); // Radio groups typically don't wrap
 
   /** Whether disabled items in the group should be skipped when navigating. */
   skipDisabled = input(true, {transform: booleanAttribute});
@@ -111,15 +108,11 @@ export class CdkRadioGroup<V> implements AfterViewInit {
   private _isViewInitialized = signal(false);
 
   constructor() {
-    effect(() => {
-      if (this._isViewInitialized() && !this._hasFocused()) {
+    afterRenderEffect(() => {
+      if (!this._hasFocused()) {
         this.pattern.setDefaultState();
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this._isViewInitialized.set(true);
   }
 
   onFocus() {
