@@ -71,6 +71,10 @@
     .mat-resizable-handle {
       background: $resizable-hover-divider;
     }
+
+    .cdk-resizable-resize-disabled > .mat-resizable-handle {
+      background: $non-resizable-hover-divider;
+    }
   }
 
   [dir='rtl'] {
