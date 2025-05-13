@@ -6,7 +6,13 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
-import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  provideCheckNoChangesConfig,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
 import {By} from '@angular/platform-browser';
@@ -32,6 +38,7 @@ describe('MatTabNavBar', () => {
         TabBarWithInactiveTabsOnInit,
       ],
       providers: [
+        provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
       ],
