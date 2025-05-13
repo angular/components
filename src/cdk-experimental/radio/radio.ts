@@ -21,7 +21,6 @@ import {
 } from '@angular/core';
 import {RadioButtonPattern, RadioGroupPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {_IdGenerator} from '@angular/cdk/a11y';
 
 /**
@@ -56,16 +55,11 @@ import {_IdGenerator} from '@angular/cdk/a11y';
   },
 })
 export class CdkRadioGroup<V> {
-  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
-
   /** The CdkRadioButtons nested inside of the CdkRadioGroup. */
   private readonly _cdkRadioButtons = contentChildren(CdkRadioButton, {descendants: true});
 
   /** A signal wrapper for directionality. */
-  protected textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  protected textDirection = inject(Directionality).valueSignal;
 
   /** The RadioButton UIPatterns of the child CdkRadioButtons. */
   protected items = computed(() => this._cdkRadioButtons().map(radio => radio.pattern));

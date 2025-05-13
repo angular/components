@@ -1,4 +1,4 @@
-import {Component, DebugElement, EventEmitter, signal, Type, WritableSignal} from '@angular/core';
+import {Component, DebugElement, signal, Type, WritableSignal} from '@angular/core';
 import {CdkRadioButton, CdkRadioGroup} from './radio';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -79,7 +79,7 @@ async function runAccessibilityChecks(root: HTMLElement): Promise<void> {
 
 describe('CdkRadioGroup', () => {
   let fixture: ComponentFixture<RadioGroupExample>;
-  let textDirection = new EventEmitter<Direction>();
+  let textDirection = signal('ltr');
 
   let radioGroup: DebugElement;
   let radioButtons: DebugElement[];
@@ -111,7 +111,7 @@ describe('CdkRadioGroup', () => {
       providers: [
         {
           provide: Directionality,
-          useValue: {value: 'ltr', change: textDirection},
+          useFactory: () => ({valueSignal: textDirection}),
         },
       ],
       imports: [BidiModule, component],
@@ -120,6 +120,7 @@ describe('CdkRadioGroup', () => {
     const fixture = TestBed.createComponent<T>(component);
     fixture.detectChanges();
     defineTestVariables(fixture);
+    textDirection.set('ltr');
     return fixture;
   }
 
@@ -171,7 +172,7 @@ describe('CdkRadioGroup', () => {
       });
     }
     if (opts?.textDirection !== undefined) {
-      textDirection.emit(opts.textDirection);
+      textDirection.set(opts.textDirection);
     }
     fixture.detectChanges();
     defineTestVariables(fixture); // Ensure env vars are up-to-date with the dom.
@@ -502,16 +503,14 @@ describe('CdkRadioGroup', () => {
         });
 
         describe('text direction rtl', () => {
-          beforeEach(() => setupRadioGroup({textDirection: 'rtl'}));
+          beforeEach(() => setupRadioGroup({textDirection: 'rtl', orientation: 'horizontal'}));
 
           it('should move focus to the next radio button on ArrowLeft', () => {
-            setupRadioGroup({orientation: 'horizontal'});
             left();
             expect(isFocused(1)).toBe(true);
           });
 
           it('should move focus to the previous radio button on ArrowRight', () => {
-            setupRadioGroup({orientation: 'horizontal'});
             left();
             left();
             right();
@@ -522,7 +521,6 @@ describe('CdkRadioGroup', () => {
             setupRadioGroup({
               skipDisabled: true,
               disabledOptions: [1, 2],
-              orientation: 'horizontal',
             });
             left();
             expect(isFocused(3)).toBe(true);
