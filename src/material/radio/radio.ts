@@ -523,6 +523,9 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     return this._required || (this.radioGroup && this.radioGroup.required);
   }
   set required(value: boolean) {
+    if (value !== this._required) {
+      this._changeDetector.markForCheck();
+    }
     this._required = value;
   }
 
