@@ -1,5 +1,12 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  provideCheckNoChangesConfig,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -14,6 +21,7 @@ import {
 describe('MatButtonToggle with forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatButtonToggleModule,
         FormsModule,
@@ -327,6 +335,7 @@ describe('MatButtonToggle with forms', () => {
 describe('MatButtonToggle without forms', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatButtonToggleModule,
         ButtonTogglesInsideButtonToggleGroup,
