@@ -4,10 +4,21 @@
 
 ```ts
 
+import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 
 // @public
 export abstract class MatFormFieldControlHarness extends ComponentHarness {
+}
+
+// @public
+export abstract class MatFormFieldControlHarnessBase extends MatFormFieldControlHarness {
+    getLabel(): Promise<string | null>;
+}
+
+// @public
+export interface MatFormFieldControlHarnessFilters extends BaseHarnessFilters {
+    label?: string | RegExp;
 }
 
 // (No @packageDocumentation comment for this package)

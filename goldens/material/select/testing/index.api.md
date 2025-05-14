@@ -4,14 +4,17 @@
 
 ```ts
 
-import { BaseHarnessFilters } from '@angular/cdk/testing';
-import { ComponentHarness } from '@angular/cdk/testing';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
-import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { MatFormFieldControlHarnessBase } from '@angular/material/form-field/testing/control';
+import { MatFormFieldControlHarnessFilters } from '@angular/material/form-field/testing/control';
+import { MatOptgroupHarness } from '@angular/material/core/testing';
+import { MatOptionHarness } from '@angular/material/core/testing';
+import { OptgroupHarnessFilters } from '@angular/material/core/testing';
+import { OptionHarnessFilters } from '@angular/material/core/testing';
 
 // @public
-export class MatSelectHarness extends MatFormFieldControlHarness {
+export class MatSelectHarness extends MatFormFieldControlHarnessBase {
     blur(): Promise<void>;
     clickOptions(filter?: OptionHarnessFilters): Promise<void>;
     close(): Promise<void>;
@@ -33,7 +36,7 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
 }
 
 // @public
-export interface SelectHarnessFilters extends BaseHarnessFilters {
+export interface SelectHarnessFilters extends MatFormFieldControlHarnessFilters {
     disabled?: boolean;
 }
 

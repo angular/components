@@ -7,6 +7,8 @@
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
+import { MatFormFieldControlHarnessBase } from '@angular/material/form-field/testing/control';
+import { MatFormFieldControlHarnessFilters } from '@angular/material/form-field/testing/control';
 
 // @public
 export interface CalendarCellHarnessFilters extends BaseHarnessFilters {
@@ -35,7 +37,7 @@ export enum CalendarView {
 }
 
 // @public
-export interface DatepickerInputHarnessFilters extends BaseHarnessFilters {
+export interface DatepickerInputHarnessFilters extends MatFormFieldControlHarnessFilters {
     placeholder?: string | RegExp;
     value?: string | RegExp;
 }
@@ -45,7 +47,7 @@ export interface DatepickerToggleHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
-export interface DateRangeInputHarnessFilters extends BaseHarnessFilters {
+export interface DateRangeInputHarnessFilters extends MatFormFieldControlHarnessFilters {
     value?: string | RegExp;
 }
 
@@ -116,6 +118,7 @@ export class MatDatepickerToggleHarness extends DatepickerTriggerHarnessBase {
 // @public
 export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
     getEndInput(): Promise<MatEndDateHarness>;
+    getLabel(): Promise<string | null>;
     getSeparator(): Promise<string>;
     getStartInput(): Promise<MatStartDateHarness>;
     getValue(): Promise<string>;
