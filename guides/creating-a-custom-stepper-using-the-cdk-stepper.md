@@ -1,6 +1,6 @@
 # Creating a custom stepper using the CDK stepper
 
-The [CDK stepper](https://material.angular.io/cdk/stepper/overview) allows to build a custom stepper which you can completely style yourself without any specific Material Design styling.
+The [CDK stepper](https://material.angular.dev/cdk/stepper/overview) allows to build a custom stepper which you can completely style yourself without any specific Material Design styling.
 
 In this guide, we'll learn how we can build our own custom stepper using the CDK stepper. Here is what we'll build by the end of this guide:
 
@@ -28,7 +28,7 @@ export class CustomStepperComponent extends CdkStepper {
 }
 ```
 
-After we've extended our component class from `CdkStepper` we can now access different properties from this class like `linear`, `selectedIndex` and `steps` which are defined in the [API documentation](https://material.angular.io/cdk/stepper/api#CdkStepper).
+After we've extended our component class from `CdkStepper` we can now access different properties from this class like `linear`, `selectedIndex` and `steps` which are defined in the [API documentation](https://material.angular.dev/cdk/stepper/api#CdkStepper).
 
 This is the HTML template of our custom stepper component:
 

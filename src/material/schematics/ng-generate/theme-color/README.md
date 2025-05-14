@@ -6,7 +6,7 @@ ng generate @angular/material:theme-color
 ## Background
 This schematic allows users to create new Material 3 theme palettes based
 on custom colors by using [Material Color Utilities](https://github.com/material-foundation/material-color-utilities).
-This is an alternative to using the available [predefined theme palettes](https://material.angular.io/guide/theming#prebuilt-color-palettes).
+This is an alternative to using the available [predefined theme palettes](https://material.angular.dev/guide/theming#prebuilt-color-palettes).
 
 The generated [color palettes](https://m3.material.io/styles/color/roles) are
 optimized to have enough contrast to be more accessible. See [Science of Color Design](https://material.io/blog/science-of-color-design)
@@ -47,7 +47,7 @@ true.
 The result of running the schematic is a new file with the generated custom colors.
 
 Angular recommendeds generating a Sass file since our theming system Sass APIs are supported and
-have benefits such as error handling and relate to the [theming documentation](https://material.angular.io/guide/theming).
+have benefits such as error handling and relate to the [theming documentation](https://material.angular.dev/guide/theming).
 If there are ever changes to the theming system or system variable names, your styles will continue
 to work and be supported. Color palettes get defined in the generated file that you can pass into
 the `theme()` mixin in your own theme file. See the [Sass themes section](#sass-themes) for more
@@ -129,7 +129,7 @@ html {
 #### Adaptive high contrast colors for adaptive themes
 The `theme()` mixin can create one theme that detects and adapts to a user if they have a
 light or dark theme by defining `color-scheme`. See the [color-scheme documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme)
-and the [theming guide](https://material.angular.io/guide/theming#supporting-light-and-dark-mode)
+and the [theming guide](https://material.angular.dev/guide/theming#supporting-light-and-dark-mode)
 for more information.
 
 Apply the `high-contrast-overrides(color-scheme)` mixin wrapped inside `@media (prefers-contrast: more)`

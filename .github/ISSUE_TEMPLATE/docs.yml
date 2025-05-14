@@ -1,5 +1,5 @@
 name: Documentation
-description: Suggest an improvement to our documentation at material.angular.io
+description: Suggest an improvement to our documentation at material.angular.dev
 title: 'docs-bug(COMPONENT): TITLE'
 labels: ['docs', 'needs triage']
 body:
@@ -8,7 +8,7 @@ body:
     attributes:
       label: Documentation Feedback
       description: |
-        Provide a brief summary of what you would like to see changed in our documentation at [material.angular.io](https://material.angular.io/).
+        Provide a brief summary of what you would like to see changed in our documentation at [material.angular.dev](https://material.angular.dev/).
         Feel free to provide any suggestions of content or examples you’d like us to include.
     validations:
       required: true
@@ -16,6 +16,6 @@ body:
     id: affected-documentation-page
     attributes:
       label: Affected documentation page
-      description: Insert a link to the affected page on [material.angular.io](https://material.angular.io/).
+      description: Insert a link to the affected page on [material.angular.dev](https://material.angular.dev/).
     validations:
       required: true

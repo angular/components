@@ -177,10 +177,10 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   // TODO: should be typed as `ThemePalette` but internal apps pass in arbitrary strings.
   /**
    * Theme color of the chip. This API is supported in M2 themes only, it has no
-   * effect in M3 themes. For color customization in M3, see https://material.angular.io/components/chips/styling.
+   * effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/chips/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input() color?: string | null;
 

@@ -1,4 +1,4 @@
-name: 'CI (material.angular.io)'
+name: 'CI (material.angular.dev)'
 
 on:
   push:
@@ -63,7 +63,7 @@ jobs:
         if: always()
         with:
           name: test-logs
-          path: material.angular.io/bazel-testlogs/
+          path: material.angular.dev/bazel-testlogs/
           retention-days: 14
 
   lighthouse:
@@ -84,5 +84,5 @@ jobs:
         if: always()
         with:
           name: lighthouse-logs
-          path: material.angular.io/bazel-testlogs/
+          path: material.angular.dev/bazel-testlogs/
           retention-days: 14

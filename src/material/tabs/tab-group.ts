@@ -126,10 +126,10 @@ export class MatTabGroup
 
   /**
    * Theme color of the tab group. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    */
   @Input()
   color: ThemePalette;
@@ -219,10 +219,10 @@ export class MatTabGroup
 
   /**
    * Theme color of the background of the tab group. This API is supported in M2 themes only, it
-   * has no effect in M3 themes. For color customization in M3, see https://material.angular.io/components/tabs/styling.
+   * has no effect in M3 themes. For color customization in M3, see https://material.angular.dev/components/tabs/styling.
    *
    * For information on applying color variants in M3, see
-   * https://material.angular.io/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
+   * https://material.angular.dev/guide/material-2-theming#optional-add-backwards-compatibility-styles-for-color-variants
    *
    * @deprecated The background color should be customized through Sass theming APIs.
    * @breaking-change 20.0.0 Remove this input

@@ -13,8 +13,8 @@
  *
  *  <deploy-dir> is a path to a directory which should be served and tested.
  *
- * `<url>` is the origin (scheme + hostname + port) of an material.angular.io
- *  deployment. It can be remote (e.g. `https://next.material.angular.io`) or local (e.g.
+ * `<url>` is the origin (scheme + hostname + port) of an material.angular.dev
+ *  deployment. It can be remote (e.g. `https://next.material.angular.dev`) or local (e.g.
  *  `http://localhost:4200`).
  *
  * `<delay>` is a millisecond value used with `setTimeout()` to allow a configurable delay

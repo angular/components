@@ -81,7 +81,7 @@ export class StackBlitzWriter {
         this._openStackBlitz({
           files,
           title: `Angular Components - ${data.description}`,
-          description: `${data.description}\n\nAuto-generated from: https://material.angular.io`,
+          description: `${data.description}\n\nAuto-generated from: https://material.angular.dev`,
           openFile: exampleMainFile,
         });
       };
