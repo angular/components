@@ -84,6 +84,7 @@ filegroup(
 copy_to_directory(
     name = "adev_assets",
     srcs = [
+        "//src/cdk/drag-drop:json_api",
         "//src/cdk/testing:json_api",
         "//src/cdk/testing/protractor:json_api",
         "//src/cdk/testing/selenium-webdriver:json_api",
