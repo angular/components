@@ -1,3 +1,18 @@
+<a name="19.2.16"></a>
+# 19.2.16 "metal-monkey" (2025-05-14)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [08f5fda901](https://github.com/angular/components/commit/08f5fda901c169250e934e6a8aed9248bac08303) | fix | **button-toggle:** use smaller border radius ([#31084](https://github.com/angular/components/pull/31084)) |
+| [68928e58aa](https://github.com/angular/components/commit/68928e58aa9a4588e88dbf04c50c1bf9828c9798) | fix | **button:** inherit button shape in focus indicator ([#31065](https://github.com/angular/components/pull/31065)) |
+| [6abe7510b2](https://github.com/angular/components/commit/6abe7510b271a4edbdd566b059c6c6fc90edad8c) | fix | **schematics:** incorrect on-tertiary color being generated ([#31061](https://github.com/angular/components/pull/31061)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af0b4638f2](https://github.com/angular/components/commit/af0b4638f2a55d4e8280c12a66f5eb9a0c949d9c) | fix | **column-resize:** Obscure weird behavior in tables that are too wide by conditionally disabling resize ([#31100](https://github.com/angular/components/pull/31100)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.15"></a>
 # 19.2.15 "abuite-ant" (2025-05-07)
 ### cdk
