@@ -4,13 +4,9 @@ import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
-import {CdkListbox, CdkListboxModule, CdkOption, ListboxValueChangeEvent} from './index';
+import {CdkListbox, CdkOption, ListboxValueChangeEvent} from './index';
 
-function setupComponent<T, O = string>(component: Type<T>, imports: any[] = []) {
-  TestBed.configureTestingModule({
-    imports: [CdkListboxModule, ...imports],
-    declarations: [component],
-  });
+function setupComponent<T, O = string>(component: Type<T>) {
   const fixture = TestBed.createComponent(component);
   fixture.detectChanges();
 
@@ -861,9 +857,7 @@ describe('CdkOption and CdkListbox', () => {
 
   describe('with FormControl', () => {
     it('should reflect disabled state of the FormControl', () => {
-      const {testComponent, fixture, listbox} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture, listbox} = setupComponent(ListboxWithFormControl);
       testComponent.formControl.disable();
       fixture.detectChanges();
 
@@ -871,9 +865,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should update when FormControl value changes', () => {
-      const {testComponent, fixture, options} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture, options} = setupComponent(ListboxWithFormControl);
       testComponent.formControl.setValue(['banana']);
       fixture.detectChanges();
 
@@ -881,9 +873,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should update FormControl when selection changes', () => {
-      const {testComponent, fixture, optionEls} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture, optionEls} = setupComponent(ListboxWithFormControl);
       const spy = jasmine.createSpy();
       const subscription = testComponent.formControl.valueChanges.subscribe(spy);
       fixture.detectChanges();
@@ -898,9 +888,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should update multi-select listbox when FormControl value changes', () => {
-      const {testComponent, fixture, options} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture, options} = setupComponent(ListboxWithFormControl);
       testComponent.isMultiselectable = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -912,9 +900,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should update FormControl when multi-selection listbox changes', () => {
-      const {testComponent, fixture, optionEls} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture, optionEls} = setupComponent(ListboxWithFormControl);
       testComponent.isMultiselectable = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -935,9 +921,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should throw when multiple values selected in single-select listbox', () => {
-      const {testComponent, fixture} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture} = setupComponent(ListboxWithFormControl);
 
       expect(() => {
         testComponent.formControl.setValue(['orange', 'banana']);
@@ -946,9 +930,7 @@ describe('CdkOption and CdkListbox', () => {
     });
 
     it('should throw when an invalid value is selected', () => {
-      const {testComponent, fixture} = setupComponent(ListboxWithFormControl, [
-        ReactiveFormsModule,
-      ]);
+      const {testComponent, fixture} = setupComponent(ListboxWithFormControl);
       testComponent.isMultiselectable = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -961,13 +943,13 @@ describe('CdkOption and CdkListbox', () => {
 
     it('should not throw on init with a preselected form control and a dynamic set of options', () => {
       expect(() => {
-        setupComponent(ListboxWithPreselectedFormControl, [ReactiveFormsModule]);
+        setupComponent(ListboxWithPreselectedFormControl);
       }).not.toThrow();
     });
 
     it('should throw on init if the preselected value is invalid', () => {
       expect(() => {
-        setupComponent(ListboxWithInvalidPreselectedFormControl, [ReactiveFormsModule]);
+        setupComponent(ListboxWithInvalidPreselectedFormControl);
       }).toThrowError('Listbox has selected values that do not match any of its options.');
     });
   });
@@ -1000,7 +982,7 @@ describe('CdkOption and CdkListbox', () => {
       <div cdkOption="peach">Peach</div>
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption],
 })
 class ListboxWithOptions {
   changedOption: CdkOption | null;
@@ -1026,7 +1008,7 @@ class ListboxWithOptions {
 
 @Component({
   template: `<div cdkListbox></div>`,
-  standalone: false,
+  imports: [CdkListbox],
 })
 class ListboxWithNoOptions {}
 
@@ -1042,7 +1024,7 @@ class ListboxWithNoOptions {}
       <div cdkOption="peach">Peach</div>
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption, ReactiveFormsModule],
 })
 class ListboxWithFormControl {
   formControl = new FormControl();
@@ -1058,7 +1040,7 @@ class ListboxWithFormControl {
       }
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption, ReactiveFormsModule],
 })
 class ListboxWithPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1073,7 +1055,7 @@ class ListboxWithPreselectedFormControl {
       }
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption, ReactiveFormsModule],
 })
 class ListboxWithInvalidPreselectedFormControl {
   options = ['a', 'b', 'c'];
@@ -1089,7 +1071,7 @@ class ListboxWithInvalidPreselectedFormControl {
       <li cdkOption="peach" cdkOptionTypeaheadLabel="peach">🍑</li>
     </ul>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption],
 })
 class ListboxWithCustomTypeahead {}
 
@@ -1103,7 +1085,7 @@ class ListboxWithCustomTypeahead {}
       <div cdkOption="peach">Peach</div>
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption],
 })
 class ListboxWithBoundValue {
   value = ['banana'];
@@ -1120,7 +1102,7 @@ class ListboxWithBoundValue {
       <div cdkOption="peach">Peach</div>
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption],
 })
 class ListboxWithMultipleBoundValues {
   value = ['apple', 'banana'];
@@ -1134,7 +1116,7 @@ class ListboxWithMultipleBoundValues {
       }
     </div>
   `,
-  standalone: false,
+  imports: [CdkListbox, CdkOption],
 })
 class ListboxWithObjectValues {
   fruits = [{name: 'Apple'}, {name: 'Orange'}, {name: 'Banana'}, {name: 'Peach'}];
