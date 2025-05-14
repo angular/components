@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@47ce326218e10e67066c27f618129ac8a13a7033
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@057595fcd4031441d5a9b1d31bf0ced68073832f
         with:
           cache-node-modules: true
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@47ce326218e10e67066c27f618129ac8a13a7033
+        uses: angular/dev-infra/github-actions/bazel/setup@057595fcd4031441d5a9b1d31bf0ced68073832f
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@47ce326218e10e67066c27f618129ac8a13a7033
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@057595fcd4031441d5a9b1d31bf0ced68073832f
       - name: Install node modules
         run: pnpm install --frozen-lockfile
 
