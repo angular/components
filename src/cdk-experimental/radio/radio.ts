@@ -18,10 +18,46 @@ import {
   linkedSignal,
   model,
   signal,
+  WritableSignal,
 } from '@angular/core';
 import {RadioButtonPattern, RadioGroupPattern} from '../ui-patterns';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
+
+// TODO: Move mapSignal to it's own file so it can be reused across components.
+
+/**
+ * Creates a new writable signal (signal<V>) whose value is connected to the given original
+ * writable signal (signal<T>) such that updating signal<V> updates signal<T> and vice-versa.
+ *
+ * This function establishes a two-way synchronization between the source signal and the new mapped
+ * signal. When the source signal changes, the mapped signal updates by applying the `transform`
+ * function. When the mapped signal is explicitly set or updated, the change is propagated back to
+ * the source signal by applying the `reverse` function.
+ */
+export function mapSignal<T, V>(
+  originalSignal: WritableSignal<T>,
+  operations: {
+    transform: (value: T) => V;
+    reverse: (value: V) => T;
+  },
+) {
+  const mappedSignal = linkedSignal(() => operations.transform(originalSignal()));
+  const updateMappedSignal = mappedSignal.update;
+  const setMappedSignal = mappedSignal.set;
+
+  mappedSignal.set = (newValue: V) => {
+    setMappedSignal(newValue);
+    originalSignal.set(operations.reverse(newValue));
+  };
+
+  mappedSignal.update = (updateFn: (value: V) => V) => {
+    updateMappedSignal(oldValue => updateFn(oldValue));
+    originalSignal.update(oldValue => operations.reverse(updateFn(operations.transform(oldValue))));
+  };
+
+  return mappedSignal;
+}
 
 /**
  * A radio button group container.
@@ -83,7 +119,10 @@ export class CdkRadioGroup<V> {
   value = model<V | null>(null);
 
   /** The internal selection state for the radio group. */
-  private readonly _value = linkedSignal(() => (this.value() ? [this.value()!] : []));
+  private readonly _value = mapSignal<V | null, V[]>(this.value, {
+    transform: value => (value !== null ? [value] : []),
+    reverse: values => (values.length === 0 ? null : values[0]),
+  });
 
   /** The RadioGroup UIPattern. */
   pattern: RadioGroupPattern<V> = new RadioGroupPattern<V>({

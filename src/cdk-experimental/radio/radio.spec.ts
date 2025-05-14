@@ -1,8 +1,9 @@
-import {Component, DebugElement, signal, Type, WritableSignal} from '@angular/core';
+import {Component, DebugElement, signal, WritableSignal} from '@angular/core';
 import {CdkRadioButton, CdkRadioGroup} from './radio';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule, Direction, Directionality} from '@angular/cdk/bidi';
+import {BidiModule, Direction} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import axe from 'axe-core';
 
 // Basic ANSI color functions because chalk has issues with unit tests.
@@ -79,8 +80,6 @@ async function runAccessibilityChecks(root: HTMLElement): Promise<void> {
 
 describe('CdkRadioGroup', () => {
   let fixture: ComponentFixture<RadioGroupExample>;
-  let textDirection = signal('ltr');
-
   let radioGroup: DebugElement;
   let radioButtons: DebugElement[];
   let radioGroupInstance: CdkRadioGroup<number>;
@@ -106,32 +105,6 @@ describe('CdkRadioGroup', () => {
   const home = () => keydown('Home');
   const end = () => keydown('End');
 
-  function setupTestEnvironment<T>(component: Type<T>) {
-    TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: Directionality,
-          useFactory: () => ({valueSignal: textDirection}),
-        },
-      ],
-      imports: [BidiModule, component],
-    }).compileComponents();
-
-    const fixture = TestBed.createComponent<T>(component);
-    fixture.detectChanges();
-    defineTestVariables(fixture);
-    textDirection.set('ltr');
-    return fixture;
-  }
-
-  function defineTestVariables(fixture: ComponentFixture<unknown>) {
-    radioGroup = fixture.debugElement.query(By.directive(CdkRadioGroup));
-    radioButtons = fixture.debugElement.queryAll(By.directive(CdkRadioButton));
-    radioGroupInstance = radioGroup.injector.get<CdkRadioGroup<number>>(CdkRadioGroup);
-    radioGroupElement = radioGroup.nativeElement;
-    radioButtonElements = radioButtons.map(radioButton => radioButton.nativeElement);
-  }
-
   function setupRadioGroup(opts?: {
     orientation?: 'horizontal' | 'vertical';
     disabled?: boolean;
@@ -143,39 +116,62 @@ describe('CdkRadioGroup', () => {
     options?: TestOption[];
     textDirection?: Direction;
   }) {
+    TestBed.configureTestingModule({
+      providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
+      imports: [BidiModule, RadioGroupExample],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(RadioGroupExample);
     const testComponent = fixture.componentInstance;
 
     if (opts?.orientation !== undefined) {
-      testComponent.orientation.set(opts.orientation);
+      testComponent.orientation = opts.orientation;
     }
     if (opts?.disabled !== undefined) {
-      testComponent.disabled.set(opts.disabled);
+      testComponent.disabled = opts.disabled;
     }
     if (opts?.readonly !== undefined) {
-      testComponent.readonly.set(opts.readonly);
+      testComponent.readonly = opts.readonly;
     }
     if (opts?.value !== undefined) {
-      testComponent.value.set(opts.value);
+      testComponent.value = opts.value;
     }
     if (opts?.skipDisabled !== undefined) {
-      testComponent.skipDisabled.set(opts.skipDisabled);
+      testComponent.skipDisabled = opts.skipDisabled;
     }
     if (opts?.focusMode !== undefined) {
-      testComponent.focusMode.set(opts.focusMode);
+      testComponent.focusMode = opts.focusMode;
     }
     if (opts?.options !== undefined) {
       testComponent.options.set(opts.options);
     }
     if (opts?.disabledOptions !== undefined) {
       opts.disabledOptions.forEach(index => {
-        testComponent.options()[index].disabled.set(true);
+        testComponent.options()[index].disabled = true;
       });
     }
-    if (opts?.textDirection !== undefined) {
-      textDirection.set(opts.textDirection);
-    }
+
     fixture.detectChanges();
-    defineTestVariables(fixture); // Ensure env vars are up-to-date with the dom.
+    defineTestVariables(fixture);
+  }
+
+  function setupDefaultRadioGroup() {
+    TestBed.configureTestingModule({
+      providers: [provideFakeDirectionality('ltr')],
+      imports: [BidiModule, DefaultRadioGroupExample],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(DefaultRadioGroupExample);
+    fixture.detectChanges();
+    defineTestVariables(fixture);
+  }
+
+  function defineTestVariables(fixture: ComponentFixture<unknown>) {
+    radioGroup = fixture.debugElement.query(By.directive(CdkRadioGroup));
+    radioButtons = fixture.debugElement.queryAll(By.directive(CdkRadioButton));
+    radioGroupInstance = radioGroup.injector.get<CdkRadioGroup<number>>(CdkRadioGroup);
+    radioGroupElement = radioGroup.nativeElement;
+    radioButtonElements = radioButtons.map(radioButton => radioButton.nativeElement);
   }
 
   afterEach(async () => {
@@ -184,38 +180,35 @@ describe('CdkRadioGroup', () => {
 
   describe('ARIA attributes and roles', () => {
     describe('default configuration', () => {
-      beforeEach(() => {
-        setupTestEnvironment(DefaultRadioGroupExample);
-      });
-
       it('should correctly set the role attribute to "radiogroup"', () => {
+        setupDefaultRadioGroup();
         expect(radioGroupElement.getAttribute('role')).toBe('radiogroup');
       });
 
       it('should correctly set the role attribute to "radio" for the radio buttons', () => {
+        setupDefaultRadioGroup();
         radioButtonElements.forEach(radioButtonElement => {
           expect(radioButtonElement.getAttribute('role')).toBe('radio');
         });
       });
 
       it('should set aria-orientation to "horizontal"', () => {
+        setupDefaultRadioGroup();
         expect(radioGroupElement.getAttribute('aria-orientation')).toBe('horizontal');
       });
 
       it('should set aria-disabled to false', () => {
+        setupDefaultRadioGroup();
         expect(radioGroupElement.getAttribute('aria-disabled')).toBe('false');
       });
 
       it('should set aria-readonly to false', () => {
+        setupDefaultRadioGroup();
         expect(radioGroupElement.getAttribute('aria-readonly')).toBe('false');
       });
     });
 
     describe('custom configuration', () => {
-      beforeEach(() => {
-        fixture = setupTestEnvironment(RadioGroupExample);
-      });
-
       it('should be able to set aria-orientation to "vertical"', () => {
         setupRadioGroup({orientation: 'vertical'});
         expect(radioGroupElement.getAttribute('aria-orientation')).toBe('vertical');
@@ -233,10 +226,6 @@ describe('CdkRadioGroup', () => {
     });
 
     describe('roving focus mode', () => {
-      beforeEach(() => {
-        fixture = setupTestEnvironment(RadioGroupExample);
-      });
-
       it('should have tabindex="-1" when focusMode is "roving"', () => {
         setupRadioGroup({focusMode: 'roving'});
         expect(radioGroupElement.getAttribute('tabindex')).toBe('-1');
@@ -264,10 +253,6 @@ describe('CdkRadioGroup', () => {
     });
 
     describe('activedescendant focus mode', () => {
-      beforeEach(() => {
-        fixture = setupTestEnvironment(RadioGroupExample);
-      });
-
       it('should have tabindex="0"', () => {
         setupRadioGroup({focusMode: 'activedescendant'});
         expect(radioGroupElement.getAttribute('tabindex')).toBe('0');
@@ -290,23 +275,28 @@ describe('CdkRadioGroup', () => {
   });
 
   describe('value and selection', () => {
-    beforeEach(() => {
-      fixture = setupTestEnvironment(RadioGroupExample);
-    });
-
     it('should select the radio button corresponding to the value input', () => {
+      setupRadioGroup();
       radioGroupInstance.value.set(1);
       fixture.detectChanges();
       expect(radioButtonElements[1].getAttribute('aria-checked')).toBe('true');
     });
 
+    it('should update the value model when the value of a radio group is changed through the ui', () => {
+      setupRadioGroup();
+      click(1);
+      expect(radioGroupInstance.value()).toBe(1);
+    });
+
     describe('pointer interaction', () => {
       it('should update the group value when a radio button is selected via pointer click', () => {
+        setupRadioGroup();
         click(1);
         expect(radioButtonElements[1].getAttribute('aria-checked')).toBe('true');
       });
 
       it('should only allow one radio button to be selected at a time', () => {
+        setupRadioGroup();
         click(1);
         click(2);
         expect(radioButtonElements[0].getAttribute('aria-checked')).toBe('false');
@@ -343,11 +333,13 @@ describe('CdkRadioGroup', () => {
 
     describe('keyboard interaction', () => {
       it('should update the group value on Space', () => {
+        setupRadioGroup();
         space();
         expect(radioButtonElements[0].getAttribute('aria-checked')).toBe('true');
       });
 
       it('should update the group value on Enter', () => {
+        setupRadioGroup();
         enter();
         expect(radioButtonElements[0].getAttribute('aria-checked')).toBe('true');
       });
@@ -365,14 +357,14 @@ describe('CdkRadioGroup', () => {
       });
 
       describe('horizontal orientation', () => {
-        beforeEach(() => setupRadioGroup({orientation: 'horizontal'}));
-
         it('should update the group value on ArrowRight', () => {
+          setupRadioGroup({orientation: 'horizontal'});
           right();
           expect(radioButtonElements[1].getAttribute('aria-checked')).toBe('true');
         });
 
         it('should update the group value on ArrowLeft', () => {
+          setupRadioGroup({orientation: 'horizontal'});
           right();
           right();
           left();
@@ -380,14 +372,14 @@ describe('CdkRadioGroup', () => {
         });
 
         describe('text direction rtl', () => {
-          beforeEach(() => setupRadioGroup({textDirection: 'rtl'}));
-
           it('should update the group value on ArrowLeft', () => {
+            setupRadioGroup({orientation: 'horizontal', textDirection: 'rtl'});
             left();
             expect(radioButtonElements[1].getAttribute('aria-checked')).toBe('true');
           });
 
           it('should update the group value on ArrowRight', () => {
+            setupRadioGroup({orientation: 'horizontal', textDirection: 'rtl'});
             left();
             left();
             right();
@@ -397,14 +389,14 @@ describe('CdkRadioGroup', () => {
       });
 
       describe('vertical orientation', () => {
-        beforeEach(() => setupRadioGroup({orientation: 'vertical'}));
-
         it('should update the group value on ArrowDown', () => {
+          setupRadioGroup({orientation: 'vertical'});
           down();
           expect(radioButtonElements[1].getAttribute('aria-checked')).toBe('true');
         });
 
         it('should update the group value on ArrowUp', () => {
+          setupRadioGroup({orientation: 'vertical'});
           down();
           down();
           up();
@@ -419,43 +411,40 @@ describe('CdkRadioGroup', () => {
     isFocused: (index: number) => boolean,
   ) {
     describe(`keyboard navigation (focusMode="${focusMode}")`, () => {
-      beforeEach(() => {
-        fixture = setupTestEnvironment(RadioGroupExample);
-        setupRadioGroup({focusMode});
-      });
-
       it('should move focus to and select the last enabled radio button on End', () => {
+        setupRadioGroup({focusMode});
         end();
         expect(isFocused(4)).toBe(true);
       });
 
       it('should move focus to and select the first enabled radio button on Home', () => {
+        setupRadioGroup({focusMode});
         end();
         home();
         expect(isFocused(0)).toBe(true);
       });
 
       it('should not allow keyboard navigation or selection if the group is disabled', () => {
-        setupRadioGroup({orientation: 'horizontal', disabled: true});
+        setupRadioGroup({focusMode, orientation: 'horizontal', disabled: true});
         right();
         expect(isFocused(0)).toBe(false);
       });
 
       it('should allow keyboard navigation if the group is readonly', () => {
-        setupRadioGroup({orientation: 'horizontal', readonly: true});
+        setupRadioGroup({focusMode, orientation: 'horizontal', readonly: true});
         right();
         expect(isFocused(1)).toBe(true);
       });
 
       describe('vertical orientation', () => {
-        beforeEach(() => setupRadioGroup({orientation: 'vertical'}));
-
         it('should move focus to the next radio button on ArrowDown', () => {
+          setupRadioGroup({focusMode, orientation: 'vertical'});
           down();
           expect(isFocused(1)).toBe(true);
         });
 
         it('should move focus to the previous radio button on ArrowUp', () => {
+          setupRadioGroup({focusMode, orientation: 'vertical'});
           down();
           down();
           up();
@@ -463,27 +452,37 @@ describe('CdkRadioGroup', () => {
         });
 
         it('should skip disabled radio buttons (skipDisabled="true")', () => {
-          setupRadioGroup({skipDisabled: true, disabledOptions: [1, 2]});
+          setupRadioGroup({
+            focusMode,
+            orientation: 'vertical',
+            skipDisabled: true,
+            disabledOptions: [1, 2],
+          });
           down();
           expect(isFocused(3)).toBe(true);
         });
 
         it('should not skip disabled radio buttons (skipDisabled="false")', () => {
-          setupRadioGroup({skipDisabled: false, disabledOptions: [1, 2]});
+          setupRadioGroup({
+            focusMode,
+            orientation: 'vertical',
+            skipDisabled: false,
+            disabledOptions: [1, 2],
+          });
           down();
           expect(isFocused(1)).toBe(true);
         });
       });
 
       describe('horizontal orientation', () => {
-        beforeEach(() => setupRadioGroup({orientation: 'horizontal'}));
-
         it('should move focus to the next radio button on ArrowRight', () => {
+          setupRadioGroup({focusMode, orientation: 'horizontal'});
           right();
           expect(isFocused(1)).toBe(true);
         });
 
         it('should move focus to the previous radio button on ArrowLeft', () => {
+          setupRadioGroup({focusMode, orientation: 'horizontal'});
           right();
           right();
           left();
@@ -491,26 +490,36 @@ describe('CdkRadioGroup', () => {
         });
 
         it('should skip disabled radio buttons (skipDisabled="true")', () => {
-          setupRadioGroup({skipDisabled: true, disabledOptions: [1, 2]});
+          setupRadioGroup({
+            focusMode,
+            orientation: 'horizontal',
+            skipDisabled: true,
+            disabledOptions: [1, 2],
+          });
           right();
           expect(isFocused(3)).toBe(true);
         });
 
         it('should not skip disabled radio buttons (skipDisabled="false")', () => {
-          setupRadioGroup({skipDisabled: false, disabledOptions: [1, 2]});
+          setupRadioGroup({
+            focusMode,
+            orientation: 'horizontal',
+            skipDisabled: false,
+            disabledOptions: [1, 2],
+          });
           right();
           expect(isFocused(1)).toBe(true);
         });
 
         describe('text direction rtl', () => {
-          beforeEach(() => setupRadioGroup({textDirection: 'rtl', orientation: 'horizontal'}));
-
           it('should move focus to the next radio button on ArrowLeft', () => {
+            setupRadioGroup({focusMode, textDirection: 'rtl', orientation: 'horizontal'});
             left();
             expect(isFocused(1)).toBe(true);
           });
 
           it('should move focus to the previous radio button on ArrowRight', () => {
+            setupRadioGroup({focusMode, textDirection: 'rtl', orientation: 'horizontal'});
             left();
             left();
             right();
@@ -519,8 +528,11 @@ describe('CdkRadioGroup', () => {
 
           it('should skip disabled radio buttons when navigating', () => {
             setupRadioGroup({
+              focusMode,
               skipDisabled: true,
+              textDirection: 'rtl',
               disabledOptions: [1, 2],
+              orientation: 'horizontal',
             });
             left();
             expect(isFocused(3)).toBe(true);
@@ -530,30 +542,26 @@ describe('CdkRadioGroup', () => {
     });
 
     describe(`pointer navigation (focusMode="${focusMode}")`, () => {
-      beforeEach(() => {
-        fixture = setupTestEnvironment(RadioGroupExample);
-        setupRadioGroup({focusMode});
-      });
-
       it('should move focus to the clicked radio button', () => {
+        setupRadioGroup({focusMode});
         click(3);
         expect(isFocused(3)).toBe(true);
       });
 
       it('should move focus to the clicked radio button if the group is disabled (skipDisabled="true")', () => {
-        setupRadioGroup({skipDisabled: true, disabled: true});
+        setupRadioGroup({focusMode, skipDisabled: true, disabled: true});
         click(3);
         expect(isFocused(3)).toBe(false);
       });
 
       it('should not move focus to the clicked radio button if the group is disabled (skipDisabled="false")', () => {
-        setupRadioGroup({skipDisabled: true, disabled: true});
+        setupRadioGroup({focusMode, skipDisabled: true, disabled: true});
         click(3);
         expect(isFocused(0)).toBe(false);
       });
 
       it('should move focus to the clicked radio button if the group is readonly', () => {
-        setupRadioGroup({readonly: true});
+        setupRadioGroup({focusMode, readonly: true});
         click(3);
         expect(isFocused(3)).toBe(true);
       });
@@ -569,10 +577,6 @@ describe('CdkRadioGroup', () => {
   });
 
   describe('failure cases', () => {
-    beforeEach(() => {
-      fixture = setupTestEnvironment(RadioGroupExample);
-    });
-
     it('should handle an empty set of radio buttons gracefully', () => {
       setupRadioGroup({options: []});
       expect(radioButtons.length).toBe(0);
@@ -583,21 +587,21 @@ describe('CdkRadioGroup', () => {
 interface TestOption {
   value: number;
   label: string;
-  disabled: WritableSignal<boolean>;
+  disabled: boolean;
 }
 
 @Component({
   template: `
     <div
-      [value]="value()"
-      [disabled]="disabled()"
-      [readonly]="readonly()"
-      [focusMode]="focusMode()"
-      [orientation]="orientation()"
-      [skipDisabled]="skipDisabled()"
+      [(value)]="value"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [focusMode]="focusMode"
+      [orientation]="orientation"
+      [skipDisabled]="skipDisabled"
       cdkRadioGroup>
       @for (option of options(); track option.value) {
-        <div cdkRadioButton [value]="option.value" [disabled]="option.disabled()">{{ option.label }}</div>
+        <div cdkRadioButton [value]="option.value" [disabled]="option.disabled">{{ option.label }}</div>
       }
     </div>
   `,
@@ -605,19 +609,19 @@ interface TestOption {
 })
 class RadioGroupExample {
   options = signal<TestOption[]>([
-    {value: 0, label: '0', disabled: signal(false)},
-    {value: 1, label: '1', disabled: signal(false)},
-    {value: 2, label: '2', disabled: signal(false)},
-    {value: 3, label: '3', disabled: signal(false)},
-    {value: 4, label: '4', disabled: signal(false)},
+    {value: 0, label: '0', disabled: false},
+    {value: 1, label: '1', disabled: false},
+    {value: 2, label: '2', disabled: false},
+    {value: 3, label: '3', disabled: false},
+    {value: 4, label: '4', disabled: false},
   ]);
 
-  disabled = signal<boolean>(false);
-  readonly = signal<boolean>(false);
-  value = signal<number | null>(null);
-  skipDisabled = signal<boolean>(true);
-  focusMode = signal<'roving' | 'activedescendant'>('roving');
-  orientation = signal<'horizontal' | 'vertical'>('horizontal');
+  value: number | null = null;
+  disabled = false;
+  readonly = false;
+  skipDisabled = true;
+  focusMode: 'roving' | 'activedescendant' = 'roving';
+  orientation: 'horizontal' | 'vertical' = 'horizontal';
 }
 
 @Component({
