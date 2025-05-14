@@ -1,3 +1,20 @@
+<a name="20.0.0-rc.1"></a>
+# 20.0.0-rc.1 "plastic-zebra" (2025-05-14)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cbffce88e3](https://github.com/angular/components/commit/cbffce88e3b42e0bfb1f7cb36f351703daff2187) | fix | **button-toggle:** use smaller border radius ([#31084](https://github.com/angular/components/pull/31084)) |
+| [aec28e2507](https://github.com/angular/components/commit/aec28e2507e726caed4ff5b663536e9f5ad1ee1c) | fix | **button:** inherit button shape in focus indicator ([#31065](https://github.com/angular/components/pull/31065)) |
+| [fd162d2018](https://github.com/angular/components/commit/fd162d201807670f7eebd6e55fa0ba544a3cabfd) | fix | **schematics:** add schematic to rename tokens ([#31051](https://github.com/angular/components/pull/31051)) |
+| [71a9d88b29](https://github.com/angular/components/commit/71a9d88b29f290f209bc8b21541d99dbb0c39995) | fix | **schematics:** incorrect on-tertiary color being generated ([#31061](https://github.com/angular/components/pull/31061)) |
+| [10a6ea493b](https://github.com/angular/components/commit/10a6ea493bf8fd845a7fec81ff2036488812d67f) | perf | **form-field:** split DOM accesses into read and write ([#31086](https://github.com/angular/components/pull/31086)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [08ccf3c685](https://github.com/angular/components/commit/08ccf3c68543d4aad0e5794a77c99d7ce8f1488b) | fix | **column-resize:** Obscure weird behavior in tables that are too wide by conditionally disabling resize ([#31100](https://github.com/angular/components/pull/31100)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-rc.0"></a>
 # 20.0.0-rc.0 "aluminium-axe" (2025-05-07)
 ### cdk-experimental
