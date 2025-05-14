@@ -25,6 +25,7 @@ $prefix: (mat, card);
       card-outlined-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
       card-outlined-outline-color: map.get($system, outline-variant),
       card-subtitle-text-color: map.get($system, on-surface),
+      card-title-text-color: map.get($system, on-surface),
     ),
     typography: (
       card-subtitle-text-font: map.get($system, title-medium-font),
