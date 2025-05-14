@@ -16,6 +16,7 @@ $prefix: (mat, card);
     m3-utils.generate-typography-tokens($systems, title-text, title-large),
     m3-utils.generate-typography-tokens($systems, subtitle-text, title-medium),
     (
+      title-text-color: map.get($systems, md-sys-color, on-surface),
       subtitle-text-color: map.get($systems, md-sys-color, on-surface),
       elevated-container-color: map.get($systems, md-sys-color, surface-container-low),
       elevated-container-elevation: map.get($systems, md-sys-elevation, level1),

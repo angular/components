@@ -25,6 +25,7 @@ $prefix: (mat, card);
     outlined-container-color: inspection.get-theme-color($theme, background, card),
     outlined-container-elevation: elevation.get-box-shadow(0),
     outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
+    title-text-color: inspection.get-theme-color($theme, foreground, text),
     subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
     filled-container-color: inspection.get-theme-color($theme, background, card),
     filled-container-elevation: elevation.get-box-shadow(0)
