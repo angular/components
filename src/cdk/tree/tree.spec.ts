@@ -5,29 +5,31 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   ErrorHandler,
-  EventEmitter,
   QueryList,
   TrackByFunction,
   Type,
   ViewChild,
   ViewChildren,
+  WritableSignal,
   inject,
-  ElementRef,
+  signal,
 } from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 
-import {Direction, Directionality} from '../bidi';
-import {CollectionViewer, DataSource} from '../collections';
-import {combineLatest, BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Direction} from '../bidi';
+import {CollectionViewer, DataSource} from '../collections';
 
+import {provideFakeDirectionality} from '../testing/private/fake-directionality';
+import {createKeyboardEvent} from '../testing/testbed/fake-events';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
-import {createKeyboardEvent} from '../testing/testbed/fake-events';
 
 /**
  * This is a cloned version of `tree.spec.ts` that contains all the same tests,
@@ -39,16 +41,14 @@ describe('CdkTree', () => {
   let dataSource: FakeDataSource;
   let treeElement: HTMLElement;
   let tree: CdkTree<TestData>;
-  let dir: {value: Direction; readonly change: EventEmitter<Direction>};
+  let dir: WritableSignal<Direction>;
 
   function configureCdkTreeTestingModule(declarations: Type<any>[]) {
+    dir = signal('ltr');
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
-        {
-          provide: Directionality,
-          useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),
-        },
+        provideFakeDirectionality(dir),
         // Custom error handler that re-throws the error. Errors happening within
         // change detection phase will be reported through the handler and thrown
         // in Ivy. Since we do not want to pollute the "console.error", but rather
@@ -237,7 +237,7 @@ describe('CdkTree', () => {
         );
       });
 
-      it('should reset element.styel to the opposite direction padding if the direction changes', () => {
+      it('should reset element.style to the opposite direction padding if the direction changes', () => {
         const node = getNodes(treeElement)[0];
 
         component.indent = 10;
@@ -247,8 +247,7 @@ describe('CdkTree', () => {
         expect(node.style.paddingLeft).toBe('10px');
         expect(node.style.paddingRight).toBeFalsy();
 
-        dir.value = 'rtl';
-        dir.change.emit('rtl');
+        dir.set('rtl');
         fixture.detectChanges();
 
         expect(node.style.paddingRight).toBe('10px');

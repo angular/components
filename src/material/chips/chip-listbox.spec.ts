@@ -1,25 +1,27 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB} from '@angular/cdk/keycodes';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   patchElementFocus,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
-  EventEmitter,
   QueryList,
+  signal,
   Type,
   ViewChild,
   ViewChildren,
+  WritableSignal,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
 import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
 import {observeOn} from 'rxjs/operators';
+import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
 
 describe('MatChipListbox', () => {
   let fixture: ComponentFixture<any>;
@@ -28,7 +30,7 @@ describe('MatChipListbox', () => {
   let chipListboxInstance: MatChipListbox;
   let testComponent: StandardChipListbox;
   let chips: QueryList<MatChipOption>;
-  let directionality: {value: Direction; change: EventEmitter<Direction>};
+  let directionality: WritableSignal<Direction>;
   let primaryActions: NodeListOf<HTMLElement>;
 
   describe('StandardChipList', () => {
@@ -424,8 +426,7 @@ describe('MatChipListbox', () => {
 
         expect(document.activeElement).toBe(primaryActions[1]);
 
-        directionality.value = 'rtl';
-        directionality.change.next('rtl');
+        directionality.set('rtl');
         fixture.detectChanges();
 
         dispatchKeyboardEvent(primaryActions[1], 'keydown', RIGHT_ARROW);
@@ -926,14 +927,11 @@ describe('MatChipListbox', () => {
     direction: Direction = 'ltr',
     beforeInitialChangeDetection?: (fixture: ComponentFixture<T>) => void,
   ): ComponentFixture<T> {
-    directionality = {
-      value: direction,
-      change: new EventEmitter(),
-    };
+    directionality = signal(direction);
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
-      providers: [{provide: Directionality, useValue: directionality}],
+      providers: [provideFakeDirectionality(directionality)],
       declarations: [component],
     });
 

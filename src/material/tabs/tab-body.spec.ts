@@ -1,30 +1,30 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {
   AfterViewInit,
   Component,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  WritableSignal,
   inject,
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatRippleModule} from '../core';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
+import {MatRippleModule} from '../core';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 
 describe('MatTabBody', () => {
-  let dir: Direction = 'ltr';
-  let dirChange: Subject<Direction> = new Subject<Direction>();
+  let dir: WritableSignal<Direction>;
 
   beforeEach(waitForAsync(() => {
-    dir = 'ltr';
+    dir = signal('ltr');
     TestBed.configureTestingModule({
       imports: [PortalModule, MatRippleModule, MatTabBody, MatTabBodyPortal, SimpleTabBodyApp],
-      providers: [{provide: Directionality, useFactory: () => ({value: dir, change: dirChange})}],
+      providers: [provideFakeDirectionality(dir)],
     });
   }));
 
@@ -40,7 +40,7 @@ describe('MatTabBody', () => {
     let fixture: ComponentFixture<SimpleTabBodyApp>;
 
     beforeEach(() => {
-      dir = 'ltr';
+      dir.set('ltr');
       fixture = TestBed.createComponent(SimpleTabBodyApp);
       fixture.detectChanges();
     });
@@ -74,7 +74,7 @@ describe('MatTabBody', () => {
     let fixture: ComponentFixture<SimpleTabBodyApp>;
 
     beforeEach(() => {
-      dir = 'rtl';
+      dir.set('rtl');
       fixture = TestBed.createComponent(SimpleTabBodyApp);
       fixture.detectChanges();
     });
@@ -112,8 +112,7 @@ describe('MatTabBody', () => {
 
     expect(fixture.componentInstance.tabBody._position).toBe('right');
 
-    dirChange.next('rtl');
-    dir = 'rtl';
+    dir.set('rtl');
 
     fixture.detectChanges();
 

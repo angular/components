@@ -41,6 +41,7 @@ ts_project(
         "//src/cdk/bidi",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
     ],
 )

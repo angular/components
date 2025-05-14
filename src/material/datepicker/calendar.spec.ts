@@ -1,14 +1,14 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {ENTER, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, provideCheckNoChangesConfig} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {DateAdapter, MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
+import {DateAdapter, MatNativeDateModule} from '../core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -23,7 +23,7 @@ describe('MatCalendar', () => {
       imports: [MatNativeDateModule, MatDatepickerModule],
       providers: [
         MatDatepickerIntl,
-        {provide: Directionality, useFactory: () => ({value: 'ltr'})},
+        provideFakeDirectionality('ltr'),
         provideCheckNoChangesConfig({exhaustive: false}),
       ],
       declarations: [
