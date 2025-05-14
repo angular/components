@@ -27,8 +27,8 @@ import {_IdGenerator} from '@angular/cdk/a11y';
 // TODO: Move mapSignal to it's own file so it can be reused across components.
 
 /**
- * Creates a new writable signal (signal<V>) whose value is connected to the given original
- * writable signal (signal<T>) such that updating signal<V> updates signal<T> and vice-versa.
+ * Creates a new writable signal (signal V) whose value is connected to the given original
+ * writable signal (signal T) such that updating signal V updates signal T and vice-versa.
  *
  * This function establishes a two-way synchronization between the source signal and the new mapped
  * signal. When the source signal changes, the mapped signal updates by applying the `transform`
