@@ -18,26 +18,26 @@ export abstract class MatFormFieldControlHarness extends ComponentHarness {}
  * Shared behavior for `MatFormFieldControlHarness` implementations
  */
 export abstract class MatFormFieldControlHarnessBase extends MatFormFieldControlHarness {
-  private readonly floatingLabelSelector = '.mdc-floating-label';
+  private readonly _floatingLabelSelector = '.mdc-floating-label';
 
   /** Gets the text content of the floating label, if it exists. */
-  public async getLabel(): Promise<string | null> {
-    const documentRootLocator = await this.documentRootLocatorFactory();
+  async getLabel(): Promise<string | null> {
+    const documentRootLocator = this.documentRootLocatorFactory();
     const labelId = await (await this.host()).getAttribute('aria-labelledby');
     const hostId = await (await this.host()).getAttribute('id');
 
     if (labelId) {
       // First option, try to fetch the label using the `aria-labelledby`
       // attribute.
-      const labelEl = await await documentRootLocator.locatorForOptional(
-        `${this.floatingLabelSelector}[id="${labelId}"]`,
+      const labelEl = await documentRootLocator.locatorForOptional(
+        `${this._floatingLabelSelector}[id="${labelId}"]`,
       )();
       return labelEl ? labelEl.text() : null;
     } else if (hostId) {
       // Fallback option, try to match the id of the input with the `for`
       // attribute of the label.
-      const labelEl = await await documentRootLocator.locatorForOptional(
-        `${this.floatingLabelSelector}[for="${hostId}"]`,
+      const labelEl = await documentRootLocator.locatorForOptional(
+        `${this._floatingLabelSelector}[for="${hostId}"]`,
       )();
       return labelEl ? labelEl.text() : null;
     }
