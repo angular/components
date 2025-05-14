@@ -1,5 +1,5 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -25,13 +25,13 @@ import {
   provideCheckNoChangesConfig,
   Provider,
   QueryList,
+  signal,
   TemplateRef,
   Type,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {MATERIAL_ANIMATIONS, MatRipple} from '../core';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
@@ -43,7 +43,9 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus,
+  provideFakeDirectionality,
 } from '../../cdk/testing/private';
+import {MATERIAL_ANIMATIONS, MatRipple} from '../core';
 import {MatMenu, MatMenuItem, MatMenuModule} from './index';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
@@ -523,16 +525,7 @@ describe('MatMenu', () => {
   });
 
   it('should set the panel direction based on the trigger direction', fakeAsync(() => {
-    const fixture = createComponent(
-      SimpleMenu,
-      [
-        {
-          provide: Directionality,
-          useFactory: () => ({value: 'rtl'}),
-        },
-      ],
-      [FakeIcon],
-    );
+    const fixture = createComponent(SimpleMenu, [provideFakeDirectionality('rtl')], [FakeIcon]);
 
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -546,17 +539,8 @@ describe('MatMenu', () => {
   }));
 
   it('should update the panel direction if the trigger direction changes', fakeAsync(() => {
-    const dirProvider = {value: 'rtl'};
-    const fixture = createComponent(
-      SimpleMenu,
-      [
-        {
-          provide: Directionality,
-          useFactory: () => dirProvider,
-        },
-      ],
-      [FakeIcon],
-    );
+    const dir = signal<Direction>('rtl');
+    const fixture = createComponent(SimpleMenu, [provideFakeDirectionality(dir)], [FakeIcon]);
 
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -572,7 +556,7 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     tick(500);
 
-    dirProvider.value = 'ltr';
+    dir.set('ltr');
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
     tick(500);
@@ -1757,12 +1741,7 @@ describe('MatMenu', () => {
     let instance: NestedMenu;
     let overlay: HTMLElement;
     let compileTestComponent = (direction: Direction = 'ltr') => {
-      fixture = createComponent(NestedMenu, [
-        {
-          provide: Directionality,
-          useFactory: () => ({value: direction}),
-        },
-      ]);
+      fixture = createComponent(NestedMenu, [provideFakeDirectionality(direction)]);
 
       fixture.detectChanges();
       instance = fixture.componentInstance;

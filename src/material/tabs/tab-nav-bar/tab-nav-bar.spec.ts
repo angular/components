@@ -1,34 +1,37 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {SharedResizeObserver} from '@angular/cdk/observers/private';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   provideCheckNoChangesConfig,
   QueryList,
+  signal,
   ViewChild,
   ViewChildren,
+  WritableSignal,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
 import {MAT_TABS_CONFIG} from '../index';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
 describe('MatTabNavBar', () => {
-  let dir: Direction = 'ltr';
-  let dirChange = new Subject();
+  let dir: WritableSignal<Direction>;
   let globalRippleOptions: RippleGlobalOptions;
   let resizeEvents: Subject<ResizeObserverEntry[]>;
 
   beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
+    dir = signal('ltr');
 
     TestBed.configureTestingModule({
       imports: [
@@ -40,7 +43,7 @@ describe('MatTabNavBar', () => {
       providers: [
         provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
+        provideFakeDirectionality(dir),
       ],
     });
 
@@ -154,7 +157,7 @@ describe('MatTabNavBar', () => {
 
       spyOn(inkBar, 'alignToElement');
 
-      dirChange.next();
+      dir.set('rtl');
       tick();
       fixture.detectChanges();
 

@@ -9,7 +9,9 @@ import {
   Type,
   ViewChild,
   ViewContainerRef,
+  WritableSignal,
   inject,
+  signal,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -23,8 +25,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Direction, Directionality} from '../bidi';
 import {CdkPortal, ComponentPortal, TemplatePortal} from '../portal';
 import {dispatchFakeEvent} from '../testing/private';
+import {provideFakeDirectionality} from '../testing/private/fake-directionality';
 import {
-  createOverlayRef,
   Overlay,
   OverlayConfig,
   OverlayContainer,
@@ -32,6 +34,7 @@ import {
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
+  createOverlayRef,
 } from './index';
 
 describe('Overlay', () => {
@@ -41,22 +44,15 @@ describe('Overlay', () => {
   let overlayContainerElement: HTMLElement;
   let overlayContainer: OverlayContainer;
   let viewContainerFixture: ComponentFixture<TestComponentWithTemplatePortals>;
-  let dir: Direction;
+  let dir: WritableSignal<Direction>;
   let mockLocation: SpyLocation;
 
   function setup(imports: Type<unknown>[] = []) {
-    dir = 'ltr';
+    dir = signal<Direction>('ltr');
     TestBed.configureTestingModule({
       imports: [OverlayModule, ...imports],
       providers: [
-        {
-          provide: Directionality,
-          useFactory: () => {
-            const fakeDirectionality = {};
-            Object.defineProperty(fakeDirectionality, 'value', {get: () => dir});
-            return fakeDirectionality;
-          },
-        },
+        provideFakeDirectionality(dir),
         {
           provide: Location,
           useClass: SpyLocation,
@@ -175,7 +171,7 @@ describe('Overlay', () => {
   });
 
   it('should take the default direction from the global Directionality', () => {
-    dir = 'rtl';
+    dir.set('rtl');
     const overlayRef = createOverlayRef(injector);
 
     overlayRef.attach(componentPortal);

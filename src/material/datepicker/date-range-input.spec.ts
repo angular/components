@@ -1,15 +1,17 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
+} from '@angular/cdk/testing/private';
 import {
   Component,
   Directive,
   ElementRef,
   provideCheckNoChangesConfig,
   Provider,
-  signal,
   Type,
   ViewChild,
 } from '@angular/core';
@@ -839,15 +841,7 @@ describe('MatDateRangeInput', () => {
   });
 
   it('moves focus between fields with arrow keys when cursor is at edge (RTL)', () => {
-    class RTL extends Directionality {
-      override readonly valueSignal = signal<Direction>('rtl');
-    }
-    const fixture = createComponent(StandardRangePicker, [
-      {
-        provide: Directionality,
-        useFactory: () => new RTL(null),
-      },
-    ]);
+    const fixture = createComponent(StandardRangePicker, [provideFakeDirectionality('rtl')]);
     fixture.detectChanges();
     const {start, end} = fixture.componentInstance;
 

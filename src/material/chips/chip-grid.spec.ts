@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   BACKSPACE,
   DELETE,
@@ -18,28 +18,30 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   patchElementFocus,
+  provideFakeDirectionality,
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
   ChangeDetectorRef,
   Component,
   DebugElement,
-  EventEmitter,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
+  WritableSignal,
   inject,
+  signal,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MATERIAL_ANIMATIONS} from '../core';
 import {MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
-import {By} from '@angular/platform-browser';
 import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
-import {MATERIAL_ANIMATIONS} from '../core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -47,7 +49,7 @@ describe('MatChipGrid', () => {
   let chipGridInstance: MatChipGrid;
   let chips: QueryList<MatChipRow>;
   let testComponent: StandardChipGrid;
-  let directionality: {value: Direction; change: EventEmitter<Direction>};
+  let directionality: WritableSignal<Direction>;
   let primaryActions: NodeListOf<HTMLElement>;
 
   const expectNoCellFocused = () => {
@@ -441,8 +443,7 @@ describe('MatChipGrid', () => {
 
           expect(document.activeElement).toBe(primaryActions[1]);
 
-          directionality.value = 'rtl';
-          directionality.change.next('rtl');
+          directionality.set('rtl');
           fixture.detectChanges();
 
           dispatchKeyboardEvent(primaryActions[1], 'keydown', RIGHT_ARROW);
@@ -1024,10 +1025,7 @@ describe('MatChipGrid', () => {
     direction: Direction = 'ltr',
     additionalImports: Type<unknown>[] = [],
   ): ComponentFixture<T> {
-    directionality = {
-      value: direction,
-      change: new EventEmitter<Direction>(),
-    } as Directionality;
+    directionality = signal(direction);
 
     TestBed.configureTestingModule({
       imports: [
@@ -1039,7 +1037,7 @@ describe('MatChipGrid', () => {
         ...additionalImports,
       ],
       providers: [
-        {provide: Directionality, useValue: directionality},
+        provideFakeDirectionality(directionality),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
       declarations: [component],

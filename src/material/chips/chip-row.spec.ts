@@ -1,15 +1,14 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, DELETE, ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
   dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
 import {
   MatChipEditInput,
   MatChipEditedEvent,
@@ -25,20 +24,10 @@ describe('Row Chips', () => {
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChipRow;
 
-  let dir = 'ltr';
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule, SingleChip],
-      providers: [
-        {
-          provide: Directionality,
-          useFactory: () => ({
-            value: dir,
-            change: new Subject(),
-          }),
-        },
-      ],
+      providers: [provideFakeDirectionality('ltr')],
     });
   }));
 
