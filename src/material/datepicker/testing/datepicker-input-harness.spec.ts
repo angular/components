@@ -5,6 +5,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {DateAdapter, MATERIAL_ANIMATIONS, MatNativeDateModule} from '../../core';
 import {MatDatepickerModule} from '../../datepicker';
+import {MatFormFieldModule} from '../../form-field';
+import {MatInputModule} from '../../input';
 import {MatCalendarHarness} from './calendar-harness';
 import {MatDatepickerInputHarness} from './datepicker-input-harness';
 
@@ -25,6 +27,13 @@ describe('MatDatepickerInputHarness', () => {
   it('should load all datepicker input harnesses', async () => {
     const inputs = await loader.getAllHarnesses(MatDatepickerInputHarness);
     expect(inputs.length).toBe(2);
+  });
+
+  it('should load datepicker input with a specific label', async () => {
+    const selects = await loader.getAllHarnesses(
+      MatDatepickerInputHarness.with({label: 'Pick a date'}),
+    );
+    expect(selects.length).toBe(1);
   });
 
   it('should filter inputs based on their value', async () => {
@@ -187,21 +196,31 @@ describe('MatDatepickerInputHarness', () => {
 
 @Component({
   template: `
-    <input
-      id="basic"
-      matInput
-      [matDatepicker]="picker"
-      (dateChange)="dateChangeCount = dateChangeCount + 1"
-      [(ngModel)]="date"
-      [min]="minDate"
-      [max]="maxDate"
-      [disabled]="disabled"
-      [required]="required"
-      placeholder="Type a date">
-    <mat-datepicker #picker [touchUi]="touchUi"></mat-datepicker>
+    <mat-form-field>
+      <mat-label>Pick a date</mat-label>
+      <input
+        id="basic"
+        matInput
+        [matDatepicker]="picker"
+        (dateChange)="dateChangeCount = dateChangeCount + 1"
+        [(ngModel)]="date"
+        [min]="minDate"
+        [max]="maxDate"
+        [disabled]="disabled"
+        [required]="required"
+        placeholder="Type a date">
+      <mat-datepicker #picker [touchUi]="touchUi"></mat-datepicker>
+    </mat-form-field>
+
     <input id="no-datepicker" matDatepicker>
   `,
-  imports: [MatNativeDateModule, MatDatepickerModule, FormsModule],
+  imports: [
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+  ],
 })
 class DatepickerInputHarnessTest {
   date: Date | null = null;

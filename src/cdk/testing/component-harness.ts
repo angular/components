@@ -120,12 +120,31 @@ export interface HarnessLoader {
   getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
 
   /**
+   * Searches for an instance of the component corresponding to the given harness type under the
+   * `HarnessLoader`'s root element, and returns a `ComponentHarness` for the instance on the page
+   * at the given index. If no matching component exists at that index, an error is thrown.
+   * @param query A query for a harness to create
+   * @param index The zero-indexed offset of the matching component instance to return
+   * @return An instance of the given harness type.
+   * @throws If a matching component instance can't be found at the given index.
+   */
+  getHarnessAtIndex<T extends ComponentHarness>(query: HarnessQuery<T>, index: number): Promise<T>;
+
+  /**
    * Searches for all instances of the component corresponding to the given harness type under the
    * `HarnessLoader`'s root element, and returns a list `ComponentHarness` for each instance.
    * @param query A query for a harness to create
    * @return A list instances of the given harness type.
    */
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+
+  /**
+   * Searches for all instances of the component corresponding to the given harness type under the
+   * `HarnessLoader`'s root element, and returns the total count of all matching components.
+   * @param query A query for a harness to create
+   * @return An integer indicating the number of instances that were found.
+   */
+  countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number>;
 
   /**
    * Searches for an instance of the component corresponding to the given harness type under the
@@ -501,6 +520,20 @@ export abstract class ContentContainerComponentHarness<S extends string = string
   }
 
   /**
+   * Gets a matching harness for the given query and index within the current harness's content.
+   * @param query The harness query to search for.
+   * @param index The zero-indexed offset of the component to find.
+   * @returns The first harness matching the given query.
+   * @throws If no matching harness is found.
+   */
+  async getHarnessAtIndex<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+    index: number,
+  ): Promise<T> {
+    return (await this.getRootHarnessLoader()).getHarnessAtIndex(query, index);
+  }
+
+  /**
    * Gets all matching harnesses for the given query within the current harness's content.
    * @param query The harness query to search for.
    * @returns The list of harness matching the given query.
@@ -510,11 +543,22 @@ export abstract class ContentContainerComponentHarness<S extends string = string
   }
 
   /**
+   * Returns the number of matching harnesses for the given query within the current harness's
+   * content.
+   *
+   * @param query The harness query to search for.
+   * @returns The number of matching harnesses for the given query.
+   */
+  async countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number> {
+    return (await this.getRootHarnessLoader()).countHarnesses(query);
+  }
+
+  /**
    * Checks whether there is a matching harnesses for the given query within the current harness's
    * content.
    *
    * @param query The harness query to search for.
-   * @returns Whetehr there is matching harnesses for the given query.
+   * @returns Whether there is matching harnesses for the given query.
    */
   async hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean> {
     return (await this.getRootHarnessLoader()).hasHarness(query);

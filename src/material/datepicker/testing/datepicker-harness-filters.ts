@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {MatFormFieldControlHarnessFilters} from '@angular/material/form-field/testing/control';
 import {BaseHarnessFilters} from '@angular/cdk/testing';
 
 /** A set of criteria that can be used to filter a list of datepicker input instances. */
-export interface DatepickerInputHarnessFilters extends BaseHarnessFilters {
+export interface DatepickerInputHarnessFilters extends MatFormFieldControlHarnessFilters {
   /** Filters based on the value of the input. */
   value?: string | RegExp;
   /** Filters based on the placeholder text of the input. */
@@ -43,7 +44,7 @@ export interface CalendarCellHarnessFilters extends BaseHarnessFilters {
 }
 
 /** A set of criteria that can be used to filter a list of date range input instances. */
-export interface DateRangeInputHarnessFilters extends BaseHarnessFilters {
+export interface DateRangeInputHarnessFilters extends MatFormFieldControlHarnessFilters {
   /** Filters based on the value of the input. */
   value?: string | RegExp;
 }

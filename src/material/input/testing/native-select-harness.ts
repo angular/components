@@ -7,7 +7,7 @@
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarnessBase} from '../../form-field/testing/control';
 import {MatNativeOptionHarness} from './native-option-harness';
 import {
   NativeOptionHarnessFilters,
@@ -15,7 +15,7 @@ import {
 } from './native-select-harness-filters';
 
 /** Harness for interacting with a native `select` in tests. */
-export class MatNativeSelectHarness extends MatFormFieldControlHarness {
+export class MatNativeSelectHarness extends MatFormFieldControlHarnessBase {
   static hostSelector = 'select[matNativeControl]';
 
   /**
@@ -25,7 +25,13 @@ export class MatNativeSelectHarness extends MatFormFieldControlHarness {
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: NativeSelectHarnessFilters = {}): HarnessPredicate<MatNativeSelectHarness> {
-    return new HarnessPredicate(MatNativeSelectHarness, options);
+    return new HarnessPredicate(MatNativeSelectHarness, options).addOption(
+      'label',
+      options.label,
+      (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getLabel(), label);
+      },
+    );
   }
 
   /** Gets a boolean promise indicating if the select is disabled. */

@@ -249,6 +249,30 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   /**
+   * Searches for an instance of the component corresponding to the given harness type and index
+   * under the `HarnessEnvironment`'s root element, and returns a `ComponentHarness` for that
+   * instance. The index specifies the offset of the component to find. If no matching
+   * component is found at that index, an error is thrown.
+   * @param query A query for a harness to create
+   * @param index The zero-indexed offset of the component to find
+   * @return An instance of the given harness type
+   * @throws If a matching component instance can't be found.
+   */
+  async getHarnessAtIndex<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+    offset: number,
+  ): Promise<T> {
+    if (offset < 0) {
+      throw Error('Index must not be negative');
+    }
+    const harnesses = await this.locatorForAll(query)();
+    if (offset >= harnesses.length) {
+      throw Error(`No harness was located at index ${offset}`);
+    }
+    return harnesses[offset];
+  }
+
+  /**
    * Searches for all instances of the component corresponding to the given harness type under the
    * `HarnessEnvironment`'s root element, and returns a list `ComponentHarness` for each instance.
    * @param query A query for a harness to create
@@ -256,6 +280,16 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
    */
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
     return this.locatorForAll(query)();
+  }
+
+  /**
+   * Searches for all instance of the component corresponding to the given harness type under the
+   * `HarnessEnvironment`'s root element, and returns the number that were found.
+   * @param query A query for a harness to create
+   * @return The number of instances that were found.
+   */
+  async countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number> {
+    return (await this.locatorForAll(query)()).length;
   }
 
   /**
