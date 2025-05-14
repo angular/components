@@ -3016,7 +3016,7 @@ Andy Chrzaszcz, Bobby Galli, Joey Perrott, Kristiyan Kostadinov, Miles Malerba, 
   - `mat-tabs`
 - The TypeScript API should remain largely unchanged, but the DOM and CSS classes for these components have changed.
 - See the MDC migration guide for more information about the changes and
-  how to migrate your app: https://material.angular.io/guide/mdc-migration.
+  how to migrate your app: https://material.angular.dev/guide/mdc-migration.
 - Buttons inside the datepicker popup and datepicker toggle now use the
   MDC-based button implementation. They have different CSS classes and
   styles, so custom style overrides may need to be updated.

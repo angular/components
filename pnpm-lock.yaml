@@ -11976,7 +11976,7 @@ snapshots:
       '@rollup/pluginutils': 5.1.4(rollup@2.79.2)
       commondir: 1.0.1
       estree-walker: 2.0.2
-      fdir: 6.4.4(picomatch@4.0.2)
+      fdir: 6.4.3(picomatch@4.0.2)
       is-reference: 1.2.1
       magic-string: 0.30.17
       picomatch: 4.0.2

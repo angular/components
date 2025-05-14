@@ -178,7 +178,7 @@ $_mdc-levels: (
 /// @param {Map} $input Configuration for the "input" typographic level.
 /// @returns {Map} A typography config for the application.
 ///
-/// @deprecated Use `mat.m2-define-typography-config` instead. See https://v17.material.angular.io/guide/mdc-migration for information about migrating.
+/// @deprecated Use `mat.m2-define-typography-config` instead. See https://v17.material.angular.dev/guide/mdc-migration for information about migrating.
 /// @breaking-change 17.0.0
 @function define-legacy-typography-config(
   $font-family:   'Roboto, "Helvetica Neue", sans-serif',
