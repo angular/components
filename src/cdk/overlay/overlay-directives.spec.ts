@@ -1,10 +1,11 @@
-import {Directionality} from '../bidi';
-import {A, ESCAPE} from '../keycodes';
-import {Component, ElementRef, Injector, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {Component, ElementRef, Injector, signal, ViewChild, WritableSignal} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {Direction} from '../bidi';
+import {A, ESCAPE} from '../keycodes';
 import {createKeyboardEvent, dispatchEvent, dispatchKeyboardEvent} from '../testing/private';
+import {provideFakeDirectionality} from '../testing/private/fake-directionality';
 import {
   CdkConnectedOverlay,
   CdkOverlayOrigin,
@@ -27,14 +28,16 @@ import {
 describe('Overlay directives', () => {
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
-  let dir: {value: string};
+  let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
   beforeEach(() => {
+    dir = signal<Direction>('ltr');
+
     TestBed.configureTestingModule({
       imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
-        {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+        provideFakeDirectionality(dir),
         {
           provide: ScrollDispatcher,
           useFactory: () => ({
@@ -115,7 +118,7 @@ describe('Overlay directives', () => {
   });
 
   it('should set and update the `dir` attribute', () => {
-    dir.value = 'rtl';
+    dir.set('rtl');
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -130,7 +133,7 @@ describe('Overlay directives', () => {
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
-    dir.value = 'ltr';
+    dir.set('ltr');
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();

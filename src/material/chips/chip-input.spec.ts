@@ -1,16 +1,16 @@
-import {Directionality} from '@angular/cdk/bidi';
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
 import {PlatformModule} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
-  dispatchKeyboardEvent,
   dispatchEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
-import {MatFormFieldModule} from '../form-field';
+import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
+import {MATERIAL_ANIMATIONS} from '../core';
+import {MatFormFieldModule} from '../form-field';
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipGrid,
@@ -19,7 +19,6 @@ import {
   MatChipsDefaultOptions,
   MatChipsModule,
 } from './index';
-import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatChipInput', () => {
   let fixture: ComponentFixture<TestChipInput>;
@@ -27,21 +26,12 @@ describe('MatChipInput', () => {
   let inputDebugElement: DebugElement;
   let inputNativeElement: HTMLInputElement;
   let chipInputDirective: MatChipInput;
-  let dir = 'ltr';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [PlatformModule, MatChipsModule, MatFormFieldModule],
       providers: [
-        {
-          provide: Directionality,
-          useFactory: () => {
-            return {
-              value: dir.toLowerCase(),
-              change: new Subject(),
-            };
-          },
-        },
+        provideFakeDirectionality('ltr'),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
       declarations: [TestChipInput],

@@ -1,14 +1,3 @@
-import {Directionality} from '../../bidi';
-import {Platform, _supportsShadowDom} from '../../platform';
-import {CdkScrollable, ViewportRuler} from '../../scrolling';
-import {
-  createMouseEvent,
-  createTouchEvent,
-  dispatchEvent,
-  dispatchFakeEvent,
-  dispatchMouseEvent,
-  dispatchTouchEvent,
-} from '../../testing/private';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -25,20 +14,33 @@ import {
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {of as observableOf} from 'rxjs';
+import {Platform, _supportsShadowDom} from '../../platform';
+import {CdkScrollable, ViewportRuler} from '../../scrolling';
+import {
+  createMouseEvent,
+  createTouchEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchMouseEvent,
+  dispatchTouchEvent,
+} from '../../testing/private';
 
 import {extendStyles} from '../dom/styling';
 import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
+import {provideFakeDirectionality} from '@angular/cdk/testing/private/fake-directionality';
+import {NgClass, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
 import {CdkDrag} from './drag';
+import {CdkDragPlaceholder} from './drag-placeholder';
+import {CdkDragPreview} from './drag-preview';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
 import {
-  createComponent as _createComponent,
   DragDropTestConfig,
+  createComponent as _createComponent,
   continueDraggingViaTouch,
   dragElementViaMouse,
   makeScrollable,
@@ -47,9 +49,6 @@ import {
   stopDraggingViaTouch,
   tickAnimationFrames,
 } from './test-utils.spec';
-import {NgClass, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {CdkDragPreview} from './drag-preview';
-import {CdkDragPlaceholder} from './drag-placeholder';
 
 export const ITEM_HEIGHT = 25;
 export const ITEM_WIDTH = 75;
@@ -551,12 +550,7 @@ export function defineCommonDropListTests(config: {
 
     it('should dispatch the correct `dropped` event in RTL horizontal drop zone', fakeAsync(() => {
       const fixture = createComponent(DraggableInHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
 
       fixture.nativeElement.setAttribute('dir', 'rtl');
@@ -1200,12 +1194,7 @@ export function defineCommonDropListTests(config: {
 
     it('should pass the proper direction to the preview in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
 
       fixture.detectChanges();
@@ -2500,12 +2489,7 @@ export function defineCommonDropListTests(config: {
 
     it('should auto-scroll right if the user holds their pointer at right edge in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();
@@ -2529,12 +2513,7 @@ export function defineCommonDropListTests(config: {
 
     it('should auto-scroll left if the user holds their pointer at left edge in rtl', fakeAsync(() => {
       const fixture = createComponent(DraggableInScrollableHorizontalDropZone, {
-        providers: [
-          {
-            provide: Directionality,
-            useValue: {value: 'rtl', change: observableOf()},
-          },
-        ],
+        providers: [provideFakeDirectionality('rtl')],
       });
       fixture.nativeElement.setAttribute('dir', 'rtl');
       fixture.detectChanges();

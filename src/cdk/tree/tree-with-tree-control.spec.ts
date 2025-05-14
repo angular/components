@@ -5,27 +5,29 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   Component,
   ErrorHandler,
-  ViewChild,
+  QueryList,
+  signal,
   TrackByFunction,
   Type,
-  EventEmitter,
+  ViewChild,
   ViewChildren,
-  QueryList,
+  WritableSignal,
 } from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CollectionViewer, DataSource} from '../collections';
-import {Directionality, Direction} from '../bidi';
-import {createKeyboardEvent} from '../testing/testbed/fake-events';
-import {combineLatest, BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Direction} from '../bidi';
+import {CollectionViewer, DataSource} from '../collections';
+import {createKeyboardEvent} from '../testing/testbed/fake-events';
 
-import {TreeControl} from './control/tree-control';
+import {provideFakeDirectionality} from '../testing/private/fake-directionality';
 import {FlatTreeControl} from './control/flat-tree-control';
 import {NestedTreeControl} from './control/nested-tree-control';
+import {TreeControl} from './control/tree-control';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 
@@ -35,16 +37,14 @@ describe('CdkTree with TreeControl', () => {
   let dataSource: FakeDataSource;
   let treeElement: HTMLElement;
   let tree: CdkTree<TestData>;
-  let dir: {value: Direction; readonly change: EventEmitter<Direction>};
+  let dir: WritableSignal<Direction>;
 
   function configureCdkTreeTestingModule(declarations: Type<any>[]) {
+    dir = signal('ltr');
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
       providers: [
-        {
-          provide: Directionality,
-          useFactory: () => (dir = {value: 'ltr', change: new EventEmitter<Direction>()}),
-        },
+        provideFakeDirectionality(dir),
         // Custom error handler that re-throws the error. Errors happening within
         // change detection phase will be reported through the handler and thrown
         // in Ivy. Since we do not want to pollute the "console.error", but rather
@@ -242,8 +242,7 @@ describe('CdkTree with TreeControl', () => {
         expect(node.style.paddingLeft).toBe('10px');
         expect(node.style.paddingRight).toBeFalsy();
 
-        dir.value = 'rtl';
-        dir.change.emit('rtl');
+        dir.set('rtl');
         fixture.detectChanges();
 
         expect(node.style.paddingRight).toBe('10px');

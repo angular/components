@@ -12,6 +12,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//:node_modules/@types/jasmine",
+        "//src/cdk/bidi",
         "//src/cdk/testing/testbed",
     ],
 )

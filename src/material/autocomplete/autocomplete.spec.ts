@@ -1,6 +1,6 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
-import {createCloseScrollStrategy, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {OverlayContainer, OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -10,6 +10,7 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
@@ -25,6 +26,7 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -36,7 +38,7 @@ import {
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
 import {MatFormField, MatFormFieldModule} from '../form-field';
@@ -634,9 +636,7 @@ describe('MatAutocomplete', () => {
   }));
 
   it('should have the correct text direction in RTL', () => {
-    const rtlFixture = createComponent(SimpleAutocomplete, [
-      {provide: Directionality, useFactory: () => ({value: 'rtl', change: EMPTY})},
-    ]);
+    const rtlFixture = createComponent(SimpleAutocomplete, [provideFakeDirectionality('rtl')]);
 
     rtlFixture.detectChanges();
     rtlFixture.componentInstance.trigger.openPanel();
@@ -649,10 +649,8 @@ describe('MatAutocomplete', () => {
   });
 
   it('should update the panel direction if it changes for the trigger', () => {
-    const dirProvider = {value: 'rtl', change: EMPTY};
-    const rtlFixture = createComponent(SimpleAutocomplete, [
-      {provide: Directionality, useFactory: () => dirProvider},
-    ]);
+    const dir = signal<Direction>('rtl');
+    const rtlFixture = createComponent(SimpleAutocomplete, [provideFakeDirectionality(dir)]);
 
     rtlFixture.detectChanges();
     rtlFixture.componentInstance.trigger.openPanel();
@@ -666,7 +664,7 @@ describe('MatAutocomplete', () => {
     rtlFixture.componentInstance.trigger.closePanel();
     rtlFixture.detectChanges();
 
-    dirProvider.value = 'ltr';
+    dir.set('ltr');
     rtlFixture.componentInstance.trigger.openPanel();
     rtlFixture.detectChanges();
 

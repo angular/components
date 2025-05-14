@@ -1,5 +1,5 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   A,
   DOWN_ARROW,
@@ -15,13 +15,14 @@ import {
   TAB,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {createCloseScrollStrategy, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
+import {OverlayContainer, OverlayModule, createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
+  provideFakeDirectionality,
   wrappedErrorMessage,
 } from '@angular/cdk/testing/private';
 import {
@@ -36,8 +37,10 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  WritableSignal,
   inject,
   provideCheckNoChangesConfig,
+  signal,
 } from '@angular/core';
 import {
   ComponentFixture,
@@ -59,7 +62,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {EMPTY, Observable, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
 import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
@@ -77,7 +80,7 @@ const DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL = 200;
 
 describe('MatSelect', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: {value: 'ltr' | 'rtl'; change: Observable<string>};
+  let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
   /**
@@ -88,6 +91,7 @@ describe('MatSelect', () => {
    * @param providers Additional providers for this block
    */
   function configureMatSelectTestingModule(declarations: any[], providers: Provider[] = []) {
+    dir = signal('ltr');
     TestBed.configureTestingModule({
       imports: [
         MatFormFieldModule,
@@ -99,7 +103,7 @@ describe('MatSelect', () => {
       providers: [
         provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
-        {provide: Directionality, useFactory: () => (dir = {value: 'ltr', change: EMPTY})},
+        provideFakeDirectionality(dir),
         {
           provide: ScrollDispatcher,
           useFactory: () => ({
@@ -4311,7 +4315,7 @@ describe('MatSelect', () => {
     }));
 
     it('should sort the selected options in reverse in rtl', fakeAsync(() => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       trigger.click();
       fixture.detectChanges();
       flush();
@@ -4365,7 +4369,7 @@ describe('MatSelect', () => {
     });
 
     it('should reverse sort the values, that get set via the model in rtl', () => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       trigger.click();
       fixture.detectChanges();
 
