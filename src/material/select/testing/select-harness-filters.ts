@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BaseHarnessFilters} from '@angular/cdk/testing';
 import {MatFormFieldControlHarnessFilters} from '@angular/material/form-field/testing/control';
 
 /** A set of criteria that can be used to filter a list of `MatSelectHarness` instances. */
