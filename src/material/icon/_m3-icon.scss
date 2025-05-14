@@ -5,31 +5,19 @@
 $prefix: (mat, icon);
 
 /// Generates custom tokens for the mat-icon.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-icon
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    color: m3-utils.hardcode(inherit, $exclude-hardcoded),
-  );
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  $color: inherit;
+  @if $color-variant {
+    $color: map.get($system, $color-variant);
+  }
 
-  $variant-tokens: (
-    // Color variants:
-    surface: (), // Default, no overrides needed.
-    primary: (
-      color: map.get($systems, md-sys-color, primary),
+  @return (
+    base: (),
+    color: (
+      color: $color,
     ),
-    secondary: (
-      color: map.get($systems, md-sys-color, secondary),
-    ),
-    tertiary: (
-      color: map.get($systems, md-sys-color, tertiary),
-    ),
-    error: (
-      color: map.get($systems, md-sys-color, error),
-    )
+    typography: (),
+    density: (),
   );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }

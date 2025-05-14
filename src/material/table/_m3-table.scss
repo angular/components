@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -9,31 +8,43 @@
 $prefix: (mat, table);
 
 /// Generates custom tokens for the mat-table.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-table
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, header-headline, title-small),
-    m3-utils.generate-typography-tokens($systems, row-item-label-text, body-medium),
-    m3-utils.generate-typography-tokens(
-        $systems, footer-supporting-text, body-medium),
-    (
-      row-item-outline-width: m3-utils.hardcode(1px, $exclude-hardcoded),
-      background-color: map.get($systems, md-sys-color, surface),
-      header-headline-color: map.get($systems, md-sys-color, on-surface),
-      row-item-label-text-color: map.get($systems, md-sys-color, on-surface),
-      row-item-outline-color: map.get($systems, md-sys-color, outline),
-    ),
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      row-item-outline-width: 1px,
+    ),
+    color: (
+      background-color: map.get($system, surface),
+      header-headline-color: map.get($system, on-surface),
+      row-item-label-text-color: map.get($system, on-surface),
+      row-item-outline-color: map.get($system, outline),
+    ),
+    typography: (
+      header-headline-font: map.get($system, title-small-font),
+      header-headline-line-height: map.get($system, title-small-line-height),
+      header-headline-size: map.get($system, title-small-size),
+      header-headline-tracking: map.get($system, title-small-tracking),
+      header-headline-weight: map.get($system, title-small-weight),
+      row-item-label-text-font: map.get($system, body-medium-font),
+      row-item-label-text-line-height: map.get($system, body-medium-line-height),
+      row-item-label-text-size: map.get($system, body-medium-size),
+      row-item-label-text-tracking: map.get($system, body-medium-tracking),
+      row-item-label-text-weight: map.get($system, body-medium-weight),
+      footer-supporting-text-font: map.get($system, body-medium-font),
+      footer-supporting-text-line-height: map.get($system, body-medium-line-height),
+      footer-supporting-text-size: map.get($system, body-medium-size),
+      footer-supporting-text-tracking: map.get($system, body-medium-tracking),
+      footer-supporting-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -4);
   $index: ($scale * -1) + 1;
 
   @return (

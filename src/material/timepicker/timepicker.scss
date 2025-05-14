@@ -1,6 +1,12 @@
 @use '@angular/cdk';
 @use '../core/tokens/token-utils';
 @use './m2-timepicker';
+@use './m3-timepicker';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-timepicker.$prefix;
+$token-slots: m2-timepicker.get-token-slots();
+$fallbacks: m3-timepicker.get-tokens(m3-system.$theme-with-system-vars);
 
 @keyframes _mat-timepicker-enter {
   from {
@@ -40,7 +46,7 @@ mat-timepicker {
   // panel which is required for scroll calculations (see #30974).
   position: relative;
 
-  @include token-utils.use-tokens(m2-timepicker.$prefix, m2-timepicker.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     border-bottom-left-radius: token-utils.slot(container-shape);
     border-bottom-right-radius: token-utils.slot(container-shape);
     box-shadow: token-utils.slot(container-elevation-shadow);
@@ -55,7 +61,7 @@ mat-timepicker {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
-    @include token-utils.use-tokens(m2-timepicker.$prefix, m2-timepicker.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       border-top-left-radius: token-utils.slot(container-shape);
       border-top-right-radius: token-utils.slot(container-shape);
     }

@@ -1,5 +1,4 @@
 @use '../core/tokens/m3-utils';
-@use '../core/style/sass-utils';
 @use 'sass:map';
 @use 'sass:list';
 @use '../core/theming/theming';
@@ -9,59 +8,48 @@
 $prefix: (mat, tab);
 
 /// Generates the tokens for MDC tab
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of tokens for the MDC tab
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-      m3-utils.generate-typography-tokens($systems, label-text, title-small),
-      (
-        active-focus-indicator-color: map.get($systems, md-sys-color, primary),
-        active-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
-        active-hover-indicator-color: map.get($systems, md-sys-color, primary),
-        active-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
-        active-indicator-color: map.get($systems, md-sys-color, primary),
-        active-indicator-height: m3-utils.hardcode(2px, $exclude-hardcoded),
-        active-indicator-shape: m3-utils.hardcode(0, $exclude-hardcoded),
-        active-label-text-color: map.get($systems, md-sys-color, on-surface),
-        active-ripple-color: map.get($systems, md-sys-color, on-surface),
-        divider-color: map.get($systems, md-sys-color, surface-variant),
-        divider-height: m3-utils.hardcode(1px, $exclude-hardcoded),
-        inactive-focus-label-text-color: map.get($systems, md-sys-color, on-surface),
-        inactive-hover-label-text-color: map.get($systems, md-sys-color, on-surface),
-        inactive-label-text-color: map.get($systems, md-sys-color, on-surface),
-        inactive-ripple-color: map.get($systems, md-sys-color, on-surface),
-        pagination-icon-color: map.get($systems, md-sys-color, on-surface),
-      ),
-  );
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
 
-  $variant-tokens: (
-    // Color variants
-    primary: (), // Default, no overrides needed
-    secondary: (
-      active-focus-indicator-color: map.get($systems, md-sys-color, secondary),
-      active-hover-indicator-color: map.get($systems, md-sys-color, secondary),
-      active-indicator-color: map.get($systems, md-sys-color, secondary),
+  @return (
+    base: (
+      active-indicator-height: 2px,
+      active-indicator-shape: 0,
+      divider-height: 1px,
     ),
-    tertiary: (
-      active-focus-indicator-color: map.get($systems, md-sys-color, tertiary),
-      active-hover-indicator-color: map.get($systems, md-sys-color, tertiary),
-      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    color: (
+      active-focus-indicator-color: map.get($system, primary),
+      active-focus-label-text-color: map.get($system, on-surface),
+      active-hover-indicator-color: map.get($system, primary),
+      active-hover-label-text-color: map.get($system, on-surface),
+      active-indicator-color: map.get($system, primary),
+      active-label-text-color: map.get($system, on-surface),
+      active-ripple-color: map.get($system, on-surface),
+      divider-color: map.get($system, surface-variant),
+      inactive-focus-label-text-color: map.get($system, on-surface),
+      inactive-hover-label-text-color: map.get($system, on-surface),
+      inactive-label-text-color: map.get($system, on-surface),
+      inactive-ripple-color: map.get($system, on-surface),
+      pagination-icon-color: map.get($system, on-surface),
     ),
-    error: (
-      active-focus-indicator-color: map.get($systems, md-sys-color, error),
-      active-hover-indicator-color: map.get($systems, md-sys-color, error),
-      active-indicator-color: map.get($systems, md-sys-color, error),
-    )
+    typography: (
+      label-text-font: map.get($system, title-small-font),
+      label-text-line-height: map.get($system, title-small-line-height),
+      label-text-size: map.get($system, title-small-size),
+      label-text-tracking: map.get($system, title-small-tracking),
+      label-text-weight: map.get($system, title-small-weight),
+    ),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -4);
   $index: ($scale * -1) + 1;
 
   @return (

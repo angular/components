@@ -280,31 +280,6 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
 }
 
-/// Gets the set of tokens from the given theme, limited to those affected by the requested theming
-/// systems.
-/// @param {Map} $theme The theme to get tokens from.
-/// @param {String...} $systems The theming systems to get tokens for. Valid values are: color,
-///   typography, density, base. If no systems are passed, all tokens will be returned.
-/// @return {Map} The requested tokens for the theme.
-@function get-theme-tokens($theme, $systems...) {
-  $systems: if(list.length($systems) == 0, (color, typography, density, base), $systems);
-  $err: _validate-theme-object($theme);
-  @if $err {
-    @error #{'Expected $theme to be an Angular Material theme object. Got:'} $theme;
-  }
-  $err: validation.validate-allowed-values($systems, color, typography, density, base);
-  @if $err {
-    @error #{'Expected $systems to contain valid system names (color, typography, density, or'}
-    #{'base). Got invalid system names:'} $err;
-  }
-  $result: ();
-  @each $system in $systems {
-    $result: map.deep-merge($result, map.get($theme, $internals, '#{$system}-tokens') or ());
-  }
-
-  @return $result;
-}
-
 /// Gets a version of the theme with a modified typography config that preserves old behavior in
 /// some components that previously used `private-typography-to-2014-config`.
 /// Do not introduce new usages of this, it should be cleaned up and removed.

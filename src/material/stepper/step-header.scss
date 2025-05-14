@@ -2,10 +2,13 @@
 @use '../core/style/layout-common';
 @use '../core/tokens/token-utils';
 @use './m2-stepper';
+@use './m3-stepper';
 @use './stepper-variables';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-stepper.$prefix;
 $token-slots: m2-stepper.get-token-slots();
+$fallbacks: m3-stepper.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-step-header {
   overflow: hidden;
@@ -25,7 +28,7 @@ $token-slots: m2-stepper.get-token-slots();
     cursor: default;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
 
     &:hover:not([aria-disabled]),
     &:hover[aria-disabled='false'] {
@@ -74,7 +77,7 @@ $token-slots: m2-stepper.get-token-slots();
 .mat-step-optional {
   font-size: stepper-variables.$step-sub-label-font-size;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(header-optional-label-text-color);
   }
 }
@@ -91,7 +94,7 @@ $token-slots: m2-stepper.get-token-slots();
   flex-shrink: 0;
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(header-icon-foreground-color);
     background-color: token-utils.slot(header-icon-background-color);
   }
@@ -116,7 +119,7 @@ $token-slots: m2-stepper.get-token-slots();
 }
 
 .mat-step-icon-state-error {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(header-error-state-icon-background-color);
     color: token-utils.slot(header-error-state-icon-foreground-color);
   }
@@ -136,7 +139,7 @@ $token-slots: m2-stepper.get-token-slots();
   min-width: stepper-variables.$label-min-width;
   vertical-align: middle;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     font-family: token-utils.slot(header-label-text-font);
     font-size: token-utils.slot(header-label-text-size);
     font-weight: token-utils.slot(header-label-text-weight);
@@ -171,21 +174,21 @@ $token-slots: m2-stepper.get-token-slots();
 }
 
 .mat-step-icon-selected {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(header-selected-state-icon-background-color);
     color: token-utils.slot(header-selected-state-icon-foreground-color);
   }
 }
 
 .mat-step-icon-state-done {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(header-done-state-icon-background-color);
     color: token-utils.slot(header-done-state-icon-foreground-color);
   }
 }
 
 .mat-step-icon-state-edit {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(header-edit-state-icon-background-color);
     color: token-utils.slot(header-edit-state-icon-foreground-color);
   }

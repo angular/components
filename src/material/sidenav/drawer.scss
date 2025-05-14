@@ -1,9 +1,11 @@
 @use '@angular/cdk';
 
 @use './m2-sidenav';
+@use './m3-sidenav';
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/layout-common';
+@use '../core/tokens/m3-system';
 
 $drawer-content-z-index: 1;
 $drawer-side-drawer-z-index: 2;
@@ -12,6 +14,7 @@ $drawer-over-drawer-z-index: 4;
 
 $token-prefix: m2-sidenav.$prefix;
 $token-slots: m2-sidenav.get-token-slots();
+$fallbacks: m3-sidenav.get-tokens(m3-system.$theme-with-system-vars);
 
 // Mixin that creates a new stacking context.
 // see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context
@@ -30,7 +33,7 @@ $token-slots: m2-sidenav.get-token-slots();
   // the application content does not get messed up with our own CSS.
   @include drawer-stacking-context();
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(content-text-color);
     background-color: token-utils.slot(content-background-color);
   }
@@ -86,7 +89,7 @@ $token-slots: m2-sidenav.get-token-slots();
   &.mat-drawer-shown {
     visibility: visible;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       background-color: token-utils.slot(scrim-color);
     }
   }
@@ -129,7 +132,7 @@ $token-slots: m2-sidenav.get-token-slots();
 
   @include drawer-stacking-context($drawer-over-drawer-z-index);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(container-text-color);
     box-shadow: token-utils.slot(container-elevation-shadow);
     background-color: token-utils.slot(container-background-color);
@@ -171,7 +174,7 @@ $token-slots: m2-sidenav.get-token-slots();
     right: 0;
     transform: translate3d(100%, 0, 0);
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       border-top-left-radius: token-utils.slot(container-shape);
       border-bottom-left-radius: token-utils.slot(container-shape);
       border-top-right-radius: 0;
@@ -180,7 +183,7 @@ $token-slots: m2-sidenav.get-token-slots();
   }
 
   [dir='rtl'] & {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       border-top-left-radius: token-utils.slot(container-shape);
       border-bottom-left-radius: token-utils.slot(container-shape);
       border-top-right-radius: 0;

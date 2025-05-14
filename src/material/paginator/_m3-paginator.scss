@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -9,29 +8,30 @@
 $prefix: (mat, paginator);
 
 /// Generates custom tokens for the mat-paginator.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-paginator
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, container-text, body-small),
-    (
-      container-text-color: map.get($systems, md-sys-color, on-surface),
-      container-background-color: map.get($systems, md-sys-color, surface),
-      enabled-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      disabled-icon-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      select-trigger-text-size: map.get($systems, md-sys-typescale, body-small-size),
-    )
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (),
+    color: (),
+    typography: (
+      container-background-color: map.get($system, surface),
+      container-text-font: map.get($system, body-small-font),
+      container-text-line-height: map.get($system, body-small-line-height),
+      container-text-size: map.get($system, body-small-size),
+      container-text-tracking: map.get($system, body-small-tracking),
+      container-text-weight: map.get($system, body-small-weight),
+      disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      enabled-icon-color: map.get($system, on-surface-variant),
+      select-trigger-text-size: map.get($system, body-small-size),
+    ),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -5);
   $index: ($scale * -1) + 1;
 
   @return (

@@ -1,9 +1,12 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use './m2-list';
+@use './m3-list';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-list.$prefix;
 $token-slots: m2-list.get-token-slots();
+$fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
 
 // Includes the structural styles for the list that were inherited from MDC.
 @mixin private-list-inherited-structural-styles {
@@ -28,7 +31,7 @@ $token-slots: m2-list.get-token-slots();
     padding-left: 16px;
     padding-right: 16px;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       background-color: token-utils.slot(list-item-container-color);
       border-radius: token-utils.slot(list-item-container-shape);
 
@@ -46,7 +49,7 @@ $token-slots: m2-list.get-token-slots();
     }
 
     &.mdc-list-item--with-one-line {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         height: token-utils.slot(list-item-one-line-container-height);
       }
 
@@ -62,7 +65,7 @@ $token-slots: m2-list.get-token-slots();
     }
 
     &.mdc-list-item--with-two-lines {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         height: token-utils.slot(list-item-two-line-container-height);
       }
 
@@ -78,7 +81,7 @@ $token-slots: m2-list.get-token-slots();
     }
 
     &.mdc-list-item--with-three-lines {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         height: token-utils.slot(list-item-three-line-container-height);
       }
 
@@ -118,7 +121,7 @@ $token-slots: m2-list.get-token-slots();
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       .mdc-list-item--with-leading-icon & {
         color: token-utils.slot(list-item-leading-icon-color);
         width: token-utils.slot(list-item-leading-icon-size);
@@ -158,7 +161,7 @@ $token-slots: m2-list.get-token-slots();
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       .mdc-list-item--with-trailing-meta & {
         font-family: token-utils.slot(list-item-trailing-supporting-text-font);
         line-height: token-utils.slot(list-item-trailing-supporting-text-line-height);
@@ -208,7 +211,7 @@ $token-slots: m2-list.get-token-slots();
     white-space: nowrap;
     overflow: hidden;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(list-item-label-text-color);
       font-family: token-utils.slot(list-item-label-text-font);
       line-height: token-utils.slot(list-item-label-text-line-height);
@@ -259,7 +262,7 @@ $token-slots: m2-list.get-token-slots();
     display: block;
     margin-top: 0;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(list-item-supporting-text-color);
       font-family: token-utils.slot(list-item-supporting-text-font);
       line-height: token-utils.slot(list-item-supporting-text-line-height);
@@ -470,20 +473,20 @@ $token-slots: m2-list.get-token-slots();
 
     .mdc-list-item__primary-text,
     .mdc-list-item__secondary-text {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         opacity: token-utils.slot(list-item-disabled-label-text-opacity);
       }
     }
 
     &.mdc-list-item--with-leading-icon .mdc-list-item__start {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         color: token-utils.slot(list-item-disabled-leading-icon-color);
         opacity: token-utils.slot(list-item-disabled-leading-icon-opacity);
       }
     }
 
     &.mdc-list-item--with-trailing-icon .mdc-list-item__end {
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         color: token-utils.slot(list-item-disabled-trailing-icon-color);
         opacity: token-utils.slot(list-item-disabled-trailing-icon-opacity);
       }

@@ -3,11 +3,14 @@
 @use '../core/tokens/token-utils';
 @use './button-base';
 @use './m2-icon-button';
+@use './m3-icon-button';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-icon-button.$prefix;
 $token-slots: m2-icon-button.get-token-slots();
+$fallbacks: m3-icon-button.get-tokens(m3-system.$theme-with-system-vars);
 
-@include token-utils.use-tokens($token-prefix, $token-slots) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-mdc-icon-button {
     @include vendor-prefixes.user-select(none);
     display: inline-block;

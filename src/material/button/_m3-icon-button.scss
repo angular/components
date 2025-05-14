@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
-@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 
@@ -13,64 +12,37 @@ $prefix: (mat, icon-button);
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-icon-button
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
   $tokens: (
-    state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    disabled-state-layer-color: map.get($systems, md-sys-color, on-surface-variant),
-    ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface-variant),
-      $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
+    base: (
+      icon-size: 24px,
     ),
-    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    disabled-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    icon-size: if($exclude-hardcoded, null, 24px),
-    icon-color: map.get($systems, md-sys-color, on-surface-variant),
+    color: (
+      disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      disabled-state-layer-color: map.get($system, on-surface-variant),
+      focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      icon-color: map.get($system, on-surface-variant),
+      pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface-variant), map.get($system, pressed-state-layer-opacity)),
+      state-layer-color: map.get($system, on-surface-variant),
+    ),
+    typography: (),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
 
-  $variant-tokens: (
-    primary: (
-      state-layer-color: map.get($systems, md-sys-color, primary),
-      ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, primary),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
-      ),
-      icon-color: map.get($systems, md-sys-color, primary)
-    ),
-    secondary: (
-      state-layer-color: map.get($systems, md-sys-color, secondary),
-      ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, secondary),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
-      ),
-      icon-color: map.get($systems, md-sys-color, secondary)
-    ),
-    tertiary: (
-      state-layer-color: map.get($systems, md-sys-color, tertiary),
-      ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, tertiary),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
-      ),
-      icon-color: map.get($systems, md-sys-color, tertiary)
-    ),
-    error: (
-      state-layer-color: map.get($systems, md-sys-color, error),
-      ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, error),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)
-      ),
-      icon-color: map.get($systems, md-sys-color, error)
-    )
-  );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -5);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -5);
   $index: ($scale * -1) + 1;
 
   @return (

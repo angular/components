@@ -1,6 +1,12 @@
 @use '@angular/cdk';
 @use '../core/tokens/token-utils';
 @use './m2-progress-spinner';
+@use './m3-progress-spinner';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-progress-spinner.$prefix;
+$token-slots: m2-progress-spinner.get-token-slots();
+$fallbacks: m3-progress-spinner.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-progress-spinner {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
@@ -17,10 +23,7 @@
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.6, 1);
 
   circle {
-    @include token-utils.use-tokens(
-      m2-progress-spinner.$prefix,
-      m2-progress-spinner.get-token-slots()
-    ) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       stroke-width: token-utils.slot(active-indicator-width);
     }
   }

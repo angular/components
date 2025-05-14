@@ -1,6 +1,5 @@
 @use './theming/theming';
 @use './theming/inspection';
-@use './theming/validation';
 @use './ripple/ripple-theme';
 @use './option/option-theme';
 @use './option/optgroup-theme';
@@ -9,14 +8,30 @@
 @use './typography/typography';
 @use './tokens/token-utils';
 @use './m2-app';
+@use './m3-app';
 @use 'ripple/m2-ripple';
+@use 'ripple/m3-ripple';
 @use 'option/m2-option';
+@use 'option/m3-option';
 @use 'option/m2-optgroup';
+@use 'option/m3-optgroup';
 @use 'selection/pseudo-checkbox/m2-pseudo-checkbox';
+@use 'sass:map';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-app.$prefix,
+        map.get(m3-app.get-tokens($theme), base));
+    @include token-utils.create-token-values(
+        m3-ripple.$prefix,
+        map.get(m3-ripple.get-tokens($theme), base));
+    @include token-utils.create-token-values(
+        m3-option.$prefix,
+        map.get(m3-option.get-tokens($theme), base));
+    @include token-utils.create-token-values(
+        m3-optgroup.$prefix,
+        map.get(m3-optgroup.get-tokens($theme), base));
   } @else {
     @include ripple-theme.base($theme);
     @include option-theme.base($theme);
@@ -31,7 +46,18 @@
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include token-utils.create-token-values(
+        m3-app.$prefix,
+        map.get(m3-app.get-tokens($theme), color));
+    @include token-utils.create-token-values(
+        m3-ripple.$prefix,
+        map.get(m3-ripple.get-tokens($theme), color));
+    @include token-utils.create-token-values(
+        m3-option.$prefix,
+        map.get(m3-option.get-tokens($theme), color));
+    @include token-utils.create-token-values(
+        m3-optgroup.$prefix,
+        map.get(m3-optgroup.get-tokens($theme), color));
   } @else {
     @include ripple-theme.color($theme);
     @include option-theme.color($theme);
@@ -46,7 +72,18 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-app.$prefix,
+        map.get(m3-app.get-tokens($theme), typography));
+    @include token-utils.create-token-values(
+        m3-ripple.$prefix,
+        map.get(m3-ripple.get-tokens($theme), typography));
+    @include token-utils.create-token-values(
+        m3-option.$prefix,
+        map.get(m3-option.get-tokens($theme), typography));
+    @include token-utils.create-token-values(
+        m3-optgroup.$prefix,
+        map.get(m3-optgroup.get-tokens($theme), typography));
   } @else {
     @include option-theme.typography($theme);
     @include optgroup-theme.typography($theme);
@@ -57,7 +94,18 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
+    @include token-utils.create-token-values(
+        m3-app.$prefix,
+        map.get(m3-app.get-tokens($theme), density));
+    @include token-utils.create-token-values(
+        m3-ripple.$prefix,
+        map.get(m3-ripple.get-tokens($theme), density));
+    @include token-utils.create-token-values(
+        m3-option.$prefix,
+        map.get(m3-option.get-tokens($theme), density));
+    @include token-utils.create-token-values(
+        m3-optgroup.$prefix,
+        map.get(m3-optgroup.get-tokens($theme), density));
   } @else {
     @include option-theme.density($theme);
     @include optgroup-theme.density($theme);
@@ -91,13 +139,16 @@
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
-@mixin theme($theme, $options...) {
+@mixin theme($theme) {
   // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
   // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
   // the imported themes (such as `mat-ripple-theme`) should not report again.
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
+      @include base($theme);
+      @include color($theme);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
@@ -111,32 +162,4 @@
       }
     }
   }
-}
-
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-app-tokens: token-utils.get-tokens-for($tokens, m2-app.$prefix, $options...);
-  $mat-ripple-tokens: token-utils.get-tokens-for($tokens, m2-ripple.$prefix, $options...);
-  $mat-option-tokens: token-utils.get-tokens-for($tokens, m2-option.$prefix, $options...);
-  $mat-optgroup-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-optgroup.$prefix,
-    $options...
-  );
-  $mat-pseudo-checkbox-tokens: token-utils.get-tokens-for(
-    $tokens,
-    m2-pseudo-checkbox.$prefix,
-    $options...
-  );
-
-  @include token-utils.create-token-values(m2-app.$prefix, $mat-app-tokens);
-  @include token-utils.create-token-values(m2-ripple.$prefix, $mat-ripple-tokens);
-  @include token-utils.create-token-values(m2-option.$prefix, $mat-option-tokens);
-  @include token-utils.create-token-values(m2-optgroup.$prefix, $mat-optgroup-tokens);
-  @include token-utils.create-token-values(
-    m2-pseudo-checkbox.$prefix,
-    $mat-pseudo-checkbox-tokens
-  );
 }

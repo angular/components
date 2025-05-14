@@ -2,13 +2,15 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use './m2-sidenav';
+@use './m3-sidenav';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-sidenav.$prefix,
+        map.get(m3-sidenav.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -19,7 +21,9 @@
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include token-utils.create-token-values(
+        m3-sidenav.$prefix,
+        map.get(m3-sidenav.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -30,14 +34,18 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-sidenav.$prefix,
+        map.get(m3-sidenav.get-tokens($theme), typography));
   } @else {
   }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
+    @include token-utils.create-token-values(
+        m3-sidenav.$prefix,
+        map.get(m3-sidenav.get-tokens($theme), base));
   } @else {
   }
 }
@@ -59,7 +67,10 @@
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-sidenav') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include base($theme);
+      @include color($theme);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
@@ -72,17 +83,5 @@
         @include typography($theme);
       }
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-sidenav.$prefix,
-      map.get($tokens, m2-sidenav.$prefix)
-    );
   }
 }

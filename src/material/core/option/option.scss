@@ -1,10 +1,17 @@
 @use '@angular/cdk';
 
 @use './m2-option';
+@use './m3-option';
 @use '../../list/m2-list';
+@use '../../list/m3-list';
 @use '../tokens/token-utils';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
+@use '../tokens/m3-system';
+
+$token-prefix: m2-option.$prefix;
+$token-slots: m2-option.get-token-slots();
+$fallbacks: m3-option.get-tokens(m3-system.$theme-with-system-vars);
 
 $_side-padding: 16px;
 
@@ -21,7 +28,7 @@ $_side-padding: 16px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
-  @include token-utils.use-tokens(m2-option.$prefix, m2-option.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(label-text-color);
     font-family: token-utils.slot(label-text-font);
     line-height: token-utils.slot(label-text-line-height);
@@ -180,12 +187,16 @@ $_side-padding: 16px;
   }
 }
 
+$list-token-prefix: m2-list.$prefix;
+$list-token-slots: m2-list.get-token-slots();
+$list-fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
+
 .mat-mdc-option-multiple {
   // Multi-select options in the selected state aren't supposed to change their background color,
   // because the checkbox already indicates that they're selected. This happened to work in M2,
   // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
   // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
-  @include token-utils.use-tokens(m2-list.$prefix, m2-list.get-token-slots()) {
+  @include token-utils.use-tokens($list-token-prefix, $list-token-slots, $list-fallbacks) {
     $selected-token: token-utils.get-token-variable-name(list-item-selected-container-color);
     $base-token: token-utils.slot(list-item-container-color, $fallback: transparent);
     #{$selected-token}: $base-token;

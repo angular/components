@@ -1,6 +1,5 @@
 @use 'sass:color';
 @use 'sass:string';
-@use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -52,16 +51,6 @@ $use-system-typography-variables: false;
   @return $result;
 }
 
-/// Coerces the given value to a list, by converting any non-list value into a single-item list.
-/// This should be used when dealing with user-passed lists of args to avoid confusing errors,
-/// since Sass treats `($x)` as equivalent to `$x`.
-/// @param {Any} $value The value to coerce to a list.
-/// @return {List} The original $value if it was a list, otherwise a single-item list containing
-///     $value.
-@function coerce-to-list($value) {
-  @return if(meta.type-of($value) != 'list', ($value,), $value);
-}
-
 /// A version of the Sass `color.change` function that is safe ot use with CSS variables.
 @function safe-color-change($color, $args...) {
   $args: meta.keywords($args);
@@ -88,24 +77,6 @@ $use-system-typography-variables: false;
     @return #{color-mix(in srgb, #{$color} #{$opacity}, transparent)};
   }
   @return $color;
-}
-
-/// Gets the given arguments as a map of keywords and validates that only supported arguments were
-/// passed.
-/// @param {ArgList} $args The arguments to convert to a keywords map.
-/// @param {List} $supported-args The supported argument names.
-/// @return {Map} The $args as a map of argument name to argument value.
-@function validate-keyword-args($args, $supported-args) {
-  @if list.length($args) > 0 {
-    @error #{'Expected keyword args, but got positional args: '}#{$args};
-  }
-  $kwargs: meta.keywords($args);
-  @each $arg, $v in $kwargs {
-    @if list.index($supported-args, $arg) == null {
-      @error #{'Unsupported argument '}#{$arg}#{'. Valid arguments are: '}#{$supported-args};
-    }
-  }
-  @return $kwargs;
 }
 
 // Returns whether the $value is a CSS variable name based on whether it's a string prefixed
