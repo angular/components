@@ -46,18 +46,6 @@ describe('Dialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        DialogModule,
-        ComponentWithChildViewContainer,
-        ComponentWithTemplateRef,
-        PizzaMsg,
-        ContentElementDialog,
-        DialogWithInjectedData,
-        DialogWithoutFocusableElements,
-        DirectiveWithViewContainer,
-        TemplateInjectorParentComponent,
-        TemplateInjectorInnerDirective,
-      ],
       providers: [
         {provide: Location, useClass: SpyLocation},
         {provide: TEMPLATE_INJECTOR_TEST_TOKEN, useValue: 'hello from test module'},
@@ -1416,7 +1404,6 @@ class DirectiveWithViewContainer {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
-  standalone: false,
 })
 class ComponentWithOnPushViewContainer {
   viewContainerRef = inject(ViewContainerRef);
@@ -1509,7 +1496,6 @@ class DialogWithoutFocusableElements {}
 @Component({
   template: `<button>I'm a button</button>`,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false,
 })
 class ShadowDomComponent {}
 
