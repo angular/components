@@ -79,6 +79,7 @@ describe('theming definition api', () => {
         'md-sys-motion',
         'md-sys-shape',
         'md-sys-state',
+        'md-ref-palette',
         'md-sys-typescale',
         'palettes',
         'theme-type',

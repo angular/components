@@ -89,6 +89,12 @@ $theme-version: 1;
       md-sys-motion: m3.md-sys-motion-values(),
       md-sys-shape: m3.md-sys-shape-values(),
       md-sys-state: m3.md-sys-state-values(),
+      md-ref-palette: (
+        // Form field native select option text color
+        neutral10: map.get($palettes, neutral, 10),
+        // Sidenav scrim (container background shadow when opened),
+        neutral-variant20: map.get($palettes, neutral-variant, 20),
+      ),
       md-sys-typescale:
         m3-tokens.get-sys-typeface($typography, $typography-system-variables-prefix),
       palettes: $palettes,

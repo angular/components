@@ -1,20 +1,24 @@
 @use '@angular/cdk';
 @use '../button/m2-button';
+@use '../button/m3-button';
 @use '../core/style/variables';
 @use '../core/tokens/token-utils';
 @use './m2-toolbar';
+@use './m3-toolbar';
+@use '../core/tokens/m3-system';
 
 $row-padding: 16px !default;
 
 $token-prefix: m2-toolbar.$prefix;
 $token-slots: m2-toolbar.get-token-slots();
+$fallbacks: m3-toolbar.get-tokens(m3-system.$theme-with-system-vars);
 
 // @deprecated @breaking-change 8.0.0
 // TODO: Remove once internal g3 apps no longer depend on this variable. Tracked with: COMP-303.
 $height-mobile-portrait: 56px !default;
 
 .mat-toolbar {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background: token-utils.slot(container-background-color);
     color: token-utils.slot(container-text-color);
 
@@ -54,11 +58,15 @@ $height-mobile-portrait: 56px !default;
   .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
     $color-token: null;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       $color-token: token-utils.slot(container-text-color);
     }
 
-    @include token-utils.use-tokens(m2-button.$prefix, m2-button.get-token-slots()) {
+    $button-token-prefix: m2-button.$prefix;
+    $button-token-slots: m2-button.get-token-slots();
+    $button-fallbacks: m3-button.get-tokens(m3-system.$theme-with-system-vars);
+
+    @include token-utils.use-tokens($button-token-prefix, $button-token-slots, $button-fallbacks) {
       #{token-utils.get-token-variable-name(text-label-text-color)}: #{$color-token};
       #{token-utils.get-token-variable-name(outlined-label-text-color)}: #{$color-token};
     }
@@ -80,7 +88,7 @@ $height-mobile-portrait: 56px !default;
   // Disable text wrapping inside of the toolbar. Developers are still able to overwrite it.
   white-space: nowrap;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     height: token-utils.slot(standard-height);
 
     @media (variables.$xsmall) {
@@ -95,7 +103,7 @@ $height-mobile-portrait: 56px !default;
   flex-direction: column;
   width: 100%;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     min-height: token-utils.slot(standard-height);
 
     // As per specs, toolbars should have a different height in mobile devices. This has been

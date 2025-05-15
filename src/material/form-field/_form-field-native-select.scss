@@ -1,6 +1,12 @@
 @use 'sass:math';
 @use './m2-form-field';
+@use './m3-form-field';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
 
 // Width of the Material Design form-field select arrow.
 $mat-form-field-select-arrow-width: 10px;
@@ -30,7 +36,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
     }
 
     &:not(.mat-mdc-native-select-inline) {
-      @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         option {
           color: token-utils.slot(select-option-text-color);
         }
@@ -62,7 +68,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
       // Make the arrow non-clickable so the user can click on the form control under it.
       pointer-events: none;
 
-      @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         color: token-utils.slot(enabled-select-arrow-color);
       }
 
@@ -72,7 +78,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
       }
     }
 
-    @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       &.mat-focused .mat-mdc-form-field-infix::after {
         color: token-utils.slot(focus-select-arrow-color);
       }

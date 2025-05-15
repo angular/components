@@ -1,17 +1,23 @@
 @use '../core/tokens/token-utils';
 @use './m2-tree';
+@use './m3-tree';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-tree.$prefix;
+$token-slots: m2-tree.get-token-slots();
+$fallbacks: m3-tree.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-tree {
   display: block;
 
-  @include token-utils.use-tokens(m2-tree.$prefix, m2-tree.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(container-background-color);
   }
 }
 
 .mat-tree-node,
 .mat-nested-tree-node {
-  @include token-utils.use-tokens(m2-tree.$prefix, m2-tree.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(node-text-color);
     font-family: token-utils.slot(node-text-font);
     font-size: token-utils.slot(node-text-size);
@@ -25,7 +31,7 @@
   flex: 1;
   word-wrap: break-word;
 
-  @include token-utils.use-tokens(m2-tree.$prefix, m2-tree.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     // TODO: before tokens were introduced, the `min-height` only applied to the
     // non-nested tree node. Should it apply to the nested one as well?
     min-height: token-utils.slot(node-min-height);

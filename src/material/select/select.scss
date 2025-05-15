@@ -4,6 +4,8 @@
 @use '../core/style/variables';
 @use '../core/tokens/token-utils';
 @use './m2-select';
+@use './m3-select';
+@use '../core/tokens/m3-system';
 
 $mat-select-arrow-size: 5px !default;
 $mat-select-arrow-margin: 4px !default;
@@ -15,6 +17,7 @@ $scale: 0.75 !default;
 
 $token-prefix: m2-select.$prefix;
 $token-slots: m2-select.get-token-slots();
+$fallbacks: m3-select.get-tokens(m3-system.$theme-with-system-vars);
 
 @keyframes _mat-select-enter {
   from {
@@ -43,7 +46,7 @@ $token-slots: m2-select.get-token-slots();
   width: 100%;
   outline: none;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     @include vendor-prefixes.smooth-font();
     color: token-utils.slot(enabled-trigger-text-color);
     font-family: token-utils.slot(trigger-text-font);
@@ -53,19 +56,19 @@ $token-slots: m2-select.get-token-slots();
     letter-spacing: token-utils.slot(trigger-text-tracking);
   }
 }
-@include token-utils.use-tokens($token-prefix, $token-slots) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   div.mat-mdc-select-panel {
     box-shadow: token-utils.slot(container-elevation-shadow);
   }
 }
 
 .mat-mdc-select-disabled {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(disabled-trigger-text-color);
   }
 
   .mat-mdc-select-placeholder {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(disabled-trigger-text-color);
     }
   }
@@ -111,7 +114,7 @@ $token-slots: m2-select.get-token-slots();
 
 .mat-mdc-form-field .mat-mdc-select.mat-mdc-select-invalid .mat-mdc-select-arrow,
 .mat-form-field-invalid:not(.mat-form-field-disabled) .mat-mdc-form-field-infix::after {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(invalid-arrow-color);
   }
 }
@@ -121,7 +124,7 @@ $token-slots: m2-select.get-token-slots();
   height: $mat-select-arrow-size;
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(enabled-arrow-color);
 
     .mat-mdc-form-field.mat-focused & {
@@ -168,7 +171,7 @@ div.mat-mdc-select-panel {
   // panel which is required for scroll calculations (see #30974).
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(panel-background-color);
   }
 
@@ -204,7 +207,7 @@ div.mat-mdc-select-panel {
       math.div(variables.$swift-ease-out-duration, 3)
       variables.$swift-ease-out-timing-function;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(placeholder-text-color);
   }
 
@@ -271,7 +274,7 @@ div.mat-mdc-select-panel {
   visibility: hidden;
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
     transform: token-utils.slot(arrow-transform);
   }

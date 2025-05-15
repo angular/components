@@ -1,8 +1,6 @@
-@use '../style/elevation';
 @use '../style/sass-utils';
 @use './m3-system';
 @use 'sass:list';
-@use 'sass:meta';
 @use 'sass:map';
 @use 'sass:string';
 
@@ -161,88 +159,6 @@ $_direct-system-fallbacks: ();
   #{$name}: #{$value};
 }
 
-// MDC doesn't currently handle elevation tokens properly. As a temporary workaround we can combine
-// the elevation and shadow-color tokens into a full box-shadow and use it as the value for the
-// elevation token.
-@function resolve-elevation($tokens, $elevation-token, $shadow-color-token) {
-  $elevation: map.get($tokens, $elevation-token);
-  $shadow-color: map.get($tokens, $shadow-color-token);
-  @return map.merge(
-    $tokens,
-    (
-      $elevation-token: elevation.get-box-shadow($elevation, $shadow-color),
-      $shadow-color-token: null,
-    )
-  );
-}
-
-/// Checks whether a list starts wih a given prefix
-/// @param {List} $list The list value to check the prefix of.
-/// @param {List} $prefix The prefix to check.
-/// @return {Boolean} Whether the list starts with the prefix.
-@function _is-prefix($list, $prefix) {
-  @for $i from 1 through list.length($prefix) {
-    @if list.nth($list, $i) != list.nth($prefix, $i) {
-      @return false;
-    }
-  }
-  @return true;
-}
-
-/// Gets the supported color variants in the given token set for the given prefix.
-/// @param {Map} $tokens The full token map.
-/// @param {List} $prefix The component prefix to get color variants for.
-/// @return {List} The supported color variants.
-@function _supported-color-variants($tokens, $prefix) {
-  $result: ();
-  @each $namespace in map.keys($tokens) {
-    @if list.length($prefix) == list.length($namespace) - 1 and _is-prefix($namespace, $prefix) {
-      $result: list.append($result, list.nth($namespace, list.length($namespace)), comma);
-    }
-  }
-  @return $result;
-}
-
-/// Gets the token values for the given components prefix with the given options.
-/// @param {Map} $tokens The full token map.
-/// @param {List} $prefix The component prefix to get the token values for.
-/// @param {ArgList} Any additional options
-///   Currently the additional supported options are:
-//     - $color-variant - The color variant to use for the component
-//     - $emit-overrides-only - Whether to emit *only* the overrides for the
-//                              specific color variant, or all color styles. Defaults to false.
-/// @throws If given options are invalid
-/// @return {Map} The token values for the requested component.
-@function get-tokens-for($tokens, $prefix, $options...) {
-  $options: sass-utils.validate-keyword-args($options, (color-variant, emit-overrides-only));
-  @if $tokens == () {
-    @return ();
-  }
-  $values: map.get($tokens, $prefix);
-  @if ($values == null) {
-    @return ();
-  }
-
-  $color-variant: map.get($options, color-variant);
-  $emit-overrides-only: map.get($options, emit-overrides-only);
-  @if $color-variant == null {
-    @return $values;
-  }
-  $overrides: map.get($tokens, list.append($prefix, $color-variant));
-  @if $overrides == null {
-    $variants: _supported-color-variants($tokens, $prefix);
-    $secondary-message: if(
-      $variants == (),
-      'Mixin does not support color variants',
-      'Supported color variants are: #{$variants}'
-    );
-
-    @error 'Invalid color variant: #{$color-variant}. #{$secondary-message}.';
-  }
-
-  @return if($emit-overrides-only, $overrides, map.merge($values, $overrides));
-}
-
 /// Emits new token values for the given token overrides.
 /// Verifies that the overrides passed in are valid tokens.
 /// New token values are emitted under the current selector or root.
@@ -291,38 +207,4 @@ $_direct-system-fallbacks: ();
     }
   }
   @return $result;
-}
-
-/// Gets the MDC tokens for the given prefix, M3 token values, and supported token slots.
-/// @param {List} $prefix The token prefix for the given tokens.
-/// @param {Map|(Map, Map)} $values A map of M3 token values for the given prefix.
-///  This param may also be a tuple of maps, the first one representing the default M3 token values,
-//   and the second containing overrides for different color variants.
-//   Single map example:
-//     (token1: green, token2: 2px)
-//   Tuple example:
-//     (
-//       (token1: green, token2: 2px),
-//       (
-//         secondary: (token1: blue),
-//         error: (token1: red),
-//       )
-//     )
-/// @param {Map} $slots A map of token slots, with null value indicating the token is not supported.
-/// @param {String|null} $variant The name of the variant the token values are for.
-/// @return {Map} A map of fully qualified token names to values, for only the supported tokens.
-@function namespace-tokens($prefix, $values, $slots, $variant: null) {
-  $result: ();
-  @if $variant == null and meta.type-of($values) == 'list' and list.length($values == 2) {
-    $variants: list.nth($values, 2);
-    $values: list.nth($values, 1);
-    @each $variant, $overrides in $variants {
-
-      $result: map.merge($result, namespace-tokens($prefix, $overrides, $slots, $variant));
-    }
-  }
-  $used-token-names: map.keys(_filter-nulls(map.get($slots, $prefix)));
-  $used-m3-tokens: _pick(_filter-nulls($values), $used-token-names);
-  $prefix: if($variant == null, $prefix, list.append($prefix, $variant));
-  @return map.merge($result, ($prefix: $used-m3-tokens));
 }

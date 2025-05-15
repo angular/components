@@ -1,57 +1,39 @@
 @use 'sass:map';
-@use '../style/sass-utils';
 @use '../tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, option);
 
 /// Generates custom tokens for the mat-option.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-option
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    selected-state-label-text-color: map.get($systems, md-sys-color, on-secondary-container),
-    label-text-color: map.get($systems, md-sys-color, on-surface),
-    hover-state-layer-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, on-surface),
-      $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
-    ),
-    focus-state-layer-color: sass-utils.safe-color-change(
-      map.get($systems, md-sys-color, on-surface),
-      $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
-    ),
-    selected-state-layer-color: map.get($systems, md-sys-color, secondary-container),
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
+  }
 
-    // According to the spec the options have to be `label-large` in all typography
-    // dimensions, however this is inconsistent with the designs and with MDC's
-    // own implementation. This appears to be a bug in the spec, because MDC overrides
-    // the font size and weight to be `body-large` (see b/261838263). We make the same
-    // override here so the label looks correct.
-    label-text-size: map.get($systems, md-sys-typescale, body-large-size),
-    label-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
-    label-text-font: map.get($systems, md-sys-typescale, label-large-font),
-    label-text-line-height: map.get($systems, md-sys-typescale, label-large-line-height),
-    label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
+  // According to the spec the options have to be `label-large` in all typography
+  // dimensions, however this is inconsistent with the designs and with MDC's
+  // own implementation. This appears to be a bug in the spec, because MDC overrides
+  // the font size and weight to be `body-large` (see b/261838263). We make the same
+  // override here so the label looks correct.
+  @return (
+    base: (),
+    color: (
+      focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      label-text-color: map.get($system, on-surface),
+      selected-state-label-text-color: map.get($system, on-secondary-container),
+      selected-state-layer-color: map.get($system, secondary-container),
+    ),
+    typography: (
+      label-text-size: map.get($system, body-large-size),
+      label-text-weight: map.get($system, body-large-weight),
+      label-text-font: map.get($system, label-large-font),
+      label-text-line-height: map.get($system, label-large-line-height),
+      label-text-tracking: map.get($system, label-large-tracking),
+    ),
+    density: (),
   );
-
-  $variant-tokens: (
-    // Color variants:
-    primary: (
-      selected-state-label-text-color: map.get($systems, md-sys-color, on-primary-container),
-      selected-state-layer-color: map.get($systems, md-sys-color, primary-container),
-    ),
-    secondary: (), // Default, no overrides needed
-    tertiary: (
-      selected-state-label-text-color: map.get($systems, md-sys-color, on-tertiary-container),
-      selected-state-layer-color: map.get($systems, md-sys-color, tertiary-container),
-    ),
-    error: (
-      selected-state-label-text-color: map.get($systems, md-sys-color, on-error-container),
-      selected-state-layer-color: map.get($systems, md-sys-color, error-container),
-    )
-  );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }

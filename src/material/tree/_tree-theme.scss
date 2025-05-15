@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/typography/typography';
 @use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
@@ -10,14 +9,18 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-tree.$prefix,
+        map.get(m3-tree.get-tokens($theme), base));
   } @else {
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include token-utils.create-token-values(
+        m3-tree.$prefix,
+        map.get(m3-tree.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -30,7 +33,9 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-tree.$prefix,
+        map.get(m3-tree.get-tokens($theme), typography));
   } @else {
     // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
     $theme: inspection.private-get-typography-back-compat-theme($theme);
@@ -46,7 +51,9 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(m3-tree.$prefix, m3-tree.get-density-tokens($theme));
+    @include token-utils.create-token-values(
+        m3-tree.$prefix,
+        map.get(m3-tree.get-tokens($theme), density));
   } @else {
     $density-scale: inspection.get-theme-density($theme);
 
@@ -76,10 +83,10 @@
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tree') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
+      @include base($theme);
+      @include color($theme);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
@@ -92,17 +99,5 @@
         @include typography($theme);
       }
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-tree.$prefix,
-      map.get($tokens, m2-tree.$prefix)
-    );
   }
 }
