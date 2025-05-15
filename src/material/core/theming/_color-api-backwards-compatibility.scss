@@ -66,9 +66,7 @@ $_overrides-only: true;
 
   &.mat-mdc-tab-group,
   &.mat-mdc-tab-nav-bar {
-    @if ($color-variant != primary) {
       @include tabs-theme.color($theme, $color-variant);
-    }
   }
 
   &.mat-mdc-slide-toggle {
