@@ -12,6 +12,9 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
+    @include token-utils.create-token-values(
+        m3-fab.$prefix,
+        map.get(m3-fab.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(

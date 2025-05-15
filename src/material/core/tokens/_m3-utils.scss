@@ -38,7 +38,9 @@
 
   // Opacity may be a system level value less than 1, instead of the intended
   // whole percentage, e.g. 38%. Remove this support when possible.
-  @if (meta.type-of($opacity) == number and $opacity < 1) {
+  @if (meta.type-of($opacity) == string and string.index($opacity, '--') == 1) {
+    $opacity: 'calc(var(#{$opacity}) * 100%)';
+  } @else if (meta.type-of($opacity) == number and $opacity < 1) {
     $opacity: '#{$opacity * 100}%';
   }
 

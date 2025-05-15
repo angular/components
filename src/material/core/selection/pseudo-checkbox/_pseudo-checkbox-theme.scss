@@ -44,7 +44,7 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
         m3-pseudo-checkbox.$prefix,
-        map.get(m3-pseudo-checkbox.get-tokens($theme, $color-variant), base));
+        map.get(m3-pseudo-checkbox.get-tokens($theme, $color-variant), color));
   } @else {
     // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
     // theme from their parent, rather than implementing their own theming, which is why we

@@ -98,7 +98,8 @@ $fallbacks: m3-progress-spinner.get-tokens(m3-system.$theme-with-system-vars);
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
   @include token-utils.use-tokens(
     m2-progress-spinner.$prefix,
-    m2-progress-spinner.get-token-slots()
+    m2-progress-spinner.get-token-slots(),
+    $fallbacks,
   ) {
     stroke: token-utils.slot(active-indicator-color);
   }

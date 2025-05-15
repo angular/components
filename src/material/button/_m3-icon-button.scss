@@ -16,6 +16,7 @@ $prefix: (mat, icon-button);
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+    $system: map.set($system, on-surface-variant, map.get($system, $color-variant));
   }
 
   $tokens: (

@@ -12,7 +12,6 @@ $prefix: (mat, sidenav);
     base: (
       container-shape: map.get($system, corner-large),
       container-elevation-shadow: none,
-      container-divider-color: transparent,
       container-width: 360px,
     ),
     color: (
@@ -21,6 +20,7 @@ $prefix: (mat, sidenav);
       content-background-color: map.get($system, background),
       content-text-color: map.get($system, on-background),
       scrim-color: m3-utils.color-with-opacity(map.get($system, neutral-variant20), 40%),
+      container-divider-color: transparent,
     ),
     typography: (),
     density: (),

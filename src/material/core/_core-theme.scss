@@ -16,6 +16,7 @@
 @use 'option/m2-optgroup';
 @use 'option/m3-optgroup';
 @use 'selection/pseudo-checkbox/m2-pseudo-checkbox';
+@use 'selection/pseudo-checkbox/m3-pseudo-checkbox';
 @use 'sass:map';
 
 @mixin base($theme) {
@@ -32,6 +33,9 @@
     @include token-utils.create-token-values(
         m3-optgroup.$prefix,
         map.get(m3-optgroup.get-tokens($theme), base));
+    @include token-utils.create-token-values(
+        m3-pseudo-checkbox.$prefix,
+        map.get(m3-pseudo-checkbox.get-tokens($theme), base));
   } @else {
     @include ripple-theme.base($theme);
     @include option-theme.base($theme);
@@ -58,6 +62,9 @@
     @include token-utils.create-token-values(
         m3-optgroup.$prefix,
         map.get(m3-optgroup.get-tokens($theme), color));
+    @include token-utils.create-token-values(
+        m3-pseudo-checkbox.$prefix,
+        map.get(m3-pseudo-checkbox.get-tokens($theme), color));
   } @else {
     @include ripple-theme.color($theme);
     @include option-theme.color($theme);
@@ -84,6 +91,9 @@
     @include token-utils.create-token-values(
         m3-optgroup.$prefix,
         map.get(m3-optgroup.get-tokens($theme), typography));
+    @include token-utils.create-token-values(
+        m3-pseudo-checkbox.$prefix,
+        map.get(m3-pseudo-checkbox.get-tokens($theme), typography));
   } @else {
     @include option-theme.typography($theme);
     @include optgroup-theme.typography($theme);
@@ -106,6 +116,9 @@
     @include token-utils.create-token-values(
         m3-optgroup.$prefix,
         map.get(m3-optgroup.get-tokens($theme), density));
+    @include token-utils.create-token-values(
+        m3-pseudo-checkbox.$prefix,
+        map.get(m3-pseudo-checkbox.get-tokens($theme), density));
   } @else {
     @include option-theme.density($theme);
     @include optgroup-theme.density($theme);

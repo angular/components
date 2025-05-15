@@ -15,7 +15,7 @@ $prefix: (mat, radio);
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   }
 
-  @return (
+  $tokens: (
     base: (
       disabled-unselected-icon-opacity: 0.38,
       disabled-selected-icon-opacity: 0.38,
@@ -45,6 +45,14 @@ $prefix: (mat, radio);
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
+
+  // Temporary removal where color variants previously did not include the
+  // unselected icon color. Remove this and approve internal screenshot changes.
+  @if $color-variant {
+    $tokens: map.remove($tokens, color, unselected-icon-color);
+  }
+
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's density theming API.

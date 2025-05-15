@@ -232,7 +232,8 @@ $fallbacks: m3-sidenav.get-tokens(m3-system.$theme-with-system-vars);
 
   @include token-utils.use-tokens(
     $token-prefix,
-    $token-slots
+    $token-slots,
+    $fallbacks,
   ) {
     border-right-color: token-utils.slot(container-divider-color);
     border-right-width: 1px;
