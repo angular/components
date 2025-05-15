@@ -1,5 +1,11 @@
 @use './m2-datepicker';
+@use './m3-datepicker';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-datepicker.$prefix;
+$token-slots: m2-datepicker.get-token-slots();
+$fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 
 $calendar-padding: 8px;
 $non-touch-calendar-cell-size: 40px;
@@ -62,8 +68,7 @@ $touch-max-height: 788px;
   display: block;
   border-radius: 4px;
 
-  @include token-utils.use-tokens(
-      m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(calendar-container-background-color);
     color: token-utils.slot(calendar-container-text-color);
     box-shadow: token-utils.slot(calendar-container-elevation-shadow);
@@ -114,8 +119,7 @@ $touch-max-height: 788px;
   display: block;
   max-height: 80vh;
 
-  @include token-utils.use-tokens(
-      m2-datepicker.$prefix, m2-datepicker.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     box-shadow: token-utils.slot(calendar-container-touch-elevation-shadow);
     border-radius: token-utils.slot(calendar-container-touch-shape);
   }

@@ -1,9 +1,12 @@
 @use '@angular/cdk';
 @use './m2-autocomplete';
+@use './m3-autocomplete';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-autocomplete.$prefix;
 $token-slots: m2-autocomplete.get-token-slots();
+$fallbacks: m3-autocomplete.get-tokens(m3-system.$theme-with-system-vars);
 
 // Even though we don't use the MDC styles, we need to keep the classes in the
 // DOM for the Gmat versions to work. We need to bump up the specificity here
@@ -21,7 +24,7 @@ div.mat-mdc-autocomplete-panel {
   // panel which is required for scroll calculations (see #30974).
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     border-radius: token-utils.slot(container-shape);
     box-shadow: token-utils.slot(container-elevation-shadow);
     background-color: token-utils.slot(background-color);

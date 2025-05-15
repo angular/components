@@ -1,6 +1,13 @@
 @use './m2-form-field';
+@use './m3-form-field';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+
 
 // MDC text-field used to use their ripple in order to show a focus and hover effect for
 // text-fields. This is unnecessary because the ripples bring in a lot of unnecessary
@@ -15,7 +22,7 @@
     opacity: 0;
     pointer-events: none; // Make sure we don't block click on the prefix/suffix.
 
-    @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       background-color: token-utils.slot(state-layer-color);
 
       .mat-mdc-text-field-wrapper:hover & {

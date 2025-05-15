@@ -1,44 +1,4 @@
-@use '../../autocomplete/m3-autocomplete';
-@use '../../bottom-sheet/m3-bottom-sheet';
-@use '../../button-toggle/m3-button-toggle';
-@use '../../button/m3-button';
-@use '../../button/m3-fab';
-@use '../../button/m3-icon-button';
-@use '../../card/m3-card';
-@use '../../checkbox/m3-checkbox';
-@use '../../chips/m3-chip';
-@use '../../datepicker/m3-datepicker';
-@use '../../dialog/m3-dialog';
-@use '../../divider/m3-divider';
-@use '../../expansion/m3-expansion';
-@use '../../form-field/m3-form-field';
-@use '../../grid-list/m3-grid-list';
-@use '../../icon/m3-icon';
-@use '../../list/m3-list';
-@use '../../menu/m3-menu';
-@use '../../paginator/m3-paginator';
-@use '../../progress-bar/m3-progress-bar';
-@use '../../progress-spinner/m3-progress-spinner';
-@use '../../radio/m3-radio';
-@use '../../select/m3-select';
-@use '../../sidenav/m3-sidenav';
-@use '../../slide-toggle/m3-slide-toggle';
-@use '../../slider/m3-slider';
-@use '../../snack-bar/m3-snack-bar';
-@use '../../sort/m3-sort';
-@use '../../stepper/m3-stepper';
-@use '../../table/m3-table';
-@use '../../tabs/m3-tabs';
-@use '../../timepicker/m3-timepicker';
-@use '../../toolbar/m3-toolbar';
-@use '../../tooltip/m3-tooltip';
-@use '../../tree/m3-tree';
 @use '../m2' as m2-theming;
-@use '../m3-app';
-@use '../option/m3-optgroup';
-@use '../option/m3-option';
-@use '../ripple/m3-ripple';
-@use '../selection/pseudo-checkbox/m3-pseudo-checkbox';
 @use '../style/sass-utils';
 @use './m2-tokens';
 @use './m3';
@@ -95,7 +55,6 @@ $_cached-token-slots: null;
       (mat, theme): map.get($systems, md-sys-color),
       (mat, typography): map.get($systems, md-sys-typescale),
     ),
-    get-m3-tokens($systems, $exclude-hardcoded, $token-slots),
   );
 
   @return $result;
@@ -190,61 +149,4 @@ $_cached-token-slots: null;
     md-sys-motion: m3.md-sys-motion-values(),
     md-sys-shape: m3.md-sys-shape-values(),
   ), $include-non-systemized: true);
-}
-
-/// Gets the full set of M3 tokens for the given theme object.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} Full set of M3 tokens
-@function get-m3-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens-list: (
-    m3-app.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-autocomplete.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-bottom-sheet.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-button-toggle.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-card.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-chip.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-datepicker.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-dialog.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-divider.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-expansion.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-fab.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-form-field.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-grid-list.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-icon-button.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-icon.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-list.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-menu.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-optgroup.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-option.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-paginator.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-progress-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-progress-spinner.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-pseudo-checkbox.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-radio.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-ripple.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tabs.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-select.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-sidenav.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-slide-toggle.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-slider.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-snack-bar.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-sort.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-stepper.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-table.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-timepicker.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-toolbar.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tooltip.get-tokens($systems, $exclude-hardcoded, $token-slots),
-    m3-tree.get-tokens($systems, $exclude-hardcoded, $token-slots),
-  );
-
-  $merged-tokens: ();
-  @each $tokens in $tokens-list {
-    $merged-tokens: map.deep-merge($merged-tokens, $tokens);
-  }
-
-  @return $merged-tokens;
 }

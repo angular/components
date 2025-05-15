@@ -5,21 +5,24 @@
 $prefix: (mat, snack-bar);
 
 /// Generates custom tokens for the mat-snack-bar.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-snack-bar
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    button-color: map.get($systems, md-sys-color, inverse-primary),
-    container-color: map.get($systems, md-sys-color, inverse-surface),
-    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-    supporting-text-color: map.get($systems, md-sys-color, inverse-on-surface),
-    supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    supporting-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-    supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      container-shape: map.get($system, corner-extra-small),
+    ),
+    color: (
+      button-color: map.get($system, inverse-primary),
+      container-color: map.get($system, inverse-surface),
+      supporting-text-color: map.get($system, inverse-on-surface),
+    ),
+    typography: (
+      supporting-text-font: map.get($system, body-medium-font),
+      supporting-text-line-height: map.get($system, body-medium-line-height),
+      supporting-text-size: map.get($system, body-medium-size),
+      supporting-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: (),
+  );
 }
