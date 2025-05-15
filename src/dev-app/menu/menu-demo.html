@@ -10,7 +10,12 @@
 
     <mat-menu #menu="matMenu">
       @for (item of items; track item) {
-        <button mat-menu-item (click)="select(item.text)" [disabled]="item.disabled">
+        <button
+          mat-menu-item
+          (click)="select(item.text)"
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive"
+          [matTooltip]="item.tooltipText">
           {{ item.text }}
         </button>
       }
@@ -27,7 +32,12 @@
 
     <mat-menu #divider="matMenu">
       @for (item of items; track item) {
-        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
+          {{ item.text }}
+        </button>
         @if (!$last) {
           <mat-divider></mat-divider>
         }
@@ -98,16 +108,18 @@
 
     <mat-menu #anchorMenu="matMenu">
       @for (item of items; track item) {
-        <a mat-menu-item href="https://www.google.com" [disabled]="item.disabled">
+        <a
+          mat-menu-item
+          href="https://www.google.com"
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
           {{ item.text }}
         </a>
       }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
-    <p>
-      Position x: before
-    </p>
+    <p>Position x: before</p>
     <mat-toolbar class="demo-end-icon">
       <button matIconButton [matMenuTriggerFor]="posXMenu" aria-label="Open x-positioned menu">
         <mat-icon>more_vert</mat-icon>
@@ -116,7 +128,10 @@
 
     <mat-menu xPosition="before" #posXMenu="matMenu">
       @for (item of iconItems; track item) {
-        <button mat-menu-item [disabled]="item.disabled">
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
           <mat-icon>{{ item.icon }}</mat-icon>
           {{ item.text }}
         </button>
@@ -124,9 +139,7 @@
     </mat-menu>
   </div>
   <div class="demo-menu-section">
-    <p>
-      Position y: above
-    </p>
+    <p>Position y: above</p>
     <mat-toolbar>
       <button matIconButton [matMenuTriggerFor]="posYMenu" aria-label="Open y-positioned menu">
         <mat-icon>more_vert</mat-icon>
@@ -135,7 +148,12 @@
 
     <mat-menu yPosition="above" #posYMenu="matMenu">
       @for (item of items; track item) {
-        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
+          {{ item.text }}
+        </button>
       }
     </mat-menu>
   </div>
@@ -153,14 +171,17 @@
 
     <mat-menu [overlapTrigger]="true" #menuOverlay="matMenu">
       @for (item of items; track item) {
-        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
+          {{ item.text }}
+        </button>
       }
     </mat-menu>
   </div>
   <div class="demo-menu-section">
-    <p>
-      Position x: before, overlapTrigger: true
-    </p>
+    <p>Position x: before, overlapTrigger: true</p>
     <mat-toolbar class="demo-end-icon">
       <button matIconButton [mat-menu-trigger-for]="posXMenuOverlay">
         <mat-icon>more_vert</mat-icon>
@@ -169,7 +190,10 @@
 
     <mat-menu xPosition="before" [overlapTrigger]="true" #posXMenuOverlay="matMenu">
       @for (item of iconItems; track item) {
-        <button mat-menu-item [disabled]="item.disabled">
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
           <mat-icon>{{ item.icon }}</mat-icon>
           {{ item.text }}
         </button>
@@ -177,9 +201,7 @@
     </mat-menu>
   </div>
   <div class="demo-menu-section">
-    <p>
-      Position y: above, overlapTrigger: true
-    </p>
+    <p>Position y: above, overlapTrigger: true</p>
     <mat-toolbar>
       <button matIconButton [mat-menu-trigger-for]="posYMenuOverlay">
         <mat-icon>more_vert</mat-icon>
@@ -188,10 +210,18 @@
 
     <mat-menu yPosition="above" [overlapTrigger]="true" #posYMenuOverlay="matMenu">
       @for (item of items; track item) {
-        <button mat-menu-item [disabled]="item.disabled">{{ item.text }}</button>
+        <button
+          mat-menu-item
+          [disabled]="item.disabled"
+          [disabledInteractive]="disabledInteractive">
+          {{ item.text }}
+        </button>
       }
     </mat-menu>
   </div>
+</div>
+<div>
+  <mat-checkbox [(ngModel)]="disabledInteractive">Disabled interactive</mat-checkbox>
 </div>
 
 <div style="height: 500px">This div is for testing scrolled menus.</div>

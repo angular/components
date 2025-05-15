@@ -2550,8 +2550,27 @@ describe('MatMenu', () => {
     }));
   });
 
+  describe('disabledInteractive', () => {
+    it('should be have `mat-mdc-menu-item-disabled-interactive` if disabledInteractive is set to true', fakeAsync(() => {
+      let fixture = createComponent(SimpleMenuWithRepeaterAndDisabledInteractive);
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      let menuPanel = document.querySelector('.mat-mdc-menu-panel')!;
+      let items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
+
+      expect(items[0].classList).toContain('mat-mdc-menu-item-disabled-interactive');
+      expect(items[1].classList).toContain('mat-mdc-menu-item-disabled-interactive');
+
+      flush();
+    }));
+  });
+
   it('should have a focus indicator', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = createComponent(SimpleMenu, [], []);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -2935,6 +2954,28 @@ class SimpleMenuWithRepeater {
   items = [
     {label: 'Pizza', disabled: false},
     {label: 'Pasta', disabled: false},
+  ];
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      @for (item of items; track $index) {
+        <button [disabled]="item.disabled" mat-menu-item [disabledInteractive]="true">{{item.label}}</button>
+      }
+    </mat-menu>
+  `,
+  standalone: false,
+})
+class SimpleMenuWithRepeaterAndDisabledInteractive {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenu) menu: MatMenu;
+  @ViewChildren(MatMenuItem) itemInstances: QueryList<MatMenuItem>;
+
+  items = [
+    {label: 'Pizza', disabled: false},
+    {label: 'Pasta', disabled: true},
   ];
 }
 
