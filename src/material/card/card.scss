@@ -94,6 +94,7 @@ $mat-card-default-padding: 16px !default;
 // Add slots for custom Angular Material card tokens.
 @include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
   .mat-mdc-card-title {
+    color: token-utils.slot(title-text-color);
     font-family: token-utils.slot(title-text-font);
     line-height: token-utils.slot(title-text-line-height);
     font-size: token-utils.slot(title-text-size);
