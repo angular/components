@@ -76,11 +76,12 @@ export class ListExpansion<T extends ExpansionItem> {
 
   /** Opens the specified item, or the currently active item if none is specified. */
   open(item: T = this.activeItem()) {
-    if (this.isExpandable(item)) {
-      this.inputs.multiExpandable()
-        ? this.expandedIds.update(ids => ids.concat(item.expansionId()))
-        : this.expandedIds.set([item.expansionId()]);
+    if (!this.isExpandable(item)) return;
+    if (this.isExpanded(item)) return;
+    if (!this.inputs.multiExpandable()) {
+      this.closeAll();
     }
+    this.expandedIds.update(ids => ids.concat(item.expansionId()));
   }
 
   /** Closes the specified item, or the currently active item if none is specified. */
@@ -116,9 +117,7 @@ export class ListExpansion<T extends ExpansionItem> {
 
   /** Checks whether the specified item is expandable / collapsible. */
   isExpandable(item: T) {
-    return (
-      !this.inputs.disabled() && this.inputs.focusManager.isFocusable(item) && item.expandable()
-    );
+    return !this.inputs.disabled() && !item.disabled() && item.expandable();
   }
 
   /** Checks whether the specified item is currently expanded. */
