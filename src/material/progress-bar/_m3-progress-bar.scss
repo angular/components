@@ -5,34 +5,24 @@
 $prefix: (mat, progress-bar);
 
 /// Generates the tokens for MDC linear-progress
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of tokens for the MDC linear-progress
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    active-indicator-color: map.get($systems, md-sys-color, primary),
-    active-indicator-height: if($exclude-hardcoded, null, 4px),
-    track-color: map.get($systems, md-sys-color, surface-variant),
-    track-height: if($exclude-hardcoded, null, 4px),
-    track-shape: map.get($systems, md-sys-shape, corner-none)
-  );
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
 
-  $variant-tokens: (
-    primary: (), // Default, no overrides needed
-    secondary: (
-      active-indicator-color: map.get($systems, md-sys-color, secondary),
-      track-color: map.get($systems, md-sys-color, secondary-container),
+  @return (
+    base: (
+      active-indicator-height: 4px,
+      track-height: 4px,
+      track-shape: map.get($system, corner-none)
     ),
-    tertiary: (
-      active-indicator-color: map.get($systems, md-sys-color, tertiary),
-      track-color: map.get($systems, md-sys-color, tertiary-container),
+    color: (
+      active-indicator-color: map.get($system, primary),
+      track-color: map.get($system, surface-variant),
     ),
-    error: (
-      active-indicator-color: map.get($systems, md-sys-color, error),
-      track-color: map.get($systems, md-sys-color, error-container),
-    ),
+    typography: (),
+    density: (),
   );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }

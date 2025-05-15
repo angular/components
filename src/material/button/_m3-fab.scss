@@ -1,184 +1,78 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, fab);
 
 /// Generates custom tokens for the mat-fab.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-fab
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
   $tokens: (
-    container-color: map.get($systems, md-sys-color, primary-container),
-    container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    container-shape: map.get($systems, md-sys-shape, corner-large),
-    disabled-state-container-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    disabled-state-foreground-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    extended-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    extended-container-height: if($exclude-hardcoded, null, 56px),
-    extended-container-shape: map.get($systems, md-sys-shape, corner-large),
-    extended-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    extended-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-    extended-label-text-font: map.get($systems, md-sys-typescale, label-large-font),
-    extended-label-text-size: map.get($systems, md-sys-typescale, label-large-size),
-    extended-label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
-    extended-label-text-weight: map.get($systems, md-sys-typescale, label-large-weight),
-    extended-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-    foreground-color: map.get($systems, md-sys-color, on-primary-container),
-    hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-    hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-    pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-primary-container),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-    small-container-color: map.get($systems, md-sys-color, primary-container),
-    small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    small-container-shape: map.get($systems, md-sys-shape, corner-medium),
-    small-disabled-state-container-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.12),
-    small-disabled-state-foreground-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    small-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    small-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-    small-foreground-color: map.get($systems, md-sys-color, on-primary-container),
-    small-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-    small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-    small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-    small-pressed-state-layer-opacity: map.get($systems, md-sys-state, pressed-state-layer-opacity),
-    small-ripple-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-primary-container),
-        $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-    small-state-layer-color: map.get($systems, md-sys-color, on-primary-container),
-    state-layer-color: map.get($systems, md-sys-color, on-primary-container),
-  );
-
-  $elevation-tokens: (
-    extended-container-elevation-shadow,
-    extended-focus-container-elevation-shadow,
-    extended-hover-container-elevation-shadow,
-    extended-pressed-container-elevation-shadow,
-    small-container-elevation-shadow,
-    small-focus-container-elevation-shadow,
-    small-hover-container-elevation-shadow,
-    small-pressed-container-elevation-shadow,
-  );
-
-  @each $token in $elevation-tokens {
-    $elevation: map.get($tokens, $token);
-
-    @if ($elevation != null) {
-      $tokens: map.set($tokens, $token, elevation.get-box-shadow($elevation));
-    }
-  }
-
-  $variant-tokens: (
-    // Color variants
-    primary: (), // Default, no overrides needed.
-    secondary: (
-      container-color: map.get($systems, md-sys-color, secondary-container),
-      container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      container-shape: map.get($systems, md-sys-shape, corner-large),
-      extended-container-height: if($exclude-hardcoded, null, 56px),
-      extended-container-shape: map.get($systems, md-sys-shape, corner-large),
-      extended-label-text-font: map.get($systems, md-sys-typescale, label-large-font),
-      extended-label-text-size: map.get($systems, md-sys-typescale, label-large-size),
-      extended-label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
-      extended-label-text-weight: map.get($systems, md-sys-typescale, label-large-weight),
-      focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-      foreground-color: map.get($systems, md-sys-color, on-secondary-container),
-      hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-      hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      ripple-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-secondary-container),
-          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-      small-container-color: map.get($systems, md-sys-color, secondary-container),
-      small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-container-shape: map.get($systems, md-sys-shape, corner-medium),
-      small-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-      small-foreground-color: map.get($systems, md-sys-color, on-secondary-container),
-      small-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-      small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-pressed-state-layer-opacity:
-          map.get($systems, md-sys-state, pressed-state-layer-opacity),
-      small-ripple-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-secondary-container),
-          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-      small-state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
-      state-layer-color: map.get($systems, md-sys-color, on-secondary-container),
+    base: (
+      container-shape: map.get($system, corner-large),
+      extended-container-height: 56px,
+      extended-container-shape: map.get($system, corner-large),
+      small-container-shape: map.get($system, corner-medium),
     ),
-    tertiary: (
-      container-color: map.get($systems, md-sys-color, tertiary-container),
-      container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      container-shape: map.get($systems, md-sys-shape, corner-large),
-      extended-container-height: if($exclude-hardcoded, null, 56px),
-      extended-container-shape: map.get($systems, md-sys-shape, corner-large),
-      extended-label-text-font: map.get($systems, md-sys-typescale, label-large-font),
-      extended-label-text-size: map.get($systems, md-sys-typescale, label-large-size),
-      extended-label-text-tracking: map.get($systems, md-sys-typescale, label-large-tracking),
-      extended-label-text-weight: map.get($systems, md-sys-typescale, label-large-weight),
-      focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-      foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
-      hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-      hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      ripple-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-tertiary-container),
-          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-      small-container-color: map.get($systems, md-sys-color, tertiary-container),
-      small-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-container-shape: map.get($systems, md-sys-shape, corner-medium),
-      small-focus-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-focus-state-layer-opacity: map.get($systems, md-sys-state, focus-state-layer-opacity),
-      small-foreground-color: map.get($systems, md-sys-color, on-tertiary-container),
-      small-hover-container-elevation-shadow: map.get($systems, md-sys-elevation, level4),
-      small-hover-state-layer-opacity: map.get($systems, md-sys-state, hover-state-layer-opacity),
-      small-pressed-container-elevation-shadow: map.get($systems, md-sys-elevation, level3),
-      small-ripple-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-tertiary-container),
-          $alpha: map.get($systems, md-sys-state, pressed-state-layer-opacity)),
-      small-state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
-      state-layer-color: map.get($systems, md-sys-color, on-tertiary-container),
-    )
+    color: (
+      container-color: map.get($system, primary-container),
+      container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      disabled-state-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      disabled-state-foreground-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      extended-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      extended-focus-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      extended-hover-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level4)),
+      extended-pressed-container-elevation-shadow: map.get($system, level3),
+      focus-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      foreground-color: map.get($system, on-primary-container),
+      hover-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level4)),
+      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      pressed-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
+      small-container-color: map.get($system, primary-container),
+      small-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      small-disabled-state-container-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      small-disabled-state-foreground-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      small-focus-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      small-foreground-color: map.get($system, on-primary-container),
+      small-hover-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level4)),
+      small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      small-pressed-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level3)),
+      small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      small-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-primary-container), map.get($system, pressed-state-layer-opacity)),
+      small-state-layer-color: map.get($system, on-primary-container),
+      state-layer-color: map.get($system, on-primary-container),
+    ),
+    typography: (
+      extended-label-text-font: map.get($system, label-large-font),
+      extended-label-text-size: map.get($system, label-large-size),
+      extended-label-text-tracking: map.get($system, label-large-tracking),
+      extended-label-text-weight: map.get($system, label-large-weight),
+    ),
   );
 
-  $elevation-tokens: (
-    container-elevation-shadow,
-    focus-container-elevation-shadow,
-    hover-container-elevation-shadow,
-    pressed-container-elevation-shadow,
-  );
-
-  @each $token in $elevation-tokens {
-    $elevation: map.get($tokens, $token);
-
-    @if ($elevation != null) {
-      $tokens: map.set($tokens, $token, elevation.get-box-shadow($elevation));
-    }
-  }
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
+  @return $tokens;
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
   $index: ($scale * -1) + 1;
 
   @return (

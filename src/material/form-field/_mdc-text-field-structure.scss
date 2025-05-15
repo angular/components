@@ -2,16 +2,19 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use './m2-form-field';
+@use './m3-form-field';
+@use '../core/tokens/m3-system';
 
 // File contains some extra long selectors due to MDC's old styling
 // stylelint-disable max-line-length
 
 $token-prefix: m2-form-field.$prefix;
 $token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
 
 // Includes the structural styles for the form field inherited from MDC.
 @mixin private-text-field-structure {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .mdc-text-field {
       display: inline-flex;
       align-items: baseline;

@@ -1,5 +1,11 @@
 @use './m2-form-field';
+@use './m3-form-field';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
 
 // Mixin that includes the density styles for form fields. MDC provides their own density
 // styles for MDC text-field which we cannot use. MDC relies on input elements to stretch
@@ -9,7 +15,7 @@
 // specification. In order to support density, we need to adjust the vertical spacing to be
 // based on the density scale.
 @mixin private-text-field-density-overrides() {
-  @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     $height: token-utils.slot(container-height);
 
     .mat-mdc-form-field-infix {

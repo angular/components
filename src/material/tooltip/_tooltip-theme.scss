@@ -1,14 +1,17 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-tooltip';
+@use './m3-tooltip';
+@use 'sass:map';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-tooltip.$prefix,
+        map.get(m3-tooltip.get-tokens($theme), base));
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
@@ -22,7 +25,9 @@
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include token-utils.create-token-values(
+        m3-tooltip.$prefix,
+        map.get(m3-tooltip.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -35,7 +40,9 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-tooltip.$prefix,
+        map.get(m3-tooltip.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -48,7 +55,9 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
+    @include token-utils.create-token-values(
+        m3-tooltip.$prefix,
+        map.get(m3-tooltip.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -76,7 +85,10 @@
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-tooltip') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
+      @include base($theme);
+      @include color($theme);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
@@ -89,15 +101,5 @@
         @include typography($theme);
       }
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if $tokens != () {
-    $tokens: token-utils.get-tokens-for($tokens, m2-tooltip.$prefix);
-    @include token-utils.create-token-values(m2-tooltip.$prefix, $tokens);
   }
 }

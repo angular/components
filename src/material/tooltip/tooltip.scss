@@ -1,5 +1,11 @@
 @use './m2-tooltip';
+@use './m3-tooltip';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-tooltip.$prefix;
+$token-slots: m2-tooltip.get-token-slots();
+$fallbacks: m3-tooltip.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-tooltip {
   // We don't use MDC's positioning so this has to be relative.
@@ -61,7 +67,7 @@
   // MDC and removing them is likely to cause screenshot differences.
   will-change: transform, opacity;
 
-  @include token-utils.use-tokens(m2-tooltip.$prefix, m2-tooltip.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(container-color);
     color: token-utils.slot(supporting-text-color);
     border-radius: token-utils.slot(container-shape);

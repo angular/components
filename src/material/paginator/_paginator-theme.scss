@@ -1,24 +1,26 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use './m2-paginator';
 @use './m3-paginator';
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-paginator.$prefix,
+        map.get(m3-paginator.get-tokens($theme), base));
   } @else {
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color));
+    @include token-utils.create-token-values(
+        m3-paginator.$prefix,
+        map.get(m3-paginator.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -29,7 +31,9 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-paginator.$prefix,
+        map.get(m3-paginator.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -39,17 +43,10 @@
 }
 
 @mixin density($theme) {
-  $density-scale: inspection.get-theme-density($theme);
-  $form-field-density: if(
-    (meta.type-of($density-scale) == 'number' and $density-scale >= -4) or
-      ($density-scale == maximum),
-    -4,
-    $density-scale
-  );
-
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-paginator.$prefix, m3-paginator.get-density-tokens($theme));
+        m3-paginator.$prefix,
+        map.get(m3-paginator.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -75,10 +72,10 @@
 @mixin theme($theme) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-paginator') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme));
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
+      @include base($theme);
+      @include color($theme);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {
@@ -91,17 +88,5 @@
         @include typography($theme);
       }
     }
-  }
-}
-
-@mixin _theme-from-tokens($tokens) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  @if ($tokens != ()) {
-    @include token-utils.create-token-values(
-      m2-paginator.$prefix,
-      map.get($tokens, m2-paginator.$prefix)
-    );
   }
 }

@@ -1,12 +1,15 @@
 
 @use '@angular/cdk';
 @use './m2-expansion';
+@use './m3-expansion';
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
 @use '../core/style/elevation';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-expansion.$prefix;
 $token-slots: m2-expansion.get-token-slots();
+$fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-expansion-panel {
   box-sizing: content-box;
@@ -23,7 +26,7 @@ $token-slots: m2-expansion.get-token-slots();
   // focus indicator relatively positions the header.
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background: token-utils.slot(container-background-color);
     color: token-utils.slot(container-text-color);
     border-radius: token-utils.slot(container-shape);
@@ -36,7 +39,7 @@ $token-slots: m2-expansion.get-token-slots();
       border-radius: 0;
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       &:first-of-type {
         border-top-right-radius: token-utils.slot(container-shape);
         border-top-left-radius: token-utils.slot(container-shape);
@@ -105,7 +108,7 @@ $token-slots: m2-expansion.get-token-slots();
     visibility: visible;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     font-family: token-utils.slot(container-text-font);
     font-size: token-utils.slot(container-text-size);
     font-weight: token-utils.slot(container-text-weight);
@@ -140,7 +143,7 @@ $token-slots: m2-expansion.get-token-slots();
   justify-content: flex-end;
   padding: 16px 8px 16px 24px;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     border-top-color: token-utils.slot(actions-divider-color);
   }
 

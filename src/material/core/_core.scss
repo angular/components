@@ -1,6 +1,12 @@
 @use './m2-app';
+@use './m3-app';
 @use './tokens/token-utils';
 @use './style/elevation';
+@use './tokens/m3-system';
+
+$token-prefix: m2-app.$prefix;
+$token-slots: m2-app.get-token-slots();
+$fallbacks: m3-app.get-tokens(m3-system.$theme-with-system-vars);
 
 /// @deprecated This mixin is a no-op and is going to be removed in v21.
 @mixin core() {}
@@ -20,7 +26,7 @@
   // user's content isn't inside of a `mat-sidenav-container`.
   @at-root {
     // Note: we need to emit fallback values here to avoid errors in internal builds.
-    @include token-utils.use-tokens(m2-app.$prefix, m2-app.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       .mat-app-background {
         background-color: token-utils.slot(background-color, transparent);
         color: token-utils.slot(text-color, inherit);
@@ -35,7 +41,7 @@
 // Material Design specification.
 @mixin elevation-classes() {
   @at-root {
-    @include token-utils.use-tokens(m2-app.$prefix, m2-app.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       // Provides external CSS classes for each elevation value. Each CSS class is formatted as
       // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
       // is elevated.

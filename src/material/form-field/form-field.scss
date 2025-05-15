@@ -1,6 +1,7 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
 @use './m2-form-field';
+@use './m3-form-field';
 @use './form-field-subscript';
 @use './form-field-focus-overlay';
 @use './form-field-high-contrast';
@@ -10,6 +11,11 @@
 @use './mdc-text-field-textarea-overrides';
 @use './mdc-text-field-structure-overrides';
 @use './mdc-text-field-density-overrides';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
 
 // Base styles for MDC text-field, notched-outline, floating label and line-ripple.
 @include mdc-text-field-structure.private-text-field-structure();
@@ -45,8 +51,7 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  @include token-utils.use-tokens(
-      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     @include vendor-prefixes.smooth-font();
     font-family: token-utils.slot(container-text-font);
     line-height: token-utils.slot(container-text-line-height);
@@ -115,8 +120,7 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-prefix {
-  @include token-utils.use-tokens(
-      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(leading-icon-color);
 
     .mat-form-field-disabled & {
@@ -126,8 +130,7 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-suffix {
-  @include token-utils.use-tokens(
-      m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(trailing-icon-color);
 
     .mat-form-field-disabled & {

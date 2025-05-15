@@ -5,43 +5,45 @@
 $prefix: (mat, dialog);
 
 /// Generates custom tokens for the dialog.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the dialog
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
+
   // headline-padding:
   // The vertical padding values are a bit weird, because MDC uses a `::before` pseudo
   // element to size the title which in turn means that we can't set a specific padding
   // and get the exact same space out of it. These values were determined through
   // trial and error so that the first line of text is 24px from the top and the bottom
   // of the text is 16px from the content under it.
-  $tokens: (
-    actions-alignment: m3-utils.hardcode(flex-end, $exclude-hardcoded),
-    actions-padding: m3-utils.hardcode(16px 24px, $exclude-hardcoded),
-    container-color: map.get($systems, md-sys-color, surface),
-    container-elevation-shadow: m3-utils.hardcode(none, $exclude-hardcoded),
-    container-max-width: m3-utils.hardcode(560px, $exclude-hardcoded),
-    container-min-width: m3-utils.hardcode(280px, $exclude-hardcoded),
-    container-shape: map.get($systems, md-sys-shape, corner-extra-large),
-    container-small-max-width:
-    m3-utils.hardcode(calc(100vw - 32px), $exclude-hardcoded),
-    content-padding: m3-utils.hardcode(20px 24px, $exclude-hardcoded),
-    headline-padding: m3-utils.hardcode(6px 24px 13px, $exclude-hardcoded),
-    subhead-color: map.get($systems, md-sys-color, on-surface),
-    subhead-font: map.get($systems, md-sys-typescale, headline-small-font),
-    subhead-line-height: map.get($systems, md-sys-typescale, headline-small-line-height),
-    subhead-size: map.get($systems, md-sys-typescale, headline-small-size),
-    subhead-tracking: map.get($systems, md-sys-typescale, headline-small-tracking),
-    subhead-weight: map.get($systems, md-sys-typescale, headline-small-weight),
-    supporting-text-color: map.get($systems, md-sys-color, on-surface-variant),
-    supporting-text-font: map.get($systems, md-sys-typescale, body-medium-font),
-    supporting-text-line-height: map.get($systems, md-sys-typescale, body-medium-line-height),
-    supporting-text-size: map.get($systems, md-sys-typescale, body-medium-size),
-    supporting-text-tracking: map.get($systems, md-sys-typescale, body-medium-tracking),
-    supporting-text-weight: map.get($systems, md-sys-typescale, body-medium-weight),
-    with-actions-content-padding: m3-utils.hardcode(20px 24px 0, $exclude-hardcoded),
+  @return (
+    base: (
+      actions-alignment: flex-end,
+      actions-padding: 16px 24px,
+      container-elevation-shadow: none,
+      container-max-width: 560px,
+      container-min-width: 280px,
+      container-shape: map.get($system, corner-extra-large),
+      container-small-max-width: calc(100vw - 32px),
+      content-padding: 20px 24px,
+      headline-padding: 6px 24px 13px,
+      with-actions-content-padding: 20px 24px 0,
+    ),
+    color: (
+      container-color: map.get($system, surface),
+      subhead-color: map.get($system, on-surface),
+      supporting-text-color: map.get($system, on-surface-variant),
+    ),
+    typography: (
+      subhead-font: map.get($system, headline-small-font),
+      subhead-line-height: map.get($system, headline-small-line-height),
+      subhead-size: map.get($system, headline-small-size),
+      subhead-tracking: map.get($system, headline-small-tracking),
+      subhead-weight: map.get($system, headline-small-weight),
+      supporting-text-font: map.get($system, body-medium-font),
+      supporting-text-line-height: map.get($system, body-medium-line-height),
+      supporting-text-size: map.get($system, body-medium-size),
+      supporting-text-tracking: map.get($system, body-medium-tracking),
+      supporting-text-weight: map.get($system, body-medium-weight),
+    ),
+    density: (),
   );
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }
