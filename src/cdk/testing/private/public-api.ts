@@ -9,6 +9,7 @@
 export * from './fake-directionality';
 export * from './text-dedent';
 export * from './wrapped-error-message';
+export * from './run-accessibility-checks';
 
 // Re-exported for convenience.
 export * from '../testbed/fake-events';
