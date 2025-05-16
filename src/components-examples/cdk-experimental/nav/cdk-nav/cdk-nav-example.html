@@ -1,0 +1,15 @@
+<nav class="example-nav" cdkNav [(value)]="selectedValue">
+  @for (link of links; track link.path) {
+    <a
+      class="example-link"
+      cdkLink
+      [value]="link.path"
+      [disabled]="link.disabled">
+      {{ link.label }}
+    </a>
+  }
+</nav>
+
+<p>
+  Selected Value: {{ selectedValue().join(', ') }}
+</p>

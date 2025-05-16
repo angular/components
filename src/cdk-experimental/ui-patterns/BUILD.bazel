@@ -12,6 +12,7 @@ ts_project(
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "//src/cdk-experimental/ui-patterns/listbox",
+        "//src/cdk-experimental/ui-patterns/nav",
         "//src/cdk-experimental/ui-patterns/radio",
         "//src/cdk-experimental/ui-patterns/tabs",
     ],
