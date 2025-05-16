@@ -34,11 +34,11 @@ $prefix: (mat, dialog);
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $text-base: if(m2-utils.$private-is-internal-build,
     if($is-dark, #fff, #000),
-    inspection.get-theme-color($theme, foreground, text, 1)
+    inspection.get-theme-color($theme, foreground, base)
   );
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, dialog),
+    container-color: inspection.get-theme-color($theme, background, surface),
     subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
     supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
   );

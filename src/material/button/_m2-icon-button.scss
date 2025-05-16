@@ -27,7 +27,7 @@ $prefix: (mat, icon-button);
     hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     icon-color: inherit,
     pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    ripple-color: inspection.get-theme-color($theme, foreground, base-10),
     state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
 }
@@ -43,7 +43,7 @@ $prefix: (mat, icon-button);
     ripple-color: if(
       meta.type-of($color) == color,
       rgba($color, $ripple-opacity),
-      inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+      inspection.get-theme-color($theme, foreground, base-10)),
   );
 }
 

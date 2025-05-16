@@ -22,7 +22,7 @@ $prefix: (mat, tooltip);
 @function get-color-tokens($theme) {
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, tooltip),
+    container-color: inspection.get-theme-color($theme, background, grey-700),
     supporting-text-color: #fff,
   );
 }
