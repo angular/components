@@ -33,6 +33,7 @@ import {
 import {MatIconModule} from '../icon';
 import {By} from '@angular/platform-browser';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
+import {MatFormFieldNotchedOutline} from '../form-field/directives/notched-outline';
 
 describe('MatMdcInput without forms', () => {
   it('should default to floating labels', fakeAsync(() => {
@@ -605,6 +606,29 @@ describe('MatMdcInput without forms', () => {
     const hintId = hint.getAttribute('id');
 
     expect(input.getAttribute('aria-describedby')).toBe(`initial ${hintId}`);
+  }));
+
+  it('should show outline label correctly based on initial condition to false', fakeAsync(() => {
+    const fixture = createComponent(MatInputOutlineWithConditionalLabel);
+    fixture.detectChanges();
+    tick(16);
+
+    const notchedOutline: HTMLElement = fixture.debugElement.query(
+      By.directive(MatFormFieldNotchedOutline),
+    ).nativeElement;
+
+    console.log('notchedOutline', notchedOutline.classList);
+
+    expect(notchedOutline.classList).toContain('mdc-notched-outline--no-label');
+    expect(notchedOutline.classList).not.toContain('mdc-notched-outline--upgraded');
+
+    fixture.componentInstance.showLabel = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    tick(16);
+
+    expect(notchedOutline.classList).not.toContain('mdc-notched-outline--no-label');
+    expect(notchedOutline.classList).toContain('mdc-notched-outline--upgraded');
   }));
 
   it('supports user binding to aria-describedby', fakeAsync(() => {
@@ -2176,6 +2200,22 @@ class MatInputWithLabelAndPlaceholder {
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
   appearance: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <mat-form-field appearance="outline">
+    @if(showLabel) {
+      <mat-label>My Label</mat-label>
+    }
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  `,
+  standalone: false,
+})
+class MatInputOutlineWithConditionalLabel {
+  @ViewChild(MatFormField) formField: MatFormField;
+  showLabel: boolean = false;
 }
 
 @Component({
