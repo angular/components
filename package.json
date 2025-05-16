@@ -82,7 +82,7 @@
     "@angular/router": "catalog:",
     "@babel/core": "^7.16.12",
     "@bazel/bazelisk": "1.12.1",
-    "@bazel/buildifier": "6.1.2",
+    "@bazel/buildifier": "8.2.0",
     "@bazel/ibazel": "^0.25.0",
     "@bazel/runfiles": "5.8.1",
     "@firebase/app-types": "^0.7.0",
