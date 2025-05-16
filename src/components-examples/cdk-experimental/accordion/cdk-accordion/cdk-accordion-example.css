@@ -1,0 +1,53 @@
+.example-accordion-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.example-accordion-header {
+  margin: 0;
+}
+
+.example-accordion-header .cdk-accordion-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  background-color: var(--mat-sys-surface);
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.example-accordion-header .cdk-accordion-trigger:hover {
+  background-color: var(--mat-sys-surface-container-highest);
+}
+
+.example-accordion-header .cdk-accordion-trigger.cdk-active {
+  background-color: var(--mat-sys-surface-dim);
+}
+
+.example-accordion-header .cdk-accordion-trigger:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -2px;
+}
+
+.example-accordion-header .cdk-accordion-trigger[aria-disabled='true'] {
+  color: inherit;
+  opacity: 0.6;
+}
+
+.example-accordion-panel {
+  padding: 16px;
+  background-color: var(--mat-sys-surface-container);
+  margin-bottom: 4px;
+}
+
+.example-accordion-panel[inert] {
+  display: none;
+}

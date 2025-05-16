@@ -242,10 +242,10 @@ describe('Expansion', () => {
       expect(expansion.isExpandable(items[0])).toBeTrue();
     });
 
-    it('should return true if an item is disabled and skipDisabled is false', () => {
+    it('should return false if an item is disabled and skipDisabled is false', () => {
       const {expansion, items} = getExpansion({skipDisabled: signal(false)});
       items[0].disabled.set(true);
-      expect(expansion.isExpandable(items[0])).toBeTrue();
+      expect(expansion.isExpandable(items[0])).toBeFalse();
     });
 
     it('should return false if an item is disabled and skipDisabled is true', () => {

@@ -107,9 +107,15 @@ export class AccordionTriggerPattern {
   /** Id of the accordion panel controlled by the trigger. */
   controls = computed(() => this.inputs.accordionPanel()?.id());
 
+  /** The tabindex of the trigger. */
+  tabindex = computed(() => (this.inputs.accordionGroup().focusManager.isFocusable(this) ? 0 : -1));
+
+  /** Whether the trigger is disabled. Disabling an accordion group disables all the triggers. */
+  disabled = computed(() => this.inputs.disabled() || this.inputs.accordionGroup().disabled());
+
   constructor(readonly inputs: AccordionTriggerInputs) {
+    this.id = inputs.id;
     this.element = inputs.element;
-    this.disabled = inputs.disabled;
     this.value = inputs.value;
     this.accordionGroup = inputs.accordionGroup;
     this.accordionPanel = inputs.accordionPanel;
@@ -173,7 +179,16 @@ export class AccordionTriggerPattern {
     this.pointerdown().handle(event);
   }
 
-  private _getItem(e: PointerEvent) {
+  /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
+  onFocus(event: FocusEvent): void {
+    const item = this._getItem(event);
+
+    if (item && this.inputs.accordionGroup().focusManager.isFocusable(item)) {
+      this.accordionGroup().focusManager.focus(item);
+    }
+  }
+
+  private _getItem(e: Event) {
     if (!(e.target instanceof HTMLElement)) {
       return;
     }
