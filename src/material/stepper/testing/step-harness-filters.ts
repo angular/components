@@ -17,7 +17,7 @@ export enum StepperOrientation {
 export interface StepHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose label matches the given value. */
   label?: string | RegExp;
-  /** Only find steps with the given selected state. */
+  /** Only find steps with the given pressed/expanded for Stepper state. */
   selected?: boolean;
   /** Only find completed steps. */
   completed?: boolean;

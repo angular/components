@@ -228,10 +228,10 @@ export class MyApp {}
 <!-- example(stepper-intl) -->
 
 ### Accessibility
-The stepper is treated as a tabbed view for accessibility purposes, so it is given
-`role="tablist"` by default. The header of step that can be clicked to select the step
-is given `role="tab"`, and the content that can be expanded upon selection is given
-`role="tabpanel"`. `aria-selected` attribute of step header is automatically set based on
+The stepper is treated as a grouped view for general accessibility purposes, so it is given
+`role="group"` by default. The header of step that can be clicked to select the step
+is given `role="button"`, and the content that can be expanded upon selection is given
+`role="region"`. `aria-expanded` attribute of step header is automatically set based on
 step selection change.
 
 The stepper and each step should be given a meaningful label via `aria-label` or `aria-labelledby`.
