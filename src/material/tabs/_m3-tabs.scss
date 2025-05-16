@@ -29,6 +29,7 @@ $prefix: (mat, tab);
       active-indicator-color: map.get($system, primary),
       active-label-text-color: map.get($system, on-surface),
       active-ripple-color: map.get($system, on-surface),
+      disabled-ripple-color: map.get($system, on-surface-variant),
       divider-color: map.get($system, surface-variant),
       inactive-focus-label-text-color: map.get($system, on-surface),
       inactive-hover-label-text-color: map.get($system, on-surface),
