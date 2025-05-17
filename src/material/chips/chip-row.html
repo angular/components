@@ -2,12 +2,19 @@
   <span class="mat-mdc-chip-focus-overlay"></span>
 }
 
+@if (!_isEditing && editIcon) {
+  <span
+    class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary"
+    role="gridcell">
+    <ng-content select="[matChipEdit]"></ng-content>
+</span>
+}
 <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"
     matChipAction
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel"
     [attr.aria-describedby]="_ariaDescriptionId">
-  @if (leadingIcon) {
+  @if (!_isEditing && leadingIcon) {
     <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
     </span>
