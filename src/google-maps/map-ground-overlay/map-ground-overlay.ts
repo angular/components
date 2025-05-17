@@ -139,7 +139,9 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
         clickable: this.clickable,
         opacity: this._opacity.value,
       });
-      this._assertInitialized();
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        assertInitialized(this);
+      }
       this.groundOverlay.setMap(map);
       this._eventManager.setTarget(this.groundOverlay);
       this.groundOverlayInitialized.emit(this.groundOverlay);
@@ -166,8 +168,10 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
    * #GroundOverlay.getBounds
    */
   getBounds(): google.maps.LatLngBounds | null {
-    this._assertInitialized();
-    return this.groundOverlay.getBounds();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.groundOverlay!.getBounds();
   }
 
   /**
@@ -176,8 +180,10 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
    * #GroundOverlay.getOpacity
    */
   getOpacity(): number {
-    this._assertInitialized();
-    return this.groundOverlay.getOpacity();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.groundOverlay!.getOpacity();
   }
 
   /**
@@ -186,8 +192,10 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
    * #GroundOverlay.getUrl
    */
   getUrl(): string {
-    this._assertInitialized();
-    return this.groundOverlay.getUrl();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertInitialized(this);
+    }
+    return this.groundOverlay!.getUrl();
   }
 
   private _watchForOpacityChanges() {
@@ -210,15 +218,13 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
       }
     });
   }
+}
 
-  private _assertInitialized(): asserts this is {groundOverlay: google.maps.GroundOverlay} {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.groundOverlay) {
-        throw Error(
-          'Cannot interact with a Google Map GroundOverlay before it has been initialized. ' +
-            'Please wait for the GroundOverlay to load before trying to interact with it.',
-        );
-      }
-    }
+function assertInitialized(ctx: MapGroundOverlay) {
+  if (!ctx.groundOverlay) {
+    throw Error(
+      'Cannot interact with a Google Map GroundOverlay before it has been initialized. ' +
+        'Please wait for the GroundOverlay to load before trying to interact with it.',
+    );
   }
 }
