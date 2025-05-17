@@ -1638,7 +1638,7 @@ describe('MatStepper', () => {
 
 /** Asserts that keyboard interaction works correctly. */
 function assertCorrectKeyboardInteraction(
-  fixture: ComponentFixture<any>,
+  fixture: ComponentFixture<unknown>,
   stepHeaders: DebugElement[],
   orientation: StepperOrientation,
 ) {
@@ -1739,7 +1739,7 @@ function assertCorrectKeyboardInteraction(
 
 /** Asserts that arrow key direction works correctly in RTL mode. */
 function assertArrowKeyInteractionInRtl(
-  fixture: ComponentFixture<any>,
+  fixture: ComponentFixture<unknown>,
   stepHeaders: DebugElement[],
 ) {
   const stepperComponent = fixture.debugElement.query(By.directive(MatStepper))!.componentInstance;
@@ -1761,7 +1761,7 @@ function assertArrowKeyInteractionInRtl(
 
 /** Asserts that keyboard interaction works correctly when the user is pressing a modifier key. */
 function assertSelectKeyWithModifierInteraction(
-  fixture: ComponentFixture<any>,
+  fixture: ComponentFixture<unknown>,
   stepHeaders: DebugElement[],
   orientation: StepperOrientation,
   selectionKey: number,
@@ -1820,7 +1820,7 @@ function asyncValidator(minLength: number, validationTrigger: Subject<void>): As
 function createComponent<T>(
   component: Type<T>,
   providers: Provider[] = [],
-  imports: any[] = [],
+  imports: Type<unknown>[] = [],
   encapsulation?: ViewEncapsulation,
   declarations = [component],
 ): ComponentFixture<T> {

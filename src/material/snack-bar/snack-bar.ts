@@ -68,7 +68,7 @@ export class MatSnackBar implements OnDestroy {
    * If there is a parent snack-bar service, all operations should delegate to that parent
    * via `_openedSnackBarRef`.
    */
-  private _snackBarRefAtThisLevel: MatSnackBarRef<any> | null = null;
+  private _snackBarRefAtThisLevel: MatSnackBarRef<unknown> | null = null;
 
   /** The component that should be rendered as the snack bar's simple component. */
   simpleSnackBarComponent = SimpleSnackBar;
@@ -80,12 +80,12 @@ export class MatSnackBar implements OnDestroy {
   handsetCssClass = 'mat-mdc-snack-bar-handset';
 
   /** Reference to the currently opened snackbar at *any* level. */
-  get _openedSnackBarRef(): MatSnackBarRef<any> | null {
+  get _openedSnackBarRef(): MatSnackBarRef<unknown> | null {
     const parent = this._parentSnackBar;
     return parent ? parent._openedSnackBarRef : this._snackBarRefAtThisLevel;
   }
 
-  set _openedSnackBarRef(value: MatSnackBarRef<any> | null) {
+  set _openedSnackBarRef(value: MatSnackBarRef<unknown> | null) {
     if (this._parentSnackBar) {
       this._parentSnackBar._openedSnackBarRef = value;
     } else {
@@ -103,11 +103,11 @@ export class MatSnackBar implements OnDestroy {
    * @param component Component to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromComponent<T, D = any>(
+  openFromComponent<T, D = unknown>(
     component: ComponentType<T>,
     config?: MatSnackBarConfig<D>,
   ): MatSnackBarRef<T> {
-    return this._attach(component, config) as MatSnackBarRef<T>;
+    return this._attach(component, config);
   }
 
   /**
@@ -117,10 +117,10 @@ export class MatSnackBar implements OnDestroy {
    * @param template Template to be instantiated.
    * @param config Extra configuration for the snack bar.
    */
-  openFromTemplate(
-    template: TemplateRef<any>,
+  openFromTemplate<C = unknown>(
+    template: TemplateRef<C>,
     config?: MatSnackBarConfig,
-  ): MatSnackBarRef<EmbeddedViewRef<any>> {
+  ): MatSnackBarRef<EmbeddedViewRef<C>> {
     return this._attach(template, config);
   }
 
@@ -192,14 +192,19 @@ export class MatSnackBar implements OnDestroy {
   /**
    * Places a new component or a template as the content of the snack bar container.
    */
+  private _attach<T>(content: ComponentType<T>, userConfig?: MatSnackBarConfig): MatSnackBarRef<T>;
+  private _attach<T>(
+    content: TemplateRef<T>,
+    userConfig?: MatSnackBarConfig,
+  ): MatSnackBarRef<EmbeddedViewRef<T>>;
   private _attach<T>(
     content: ComponentType<T> | TemplateRef<T>,
     userConfig?: MatSnackBarConfig,
-  ): MatSnackBarRef<T | EmbeddedViewRef<any>> {
+  ): MatSnackBarRef<T | EmbeddedViewRef<unknown>> {
     const config = {...new MatSnackBarConfig(), ...this._defaultConfig, ...userConfig};
     const overlayRef = this._createOverlay(config);
     const container = this._attachSnackBarContainer(overlayRef, config);
-    const snackBarRef = new MatSnackBarRef<T | EmbeddedViewRef<any>>(container, overlayRef);
+    const snackBarRef = new MatSnackBarRef<T | EmbeddedViewRef<unknown>>(container, overlayRef);
 
     if (content instanceof TemplateRef) {
       const portal = new TemplatePortal(content, null!, {
@@ -236,11 +241,11 @@ export class MatSnackBar implements OnDestroy {
 
     this._animateSnackBar(snackBarRef, config);
     this._openedSnackBarRef = snackBarRef;
-    return this._openedSnackBarRef;
+    return snackBarRef;
   }
 
   /** Animates the old snack bar out and the new one in. */
-  private _animateSnackBar(snackBarRef: MatSnackBarRef<any>, config: MatSnackBarConfig) {
+  private _animateSnackBar(snackBarRef: MatSnackBarRef<unknown>, config: MatSnackBarConfig) {
     // When the snackbar is dismissed, clear the reference to it.
     snackBarRef.afterDismissed().subscribe(() => {
       // Clear the snackbar ref if it hasn't already been replaced by a newer snackbar.

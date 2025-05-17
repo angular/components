@@ -86,7 +86,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
   private _dateFormats = inject(MAT_DATE_FORMATS, {optional: true})!;
   private _formField = inject(MAT_FORM_FIELD, {optional: true});
 
-  private _onChange: ((value: any) => void) | undefined;
+  private _onChange: ((value: unknown) => void) | undefined;
   private _onTouched: (() => void) | undefined;
   private _validatorOnChange: (() => void) | undefined;
   private _cleanupClick: () => void;
@@ -183,7 +183,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
    * Implemented as a part of `ControlValueAccessor`.
    * @docs-private
    */
-  writeValue(value: any): void {
+  writeValue(value: unknown): void {
     // Note that we need to deserialize here, rather than depend on the value change effect,
     // because `getValidDateOrNull` will clobber the value if it's parseable, but not created by
     // the current adapter (see #30140).
@@ -195,7 +195,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
    * Implemented as a part of `ControlValueAccessor`.
    * @docs-private
    */
-  registerOnChange(fn: (value: any) => void): void {
+  registerOnChange(fn: (value: unknown) => void): void {
     this._onChange = fn;
   }
 
