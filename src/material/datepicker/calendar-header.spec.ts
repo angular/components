@@ -1,9 +1,9 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatNativeDateModule, DateAdapter} from '../core';
-import {DEC, FEB, JAN} from '../testing';
 import {By} from '@angular/platform-browser';
+import {DateAdapter, MatNativeDateModule} from '../core';
+import {DEC, FEB, JAN} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerModule} from './datepicker-module';
@@ -19,7 +19,7 @@ describe('MatCalendarHeader', () => {
         StandardCalendar,
         CalendarWithMinMaxDate,
       ],
-      providers: [MatDatepickerIntl, {provide: Directionality, useFactory: () => ({value: 'ltr'})}],
+      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr')],
     });
   }));
 

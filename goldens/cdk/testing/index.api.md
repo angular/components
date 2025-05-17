@@ -48,10 +48,12 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
 
 // @public
 export abstract class ContentContainerComponentHarness<S extends string = string> extends ComponentHarness implements HarnessLoader {
+    countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number>;
     getAllChildLoaders(selector: S): Promise<HarnessLoader[]>;
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
     getChildLoader(selector: S): Promise<HarnessLoader>;
     getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
+    getHarnessAtIndex<T extends ComponentHarness>(query: HarnessQuery<T>, index: number): Promise<T>;
     getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
     protected getRootHarnessLoader(): Promise<HarnessLoader>;
     hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean>;
@@ -83,6 +85,7 @@ export function handleAutoChangeDetectionStatus(handler: (status: AutoChangeDete
 export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected constructor(
     rawRootElement: E);
+    countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number>;
     protected createComponentHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>, element: E): T;
     protected abstract createEnvironment(element: E): HarnessEnvironment<E>;
     protected abstract createTestElement(element: E): TestElement;
@@ -94,6 +97,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     getChildLoader(selector: string): Promise<HarnessLoader>;
     protected abstract getDocumentRoot(): E;
     getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
+    getHarnessAtIndex<T extends ComponentHarness>(query: HarnessQuery<T>, offset: number): Promise<T>;
     getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
     harnessLoaderFor(selector: string): Promise<HarnessLoader>;
     harnessLoaderForAll(selector: string): Promise<HarnessLoader[]>;
@@ -111,10 +115,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
 // @public
 export interface HarnessLoader {
+    countHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<number>;
     getAllChildLoaders(selector: string): Promise<HarnessLoader[]>;
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
     getChildLoader(selector: string): Promise<HarnessLoader>;
     getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
+    getHarnessAtIndex<T extends ComponentHarness>(query: HarnessQuery<T>, index: number): Promise<T>;
     getHarnessOrNull<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T | null>;
     hasHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<boolean>;
 }

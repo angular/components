@@ -1,13 +1,19 @@
 @use '../core/tokens/token-utils';
 @use './m2-divider';
+@use './m3-divider';
+@use '../core/tokens/m3-system';
 
 $inset-margin: 80px;
+
+$token-prefix: m2-divider.$prefix;
+$token-slots: m2-divider.get-token-slots();
+$fallbacks: m3-divider.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-divider {
   display: block;
   margin: 0;
   border-top-style: solid;
-  @include token-utils.use-tokens(m2-divider.$prefix, m2-divider.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     border-top-color: token-utils.slot(color);
     border-top-width: token-utils.slot(width);
 

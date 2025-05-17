@@ -19,7 +19,10 @@ ts_project(
 
 filegroup(
     name = "source-files",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
 )
 
 ts_project(

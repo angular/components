@@ -5,21 +5,23 @@
 $prefix: (mat, tooltip);
 
 /// Generates the tokens for MDC plain-tooltip
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of tokens for the MDC plain-tooltip
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    container-color: map.get($systems, md-sys-color, inverse-surface),
-    container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-    supporting-text-color: map.get($systems, md-sys-color, inverse-on-surface),
-    supporting-text-font: map.get($systems, md-sys-typescale, body-small-font),
-    supporting-text-line-height: map.get($systems, md-sys-typescale, body-small-line-height),
-    supporting-text-size: map.get($systems, md-sys-typescale, body-small-size),
-    supporting-text-tracking: map.get($systems, md-sys-typescale, body-small-tracking),
-    supporting-text-weight: map.get($systems, md-sys-typescale, body-small-weight)
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (),
+    color: (
+      container-color: map.get($system, inverse-surface),
+      container-shape: map.get($system, corner-extra-small),
+      supporting-text-color: map.get($system, inverse-on-surface),
+    ),
+    typography: (
+      supporting-text-font: map.get($system, body-small-font),
+      supporting-text-line-height: map.get($system, body-small-line-height),
+      supporting-text-size: map.get($system, body-small-size),
+      supporting-text-tracking: map.get($system, body-small-tracking),
+      supporting-text-weight: map.get($system, body-small-weight)
+    ),
+    density: (),
+  );
 }

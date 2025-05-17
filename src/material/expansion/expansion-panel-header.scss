@@ -1,10 +1,13 @@
 @use '@angular/cdk';
 @use './m2-expansion';
+@use './m3-expansion';
 @use '../core/tokens/token-utils';
 @use './expansion-variables';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-expansion.$prefix;
 $token-slots: m2-expansion.get-token-slots();
+$fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-expansion-panel-header {
   display: flex;
@@ -22,7 +25,7 @@ $token-slots: m2-expansion.get-token-slots();
     border-radius: inherit;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     height: token-utils.slot(header-collapsed-state-height);
     font-family: token-utils.slot(header-text-font);
     font-size: token-utils.slot(header-text-size);
@@ -115,7 +118,7 @@ $token-slots: m2-expansion.get-token-slots();
 }
 
 .mat-expansion-panel-header-title {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(header-text-color);
   }
 }
@@ -141,7 +144,7 @@ $token-slots: m2-expansion.get-token-slots();
 .mat-expansion-panel-header-description {
   flex-grow: 2;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(header-description-color);
   }
 }
@@ -166,7 +169,7 @@ $token-slots: m2-expansion.get-token-slots();
     transform: rotate(45deg);
     vertical-align: middle;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(header-indicator-color);
       display: token-utils.slot(legacy-header-indicator-display,
         inline-block);
@@ -185,7 +188,7 @@ $token-slots: m2-expansion.get-token-slots();
     // Ideally we'd make the container `inline-flex`, but that affects M2.
     vertical-align: middle;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       fill: token-utils.slot(header-indicator-color);
       display: token-utils.slot(header-indicator-display, none);
     }

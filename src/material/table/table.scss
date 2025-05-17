@@ -1,7 +1,13 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use './m2-table';
+@use './m3-table';
 @use './table-flex-styles';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-table.$prefix;
+$token-slots: m2-table.get-token-slots();
+$fallbacks: m3-table.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-table-sticky {
   // Note that the table can either set this class or an inline style to make something sticky.
@@ -28,7 +34,7 @@ $token-slots: m2-table.get-token-slots();
   table-layout: auto;
   white-space: normal;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(background-color);
   }
 }
@@ -49,7 +55,7 @@ $token-slots: m2-table.get-token-slots();
   padding: 0 16px;
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   // TODO(crisbeto): these tokens have default values in order to make the initial token
   // work easier to land in g3. Eventually we should remove them.
   .mat-mdc-header-row {

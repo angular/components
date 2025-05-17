@@ -1,12 +1,15 @@
 @use '@angular/cdk';
 @use './m2-menu';
+@use './m3-menu';
 @use '../core/tokens/token-utils';
 @use '../core/style/menu-common';
 @use '../core/style/button-common';
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-menu.$prefix;
 $token-slots: m2-menu.get-token-slots();
+$fallbacks: m3-menu.get-tokens(m3-system.$theme-with-system-vars);
 
 // Prevent rendering mat-menu as it can affect the flex layout.
 mat-menu {
@@ -24,7 +27,7 @@ mat-menu {
     flex: 1;
     white-space: normal;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       font-family: token-utils.slot(item-label-text-font);
       line-height: token-utils.slot(item-label-text-line-height);
       font-size: token-utils.slot(item-label-text-size);
@@ -62,7 +65,7 @@ mat-menu {
   outline: 0;
   animation: _mat-menu-enter 120ms cubic-bezier(0, 0, 0.2, 1);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     border-radius: token-utils.slot(container-shape);
     background-color: token-utils.slot(container-color);
     box-shadow: token-utils.slot(container-elevation-shadow);
@@ -106,7 +109,7 @@ mat-menu {
 
   .mat-divider {
     // Use margin instead of padding since divider uses border-top to render out the line.
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(divider-color);
       margin-bottom: token-utils.slot(divider-bottom-spacing);
       margin-top: token-utils.slot(divider-top-spacing);
@@ -135,14 +138,14 @@ mat-menu {
   margin: 0; // Resolves an issue where buttons have an extra 2px margin on Safari.
   min-height: 48px;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     padding-left: token-utils.slot(item-leading-spacing);
     padding-right: token-utils.slot(item-trailing-spacing);
   }
 
   @include button-common.reset;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
 
     [dir='rtl'] & {
@@ -161,7 +164,7 @@ mat-menu {
     }
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     // The class selector isn't specific enough to overide the link pseudo selectors so we need
     // to target them specifically, otherwise the item color might be overwritten by the user
     // agent resets of the app.
@@ -201,7 +204,7 @@ mat-menu {
 
   .mat-icon {
     flex-shrink: 0;
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       margin-right: token-utils.slot(item-spacing);
       height: token-utils.slot(item-icon-size);
       width: token-utils.slot(item-icon-size);
@@ -213,14 +216,14 @@ mat-menu {
 
     .mat-icon {
       margin-right: 0;
-      @include token-utils.use-tokens($token-prefix, $token-slots) {
+      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         margin-left: token-utils.slot(item-spacing);
       }
     }
   }
 
   &:not([disabled]) {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       &:hover {
         background-color: token-utils.slot(item-hover-state-layer-color);
       }
@@ -243,7 +246,7 @@ mat-menu {
 }
 
 .mat-mdc-menu-submenu-icon {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     @include menu-common.item-submenu-icon(
       token-utils.slot(item-spacing),
       token-utils.slot(item-icon-size)

@@ -1,4 +1,4 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component, DebugElement, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -812,14 +812,14 @@ class GridListWithoutMatchingGap {}
 
 @Component({
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
-  providers: [{provide: Directionality, useValue: {}}],
+  providers: [provideFakeDirectionality('ltr')],
   standalone: false,
 })
 class GridListWithEmptyDirectionality {}
 
 @Component({
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
-  providers: [{provide: Directionality, useValue: {value: 'rtl'}}],
+  providers: [provideFakeDirectionality('rtl')],
   standalone: false,
 })
 class GridListWithRtl {}

@@ -4,6 +4,8 @@
 @use '../core/style/button-common';
 @use '../core/tokens/token-utils';
 @use './m2-datepicker';
+@use './m3-datepicker';
+@use '../core/tokens/m3-system';
 
 $calendar-body-label-padding-start: 5% !default;
 // We don't want the label to jump around when we switch between month and year views, so we use
@@ -25,6 +27,7 @@ $calendar-range-end-body-cell-size:
 
 $token-prefix: m2-datepicker.$prefix;
 $token-slots: m2-datepicker.get-token-slots();
+$fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 
 // Styles for a highlighted calendar cell (e.g. hovered or focused).
 @mixin _highlighted-cell($token-name) {
@@ -48,7 +51,7 @@ $token-slots: m2-datepicker.get-token-slots();
 
 .mat-calendar-body-today {
   @include _unselected-cell {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       border-color: token-utils.slot(calendar-date-today-outline-color);
     }
   }
@@ -61,7 +64,7 @@ $token-slots: m2-datepicker.get-token-slots();
   padding-left: $calendar-body-label-side-padding;
   padding-right: $calendar-body-label-side-padding;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     font-size: token-utils.slot(calendar-body-label-text-size);
     font-weight: token-utils.slot(calendar-body-label-text-weight);
     color: token-utils.slot(calendar-body-label-text-color);
@@ -92,7 +95,7 @@ $token-slots: m2-datepicker.get-token-slots();
   margin: 0;
 
   // Needs to be repeated here in order to override the user agent styles.
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     font-family: token-utils.slot(calendar-text-font);
     font-size: token-utils.slot(calendar-text-size);
   }
@@ -188,7 +191,7 @@ $token-slots: m2-datepicker.get-token-slots();
 }
 
 .mat-calendar-body-in-preview {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(calendar-date-preview-state-outline-color);
   }
 
@@ -219,7 +222,7 @@ $token-slots: m2-datepicker.get-token-slots();
 .mat-calendar-body-disabled {
   cursor: default;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     & > .mat-calendar-body-cell-content {
       @include _unselected-cell {
         color: token-utils.slot(calendar-date-disabled-state-text-color);
@@ -263,7 +266,7 @@ $token-slots: m2-datepicker.get-token-slots();
   // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
   border-radius: $calendar-body-cell-radius;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(calendar-date-text-color);
     border-color: token-utils.slot(calendar-date-outline-color);
   }
@@ -280,7 +283,7 @@ $token-slots: m2-datepicker.get-token-slots();
 }
 
 .mat-calendar-body-active {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .cdk-keyboard-focused &, .cdk-program-focused & {
       @include _highlighted-cell(calendar-date-focus-state-background-color);
     }
@@ -289,14 +292,14 @@ $token-slots: m2-datepicker.get-token-slots();
 
 @media (hover: hover) {
   .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
         @include _highlighted-cell(calendar-date-hover-state-background-color);
     }
   }
 }
 
 .mat-calendar-body-selected {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(calendar-date-selected-state-background-color);
     color: token-utils.slot(calendar-date-selected-state-text-color);
 
@@ -311,7 +314,7 @@ $token-slots: m2-datepicker.get-token-slots();
   }
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   $range-color:
     token-utils.slot(calendar-date-in-range-state-background-color);
   $comparison-color:

@@ -5,14 +5,15 @@
 $prefix: (mat, sort);
 
 /// Generates custom tokens for the mat-sort.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-sort
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    arrow-color: map.get($systems, md-sys-color, on-surface),
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (),
+    color: (
+      arrow-color: map.get($system, on-surface),
+    ),
+    typography: (),
+    density: (),
+  );
 }

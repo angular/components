@@ -1,5 +1,5 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {CdkScrollable, OverlayContainer, OverlayModule} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
@@ -12,24 +12,26 @@ import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
   DebugElement,
   ElementRef,
+  signal,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import {
   ComponentFixture,
-  TestBed,
   fakeAsync,
   flush,
+  TestBed,
   tick,
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
 import {
   MAT_TOOLTIP_DEFAULT_OPTIONS,
   MatTooltip,
@@ -43,11 +45,13 @@ const initialTooltipMessage = 'initial tooltip message';
 
 describe('MatTooltip', () => {
   let overlayContainerElement: HTMLElement;
-  let dir: {value: Direction; change: Subject<Direction>};
+  let dir: WritableSignal<Direction>;
   let platform: Platform;
   let focusMonitor: FocusMonitor;
 
   beforeEach(waitForAsync(() => {
+    dir = signal('ltr');
+
     TestBed.configureTestingModule({
       imports: [
         MatTooltipModule,
@@ -60,14 +64,7 @@ describe('MatTooltip', () => {
         TooltipOnDraggableElement,
         DataBoundAriaLabelTooltip,
       ],
-      providers: [
-        {
-          provide: Directionality,
-          useFactory: () => {
-            return (dir = {value: 'ltr', change: new Subject()});
-          },
-        },
-      ],
+      providers: [provideFakeDirectionality(dir)],
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
@@ -512,7 +509,8 @@ describe('MatTooltip', () => {
 
       assertTooltipInstance(tooltipDirective, true);
       const spy = spyOn(tooltipDirective as any, '_updatePosition').and.callThrough();
-      dir.change.next('rtl');
+      dir.set('rtl');
+      fixture.detectChanges();
 
       assertTooltipInstance(tooltipDirective, true);
       expect(spy).toHaveBeenCalled();
@@ -683,7 +681,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._getOrigin().main).toEqual(rightOrigin);
 
       // Test expectations in RTL
-      dir.value = 'rtl';
+      dir.set('rtl');
       tooltipDirective.position = 'before';
       expect(tooltipDirective._getOrigin().main).toEqual(leftOrigin);
       tooltipDirective.position = 'after';
@@ -703,7 +701,7 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._getOverlayPosition().main).toEqual(rightOverlayPosition);
 
       // Test expectations in RTL
-      dir.value = 'rtl';
+      dir.set('rtl');
       tooltipDirective.position = 'before';
       expect(tooltipDirective._getOverlayPosition().main).toEqual(leftOverlayPosition);
       tooltipDirective.position = 'after';
@@ -720,7 +718,7 @@ describe('MatTooltip', () => {
     });
 
     it('should pass the layout direction to the tooltip', fakeAsync(() => {
-      dir.value = 'rtl';
+      dir.set('rtl');
 
       tooltipDirective.show();
       tick(0);
@@ -737,7 +735,7 @@ describe('MatTooltip', () => {
     }));
 
     it('should keep the overlay direction in sync with the trigger direction', fakeAsync(() => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       tooltipDirective.show();
       tick(0);
       fixture.detectChanges();
@@ -755,7 +753,7 @@ describe('MatTooltip', () => {
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
-      dir.value = 'ltr';
+      dir.set('ltr');
       tooltipDirective.show();
       tick(0);
       fixture.detectChanges();
@@ -989,7 +987,7 @@ describe('MatTooltip', () => {
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      dir.value = 'ltr';
+      dir.set('ltr');
       tooltipDirective.position = 'after';
       fixture.changeDetectorRef.markForCheck();
       tooltipDirective.show(0);
@@ -1007,7 +1005,7 @@ describe('MatTooltip', () => {
       tooltipDirective.hide(0);
       fixture.detectChanges();
       tick(0);
-      dir.value = 'rtl';
+      dir.set('rtl');
       tooltipDirective.show(0);
       fixture.detectChanges();
       tick(0);

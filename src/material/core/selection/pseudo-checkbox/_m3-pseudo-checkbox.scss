@@ -1,49 +1,36 @@
 @use 'sass:map';
-@use '../../style/sass-utils';
 @use '../../tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, pseudo-checkbox);
 
 /// Generates custom tokens for the full variant of mat-pseudo-checkbox.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the full variant of mat-pseudo-checkbox
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
+/// @param {String} $color-variant The color variant to use for the component (M3 only)
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
+
+  @return (
+    base: (),
+    color: (
+      full-disabled-selected-checkmark-color: map.get($system, surface),
+      full-disabled-selected-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      full-disabled-unselected-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      full-selected-checkmark-color: map.get($system, on-primary),
+      full-selected-icon-color: map.get($system, primary),
+      full-unselected-icon-color: map.get($system, on-surface-variant),
+      minimal-disabled-selected-checkmark-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      minimal-selected-checkmark-color: map.get($system, primary),
+    ),
+    typography: (),
+    density: (),
+  );
+
   $tokens: (
-    full-disabled-selected-checkmark-color: map.get($systems, md-sys-color, surface),
-    full-disabled-selected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    full-disabled-unselected-icon-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    full-selected-checkmark-color: map.get($systems, md-sys-color, on-primary),
-    full-selected-icon-color: map.get($systems, md-sys-color, primary),
-    full-unselected-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-    minimal-disabled-selected-checkmark-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-    minimal-selected-checkmark-color: map.get($systems, md-sys-color, primary),
   );
-
-  $variant-tokens: (
-    // Color variants:
-    primary: (), // Default, no overrides needed.
-    secondary: (
-      full-selected-checkmark-color: map.get($systems, md-sys-color, on-secondary),
-      full-selected-icon-color: map.get($systems, md-sys-color, secondary),
-      minimal-selected-checkmark-color: map.get($systems, md-sys-color, secondary),
-    ),
-    tertiary: (
-      full-selected-checkmark-color: map.get($systems, md-sys-color, on-tertiary),
-      full-selected-icon-color: map.get($systems, md-sys-color, tertiary),
-      minimal-selected-checkmark-color: map.get($systems, md-sys-color, tertiary),
-    ),
-    error: (
-      full-selected-checkmark-color: map.get($systems, md-sys-color, on-error),
-      full-selected-icon-color: map.get($systems, md-sys-color, error),
-      minimal-selected-checkmark-color: map.get($systems, md-sys-color, error),
-    )
-  );
-
-  @return m3-utils.namespace($prefix, ($tokens, $variant-tokens), $token-slots);
 }

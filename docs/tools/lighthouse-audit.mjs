@@ -141,6 +141,7 @@ async function launchChromeAndRunLighthouse(url, flags, config) {
   const browser = await puppeteer.launch({
     // Allow for a custom chromium to be provided (e.g. for M1 native support)
     executablePath: process.env.CHROMIUM_BIN,
+    args: ['--no-sandbox'],
     headless: 'new',
   });
 

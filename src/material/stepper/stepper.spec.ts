@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -20,18 +20,20 @@ import {
   createKeyboardEvent,
   dispatchEvent,
   dispatchKeyboardEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {
   Component,
   DebugElement,
-  EventEmitter,
   Provider,
   QueryList,
   Type,
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  WritableSignal,
   inject,
+  provideCheckNoChangesConfig,
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -45,26 +47,23 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {MATERIAL_ANIMATIONS, MatRipple, ThemePalette} from '../core';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
 import {Observable, Subject, merge} from 'rxjs';
 import {map, take} from 'rxjs/operators';
+import {MATERIAL_ANIMATIONS, MatRipple, ThemePalette} from '../core';
+import {MatFormFieldModule} from '../form-field';
+import {MatInputModule} from '../input';
 import {MatStepHeader, MatStepperModule} from './index';
 import {MatStep, MatStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
 import {MatStepperIntl} from './stepper-intl';
 
 const VALID_REGEX = /valid/;
-let dir: {value: Direction; readonly change: EventEmitter<Direction>};
+let dir: WritableSignal<Direction>;
 
 describe('MatStepper', () => {
   beforeEach(() => {
-    dir = {
-      value: 'ltr',
-      change: new EventEmitter(),
-    };
+    dir = signal('ltr');
   });
 
   describe('basic stepper', () => {
@@ -598,7 +597,7 @@ describe('MatStepper', () => {
     let fixture: ComponentFixture<SimpleMatVerticalStepperApp>;
 
     beforeEach(() => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       fixture = createComponent(SimpleMatVerticalStepperApp);
       fixture.detectChanges();
     });
@@ -1010,7 +1009,7 @@ describe('MatStepper', () => {
     });
 
     it('should reverse arrow key focus in RTL mode', () => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       const fixture = createComponent(SimpleMatVerticalStepperApp);
       fixture.detectChanges();
 
@@ -1106,7 +1105,7 @@ describe('MatStepper', () => {
     });
 
     it('should reverse arrow key focus in RTL mode', () => {
-      dir.value = 'rtl';
+      dir.set('rtl');
       const fixture = createComponent(SimpleMatHorizontalStepperApp);
       fixture.detectChanges();
 
@@ -1131,8 +1130,7 @@ describe('MatStepper', () => {
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-horizontal-stepper-header'));
       assertCorrectKeyboardInteraction(fixture, stepHeaders, 'horizontal');
 
-      dir.value = 'rtl';
-      dir.change.emit('rtl');
+      dir.set('rtl');
       fixture.detectChanges();
 
       assertArrowKeyInteractionInRtl(fixture, stepHeaders);
@@ -1829,7 +1827,8 @@ function createComponent<T>(
   TestBed.configureTestingModule({
     imports: [MatStepperModule, ReactiveFormsModule, ...imports],
     providers: [
-      {provide: Directionality, useFactory: () => dir},
+      provideCheckNoChangesConfig({exhaustive: false}),
+      provideFakeDirectionality(dir),
       {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ...providers,
     ],

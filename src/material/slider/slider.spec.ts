@@ -6,9 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BidiModule, Directionality} from '@angular/cdk/bidi';
+import {BidiModule} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {dispatchEvent, dispatchFakeEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
+import {
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchPointerEvent,
+  provideFakeDirectionality,
+} from '@angular/cdk/testing/private';
 import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
@@ -20,7 +25,6 @@ import {
 } from '@angular/core/testing';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {of} from 'rxjs';
 import {MatSliderModule} from './module';
 import {MatSlider} from './slider';
 import {MatSliderRangeThumb, MatSliderThumb} from './slider-input';
@@ -1123,12 +1127,7 @@ describe('MatSlider', () => {
     let fixture: ComponentFixture<StandardRangeSlider>;
 
     beforeEach(waitForAsync(() => {
-      fixture = createComponent(StandardSlider, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: of()},
-        },
-      ]);
+      fixture = createComponent(StandardSlider, [provideFakeDirectionality('rtl')]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
@@ -1165,12 +1164,7 @@ describe('MatSlider', () => {
     let endInput: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      const fixture = createComponent(StandardRangeSlider, [
-        {
-          provide: Directionality,
-          useValue: {value: 'rtl', change: of()},
-        },
-      ]);
+      const fixture = createComponent(StandardRangeSlider, [provideFakeDirectionality('rtl')]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;

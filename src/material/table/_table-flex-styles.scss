@@ -1,5 +1,11 @@
 @use '../core/tokens/token-utils';
 @use './m2-table';
+@use './m3-table';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-table.$prefix;
+$token-slots: m2-table.get-token-slots();
+$fallbacks: m3-table.get-tokens(m3-system.$theme-with-system-vars);
 
 // Flex-based table structure
 $header-row-height: 56px;
@@ -12,7 +18,7 @@ $row-horizontal-padding: 24px;
     display: block;
   }
 
-  @include token-utils.use-tokens(m2-table.$prefix, m2-table.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     mat-header-row {
       min-height: token-utils.slot(header-container-height, $header-row-height);
     }

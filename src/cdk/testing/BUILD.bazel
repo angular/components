@@ -25,7 +25,10 @@ markdown_to_html(
 
 filegroup(
     name = "source-files",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
 )
 
 ng_web_test_suite(

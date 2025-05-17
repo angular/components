@@ -1,4 +1,4 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   ENTER,
@@ -18,6 +18,7 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
   typeInElement,
 } from '@angular/cdk/testing/private';
 import {
@@ -28,6 +29,7 @@ import {
   Type,
   ViewChild,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {
@@ -38,11 +40,11 @@ import {
   ReactiveFormsModule,
   Validator,
 } from '@angular/forms';
-import {MAT_DATE_LOCALE, MATERIAL_ANIMATIONS, MatNativeDateModule, NativeDateModule} from '../core';
-import {MatFormField, MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
+import {MATERIAL_ANIMATIONS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '../core';
+import {MatFormField, MatFormFieldModule} from '../form-field';
+import {MatInputModule} from '../input';
 import {DEC, JAN, JUL, JUN, SEP} from '../testing';
 import {MatDatepicker} from './datepicker';
 import {DatepickerDropdownPositionX, DatepickerDropdownPositionY} from './datepicker-base';
@@ -2085,12 +2087,7 @@ describe('MatDatepicker', () => {
         const fixture = createComponent(
           StandardDatepicker,
           [MatNativeDateModule],
-          [
-            {
-              provide: Directionality,
-              useValue: {value: 'rtl'},
-            },
-          ],
+          [provideFakeDirectionality('rtl')],
         );
 
         fixture.detectChanges();
@@ -2104,16 +2101,11 @@ describe('MatDatepicker', () => {
       }));
 
       it('should update the popup direction if the directionality value changes', fakeAsync(() => {
-        const dirProvider = {value: 'ltr'};
+        const dir = signal<Direction>('ltr');
         const fixture = createComponent(
           StandardDatepicker,
           [MatNativeDateModule],
-          [
-            {
-              provide: Directionality,
-              useFactory: () => dirProvider,
-            },
-          ],
+          [provideFakeDirectionality(dir)],
         );
 
         fixture.detectChanges();
@@ -2129,7 +2121,7 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
         flush();
 
-        dirProvider.value = 'rtl';
+        dir.set('rtl');
         fixture.componentInstance.datepicker.open();
         fixture.detectChanges();
         tick();
@@ -2143,12 +2135,7 @@ describe('MatDatepicker', () => {
         const fixture = createComponent(
           StandardDatepicker,
           [MatNativeDateModule],
-          [
-            {
-              provide: Directionality,
-              useValue: {value: 'rtl'},
-            },
-          ],
+          [provideFakeDirectionality('rtl')],
         );
 
         fixture.componentInstance.touch = true;

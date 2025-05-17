@@ -1,26 +1,19 @@
 import {ENTER, SPACE, TAB} from '../keycodes';
-import {Component, ElementRef, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {CdkMenu} from './menu';
 import {Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
-import {CdkMenuModule} from './menu-module';
 import {CdkMenuTrigger} from './menu-trigger';
+import {CdkMenuBar} from './menu-bar';
 
 describe('MenuTrigger', () => {
   describe('on CdkMenuItem', () => {
     let fixture: ComponentFixture<TriggerForEmptyMenu>;
     let menuItem: CdkMenuItem;
     let menuItemElement: HTMLButtonElement;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [TriggerForEmptyMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TriggerForEmptyMenu);
@@ -109,13 +102,6 @@ describe('MenuTrigger', () => {
     };
 
     const setDocumentDirection = (dir: 'ltr' | 'rtl') => (document.dir = dir);
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [MenuBarWithNestedSubMenus],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MenuBarWithNestedSubMenus);
@@ -326,23 +312,9 @@ describe('MenuTrigger', () => {
   });
 
   describe('with shared triggered menu', () => {
-    /**
-     * Return a function which builds the given component and renders it.
-     * @param componentClass the component to create
-     */
-    function createComponent<T>(componentClass: Type<T>) {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [componentClass],
-      });
-
-      const fixture = TestBed.createComponent(componentClass);
-      fixture.detectChanges();
-      return fixture;
-    }
-
     it('should allow two triggers in different menubars to open the same menu', () => {
-      const fixture = createComponent(TriggersWithSameMenuDifferentMenuBars);
+      const fixture = TestBed.createComponent(TriggersWithSameMenuDifferentMenuBars);
+      fixture.detectChanges();
       expect(fixture.componentInstance.menus.length).toBe(0);
       fixture.componentInstance.triggers.get(0)!.toggle();
       fixture.detectChanges();
@@ -356,7 +328,8 @@ describe('MenuTrigger', () => {
     });
 
     it('should allow two triggers in the same menubar open the same menu', () => {
-      const fixture = createComponent(TriggersWithSameMenuSameMenuBar);
+      const fixture = TestBed.createComponent(TriggersWithSameMenuSameMenuBar);
+      fixture.detectChanges();
       expect(fixture.componentInstance.menus.length).toBe(0);
       fixture.componentInstance.triggers.get(0)!.toggle();
       fixture.detectChanges();
@@ -370,7 +343,8 @@ describe('MenuTrigger', () => {
     });
 
     it('should allow a trigger in a submenu references its parent menu', () => {
-      const fixture = createComponent(TriggerOpensItsMenu);
+      const fixture = TestBed.createComponent(TriggerOpensItsMenu);
+      fixture.detectChanges();
       expect(fixture.componentInstance.menus.length).toBe(0);
       expect(fixture.componentInstance.triggers.length).toBe(1);
       fixture.componentInstance.triggers.get(0)!.toggle();
@@ -402,13 +376,6 @@ describe('MenuTrigger', () => {
       fixture.detectChanges();
       grabElementsForTesting();
     };
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [StandaloneTriggerWithInlineMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(StandaloneTriggerWithInlineMenu);
@@ -503,11 +470,6 @@ describe('MenuTrigger', () => {
   });
 
   it('should be able to pass data to the menu via the template context', () => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [TriggerWithData],
-    });
-
     const fixture = TestBed.createComponent(TriggerWithData);
     fixture.componentInstance.menuData = {message: 'Hello!'};
     fixture.detectChanges();
@@ -519,15 +481,7 @@ describe('MenuTrigger', () => {
 
   describe('null triggerFor', () => {
     let fixture: ComponentFixture<TriggerWithNullValue>;
-
     let nativeTrigger: HTMLElement;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [TriggerWithNullValue],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(TriggerWithNullValue);
@@ -562,11 +516,6 @@ describe('MenuTrigger', () => {
   });
 
   it('should focus the first item when opening on click', fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [TriggersWithSameMenuDifferentMenuBars],
-    });
-
     const fixture = TestBed.createComponent(TriggersWithSameMenuDifferentMenuBars);
     fixture.detectChanges();
 
@@ -587,7 +536,7 @@ describe('MenuTrigger', () => {
     <div cdkMenuBar><button cdkMenuItem [cdkMenuTriggerFor]="noop">Click me!</button></div>
     <ng-template #noop><div cdkMenu></div></ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenuBar, CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class TriggerForEmptyMenu {
   @ViewChild(CdkMenuTrigger) trigger: CdkMenuTrigger;
@@ -612,7 +561,7 @@ class TriggerForEmptyMenu {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class MenuBarWithNestedSubMenus {
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
@@ -639,7 +588,7 @@ class MenuBarWithNestedSubMenus {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggersWithSameMenuDifferentMenuBars {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -662,7 +611,7 @@ class TriggersWithSameMenuDifferentMenuBars {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggersWithSameMenuSameMenuBar {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -681,7 +630,7 @@ class TriggersWithSameMenuSameMenuBar {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger, CdkMenuBar],
 })
 class TriggerOpensItsMenu {
   @ViewChildren(CdkMenuTrigger) triggers: QueryList<CdkMenuTrigger>;
@@ -706,7 +655,7 @@ class TriggerOpensItsMenu {
       <button #inline_item cdkMenuItem></button>
     </div>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class StandaloneTriggerWithInlineMenu {
   @ViewChild(CdkMenuItem, {read: ElementRef}) nativeTrigger: ElementRef<HTMLElement>;
@@ -726,7 +675,7 @@ class StandaloneTriggerWithInlineMenu {
       <div cdkMenu class="test-menu">{{message}}</div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenu, CdkMenuTrigger],
 })
 class TriggerWithData {
   menuData: unknown;
@@ -736,7 +685,7 @@ class TriggerWithData {
   template: `
     <button [cdkMenuTriggerFor]="null">First</button>
   `,
-  standalone: false,
+  imports: [CdkMenuTrigger],
 })
 class TriggerWithNullValue {
   @ViewChild(CdkMenuTrigger, {static: true})

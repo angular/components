@@ -1,8 +1,7 @@
-import {Directionality} from '@angular/cdk/bidi';
+import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
 describe('MatChip', () => {
@@ -10,8 +9,6 @@ describe('MatChip', () => {
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
-
-  let dir = 'ltr';
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -22,15 +19,7 @@ describe('MatChip', () => {
         BasicChipWithStaticTabindex,
         BasicChipWithBoundTabindex,
       ],
-      providers: [
-        {
-          provide: Directionality,
-          useFactory: () => ({
-            value: dir,
-            change: new Subject(),
-          }),
-        },
-      ],
+      providers: [provideFakeDirectionality('ltr')],
     });
   }));
 

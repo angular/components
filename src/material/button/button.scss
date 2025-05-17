@@ -4,6 +4,12 @@
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use './m2-button';
+@use './m3-button';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-button.$prefix;
+$token-slots: m2-button.get-token-slots();
+$fallbacks: m3-button.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-button-base {
   text-decoration: none;
@@ -53,7 +59,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-button.$prefix, m2-button.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-mdc-button {
     padding: 0 #{token-utils.slot(text-horizontal-padding, true)};
     height: token-utils.slot(text-container-height);

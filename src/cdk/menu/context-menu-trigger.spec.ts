@@ -1,6 +1,5 @@
-import {Component, ViewChild, ElementRef, Type, ViewChildren, QueryList} from '@angular/core';
-import {CdkMenuModule} from './menu-module';
-import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
+import {Component, ViewChild, ElementRef, ViewChildren, QueryList} from '@angular/core';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
@@ -13,13 +12,6 @@ import {LEFT_ARROW, RIGHT_ARROW} from '../keycodes';
 describe('CdkContextMenuTrigger', () => {
   describe('with simple context menu trigger', () => {
     let fixture: ComponentFixture<SimpleContextMenu>;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [SimpleContextMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(SimpleContextMenu);
@@ -164,13 +156,6 @@ describe('CdkContextMenuTrigger', () => {
   describe('nested context menu triggers', () => {
     let fixture: ComponentFixture<NestedContextMenu>;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [NestedContextMenu],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(NestedContextMenu);
       fixture.detectChanges();
@@ -279,13 +264,6 @@ describe('CdkContextMenuTrigger', () => {
     let fixture: ComponentFixture<ContextMenuWithSubmenu>;
     let instance: ContextMenuWithSubmenu;
 
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [ContextMenuWithSubmenu],
-      });
-    }));
-
     beforeEach(() => {
       fixture = TestBed.createComponent(ContextMenuWithSubmenu);
       fixture.detectChanges();
@@ -309,13 +287,6 @@ describe('CdkContextMenuTrigger', () => {
     let fixture: ComponentFixture<ContextMenuWithMenuBarAndInlineMenu>;
     let nativeMenuBar: HTMLElement;
     let nativeMenuBarTrigger: HTMLElement;
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [ContextMenuWithMenuBarAndInlineMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(ContextMenuWithMenuBarAndInlineMenu);
@@ -410,23 +381,10 @@ describe('CdkContextMenuTrigger', () => {
   });
 
   describe('with shared triggered menu', () => {
-    /**
-     * Return a function which builds the given component and renders it.
-     * @param componentClass the component to create
-     */
-    function createComponent<T>(componentClass: Type<T>) {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [componentClass],
-      });
-
-      const fixture = TestBed.createComponent(componentClass);
-      fixture.detectChanges();
-      return fixture;
-    }
-
     it('should allow a context menu and menubar trigger share a menu', () => {
-      const fixture = createComponent(MenuBarAndContextTriggerShareMenu);
+      const fixture = TestBed.createComponent(MenuBarAndContextTriggerShareMenu);
+      fixture.detectChanges();
+
       expect(fixture.componentInstance.menus.length).toBe(0);
       fixture.componentInstance.menuBarTrigger.toggle();
       fixture.detectChanges();
@@ -441,11 +399,6 @@ describe('CdkContextMenuTrigger', () => {
   });
 
   it('should be able to pass data to the menu via the template context', () => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule],
-      declarations: [ContextTriggerWithData],
-    });
-
     const fixture = TestBed.createComponent(ContextTriggerWithData);
     fixture.componentInstance.menuData = {message: 'Hello!'};
     fixture.detectChanges();
@@ -467,7 +420,7 @@ describe('CdkContextMenuTrigger', () => {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkContextMenuTrigger, CdkMenu, CdkMenuItem],
 })
 class SimpleContextMenu {
   @ViewChild(CdkContextMenuTrigger) trigger: CdkContextMenuTrigger;
@@ -496,7 +449,7 @@ class SimpleContextMenu {
       <div #copy_menu cdkMenu></div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkContextMenuTrigger, CdkMenu],
 })
 class NestedContextMenu {
   @ViewChild('cut_trigger', {read: ElementRef}) cutContext: ElementRef<HTMLElement>;
@@ -522,7 +475,7 @@ class NestedContextMenu {
       <div #copy_menu cdkMenu></div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem],
 })
 class ContextMenuWithSubmenu {
   @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) context: ElementRef<HTMLElement>;
@@ -553,7 +506,7 @@ class ContextMenuWithSubmenu {
       <button #inline_menu_button cdkMenuItem></button>
     </div>
   `,
-  standalone: false,
+  imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuBar],
 })
 class ContextMenuWithMenuBarAndInlineMenu {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar: ElementRef;
@@ -582,7 +535,7 @@ class ContextMenuWithMenuBarAndInlineMenu {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkMenuBar, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger],
 })
 class MenuBarAndContextTriggerShareMenu {
   @ViewChild(CdkMenuTrigger) menuBarTrigger: CdkMenuTrigger;
@@ -598,7 +551,7 @@ class MenuBarAndContextTriggerShareMenu {
       <div cdkMenu class="test-menu">{{message}}</div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [CdkContextMenuTrigger, CdkMenu],
 })
 class ContextTriggerWithData {
   @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement: ElementRef<HTMLElement>;

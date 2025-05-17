@@ -24,6 +24,7 @@
     "**/typings.d.ts",
     "src/**/*spec.ts",
     "src/cdk/schematics/**/*",
+    "src/cdk/testing/private/**/*",
     "src/material/schematics/**/*",
     "src/material/schematics/ng-generate/theme-color/**/*.bazel",
     "src/material/schematics/ng-generate/theme-color/index_bundled.d.ts",

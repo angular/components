@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
 
@@ -7,39 +6,39 @@
 $prefix: (mat, menu);
 
 /// Generates custom tokens for the mat-menu.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-menu
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, item-label-text, label-large),
-    (
-      container-shape: map.get($systems, md-sys-shape, corner-extra-small),
-      divider-color: map.get($systems, md-sys-color, surface-variant),
-      divider-bottom-spacing: m3-utils.hardcode(8px, $exclude-hardcoded),
-      divider-top-spacing: m3-utils.hardcode(8px, $exclude-hardcoded),
-      item-label-text-color: map.get($systems, md-sys-color, on-surface),
-      item-icon-color: map.get($systems, md-sys-color, on-surface-variant),
-      item-icon-size: m3-utils.hardcode(24px, $exclude-hardcoded),
-      item-hover-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
-      ),
-      item-focus-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
-      ),
-      item-spacing: m3-utils.hardcode(12px, $exclude-hardcoded),
-      item-leading-spacing: m3-utils.hardcode(12px, $exclude-hardcoded),
-      item-trailing-spacing: m3-utils.hardcode(12px, $exclude-hardcoded),
-      item-with-icon-leading-spacing: m3-utils.hardcode(12px, $exclude-hardcoded),
-      item-with-icon-trailing-spacing: m3-utils.hardcode(12px, $exclude-hardcoded),
-      container-color: map.get($systems, md-sys-color, surface-container),
-      container-elevation-shadow: m3-utils.hardcode(
-        elevation.get-box-shadow(2), $exclude-hardcoded),
-    )
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      divider-bottom-spacing: 8px,
+      divider-top-spacing: 8px,
+      item-icon-size: 24px,
+      item-spacing: 12px,
+      item-leading-spacing: 12px,
+      item-trailing-spacing: 12px,
+      item-with-icon-leading-spacing: 12px,
+      item-with-icon-trailing-spacing: 12px,
+    ),
+    color: (
+      container-shape: map.get($system, corner-extra-small),
+      divider-color: map.get($system, surface-variant),
+      item-label-text-color: map.get($system, on-surface),
+      item-icon-color: map.get($system, on-surface-variant),
+      item-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      item-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      container-color: map.get($system, surface-container),
+      container-elevation-shadow: elevation.get-box-shadow(2),
+    ),
+    typography: (
+      item-label-text-font: map.get($system, label-large-font),
+      item-label-text-line-height: map.get($system, label-large-line-height),
+      item-label-text-size: map.get($system, label-large-size),
+      item-label-text-tracking: map.get($system, label-large-tracking),
+      item-label-text-weight: map.get($system, label-large-weight),
+    ),
+    density: (),
+  );
 }

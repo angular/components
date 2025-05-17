@@ -8,25 +8,27 @@
 $prefix: (mat, tree);
 
 /// Generates custom tokens for the mat-tree.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-tree
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    container-background-color: map.get($systems, md-sys-color, surface),
-    node-text-color: map.get($systems, md-sys-color, on-surface),
-    node-text-font: map.get($systems, md-sys-typescale, body-large-font),
-    node-text-size: map.get($systems, md-sys-typescale, body-large-size),
-    node-text-weight: map.get($systems, md-sys-typescale, body-large-weight),
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (),
+    color: (
+      container-background-color: map.get($system, surface),
+      node-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      node-text-font: map.get($system, body-large-font),
+      node-text-size: map.get($system, body-large-size),
+      node-text-weight: map.get($system, body-large-weight),
+    ),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -4);
   $index: ($scale * -1) + 1;
 
   @return (

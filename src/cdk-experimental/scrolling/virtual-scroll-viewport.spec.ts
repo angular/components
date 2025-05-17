@@ -1,5 +1,11 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
-import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  Input,
+  provideCheckNoChangesConfig,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
@@ -11,6 +17,7 @@ describe('CdkVirtualScrollViewport', () => {
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
+        providers: [provideCheckNoChangesConfig({exhaustive: false})],
         imports: [ScrollingModule, ExperimentalScrollingModule, AutoSizeVirtualScroll],
       });
     }));

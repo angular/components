@@ -6,7 +6,7 @@
 // color and opacity for states like hover, active, and focus. Additionally, adds styles to the
 // ripple and state container so that they fill the button, match the border radius, and avoid
 // pointer events.
-@mixin mat-private-button-interactive() {
+@mixin mat-private-button-interactive($focus-indicator-inherits-shape: true) {
   -webkit-tap-highlight-color: transparent;
 
   // The ripple container should match the bounds of the entire button.
@@ -50,10 +50,18 @@
   // The focus indicator should match the bounds of the entire button.
   .mat-focus-indicator {
     @include layout-common.fill();
+
+    @if ($focus-indicator-inherits-shape) {
+      border-radius: inherit;
+    }
   }
 
   &:focus > .mat-focus-indicator::before {
     content: '';
+
+    @if ($focus-indicator-inherits-shape) {
+      border-radius: inherit;
+    }
   }
 }
 

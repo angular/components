@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:list';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
@@ -9,43 +8,48 @@
 $prefix: (mat, expansion);
 
 /// Generates custom tokens for the mat-expansion.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-expansion
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, header-text, title-medium),
-    m3-utils.generate-typography-tokens($systems, container-text, body-large),
-    (
-      container-shape: m3-utils.hardcode(12px, $exclude-hardcoded),
-      legacy-header-indicator-display: m3-utils.hardcode(none, $exclude-hardcoded),
-      header-indicator-display: m3-utils.hardcode(inline-block, $exclude-hardcoded),
-      container-background-color: map.get($systems, md-sys-color, surface),
-      container-text-color: map.get($systems, md-sys-color, on-surface),
-      actions-divider-color: map.get($systems, md-sys-color, outline),
-      header-hover-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, hover-state-layer-opacity)
-      ),
-      header-focus-state-layer-color: sass-utils.safe-color-change(
-        map.get($systems, md-sys-color, on-surface),
-        $alpha: map.get($systems, md-sys-state, focus-state-layer-opacity)
-      ),
-      header-disabled-state-text-color: sass-utils.safe-color-change(
-          map.get($systems, md-sys-color, on-surface), $alpha: 0.38),
-      header-text-color: map.get($systems, md-sys-color, on-surface),
-      header-description-color: map.get($systems, md-sys-color, on-surface-variant),
-      header-indicator-color: map.get($systems, md-sys-color, on-surface-variant),
-    )
-  );
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
 
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
+  @return (
+    base: (
+      container-shape: 12px,
+      header-indicator-display: inline-block,
+      legacy-header-indicator-display: none,
+    ),
+    color: (
+      actions-divider-color: map.get($system, outline),
+      container-background-color: map.get($system, surface),
+      container-text-color: map.get($system, on-surface),
+      header-description-color: map.get($system, on-surface-variant),
+      header-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      header-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      header-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      header-indicator-color: map.get($system, on-surface-variant),
+      header-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      container-text-font: map.get($system, body-large-font),
+      container-text-line-height: map.get($system, body-large-line-height),
+      container-text-size: map.get($system, body-large-size),
+      container-text-tracking: map.get($system, body-large-tracking),
+      container-text-weight: map.get($system, body-large-weight),
+      header-text-font: map.get($system, title-medium-font),
+      header-text-line-height: map.get($system, title-medium-line-height),
+      header-text-size: map.get($system, title-medium-size),
+      header-text-tracking: map.get($system, title-medium-tracking),
+      header-text-weight: map.get($system, title-medium-weight),
+    ),
+    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+  );
 }
 
 // Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
   $index: ($scale * -1) + 1;
 
   @return (

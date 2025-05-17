@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use './style/elevation';
 @use './tokens/m3-utils';
 
@@ -7,25 +6,41 @@
 $prefix: (mat, app);
 
 /// Generates custom tokens for the app.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the app
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    background-color: map.get($systems, md-sys-color, background),
-    text-color: map.get($systems, md-sys-color, on-background),
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
+
+  @return (
+    base: (),
+    color: (
+      background-color: map.get($system, background),
+      text-color: map.get($system, on-background),
+      elevation-shadow-level-0: elevation.get-box-shadow(0, map.get($system, shadow)),
+      elevation-shadow-level-1: elevation.get-box-shadow(1, map.get($system, shadow)),
+      elevation-shadow-level-2: elevation.get-box-shadow(2, map.get($system, shadow)),
+      elevation-shadow-level-3: elevation.get-box-shadow(3, map.get($system, shadow)),
+      elevation-shadow-level-4: elevation.get-box-shadow(4, map.get($system, shadow)),
+      elevation-shadow-level-5: elevation.get-box-shadow(5, map.get($system, shadow)),
+      elevation-shadow-level-6: elevation.get-box-shadow(6, map.get($system, shadow)),
+      elevation-shadow-level-7: elevation.get-box-shadow(7, map.get($system, shadow)),
+      elevation-shadow-level-8: elevation.get-box-shadow(8, map.get($system, shadow)),
+      elevation-shadow-level-9: elevation.get-box-shadow(9, map.get($system, shadow)),
+      elevation-shadow-level-10: elevation.get-box-shadow(10, map.get($system, shadow)),
+      elevation-shadow-level-11: elevation.get-box-shadow(11, map.get($system, shadow)),
+      elevation-shadow-level-12: elevation.get-box-shadow(12, map.get($system, shadow)),
+      elevation-shadow-level-13: elevation.get-box-shadow(13, map.get($system, shadow)),
+      elevation-shadow-level-14: elevation.get-box-shadow(14, map.get($system, shadow)),
+      elevation-shadow-level-15: elevation.get-box-shadow(15, map.get($system, shadow)),
+      elevation-shadow-level-16: elevation.get-box-shadow(16, map.get($system, shadow)),
+      elevation-shadow-level-17: elevation.get-box-shadow(17, map.get($system, shadow)),
+      elevation-shadow-level-18: elevation.get-box-shadow(18, map.get($system, shadow)),
+      elevation-shadow-level-19: elevation.get-box-shadow(19, map.get($system, shadow)),
+      elevation-shadow-level-20: elevation.get-box-shadow(20, map.get($system, shadow)),
+      elevation-shadow-level-21: elevation.get-box-shadow(21, map.get($system, shadow)),
+      elevation-shadow-level-22: elevation.get-box-shadow(22, map.get($system, shadow)),
+      elevation-shadow-level-23: elevation.get-box-shadow(23, map.get($system, shadow)),
+      elevation-shadow-level-24: elevation.get-box-shadow(24, map.get($system, shadow)),
+    ),
+    typography: (),
+    density: (),
   );
-
-  // If the shadow-color is an actual color, convert it to a box-shadow value. Otherwise
-  // use the token value as itself (e,g. as a CSS var name).
-  $shadow-color: map.get($systems, md-sys-color, shadow);
-  @if (meta.type-of($shadow-color) == color) {
-    @for $zValue from 0 through 24 {
-      $shadow: elevation.get-box-shadow($zValue, $shadow-color);
-      $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
-    }
-  }
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }

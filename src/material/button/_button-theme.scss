@@ -1,13 +1,13 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
-@use '../core/theming/validation';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use './m2-button';
 @use './m3-button';
+@use 'sass:map';
 
-@mixin _button-variant($theme, $palette) {
+@mixin _m2-button-variant($theme, $palette) {
   $mat-tokens: if(
     $palette,
     m2-button.private-get-color-palette-color-tokens($theme, $palette),
@@ -17,21 +17,14 @@
   @include token-utils.create-token-values-mixed(m2-button.$prefix, $mat-tokens);
 }
 
-@mixin _theme-from-tokens($tokens, $options...) {
-  @include validation.selector-defined(
-    'Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector'
-  );
-  $mat-text-button-tokens: token-utils.get-tokens-for(
-    $tokens, m2-button.$prefix, $options...);
-  @include token-utils.create-token-values(m2-button.$prefix, $mat-text-button-tokens);
-}
-
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-button.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, base));
+    @include token-utils.create-token-values(
+        m3-button.$prefix,
+        map.get(m3-button.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -42,15 +35,17 @@
 
 /// Outputs color theme styles for the mat-button.
 /// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin color($theme, $options...) {
+/// @param {String} $color-variant The color variant to use for
+///     the badge: primary, secondary, tertiary, or error (If not specified,
+///     default primary color will be used).
+@mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, color), $options...);
+    @include token-utils.create-token-values(
+        m3-button.$prefix,
+        map.get(m3-button.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include _button-variant($theme, null);
+      @include _m2-button-variant($theme, null);
     }
 
     .mat-mdc-button,
@@ -59,15 +54,15 @@
     .mat-mdc-outlined-button,
     .mat-tonal-button {
       &.mat-primary {
-        @include _button-variant($theme, primary);
+        @include _m2-button-variant($theme, primary);
       }
 
       &.mat-accent {
-        @include _button-variant($theme, accent);
+        @include _m2-button-variant($theme, accent);
       }
 
       &.mat-warn {
-        @include _button-variant($theme, warn);
+        @include _m2-button-variant($theme, warn);
       }
     }
   }
@@ -77,7 +72,9 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include _theme-from-tokens(inspection.get-theme-tokens($theme, typography));
+    @include token-utils.create-token-values(
+        m3-button.$prefix,
+        map.get(m3-button.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -93,7 +90,8 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-button.$prefix, m3-button.get-density-tokens($theme));
+        m3-button.$prefix,
+        map.get(m3-button.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
@@ -122,16 +120,15 @@
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button.
 /// @param {Map} $theme The theme to generate styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the button: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
-@mixin theme($theme, $options...) {
+/// @param {String} $color-variant: The color variant to use for the button: primary, secondary,
+//         tertiary, or error (If not specified, default primary color will be used).
+@mixin theme($theme, $color-variant: null) {
   @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
     @if inspection.get-theme-version($theme) == 1 {
-      @include _theme-from-tokens(inspection.get-theme-tokens($theme), $options...);
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
+      @include base($theme);
+      @include color($theme, $color-variant);
+      @include density($theme);
+      @include typography($theme);
     } @else {
       @include base($theme);
       @if inspection.theme-has($theme, color) {

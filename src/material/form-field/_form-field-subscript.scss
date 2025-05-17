@@ -1,6 +1,12 @@
 @use './m2-form-field';
+@use './m3-form-field';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-form-field.$prefix;
+$token-slots: m2-form-field.get-token-slots();
+$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
 
 @mixin private-form-field-subscript() {
   @keyframes _mat-form-field-subscript-animation {
@@ -72,7 +78,7 @@
   .mat-mdc-form-field-error {
     display: block;
 
-    @include token-utils.use-tokens(m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(error-text-color);
     }
   }
@@ -81,8 +87,7 @@
   // jumps when hints or errors are displayed.
   .mat-mdc-form-field-subscript-wrapper,
   .mat-mdc-form-field-bottom-align::before {
-    @include token-utils.use-tokens(
-        m2-form-field.$prefix, m2-form-field.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       @include vendor-prefixes.smooth-font();
       font-family: token-utils.slot(subscript-text-font);
       line-height: token-utils.slot(subscript-text-line-height);

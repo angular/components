@@ -7,3 +7,4 @@
  */
 
 export * from './form-field-control-harness';
+export * from './form-field-control-harness-filters';

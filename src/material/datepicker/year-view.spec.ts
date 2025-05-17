@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -9,19 +9,25 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {Component, ViewChild} from '@angular/core';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  provideFakeDirectionality,
+} from '@angular/cdk/testing/private';
+import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
+import {MatNativeDateModule} from '../core';
 import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '../testing';
 import {MatCalendarBody} from './calendar-body';
 import {MatYearView} from './year-view';
 
 describe('MatYearView', () => {
-  let dir: {value: Direction};
+  let dir: WritableSignal<Direction>;
 
   beforeEach(waitForAsync(() => {
+    dir = signal<Direction>('ltr');
+
     TestBed.configureTestingModule({
       imports: [
         MatNativeDateModule,
@@ -32,7 +38,7 @@ describe('MatYearView', () => {
         YearViewWithDateFilter,
         YearViewWithDateClass,
       ],
-      providers: [{provide: Directionality, useFactory: () => (dir = {value: 'ltr'})}],
+      providers: [provideFakeDirectionality(dir)],
     });
   }));
 
@@ -126,7 +132,7 @@ describe('MatYearView', () => {
             '.mat-calendar-body',
           ) as HTMLElement;
           expect(calendarBodyEl).not.toBeNull();
-          dir.value = 'ltr';
+          dir.set('ltr');
           fixture.componentInstance.date = new Date(2017, JAN, 5);
           fixture.changeDetectorRef.markForCheck();
           dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -146,7 +152,7 @@ describe('MatYearView', () => {
         });
 
         it('should increment month on left arrow press in rtl', () => {
-          dir.value = 'rtl';
+          dir.set('rtl');
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
           fixture.detectChanges();
@@ -172,7 +178,7 @@ describe('MatYearView', () => {
         });
 
         it('should decrement month on right arrow press in rtl', () => {
-          dir.value = 'rtl';
+          dir.set('rtl');
 
           dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
           fixture.detectChanges();

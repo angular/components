@@ -1,4 +1,4 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -18,11 +18,12 @@ import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
+  provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component} from '@angular/core';
+import {Component, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MAT_DATE_FORMATS, MatNativeDateModule} from '../core';
 import {By} from '@angular/platform-browser';
+import {MAT_DATE_FORMATS, MatNativeDateModule} from '../core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
 import {MatCalendarBody, MatCalendarUserEvent} from './calendar-body';
 import {
@@ -34,9 +35,11 @@ import {MatMonthView} from './month-view';
 
 describe('MatMonthView', () => {
   describe('standard providers', () => {
-    let dir: {value: Direction};
+    let dir: WritableSignal<Direction>;
 
     beforeEach(waitForAsync(() => {
+      dir = signal<Direction>('ltr');
+
       TestBed.configureTestingModule({
         imports: [
           MatNativeDateModule,
@@ -48,7 +51,7 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          {provide: Directionality, useFactory: () => (dir = {value: 'ltr'})},
+          provideFakeDirectionality(dir),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
       });
@@ -264,7 +267,7 @@ describe('MatMonthView', () => {
               '.mat-calendar-body',
             ) as HTMLElement;
             expect(calendarBodyEl).not.toBeNull();
-            dir.value = 'ltr';
+            dir.set('ltr');
             fixture.componentInstance.date = new Date(2017, JAN, 5);
             fixture.changeDetectorRef.markForCheck();
             dispatchFakeEvent(calendarBodyEl, 'focus');
@@ -287,7 +290,7 @@ describe('MatMonthView', () => {
           });
 
           it('should increment date on left arrow press in rtl', () => {
-            dir.value = 'rtl';
+            dir.set('rtl');
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
             fixture.detectChanges();
@@ -313,7 +316,7 @@ describe('MatMonthView', () => {
           });
 
           it('should decrement date on right arrow press in rtl', () => {
-            dir.value = 'rtl';
+            dir.set('rtl');
 
             dispatchKeyboardEvent(calendarBodyEl, 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
@@ -813,7 +816,7 @@ describe('MatMonthView', () => {
           MonthViewWithDateClass,
         ],
         providers: [
-          {provide: Directionality, useFactory: () => ({value: 'ltr'})},
+          provideFakeDirectionality('ltr'),
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
           {
             provide: MAT_DATE_FORMATS,

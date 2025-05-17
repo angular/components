@@ -1,6 +1,12 @@
 @use '@angular/cdk';
 @use './m2-ripple';
+@use './m3-ripple';
 @use '../tokens/token-utils';
+@use '../tokens/m3-system';
+
+$token-prefix: m2-ripple.$prefix;
+$token-slots: m2-ripple.get-token-slots();
+$fallbacks: m3-ripple.get-tokens(m3-system.$theme-with-system-vars);
 
 @mixin ripple() {
   // The host element of an mat-ripple directive should always have a position of "absolute" or
@@ -37,7 +43,7 @@
     // the ripples aren't clipped when inside the shadow DOM (see #24028).
     transform: scale3d(0, 0, 0);
 
-    @include token-utils.use-tokens(m2-ripple.$prefix, m2-ripple.get-token-slots()) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       // We have to emit a fallback value here, because some internal builds depend on it.
       background-color: token-utils.slot(color, $fallback: rgba(#000, 0.1));
     }

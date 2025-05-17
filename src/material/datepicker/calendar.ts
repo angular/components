@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -41,6 +42,7 @@ import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-select
 import {MatIconButton, MatButton} from '../button';
 import {_IdGenerator, CdkMonitorFocus} from '@angular/cdk/a11y';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
+import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 
 /**
  * Possible views for the calendar.
@@ -241,6 +243,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter, {optional: true})!;
   private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS, {optional: true});
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
@@ -457,9 +460,12 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       const view = this._getCurrentViewComponent();
 
       if (view) {
-        // Schedule focus to be moved to the active date since re-rendering
-        // can blur the active cell. See #29265.
-        this._moveFocusOnNextTick = true;
+        // Schedule focus to be moved to the active date since re-rendering can blur the active
+        // cell (see #29265), however don't do so if focus is outside of the calendar, because it
+        // can steal away the user's attention (see #30635).
+        if (this._elementRef.nativeElement.contains(_getFocusedElementPierceShadowDom())) {
+          this._moveFocusOnNextTick = true;
+        }
 
         // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
         // passed down to the view via data bindings which won't be up-to-date when we call `_init`.

@@ -1,8 +1,10 @@
 @use 'sass:math';
 @use '@angular/cdk';
 @use './m2-checkbox';
+@use './m3-checkbox';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
+@use '../core/tokens/m3-system';
 
 $_path-length: 29.7833385;
 $_transition-duration: 90ms;
@@ -18,6 +20,7 @@ $_fallback-size: 40px;
 @mixin checkbox-structure($include-state-layer-styles) {
   $prefix: m2-checkbox.$prefix;
   $slots: m2-checkbox.get-token-slots();
+  $fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
 
   .mdc-checkbox {
     display: inline-block;
@@ -31,7 +34,7 @@ $_fallback-size: 40px;
     cursor: pointer;
     vertical-align: bottom;
 
-    @include token-utils.use-tokens($prefix, $slots) {
+    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
       $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
       padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
       margin: calc((#{$layer-size} - #{$layer-size}) / 2);
@@ -51,7 +54,7 @@ $_fallback-size: 40px;
       cursor: inherit;
       z-index: 1;
 
-      @include token-utils.use-tokens($prefix, $slots) {
+      @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
         $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
         $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
         width: $layer-size;
@@ -91,7 +94,7 @@ $_fallback-size: 40px;
     // Force browser to show background-color when using the print function
     @include vendor-prefixes.color-adjust(exact);
 
-    @include token-utils.use-tokens($prefix, $slots) {
+    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
       $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
       $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
 
@@ -103,7 +106,7 @@ $_fallback-size: 40px;
 
   // These can't be under `.mdc-checkbox__background` because
   // the selectors will break when the mixin is nested.
-  @include token-utils.use-tokens($prefix, $slots) {
+  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
     .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
     .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
       border-color: token-utils.slot(selected-icon-color);
@@ -174,7 +177,7 @@ $_fallback-size: 40px;
     opacity: 0;
     transition: opacity $_transition-duration * 2 $_exit-curve;
 
-    @include token-utils.use-tokens($prefix, $slots) {
+    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       color: token-utils.slot(selected-checkmark-color);
@@ -185,7 +188,7 @@ $_fallback-size: 40px;
     }
   }
 
-  @include token-utils.use-tokens($prefix, $slots) {
+  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
     .mdc-checkbox--disabled {
       &, &.mat-mdc-checkbox-disabled-interactive {
         .mdc-checkbox__checkmark {
@@ -217,7 +220,7 @@ $_fallback-size: 40px;
     transition: opacity $_transition-duration $_exit-curve,
                 transform $_transition-duration $_exit-curve;
 
-    @include token-utils.use-tokens($prefix, $slots) {
+    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
       // Always apply the color since the element becomes `opacity: 0`
       // when unchecked. This makes the animation look better.
       border-color: token-utils.slot(selected-checkmark-color);
@@ -228,7 +231,7 @@ $_fallback-size: 40px;
     }
   }
 
-  @include token-utils.use-tokens($prefix, $slots) {
+  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
     .mdc-checkbox--disabled {
       &, &.mat-mdc-checkbox-disabled-interactive {
         .mdc-checkbox__mixedmark {

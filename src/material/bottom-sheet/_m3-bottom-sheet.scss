@@ -1,24 +1,27 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, bottom-sheet);
 
 /// Generates custom tokens for the mat-bottom-sheet.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-bottom-sheet
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, container-text, body-large),
-    (
-      container-shape: m3-utils.hardcode(28px, $exclude-hardcoded),
-      container-text-color: map.get($systems, md-sys-color, on-surface),
-      container-background-color: map.get($systems, md-sys-color, surface-container-low),
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
+  @return (
+    base: (
+      container-shape: 28px,
     ),
+    color: (
+      container-text-color: map.get($system, on-surface),
+      container-background-color: map.get($system, surface-container-low),
+    ),
+    typography: (
+      container-text-font: map.get($system, body-large-font),
+      container-text-line-height: map.get($system, body-large-line-height),
+      container-text-size: map.get($system, body-large-size),
+      container-text-tracking: map.get($system, body-large-tracking),
+      container-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (),
   );
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }

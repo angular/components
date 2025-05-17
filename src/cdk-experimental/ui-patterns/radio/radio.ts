@@ -51,7 +51,9 @@ export class RadioButtonPattern<V> {
   active = computed(() => this.group()?.focusManager.activeItem() === this);
 
   /** Whether the radio button is selected. */
-  selected = computed(() => this.group()?.selection.inputs.value().includes(this.value()));
+  selected: SignalLike<boolean> = computed(
+    () => !!this.group()?.selection.inputs.value().includes(this.value()),
+  );
 
   /** Whether the radio button is disabled. */
   disabled: SignalLike<boolean>;

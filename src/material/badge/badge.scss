@@ -1,7 +1,9 @@
 @use 'sass:color';
 @use '@angular/cdk';
 @use './m2-badge';
+@use './m3-badge';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m3-system';
 
 $default-size: 22px !default;
 $small-size: $default-size - 6;
@@ -9,9 +11,10 @@ $large-size: $default-size + 6;
 
 $token-prefix: m2-badge.$prefix;
 $token-slots: m2-badge.get-token-slots();
+$fallbacks: m3-badge.get-tokens(m3-system.$theme-with-system-vars);
 
 @mixin _badge-size($size) {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     $prefix: if($size == 'medium', '', $size + '-size-');
     $legacy-size-var-name: 'legacy-#{$prefix}container-size';
     $size-var-name: '#{$prefix}container-size';
@@ -65,7 +68,7 @@ $token-slots: m2-badge.get-token-slots();
   box-sizing: border-box;
   pointer-events: none;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(background-color);
     color: token-utils.slot(text-color);
     font-family: token-utils.slot(text-font);
@@ -106,7 +109,7 @@ $token-slots: m2-badge.get-token-slots();
 }
 
 .mat-badge-disabled .mat-badge-content {
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(disabled-state-background-color);
     color: token-utils.slot(disabled-state-text-color);
   }

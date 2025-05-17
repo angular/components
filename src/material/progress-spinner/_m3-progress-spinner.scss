@@ -5,30 +5,22 @@
 $prefix: (mat, progress-spinner);
 
 /// Generates the tokens for MDC circular-progress
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of tokens for the MDC circular-progress
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: (
-    active-indicator-color: map.get($systems, md-sys-color, primary),
-    active-indicator-width: if($exclude-hardcoded, null, 4px),
-    size: if($exclude-hardcoded, null, 48px)
-  );
+/// @param {String} $color-variant The color variant to use for the component
+@function get-tokens($theme, $color-variant: null) {
+  $system: m3-utils.get-system($theme);
+  @if $color-variant {
+    $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  }
 
-  $variant-tokens: (
-    primary: (), // Default, no overrides needed
-    secondary: (
-      active-indicator-color: map.get($systems, md-sys-color, secondary),
+  @return (
+    base: (
+      size: 48px,
+      active-indicator-width: 4px,
     ),
-    tertiary: (
-      active-indicator-color: map.get($systems, md-sys-color, tertiary),
+    color: (
+      active-indicator-color: map.get($system, primary),
     ),
-    error: (
-      active-indicator-color: map.get($systems, md-sys-color, error),
-    )
+    typography: (),
+    density: (),
   );
-
-  @return m3-utils.namespace(
-      $prefix, ($tokens, $variant-tokens), $token-slots);
 }

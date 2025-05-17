@@ -128,12 +128,6 @@ describe('M3 theme', () => {
       .toEqual([]);
   });
 
-  it('should throw if theme included at root', () => {
-    expect(() => transpile(`@include mat.all-component-themes($theme)`)).toThrowError(
-      /Calls to Angular Material theme mixins with an M3 theme must be wrapped in a selector/,
-    );
-  });
-
   describe('theme override API', () => {
     beforeEach(() => {
       spyOn(process.stderr, 'write').and.callThrough();

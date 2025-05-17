@@ -23,385 +23,26 @@ import {
   PopoverEditClickOutBehavior,
 } from './index';
 
-const NAME_EDIT_TEMPLATE = `
-    <div style="background-color: white;">
-      <form #f="ngForm"
-          cdkEditControl
-          (ngSubmit)="onSubmit(element, f)"
-          [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
-          [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
-          [cdkEditControlClickOutBehavior]="clickOutBehavior">
-        <input [ngModel]="element.name" name="name" required>
-        <input [ngModel]="element.weight" name="weight">
-        <br>
-        <button class="submit" type="submit">Confirm</button>
-        <button class="revert" cdkEditRevert>Revert</button>
-        <button class="close" cdkEditClose>Close</button>
-      </form>
-    </div>
-    `;
-
-const WEIGHT_EDIT_TEMPLATE = `
-    <div>
-      <form #f="ngForm" cdkEditControl>
-        <input>
-      </form>
-    </div>
-    `;
-
-const CELL_TEMPLATE = `
-    {{element.name}}
-
-    <span *cdkRowHoverContent>
-      <button class="open" cdkEditOpen>Edit</button>
-    </span>
-    `;
-
-const POPOVER_EDIT_DIRECTIVE_NAME = `
-    [cdkPopoverEdit]="nameEdit"
-    [cdkPopoverEditColspan]="colspan"
-    [cdkPopoverEditDisabled]="nameEditDisabled"
-    [cdkPopoverEditAriaLabel]="nameEditAriaLabel"
-    `;
-
-const POPOVER_EDIT_DIRECTIVE_WEIGHT = `[cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut`;
-
 interface PeriodicElement {
   name: string;
   weight: number;
 }
 
-@Directive()
-abstract class BaseTestComponent {
-  @ViewChild('table') table: ElementRef;
-
-  preservedValues = new FormValueContainer<PeriodicElement, {'name': string}>();
-  nameEditDisabled = false;
-  nameEditAriaLabel: string | undefined = undefined;
-  ignoreSubmitUnlessValid = true;
-  clickOutBehavior: PopoverEditClickOutBehavior = 'close';
-  colspan: CdkPopoverEditColspan = {};
-  direction: Direction = 'ltr';
-  cdr = inject(ChangeDetectorRef);
-
-  constructor() {
-    this.renderData();
-  }
-
-  abstract renderData(): void;
-
-  onSubmit(element: PeriodicElement, form: NgForm) {
-    if (!form.valid) {
-      return;
-    }
-
-    element.name = form.value['name'];
-  }
-
-  triggerHoverState(rowIndex = 0) {
-    const row = getRows(this.table.nativeElement)[rowIndex];
-    row.dispatchEvent(new Event('mouseover', {bubbles: true}));
-    row.dispatchEvent(new Event('mousemove', {bubbles: true}));
-
-    // Wait for the mouse hover debounce in edit-event-dispatcher.
-    tick(41);
-  }
-
-  getRows() {
-    return getRows(this.table.nativeElement);
-  }
-
-  getEditCell(rowIndex = 0, cellIndex = 1) {
-    const row = this.getRows()[rowIndex];
-    return getCells(row)[cellIndex];
-  }
-
-  focusEditCell(rowIndex = 0, cellIndex = 1) {
-    this.getEditCell(rowIndex, cellIndex).focus();
-  }
-
-  hoverContentStateForRow(rowIndex = 0) {
-    const openButton = this.getOpenButton(rowIndex);
-
-    if (!openButton) {
-      return HoverContentState.OFF;
-    }
-    return parseInt(getComputedStyle(openButton.parentNode as Element).opacity || '', 10) === 0
-      ? HoverContentState.FOCUSABLE
-      : HoverContentState.ON;
-  }
-
-  getOpenButton(rowIndex = 0) {
-    return this.getEditCell(rowIndex).querySelector('.open') as HTMLElement | null;
-  }
-
-  clickOpenButton(rowIndex = 0) {
-    this.getOpenButton(rowIndex)!.click();
-  }
-
-  openLens(rowIndex = 0, cellIndex = 1) {
-    this.focusEditCell(rowIndex, cellIndex);
-    this.getEditCell(rowIndex, cellIndex).dispatchEvent(
-      new KeyboardEvent('keydown', {bubbles: true, key: 'Enter'}),
-    );
-    flush();
-  }
-
-  getEditPane() {
-    return document.querySelector('.cdk-edit-pane');
-  }
-
-  getEditBoundingBox() {
-    return document.querySelector('.cdk-overlay-connected-position-bounding-box');
-  }
-
-  getNameInput() {
-    return document.querySelector('input[name="name"]') as HTMLInputElement | null;
-  }
-
-  getWeightInput() {
-    return document.querySelector('input[name="weight"]') as HTMLInputElement | null;
-  }
-
-  lensIsOpen() {
-    return !!this.getNameInput();
-  }
-
-  getSubmitButton() {
-    return document.querySelector('.submit') as HTMLElement | null;
-  }
-
-  clickSubmitButton() {
-    this.getSubmitButton()!.click();
-  }
-
-  getRevertButton() {
-    return document.querySelector('.revert') as HTMLElement | null;
-  }
-
-  clickRevertButton() {
-    this.getRevertButton()!.click();
-  }
-
-  getCloseButton() {
-    return document.querySelector('.close') as HTMLElement | null;
-  }
-
-  clickCloseButton() {
-    this.getCloseButton()!.click();
-  }
-}
-
-@Component({
-  template: `
-  <table #table editable [dir]="direction">
-    <ng-template #nameEdit let-element>
-      ${NAME_EDIT_TEMPLATE}
-    </ng-template>
-
-    <ng-template #weightEdit let-element>
-      ${WEIGHT_EDIT_TEMPLATE}
-    </ng-template>
-
-    @for (element of elements; track element) {
-      <tr>
-        <td> just a cell </td>
-
-        <td ${POPOVER_EDIT_DIRECTIVE_NAME}
-            [cdkPopoverEditContext]="element">
-          ${CELL_TEMPLATE}
-        </td>
-
-        <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-          {{element.weight}}
-        </td>
-      </tr>
-    }
-  </table>
-  `,
-  standalone: false,
-})
-class VanillaTableOutOfCell extends BaseTestComponent {
-  elements: ChemicalElement[];
-
-  renderData() {
-    this.elements = createElementData();
-    this.cdr.markForCheck();
-  }
-}
-
-@Component({
-  template: `
-  <table #table editable [dir]="direction">
-    @for (element of elements; track element) {
-      <tr>
-        <td> just a cell </td>
-
-        <td ${POPOVER_EDIT_DIRECTIVE_NAME}>
-          ${CELL_TEMPLATE}
-
-          <ng-template #nameEdit>
-            ${NAME_EDIT_TEMPLATE}
-          </ng-template>
-        </td>
-
-        <td ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-          {{element.weight}}
-
-          <ng-template #weightEdit>
-            ${WEIGHT_EDIT_TEMPLATE}
-          </ng-template>
-        </td>
-      </tr>
-    }
-  </table>
-  `,
-  standalone: false,
-})
-class VanillaTableInCell extends BaseTestComponent {
-  elements: ChemicalElement[];
-
-  renderData() {
-    this.elements = createElementData();
-    this.cdr.markForCheck();
-  }
-}
-
-class ElementDataSource extends DataSource<PeriodicElement> {
-  /** Stream of data that is provided to the table. */
-  data = new BehaviorSubject(createElementData());
-
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect() {
-    return this.data;
-  }
-
-  disconnect() {}
-}
-
-@Component({
-  template: `
-  <div #table [dir]="direction">
-    <cdk-table cdk-table editable [dataSource]="dataSource">
-      <ng-container cdkColumnDef="before">
-        <cdk-cell *cdkCellDef="let element">
-          just a cell
-        </cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="name">
-        <cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_NAME}>
-          ${CELL_TEMPLATE}
-
-          <ng-template #nameEdit>
-            ${NAME_EDIT_TEMPLATE}
-          </ng-template>
-
-          <span *cdkIfRowHovered>
-            <button cdkEditOpen>Edit</button>
-          </span>
-        </cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="weight">
-        <cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-          {{element.weight}}
-
-          <ng-template #weightEdit>
-            ${WEIGHT_EDIT_TEMPLATE}
-          </ng-template>
-        </cdk-cell>
-      </ng-container>
-
-      <cdk-row *cdkRowDef="let row; columns: displayedColumns;"></cdk-row>
-    </cdk-table>
-  </div>
-  `,
-  standalone: false,
-})
-class CdkFlexTableInCell extends BaseTestComponent {
-  displayedColumns = ['before', 'name', 'weight'];
-  dataSource: ElementDataSource;
-
-  renderData() {
-    this.dataSource = new ElementDataSource();
-    this.cdr.markForCheck();
-  }
-}
-
-@Component({
-  template: `
-  <div #table [dir]="direction">
-    <table cdk-table editable [dataSource]="dataSource">
-      <ng-container cdkColumnDef="before">
-        <td cdk-cell *cdkCellDef="let element">
-          just a cell
-        </td>
-      </ng-container>
-
-      <ng-container cdkColumnDef="name">
-        <td cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_NAME}>
-          ${CELL_TEMPLATE}
-
-          <ng-template #nameEdit>
-            ${NAME_EDIT_TEMPLATE}
-          </ng-template>
-
-          <span *cdkIfRowHovered>
-            <button cdkEditOpen>Edit</button>
-          </span>
-        </td>
-      </ng-container>
-
-      <ng-container cdkColumnDef="weight">
-        <td cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
-          {{element.weight}}
-
-          <ng-template #weightEdit>
-            ${WEIGHT_EDIT_TEMPLATE}
-          </ng-template>
-        </td>
-      </ng-container>
-
-      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  <div>
-  `,
-  standalone: false,
-})
-class CdkTableInCell extends BaseTestComponent {
-  displayedColumns = ['before', 'name', 'weight'];
-  dataSource: ElementDataSource;
-
-  renderData() {
-    this.dataSource = new ElementDataSource();
-    this.cdr.markForCheck();
-  }
-}
-
 const testCases = [
-  [VanillaTableOutOfCell, 'Vanilla HTML table; edit defined outside of cell'],
-  [VanillaTableInCell, 'Vanilla HTML table; edit defined within cell'],
-  [CdkFlexTableInCell, 'Flex cdk-table; edit defined within cell'],
-  [CdkTableInCell, 'Table cdk-table; edit defined within cell'],
+  [() => VanillaTableOutOfCell, 'Vanilla HTML table; edit defined outside of cell'],
+  [() => VanillaTableInCell, 'Vanilla HTML table; edit defined within cell'],
+  [() => CdkFlexTableInCell, 'Flex cdk-table; edit defined within cell'],
+  [() => CdkTableInCell, 'Table cdk-table; edit defined within cell'],
 ] as const;
 
 describe('CDK Popover Edit', () => {
-  for (const [componentClass, label] of testCases) {
+  for (const [getComponentClass, label] of testCases) {
     describe(label, () => {
       let component: BaseTestComponent;
       let fixture: ComponentFixture<BaseTestComponent>;
 
       beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkTableModule, CdkPopoverEditModule, FormsModule, BidiModule],
-          declarations: [componentClass],
-        });
-        fixture = TestBed.createComponent<BaseTestComponent>(componentClass);
+        fixture = TestBed.createComponent<BaseTestComponent>(getComponentClass());
         component = fixture.componentInstance;
         component.renderData();
         fixture.detectChanges();
@@ -1044,6 +685,410 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
   }
 });
 
+@Directive()
+abstract class BaseTestComponent {
+  @ViewChild('table') table: ElementRef;
+
+  preservedValues = new FormValueContainer<PeriodicElement, {'name': string}>();
+  nameEditDisabled = false;
+  nameEditAriaLabel: string | undefined = undefined;
+  ignoreSubmitUnlessValid = true;
+  clickOutBehavior: PopoverEditClickOutBehavior = 'close';
+  colspan: CdkPopoverEditColspan = {};
+  direction: Direction = 'ltr';
+  cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.renderData();
+  }
+
+  abstract renderData(): void;
+
+  onSubmit(element: PeriodicElement, form: NgForm) {
+    if (!form.valid) {
+      return;
+    }
+
+    element.name = form.value['name'];
+  }
+
+  triggerHoverState(rowIndex = 0) {
+    const row = getRows(this.table.nativeElement)[rowIndex];
+    row.dispatchEvent(new Event('mouseover', {bubbles: true}));
+    row.dispatchEvent(new Event('mousemove', {bubbles: true}));
+
+    // Wait for the mouse hover debounce in edit-event-dispatcher.
+    tick(41);
+  }
+
+  getRows() {
+    return getRows(this.table.nativeElement);
+  }
+
+  getEditCell(rowIndex = 0, cellIndex = 1) {
+    const row = this.getRows()[rowIndex];
+    return getCells(row)[cellIndex];
+  }
+
+  focusEditCell(rowIndex = 0, cellIndex = 1) {
+    this.getEditCell(rowIndex, cellIndex).focus();
+  }
+
+  hoverContentStateForRow(rowIndex = 0) {
+    const openButton = this.getOpenButton(rowIndex);
+
+    if (!openButton) {
+      return HoverContentState.OFF;
+    }
+    return parseInt(getComputedStyle(openButton.parentNode as Element).opacity || '', 10) === 0
+      ? HoverContentState.FOCUSABLE
+      : HoverContentState.ON;
+  }
+
+  getOpenButton(rowIndex = 0) {
+    return this.getEditCell(rowIndex).querySelector('.open') as HTMLElement | null;
+  }
+
+  clickOpenButton(rowIndex = 0) {
+    this.getOpenButton(rowIndex)!.click();
+  }
+
+  openLens(rowIndex = 0, cellIndex = 1) {
+    this.focusEditCell(rowIndex, cellIndex);
+    this.getEditCell(rowIndex, cellIndex).dispatchEvent(
+      new KeyboardEvent('keydown', {bubbles: true, key: 'Enter'}),
+    );
+    flush();
+  }
+
+  getEditPane() {
+    return document.querySelector('.cdk-edit-pane');
+  }
+
+  getEditBoundingBox() {
+    return document.querySelector('.cdk-overlay-connected-position-bounding-box');
+  }
+
+  getNameInput() {
+    return document.querySelector('input[name="name"]') as HTMLInputElement | null;
+  }
+
+  getWeightInput() {
+    return document.querySelector('input[name="weight"]') as HTMLInputElement | null;
+  }
+
+  lensIsOpen() {
+    return !!this.getNameInput();
+  }
+
+  getSubmitButton() {
+    return document.querySelector('.submit') as HTMLElement | null;
+  }
+
+  clickSubmitButton() {
+    this.getSubmitButton()!.click();
+  }
+
+  getRevertButton() {
+    return document.querySelector('.revert') as HTMLElement | null;
+  }
+
+  clickRevertButton() {
+    this.getRevertButton()!.click();
+  }
+
+  getCloseButton() {
+    return document.querySelector('.close') as HTMLElement | null;
+  }
+
+  clickCloseButton() {
+    this.getCloseButton()!.click();
+  }
+}
+
+@Component({
+  template: `
+  <table #table editable [dir]="direction">
+    <ng-template #nameEdit let-element>
+      <div style="background-color: white;">
+        <form #f="ngForm"
+            cdkEditControl
+            (ngSubmit)="onSubmit(element, f)"
+            [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
+            [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
+            [cdkEditControlClickOutBehavior]="clickOutBehavior">
+          <input [ngModel]="element.name" name="name" required>
+          <input [ngModel]="element.weight" name="weight">
+          <br>
+          <button class="submit" type="submit">Confirm</button>
+          <button class="revert" cdkEditRevert>Revert</button>
+          <button class="close" cdkEditClose>Close</button>
+        </form>
+      </div>
+    </ng-template>
+
+    <ng-template #weightEdit let-element>
+      <div>
+        <form #f="ngForm" cdkEditControl>
+          <input>
+        </form>
+      </div>
+    </ng-template>
+
+    @for (element of elements; track element) {
+      <tr>
+        <td> just a cell </td>
+
+        <td [cdkPopoverEdit]="nameEdit"
+            [cdkPopoverEditColspan]="colspan"
+            [cdkPopoverEditDisabled]="nameEditDisabled"
+            [cdkPopoverEditAriaLabel]="nameEditAriaLabel"
+            [cdkPopoverEditContext]="element">
+          {{element.name}}
+          <span *cdkRowHoverContent>
+            <button class="open" cdkEditOpen>Edit</button>
+          </span>
+        </td>
+
+        <td [cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut>
+          {{element.weight}}
+        </td>
+      </tr>
+    }
+  </table>
+  `,
+  imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+})
+class VanillaTableOutOfCell extends BaseTestComponent {
+  elements: ChemicalElement[];
+
+  renderData() {
+    this.elements = createElementData();
+    this.cdr.markForCheck();
+  }
+}
+
+@Component({
+  template: `
+  <table #table editable [dir]="direction">
+    @for (element of elements; track element) {
+      <tr>
+        <td> just a cell </td>
+
+        <td [cdkPopoverEdit]="nameEdit"
+            [cdkPopoverEditColspan]="colspan"
+            [cdkPopoverEditDisabled]="nameEditDisabled"
+            [cdkPopoverEditAriaLabel]="nameEditAriaLabel">
+          {{element.name}}
+          <span *cdkRowHoverContent>
+            <button class="open" cdkEditOpen>Edit</button>
+          </span>
+
+          <ng-template #nameEdit>
+            <div style="background-color: white;">
+              <form #f="ngForm"
+                  cdkEditControl
+                  (ngSubmit)="onSubmit(element, f)"
+                  [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
+                  [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
+                  [cdkEditControlClickOutBehavior]="clickOutBehavior">
+                <input [ngModel]="element.name" name="name" required>
+                <input [ngModel]="element.weight" name="weight">
+                <br>
+                <button class="submit" type="submit">Confirm</button>
+                <button class="revert" cdkEditRevert>Revert</button>
+                <button class="close" cdkEditClose>Close</button>
+              </form>
+            </div>
+          </ng-template>
+        </td>
+
+        <td [cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut>
+          {{element.weight}}
+
+          <ng-template #weightEdit>
+            <div>
+              <form #f="ngForm" cdkEditControl>
+                <input>
+              </form>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+    }
+  </table>
+  `,
+  imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+})
+class VanillaTableInCell extends BaseTestComponent {
+  elements: ChemicalElement[];
+
+  renderData() {
+    this.elements = createElementData();
+    this.cdr.markForCheck();
+  }
+}
+
+class ElementDataSource extends DataSource<PeriodicElement> {
+  /** Stream of data that is provided to the table. */
+  data = new BehaviorSubject(createElementData());
+
+  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  connect() {
+    return this.data;
+  }
+
+  disconnect() {}
+}
+
+@Component({
+  template: `
+  <div #table [dir]="direction">
+    <cdk-table cdk-table editable [dataSource]="dataSource">
+      <ng-container cdkColumnDef="before">
+        <cdk-cell *cdkCellDef="let element">
+          just a cell
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="name">
+        <cdk-cell *cdkCellDef="let element" [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditColspan]="colspan"
+          [cdkPopoverEditDisabled]="nameEditDisabled"
+          [cdkPopoverEditAriaLabel]="nameEditAriaLabel">
+          {{element.name}}
+          <span *cdkRowHoverContent>
+            <button class="open" cdkEditOpen>Edit</button>
+          </span>
+
+          <ng-template #nameEdit>
+            <div style="background-color: white;">
+              <form #f="ngForm"
+                  cdkEditControl
+                  (ngSubmit)="onSubmit(element, f)"
+                  [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
+                  [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
+                  [cdkEditControlClickOutBehavior]="clickOutBehavior">
+                <input [ngModel]="element.name" name="name" required>
+                <input [ngModel]="element.weight" name="weight">
+                <br>
+                <button class="submit" type="submit">Confirm</button>
+                <button class="revert" cdkEditRevert>Revert</button>
+                <button class="close" cdkEditClose>Close</button>
+              </form>
+            </div>
+          </ng-template>
+
+          <span *cdkIfRowHovered>
+            <button cdkEditOpen>Edit</button>
+          </span>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="weight">
+        <cdk-cell *cdkCellDef="let element" [cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut>
+          {{element.weight}}
+
+          <ng-template #weightEdit>
+            <div>
+              <form #f="ngForm" cdkEditControl>
+                <input>
+              </form>
+            </div>
+          </ng-template>
+        </cdk-cell>
+      </ng-container>
+
+      <cdk-row *cdkRowDef="let row; columns: displayedColumns;"></cdk-row>
+    </cdk-table>
+  </div>
+  `,
+  imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+})
+class CdkFlexTableInCell extends BaseTestComponent {
+  displayedColumns = ['before', 'name', 'weight'];
+  dataSource: ElementDataSource;
+
+  renderData() {
+    this.dataSource = new ElementDataSource();
+    this.cdr.markForCheck();
+  }
+}
+
+@Component({
+  template: `
+  <div #table [dir]="direction">
+    <table cdk-table editable [dataSource]="dataSource">
+      <ng-container cdkColumnDef="before">
+        <td cdk-cell *cdkCellDef="let element">
+          just a cell
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="name">
+        <td cdk-cell *cdkCellDef="let element" [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditColspan]="colspan"
+          [cdkPopoverEditDisabled]="nameEditDisabled"
+          [cdkPopoverEditAriaLabel]="nameEditAriaLabel">
+          {{element.name}}
+          <span *cdkRowHoverContent>
+            <button class="open" cdkEditOpen>Edit</button>
+          </span>
+
+          <ng-template #nameEdit>
+            <div style="background-color: white;">
+              <form #f="ngForm"
+                  cdkEditControl
+                  (ngSubmit)="onSubmit(element, f)"
+                  [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
+                  [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
+                  [cdkEditControlClickOutBehavior]="clickOutBehavior">
+                <input [ngModel]="element.name" name="name" required>
+                <input [ngModel]="element.weight" name="weight">
+                <br>
+                <button class="submit" type="submit">Confirm</button>
+                <button class="revert" cdkEditRevert>Revert</button>
+                <button class="close" cdkEditClose>Close</button>
+              </form>
+            </div>
+          </ng-template>
+
+          <span *cdkIfRowHovered>
+            <button cdkEditOpen>Edit</button>
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="weight">
+        <td cdk-cell *cdkCellDef="let element" [cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut>
+          {{element.weight}}
+
+          <ng-template #weightEdit>
+            <div>
+              <form #f="ngForm" cdkEditControl>
+                <input>
+              </form>
+            </div>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  <div>
+  `,
+  imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
+})
+class CdkTableInCell extends BaseTestComponent {
+  displayedColumns = ['before', 'name', 'weight'];
+  dataSource: ElementDataSource;
+
+  renderData() {
+    this.dataSource = new ElementDataSource();
+    this.cdr.markForCheck();
+  }
+}
+
 @Component({
   template: `
   <div #table [dir]="direction">
@@ -1056,11 +1101,31 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
 
       <ng-container cdkColumnDef="name">
         <td cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_NAME}>
-          ${CELL_TEMPLATE}
+          [cdkPopoverEdit]="nameEdit"
+          [cdkPopoverEditColspan]="colspan"
+          [cdkPopoverEditDisabled]="nameEditDisabled"
+          [cdkPopoverEditAriaLabel]="nameEditAriaLabel">
+          {{element.name}}
+          <span *cdkRowHoverContent>
+            <button class="open" cdkEditOpen>Edit</button>
+          </span>
 
           <ng-template #nameEdit>
-            ${NAME_EDIT_TEMPLATE}
+            <div style="background-color: white;">
+              <form #f="ngForm"
+                  cdkEditControl
+                  (ngSubmit)="onSubmit(element, f)"
+                  [(cdkEditControlPreservedFormValue)]="preservedValues.for(element).value"
+                  [cdkEditControlIgnoreSubmitUnlessValid]="ignoreSubmitUnlessValid"
+                  [cdkEditControlClickOutBehavior]="clickOutBehavior">
+                <input [ngModel]="element.name" name="name" required>
+                <input [ngModel]="element.weight" name="weight">
+                <br>
+                <button class="submit" type="submit">Confirm</button>
+                <button class="revert" cdkEditRevert>Revert</button>
+                <button class="close" cdkEditClose>Close</button>
+              </form>
+            </div>
           </ng-template>
 
           <span *cdkIfRowHovered>
@@ -1070,12 +1135,15 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
       </ng-container>
 
       <ng-container cdkColumnDef="weight">
-        <td cdk-cell *cdkCellDef="let element"
-            ${POPOVER_EDIT_DIRECTIVE_WEIGHT}>
+        <td cdk-cell *cdkCellDef="let element" [cdkPopoverEdit]="weightEdit" cdkPopoverEditTabOut>
           {{element.weight}}
 
           <ng-template #weightEdit>
-            ${WEIGHT_EDIT_TEMPLATE}
+            <div>
+              <form #f="ngForm" cdkEditControl>
+                <input>
+              </form>
+            </div>
           </ng-template>
         </td>
       </ng-container>
@@ -1090,7 +1158,7 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
     </table>
   <div>
   `,
-  standalone: false,
+  imports: [CdkPopoverEditModule, FormsModule, CdkTableModule, BidiModule],
 })
 class CdkTableWithSkipRows extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -1110,10 +1178,6 @@ describe('CDK Popover Edit - with focus ignore rows', () => {
     dispatchKeyboardEvent(cell, 'keydown', keyCode);
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule, CdkPopoverEditModule, FormsModule, BidiModule],
-      declarations: [CdkTableWithSkipRows],
-    });
     fixture = TestBed.createComponent(CdkTableWithSkipRows);
     component = fixture.componentInstance;
     component.renderData();

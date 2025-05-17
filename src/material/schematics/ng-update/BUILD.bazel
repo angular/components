@@ -68,6 +68,7 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
+        ":ng_update_index",
         ":schematics_test_cases",
         ":test_lib",
         "//src/material/schematics:collection_assets",

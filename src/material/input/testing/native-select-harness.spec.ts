@@ -21,6 +21,13 @@ describe('MatNativeSelectHarness', () => {
     expect(selects.length).toBe(2);
   });
 
+  it('should load select with a specific label', async () => {
+    const inputs = await loader.getAllHarnesses(
+      MatNativeSelectHarness.with({label: 'Favorite food'}),
+    );
+    expect(inputs.length).toBe(1);
+  });
+
   it('should get the id of a select', async () => {
     const selects = await loader.getAllHarnesses(MatNativeSelectHarness);
     expect(await parallel(() => selects.map(select => select.getId()))).toEqual(['food', 'drink']);
@@ -187,6 +194,7 @@ describe('MatNativeSelectHarness', () => {
 @Component({
   template: `
     <mat-form-field>
+      <mat-label>Favorite food</mat-label>
       <select
         id="food"
         matNativeControl

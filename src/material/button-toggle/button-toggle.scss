@@ -5,6 +5,8 @@
 @use '../core/style/elevation';
 @use '../core/tokens/token-utils';
 @use './m2-button-toggle';
+@use './m3-button-toggle';
+@use '../core/tokens/m3-system';
 
 $standard-padding: 12px !default;
 $legacy-padding: 16px !default;
@@ -17,7 +19,11 @@ $legacy-height: 36px !default;
 $standard-border-radius: 4px !default;
 $legacy-border-radius: 2px !default;
 
-@include token-utils.use-tokens(m2-button-toggle.$prefix, m2-button-toggle.get-token-slots()) {
+$token-prefix: m2-button-toggle.$prefix;
+$token-slots: m2-button-toggle.get-token-slots();
+$fallbacks: m3-button-toggle.get-tokens(m3-system.$theme-with-system-vars);
+
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-button-toggle-standalone,
   .mat-button-toggle-group {
     position: relative;

@@ -1,9 +1,15 @@
 @use './m2-optgroup';
+@use './m3-optgroup';
 @use '../tokens/token-utils';
+@use '../tokens/m3-system';
+
+$token-prefix: m2-optgroup.$prefix;
+$token-slots: m2-optgroup.get-token-slots();
+$fallbacks: m3-optgroup.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-optgroup {
   // These tokens are set on the root option group to make them easier to override.
-  @include token-utils.use-tokens(m2-optgroup.$prefix, m2-optgroup.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     color: token-utils.slot(label-text-color);
     font-family: token-utils.slot(label-text-font);
     line-height: token-utils.slot(label-text-line-height);

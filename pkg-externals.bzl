@@ -39,6 +39,7 @@ PKG_EXTERNALS = [
     "@angular/youtube-player",
 
     # Third-party libraries.
+    "axe-core",
     "kagekiri",
     "moment",
     "moment/locale/fr",

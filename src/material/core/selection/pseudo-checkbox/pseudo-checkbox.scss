@@ -4,7 +4,13 @@
 @use '../../style/variables';
 @use '../../tokens/token-utils';
 @use './m2-pseudo-checkbox';
+@use './m3-pseudo-checkbox';
 @use './pseudo-checkbox-common';
+@use '../../tokens/m3-system';
+
+$token-prefix: m2-pseudo-checkbox.$prefix;
+$token-slots: m2-pseudo-checkbox.get-token-slots();
+$fallbacks: m3-pseudo-checkbox.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-pseudo-checkbox {
   border-radius: 2px;
@@ -53,8 +59,7 @@
   box-sizing: content-box;
 }
 
-@include token-utils.use-tokens(
-    m2-pseudo-checkbox.$prefix, m2-pseudo-checkbox.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-pseudo-checkbox-minimal {
     &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
       &::after {

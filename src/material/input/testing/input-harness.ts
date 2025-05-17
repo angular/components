@@ -7,12 +7,12 @@
  */
 
 import {HarnessPredicate, parallel} from '@angular/cdk/testing';
-import {MatFormFieldControlHarness} from '../../form-field/testing/control';
+import {MatFormFieldControlHarnessBase} from '@angular/material/form-field/testing/control';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {InputHarnessFilters} from './input-harness-filters';
 
 /** Harness for interacting with a standard Material inputs in tests. */
-export class MatInputHarness extends MatFormFieldControlHarness {
+export class MatInputHarness extends MatFormFieldControlHarnessBase {
   // TODO: We do not want to handle `select` elements with `matNativeControl` because
   // not all methods of this harness work reasonably for native select elements.
   // For more details. See: https://github.com/angular/components/pull/18221.
@@ -31,6 +31,9 @@ export class MatInputHarness extends MatFormFieldControlHarness {
       })
       .addOption('placeholder', options.placeholder, (harness, placeholder) => {
         return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
+      })
+      .addOption('label', options.label, (harness, label) => {
+        return HarnessPredicate.stringMatches(harness.getLabel(), label);
       });
   }
 

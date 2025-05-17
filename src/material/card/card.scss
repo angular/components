@@ -1,5 +1,7 @@
 @use '../core/tokens/token-utils';
 @use './m2-card';
+@use './m3-card';
+@use '../core/tokens/m3-system';
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -7,7 +9,11 @@ $mat-card-header-size: 40px !default;
 // Default padding for text content within a card.
 $mat-card-default-padding: 16px !default;
 
-@include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
+$token-prefix: m2-card.$prefix;
+$token-slots: m2-card.get-token-slots();
+$fallbacks: m3-card.get-tokens(m3-system.$theme-with-system-vars);
+
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-mdc-card {
     display: flex;
     flex-direction: column;
@@ -52,7 +58,7 @@ $mat-card-default-padding: 16px !default;
 }
 
 .mat-mdc-card-filled {
-  @include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     background-color: token-utils.slot(filled-container-color);
     border-radius: token-utils.slot(filled-container-shape);
     box-shadow: token-utils.slot(filled-container-elevation);
@@ -92,7 +98,7 @@ $mat-card-default-padding: 16px !default;
 }
 
 // Add slots for custom Angular Material card tokens.
-@include token-utils.use-tokens(m2-card.$prefix, m2-card.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-mdc-card-title {
     font-family: token-utils.slot(title-text-font);
     line-height: token-utils.slot(title-text-line-height);

@@ -1,13 +1,17 @@
 @use '@angular/cdk';
 @use './m2-snack-bar';
+@use './m3-snack-bar';
 @use '../button/m2-button';
+@use '../button/m3-button';
 @use '../core/tokens/token-utils';
 @use '../core/style/elevation';
+@use '../core/tokens/m3-system';
 
 $_side-padding: 8px;
 
 $token-prefix: m2-snack-bar.$prefix;
 $token-slots: m2-snack-bar.get-token-slots();
+$fallbacks: m3-snack-bar.get-tokens(m3-system.$theme-with-system-vars);
 
 @keyframes _mat-snack-bar-enter {
   from {
@@ -90,7 +94,7 @@ $token-slots: m2-snack-bar.get-token-slots();
     outline: solid 1px;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .mat-mdc-snack-bar-container & {
       color: token-utils.slot(supporting-text-color);
       border-radius: token-utils.slot(container-shape);
@@ -111,7 +115,7 @@ $token-slots: m2-snack-bar.get-token-slots();
     padding-right: 16px;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .mat-mdc-snack-bar-container & {
       font-family: token-utils.slot(supporting-text-font);
       font-size: token-utils.slot(supporting-text-size);
@@ -144,10 +148,12 @@ $token-slots: m2-snack-bar.get-token-slots();
     // MDC's `action-label-text-color` should be able to do this, but the button theme has a
     // higher specificity so it ends up overriding it. Define our own variable that we can
     // use to control the color instead.
-    @include token-utils.use-tokens($token-prefix, $token-slots) {
+    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
       color: token-utils.slot(button-color);
     }
   }
+
+  $button-fallbacks: m3-button.get-tokens(m3-system.$theme-with-system-vars);
 
   // Darken the ripples in the button so they're visible against the dark background.
   @include token-utils.create-token-values-mixed(m2-button.$prefix, (

@@ -4,6 +4,12 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/focus-indicators/private' as focus-indicators-private;
 @use './m2-fab';
+@use './m3-fab';
+@use '../core/tokens/m3-system';
+
+$token-prefix: m2-fab.$prefix;
+$token-slots: m2-fab.get-token-slots();
+$fallbacks: m3-fab.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-fab-base {
   @include vendor-prefixes.user-select(none);
@@ -26,7 +32,8 @@
     transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
   flex-shrink: 0; // Prevent the button from shrinking since it's always supposed to be a circle.
 
-  @include button-base.mat-private-button-interactive();
+  // Due to the shape of the FAB, inheriting the shape looks off. Disable it explicitly.
+  @include button-base.mat-private-button-interactive($focus-indicator-inherits-shape: false);
   @include style-private.private-animation-noop();
 
   &::before {
@@ -92,7 +99,7 @@
   }
 }
 
-@include token-utils.use-tokens(m2-fab.$prefix, m2-fab.get-token-slots()) {
+@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
   .mat-mdc-fab {
     background-color: token-utils.slot(container-color);
     border-radius: token-utils.slot(container-shape);

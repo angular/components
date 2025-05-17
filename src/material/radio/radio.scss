@@ -1,10 +1,13 @@
 @use './m2-radio';
+@use './m3-radio';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 @use './radio-common';
+@use '../core/tokens/m3-system';
 
 $token-prefix: m2-radio.$prefix;
 $token-slots: m2-radio.get-token-slots();
+$fallbacks: m3-radio.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-radio-button {
   -webkit-tap-highlight-color: transparent;
@@ -12,7 +15,7 @@ $token-slots: m2-radio.get-token-slots();
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .mdc-radio__background::before {
       background-color: token-utils.slot(ripple-color);
     }
@@ -63,7 +66,7 @@ $token-slots: m2-radio.get-token-slots();
 
   // We don't inherit the border focus style from MDC since we don't use their ripple.
   // Instead we need to replicate it here.
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     .mdc-radio > .mdc-radio__native-control:focus:enabled:not(:checked) {
       & ~ .mdc-radio__background > .mdc-radio__outer-circle {
         border-color: token-utils.slot(unselected-focus-icon-color);
@@ -97,7 +100,7 @@ $token-slots: m2-radio.get-token-slots();
   width: 48px;
   transform: translate(-50%, -50%);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots) {
+  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
     display: token-utils.slot(touch-target-display);
   }
 

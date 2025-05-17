@@ -1,22 +1,24 @@
 @use 'sass:map';
-@use '../style/sass-utils';
 @use '../tokens/m3-utils';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, optgroup);
 
 /// Generates custom tokens for the mat-optgroup.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-optgroup
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, label-text, title-small),
-    (
-      label-text-color: map.get($systems, md-sys-color, on-surface-variant),
-    )
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
+  @return (
+    base: (),
+    color: (
+      label-text-color: map.get($system, on-surface-variant),
+    ),
+    typography: (
+      label-text-font: map.get($system, title-small-font),
+      label-text-line-height: map.get($system, title-small-line-height),
+      label-text-size: map.get($system, title-small-size),
+      label-text-tracking: map.get($system, title-small-tracking),
+      label-text-weight: map.get($system, title-small-weight),
+    ),
+    density: (),
   );
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }

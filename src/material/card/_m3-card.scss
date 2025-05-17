@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
 
@@ -7,42 +6,38 @@
 $prefix: (mat, card);
 
 /// Generates custom tokens for the mat-card.
-/// @param {Map} $systems The MDC system tokens
-/// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
-/// @param {Map} $token-slots Possible token slots
-/// @return {Map} A set of custom tokens for the mat-card
-@function get-tokens($systems, $exclude-hardcoded, $token-slots) {
-  $tokens: sass-utils.merge-all(
-    m3-utils.generate-typography-tokens($systems, title-text, title-large),
-    m3-utils.generate-typography-tokens($systems, subtitle-text, title-medium),
-    (
-      subtitle-text-color: map.get($systems, md-sys-color, on-surface),
-      elevated-container-color: map.get($systems, md-sys-color, surface-container-low),
-      elevated-container-elevation: map.get($systems, md-sys-elevation, level1),
-      elevated-container-shape: map.get($systems, md-sys-shape, corner-medium),
-      outlined-container-color: map.get($systems, md-sys-color, surface),
-      outlined-container-elevation: map.get($systems, md-sys-elevation, level0),
-      outlined-container-shape: map.get($systems, md-sys-shape, corner-medium),
-      outlined-outline-color: map.get($systems, md-sys-color, outline-variant),
-      outlined-outline-width: if($exclude-hardcoded, null, 1px),
-      filled-container-color: map.get($systems, md-sys-color, surface-container-highest),
-      filled-container-elevation: map.get($systems, md-sys-elevation, level0),
-      filled-container-shape: map.get($systems, md-sys-shape, corner-medium),
+@function get-tokens($theme) {
+  $system: m3-utils.get-system($theme);
+  @return (
+    base: (
+      elevated-container-shape: map.get($system, corner-medium),
+      filled-container-shape: map.get($system, corner-medium),
+      outlined-container-shape: map.get($system, corner-medium),
+      outlined-outline-width: 1px,
     ),
+    color: (
+      elevated-container-color: map.get($system, surface-container-low),
+      elevated-container-elevation: elevation.get-box-shadow(map.get($system, level1)),
+      filled-container-color: map.get($system, surface-container-highest),
+      filled-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
+      outlined-container-color: map.get($system, surface),
+      outlined-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
+      outlined-outline-color: map.get($system, outline-variant),
+      subtitle-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      subtitle-text-font: map.get($system, title-medium-font),
+      subtitle-text-line-height: map.get($system, title-medium-line-height),
+      subtitle-text-size: map.get($system, title-medium-size),
+      subtitle-text-tracking: map.get($system, title-medium-tracking),
+      subtitle-text-weight: map.get($system, title-medium-weight),
+      title-text-font: map.get($system, title-large-font),
+      title-text-line-height: map.get($system, title-large-line-height),
+      title-text-size: map.get($system, title-large-size),
+      title-text-tracking: map.get($system, title-large-tracking),
+      title-text-weight: map.get($system, title-large-weight),
+    ),
+    density: (),
   );
-
-  $elevated-elevation: map.get($tokens, elevated-container-elevation);
-  @if ($elevated-elevation != null) {
-    $tokens: map.set($tokens, elevated-container-elevation,
-        elevation.get-box-shadow($elevated-elevation));
-  }
-
-  $outlined-elevation: map.get($tokens, outlined-container-elevation);
-  @if ($outlined-elevation != null) {
-    $tokens: map.set($tokens, outlined-container-elevation,
-        elevation.get-box-shadow($outlined-elevation));
-  }
-
-  @return m3-utils.namespace($prefix, $tokens, $token-slots);
 }
 
