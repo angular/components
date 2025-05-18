@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {BidiModule} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {
   dispatchEvent,
@@ -40,11 +39,7 @@ describe('MatSlider', () => {
   let platform: Platform;
 
   function createComponent<T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
-      providers: [...providers],
-      declarations: [component],
-    });
+    TestBed.configureTestingModule({providers});
     platform = TestBed.inject(Platform);
     return TestBed.createComponent<T>(component);
   }
@@ -1730,7 +1725,7 @@ const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class StandardSlider {}
 
@@ -1742,7 +1737,7 @@ class StandardSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class StandardRangeSlider {}
 
@@ -1753,7 +1748,7 @@ class StandardRangeSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class DisabledSlider {}
 
@@ -1765,7 +1760,7 @@ class DisabledSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class DisabledRangeSlider {}
 
@@ -1776,7 +1771,7 @@ class DisabledRangeSlider {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithMinAndMax {
   min = 25;
@@ -1791,7 +1786,7 @@ class SliderWithMinAndMax {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithMinAndMax {
   min = 25;
@@ -1805,7 +1800,7 @@ class RangeSliderWithMinAndMax {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithValue {}
 
@@ -1817,7 +1812,7 @@ class SliderWithValue {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithValue {}
 
@@ -1828,7 +1823,7 @@ class RangeSliderWithValue {}
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithStep {
   step = 25;
@@ -1842,7 +1837,7 @@ class SliderWithStep {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithStep {
   step = 25;
@@ -1855,7 +1850,7 @@ class RangeSliderWithStep {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1871,7 +1866,7 @@ class DiscreteSliderWithDisplayWith {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1886,7 +1881,7 @@ class DiscreteRangeSliderWithDisplayWith {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithOneWayBinding {
   value = 50;
@@ -1900,7 +1895,7 @@ class SliderWithOneWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithOneWayBinding {
   startValue = 25;
@@ -1914,7 +1909,7 @@ class RangeSliderWithOneWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, FormsModule],
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1929,7 +1924,7 @@ class SliderWithNgModel {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1946,7 +1941,7 @@ class RangeSliderWithNgModel {
 
 `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModelEdgeCase {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1960,7 +1955,7 @@ class RangeSliderWithNgModelEdgeCase {
     <input [formControl]="control" matSliderThumb>
   </mat-slider>`,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, ReactiveFormsModule],
 })
 class SliderWithFormControl {
   control = new FormControl(0);
@@ -1973,7 +1968,7 @@ class SliderWithFormControl {
     <input [formControl]="endInputControl" matSliderEndThumb>
   </mat-slider>`,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, ReactiveFormsModule],
 })
 class RangeSliderWithFormControl {
   startInputControl = new FormControl(0);
@@ -1987,7 +1982,7 @@ class RangeSliderWithFormControl {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithTwoWayBinding {
   value = 0;
@@ -2001,7 +1996,7 @@ class SliderWithTwoWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -2017,7 +2012,7 @@ class RangeSliderWithTwoWayBinding {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class SliderWithTickMarks {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -2031,7 +2026,7 @@ class SliderWithTickMarks {
   </mat-slider>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule],
 })
 class RangeSliderWithTickMarks {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -2047,7 +2042,7 @@ class RangeSliderWithTickMarks {
   <div>
   `,
   styles: SLIDER_STYLES,
-  standalone: false,
+  imports: [MatSliderModule, ReactiveFormsModule],
 })
 class SliderWithFormGroup {
   readonly MIN = 0;

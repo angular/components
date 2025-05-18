@@ -53,17 +53,6 @@ describe('MatTooltip', () => {
     dir = signal('ltr');
 
     TestBed.configureTestingModule({
-      imports: [
-        MatTooltipModule,
-        OverlayModule,
-        BasicTooltipDemo,
-        ScrollableTooltipDemo,
-        OnPushTooltipDemo,
-        DynamicTooltipsDemo,
-        TooltipOnTextFields,
-        TooltipOnDraggableElement,
-        DataBoundAriaLabelTooltip,
-      ],
       providers: [provideFakeDirectionality(dir)],
     });
 
@@ -161,7 +150,6 @@ describe('MatTooltip', () => {
 
     it('should be able to override the default show and hide delays', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule, BasicTooltipDemo],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -196,8 +184,6 @@ describe('MatTooltip', () => {
 
     it('should be able to override the default position', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule],
-        declarations: [TooltipDemoWithoutPositionBinding],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -223,8 +209,6 @@ describe('MatTooltip', () => {
 
     it('should be able to define a default (global) tooltip class', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        declarations: [TooltipDemoWithoutTooltipClassBinding],
-        imports: [MatTooltipModule, OverlayModule],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -250,8 +234,6 @@ describe('MatTooltip', () => {
 
     it('should be able to provide tooltip class over the custom default one', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        declarations: [TooltipDemoWithTooltipClassBinding],
-        imports: [MatTooltipModule, OverlayModule],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -282,11 +264,7 @@ describe('MatTooltip', () => {
         return;
       }
 
-      TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule],
-        declarations: [WideTooltipDemo],
-      });
-
+      TestBed.resetTestingModule();
       const wideFixture = TestBed.createComponent(WideTooltipDemo);
       wideFixture.detectChanges();
       tooltipDirective = wideFixture.debugElement
@@ -315,8 +293,6 @@ describe('MatTooltip', () => {
       }
 
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule],
-        declarations: [WideTooltipDemo],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -347,8 +323,6 @@ describe('MatTooltip', () => {
 
     it('should be able to disable tooltip interactivity', fakeAsync(() => {
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatTooltipModule, OverlayModule],
-        declarations: [TooltipDemoWithoutPositionBinding],
         providers: [
           {
             provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -1583,7 +1557,6 @@ describe('MatTooltip', () => {
 });
 
 @Component({
-  selector: 'app',
   template: `
     @if (showButton) {
       <button #button
@@ -1607,7 +1580,6 @@ class BasicTooltipDemo {
 }
 
 @Component({
-  selector: 'app',
   template: `
     <div cdkScrollable style="padding: 100px; margin: 300px;
                                height: 200px; width: 200px; overflow: auto;">
@@ -1638,7 +1610,6 @@ class ScrollableTooltipDemo {
 }
 
 @Component({
-  selector: 'app',
   template: `
     <button [matTooltip]="message"
             [matTooltipPosition]="position">
@@ -1653,7 +1624,6 @@ class OnPushTooltipDemo {
 }
 
 @Component({
-  selector: 'app',
   template: `
     @for (tooltip of tooltips; track tooltip) {
       <button [matTooltip]="tooltip">Button {{tooltip}}</button>
@@ -1709,9 +1679,8 @@ class TooltipOnDraggableElement {
 }
 
 @Component({
-  selector: 'app',
   template: `<button #button [matTooltip]="message">Button</button>`,
-  standalone: false,
+  imports: [MatTooltip],
 })
 class TooltipDemoWithoutPositionBinding {
   message: any = initialTooltipMessage;
@@ -1720,9 +1689,8 @@ class TooltipDemoWithoutPositionBinding {
 }
 
 @Component({
-  selector: 'app',
   template: `<button #button [matTooltip]="message">Button</button>`,
-  standalone: false,
+  imports: [MatTooltip],
 })
 class TooltipDemoWithoutTooltipClassBinding {
   message = initialTooltipMessage;
@@ -1731,11 +1699,10 @@ class TooltipDemoWithoutTooltipClassBinding {
 }
 
 @Component({
-  selector: 'app',
   template: `
     <button #button matTooltipClass="fixed-tooltip-class" [matTooltip]="message">Button</button>
   `,
-  standalone: false,
+  imports: [MatTooltip],
 })
 class TooltipDemoWithTooltipClassBinding {
   message: any = initialTooltipMessage;
@@ -1744,10 +1711,9 @@ class TooltipDemoWithTooltipClassBinding {
 }
 
 @Component({
-  selector: 'app',
   styles: `button { width: 500px; height: 500px; }`,
   template: `<button #button [matTooltip]="message">Button</button>`,
-  standalone: false,
+  imports: [MatTooltip],
 })
 class WideTooltipDemo {
   message = 'Test';
