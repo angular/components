@@ -5,8 +5,6 @@ import {
   Component,
   Directive,
   ErrorHandler,
-  Provider,
-  Type,
   ViewChild,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
@@ -25,18 +23,35 @@ import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormField,
   MatFormFieldAppearance,
-  MatFormFieldModule,
   SubscriptSizing,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
 } from '../form-field';
-import {MatIconModule} from '../icon';
 import {By} from '@angular/platform-browser';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
 
 describe('MatMdcInput without forms', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        // Custom error handler that re-throws the error. Errors happening within
+        // change detection phase will be reported through the handler and thrown
+        // in Ivy. Since we do not want to pollute the "console.error", but rather
+        // just rely on the actual error interrupting the test, we re-throw here.
+        {
+          provide: ErrorHandler,
+          useValue: {
+            handleError: (err: any) => {
+              throw err;
+            },
+          },
+        },
+      ],
+    });
+  });
+
   it('should default to floating labels', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithLabel);
+    const fixture = TestBed.createComponent(MatInputWithLabel);
     fixture.detectChanges();
 
     let formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -47,12 +62,15 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should default to global floating label type', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithLabel, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {floatLabel: 'always'},
-      },
-    ]);
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {floatLabel: 'always'},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithLabel);
     fixture.detectChanges();
 
     let formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -63,7 +81,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not be treated as empty if type is date', fakeAsync(() => {
-    const fixture = createComponent(MatInputDateTestController);
+    const fixture = TestBed.createComponent(MatInputDateTestController);
     fixture.detectChanges();
 
     if (getSupportedInputTypes().has('date')) {
@@ -75,7 +93,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should be treated as empty if type is date on unsupported browser', fakeAsync(() => {
-    const fixture = createComponent(MatInputDateTestController);
+    const fixture = TestBed.createComponent(MatInputDateTestController);
     fixture.detectChanges();
 
     if (!getSupportedInputTypes().has('date')) {
@@ -87,7 +105,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should treat text input type as empty at init', fakeAsync(() => {
-    let fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -97,7 +115,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should treat password input type as empty at init', fakeAsync(() => {
-    let fixture = createComponent(MatInputPasswordTestController);
+    const fixture = TestBed.createComponent(MatInputPasswordTestController);
     fixture.detectChanges();
 
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -107,7 +125,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should treat number input type as empty at init', fakeAsync(() => {
-    let fixture = createComponent(MatInputNumberTestController);
+    const fixture = TestBed.createComponent(MatInputNumberTestController);
     fixture.detectChanges();
 
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -117,7 +135,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not be empty after input entered', fakeAsync(() => {
-    let fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'))!;
@@ -134,7 +152,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should update the placeholder when input entered', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithStaticLabel);
+    const fixture = TestBed.createComponent(MatInputWithStaticLabel);
     fixture.detectChanges();
 
     const inputEl = fixture.debugElement.query(By.css('input'))!;
@@ -157,7 +175,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not be empty when the value set before view init', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithValueBinding);
+    const fixture = TestBed.createComponent(MatInputWithValueBinding);
     fixture.detectChanges();
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
       .componentInstance as MatFormField;
@@ -171,7 +189,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should add id', fakeAsync(() => {
-    let fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     const inputElement: HTMLInputElement = fixture.debugElement.query(
@@ -186,7 +204,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should add aria-required reflecting the required state', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithRequired);
+    const fixture = TestBed.createComponent(MatInputWithRequired);
     fixture.detectChanges();
 
     const inputElement: HTMLInputElement = fixture.debugElement.query(
@@ -207,7 +225,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not overwrite existing id', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithId);
+    const fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
     const inputElement: HTMLInputElement = fixture.debugElement.query(
@@ -222,14 +240,14 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it("validates there's only one hint label per side", () => {
-    let fixture = createComponent(MatInputInvalidHintTestController);
+    const fixture = TestBed.createComponent(MatInputInvalidHintTestController);
     expect(() => fixture.detectChanges()).toThrowError(
       wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')),
     );
   });
 
   it("validates there's only one hint label per side (attribute)", () => {
-    let fixture = createComponent(MatInputInvalidHint2TestController);
+    const fixture = TestBed.createComponent(MatInputInvalidHint2TestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
       wrappedErrorMessage(getMatFormFieldDuplicatedHintError('start')),
@@ -237,7 +255,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('validates that matInput child is present', fakeAsync(() => {
-    let fixture = createComponent(MatInputMissingMatInputTestController);
+    const fixture = TestBed.createComponent(MatInputMissingMatInputTestController);
 
     expect(() => fixture.detectChanges()).toThrowError(
       wrappedErrorMessage(getMatFormFieldMissingControlError()),
@@ -245,7 +263,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('validates that matInput child is present after initialization', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithNgIf);
+    const fixture = TestBed.createComponent(MatInputWithNgIf);
 
     expect(() => fixture.detectChanges()).not.toThrowError(
       wrappedErrorMessage(getMatFormFieldMissingControlError()),
@@ -260,7 +278,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('validates the type', fakeAsync(() => {
-    let fixture = createComponent(MatInputInvalidTypeTestController);
+    const fixture = TestBed.createComponent(MatInputInvalidTypeTestController);
 
     // Technically this throws during the OnChanges detection phase,
     // so the error is really a ChangeDetectionError and it becomes
@@ -273,7 +291,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports hint labels attribute', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabelTestController);
+    const fixture = TestBed.createComponent(MatInputHintLabelTestController);
     fixture.detectChanges();
 
     // If the hint label is empty, expect no label.
@@ -286,7 +304,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets an id on hint labels', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabelTestController);
+    const fixture = TestBed.createComponent(MatInputHintLabelTestController);
 
     fixture.componentInstance.label = 'label';
     fixture.changeDetectorRef.markForCheck();
@@ -298,7 +316,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports hint labels elements', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabel2TestController);
+    const fixture = TestBed.createComponent(MatInputHintLabel2TestController);
     fixture.detectChanges();
 
     // In this case, we should have an empty <mat-hint>.
@@ -313,7 +331,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets an id on the hint element', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabel2TestController);
+    const fixture = TestBed.createComponent(MatInputHintLabel2TestController);
 
     fixture.componentInstance.label = 'label';
     fixture.changeDetectorRef.markForCheck();
@@ -325,7 +343,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports label required star', fakeAsync(() => {
-    const fixture = createComponent(MatInputLabelRequiredTestComponent);
+    const fixture = TestBed.createComponent(MatInputLabelRequiredTestComponent);
     fixture.detectChanges();
 
     const label = fixture.debugElement.query(By.css('label'))!;
@@ -335,7 +353,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should show the required star when using a FormControl', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithRequiredFormControl);
+    const fixture = TestBed.createComponent(MatInputWithRequiredFormControl);
     fixture.detectChanges();
 
     const label = fixture.debugElement.query(By.css('label'))!;
@@ -345,7 +363,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should show the required star when FormControl is reassigned', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithRequiredAssignableFormControl);
+    const fixture = TestBed.createComponent(MatInputWithRequiredAssignableFormControl);
     fixture.detectChanges();
 
     // should have star by default
@@ -362,7 +380,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should show the required star when required validator is toggled', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithRequiredAssignableFormControl);
+    const fixture = TestBed.createComponent(MatInputWithRequiredAssignableFormControl);
     fixture.detectChanges();
 
     // should have star by default
@@ -387,7 +405,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not hide the required star if input is disabled', () => {
-    const fixture = createComponent(MatInputLabelRequiredTestComponent);
+    const fixture = TestBed.createComponent(MatInputLabelRequiredTestComponent);
 
     fixture.componentInstance.disabled = true;
     fixture.changeDetectorRef.markForCheck();
@@ -400,7 +418,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('hide label required star when set to hide the required marker', fakeAsync(() => {
-    const fixture = createComponent(MatInputLabelRequiredTestComponent);
+    const fixture = TestBed.createComponent(MatInputLabelRequiredTestComponent);
     fixture.detectChanges();
 
     const label = fixture.debugElement.query(By.css('label'))!;
@@ -417,7 +435,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports the disabled attribute as binding', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithDisabled);
+    const fixture = TestBed.createComponent(MatInputWithDisabled);
     fixture.detectChanges();
 
     const wrapperEl = fixture.debugElement.query(
@@ -441,7 +459,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should be able to set an input as being disabled and interactive', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithDisabled);
+    const fixture = TestBed.createComponent(MatInputWithDisabled);
     fixture.componentInstance.disabled = true;
     fixture.detectChanges();
 
@@ -462,7 +480,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not float the label when disabled and disabledInteractive are set', fakeAsync(() => {
-    const fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.componentInstance.disabled = fixture.componentInstance.disabledInteractive = true;
     fixture.detectChanges();
 
@@ -482,7 +500,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should float the label when disabledInteractive is set and the input has a value', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithDynamicLabel);
+    const fixture = TestBed.createComponent(MatInputWithDynamicLabel);
     fixture.componentInstance.shouldFloat = 'auto';
     fixture.componentInstance.disabled = fixture.componentInstance.disabledInteractive = true;
     fixture.detectChanges();
@@ -500,7 +518,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports the disabled attribute as binding for select', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const wrapperEl = fixture.debugElement.query(
@@ -524,7 +542,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should add a class to the form field if it has a native select', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const formField = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -533,7 +551,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports the required attribute as binding', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithRequired);
+    const fixture = TestBed.createComponent(MatInputWithRequired);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -548,7 +566,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports the required attribute as binding for select', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const selectEl = fixture.debugElement.query(By.css('select'))!.nativeElement;
@@ -563,7 +581,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports the type attribute as binding', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithType);
+    const fixture = TestBed.createComponent(MatInputWithType);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -578,7 +596,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports textarea', fakeAsync(() => {
-    let fixture = createComponent(MatInputTextareaWithBindings);
+    const fixture = TestBed.createComponent(MatInputTextareaWithBindings);
     fixture.detectChanges();
 
     const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector('textarea');
@@ -586,7 +604,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports select', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const nativeSelect: HTMLTextAreaElement = fixture.nativeElement.querySelector('select');
@@ -594,7 +612,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets the aria-describedby when a hintLabel is set', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabelTestController);
+    const fixture = TestBed.createComponent(MatInputHintLabelTestController);
 
     fixture.componentInstance.label = 'label';
     fixture.changeDetectorRef.markForCheck();
@@ -608,7 +626,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('supports user binding to aria-describedby', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithSubscriptAndAriaDescribedBy);
+    const fixture = TestBed.createComponent(MatInputWithSubscriptAndAriaDescribedBy);
 
     fixture.componentInstance.label = 'label';
     fixture.changeDetectorRef.markForCheck();
@@ -646,7 +664,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets the aria-describedby to the id of the mat-hint', fakeAsync(() => {
-    let fixture = createComponent(MatInputHintLabel2TestController);
+    const fixture = TestBed.createComponent(MatInputHintLabel2TestController);
 
     fixture.componentInstance.label = 'label';
     fixture.changeDetectorRef.markForCheck();
@@ -659,7 +677,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets the aria-describedby with multiple mat-hint instances', fakeAsync(() => {
-    let fixture = createComponent(MatInputMultipleHintTestController);
+    const fixture = TestBed.createComponent(MatInputMultipleHintTestController);
 
     fixture.componentInstance.startId = 'start';
     fixture.componentInstance.endId = 'end';
@@ -672,7 +690,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should preserve aria-describedby set directly in the DOM', fakeAsync(() => {
-    const fixture = createComponent(MatInputHintLabel2TestController);
+    const fixture = TestBed.createComponent(MatInputHintLabel2TestController);
     const input = fixture.nativeElement.querySelector('input');
     input.setAttribute('aria-describedby', 'custom');
     fixture.componentInstance.label = 'label';
@@ -684,7 +702,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should set a class on the hint element based on its alignment', fakeAsync(() => {
-    const fixture = createComponent(MatInputMultipleHintTestController);
+    const fixture = TestBed.createComponent(MatInputMultipleHintTestController);
 
     fixture.componentInstance.startId = 'start';
     fixture.componentInstance.endId = 'end';
@@ -699,7 +717,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('sets the aria-describedby when a hintLabel is set, in addition to a mat-hint', fakeAsync(() => {
-    let fixture = createComponent(MatInputMultipleHintMixedTestController);
+    const fixture = TestBed.createComponent(MatInputMultipleHintMixedTestController);
 
     fixture.detectChanges();
 
@@ -716,7 +734,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should float when floatLabel is set to default and text is entered', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithDynamicLabel);
+    const fixture = TestBed.createComponent(MatInputWithDynamicLabel);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -741,7 +759,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should always float the label when floatLabel is set to always', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithDynamicLabel);
+    const fixture = TestBed.createComponent(MatInputWithDynamicLabel);
     fixture.detectChanges();
 
     let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
@@ -761,7 +779,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should float labels when select has value', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
@@ -769,7 +787,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should mark a multi-select as being inline', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const select: HTMLSelectElement = fixture.nativeElement.querySelector('select');
@@ -784,7 +802,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should mark a select with a size as being inline', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const select: HTMLSelectElement = fixture.nativeElement.querySelector('select');
@@ -803,7 +821,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not float the label if the selectedIndex is negative', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelect);
+    const fixture = TestBed.createComponent(MatInputSelect);
     fixture.detectChanges();
 
     const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
@@ -819,7 +837,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not float labels when select has no value, no option label, no option innerHtml', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelectWithNoLabelNoValue);
+    const fixture = TestBed.createComponent(MatInputSelectWithNoLabelNoValue);
     fixture.detectChanges();
 
     const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
@@ -827,7 +845,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should floating labels when select has no value but has option label', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelectWithLabel);
+    const fixture = TestBed.createComponent(MatInputSelectWithLabel);
     fixture.detectChanges();
 
     const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
@@ -835,7 +853,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should floating labels when select has no value but has option innerHTML', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelectWithInnerHtml);
+    const fixture = TestBed.createComponent(MatInputSelectWithInnerHtml);
     fixture.detectChanges();
 
     const labelEl = fixture.debugElement.query(By.css('label'))!.nativeElement;
@@ -843,12 +861,12 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not throw if a native select does not have options', fakeAsync(() => {
-    const fixture = createComponent(MatInputSelectWithoutOptions);
+    const fixture = TestBed.createComponent(MatInputSelectWithoutOptions);
     expect(() => fixture.detectChanges()).not.toThrow();
   }));
 
   it('should be able to toggle the floating label programmatically', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithId);
+    const fixture = TestBed.createComponent(MatInputWithId);
 
     fixture.detectChanges();
 
@@ -868,7 +886,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should not have prefix and suffix elements when none are specified', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithId);
+    const fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
 
     let prefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-prefix'));
@@ -879,7 +897,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should add prefix and suffix elements when specified', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithPrefixAndSuffix);
+    const fixture = TestBed.createComponent(MatInputWithPrefixAndSuffix);
     fixture.detectChanges();
 
     const textPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-prefix'))!;
@@ -898,7 +916,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should allow ng-container as prefix and suffix', () => {
-    const fixture = createComponent(InputWithNgContainerPrefixAndSuffix);
+    const fixture = TestBed.createComponent(InputWithNgContainerPrefixAndSuffix);
     fixture.detectChanges();
 
     const textPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-prefix'))!;
@@ -913,7 +931,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('should update empty class when value changes programmatically and OnPush', fakeAsync(() => {
-    let fixture = createComponent(MatInputOnPush);
+    const fixture = TestBed.createComponent(MatInputOnPush);
     fixture.detectChanges();
 
     let component = fixture.componentInstance;
@@ -928,7 +946,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should set the focused class when the input is focused', fakeAsync(() => {
-    let fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     let input = fixture.debugElement
@@ -945,7 +963,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should remove the focused class if the input becomes disabled while focused', fakeAsync(() => {
-    const fixture = createComponent(MatInputTextTestController);
+    const fixture = TestBed.createComponent(MatInputTextTestController);
     fixture.detectChanges();
 
     const input = fixture.debugElement
@@ -967,7 +985,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should only show the native control placeholder, when there is a label, on focus', () => {
-    const fixture = createComponent(MatInputWithLabelAndPlaceholder);
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(By.css('mat-form-field'))!.nativeElement;
@@ -985,7 +1003,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('should always show the native control placeholder when floatLabel is set to "always"', () => {
-    const fixture = createComponent(MatInputWithLabelAndPlaceholder);
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
 
     fixture.componentInstance.floatLabel = 'always';
     fixture.changeDetectorRef.markForCheck();
@@ -997,7 +1015,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('should not add the `placeholder` attribute if there is no placeholder', () => {
-    const fixture = createComponent(MatInputWithoutPlaceholder);
+    const fixture = TestBed.createComponent(MatInputWithoutPlaceholder);
     fixture.detectChanges();
     const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
 
@@ -1005,7 +1023,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('should not add the native select class if the control is not a native select', () => {
-    const fixture = createComponent(MatInputWithId);
+    const fixture = TestBed.createComponent(MatInputWithId);
     fixture.detectChanges();
     const formField = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
 
@@ -1013,7 +1031,7 @@ describe('MatMdcInput without forms', () => {
   });
 
   it('should preserve the native placeholder on a non-legacy appearance', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithLabelAndPlaceholder);
+    const fixture = TestBed.createComponent(MatInputWithLabelAndPlaceholder);
     fixture.componentInstance.floatLabel = 'auto';
     fixture.componentInstance.appearance = 'outline';
     fixture.changeDetectorRef.markForCheck();
@@ -1028,7 +1046,7 @@ describe('MatMdcInput without forms', () => {
     'should use the native input value when determining whether ' +
       'the element is empty with a custom accessor',
     fakeAsync(() => {
-      let fixture = createComponent(MatInputWithCustomAccessor, [], [], [CustomMatInputAccessor]);
+      const fixture = TestBed.createComponent(MatInputWithCustomAccessor);
       fixture.detectChanges();
       let formField = fixture.debugElement.query(By.directive(MatFormField))!
         .componentInstance as MatFormField;
@@ -1043,7 +1061,7 @@ describe('MatMdcInput without forms', () => {
   );
 
   it('should default the form field color to primary', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithColor);
+    const fixture = TestBed.createComponent(MatInputWithColor);
     fixture.detectChanges();
 
     const formField = fixture.nativeElement.querySelector('.mat-mdc-form-field');
@@ -1051,7 +1069,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should be able to change the form field color', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithColor);
+    const fixture = TestBed.createComponent(MatInputWithColor);
     fixture.componentInstance.color = 'accent';
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -1066,7 +1084,7 @@ describe('MatMdcInput without forms', () => {
   }));
 
   it('should set a class on the input depending on whether it is in a form field', fakeAsync(() => {
-    const fixture = createComponent(MatInputInsideOutsideFormField);
+    const fixture = TestBed.createComponent(MatInputInsideOutsideFormField);
     fixture.detectChanges();
 
     const inFormField = fixture.nativeElement.querySelector('.inside');
@@ -1085,7 +1103,7 @@ describe('MatMdcInput with forms', () => {
     let inputEl: HTMLInputElement;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(MatInputWithFormErrorMessages);
+      fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       containerEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -1177,7 +1195,7 @@ describe('MatMdcInput with forms', () => {
       fixture.destroy();
       TestBed.resetTestingModule();
 
-      let groupFixture = createComponent(MatInputWithFormGroupErrorMessages);
+      let groupFixture = TestBed.createComponent(MatInputWithFormGroupErrorMessages);
       let component: MatInputWithFormGroupErrorMessages;
 
       groupFixture.detectChanges();
@@ -1325,7 +1343,7 @@ describe('MatMdcInput with forms', () => {
 
   describe('custom error behavior', () => {
     it('should display an error message when a custom error matcher returns true', fakeAsync(() => {
-      let fixture = createComponent(InputInFormGroup);
+      const fixture = TestBed.createComponent(InputInFormGroup);
       fixture.detectChanges();
 
       let component = fixture.componentInstance;
@@ -1355,13 +1373,15 @@ describe('MatMdcInput with forms', () => {
     }));
 
     it('should display an error message when global error matcher returns true', fakeAsync(() => {
-      let fixture = createComponent(MatInputWithFormErrorMessages, [
-        {
-          provide: ErrorStateMatcher,
-          useValue: {isErrorState: () => true},
-        },
-      ]);
-
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: ErrorStateMatcher,
+            useValue: {isErrorState: () => true},
+          },
+        ],
+      });
+      const fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
       fixture.detectChanges();
 
       let containerEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -1378,12 +1398,15 @@ describe('MatMdcInput with forms', () => {
     }));
 
     it('should display an error message when using ShowOnDirtyErrorStateMatcher', fakeAsync(() => {
-      let fixture = createComponent(MatInputWithFormErrorMessages, [
-        {
-          provide: ErrorStateMatcher,
-          useClass: ShowOnDirtyErrorStateMatcher,
-        },
-      ]);
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: ErrorStateMatcher,
+            useClass: ShowOnDirtyErrorStateMatcher,
+          },
+        ],
+      });
+      const fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
       fixture.detectChanges();
 
       let containerEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -1413,7 +1436,7 @@ describe('MatMdcInput with forms', () => {
   });
 
   it('should update the value when using FormControl.setValue', () => {
-    let fixture = createComponent(MatInputWithFormControl);
+    const fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
     let input = fixture.debugElement
@@ -1428,7 +1451,7 @@ describe('MatMdcInput with forms', () => {
   });
 
   it('should display disabled styles when using FormControl.disable()', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithFormControl);
+    const fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
     const formFieldEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
@@ -1450,7 +1473,7 @@ describe('MatMdcInput with forms', () => {
   }));
 
   it('should not treat the number 0 as empty', fakeAsync(() => {
-    let fixture = createComponent(MatInputZeroTestController);
+    const fixture = TestBed.createComponent(MatInputZeroTestController);
     fixture.detectChanges();
     flush();
 
@@ -1463,7 +1486,7 @@ describe('MatMdcInput with forms', () => {
   }));
 
   it('should update when the form field value is patched without emitting', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithFormControl);
+    const fixture = TestBed.createComponent(MatInputWithFormControl);
     fixture.detectChanges();
 
     let formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -1478,7 +1501,7 @@ describe('MatMdcInput with forms', () => {
   }));
 
   it('should update notch size after changing appearance to outline', fakeAsync(() => {
-    const fixture = createComponent(MatInputWithAppearance);
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
     fixture.detectChanges();
     tick(16);
 
@@ -1502,76 +1525,90 @@ describe('MatMdcInput with forms', () => {
 
 describe('MatFormField default options', () => {
   it('should be fill appearance if no default options provided', () => {
-    const fixture = createComponent(MatInputWithAppearance);
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.appearance).toBe('fill');
   });
 
   it('should be fill appearance if empty default options provided', () => {
-    const fixture = createComponent(MatInputWithAppearance, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {},
-      },
-    ]);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
 
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.appearance).toBe('fill');
   });
 
   it('should be able to change the default appearance', () => {
-    const fixture = createComponent(MatInputWithAppearance, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {appearance: 'outline'},
-      },
-    ]);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {appearance: 'outline'},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
 
   it('should default hideRequiredMarker to false', () => {
-    const fixture = createComponent(MatInputWithAppearance, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {},
-      },
-    ]);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
 
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(false);
   });
 
   it('should be able to change the default value of hideRequiredMarker and appearance', () => {
-    const fixture = createComponent(MatInputWithAppearance, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {
-          hideRequiredMarker: true,
-          appearance: 'outline',
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {
+            hideRequiredMarker: true,
+            appearance: 'outline',
+          },
         },
-      },
-    ]);
-
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(true);
     expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
 
   it('should be able to change the default color', () => {
-    const fixture = createComponent(MatInputSimple, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {color: 'accent'},
-      },
-    ]);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {color: 'accent'},
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputSimple);
     fixture.detectChanges();
     const formField = fixture.nativeElement.querySelector('.mat-mdc-form-field');
     expect(formField.classList).toContain('mat-accent');
   });
 
   it('defaults subscriptSizing to false', () => {
-    const fixture = createComponent(MatInputWithSubscriptSizing);
+    const fixture = TestBed.createComponent(MatInputWithSubscriptSizing);
     fixture.detectChanges();
 
     const subscriptElement = fixture.nativeElement.querySelector(
@@ -1594,14 +1631,15 @@ describe('MatFormField default options', () => {
   });
 
   it('changes the default value of subscriptSizing (undefined input)', () => {
-    const fixture = createComponent(MatInputWithSubscriptSizing, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {
-          subscriptSizing: 'dynamic',
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {subscriptSizing: 'dynamic'},
         },
-      },
-    ]);
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithSubscriptSizing);
 
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.subscriptSizing).toBe('dynamic');
@@ -1613,14 +1651,15 @@ describe('MatFormField default options', () => {
   });
 
   it('changes the default value of subscriptSizing (no input)', () => {
-    const fixture = createComponent(MatInputWithAppearance, [
-      {
-        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-        useValue: {
-          subscriptSizing: 'dynamic',
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {subscriptSizing: 'dynamic'},
         },
-      },
-    ]);
+      ],
+    });
+    const fixture = TestBed.createComponent(MatInputWithAppearance);
 
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.subscriptSizing).toBe('dynamic');
@@ -1634,7 +1673,7 @@ describe('MatFormField default options', () => {
 
 describe('MatFormField without label', () => {
   it('should not float the label when no label is defined.', () => {
-    let fixture = createComponent(MatInputWithoutDefinedLabel);
+    const fixture = TestBed.createComponent(MatInputWithoutDefinedLabel);
     fixture.detectChanges();
 
     const inputEl = fixture.debugElement.query(By.css('input'))!;
@@ -1650,7 +1689,7 @@ describe('MatFormField without label', () => {
   });
 
   it('should not float the label when the label is removed after it has been shown', () => {
-    let fixture = createComponent(MatInputWithCondictionalLabel);
+    const fixture = TestBed.createComponent(MatInputWithCondictionalLabel);
     fixture.detectChanges();
     const inputEl = fixture.debugElement.query(By.css('input'))!;
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -1672,7 +1711,7 @@ describe('MatFormField without label', () => {
   });
 
   it('should float the label when the label is not removed', () => {
-    let fixture = createComponent(MatInputWithCondictionalLabel);
+    const fixture = TestBed.createComponent(MatInputWithCondictionalLabel);
     fixture.detectChanges();
     const inputEl = fixture.debugElement.query(By.css('input'))!;
     const formField = fixture.debugElement.query(By.directive(MatFormField))!
@@ -1689,60 +1728,13 @@ describe('MatFormField without label', () => {
   });
 });
 
-function configureTestingModule(
-  component: Type<any>,
-  options: {
-    providers?: Provider[];
-    imports?: any[];
-    declarations?: any[];
-  } = {},
-) {
-  const {providers = [], imports = [], declarations = []} = options;
-  TestBed.configureTestingModule({
-    imports: [
-      FormsModule,
-      MatFormFieldModule,
-      MatIconModule,
-      MatInputModule,
-      ReactiveFormsModule,
-      ...imports,
-    ],
-    declarations: [component, ...declarations],
-    providers: [
-      // Custom error handler that re-throws the error. Errors happening within
-      // change detection phase will be reported through the handler and thrown
-      // in Ivy. Since we do not want to pollute the "console.error", but rather
-      // just rely on the actual error interrupting the test, we re-throw here.
-      {
-        provide: ErrorHandler,
-        useValue: {
-          handleError: (err: any) => {
-            throw err;
-          },
-        },
-      },
-      ...providers,
-    ],
-  });
-}
-
-function createComponent<T>(
-  component: Type<T>,
-  providers: Provider[] = [],
-  imports: any[] = [],
-  declarations: any[] = [],
-): ComponentFixture<T> {
-  configureTestingModule(component, {providers, imports, declarations});
-  return TestBed.createComponent<T>(component);
-}
-
 @Component({
   template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Label</mat-label>
       <input matNativeControl id="test-id" placeholder="test">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithId {
   floatLabel: 'always' | 'auto' = 'auto';
@@ -1754,7 +1746,7 @@ class MatInputWithId {
       <input matInput [disabled]="disabled" [disabledInteractive]="disabledInteractive">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithDisabled {
   disabled = false;
@@ -1763,7 +1755,7 @@ class MatInputWithDisabled {
 
 @Component({
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithRequired {
   required: boolean;
@@ -1771,7 +1763,7 @@ class MatInputWithRequired {
 
 @Component({
   template: `<mat-form-field><input matInput [type]="type"></mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithType {
   type: string;
@@ -1783,7 +1775,7 @@ class MatInputWithType {
       <mat-label>hello</mat-label>
       <input matInput required [disabled]="disabled">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputLabelRequiredTestComponent {
   hideRequiredMarker: boolean = false;
@@ -1795,7 +1787,7 @@ class MatInputLabelRequiredTestComponent {
     <mat-form-field>
       <input matInput placeholder="Hello" [formControl]="formControl">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithFormControl {
   formControl = new FormControl('');
@@ -1803,7 +1795,7 @@ class MatInputWithFormControl {
 
 @Component({
   template: `<mat-form-field><input matInput><mat-hint>{{label}}</mat-hint></mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputHintLabel2TestController {
   label: string = '';
@@ -1814,7 +1806,7 @@ class MatInputHintLabel2TestController {
     <mat-form-field [hintLabel]="label">
       <input matInput aria-describedby="initial">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputHintLabelTestController {
   label: string = '';
@@ -1828,7 +1820,7 @@ class MatInputHintLabelTestController {
         <mat-error>Some error</mat-error>
       }
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithSubscriptAndAriaDescribedBy {
   label: string = '';
@@ -1839,7 +1831,7 @@ class MatInputWithSubscriptAndAriaDescribedBy {
 
 @Component({
   template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputInvalidTypeTestController {
   t = 'file';
@@ -1851,7 +1843,7 @@ class MatInputInvalidTypeTestController {
       <input matInput>
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputInvalidHint2TestController {}
 
@@ -1862,7 +1854,7 @@ class MatInputInvalidHint2TestController {}
       <mat-hint>Hello</mat-hint>
       <mat-hint>World</mat-hint>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputInvalidHintTestController {}
 
@@ -1873,7 +1865,7 @@ class MatInputInvalidHintTestController {}
       <mat-hint align="start" [id]="startId">Hello</mat-hint>
       <mat-hint align="end" [id]="endId">World</mat-hint>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputMultipleHintTestController {
   startId: string;
@@ -1886,7 +1878,7 @@ class MatInputMultipleHintTestController {
       <input matInput>
       <mat-hint align="end">World</mat-hint>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputMultipleHintMixedTestController {}
 
@@ -1895,7 +1887,7 @@ class MatInputMultipleHintMixedTestController {}
     <mat-form-field>
       <input matInput type="date" placeholder="Placeholder">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputDateTestController {}
 
@@ -1910,7 +1902,7 @@ class MatInputDateTestController {}
         [disabled]="disabled"
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputTextTestController {
   disabled = false;
@@ -1922,7 +1914,7 @@ class MatInputTextTestController {
     <mat-form-field>
       <input matInput type="password" placeholder="Placeholder">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputPasswordTestController {}
 
@@ -1931,7 +1923,7 @@ class MatInputPasswordTestController {}
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputNumberTestController {}
 
@@ -1940,7 +1932,7 @@ class MatInputNumberTestController {}
     <mat-form-field>
       <input matInput type="number" placeholder="Placeholder" [(ngModel)]="value">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule, FormsModule],
 })
 class MatInputZeroTestController {
   value = 0;
@@ -1951,7 +1943,7 @@ class MatInputZeroTestController {
     <mat-form-field>
       <input matInput placeholder="Label" [value]="value">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithValueBinding {
   value: string = 'Initial';
@@ -1963,7 +1955,7 @@ class MatInputWithValueBinding {
       <input matInput placeholder="Label">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithStaticLabel {}
 
@@ -1977,7 +1969,7 @@ class MatInputWithStaticLabel {}
         [disabled]="disabled"
         [disabledInteractive]="disabledInteractive">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithDynamicLabel {
   shouldFloat: 'always' | 'auto' = 'always';
@@ -1991,7 +1983,7 @@ class MatInputWithDynamicLabel {
       <input matInput placeholder="Label">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithoutDefinedLabel {}
 
@@ -2003,7 +1995,7 @@ class MatInputWithoutDefinedLabel {}
       }
       <input matInput>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithCondictionalLabel {
   hasLabel = true;
@@ -2015,7 +2007,7 @@ class MatInputWithCondictionalLabel {
       <textarea matNativeControl [rows]="rows" [cols]="cols" [wrap]="wrap" placeholder="Snacks">
       </textarea>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputTextareaWithBindings {
   rows: number = 4;
@@ -2025,7 +2017,7 @@ class MatInputTextareaWithBindings {
 
 @Component({
   template: `<mat-form-field><input></mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputMissingMatInputTestController {}
 
@@ -2041,7 +2033,7 @@ class MatInputMissingMatInputTestController {}
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule, FormsModule],
 })
 class MatInputWithFormErrorMessages {
   @ViewChild('form') form: NgForm;
@@ -2064,7 +2056,7 @@ class MatInputWithFormErrorMessages {
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class InputInFormGroup {
   formGroup = new FormGroup({
@@ -2088,7 +2080,7 @@ class InputInFormGroup {
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithFormGroupErrorMessages {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
@@ -2107,7 +2099,7 @@ class MatInputWithFormGroupErrorMessages {
       <mat-icon matIconSuffix>favorite</mat-icon>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithPrefixAndSuffix {}
 
@@ -2119,7 +2111,7 @@ class MatInputWithPrefixAndSuffix {}
       }
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithNgIf {
   renderInput = true;
@@ -2133,7 +2125,7 @@ class MatInputWithNgIf {
       <input matInput [formControl]="formControl">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputOnPush {
   formControl = new FormControl('');
@@ -2146,7 +2138,7 @@ class MatInputOnPush {
       <input matInput>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithLabel {}
 
@@ -2157,7 +2149,7 @@ class MatInputWithLabel {}
       <input matInput placeholder="Placeholder">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithLabelAndPlaceholder {
   floatLabel: FloatLabelType;
@@ -2171,7 +2163,7 @@ class MatInputWithLabelAndPlaceholder {
       <input matInput placeholder="Placeholder">
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField: MatFormField;
@@ -2185,7 +2177,7 @@ class MatInputWithAppearance {
       <input matInput placeholder="Placeholder" required>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithSubscriptSizing {
   @ViewChild(MatFormField) formField: MatFormField;
@@ -2198,7 +2190,7 @@ class MatInputWithSubscriptSizing {
       <input matInput>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithoutPlaceholder {}
 
@@ -2213,7 +2205,7 @@ class MatInputWithoutPlaceholder {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputSelect {
   disabled: boolean;
@@ -2231,7 +2223,7 @@ class MatInputSelect {
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputSelectWithNoLabelNoValue {}
 
@@ -2246,7 +2238,7 @@ class MatInputSelectWithNoLabelNoValue {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputSelectWithLabel {}
 
@@ -2261,28 +2253,9 @@ class MatInputSelectWithLabel {}
         <option value="audi">Audi</option>
       </select>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputSelectWithInnerHtml {}
-
-@Component({
-  template: `
-    <mat-form-field>
-      <input matInput customInputAccessor placeholder="Placeholder">
-    </mat-form-field>`,
-  standalone: false,
-})
-class MatInputWithCustomAccessor {}
-
-@Component({
-  template: `
-    <mat-form-field>
-      <select matNativeControl>
-      </select>
-    </mat-form-field>`,
-  standalone: false,
-})
-class MatInputSelectWithoutOptions {}
 
 /** Custom component that never has a value. Used for testing the `MAT_INPUT_VALUE_ACCESSOR`. */
 @Directive({
@@ -2293,7 +2266,6 @@ class MatInputSelectWithoutOptions {}
       useExisting: CustomMatInputAccessor,
     },
   ],
-  standalone: false,
 })
 class CustomMatInputAccessor {
   get value() {
@@ -2305,10 +2277,29 @@ class CustomMatInputAccessor {
 
 @Component({
   template: `
+    <mat-form-field>
+      <input matInput customInputAccessor placeholder="Placeholder">
+    </mat-form-field>`,
+  imports: [MatInputModule, CustomMatInputAccessor],
+})
+class MatInputWithCustomAccessor {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl>
+      </select>
+    </mat-form-field>`,
+  imports: [MatInputModule],
+})
+class MatInputSelectWithoutOptions {}
+
+@Component({
+  template: `
     <mat-form-field [color]="color">
       <input matNativeControl>
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputWithColor {
   color: ThemePalette;
@@ -2322,7 +2313,7 @@ class MatInputWithColor {
 
     <input class="outside" matNativeControl>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputInsideOutsideFormField {}
 
@@ -2332,7 +2323,7 @@ class MatInputInsideOutsideFormField {}
       <mat-label>Hello</mat-label>
       <input matInput [formControl]="formControl">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithRequiredFormControl {
   formControl = new FormControl('', [Validators.required]);
@@ -2344,7 +2335,7 @@ class MatInputWithRequiredFormControl {
       <input matInput>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class MatInputSimple {}
 
@@ -2358,7 +2349,7 @@ class MatInputSimple {}
       <ng-container matIconSuffix>icon-suffix</ng-container>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatInputModule],
 })
 class InputWithNgContainerPrefixAndSuffix {}
 
@@ -2368,7 +2359,7 @@ class InputWithNgContainerPrefixAndSuffix {}
       <mat-label>Hello</mat-label>
       <input matInput [formControl]="formControl">
     </mat-form-field>`,
-  standalone: false,
+  imports: [MatInputModule, ReactiveFormsModule],
 })
 class MatInputWithRequiredAssignableFormControl {
   formControl = new FormControl('', [Validators.required]);

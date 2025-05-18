@@ -1,41 +1,32 @@
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
-import {Component, DebugElement, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, DebugElement, ViewChild} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatGridTile, MatGridTileText} from './grid-tile';
 import {MatGridList, MatGridListModule} from './index';
 
 describe('MatGridList', () => {
-  function createComponent<T>(componentType: Type<T>): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [MatGridListModule],
-      declarations: [componentType],
-    });
-
-    return TestBed.createComponent<T>(componentType);
-  }
-
   it('should throw error if cols is not defined', () => {
-    const fixture = createComponent(GridListWithoutCols);
+    const fixture = TestBed.createComponent(GridListWithoutCols);
 
     expect(() => fixture.detectChanges()).toThrowError(/must pass in number of columns/);
   });
 
   it('should throw error if rowHeight ratio is invalid', () => {
     expect(() => {
-      const fixture = createComponent(GridListWithInvalidRowHeightRatio);
+      const fixture = TestBed.createComponent(GridListWithInvalidRowHeightRatio);
       fixture.detectChanges();
     }).toThrowError(/invalid ratio given for row-height/);
   });
 
   it('should throw error if tile colspan is wider than total cols', () => {
-    const fixture = createComponent(GridListWithTooWideColspan);
+    const fixture = TestBed.createComponent(GridListWithTooWideColspan);
 
     expect(() => fixture.detectChanges()).toThrowError(/tile with colspan 5 is wider than grid/);
   });
 
   it('should not throw when setting the `rowHeight` programmatically before init', () => {
-    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedRowHeight);
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     expect(() => {
@@ -48,7 +39,7 @@ describe('MatGridList', () => {
   });
 
   it('should preserve value when zero is set as row height', () => {
-    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedRowHeight);
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!.componentInstance;
 
     gridList.rowHeight = 0;
@@ -56,7 +47,7 @@ describe('MatGridList', () => {
   });
 
   it('should set the columns to zero if a negative number is passed in', () => {
-    const fixture = createComponent(GridListWithDynamicCols);
+    const fixture = TestBed.createComponent(GridListWithDynamicCols);
     fixture.detectChanges();
 
     expect(fixture.componentInstance.gridList.cols).toBe(2);
@@ -71,7 +62,7 @@ describe('MatGridList', () => {
   });
 
   it('should default to 1:1 row height if undefined ', () => {
-    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedRowHeight);
 
     fixture.detectChanges();
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
@@ -84,7 +75,7 @@ describe('MatGridList', () => {
   });
 
   it('should use a ratio row height if passed in', () => {
-    const fixture = createComponent(GirdListWithRowHeightRatio);
+    const fixture = TestBed.createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
     fixture.changeDetectorRef.markForCheck();
@@ -107,7 +98,7 @@ describe('MatGridList', () => {
   });
 
   it('should divide row height evenly in "fit" mode', () => {
-    const fixture = createComponent(GridListWithFitRowHeightMode);
+    const fixture = TestBed.createComponent(GridListWithFitRowHeightMode);
 
     fixture.componentInstance.totalHeight = '300px';
     fixture.changeDetectorRef.markForCheck();
@@ -126,7 +117,7 @@ describe('MatGridList', () => {
   });
 
   it('should use the fixed row height if passed in', () => {
-    const fixture = createComponent(GridListWithFixedRowHeightMode);
+    const fixture = TestBed.createComponent(GridListWithFixedRowHeightMode);
 
     fixture.componentInstance.rowHeight = '100px';
     fixture.changeDetectorRef.markForCheck();
@@ -143,7 +134,7 @@ describe('MatGridList', () => {
   });
 
   it('should default to pixels if row height units are missing', () => {
-    const fixture = createComponent(GridListWithUnitlessFixedRowHeight);
+    const fixture = TestBed.createComponent(GridListWithUnitlessFixedRowHeight);
 
     fixture.detectChanges();
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
@@ -151,7 +142,7 @@ describe('MatGridList', () => {
   });
 
   it('should default gutter size to 1px', () => {
-    const fixture = createComponent(GridListWithUnspecifiedGutterSize);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedGutterSize);
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -166,7 +157,7 @@ describe('MatGridList', () => {
   });
 
   it('should be able to set the gutter size to zero', () => {
-    const fixture = createComponent(GridListWithUnspecifiedGutterSize);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedGutterSize);
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     gridList.componentInstance.gutterSize = 0;
@@ -185,7 +176,7 @@ describe('MatGridList', () => {
   });
 
   it('should lay out the tiles correctly for a nested grid list', () => {
-    const fixture = createComponent(NestedGridList);
+    const fixture = TestBed.createComponent(NestedGridList);
 
     fixture.detectChanges();
     const innerTiles = fixture.debugElement.queryAll(
@@ -198,7 +189,7 @@ describe('MatGridList', () => {
   });
 
   it('should set the gutter size if passed', () => {
-    const fixture = createComponent(GridListWithGutterSize);
+    const fixture = TestBed.createComponent(GridListWithGutterSize);
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -213,7 +204,7 @@ describe('MatGridList', () => {
   });
 
   it('should use pixels if gutter units are missing', () => {
-    const fixture = createComponent(GridListWithUnitlessGutterSize);
+    const fixture = TestBed.createComponent(GridListWithUnitlessGutterSize);
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -228,7 +219,7 @@ describe('MatGridList', () => {
   });
 
   it('should allow alternate units for the gutter size', () => {
-    const fixture = createComponent(GridListWithUnspecifiedGutterSize);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedGutterSize);
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     gridList.componentInstance.gutterSize = '10%';
@@ -242,7 +233,7 @@ describe('MatGridList', () => {
   });
 
   it('should set the correct list height in ratio mode', () => {
-    const fixture = createComponent(GridListWithRatioHeightAndMulipleRows);
+    const fixture = TestBed.createComponent(GridListWithRatioHeightAndMulipleRows);
 
     fixture.detectChanges();
     const list = fixture.debugElement.query(By.directive(MatGridList))!;
@@ -254,7 +245,7 @@ describe('MatGridList', () => {
   });
 
   it('should set the correct list height in fixed mode', () => {
-    const fixture = createComponent(GridListWithFixRowHeightAndMultipleRows);
+    const fixture = TestBed.createComponent(GridListWithFixRowHeightAndMultipleRows);
 
     fixture.detectChanges();
     const list = fixture.debugElement.query(By.directive(MatGridList))!;
@@ -262,7 +253,7 @@ describe('MatGridList', () => {
   });
 
   it('should allow adjustment of tile colspan', () => {
-    const fixture = createComponent(GridListWithColspanBinding);
+    const fixture = TestBed.createComponent(GridListWithColspanBinding);
 
     fixture.componentInstance.colspan = 2;
     fixture.changeDetectorRef.markForCheck();
@@ -278,7 +269,7 @@ describe('MatGridList', () => {
   });
 
   it('should allow adjustment of tile rowspan', () => {
-    const fixture = createComponent(GridListWithRowspanBinding);
+    const fixture = TestBed.createComponent(GridListWithRowspanBinding);
 
     fixture.componentInstance.rowspan = 2;
     fixture.changeDetectorRef.markForCheck();
@@ -294,7 +285,7 @@ describe('MatGridList', () => {
   });
 
   it('should lay out tiles correctly for a complex layout', () => {
-    const fixture = createComponent(GridListWithComplexLayout);
+    const fixture = TestBed.createComponent(GridListWithComplexLayout);
 
     fixture.componentInstance.tiles = [
       {cols: 3, rows: 1},
@@ -329,7 +320,7 @@ describe('MatGridList', () => {
   });
 
   it('should lay out tiles correctly', () => {
-    const fixture = createComponent(GridListWithLayout);
+    const fixture = TestBed.createComponent(GridListWithLayout);
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -361,7 +352,7 @@ describe('MatGridList', () => {
   });
 
   it('should lay out tiles correctly when single cell to be placed at the beginning', () => {
-    const fixture = createComponent(GridListWithSingleCellAtBeginning);
+    const fixture = TestBed.createComponent(GridListWithSingleCellAtBeginning);
 
     fixture.detectChanges();
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
@@ -387,7 +378,7 @@ describe('MatGridList', () => {
   });
 
   it('should add not add any classes to footers without lines', () => {
-    const fixture = createComponent(GridListWithFootersWithoutLines);
+    const fixture = TestBed.createComponent(GridListWithFootersWithoutLines);
     fixture.detectChanges();
 
     const footer = fixture.debugElement.query(By.directive(MatGridTileText))!;
@@ -395,7 +386,7 @@ describe('MatGridList', () => {
   });
 
   it('should add class to footers with two lines', () => {
-    const fixture = createComponent(GridListWithFooterContainingTwoLines);
+    const fixture = TestBed.createComponent(GridListWithFooterContainingTwoLines);
     fixture.detectChanges();
 
     const footer = fixture.debugElement.query(By.directive(MatGridTileText))!;
@@ -403,7 +394,7 @@ describe('MatGridList', () => {
   });
 
   it('should add class to footers with two indirect descendant lines', () => {
-    const fixture = createComponent(GridListWithFooterContainingTwoIndirectDescendantLines);
+    const fixture = TestBed.createComponent(GridListWithFooterContainingTwoIndirectDescendantLines);
     fixture.detectChanges();
 
     const footer = fixture.debugElement.query(By.directive(MatGridTileText))!;
@@ -411,7 +402,7 @@ describe('MatGridList', () => {
   });
 
   it('should not use calc() that evaluates to 0', () => {
-    const fixture = createComponent(GirdListWithRowHeightRatio);
+    const fixture = TestBed.createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
     fixture.changeDetectorRef.markForCheck();
@@ -424,7 +415,7 @@ describe('MatGridList', () => {
   });
 
   it('should reset the old styles when switching to a new tile styler', () => {
-    const fixture = createComponent(GirdListWithRowHeightRatio);
+    const fixture = TestBed.createComponent(GirdListWithRowHeightRatio);
 
     fixture.componentInstance.rowHeight = '4:1';
     fixture.changeDetectorRef.markForCheck();
@@ -459,7 +450,7 @@ describe('MatGridList', () => {
   });
 
   it('should ensure that all tiles are inside the grid when there are no matching gaps', () => {
-    const fixture = createComponent(GridListWithoutMatchingGap);
+    const fixture = TestBed.createComponent(GridListWithoutMatchingGap);
     const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
 
     fixture.detectChanges();
@@ -469,7 +460,7 @@ describe('MatGridList', () => {
   });
 
   it('should default to LTR if empty directionality is given', () => {
-    const fixture = createComponent(GridListWithEmptyDirectionality);
+    const fixture = TestBed.createComponent(GridListWithEmptyDirectionality);
     const tile: HTMLElement = fixture.debugElement.query(By.css('mat-grid-tile'))!.nativeElement;
     fixture.detectChanges();
 
@@ -478,7 +469,7 @@ describe('MatGridList', () => {
   });
 
   it('should set `right` styles for RTL', () => {
-    const fixture = createComponent(GridListWithRtl);
+    const fixture = TestBed.createComponent(GridListWithRtl);
     const tile: HTMLElement = fixture.debugElement.query(By.css('mat-grid-tile'))!.nativeElement;
     fixture.detectChanges();
 
@@ -487,7 +478,7 @@ describe('MatGridList', () => {
   });
 
   it('should lay out the tiles if they are not direct descendants of the list', () => {
-    const fixture = createComponent(GridListWithIndirectTileDescendants);
+    const fixture = TestBed.createComponent(GridListWithIndirectTileDescendants);
 
     fixture.detectChanges();
     const tile = fixture.debugElement.query(By.directive(MatGridTile))!;
@@ -499,7 +490,7 @@ describe('MatGridList', () => {
   });
 
   it('should throw if an invalid value is set as the `rowHeight`', () => {
-    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const fixture = TestBed.createComponent(GridListWithUnspecifiedRowHeight);
     const gridList = fixture.debugElement.query(By.directive(MatGridList))!;
 
     expect(() => {
@@ -543,22 +534,25 @@ function getComputedLeft(element: DebugElement): number {
   return elementRect.left - bodyRect.left;
 }
 
-@Component({template: '<mat-grid-list></mat-grid-list>', standalone: false})
+@Component({template: '<mat-grid-list></mat-grid-list>', imports: [MatGridListModule]})
 class GridListWithoutCols {}
 
 @Component({
   template: '<mat-grid-list cols="4" rowHeight="4:3:2"></mat-grid-list>',
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithInvalidRowHeightRatio {}
 
 @Component({
   template: '<mat-grid-list cols="4"><mat-grid-tile colspan="5"></mat-grid-tile></mat-grid-list>',
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithTooWideColspan {}
 
-@Component({template: '<mat-grid-list [cols]="cols"></mat-grid-list>', standalone: false})
+@Component({
+  template: '<mat-grid-list [cols]="cols"></mat-grid-list>',
+  imports: [MatGridListModule],
+})
 class GridListWithDynamicCols {
   @ViewChild(MatGridList) gridList: MatGridList;
   cols = 2;
@@ -571,7 +565,7 @@ class GridListWithDynamicCols {
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithUnspecifiedRowHeight {}
 
@@ -582,7 +576,7 @@ class GridListWithUnspecifiedRowHeight {}
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GirdListWithRowHeightRatio {
   rowHeight: string;
@@ -594,7 +588,7 @@ class GirdListWithRowHeightRatio {
       <mat-grid-tile></mat-grid-tile>
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFitRowHeightMode {
   totalHeight: string;
@@ -605,7 +599,7 @@ class GridListWithFitRowHeightMode {
     <mat-grid-list cols="4" [rowHeight]="rowHeight">
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFixedRowHeightMode {
   rowHeight: string;
@@ -616,7 +610,7 @@ class GridListWithFixedRowHeightMode {
     <mat-grid-list cols="4" rowHeight="100">
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithUnitlessFixedRowHeight {
   rowHeight: string;
@@ -631,7 +625,7 @@ class GridListWithUnitlessFixedRowHeight {
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithUnspecifiedGutterSize {}
 
@@ -644,7 +638,7 @@ class GridListWithUnspecifiedGutterSize {}
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithGutterSize {}
 
@@ -657,7 +651,7 @@ class GridListWithGutterSize {}
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithUnitlessGutterSize {}
 
@@ -669,7 +663,7 @@ class GridListWithUnitlessGutterSize {}
         <mat-grid-tile></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithRatioHeightAndMulipleRows {}
 
@@ -679,7 +673,7 @@ class GridListWithRatioHeightAndMulipleRows {}
       <mat-grid-tile></mat-grid-tile>
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFixRowHeightAndMultipleRows {}
 
@@ -690,7 +684,7 @@ class GridListWithFixRowHeightAndMultipleRows {}
         <mat-grid-tile [colspan]="colspan"></mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithColspanBinding {
   colspan: number;
@@ -701,7 +695,7 @@ class GridListWithColspanBinding {
     <mat-grid-list cols="1" rowHeight="100px">
       <mat-grid-tile [rowspan]="rowspan"></mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithRowspanBinding {
   rowspan: number;
@@ -719,7 +713,7 @@ class GridListWithRowspanBinding {
         }
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithComplexLayout {
   tiles: any[];
@@ -736,7 +730,7 @@ class GridListWithComplexLayout {
       <mat-grid-tile [colspan]="4" [rowspan]="4"></mat-grid-tile>
     </mat-grid-list>
   </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithLayout {}
 
@@ -750,7 +744,7 @@ class GridListWithLayout {}
       <mat-grid-tile [colspan]="1" [rowspan]="2"></mat-grid-tile>
     </mat-grid-list>
   </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithSingleCellAtBeginning {}
 
@@ -763,7 +757,7 @@ class GridListWithSingleCellAtBeginning {}
         </mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFootersWithoutLines {}
 
@@ -777,7 +771,7 @@ class GridListWithFootersWithoutLines {}
         </mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFooterContainingTwoLines {}
 
@@ -793,7 +787,7 @@ class GridListWithFooterContainingTwoLines {}
         </mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithFooterContainingTwoIndirectDescendantLines {}
 
@@ -806,21 +800,21 @@ class GridListWithFooterContainingTwoIndirectDescendantLines {}
     <mat-grid-tile [rowspan]="2" [colspan]="2">4</mat-grid-tile>
   </mat-grid-list>
 `,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithoutMatchingGap {}
 
 @Component({
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [provideFakeDirectionality('ltr')],
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithEmptyDirectionality {}
 
 @Component({
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [provideFakeDirectionality('rtl')],
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithRtl {}
 
@@ -835,7 +829,7 @@ class GridListWithRtl {}
       </mat-grid-list>
     </div>
   `,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class GridListWithIndirectTileDescendants {}
 
@@ -853,6 +847,6 @@ class GridListWithIndirectTileDescendants {}
         </mat-grid-tile>
       </mat-grid-list>
     </div>`,
-  standalone: false,
+  imports: [MatGridListModule],
 })
 class NestedGridList {}
