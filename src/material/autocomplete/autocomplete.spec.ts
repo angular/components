@@ -37,18 +37,18 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
 import {By} from '@angular/platform-browser';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
-import {MatFormField, MatFormFieldModule} from '../form-field';
+import {MATERIAL_ANIMATIONS, MatOptgroup, MatOption, MatOptionSelectionChange} from '../core';
+import {MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {
   MAT_AUTOCOMPLETE_DEFAULT_OPTIONS,
   MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
   MatAutocomplete,
   MatAutocompleteDefaultOptions,
-  MatAutocompleteModule,
   MatAutocompleteOrigin,
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
@@ -61,23 +61,13 @@ describe('MatAutocomplete', () => {
   // Creates a test component fixture.
   function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
     TestBed.configureTestingModule({
-      imports: [
-        MatAutocompleteModule,
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        OverlayModule,
-      ],
       providers: [
         ...providers,
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [component],
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
-
     return TestBed.createComponent<T>(component);
   }
 
@@ -4022,7 +4012,16 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
   </mat-autocomplete>
 `;
 
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE, standalone: false})
+@Component({
+  template: SIMPLE_AUTOCOMPLETE_TEMPLATE,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
+})
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];
@@ -4081,27 +4080,40 @@ class SimpleAutocomplete implements OnDestroy {
 @Component({
   template: SIMPLE_AUTOCOMPLETE_TEMPLATE,
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
 })
 class SimpleAutocompleteShadowDom extends SimpleAutocomplete {}
 
 @Component({
   template: `
     @if (isVisible) {
-<mat-form-field>
-      <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
-    </mat-form-field>
-}
+      <mat-form-field>
+        <input matInput placeholder="Choose" [matAutocomplete]="auto" [formControl]="optionCtrl">
+      </mat-form-field>
+    }
 
     <mat-autocomplete #auto="matAutocomplete">
       @for (option of filteredOptions | async; track option) {
-  <mat-option [value]="option">
-         {{option}}
-      </mat-option>
-}
+        <mat-option [value]="option">
+          {{option}}
+        </mat-option>
+      }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+  ],
 })
 class NgIfAutocomplete {
   optionCtrl = new FormControl('');
@@ -4139,7 +4151,7 @@ class NgIfAutocomplete {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
 })
 class AutocompleteWithoutForms {
   filteredStates: any[];
@@ -4169,7 +4181,7 @@ class AutocompleteWithoutForms {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
 })
 class AutocompleteWithNgModel {
   filteredStates: any[];
@@ -4201,7 +4213,7 @@ class AutocompleteWithNgModel {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
 })
 class AutocompleteWithNumbers {
   selectedNumber: number;
@@ -4221,7 +4233,13 @@ class AutocompleteWithNumbers {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
 })
 class AutocompleteWithOnPushDelay implements OnInit {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4244,7 +4262,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule, AsyncPipe],
 })
 class AutocompleteWithNativeInput {
   optionCtrl = new FormControl('');
@@ -4268,7 +4286,7 @@ class AutocompleteWithNativeInput {
 
 @Component({
   template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule],
 })
 class AutocompleteWithoutPanel {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4293,7 +4311,14 @@ class AutocompleteWithoutPanel {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOptgroup,
+    MatOption,
+    MatInputModule,
+    FormsModule,
+  ],
 })
 class AutocompleteWithGroups {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4334,7 +4359,14 @@ class AutocompleteWithGroups {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOptgroup,
+    MatOption,
+    MatInputModule,
+    FormsModule,
+  ],
 })
 class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
 
@@ -4352,7 +4384,7 @@ class AutocompleteWithIndirectGroups extends AutocompleteWithGroups {}
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
 })
 class AutocompleteWithSelectEvent {
   selectedState: string;
@@ -4368,7 +4400,7 @@ class AutocompleteWithSelectEvent {
     <input [formControl]="formControl" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, ReactiveFormsModule],
 })
 class PlainAutocompleteInputWithFormControl {
   formControl = new FormControl('');
@@ -4386,7 +4418,7 @@ class PlainAutocompleteInputWithFormControl {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule, FormsModule],
 })
 class AutocompleteWithNumberInputAndNgModel {
   selectedValue: number;
@@ -4419,7 +4451,14 @@ class AutocompleteWithNumberInputAndNgModel {
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatAutocompleteOrigin,
+    MatOption,
+    MatInputModule,
+    FormsModule,
+  ],
 })
 class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
@@ -4434,7 +4473,7 @@ class AutocompleteWithDifferentOrigin {
     <input autocomplete="changed" [(ngModel)]="value" [matAutocomplete]="auto"/>
     <mat-autocomplete #auto="matAutocomplete"></mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, FormsModule],
 })
 class AutocompleteWithNativeAutocompleteAttribute {
   value: string;
@@ -4442,7 +4481,7 @@ class AutocompleteWithNativeAutocompleteAttribute {
 
 @Component({
   template: '<input [matAutocomplete]="null" matAutocompleteDisabled>',
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption],
 })
 class InputWithoutAutocompleteAndDisabled {}
 
@@ -4458,7 +4497,7 @@ class InputWithoutAutocompleteAndDisabled {}
       }
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
 })
 class AutocompleteWithActivatedEvent {
   states = ['California', 'West Virginia', 'Florida'];
@@ -4470,7 +4509,6 @@ class AutocompleteWithActivatedEvent {
 }
 
 @Component({
-  selector: 'autocomplete-inside-a-modal',
   template: `
     <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">open dialog</button>
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="true"
@@ -4488,7 +4526,14 @@ class AutocompleteWithActivatedEvent {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatOption,
+    MatInputModule,
+    ReactiveFormsModule,
+    OverlayModule,
+  ],
 })
 class AutocompleteInsideAModal {
   foods = [
@@ -4506,7 +4551,6 @@ class AutocompleteInsideAModal {
 }
 
 @Component({
-  selector: 'autocomplete-without-options',
   template: `
     <mat-form-field>
       <input matInput [matAutocomplete]="auto">
@@ -4515,7 +4559,7 @@ class AutocompleteInsideAModal {
     <mat-autocomplete #auto="matAutocomplete">
     </mat-autocomplete>
   `,
-  standalone: false,
+  imports: [MatAutocomplete, MatAutocompleteTrigger, MatOption, MatInputModule],
 })
 class AutocompleteWithoutOptions {
   @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;

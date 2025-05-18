@@ -1,4 +1,3 @@
-import {OverlayModule} from '@angular/cdk/overlay';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {
   Component,
@@ -12,10 +11,10 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MATERIAL_ANIMATIONS, MatOption} from '../core';
-import {MatFormField, MatFormFieldModule} from '../form-field';
+import {MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatAutocomplete} from './autocomplete';
 import {MatAutocompleteTrigger} from './autocomplete-trigger';
@@ -25,20 +24,11 @@ describe('MatAutocomplete Zone.js integration', () => {
   // Creates a test component fixture.
   function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
     TestBed.configureTestingModule({
-      imports: [
-        MatAutocompleteModule,
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        OverlayModule,
-      ],
       providers: [
         provideZoneChangeDetection(),
         ...providers,
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [component],
     });
 
     return TestBed.createComponent<T>(component);
@@ -91,41 +81,42 @@ describe('MatAutocomplete Zone.js integration', () => {
   }));
 });
 
-const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
-  <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width" [color]="theme">
-    @if (hasLabel) {
-      <mat-label>State</mat-label>
-    }
-    <input
-      matInput
-      placeholder="State"
-      [matAutocomplete]="auto"
-      [matAutocompletePosition]="position"
-      [matAutocompleteDisabled]="autocompleteDisabled"
-      [formControl]="stateCtrl">
-  </mat-form-field>
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    [class]="panelClass"
-    [displayWith]="displayFn"
-    [disableRipple]="disableRipple"
-    [requireSelection]="requireSelection"
-    [aria-label]="ariaLabel"
-    [aria-labelledby]="ariaLabelledby"
-    (opened)="openedSpy()"
-    (closed)="closedSpy()">
-    @for (state of filteredStates; track state) {
-      <mat-option
-        [value]="state"
-        [style.height.px]="state.height"
-        [disabled]="state.disabled">
-        <span>{{ state.code }}: {{ state.name }}</span>
-      </mat-option>
-    }
-  </mat-autocomplete>
-`;
-
-@Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE, standalone: false})
+@Component({
+  template: `
+    <mat-form-field [floatLabel]="floatLabel" [style.width.px]="width" [color]="theme">
+      @if (hasLabel) {
+        <mat-label>State</mat-label>
+      }
+      <input
+        matInput
+        placeholder="State"
+        [matAutocomplete]="auto"
+        [matAutocompletePosition]="position"
+        [matAutocompleteDisabled]="autocompleteDisabled"
+        [formControl]="stateCtrl">
+    </mat-form-field>
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [class]="panelClass"
+      [displayWith]="displayFn"
+      [disableRipple]="disableRipple"
+      [requireSelection]="requireSelection"
+      [aria-label]="ariaLabel"
+      [aria-labelledby]="ariaLabelledby"
+      (opened)="openedSpy()"
+      (closed)="closedSpy()">
+      @for (state of filteredStates; track state) {
+        <mat-option
+          [value]="state"
+          [style.height.px]="state.height"
+          [disabled]="state.disabled">
+          <span>{{ state.code }}: {{ state.name }}</span>
+        </mat-option>
+      }
+    </mat-autocomplete>
+  `,
+  imports: [MatAutocompleteModule, MatInputModule, ReactiveFormsModule],
+})
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);
   filteredStates: any[];

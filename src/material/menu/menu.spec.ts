@@ -1,5 +1,5 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Direction} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -23,11 +23,9 @@ import {
   OnDestroy,
   Output,
   provideCheckNoChangesConfig,
-  Provider,
   QueryList,
   signal,
   TemplateRef,
-  Type,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -50,6 +48,7 @@ import {MatMenu, MatMenuItem, MatMenuModule} from './index';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MAT_MENU_SCROLL_STRATEGY,
+  MatMenuContent,
   MatMenuPanel,
   MatMenuTrigger,
   MenuPositionX,
@@ -60,35 +59,22 @@ const MENU_PANEL_TOP_PADDING = 8;
 
 describe('MatMenu', () => {
   let overlayContainerElement: HTMLElement;
-  let focusMonitor: FocusMonitor;
-  let viewportRuler: ViewportRuler;
 
-  function createComponent<T>(
-    component: Type<T>,
-    providers: Provider[] = [],
-    declarations: any[] = [],
-    imports: Type<unknown>[] = [],
-  ): ComponentFixture<T> {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideCheckNoChangesConfig({exhaustive: false}),
-        ...providers,
-        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
-      ],
-      imports: [MatMenuModule, ...imports],
-      declarations: [component, ...declarations],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
-    focusMonitor = TestBed.inject(FocusMonitor);
-    viewportRuler = TestBed.inject(ViewportRuler);
-    const fixture = TestBed.createComponent<T>(component);
     window.scroll(0, 0);
-    return fixture;
-  }
+  });
+
+  afterEach(() => {
+    window.scroll(0, 0);
+  });
 
   it('should aria-controls the menu panel', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -99,7 +85,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set aria-haspopup based on whether a menu is assigned', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerElement = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -113,7 +99,7 @@ describe('MatMenu', () => {
   }));
 
   it('should open the menu as an idempotent operation', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     expect(overlayContainerElement.textContent).toBe('');
     expect(() => {
@@ -128,7 +114,7 @@ describe('MatMenu', () => {
   }));
 
   it('should close the menu when a click occurs outside the menu', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
@@ -141,7 +127,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to remove the backdrop', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.menu.hasBackdrop = false;
@@ -153,7 +139,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the correct aria-haspopup value on the trigger element', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerElement = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -161,7 +147,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openMenu();
@@ -188,7 +174,7 @@ describe('MatMenu', () => {
   }));
 
   it('should restore focus to the trigger when the menu was opened by keyboard', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -206,7 +192,7 @@ describe('MatMenu', () => {
   }));
 
   it('should not restore focus to the trigger if focus restoration is disabled', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -228,7 +214,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to move focus in the closed event', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     const instance = fixture.componentInstance;
     fixture.detectChanges();
     const triggerEl = instance.triggerEl.nativeElement;
@@ -250,7 +236,7 @@ describe('MatMenu', () => {
   }));
 
   it('should restore focus to the trigger immediately once the menu is closed', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -273,7 +259,9 @@ describe('MatMenu', () => {
   it('should move focus to another item if the active item is destroyed', fakeAsync(() => {
     // TODO(crisbeto): figure out why NoopAnimationsModule is necessary
     // here and our token isn't enough. Likely indicates an issue.
-    const fixture = createComponent(MenuWithRepeatedItems, [], [FakeIcon], [NoopAnimationsModule]);
+    TestBed.resetTestingModule().configureTestingModule({imports: [NoopAnimationsModule]});
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    const fixture = TestBed.createComponent(MenuWithRepeatedItems);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -295,7 +283,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
 
     fixture.componentInstance.backdropClass = 'custom-backdrop';
     fixture.detectChanges();
@@ -309,11 +297,16 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to set a custom class on the overlay panel', fakeAsync(() => {
-    const optionsProvider = {
-      provide: MAT_MENU_DEFAULT_OPTIONS,
-      useValue: {overlayPanelClass: 'custom-panel-class'},
-    };
-    const fixture = createComponent(SimpleMenu, [optionsProvider], [FakeIcon]);
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [
+        {
+          provide: MAT_MENU_DEFAULT_OPTIONS,
+          useValue: {overlayPanelClass: 'custom-panel-class'},
+        },
+      ],
+    });
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    const fixture = TestBed.createComponent(SimpleMenu);
 
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -326,12 +319,16 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to set a custom classes on the overlay panel', fakeAsync(() => {
-    const optionsProvider = {
-      provide: MAT_MENU_DEFAULT_OPTIONS,
-      useValue: {overlayPanelClass: ['custom-panel-class-1', 'custom-panel-class-2']},
-    };
-    const fixture = createComponent(SimpleMenu, [optionsProvider], [FakeIcon]);
-
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [
+        {
+          provide: MAT_MENU_DEFAULT_OPTIONS,
+          useValue: {overlayPanelClass: ['custom-panel-class-1', 'custom-panel-class-2']},
+        },
+      ],
+    });
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -344,7 +341,7 @@ describe('MatMenu', () => {
   }));
 
   it('should restore focus to the root trigger when the menu was opened by mouse', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
@@ -362,7 +359,7 @@ describe('MatMenu', () => {
   }));
 
   it('should restore focus to the root trigger when the menu was opened by touch', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
@@ -380,7 +377,7 @@ describe('MatMenu', () => {
   }));
 
   it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     // Add 50 items to make the menu scrollable
@@ -400,7 +397,8 @@ describe('MatMenu', () => {
   }));
 
   it('should set the proper focus origin when restoring focus after opening by keyboard', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const focusMonitor = TestBed.inject(FocusMonitor);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -418,7 +416,8 @@ describe('MatMenu', () => {
   }));
 
   it('should set the proper focus origin when restoring focus after opening by mouse', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const focusMonitor = TestBed.inject(FocusMonitor);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -437,7 +436,8 @@ describe('MatMenu', () => {
   }));
 
   it('should set proper focus origin when right clicking on trigger, before opening by keyboard', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const focusMonitor = TestBed.inject(FocusMonitor);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -461,7 +461,8 @@ describe('MatMenu', () => {
   }));
 
   it('should set the proper focus origin when restoring focus after opening by touch', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const focusMonitor = TestBed.inject(FocusMonitor);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -481,7 +482,7 @@ describe('MatMenu', () => {
   }));
 
   it('should close the menu when pressing ESCAPE', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
@@ -496,7 +497,7 @@ describe('MatMenu', () => {
   }));
 
   it('should not close the menu when pressing ESCAPE with a modifier', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
 
@@ -512,7 +513,7 @@ describe('MatMenu', () => {
   }));
 
   it('should open a custom menu', () => {
-    const fixture = createComponent(CustomMenu, [], [CustomMenuPanel]);
+    const fixture = TestBed.createComponent(CustomMenu);
     fixture.detectChanges();
     expect(overlayContainerElement.textContent).toBe('');
     expect(() => {
@@ -525,8 +526,11 @@ describe('MatMenu', () => {
   });
 
   it('should set the panel direction based on the trigger direction', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [provideFakeDirectionality('rtl')], [FakeIcon]);
-
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [provideFakeDirectionality('rtl')],
+    });
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -540,8 +544,11 @@ describe('MatMenu', () => {
 
   it('should update the panel direction if the trigger direction changes', fakeAsync(() => {
     const dir = signal<Direction>('rtl');
-    const fixture = createComponent(SimpleMenu, [provideFakeDirectionality(dir)], [FakeIcon]);
-
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [provideFakeDirectionality(dir)],
+    });
+    const fixture = TestBed.createComponent(SimpleMenu);
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -568,7 +575,7 @@ describe('MatMenu', () => {
   }));
 
   it('should transfer any custom classes from the host to the overlay', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
 
     fixture.componentInstance.panelClass = 'custom-one custom-two';
     fixture.detectChanges();
@@ -587,7 +594,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the "menu" role on the overlay panel', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -602,7 +609,7 @@ describe('MatMenu', () => {
   }));
 
   it('should forward ARIA attributes to the menu panel', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     const instance = fixture.componentInstance;
     fixture.detectChanges();
     instance.trigger.openMenu();
@@ -637,7 +644,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the "menuitem" role on the items by default', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -650,7 +657,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to set an alternate role on the menu items', fakeAsync(() => {
-    const fixture = createComponent(MenuWithCheckboxItems);
+    const fixture = TestBed.createComponent(MenuWithCheckboxItems);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -663,7 +670,7 @@ describe('MatMenu', () => {
   }));
 
   it('should not change focus origin if origin not specified for menu items', fakeAsync(() => {
-    const fixture = createComponent(MenuWithCheckboxItems);
+    const fixture = TestBed.createComponent(MenuWithCheckboxItems);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -687,32 +694,32 @@ describe('MatMenu', () => {
   }));
 
   it('should not throw an error on destroy', () => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     expect(fixture.destroy.bind(fixture)).not.toThrow();
   });
 
   it('should be able to extract the menu item text', () => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
   });
 
   it('should filter out icon nodes when figuring out the label', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const items = fixture.componentInstance.items.toArray();
     expect(items[2].getLabel()).toBe('Item with an icon');
   }));
 
   it('should get the label of an item if the text is not in a direct descendant node', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const items = fixture.componentInstance.items.toArray();
     expect(items[3].getLabel()).toBe('Item with text inside span');
   }));
 
   it('should set the proper focus origin when opening by mouse', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
 
@@ -727,7 +734,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the proper focus origin when opening by touch', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
 
@@ -742,7 +749,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the proper origin when calling focusFirstItem after the opening sequence has started', () => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
 
@@ -756,17 +763,18 @@ describe('MatMenu', () => {
 
   it('should close the menu when using the CloseScrollStrategy', fakeAsync(() => {
     const scrolledSubject = new Subject();
-    const fixture = createComponent(
-      SimpleMenu,
-      [
+    TestBed.resetTestingModule().configureTestingModule({
+      providers: [
         {provide: ScrollDispatcher, useFactory: () => ({scrolled: () => scrolledSubject})},
         {
           provide: MAT_MENU_SCROLL_STRATEGY,
           useFactory: () => () => createCloseScrollStrategy(TestBed.inject(Injector)),
         },
       ],
-      [FakeIcon],
-    );
+    });
+    overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const trigger = fixture.componentInstance.trigger;
 
@@ -782,7 +790,7 @@ describe('MatMenu', () => {
   }));
 
   it('should switch to keyboard focus when using the keyboard after opening using the mouse', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
 
     fixture.detectChanges();
     fixture.componentInstance.triggerEl.nativeElement.click();
@@ -812,7 +820,7 @@ describe('MatMenu', () => {
   }));
 
   it('should set the keyboard focus origin when opened using the keyboard', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -834,7 +842,7 @@ describe('MatMenu', () => {
   }));
 
   it('should toggle the aria-expanded attribute on the trigger', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -854,7 +862,7 @@ describe('MatMenu', () => {
   }));
 
   it('should toggle aria-expanded on the trigger in an OnPush component', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenuOnPush, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenuOnPush);
     fixture.detectChanges();
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -875,14 +883,14 @@ describe('MatMenu', () => {
 
   it('should throw if assigning a menu that contains the trigger', fakeAsync(() => {
     expect(() => {
-      const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(InvalidRecursiveMenu);
       fixture.detectChanges();
       tick(500);
     }).toThrowError(/menu cannot contain its own trigger/);
   }));
 
   it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
-    const fixture = createComponent(DynamicPanelMenu);
+    const fixture = TestBed.createComponent(DynamicPanelMenu);
     fixture.detectChanges();
     expect(overlayContainerElement.textContent).toBe('');
 
@@ -915,7 +923,7 @@ describe('MatMenu', () => {
   }));
 
   it('should focus the first item when pressing home', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openMenu();
@@ -943,7 +951,7 @@ describe('MatMenu', () => {
   }));
 
   it('should not focus the first item when pressing home with a modifier key', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openMenu();
@@ -970,7 +978,7 @@ describe('MatMenu', () => {
   }));
 
   it('should focus the last item when pressing end', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openMenu();
@@ -991,7 +999,7 @@ describe('MatMenu', () => {
   }));
 
   it('should not focus the last item when pressing end with a modifier key', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.openMenu();
@@ -1014,7 +1022,7 @@ describe('MatMenu', () => {
   }));
 
   it('should respect the DOM order, rather than insertion order, when moving focus using the arrow keys', fakeAsync(() => {
-    let fixture = createComponent(SimpleMenuWithRepeater);
+    let fixture = TestBed.createComponent(SimpleMenuWithRepeater);
 
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -1043,7 +1051,7 @@ describe('MatMenu', () => {
   }));
 
   it('should sync the focus order when an item is focused programmatically', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenuWithRepeater);
+    const fixture = TestBed.createComponent(SimpleMenuWithRepeater);
 
     // Add some more items to work with.
     for (let i = 0; i < 5; i++) {
@@ -1076,7 +1084,7 @@ describe('MatMenu', () => {
   }));
 
   it('should open submenus when the menu is inside an OnPush component', fakeAsync(() => {
-    const fixture = createComponent(LazyMenuWithOnPush);
+    const fixture = TestBed.createComponent(LazyMenuWithOnPush);
     fixture.detectChanges();
 
     // Open the top-level menu
@@ -1096,7 +1104,7 @@ describe('MatMenu', () => {
   }));
 
   it('should focus the menu panel if all items are disabled', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenuWithRepeater, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenuWithRepeater);
     fixture.componentInstance.items.forEach(item => (item.disabled = true));
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -1109,7 +1117,7 @@ describe('MatMenu', () => {
   }));
 
   it('should focus the menu panel if all items are disabled inside lazy content', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenuWithRepeaterInLazyContent, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenuWithRepeaterInLazyContent);
     fixture.componentInstance.items.forEach(item => (item.disabled = true));
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -1122,13 +1130,13 @@ describe('MatMenu', () => {
   }));
 
   it('should clear the static aria-label from the menu host', fakeAsync(() => {
-    const fixture = createComponent(StaticAriaLabelMenu);
+    const fixture = TestBed.createComponent(StaticAriaLabelMenu);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('mat-menu').hasAttribute('aria-label')).toBe(false);
   }));
 
   it('should clear the static aria-labelledby from the menu host', fakeAsync(() => {
-    const fixture = createComponent(StaticAriaLabelledByMenu);
+    const fixture = TestBed.createComponent(StaticAriaLabelledByMenu);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('mat-menu').hasAttribute('aria-labelledby')).toBe(
       false,
@@ -1136,7 +1144,7 @@ describe('MatMenu', () => {
   }));
 
   it('should clear the static aria-describedby from the menu host', fakeAsync(() => {
-    const fixture = createComponent(StaticAriaDescribedbyMenu);
+    const fixture = TestBed.createComponent(StaticAriaDescribedbyMenu);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('mat-menu').hasAttribute('aria-describedby')).toBe(
       false,
@@ -1144,7 +1152,7 @@ describe('MatMenu', () => {
   }));
 
   it('should be able to move focus inside the `open` event', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     fixture.componentInstance.trigger.menuOpened.subscribe(() => {
@@ -1159,7 +1167,7 @@ describe('MatMenu', () => {
   }));
 
   it('should default to the "below" and "after" positions', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -1171,7 +1179,8 @@ describe('MatMenu', () => {
   }));
 
   it('should keep the panel in the viewport when more items are added while open', () => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const viewportRuler = TestBed.inject(ViewportRuler);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
 
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
@@ -1195,8 +1204,7 @@ describe('MatMenu', () => {
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
-      const fixture = createComponent(SimpleLazyMenu);
-
+      const fixture = TestBed.createComponent(SimpleLazyMenu);
       fixture.detectChanges();
       fixture.componentInstance.triggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -1214,27 +1222,16 @@ describe('MatMenu', () => {
     }));
 
     it('should detach the lazy content when the menu is closed', fakeAsync(() => {
-      let destroyCount = 0;
-
-      // Note: for some reason doing `spyOn(item, 'ngOnDestroy')` doesn't work, even though a
-      // `console.log` shows that the `ngOnDestroy` gets called. We work around it with a custom
-      // directive that increments a counter.
-      @Directive({selector: '[mat-menu-item]', standalone: false})
-      class DestroyChecker implements OnDestroy {
-        ngOnDestroy(): void {
-          destroyCount++;
-        }
-      }
-
-      const fixture = createComponent(SimpleLazyMenu, undefined, [DestroyChecker]);
+      const fixture = TestBed.createComponent(SimpleLazyMenu);
       fixture.detectChanges();
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
       tick(500);
       fixture.detectChanges();
 
+      const checkers = fixture.componentInstance.destroyCheckers.toArray();
       expect(fixture.componentInstance.items.length).toBe(2);
-      expect(destroyCount).toBe(0);
+      expect(checkers.map(d => d.destroyed)).toEqual([false, false]);
 
       fixture.componentInstance.trigger.closeMenu();
       fixture.detectChanges();
@@ -1244,11 +1241,13 @@ describe('MatMenu', () => {
       expect(fixture.componentInstance.items.length)
         .withContext('Expected items to be removed from query list')
         .toBe(0);
-      expect(destroyCount).withContext('Expected ngOnDestroy to have been called').toBe(2);
+      expect(checkers.map(d => d.destroyed))
+        .withContext('Expected ngOnDestroy to have been called')
+        .toEqual([true, true]);
     }));
 
     it('should focus the first menu item when opening a lazy menu via keyboard', () => {
-      const fixture = createComponent(SimpleLazyMenu);
+      const fixture = TestBed.createComponent(SimpleLazyMenu);
       fixture.detectChanges();
 
       // A click without a mousedown before it is considered a keyboard open.
@@ -1261,8 +1260,7 @@ describe('MatMenu', () => {
     });
 
     it('should be able to open the same menu with a different context', fakeAsync(() => {
-      const fixture = createComponent(LazyMenuWithContext);
-
+      const fixture = TestBed.createComponent(LazyMenuWithContext);
       fixture.detectChanges();
       fixture.componentInstance.triggerOne.openMenu();
       fixture.detectChanges();
@@ -1290,7 +1288,7 @@ describe('MatMenu', () => {
     let trigger: HTMLElement;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(PositionedMenu);
+      fixture = TestBed.createComponent(PositionedMenu);
       fixture.detectChanges();
 
       trigger = fixture.componentInstance.triggerEl.nativeElement;
@@ -1405,7 +1403,7 @@ describe('MatMenu', () => {
 
   describe('fallback positions', () => {
     it('should fall back to "before" mode if "after" mode would not fit on screen', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -1439,7 +1437,7 @@ describe('MatMenu', () => {
     }));
 
     it('should fall back to "above" mode if "below" mode would not fit on screen', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -1467,7 +1465,7 @@ describe('MatMenu', () => {
     }));
 
     it('should re-position menu on both axes if both defaults would not fit', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -1496,7 +1494,7 @@ describe('MatMenu', () => {
     }));
 
     it('should re-position a menu with custom position set', fakeAsync(() => {
-      const fixture = createComponent(PositionedMenu);
+      const fixture = TestBed.createComponent(PositionedMenu);
       fixture.detectChanges();
       const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -1545,7 +1543,7 @@ describe('MatMenu', () => {
       readonly trigger: HTMLElement;
 
       constructor(ctor: {new (): T}, inputs: {[key: string]: any} = {}) {
-        this.fixture = createComponent(ctor);
+        this.fixture = TestBed.createComponent(ctor);
         Object.keys(inputs).forEach(
           key => ((this.fixture.componentInstance as any)[key] = inputs[key]),
         );
@@ -1636,7 +1634,7 @@ describe('MatMenu', () => {
 
   describe('animations', () => {
     it('should enable ripples on items by default', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openMenu();
@@ -1650,7 +1648,7 @@ describe('MatMenu', () => {
     }));
 
     it('should disable ripples on disabled items', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openMenu();
@@ -1664,7 +1662,7 @@ describe('MatMenu', () => {
     }));
 
     it('should disable ripples if disableRipple is set', fakeAsync(() => {
-      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      const fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
 
       fixture.componentInstance.trigger.openMenu();
@@ -1683,7 +1681,7 @@ describe('MatMenu', () => {
     let fixture: ComponentFixture<SimpleMenu>;
 
     beforeEach(fakeAsync(() => {
-      fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      fixture = TestBed.createComponent(SimpleMenu);
       fixture.detectChanges();
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
@@ -1740,23 +1738,37 @@ describe('MatMenu', () => {
     let fixture: ComponentFixture<NestedMenu>;
     let instance: NestedMenu;
     let overlay: HTMLElement;
-    let compileTestComponent = (direction: Direction = 'ltr') => {
-      fixture = createComponent(NestedMenu, [provideFakeDirectionality(direction)]);
+    let direction: Direction;
 
+    beforeEach(() => {
+      direction = 'ltr';
+      TestBed.resetTestingModule().configureTestingModule({
+        providers: [
+          provideCheckNoChangesConfig({exhaustive: false}),
+          {
+            provide: Directionality,
+            useValue: {
+              get value() {
+                return direction;
+              },
+            },
+          },
+        ],
+      });
+      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+      fixture = TestBed.createComponent(NestedMenu);
       fixture.detectChanges();
       instance = fixture.componentInstance;
       overlay = overlayContainerElement;
-    };
+    });
 
     it('should set the `triggersSubmenu` flags on the triggers', fakeAsync(() => {
-      compileTestComponent();
       expect(instance.rootTrigger.triggersSubmenu()).toBe(false);
       expect(instance.levelOneTrigger.triggersSubmenu()).toBe(true);
       expect(instance.levelTwoTrigger.triggersSubmenu()).toBe(true);
     }));
 
     it('should set the `parentMenu` on the sub-menu instances', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -1775,7 +1787,7 @@ describe('MatMenu', () => {
     }));
 
     it('should pass the layout direction the nested menus', fakeAsync(() => {
-      compileTestComponent('rtl');
+      direction = 'rtl';
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
 
@@ -1793,7 +1805,6 @@ describe('MatMenu', () => {
     }));
 
     it('should emit an event when the hover state of the menu items changes', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -1818,7 +1829,6 @@ describe('MatMenu', () => {
     }));
 
     it('should toggle a nested menu when its trigger is hovered', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
@@ -1854,7 +1864,6 @@ describe('MatMenu', () => {
     }));
 
     it('should close all the open sub-menus when the hover state is changed at the root', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
 
@@ -1884,7 +1893,6 @@ describe('MatMenu', () => {
     }));
 
     it('should close submenu when hovering over disabled sibling item', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -1914,7 +1922,6 @@ describe('MatMenu', () => {
     }));
 
     it('should not open submenu when hovering over disabled trigger', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -1940,7 +1947,6 @@ describe('MatMenu', () => {
     }));
 
     it('should open a nested menu when its trigger is clicked', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -1965,7 +1971,6 @@ describe('MatMenu', () => {
     }));
 
     it('should open and close a nested menu with arrow keys in ltr', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
@@ -1988,7 +1993,7 @@ describe('MatMenu', () => {
     }));
 
     it('should open and close a nested menu with the arrow keys in rtl', fakeAsync(() => {
-      compileTestComponent('rtl');
+      direction = 'rtl';
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
@@ -2011,7 +2016,6 @@ describe('MatMenu', () => {
     }));
 
     it('should not do anything with the arrow keys for a top-level menu', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -2034,7 +2038,6 @@ describe('MatMenu', () => {
     }));
 
     it('should close all of the menus when the backdrop is clicked', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -2067,7 +2070,6 @@ describe('MatMenu', () => {
     }));
 
     it('should shift focus between the sub-menus', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2110,7 +2112,6 @@ describe('MatMenu', () => {
     }));
 
     it('should restore focus to a nested trigger when navigating via the keyboard', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
 
@@ -2131,7 +2132,6 @@ describe('MatMenu', () => {
     }));
 
     it('should position the sub-menu to the right edge of the trigger in ltr', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '50px';
       instance.rootTriggerEl.nativeElement.style.top = '200px';
@@ -2151,7 +2151,6 @@ describe('MatMenu', () => {
     }));
 
     it('should fall back to aligning to the left edge of the trigger in ltr', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.right = '10px';
       instance.rootTriggerEl.nativeElement.style.top = '200px';
@@ -2171,7 +2170,7 @@ describe('MatMenu', () => {
     }));
 
     it('should position the sub-menu to the left edge of the trigger in rtl', fakeAsync(() => {
-      compileTestComponent('rtl');
+      direction = 'rtl';
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '50%';
       instance.rootTriggerEl.nativeElement.style.top = '200px';
@@ -2191,7 +2190,7 @@ describe('MatMenu', () => {
     }));
 
     it('should fall back to aligning to the right edge of the trigger in rtl', fakeAsync(() => {
-      compileTestComponent('rtl');
+      direction = 'rtl';
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '10px';
       instance.rootTriggerEl.nativeElement.style.top = '200px';
@@ -2211,7 +2210,6 @@ describe('MatMenu', () => {
     }));
 
     it('should account for custom padding when offsetting the sub-menu', () => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.style.position = 'fixed';
       instance.rootTriggerEl.nativeElement.style.left = '10px';
       instance.rootTriggerEl.nativeElement.style.top = '200px';
@@ -2231,7 +2229,6 @@ describe('MatMenu', () => {
     });
 
     it('should close all of the menus when an item is clicked', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
 
@@ -2255,7 +2252,6 @@ describe('MatMenu', () => {
     }));
 
     it('should close all of the menus when the user tabs away', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
 
@@ -2279,7 +2275,6 @@ describe('MatMenu', () => {
     }));
 
     it('should set a class on the menu items that trigger a sub-menu', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2299,8 +2294,6 @@ describe('MatMenu', () => {
     }));
 
     it('should not change focus origin if origin not specified for trigger', fakeAsync(() => {
-      compileTestComponent();
-
       instance.levelOneTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2318,7 +2311,6 @@ describe('MatMenu', () => {
     }));
 
     it('should close all of the menus when the root is closed programmatically', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
 
@@ -2342,7 +2334,6 @@ describe('MatMenu', () => {
     }));
 
     it('should toggle a nested menu when its trigger is added after init', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
       tick(500);
@@ -2371,7 +2362,6 @@ describe('MatMenu', () => {
     }));
 
     it('should prevent the default mousedown action if the menu item opens a sub-menu', fakeAsync(() => {
-      compileTestComponent();
       instance.rootTrigger.openMenu();
       fixture.detectChanges();
       tick(500);
@@ -2388,7 +2378,7 @@ describe('MatMenu', () => {
     }));
 
     it('should handle the items being rendered in a repeater', fakeAsync(() => {
-      const repeaterFixture = createComponent(NestedMenuRepeater);
+      const repeaterFixture = TestBed.createComponent(NestedMenuRepeater);
       overlay = overlayContainerElement;
 
       expect(() => repeaterFixture.detectChanges()).not.toThrow();
@@ -2409,7 +2399,7 @@ describe('MatMenu', () => {
     }));
 
     it('should be able to trigger the same nested menu from different triggers', fakeAsync(() => {
-      const repeaterFixture = createComponent(NestedMenuRepeater);
+      const repeaterFixture = TestBed.createComponent(NestedMenuRepeater);
       overlay = overlayContainerElement;
 
       repeaterFixture.detectChanges();
@@ -2439,7 +2429,7 @@ describe('MatMenu', () => {
     }));
 
     it('should close the initial menu if the user moves away while animating', fakeAsync(() => {
-      const repeaterFixture = createComponent(NestedMenuRepeater);
+      const repeaterFixture = TestBed.createComponent(NestedMenuRepeater);
       overlay = overlayContainerElement;
 
       repeaterFixture.detectChanges();
@@ -2468,7 +2458,7 @@ describe('MatMenu', () => {
       'should be able to open a submenu through an item that is not a direct descendant ' +
         'of the panel',
       fakeAsync(() => {
-        const nestedFixture = createComponent(SubmenuDeclaredInsideParentMenu);
+        const nestedFixture = TestBed.createComponent(SubmenuDeclaredInsideParentMenu);
         overlay = overlayContainerElement;
 
         nestedFixture.detectChanges();
@@ -2493,7 +2483,7 @@ describe('MatMenu', () => {
       'should not close when hovering over a menu item inside a sub-menu panel that is declared' +
         'inside the root menu',
       fakeAsync(() => {
-        const nestedFixture = createComponent(SubmenuDeclaredInsideParentMenu);
+        const nestedFixture = TestBed.createComponent(SubmenuDeclaredInsideParentMenu);
         overlay = overlayContainerElement;
 
         nestedFixture.detectChanges();
@@ -2523,8 +2513,6 @@ describe('MatMenu', () => {
     );
 
     it('should not re-focus a child menu trigger when hovering another trigger', fakeAsync(() => {
-      compileTestComponent();
-
       dispatchFakeEvent(instance.rootTriggerEl.nativeElement, 'mousedown');
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -2551,7 +2539,7 @@ describe('MatMenu', () => {
   });
 
   it('should have a focus indicator', fakeAsync(() => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -2577,7 +2565,6 @@ describe('MatMenu default overrides', () => {
         },
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [SimpleMenu, FakeIcon],
     });
   }));
 
@@ -2622,8 +2609,14 @@ const SIMPLE_MENU_TEMPLATE = `
 `;
 
 @Component({
+  selector: 'mat-icon',
+  template: '<ng-content/>',
+})
+class FakeIcon {}
+
+@Component({
   template: SIMPLE_MENU_TEMPLATE,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
 })
 class SimpleMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2643,7 +2636,7 @@ class SimpleMenu {
 @Component({
   template: SIMPLE_MENU_TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
 })
 class SimpleMenuOnPush extends SimpleMenu {}
 
@@ -2654,7 +2647,7 @@ class SimpleMenuOnPush extends SimpleMenu {}
       <button mat-menu-item> Positioned Content </button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class PositionedMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2674,7 +2667,7 @@ interface TestableMenu {
       <button mat-menu-item> Not overlapped Content </button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class OverlapMenu implements TestableMenu {
   @Input() overlapTrigger: boolean;
@@ -2691,7 +2684,7 @@ class OverlapMenu implements TestableMenu {
     </ng-template>
   `,
   exportAs: 'matCustomMenu',
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class CustomMenuPanel implements MatMenuPanel {
   direction: Direction;
@@ -2714,7 +2707,7 @@ class CustomMenuPanel implements MatMenuPanel {
       <button mat-menu-item> Custom Content </button>
     </custom-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, CustomMenuPanel],
 })
 class CustomMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2766,7 +2759,7 @@ class CustomMenu {
       <button mat-menu-item>Twelve</button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class NestedMenu {
   @ViewChild('root') rootMenu: MatMenu;
@@ -2805,7 +2798,7 @@ class NestedMenu {
       <button mat-menu-item>Five</button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class NestedMenuRepeater {
   @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef<HTMLElement>;
@@ -2826,18 +2819,23 @@ class NestedMenuRepeater {
       </mat-menu>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class SubmenuDeclaredInsideParentMenu {
   @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef;
 }
 
-@Component({
-  selector: 'mat-icon',
-  template: '<ng-content></ng-content>',
-  standalone: false,
-})
-class FakeIcon {}
+// Note: for some reason doing `spyOn(item, 'ngOnDestroy')` doesn't work, even though a
+// `console.log` shows that the `ngOnDestroy` gets called. We work around it with a custom
+// directive that flips a flag.
+@Directive({selector: '[mat-menu-item]'})
+class DestroyChecker implements OnDestroy {
+  destroyed = false;
+
+  ngOnDestroy(): void {
+    this.destroyed = true;
+  }
+}
 
 @Component({
   template: `
@@ -2850,12 +2848,13 @@ class FakeIcon {}
       </ng-template>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent, DestroyChecker],
 })
 class SimpleLazyMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+  @ViewChildren(DestroyChecker) destroyCheckers: QueryList<DestroyChecker>;
 }
 
 @Component({
@@ -2876,7 +2875,7 @@ class SimpleLazyMenu {
       </ng-template>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class LazyMenuWithContext {
   @ViewChild('triggerOne') triggerOne: MatMenuTrigger;
@@ -2894,7 +2893,7 @@ class LazyMenuWithContext {
       <button mat-menu-item>Two</button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class DynamicPanelMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2911,7 +2910,7 @@ class DynamicPanelMenu {
       <button mat-menu-item role="menuitemcheckbox" aria-checked="false">Not checked</button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class MenuWithCheckboxItems {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2926,7 +2925,7 @@ class MenuWithCheckboxItems {
       }
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class SimpleMenuWithRepeater {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2949,7 +2948,7 @@ class SimpleMenuWithRepeater {
       </ng-template>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class SimpleMenuWithRepeaterInLazyContent {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
@@ -2977,7 +2976,7 @@ class SimpleMenuWithRepeaterInLazyContent {
     </mat-menu>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class LazyMenuWithOnPush {
   @ViewChild('triggerEl', {read: ElementRef}) rootTrigger: ElementRef;
@@ -2990,25 +2989,25 @@ class LazyMenuWithOnPush {
       <button [matMenuTriggerFor]="menu"></button>
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class InvalidRecursiveMenu {}
 
 @Component({
   template: '<mat-menu aria-label="label"></mat-menu>',
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class StaticAriaLabelMenu {}
 
 @Component({
   template: '<mat-menu aria-labelledby="some-element"></mat-menu>',
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class StaticAriaLabelledByMenu {}
 
 @Component({
   template: '<mat-menu aria-describedby="some-element"></mat-menu>',
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class StaticAriaDescribedbyMenu {}
 
@@ -3021,7 +3020,7 @@ class StaticAriaDescribedbyMenu {}
       }
     </mat-menu>
   `,
-  standalone: false,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
 })
 class MenuWithRepeatedItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;

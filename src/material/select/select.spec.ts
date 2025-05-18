@@ -33,7 +33,6 @@ import {
   ElementRef,
   Injector,
   OnInit,
-  Provider,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -42,14 +41,7 @@ import {
   provideCheckNoChangesConfig,
   signal,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -64,11 +56,16 @@ import {
 import {By} from '@angular/platform-browser';
 import {Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ErrorStateMatcher, MATERIAL_ANIMATIONS, MatOption, MatOptionSelectionChange} from '../core';
+import {
+  ErrorStateMatcher,
+  MATERIAL_ANIMATIONS,
+  MatOptgroup,
+  MatOption,
+  MatOptionSelectionChange,
+} from '../core';
 import {FloatLabelType, MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '../form-field';
 import {MAT_SELECT_CONFIG, MatSelectConfig} from '../select';
-import {MatSelectModule} from './index';
-import {MAT_SELECT_SCROLL_STRATEGY, MatSelect} from './select';
+import {MAT_SELECT_SCROLL_STRATEGY, MatSelect, MatSelectTrigger} from './select';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -83,23 +80,9 @@ describe('MatSelect', () => {
   let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
-  /**
-   * Configures the test module for MatSelect with the given declarations. This is broken out so
-   * that we're only compiling the necessary test components for each test in order to speed up
-   * overall test time.
-   * @param declarations Components to declare for this block
-   * @param providers Additional providers for this block
-   */
-  function configureMatSelectTestingModule(declarations: any[], providers: Provider[] = []) {
+  beforeEach(() => {
     dir = signal('ltr');
     TestBed.configureTestingModule({
-      imports: [
-        MatFormFieldModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        FormsModule,
-        OverlayModule,
-      ],
       providers: [
         provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
@@ -110,28 +93,13 @@ describe('MatSelect', () => {
             scrolled: () => scrolledSubject,
           }),
         },
-        ...providers,
       ],
-      declarations: declarations,
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
-  }
+  });
 
   describe('core', () => {
-    beforeEach(waitForAsync(() => {
-      configureMatSelectTestingModule([
-        BasicSelect,
-        SelectInsideAModal,
-        MultiSelect,
-        SelectWithGroups,
-        SelectWithGroupsAndNgContainer,
-        SelectWithFormFieldLabel,
-        SelectWithChangeEvent,
-        SelectInsideDynamicFormGroup,
-      ]);
-    }));
-
     describe('accessibility', () => {
       describe('for select', () => {
         let fixture: ComponentFixture<BasicSelect>;
@@ -1448,11 +1416,6 @@ describe('MatSelect', () => {
         // Need to recreate the testing module, because the issue we're
         // testing for only happens when animations are enabled.
         TestBed.resetTestingModule();
-        TestBed.configureTestingModule({
-          imports: [MatFormFieldModule, MatSelectModule],
-          declarations: [BasicSelect],
-        });
-
         fixture = TestBed.createComponent(BasicSelect);
         fixture.detectChanges();
         const select = fixture.componentInstance.select;
@@ -1781,8 +1744,6 @@ describe('MatSelect', () => {
 
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
-          imports: [MatFormFieldModule, MatSelectModule],
-          declarations: [BasicSelect],
           providers: [
             {
               provide: MAT_SELECT_SCROLL_STRATEGY,
@@ -2708,8 +2669,6 @@ describe('MatSelect', () => {
   });
 
   describe('when initialized without options', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectInitWithoutOptions])));
-
     it('should select the proper option when option list is initialized later', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectInitWithoutOptions);
       const instance = fixture.componentInstance;
@@ -2731,8 +2690,6 @@ describe('MatSelect', () => {
   });
 
   describe('with a selectionChange event handler', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithChangeEvent])));
-
     let fixture: ComponentFixture<SelectWithChangeEvent>;
     let trigger: HTMLElement;
 
@@ -2775,8 +2732,6 @@ describe('MatSelect', () => {
   });
 
   describe('with ngModel', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgModelSelect])));
-
     it('should disable itself when control is disabled using the property', fakeAsync(() => {
       const fixture = TestBed.createComponent(NgModelSelect);
       fixture.detectChanges();
@@ -2827,8 +2782,6 @@ describe('MatSelect', () => {
   });
 
   describe('with ngIf', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgIfSelect])));
-
     it('should handle nesting in an ngIf', fakeAsync(() => {
       const fixture = TestBed.createComponent(NgIfSelect);
       fixture.detectChanges();
@@ -2861,8 +2814,6 @@ describe('MatSelect', () => {
   });
 
   describe('with multiple mat-select elements in one view', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ManySelects])));
-
     let fixture: ComponentFixture<ManySelects>;
     let triggers: DebugElement[];
     let options: NodeListOf<HTMLElement>;
@@ -2908,8 +2859,6 @@ describe('MatSelect', () => {
   });
 
   describe('with floatLabel', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([FloatLabelSelect])));
-
     it('should be able to always float the label', () => {
       const fixture = TestBed.createComponent(FloatLabelSelect);
       fixture.detectChanges();
@@ -2929,9 +2878,7 @@ describe('MatSelect', () => {
     it('should default to global floating label type', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule, FormsModule],
         providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}],
-        declarations: [FloatLabelSelect],
       });
 
       const fixture = TestBed.createComponent(FloatLabelSelect);
@@ -2965,9 +2912,6 @@ describe('MatSelect', () => {
   });
 
   describe('with a sibling component that throws an error', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([SelectWithErrorSibling, ThrowsErrorOnInit])));
-
     it('should not crash the browser when a sibling throws an error on init', () => {
       // Note that this test can be considered successful if the error being thrown didn't
       // end up crashing the testing setup altogether.
@@ -2978,8 +2922,6 @@ describe('MatSelect', () => {
   });
 
   describe('with tabindex', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
-
     it('should be able to set the tabindex via the native attribute', () => {
       const fixture = TestBed.createComponent(SelectWithPlainTabindex);
       fixture.detectChanges();
@@ -2990,8 +2932,6 @@ describe('MatSelect', () => {
   });
 
   describe('change events', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
-
     it('should complete the stateChanges stream on destroy', () => {
       const fixture = TestBed.createComponent(SelectWithPlainTabindex);
       fixture.detectChanges();
@@ -3009,8 +2949,6 @@ describe('MatSelect', () => {
   });
 
   describe('when initially hidden', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectInitiallyHidden])));
-
     it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
       fixture.detectChanges();
@@ -3032,8 +2970,6 @@ describe('MatSelect', () => {
   });
 
   describe('with no placeholder', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectNoPlaceholder])));
-
     it('should set the width of the overlay if there is no placeholder', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
 
@@ -3050,8 +2986,6 @@ describe('MatSelect', () => {
   });
 
   describe('with theming', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectWithTheming])));
-
     let fixture: ComponentFixture<BasicSelectWithTheming>;
 
     beforeEach(() => {
@@ -3073,8 +3007,6 @@ describe('MatSelect', () => {
   });
 
   describe('when invalid inside a form', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([InvalidSelectInForm])));
-
     it('should not throw SelectionModel errors in addition to ngModel errors', () => {
       const fixture = TestBed.createComponent(InvalidSelectInForm);
 
@@ -3088,8 +3020,6 @@ describe('MatSelect', () => {
   });
 
   describe('with ngModel using compareWith', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgModelCompareWithSelect])));
-
     let fixture: ComponentFixture<NgModelCompareWithSelect>;
     let instance: NgModelCompareWithSelect;
 
@@ -3157,8 +3087,6 @@ describe('MatSelect', () => {
   });
 
   describe(`when the select's value is accessed on initialization`, () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectEarlyAccessSibling])));
-
     it('should not throw when trying to access the selected value on init in the view', () => {
       expect(() => {
         TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
@@ -3187,8 +3115,6 @@ describe('MatSelect', () => {
   });
 
   describe('with ngIf and mat-label', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithNgIfAndLabel])));
-
     it('should not throw when using ngIf on a select with an associated label', () => {
       expect(() => {
         const fixture = TestBed.createComponent(SelectWithNgIfAndLabel);
@@ -3198,8 +3124,6 @@ describe('MatSelect', () => {
   });
 
   describe('inside of a form group', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectInsideFormGroup])));
-
     let fixture: ComponentFixture<SelectInsideFormGroup>;
     let testComponent: SelectInsideFormGroup;
     let select: HTMLElement;
@@ -3311,10 +3235,7 @@ describe('MatSelect', () => {
       };
 
       fixture.destroy();
-
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatSelectModule, ReactiveFormsModule, FormsModule],
-        declarations: [SelectInsideFormGroup],
         providers: [{provide: ErrorStateMatcher, useValue: errorStateMatcher}],
       });
 
@@ -3350,8 +3271,6 @@ describe('MatSelect', () => {
   });
 
   describe('with custom error behavior', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([CustomErrorBehaviorSelect])));
-
     it('should be able to override the error matching behavior via an @Input', () => {
       const fixture = TestBed.createComponent(CustomErrorBehaviorSelect);
       const component = fixture.componentInstance;
@@ -3372,9 +3291,6 @@ describe('MatSelect', () => {
   });
 
   describe('with preselected array values', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([SingleSelectWithPreselectedArrayValues])));
-
     it('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
       const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
       fixture.detectChanges();
@@ -3389,9 +3305,6 @@ describe('MatSelect', () => {
   });
 
   describe('with custom value accessor', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([CompWithCustomSelect, CustomSelectAccessor])));
-
     it('should support use inside a custom value accessor', () => {
       const fixture = TestBed.createComponent(CompWithCustomSelect);
       spyOn(fixture.componentInstance.customAccessor, 'writeValue');
@@ -3405,8 +3318,6 @@ describe('MatSelect', () => {
   });
 
   describe('with a falsy value', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([FalsyValueSelect])));
-
     it('should be able to programmatically select a falsy option', fakeAsync(() => {
       const fixture = TestBed.createComponent(FalsyValueSelect);
 
@@ -3426,9 +3337,6 @@ describe('MatSelect', () => {
   });
 
   describe('with OnPush', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([BasicSelectOnPush, BasicSelectOnPushPreselected])));
-
     it('should set the trigger text based on the value when initialized', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectOnPushPreselected);
 
@@ -3469,8 +3377,6 @@ describe('MatSelect', () => {
   });
 
   describe('with custom trigger', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithCustomTrigger])));
-
     it('should allow the user to customize the label', () => {
       const fixture = TestBed.createComponent(SelectWithCustomTrigger);
       fixture.detectChanges();
@@ -3487,8 +3393,6 @@ describe('MatSelect', () => {
   });
 
   describe('when reseting the value by setting null or undefined', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ResetValuesSelect])));
-
     let fixture: ComponentFixture<ResetValuesSelect>;
     let trigger: HTMLElement;
     let formField: HTMLElement;
@@ -3583,8 +3487,6 @@ describe('MatSelect', () => {
   });
 
   describe('allowing selection of nullable options', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ResetValuesSelect])));
-
     let fixture: ComponentFixture<ResetValuesSelect>;
     let trigger: HTMLElement;
     let formField: HTMLElement;
@@ -3684,7 +3586,6 @@ describe('MatSelect', () => {
     let trigger: HTMLElement;
 
     beforeEach(() => {
-      configureMatSelectTestingModule([SelectWithResetOptionAndFormControl]);
       fixture = TestBed.createComponent(SelectWithResetOptionAndFormControl);
       fixture.detectChanges();
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement;
@@ -3736,13 +3637,6 @@ describe('MatSelect', () => {
   });
 
   describe('without Angular forms', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([
-        BasicSelectWithoutForms,
-        BasicSelectWithoutFormsPreselected,
-        BasicSelectWithoutFormsMultiple,
-      ])));
-
     it('should set the value when options are clicked', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectWithoutForms);
 
@@ -4086,8 +3980,6 @@ describe('MatSelect', () => {
   });
 
   describe('with option centering disabled', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithoutOptionCentering])));
-
     let fixture: ComponentFixture<SelectWithoutOptionCentering>;
     let trigger: HTMLElement;
 
@@ -4119,8 +4011,6 @@ describe('MatSelect', () => {
   });
 
   describe('positioning', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelect])));
-
     let fixture: ComponentFixture<BasicSelect>;
     let trigger: HTMLElement;
     let formField: HTMLElement;
@@ -4172,9 +4062,6 @@ describe('MatSelect', () => {
   });
 
   describe('with multiple selection', () => {
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([MultiSelect, MultiSelectWithLotsOfOptions])));
-
     let fixture: ComponentFixture<MultiSelect>;
     let testInstance: MultiSelect;
     let trigger: HTMLElement;
@@ -4643,9 +4530,9 @@ describe('MatSelect', () => {
   });
 
   it('should be able to provide default values through an injection token', fakeAsync(() => {
-    configureMatSelectTestingModule(
-      [NgModelSelect],
-      [
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
         {
           provide: MAT_SELECT_CONFIG,
           useValue: {
@@ -4656,7 +4543,7 @@ describe('MatSelect', () => {
           } as MatSelectConfig,
         },
       ],
-    );
+    });
     const fixture = TestBed.createComponent(NgModelSelect);
     fixture.detectChanges();
     const select = fixture.componentInstance.select;
@@ -4672,15 +4559,15 @@ describe('MatSelect', () => {
 
   it('should be able to hide checkmark icon through an injection token', () => {
     const matSelectConfig: MatSelectConfig = {hideSingleSelectionIndicator: true};
-    configureMatSelectTestingModule(
-      [NgModelSelect],
-      [
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
         {
           provide: MAT_SELECT_CONFIG,
           useValue: matSelectConfig,
         },
       ],
-    );
+    });
     const fixture = TestBed.createComponent(NgModelSelect);
     fixture.detectChanges();
     const select = fixture.componentInstance.select;
@@ -4705,7 +4592,6 @@ describe('MatSelect', () => {
   });
 
   it('should not not throw if the select is inside an ng-container with ngIf', () => {
-    configureMatSelectTestingModule([SelectInNgContainer]);
     const fixture = TestBed.createComponent(SelectInNgContainer);
     expect(() => fixture.detectChanges()).not.toThrow();
   });
@@ -4713,9 +4599,6 @@ describe('MatSelect', () => {
   describe('page up/down with disabled options', () => {
     let fixture: ComponentFixture<BasicSelectWithFirstAndLastOptionDisabled>;
     let host: HTMLElement;
-
-    beforeEach(waitForAsync(() =>
-      configureMatSelectTestingModule([BasicSelectWithFirstAndLastOptionDisabled])));
 
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(BasicSelectWithFirstAndLastOptionDisabled);
@@ -4762,7 +4645,6 @@ describe('MatSelect', () => {
 });
 
 @Component({
-  selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
@@ -4787,7 +4669,7 @@ describe('MatSelect', () => {
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class BasicSelect {
   foods: any[] = [
@@ -4821,7 +4703,6 @@ class BasicSelect {
 }
 
 @Component({
-  selector: 'ng-model-select',
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" ngModel [disabled]="isDisabled">
@@ -4831,7 +4712,7 @@ class BasicSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
 })
 class NgModelSelect {
   foods: any[] = [
@@ -4846,7 +4727,6 @@ class NgModelSelect {
 }
 
 @Component({
-  selector: 'many-selects',
   template: `
     <mat-form-field>
       <mat-select placeholder="First">
@@ -4861,12 +4741,11 @@ class NgModelSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class ManySelects {}
 
 @Component({
-  selector: 'ng-if-select',
   template: `
     @if (isShowing) {
       <div>
@@ -4880,7 +4759,7 @@ class ManySelects {}
       </div>
     }
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class NgIfSelect {
   isShowing = false;
@@ -4895,7 +4774,6 @@ class NgIfSelect {
 }
 
 @Component({
-  selector: 'select-with-change-event',
   template: `
     <mat-form-field>
       <mat-select (selectionChange)="changeListener($event)">
@@ -4905,7 +4783,7 @@ class NgIfSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class SelectWithChangeEvent {
   foods: string[] = [
@@ -4923,7 +4801,6 @@ class SelectWithChangeEvent {
 }
 
 @Component({
-  selector: 'select-init-without-options',
   template: `
     <mat-form-field>
       <mat-select placeholder="Food I want to eat right now" [formControl]="control">
@@ -4933,7 +4810,7 @@ class SelectWithChangeEvent {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectInitWithoutOptions {
   foods: any[];
@@ -4952,8 +4829,8 @@ class SelectInitWithoutOptions {
 }
 
 @Component({
-  selector: 'custom-select-accessor',
   template: `<mat-form-field><mat-select></mat-select></mat-form-field>`,
+  selector: 'custom-select-accessor',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -4961,7 +4838,7 @@ class SelectInitWithoutOptions {
       multi: true,
     },
   ],
-  standalone: false,
+  imports: [MatSelect, MatFormFieldModule],
 })
 class CustomSelectAccessor implements ControlValueAccessor {
   @ViewChild(MatSelect) select: MatSelect;
@@ -4972,7 +4849,6 @@ class CustomSelectAccessor implements ControlValueAccessor {
 }
 
 @Component({
-  selector: 'comp-with-custom-select',
   template: `<custom-select-accessor [formControl]="ctrl"></custom-select-accessor>`,
   providers: [
     {
@@ -4981,7 +4857,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
       multi: true,
     },
   ],
-  standalone: false,
+  imports: [CustomSelectAccessor, MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
@@ -4989,23 +4865,8 @@ class CompWithCustomSelect {
 }
 
 @Component({
-  selector: 'select-infinite-loop',
-  template: `
-    <mat-form-field>
-      <mat-select [(ngModel)]="value"></mat-select>
-    </mat-form-field>
-    <throws-error-on-init></throws-error-on-init>
-  `,
-  standalone: false,
-})
-class SelectWithErrorSibling {
-  value: string;
-}
-
-@Component({
-  selector: 'throws-error-on-init',
   template: '',
-  standalone: false,
+  selector: 'throws-error-on-init',
 })
 class ThrowsErrorOnInit implements OnInit {
   ngOnInit() {
@@ -5014,7 +4875,19 @@ class ThrowsErrorOnInit implements OnInit {
 }
 
 @Component({
-  selector: 'basic-select-on-push',
+  template: `
+    <mat-form-field>
+      <mat-select [(ngModel)]="value"></mat-select>
+    </mat-form-field>
+    <throws-error-on-init></throws-error-on-init>
+  `,
+  imports: [ThrowsErrorOnInit, MatSelect, MatOption, MatFormFieldModule, FormsModule],
+})
+class SelectWithErrorSibling {
+  value: string;
+}
+
+@Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
@@ -5025,7 +4898,7 @@ class ThrowsErrorOnInit implements OnInit {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class BasicSelectOnPush {
   foods: any[] = [
@@ -5037,7 +4910,6 @@ class BasicSelectOnPush {
 }
 
 @Component({
-  selector: 'basic-select-on-push-preselected',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
@@ -5048,7 +4920,7 @@ class BasicSelectOnPush {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class BasicSelectOnPushPreselected {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5061,7 +4933,6 @@ class BasicSelectOnPushPreselected {
 }
 
 @Component({
-  selector: 'floating-label-select',
   template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Select a food</mat-label>
@@ -5072,7 +4943,7 @@ class BasicSelectOnPushPreselected {
       </mat-select>
     </mat-form-field>
     `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class FloatLabelSelect {
   floatLabel: FloatLabelType | null = 'auto';
@@ -5088,7 +4959,6 @@ class FloatLabelSelect {
 }
 
 @Component({
-  selector: 'multi-select',
   template: `
     <mat-form-field>
       <mat-select multiple placeholder="Food" [formControl]="control"
@@ -5099,7 +4969,7 @@ class FloatLabelSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class MultiSelect {
   foods: any[] = [
@@ -5120,14 +4990,12 @@ class MultiSelect {
 }
 
 @Component({
-  selector: 'select-with-plain-tabindex',
   template: `<mat-form-field><mat-select tabindex="5"></mat-select></mat-form-field>`,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class SelectWithPlainTabindex {}
 
 @Component({
-  selector: 'select-early-sibling-access',
   template: `
     <mat-form-field>
       <mat-select #select="matSelect"></mat-select>
@@ -5136,12 +5004,11 @@ class SelectWithPlainTabindex {}
       <div></div>
     }
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class SelectEarlyAccessSibling {}
 
 @Component({
-  selector: 'basic-select-initially-hidden',
   template: `
     <mat-form-field>
       <mat-select [style.display]="isVisible ? 'block' : 'none'">
@@ -5149,14 +5016,13 @@ class SelectEarlyAccessSibling {}
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectInitiallyHidden {
   isVisible = false;
 }
 
 @Component({
-  selector: 'basic-select-no-placeholder',
   template: `
     <mat-form-field>
       <mat-select>
@@ -5164,12 +5030,11 @@ class BasicSelectInitiallyHidden {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectNoPlaceholder {}
 
 @Component({
-  selector: 'basic-select-with-theming',
   template: `
     <mat-form-field [color]="theme">
       <mat-select placeholder="Food">
@@ -5178,7 +5043,7 @@ class BasicSelectNoPlaceholder {}
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectWithTheming {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5186,7 +5051,6 @@ class BasicSelectWithTheming {
 }
 
 @Component({
-  selector: 'reset-values-select',
   template: `
     <mat-form-field>
       <mat-label>Select a food</mat-label>
@@ -5198,7 +5062,7 @@ class BasicSelectWithTheming {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class ResetValuesSelect {
   foods: any[] = [
@@ -5225,7 +5089,7 @@ class ResetValuesSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class FalsyValueSelect {
   foods: any[] = [
@@ -5237,7 +5101,6 @@ class FalsyValueSelect {
 }
 
 @Component({
-  selector: 'select-with-groups',
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
@@ -5252,7 +5115,7 @@ class FalsyValueSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatOptgroup, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectWithGroups {
   control = new FormControl('');
@@ -5296,7 +5159,6 @@ class SelectWithGroups {
 }
 
 @Component({
-  selector: 'select-with-groups',
   template: `
     <mat-form-field>
       <mat-select placeholder="Pokemon" [formControl]="control">
@@ -5310,7 +5172,7 @@ class SelectWithGroups {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatOptgroup, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectWithGroupsAndNgContainer {
   control = new FormControl('');
@@ -5330,7 +5192,7 @@ class SelectWithGroupsAndNgContainer {
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
 })
 class InvalidSelectInForm {
   value: any;
@@ -5351,7 +5213,7 @@ class InvalidSelectInForm {
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectInsideFormGroup {
   @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
@@ -5376,7 +5238,7 @@ class SelectInsideFormGroup {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectWithoutForms {
   selectedFood: string | null;
@@ -5399,7 +5261,7 @@ class BasicSelectWithoutForms {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectWithoutFormsPreselected {
   selectedFood = 'pizza-1';
@@ -5421,7 +5283,7 @@ class BasicSelectWithoutFormsPreselected {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class BasicSelectWithoutFormsMultiple {
   selectedFoods: string[];
@@ -5435,7 +5297,6 @@ class BasicSelectWithoutFormsMultiple {
 }
 
 @Component({
-  selector: 'select-with-custom-trigger',
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" #select="matSelect">
@@ -5448,7 +5309,7 @@ class BasicSelectWithoutFormsMultiple {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatSelectTrigger, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectWithCustomTrigger {
   foods: any[] = [
@@ -5459,7 +5320,6 @@ class SelectWithCustomTrigger {
 }
 
 @Component({
-  selector: 'ng-model-compare-with',
   template: `
     <mat-form-field>
       <mat-select [ngModel]="selectedFood" (ngModelChange)="setFoodByCopy($event)"
@@ -5470,7 +5330,7 @@ class SelectWithCustomTrigger {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
 })
 class NgModelCompareWithSelect {
   foods: {value: string; viewValue: string}[] = [
@@ -5517,7 +5377,7 @@ class NgModelCompareWithSelect {
       }
     </mat-select>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class CustomErrorBehaviorSelect {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5539,7 +5399,7 @@ class CustomErrorBehaviorSelect {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
 })
 class SingleSelectWithPreselectedArrayValues {
   foods: any[] = [
@@ -5555,7 +5415,6 @@ class SingleSelectWithPreselectedArrayValues {
 }
 
 @Component({
-  selector: 'select-without-option-centering',
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control" disableOptionCentering>
@@ -5565,7 +5424,7 @@ class SingleSelectWithPreselectedArrayValues {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectWithoutOptionCentering {
   foods: any[] = [
@@ -5586,22 +5445,6 @@ class SelectWithoutOptionCentering {
 
 @Component({
   template: `
-    <mat-form-field>
-      <mat-label>Select a thing</mat-label>
-
-      <mat-select [placeholder]="placeholder">
-        <mat-option value="thing">A thing</mat-option>
-      </mat-select>
-    </mat-form-field>
-  `,
-  standalone: false,
-})
-class SelectWithFormFieldLabel {
-  placeholder: string;
-}
-
-@Component({
-  template: `
     <mat-form-field appearance="fill">
       <mat-label>Select something</mat-label>
       @if (showSelect) {
@@ -5611,7 +5454,7 @@ class SelectWithFormFieldLabel {
       }
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class SelectWithNgIfAndLabel {
   showSelect = true;
@@ -5627,7 +5470,7 @@ class SelectWithNgIfAndLabel {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule],
 })
 class MultiSelectWithLotsOfOptions {
   items = new Array(100).fill(0).map((_, i) => i);
@@ -5643,7 +5486,6 @@ class MultiSelectWithLotsOfOptions {
 }
 
 @Component({
-  selector: 'basic-select-with-reset',
   template: `
     <mat-form-field>
       <mat-select [formControl]="control">
@@ -5654,7 +5496,7 @@ class MultiSelectWithLotsOfOptions {
       </mat-select>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectWithResetOptionAndFormControl {
   @ViewChild(MatSelect) select: MatSelect;
@@ -5663,7 +5505,6 @@ class SelectWithResetOptionAndFormControl {
 }
 
 @Component({
-  selector: 'select-with-placeholder-in-ngcontainer-with-ngIf',
   template: `
     <mat-form-field>
       @if (true) {
@@ -5675,7 +5516,7 @@ class SelectWithResetOptionAndFormControl {
       }
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule],
 })
 class SelectInNgContainer {}
 
@@ -5689,7 +5530,7 @@ class SelectInNgContainer {}
       </mat-form-field>
     </form>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class SelectInsideDynamicFormGroup {
   private _formBuilder = inject(FormBuilder);
@@ -5711,7 +5552,6 @@ class SelectInsideDynamicFormGroup {
   }
 }
 @Component({
-  selector: 'basic-select',
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
@@ -5735,7 +5575,7 @@ class SelectInsideDynamicFormGroup {
     </mat-form-field>
     <div [style.height.px]="heightBelow"></div>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, ReactiveFormsModule],
 })
 class BasicSelectWithFirstAndLastOptionDisabled {
   foods: any[] = [
@@ -5767,7 +5607,6 @@ class BasicSelectWithFirstAndLastOptionDisabled {
 }
 
 @Component({
-  selector: 'select-inside-a-modal',
   template: `
     <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">open dialog</button>
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="true"
@@ -5784,7 +5623,7 @@ class BasicSelectWithFirstAndLastOptionDisabled {
       </div>
     </ng-template>
   `,
-  standalone: false,
+  imports: [MatSelect, MatOption, MatFormFieldModule, FormsModule, OverlayModule],
 })
 class SelectInsideAModal {
   foods = [
