@@ -51,7 +51,7 @@ jobs:
           retention-days: 14
 
   lighthouse:
-    runs-on: ubuntu-22.04 # Note, fails on Ubuntu 24.04. see https://github.com/actions/runner-images/issues/10636
+    runs-on: ubuntu-24.04 # Note, fails on Ubuntu 24.04. see https://github.com/actions/runner-images/issues/10636
     steps:
       - name: Initialize environment
         uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@a9061f8b8f7bb7b0ea2b578d48dcfd4e6b83a18b
