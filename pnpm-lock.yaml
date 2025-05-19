@@ -166,10 +166,10 @@ importers:
         version: 18.3.5(encoding@0.1.13)
       '@rollup/plugin-commonjs':
         specifier: ^28.0.0
-        version: 28.0.3(rollup@2.79.2)
+        version: 28.0.3(rollup@4.40.2)
       '@rollup/plugin-node-resolve':
         specifier: ^16.0.0
-        version: 16.0.1(rollup@2.79.2)
+        version: 16.0.1(rollup@4.40.2)
       '@schematics/angular':
         specifier: 'catalog:'
         version: 20.0.0-rc.2(chokidar@4.0.3)
@@ -306,14 +306,14 @@ importers:
         specifier: ^2.3.6
         version: 2.3.7
       rollup:
-        specifier: ^2.66.1
-        version: 2.79.2
+        specifier: ^4.0.0
+        version: 4.40.2
       rollup-plugin-dts:
         specifier: 6.2.1
-        version: 6.2.1(rollup@2.79.2)(typescript@5.8.3)
+        version: 6.2.1(rollup@4.40.2)(typescript@5.8.3)
       rollup-plugin-sourcemaps2:
         specifier: 0.5.0
-        version: 0.5.0(@types/node@22.14.1)(rollup@2.79.2)
+        version: 0.5.0(@types/node@22.14.1)(rollup@4.40.2)
       sass:
         specifier: ^1.80.6
         version: 1.86.3
@@ -7785,11 +7785,6 @@ packages:
       '@types/node':
         optional: true
 
-  rollup@2.79.2:
-    resolution: {integrity: sha512-fS6iqSPZDs3dr/y7Od6y5nha8dW1YnbgtsyotCVvoFGKbERG++CVRFv1meyGDE1SNItQA8BrnCw7ScdAhRJ3XQ==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-
   rollup@4.40.2:
     resolution: {integrity: sha512-tfUOg6DTP4rhQ3VjOO6B4wyrJnGOX85requAXvqYTHsOgb2TFJdZ3aWpT8W2kPoypSGP7dZUyzxJ9ee4buM5Fg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
@@ -11436,9 +11431,9 @@ snapshots:
       - bare-buffer
       - supports-color
 
-  '@rollup/plugin-commonjs@28.0.3(rollup@2.79.2)':
+  '@rollup/plugin-commonjs@28.0.3(rollup@4.40.2)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@2.79.2)
+      '@rollup/pluginutils': 5.1.4(rollup@4.40.2)
       commondir: 1.0.1
       estree-walker: 2.0.2
       fdir: 6.4.4(picomatch@4.0.2)
@@ -11446,25 +11441,25 @@ snapshots:
       magic-string: 0.30.17
       picomatch: 4.0.2
     optionalDependencies:
-      rollup: 2.79.2
+      rollup: 4.40.2
 
-  '@rollup/plugin-node-resolve@16.0.1(rollup@2.79.2)':
+  '@rollup/plugin-node-resolve@16.0.1(rollup@4.40.2)':
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@2.79.2)
+      '@rollup/pluginutils': 5.1.4(rollup@4.40.2)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-module: 1.0.0
       resolve: 1.22.10
     optionalDependencies:
-      rollup: 2.79.2
+      rollup: 4.40.2
 
-  '@rollup/pluginutils@5.1.4(rollup@2.79.2)':
+  '@rollup/pluginutils@5.1.4(rollup@4.40.2)':
     dependencies:
       '@types/estree': 1.0.7
       estree-walker: 2.0.2
       picomatch: 4.0.2
     optionalDependencies:
-      rollup: 2.79.2
+      rollup: 4.40.2
 
   '@rollup/rollup-android-arm-eabi@4.40.2':
     optional: true
@@ -17565,24 +17560,20 @@ snapshots:
 
   robots-parser@3.0.1: {}
 
-  rollup-plugin-dts@6.2.1(rollup@2.79.2)(typescript@5.8.3):
+  rollup-plugin-dts@6.2.1(rollup@4.40.2)(typescript@5.8.3):
     dependencies:
       magic-string: 0.30.17
-      rollup: 2.79.2
+      rollup: 4.40.2
       typescript: 5.8.3
     optionalDependencies:
       '@babel/code-frame': 7.26.2
 
-  rollup-plugin-sourcemaps2@0.5.0(@types/node@22.14.1)(rollup@2.79.2):
+  rollup-plugin-sourcemaps2@0.5.0(@types/node@22.14.1)(rollup@4.40.2):
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@2.79.2)
-      rollup: 2.79.2
+      '@rollup/pluginutils': 5.1.4(rollup@4.40.2)
+      rollup: 4.40.2
     optionalDependencies:
       '@types/node': 22.14.1
-
-  rollup@2.79.2:
-    optionalDependencies:
-      fsevents: 2.3.3
 
   rollup@4.40.2:
     dependencies:
