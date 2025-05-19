@@ -219,6 +219,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
   _getRole(): string | null {
     return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
   }
+
+  _hasFocus(link: MatTabLink): boolean {
+    return this._keyManager?.activeItem === link;
+  }
 }
 
 /**
@@ -395,11 +399,7 @@ export class MatTabLink
   }
 
   _getTabIndex(): number {
-    if (this._tabNavBar.tabPanel) {
-      return this._isActive && !this.disabled ? 0 : -1;
-    } else {
-      return this.disabled ? -1 : this.tabIndex;
-    }
+    return this._tabNavBar._hasFocus(this) ? this.tabIndex : -1;
   }
 }
 

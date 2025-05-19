@@ -15,6 +15,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
@@ -98,6 +99,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     abstract _items: QueryList<MatPaginatedTabHeaderItem>;
     protected abstract _itemSelected(event: KeyboardEvent): void;
+    protected _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem> | undefined;
     // (undocumented)
     abstract _nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
@@ -457,6 +459,8 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     _fitInkBarToContent: BehaviorSubject<boolean>;
     // (undocumented)
     _getRole(): string | null;
+    // (undocumented)
+    _hasFocus(link: MatTabLink): boolean;
     // (undocumented)
     _inkBar: MatInkBar;
     _items: QueryList<MatTabLink>;
