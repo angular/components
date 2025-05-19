@@ -229,7 +229,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
       margin: 16px;
     }
   `,
-  standalone: false,
+  imports: [MatTableModule, MatPopoverEditModule, FormsModule],
 })
 class MatFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -281,7 +281,7 @@ class MatFlexTableInCell extends BaseTestComponent {
       margin: 16px;
     }
   `,
-  standalone: false,
+  imports: [MatTableModule, MatPopoverEditModule, FormsModule],
 })
 class MatTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -300,10 +300,6 @@ describe('Material Popover Edit', () => {
       let fixture: ComponentFixture<BaseTestComponent>;
 
       beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatTableModule, MatPopoverEditModule, FormsModule],
-          declarations: [componentClass],
-        });
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();

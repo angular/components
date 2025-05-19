@@ -1364,18 +1364,13 @@ describe('MatIcon without HttpClientModule', () => {
 
   @Component({
     template: `<mat-icon [svgIcon]="iconName"></mat-icon>`,
-    standalone: false,
+    imports: [MatIcon],
   })
   class IconFromSvgName {
     iconName: string | undefined = '';
   }
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatIconModule],
-      declarations: [IconFromSvgName],
-    });
-
     iconRegistry = TestBed.inject(MatIconRegistry);
     sanitizer = TestBed.inject(DomSanitizer);
   }));

@@ -274,7 +274,10 @@ abstract class BaseTestComponentRtl extends BaseTestComponent {
   }
 }
 
-@Component({template: getTableTemplate(false), standalone: false})
+@Component({
+  template: getTableTemplate(false),
+  imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+})
 class MatResizeTest extends BaseTestComponent {
   @ViewChild(MatColumnResize) columnResize: AbstractMatColumnResize;
 }
@@ -282,32 +285,47 @@ class MatResizeTest extends BaseTestComponent {
 @Component({
   template: getTableTemplate(false),
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [BidiModule, MatTableModule, MatColumnResizeModule],
 })
 class MatResizeOnPushTest extends MatResizeTest {}
 
-@Component({template: getTableTemplate(true), standalone: false})
+@Component({
+  template: getTableTemplate(true),
+  imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+})
 class MatResizeDefaultTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getTableTemplate(true), standalone: false})
+@Component({
+  template: getTableTemplate(true),
+  imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+})
 class MatResizeDefaultRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResize) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(false), standalone: false})
+@Component({
+  template: getFlexTemplate(false),
+  imports: [BidiModule, MatTableModule, MatColumnResizeModule],
+})
 class MatResizeFlexTest extends BaseTestComponent {
   @ViewChild(MatColumnResizeFlex) columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(true), standalone: false})
+@Component({
+  template: getFlexTemplate(true),
+  imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+})
 class MatResizeDefaultFlexTest extends BaseTestComponent {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
   columnResize: AbstractMatColumnResize;
 }
 
-@Component({template: getFlexTemplate(true), standalone: false})
+@Component({
+  template: getFlexTemplate(true),
+  imports: [BidiModule, MatTableModule, MatDefaultEnabledColumnResizeModule],
+})
 class MatResizeDefaultFlexRtlTest extends BaseTestComponentRtl {
   @ViewChild(MatDefaultEnabledColumnResizeFlex)
   columnResize: AbstractMatColumnResize;
@@ -357,44 +375,23 @@ declare global {
 }
 
 const testCases = [
-  [MatColumnResizeModule, MatResizeTest, 'opt-in table-based mat-table'],
-  [MatColumnResizeModule, MatResizeOnPushTest, 'inside OnPush component'],
-  [MatColumnResizeModule, MatResizeFlexTest, 'opt-in flex-based mat-table'],
-  [
-    MatDefaultEnabledColumnResizeModule,
-    MatResizeDefaultTest,
-    'default enabled table-based mat-table',
-  ],
-  [
-    MatDefaultEnabledColumnResizeModule,
-    MatResizeDefaultRtlTest,
-    'default enabled rtl table-based mat-table',
-  ],
-  [
-    MatDefaultEnabledColumnResizeModule,
-    MatResizeDefaultFlexTest,
-    'default enabled flex-based mat-table',
-  ],
-  [
-    MatDefaultEnabledColumnResizeModule,
-    MatResizeDefaultFlexRtlTest,
-    'default enabled rtl flex-based mat-table',
-  ],
+  [MatResizeTest, 'opt-in table-based mat-table'],
+  [MatResizeOnPushTest, 'inside OnPush component'],
+  [MatResizeFlexTest, 'opt-in flex-based mat-table'],
+  [MatResizeDefaultTest, 'default enabled table-based mat-table'],
+  [MatResizeDefaultRtlTest, 'default enabled rtl table-based mat-table'],
+  [MatResizeDefaultFlexTest, 'default enabled flex-based mat-table'],
+  [MatResizeDefaultFlexRtlTest, 'default enabled rtl flex-based mat-table'],
 ] as const;
 
 describe('Material Popover Edit', () => {
-  for (const [resizeModule, componentClass, label] of testCases) {
+  for (const [componentClass, label] of testCases) {
     describe(label, () => {
       let component: BaseTestComponent;
       let fixture: ComponentFixture<BaseTestComponent>;
 
       beforeEach(fakeAsync(() => {
         jasmine.addMatchers(approximateMatcher);
-
-        TestBed.configureTestingModule({
-          imports: [BidiModule, MatTableModule, resizeModule],
-          declarations: [componentClass],
-        });
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -645,12 +642,10 @@ describe('Material Popover Edit', () => {
       jasmine.addMatchers(approximateMatcher);
 
       TestBed.configureTestingModule({
-        imports: [BidiModule, MatTableModule, MatColumnResizeModule],
         providers: [
           FakeColumnSizeStore,
           {provide: ColumnSizeStore, useExisting: FakeColumnSizeStore},
         ],
-        declarations: [MatResizeOnPushTest],
       });
       fixture = TestBed.createComponent(MatResizeOnPushTest);
       component = fixture.componentInstance;
