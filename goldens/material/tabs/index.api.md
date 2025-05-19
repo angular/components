@@ -414,8 +414,6 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     _getRole(): string | null;
     // (undocumented)
-    _getTabIndex(): number;
-    // (undocumented)
     _handleFocus(): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
@@ -438,6 +436,8 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     tabIndex: number;
     // (undocumented)
+    protected _tabIndex: i0.Signal<number>;
+    // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, never>;
@@ -457,6 +457,8 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     set fitInkBarToContent(value: boolean);
     // (undocumented)
     _fitInkBarToContent: BehaviorSubject<boolean>;
+    // (undocumented)
+    _focusedItem: i0.WritableSignal<MatPaginatedTabHeaderItem | null>;
     // (undocumented)
     _getRole(): string | null;
     // (undocumented)
