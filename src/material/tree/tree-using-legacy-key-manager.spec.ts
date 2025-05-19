@@ -10,12 +10,7 @@ describe('MatTree when provided LegacyTreeKeyManager', () => {
   let fixture: ComponentFixture<SimpleMatTreeApp>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTreeModule],
-      declarations: [SimpleMatTreeApp],
-      providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
-    });
-
+    TestBed.configureTestingModule({providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER]});
     fixture = TestBed.createComponent(SimpleMatTreeApp);
     fixture.detectChanges();
   });
@@ -98,7 +93,7 @@ class MinimalTestData {
       </mat-tree-node>
     </mat-tree>
   `,
-  standalone: false,
+  imports: [MatTreeModule],
 })
 class SimpleMatTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;

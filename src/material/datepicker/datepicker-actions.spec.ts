@@ -1,25 +1,19 @@
 import {Component, ElementRef, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MATERIAL_ANIMATIONS, MatNativeDateModule} from '../core';
-import {MatFormFieldModule} from '../form-field';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {MatInputModule} from '../input';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerModule} from './datepicker-module';
+import {MatButtonModule} from '../button';
 
 describe('MatDatepickerActions', () => {
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      declarations: [component],
-      imports: [
-        FormsModule,
-        MatDatepickerModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatNativeDateModule,
+      providers: [
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
+        provideNativeDateAdapter(),
       ],
-      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
 
     return TestBed.createComponent(component);
@@ -303,7 +297,7 @@ describe('MatDatepickerActions', () => {
       </mat-datepicker>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatDatepickerModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
 })
 class DatepickerWithActions {
   @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;

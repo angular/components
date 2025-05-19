@@ -16,12 +16,13 @@ import {
   ViewChildren,
   WritableSignal,
 } from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
 import {observeOn} from 'rxjs/operators';
-import {MatChipListbox, MatChipOption, MatChipsModule} from './index';
+import {MatChipListbox, MatChipOption} from './index';
 
 describe('MatChipListbox', () => {
   let fixture: ComponentFixture<any>;
@@ -930,9 +931,7 @@ describe('MatChipListbox', () => {
     directionality = signal(direction);
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, MatChipsModule],
       providers: [provideFakeDirectionality(directionality)],
-      declarations: [component],
     });
 
     fixture = TestBed.createComponent<T>(component);
@@ -961,7 +960,7 @@ describe('MatChipListbox', () => {
         </mat-chip-option>
       }
     </mat-chip-listbox>`,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption],
 })
 class StandardChipListbox {
   name: string = 'Test';
@@ -975,16 +974,16 @@ class StandardChipListbox {
 
 @Component({
   template: `
-      <mat-chip-listbox [formControl]="control" [required]="isRequired"
-        [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        @for (food of foods; track food) {
-          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
-            {{ food.viewValue }}
-          </mat-chip-option>
-        }
-      </mat-chip-listbox>
+    <mat-chip-listbox [formControl]="control" [required]="isRequired"
+      [tabIndex]="tabIndexOverride" [selectable]="selectable">
+      @for (food of foods; track food) {
+        <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+          {{ food.viewValue }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
 })
 class BasicChipListbox {
   foods: any[] = [
@@ -1008,17 +1007,17 @@ class BasicChipListbox {
 
 @Component({
   template: `
-      <mat-chip-listbox [multiple]="true" [formControl]="control"
-        [required]="isRequired"
-        [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        @for (food of foods; track food) {
-          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
-            {{ food.viewValue }}
-          </mat-chip-option>
-        }
-      </mat-chip-listbox>
+    <mat-chip-listbox [multiple]="true" [formControl]="control"
+      [required]="isRequired"
+      [tabIndex]="tabIndexOverride" [selectable]="selectable">
+      @for (food of foods; track food) {
+        <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+          {{ food.viewValue }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
 })
 class MultiSelectionChipListbox {
   foods: any[] = [
@@ -1042,13 +1041,13 @@ class MultiSelectionChipListbox {
 
 @Component({
   template: `
-      <mat-chip-listbox [multiple]="true" [formControl]="control">
-        <mat-chip-option *ngFor="let chip of chips$ | async" [value]="chip">
-          {{ chip }}
-        </mat-chip-option>
-      </mat-chip-listbox>
+    <mat-chip-listbox [multiple]="true" [formControl]="control">
+      @for (chip of chips$ | async; track $index) {
+        <mat-chip-option [value]="chip">{{ chip }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, AsyncPipe, ReactiveFormsModule],
 })
 class AsyncMultiSelectionChipListbox {
   private _chipsSubject = new BehaviorSubject(['tutorial-1', 'tutorial-2', 'tutorial-3']);
@@ -1064,13 +1063,13 @@ class AsyncMultiSelectionChipListbox {
 
 @Component({
   template: `
-      <mat-chip-listbox [formControl]="control">
-        @for (food of foods; track food) {
-          <mat-chip-option [value]="food.value">{{ food.viewValue }}</mat-chip-option>
-        }
-      </mat-chip-listbox>
+    <mat-chip-listbox [formControl]="control">
+      @for (food of foods; track food) {
+        <mat-chip-option [value]="food.value">{{ food.viewValue }}</mat-chip-option>
+      }
+    </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
 })
 class FalsyValueChipListbox {
   foods: any[] = [
@@ -1091,7 +1090,7 @@ class FalsyValueChipListbox {
       }
     </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption],
 })
 class SelectedChipListbox {
   foods: any[] = [
@@ -1104,16 +1103,16 @@ class SelectedChipListbox {
 
 @Component({
   template: `
-      <mat-chip-listbox [formControl]="control" [required]="isRequired"
-        [tabIndex]="tabIndexOverride" [selectable]="selectable">
-        @for (food of foods; track food) {
-          <mat-chip-option [value]="food.value" [disabled]="food.disabled">
-            {{ food.viewValue }}
-          </mat-chip-option>
-        }
-      </mat-chip-listbox>
+    <mat-chip-listbox [formControl]="control" [required]="isRequired"
+      [tabIndex]="tabIndexOverride" [selectable]="selectable">
+      @for (food of foods; track food) {
+        <mat-chip-option [value]="food.value" [disabled]="food.disabled">
+          {{ food.viewValue }}
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, ReactiveFormsModule],
 })
 class FalsyBasicChipListbox {
   foods: any[] = [
@@ -1144,7 +1143,7 @@ class FalsyBasicChipListbox {
       </mat-chip-listbox>
     </form>
   `,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, FormsModule],
 })
 class IndividuallyDisabledChipInsideForm {
   @ViewChild(MatChipOption) chip: MatChipOption;

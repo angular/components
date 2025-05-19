@@ -1,5 +1,4 @@
 import {COMMA, ENTER, TAB} from '@angular/cdk/keycodes';
-import {PlatformModule} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -10,14 +9,14 @@ import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MATERIAL_ANIMATIONS} from '../core';
-import {MatFormFieldModule} from '../form-field';
+import {MatFormField} from '../form-field';
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipGrid,
   MatChipInput,
   MatChipInputEvent,
+  MatChipRow,
   MatChipsDefaultOptions,
-  MatChipsModule,
 } from './index';
 
 describe('MatChipInput', () => {
@@ -29,12 +28,10 @@ describe('MatChipInput', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [PlatformModule, MatChipsModule, MatFormFieldModule],
       providers: [
         provideFakeDirectionality('ltr'),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [TestChipInput],
     });
   }));
 
@@ -239,8 +236,6 @@ describe('MatChipInput', () => {
       fixture.destroy();
 
       TestBed.resetTestingModule().configureTestingModule({
-        imports: [MatChipsModule, MatFormFieldModule, PlatformModule],
-        declarations: [TestChipInput],
         providers: [
           {
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
@@ -325,7 +320,7 @@ describe('MatChipInput', () => {
       </mat-chip-grid>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatFormField, MatChipGrid, MatChipRow, MatChipInput],
 })
 class TestChipInput {
   @ViewChild(MatChipGrid) chipGridInstance: MatChipGrid;
