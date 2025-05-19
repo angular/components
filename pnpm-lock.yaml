@@ -180,8 +180,8 @@ importers:
         specifier: ^9.0.13
         version: 9.0.13
       '@types/glob':
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^8.0.0
+        version: 8.1.0
       '@types/jasmine':
         specifier: ^4.0.0
         version: 4.6.5
@@ -2920,6 +2920,9 @@ packages:
 
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
+
+  '@types/glob@8.1.0':
+    resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
 
   '@types/google.maps@3.58.1':
     resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
@@ -11730,6 +11733,11 @@ snapshots:
       '@types/minimatch': 5.1.2
       '@types/node': 22.14.1
 
+  '@types/glob@8.1.0':
+    dependencies:
+      '@types/minimatch': 5.1.2
+      '@types/node': 22.14.1
+
   '@types/google.maps@3.58.1': {}
 
   '@types/http-errors@2.0.4': {}
@@ -11817,7 +11825,7 @@ snapshots:
 
   '@types/rimraf@3.0.2':
     dependencies:
-      '@types/glob': 7.2.0
+      '@types/glob': 8.1.0
       '@types/node': 22.14.1
 
   '@types/selenium-webdriver@3.0.26': {}
