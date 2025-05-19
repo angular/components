@@ -165,7 +165,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // this was also done by the animations module which some internal tests seem to depend on.
     // Simulate it by toggling the `hidden` attribute instead.
     '[style.visibility]': '(!_container && !opened) ? "hidden" : null',
-    'tabIndex': '-1',
+    'tabIndex': '(mode !== "side") ? "-1" : null',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
