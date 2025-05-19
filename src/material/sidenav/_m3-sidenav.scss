@@ -1,26 +1,24 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, sidenav);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-sidenav.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      container-shape: map.get($system, corner-large),
-      container-elevation-shadow: none,
-      container-width: 360px,
-      container-divider-color: transparent,
+      sidenav-container-shape: map.get($system, corner-large),
+      sidenav-container-elevation-shadow: none,
+      sidenav-container-width: 360px,
+      sidenav-container-divider-color: transparent,
     ),
     color: (
-      container-background-color: map.get($system, surface),
-      container-text-color: map.get($system, on-surface-variant),
-      content-background-color: map.get($system, background),
-      content-text-color: map.get($system, on-background),
-      scrim-color: m3-utils.color-with-opacity(map.get($system, neutral-variant20), 40%),
+      sidenav-container-background-color: map.get($system, surface),
+      sidenav-container-text-color: map.get($system, on-surface-variant),
+      sidenav-content-background-color: map.get($system, background),
+      sidenav-content-text-color: map.get($system, on-background),
+      sidenav-scrim-color: m3-utils.color-with-opacity(map.get($system, neutral-variant20), 40%),
     ),
     typography: (),
     density: (),

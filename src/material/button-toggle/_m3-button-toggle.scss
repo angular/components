@@ -3,12 +3,10 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, button-toggle);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-button-toggle.
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
@@ -16,30 +14,47 @@ $prefix: (mat, button-toggle);
 
   $tokens: (
     base: (
-      focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      shape: map.get($system, corner-extra-large),
+      button-toggle-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-toggle-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-toggle-shape: map.get($system, corner-extra-large),
+      button-toggle-legacy-shape: null,
+      button-toggle-legacy-selected-state-text-color: null,
+      button-toggle-legacy-focus-state-layer-opacity: null,
+      button-toggle-legacy-height: null,
     ),
     typography: (
-      label-text-font: map.get($system, label-large-font),
-      label-text-line-height: map.get($system, label-large-line-height),
-      label-text-size: map.get($system, label-large-size),
-      label-text-tracking: map.get($system, label-large-tracking),
-      label-text-weight: map.get($system, label-large-weight),
+      button-toggle-label-text-font: map.get($system, label-large-font),
+      button-toggle-label-text-line-height: map.get($system, label-large-line-height),
+      button-toggle-label-text-size: map.get($system, label-large-size),
+      button-toggle-label-text-tracking: map.get($system, label-large-tracking),
+      button-toggle-label-text-weight: map.get($system, label-large-weight),
+      button-toggle-legacy-label-text-font: null,
+      button-toggle-legacy-label-text-line-height: null,
+      button-toggle-legacy-label-text-size: null,
+      button-toggle-legacy-label-text-tracking: null,
+      button-toggle-legacy-label-text-weight: null,
     ),
     color: (
-      background-color: transparent,
-      disabled-selected-state-background-color:
+      button-toggle-background-color: transparent,
+      button-toggle-disabled-selected-state-background-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      disabled-selected-state-text-color:
+      button-toggle-disabled-selected-state-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-state-background-color: transparent,
-      disabled-state-text-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      divider-color: map.get($system, outline),
-      selected-state-background-color: map.get($system, secondary-container),
-      selected-state-text-color: map.get($system, on-secondary-container),
-      state-layer-color: map.get($system, on-surface),
-      text-color: map.get($system, on-surface),
+      button-toggle-disabled-state-background-color: transparent,
+      button-toggle-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      button-toggle-divider-color: map.get($system, outline),
+      button-toggle-selected-state-background-color: map.get($system, secondary-container),
+      button-toggle-selected-state-text-color: map.get($system, on-secondary-container),
+      button-toggle-state-layer-color: map.get($system, on-surface),
+      button-toggle-text-color: map.get($system, on-surface),
+      button-toggle-legacy-disabled-selected-state-background-color: null,
+      button-toggle-legacy-disabled-state-background-color: null,
+      button-toggle-legacy-disabled-state-text-color: null,
+      button-toggle-legacy-selected-state-background-color: null,
+      button-toggle-legacy-selected-state-text-color: null,
+      button-toggle-legacy-state-layer-color: null,
+      button-toggle-legacy-text-color: null,
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -53,6 +68,6 @@ $prefix: (mat, button-toggle);
   $index: ($scale * -1) + 1;
 
   @return (
-    height: list.nth((40px, 40px, 40px, 36px, 24px), $index),
+    button-toggle-height: list.nth((40px, 40px, 40px, 36px, 24px), $index),
   );
 }

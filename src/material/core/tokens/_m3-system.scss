@@ -16,13 +16,10 @@
 @use '../../toolbar/m3-toolbar';
 @use '../../tree/m3-tree';
 @use '../style/elevation';
-@use '../style/sass-utils';
 @use '../theming/config-validation';
 @use '../theming/definition';
 @use '../theming/palettes';
 @use './m3';
-@use './m3-tokens';
-@use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -149,7 +146,7 @@
       $density-tokens: get-density-tokens($scale);
       @each $prefix, $tokens in $density-tokens {
         @each $token-name, $token-value in $tokens {
-          --#{list.nth($prefix, 1)}-#{list.nth($prefix, 2)}-#{$token-name}: #{$token-value};
+          --mat-#{$token-name}: #{$token-value};
         }
       }
     }
@@ -162,23 +159,23 @@
 // Gets all density-related tokens from the components.
 @function get-density-tokens($scale) {
   @return (
-    m3-checkbox.$prefix: m3-checkbox.get-density-tokens($scale),
-    m3-chip.$prefix: m3-chip.get-density-tokens($scale),
-    m3-expansion.$prefix: m3-expansion.get-density-tokens($scale),
-    m3-fab.$prefix: m3-fab.get-density-tokens($scale),
-    m3-button.$prefix: m3-button.get-density-tokens($scale),
-    m3-form-field.$prefix: m3-form-field.get-density-tokens($scale),
-    m3-icon-button.$prefix: m3-icon-button.get-density-tokens($scale),
-    m3-list.$prefix: m3-list.get-density-tokens($scale),
-    m3-paginator.$prefix: m3-paginator.get-density-tokens($scale),
-    m3-radio.$prefix: m3-radio.get-density-tokens($scale),
-    m3-tabs.$prefix: m3-tabs.get-density-tokens($scale),
-    m3-select.$prefix: m3-select.get-density-tokens($scale),
-    m3-button-toggle.$prefix: m3-button-toggle.get-density-tokens($scale),
-    m3-stepper.$prefix: m3-stepper.get-density-tokens($scale),
-    m3-table.$prefix: m3-table.get-density-tokens($scale),
-    m3-toolbar.$prefix: m3-toolbar.get-density-tokens($scale),
-    m3-tree.$prefix: m3-tree.get-density-tokens($scale),
+    m3-checkbox.get-density-tokens($scale),
+    m3-chip.get-density-tokens($scale),
+    m3-expansion.get-density-tokens($scale),
+    m3-fab.get-density-tokens($scale),
+    m3-button.get-density-tokens($scale),
+    m3-form-field.get-density-tokens($scale),
+    m3-icon-button.get-density-tokens($scale),
+    m3-list.get-density-tokens($scale),
+    m3-paginator.get-density-tokens($scale),
+    m3-radio.get-density-tokens($scale),
+    m3-tabs.get-density-tokens($scale),
+    m3-select.get-density-tokens($scale),
+    m3-button-toggle.get-density-tokens($scale),
+    m3-stepper.get-density-tokens($scale),
+    m3-table.get-density-tokens($scale),
+    m3-toolbar.get-density-tokens($scale),
+    m3-tree.get-density-tokens($scale),
   );
 }
 
@@ -299,27 +296,6 @@
   }
 }
 
-// Return a new map where the values are the same as the provided map's
-// keys, prefixed with "--mat-sys-". For example:
-// (key1: '', key2: '') --> (key1: --mat-sys-key1, key2: --mat-sys-key2)
-@function _create-system-app-vars-map($map) {
-  $new-map: ();
-  @each $key, $value in $map {
-    $new-map: map.set($new-map, $key, --#{definition.$system-fallback-prefix}-#{$key});
-  }
-  @return $new-map;
-}
-
-// Create a components tokens map where values are based on
-// system fallback variables referencing Material's system keys.
-// Includes density token fallbacks where density is 0.
-@function create-system-fallbacks() {
-  @return sass-utils.deep-merge-all(
-      m3-tokens.generate-tokens($app-vars, true, true),
-      get-density-tokens(0),
-  );
-}
-
 /// Creates a single merged map from the provided variable-length map arguments
 @function map-merge-all($maps...) {
   $result: ();
@@ -328,28 +304,3 @@
   }
   @return $result;
 }
-
-$placeholder-palettes: m3.md-sys-color-values-light(palettes.$blue-palette);
-$placeholder-palettes: map.set($placeholder-palettes, primary, palettes.$blue-palette);
-$app-vars: (
-  'md-sys-color': _create-system-app-vars-map(m3.md-sys-color-values-light($placeholder-palettes)),
-  'md-sys-typescale': _create-system-app-vars-map(m3.md-sys-typescale-values((
-    brand: (Roboto),
-    plain: (Roboto),
-    bold: 700,
-    medium: 500,
-    regular: 400
-  ))),
-  'md-sys-elevation': _create-system-app-vars-map(m3.md-sys-elevation-values()),
-  'md-sys-state': _create-system-app-vars-map(m3.md-sys-state-values()),
-  'md-sys-shape': _create-system-app-vars-map(m3.md-sys-shape-values()),
-  // Add a subset of palette-specific colors used by components instead of system values
-  'md-ref-palette': _create-system-app-vars-map(
-      (
-        neutral10: '', // Form field native select option text color
-        neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
-      )
-  ),
-);
-
-$theme-with-system-vars: (definition.$internals: $app-vars);

@@ -1,19 +1,17 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, divider);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-divider.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      width: 1px,
+      divider-width: 1px,
     ),
     color: (
-      color: map.get($system, outline),
+      divider-color: map.get($system, outline),
     ),
     typography: (),
     density: (),

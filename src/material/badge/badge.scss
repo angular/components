@@ -1,46 +1,40 @@
 @use 'sass:color';
 @use '@angular/cdk';
-@use './m2-badge';
 @use './m3-badge';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
 $default-size: 22px !default;
 $small-size: $default-size - 6;
 $large-size: $default-size + 6;
 
-$token-prefix: m2-badge.$prefix;
-$token-slots: m2-badge.get-token-slots();
-$fallbacks: m3-badge.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-badge.get-tokens();
 
 @mixin _badge-size($size) {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $prefix: if($size == 'medium', '', $size + '-size-');
-    $legacy-size-var-name: 'legacy-#{$prefix}container-size';
-    $size-var-name: '#{$prefix}container-size';
+  $prefix: if($size == 'medium', '', $size + '-size-');
+  $legacy-size-var-name: 'badge-legacy-#{$prefix}container-size';
+  $size-var-name: 'badge-#{$prefix}container-size';
 
-    .mat-badge-content {
-      // The M2 badge is implemented incorrectly because it uses `width` and `height` for its
-      // size which causes the text to be truncated. For M3 we want to fix this by emitting
-      // two declarations:
-      // * `legacy-container-size` token - targets width/height as in M2. In M3 the token is
-      // emitted as `unset`.
-      // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
-      // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
-      // grow with the content.
-      width: token-utils.slot($legacy-size-var-name);
-      height: token-utils.slot($legacy-size-var-name);
-      min-width: token-utils.slot($size-var-name);
-      min-height: token-utils.slot($size-var-name);
-      line-height: token-utils.slot('#{$prefix}line-height');
-      padding: token-utils.slot('#{$prefix}container-padding');
-      font-size: token-utils.slot('#{$prefix}text-size');
-      margin: token-utils.slot('#{$prefix}container-offset');
-    }
+  .mat-badge-content {
+    // The M2 badge is implemented incorrectly because it uses `width` and `height` for its
+    // size which causes the text to be truncated. For M3 we want to fix this by emitting
+    // two declarations:
+    // * `legacy-container-size` token - targets width/height as in M2. In M3 the token is
+    // emitted as `unset`.
+    // * `container-size` token - In M2 the token is emitted as `unset` to preserve the legacy
+    // behavior while in M3 it targets `min-width` and `min-height` which allows the badge to
+    // grow with the content.
+    width: token-utils.slot($legacy-size-var-name, $fallbacks);
+    height: token-utils.slot($legacy-size-var-name, $fallbacks);
+    min-width: token-utils.slot($size-var-name, $fallbacks);
+    min-height: token-utils.slot($size-var-name, $fallbacks);
+    line-height: token-utils.slot('badge-#{$prefix}line-height', $fallbacks);
+    padding: token-utils.slot('badge-#{$prefix}container-padding', $fallbacks);
+    font-size: token-utils.slot('badge-#{$prefix}text-size', $fallbacks);
+    margin: token-utils.slot('badge-#{$prefix}container-offset', $fallbacks);
+  }
 
-    &.mat-badge-overlap .mat-badge-content {
-      margin: token-utils.slot('#{$prefix}container-overlap-offset');
-    }
+  &.mat-badge-overlap .mat-badge-content {
+    margin: token-utils.slot('badge-#{$prefix}container-overlap-offset', $fallbacks);
   }
 }
 
@@ -68,38 +62,36 @@ $fallbacks: m3-badge.get-tokens(m3-system.$theme-with-system-vars);
   box-sizing: border-box;
   pointer-events: none;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(background-color);
-    color: token-utils.slot(text-color);
-    font-family: token-utils.slot(text-font);
-    font-weight: token-utils.slot(text-weight);
-    border-radius: token-utils.slot(container-shape);
+  background-color: token-utils.slot(badge-background-color, $fallbacks);
+  color: token-utils.slot(badge-text-color, $fallbacks);
+  font-family: token-utils.slot(badge-text-font, $fallbacks);
+  font-weight: token-utils.slot(badge-text-weight, $fallbacks);
+  border-radius: token-utils.slot(badge-container-shape, $fallbacks);
 
-    .mat-badge-above & {
-      bottom: 100%;
-    }
+  .mat-badge-above & {
+    bottom: 100%;
+  }
 
-    .mat-badge-below & {
-      top: 100%;
-    }
+  .mat-badge-below & {
+    top: 100%;
+  }
 
-    .mat-badge-before & {
-      right: 100%;
-    }
+  .mat-badge-before & {
+    right: 100%;
+  }
 
-    [dir='rtl'] .mat-badge-before & {
-      right: auto;
-      left: 100%;
-    }
+  [dir='rtl'] .mat-badge-before & {
+    right: auto;
+    left: 100%;
+  }
 
-    .mat-badge-after & {
-      left: 100%;
-    }
+  .mat-badge-after & {
+    left: 100%;
+  }
 
-    [dir='rtl'] .mat-badge-after & {
-      left: auto;
-      right: 100%;
-    }
+  [dir='rtl'] .mat-badge-after & {
+    left: auto;
+    right: 100%;
   }
 
   @include cdk.high-contrast {
@@ -109,10 +101,8 @@ $fallbacks: m3-badge.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 .mat-badge-disabled .mat-badge-content {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(disabled-state-background-color);
-    color: token-utils.slot(disabled-state-text-color);
-  }
+  background-color: token-utils.slot(badge-disabled-state-background-color, $fallbacks);
+  color: token-utils.slot(badge-disabled-state-text-color, $fallbacks);
 }
 
 .mat-badge-hidden .mat-badge-content {

@@ -12,15 +12,10 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-button-toggle.$prefix,
-        map.get(m3-button-toggle.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-button-toggle.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-button-toggle.$prefix,
-        m2-button-toggle.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-button-toggle.get-unthemable-tokens());
     }
   }
 }
@@ -32,12 +27,10 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-button-toggle.$prefix,
         map.get(m3-button-toggle.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-button-toggle.$prefix,
         m2-button-toggle.get-color-tokens($theme)
       );
     }
@@ -49,14 +42,11 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-button-toggle.$prefix,
         map.get(m3-button-toggle.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-button-toggle.$prefix,
-        m2-button-toggle.get-typography-tokens($theme)
-      );
+          m2-button-toggle.get-typography-tokens($theme));
     }
   }
 }
@@ -66,26 +56,20 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-button-toggle.$prefix,
         map.get(m3-button-toggle.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-button-toggle.$prefix,
-        m2-button-toggle.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-button-toggle.get-density-tokens($theme));
     }
   }
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {
-  $standard-tokens: m2-button-toggle.get-token-slots();
-
   @return (
     (
-      namespace: m2-button-toggle.$prefix,
-      tokens: $standard-tokens,
+      namespace: button-toggle,
+      tokens: token-utils.get-overrides(m3-button-toggle.get-tokens(), button-toggle)
     ),
   );
 }
@@ -93,7 +77,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-button-toggle.

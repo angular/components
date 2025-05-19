@@ -1,22 +1,16 @@
-@use './m2-optgroup';
 @use './m3-optgroup';
 @use '../tokens/token-utils';
-@use '../tokens/m3-system';
 
-$token-prefix: m2-optgroup.$prefix;
-$token-slots: m2-optgroup.get-token-slots();
-$fallbacks: m3-optgroup.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-optgroup.get-tokens();
 
 .mat-mdc-optgroup {
   // These tokens are set on the root option group to make them easier to override.
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(label-text-color);
-    font-family: token-utils.slot(label-text-font);
-    line-height: token-utils.slot(label-text-line-height);
-    font-size: token-utils.slot(label-text-size);
-    letter-spacing: token-utils.slot(label-text-tracking);
-    font-weight: token-utils.slot(label-text-weight);
-  }
+  color: token-utils.slot(optgroup-label-text-color, $fallbacks);
+  font-family: token-utils.slot(optgroup-label-text-font, $fallbacks);
+  line-height: token-utils.slot(optgroup-label-text-line-height, $fallbacks);
+  font-size: token-utils.slot(optgroup-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(optgroup-label-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(optgroup-label-text-weight, $fallbacks);
 }
 
 .mat-mdc-optgroup-label {

@@ -5,14 +5,11 @@
 @use '../core/style/elevation';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, select);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-elevation-shadow: elevation.get-box-shadow(8),
+    select-container-elevation-shadow: elevation.get-box-shadow(8),
   );
 }
 
@@ -31,16 +28,16 @@ $prefix: (mat, select);
     inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return (
-    panel-background-color: inspection.get-theme-color($theme, background, card),
-    enabled-trigger-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    disabled-trigger-text-color:
+    select-panel-background-color: inspection.get-theme-color($theme, background, card),
+    select-enabled-trigger-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    select-disabled-trigger-text-color:
       sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    placeholder-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    enabled-arrow-color: sass-utils.safe-color-change($icon-color-base, $alpha: 0.54),
-    disabled-arrow-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.38),
-    focused-arrow-color: sass-utils.safe-color-change(
+    select-placeholder-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    select-enabled-arrow-color: sass-utils.safe-color-change($icon-color-base, $alpha: 0.54),
+    select-disabled-arrow-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.38),
+    select-focused-arrow-color: sass-utils.safe-color-change(
       inspection.get-theme-color($theme, $palette-name, default), $alpha: 0.87),
-    invalid-arrow-color: sass-utils.safe-color-change(
+    select-invalid-arrow-color: sass-utils.safe-color-change(
       inspection.get-theme-color($theme, warn, default), $alpha: 0.87),
   );
 }
@@ -48,11 +45,11 @@ $prefix: (mat, select);
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    trigger-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    trigger-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    trigger-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    trigger-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    trigger-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
+    select-trigger-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    select-trigger-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    select-trigger-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    select-trigger-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    select-trigger-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
   );
 }
 
@@ -61,7 +58,7 @@ $prefix: (mat, select);
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
 
   @return (
-    arrow-transform: map.get((
+    select-arrow-transform: map.get((
       0: translateY(-8px),
       -1: translateY(-8px),
       -2: none,

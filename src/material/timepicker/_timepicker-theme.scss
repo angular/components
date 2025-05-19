@@ -12,15 +12,10 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-timepicker.$prefix,
-        map.get(m3-timepicker.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-timepicker.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-timepicker.get-unthemable-tokens());
     }
   }
 }
@@ -30,14 +25,10 @@
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-timepicker.$prefix,
         map.get(m3-timepicker.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-color-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-timepicker.get-color-tokens($theme));
     }
   }
 }
@@ -46,15 +37,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-timepicker.$prefix,
-        map.get(m3-timepicker.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-timepicker.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-timepicker.get-typography-tokens($theme));
     }
   }
 }
@@ -63,15 +49,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-timepicker.$prefix,
-        map.get(m3-timepicker.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-timepicker.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-timepicker.$prefix,
-        m2-timepicker.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-timepicker.get-density-tokens($theme));
     }
   }
 }
@@ -80,8 +61,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-timepicker.$prefix,
-      tokens: m2-timepicker.get-token-slots(),
+      namespace: timepicker,
+      tokens: token-utils.get-overrides(m3-timepicker.get-tokens(), timepicker)
     ),
   );
 }
@@ -89,7 +70,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-timepicker.

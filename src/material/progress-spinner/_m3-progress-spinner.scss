@@ -1,12 +1,13 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, progress-spinner);
 
 /// Generates the tokens for MDC circular-progress
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -14,11 +15,11 @@ $prefix: (mat, progress-spinner);
 
   @return (
     base: (
-      size: 48px,
-      active-indicator-width: 4px,
+      progress-spinner-size: 48px,
+      progress-spinner-active-indicator-width: 4px,
     ),
     color: (
-      active-indicator-color: map.get($system, primary),
+      progress-spinner-active-indicator-color: map.get($system, primary),
     ),
     typography: (),
     density: (),

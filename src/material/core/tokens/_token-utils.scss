@@ -1,52 +1,7 @@
 @use '../style/sass-utils';
-@use './m3-system';
 @use 'sass:list';
 @use 'sass:map';
 @use 'sass:string';
-
-$_tokens: null;
-$_component-prefix: null;
-$_system-fallbacks: m3-system.create-system-fallbacks();
-$_direct-system-fallbacks: ();
-
-// Sets the token prefix and map to use when creating token slots.
-@mixin use-tokens($prefix, $tokens, $direct-system-fallbacks: null) {
-  $_component-prefix: $prefix !global;
-  $_tokens: $tokens !global;
-
-  // Direct system fallbacks are a map of base, color, typography, and density tokens. To simplify
-  // lookup, flatten these token groups into a single map.
-  @if $direct-system-fallbacks {
-    $_direct-system-fallbacks: () !global;
-    @each $tokens in map.values($direct-system-fallbacks) {
-      @each $token, $value in $tokens {
-        $_direct-system-fallbacks: map.set($_direct-system-fallbacks, $token, $value) !global;
-      }
-    }
-  }
-
-  @content;
-
-  $_component-prefix: null !global;
-  $_tokens: null !global;
-  $_direct-system-fallbacks: () !global;
-}
-
-// Combines a prefix and a string to generate a CSS variable name for a token.
-@function _create-var-name($prefix, $token) {
-  @if $prefix == null or $token == null {
-    @error 'Must specify both prefix and name when generating token';
-  }
-
-  $string-prefix: '';
-
-  // Prefixes are lists so we need to combine them.
-  @each $part in $prefix {
-    $string-prefix: if($string-prefix == '', $part, '#{$string-prefix}-#{$part}');
-  }
-
-  @return string.unquote('--#{$string-prefix}-#{$token}');
-}
 
 // Creates a CSS variable, including the fallback if provided.
 @function _create-var($name, $fallback: null) {
@@ -57,112 +12,99 @@ $_direct-system-fallbacks: ();
   }
 }
 
-// Gets the value of the token given the current global context state.
-@function _get-token-value($token, $fallback) {
-  $var-name: _create-var-name($_component-prefix, $token);
-  $fallback: _get-token-fallback($token, $fallback);
-  @return _create-var($var-name, $fallback);
+// Returns a list of overrides for the given M3 get-tokens mixin and prefix. Each token has its
+// prefix removed since the overrides API expects its absence. The returned map includes "all" for
+// all override tokens, and also the subsets with keys base, color, typography, and density.
+@function get-overrides($tokens, $prefix) {
+  $base: remove-token-prefixes(map.get($tokens, base), $prefix);
+  $color: remove-token-prefixes(map.get($tokens, color), $prefix);
+  $typography: remove-token-prefixes(map.get($tokens, typography), $prefix);
+  $density: remove-token-prefixes(map.get($tokens, density), $prefix);
+  $all: ();
+  @each $map in ($base, $color, $typography, $density) {
+    $all: map.merge($all, $map);
+  }
+
+  @return (
+    all: $all,
+    base: $base,
+    color: $color,
+    typography: $typography,
+    density: $density,
+  );
 }
 
-// Assertion mixin that throws an error if the global state has not been set up by wrapping
-// calls with `use-tokens`.
-@function _assert-use-tokens($token) {
-  @if $_component-prefix == null or $_tokens == null {
-    @error 'Function was not called within a wrapping call of `use-tokens`';
+// Removes a prefix from each component token in the provided map of prefixed tokens.
+@function remove-token-prefixes($prefixed-tokens: (), $prefix) {
+  $tokens: ();
+  @each $prefixed-token, $value in $prefixed-tokens {
+    $token: string.slice($prefixed-token, string.length($prefix) + 2);
+    $tokens: map.set($tokens, $token, $value);
   }
-  @if not map.has-key($_tokens, $token) {
-    @error 'Token #{$token} does not exist. Configured tokens are: #{map.keys($_tokens)}';
-  }
-
-  @return true;
+  @return $tokens;
 }
 
 // Returns the token slot value.
 // Accepts an optional fallback parameter to include in the CSS variable.
 // If $fallback is `true`, then use the tokens map to get the fallback.
 // TODO: Remove the use case where we accept "true" and handle any failing client screenshots
-@function slot($token, $fallback: null) {
-  $_assert: _assert-use-tokens($token);
-  @return _get-token-value($token, $fallback);
-}
-
-// Returns the name of a token including the current prefix. Intended to be used in calculations
-// involving tokens. `create-token-slot` should be used when outputting tokens.
-@function get-token-variable-name($token) {
-  $_assert: _assert-use-tokens($token);
-  @return _create-var-name($_component-prefix, $token);
-}
-
-// Gets the token's fallback value. Prefers adding a system-level fallback if one exists, otherwise
-// use the provided fallback.
-@function _get-token-fallback($token, $fallback: null) {
-  // If the $fallback is `true`, this is the component's signal to use the current token map value
-  @if ($fallback == true) {
-    $fallback: map.get($_tokens, $token);
-  }
-
-  $direct-sys-fallback: map.get($_direct-system-fallbacks, $token);
-  @if ($direct-sys-fallback) {
-    @if (sass-utils.is-css-var-name($direct-sys-fallback)) {
-      @return _create-var($direct-sys-fallback, $fallback);
+@function slot($token, $fallbacks, $fallback: null) {
+  // Fallbacks are a map of base, color, typography, and density tokens. To simplify
+  // lookup, flatten these token groups into a single map.
+  $fallbacks-flattened: ();
+  @each $tokens in map.values($fallbacks) {
+    @each $token, $value in $tokens {
+      $fallbacks-flattened: map.set($fallbacks-flattened, $token, $value);
     }
-    @return $direct-sys-fallback;
+  }
+  @if not map.has-key($fallbacks-flattened, $token) {
+    @error 'Token #{$token} does not exist. Configured tokens are:' +
+        #{map.keys($fallbacks-flattened)};
   }
 
-  // Check whether there's a system-level fallback. If not, return the optional
-  // provided fallback (otherwise null).
-  $sys-fallback: map.get($_system-fallbacks, $_component-prefix, $token);
-  @if (not $sys-fallback) {
-    @return $fallback;
+  $fallback: map.get($fallbacks-flattened, $token);
+  @if (sass-utils.is-css-var-name($fallback)) {
+    $fallback: _create-var($fallback, $fallback);
   }
 
-  @if (sass-utils.is-css-var-name($sys-fallback)) {
-    @return _create-var($sys-fallback, $fallback);
-  }
-
-  @return $sys-fallback;
+  @return _create-var(--mat-#{$token}, $fallback);
 }
 
-// Outputs a map of tokens under a specific prefix.
-@mixin create-token-values($prefix, $tokens) {
-  @include _create-token-values-internal($prefix, $tokens, false);
+// Outputs a map of tokens.
+@mixin create-token-values($tokens) {
+  @include _create-token-values-internal($tokens, false);
 }
 
 // Outputs a map of tokens under a specific prefix in scenarios where tokens may be mixed with
 // other declarations (e.g. M2 themes). Used to avoid https://sass-lang.com/documentation/breaking-changes/mixed-decls/
-@mixin create-token-values-mixed($prefix, $tokens) {
-  @include _create-token-values-internal($prefix, $tokens, true);
+@mixin create-token-values-mixed($tokens) {
+  @include _create-token-values-internal($tokens, true);
 }
 
-@mixin _create-token-values-internal($prefix, $tokens, $in-place) {
+@mixin _create-token-values-internal($tokens, $in-place) {
   @if ($tokens != null) {
     @if ($in-place) {
       & {
         @each $key, $value in $tokens {
           @if $value != null {
-            @include define-css_var($prefix, $key, $value);
+            --mat-#{$key}: #{$value};
           }
         }
       }
     } @else {
       @each $key, $value in $tokens {
         @if $value != null {
-          @include define-css-var($prefix, $key, $value);
+          --mat-#{$key}: #{$value};
         }
       }
     }
   }
 }
 
-@mixin define-css-var($prefix, $key, $value) {
-  $name: _create-var-name($prefix, $key);
-  #{$name}: #{$value};
-}
-
 /// Emits new token values for the given token overrides.
 /// Verifies that the overrides passed in are valid tokens.
 /// New token values are emitted under the current selector or root.
-@mixin batch-create-token-values($overrides: (), $namespace-configs...) {
+@mixin batch-create-token-values($overrides: (), $namespace-configs) {
   @include sass-utils.current-selector-or-root() {
     $prefixed-name-data: ();
     $all-names: ();
@@ -170,7 +112,7 @@ $_direct-system-fallbacks: ();
     @each $config in $namespace-configs {
       $namespace: map.get($config, namespace);
       $prefix: if(map.has-key($config, prefix), map.get($config, prefix), '');
-      $tokens: _filter-nulls(map.get($config, tokens));
+      $tokens: _filter-nulls(map.get(map.get($config, tokens), all));
       @each $name, $value in $tokens {
         $prefixed-name: $prefix + $name;
         $all-names: list.append($all-names, $prefixed-name, $separator: comma);
@@ -183,12 +125,8 @@ $_direct-system-fallbacks: ();
         $data: map.get($prefixed-name-data, $name);
         $namespace: list.nth($data, 1);
         $name: list.nth($data, 2);
-        @include create-token-values(
-          $namespace,
-          (
-            $name: $value,
-          )
-        );
+        $prefixed-name: $namespace + '-' + $name;
+        @include create-token-values(($prefixed-name: $value));
       } @else {
         @error #{'Invalid token name `'}#{$name}#{'`. '}#{'Valid tokens are: '}#{$all-names};
       }

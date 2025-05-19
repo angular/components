@@ -1,13 +1,11 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, slider);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-slider.
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -15,53 +13,53 @@ $prefix: (mat, slider);
 
   @return (
     base: (
-      value-indicator-opacity: 1,
-      value-indicator-padding: 0,
-      value-indicator-width: 28px,
-      value-indicator-height: 28px,
-      value-indicator-caret-display: none,
-      value-indicator-border-radius: 50% 50% 50% 0,
-      value-indicator-text-transform: rotate(45deg),
-      value-indicator-container-transform: translateX(-50%) rotate(-45deg),
-      active-track-height: 4px,
-      handle-height: 20px,
-      handle-width: 20px,
-      inactive-track-height: 4px,
-      with-overlap-handle-outline-width: 1px,
-      with-tick-marks-active-container-opacity: 0.38,
-      with-tick-marks-container-size: 2px,
-      with-tick-marks-inactive-container-opacity: 0.38,
+      slider-value-indicator-opacity: 1,
+      slider-value-indicator-padding: 0,
+      slider-value-indicator-width: 28px,
+      slider-value-indicator-height: 28px,
+      slider-value-indicator-caret-display: none,
+      slider-value-indicator-border-radius: 50% 50% 50% 0,
+      slider-value-indicator-text-transform: rotate(45deg),
+      slider-value-indicator-container-transform: translateX(-50%) rotate(-45deg),
+      slider-active-track-height: 4px,
+      slider-handle-height: 20px,
+      slider-handle-width: 20px,
+      slider-inactive-track-height: 4px,
+      slider-with-overlap-handle-outline-width: 1px,
+      slider-with-tick-marks-active-container-opacity: 0.38,
+      slider-with-tick-marks-container-size: 2px,
+      slider-with-tick-marks-inactive-container-opacity: 0.38,
     ),
     color: (
-      active-track-color: map.get($system, primary),
-      active-track-shape: map.get($system, corner-full),
-      disabled-active-track-color: map.get($system, on-surface),
-      disabled-handle-color: map.get($system, on-surface),
-      disabled-inactive-track-color: map.get($system, on-surface),
-      focus-handle-color: map.get($system, primary),
-      focus-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 20%),
-      handle-color: map.get($system, primary),
-      handle-elevation: elevation.get-box-shadow(map.get($system, level1)),
-      handle-shape: map.get($system, corner-full),
-      hover-handle-color: map.get($system, primary),
-      hover-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 5%),
-      inactive-track-color: map.get($system, surface-variant),
-      inactive-track-shape: map.get($system, corner-full),
-      label-container-color: map.get($system, primary),
-      label-label-text-color: map.get($system, on-primary),
-      ripple-color: map.get($system, primary),
-      with-overlap-handle-outline-color: map.get($system, on-primary),
-      with-tick-marks-active-container-color: map.get($system, on-primary),
-      with-tick-marks-container-shape: map.get($system, corner-full),
-      with-tick-marks-disabled-container-color: map.get($system, on-surface),
-      with-tick-marks-inactive-container-color: map.get($system, on-surface-variant),
+      slider-active-track-color: map.get($system, primary),
+      slider-active-track-shape: map.get($system, corner-full),
+      slider-disabled-active-track-color: map.get($system, on-surface),
+      slider-disabled-handle-color: map.get($system, on-surface),
+      slider-disabled-inactive-track-color: map.get($system, on-surface),
+      slider-focus-handle-color: map.get($system, primary),
+      slider-focus-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 20%),
+      slider-handle-color: map.get($system, primary),
+      slider-handle-elevation: elevation.get-box-shadow(map.get($system, level1)),
+      slider-handle-shape: map.get($system, corner-full),
+      slider-hover-handle-color: map.get($system, primary),
+      slider-hover-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 5%),
+      slider-inactive-track-color: map.get($system, surface-variant),
+      slider-inactive-track-shape: map.get($system, corner-full),
+      slider-label-container-color: map.get($system, primary),
+      slider-label-label-text-color: map.get($system, on-primary),
+      slider-ripple-color: map.get($system, primary),
+      slider-with-overlap-handle-outline-color: map.get($system, on-primary),
+      slider-with-tick-marks-active-container-color: map.get($system, on-primary),
+      slider-with-tick-marks-container-shape: map.get($system, corner-full),
+      slider-with-tick-marks-disabled-container-color: map.get($system, on-surface),
+      slider-with-tick-marks-inactive-container-color: map.get($system, on-surface-variant),
     ),
     typography: (
-      label-label-text-font: map.get($system, label-medium-font),
-      label-label-text-line-height: map.get($system, label-medium-line-height),
-      label-label-text-size: map.get($system, label-medium-size),
-      label-label-text-tracking: map.get($system, label-medium-tracking),
-      label-label-text-weight: map.get($system, label-medium-weight),
+      slider-label-label-text-font: map.get($system, label-medium-font),
+      slider-label-label-text-line-height: map.get($system, label-medium-line-height),
+      slider-label-label-text-size: map.get($system, label-medium-size),
+      slider-label-label-text-tracking: map.get($system, label-medium-tracking),
+      slider-label-label-text-weight: map.get($system, label-medium-weight),
     ),
     density: (),
   );

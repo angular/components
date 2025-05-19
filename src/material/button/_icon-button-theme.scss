@@ -9,16 +9,11 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-icon-button.$prefix,
-        map.get(m3-icon-button.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-icon-button.get-tokens($theme), base));
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-icon-button.$prefix,
-        m2-icon-button.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-icon-button.get-unthemable-tokens());
     }
   }
 }
@@ -30,7 +25,7 @@
     m2-icon-button.get-color-tokens($theme)
   );
 
-  @include token-utils.create-token-values-mixed(m2-icon-button.$prefix, $mat-tokens);
+  @include token-utils.create-token-values-mixed($mat-tokens);
 }
 
 /// Outputs color theme styles for the mat-icon-button.
@@ -40,7 +35,6 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-icon-button.$prefix,
         map.get(m3-icon-button.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
@@ -66,13 +60,10 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-icon-button.$prefix,
         map.get(m3-icon-button.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-icon-button.$prefix,
-        m2-icon-button.get-typography-tokens($theme)
+      @include token-utils.create-token-values-mixed(m2-icon-button.get-typography-tokens($theme)
       );
     }
   }
@@ -80,9 +71,7 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-icon-button.$prefix,
-        map.get(m3-icon-button.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-icon-button.get-tokens($theme), density));
   } @else {
     $icon-size: 24px;
     $density-scale: inspection.get-theme-density($theme);
@@ -98,9 +87,8 @@
 
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-icon-button.$prefix,
-        m2-icon-button.get-density-tokens(
-            $theme, $exclude: (state-layer-size))
+          m2-icon-button.get-density-tokens(
+              $theme, $exclude: (state-layer-size))
       );
     }
 
@@ -127,14 +115,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-icon-button.$prefix,
-      tokens: m2-icon-button.get-token-slots(),
+      namespace: icon-button,
+      tokens: token-utils.get-overrides(m3-icon-button.get-tokens(), icon-button)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-icon-button.

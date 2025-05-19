@@ -1,17 +1,12 @@
 @use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use './m2-slide-toggle';
 @use './m3-slide-toggle';
 @use '@angular/cdk';
-@use '../core/tokens/m3-system';
 
 $_interactive-disabled-selector: '.mat-mdc-slide-toggle-disabled-interactive.mdc-switch--disabled';
 
-$token-prefix: m2-slide-toggle.$prefix;
-$token-slots: m2-slide-toggle.get-token-slots();
-$fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
-
+$fallbacks: m3-slide-toggle.get-tokens();
 
 .mdc-switch {
   align-items: center;
@@ -26,9 +21,7 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   padding: 0;
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(track-width);
-  }
+  width: token-utils.slot(slide-toggle-track-width, $fallbacks);
 
   &.mdc-switch--disabled {
     cursor: default;
@@ -45,13 +38,11 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   position: relative;
   width: 100%;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    height: token-utils.slot(track-height);
-    border-radius: token-utils.slot(track-shape);
+  height: token-utils.slot(slide-toggle-track-height, $fallbacks);
+  border-radius: token-utils.slot(slide-toggle-track-shape, $fallbacks);
 
-    .mdc-switch--disabled.mdc-switch & {
-      opacity: token-utils.slot(disabled-track-opacity);
-    }
+  .mdc-switch--disabled.mdc-switch & {
+    opacity: token-utils.slot(slide-toggle-disabled-track-opacity, $fallbacks);
   }
 
   &::before,
@@ -65,19 +56,19 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
     position: absolute;
     width: 100%;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-width: token-utils.slot(track-outline-width);
-      border-color: token-utils.slot(track-outline-color);
+    border-width: token-utils.slot(slide-toggle-track-outline-width, $fallbacks);
+    border-color: token-utils.slot(slide-toggle-track-outline-color, $fallbacks);
 
-      .mdc-switch--selected & {
-        border-width: token-utils.slot(selected-track-outline-width);
-        border-color: token-utils.slot(selected-track-outline-color);
-      }
+    .mdc-switch--selected & {
+      border-width: token-utils.slot(slide-toggle-selected-track-outline-width, $fallbacks);
+      border-color: token-utils.slot(slide-toggle-selected-track-outline-color, $fallbacks);
+    }
 
-      .mdc-switch--disabled & {
-        border-width: token-utils.slot(disabled-unselected-track-outline-width);
-        border-color: token-utils.slot(disabled-unselected-track-outline-color);
-      }
+    .mdc-switch--disabled & {
+      border-width: token-utils.slot(
+          slide-toggle-disabled-unselected-track-outline-width, $fallbacks);
+      border-color: token-utils.slot(
+          slide-toggle-disabled-unselected-track-outline-color, $fallbacks);
     }
   }
 
@@ -89,9 +80,7 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
     transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1);
     transform: translateX(0);
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background: token-utils.slot(unselected-track-color);
-    }
+    background: token-utils.slot(slide-toggle-unselected-track-color, $fallbacks);
 
     .mdc-switch--selected & {
       transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
@@ -102,46 +91,40 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
       }
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-switch--selected & {
-        opacity: token-utils.slot(hidden-track-opacity);
-        transition: token-utils.slot(hidden-track-transition);
-      }
-
-      .mdc-switch--unselected & {
-        opacity: token-utils.slot(visible-track-opacity);
-        transition: token-utils.slot(visible-track-transition);
-      }
+    .mdc-switch--selected & {
+      opacity: token-utils.slot(slide-toggle-hidden-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-hidden-track-transition, $fallbacks);
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-switch:enabled:hover:not(:focus):not(:active) & {
-        background: token-utils.slot(unselected-hover-track-color);
-      }
+    .mdc-switch--unselected & {
+      opacity: token-utils.slot(slide-toggle-visible-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-visible-track-transition, $fallbacks);
+    }
 
-      .mdc-switch:enabled:focus:not(:active) & {
-        background: token-utils.slot(unselected-focus-track-color);
-      }
+    .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-track-color, $fallbacks);
+    }
 
-      .mdc-switch:enabled:active & {
-        background: token-utils.slot(unselected-pressed-track-color);
-      }
+    .mdc-switch:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-focus-track-color, $fallbacks);
+    }
 
-      #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
-      #{$_interactive-disabled-selector}:focus:not(:active) &,
-      #{$_interactive-disabled-selector}:active &,
-      .mdc-switch.mdc-switch--disabled & {
-        background: token-utils.slot(disabled-unselected-track-color);
-      }
+    .mdc-switch:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-track-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}:focus:not(:active) &,
+    #{$_interactive-disabled-selector}:active &,
+    .mdc-switch.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-unselected-track-color, $fallbacks);
     }
   }
 
   &::after {
     transform: translateX(-100%);
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background: token-utils.slot(selected-track-color);
-    }
+    background: token-utils.slot(slide-toggle-selected-track-color, $fallbacks);
 
     [dir='rtl'] & {
       transform: translateX(100%);
@@ -151,37 +134,33 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
       transform: translateX(0);
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-switch--selected & {
-        opacity: token-utils.slot(visible-track-opacity);
-        transition: token-utils.slot(visible-track-transition);
-      }
-
-      .mdc-switch--unselected & {
-        opacity: token-utils.slot(hidden-track-opacity);
-        transition: token-utils.slot(hidden-track-transition);
-      }
+    .mdc-switch--selected & {
+      opacity: token-utils.slot(slide-toggle-visible-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-visible-track-transition, $fallbacks);
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-switch:enabled:hover:not(:focus):not(:active) & {
-        background: token-utils.slot(selected-hover-track-color);
-      }
+    .mdc-switch--unselected & {
+      opacity: token-utils.slot(slide-toggle-hidden-track-opacity, $fallbacks);
+      transition: token-utils.slot(slide-toggle-hidden-track-transition, $fallbacks);
+    }
 
-      .mdc-switch:enabled:focus:not(:active) & {
-        background: token-utils.slot(selected-focus-track-color);
-      }
+    .mdc-switch:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-hover-track-color, $fallbacks);
+    }
 
-      .mdc-switch:enabled:active & {
-        background: token-utils.slot(selected-pressed-track-color);
-      }
+    .mdc-switch:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-focus-track-color, $fallbacks);
+    }
 
-      #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
-      #{$_interactive-disabled-selector}:focus:not(:active) &,
-      #{$_interactive-disabled-selector}:active &,
-      .mdc-switch.mdc-switch--disabled & {
-        background: token-utils.slot(disabled-selected-track-color);
-      }
+    .mdc-switch:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-track-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}:focus:not(:active) &,
+    #{$_interactive-disabled-selector}:active &,
+    .mdc-switch.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-selected-track-color, $fallbacks);
     }
   }
 }
@@ -196,9 +175,7 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   right: auto;
   transform: translateX(0);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: calc(100% - #{token-utils.slot(handle-width)});
-  }
+  width: calc(100% - #{token-utils.slot(slide-toggle-handle-width, $fallbacks)});
 
   [dir='rtl'] & {
     left: auto;
@@ -230,63 +207,61 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
     height 75ms cubic-bezier(0.4, 0, 0.2, 1),
     margin 75ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(handle-width);
-    height: token-utils.slot(handle-height);
-    border-radius: token-utils.slot(handle-shape);
-  }
+  width: token-utils.slot(slide-toggle-handle-width, $fallbacks);
+  height: token-utils.slot(slide-toggle-handle-height, $fallbacks);
+  border-radius: token-utils.slot(slide-toggle-handle-shape, $fallbacks);
 
   [dir='rtl'] & {
     left: auto;
     right: 0;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-slide-toggle .mdc-switch--unselected & {
-      width: token-utils.slot(unselected-handle-size);
-      height: token-utils.slot(unselected-handle-size);
-      margin: token-utils.slot(unselected-handle-horizontal-margin);
+  .mat-mdc-slide-toggle .mdc-switch--unselected & {
+    width: token-utils.slot(slide-toggle-unselected-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-unselected-handle-size, $fallbacks);
+    margin: token-utils.slot(slide-toggle-unselected-handle-horizontal-margin, $fallbacks);
 
-      &:has(.mdc-switch__icons) {
-        margin: token-utils.slot(unselected-with-icon-handle-horizontal-margin);
-      }
+    &:has(.mdc-switch__icons) {
+      margin: token-utils.slot(
+          slide-toggle-unselected-with-icon-handle-horizontal-margin, $fallbacks);
     }
+  }
 
-    .mat-mdc-slide-toggle .mdc-switch--selected & {
-      width: token-utils.slot(selected-handle-size);
-      height: token-utils.slot(selected-handle-size);
-      margin: token-utils.slot(selected-handle-horizontal-margin);
+  .mat-mdc-slide-toggle .mdc-switch--selected & {
+    width: token-utils.slot(slide-toggle-selected-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-selected-handle-size, $fallbacks);
+    margin: token-utils.slot(slide-toggle-selected-handle-horizontal-margin, $fallbacks);
 
-      &:has(.mdc-switch__icons) {
-        margin: token-utils.slot(selected-with-icon-handle-horizontal-margin);
-      }
+    &:has(.mdc-switch__icons) {
+      margin: token-utils.slot(
+          slide-toggle-selected-with-icon-handle-horizontal-margin, $fallbacks);
     }
+  }
 
-    .mat-mdc-slide-toggle &:has(.mdc-switch__icons) {
-      width: token-utils.slot(with-icon-handle-size);
-      height: token-utils.slot(with-icon-handle-size);
-    }
+  .mat-mdc-slide-toggle &:has(.mdc-switch__icons) {
+    width: token-utils.slot(slide-toggle-with-icon-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-with-icon-handle-size, $fallbacks);
+  }
 
-    .mat-mdc-slide-toggle .mdc-switch:active:not(.mdc-switch--disabled) & {
-      width: token-utils.slot(pressed-handle-size);
-      height: token-utils.slot(pressed-handle-size);
-    }
+  .mat-mdc-slide-toggle .mdc-switch:active:not(.mdc-switch--disabled) & {
+    width: token-utils.slot(slide-toggle-pressed-handle-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-pressed-handle-size, $fallbacks);
+  }
 
-    .mat-mdc-slide-toggle .mdc-switch--selected:active:not(.mdc-switch--disabled) & {
-      margin: token-utils.slot(selected-pressed-handle-horizontal-margin);
-    }
+  .mat-mdc-slide-toggle .mdc-switch--selected:active:not(.mdc-switch--disabled) & {
+    margin: token-utils.slot(slide-toggle-selected-pressed-handle-horizontal-margin, $fallbacks);
+  }
 
-    .mat-mdc-slide-toggle .mdc-switch--unselected:active:not(.mdc-switch--disabled) & {
-      margin: token-utils.slot(unselected-pressed-handle-horizontal-margin);
-    }
+  .mat-mdc-slide-toggle .mdc-switch--unselected:active:not(.mdc-switch--disabled) & {
+    margin: token-utils.slot(slide-toggle-unselected-pressed-handle-horizontal-margin, $fallbacks);
+  }
 
-    .mdc-switch--disabled.mdc-switch--selected &::after {
-      opacity: token-utils.slot(disabled-selected-handle-opacity);
-    }
+  .mdc-switch--disabled.mdc-switch--selected &::after {
+    opacity: token-utils.slot(slide-toggle-disabled-selected-handle-opacity, $fallbacks);
+  }
 
-    .mdc-switch--disabled.mdc-switch--unselected &::after {
-      opacity: token-utils.slot(disabled-unselected-handle-opacity);
-    }
+  .mdc-switch--disabled.mdc-switch--unselected &::after {
+    opacity: token-utils.slot(slide-toggle-disabled-unselected-handle-opacity, $fallbacks);
   }
 
   &::before,
@@ -309,55 +284,53 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
     }
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    &::after {
-      .mdc-switch--selected:enabled & {
-        background: token-utils.slot(selected-handle-color);
-      }
-
-      .mdc-switch--selected:enabled:hover:not(:focus):not(:active) & {
-        background: token-utils.slot(selected-hover-handle-color);
-      }
-
-      .mdc-switch--selected:enabled:focus:not(:active) & {
-        background: token-utils.slot(selected-focus-handle-color);
-      }
-
-      .mdc-switch--selected:enabled:active & {
-        background: token-utils.slot(selected-pressed-handle-color);
-      }
-
-      #{$_interactive-disabled-selector}.mdc-switch--selected:hover:not(:focus):not(:active) &,
-      #{$_interactive-disabled-selector}.mdc-switch--selected:focus:not(:active) &,
-      #{$_interactive-disabled-selector}.mdc-switch--selected:active &,
-      .mdc-switch--selected.mdc-switch--disabled & {
-        background: token-utils.slot(disabled-selected-handle-color);
-      }
-
-      .mdc-switch--unselected:enabled & {
-        background: token-utils.slot(unselected-handle-color);
-      }
-
-      .mdc-switch--unselected:enabled:hover:not(:focus):not(:active) & {
-        background: token-utils.slot(unselected-hover-handle-color);
-      }
-
-      .mdc-switch--unselected:enabled:focus:not(:active) & {
-        background: token-utils.slot(unselected-focus-handle-color);
-      }
-
-      .mdc-switch--unselected:enabled:active & {
-        background: token-utils.slot(unselected-pressed-handle-color);
-      }
-
-      .mdc-switch--unselected.mdc-switch--disabled & {
-        background: token-utils.slot(disabled-unselected-handle-color);
-      }
+  &::after {
+    .mdc-switch--selected:enabled & {
+      background: token-utils.slot(slide-toggle-selected-handle-color, $fallbacks);
     }
 
-    &::before {
-      background: token-utils.slot(handle-surface-color);
+    .mdc-switch--selected:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-hover-handle-color, $fallbacks);
     }
+
+    .mdc-switch--selected:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-selected-focus-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--selected:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-handle-color, $fallbacks);
+    }
+
+    #{$_interactive-disabled-selector}.mdc-switch--selected:hover:not(:focus):not(:active) &,
+    #{$_interactive-disabled-selector}.mdc-switch--selected:focus:not(:active) &,
+    #{$_interactive-disabled-selector}.mdc-switch--selected:active &,
+    .mdc-switch--selected.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-selected-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled & {
+      background: token-utils.slot(slide-toggle-unselected-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:hover:not(:focus):not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:focus:not(:active) & {
+      background: token-utils.slot(slide-toggle-unselected-focus-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-handle-color, $fallbacks);
+    }
+
+    .mdc-switch--unselected.mdc-switch--disabled & {
+      background: token-utils.slot(slide-toggle-disabled-unselected-handle-color, $fallbacks);
+    }
+  }
+
+  &::before {
+    background: token-utils.slot(slide-toggle-handle-surface-color, $fallbacks);
   }
 }
 
@@ -369,17 +342,15 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   right: 0;
   top: 0;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mdc-switch:enabled & {
-      box-shadow: token-utils.slot(handle-elevation-shadow);
-    }
+  .mdc-switch:enabled & {
+    box-shadow: token-utils.slot(slide-toggle-handle-elevation-shadow, $fallbacks);
+  }
 
-    #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
-    #{$_interactive-disabled-selector}:focus:not(:active) &,
-    #{$_interactive-disabled-selector}:active &,
-    .mdc-switch.mdc-switch--disabled & {
-      box-shadow: token-utils.slot(disabled-handle-elevation-shadow);
-    }
+  #{$_interactive-disabled-selector}:hover:not(:focus):not(:active) &,
+  #{$_interactive-disabled-selector}:focus:not(:active) &,
+  #{$_interactive-disabled-selector}:active &,
+  .mdc-switch.mdc-switch--disabled & {
+    box-shadow: token-utils.slot(slide-toggle-disabled-handle-elevation-shadow, $fallbacks);
   }
 }
 
@@ -390,10 +361,8 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   transform: translate(-50%, -50%);
   z-index: -1;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(state-layer-size);
-    height: token-utils.slot(state-layer-size);
-  }
+  width: token-utils.slot(slide-toggle-state-layer-size, $fallbacks);
+  height: token-utils.slot(slide-toggle-state-layer-size, $fallbacks);
 
   &::after {
     content: '';
@@ -411,41 +380,39 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
       transition: 75ms opacity cubic-bezier(0, 0, 0.2, 1);
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      #{$_interactive-disabled-selector}:enabled:focus &,
-      #{$_interactive-disabled-selector}:enabled:active &,
-      #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
-      .mdc-switch--unselected:enabled:hover:not(:focus) & {
-        background: token-utils.slot(unselected-hover-state-layer-color);
-        opacity: token-utils.slot(unselected-hover-state-layer-opacity);
-      }
+    #{$_interactive-disabled-selector}:enabled:focus &,
+    #{$_interactive-disabled-selector}:enabled:active &,
+    #{$_interactive-disabled-selector}:enabled:hover:not(:focus) &,
+    .mdc-switch--unselected:enabled:hover:not(:focus) & {
+      background: token-utils.slot(slide-toggle-unselected-hover-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-hover-state-layer-opacity, $fallbacks);
+    }
 
-      .mdc-switch--unselected:enabled:focus & {
-        background: token-utils.slot(unselected-focus-state-layer-color);
-        opacity: token-utils.slot(unselected-focus-state-layer-opacity);
-      }
+    .mdc-switch--unselected:enabled:focus & {
+      background: token-utils.slot(slide-toggle-unselected-focus-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-focus-state-layer-opacity, $fallbacks);
+    }
 
-      .mdc-switch--unselected:enabled:active & {
-        background: token-utils.slot(unselected-pressed-state-layer-color);
-        opacity: token-utils.slot(unselected-pressed-state-layer-opacity);
-        transition: opacity 75ms linear;
-      }
+    .mdc-switch--unselected:enabled:active & {
+      background: token-utils.slot(slide-toggle-unselected-pressed-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-unselected-pressed-state-layer-opacity, $fallbacks);
+      transition: opacity 75ms linear;
+    }
 
-      .mdc-switch--selected:enabled:hover:not(:focus) & {
-        background: token-utils.slot(selected-hover-state-layer-color);
-        opacity: token-utils.slot(selected-hover-state-layer-opacity);
-      }
+    .mdc-switch--selected:enabled:hover:not(:focus) & {
+      background: token-utils.slot(slide-toggle-selected-hover-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-hover-state-layer-opacity, $fallbacks);
+    }
 
-      .mdc-switch--selected:enabled:focus & {
-        background: token-utils.slot(selected-focus-state-layer-color);
-        opacity: token-utils.slot(selected-focus-state-layer-opacity);
-      }
+    .mdc-switch--selected:enabled:focus & {
+      background: token-utils.slot(slide-toggle-selected-focus-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-focus-state-layer-opacity, $fallbacks);
+    }
 
-      .mdc-switch--selected:enabled:active & {
-        background: token-utils.slot(selected-pressed-state-layer-color);
-        opacity: token-utils.slot(selected-pressed-state-layer-opacity);
-        transition: opacity 75ms linear;
-      }
+    .mdc-switch--selected:enabled:active & {
+      background: token-utils.slot(slide-toggle-selected-pressed-state-layer-color, $fallbacks);
+      opacity: token-utils.slot(slide-toggle-selected-pressed-state-layer-opacity, $fallbacks);
+      transition: opacity 75ms linear;
     }
   }
 }
@@ -459,14 +426,12 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   // Works around a rendering issue in Safari 18.3 (see #30487).
   transform: translateZ(0);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mdc-switch--disabled.mdc-switch--unselected & {
-      opacity: token-utils.slot(disabled-unselected-icon-opacity);
-    }
+  .mdc-switch--disabled.mdc-switch--unselected & {
+    opacity: token-utils.slot(slide-toggle-disabled-unselected-icon-opacity, $fallbacks);
+  }
 
-    .mdc-switch--disabled.mdc-switch--selected & {
-      opacity: token-utils.slot(disabled-selected-icon-opacity);
-    }
+  .mdc-switch--disabled.mdc-switch--selected & {
+    opacity: token-utils.slot(slide-toggle-disabled-selected-icon-opacity, $fallbacks);
   }
 }
 
@@ -480,26 +445,24 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   opacity: 0;
   transition: opacity 30ms 0ms cubic-bezier(0.4, 0, 1, 1);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mdc-switch--unselected & {
-      width: token-utils.slot(unselected-icon-size);
-      height: token-utils.slot(unselected-icon-size);
-      fill: token-utils.slot(unselected-icon-color);
-    }
+  .mdc-switch--unselected & {
+    width: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-unselected-icon-size, $fallbacks);
+    fill: token-utils.slot(slide-toggle-unselected-icon-color, $fallbacks);
+  }
 
-    .mdc-switch--unselected.mdc-switch--disabled & {
-      fill: token-utils.slot(disabled-unselected-icon-color);
-    }
+  .mdc-switch--unselected.mdc-switch--disabled & {
+    fill: token-utils.slot(slide-toggle-disabled-unselected-icon-color, $fallbacks);
+  }
 
-    .mdc-switch--selected & {
-      width: token-utils.slot(selected-icon-size);
-      height: token-utils.slot(selected-icon-size);
-      fill: token-utils.slot(selected-icon-color);
-    }
+  .mdc-switch--selected & {
+    width: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
+    height: token-utils.slot(slide-toggle-selected-icon-size, $fallbacks);
+    fill: token-utils.slot(slide-toggle-selected-icon-color, $fallbacks);
+  }
 
-    .mdc-switch--selected.mdc-switch--disabled & {
-      fill: token-utils.slot(disabled-selected-icon-color);
-    }
+  .mdc-switch--selected.mdc-switch--disabled & {
+    fill: token-utils.slot(slide-toggle-disabled-selected-icon-color, $fallbacks);
   }
 }
 
@@ -541,14 +504,12 @@ $fallbacks: m3-slide-toggle.get-tokens(m3-system.$theme-with-system-vars);
   }
 
   .mat-internal-form-field {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(label-text-color);
-      font-family: token-utils.slot(label-text-font);
-      line-height: token-utils.slot(label-text-line-height);
-      font-size: token-utils.slot(label-text-size);
-      letter-spacing: token-utils.slot(label-text-tracking);
-      font-weight: token-utils.slot(label-text-weight);
-    }
+    color: token-utils.slot(slide-toggle-label-text-color, $fallbacks);
+    font-family: token-utils.slot(slide-toggle-label-text-font, $fallbacks);
+    line-height: token-utils.slot(slide-toggle-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(slide-toggle-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(slide-toggle-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(slide-toggle-label-text-weight, $fallbacks);
   }
 
   .mat-ripple-element {

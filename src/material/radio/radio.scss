@@ -1,13 +1,9 @@
-@use './m2-radio';
 @use './m3-radio';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
 @use './radio-common';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-radio.$prefix;
-$token-slots: m2-radio.get-token-slots();
-$fallbacks: m3-radio.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-radio.get-tokens();
 
 .mat-mdc-radio-button {
   -webkit-tap-highlight-color: transparent;
@@ -15,37 +11,35 @@ $fallbacks: m3-radio.get-tokens(m3-system.$theme-with-system-vars);
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
+  .mdc-radio__background::before {
+    background-color: token-utils.slot(radio-ripple-color, $fallbacks);
+  }
+
+  &.mat-mdc-radio-checked {
+    .mat-ripple-element,
     .mdc-radio__background::before {
-      background-color: token-utils.slot(ripple-color);
+      background-color: token-utils.slot(radio-checked-ripple-color, $fallbacks);
     }
+  }
 
-    &.mat-mdc-radio-checked {
-      .mat-ripple-element,
-      .mdc-radio__background::before {
-        background-color: token-utils.slot(checked-ripple-color);
-      }
+  &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
+    .mat-ripple-element,
+    .mdc-radio__background::before {
+      background-color: token-utils.slot(radio-ripple-color, $fallbacks);
     }
+  }
 
-    &.mat-mdc-radio-disabled-interactive .mdc-radio--disabled {
-      .mat-ripple-element,
-      .mdc-radio__background::before {
-        background-color: token-utils.slot(ripple-color);
-      }
-    }
+  .mat-internal-form-field {
+    color: token-utils.slot(radio-label-text-color, $fallbacks);
+    font-family: token-utils.slot(radio-label-text-font, $fallbacks);
+    line-height: token-utils.slot(radio-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(radio-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(radio-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(radio-label-text-weight, $fallbacks);
+  }
 
-    .mat-internal-form-field {
-      color: token-utils.slot(label-text-color);
-      font-family: token-utils.slot(label-text-font);
-      line-height: token-utils.slot(label-text-line-height);
-      font-size: token-utils.slot(label-text-size);
-      letter-spacing: token-utils.slot(label-text-tracking);
-      font-weight: token-utils.slot(label-text-weight);
-    }
-
-    .mdc-radio--disabled + label {
-      color: token-utils.slot(disabled-label-color);
-    }
+  .mdc-radio--disabled + label {
+    color: token-utils.slot(radio-disabled-label-color, $fallbacks);
   }
 
   // This is necessary because we do not depend on MDC's ripple, but have our own that should be
@@ -66,11 +60,9 @@ $fallbacks: m3-radio.get-tokens(m3-system.$theme-with-system-vars);
 
   // We don't inherit the border focus style from MDC since we don't use their ripple.
   // Instead we need to replicate it here.
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mdc-radio > .mdc-radio__native-control:focus:enabled:not(:checked) {
-      & ~ .mdc-radio__background > .mdc-radio__outer-circle {
-        border-color: token-utils.slot(unselected-focus-icon-color);
-      }
+  .mdc-radio > .mdc-radio__native-control:focus:enabled:not(:checked) {
+    & ~ .mdc-radio__background > .mdc-radio__outer-circle {
+      border-color: token-utils.slot(radio-unselected-focus-icon-color, $fallbacks);
     }
   }
 
@@ -99,10 +91,7 @@ $fallbacks: m3-radio.get-tokens(m3-system.$theme-with-system-vars);
   height: 48px;
   width: 48px;
   transform: translate(-50%, -50%);
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    display: token-utils.slot(touch-target-display);
-  }
+  display: token-utils.slot(radio-touch-target-display, $fallbacks);
 
   [dir='rtl'] & {
     left: auto;

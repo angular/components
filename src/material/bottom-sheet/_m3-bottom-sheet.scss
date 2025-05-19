@@ -1,26 +1,24 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, bottom-sheet);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-bottom-sheet.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
   @return (
     base: (
-      container-shape: 28px,
+      bottom-sheet-container-shape: 28px,
     ),
     color: (
-      container-text-color: map.get($system, on-surface),
-      container-background-color: map.get($system, surface-container-low),
+      bottom-sheet-container-text-color: map.get($system, on-surface),
+      bottom-sheet-container-background-color: map.get($system, surface-container-low),
     ),
     typography: (
-      container-text-font: map.get($system, body-large-font),
-      container-text-line-height: map.get($system, body-large-line-height),
-      container-text-size: map.get($system, body-large-size),
-      container-text-tracking: map.get($system, body-large-tracking),
-      container-text-weight: map.get($system, body-large-weight),
+      bottom-sheet-container-text-font: map.get($system, body-large-font),
+      bottom-sheet-container-text-line-height: map.get($system, body-large-line-height),
+      bottom-sheet-container-text-size: map.get($system, body-large-size),
+      bottom-sheet-container-text-tracking: map.get($system, body-large-tracking),
+      bottom-sheet-container-text-weight: map.get($system, body-large-weight),
     ),
     density: (),
   );

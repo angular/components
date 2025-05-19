@@ -1,17 +1,11 @@
 @use '@angular/cdk';
-
-@use './m2-option';
 @use './m3-option';
-@use '../../list/m2-list';
 @use '../../list/m3-list';
 @use '../tokens/token-utils';
 @use '../style/vendor-prefixes';
 @use '../style/layout-common';
-@use '../tokens/m3-system';
 
-$token-prefix: m2-option.$prefix;
-$token-slots: m2-option.get-token-slots();
-$fallbacks: m3-option.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-option.get-tokens();
 
 $_side-padding: 16px;
 
@@ -28,40 +22,38 @@ $_side-padding: 16px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(label-text-color);
-    font-family: token-utils.slot(label-text-font);
-    line-height: token-utils.slot(label-text-line-height);
-    font-size: token-utils.slot(label-text-size);
-    letter-spacing: token-utils.slot(label-text-tracking);
-    font-weight: token-utils.slot(label-text-weight);
+  color: token-utils.slot(option-label-text-color, $fallbacks);
+  font-family: token-utils.slot(option-label-text-font, $fallbacks);
+  line-height: token-utils.slot(option-label-text-line-height, $fallbacks);
+  font-size: token-utils.slot(option-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(option-label-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(option-label-text-weight, $fallbacks);
 
-    // Increase specificity to override styles from list theme.
-    &:hover:not(.mdc-list-item--disabled) {
-      background-color: token-utils.slot(hover-state-layer-color);
-    }
+  // Increase specificity to override styles from list theme.
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: token-utils.slot(option-hover-state-layer-color, $fallbacks);
+  }
 
-    &:focus.mdc-list-item,
-    &.mat-mdc-option-active.mdc-list-item {
-      background-color: token-utils.slot(focus-state-layer-color);
-      outline: 0;
-    }
+  &:focus.mdc-list-item,
+  &.mat-mdc-option-active.mdc-list-item {
+    background-color: token-utils.slot(option-focus-state-layer-color, $fallbacks);
+    outline: 0;
+  }
 
-    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      // We don't change the background & text color in multiple mode since
-      // it has the checkbox to show the selected state.
-      &:not(.mat-mdc-option-multiple) {
-        background-color: token-utils.slot(selected-state-layer-color);
-        .mdc-list-item__primary-text {
-          color: token-utils.slot(selected-state-label-text-color);
-        }
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    // We don't change the background & text color in multiple mode since
+    // it has the checkbox to show the selected state.
+    &:not(.mat-mdc-option-multiple) {
+      background-color: token-utils.slot(option-selected-state-layer-color, $fallbacks);
+      .mdc-list-item__primary-text {
+        color: token-utils.slot(option-selected-state-label-text-color, $fallbacks);
       }
     }
+  }
 
-    .mat-pseudo-checkbox {
-      --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
-          token-utils.slot(selected-state-label-text-color)};
-    }
+  .mat-pseudo-checkbox {
+    --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
+        token-utils.slot(option-selected-state-label-text-color, $fallbacks)};
   }
 
   &.mdc-list-item {
@@ -187,20 +179,15 @@ $_side-padding: 16px;
   }
 }
 
-$list-token-prefix: m2-list.$prefix;
-$list-token-slots: m2-list.get-token-slots();
-$list-fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
+$list-fallbacks: m3-list.get-tokens();
 
 .mat-mdc-option-multiple {
   // Multi-select options in the selected state aren't supposed to change their background color,
   // because the checkbox already indicates that they're selected. This happened to work in M2,
   // due to `list-item-selected-container-color` being the same as `list-item-container-color`,
   // but that's no longer the case in M3. This overrides ensures that the appearance is consistent.
-  @include token-utils.use-tokens($list-token-prefix, $list-token-slots, $list-fallbacks) {
-    $selected-token: token-utils.get-token-variable-name(list-item-selected-container-color);
-    $base-token: token-utils.slot(list-item-container-color, $fallback: transparent);
-    #{$selected-token}: $base-token;
-  }
+    --mat-list-list-item-selected-container-color: #{
+        token-utils.slot(list-list-item-container-color, $list-fallbacks, $fallback: transparent)};
 }
 
 // For options, render the focus indicator when the class .mat-mdc-option-active is present.

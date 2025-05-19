@@ -1,10 +1,8 @@
 @use 'sass:math';
 @use '@angular/cdk';
-@use './m2-checkbox';
 @use './m3-checkbox';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m3-system';
 
 $_path-length: 29.7833385;
 $_transition-duration: 90ms;
@@ -18,9 +16,7 @@ $_fallback-size: 40px;
 
 // Structural styles for a checkbox. Shared with the selection list.
 @mixin checkbox-structure($include-state-layer-styles) {
-  $prefix: m2-checkbox.$prefix;
-  $slots: m2-checkbox.get-token-slots();
-  $fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
+  $fallbacks: m3-checkbox.get-tokens();
 
   .mdc-checkbox {
     display: inline-block;
@@ -34,14 +30,13 @@ $_fallback-size: 40px;
     cursor: pointer;
     vertical-align: bottom;
 
-    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-      $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
-      padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
-      margin: calc((#{$layer-size} - #{$layer-size}) / 2);
+    $layer-size: token-utils.slot(checkbox-state-layer-size,
+        $fallbacks, $fallback: $_fallback-size);
+    padding: calc((#{$layer-size} - #{$_icon-size}) / 2);
+    margin: calc((#{$layer-size} - #{$layer-size}) / 2);
 
-      @if ($include-state-layer-styles) {
-        @include _state-layer-styles;
-      }
+    @if ($include-state-layer-styles) {
+      @include _state-layer-styles($fallbacks);
     }
 
     // These styles have to be nested in order to override overly-broad
@@ -54,15 +49,14 @@ $_fallback-size: 40px;
       cursor: inherit;
       z-index: 1;
 
-      @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-        $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
-        $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
-        width: $layer-size;
-        height: $layer-size;
-        top: $offset;
-        right: $offset;
-        left: $offset;
-      }
+      $layer-size: token-utils.slot(checkbox-state-layer-size,
+          $fallbacks, $fallback: $_fallback-size);
+      $offset: calc((#{$layer-size} - #{$layer-size}) / 2);
+      width: $layer-size;
+      height: $layer-size;
+      top: $offset;
+      right: $offset;
+      left: $offset;
     }
   }
 
@@ -94,76 +88,73 @@ $_fallback-size: 40px;
     // Force browser to show background-color when using the print function
     @include vendor-prefixes.color-adjust(exact);
 
-    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-      $layer-size: token-utils.slot(state-layer-size, $fallback: $_fallback-size);
-      $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
+    $layer-size: token-utils.slot(checkbox-state-layer-size,
+        $fallbacks, $fallback: $_fallback-size);
+    $offset: calc((#{$layer-size} - #{$_icon-size}) / 2);
 
-      border-color: token-utils.slot(unselected-icon-color);
-      top: $offset;
-      left: $offset;
-    }
+    border-color: token-utils.slot(checkbox-unselected-icon-color, $fallbacks);
+    top: $offset;
+    left: $offset;
   }
 
   // These can't be under `.mdc-checkbox__background` because
   // the selectors will break when the mixin is nested.
-  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-    .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
-    .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
-      border-color: token-utils.slot(selected-icon-color);
-      background-color: token-utils.slot(selected-icon-color);
+  .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-selected-icon-color, $fallbacks);
+    background-color: token-utils.slot(checkbox-selected-icon-color, $fallbacks);
+  }
+
+  .mdc-checkbox--disabled .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-disabled-unselected-icon-color, $fallbacks);
+  }
+
+  .mdc-checkbox__native-control:disabled:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:disabled:indeterminate ~ .mdc-checkbox__background {
+    background-color: token-utils.slot(checkbox-disabled-selected-icon-color, $fallbacks);
+    border-color: transparent;
+  }
+
+  // stylelint-disable selector-combinator-space-before
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover
+    > .mdc-checkbox__native-control:not(:indeterminate) ~ .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-unselected-hover-icon-color, $fallbacks);
+    background-color: transparent;
+  }
+  // stylelint-enable selector-combinator-space-before
+
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-selected-hover-icon-color, $fallbacks);
+    background-color: token-utils.slot(checkbox-selected-hover-icon-color, $fallbacks);
+  }
+
+  // Note: this must be more specific than the hover styles above.
+  // Double :focus is added for increased specificity.
+  .mdc-checkbox__native-control:focus:focus:not(:checked) ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:not(:indeterminate) ~ .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-unselected-focus-icon-color, $fallbacks);
+  }
+
+  .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
+  .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
+    border-color: token-utils.slot(checkbox-selected-focus-icon-color, $fallbacks);
+    background-color: token-utils.slot(checkbox-selected-focus-icon-color, $fallbacks);
+  }
+
+  // Needs extra specificity to override the focus, hover, active states.
+  .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive {
+    .mdc-checkbox:hover > .mdc-checkbox__native-control ~ .mdc-checkbox__background,
+    .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background,
+    .mdc-checkbox__background {
+      border-color: token-utils.slot(checkbox-disabled-unselected-icon-color, $fallbacks);
     }
 
-    .mdc-checkbox--disabled .mdc-checkbox__background {
-      border-color: token-utils.slot(disabled-unselected-icon-color);
-    }
-
-    .mdc-checkbox__native-control:disabled:checked ~ .mdc-checkbox__background,
-    .mdc-checkbox__native-control:disabled:indeterminate ~ .mdc-checkbox__background {
-      background-color: token-utils.slot(disabled-selected-icon-color);
+    .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
+    .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
+      background-color: token-utils.slot(checkbox-disabled-selected-icon-color, $fallbacks);
       border-color: transparent;
-    }
-
-    // stylelint-disable selector-combinator-space-before
-    .mdc-checkbox:hover > .mdc-checkbox__native-control:not(:checked) ~ .mdc-checkbox__background,
-    .mdc-checkbox:hover
-      > .mdc-checkbox__native-control:not(:indeterminate) ~ .mdc-checkbox__background {
-      border-color: token-utils.slot(unselected-hover-icon-color);
-      background-color: transparent;
-    }
-    // stylelint-enable selector-combinator-space-before
-
-    .mdc-checkbox:hover > .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
-    .mdc-checkbox:hover > .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-      border-color: token-utils.slot(selected-hover-icon-color);
-      background-color: token-utils.slot(selected-hover-icon-color);
-    }
-
-    // Note: this must be more specific than the hover styles above.
-    // Double :focus is added for increased specificity.
-    .mdc-checkbox__native-control:focus:focus:not(:checked) ~ .mdc-checkbox__background,
-    .mdc-checkbox__native-control:focus:focus:not(:indeterminate) ~ .mdc-checkbox__background {
-      border-color: token-utils.slot(unselected-focus-icon-color);
-    }
-
-    .mdc-checkbox__native-control:focus:focus:checked ~ .mdc-checkbox__background,
-    .mdc-checkbox__native-control:focus:focus:indeterminate ~ .mdc-checkbox__background {
-      border-color: token-utils.slot(selected-focus-icon-color);
-      background-color: token-utils.slot(selected-focus-icon-color);
-    }
-
-    // Needs extra specificity to override the focus, hover, active states.
-    .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive {
-      .mdc-checkbox:hover > .mdc-checkbox__native-control ~ .mdc-checkbox__background,
-      .mdc-checkbox .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background,
-      .mdc-checkbox__background {
-        border-color: token-utils.slot(disabled-unselected-icon-color);
-      }
-
-      .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background,
-      .mdc-checkbox__native-control:indeterminate ~ .mdc-checkbox__background {
-        background-color: token-utils.slot(disabled-selected-icon-color);
-        border-color: transparent;
-      }
     }
   }
 
@@ -177,26 +168,22 @@ $_fallback-size: 40px;
     opacity: 0;
     transition: opacity $_transition-duration * 2 $_exit-curve;
 
-    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-      // Always apply the color since the element becomes `opacity: 0`
-      // when unchecked. This makes the animation look better.
-      color: token-utils.slot(selected-checkmark-color);
-    }
+    // Always apply the color since the element becomes `opacity: 0`
+    // when unchecked. This makes the animation look better.
+    color: token-utils.slot(checkbox-selected-checkmark-color, $fallbacks);
 
     @include cdk.high-contrast {
       color: CanvasText;
     }
   }
 
-  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-    .mdc-checkbox--disabled {
-      &, &.mat-mdc-checkbox-disabled-interactive {
-        .mdc-checkbox__checkmark {
-          color: token-utils.slot(disabled-selected-checkmark-color);
+  .mdc-checkbox--disabled {
+    &, &.mat-mdc-checkbox-disabled-interactive {
+      .mdc-checkbox__checkmark {
+        color: token-utils.slot(checkbox-disabled-selected-checkmark-color, $fallbacks);
 
-          @include cdk.high-contrast {
-            color: CanvasText;
-          }
+        @include cdk.high-contrast {
+          color: CanvasText;
         }
       }
     }
@@ -220,23 +207,19 @@ $_fallback-size: 40px;
     transition: opacity $_transition-duration $_exit-curve,
                 transform $_transition-duration $_exit-curve;
 
-    @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-      // Always apply the color since the element becomes `opacity: 0`
-      // when unchecked. This makes the animation look better.
-      border-color: token-utils.slot(selected-checkmark-color);
-    }
+    // Always apply the color since the element becomes `opacity: 0`
+    // when unchecked. This makes the animation look better.
+    border-color: token-utils.slot(checkbox-selected-checkmark-color, $fallbacks);
 
     @include cdk.high-contrast {
       margin: 0 1px;
     }
   }
 
-  @include token-utils.use-tokens($prefix, $slots, $fallbacks) {
-    .mdc-checkbox--disabled {
-      &, &.mat-mdc-checkbox-disabled-interactive {
-        .mdc-checkbox__mixedmark {
-          border-color: token-utils.slot(disabled-selected-checkmark-color);
-        }
+  .mdc-checkbox--disabled {
+    &, &.mat-mdc-checkbox-disabled-interactive {
+      .mdc-checkbox__mixedmark {
+        border-color: token-utils.slot(checkbox-disabled-selected-checkmark-color, $fallbacks);
       }
     }
   }
@@ -470,72 +453,72 @@ $_fallback-size: 40px;
   }
 }
 
-@mixin _state-layer-styles() {
+@mixin _state-layer-styles($fallbacks) {
   // MDC expects `.mdc-checkbox__ripple::before` to be the state layer, but we use
   // `.mdc-checkbox__ripple` instead, so we emit the state layer slots ourselves.
   &:hover {
     > .mdc-checkbox__ripple {
-      opacity: token-utils.slot(unselected-hover-state-layer-opacity);
-      background-color: token-utils.slot(unselected-hover-state-layer-color);
+      opacity: token-utils.slot(checkbox-unselected-hover-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-unselected-hover-state-layer-color, $fallbacks);
     }
 
     > .mat-mdc-checkbox-ripple > .mat-ripple-element {
-      background-color: token-utils.slot(unselected-hover-state-layer-color);
+      background-color: token-utils.slot(checkbox-unselected-hover-state-layer-color, $fallbacks);
     }
   }
 
   .mdc-checkbox__native-control:focus {
     & + .mdc-checkbox__ripple {
-      opacity: token-utils.slot(unselected-focus-state-layer-opacity);
-      background-color: token-utils.slot(unselected-focus-state-layer-color);
+      opacity: token-utils.slot(checkbox-unselected-focus-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-unselected-focus-state-layer-color, $fallbacks);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      background-color: token-utils.slot(unselected-focus-state-layer-color);
+      background-color: token-utils.slot(checkbox-unselected-focus-state-layer-color, $fallbacks);
     }
   }
 
   &:active > .mdc-checkbox__native-control {
     & + .mdc-checkbox__ripple {
-      opacity: token-utils.slot(unselected-pressed-state-layer-opacity);
-      background-color: token-utils.slot(unselected-pressed-state-layer-color);
+      opacity: token-utils.slot(checkbox-unselected-pressed-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-unselected-pressed-state-layer-color, $fallbacks);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      background-color: token-utils.slot(unselected-pressed-state-layer-color);
+      background-color: token-utils.slot(checkbox-unselected-pressed-state-layer-color, $fallbacks);
     }
   }
 
   &:hover .mdc-checkbox__native-control:checked {
     & + .mdc-checkbox__ripple {
-      opacity: token-utils.slot(selected-hover-state-layer-opacity);
-      background-color: token-utils.slot(selected-hover-state-layer-color);
+      opacity: token-utils.slot(checkbox-selected-hover-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-selected-hover-state-layer-color, $fallbacks);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      background-color: token-utils.slot(selected-hover-state-layer-color);
+      background-color: token-utils.slot(checkbox-selected-hover-state-layer-color, $fallbacks);
     }
   }
 
   .mdc-checkbox__native-control:focus:checked {
     & + .mdc-checkbox__ripple {
-      opacity: token-utils.slot(selected-focus-state-layer-opacity);
-      background-color: token-utils.slot(selected-focus-state-layer-color);
+      opacity: token-utils.slot(checkbox-selected-focus-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-selected-focus-state-layer-color, $fallbacks);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      background-color: token-utils.slot(selected-focus-state-layer-color);
+      background-color: token-utils.slot(checkbox-selected-focus-state-layer-color, $fallbacks);
     }
   }
 
   &:active > .mdc-checkbox__native-control:checked {
     & + .mdc-checkbox__ripple {
-      opacity: token-utils.slot(selected-pressed-state-layer-opacity);
-      background-color: token-utils.slot(selected-pressed-state-layer-color);
+      opacity: token-utils.slot(checkbox-selected-pressed-state-layer-opacity, $fallbacks);
+      background-color: token-utils.slot(checkbox-selected-pressed-state-layer-color, $fallbacks);
     }
 
     & ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
-      background-color: token-utils.slot(selected-pressed-state-layer-color);
+      background-color: token-utils.slot(checkbox-selected-pressed-state-layer-color, $fallbacks);
     }
   }
 
@@ -543,7 +526,7 @@ $_fallback-size: 40px;
   .mdc-checkbox--disabled.mat-mdc-checkbox-disabled-interactive & {
     .mdc-checkbox__native-control ~ .mat-mdc-checkbox-ripple .mat-ripple-element,
     .mdc-checkbox__native-control + .mdc-checkbox__ripple {
-      background-color: token-utils.slot(unselected-hover-state-layer-color);
+      background-color: token-utils.slot(checkbox-unselected-hover-state-layer-color, $fallbacks);
     }
   }
 }

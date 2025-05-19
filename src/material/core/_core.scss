@@ -1,12 +1,8 @@
-@use './m2-app';
 @use './m3-app';
 @use './tokens/token-utils';
 @use './style/elevation';
-@use './tokens/m3-system';
 
-$token-prefix: m2-app.$prefix;
-$token-slots: m2-app.get-token-slots();
-$fallbacks: m3-app.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-app.get-tokens();
 
 /// @deprecated This mixin is a no-op and is going to be removed in v21.
 @mixin core() {}
@@ -26,11 +22,9 @@ $fallbacks: m3-app.get-tokens(m3-system.$theme-with-system-vars);
   // user's content isn't inside of a `mat-sidenav-container`.
   @at-root {
     // Note: we need to emit fallback values here to avoid errors in internal builds.
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mat-app-background {
-        background-color: token-utils.slot(background-color, transparent);
-        color: token-utils.slot(text-color, inherit);
-      }
+    .mat-app-background {
+      background-color: token-utils.slot(app-background-color, $fallbacks, transparent);
+      color: token-utils.slot(app-text-color, $fallbacks, inherit);
     }
   }
 }
@@ -41,18 +35,15 @@ $fallbacks: m3-app.get-tokens(m3-system.$theme-with-system-vars);
 // Material Design specification.
 @mixin elevation-classes() {
   @at-root {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      // Provides external CSS classes for each elevation value. Each CSS class is formatted as
-      // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
-      // is elevated.
-      @for $z-value from 0 through 24 {
-        $selector: elevation.$prefix + $z-value;
-        // We need the `mat-mdc-elevation-specific`, because some MDC mixins
-        // come with elevation baked in and we don't have a way of removing it.
-        .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
-          box-shadow: token-utils.slot('elevation-shadow-level-#{$z-value}',
-            none);
-        }
+    // Provides external CSS classes for each elevation value. Each CSS class is formatted as
+    // `mat-elevation-z$z-value` where `$z-value` corresponds to the z-space to which the element
+    // is elevated.
+    @for $z-value from 0 through 24 {
+      $selector: elevation.$prefix + $z-value;
+      // We need the `mat-mdc-elevation-specific`, because some MDC mixins
+      // come with elevation baked in and we don't have a way of removing it.
+      .#{$selector}, .mat-mdc-elevation-specific.#{$selector} {
+        box-shadow: token-utils.slot('app-elevation-shadow-level-#{$z-value}', $fallbacks, none);
       }
     }
   }

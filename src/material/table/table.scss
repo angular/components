@@ -1,13 +1,9 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use './m2-table';
 @use './m3-table';
 @use './table-flex-styles';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-table.$prefix;
-$token-slots: m2-table.get-token-slots();
-$fallbacks: m3-table.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-table.get-tokens();
 
 .mat-mdc-table-sticky {
   // Note that the table can either set this class or an inline style to make something sticky.
@@ -16,12 +12,9 @@ $fallbacks: m3-table.get-tokens(m3-system.$theme-with-system-vars);
   position: sticky !important;
 }
 
-$token-prefix: m2-table.$prefix;
-$token-slots: m2-table.get-token-slots();
-
 @mixin _cell-border {
-  border-bottom-color: token-utils.slot(row-item-outline-color, true);
-  border-bottom-width: token-utils.slot(row-item-outline-width, true);
+  border-bottom-color: token-utils.slot(table-row-item-outline-color, $fallbacks, true);
+  border-bottom-width: token-utils.slot(table-row-item-outline-width, $fallbacks, true);
   border-bottom-style: solid;
 }
 
@@ -33,10 +26,7 @@ $token-slots: m2-table.get-token-slots();
   border-spacing: 0;
   table-layout: auto;
   white-space: normal;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(background-color);
-  }
+  background-color: token-utils.slot(table-background-color, $fallbacks);
 }
 
 .mdc-data-table__cell {
@@ -55,81 +45,79 @@ $token-slots: m2-table.get-token-slots();
   padding: 0 16px;
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  // TODO(crisbeto): these tokens have default values in order to make the initial token
-  // work easier to land in g3. Eventually we should remove them.
-  .mat-mdc-header-row {
-    @include vendor-prefixes.smooth-font;
-    height: token-utils.slot(header-container-height, 56px);
-    color: token-utils.slot(header-headline-color, true);
-    font-family: token-utils.slot(header-headline-font, true);
-    line-height: token-utils.slot(header-headline-line-height);
-    font-size: token-utils.slot(header-headline-size, 14px);
-    font-weight: token-utils.slot(header-headline-weight, 500);
+// TODO(crisbeto): these tokens have default values in order to make the initial token
+// work easier to land in g3. Eventually we should remove them.
+.mat-mdc-header-row {
+  @include vendor-prefixes.smooth-font;
+  height: token-utils.slot(table-header-container-height, $fallbacks, 56px);
+  color: token-utils.slot(table-header-headline-color, $fallbacks, true);
+  font-family: token-utils.slot(table-header-headline-font, $fallbacks, true);
+  line-height: token-utils.slot(table-header-headline-line-height, $fallbacks);
+  font-size: token-utils.slot(table-header-headline-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-header-headline-weight, $fallbacks, 500);
+}
+
+.mat-mdc-row {
+  height: token-utils.slot(table-row-item-container-height, $fallbacks, 52px);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, true);
+}
+
+// Note that while it's redundant to apply the typography both to the row
+// and the content element since the cell inherit from both of them,
+// applying it only to one results in sub-pixel differences in the
+// letter spacing which leads to a lot of internal screenshot diffs.
+.mat-mdc-row,
+.mdc-data-table__content {
+  @include vendor-prefixes.smooth-font;
+  font-family: token-utils.slot(table-row-item-label-text-font, $fallbacks, true);
+  line-height: token-utils.slot(table-row-item-label-text-line-height, $fallbacks);
+  font-size: token-utils.slot(table-row-item-label-text-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-row-item-label-text-weight, $fallbacks);
+}
+
+.mat-mdc-footer-row {
+  @include vendor-prefixes.smooth-font;
+  height: token-utils.slot(table-footer-container-height, $fallbacks, 52px);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, true);
+  font-family: token-utils.slot(table-footer-supporting-text-font, $fallbacks, true);
+  line-height: token-utils.slot(table-footer-supporting-text-line-height, $fallbacks);
+  font-size: token-utils.slot(table-footer-supporting-text-size, $fallbacks, 14px);
+  font-weight: token-utils.slot(table-footer-supporting-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(table-footer-supporting-text-tracking, $fallbacks);
+}
+
+.mat-mdc-header-cell {
+  @include _cell-border;
+  letter-spacing: token-utils.slot(table-header-headline-tracking, $fallbacks);
+  font-weight: inherit;
+  line-height: inherit;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  outline: none;
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
   }
 
-  .mat-mdc-row {
-    height: token-utils.slot(row-item-container-height, 52px);
-    color: token-utils.slot(row-item-label-text-color, true);
+  .mdc-data-table__row:last-child > & {
+    border-bottom: none;
   }
+}
 
-  // Note that while it's redundant to apply the typography both to the row
-  // and the content element since the cell inherit from both of them,
-  // applying it only to one results in sub-pixel differences in the
-  // letter spacing which leads to a lot of internal screenshot diffs.
-  .mat-mdc-row,
-  .mdc-data-table__content {
-    @include vendor-prefixes.smooth-font;
-    font-family: token-utils.slot(row-item-label-text-font, true);
-    line-height: token-utils.slot(row-item-label-text-line-height);
-    font-size: token-utils.slot(row-item-label-text-size, 14px);
-    font-weight: token-utils.slot(row-item-label-text-weight);
+.mat-mdc-cell {
+  @include _cell-border;
+  letter-spacing: token-utils.slot(table-row-item-label-text-tracking, $fallbacks);
+  line-height: inherit;
+
+  .mdc-data-table__row:last-child > & {
+    border-bottom: none;
   }
+}
 
-  .mat-mdc-footer-row {
-    @include vendor-prefixes.smooth-font;
-    height: token-utils.slot(footer-container-height, 52px);
-    color: token-utils.slot(row-item-label-text-color, true);
-    font-family: token-utils.slot(footer-supporting-text-font, true);
-    line-height: token-utils.slot(footer-supporting-text-line-height);
-    font-size: token-utils.slot(footer-supporting-text-size, 14px);
-    font-weight: token-utils.slot(footer-supporting-text-weight);
-    letter-spacing: token-utils.slot(footer-supporting-text-tracking);
-  }
-
-  .mat-mdc-header-cell {
-    @include _cell-border;
-    letter-spacing: token-utils.slot(header-headline-tracking);
-    font-weight: inherit;
-    line-height: inherit;
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    outline: none;
-    text-align: left;
-
-    [dir='rtl'] & {
-      text-align: right;
-    }
-
-    .mdc-data-table__row:last-child > & {
-      border-bottom: none;
-    }
-  }
-
-  .mat-mdc-cell {
-    @include _cell-border;
-    letter-spacing: token-utils.slot(row-item-label-text-tracking);
-    line-height: inherit;
-
-    .mdc-data-table__row:last-child > & {
-      border-bottom: none;
-    }
-  }
-
-  .mat-mdc-footer-cell {
-    letter-spacing: token-utils.slot(row-item-label-text-tracking);
-  }
+.mat-mdc-footer-cell {
+  letter-spacing: token-utils.slot(table-row-item-label-text-tracking, $fallbacks);
 }
 
 // MDC table rows are styled with a top border, whereas our legacy flex table styles rows with

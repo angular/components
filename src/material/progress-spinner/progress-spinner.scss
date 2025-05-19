@@ -1,12 +1,8 @@
 @use '@angular/cdk';
 @use '../core/tokens/token-utils';
-@use './m2-progress-spinner';
 @use './m3-progress-spinner';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-progress-spinner.$prefix;
-$token-slots: m2-progress-spinner.get-token-slots();
-$fallbacks: m3-progress-spinner.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-progress-spinner.get-tokens();
 
 .mat-mdc-progress-spinner {
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
@@ -23,9 +19,7 @@ $fallbacks: m3-progress-spinner.get-tokens(m3-system.$theme-with-system-vars);
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.6, 1);
 
   circle {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      stroke-width: token-utils.slot(active-indicator-width);
-    }
+    stroke-width: token-utils.slot(progress-spinner-active-indicator-width, $fallbacks);
   }
 
   &._mat-animation-noopable {
@@ -96,13 +90,7 @@ $fallbacks: m3-progress-spinner.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-mdc-progress-spinner .mdc-circular-progress__determinate-circle,
 .mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
-  @include token-utils.use-tokens(
-    m2-progress-spinner.$prefix,
-    m2-progress-spinner.get-token-slots(),
-    $fallbacks,
-  ) {
-    stroke: token-utils.slot(active-indicator-color);
-  }
+  stroke: token-utils.slot(progress-spinner-active-indicator-color, $fallbacks);
 
   @include cdk.high-contrast {
     stroke: CanvasText;

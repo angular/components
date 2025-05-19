@@ -1,16 +1,12 @@
 @use '@angular/cdk';
-@use './m2-slider';
 @use './m3-slider';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m3-system';
 
 $mat-slider-min-size: 128px !default;
 $mat-slider-horizontal-margin: 8px !default;
 
-$token-prefix: m2-slider.$prefix;
-$token-slots: m2-slider.get-token-slots();
-$fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-slider.get-tokens();
 
 .mdc-slider__track {
   position: absolute;
@@ -18,10 +14,7 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   transform: translateY(-50%);
   width: 100%;
   pointer-events: none;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    height: token-utils.slot(inactive-track-height);
-  }
+  height: token-utils.slot(slider-inactive-track-height, $fallbacks);
 }
 
 .mdc-slider__track--active,
@@ -34,14 +27,11 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
 
 .mdc-slider__track--active {
   overflow: hidden;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-radius: token-utils.slot(active-track-shape);
-    $active-height-ref: token-utils.slot(active-track-height);
-    $inactive-height-ref: token-utils.slot(inactive-track-height);
-    height: $active-height-ref;
-    top: calc((#{$inactive-height-ref} - #{$active-height-ref}) / 2);
-  }
+  border-radius: token-utils.slot(slider-active-track-shape, $fallbacks);
+  $active-height-ref: token-utils.slot(slider-active-track-height, $fallbacks);
+  $inactive-height-ref: token-utils.slot(slider-inactive-track-height, $fallbacks);
+  height: $active-height-ref;
+  top: calc((#{$inactive-height-ref} - #{$active-height-ref}) / 2);
 }
 
 .mdc-slider__track--active_fill {
@@ -53,13 +43,11 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   transform-origin: left;
   transition: transform 80ms ease;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-color: token-utils.slot(active-track-color);
-    border-top-width: token-utils.slot(active-track-height);
+  border-color: token-utils.slot(slider-active-track-color, $fallbacks);
+  border-top-width: token-utils.slot(slider-active-track-height, $fallbacks);
 
-    .mdc-slider--disabled & {
-      border-color: token-utils.slot(disabled-active-track-color);
-    }
+  .mdc-slider--disabled & {
+    border-color: token-utils.slot(slider-disabled-active-track-color, $fallbacks);
   }
 
   [dir='rtl'] & {
@@ -73,15 +61,13 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   top: 0;
   opacity: 0.24;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(inactive-track-color);
-    height: token-utils.slot(inactive-track-height);
-    border-radius: token-utils.slot(inactive-track-shape);
+  background-color: token-utils.slot(slider-inactive-track-color, $fallbacks);
+  height: token-utils.slot(slider-inactive-track-height, $fallbacks);
+  border-radius: token-utils.slot(slider-inactive-track-shape, $fallbacks);
 
-    .mdc-slider--disabled & {
-      background-color: token-utils.slot(disabled-inactive-track-color);
-      opacity: 0.24;
-    }
+  .mdc-slider--disabled & {
+    background-color: token-utils.slot(slider-disabled-inactive-track-color, $fallbacks);
+    opacity: 0.24;
   }
 
   &::before {
@@ -107,11 +93,7 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   left: 50%;
   pointer-events: none;
   position: absolute;
-  transform: translateX(-50%);
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    transform: token-utils.slot(value-indicator-container-transform);
-  }
+  transform: token-utils.slot(slider-value-indicator-container-transform, $fallbacks);
 
   .mdc-slider__thumb--with-indicator & {
     pointer-events: auto;
@@ -121,30 +103,22 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
 .mdc-slider__value-indicator {
   display: flex;
   align-items: center;
-  border-radius: 4px;
-  height: 32px;
-  padding: 0 12px;
   transform: scale(0);
   transform-origin: bottom;
-  opacity: 1;
   transition: transform 100ms cubic-bezier(0.4, 0, 1, 1);
 
   // Stop parent word-break from altering
   // the word-break of the value indicator.
   word-break: normal;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(label-container-color);
-    color: token-utils.slot(label-label-text-color);
-  }
+  background-color: token-utils.slot(slider-label-container-color, $fallbacks);
+  color: token-utils.slot(slider-label-label-text-color, $fallbacks);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(value-indicator-width);
-    height: token-utils.slot(value-indicator-height);
-    padding: token-utils.slot(value-indicator-padding);
-    opacity: token-utils.slot(value-indicator-opacity);
-    border-radius: token-utils.slot(value-indicator-border-radius);
-  }
+  width: token-utils.slot(slider-value-indicator-width, $fallbacks);
+  height: token-utils.slot(slider-value-indicator-height, $fallbacks);
+  padding: token-utils.slot(slider-value-indicator-padding, $fallbacks);
+  opacity: token-utils.slot(slider-value-indicator-opacity, $fallbacks);
+  border-radius: token-utils.slot(slider-value-indicator-border-radius, $fallbacks);
 
   .mdc-slider__thumb--with-indicator & {
     transition: transform 100ms cubic-bezier(0, 0, 0.2, 1);
@@ -162,14 +136,8 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
     position: absolute;
     transform: translateX(-50%);
     width: 0;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      display: token-utils.slot(value-indicator-caret-display);
-    }
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-top-color: token-utils.slot(label-container-color);
-    }
+    display: token-utils.slot(slider-value-indicator-caret-display, $fallbacks);
+    border-top-color: token-utils.slot(slider-label-container-color, $fallbacks);
   }
 
   &::after {
@@ -192,19 +160,13 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
 
 .mdc-slider__value-indicator-text {
   text-align: center;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(value-indicator-width);
-    transform: token-utils.slot(value-indicator-text-transform);
-  }
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-family: token-utils.slot(label-label-text-font);
-    font-size: token-utils.slot(label-label-text-size);
-    font-weight: token-utils.slot(label-label-text-weight);
-    line-height: token-utils.slot(label-label-text-line-height);
-    letter-spacing: token-utils.slot(label-label-text-tracking);
-  }
+  width: token-utils.slot(slider-value-indicator-width, $fallbacks);
+  transform: token-utils.slot(slider-value-indicator-text-transform, $fallbacks);
+  font-family: token-utils.slot(slider-label-label-text-font, $fallbacks);
+  font-size: token-utils.slot(slider-label-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(slider-label-label-text-weight, $fallbacks);
+  line-height: token-utils.slot(slider-label-label-text-line-height, $fallbacks);
+  letter-spacing: token-utils.slot(slider-label-label-text-tracking, $fallbacks);
 }
 
 .mdc-slider__thumb {
@@ -238,32 +200,30 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   transform: translate(-50%, -50%);
   border-style: solid;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $width-ref: token-utils.slot(handle-width);
-    $height-ref: token-utils.slot(handle-height);
-    width: $width-ref;
-    height: $height-ref;
-    border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
+  $width-ref: token-utils.slot(slider-handle-width, $fallbacks);
+  $height-ref: token-utils.slot(slider-handle-height, $fallbacks);
+  width: $width-ref;
+  height: $height-ref;
+  border-width: calc(#{$height-ref} / 2) calc(#{$width-ref} / 2);
 
-    box-shadow: token-utils.slot(handle-elevation);
-    background-color: token-utils.slot(handle-color);
-    border-color: token-utils.slot(handle-color);
-    border-radius: token-utils.slot(handle-shape);
+  box-shadow: token-utils.slot(slider-handle-elevation, $fallbacks);
+  background-color: token-utils.slot(slider-handle-color, $fallbacks);
+  border-color: token-utils.slot(slider-handle-color, $fallbacks);
+  border-radius: token-utils.slot(slider-handle-shape, $fallbacks);
 
-    .mdc-slider__thumb:hover & {
-      background-color: token-utils.slot(hover-handle-color);
-      border-color: token-utils.slot(hover-handle-color);
-    }
+  .mdc-slider__thumb:hover & {
+    background-color: token-utils.slot(slider-hover-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-hover-handle-color, $fallbacks);
+  }
 
-    .mdc-slider__thumb--focused & {
-      background-color: token-utils.slot(focus-handle-color);
-      border-color: token-utils.slot(focus-handle-color);
-    }
+  .mdc-slider__thumb--focused & {
+    background-color: token-utils.slot(slider-focus-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-focus-handle-color, $fallbacks);
+  }
 
-    .mdc-slider--disabled & {
-      background-color: token-utils.slot(disabled-handle-color);
-      border-color: token-utils.slot(disabled-handle-color);
-    }
+  .mdc-slider--disabled & {
+    background-color: token-utils.slot(slider-disabled-handle-color, $fallbacks);
+    border-color: token-utils.slot(slider-disabled-handle-color, $fallbacks);
   }
 
   .mdc-slider__thumb--top &,
@@ -271,11 +231,8 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   .mdc-slider__thumb--top.mdc-slider__thumb--focused & {
     border: solid 1px #fff;
     box-sizing: content-box;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-color: token-utils.slot(with-overlap-handle-outline-color);
-      border-width: token-utils.slot(with-overlap-handle-outline-width);
-    }
+    border-color: token-utils.slot(slider-with-overlap-handle-outline-color, $fallbacks);
+    border-width: token-utils.slot(slider-with-overlap-handle-outline-width, $fallbacks);
   }
 }
 
@@ -292,30 +249,24 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
 
 .mdc-slider__tick-mark--active,
 .mdc-slider__tick-mark--inactive {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    width: token-utils.slot(with-tick-marks-container-size);
-    height: token-utils.slot(with-tick-marks-container-size);
-    border-radius: token-utils.slot(with-tick-marks-container-shape);
-  }
+  width: token-utils.slot(slider-with-tick-marks-container-size, $fallbacks);
+  height: token-utils.slot(slider-with-tick-marks-container-size, $fallbacks);
+  border-radius: token-utils.slot(slider-with-tick-marks-container-shape, $fallbacks);
 }
 
 .mdc-slider__tick-mark--inactive {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    opacity: token-utils.slot(with-tick-marks-inactive-container-opacity);
-    background-color: token-utils.slot(with-tick-marks-inactive-container-color);
+  opacity: token-utils.slot(slider-with-tick-marks-inactive-container-opacity, $fallbacks);
+  background-color: token-utils.slot(slider-with-tick-marks-inactive-container-color, $fallbacks);
 
-    .mdc-slider--disabled & {
-      opacity: token-utils.slot(with-tick-marks-inactive-container-opacity);
-      background-color: token-utils.slot(with-tick-marks-disabled-container-color);
-    }
+  .mdc-slider--disabled & {
+    opacity: token-utils.slot(slider-with-tick-marks-inactive-container-opacity, $fallbacks);
+    background-color: token-utils.slot(slider-with-tick-marks-disabled-container-color, $fallbacks);
   }
 }
 
 .mdc-slider__tick-mark--active {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    opacity: token-utils.slot(with-tick-marks-active-container-opacity);
-    background-color: token-utils.slot(with-tick-marks-active-container-color);
-  }
+  opacity: token-utils.slot(slider-with-tick-marks-active-container-opacity, $fallbacks);
+  background-color: token-utils.slot(slider-with-tick-marks-active-container-color, $fallbacks);
 }
 
 .mdc-slider__input {
@@ -392,22 +343,20 @@ $fallbacks: m3-slider.get-tokens(m3-system.$theme-with-system-vars);
   }
 
   // Add slots for custom Angular Material slider tokens.
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    // The `.mat-ripple` wrapper here is redundant, but we need it to
-    // increase the specificity due to how some styles are setup in g3.
-    .mat-ripple {
-      .mat-ripple-element {
-        background-color: token-utils.slot(ripple-color);
-      }
+  // The `.mat-ripple` wrapper here is redundant, but we need it to
+  // increase the specificity due to how some styles are setup in g3.
+  .mat-ripple {
+    .mat-ripple-element {
+      background-color: token-utils.slot(slider-ripple-color, $fallbacks);
+    }
 
-      .mat-mdc-slider-hover-ripple {
-        background-color: token-utils.slot(hover-state-layer-color);
-      }
+    .mat-mdc-slider-hover-ripple {
+      background-color: token-utils.slot(slider-hover-state-layer-color, $fallbacks);
+    }
 
-      .mat-mdc-slider-focus-ripple,
-      .mat-mdc-slider-active-ripple {
-        background-color: token-utils.slot(focus-state-layer-color);
-      }
+    .mat-mdc-slider-focus-ripple,
+    .mat-mdc-slider-active-ripple {
+      background-color: token-utils.slot(slider-focus-state-layer-color, $fallbacks);
     }
   }
 

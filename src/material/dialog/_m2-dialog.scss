@@ -3,26 +3,23 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, dialog);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
-    container-elevation-shadow: elevation.get-box-shadow(24),
-    container-max-width: 80vw,
-    container-small-max-width: 80vw,
-    container-min-width: 0,
-    actions-alignment: start,
-    actions-padding: 8px,
-    content-padding: 20px 24px,
-    with-actions-content-padding: 20px 24px,
+    dialog-container-shape: 4px,
+    dialog-container-elevation-shadow: elevation.get-box-shadow(24),
+    dialog-container-max-width: 80vw,
+    dialog-container-small-max-width: 80vw,
+    dialog-container-min-width: 0,
+    dialog-actions-alignment: start,
+    dialog-actions-padding: 8px,
+    dialog-content-padding: 20px 24px,
+    dialog-with-actions-content-padding: 20px 24px,
 
     // Note: the CSS class is `title` while the M2 tokens call it `subhead`.
     // M3 calls it `headline` which is what we're aligning with.
-    headline-padding: 0 24px 9px,
+    dialog-headline-padding: 0 24px 9px,
   );
 }
 
@@ -38,25 +35,27 @@ $prefix: (mat, dialog);
   );
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, dialog),
-    subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
-    supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
+    dialog-container-color: inspection.get-theme-color($theme, background, dialog),
+    dialog-subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
+    dialog-supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    subhead-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    subhead-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    subhead-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    subhead-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    subhead-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    supporting-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    supporting-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    supporting-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    supporting-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    supporting-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    dialog-subhead-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    dialog-subhead-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
+    dialog-subhead-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    dialog-subhead-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    dialog-subhead-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
+    dialog-supporting-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    dialog-supporting-text-line-height:
+        inspection.get-theme-typography($theme, body-1, line-height),
+    dialog-supporting-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    dialog-supporting-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    dialog-supporting-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
   );
 }
 

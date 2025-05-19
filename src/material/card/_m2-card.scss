@@ -3,47 +3,46 @@
 @use '../core/style/sass-utils';
 @use '../core/style/elevation';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, card);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    elevated-container-shape: 4px,
-    outlined-container-shape: 4px,
-    filled-container-shape: 4px,
-    outlined-outline-width: 1px,
+    card-elevated-container-shape: 4px,
+    card-outlined-container-shape: 4px,
+    card-filled-container-shape: 4px,
+    card-outlined-outline-width: 1px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    elevated-container-color: inspection.get-theme-color($theme, background, card),
-    elevated-container-elevation: elevation.get-box-shadow(1),
-    outlined-container-color: inspection.get-theme-color($theme, background, card),
-    outlined-container-elevation: elevation.get-box-shadow(0),
-    outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    filled-container-color: inspection.get-theme-color($theme, background, card),
-    filled-container-elevation: elevation.get-box-shadow(0)
+    card-elevated-container-color: inspection.get-theme-color($theme, background, card),
+    card-elevated-container-elevation: elevation.get-box-shadow(1),
+    card-outlined-container-color: inspection.get-theme-color($theme, background, card),
+    card-outlined-container-elevation: elevation.get-box-shadow(0),
+    card-outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
+    card-subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    card-filled-container-color: inspection.get-theme-color($theme, background, card),
+    card-filled-container-elevation: elevation.get-box-shadow(0)
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    subtitle-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    subtitle-text-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
-    subtitle-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    subtitle-text-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
-    subtitle-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    card-title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    card-title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
+    card-title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    card-title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
+    card-title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    card-subtitle-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    card-subtitle-text-line-height:
+        inspection.get-theme-typography($theme, subtitle-2, line-height),
+    card-subtitle-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    card-subtitle-text-tracking:
+        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
+    card-subtitle-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
   );
 }
 

@@ -10,9 +10,6 @@ $_default-size: 22px;
 $_small-size: $_default-size - 6px;
 $_large-size: $_default-size + 6px;
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, badge);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -21,26 +18,26 @@ $prefix: (mat, badge);
   $large-size: $_large-size;
 
   @return (
-    container-shape: 50%,
-    container-size: unset,
-    small-size-container-size: unset,
-    large-size-container-size: unset,
+    badge-container-shape: 50%,
+    badge-container-size: unset,
+    badge-small-size-container-size: unset,
+    badge-large-size-container-size: unset,
 
-    legacy-container-size: $default-size,
-    legacy-small-size-container-size: $small-size,
-    legacy-large-size-container-size: $large-size,
+    badge-legacy-container-size: $default-size,
+    badge-legacy-small-size-container-size: $small-size,
+    badge-legacy-large-size-container-size: $large-size,
 
-    container-offset: math.div($default-size, -2) 0,
-    small-size-container-offset: math.div($small-size, -2) 0,
-    large-size-container-offset: math.div($large-size, -2) 0,
+    badge-container-offset: math.div($default-size, -2) 0,
+    badge-small-size-container-offset: math.div($small-size, -2) 0,
+    badge-large-size-container-offset: math.div($large-size, -2) 0,
 
-    container-overlap-offset: math.div($default-size, -2),
-    small-size-container-overlap-offset: math.div($small-size, -2),
-    large-size-container-overlap-offset: math.div($large-size, -2),
+    badge-container-overlap-offset: math.div($default-size, -2),
+    badge-small-size-container-overlap-offset: math.div($small-size, -2),
+    badge-large-size-container-overlap-offset: math.div($large-size, -2),
 
-    container-padding: 0,
-    small-size-container-padding: 0,
-    large-size-container-padding: 0,
+    badge-container-padding: 0,
+    badge-small-size-container-padding: 0,
+    badge-large-size-container-padding: 0,
   );
 }
 
@@ -62,16 +59,16 @@ $prefix: (mat, badge);
   }
 
   @return map.merge($primary-color-tokens, (
-    disabled-state-background-color: $disabled-background,
-    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
+    badge-disabled-state-background-color: $disabled-background,
+    badge-disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
   ));
 }
 
 // Generates the tokens used to theme the badge based on a palette.
 @function private-get-color-palette-color-tokens($theme, $palette-name: primary) {
   @return (
-    background-color: inspection.get-theme-color($theme, $palette-name),
-    text-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
+    badge-background-color: inspection.get-theme-color($theme, $palette-name),
+    badge-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
 }
 
@@ -80,16 +77,16 @@ $prefix: (mat, badge);
   $base-size: 12px;
 
   @return (
-    text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    line-height: $_default-size,
-    text-size: $base-size,
-    text-weight: 600,
+    badge-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    badge-line-height: $_default-size,
+    badge-text-size: $base-size,
+    badge-text-weight: 600,
 
-    small-size-text-size: $base-size * 0.75,
-    small-size-line-height: $_small-size,
+    badge-small-size-text-size: $base-size * 0.75,
+    badge-small-size-line-height: $_small-size,
 
-    large-size-text-size: $base-size * 2,
-    large-size-line-height: $_large-size,
+    badge-large-size-text-size: $base-size * 2,
+    badge-large-size-line-height: $_large-size,
   );
 }
 

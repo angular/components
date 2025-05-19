@@ -5,14 +5,11 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, icon-button);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    icon-size: 24px,
+    icon-button-icon-size: 24px,
   );
 }
 
@@ -21,14 +18,14 @@ $prefix: (mat, icon-button);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    disabled-icon-color: if($is-dark, rgba(#fff, 0.5), rgba(#000, 0.38)),
-    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    icon-color: inherit,
-    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    icon-button-disabled-icon-color: if($is-dark, rgba(#fff, 0.5), rgba(#000, 0.38)),
+    icon-button-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    icon-button-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    icon-button-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    icon-button-icon-color: inherit,
+    icon-button-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    icon-button-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    icon-button-state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
 }
 
@@ -38,9 +35,9 @@ $prefix: (mat, icon-button);
   $ripple-opacity: 0.1;
 
   @return (
-    icon-color: inspection.get-theme-color($theme, $palette-name),
-    state-layer-color: $color,
-    ripple-color: if(
+    icon-button-icon-color: inspection.get-theme-color($theme, $palette-name),
+    icon-button-state-layer-color: $color,
+    icon-button-ripple-color: if(
       meta.type-of($color) == color,
       rgba($color, $ripple-opacity),
       inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
@@ -57,8 +54,8 @@ $prefix: (mat, icon-button);
   $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   $tokens: (
-    touch-target-display: if($scale < -1, none, block),
-    state-layer-size: map.get((
+    icon-button-touch-target-display: if($scale < -1, none, block),
+    icon-button-state-layer-size: map.get((
       0: 48px,
       -1: 44px,
       -2: 40px,

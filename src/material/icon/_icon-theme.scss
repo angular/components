@@ -9,7 +9,7 @@
 @mixin _palette-colors($theme, $palette-name) {
   $color: inspection.get-theme-color($theme, $palette-name, text);
   $tokens: m2-icon.private-get-icon-color-tokens($color);
-  @include token-utils.create-token-values-mixed(m2-icon.$prefix, $tokens);
+  @include token-utils.create-token-values-mixed($tokens);
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
@@ -17,9 +17,7 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-icon.$prefix,
-        map.get(m3-icon.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), base));
   } @else {
   }
 }
@@ -30,14 +28,10 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-icon.$prefix,
         map.get(m3-icon.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-icon.$prefix,
-        m2-icon.get-color-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-icon.get-color-tokens($theme));
     }
 
     .mat-icon {
@@ -60,9 +54,7 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-icon.$prefix,
-        map.get(m3-icon.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), typography));
   } @else {
   }
 }
@@ -71,9 +63,7 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-icon.$prefix,
-        map.get(m3-icon.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), density));
   } @else {
   }
 }
@@ -82,8 +72,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-icon.$prefix,
-      tokens: m2-icon.get-token-slots(),
+      namespace: icon,
+      tokens: token-utils.get-overrides(m3-icon.get-tokens(), icon)
     ),
   );
 }
@@ -91,7 +81,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-icon.

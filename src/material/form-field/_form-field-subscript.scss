@@ -1,12 +1,8 @@
-@use './m2-form-field';
 @use './m3-form-field';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-form-field.$prefix;
-$token-slots: m2-form-field.get-token-slots();
-$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-form-field.get-tokens();
 
 @mixin private-form-field-subscript() {
   @keyframes _mat-form-field-subscript-animation {
@@ -77,23 +73,18 @@ $fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
   // Single error message displayed beneath the form field underline.
   .mat-mdc-form-field-error {
     display: block;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(error-text-color);
-    }
+    color: token-utils.slot(form-field-error-text-color, $fallbacks);
   }
 
   // The subscript wrapper has a minimum height to avoid that the form-field
   // jumps when hints or errors are displayed.
   .mat-mdc-form-field-subscript-wrapper,
   .mat-mdc-form-field-bottom-align::before {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      @include vendor-prefixes.smooth-font();
-      font-family: token-utils.slot(subscript-text-font);
-      line-height: token-utils.slot(subscript-text-line-height);
-      font-size: token-utils.slot(subscript-text-size);
-      letter-spacing: token-utils.slot(subscript-text-tracking);
-      font-weight: token-utils.slot(subscript-text-weight);
-    }
+    @include vendor-prefixes.smooth-font();
+    font-family: token-utils.slot(form-field-subscript-text-font, $fallbacks);
+    line-height: token-utils.slot(form-field-subscript-text-line-height, $fallbacks);
+    font-size: token-utils.slot(form-field-subscript-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(form-field-subscript-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(form-field-subscript-text-weight, $fallbacks);
   }
 }

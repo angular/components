@@ -1,15 +1,11 @@
 @use '../core/style/layout-common';
-@use './m2-checkbox';
 @use './m3-checkbox';
 @use '../core/tokens/token-utils';
 @use './checkbox-common';
-@use '../core/tokens/m3-system';
 
 @include checkbox-common.checkbox-structure(true);
 
-$token-prefix: m2-checkbox.$prefix;
-$token-slots: m2-checkbox.get-token-slots();
-$fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-checkbox.get-tokens();
 
 .mat-mdc-checkbox {
   // The host node defaults to `display: inline`, we have to change it in order for margins to work.
@@ -28,14 +24,12 @@ $fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
   }
 
   .mat-internal-form-field {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(label-text-color);
-      font-family: token-utils.slot(label-text-font);
-      line-height: token-utils.slot(label-text-line-height);
-      font-size: token-utils.slot(label-text-size);
-      letter-spacing: token-utils.slot(label-text-tracking);
-      font-weight: token-utils.slot(label-text-weight);
-    }
+    color: token-utils.slot(checkbox-label-text-color, $fallbacks);
+    font-family: token-utils.slot(checkbox-label-text-font, $fallbacks);
+    line-height: token-utils.slot(checkbox-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(checkbox-label-text-size, $fallbacks);
+    letter-spacing: token-utils.slot(checkbox-label-text-tracking, $fallbacks);
+    font-weight: token-utils.slot(checkbox-label-text-weight, $fallbacks);
   }
 
   &.mat-mdc-checkbox-disabled {
@@ -49,10 +43,7 @@ $fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
 
     label {
       cursor: default;
-
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        color: token-utils.slot(disabled-label-color);
-      }
+      color: token-utils.slot(checkbox-disabled-label-color, $fallbacks);
     }
   }
 
@@ -97,10 +88,7 @@ $fallbacks: m3-checkbox.get-tokens(m3-system.$theme-with-system-vars);
   height: 48px;
   width: 48px;
   transform: translate(-50%, -50%);
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    display: token-utils.slot(touch-target-display);
-  }
+  display: token-utils.slot(checkbox-touch-target-display, $fallbacks);
 }
 
 // Checkbox components have to set `border-radius: 50%` in order to support density scaling

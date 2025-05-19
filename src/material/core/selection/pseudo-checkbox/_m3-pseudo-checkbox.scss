@@ -1,12 +1,10 @@
 @use 'sass:map';
 @use '../../tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, pseudo-checkbox);
+@use '../../tokens/m3';
 
 /// Generates custom tokens for the full variant of mat-pseudo-checkbox.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -15,17 +13,17 @@ $prefix: (mat, pseudo-checkbox);
   @return (
     base: (),
     color: (
-      full-disabled-selected-checkmark-color: map.get($system, surface),
-      full-disabled-selected-icon-color:
+      pseudo-checkbox-full-disabled-selected-checkmark-color: map.get($system, surface),
+      pseudo-checkbox-full-disabled-selected-icon-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      full-disabled-unselected-icon-color:
+      pseudo-checkbox-full-disabled-unselected-icon-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      full-selected-checkmark-color: map.get($system, on-primary),
-      full-selected-icon-color: map.get($system, primary),
-      full-unselected-icon-color: map.get($system, on-surface-variant),
-      minimal-disabled-selected-checkmark-color:
+      pseudo-checkbox-full-selected-checkmark-color: map.get($system, on-primary),
+      pseudo-checkbox-full-selected-icon-color: map.get($system, primary),
+      pseudo-checkbox-full-unselected-icon-color: map.get($system, on-surface-variant),
+      pseudo-checkbox-minimal-disabled-selected-checkmark-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      minimal-selected-checkmark-color: map.get($system, primary),
+      pseudo-checkbox-minimal-selected-checkmark-color: map.get($system, primary),
     ),
     typography: (),
     density: (),

@@ -1,9 +1,7 @@
 @use '@angular/cdk';
 @use '../core/style/elevation';
-@use './m2-bottom-sheet';
 @use './m3-bottom-sheet';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
 // The bottom sheet minimum width on larger screen sizes is based
 // on increments of the toolbar, according to the spec. See:
@@ -12,9 +10,7 @@ $_width-increment: 64px;
 $container-vertical-padding: 8px !default;
 $container-horizontal-padding: 16px !default;
 
-$token-prefix: m2-bottom-sheet.$prefix;
-$token-slots: m2-bottom-sheet.get-token-slots();
-$fallbacks: m3-bottom-sheet.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-bottom-sheet.get-tokens();
 
 @keyframes _mat-bottom-sheet-enter {
   from {
@@ -51,15 +47,13 @@ $fallbacks: m3-bottom-sheet.get-tokens(m3-system.$theme-with-system-vars);
   // elements (e.g. close buttons) inside the bottom sheet.
   position: relative;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background: token-utils.slot(container-background-color);
-    color: token-utils.slot(container-text-color);
-    font-family: token-utils.slot(container-text-font);
-    font-size: token-utils.slot(container-text-size);
-    line-height: token-utils.slot(container-text-line-height);
-    font-weight: token-utils.slot(container-text-weight);
-    letter-spacing: token-utils.slot(container-text-tracking);
-  }
+  background: token-utils.slot(bottom-sheet-container-background-color, $fallbacks);
+  color: token-utils.slot(bottom-sheet-container-text-color, $fallbacks);
+  font-family: token-utils.slot(bottom-sheet-container-text-font, $fallbacks);
+  font-size: token-utils.slot(bottom-sheet-container-text-size, $fallbacks);
+  line-height: token-utils.slot(bottom-sheet-container-text-line-height, $fallbacks);
+  font-weight: token-utils.slot(bottom-sheet-container-text-weight, $fallbacks);
+  letter-spacing: token-utils.slot(bottom-sheet-container-text-tracking, $fallbacks);
 
   @include cdk.high-contrast {
     outline: 1px solid;
@@ -80,10 +74,8 @@ $fallbacks: m3-bottom-sheet.get-tokens(m3-system.$theme-with-system-vars);
 
 // Applies a border radius to the bottom sheet. Should only be applied when it's not full-screen.
 %_mat-bottom-sheet-container-border-radius {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-top-left-radius: token-utils.slot(container-shape);
-    border-top-right-radius: token-utils.slot(container-shape);
-  }
+  border-top-left-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
+  border-top-right-radius: token-utils.slot(bottom-sheet-container-shape, $fallbacks);
 }
 
 .mat-bottom-sheet-container-medium {

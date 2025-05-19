@@ -3,13 +3,11 @@
 @use 'sass:list';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, tab);
+@use '../core/tokens/m3';
 
 /// Generates the tokens for MDC tab
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -17,32 +15,34 @@ $prefix: (mat, tab);
 
   @return (
     base: (
-      active-indicator-height: 2px,
-      active-indicator-shape: 0,
-      divider-height: 1px,
+      tab-active-indicator-height: 2px,
+      tab-active-indicator-shape: 0,
+      tab-divider-height: 1px,
     ),
     color: (
-      active-focus-indicator-color: map.get($system, primary),
-      active-focus-label-text-color: map.get($system, on-surface),
-      active-hover-indicator-color: map.get($system, primary),
-      active-hover-label-text-color: map.get($system, on-surface),
-      active-indicator-color: map.get($system, primary),
-      active-label-text-color: map.get($system, on-surface),
-      active-ripple-color: map.get($system, on-surface),
-      disabled-ripple-color: map.get($system, on-surface-variant),
-      divider-color: map.get($system, surface-variant),
-      inactive-focus-label-text-color: map.get($system, on-surface),
-      inactive-hover-label-text-color: map.get($system, on-surface),
-      inactive-label-text-color: map.get($system, on-surface),
-      inactive-ripple-color: map.get($system, on-surface),
-      pagination-icon-color: map.get($system, on-surface),
+      tab-active-focus-indicator-color: map.get($system, primary),
+      tab-active-focus-label-text-color: map.get($system, on-surface),
+      tab-active-hover-indicator-color: map.get($system, primary),
+      tab-active-hover-label-text-color: map.get($system, on-surface),
+      tab-active-indicator-color: map.get($system, primary),
+      tab-active-label-text-color: map.get($system, on-surface),
+      tab-active-ripple-color: map.get($system, on-surface),
+      tab-divider-color: map.get($system, surface-variant),
+      tab-inactive-focus-label-text-color: map.get($system, on-surface),
+      tab-inactive-hover-label-text-color: map.get($system, on-surface),
+      tab-inactive-label-text-color: map.get($system, on-surface),
+      tab-inactive-ripple-color: map.get($system, on-surface),
+      tab-pagination-icon-color: map.get($system, on-surface),
+      tab-disabled-ripple-color: map.get($system, on-surface-variant),
+      tab-background-color: null,
+      tab-foreground-color: null,
     ),
     typography: (
-      label-text-font: map.get($system, title-small-font),
-      label-text-line-height: map.get($system, title-small-line-height),
-      label-text-size: map.get($system, title-small-size),
-      label-text-tracking: map.get($system, title-small-tracking),
-      label-text-weight: map.get($system, title-small-weight),
+      tab-label-text-font: map.get($system, title-small-font),
+      tab-label-text-line-height: map.get($system, title-small-line-height),
+      tab-label-text-size: map.get($system, title-small-size),
+      tab-label-text-tracking: map.get($system, title-small-tracking),
+      tab-label-text-weight: map.get($system, title-small-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -54,6 +54,6 @@ $prefix: (mat, tab);
   $index: ($scale * -1) + 1;
 
   @return (
-    container-height: list.nth((48px, 44px, 40px, 36px, 32px), $index),
+    tab-container-height: list.nth((48px, 44px, 40px, 36px, 32px), $index),
   );
 }

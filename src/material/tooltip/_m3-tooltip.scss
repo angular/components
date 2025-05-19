@@ -1,26 +1,24 @@
 @use '../core/tokens/m3-utils';
 @use 'sass:map';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, tooltip);
+@use '../core/tokens/m3';
 
 /// Generates the tokens for MDC plain-tooltip
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (),
     color: (
-      container-color: map.get($system, inverse-surface),
-      container-shape: map.get($system, corner-extra-small),
-      supporting-text-color: map.get($system, inverse-on-surface),
+      tooltip-container-color: map.get($system, inverse-surface),
+      tooltip-container-shape: map.get($system, corner-extra-small),
+      tooltip-supporting-text-color: map.get($system, inverse-on-surface),
     ),
     typography: (
-      supporting-text-font: map.get($system, body-small-font),
-      supporting-text-line-height: map.get($system, body-small-line-height),
-      supporting-text-size: map.get($system, body-small-size),
-      supporting-text-tracking: map.get($system, body-small-tracking),
-      supporting-text-weight: map.get($system, body-small-weight)
+      tooltip-supporting-text-font: map.get($system, body-small-font),
+      tooltip-supporting-text-line-height: map.get($system, body-small-line-height),
+      tooltip-supporting-text-size: map.get($system, body-small-size),
+      tooltip-supporting-text-tracking: map.get($system, body-small-tracking),
+      tooltip-supporting-text-weight: map.get($system, body-small-weight)
     ),
     density: (),
   );

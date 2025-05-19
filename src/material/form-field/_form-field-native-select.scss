@@ -1,12 +1,8 @@
 @use 'sass:math';
-@use './m2-form-field';
 @use './m3-form-field';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-form-field.$prefix;
-$token-slots: m2-form-field.get-token-slots();
-$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-form-field.get-tokens();
 
 // Width of the Material Design form-field select arrow.
 $mat-form-field-select-arrow-width: 10px;
@@ -36,14 +32,12 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
     }
 
     &:not(.mat-mdc-native-select-inline) {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        option {
-          color: token-utils.slot(select-option-text-color);
-        }
+      option {
+        color: token-utils.slot(form-field-select-option-text-color, $fallbacks);
+      }
 
-        option:disabled {
-          color: token-utils.slot(select-disabled-option-text-color);
-        }
+      option:disabled {
+        color: token-utils.slot(form-field-select-disabled-option-text-color, $fallbacks);
       }
     }
   }
@@ -68,9 +62,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
       // Make the arrow non-clickable so the user can click on the form control under it.
       pointer-events: none;
 
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        color: token-utils.slot(enabled-select-arrow-color);
-      }
+      color: token-utils.slot(form-field-enabled-select-arrow-color, $fallbacks);
 
       [dir='rtl'] & {
         right: auto;
@@ -78,14 +70,12 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
       }
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      &.mat-focused .mat-mdc-form-field-infix::after {
-        color: token-utils.slot(focus-select-arrow-color);
-      }
+    &.mat-focused .mat-mdc-form-field-infix::after {
+      color: token-utils.slot(form-field-focus-select-arrow-color, $fallbacks);
+    }
 
-      &.mat-form-field-disabled .mat-mdc-form-field-infix::after {
-        color: token-utils.slot(disabled-select-arrow-color);
-      }
+    &.mat-form-field-disabled .mat-mdc-form-field-infix::after {
+      color: token-utils.slot(form-field-disabled-select-arrow-color, $fallbacks);
     }
 
     // Add padding on the end of the native select so that the content does not

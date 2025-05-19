@@ -9,55 +9,43 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-expansion.$prefix,
-        map.get(m3-expansion.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-expansion.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-expansion.$prefix, m2-expansion.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-expansion.get-unthemable-tokens());
     }
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-expansion.$prefix,
-        map.get(m3-expansion.get-tokens($theme), color));
+    @include token-utils.create-token-values(map.get(m3-expansion.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-expansion.$prefix, m2-expansion.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-expansion.get-color-tokens($theme));
     }
   }
 }
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-expansion.$prefix,
-        map.get(m3-expansion.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-expansion.get-tokens($theme), typography));
   } @else {
     // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
     $theme: inspection.private-get-typography-back-compat-theme($theme);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-expansion.$prefix, m2-expansion.get-typography-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-expansion.get-typography-tokens($theme));
     }
   }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-expansion.$prefix,
-        map.get(m3-expansion.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-expansion.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-expansion.$prefix, m2-expansion.get-density-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-expansion.get-density-tokens($theme));
     }
   }
 }
@@ -66,14 +54,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-expansion.$prefix,
-      tokens: m2-expansion.get-token-slots(),
+      namespace: expansion,
+      tokens: token-utils.get-overrides(m3-expansion.get-tokens(), expansion)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

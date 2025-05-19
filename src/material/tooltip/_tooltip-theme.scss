@@ -9,61 +9,41 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-tooltip.$prefix,
-        map.get(m3-tooltip.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-tooltip.get-tokens($theme), base));
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-tooltip.$prefix,
-        m2-tooltip.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-tooltip.get-unthemable-tokens());
     }
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-tooltip.$prefix,
-        map.get(m3-tooltip.get-tokens($theme), color));
+    @include token-utils.create-token-values(map.get(m3-tooltip.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-tooltip.$prefix,
-        m2-tooltip.get-color-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-tooltip.get-color-tokens($theme));
     }
   }
 }
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-tooltip.$prefix,
-        map.get(m3-tooltip.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-tooltip.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-tooltip.$prefix,
-        m2-tooltip.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-tooltip.get-typography-tokens($theme));
     }
   }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-tooltip.$prefix,
-        map.get(m3-tooltip.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-tooltip.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-tooltip.$prefix,
-        m2-tooltip.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-tooltip.get-density-tokens($theme));
     }
   }
 }
@@ -72,14 +52,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-tooltip.$prefix,
-      tokens: m2-tooltip.get-token-slots(),
+      namespace: tooltip,
+      tokens: token-utils.get-overrides(m3-tooltip.get-tokens(), tooltip)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {
