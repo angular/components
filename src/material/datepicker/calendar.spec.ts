@@ -8,11 +8,10 @@ import {
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {DateAdapter, MatNativeDateModule} from '../core';
+import {DateAdapter, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
 import {MatCalendar} from './calendar';
 import {MatDatepickerIntl} from './datepicker-intl';
-import {MatDatepickerModule} from './datepicker-module';
 
 describe('MatCalendar', () => {
   let adapter: DateAdapter<Date>;
@@ -20,15 +19,7 @@ describe('MatCalendar', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatNativeDateModule, MatDatepickerModule],
-      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr')],
-      declarations: [
-        // Test components.
-        StandardCalendar,
-        CalendarWithMinMax,
-        CalendarWithDateFilter,
-        CalendarWithSelectableMinDate,
-      ],
+      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr'), provideNativeDateAdapter()],
     });
 
     adapter = TestBed.inject(DateAdapter);
@@ -650,7 +641,7 @@ describe('MatCalendar', () => {
         (yearSelected)="selectedYear=$event"
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class StandardCalendar {
   selected: Date;
@@ -663,7 +654,7 @@ class StandardCalendar {
   template: `
     <mat-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate"></mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithMinMax {
   startAt: Date;
@@ -676,7 +667,7 @@ class CalendarWithMinMax {
     <mat-calendar [startAt]="startDate" [(selected)]="selected" [dateFilter]="dateFilter">
     </mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithDateFilter {
   selected: Date;
@@ -696,7 +687,7 @@ class CalendarWithDateFilter {
       [minDate]="selected">
     </mat-calendar>
   `,
-  standalone: false,
+  imports: [MatCalendar],
 })
 class CalendarWithSelectableMinDate {
   startAt = new Date(2018, JUL, 0);

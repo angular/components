@@ -50,7 +50,6 @@ import {By} from '@angular/platform-browser';
 import {Observable, Subject, merge} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {MATERIAL_ANIMATIONS, MatRipple, ThemePalette} from '../core';
-import {MatFormFieldModule} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatStepHeader, MatStepperModule} from './index';
 import {MatStep, MatStepper} from './stepper';
@@ -265,7 +264,7 @@ describe('MatStepper', () => {
 
       fixture.destroy();
       TestBed.resetTestingModule();
-      fixture = createComponent(SimpleMatVerticalStepperApp, [], [], ViewEncapsulation.ShadowDom);
+      fixture = createComponent(SimpleMatVerticalStepperApp, [], ViewEncapsulation.ShadowDom);
       fixture.detectChanges();
 
       const stepper = fixture.componentInstance.stepper;
@@ -591,7 +590,7 @@ describe('MatStepper', () => {
     let stepper: MatStepper;
 
     beforeEach(() => {
-      fixture = createComponent(LinearMatVerticalStepperApp, [], [], undefined, []);
+      fixture = createComponent(LinearMatVerticalStepperApp);
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
@@ -1307,16 +1306,12 @@ describe('MatStepper', () => {
     let stepper: MatStepper;
 
     function createFixture(showErrorByDefault: boolean | undefined) {
-      fixture = createComponent(
-        MatHorizontalStepperWithErrorsApp,
-        [
-          {
-            provide: STEPPER_GLOBAL_OPTIONS,
-            useValue: {showError: showErrorByDefault},
-          },
-        ],
-        [MatFormFieldModule, MatInputModule],
-      );
+      fixture = createComponent(MatHorizontalStepperWithErrorsApp, [
+        {
+          provide: STEPPER_GLOBAL_OPTIONS,
+          useValue: {showError: showErrorByDefault},
+        },
+      ]);
       fixture.detectChanges();
       stepper = fixture.debugElement.query(By.css('mat-stepper'))!.componentInstance;
     }
@@ -1370,16 +1365,12 @@ describe('MatStepper', () => {
     let stepper: MatStepper;
 
     beforeEach(() => {
-      fixture = createComponent(
-        MatHorizontalStepperWithErrorsApp,
-        [
-          {
-            provide: STEPPER_GLOBAL_OPTIONS,
-            useValue: {displayDefaultIndicatorType: false},
-          },
-        ],
-        [MatFormFieldModule, MatInputModule],
-      );
+      fixture = createComponent(MatHorizontalStepperWithErrorsApp, [
+        {
+          provide: STEPPER_GLOBAL_OPTIONS,
+          useValue: {displayDefaultIndicatorType: false},
+        },
+      ]);
       fixture.detectChanges();
       stepper = fixture.debugElement.query(By.css('mat-stepper'))!.componentInstance;
     });
@@ -1765,18 +1756,14 @@ function asyncValidator(minLength: number, validationTrigger: Subject<void>): As
 function createComponent<T>(
   component: Type<T>,
   providers: Provider[] = [],
-  imports: any[] = [],
   encapsulation?: ViewEncapsulation,
-  declarations = [component],
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
-    imports: [MatStepperModule, ReactiveFormsModule, ...imports],
     providers: [
       provideFakeDirectionality(dir),
       {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ...providers,
     ],
-    declarations,
   });
 
   if (encapsulation != null) {
@@ -1801,22 +1788,22 @@ function createComponent<T>(
           <mat-error>This field is required</mat-error>
         </mat-form-field>
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
   </form>
   `,
-  standalone: false,
+  imports: [MatStepperModule, MatInputModule, ReactiveFormsModule],
 })
 class MatHorizontalStepperWithErrorsApp {
   private readonly _formBuilder = inject(FormBuilder);
@@ -1837,28 +1824,28 @@ class MatHorizontalStepperWithErrorsApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [color]="secondStepTheme()">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
       <mat-step [label]="inputLabel" optional>
         Content 3
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class SimpleMatHorizontalStepperApp {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -1876,8 +1863,8 @@ class SimpleMatHorizontalStepperApp {
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
       @if (showStepTwo()) {
@@ -1885,21 +1872,21 @@ class SimpleMatHorizontalStepperApp {
           <ng-template matStepLabel>Step 2</ng-template>
           Content 2
           <div>
-            <button matButton matStepperPrevious>Back</button>
-            <button matButton matStepperNext>Next</button>
+            <button matStepperPrevious>Back</button>
+            <button matStepperNext>Next</button>
           </div>
         </mat-step>
       }
       <mat-step [label]="inputLabel()">
         Content 3
         <div>
-          <button matButton matStepperPrevious>Back</button>
-          <button matButton matStepperNext>Next</button>
+          <button matStepperPrevious>Back</button>
+          <button matStepperNext>Next</button>
         </div>
       </mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class SimpleMatVerticalStepperApp {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -1971,7 +1958,7 @@ class LinearMatVerticalStepperApp {
       <mat-step label="Three"></mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class SimplePreselectedMatHorizontalStepperApp {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2017,7 +2004,6 @@ class SimplePreselectedMatHorizontalStepperApp {
     </mat-stepper>
   `,
   imports: [ReactiveFormsModule, MatStepperModule],
-  standalone: false,
 })
 class LinearMatVerticalStepperAppForAlreadyFilledForm {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2042,7 +2028,7 @@ class LinearMatVerticalStepperAppForAlreadyFilledForm {
       }
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class SimpleStepperWithoutStepControl {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2064,7 +2050,7 @@ class SimpleStepperWithoutStepControl {
       }
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class SimpleStepperWithStepControlAndCompletedBinding {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2090,7 +2076,7 @@ class SimpleStepperWithStepControlAndCompletedBinding {
       <mat-step>Content 3</mat-step>
     </mat-stepper>
 `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class IconOverridesStepper {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2128,7 +2114,7 @@ class IconOverridesStepper {
       <mat-step>Content 3</mat-step>
     </mat-stepper>
 `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
 
@@ -2140,7 +2126,7 @@ class IndirectDescendantIconOverridesStepper extends IconOverridesStepper {}
       <mat-step label="Step 3" [stepControl]="controls[2]"></mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class LinearStepperWithValidOptionalStep {
   controls = [0, 0, 0].map(() => new FormControl(''));
@@ -2153,7 +2139,7 @@ class LinearStepperWithValidOptionalStep {
       <mat-step [aria-label]="ariaLabel()" [aria-labelledby]="ariaLabelledby()" label="One"></mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithAriaInputs {
   ariaLabel = signal('');
@@ -2170,7 +2156,7 @@ class StepperWithAriaInputs {
       }
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithIndirectDescendantSteps {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2190,7 +2176,7 @@ class StepperWithIndirectDescendantSteps {
       }
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithNgIf {
   showStep2 = signal(false);
@@ -2209,7 +2195,7 @@ class StepperWithNgIf {
       </mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class NestedSteppers {
   @ViewChildren(MatStepper) steppers: QueryList<MatStepper>;
@@ -2223,7 +2209,7 @@ class NestedSteppers {
       <mat-step label="Step 3">Content 3</mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithStaticOutOfBoundsIndex {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2246,7 +2232,7 @@ class StepperWithStaticOutOfBoundsIndex {
       </mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithLazyContent {
   selectedIndex = signal(0);
@@ -2262,7 +2248,7 @@ class StepperWithLazyContent {
       <mat-step label="Step 3">Content 3</mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class HorizontalStepperWithDelayedStep {
   @ViewChild(MatStepper) stepper: MatStepper;
@@ -2277,7 +2263,7 @@ class HorizontalStepperWithDelayedStep {
       <mat-step label="Three"></mat-step>
     </mat-stepper>
   `,
-  standalone: false,
+  imports: [MatStepperModule],
 })
 class StepperWithTwoWayBindingOnSelectedIndex {
   index: number = 0;

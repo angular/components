@@ -10,12 +10,12 @@ import {By} from '@angular/platform-browser';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../core';
 import {
   MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChipAvatar,
   MatChipEvent,
   MatChipListbox,
   MatChipOption,
   MatChipSelectionChange,
   MatChipsDefaultOptions,
-  MatChipsModule,
 } from './index';
 
 describe('Option Chips', () => {
@@ -36,13 +36,11 @@ describe('Option Chips', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [MatChipsModule],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         provideFakeDirectionality('ltr'),
         {provide: MAT_CHIPS_DEFAULT_OPTIONS, useFactory: () => defaultOptions},
       ],
-      declarations: [SingleChip],
     });
   }));
 
@@ -419,7 +417,7 @@ describe('Option Chips', () => {
         </div>
       }
     </mat-chip-listbox>`,
-  standalone: false,
+  imports: [MatChipListbox, MatChipOption, MatChipAvatar],
 })
 class SingleChip {
   @ViewChild(MatChipListbox) chipList: MatChipListbox;

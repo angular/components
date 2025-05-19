@@ -3,20 +3,13 @@ import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing'
 import {ThemePalette} from '../core';
 import {MatSelect} from '../select';
 import {By} from '@angular/platform-browser';
-import {
-  MatPaginator,
-  MatPaginatorIntl,
-  MatPaginatorModule,
-  MatPaginatorSelectConfig,
-} from './index';
+import {MatPaginator, MatPaginatorIntl, MatPaginatorSelectConfig} from './index';
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorDefaultOptions} from './paginator';
 
 describe('MatPaginator', () => {
   function createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatPaginatorModule],
       providers: [MatPaginatorIntl, ...providers],
-      declarations: [type],
     });
 
     const fixture = TestBed.createComponent(type);
@@ -652,7 +645,7 @@ function getLastButton(fixture: ComponentFixture<any>): HTMLButtonElement {
                    (page)="pageEvent($event)">
     </mat-paginator>
   `,
-  standalone: false,
+  imports: [MatPaginator],
 })
 class MatPaginatorApp {
   pageIndex = 0;
@@ -677,30 +670,24 @@ class MatPaginatorApp {
 }
 
 @Component({
-  template: `
-    <mat-paginator></mat-paginator>
-  `,
-  standalone: false,
+  template: `<mat-paginator/>`,
+  imports: [MatPaginator],
 })
 class MatPaginatorWithoutInputsApp {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }
 
 @Component({
-  template: `
-    <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
-  `,
-  standalone: false,
+  template: `<mat-paginator [pageSizeOptions]="[10, 20, 30]"/>`,
+  imports: [MatPaginator],
 })
 class MatPaginatorWithoutPageSizeApp {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }
 
 @Component({
-  template: `
-    <mat-paginator [pageSize]="10"></mat-paginator>
-  `,
-  standalone: false,
+  template: `<mat-paginator [pageSize]="10"/>`,
+  imports: [MatPaginator],
 })
 class MatPaginatorWithoutOptionsApp {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -714,18 +701,15 @@ class MatPaginatorWithoutOptionsApp {
                    length="100">
     </mat-paginator>
   `,
-  standalone: false,
+  imports: [MatPaginator],
 })
 class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }
 
 @Component({
-  template: `
-    <mat-paginator [pageSizeOptions]="pageSizeOptions">
-    </mat-paginator>
-  `,
-  standalone: false,
+  template: `<mat-paginator [pageSizeOptions]="pageSizeOptions"/>`,
+  imports: [MatPaginator],
 })
 class MatPaginatorWithReadonlyOptions {
   @ViewChild(MatPaginator) paginator: MatPaginator;

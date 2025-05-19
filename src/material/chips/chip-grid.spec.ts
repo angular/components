@@ -39,9 +39,15 @@ import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from 
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MATERIAL_ANIMATIONS} from '../core';
-import {MatFormFieldModule} from '../form-field';
-import {MatInputModule} from '../input';
-import {MatChipEvent, MatChipGrid, MatChipInputEvent, MatChipRow, MatChipsModule} from './index';
+import {MatError, MatFormField, MatHint, MatLabel} from '../form-field';
+import {
+  MatChipEvent,
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent,
+  MatChipRemove,
+  MatChipRow,
+} from './index';
 
 describe('MatChipGrid', () => {
   let chipGridDebugElement: DebugElement;
@@ -1028,19 +1034,11 @@ describe('MatChipGrid', () => {
     directionality = signal(direction);
 
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatChipsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ...additionalImports,
-      ],
+      imports: additionalImports,
       providers: [
         provideFakeDirectionality(directionality),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
-      declarations: [component],
     });
 
     const fixture = TestBed.createComponent<T>(component);
@@ -1067,7 +1065,7 @@ describe('MatChipGrid', () => {
       }
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput],
 })
 class StandardChipGrid {
   name: string = 'Test';
@@ -1089,7 +1087,7 @@ class StandardChipGrid {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel],
 })
 class FormFieldChipGrid {
   chips = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1121,7 +1119,7 @@ class FormFieldChipGrid {
           (matChipInputTokenEnd)="add($event)"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel, ReactiveFormsModule],
 })
 class InputChipGrid {
   foods: any[] = [
@@ -1168,20 +1166,30 @@ class InputChipGrid {
 
 @Component({
   template: `
-<form #form="ngForm" novalidate>
-  <mat-form-field>
-    <mat-chip-grid #chipGrid [formControl]="formControl">
-      @for (food of foods; track food) {
-        <mat-chip-row [value]="food.value">{{food.viewValue}}</mat-chip-row>
-      }
-    </mat-chip-grid>
-    <input name="test" [matChipInputFor]="chipGrid"/>
-    <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
-    <mat-error>Should have value</mat-error>
-  </mat-form-field>
-</form>
+    <form #form="ngForm" novalidate>
+      <mat-form-field>
+        <mat-chip-grid #chipGrid [formControl]="formControl">
+          @for (food of foods; track food) {
+            <mat-chip-row [value]="food.value">{{food.viewValue}}</mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input name="test" [matChipInputFor]="chipGrid"/>
+        <mat-hint>Please select a chip, or type to add a new chip</mat-hint>
+        <mat-error>Should have value</mat-error>
+      </mat-form-field>
+    </form>
   `,
-  standalone: false,
+  imports: [
+    MatChipGrid,
+    MatChipRow,
+    MatChipInput,
+    MatFormField,
+    MatHint,
+    MatError,
+    MatLabel,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
 })
 class ChipGridWithFormErrorMessages {
   foods: any[] = [
@@ -1217,7 +1225,7 @@ class ChipGridWithFormErrorMessages {
       <input name="test" [matChipInputFor]="chipGrid"/>
     </mat-form-field>
   `,
-  standalone: false,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatChipRemove],
 })
 class ChipGridWithRemove {
   chips = [0, 1, 2, 3, 4];
