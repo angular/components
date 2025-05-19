@@ -15,6 +15,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
@@ -98,6 +99,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     abstract _items: QueryList<MatPaginatedTabHeaderItem>;
     protected abstract _itemSelected(event: KeyboardEvent): void;
+    protected _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem> | undefined;
     // (undocumented)
     abstract _nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
@@ -412,8 +414,6 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     _getRole(): string | null;
     // (undocumented)
-    _getTabIndex(): number;
-    // (undocumented)
     _handleFocus(): void;
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
@@ -436,6 +436,8 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     // (undocumented)
     tabIndex: number;
     // (undocumented)
+    protected _tabIndex: i0.Signal<number>;
+    // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatTabLink, "[mat-tab-link], [matTabLink]", ["matTabLink"], { "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabLink, never>;
@@ -456,7 +458,11 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     // (undocumented)
     _fitInkBarToContent: BehaviorSubject<boolean>;
     // (undocumented)
+    _focusedItem: i0.WritableSignal<MatPaginatedTabHeaderItem | null>;
+    // (undocumented)
     _getRole(): string | null;
+    // (undocumented)
+    _hasFocus(link: MatTabLink): boolean;
     // (undocumented)
     _inkBar: MatInkBar;
     _items: QueryList<MatTabLink>;
