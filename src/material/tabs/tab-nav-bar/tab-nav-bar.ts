@@ -25,6 +25,8 @@ import {
   ANIMATION_MODULE_TYPE,
   inject,
   HostAttributeToken,
+  signal,
+  computed,
 } from '@angular/core';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -44,7 +46,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {MAT_TABS_CONFIG, MatTabsConfig} from '../tab-config';
-import {MatPaginatedTabHeader} from '../paginated-tab-header';
+import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
 import {CdkObserveContent} from '@angular/cdk/observers';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 
@@ -75,6 +77,8 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
+  _focusedItem = signal<MatPaginatedTabHeaderItem | null>(null);
+
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input({transform: booleanAttribute})
   get fitInkBarToContent(): boolean {
@@ -195,6 +199,11 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
       .subscribe(() => this.updateActiveLink());
 
     super.ngAfterContentInit();
+
+    // Turn the `change` stream into a signal to try and avoid "changed after checked" errors.
+    this._keyManager!.change.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() =>
+      this._focusedItem.set(this._keyManager?.activeItem || null),
+    );
   }
 
   override ngAfterViewInit() {
@@ -215,12 +224,13 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     for (let i = 0; i < items.length; i++) {
       if (items[i].active) {
         this.selectedIndex = i;
-        this._changeDetectorRef.markForCheck();
-
         if (this.tabPanel) {
           this.tabPanel._activeTabId = items[i].id;
         }
-
+        // Updating the `selectedIndex` won't trigger the `change` event on
+        // the key manager so we need to set the signal from here.
+        this._focusedItem.set(items[i]);
+        this._changeDetectorRef.markForCheck();
         return;
       }
     }
@@ -230,6 +240,10 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   _getRole(): string | null {
     return this.tabPanel ? 'tablist' : this._elementRef.nativeElement.getAttribute('role');
+  }
+
+  _hasFocus(link: MatTabLink): boolean {
+    return this._keyManager?.activeItem === link;
   }
 }
 
@@ -250,7 +264,7 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-selected]': '_getAriaSelected()',
     '[attr.id]': 'id',
-    '[attr.tabIndex]': '_getTabIndex()',
+    '[attr.tabIndex]': '_tabIndex()',
     '[attr.role]': '_getRole()',
     '[class.mat-mdc-tab-disabled]': 'disabled',
     '[class.mdc-tab--active]': 'active',
@@ -271,6 +285,10 @@ export class MatTabLink
 
   /** Whether the tab link is active or not. */
   protected _isActive: boolean = false;
+
+  protected _tabIndex = computed(() =>
+    this._tabNavBar._focusedItem() === this ? this.tabIndex : -1,
+  );
 
   /** Whether the link is active. */
   @Input({transform: booleanAttribute})
@@ -406,14 +424,6 @@ export class MatTabLink
 
   _getRole(): string | null {
     return this._tabNavBar.tabPanel ? 'tab' : this.elementRef.nativeElement.getAttribute('role');
-  }
-
-  _getTabIndex(): number {
-    if (this._tabNavBar.tabPanel) {
-      return this._isActive && !this.disabled ? 0 : -1;
-    } else {
-      return this.disabled ? -1 : this.tabIndex;
-    }
   }
 }
 
