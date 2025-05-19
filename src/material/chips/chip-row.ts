@@ -172,6 +172,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     afterNextRender(
       () => {
         this._getEditInput().initialize(value);
+
+        // Necessary when using edit icon to prevent edit from aborting
         setTimeout(() => this._ngZone.run(() => (this._editStartPending = false)));
       },
       {injector: this._injector},
