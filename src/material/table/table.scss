@@ -13,8 +13,8 @@ $fallbacks: m3-table.get-tokens();
 }
 
 @mixin _cell-border {
-  border-bottom-color: token-utils.slot(table-row-item-outline-color, $fallbacks, true);
-  border-bottom-width: token-utils.slot(table-row-item-outline-width, $fallbacks, true);
+  border-bottom-color: token-utils.slot(table-row-item-outline-color, $fallbacks, rgba(0, 0, 0, 0.12));
+  border-bottom-width: token-utils.slot(table-row-item-outline-width, $fallbacks, 1px);
   border-bottom-style: solid;
 }
 
@@ -50,8 +50,8 @@ $fallbacks: m3-table.get-tokens();
 .mat-mdc-header-row {
   @include vendor-prefixes.smooth-font;
   height: token-utils.slot(table-header-container-height, $fallbacks, 56px);
-  color: token-utils.slot(table-header-headline-color, $fallbacks, true);
-  font-family: token-utils.slot(table-header-headline-font, $fallbacks, true);
+  color: token-utils.slot(table-header-headline-color, $fallbacks, rgba(0, 0, 0, 0.87));
+  font-family: token-utils.slot(table-header-headline-font, $fallbacks, (Roboto, sans-serif));
   line-height: token-utils.slot(table-header-headline-line-height, $fallbacks);
   font-size: token-utils.slot(table-header-headline-size, $fallbacks, 14px);
   font-weight: token-utils.slot(table-header-headline-weight, $fallbacks, 500);
@@ -59,7 +59,7 @@ $fallbacks: m3-table.get-tokens();
 
 .mat-mdc-row {
   height: token-utils.slot(table-row-item-container-height, $fallbacks, 52px);
-  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, true);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, rgba(0, 0, 0, 0.87));
 }
 
 // Note that while it's redundant to apply the typography both to the row
@@ -69,7 +69,7 @@ $fallbacks: m3-table.get-tokens();
 .mat-mdc-row,
 .mdc-data-table__content {
   @include vendor-prefixes.smooth-font;
-  font-family: token-utils.slot(table-row-item-label-text-font, $fallbacks, true);
+  font-family: token-utils.slot(table-row-item-label-text-font, $fallbacks, (Roboto, sans-serif));
   line-height: token-utils.slot(table-row-item-label-text-line-height, $fallbacks);
   font-size: token-utils.slot(table-row-item-label-text-size, $fallbacks, 14px);
   font-weight: token-utils.slot(table-row-item-label-text-weight, $fallbacks);
@@ -78,8 +78,8 @@ $fallbacks: m3-table.get-tokens();
 .mat-mdc-footer-row {
   @include vendor-prefixes.smooth-font;
   height: token-utils.slot(table-footer-container-height, $fallbacks, 52px);
-  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, true);
-  font-family: token-utils.slot(table-footer-supporting-text-font, $fallbacks, true);
+  color: token-utils.slot(table-row-item-label-text-color, $fallbacks, rgba(0, 0, 0, 0.87));
+  font-family: token-utils.slot(table-footer-supporting-text-font, $fallbacks, (Roboto, sans-serif));
   line-height: token-utils.slot(table-footer-supporting-text-line-height, $fallbacks);
   font-size: token-utils.slot(table-footer-supporting-text-size, $fallbacks, 14px);
   font-weight: token-utils.slot(table-footer-supporting-text-weight, $fallbacks);

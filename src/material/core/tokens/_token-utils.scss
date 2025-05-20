@@ -47,7 +47,6 @@
 // Returns the token slot value.
 // Accepts an optional fallback parameter to include in the CSS variable.
 // If $fallback is `true`, then use the tokens map to get the fallback.
-// TODO: Remove the use case where we accept "true" and handle any failing client screenshots
 @function slot($token, $fallbacks, $fallback: null) {
   // Fallbacks are a map of base, color, typography, and density tokens. To simplify
   // lookup, flatten these token groups into a single map.
@@ -112,7 +111,7 @@
     @each $config in $namespace-configs {
       $namespace: map.get($config, namespace);
       $prefix: if(map.has-key($config, prefix), map.get($config, prefix), '');
-      $tokens: _filter-nulls(map.get(map.get($config, tokens), all));
+      $tokens: map.get(map.get($config, tokens), all);
       @each $name, $value in $tokens {
         $prefixed-name: $prefix + $name;
         $all-names: list.append($all-names, $prefixed-name, $separator: comma);
@@ -132,17 +131,4 @@
       }
     }
   }
-}
-
-/// Filters keys with a null value out of the map.
-/// @param {Map} $map The map to filter.
-/// @return {Map} The given map with all of the null keys filtered out.
-@function _filter-nulls($map) {
-  $result: ();
-  @each $key, $val in $map {
-    @if $val != null {
-      $result: map.set($result, $key, $val);
-    }
-  }
-  @return $result;
 }
