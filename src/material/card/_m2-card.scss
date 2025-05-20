@@ -20,13 +20,13 @@ $prefix: (mat, card);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    elevated-container-color: inspection.get-theme-color($theme, background, card),
+    elevated-container-color: inspection.get-theme-color($theme, background, surface),
     elevated-container-elevation: elevation.get-box-shadow(1),
-    outlined-container-color: inspection.get-theme-color($theme, background, card),
+    outlined-container-color: inspection.get-theme-color($theme, background, surface),
     outlined-container-elevation: elevation.get-box-shadow(0),
-    outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    filled-container-color: inspection.get-theme-color($theme, background, card),
+    outlined-outline-color: inspection.get-theme-color($theme, foreground, base-12),
+    subtitle-text-color: inspection.get-theme-color($theme, foreground, base-70-54),
+    filled-container-color: inspection.get-theme-color($theme, background, surface),
     filled-container-elevation: elevation.get-box-shadow(0)
   );
 }

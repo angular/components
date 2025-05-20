@@ -16,7 +16,7 @@ $prefix: (mat, divider);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    color: inspection.get-theme-color($theme, foreground, divider)
+    color: inspection.get-theme-color($theme, foreground, base-12)
   );
 }
 

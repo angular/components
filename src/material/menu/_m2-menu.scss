@@ -29,17 +29,16 @@ $prefix: (mat, menu);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
-    if($is-dark, 0.08, 0.04));
-  $text-color: inspection.get-theme-color($theme, foreground, text);
+  $active-state-layer-color: inspection.get-theme-color($theme, foreground, base-08-04);
+  $text-color: inspection.get-theme-color($theme, foreground, on-surface);
 
   @return (
     item-label-text-color: $text-color,
     item-icon-color: $text-color,
     item-hover-state-layer-color: $active-state-layer-color,
     item-focus-state-layer-color: $active-state-layer-color,
-    container-color: inspection.get-theme-color($theme, background, card),
-    divider-color: inspection.get-theme-color($theme, foreground, divider),
+    container-color: inspection.get-theme-color($theme, background, surface),
+    divider-color: inspection.get-theme-color($theme, foreground, base-12),
   );
 }
 

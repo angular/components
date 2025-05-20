@@ -46,9 +46,10 @@ $prefix: (mat, badge);
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $is-dark: inspection.get-theme-type($theme) == dark;
   $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $app-background: inspection.get-theme-color($theme, background, background);
-  $disabled-background: inspection.get-theme-color($theme, foreground, disabled-button);
+  $app-background: inspection.get-theme-color($theme, background, h303030-grey-50);
+  $disabled-background: inspection.get-theme-color($theme, foreground, base-30-26);
 
   // The disabled color usually has some kind of opacity, but because the badge is overlayed
   // on top of something else, it won't look good if it's opaque. If it is a color *type*,
@@ -63,7 +64,7 @@ $prefix: (mat, badge);
 
   @return map.merge($primary-color-tokens, (
     disabled-state-background-color: $disabled-background,
-    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
+    disabled-state-text-color: inspection.get-theme-color($theme, foreground, base-50-38),
   ));
 }
 

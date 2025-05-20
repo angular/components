@@ -30,10 +30,10 @@ $prefix: (mat, radio);
 
   @return (
     checked-ripple-color: inspection.get-theme-color($theme, $palette-name, default),
-    disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
+    disabled-label-color: inspection.get-theme-color($theme, foreground, base-50-38),
     disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
     disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
-    label-text-color: inspection.get-theme-color($theme, foreground, text),
+    label-text-color: inspection.get-theme-color($theme, foreground, on-surface),
     ripple-color: inspection.get-theme-color($theme, foreground, base),
     selected-focus-icon-color: $palette-color,
     selected-hover-icon-color: $palette-color,
