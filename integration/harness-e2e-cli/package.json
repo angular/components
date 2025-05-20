@@ -44,6 +44,6 @@
     "selenium-webdriver": "3.6.0",
     "ts-node": "~10.9.1",
     "typescript": "5.8.3",
-    "wait-on": "^6.0.0"
+    "wait-on": "^8.0.0"
   }
 }
