@@ -1,0 +1,10 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "cdk-experimental-accordion",
+    srcs = glob(["**/*.ts"]),
+    assets = ["cdk-accordion-demo.html"],
+    deps = ["//src/components-examples/cdk-experimental/accordion"],
+)

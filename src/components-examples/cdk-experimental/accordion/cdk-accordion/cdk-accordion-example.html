@@ -1,0 +1,73 @@
+<div class="example-accordion-controls">
+  <mat-checkbox [formControl]="wrap">Wrap (ArrowKey-only)</mat-checkbox>
+  <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Expanded Items</mat-label>
+    <mat-select [(value)]="expandedIds" multiple>
+      @for (item of items; track item) {
+        <mat-option [value]="item">{{item}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div
+  cdkAccordionGroup
+  class="example-accordion-group"
+  [multiExpandable]="multi.value"
+  [disabled]="disabled.value"
+  [skipDisabled]="skipDisabled.value"
+  [wrap]="wrap.value"
+  [(value)]="expandedIds"
+>
+  <div class="example-accordion-container">
+    <h3 class="example-accordion-header">
+      <button cdkAccordionTrigger value="item1">
+        Item 1 Trigger
+        <mat-icon aria-hidden="true">{{expansionIcon('item1')()}}</mat-icon>
+      </button>
+    </h3>
+    <div cdkAccordionPanel value="item1" class="example-accordion-panel">
+      <ng-template cdkAccordionContent>
+        <p>This is the content for Item 1.</p>
+        <button>Focusable Button</button>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="example-accordion-container">
+    <h3 class="example-accordion-header">
+      <button cdkAccordionTrigger value="item2" disabled>
+        Item 2 Trigger (disabled)
+        <mat-icon aria-hidden="true">{{expansionIcon('item2')()}}</mat-icon>
+      </button>
+    </h3>
+    <div cdkAccordionPanel value="item2" class="example-accordion-panel">
+      <ng-template cdkAccordionContent>
+        <p>This is the content for Item 2.</p>
+        <label>Input inside panel: <input type="text"></label>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="example-accordion-container">
+    <h3 class="example-accordion-header">
+      <button cdkAccordionTrigger value="item3">
+        Item 3 Trigger
+        <mat-icon aria-hidden="true">{{expansionIcon('item3')()}}</mat-icon>
+      </button>
+    </h3>
+    <div
+      cdkAccordionPanel
+      value="item3"
+      class="example-accordion-panel"
+    >
+      <ng-template cdkAccordionContent>
+        <p>This is the content for Item 3.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

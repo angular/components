@@ -10,6 +10,7 @@ ts_project(
     ),
     deps = [
         "//:node_modules/@angular/core",
+        "//src/cdk-experimental/ui-patterns/accordion",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
         "//src/cdk-experimental/ui-patterns/listbox",
         "//src/cdk-experimental/ui-patterns/radio",
