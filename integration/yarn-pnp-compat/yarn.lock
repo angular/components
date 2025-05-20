@@ -470,7 +470,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.27.1":
+"@babel/core@npm:7.27.1, @babel/core@npm:^7.12.3":
   version: 7.27.1
   resolution: "@babel/core@npm:7.27.1"
   dependencies:
@@ -493,7 +493,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.23.9, @babel/core@npm:^7.7.5":
+"@babel/core@npm:^7.23.9":
   version: 7.26.9
   resolution: "@babel/core@npm:7.26.9"
   dependencies:
@@ -841,6 +841,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/parser@npm:^7.14.7, @babel/parser@npm:^7.27.1, @babel/parser@npm:^7.27.2":
+  version: 7.27.2
+  resolution: "@babel/parser@npm:7.27.2"
+  dependencies:
+    "@babel/types": "npm:^7.27.1"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: 10/133b4ccfbc01d4f36b0945937aabff87026c29fda6dcd3c842053a672e50f2487a101a3acd150bbaa2eecd33f3bd35650f95b806567c926f93b2af35c2b615c9
+  languageName: node
+  linkType: hard
+
 "@babel/parser@npm:^7.23.9, @babel/parser@npm:^7.26.9":
   version: 7.26.9
   resolution: "@babel/parser@npm:7.26.9"
@@ -849,17 +860,6 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 10/cb84fe3ba556d6a4360f3373cf7eb0901c46608c8d77330cc1ca021d60f5d6ebb4056a8e7f9dd0ef231923ef1fe69c87b11ce9e160d2252e089a20232a2b942b
-  languageName: node
-  linkType: hard
-
-"@babel/parser@npm:^7.27.1, @babel/parser@npm:^7.27.2":
-  version: 7.27.2
-  resolution: "@babel/parser@npm:7.27.2"
-  dependencies:
-    "@babel/types": "npm:^7.27.1"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 10/133b4ccfbc01d4f36b0945937aabff87026c29fda6dcd3c842053a672e50f2487a101a3acd150bbaa2eecd33f3bd35650f95b806567c926f93b2af35c2b615c9
   languageName: node
   linkType: hard
 
@@ -3437,12 +3437,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.14.0":
-  version: 22.14.0
-  resolution: "@types/node@npm:22.14.0"
+"@types/node@npm:22.15.21":
+  version: 22.15.21
+  resolution: "@types/node@npm:22.15.21"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/d0669a8a37a18532c886ccfa51eb3fe1e46088deb4d3d27ebcd5d7d68bd6343ad1c7a3fcb85164780a57629359c33a6c917ecff748ea232bceac7692acc96537
+  checksum: 10/cb4189587cca445bfb8166c0ed39f9344d743f37f3da892f2999a99bbabda45dc773237e61ecb7d1dc83dd95718cb1b5715b0be5dd7953565b19019e36a7cf39
   languageName: node
   linkType: hard
 
@@ -6233,15 +6233,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"istanbul-lib-instrument@npm:^4.0.1":
-  version: 4.0.3
-  resolution: "istanbul-lib-instrument@npm:4.0.3"
+"istanbul-lib-instrument@npm:^5.1.0":
+  version: 5.2.1
+  resolution: "istanbul-lib-instrument@npm:5.2.1"
   dependencies:
-    "@babel/core": "npm:^7.7.5"
+    "@babel/core": "npm:^7.12.3"
+    "@babel/parser": "npm:^7.14.7"
     "@istanbuljs/schema": "npm:^0.1.2"
-    istanbul-lib-coverage: "npm:^3.0.0"
+    istanbul-lib-coverage: "npm:^3.2.0"
     semver: "npm:^6.3.0"
-  checksum: 10/6e04ab365b95644ec4954b645f901be90be8ad81233d6df536300cdafcf70dd1ed22a912ceda38b32053c7fc9830c44cd23550c603f493329a8532073d1d6c42
+  checksum: 10/bbc4496c2f304d799f8ec22202ab38c010ac265c441947f075c0f7d46bd440b45c00e46017cf9053453d42182d768b1d6ed0e70a142c95ab00df9843aa5ab80e
   languageName: node
   linkType: hard
 
@@ -6256,7 +6257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"istanbul-lib-source-maps@npm:^4.0.0":
+"istanbul-lib-source-maps@npm:^4.0.1":
   version: 4.0.1
   resolution: "istanbul-lib-source-maps@npm:4.0.1"
   dependencies:
@@ -6267,7 +6268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"istanbul-reports@npm:^3.0.0":
+"istanbul-reports@npm:^3.0.5":
   version: 3.1.7
   resolution: "istanbul-reports@npm:3.1.7"
   dependencies:
@@ -6297,10 +6298,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~5.6.0":
-  version: 5.6.0
-  resolution: "jasmine-core@npm:5.6.0"
-  checksum: 10/0171a28634c6d9667278a628483bc9c6a075512078e74d208ae9172525e108d386621915449b30abe008d1bd86568a7f057cfc170be2286da5e21c4d5f2eba8e
+"jasmine-core@npm:~5.7.0":
+  version: 5.7.1
+  resolution: "jasmine-core@npm:5.7.1"
+  checksum: 10/ce61bd518354fd775e99d43243db1eaeeab3089705bcadeef31ee3c675fdac77f7eafbc68911d9900f1d4d7d85bf16fd9d4d917776454085b8f55410657dbe8f
   languageName: node
   linkType: hard
 
@@ -6423,26 +6424,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-chrome-launcher@npm:~3.1.0":
-  version: 3.1.1
-  resolution: "karma-chrome-launcher@npm:3.1.1"
+"karma-chrome-launcher@npm:~3.2.0":
+  version: 3.2.0
+  resolution: "karma-chrome-launcher@npm:3.2.0"
   dependencies:
     which: "npm:^1.2.1"
-  checksum: 10/527c33a27d251355693d2a27f7ab7a5c0fc0ef156d5e82261f7d9a02d09cfa7f6d09979e73d3ecbbce43fe5a8e1ee69ca634783e0d40255bc7e1e53af376a12c
+  checksum: 10/2124684172ef04f6fa3a957d72214adcd780e440adf61d191f1e6faa648b6b509056952910d6d0517d118250d347d8b30f77ccac195ea53dcdf3d7ed71651506
   languageName: node
   linkType: hard
 
-"karma-coverage@npm:~2.0.3":
-  version: 2.0.3
-  resolution: "karma-coverage@npm:2.0.3"
+"karma-coverage@npm:~2.2.0":
+  version: 2.2.1
+  resolution: "karma-coverage@npm:2.2.1"
   dependencies:
-    istanbul-lib-coverage: "npm:^3.0.0"
-    istanbul-lib-instrument: "npm:^4.0.1"
+    istanbul-lib-coverage: "npm:^3.2.0"
+    istanbul-lib-instrument: "npm:^5.1.0"
     istanbul-lib-report: "npm:^3.0.0"
-    istanbul-lib-source-maps: "npm:^4.0.0"
-    istanbul-reports: "npm:^3.0.0"
+    istanbul-lib-source-maps: "npm:^4.0.1"
+    istanbul-reports: "npm:^3.0.5"
     minimatch: "npm:^3.0.4"
-  checksum: 10/5f9254b008440778835c181b02ea658c40e8112aa8ce062bf0c07cfc7fd4f2b96ad33b7fdc8fdc4f70778b44cfbf872d74a69a7224fbc15e5485cc79e537be23
+  checksum: 10/ca4f5d1d059f1cce38b07540a0220757f0e8772a0f38e20189f1d6ede736988b7a0c57f02f90dc588cbd4ced2ced1a12c456b633149d88571f5e545fd0a4f790
   languageName: node
   linkType: hard
 
@@ -9793,12 +9794,12 @@ __metadata:
     "@angular/platform-browser": "npm:20.0.0-rc.1"
     "@angular/router": "npm:20.0.0-rc.1"
     "@types/jasmine": "npm:~5.1.7"
-    "@types/node": "npm:22.14.0"
+    "@types/node": "npm:22.15.21"
     glob: "npm:^7.2.0"
-    jasmine-core: "npm:~5.6.0"
+    jasmine-core: "npm:~5.7.0"
     karma: "npm:~6.4.4"
-    karma-chrome-launcher: "npm:~3.1.0"
-    karma-coverage: "npm:~2.0.3"
+    karma-chrome-launcher: "npm:~3.2.0"
+    karma-coverage: "npm:~2.2.0"
     karma-jasmine: "npm:~4.0.0"
     karma-jasmine-html-reporter: "npm:~1.7.0"
     rxjs: "npm:^7.5.5"
