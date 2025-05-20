@@ -47,7 +47,7 @@ export class MatSidenavContent extends MatDrawerContent {}
   templateUrl: 'drawer.html',
   host: {
     'class': 'mat-drawer mat-sidenav',
-    'tabIndex': '-1',
+    '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.mat-drawer-end]': 'position === "end"',
