@@ -132,8 +132,8 @@ importers:
         specifier: 'catalog:'
         version: 20.0.0-rc.1(@angular/compiler-cli@20.0.0-rc.1(@angular/compiler@20.0.0-rc.1)(typescript@5.8.3))(@angular/compiler@20.0.0-rc.1)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#32c4a4b15963cdd60dd1a35e92f75e538936fcdf
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/32c4a4b15963cdd60dd1a35e92f75e538936fcdf(encoding@0.1.13)
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a0e523780deaf6c6361b91fd0b965ba58d7551a0
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a0e523780deaf6c6361b91fd0b965ba58d7551a0(encoding@0.1.13)
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 20.0.0-rc.1(66c4waiyzoicv6gxn24dzbippq)
@@ -910,9 +910,9 @@ packages:
       '@angular/compiler': 20.0.0-rc.1
       '@angular/compiler-cli': 20.0.0-rc.1
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/32c4a4b15963cdd60dd1a35e92f75e538936fcdf':
-    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/32c4a4b15963cdd60dd1a35e92f75e538936fcdf}
-    version: 0.0.0-a9061f8b8f7bb7b0ea2b578d48dcfd4e6b83a18b
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a0e523780deaf6c6361b91fd0b965ba58d7551a0':
+    resolution: {tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a0e523780deaf6c6361b91fd0b965ba58d7551a0}
+    version: 0.0.0-b5a3609f89c06eb4037dce22a93641213a5d1508
     hasBin: true
 
   '@angular/platform-browser-dynamic@20.0.0-rc.1':
@@ -9581,7 +9581,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/32c4a4b15963cdd60dd1a35e92f75e538936fcdf(encoding@0.1.13)':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a0e523780deaf6c6361b91fd0b965ba58d7551a0(encoding@0.1.13)':
     dependencies:
       '@google-cloud/spanner': 7.21.0(encoding@0.1.13)(supports-color@10.0.0)
       '@octokit/rest': 21.1.1
@@ -9589,7 +9589,7 @@ snapshots:
       '@types/supports-color': 10.0.0
       '@yarnpkg/lockfile': 1.1.0
       chalk: 5.4.1
-      semver: 7.7.1
+      semver: 7.7.2
       supports-color: 10.0.0
       typed-graphqlify: 3.1.6
       typescript: 5.8.3
@@ -11089,7 +11089,7 @@ snapshots:
 
   '@npmcli/fs@3.1.1':
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
     optional: true
 
   '@npmcli/fs@4.0.0':
@@ -16028,7 +16028,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.1
+      semver: 7.7.2
 
   make-error@1.3.6: {}
 
@@ -16427,7 +16427,7 @@ snapshots:
       make-fetch-happen: 13.0.1
       nopt: 7.2.1
       proc-log: 4.2.0
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 6.2.1
       which: 4.0.0
     transitivePeerDependencies:
@@ -16475,7 +16475,7 @@ snapshots:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.16.1
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
@@ -16623,7 +16623,7 @@ snapshots:
 
   openapi3-ts@3.2.0:
     dependencies:
-      yaml: 2.7.1
+      yaml: 2.8.0
 
   opener@1.5.2: {}
 
@@ -17034,7 +17034,7 @@ snapshots:
       jsdoc: 4.0.4
       minimist: 1.2.8
       protobufjs: 7.2.4
-      semver: 7.7.1
+      semver: 7.7.2
       tmp: 0.2.3
       uglify-js: 3.19.3
 
