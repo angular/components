@@ -32,18 +32,18 @@
     .mat-mdc-tab-nav-bar {
       @include token-utils.create-token-values-mixed(
           m2-tabs.get-color-tokens($theme, primary,
-            $exclude: (background-color, foreground-color)));
+            $exclude: (tab-background-color, tab-foreground-color)));
 
       &.mat-accent {
         @include token-utils.create-token-values-mixed(
           m2-tabs.get-color-tokens($theme, accent,
-            $exclude: (background-color, foreground-color)));
+            $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
           m2-tabs.get-color-tokens($theme, warn,
-            $exclude: (background-color, foreground-color)));
+            $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-background-primary {

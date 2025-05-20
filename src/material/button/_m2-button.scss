@@ -147,7 +147,7 @@
     button-filled-ripple-color: $ripple-color,
     button-filled-state-layer-color: $state-layer-color,
     button-outlined-label-text-color: inspection.get-theme-color($theme, $palette-name, default),
-    button-outlined-outline-color: map.get(get-color-tokens($theme), outlined-outline-color),
+    button-outlined-outline-color: map.get(get-color-tokens($theme), button-outlined-outline-color),
     button-outlined-ripple-color:
         if(
           meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,

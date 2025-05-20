@@ -36,14 +36,14 @@
       &.mat-primary {
         @include token-utils.create-token-values-mixed(
             m2-checkbox.get-color-tokens($theme, primary,
-                $exclude: (disabled-label-color, label-text-color))
+                $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
           m2-checkbox.get-color-tokens($theme, warn,
-              $exclude: (disabled-label-color, label-text-color))
+              $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
     }

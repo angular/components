@@ -88,7 +88,7 @@
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
           m2-icon-button.get-density-tokens(
-              $theme, $exclude: (state-layer-size))
+              $theme, $exclude: (icon-button-state-layer-size))
       );
     }
 

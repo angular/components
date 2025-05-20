@@ -144,7 +144,7 @@
       // Emit component-level density tokens if the scale is lower than 0. The density tokens
       // do not fallback to any system-level values and must be defined if the scale is different.
       $density-tokens: get-density-tokens($scale);
-      @each $prefix, $tokens in $density-tokens {
+      @each $tokens in $density-tokens {
         @each $token-name, $token-value in $tokens {
           --mat-#{$token-name}: #{$token-value};
         }
