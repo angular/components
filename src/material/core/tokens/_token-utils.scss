@@ -62,12 +62,12 @@
         #{map.keys($fallbacks-flattened)};
   }
 
-  $fallback: map.get($fallbacks-flattened, $token);
-  @if (sass-utils.is-css-var-name($fallback)) {
-    $fallback: _create-var($fallback, $fallback);
+  $sys-fallback: map.get($fallbacks-flattened, $token);
+  @if (sass-utils.is-css-var-name($sys-fallback)) {
+    $sys-fallback: _create-var($sys-fallback, $fallback);
   }
 
-  @return _create-var(--mat-#{$token}, $fallback);
+  @return _create-var(--mat-#{$token}, $sys-fallback);
 }
 
 // Outputs a map of tokens.
