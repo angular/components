@@ -165,7 +165,9 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // this was also done by the animations module which some internal tests seem to depend on.
     // Simulate it by toggling the `hidden` attribute instead.
     '[style.visibility]': '(!_container && !opened) ? "hidden" : null',
-    'tabIndex': '-1',
+    // The sidenav container should not be focused on when used in side mode. See b/286459024 for
+    // reference. Updates tabIndex of drawer/container to default to null if in side mode.
+    '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
