@@ -15,10 +15,10 @@ http_archive(
 # Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
-    sha256 = "a9c5d3a22461ed7063aa7b088f9c96fa0aaaa8b6984b601f84d705adc47d8a58",
-    strip_prefix = "bazel-skylib-8334f938c1574ef6f1f7a38a03550a31df65274e",
+    sha256 = "4f7e2b6bafa9a88ac1b0ee0c3ad69850282419aa51f6bd5b45cde8d0c945d18c",
+    strip_prefix = "bazel-skylib-454b25912a8ddf3d90eb47f25260befd5ee274a8",
     urls = [
-        "https://github.com/bazelbuild/bazel-skylib/archive/8334f938c1574ef6f1f7a38a03550a31df65274e.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/archive/454b25912a8ddf3d90eb47f25260befd5ee274a8.tar.gz",
     ],
 )
 
@@ -45,9 +45,9 @@ build_bazel_rules_nodejs_dependencies()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "3388abe9b9728ef68ea8d8301f932b11b2c9a271d74741ddd5f3b34d1db843ac",
-    strip_prefix = "rules_js-2.1.1",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.1.1/rules_js-v2.1.1.tar.gz",
+    sha256 = "83e5af4d17385d1c3268c31ae217dbfc8525aa7bcf52508dc6864baffc8b9501",
+    strip_prefix = "rules_js-2.3.7",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.7/rules_js-v2.3.7.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -154,9 +154,9 @@ npm_repositories()
 
 http_archive(
     name = "aspect_rules_ts",
-    sha256 = "9acd128abe77397505148eaa6895faed57839560dbf2177dd6285e51235e2724",
-    strip_prefix = "rules_ts-3.3.1",
-    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.3.1/rules_ts-v3.3.1.tar.gz",
+    sha256 = "6b15ac1c69f2c0f1282e41ab469fd63cd40eb2e2d83075e19b68a6a76669773f",
+    strip_prefix = "rules_ts-3.6.0",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.6.0/rules_ts-v3.6.0.tar.gz",
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
@@ -169,9 +169,9 @@ rules_ts_dependencies(
 
 http_archive(
     name = "aspect_rules_rollup",
-    sha256 = "c4062681968f5dcd3ce01e09e4ba73670c064744a7046211763e17c98ab8396e",
-    strip_prefix = "rules_rollup-2.0.0",
-    url = "https://github.com/aspect-build/rules_rollup/releases/download/v2.0.0/rules_rollup-v2.0.0.tar.gz",
+    sha256 = "0b8ac7d97cd660eb9a275600227e9c4268f5904cba962939d1a6ce9a0a059d2e",
+    strip_prefix = "rules_rollup-2.0.1",
+    url = "https://github.com/aspect-build/rules_rollup/releases/download/v2.0.1/rules_rollup-v2.0.1.tar.gz",
 )
 
 http_archive(
@@ -203,7 +203,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "84a8039330a4accc86f0b53c4ef5ff745c3e1bbe",
+    commit = "5b9b1fc545736b8b602a216f89134c1f20d3009c",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
@@ -224,9 +224,9 @@ rules_angular_step3(
 
 http_archive(
     name = "aspect_rules_esbuild",
-    sha256 = "550e33ddeb86a564b22b2c5d3f84748c6639b1b2b71fae66bf362c33392cbed8",
-    strip_prefix = "rules_esbuild-0.21.0",
-    url = "https://github.com/aspect-build/rules_esbuild/releases/download/v0.21.0/rules_esbuild-v0.21.0.tar.gz",
+    sha256 = "530adfeae30bbbd097e8af845a44a04b641b680c5703b3bf885cbd384ffec779",
+    strip_prefix = "rules_esbuild-0.22.1",
+    url = "https://github.com/aspect-build/rules_esbuild/releases/download/v0.22.1/rules_esbuild-v0.22.1.tar.gz",
 )
 
 load("@aspect_rules_esbuild//esbuild:dependencies.bzl", "rules_esbuild_dependencies")
