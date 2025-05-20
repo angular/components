@@ -13,7 +13,8 @@ $fallbacks: m3-table.get-tokens();
 }
 
 @mixin _cell-border {
-  border-bottom-color: token-utils.slot(table-row-item-outline-color, $fallbacks, rgba(0, 0, 0, 0.12));
+  border-bottom-color: token-utils.slot(
+      table-row-item-outline-color, $fallbacks, rgba(0, 0, 0, 0.12));
   border-bottom-width: token-utils.slot(table-row-item-outline-width, $fallbacks, 1px);
   border-bottom-style: solid;
 }
@@ -79,7 +80,8 @@ $fallbacks: m3-table.get-tokens();
   @include vendor-prefixes.smooth-font;
   height: token-utils.slot(table-footer-container-height, $fallbacks, 52px);
   color: token-utils.slot(table-row-item-label-text-color, $fallbacks, rgba(0, 0, 0, 0.87));
-  font-family: token-utils.slot(table-footer-supporting-text-font, $fallbacks, (Roboto, sans-serif));
+  font-family: token-utils.slot(
+      table-footer-supporting-text-font, $fallbacks, (Roboto, sans-serif));
   line-height: token-utils.slot(table-footer-supporting-text-line-height, $fallbacks);
   font-size: token-utils.slot(table-footer-supporting-text-size, $fallbacks, 14px);
   font-weight: token-utils.slot(table-footer-supporting-text-weight, $fallbacks);
