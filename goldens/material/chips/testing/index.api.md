@@ -17,6 +17,10 @@ export interface ChipAvatarHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public (undocumented)
+export interface ChipEditHarnessFilters extends BaseHarnessFilters {
+}
+
+// @public (undocumented)
 export interface ChipEditInputHarnessFilters extends BaseHarnessFilters {
 }
 
@@ -68,6 +72,14 @@ export class MatChipAvatarHarness extends ComponentHarness {
 }
 
 // @public
+export class MatChipEditHarness extends ComponentHarness {
+    click(): Promise<void>;
+    // (undocumented)
+    static hostSelector: string;
+    static with<T extends MatChipEditHarness>(this: ComponentHarnessConstructor<T>, options?: ChipEditHarnessFilters): HarnessPredicate<T>;
+}
+
+// @public
 export class MatChipEditInputHarness extends ComponentHarness {
     // (undocumented)
     static hostSelector: string;
@@ -89,6 +101,7 @@ export class MatChipGridHarness extends ComponentHarness {
 
 // @public
 export class MatChipHarness extends ContentContainerComponentHarness {
+    geEditButton(filter?: ChipEditHarnessFilters): Promise<MatChipEditHarness>;
     getAvatar(filter?: ChipAvatarHarnessFilters): Promise<MatChipAvatarHarness | null>;
     getRemoveButton(filter?: ChipRemoveHarnessFilters): Promise<MatChipRemoveHarness>;
     getText(): Promise<string>;

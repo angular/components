@@ -15,9 +15,11 @@ import {
 import {MatChipAvatarHarness} from './chip-avatar-harness';
 import {
   ChipAvatarHarnessFilters,
+  ChipEditHarnessFilters,
   ChipHarnessFilters,
   ChipRemoveHarnessFilters,
 } from './chip-harness-filters';
+import {MatChipEditHarness} from './chip-edit-harness';
 import {MatChipRemoveHarness} from './chip-remove-harness';
 
 /** Harness for interacting with a mat-chip in tests. */
@@ -60,6 +62,14 @@ export class MatChipHarness extends ContentContainerComponentHarness {
   async remove(): Promise<void> {
     const hostEl = await this.host();
     await hostEl.sendKeys(TestKey.DELETE);
+  }
+
+  /**
+   * Gets the edit button inside of a chip.
+   * @param filter Optionally filters which chips are included.
+   */
+  async geEditButton(filter: ChipEditHarnessFilters = {}): Promise<MatChipEditHarness> {
+    return this.locatorFor(MatChipEditHarness.with(filter))();
   }
 
   /**
