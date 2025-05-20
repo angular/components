@@ -118,7 +118,7 @@
     "jasmine-core": "5.6.0",
     "jasmine-reporters": "^2.5.2",
     "jsonc-parser": "^3.3.1",
-    "kagekiri": "^1.4.1",
+    "kagekiri": "^2.0.0",
     "karma": "^6.3.12",
     "karma-browserstack-launcher": "^1.6.0",
     "karma-jasmine": "^4.0.1",

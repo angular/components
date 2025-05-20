@@ -255,8 +255,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       kagekiri:
-        specifier: ^1.4.1
-        version: 1.4.3
+        specifier: ^2.0.0
+        version: 2.0.0
       karma:
         specifier: ^6.3.12
         version: 6.4.4
@@ -6104,8 +6104,8 @@ packages:
   jws@4.0.0:
     resolution: {integrity: sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg==}
 
-  kagekiri@1.4.3:
-    resolution: {integrity: sha512-aBJi52dwFm/hGTtGq3995H5KKcGP/bHo7pBpxyElpNGuo33JRpoxLx6Bx2EdOEXIy+6pg8FZUg1lk1cuNQcubg==}
+  kagekiri@2.0.0:
+    resolution: {integrity: sha512-4AG25g5A6NTS7+9RRIyB6Yn5G8QHu+spy/pENI0zfNC4j4XBsaVueykK/yJAmE1x4MyD6NpcoXhVUmBB9nI9DA==}
 
   karma-browserstack-launcher@1.6.0:
     resolution: {integrity: sha512-Y/UWPdHZkHIVH2To4GWHCTzmrsB6H7PBWy6pw+TWz5sr4HW2mcE+Uj6qWgoVNxvQU1Pfn5LQQzI6EQ65p8QbiQ==}
@@ -15578,7 +15578,7 @@ snapshots:
       jwa: 2.0.0
       safe-buffer: 5.2.1
 
-  kagekiri@1.4.3: {}
+  kagekiri@2.0.0: {}
 
   karma-browserstack-launcher@1.6.0(karma@6.4.4):
     dependencies:
