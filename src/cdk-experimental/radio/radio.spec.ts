@@ -508,6 +508,14 @@ describe('CdkRadioGroup', () => {
       setupRadioGroup({options: []});
       expect(radioButtons.length).toBe(0);
     });
+
+    describe('bad accessibility violations', () => {
+      it('should report when the selected radio button is disabled and skipDisabled is true', () => {
+        spyOn(console, 'error');
+        setupRadioGroup({value: 1, skipDisabled: true, disabledOptions: [1]});
+        expect(console.error).toHaveBeenCalled();
+      });
+    });
   });
 });
 

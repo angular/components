@@ -138,6 +138,13 @@ export class CdkRadioGroup<V> {
 
   constructor() {
     afterRenderEffect(() => {
+      const violations = this.pattern.validate();
+      for (const violation of violations) {
+        console.error(violation);
+      }
+    });
+
+    afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this.pattern.setDefaultState();
       }
