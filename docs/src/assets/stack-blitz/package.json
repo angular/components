@@ -31,7 +31,7 @@
     "@angular-devkit/build-angular": "^20.0.0-rc",
     "@angular/cli": "^20.0.0-rc",
     "@angular/compiler-cli": "^20.0.0-rc",
-    "@types/jasmine": "~3.10.0",
+    "@types/jasmine": "~5.1.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.99.0",
     "karma": "~6.4.0",
