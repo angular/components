@@ -25,7 +25,7 @@ $fallbacks: m3-slide-toggle.get-tokens();
     $_touch-target-size: 48px;
     $_ripple-size: 24px;
     $offset: 5px;
-  
+
     content: '';
     opacity: 0;
     display: block;
@@ -388,7 +388,6 @@ $fallbacks: m3-slide-toggle.get-tokens();
   &::after {
     content: '';
     opacity: 0;
-  
 
     .mdc-switch--disabled & {
       display: none;
