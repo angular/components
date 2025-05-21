@@ -15,6 +15,7 @@ import {
   ElementRef,
   inject,
   input,
+  isDevMode,
   linkedSignal,
   model,
   signal,
@@ -138,9 +139,11 @@ export class CdkRadioGroup<V> {
 
   constructor() {
     afterRenderEffect(() => {
-      const violations = this.pattern.validate();
-      for (const violation of violations) {
-        console.error(violation);
+      if (isDevMode()) {
+        const violations = this.pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
+        }
       }
     });
 
