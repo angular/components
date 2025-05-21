@@ -183,8 +183,8 @@ importers:
         specifier: ^8.0.0
         version: 8.1.0
       '@types/jasmine':
-        specifier: ^4.0.0
-        version: 4.6.5
+        specifier: ^5.0.0
+        version: 5.1.8
       '@types/luxon':
         specifier: ^3.0.0
         version: 3.6.2
@@ -2783,9 +2783,6 @@ packages:
 
   '@types/http-proxy@1.17.16':
     resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
-
-  '@types/jasmine@4.6.5':
-    resolution: {integrity: sha512-QgQkk8QL3vhML6msrckf7olLTwi+qeP5rLtmMeP4573HWlFw13xBX8M7YklKoP/Vu/gIXcwWYirTIa/8XVew9g==}
 
   '@types/jasmine@5.1.8':
     resolution: {integrity: sha512-u7/CnvRdh6AaaIzYjCgUuVbREFgulhX05Qtf6ZtW+aOcjCKKVvKgpkPYJBFTZSHtFBYimzU4zP0V2vrEsq9Wcg==}
@@ -11459,8 +11456,6 @@ snapshots:
   '@types/http-proxy@1.17.16':
     dependencies:
       '@types/node': 22.14.1
-
-  '@types/jasmine@4.6.5': {}
 
   '@types/jasmine@5.1.8': {}
 
