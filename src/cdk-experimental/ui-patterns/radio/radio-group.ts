@@ -48,8 +48,11 @@ export class RadioGroupPattern<V> {
   /** Whether the radio group is disabled. */
   disabled = computed(() => this.inputs.disabled() || this.focusManager.isListDisabled());
 
+  /** The currently selected radio button. */
+  selectedItem = computed(() => this.selection.selectedItems()[0]);
+
   /** Whether the radio group is readonly. */
-  readonly: SignalLike<boolean>;
+  readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
   /** The tabindex of the radio group (if using activedescendant). */
   tabindex = computed(() => this.focusManager.getListTabindex());
@@ -111,7 +114,6 @@ export class RadioGroupPattern<V> {
   });
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
-    this.readonly = inputs.readonly;
     this.orientation = inputs.orientation;
 
     this.focusManager = new ListFocus(inputs);
@@ -192,6 +194,19 @@ export class RadioGroupPattern<V> {
     if (firstItem) {
       this.inputs.activeIndex.set(firstItem.index());
     }
+  }
+
+  /** Validates the state of the radio group and returns a list of accessibility violations. */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (this.selectedItem()?.disabled() && this.inputs.skipDisabled()) {
+      violations.push(
+        "Accessibility Violation: The selected radio button is disabled while 'skipDisabled' is true, making the selection unreachable via keyboard.",
+      );
+    }
+
+    return violations;
   }
 
   /** Safely performs a navigation operation and updates selection if needed. */

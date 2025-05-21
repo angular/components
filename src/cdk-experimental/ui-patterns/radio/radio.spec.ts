@@ -298,4 +298,16 @@ describe('RadioGroup Pattern', () => {
       expect(radioGroup.inputs.activeIndex()).toBe(0); // Defaults to first focusable
     });
   });
+
+  describe('validate', () => {
+    it('should report a violation if the selected item is disabled and skipDisabled is true', () => {
+      const {radioGroup, radioButtons} = getDefaultPatterns({
+        value: signal(['Banana']),
+        skipDisabled: signal(true),
+      });
+      radioButtons[1].disabled.set(true); // Disable the selected item.
+      const violations = radioGroup.validate();
+      expect(violations.length).toBe(1);
+    });
+  });
 });

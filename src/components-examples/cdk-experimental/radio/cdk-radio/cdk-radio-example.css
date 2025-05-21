@@ -1,0 +1,106 @@
+.example-radio-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.example-radio-group {
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  max-height: 50vh;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  overflow: scroll;
+  user-select: none;
+}
+
+.example-radio-group[aria-orientation='horizontal'] {
+  flex-direction: row;
+}
+
+.example-radio-group[aria-disabled='true'] {
+  background-color: var(--mat-sys-surface-dim);
+  pointer-events: none;
+}
+
+.example-radio-button {
+  gap: 16px;
+  padding: 16px;
+  display: flex;
+  cursor: pointer;
+  position: relative;
+  align-items: center;
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+/* Basic visual indicator for the radio button */
+.example-radio-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--mat-sys-outline);
+  display: inline-block;
+  position: relative;
+}
+
+.example-radio-button[aria-checked='true'] .example-radio-indicator {
+  border-color: var(--mat-sys-primary);
+}
+
+.example-radio-button[aria-checked='true'] .example-radio-indicator::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--mat-sys-primary);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.example-radio-button[aria-disabled='true'][aria-checked='true'] .example-radio-indicator::after {
+  background-color: var(--mat-sys-outline);
+}
+
+.example-radio-button.cdk-active,
+.example-radio-button[aria-disabled='false']:hover {
+  outline: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-container);
+}
+
+.example-radio-button[aria-disabled='false']:focus-within {
+  outline: 2px solid var(--mat-sys-primary);
+  background: var(--mat-sys-surface-container);
+}
+
+.example-radio-button.cdk-active[aria-disabled='true'],
+.example-radio-button[aria-disabled='true']:focus-within {
+  outline: 2px solid var(--mat-sys-outline);
+}
+
+.example-radio-button[aria-disabled='true'] {
+  cursor: default;
+}
+
+.example-radio-button[aria-disabled='true'] span:not(.example-radio-indicator) {
+  opacity: 0.3;
+}
+
+.example-radio-button[aria-disabled='true']::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: var(--mat-sys-corner-extra-small);
+  background-color: var(--mat-sys-on-surface);
+  opacity: var(--mat-sys-focus-state-layer-opacity);
+}

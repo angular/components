@@ -138,6 +138,15 @@ export class CdkRadioGroup<V> {
 
   constructor() {
     afterRenderEffect(() => {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        const violations = this.pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
+        }
+      }
+    });
+
+    afterRenderEffect(() => {
       if (!this._hasFocused()) {
         this.pattern.setDefaultState();
       }

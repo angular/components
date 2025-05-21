@@ -1,0 +1,62 @@
+<div class="example-radio-controls">
+  <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="readonly">Readonly</mat-checkbox>
+  <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Selected Flavor</mat-label>
+    <mat-select [(value)]="selectedValue">
+      <mat-option [value]="null"><em>None</em></mat-option>
+      @for (flavor of flavors; track flavor) {
+        <mat-option [value]="flavor">{{flavor}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Disabled Radio Options</mat-label>
+    <mat-select [(value)]="disabledOptions" multiple>
+      @for (flavor of flavors; track flavor) {
+        <mat-option [value]="flavor">{{flavor}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Orientation</mat-label>
+    <mat-select [(value)]="orientation">
+      <mat-option value="vertical">Vertical</mat-option>
+      <mat-option value="horizontal">Horizontal</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic" appearance="outline">
+    <mat-label>Focus strategy</mat-label>
+    <mat-select [(value)]="focusMode">
+      <mat-option value="roving">Roving Tabindex</mat-option>
+      <mat-option value="activedescendant">Active Descendant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- #docregion radio-group -->
+<ul
+  cdkRadioGroup
+  [(value)]="selectedValue"
+  [disabled]="disabled.value"
+  [readonly]="readonly.value"
+  [skipDisabled]="skipDisabled.value"
+  [orientation]="orientation"
+  [focusMode]="focusMode"
+  class="example-radio-group"
+  aria-label="Select your favorite ice cream flavor"
+>
+  @for (flavor of flavors; track flavor) {
+    @let optionDisabled = disabledOptions.includes(flavor);
+    <li cdkRadioButton [value]="flavor" [disabled]="optionDisabled" class="example-radio-button">
+      <span class="example-radio-indicator"></span>
+      <span>{{ flavor }}</span>
+    </li>
+  }
+</ul>
+<!-- #enddocregion radio-group -->

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 
@@ -35,6 +35,11 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** The end index to use for range selection. */
   rangeEndIndex = signal<number>(0);
+
+  /** The currently selected items. */
+  selectedItems = computed(() =>
+    this.inputs.items().filter(item => this.inputs.value().includes(item.value())),
+  );
 
   constructor(readonly inputs: ListSelectionInputs<T, V> & {focusManager: ListFocus<T>}) {}
 

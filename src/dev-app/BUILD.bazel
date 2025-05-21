@@ -1,8 +1,8 @@
-load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary")
-load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
+load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -36,6 +36,7 @@ ng_project(
         "//src/dev-app/cdk-experimental-accordion",
         "//src/dev-app/cdk-experimental-combobox",
         "//src/dev-app/cdk-experimental-listbox",
+        "//src/dev-app/cdk-experimental-radio",
         "//src/dev-app/cdk-experimental-tabs",
         "//src/dev-app/cdk-listbox",
         "//src/dev-app/cdk-menu",
