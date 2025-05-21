@@ -11,5 +11,7 @@ export * from './listbox/option';
 export * from './radio/radio-group';
 export * from './radio/radio';
 export * from './behaviors/signal-like/signal-like';
+export * from './nav/nav';
+export * from './nav/link';
 export * from './tabs/tabs';
 export * from './accordion/accordion';

@@ -13,6 +13,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk-experimental/column-resize',
     'cdk-experimental/combobox',
     'cdk-experimental/listbox',
+    'cdk-experimental/nav',
     'cdk-experimental/popover-edit',
     'cdk-experimental/radio',
     'cdk-experimental/scrolling',
