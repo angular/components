@@ -1,3 +1,23 @@
+<a name="20.0.0-rc.2"></a>
+# 20.0.0-rc.2 "orichalcum-ostrich" (2025-05-21)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7d360ac776](https://github.com/angular/components/commit/7d360ac7761520c4382776c2950d47919e59cc21) | fix | **button-toggle:** changed after checked error when updating tabindex ([#31172](https://github.com/angular/components/pull/31172)) |
+| [c17cdadaed](https://github.com/angular/components/commit/c17cdadaed032441cfddbddecf006a4eb1e0b087) | fix | **datepicker:** prevent calendar from stealing away focus ([#31128](https://github.com/angular/components/pull/31128)) |
+| [704761652d](https://github.com/angular/components/commit/704761652dfbaa32283d4dc5ce58ca7c679b217b) | fix | **dialog:** use custom token to disable animations ([#31156](https://github.com/angular/components/pull/31156)) |
+| [8a45ec9280](https://github.com/angular/components/commit/8a45ec9280072c383fa61d799ba500794068e476) | fix | **radio:** assistive technology announcing button as invalid ([#31160](https://github.com/angular/components/pull/31160)) |
+| [e5eb939693](https://github.com/angular/components/commit/e5eb9396935e2c47d20a448719374cc2fc51cd17) | fix | **radio:** updating required value should mark for check ([#31109](https://github.com/angular/components/pull/31109)) |
+| [fa150969b2](https://github.com/angular/components/commit/fa150969b2607cb8f02eda8f4d493828812863ab) | fix | **sidenav:** removes -1 tabindex from sidenav  ([#31155](https://github.com/angular/components/pull/31155)) |
+| [a3711eb091](https://github.com/angular/components/commit/a3711eb09198f466b1ed04593da7e35b0b6e6aca) | fix | **tabs:** avoid not having any focusable tabs ([#31144](https://github.com/angular/components/pull/31144)) |
+| [922c678c07](https://github.com/angular/components/commit/922c678c0790161c5b9dc001393e82fafc607025) | fix | **tabs:** not emitting token in M3 ([#31136](https://github.com/angular/components/pull/31136)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [16493ecab8](https://github.com/angular/components/commit/16493ecab893d522f81b769e059f8fa6138b9e7e) | fix | **scrolling:** Fix ExpressionChangedAfterItWasCheckedError ([#31076](https://github.com/angular/components/pull/31076)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.17"></a>
 # 19.2.17 "fulgurite-fiesta" (2025-05-21)
 ### material
