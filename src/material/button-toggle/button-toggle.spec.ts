@@ -1,12 +1,5 @@
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {
-  Component,
-  DebugElement,
-  provideCheckNoChangesConfig,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -19,21 +12,6 @@ import {
 } from './index';
 
 describe('MatButtonToggle with forms', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [provideCheckNoChangesConfig({exhaustive: false})],
-      imports: [
-        MatButtonToggleModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ButtonToggleGroupWithNgModel,
-        ButtonToggleGroupWithFormControl,
-        ButtonToggleGroupWithIndirectDescendantToggles,
-        ButtonToggleGroupWithFormControlAndDynamicButtons,
-      ],
-    });
-  }));
-
   describe('using FormControl', () => {
     let fixture: ComponentFixture<ButtonToggleGroupWithFormControl>;
     let groupDebugElement: DebugElement;
@@ -333,27 +311,6 @@ describe('MatButtonToggle with forms', () => {
 });
 
 describe('MatButtonToggle without forms', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [provideCheckNoChangesConfig({exhaustive: false})],
-      imports: [
-        MatButtonToggleModule,
-        ButtonTogglesInsideButtonToggleGroup,
-        ButtonTogglesInsideButtonToggleGroupMultiple,
-        FalsyButtonTogglesInsideButtonToggleGroupMultiple,
-        ButtonToggleGroupWithInitialValue,
-        StandaloneButtonToggle,
-        ButtonToggleWithAriaLabel,
-        ButtonToggleWithAriaLabelledby,
-        RepeatedButtonTogglesWithPreselectedValue,
-        ButtonToggleWithTabindex,
-        ButtonToggleWithStaticName,
-        ButtonToggleWithStaticChecked,
-        ButtonToggleWithStaticAriaAttributes,
-      ],
-    });
-  }));
-
   describe('inside of an exclusive selection group', () => {
     let fixture: ComponentFixture<ButtonTogglesInsideButtonToggleGroup>;
     let groupDebugElement: DebugElement;
