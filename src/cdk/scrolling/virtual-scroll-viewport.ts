@@ -23,6 +23,7 @@ import {
   OnInit,
   Optional,
   Output,
+  signal,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -137,10 +138,10 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   private _totalContentSize = 0;
 
   /** A string representing the `style.width` property value to be used for the spacer element. */
-  _totalContentWidth = '';
+  _totalContentWidth = signal('');
 
   /** A string representing the `style.height` property value to be used for the spacer element. */
-  _totalContentHeight = '';
+  _totalContentHeight = signal('');
 
   /**
    * The CSS transform applied to the rendered subset of items so that they appear within the bounds
@@ -533,9 +534,11 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
   /** Calculates the `style.width` and `style.height` for the spacer element. */
   private _calculateSpacerSize() {
-    this._totalContentHeight =
-      this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`;
-    this._totalContentWidth =
-      this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '';
+    this._totalContentHeight.set(
+      this.orientation === 'horizontal' ? '' : `${this._totalContentSize}px`,
+    );
+    this._totalContentWidth.set(
+      this.orientation === 'horizontal' ? `${this._totalContentSize}px` : '',
+    );
   }
 }
