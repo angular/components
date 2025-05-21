@@ -105,7 +105,7 @@
     "@types/yargs": "^17.0.8",
     "autoprefixer": "^10.4.2",
     "axe-core": "^4.10.3",
-    "chalk": "^4.1.0",
+    "chalk": "^5.0.0",
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.29.5",
     "esbuild": "^0.17.5",
