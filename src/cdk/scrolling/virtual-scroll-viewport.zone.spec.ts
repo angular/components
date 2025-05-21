@@ -1,10 +1,11 @@
 import {
-  ApplicationRef,
   Component,
+  Injector,
   NgZone,
   TrackByFunction,
   ViewChild,
   ViewEncapsulation,
+  afterNextRender,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, waitForAsync} from '@angular/core/testing';
@@ -40,7 +41,6 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
 
     describe('viewChange change detection behavior', () => {
       it('should run change detection if there are any viewChange listeners', fakeAsync(() => {
-        const appRef = TestBed.inject(ApplicationRef);
         testComponent.virtualForOf.viewChange.subscribe();
         finishInit(fixture);
         testComponent.items = Array(10).fill(0);
@@ -48,12 +48,13 @@ describe('CdkVirtualScrollViewport Zone.js intergation', () => {
         fixture.detectChanges();
         flush();
 
-        spyOn(appRef, 'tick');
+        const spy = jasmine.createSpy();
+        afterNextRender(spy, {injector: TestBed.inject(Injector)});
 
         viewport.scrollToIndex(5);
         triggerScroll(viewport);
 
-        expect(appRef.tick).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
       }));
     });
   });
