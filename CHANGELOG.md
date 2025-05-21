@@ -1,3 +1,17 @@
+<a name="19.2.17"></a>
+# 19.2.17 "fulgurite-fiesta" (2025-05-21)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0e300d1041](https://github.com/angular/components/commit/0e300d10413056bc53f67dcbd164b5eb8b54572a) | fix | **datepicker:** prevent calendar from stealing away focus ([#31128](https://github.com/angular/components/pull/31128)) |
+| [af04c772ed](https://github.com/angular/components/commit/af04c772ed5cc5d324f7eb937f57e3333b04a6f3) | fix | **dialog:** use custom token to disable animations ([#31156](https://github.com/angular/components/pull/31156)) |
+| [306eef1d74](https://github.com/angular/components/commit/306eef1d74be438735edcff6a3bd1a01ed58aad2) | fix | **radio:** assistive technology announcing button as invalid ([#31160](https://github.com/angular/components/pull/31160)) |
+| [bd614b4a69](https://github.com/angular/components/commit/bd614b4a69c147ece0a0f0eacdac9714567080e1) | fix | **radio:** updating required value should mark for check ([#31109](https://github.com/angular/components/pull/31109)) |
+| [ca231dc9b8](https://github.com/angular/components/commit/ca231dc9b80f7c2711efe74544b6a37945b1c1b4) | fix | **sidenav:** removes -1 tabindex from sidenav  ([#31155](https://github.com/angular/components/pull/31155)) |
+| [33d8f3347e](https://github.com/angular/components/commit/33d8f3347ef56dfc963ad6264b849f0b0dc96a92) | fix | **tabs:** avoid not having any focusable tabs ([#31144](https://github.com/angular/components/pull/31144)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.16"></a>
 # 19.2.16 "metal-monkey" (2025-05-14)
 ### material
