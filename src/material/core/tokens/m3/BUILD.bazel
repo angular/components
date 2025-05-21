@@ -12,5 +12,6 @@ sass_library(
         "_md-sys-shape.scss",
         "_md-sys-state.scss",
         "_md-sys-typescale.scss",
+        "_theme.scss",
     ],
 )

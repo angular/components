@@ -8,19 +8,16 @@
 @use 'sass:math';
 @use 'sass:meta';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, form-field);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    filled-active-indicator-height: 1px,
-    filled-focus-active-indicator-height: 2px,
-    filled-container-shape: 4px,
-    outlined-outline-width: 1px,
-    outlined-focus-outline-width: 2px,
-    outlined-container-shape: 4px,
+    form-field-filled-active-indicator-height: 1px,
+    form-field-filled-focus-active-indicator-height: 2px,
+    form-field-filled-container-shape: 4px,
+    form-field-outlined-outline-width: 1px,
+    form-field-outlined-focus-outline-width: 2px,
+    form-field-outlined-container-shape: 4px,
   );
 }
 
@@ -44,20 +41,21 @@ $prefix: (mat, form-field);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
-    disabled-input-text-placeholder-color:
+    form-field-disabled-input-text-placeholder-color:
       inspection.get-theme-color($theme, foreground, icon, 0.38),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
-    error-text-color: inspection.get-theme-color($theme, warn),
+    form-field-state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    form-field-error-text-color: inspection.get-theme-color($theme, warn),
 
     // On dark themes we set the native `select` color to some shade of white,
     // however the color propagates to all of the `option` elements, which are
     // always on a white background inside the dropdown, causing them to blend in.
     // Since we can't change background of the dropdown, we need to explicitly
     // reset the color of the options to something dark.
-    select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
+    form-field-select-option-text-color: if($is-dark, m2-palette.$dark-primary-text, inherit),
     // Note the spelling of the `GrayText` here which is a system color. See:
     // https://developer.mozilla.org/en-US/docs/Web/CSS/system-color
-    select-disabled-option-text-color: if($is-dark, m2-palette.$dark-disabled-text, GrayText),
+    form-field-select-disabled-option-text-color:
+        if($is-dark, m2-palette.$dark-disabled-text, GrayText),
 
     // These tokens are necessary for M3. MDC has them built in already, but:
     // 1. They are too specific, breaking a lot of internal clients.
@@ -65,58 +63,69 @@ $prefix: (mat, form-field);
     // Note: MDC has tokens for all the various states of the icons. Some of them are ommitted,
     // because they resolve to the same value (e.g. focus and base states for the leading icon
     // are the same).
-    leading-icon-color: unset,
-    disabled-leading-icon-color: unset,
-    trailing-icon-color: unset,
-    disabled-trailing-icon-color: unset,
-    error-focus-trailing-icon-color: unset,
-    error-hover-trailing-icon-color: unset,
-    error-trailing-icon-color: unset,
-    enabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
-    disabled-select-arrow-color: inspection.get-theme-color($theme, foreground, icon, 0.38),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
-    filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
-    filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
-    filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    filled-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    filled-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    filled-input-text-placeholder-color:
+    form-field-leading-icon-color: unset,
+    form-field-disabled-leading-icon-color: unset,
+    form-field-trailing-icon-color: unset,
+    form-field-disabled-trailing-icon-color: unset,
+    form-field-error-focus-trailing-icon-color: unset,
+    form-field-error-hover-trailing-icon-color: unset,
+    form-field-error-trailing-icon-color: unset,
+    form-field-enabled-select-arrow-color:
+        inspection.get-theme-color($theme, foreground, icon, 0.54),
+    form-field-disabled-select-arrow-color:
+        inspection.get-theme-color($theme, foreground, icon, 0.38),
+    form-field-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    form-field-focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
+    form-field-filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
+    form-field-filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
+    form-field-filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    form-field-filled-hover-label-text-color:
         sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    filled-error-hover-label-text-color: $warn-color,
-    filled-error-focus-label-text-color: $warn-color,
-    filled-error-label-text-color: $warn-color,
-    filled-error-caret-color: $warn-color,
-    filled-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.42),
-    filled-disabled-active-indicator-color:
+    form-field-filled-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    form-field-filled-input-text-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    form-field-filled-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    form-field-filled-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    form-field-filled-error-hover-label-text-color: $warn-color,
+    form-field-filled-error-focus-label-text-color: $warn-color,
+    form-field-filled-error-label-text-color: $warn-color,
+    form-field-filled-error-caret-color: $warn-color,
+    form-field-filled-active-indicator-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.42),
+    form-field-filled-disabled-active-indicator-color:
         sass-utils.safe-color-change($divider-base, $alpha: 0.06),
-    filled-hover-active-indicator-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
-    filled-error-active-indicator-color: $warn-color,
-    filled-error-focus-active-indicator-color: $warn-color,
-    filled-error-hover-active-indicator-color: $warn-color,
-    outlined-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-hover-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    outlined-input-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    outlined-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    outlined-input-text-placeholder-color:
+    form-field-filled-hover-active-indicator-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+    form-field-filled-error-active-indicator-color: $warn-color,
+    form-field-filled-error-focus-active-indicator-color: $warn-color,
+    form-field-filled-error-hover-active-indicator-color: $warn-color,
+    form-field-outlined-label-text-color:
         sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    outlined-error-caret-color: $warn-color,
-    outlined-error-focus-label-text-color: $warn-color,
-    outlined-error-label-text-color: $warn-color,
-    outlined-error-hover-label-text-color: $warn-color,
-    outlined-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
-    outlined-disabled-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.06),
-    outlined-hover-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.87),
-    outlined-error-focus-outline-color: $warn-color,
-    outlined-error-hover-outline-color: $warn-color,
-    outlined-error-outline-color: $warn-color,
+    form-field-outlined-hover-label-text-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    form-field-outlined-disabled-label-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    form-field-outlined-input-text-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+    form-field-outlined-disabled-input-text-color:
+        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+    form-field-outlined-input-text-placeholder-color:
+        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    form-field-outlined-error-caret-color: $warn-color,
+    form-field-outlined-error-focus-label-text-color: $warn-color,
+    form-field-outlined-error-label-text-color: $warn-color,
+    form-field-outlined-error-hover-label-text-color: $warn-color,
+    form-field-outlined-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
+    form-field-outlined-disabled-outline-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+    form-field-outlined-hover-outline-color:
+        sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+    form-field-outlined-error-focus-outline-color: $warn-color,
+    form-field-outlined-error-hover-outline-color: $warn-color,
+    form-field-outlined-error-outline-color: $warn-color,
   ));
 }
 
@@ -132,13 +141,15 @@ $prefix: (mat, form-field);
   $palette-color: inspection.get-theme-color($theme, $palette-name);
 
   @return (
-    focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
-    filled-caret-color: $palette-color,
-    filled-focus-active-indicator-color: $palette-color,
-    filled-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
-    outlined-caret-color: $palette-color,
-    outlined-focus-outline-color: $palette-color,
-    outlined-focus-label-text-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-filled-caret-color: $palette-color,
+    form-field-filled-focus-active-indicator-color: $palette-color,
+    form-field-filled-focus-label-text-color:
+        sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-outlined-caret-color: $palette-color,
+    form-field-outlined-focus-outline-color: $palette-color,
+    form-field-outlined-focus-label-text-color:
+        sass-utils.safe-color-change($palette-color, $alpha: 0.87),
   );
 }
 
@@ -148,11 +159,13 @@ $prefix: (mat, form-field);
     // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
     // shows `body1` for text fields though, so we manually override the typography.
     // Note: Form controls inherit the typography from the parent form field.
-    container-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    container-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    container-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    container-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    container-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-container-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    form-field-container-text-line-height:
+        inspection.get-theme-typography($theme, body-1, line-height),
+    form-field-container-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    form-field-container-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    form-field-container-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
 
     // In the container styles, we updated the floating label to use the `body-1` typography level.
     // The MDC notched outline overrides this accidentally (only when the label floats) to a
@@ -162,21 +175,29 @@ $prefix: (mat, form-field);
     // https://github.com/material-components/material-components-web/blob/master/packages/mdc-notched-outline/_mixins.scss#L272-L292.
     // This is why we can't use their `label-text-populated-size` token and we have to declare
     // our own version of it.
-    outlined-label-text-populated-size: inspection.get-theme-typography($theme, body-1, font-size),
+    form-field-outlined-label-text-populated-size:
+        inspection.get-theme-typography($theme, body-1, font-size),
 
-    subscript-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    subscript-text-line-height: inspection.get-theme-typography($theme, caption, line-height),
-    subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    subscript-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
-    subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    filled-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    filled-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    filled-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    filled-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    outlined-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    outlined-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    outlined-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    outlined-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-subscript-text-font: inspection.get-theme-typography($theme, caption, font-family),
+    form-field-subscript-text-line-height:
+        inspection.get-theme-typography($theme, caption, line-height),
+    form-field-subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    form-field-subscript-text-tracking:
+        inspection.get-theme-typography($theme, caption, letter-spacing),
+    form-field-subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
+    form-field-filled-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    form-field-filled-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    form-field-filled-label-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    form-field-filled-label-text-weight:
+        inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-outlined-label-text-font:
+        inspection.get-theme-typography($theme, body-1, font-family),
+    form-field-outlined-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    form-field-outlined-label-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    form-field-outlined-label-text-weight:
+        inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
@@ -224,12 +245,12 @@ $prefix: (mat, form-field);
   $vertical-padding: 16px - $vertical-deduction;
 
   @return (
-    container-height: $height,
-    filled-label-display: if($hide-label, none, block),
-    container-vertical-padding: $vertical-padding,
-    filled-with-label-container-padding-top:
+    form-field-container-height: $height,
+    form-field-filled-label-display: if($hide-label, none, block),
+    form-field-container-vertical-padding: $vertical-padding,
+    form-field-filled-with-label-container-padding-top:
       if($hide-label, $vertical-padding, $filled-with-label-padding-top),
-    filled-with-label-container-padding-bottom:
+    form-field-filled-with-label-container-padding-bottom:
       if($hide-label, $vertical-padding, $filled-with-label-padding-bottom),
   );
 }

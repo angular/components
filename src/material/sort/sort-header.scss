@@ -1,12 +1,8 @@
-@use './m2-sort';
 @use './m3-sort';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-sort.$prefix;
-$token-slots: m2-sort.get-token-slots();
-$fallbacks: m3-sort.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-sort.get-tokens();
 
 .mat-sort-header {
   cursor: pointer;
@@ -82,10 +78,7 @@ $fallbacks: m3-sort.get-tokens(m3-system.$theme-with-system-vars);
   transition: transform $timing, opacity $timing;
   opacity: 0;
   overflow: visible;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(arrow-color);
-  }
+  color: token-utils.slot(sort-arrow-color, $fallbacks);
 
   .mat-sort-header.cdk-keyboard-focused &,
   .mat-sort-header.cdk-program-focused &,

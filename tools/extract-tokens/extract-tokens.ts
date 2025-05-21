@@ -206,7 +206,6 @@ function getTokenExtractionCode(
   const m3System = '___privateM3System';
   const palettes = '___privatePalettes';
   const sassUtils = '__privateSassUtils';
-  const inferTokenType = '__privateInferFromValue';
   const defineOverrides = '_define-overrides';
   const corePath = relative(dirname(absoluteThemePath), join(srcPath, 'material/core')) || '.';
 
@@ -254,91 +253,49 @@ function getTokenExtractionCode(
       @return $result;
     }
 
-    // Uses some simple heuristics to determine the type of a token based on its name or value.
-    @function ${inferTokenType}($name, $value) {
-      @if ($value == null) {
-        @return null;
-      }
-
-      $type: ${meta}.type-of($value);
-      $inferred-type: null;
-
-      // Note: Sass' string.index returns a 1-based index or null (if the value can't be found)
-      // so it's safe to just null check it in the conditions below.
-      @if ($type == 'color' or ${str}.index($name, 'shadow') or ${str}.index($name, 'opacity')) {
-        $inferred-type: color;
-      } @else if (
-        ${str}.index($name, 'font') or
-        ${str}.index($name, 'line-height') or
-        ${str}.index($name, 'tracking') or
-        ${str}.index($name, 'weight') or
-        (${str}.index($name, 'text') and ${str}.index($name, 'size')) or
-        (${str}.index($name, 'text') and ${str}.index($name, 'transform'))
-      ) {
-        $inferred-type: typography;
-      } @else if (${str}.index($name, 'width') or ${str}.index($name, 'height')) {
-        $inferred-type: density;
-      } @else if ($type == 'string' or ${str}.index($name, 'shape')) {
-        $inferred-type: base;
-      }
-
-      @return $inferred-type;
-    }
-
     @each $map in $__override-tokens {
-      $namespace: ${map}.get($map, namespace);
       $tokens: ${map}.get($map, tokens);
+      $namespace: ${map}.get($map, namespace);
       $prefix: ${map}.get($map, prefix) or '';
-      $color: ${map}.get($__all-color, $namespace) or ();
-      $base: ${map}.get($__all-base, $namespace) or ();
-      $typography: ${map}.get($__all-typography, $namespace) or ();
-      $density: ${map}.get($__all-density, $namespace) or ();\
 
-      @each $name, $resolved-value in $tokens {
-        $color-value: ${map}.get($color, $name);
-        $base-value: ${map}.get($base, $name);
-        $typography-value: ${map}.get($typography, $name);
-        $density-value: ${map}.get($density, $name);
+      @each $name, $value in ${map}.get($tokens, base) {
+      $__results: ${list}.append($__results, (
+          name: ${str}.unquote($name),
+          value: $value,
+          type: base,
+          prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
+          overridesName: ${str}.unquote($prefix + $name),
+        )) !global;
+      }
 
-        $type: '';
-        $value: null;
+      @each $name, $value in ${map}.get($tokens, color) {
+      $__results: ${list}.append($__results, (
+          name: ${str}.unquote($name),
+          value: $value,
+          type: color,
+          prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
+          overridesName: ${str}.unquote($prefix + $name),
+        )) !global;
+      }
 
-        @if ($density-value) {
-          $type: density;
-          $value: $density-value;
-        } @else if ($typography-value) {
-          $type: typography;
-          $value: $typography-value;
-        } @else if ($color-value) {
-          $type: color;
-          $value: $color-value;
-        } @else {
-          $type: base;
-          $value: $base-value;
-        }
+      @each $name, $value in ${map}.get($tokens, typography) {
+      $__results: ${list}.append($__results, (
+          name: ${str}.unquote($name),
+          value: $value,
+          type: typography,
+          prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
+          overridesName: ${str}.unquote($prefix + $name),
+        )) !global;
+      }
 
-        // If the token has a value, but could not be found in the token maps, try to infer its type
-        // from the name and value. This is fairly rare, but can happen for some hardcoded tokens.
-        @if ($value == null and $resolved-value) {
-          $fallback-type: ${inferTokenType}($name, $resolved-value);
-
-          @if ($fallback-type == null) {
-            $fallback-type: base;
-          }
-
-          $type: $fallback-type;
-          $value: $resolved-value;
-        }
-
-        @if ($value) {
-          $__results: ${list}.append($__results, (
-            name: ${str}.unquote($name),
-            value: $value,
-            type: $type,
-            prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
-            overridesName: ${str}.unquote($prefix + $name),
-          )) !global;
-        }
+      @each $name, $value in ${map}.get($tokens, density) {
+      $__results: ${list}.append($__results, (
+          name: ${str}.unquote($name),
+          value: $value,
+          type: density,
+          prefix: ${str}.unquote(${stringJoin}($namespace, '-')),
+          overridesName: ${str}.unquote($prefix + $name),
+        )) !global;
       }
     }
 

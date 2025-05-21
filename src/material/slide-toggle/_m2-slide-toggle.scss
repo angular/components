@@ -5,9 +5,6 @@
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, slide-toggle);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -19,46 +16,46 @@ $prefix: (mat, slide-toggle);
   // The m2 slide-toggle uses transforms to hide & show the tracks while
   // the m3 slide-toggle uses opacity.
   @return (
-    disabled-handle-opacity: null,
-    disabled-selected-handle-opacity: 0.38,
-    disabled-selected-icon-opacity: 0.38,
-    disabled-track-opacity: 0.12,
-    disabled-unselected-handle-opacity: 0.38,
-    disabled-unselected-icon-opacity: 0.38,
-    disabled-unselected-track-outline-color: transparent,
-    disabled-unselected-track-outline-width: 1px,
-    handle-height: 20px,
-    handle-shape: 10px,
-    handle-width: 20px,
-    hidden-track-opacity: 1,
-    hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
-    pressed-handle-size: 20px,
-    selected-focus-state-layer-opacity: 0.12,
-    selected-handle-horizontal-margin: 0,
-    selected-handle-size: 20px,
-    selected-hover-state-layer-opacity: 0.04,
-    selected-icon-size: 18px,
-    selected-pressed-handle-horizontal-margin: 0,
-    selected-pressed-state-layer-opacity: 0.1,
-    selected-track-outline-color: transparent,
-    selected-track-outline-width: 1px,
-    selected-with-icon-handle-horizontal-margin: 0,
-    track-height: 14px,
-    track-outline-color: transparent,
-    track-outline-width: 1px,
-    track-shape: 7px,
-    track-width: 36px,
-    unselected-focus-state-layer-opacity: 0.12,
-    unselected-handle-horizontal-margin: 0,
-    unselected-handle-size: 20px,
-    unselected-hover-state-layer-opacity: 0.04,
-    unselected-icon-size: 18px,
-    unselected-pressed-handle-horizontal-margin: 0,
-    unselected-pressed-state-layer-opacity: 0.1,
-    unselected-with-icon-handle-horizontal-margin: 0,
-    visible-track-opacity: 1,
-    visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
-    with-icon-handle-size: 20px,
+    slide-toggle-disabled-handle-opacity: null,
+    slide-toggle-disabled-selected-handle-opacity: 0.38,
+    slide-toggle-disabled-selected-icon-opacity: 0.38,
+    slide-toggle-disabled-track-opacity: 0.12,
+    slide-toggle-disabled-unselected-handle-opacity: 0.38,
+    slide-toggle-disabled-unselected-icon-opacity: 0.38,
+    slide-toggle-disabled-unselected-track-outline-color: transparent,
+    slide-toggle-disabled-unselected-track-outline-width: 1px,
+    slide-toggle-handle-height: 20px,
+    slide-toggle-handle-shape: 10px,
+    slide-toggle-handle-width: 20px,
+    slide-toggle-hidden-track-opacity: 1,
+    slide-toggle-hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
+    slide-toggle-pressed-handle-size: 20px,
+    slide-toggle-selected-focus-state-layer-opacity: 0.12,
+    slide-toggle-selected-handle-horizontal-margin: 0,
+    slide-toggle-selected-handle-size: 20px,
+    slide-toggle-selected-hover-state-layer-opacity: 0.04,
+    slide-toggle-selected-icon-size: 18px,
+    slide-toggle-selected-pressed-handle-horizontal-margin: 0,
+    slide-toggle-selected-pressed-state-layer-opacity: 0.1,
+    slide-toggle-selected-track-outline-color: transparent,
+    slide-toggle-selected-track-outline-width: 1px,
+    slide-toggle-selected-with-icon-handle-horizontal-margin: 0,
+    slide-toggle-track-height: 14px,
+    slide-toggle-track-outline-color: transparent,
+    slide-toggle-track-outline-width: 1px,
+    slide-toggle-track-shape: 7px,
+    slide-toggle-track-width: 36px,
+    slide-toggle-unselected-focus-state-layer-opacity: 0.12,
+    slide-toggle-unselected-handle-horizontal-margin: 0,
+    slide-toggle-unselected-handle-size: 20px,
+    slide-toggle-unselected-hover-state-layer-opacity: 0.04,
+    slide-toggle-unselected-icon-size: 18px,
+    slide-toggle-unselected-pressed-handle-horizontal-margin: 0,
+    slide-toggle-unselected-pressed-state-layer-opacity: 0.1,
+    slide-toggle-unselected-with-icon-handle-horizontal-margin: 0,
+    slide-toggle-visible-track-opacity: 1,
+    slide-toggle-visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
+    slide-toggle-with-icon-handle-size: 20px,
   );
 }
 
@@ -80,29 +77,29 @@ $prefix: (mat, slide-toggle);
   @return map.merge(
       $theme-color-tokens,
       (
-        disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
-        disabled-selected-handle-color: $disabled-handle-color,
-        disabled-selected-icon-color: $icon-color,
-        disabled-selected-track-color: $on-surface,
-        disabled-unselected-handle-color: $disabled-handle-color,
-        disabled-unselected-icon-color: $icon-color,
-        disabled-unselected-track-color: $on-surface,
-        handle-elevation-shadow: elevation.get-box-shadow(1),
-        handle-surface-color: #fff,
-        label-text-color: inspection.get-theme-color($theme, foreground, text),
-        selected-icon-color: $icon-color,
-        unselected-hover-handle-color: $on-surface-state-content,
-        unselected-focus-handle-color: $on-surface-state-content,
-        unselected-focus-state-layer-color: $on-surface,
-        unselected-focus-track-color: $hairline,
-        unselected-icon-color: $icon-color,
-        unselected-handle-color: $on-surface-variant,
-        unselected-hover-state-layer-color: $on-surface,
-        unselected-hover-track-color: $hairline,
-        unselected-pressed-handle-color: $on-surface-state-content,
-        unselected-pressed-track-color: $hairline,
-        unselected-pressed-state-layer-color: $on-surface,
-        unselected-track-color: $hairline,
+        slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
+        slide-toggle-disabled-selected-handle-color: $disabled-handle-color,
+        slide-toggle-disabled-selected-icon-color: $icon-color,
+        slide-toggle-disabled-selected-track-color: $on-surface,
+        slide-toggle-disabled-unselected-handle-color: $disabled-handle-color,
+        slide-toggle-disabled-unselected-icon-color: $icon-color,
+        slide-toggle-disabled-unselected-track-color: $on-surface,
+        slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
+        slide-toggle-handle-surface-color: #fff,
+        slide-toggle-label-text-color: inspection.get-theme-color($theme, foreground, text),
+        slide-toggle-selected-icon-color: $icon-color,
+        slide-toggle-unselected-hover-handle-color: $on-surface-state-content,
+        slide-toggle-unselected-focus-handle-color: $on-surface-state-content,
+        slide-toggle-unselected-focus-state-layer-color: $on-surface,
+        slide-toggle-unselected-focus-track-color: $hairline,
+        slide-toggle-unselected-icon-color: $icon-color,
+        slide-toggle-unselected-handle-color: $on-surface-variant,
+        slide-toggle-unselected-hover-state-layer-color: $on-surface,
+        slide-toggle-unselected-hover-track-color: $hairline,
+        slide-toggle-unselected-pressed-handle-color: $on-surface-state-content,
+        slide-toggle-unselected-pressed-track-color: $hairline,
+        slide-toggle-unselected-pressed-state-layer-color: $on-surface,
+        slide-toggle-unselected-track-color: $hairline,
       )
   );
 }
@@ -115,28 +112,30 @@ $prefix: (mat, slide-toggle);
   $inverse: inspection.get-theme-color($theme, $palette-name, if($is-dark, 600, 300));
 
   @return (
-    selected-focus-state-layer-color: $palette-color,
-    selected-handle-color: $palette-color,
-    selected-hover-state-layer-color: $palette-color,
-    selected-pressed-state-layer-color: $palette-color,
-    selected-focus-handle-color: $state-content,
-    selected-hover-handle-color: $state-content,
-    selected-pressed-handle-color: $state-content,
-    selected-focus-track-color: $inverse,
-    selected-hover-track-color: $inverse,
-    selected-pressed-track-color: $inverse,
-    selected-track-color: $inverse,
+    slide-toggle-selected-focus-state-layer-color: $palette-color,
+    slide-toggle-selected-handle-color: $palette-color,
+    slide-toggle-selected-hover-state-layer-color: $palette-color,
+    slide-toggle-selected-pressed-state-layer-color: $palette-color,
+    slide-toggle-selected-focus-handle-color: $state-content,
+    slide-toggle-selected-hover-handle-color: $state-content,
+    slide-toggle-selected-pressed-handle-color: $state-content,
+    slide-toggle-selected-focus-track-color: $inverse,
+    slide-toggle-selected-hover-track-color: $inverse,
+    slide-toggle-selected-pressed-track-color: $inverse,
+    slide-toggle-selected-track-color: $inverse,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+    slide-toggle-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    slide-toggle-label-text-line-height:
+        inspection.get-theme-typography($theme, body-2, line-height),
+    slide-toggle-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    slide-toggle-label-text-tracking:
+        inspection.get-theme-typography($theme, body-2, letter-spacing),
+    slide-toggle-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
   );
 }
 
@@ -146,7 +145,7 @@ $prefix: (mat, slide-toggle);
 
   @return (
     // The diameter of the handle ripple.
-    state-layer-size: map.get((
+    slide-toggle-state-layer-size: map.get((
       0: 40px,
       -1: 36px,
       -2: 32px,

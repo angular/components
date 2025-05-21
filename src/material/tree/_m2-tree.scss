@@ -4,9 +4,6 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, tree);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -18,17 +15,17 @@ $prefix: (mat, tree);
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
 
   @return (
-    container-background-color: inspection.get-theme-color($theme, background, card),
-    node-text-color: inspection.get-theme-color($theme, foreground, text),
+    tree-container-background-color: inspection.get-theme-color($theme, background, card),
+    tree-node-text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    node-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    node-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    node-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    tree-node-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    tree-node-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    tree-node-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
 
     // TODO(crisbeto): provide tokens for line height and letter spacing to match other components.
   );
@@ -46,7 +43,7 @@ $prefix: (mat, tree);
   );
 
   @return (
-    node-min-height: map.get($min-height-scale, $density-scale)
+    tree-node-min-height: map.get($min-height-scale, $density-scale)
   );
 }
 

@@ -3,26 +3,23 @@
 @use '../core/style/sass-utils';
 @use '../core/style/elevation';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, menu);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
-    divider-bottom-spacing: 0,
-    divider-top-spacing: 0,
-    item-spacing: 16px,
-    item-icon-size: 24px,
-    item-leading-spacing: 16px,
-    item-trailing-spacing: 16px,
-    item-with-icon-leading-spacing: 16px,
-    item-with-icon-trailing-spacing: 16px,
-    container-elevation-shadow: elevation.get-box-shadow(8),
+    menu-container-shape: 4px,
+    menu-divider-bottom-spacing: 0,
+    menu-divider-top-spacing: 0,
+    menu-item-spacing: 16px,
+    menu-item-icon-size: 24px,
+    menu-item-leading-spacing: 16px,
+    menu-item-trailing-spacing: 16px,
+    menu-item-with-icon-leading-spacing: 16px,
+    menu-item-with-icon-trailing-spacing: 16px,
+    menu-container-elevation-shadow: elevation.get-box-shadow(8),
 
     // Unused
-    base-elevation-level: null,
+    menu-base-elevation-level: null,
   );
 }
 
@@ -34,23 +31,23 @@ $prefix: (mat, menu);
   $text-color: inspection.get-theme-color($theme, foreground, text);
 
   @return (
-    item-label-text-color: $text-color,
-    item-icon-color: $text-color,
-    item-hover-state-layer-color: $active-state-layer-color,
-    item-focus-state-layer-color: $active-state-layer-color,
-    container-color: inspection.get-theme-color($theme, background, card),
-    divider-color: inspection.get-theme-color($theme, foreground, divider),
+    menu-item-label-text-color: $text-color,
+    menu-item-icon-color: $text-color,
+    menu-item-hover-state-layer-color: $active-state-layer-color,
+    menu-item-focus-state-layer-color: $active-state-layer-color,
+    menu-container-color: inspection.get-theme-color($theme, background, card),
+    menu-divider-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    item-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    item-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    item-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    item-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    item-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    menu-item-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    menu-item-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    menu-item-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    menu-item-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    menu-item-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 

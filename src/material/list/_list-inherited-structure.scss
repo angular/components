@@ -1,12 +1,8 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use './m2-list';
 @use './m3-list';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-list.$prefix;
-$token-slots: m2-list.get-token-slots();
-$fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-list.get-tokens();
 
 // Includes the structural styles for the list that were inherited from MDC.
 @mixin private-list-inherited-structural-styles {
@@ -31,13 +27,11 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     padding-left: 16px;
     padding-right: 16px;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background-color: token-utils.slot(list-item-container-color);
-      border-radius: token-utils.slot(list-item-container-shape);
+    background-color: token-utils.slot(list-list-item-container-color, $fallbacks);
+    border-radius: token-utils.slot(list-list-item-container-shape, $fallbacks);
 
-      &.mdc-list-item--selected {
-        background-color: token-utils.slot(list-item-selected-container-color);
-      }
+    &.mdc-list-item--selected {
+      background-color: token-utils.slot(list-list-item-selected-container-color, $fallbacks);
     }
 
     &:focus {
@@ -49,9 +43,7 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     }
 
     &.mdc-list-item--with-one-line {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        height: token-utils.slot(list-item-one-line-container-height);
-      }
+      height: token-utils.slot(list-list-item-one-line-container-height, $fallbacks);
 
       .mdc-list-item__start {
         align-self: center;
@@ -65,9 +57,7 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     }
 
     &.mdc-list-item--with-two-lines {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        height: token-utils.slot(list-item-two-line-container-height);
-      }
+      height: token-utils.slot(list-list-item-two-line-container-height, $fallbacks);
 
       .mdc-list-item__start {
         align-self: flex-start;
@@ -81,9 +71,7 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     }
 
     &.mdc-list-item--with-three-lines {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        height: token-utils.slot(list-item-three-line-container-height);
-      }
+      height: token-utils.slot(list-list-item-three-line-container-height, $fallbacks);
 
       .mdc-list-item__start {
         align-self: flex-start;
@@ -121,39 +109,37 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-list-item--with-leading-icon & {
-        color: token-utils.slot(list-item-leading-icon-color);
-        width: token-utils.slot(list-item-leading-icon-size);
-        height: token-utils.slot(list-item-leading-icon-size);
-        margin-left: 16px;
-        margin-right: 32px;
-      }
+    .mdc-list-item--with-leading-icon & {
+      color: token-utils.slot(list-list-item-leading-icon-color, $fallbacks);
+      width: token-utils.slot(list-list-item-leading-icon-size, $fallbacks);
+      height: token-utils.slot(list-list-item-leading-icon-size, $fallbacks);
+      margin-left: 16px;
+      margin-right: 32px;
+    }
 
-      [dir='rtl'] .mdc-list-item--with-leading-icon & {
-        margin-left: 32px;
-        margin-right: 16px;
-      }
+    [dir='rtl'] .mdc-list-item--with-leading-icon & {
+      margin-left: 32px;
+      margin-right: 16px;
+    }
 
-      .mdc-list-item--with-leading-icon:hover & {
-        color: token-utils.slot(list-item-hover-leading-icon-color);
-      }
+    .mdc-list-item--with-leading-icon:hover & {
+      color: token-utils.slot(list-list-item-hover-leading-icon-color, $fallbacks);
+    }
 
-      // This is the same in RTL, but we need the specificity.
-      .mdc-list-item--with-leading-avatar & {
-        width: token-utils.slot(list-item-leading-avatar-size);
-        height: token-utils.slot(list-item-leading-avatar-size);
-        margin-left: 16px;
-        margin-right: 16px;
-        border-radius: 50%;
-      }
+    // This is the same in RTL, but we need the specificity.
+    .mdc-list-item--with-leading-avatar & {
+      width: token-utils.slot(list-list-item-leading-avatar-size, $fallbacks);
+      height: token-utils.slot(list-list-item-leading-avatar-size, $fallbacks);
+      margin-left: 16px;
+      margin-right: 16px;
+      border-radius: 50%;
+    }
 
-      .mdc-list-item--with-leading-avatar &,
-      [dir='rtl'] .mdc-list-item--with-leading-avatar & {
-        margin-left: 16px;
-        margin-right: 16px;
-        border-radius: 50%;
-      }
+    .mdc-list-item--with-leading-avatar &,
+    [dir='rtl'] .mdc-list-item--with-leading-avatar & {
+      margin-left: 16px;
+      margin-right: 16px;
+      border-radius: 50%;
     }
   }
 
@@ -161,34 +147,34 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     flex-shrink: 0;
     pointer-events: none;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-list-item--with-trailing-meta & {
-        font-family: token-utils.slot(list-item-trailing-supporting-text-font);
-        line-height: token-utils.slot(list-item-trailing-supporting-text-line-height);
-        font-size: token-utils.slot(list-item-trailing-supporting-text-size);
-        font-weight: token-utils.slot(list-item-trailing-supporting-text-weight);
-        letter-spacing: token-utils.slot(list-item-trailing-supporting-text-tracking);
-      }
+    .mdc-list-item--with-trailing-meta & {
+      font-family: token-utils.slot(list-list-item-trailing-supporting-text-font, $fallbacks);
+      line-height: token-utils.slot(
+          list-list-item-trailing-supporting-text-line-height, $fallbacks);
+      font-size: token-utils.slot(list-list-item-trailing-supporting-text-size, $fallbacks);
+      font-weight: token-utils.slot(list-list-item-trailing-supporting-text-weight, $fallbacks);
+      letter-spacing: token-utils.slot(
+          list-list-item-trailing-supporting-text-tracking, $fallbacks);
+    }
 
-      .mdc-list-item--with-trailing-icon & {
-        color: token-utils.slot(list-item-trailing-icon-color);
-        width: token-utils.slot(list-item-trailing-icon-size);
-        height: token-utils.slot(list-item-trailing-icon-size);
-      }
+    .mdc-list-item--with-trailing-icon & {
+      color: token-utils.slot(list-list-item-trailing-icon-color, $fallbacks);
+      width: token-utils.slot(list-list-item-trailing-icon-size, $fallbacks);
+      height: token-utils.slot(list-list-item-trailing-icon-size, $fallbacks);
+    }
 
-      .mdc-list-item--with-trailing-icon:hover & {
-        color: token-utils.slot(list-item-hover-trailing-icon-color);
-      }
+    .mdc-list-item--with-trailing-icon:hover & {
+      color: token-utils.slot(list-list-item-hover-trailing-icon-color, $fallbacks);
+    }
 
-      // For some reason this has an increased specificity just for the `color`.
-      // Keeping it in place for now to reduce the amount of screenshot diffs.
-      .mdc-list-item.mdc-list-item--with-trailing-meta & {
-        color: token-utils.slot(list-item-trailing-supporting-text-color);
-      }
+    // For some reason this has an increased specificity just for the `color`.
+    // Keeping it in place for now to reduce the amount of screenshot diffs.
+    .mdc-list-item.mdc-list-item--with-trailing-meta & {
+      color: token-utils.slot(list-list-item-trailing-supporting-text-color, $fallbacks);
+    }
 
-      .mdc-list-item--selected.mdc-list-item--with-trailing-icon & {
-        color: token-utils.slot(list-item-selected-trailing-icon-color);
-      }
+    .mdc-list-item--selected.mdc-list-item--with-trailing-icon & {
+      color: token-utils.slot(list-list-item-selected-trailing-icon-color, $fallbacks);
     }
   }
 
@@ -211,21 +197,19 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     white-space: nowrap;
     overflow: hidden;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(list-item-label-text-color);
-      font-family: token-utils.slot(list-item-label-text-font);
-      line-height: token-utils.slot(list-item-label-text-line-height);
-      font-size: token-utils.slot(list-item-label-text-size);
-      font-weight: token-utils.slot(list-item-label-text-weight);
-      letter-spacing: token-utils.slot(list-item-label-text-tracking);
+    color: token-utils.slot(list-list-item-label-text-color, $fallbacks);
+    font-family: token-utils.slot(list-list-item-label-text-font, $fallbacks);
+    line-height: token-utils.slot(list-list-item-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(list-list-item-label-text-size, $fallbacks);
+    font-weight: token-utils.slot(list-list-item-label-text-weight, $fallbacks);
+    letter-spacing: token-utils.slot(list-list-item-label-text-tracking, $fallbacks);
 
-      .mdc-list-item:hover & {
-        color: token-utils.slot(list-item-hover-label-text-color);
-      }
+    .mdc-list-item:hover & {
+      color: token-utils.slot(list-list-item-hover-label-text-color, $fallbacks);
+    }
 
-      .mdc-list-item:focus & {
-        color: token-utils.slot(list-item-focus-label-text-color);
-      }
+    .mdc-list-item:focus & {
+      color: token-utils.slot(list-list-item-focus-label-text-color, $fallbacks);
     }
 
     .mdc-list-item--with-two-lines &,
@@ -261,15 +245,12 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
     overflow: hidden;
     display: block;
     margin-top: 0;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(list-item-supporting-text-color);
-      font-family: token-utils.slot(list-item-supporting-text-font);
-      line-height: token-utils.slot(list-item-supporting-text-line-height);
-      font-size: token-utils.slot(list-item-supporting-text-size);
-      font-weight: token-utils.slot(list-item-supporting-text-weight);
-      letter-spacing: token-utils.slot(list-item-supporting-text-tracking);
-    }
+    color: token-utils.slot(list-list-item-supporting-text-color, $fallbacks);
+    font-family: token-utils.slot(list-list-item-supporting-text-font, $fallbacks);
+    line-height: token-utils.slot(list-list-item-supporting-text-line-height, $fallbacks);
+    font-size: token-utils.slot(list-list-item-supporting-text-size, $fallbacks);
+    font-weight: token-utils.slot(list-list-item-supporting-text-weight, $fallbacks);
+    letter-spacing: token-utils.slot(list-list-item-supporting-text-tracking, $fallbacks);
 
     &::before {
       display: inline-block;
@@ -473,23 +454,17 @@ $fallbacks: m3-list.get-tokens(m3-system.$theme-with-system-vars);
 
     .mdc-list-item__primary-text,
     .mdc-list-item__secondary-text {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        opacity: token-utils.slot(list-item-disabled-label-text-opacity);
-      }
+      opacity: token-utils.slot(list-list-item-disabled-label-text-opacity, $fallbacks);
     }
 
     &.mdc-list-item--with-leading-icon .mdc-list-item__start {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        color: token-utils.slot(list-item-disabled-leading-icon-color);
-        opacity: token-utils.slot(list-item-disabled-leading-icon-opacity);
-      }
+      color: token-utils.slot(list-list-item-disabled-leading-icon-color, $fallbacks);
+      opacity: token-utils.slot(list-list-item-disabled-leading-icon-opacity, $fallbacks);
     }
 
     &.mdc-list-item--with-trailing-icon .mdc-list-item__end {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        color: token-utils.slot(list-item-disabled-trailing-icon-color);
-        opacity: token-utils.slot(list-item-disabled-trailing-icon-opacity);
-      }
+      color: token-utils.slot(list-list-item-disabled-trailing-icon-color, $fallbacks);
+      opacity: token-utils.slot(list-list-item-disabled-trailing-icon-opacity, $fallbacks);
     }
   }
 

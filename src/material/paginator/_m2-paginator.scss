@@ -5,9 +5,6 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, paginator);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -19,22 +16,24 @@ $prefix: (mat, paginator);
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
 
   @return (
-    container-text-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.87),
-    container-background-color: inspection.get-theme-color($theme, background, card),
-    enabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.54),
-    disabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.12),
+    paginator-container-text-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.87),
+    paginator-container-background-color: inspection.get-theme-color($theme, background, card),
+    paginator-enabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.54),
+    paginator-disabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.12),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    container-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    container-text-line-height: inspection.get-theme-typography($theme, caption, line-height),
-    container-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    container-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
-    container-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    select-trigger-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    paginator-container-text-font: inspection.get-theme-typography($theme, caption, font-family),
+    paginator-container-text-line-height:
+        inspection.get-theme-typography($theme, caption, line-height),
+    paginator-container-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    paginator-container-text-tracking:
+        inspection.get-theme-typography($theme, caption, letter-spacing),
+    paginator-container-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
+    paginator-select-trigger-text-size: inspection.get-theme-typography($theme, caption, font-size),
   );
 }
 
@@ -69,10 +68,10 @@ $prefix: (mat, paginator);
   $form-field-vertical-padding: 16px - $form-field-vertical-deduction;
 
   @return (
-    container-size: map.get($size-scale, $density-scale),
-    form-field-container-height: $form-field-height,
-    form-field-container-vertical-padding: $form-field-vertical-padding,
-    touch-target-display: if($density-scale < -2, none, block),
+    paginator-container-size: map.get($size-scale, $density-scale),
+    paginator-form-field-container-height: $form-field-height,
+    paginator-form-field-container-vertical-padding: $form-field-vertical-padding,
+    paginator-touch-target-display: if($density-scale < -2, none, block),
   );
 }
 

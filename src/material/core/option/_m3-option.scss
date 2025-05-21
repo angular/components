@@ -1,11 +1,9 @@
 @use 'sass:map';
 @use '../tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, option);
+@use '../tokens/m3';
 
 /// Generates custom tokens for the mat-option.
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
@@ -19,20 +17,20 @@ $prefix: (mat, option);
   @return (
     base: (),
     color: (
-      focus-state-layer-color: m3-utils.color-with-opacity(
+      option-focus-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
-      hover-state-layer-color: m3-utils.color-with-opacity(
+      option-hover-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
-      label-text-color: map.get($system, on-surface),
-      selected-state-label-text-color: map.get($system, on-secondary-container),
-      selected-state-layer-color: map.get($system, secondary-container),
+      option-label-text-color: map.get($system, on-surface),
+      option-selected-state-label-text-color: map.get($system, on-secondary-container),
+      option-selected-state-layer-color: map.get($system, secondary-container),
     ),
     typography: (
-      label-text-size: map.get($system, body-large-size),
-      label-text-weight: map.get($system, body-large-weight),
-      label-text-font: map.get($system, label-large-font),
-      label-text-line-height: map.get($system, label-large-line-height),
-      label-text-tracking: map.get($system, label-large-tracking),
+      option-label-text-size: map.get($system, body-large-size),
+      option-label-text-weight: map.get($system, body-large-weight),
+      option-label-text-font: map.get($system, label-large-font),
+      option-label-text-line-height: map.get($system, label-large-line-height),
+      option-label-text-tracking: map.get($system, label-large-tracking),
     ),
     density: (),
   );

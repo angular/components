@@ -2,9 +2,6 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/m2-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, tooltip);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 //
@@ -13,8 +10,8 @@ $prefix: (mat, tooltip);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
-    supporting-text-line-height: 16px,
+    tooltip-container-shape: 4px,
+    tooltip-supporting-text-line-height: 16px,
   );
 }
 
@@ -22,18 +19,19 @@ $prefix: (mat, tooltip);
 @function get-color-tokens($theme) {
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, tooltip),
-    supporting-text-color: #fff,
+    tooltip-container-color: inspection.get-theme-color($theme, background, tooltip),
+    tooltip-supporting-text-color: #fff,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    supporting-text-tracking: inspection.get-theme-typography($theme, caption, letter-spacing),
+    tooltip-supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
+    tooltip-supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    tooltip-supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
+    tooltip-supporting-text-tracking:
+        inspection.get-theme-typography($theme, caption, letter-spacing),
   );
 }
 

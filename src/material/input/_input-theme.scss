@@ -23,13 +23,13 @@
   @return (
     (
       namespace: '',
-      tokens: (),
+      tokens: token-utils.get-overrides((base: (), color: (), typography: (), density: ()), input),
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+  @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

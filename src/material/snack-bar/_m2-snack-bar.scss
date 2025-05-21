@@ -4,14 +4,11 @@
 @use 'sass:meta';
 @use 'sass:color';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, snack-bar);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
+    snack-bar-container-shape: 4px,
   );
 }
 
@@ -21,12 +18,13 @@ $prefix: (mat, snack-bar);
   $surface: inspection.get-theme-color($theme, background, card);
 
   @return (
-    container-color: if(
+    snack-bar-container-color: if(
         meta.type-of($surface) == color,
         color.mix(if($is-dark, #fff, #000), $surface, 80%),
         $surface),
-    supporting-text-color: if(meta.type-of($surface) == color, rgba($surface, 0.87), $surface),
-    button-color:
+    snack-bar-supporting-text-color:
+        if(meta.type-of($surface) == color, rgba($surface, 0.87), $surface),
+    snack-bar-button-color:
       if(
         $is-dark,
         inspection.get-theme-color($theme, primary, 500),
@@ -38,10 +36,11 @@ $prefix: (mat, snack-bar);
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    supporting-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    snack-bar-supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    snack-bar-supporting-text-line-height:
+        inspection.get-theme-typography($theme, body-2, line-height),
+    snack-bar-supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    snack-bar-supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 

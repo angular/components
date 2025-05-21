@@ -1,17 +1,18 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, sort);
 
 /// Generates custom tokens for the mat-sort.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (),
     color: (
-      arrow-color: map.get($system, on-surface),
+      sort-arrow-color: map.get($system, on-surface),
     ),
     typography: (),
     density: (),

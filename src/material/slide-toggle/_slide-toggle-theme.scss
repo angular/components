@@ -12,22 +12,14 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-slide-toggle.$prefix,
-        map.get(m3-slide-toggle.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-slide-toggle.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(
-          m2-slide-toggle.$prefix,
-          m2-slide-toggle.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens());
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(
-          m2-slide-toggle.$prefix,
-          m2-slide-toggle.get-unthemable-tokens()
-        );
+        @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens());
       }
     }
   }
@@ -39,17 +31,13 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-slide-toggle.$prefix,
         map.get(m3-slide-toggle.get-tokens($theme, $color-variant), color));
   } @else {
     $mat-tokens: m2-slide-toggle.get-color-tokens($theme);
 
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-slide-toggle.$prefix,
-        m2-slide-toggle.get-color-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-color-tokens($theme));
 
       & {
         // TODO(andrewjs): Remove this once all tokens are migrated to
@@ -78,16 +66,12 @@
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-            m2-slide-toggle.$prefix,
-            m2-slide-toggle.private-get-color-palette-color-tokens($theme, accent)
-          );
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, accent));
         }
 
         &.mat-warn {
           @include token-utils.create-token-values-mixed(
-            m2-slide-toggle.$prefix,
-            m2-slide-toggle.private-get-color-palette-color-tokens($theme, warn)
-          );
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, warn));
         }
       }
     }
@@ -99,21 +83,15 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-slide-toggle.$prefix,
         map.get(m3-slide-toggle.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(
-        m2-slide-toggle.$prefix,
-        m2-slide-toggle.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-typography-tokens($theme));
 
       .mat-mdc-slide-toggle {
         @include token-utils.create-token-values-mixed(
-          m2-slide-toggle.$prefix,
-          m2-slide-toggle.get-typography-tokens($theme)
-        );
+            m2-slide-toggle.get-typography-tokens($theme));
       }
     }
   }
@@ -127,16 +105,10 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(
-        m2-slide-toggle.$prefix,
-        m2-slide-toggle.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-density-tokens($theme));
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(
-          m2-slide-toggle.$prefix,
-          m2-slide-toggle.get-density-tokens($theme)
-        );
+        @include token-utils.create-token-values-mixed(m2-slide-toggle.get-density-tokens($theme));
       }
     }
   }
@@ -146,8 +118,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-slide-toggle.$prefix,
-      tokens: m2-slide-toggle.get-token-slots(),
+      namespace: slide-toggle,
+      tokens: token-utils.get-overrides(m3-slide-toggle.get-tokens(), slide-toggle)
     ),
   );
 }
@@ -155,7 +127,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-icon.

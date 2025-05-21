@@ -12,9 +12,7 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-stepper.$prefix,
-        map.get(m3-stepper.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-stepper.get-tokens($theme), base));
   } @else {
   }
 }
@@ -25,27 +23,19 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-stepper.$prefix,
         map.get(m3-stepper.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-stepper.$prefix,
-        m2-stepper.get-color-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-stepper.get-color-tokens($theme));
 
       .mat-step-header.mat-accent {
         @include token-utils.create-token-values-mixed(
-          m2-stepper.$prefix,
-          m2-stepper.private-get-color-palette-color-tokens($theme, accent)
-        );
+          m2-stepper.private-get-color-palette-color-tokens($theme, accent));
       }
 
       .mat-step-header.mat-warn {
         @include token-utils.create-token-values-mixed(
-          m2-stepper.$prefix,
-          m2-stepper.private-get-color-palette-color-tokens($theme, warn)
-        );
+          m2-stepper.private-get-color-palette-color-tokens($theme, warn));
       }
     }
   }
@@ -55,15 +45,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-stepper.$prefix,
-        map.get(m3-stepper.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-stepper.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-stepper.$prefix,
-        m2-stepper.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-stepper.get-typography-tokens($theme));
     }
   }
 }
@@ -72,15 +57,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-stepper.$prefix,
-        map.get(m3-stepper.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-stepper.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-stepper.$prefix,
-        m2-stepper.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-stepper.get-density-tokens($theme));
     }
   }
 }
@@ -89,8 +69,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-stepper.$prefix,
-      tokens: m2-stepper.get-token-slots(),
+      namespace: stepper,
+      tokens: token-utils.get-overrides(m3-stepper.get-tokens(), stepper)
     ),
   );
 }
@@ -98,7 +78,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for mat-stepper.

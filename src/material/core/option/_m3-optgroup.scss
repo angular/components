@@ -1,23 +1,24 @@
 @use 'sass:map';
 @use '../tokens/m3-utils';
+@use '../tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, optgroup);
 
 /// Generates custom tokens for the mat-optgroup.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
   @return (
     base: (),
     color: (
-      label-text-color: map.get($system, on-surface-variant),
+      optgroup-label-text-color: map.get($system, on-surface-variant),
     ),
     typography: (
-      label-text-font: map.get($system, title-small-font),
-      label-text-line-height: map.get($system, title-small-line-height),
-      label-text-size: map.get($system, title-small-size),
-      label-text-tracking: map.get($system, title-small-tracking),
-      label-text-weight: map.get($system, title-small-weight),
+      optgroup-label-text-font: map.get($system, title-small-font),
+      optgroup-label-text-line-height: map.get($system, title-small-line-height),
+      optgroup-label-text-size: map.get($system, title-small-size),
+      optgroup-label-text-tracking: map.get($system, title-small-tracking),
+      optgroup-label-text-weight: map.get($system, title-small-weight),
     ),
     density: (),
   );

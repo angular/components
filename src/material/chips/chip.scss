@@ -3,9 +3,7 @@
 @use '../core/style/layout-common';
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
-@use './m2-chip';
 @use './m3-chip';
-@use '../core/tokens/m3-system';
 
 $_checkmark-size: 20px;
 $_trailing-icon-size: 18px;
@@ -15,9 +13,7 @@ $_trailing-action-padding: 8px;
 $_avatar-leading-padding: 4px;
 $_avatar-trailing-padding: 8px;
 
-$token-prefix: m2-chip.$prefix;
-$token-slots: m2-chip.get-token-slots();
-$fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-chip.get-tokens();
 
 .mdc-evolution-chip,
 .mdc-evolution-chip__cell,
@@ -80,52 +76,50 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
   white-space: inherit;
   overflow-x: hidden;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip &::before {
-      border-width: token-utils.slot(outline-width);
-      border-radius: token-utils.slot(container-shape-radius);
-      box-sizing: border-box;
-      content: '';
-      height: 100%;
-      left: 0;
-      position: absolute;
-      pointer-events: none;
-      top: 0;
-      width: 100%;
-      z-index: 1;
-      border-style: solid;
-    }
+  .mat-mdc-standard-chip &::before {
+    border-width: token-utils.slot(chip-outline-width, $fallbacks);
+    border-radius: token-utils.slot(chip-container-shape-radius, $fallbacks);
+    box-sizing: border-box;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    border-style: solid;
+  }
 
-    .mat-mdc-standard-chip & {
-      padding-left: $_action-padding;
-      padding-right: $_action-padding;
-    }
+  .mat-mdc-standard-chip & {
+    padding-left: $_action-padding;
+    padding-right: $_action-padding;
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
-      padding-left: 0;
-      padding-right: $_action-padding;
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
+    padding-left: 0;
+    padding-right: $_action-padding;
+  }
 
-    [dir='rtl'] .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
-      padding-left: $_action-padding;
-      padding-right: 0;
-    }
+  [dir='rtl'] .mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic & {
+    padding-left: $_action-padding;
+    padding-right: 0;
+  }
 
-    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) &::before {
-      border-color: token-utils.slot(outline-color);
-    }
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) &::before {
+    border-color: token-utils.slot(chip-outline-color, $fallbacks);
+  }
 
-    &:not(.mdc-evolution-chip__action--presentational):not(.mdc-ripple-upgraded):focus::before {
-      border-color: token-utils.slot(focus-outline-color);
-    }
+  &:not(.mdc-evolution-chip__action--presentational):not(.mdc-ripple-upgraded):focus::before {
+    border-color: token-utils.slot(chip-focus-outline-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled &::before {
-      border-color: token-utils.slot(disabled-outline-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--disabled &::before {
+    border-color: token-utils.slot(chip-disabled-outline-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--selected &::before {
-      border-width: token-utils.slot(flat-selected-outline-width);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--selected &::before {
+    border-width: token-utils.slot(chip-flat-selected-outline-width, $fallbacks);
   }
 
   // Keeps basic listbox chips looking consistent with the other variations. Listbox chips don't
@@ -183,14 +177,12 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
   position: relative;
   overflow: visible;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      color: token-utils.slot(with-trailing-icon-trailing-icon-color);
-    }
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+    color: token-utils.slot(chip-with-trailing-icon-trailing-icon-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      color: token-utils.slot(with-trailing-icon-disabled-trailing-icon-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+    color: token-utils.slot(chip-with-trailing-icon-disabled-trailing-icon-color, $fallbacks);
   }
 
   // Moved out into variables, because the selectors are too long.
@@ -226,27 +218,25 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
   text-overflow: ellipsis;
   overflow: hidden;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip & {
-      font-family: token-utils.slot(label-text-font);
-      line-height: token-utils.slot(label-text-line-height);
-      font-size: token-utils.slot(label-text-size);
-      font-weight: token-utils.slot(label-text-weight);
-      letter-spacing: token-utils.slot(label-text-tracking);
-    }
+  .mat-mdc-standard-chip & {
+    font-family: token-utils.slot(chip-label-text-font, $fallbacks);
+    line-height: token-utils.slot(chip-label-text-line-height, $fallbacks);
+    font-size: token-utils.slot(chip-label-text-size, $fallbacks);
+    font-weight: token-utils.slot(chip-label-text-weight, $fallbacks);
+    letter-spacing: token-utils.slot(chip-label-text-tracking, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      color: token-utils.slot(label-text-color);
-    }
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+    color: token-utils.slot(chip-label-text-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) & {
-      color: token-utils.slot(selected-label-text-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) & {
+    color: token-utils.slot(chip-selected-label-text-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled &,
-    .mat-mdc-standard-chip.mdc-evolution-chip--selected.mdc-evolution-chip--disabled & {
-      color: token-utils.slot(disabled-label-text-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--disabled &,
+  .mat-mdc-standard-chip.mdc-evolution-chip--selected.mdc-evolution-chip--disabled & {
+    color: token-utils.slot(chip-disabled-label-text-color, $fallbacks);
   }
 }
 
@@ -259,12 +249,10 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
   position: relative;
   flex: 1 0 auto;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip & {
-      width: token-utils.slot(with-avatar-avatar-size);
-      height: token-utils.slot(with-avatar-avatar-size);
-      font-size: token-utils.slot(with-avatar-avatar-size);
-    }
+  .mat-mdc-standard-chip & {
+    width: token-utils.slot(chip-with-avatar-avatar-size, $fallbacks);
+    height: token-utils.slot(chip-with-avatar-avatar-size, $fallbacks);
+    font-size: token-utils.slot(chip-with-avatar-avatar-size, $fallbacks);
   }
 
   .mdc-evolution-chip--selecting & {
@@ -319,14 +307,12 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
   height: $_checkmark-size;
   width: $_checkmark-size;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      color: token-utils.slot(with-icon-selected-icon-color);
-    }
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+    color: token-utils.slot(chip-with-icon-selected-icon-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      color: token-utils.slot(with-icon-disabled-icon-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+    color: token-utils.slot(chip-with-icon-disabled-icon-color, $fallbacks);
   }
 
   .mdc-evolution-chip--selecting & {
@@ -374,47 +360,40 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
     font-size: $_trailing-icon-size;
   }
 
-  $disabled-icon-opacity: null;
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $disabled-icon-opacity:
-      token-utils.slot(with-trailing-icon-disabled-trailing-icon-opacity);
-  }
+  $disabled-icon-opacity:
+      token-utils.slot(chip-with-trailing-icon-disabled-trailing-icon-opacity, $fallbacks);
 
   // If the trailing icon is a chip-remove button, we have to factor in the trailing action
   // opacity as well as the disabled opacity.
   .mdc-evolution-chip--disabled &.mat-mdc-chip-remove {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      $action-opacity: token-utils.slot(trailing-action-opacity);
-      opacity: calc(#{$action-opacity} * #{$disabled-icon-opacity});
+    $action-opacity: token-utils.slot(chip-trailing-action-opacity, $fallbacks);
+    opacity: calc(#{$action-opacity} * #{$disabled-icon-opacity});
 
-      &:focus {
-        $action-focus-opacity: token-utils.slot(trailing-action-focus-opacity);
-        opacity: calc(#{$action-focus-opacity} * #{$disabled-icon-opacity});
-      }
+    &:focus {
+      $action-focus-opacity: token-utils.slot(chip-trailing-action-focus-opacity, $fallbacks);
+      opacity: calc(#{$action-focus-opacity} * #{$disabled-icon-opacity});
     }
   }
 }
 
 .mat-mdc-standard-chip {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-radius: token-utils.slot(container-shape-radius);
-    height: token-utils.slot(container-height);
+  border-radius: token-utils.slot(chip-container-shape-radius, $fallbacks);
+  height: token-utils.slot(chip-container-height, $fallbacks);
 
-    &:not(.mdc-evolution-chip--disabled) {
-      background-color: token-utils.slot(elevated-container-color);
-    }
+  &:not(.mdc-evolution-chip--disabled) {
+    background-color: token-utils.slot(chip-elevated-container-color, $fallbacks);
+  }
 
-    &.mdc-evolution-chip--disabled {
-      background-color: token-utils.slot(elevated-disabled-container-color);
-    }
+  &.mdc-evolution-chip--disabled {
+    background-color: token-utils.slot(chip-elevated-disabled-container-color, $fallbacks);
+  }
 
-    &.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
-      background-color: token-utils.slot(elevated-selected-container-color);
-    }
+  &.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
+    background-color: token-utils.slot(chip-elevated-selected-container-color, $fallbacks);
+  }
 
-    &.mdc-evolution-chip--selected.mdc-evolution-chip--disabled {
-      background-color: token-utils.slot(flat-disabled-selected-container-color);
-    }
+  &.mdc-evolution-chip--selected.mdc-evolution-chip--disabled {
+    background-color: token-utils.slot(chip-flat-disabled-selected-container-color, $fallbacks);
   }
 
   @include cdk.high-contrast {
@@ -423,25 +402,23 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 .mdc-evolution-chip__icon--primary {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .mat-mdc-standard-chip & {
-      border-radius: token-utils.slot(with-avatar-avatar-shape-radius);
-      width: token-utils.slot(with-icon-icon-size);
-      height: token-utils.slot(with-icon-icon-size);
-      font-size: token-utils.slot(with-icon-icon-size);
-    }
+  .mat-mdc-standard-chip & {
+    border-radius: token-utils.slot(chip-with-avatar-avatar-shape-radius, $fallbacks);
+    width: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
+    height: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
+    font-size: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
+  }
 
-    .mdc-evolution-chip--selected & {
-      opacity: 0;
-    }
+  .mdc-evolution-chip--selected & {
+    opacity: 0;
+  }
 
-    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
-      color: token-utils.slot(with-icon-icon-color);
-    }
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) & {
+    color: token-utils.slot(chip-with-icon-icon-color, $fallbacks);
+  }
 
-    .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
-      color: token-utils.slot(with-icon-disabled-icon-color);
-    }
+  .mat-mdc-standard-chip.mdc-evolution-chip--disabled & {
+    color: token-utils.slot(chip-with-icon-disabled-icon-color, $fallbacks);
   }
 }
 
@@ -451,110 +428,100 @@ $fallbacks: m3-chip.get-tokens(m3-system.$theme-with-system-vars);
 // that we don't re-implement ourselves below.
 // TODO(crisbeto): with some future refactors we may be able to clean this up.
 .mat-mdc-chip-highlighted {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $highlighted-remapped-tokens: (
-      with-icon-icon-color: with-icon-selected-icon-color,
-      elevated-container-color: elevated-selected-container-color,
-      label-text-color: selected-label-text-color,
-      outline-width: flat-selected-outline-width,
-    );
-
-    @each $selected, $base in $highlighted-remapped-tokens {
-      #{token-utils.get-token-variable-name($selected)}: token-utils.slot($base);
-    }
-  }
+  --mat-chip-with-icon-icon-color: #{token-utils.slot(chip-with-icon-selected-icon-color,
+      $fallbacks)};
+  --mat-chip-elevated-container-color: #{token-utils.slot(chip-elevated-selected-container-color,
+      $fallbacks)};
+  --mat-chip-label-text-color: #{token-utils.slot(chip-selected-label-text-color, $fallbacks)};
+  --mat-chip-outline-width: #{token-utils.slot(chip-flat-selected-outline-width, $fallbacks)};
 }
 
 // Add additional slots for the MDC chip tokens, needed in Angular Material.
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-mdc-chip-focus-overlay {
-    background: token-utils.slot(focus-state-layer-color);
+.mat-mdc-chip-focus-overlay {
+  background: token-utils.slot(chip-focus-state-layer-color, $fallbacks);
 
-    .mat-mdc-chip-selected &,
-    .mat-mdc-chip-highlighted & {
-      background: token-utils.slot(selected-focus-state-layer-color);
-    }
-
-    .mat-mdc-chip:hover & {
-      background: token-utils.slot(hover-state-layer-color);
-      opacity: token-utils.slot(hover-state-layer-opacity);
-    }
-
-    .mat-mdc-chip-selected:hover,
-    .mat-mdc-chip-highlighted:hover & {
-      background: token-utils.slot(selected-hover-state-layer-color);
-      opacity: token-utils.slot(selected-hover-state-layer-opacity);
-    }
-
-    .mat-mdc-chip.cdk-focused & {
-      background: token-utils.slot(focus-state-layer-color);
-      opacity: token-utils.slot(focus-state-layer-opacity);
-    }
-
-    .mat-mdc-chip-selected.cdk-focused &,
-    .mat-mdc-chip-highlighted.cdk-focused & {
-      background: token-utils.slot(selected-focus-state-layer-color);
-      opacity: token-utils.slot(selected-focus-state-layer-opacity);
-    }
+  .mat-mdc-chip-selected &,
+  .mat-mdc-chip-highlighted & {
+    background: token-utils.slot(chip-selected-focus-state-layer-color, $fallbacks);
   }
 
-  .mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
-    opacity: token-utils.slot(with-avatar-disabled-avatar-opacity);
+  .mat-mdc-chip:hover & {
+    background: token-utils.slot(chip-hover-state-layer-color, $fallbacks);
+    opacity: token-utils.slot(chip-hover-state-layer-opacity, $fallbacks);
   }
 
-  .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-    opacity: token-utils.slot(with-trailing-icon-disabled-trailing-icon-opacity);
+  .mat-mdc-chip-selected:hover,
+  .mat-mdc-chip-highlighted:hover & {
+    background: token-utils.slot(chip-selected-hover-state-layer-color, $fallbacks);
+    opacity: token-utils.slot(chip-selected-hover-state-layer-opacity, $fallbacks);
   }
 
-  .mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
-    opacity: token-utils.slot(with-icon-disabled-icon-opacity);
+  .mat-mdc-chip.cdk-focused & {
+    background: token-utils.slot(chip-focus-state-layer-color, $fallbacks);
+    opacity: token-utils.slot(chip-focus-state-layer-opacity, $fallbacks);
+  }
+
+  .mat-mdc-chip-selected.cdk-focused &,
+  .mat-mdc-chip-highlighted.cdk-focused & {
+    background: token-utils.slot(chip-selected-focus-state-layer-color, $fallbacks);
+    opacity: token-utils.slot(chip-selected-focus-state-layer-opacity, $fallbacks);
   }
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  // Historically, MDC did not support disabled chips, so we needed our own disabled styles.
-  // Now that MDC supports disabled styles, we should switch to using theirs.
-  .mat-mdc-standard-chip {
-    &.mdc-evolution-chip--disabled {
-      opacity: token-utils.slot(disabled-container-opacity);
-    }
+.mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-avatar {
+  opacity: token-utils.slot(chip-with-avatar-disabled-avatar-opacity, $fallbacks);
+}
 
-    &.mdc-evolution-chip--selected,
-    &.mat-mdc-chip-highlighted {
-      .mdc-evolution-chip__icon--trailing {
-        color: token-utils.slot(selected-trailing-icon-color);
-      }
+.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+  opacity: token-utils.slot(chip-with-trailing-icon-disabled-trailing-icon-opacity, $fallbacks);
+}
 
-      &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
-        color: token-utils.slot(selected-disabled-trailing-icon-color);
-      }
-    }
+.mdc-evolution-chip--disabled.mdc-evolution-chip--selected .mdc-evolution-chip__checkmark {
+  opacity: token-utils.slot(chip-with-icon-disabled-icon-opacity, $fallbacks);
+}
+
+// Historically, MDC did not support disabled chips, so we needed our own disabled styles.
+// Now that MDC supports disabled styles, we should switch to using theirs.
+.mat-mdc-standard-chip {
+  &.mdc-evolution-chip--disabled {
+    opacity: token-utils.slot(chip-disabled-container-opacity, $fallbacks);
   }
 
-  .mat-mdc-chip-remove {
-    opacity: token-utils.slot(trailing-action-opacity);
-
-    &:focus {
-      opacity: token-utils.slot(trailing-action-focus-opacity);
+  &.mdc-evolution-chip--selected,
+  &.mat-mdc-chip-highlighted {
+    .mdc-evolution-chip__icon--trailing {
+      color: token-utils.slot(chip-selected-trailing-icon-color, $fallbacks);
     }
 
-    &::after {
-      background-color: token-utils.slot(trailing-action-state-layer-color);
-    }
-
-    &:hover::after {
-      opacity: token-utils.slot(trailing-action-hover-state-layer-opacity);
-    }
-
-    &:focus::after {
-      opacity: token-utils.slot(trailing-action-focus-state-layer-opacity);
+    &.mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
+      color: token-utils.slot(chip-selected-disabled-trailing-icon-color, $fallbacks);
     }
   }
+}
 
-  .mat-mdc-chip-selected .mat-mdc-chip-remove::after,
-  .mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
-    background-color: token-utils.slot(selected-trailing-action-state-layer-color);
+.mat-mdc-chip-remove {
+  opacity: token-utils.slot(chip-trailing-action-opacity, $fallbacks);
+
+  &:focus {
+    opacity: token-utils.slot(chip-trailing-action-focus-opacity, $fallbacks);
   }
+
+  &::after {
+    background-color: token-utils.slot(chip-trailing-action-state-layer-color, $fallbacks);
+  }
+
+  &:hover::after {
+    opacity: token-utils.slot(chip-trailing-action-hover-state-layer-opacity, $fallbacks);
+  }
+
+  &:focus::after {
+    opacity: token-utils.slot(chip-trailing-action-focus-state-layer-opacity, $fallbacks);
+  }
+}
+
+.mat-mdc-chip-selected .mat-mdc-chip-remove::after,
+.mat-mdc-chip-highlighted .mat-mdc-chip-remove::after {
+  background-color: token-utils.slot(chip-selected-trailing-action-state-layer-color, $fallbacks);
 }
 
 .mat-mdc-standard-chip {

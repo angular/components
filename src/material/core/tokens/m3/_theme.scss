@@ -1,0 +1,47 @@
+@use '../../theming/palettes';
+@use './md-sys-color';
+@use './md-sys-elevation';
+@use './md-sys-shape';
+@use './md-sys-state';
+@use './md-sys-typescale';
+@use 'sass:map';
+
+// Return a new map where the values are the same as the provided map's
+// keys, prefixed with "--mat-sys-". For example:
+// (key1: '', key2: '') --> (key1: --mat-sys-key1, key2: --mat-sys-key2)
+@function _create-system-app-vars-map($map) {
+  $new-map: ();
+  @each $key, $value in $map {
+    $new-map: map.set($new-map, $key, --mat-sys-#{$key});
+  }
+  @return $new-map;
+}
+
+/// Map key used to store internals of theme config.
+$internals: _mat-theming-internals-do-not-access;
+
+$placeholder-palettes: md-sys-color.md-sys-color-values-light(palettes.$blue-palette);
+$placeholder-palettes: map.set($placeholder-palettes, primary, palettes.$blue-palette);
+$app-vars: (
+  'md-sys-color': _create-system-app-vars-map(
+      md-sys-color.md-sys-color-values-light($placeholder-palettes)),
+  'md-sys-typescale': _create-system-app-vars-map(md-sys-typescale.md-sys-typescale-values((
+    brand: (Roboto),
+    plain: (Roboto),
+    bold: 700,
+    medium: 500,
+    regular: 400
+  ))),
+  'md-sys-elevation': _create-system-app-vars-map(md-sys-elevation.md-sys-elevation-values()),
+  'md-sys-state': _create-system-app-vars-map(md-sys-state.md-sys-state-values()),
+  'md-sys-shape': _create-system-app-vars-map(md-sys-shape.md-sys-shape-values()),
+  // Add a subset of palette-specific colors used by components instead of system values
+  'md-ref-palette': _create-system-app-vars-map(
+      (
+        neutral10: '', // Form field native select option text color
+        neutral-variant20: '', // Sidenav scrim (container background shadow when opened),
+      )
+  ),
+);
+
+$sys-theme: ($internals: $app-vars);

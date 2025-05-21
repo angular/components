@@ -2,9 +2,6 @@
 @use '../../theming/inspection';
 @use '../../style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, pseudo-checkbox);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -18,14 +15,16 @@ $prefix: (mat, pseudo-checkbox);
   $checkmark-color: inspection.get-theme-color($theme, background, background);
 
   @return (
-    full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
-    full-selected-checkmark-color: $checkmark-color,
-    full-unselected-icon-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    full-disabled-selected-checkmark-color: $checkmark-color,
-    full-disabled-unselected-icon-color: $disabled-color,
-    full-disabled-selected-icon-color: $disabled-color,
-    minimal-selected-checkmark-color: inspection.get-theme-color($theme, $palette-name),
-    minimal-disabled-selected-checkmark-color: if($is-dark, #686868, #b0b0b0),
+    pseudo-checkbox-full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
+    pseudo-checkbox-full-selected-checkmark-color: $checkmark-color,
+    pseudo-checkbox-full-unselected-icon-color:
+        inspection.get-theme-color($theme, foreground, secondary-text),
+    pseudo-checkbox-full-disabled-selected-checkmark-color: $checkmark-color,
+    pseudo-checkbox-full-disabled-unselected-icon-color: $disabled-color,
+    pseudo-checkbox-full-disabled-selected-icon-color: $disabled-color,
+    pseudo-checkbox-minimal-selected-checkmark-color:
+        inspection.get-theme-color($theme, $palette-name),
+    pseudo-checkbox-minimal-disabled-selected-checkmark-color: if($is-dark, #686868, #b0b0b0),
   );
 }
 

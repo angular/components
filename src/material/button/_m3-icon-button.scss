@@ -3,16 +3,14 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, icon-button);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-icon-button.
 /// @param {Map} $systems The MDC system tokens
 /// @param {Boolean} $exclude-hardcoded Whether to exclude hardcoded token values
 /// @param {Map} $token-slots Possible token slots
 /// @return {Map} A set of custom tokens for the mat-icon-button
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -21,18 +19,19 @@ $prefix: (mat, icon-button);
 
   $tokens: (
     base: (
-      icon-size: 24px,
+      icon-button-icon-size: 24px,
     ),
     color: (
-      disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-state-layer-color: map.get($system, on-surface-variant),
-      focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      icon-color: map.get($system, on-surface-variant),
-      pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-      ripple-color: m3-utils.color-with-opacity(
+      icon-button-disabled-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      icon-button-disabled-state-layer-color: map.get($system, on-surface-variant),
+      icon-button-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      icon-button-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      icon-button-icon-color: map.get($system, on-surface-variant),
+      icon-button-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      icon-button-ripple-color: m3-utils.color-with-opacity(
           map.get($system, on-surface-variant), map.get($system, pressed-state-layer-opacity)),
-      state-layer-color: map.get($system, on-surface-variant),
+      icon-button-state-layer-color: map.get($system, on-surface-variant),
     ),
     typography: (),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
@@ -47,8 +46,8 @@ $prefix: (mat, icon-button);
   $index: ($scale * -1) + 1;
 
   @return (
-    touch-target-display: list.nth((block, block, none, none, none, none), $index),
+    icon-button-touch-target-display: list.nth((block, block, none, none, none, none), $index),
     // The size caps out at 24px, because anything lower will be smaller than the icon.
-    state-layer-size: list.nth((40px, 36px, 32px, 28px, 24px, 24px), $index),
+    icon-button-state-layer-size: list.nth((40px, 36px, 32px, 28px, 24px, 24px), $index),
   );
 }

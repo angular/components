@@ -3,12 +3,10 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, chip);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-chip.
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
@@ -16,56 +14,58 @@ $prefix: (mat, chip);
 
   @return (
     base: (
-      container-shape-radius: 8px,
-      disabled-container-opacity: 1,
-      elevated-container-color: transparent, // surface in M3, but not emitted in MDC
-      flat-selected-outline-width: 0,
-      outline-width: 1px,
-      trailing-action-focus-opacity: 1,
-      trailing-action-opacity: 1,
-      with-avatar-avatar-shape-radius: 24px,
-      with-avatar-avatar-size: 24px,
-      with-avatar-disabled-avatar-opacity: 0.38,
-      with-icon-disabled-icon-opacity: 0.38,
-      with-icon-icon-size: 18px,
-      with-trailing-icon-disabled-trailing-icon-opacity: 0.38,
+      chip-container-shape-radius: 8px,
+      chip-disabled-container-opacity: 1,
+      chip-elevated-container-color: transparent, // surface in M3, but not emitted in MDC
+      chip-flat-selected-outline-width: 0,
+      chip-outline-width: 1px,
+      chip-trailing-action-focus-opacity: 1,
+      chip-trailing-action-opacity: 1,
+      chip-with-avatar-avatar-shape-radius: 24px,
+      chip-with-avatar-avatar-size: 24px,
+      chip-with-avatar-disabled-avatar-opacity: 0.38,
+      chip-with-icon-disabled-icon-opacity: 0.38,
+      chip-with-icon-icon-size: 18px,
+      chip-with-trailing-icon-disabled-trailing-icon-opacity: 0.38,
     ),
     color: (
-      disabled-label-text-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-outline-color: m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      elevated-selected-container-color: map.get($system, secondary-container),
-      flat-disabled-selected-container-color:
+      chip-disabled-label-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      chip-disabled-outline-color: m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      chip-elevated-selected-container-color: map.get($system, secondary-container),
+      chip-flat-disabled-selected-container-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      focus-outline-color: map.get($system, on-surface-variant),
-      focus-state-layer-color: map.get($system, on-surface-variant),
-      focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      hover-state-layer-color: map.get($system, on-surface-variant),
-      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      label-text-color: map.get($system, on-surface-variant),
-      outline-color: map.get($system, outline),
-      selected-disabled-trailing-icon-color: map.get($system, on-surface),
-      selected-focus-state-layer-color: map.get($system, on-secondary-container),
-      selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      selected-hover-state-layer-color: map.get($system, on-secondary-container),
-      selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      selected-label-text-color: map.get($system, on-secondary-container),
-      selected-trailing-action-state-layer-color: map.get($system, on-secondary-container),
-      selected-trailing-icon-color: map.get($system, on-secondary-container),
-      trailing-action-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      trailing-action-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      trailing-action-state-layer-color: map.get($system, on-surface-variant),
-      with-icon-disabled-icon-color: map.get($system, on-surface),
-      with-icon-icon-color: map.get($system, on-surface-variant),
-      with-icon-selected-icon-color: map.get($system, on-secondary-container),
-      with-trailing-icon-disabled-trailing-icon-color:map.get($system, on-surface),
-      with-trailing-icon-trailing-icon-color: map.get($system, on-surface-variant),
+      chip-focus-outline-color: map.get($system, on-surface-variant),
+      chip-focus-state-layer-color: map.get($system, on-surface-variant),
+      chip-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      chip-hover-state-layer-color: map.get($system, on-surface-variant),
+      chip-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-label-text-color: map.get($system, on-surface-variant),
+      chip-outline-color: map.get($system, outline),
+      chip-selected-disabled-trailing-icon-color: map.get($system, on-surface),
+      chip-selected-focus-state-layer-color: map.get($system, on-secondary-container),
+      chip-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      chip-selected-hover-state-layer-color: map.get($system, on-secondary-container),
+      chip-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-selected-label-text-color: map.get($system, on-secondary-container),
+      chip-selected-trailing-action-state-layer-color: map.get($system, on-secondary-container),
+      chip-selected-trailing-icon-color: map.get($system, on-secondary-container),
+      chip-trailing-action-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      chip-trailing-action-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-trailing-action-state-layer-color: map.get($system, on-surface-variant),
+      chip-with-icon-disabled-icon-color: map.get($system, on-surface),
+      chip-with-icon-icon-color: map.get($system, on-surface-variant),
+      chip-with-icon-selected-icon-color: map.get($system, on-secondary-container),
+      chip-with-trailing-icon-disabled-trailing-icon-color:map.get($system, on-surface),
+      chip-with-trailing-icon-trailing-icon-color: map.get($system, on-surface-variant),
+      chip-elevated-disabled-container-color: null,
     ),
     typography: (
-      label-text-font: map.get($system, label-large-font),
-      label-text-line-height: map.get($system, label-large-line-height),
-      label-text-size: map.get($system, label-large-size),
-      label-text-tracking: map.get($system, label-large-tracking),
-      label-text-weight: map.get($system, label-large-weight),
+      chip-label-text-font: map.get($system, label-large-font),
+      chip-label-text-line-height: map.get($system, label-large-line-height),
+      chip-label-text-size: map.get($system, label-large-size),
+      chip-label-text-tracking: map.get($system, label-large-tracking),
+      chip-label-text-weight: map.get($system, label-large-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -77,6 +77,6 @@ $prefix: (mat, chip);
   $index: ($scale * -1) + 1;
 
   @return (
-    container-height: list.nth((32px, 28px, 24px), $index),
+    chip-container-height: list.nth((32px, 28px, 24px), $index),
   );
 }

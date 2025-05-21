@@ -3,40 +3,38 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, table);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-table.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      row-item-outline-width: 1px,
+      table-row-item-outline-width: 1px,
     ),
     color: (
-      background-color: map.get($system, surface),
-      header-headline-color: map.get($system, on-surface),
-      row-item-label-text-color: map.get($system, on-surface),
-      row-item-outline-color: map.get($system, outline),
+      table-background-color: map.get($system, surface),
+      table-header-headline-color: map.get($system, on-surface),
+      table-row-item-label-text-color: map.get($system, on-surface),
+      table-row-item-outline-color: map.get($system, outline),
     ),
     typography: (
-      header-headline-font: map.get($system, title-small-font),
-      header-headline-line-height: map.get($system, title-small-line-height),
-      header-headline-size: map.get($system, title-small-size),
-      header-headline-tracking: map.get($system, title-small-tracking),
-      header-headline-weight: map.get($system, title-small-weight),
-      row-item-label-text-font: map.get($system, body-medium-font),
-      row-item-label-text-line-height: map.get($system, body-medium-line-height),
-      row-item-label-text-size: map.get($system, body-medium-size),
-      row-item-label-text-tracking: map.get($system, body-medium-tracking),
-      row-item-label-text-weight: map.get($system, body-medium-weight),
-      footer-supporting-text-font: map.get($system, body-medium-font),
-      footer-supporting-text-line-height: map.get($system, body-medium-line-height),
-      footer-supporting-text-size: map.get($system, body-medium-size),
-      footer-supporting-text-tracking: map.get($system, body-medium-tracking),
-      footer-supporting-text-weight: map.get($system, body-medium-weight),
+      table-header-headline-font: map.get($system, title-small-font),
+      table-header-headline-line-height: map.get($system, title-small-line-height),
+      table-header-headline-size: map.get($system, title-small-size),
+      table-header-headline-tracking: map.get($system, title-small-tracking),
+      table-header-headline-weight: map.get($system, title-small-weight),
+      table-row-item-label-text-font: map.get($system, body-medium-font),
+      table-row-item-label-text-line-height: map.get($system, body-medium-line-height),
+      table-row-item-label-text-size: map.get($system, body-medium-size),
+      table-row-item-label-text-tracking: map.get($system, body-medium-tracking),
+      table-row-item-label-text-weight: map.get($system, body-medium-weight),
+      table-footer-supporting-text-font: map.get($system, body-medium-font),
+      table-footer-supporting-text-line-height: map.get($system, body-medium-line-height),
+      table-footer-supporting-text-size: map.get($system, body-medium-size),
+      table-footer-supporting-text-tracking: map.get($system, body-medium-tracking),
+      table-footer-supporting-text-weight: map.get($system, body-medium-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -48,8 +46,8 @@ $prefix: (mat, table);
   $index: ($scale * -1) + 1;
 
   @return (
-    header-container-height: list.nth((56px, 52px, 48px, 44px, 40px), $index),
-    footer-container-height: list.nth((52px, 48px, 44px, 40px, 36px), $index),
-    row-item-container-height: list.nth((52px, 48px, 44px, 40px, 36px), $index),
+    table-header-container-height: list.nth((56px, 52px, 48px, 44px, 40px), $index),
+    table-footer-container-height: list.nth((52px, 48px, 44px, 40px, 36px), $index),
+    table-row-item-container-height: list.nth((52px, 48px, 44px, 40px, 36px), $index),
   );
 }

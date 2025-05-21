@@ -1,13 +1,9 @@
 @use '@angular/cdk';
-@use './m2-expansion';
 @use './m3-expansion';
 @use '../core/tokens/token-utils';
 @use './expansion-variables';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-expansion.$prefix;
-$token-slots: m2-expansion.get-token-slots();
-$fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-expansion.get-tokens();
 
 .mat-expansion-panel-header {
   display: flex;
@@ -25,40 +21,38 @@ $fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
     border-radius: inherit;
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    height: token-utils.slot(header-collapsed-state-height);
-    font-family: token-utils.slot(header-text-font);
-    font-size: token-utils.slot(header-text-size);
-    font-weight: token-utils.slot(header-text-weight);
-    line-height: token-utils.slot(header-text-line-height);
-    letter-spacing: token-utils.slot(header-text-tracking);
+  height: token-utils.slot(expansion-header-collapsed-state-height, $fallbacks);
+  font-family: token-utils.slot(expansion-header-text-font, $fallbacks);
+  font-size: token-utils.slot(expansion-header-text-size, $fallbacks);
+  font-weight: token-utils.slot(expansion-header-text-weight, $fallbacks);
+  line-height: token-utils.slot(expansion-header-text-line-height, $fallbacks);
+  letter-spacing: token-utils.slot(expansion-header-text-tracking, $fallbacks);
 
-    &.mat-expanded {
-      height: token-utils.slot(header-expanded-state-height);
+  &.mat-expanded {
+    height: token-utils.slot(expansion-header-expanded-state-height, $fallbacks);
+  }
+
+  &[aria-disabled='true'] {
+    color: token-utils.slot(expansion-header-disabled-state-text-color, $fallbacks);
+  }
+
+  &:not([aria-disabled='true']) {
+    cursor: pointer;
+
+    .mat-expansion-panel:not(.mat-expanded) &:hover {
+      background: token-utils.slot(expansion-header-hover-state-layer-color, $fallbacks);
+
+      // Disable the hover on touch devices since it can appear like it is stuck. We can't use
+      // `@media (hover)` above, because the desktop support browser support isn't great.
+      @media (hover: none) {
+        background: token-utils.slot(expansion-container-background-color, $fallbacks);
+      }
     }
 
-    &[aria-disabled='true'] {
-      color: token-utils.slot(header-disabled-state-text-color);
-    }
-
-    &:not([aria-disabled='true']) {
-      cursor: pointer;
-
-      .mat-expansion-panel:not(.mat-expanded) &:hover {
-        background: token-utils.slot(header-hover-state-layer-color);
-
-        // Disable the hover on touch devices since it can appear like it is stuck. We can't use
-        // `@media (hover)` above, because the desktop support browser support isn't great.
-        @media (hover: none) {
-          background: token-utils.slot(container-background-color);
-        }
-      }
-
-      // The `.mat-expansion-panel` here is redundant, but we need the additional specificity.
-      .mat-expansion-panel &.cdk-keyboard-focused,
-      .mat-expansion-panel &.cdk-program-focused {
-        background: token-utils.slot(header-focus-state-layer-color);
-      }
+    // The `.mat-expansion-panel` here is redundant, but we need the additional specificity.
+    .mat-expansion-panel &.cdk-keyboard-focused,
+    .mat-expansion-panel &.cdk-program-focused {
+      background: token-utils.slot(expansion-header-focus-state-layer-color, $fallbacks);
     }
   }
 
@@ -118,9 +112,7 @@ $fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 .mat-expansion-panel-header-title {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(header-text-color);
-  }
+  color: token-utils.slot(expansion-header-text-color, $fallbacks);
 }
 
 .mat-expansion-panel-header-title,
@@ -144,9 +136,7 @@ $fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
 .mat-expansion-panel-header-description {
   flex-grow: 2;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(header-description-color);
-  }
+  color: token-utils.slot(expansion-header-description-color, $fallbacks);
 }
 
 // Creates the expansion indicator arrow. Done using ::after
@@ -164,16 +154,12 @@ $fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
     border-style: solid;
     border-width: 0 2px 2px 0;
     content: '';
-    display: inline-block;
     padding: 3px;
     transform: rotate(45deg);
     vertical-align: middle;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(header-indicator-color);
-      display: token-utils.slot(legacy-header-indicator-display,
-        inline-block);
-    }
+    color: token-utils.slot(expansion-header-indicator-color, $fallbacks);
+    display: token-utils.slot(expansion-legacy-header-indicator-display, $fallbacks, inline-block);
   }
 
   svg {
@@ -188,10 +174,8 @@ $fallbacks: m3-expansion.get-tokens(m3-system.$theme-with-system-vars);
     // Ideally we'd make the container `inline-flex`, but that affects M2.
     vertical-align: middle;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      fill: token-utils.slot(header-indicator-color);
-      display: token-utils.slot(header-indicator-display, none);
-    }
+    fill: token-utils.slot(expansion-header-indicator-color, $fallbacks);
+    display: token-utils.slot(expansion-header-indicator-display, $fallbacks, none);
   }
 }
 

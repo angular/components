@@ -3,9 +3,6 @@
 @use '../theming/inspection';
 @use '../style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, ripple);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -23,7 +20,7 @@ $prefix: (mat, ripple);
   $color: if(meta.type-of($base) == color, $base, if($is-dark, #fff, #000));
 
   @return (
-    color: rgba($color, 0.1),
+    ripple-color: rgba($color, 0.1),
   );
 }
 

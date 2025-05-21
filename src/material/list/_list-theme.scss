@@ -13,71 +13,49 @@
 @mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-list.$prefix,
-        map.get(m3-list.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-list.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-list.get-unthemable-tokens());
     }
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-list.$prefix,
-        map.get(m3-list.get-tokens($theme), color));
+    @include token-utils.create-token-values(map.get(m3-list.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-list.get-color-tokens($theme));
     }
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values-mixed(
-        m2-radio.$prefix, m2-radio.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, primary));
     }
 
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix,
-          m2-radio.get-color-tokens($theme, accent)
-        );
+        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, accent));
       }
     }
 
     .mat-warn {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix,
-          m2-radio.get-color-tokens($theme, warn)
-        );
+        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, warn));
       }
     }
 
     .mat-mdc-list-option {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, primary)
-      );
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, primary));
     }
     .mat-mdc-list-option.mat-accent {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, accent)
-      );
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, accent));
     }
     .mat-mdc-list-option.mat-warn {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-color-tokens($theme, warn)
-      );
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, warn));
     }
 
     // There is no token for activated color on nav list.
@@ -107,22 +85,18 @@
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-list.$prefix,
-        map.get(m3-list.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-list.get-tokens($theme), density));
   } @else {
     $density-scale: inspection.get-theme-density($theme);
 
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-density-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-list.get-density-tokens($theme));
     }
 
     .mdc-list-item__start,
     .mdc-list-item__end {
-      @include token-utils.create-token-values-mixed(
-          m2-radio.$prefix, m2-radio.get-density-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-radio.get-density-tokens($theme));
     }
 
     // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
@@ -166,13 +140,10 @@
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-list.$prefix,
-        map.get(m3-list.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-list.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-list.$prefix, m2-list.get-typography-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-list.get-typography-tokens($theme));
     }
 
     // MDC does not have tokens for the subheader.
@@ -188,14 +159,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-list.$prefix,
-      tokens: m2-list.get-token-slots(),
+      namespace: list,
+      tokens: token-utils.get-overrides(m3-list.get-tokens(), list)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

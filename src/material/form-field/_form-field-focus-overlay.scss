@@ -1,12 +1,8 @@
-@use './m2-form-field';
 @use './m3-form-field';
 @use '../core/tokens/token-utils';
 @use '../core/style/layout-common';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-form-field.$prefix;
-$token-slots: m2-form-field.get-token-slots();
-$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-form-field.get-tokens();
 
 
 // MDC text-field used to use their ripple in order to show a focus and hover effect for
@@ -22,16 +18,14 @@ $fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
     opacity: 0;
     pointer-events: none; // Make sure we don't block click on the prefix/suffix.
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background-color: token-utils.slot(state-layer-color);
+    background-color: token-utils.slot(form-field-state-layer-color, $fallbacks);
 
-      .mat-mdc-text-field-wrapper:hover & {
-        opacity: token-utils.slot(hover-state-layer-opacity);
-      }
+    .mat-mdc-text-field-wrapper:hover & {
+      opacity: token-utils.slot(form-field-hover-state-layer-opacity, $fallbacks);
+    }
 
-      .mat-mdc-form-field.mat-focused & {
-        opacity: token-utils.slot(focus-state-layer-opacity);
-      }
+    .mat-mdc-form-field.mat-focused & {
+      opacity: token-utils.slot(form-field-focus-state-layer-opacity, $fallbacks);
     }
   }
 }

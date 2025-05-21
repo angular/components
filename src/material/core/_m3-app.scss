@@ -1,44 +1,42 @@
 @use 'sass:map';
 @use './style/elevation';
 @use './tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, app);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the app.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (),
     color: (
-      background-color: map.get($system, background),
-      text-color: map.get($system, on-background),
-      elevation-shadow-level-0: elevation.get-box-shadow(0, map.get($system, shadow)),
-      elevation-shadow-level-1: elevation.get-box-shadow(1, map.get($system, shadow)),
-      elevation-shadow-level-2: elevation.get-box-shadow(2, map.get($system, shadow)),
-      elevation-shadow-level-3: elevation.get-box-shadow(3, map.get($system, shadow)),
-      elevation-shadow-level-4: elevation.get-box-shadow(4, map.get($system, shadow)),
-      elevation-shadow-level-5: elevation.get-box-shadow(5, map.get($system, shadow)),
-      elevation-shadow-level-6: elevation.get-box-shadow(6, map.get($system, shadow)),
-      elevation-shadow-level-7: elevation.get-box-shadow(7, map.get($system, shadow)),
-      elevation-shadow-level-8: elevation.get-box-shadow(8, map.get($system, shadow)),
-      elevation-shadow-level-9: elevation.get-box-shadow(9, map.get($system, shadow)),
-      elevation-shadow-level-10: elevation.get-box-shadow(10, map.get($system, shadow)),
-      elevation-shadow-level-11: elevation.get-box-shadow(11, map.get($system, shadow)),
-      elevation-shadow-level-12: elevation.get-box-shadow(12, map.get($system, shadow)),
-      elevation-shadow-level-13: elevation.get-box-shadow(13, map.get($system, shadow)),
-      elevation-shadow-level-14: elevation.get-box-shadow(14, map.get($system, shadow)),
-      elevation-shadow-level-15: elevation.get-box-shadow(15, map.get($system, shadow)),
-      elevation-shadow-level-16: elevation.get-box-shadow(16, map.get($system, shadow)),
-      elevation-shadow-level-17: elevation.get-box-shadow(17, map.get($system, shadow)),
-      elevation-shadow-level-18: elevation.get-box-shadow(18, map.get($system, shadow)),
-      elevation-shadow-level-19: elevation.get-box-shadow(19, map.get($system, shadow)),
-      elevation-shadow-level-20: elevation.get-box-shadow(20, map.get($system, shadow)),
-      elevation-shadow-level-21: elevation.get-box-shadow(21, map.get($system, shadow)),
-      elevation-shadow-level-22: elevation.get-box-shadow(22, map.get($system, shadow)),
-      elevation-shadow-level-23: elevation.get-box-shadow(23, map.get($system, shadow)),
-      elevation-shadow-level-24: elevation.get-box-shadow(24, map.get($system, shadow)),
+      app-background-color: map.get($system, background),
+      app-text-color: map.get($system, on-background),
+      app-elevation-shadow-level-0: elevation.get-box-shadow(0, map.get($system, shadow)),
+      app-elevation-shadow-level-1: elevation.get-box-shadow(1, map.get($system, shadow)),
+      app-elevation-shadow-level-2: elevation.get-box-shadow(2, map.get($system, shadow)),
+      app-elevation-shadow-level-3: elevation.get-box-shadow(3, map.get($system, shadow)),
+      app-elevation-shadow-level-4: elevation.get-box-shadow(4, map.get($system, shadow)),
+      app-elevation-shadow-level-5: elevation.get-box-shadow(5, map.get($system, shadow)),
+      app-elevation-shadow-level-6: elevation.get-box-shadow(6, map.get($system, shadow)),
+      app-elevation-shadow-level-7: elevation.get-box-shadow(7, map.get($system, shadow)),
+      app-elevation-shadow-level-8: elevation.get-box-shadow(8, map.get($system, shadow)),
+      app-elevation-shadow-level-9: elevation.get-box-shadow(9, map.get($system, shadow)),
+      app-elevation-shadow-level-10: elevation.get-box-shadow(10, map.get($system, shadow)),
+      app-elevation-shadow-level-11: elevation.get-box-shadow(11, map.get($system, shadow)),
+      app-elevation-shadow-level-12: elevation.get-box-shadow(12, map.get($system, shadow)),
+      app-elevation-shadow-level-13: elevation.get-box-shadow(13, map.get($system, shadow)),
+      app-elevation-shadow-level-14: elevation.get-box-shadow(14, map.get($system, shadow)),
+      app-elevation-shadow-level-15: elevation.get-box-shadow(15, map.get($system, shadow)),
+      app-elevation-shadow-level-16: elevation.get-box-shadow(16, map.get($system, shadow)),
+      app-elevation-shadow-level-17: elevation.get-box-shadow(17, map.get($system, shadow)),
+      app-elevation-shadow-level-18: elevation.get-box-shadow(18, map.get($system, shadow)),
+      app-elevation-shadow-level-19: elevation.get-box-shadow(19, map.get($system, shadow)),
+      app-elevation-shadow-level-20: elevation.get-box-shadow(20, map.get($system, shadow)),
+      app-elevation-shadow-level-21: elevation.get-box-shadow(21, map.get($system, shadow)),
+      app-elevation-shadow-level-22: elevation.get-box-shadow(22, map.get($system, shadow)),
+      app-elevation-shadow-level-23: elevation.get-box-shadow(23, map.get($system, shadow)),
+      app-elevation-shadow-level-24: elevation.get-box-shadow(24, map.get($system, shadow)),
     ),
     typography: (),
     density: (),

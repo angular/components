@@ -1,27 +1,25 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, snack-bar);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-snack-bar.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      container-shape: map.get($system, corner-extra-small),
+      snack-bar-container-shape: map.get($system, corner-extra-small),
     ),
     color: (
-      button-color: map.get($system, inverse-primary),
-      container-color: map.get($system, inverse-surface),
-      supporting-text-color: map.get($system, inverse-on-surface),
+      snack-bar-button-color: map.get($system, inverse-primary),
+      snack-bar-container-color: map.get($system, inverse-surface),
+      snack-bar-supporting-text-color: map.get($system, inverse-on-surface),
     ),
     typography: (
-      supporting-text-font: map.get($system, body-medium-font),
-      supporting-text-line-height: map.get($system, body-medium-line-height),
-      supporting-text-size: map.get($system, body-medium-size),
-      supporting-text-weight: map.get($system, body-medium-weight),
+      snack-bar-supporting-text-font: map.get($system, body-medium-font),
+      snack-bar-supporting-text-line-height: map.get($system, body-medium-line-height),
+      snack-bar-supporting-text-size: map.get($system, body-medium-size),
+      snack-bar-supporting-text-weight: map.get($system, body-medium-weight),
     ),
     density: (),
   );

@@ -1,13 +1,9 @@
 @use '../core/style/list-common';
 @use '../core/style/layout-common';
-@use './m2-grid-list';
 @use './m3-grid-list';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-grid-list.$prefix;
-$token-slots: m2-grid-list.get-token-slots();
-$fallbacks: m3-grid-list.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-grid-list.get-tokens();
 
 // height of tile header or footer if it has one line
 $one-line-height: 48px;
@@ -76,19 +72,15 @@ $text-padding: 16px;
 }
 
 .mat-grid-tile-header {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $secondary-token-name: token-utils.slot(tile-header-secondary-text-size);
-    font-size: token-utils.slot(tile-header-primary-text-size);
-    @include list-common.base(#{$secondary-token-name});
-  }
+  $secondary-token-name: token-utils.slot(grid-list-tile-header-secondary-text-size, $fallbacks);
+  font-size: token-utils.slot(grid-list-tile-header-primary-text-size, $fallbacks);
+  @include list-common.base(#{$secondary-token-name});
 }
 
 .mat-grid-tile-footer {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    $secondary-token-name: token-utils.slot(tile-footer-secondary-text-size);
-    font-size: token-utils.slot(tile-footer-primary-text-size);
-    @include list-common.base(#{$secondary-token-name});
-  }
+  $secondary-token-name: token-utils.slot(grid-list-tile-footer-secondary-text-size, $fallbacks);
+  font-size: token-utils.slot(grid-list-tile-footer-primary-text-size, $fallbacks);
+  @include list-common.base(#{$secondary-token-name});
 }
 
 .mat-grid-tile-content {

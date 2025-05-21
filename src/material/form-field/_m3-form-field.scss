@@ -3,13 +3,14 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, form-field);
 
 /// Generates custom tokens for the mat-form-field.
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -17,98 +18,104 @@ $prefix: (mat, form-field);
 
   @return (
     base: (
-      filled-active-indicator-height: 1px,
-      filled-focus-active-indicator-height: 2px,
-      filled-container-shape: map.get($system, corner-extra-small),
-      outlined-outline-width: 1px,
-      outlined-focus-outline-width: 2px,
-      outlined-container-shape: map.get($system, corner-extra-small),
+      form-field-filled-active-indicator-height: 1px,
+      form-field-filled-focus-active-indicator-height: 2px,
+      form-field-filled-container-shape: map.get($system, corner-extra-small),
+      form-field-outlined-outline-width: 1px,
+      form-field-outlined-focus-outline-width: 2px,
+      form-field-outlined-container-shape: map.get($system, corner-extra-small),
     ),
     color: (
-      disabled-input-text-placeholder-color:
+      form-field-disabled-input-text-placeholder-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-leading-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-select-arrow-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      disabled-trailing-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      enabled-select-arrow-color: map.get($system, on-surface-variant),
-      error-focus-trailing-icon-color: map.get($system, error),
-      error-hover-trailing-icon-color: map.get($system, on-error-container),
-      error-text-color: map.get($system, error),
-      error-trailing-icon-color: map.get($system, error),
-      filled-active-indicator-color: map.get($system, on-surface-variant),
-      filled-caret-color: map.get($system, primary),
-      filled-container-color: map.get($system, surface-variant),
-      filled-disabled-active-indicator-color:
+      form-field-disabled-leading-icon-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      filled-disabled-container-color:
+      form-field-disabled-select-arrow-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      form-field-disabled-trailing-icon-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      form-field-enabled-select-arrow-color: map.get($system, on-surface-variant),
+      form-field-error-focus-trailing-icon-color: map.get($system, error),
+      form-field-error-hover-trailing-icon-color: map.get($system, on-error-container),
+      form-field-error-text-color: map.get($system, error),
+      form-field-error-trailing-icon-color: map.get($system, error),
+      form-field-filled-active-indicator-color: map.get($system, on-surface-variant),
+      form-field-filled-caret-color: map.get($system, primary),
+      form-field-filled-container-color: map.get($system, surface-variant),
+      form-field-filled-disabled-active-indicator-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      form-field-filled-disabled-container-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 4%),
-      filled-disabled-input-text-color:
+      form-field-filled-disabled-input-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      filled-disabled-label-text-color:
+      form-field-filled-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      filled-error-active-indicator-color: map.get($system, error),
-      filled-error-focus-active-indicator-color: map.get($system, error),
-      filled-error-focus-label-text-color: map.get($system, error),
-      filled-error-hover-active-indicator-color: map.get($system, on-error-container),
-      filled-error-hover-label-text-color: map.get($system, on-error-container),
-      filled-error-label-text-color: map.get($system, error),
-      filled-focus-active-indicator-color: map.get($system, primary),
-      filled-focus-label-text-color: map.get($system, primary),
-      filled-hover-active-indicator-color: map.get($system, on-surface),
-      filled-hover-label-text-color: map.get($system, on-surface-variant),
-      filled-input-text-color: map.get($system, on-surface),
-      filled-input-text-placeholder-color: map.get($system, on-surface-variant),
-      filled-label-text-color: map.get($system, on-surface-variant),
-      focus-select-arrow-color: map.get($system, primary),
-      focus-state-layer-opacity: 0,
-      hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      leading-icon-color: map.get($system, on-surface-variant),
-      outlined-caret-color: map.get($system, primary),
-      outlined-disabled-input-text-color:
+      form-field-filled-error-active-indicator-color: map.get($system, error),
+      form-field-filled-error-caret-color: map.get($system, error),
+      form-field-filled-error-focus-active-indicator-color: map.get($system, error),
+      form-field-filled-error-focus-label-text-color: map.get($system, error),
+      form-field-filled-error-hover-active-indicator-color: map.get($system, on-error-container),
+      form-field-filled-error-hover-label-text-color: map.get($system, on-error-container),
+      form-field-filled-error-label-text-color: map.get($system, error),
+      form-field-filled-focus-active-indicator-color: map.get($system, primary),
+      form-field-filled-focus-label-text-color: map.get($system, primary),
+      form-field-filled-hover-active-indicator-color: map.get($system, on-surface),
+      form-field-filled-hover-label-text-color: map.get($system, on-surface-variant),
+      form-field-filled-input-text-color: map.get($system, on-surface),
+      form-field-filled-input-text-placeholder-color: map.get($system, on-surface-variant),
+      form-field-filled-label-text-color: map.get($system, on-surface-variant),
+      form-field-focus-select-arrow-color: map.get($system, primary),
+      form-field-focus-state-layer-opacity: 0,
+      form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      form-field-leading-icon-color: map.get($system, on-surface-variant),
+      form-field-outlined-caret-color: map.get($system, primary),
+      form-field-outlined-disabled-input-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      outlined-disabled-label-text-color:
+      form-field-outlined-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      outlined-disabled-outline-color:
+      form-field-outlined-disabled-outline-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      outlined-error-focus-label-text-color: map.get($system, error),
-      outlined-error-focus-outline-color: map.get($system, error),
-      outlined-error-hover-label-text-color: map.get($system, on-error-container),
-      outlined-error-hover-outline-color: map.get($system, on-error-container),
-      outlined-error-label-text-color: map.get($system, error),
-      outlined-error-outline-color: map.get($system, error),
-      outlined-focus-label-text-color: map.get($system, primary),
-      outlined-focus-outline-color: map.get($system, primary),
-      outlined-hover-label-text-color: map.get($system, on-surface),
-      outlined-hover-outline-color: map.get($system, on-surface),
-      outlined-input-text-color: map.get($system, on-surface),
-      outlined-input-text-placeholder-color: map.get($system, on-surface-variant),
-      outlined-label-text-color: map.get($system, on-surface-variant),
-      outlined-outline-color: map.get($system, outline),
-      select-disabled-option-text-color:
+      form-field-outlined-error-caret-color: map.get($system, error),
+      form-field-outlined-error-focus-label-text-color: map.get($system, error),
+      form-field-outlined-error-focus-outline-color: map.get($system, error),
+      form-field-outlined-error-hover-label-text-color: map.get($system, on-error-container),
+      form-field-outlined-error-hover-outline-color: map.get($system, on-error-container),
+      form-field-outlined-error-label-text-color: map.get($system, error),
+      form-field-outlined-error-outline-color: map.get($system, error),
+      form-field-outlined-focus-label-text-color: map.get($system, primary),
+      form-field-outlined-focus-outline-color: map.get($system, primary),
+      form-field-outlined-hover-label-text-color: map.get($system, on-surface),
+      form-field-outlined-hover-outline-color: map.get($system, on-surface),
+      form-field-outlined-input-text-color: map.get($system, on-surface),
+      form-field-outlined-input-text-placeholder-color: map.get($system, on-surface-variant),
+      form-field-outlined-label-text-color: map.get($system, on-surface-variant),
+      form-field-outlined-outline-color: map.get($system, outline),
+      form-field-select-disabled-option-text-color:
           m3-utils.color-with-opacity(map.get($system, neutral10), 38%),
-      select-option-text-color: map.get($system, neutral10),
-      state-layer-color: map.get($system, on-surface),
-      trailing-icon-color: map.get($system, on-surface-variant),
+      form-field-select-option-text-color: map.get($system, neutral10),
+      form-field-state-layer-color: map.get($system, on-surface),
+      form-field-trailing-icon-color: map.get($system, on-surface-variant),
     ),
     typography: (
-      container-text-font: map.get($system, body-large-font),
-      container-text-line-height: map.get($system, body-large-line-height),
-      container-text-size: map.get($system, body-large-size),
-      container-text-tracking: map.get($system, body-large-tracking),
-      container-text-weight: map.get($system, body-large-weight),
-      subscript-text-font: map.get($system, body-small-font),
-      subscript-text-line-height: map.get($system, body-small-line-height),
-      subscript-text-size: map.get($system, body-small-size),
-      subscript-text-tracking: map.get($system, body-small-tracking),
-      subscript-text-weight: map.get($system, body-small-weight),
-      outlined-label-text-font: map.get($system, body-large-font),
-      outlined-label-text-size: map.get($system, body-large-size),
-      outlined-label-text-tracking: map.get($system, body-large-tracking),
-      outlined-label-text-weight: map.get($system, body-large-weight),
-      filled-label-text-font: map.get($system, body-large-font),
-      filled-label-text-size: map.get($system, body-large-size),
-      filled-label-text-tracking: map.get($system, body-large-tracking),
-      filled-label-text-weight: map.get($system, body-large-weight),
+      form-field-container-text-font: map.get($system, body-large-font),
+      form-field-container-text-line-height: map.get($system, body-large-line-height),
+      form-field-container-text-size: map.get($system, body-large-size),
+      form-field-container-text-tracking: map.get($system, body-large-tracking),
+      form-field-container-text-weight: map.get($system, body-large-weight),
+      form-field-subscript-text-font: map.get($system, body-small-font),
+      form-field-subscript-text-line-height: map.get($system, body-small-line-height),
+      form-field-subscript-text-size: map.get($system, body-small-size),
+      form-field-subscript-text-tracking: map.get($system, body-small-tracking),
+      form-field-subscript-text-weight: map.get($system, body-small-weight),
+      form-field-outlined-label-text-font: map.get($system, body-large-font),
+      form-field-outlined-label-text-size: map.get($system, body-large-size),
+      form-field-outlined-label-text-tracking: map.get($system, body-large-tracking),
+      form-field-outlined-label-text-weight: map.get($system, body-large-weight),
+      form-field-filled-label-text-font: map.get($system, body-large-font),
+      form-field-filled-label-text-size: map.get($system, body-large-size),
+      form-field-filled-label-text-tracking: map.get($system, body-large-tracking),
+      form-field-filled-label-text-weight: map.get($system, body-large-weight),
+      form-field-outlined-label-text-populated-size: null,
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -120,10 +127,12 @@ $prefix: (mat, form-field);
   $index: ($scale * -1) + 1;
 
   @return (
-    container-height: list.nth((56px, 52px, 48px, 44px, 40px, 36px), $index),
-    filled-label-display: list.nth((block, block, none, none, none, none), $index),
-    container-vertical-padding: list.nth((16px, 14px, 12px, 10px, 8px, 6px), $index),
-    filled-with-label-container-padding-top: list.nth((24px, 22px, 12px, 10px, 8px, 6px), $index),
-    filled-with-label-container-padding-bottom: list.nth((8px, 6px, 12px, 10px, 8px, 6px), $index),
+    form-field-container-height: list.nth((56px, 52px, 48px, 44px, 40px, 36px), $index),
+    form-field-filled-label-display: list.nth((block, block, none, none, none, none), $index),
+    form-field-container-vertical-padding: list.nth((16px, 14px, 12px, 10px, 8px, 6px), $index),
+    form-field-filled-with-label-container-padding-top:
+        list.nth((24px, 22px, 12px, 10px, 8px, 6px), $index),
+    form-field-filled-with-label-container-padding-bottom:
+        list.nth((8px, 6px, 12px, 10px, 8px, 6px), $index),
   );
 }

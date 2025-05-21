@@ -2,9 +2,7 @@
 
 @use '../core/focus-indicators/private';
 @use '../core/tokens/token-utils';
-@use './m2-datepicker';
 @use './m3-datepicker';
-@use '../core/tokens/m3-system';
 
 $calendar-padding: 8px !default;
 $calendar-header-divider-width: 1px !default;
@@ -17,9 +15,7 @@ $calendar-controls-side-margin: calc(33% / 7 - 16px);
 $calendar-arrow-size: 5px !default;
 $calendar-arrow-disabled-opacity: 0.5 !default;
 
-$token-prefix: m2-datepicker.$prefix;
-$token-slots: m2-datepicker.get-token-slots();
-$fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-datepicker.get-tokens();
 
 .mat-calendar {
   display: block;
@@ -27,10 +23,8 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   // Prevents layout issues if the line height bleeds in from the body (see #29756).
   line-height: normal;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-family: token-utils.slot(calendar-text-font);
-    font-size: token-utils.slot(calendar-text-size);
-  }
+  font-family: token-utils.slot(datepicker-calendar-text-font, $fallbacks);
+  font-size: token-utils.slot(datepicker-calendar-text-size, $fallbacks);
 }
 
 .mat-calendar-header {
@@ -56,11 +50,10 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   min-width: 0;
   margin: 0 8px;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-size: token-utils.slot(calendar-period-button-text-size);
-    font-weight: token-utils.slot(calendar-period-button-text-weight);
-    --mat-button-text-label-text-color: #{token-utils.slot(calendar-period-button-text-color)};
-  }
+  font-size: token-utils.slot(datepicker-calendar-period-button-text-size, $fallbacks);
+  font-weight: token-utils.slot(datepicker-calendar-period-button-text-weight, $fallbacks);
+  --mat-button-text-label-text-color: #{
+      token-utils.slot(datepicker-calendar-period-button-text-color, $fallbacks)};
 }
 
 .mat-calendar-arrow {
@@ -70,9 +63,7 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   margin: 0 0 0 $calendar-arrow-size;
   vertical-align: middle;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    fill: token-utils.slot(calendar-period-button-icon-color);
-  }
+  fill: token-utils.slot(datepicker-calendar-period-button-icon-color, $fallbacks);
 
   &.mat-calendar-invert {
     transform: rotate(180deg);
@@ -90,11 +81,9 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
-    .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
-      color: token-utils.slot(calendar-navigation-button-icon-color);
-    }
+  // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
+  .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
+    color: token-utils.slot(datepicker-calendar-navigation-button-icon-color, $fallbacks);
   }
 
   [dir='rtl'] & {
@@ -111,12 +100,9 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 .mat-calendar-table-header th {
   text-align: center;
   padding: 0 0 $calendar-padding 0;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(calendar-header-text-color);
-    font-size: token-utils.slot(calendar-header-text-size);
-    font-weight: token-utils.slot(calendar-header-text-weight);
-  }
+  color: token-utils.slot(datepicker-calendar-header-text-color, $fallbacks);
+  font-size: token-utils.slot(datepicker-calendar-header-text-size, $fallbacks);
+  font-weight: token-utils.slot(datepicker-calendar-header-text-weight, $fallbacks);
 }
 
 .mat-calendar-table-header-divider {
@@ -132,10 +118,7 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
     left: -$calendar-padding;
     right: -$calendar-padding;
     height: $calendar-header-divider-width;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background: token-utils.slot(calendar-header-divider-color);
-    }
+    background: token-utils.slot(datepicker-calendar-header-divider-color, $fallbacks);
   }
 }
 

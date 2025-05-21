@@ -4,9 +4,6 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, toolbar);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -24,11 +21,13 @@ $prefix: (mat, toolbar);
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    toolbar-title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
+    toolbar-title-text-line-height:
+        inspection.get-theme-typography($theme, headline-6, line-height),
+    toolbar-title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
+    toolbar-title-text-tracking:
+        inspection.get-theme-typography($theme, headline-6, letter-spacing),
+    toolbar-title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
   );
 }
 
@@ -50,16 +49,16 @@ $prefix: (mat, toolbar);
   );
 
   @return (
-    standard-height: map.get($standard-scale, $density-scale),
-    mobile-height: map.get($mobile-scale, $density-scale),
+    toolbar-standard-height: map.get($standard-scale, $density-scale),
+    toolbar-mobile-height: map.get($mobile-scale, $density-scale),
   );
 }
 
 // Generates the tokens used to theme the toolbar based on a palette.
 @function private-get-color-palette-color-tokens($background-color, $text-color) {
   @return (
-    container-background-color: $background-color,
-    container-text-color: $text-color,
+    toolbar-container-background-color: $background-color,
+    toolbar-container-text-color: $text-color,
   );
 }
 

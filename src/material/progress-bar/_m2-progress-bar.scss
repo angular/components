@@ -4,9 +4,6 @@
 @use 'sass:color';
 @use 'sass:meta';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, progress-bar);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 //
@@ -19,9 +16,9 @@ $prefix: (mat, progress-bar);
   @return (
     // The height of the progress bar. `active-indicator-height` applies to the
     // bar and `track-height` applies to the track.
-    active-indicator-height: $height,
-    track-height: $height,
-    track-shape: 0,
+    progress-bar-active-indicator-height: $height,
+    progress-bar-track-height: $height,
+    progress-bar-track-shape: 0,
   );
 }
 
@@ -29,8 +26,8 @@ $prefix: (mat, progress-bar);
 @function get-color-tokens($theme, $palette-name: primary) {
   $palette-color: inspection.get-theme-color($theme, $palette-name);
   @return (
-    active-indicator-color: $palette-color,
-    track-color: if(
+    progress-bar-active-indicator-color: $palette-color,
+    progress-bar-track-color: if(
         meta.type-of($palette-color) == color,
         color.adjust($palette-color, $alpha: -0.75),
         $palette-color

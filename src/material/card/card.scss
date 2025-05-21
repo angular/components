@@ -1,7 +1,5 @@
 @use '../core/tokens/token-utils';
-@use './m2-card';
 @use './m3-card';
-@use '../core/tokens/m3-system';
 
 // Size of the `mat-card-header` region custom to Angular Material.
 $mat-card-header-size: 40px !default;
@@ -9,60 +7,54 @@ $mat-card-header-size: 40px !default;
 // Default padding for text content within a card.
 $mat-card-default-padding: 16px !default;
 
-$token-prefix: m2-card.$prefix;
-$token-slots: m2-card.get-token-slots();
-$fallbacks: m3-card.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-card.get-tokens();
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-mdc-card {
-    display: flex;
-    flex-direction: column;
+.mat-mdc-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  border-style: solid;
+  border-width: 0;
+  background-color: token-utils.slot(card-elevated-container-color, $fallbacks);
+  border-color: token-utils.slot(card-elevated-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-elevated-container-shape, $fallbacks);
+  box-shadow: token-utils.slot(card-elevated-container-elevation, $fallbacks);
+
+  // Transparent card border for high-contrast mode.
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: solid 1px transparent;
+    content: '';
+    display: block;
+    pointer-events: none;
     box-sizing: border-box;
-    position: relative;
-    border-style: solid;
-    border-width: 0;
-    background-color: token-utils.slot(elevated-container-color);
-    border-color: token-utils.slot(elevated-container-color);
-    border-radius: token-utils.slot(elevated-container-shape);
-    box-shadow: token-utils.slot(elevated-container-elevation);
-
-    // Transparent card border for high-contrast mode.
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: solid 1px transparent;
-      content: '';
-      display: block;
-      pointer-events: none;
-      box-sizing: border-box;
-      border-radius: token-utils.slot(elevated-container-shape);
-    }
+    border-radius: token-utils.slot(card-elevated-container-shape, $fallbacks);
   }
+}
 
-  .mat-mdc-card-outlined {
-    background-color: token-utils.slot(outlined-container-color);
-    border-radius: token-utils.slot(outlined-container-shape);
-    border-width: token-utils.slot(outlined-outline-width);
-    border-color: token-utils.slot(outlined-outline-color);
-    box-shadow: token-utils.slot(outlined-container-elevation);
+.mat-mdc-card-outlined {
+  background-color: token-utils.slot(card-outlined-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-outlined-container-shape, $fallbacks);
+  border-width: token-utils.slot(card-outlined-outline-width, $fallbacks);
+  border-color: token-utils.slot(card-outlined-outline-color, $fallbacks);
+  box-shadow: token-utils.slot(card-outlined-container-elevation, $fallbacks);
 
-    // Outlined card already displays border in high-contrast mode.
-    // Overwriting styles set above to remove a duplicate border.
-    &::after {
-      border: none;
-    }
+  // Outlined card already displays border in high-contrast mode.
+  // Overwriting styles set above to remove a duplicate border.
+  &::after {
+    border: none;
   }
 }
 
 .mat-mdc-card-filled {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(filled-container-color);
-    border-radius: token-utils.slot(filled-container-shape);
-    box-shadow: token-utils.slot(filled-container-elevation);
-  }
+  background-color: token-utils.slot(card-filled-container-color, $fallbacks);
+  border-radius: token-utils.slot(card-filled-container-shape, $fallbacks);
+  box-shadow: token-utils.slot(card-filled-container-elevation, $fallbacks);
 }
 
 .mdc-card__media {
@@ -98,23 +90,21 @@ $fallbacks: m3-card.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 // Add slots for custom Angular Material card tokens.
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-mdc-card-title {
-    font-family: token-utils.slot(title-text-font);
-    line-height: token-utils.slot(title-text-line-height);
-    font-size: token-utils.slot(title-text-size);
-    letter-spacing: token-utils.slot(title-text-tracking);
-    font-weight: token-utils.slot(title-text-weight);
-  }
+.mat-mdc-card-title {
+  font-family: token-utils.slot(card-title-text-font, $fallbacks);
+  line-height: token-utils.slot(card-title-text-line-height, $fallbacks);
+  font-size: token-utils.slot(card-title-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(card-title-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(card-title-text-weight, $fallbacks);
+}
 
-  .mat-mdc-card-subtitle {
-    color: token-utils.slot(subtitle-text-color);
-    font-family: token-utils.slot(subtitle-text-font);
-    line-height: token-utils.slot(subtitle-text-line-height);
-    font-size: token-utils.slot(subtitle-text-size);
-    letter-spacing: token-utils.slot(subtitle-text-tracking);
-    font-weight: token-utils.slot(subtitle-text-weight);
-  }
+.mat-mdc-card-subtitle {
+  color: token-utils.slot(card-subtitle-text-color, $fallbacks);
+  font-family: token-utils.slot(card-subtitle-text-font, $fallbacks);
+  line-height: token-utils.slot(card-subtitle-text-line-height, $fallbacks);
+  font-size: token-utils.slot(card-subtitle-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(card-subtitle-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(card-subtitle-text-weight, $fallbacks);
 }
 
 // Title text and subtitles text within a card. MDC doesn't have pre-made title sections for cards.

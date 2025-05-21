@@ -4,53 +4,54 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, expansion);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-shape: 4px,
-    legacy-header-indicator-display: inline-block,
-    header-indicator-display: none,
+    expansion-container-shape: 4px,
+    expansion-legacy-header-indicator-display: inline-block,
+    expansion-header-indicator-display: none,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    container-background-color: inspection.get-theme-color($theme, background, card),
-    container-text-color: inspection.get-theme-color($theme, foreground, text),
-    actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
-    header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    header-disabled-state-text-color: inspection.get-theme-color(
+    expansion-container-background-color: inspection.get-theme-color($theme, background, card),
+    expansion-container-text-color: inspection.get-theme-color($theme, foreground, text),
+    expansion-actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    expansion-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
+    expansion-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
+    expansion-header-disabled-state-text-color: inspection.get-theme-color(
         $theme, foreground, disabled-button),
-    header-text-color: inspection.get-theme-color($theme, foreground, text),
-    header-description-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    header-indicator-color: inspection.get-theme-color($theme, foreground, secondary-text),
+    expansion-header-text-color: inspection.get-theme-color($theme, foreground, text),
+    expansion-header-description-color:
+        inspection.get-theme-color($theme, foreground, secondary-text),
+    expansion-header-indicator-color:
+        inspection.get-theme-color($theme, foreground, secondary-text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    header-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    header-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    header-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    expansion-header-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    expansion-header-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    expansion-header-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
 
     // TODO(crisbeto): these two properties weren't set at all before the introduction of tokens,
     // but it's inconsistent not to provide them since the container sets all of them. Eventually
     // we should change the values to use come from `subtitle-2`.
-    header-text-line-height: inherit,
-    header-text-tracking: inherit,
+    expansion-header-text-line-height: inherit,
+    expansion-header-text-tracking: inherit,
 
-    container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    container-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    container-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    expansion-container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    expansion-container-text-line-height:
+        inspection.get-theme-typography($theme, body-2, line-height),
+    expansion-container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    expansion-container-text-tracking:
+        inspection.get-theme-typography($theme, body-2, letter-spacing),
+    expansion-container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 
@@ -71,8 +72,8 @@ $prefix: (mat, expansion);
   );
 
   @return (
-    header-collapsed-state-height: map.get($collapsed-scale, $scale),
-    header-expanded-state-height: map.get($expanded-scale, $scale),
+    expansion-header-collapsed-state-height: map.get($collapsed-scale, $scale),
+    expansion-header-expanded-state-height: map.get($expanded-scale, $scale),
   );
 }
 

@@ -9,15 +9,10 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-bottom-sheet.$prefix,
-        map.get(m3-bottom-sheet.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-bottom-sheet.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-bottom-sheet.$prefix,
-        m2-bottom-sheet.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-bottom-sheet.get-unthemable-tokens());
     }
   }
 }
@@ -25,12 +20,10 @@
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-bottom-sheet.$prefix,
         map.get(m3-bottom-sheet.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-bottom-sheet.$prefix,
         m2-bottom-sheet.get-color-tokens($theme)
       );
     }
@@ -40,12 +33,10 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-bottom-sheet.$prefix,
         map.get(m3-bottom-sheet.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(
-        m2-bottom-sheet.$prefix,
         m2-bottom-sheet.get-typography-tokens($theme)
       );
     }
@@ -55,7 +46,6 @@
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-bottom-sheet.$prefix,
         map.get(m3-bottom-sheet.get-tokens($theme), density));
   } @else {
   }
@@ -65,14 +55,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-bottom-sheet.$prefix,
-      tokens: m2-bottom-sheet.get-token-slots(),
+      namespace: bottom-sheet,
+      tokens: token-utils.get-overrides(m3-bottom-sheet.get-tokens(), bottom-sheet)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

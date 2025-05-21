@@ -5,18 +5,15 @@
 @use '../core/style/elevation';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, sidenav);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
     // Currently zero, but it appears to be relevant for M3.
     // See: https://m3.material.io/components/navigation-drawer/overview
-    container-shape: 0,
-    container-elevation-shadow: elevation.get-box-shadow(16),
-    container-width: auto,
+    sidenav-container-shape: 0,
+    sidenav-container-elevation-shadow: elevation.get-box-shadow(16),
+    sidenav-container-width: auto,
   );
 }
 
@@ -29,17 +26,17 @@ $prefix: (mat, sidenav);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
-    container-divider-color: inspection.get-theme-color($theme, foreground, divider),
-    container-background-color: inspection.get-theme-color($theme, background, dialog),
-    container-text-color: inspection.get-theme-color($theme, foreground, text),
-    content-background-color: inspection.get-theme-color($theme, background, background),
-    content-text-color: inspection.get-theme-color($theme, foreground, text),
+    sidenav-container-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    sidenav-container-background-color: inspection.get-theme-color($theme, background, dialog),
+    sidenav-container-text-color: inspection.get-theme-color($theme, foreground, text),
+    sidenav-content-background-color: inspection.get-theme-color($theme, background, background),
+    sidenav-content-text-color: inspection.get-theme-color($theme, foreground, text),
 
     // We use invert() here to have the darken the background color expected to be used.
     // If the background is light, we use a dark backdrop. If the background is dark, we
     // use a light backdrop. If the value isn't a color, Sass will throw an error so we
     // fall back to something generic.
-    scrim-color: if(meta.type-of($scrim-color) == color,
+    sidenav-scrim-color: if(meta.type-of($scrim-color) == color,
       color.invert($scrim-color), $fallback-scrim-color),
   );
 }

@@ -2,21 +2,18 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, divider);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    width: 1px
+    divider-width: 1px
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    color: inspection.get-theme-color($theme, foreground, divider)
+    divider-color: inspection.get-theme-color($theme, foreground, divider)
   );
 }
 

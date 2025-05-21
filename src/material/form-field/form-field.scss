@@ -1,6 +1,5 @@
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
-@use './m2-form-field';
 @use './m3-form-field';
 @use './form-field-subscript';
 @use './form-field-focus-overlay';
@@ -11,11 +10,8 @@
 @use './mdc-text-field-textarea-overrides';
 @use './mdc-text-field-structure-overrides';
 @use './mdc-text-field-density-overrides';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-form-field.$prefix;
-$token-slots: m2-form-field.get-token-slots();
-$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-form-field.get-tokens();
 
 // Base styles for MDC text-field, notched-outline, floating label and line-ripple.
 @include mdc-text-field-structure.private-text-field-structure();
@@ -51,26 +47,24 @@ $_icon-prefix-infix-padding: 4px;
   // To avoid problems with text-align.
   text-align: left;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    @include vendor-prefixes.smooth-font();
-    font-family: token-utils.slot(container-text-font);
-    line-height: token-utils.slot(container-text-line-height);
-    font-size: token-utils.slot(container-text-size);
-    letter-spacing: token-utils.slot(container-text-tracking);
-    font-weight: token-utils.slot(container-text-weight);
+  @include vendor-prefixes.smooth-font();
+  font-family: token-utils.slot(form-field-container-text-font, $fallbacks);
+  line-height: token-utils.slot(form-field-container-text-line-height, $fallbacks);
+  font-size: token-utils.slot(form-field-container-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(form-field-container-text-tracking, $fallbacks);
+  font-weight: token-utils.slot(form-field-container-text-weight, $fallbacks);
 
-    .mdc-text-field--outlined {
-      $token-value: token-utils.slot(outlined-label-text-populated-size);
+  .mdc-text-field--outlined {
+    $token-value: token-utils.slot(form-field-outlined-label-text-populated-size, $fallbacks);
 
-      // For the non-upgraded notch label (i.e. when rendered on the server), also
-      // use the correct typography.
-      .mdc-floating-label--float-above {
-        font-size: calc(#{$token-value} * var(--mat-mdc-form-field-floating-label-scale));
-      }
+    // For the non-upgraded notch label (i.e. when rendered on the server), also
+    // use the correct typography.
+    .mdc-floating-label--float-above {
+      font-size: calc(#{$token-value} * var(--mat-mdc-form-field-floating-label-scale));
+    }
 
-      .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-        font-size: $token-value;
-      }
+    .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+      font-size: $token-value;
     }
   }
 
@@ -120,35 +114,31 @@ $_icon-prefix-infix-padding: 4px;
 }
 
 .mat-mdc-form-field-icon-prefix {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(leading-icon-color);
+  color: token-utils.slot(form-field-leading-icon-color, $fallbacks);
 
-    .mat-form-field-disabled & {
-      color: token-utils.slot(disabled-leading-icon-color);
-    }
+  .mat-form-field-disabled & {
+    color: token-utils.slot(form-field-disabled-leading-icon-color, $fallbacks);
   }
 }
 
 .mat-mdc-form-field-icon-suffix {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(trailing-icon-color);
+  color: token-utils.slot(form-field-trailing-icon-color, $fallbacks);
 
-    .mat-form-field-disabled & {
-      color: token-utils.slot(disabled-trailing-icon-color);
-    }
+  .mat-form-field-disabled & {
+    color: token-utils.slot(form-field-disabled-trailing-icon-color, $fallbacks);
+  }
 
-    .mat-form-field-invalid & {
-      color: token-utils.slot(error-trailing-icon-color);
-    }
+  .mat-form-field-invalid & {
+    color: token-utils.slot(form-field-error-trailing-icon-color, $fallbacks);
+  }
 
-    .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled)
-      .mat-mdc-text-field-wrapper:hover & {
-      color: token-utils.slot(error-hover-trailing-icon-color);
-    }
+  .mat-form-field-invalid:not(.mat-focused):not(.mat-form-field-disabled)
+    .mat-mdc-text-field-wrapper:hover & {
+    color: token-utils.slot(form-field-error-hover-trailing-icon-color, $fallbacks);
+  }
 
-    .mat-form-field-invalid.mat-focused .mat-mdc-text-field-wrapper & {
-      color: token-utils.slot(error-focus-trailing-icon-color);
-    }
+  .mat-form-field-invalid.mat-focused .mat-mdc-text-field-wrapper & {
+    color: token-utils.slot(form-field-error-focus-trailing-icon-color, $fallbacks);
   }
 }
 

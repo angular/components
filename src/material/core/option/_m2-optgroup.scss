@@ -2,9 +2,6 @@
 @use '../theming/inspection';
 @use '../tokens/m2-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, optgroup);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -14,18 +11,18 @@ $prefix: (mat, optgroup);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    label-text-color: inspection.get-theme-color($theme, foreground, text),
+    optgroup-label-text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
+    optgroup-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    optgroup-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
+    optgroup-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    optgroup-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
+    optgroup-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
   );
 }
 

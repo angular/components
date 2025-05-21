@@ -1,12 +1,8 @@
 @use '../core/style/vendor-prefixes';
-@use './m2-tabs';
 @use './m3-tabs';
 @use '../core/tokens/token-utils';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-tabs.$prefix;
-$token-slots: m2-tabs.get-token-slots();
-$fallbacks: m3-tabs.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-tabs.get-tokens();
 
 $mat-tab-animation-duration: 500ms !default;
 
@@ -104,17 +100,12 @@ $mat-tab-animation-duration: 500ms !default;
   // Tabs might be `button` elements so we have to reset the user agent styling.
   background: none;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    height: token-utils.slot(container-height);
-  }
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-family: token-utils.slot(label-text-font);
-    font-size: token-utils.slot(label-text-size);
-    letter-spacing: token-utils.slot(label-text-tracking);
-    line-height: token-utils.slot(label-text-line-height);
-    font-weight: token-utils.slot(label-text-weight);
-  }
+  height: token-utils.slot(tab-container-height, $fallbacks);
+  font-family: token-utils.slot(tab-label-text-font, $fallbacks);
+  font-size: token-utils.slot(tab-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(tab-label-text-tracking, $fallbacks);
+  line-height: token-utils.slot(tab-label-text-line-height, $fallbacks);
+  font-weight: token-utils.slot(tab-label-text-weight, $fallbacks);
 
   &.mdc-tab {
     // MDC's tabs stretch to fit the header by default, whereas stretching on our current ones
@@ -124,50 +115,46 @@ $mat-tab-animation-duration: 500ms !default;
   }
 
   .mdc-tab-indicator__content--underline {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-color: token-utils.slot(active-indicator-color);
-      border-top-width: token-utils.slot(active-indicator-height);
-      border-radius: token-utils.slot(active-indicator-shape);
-    }
+    border-color: token-utils.slot(tab-active-indicator-color, $fallbacks);
+    border-top-width: token-utils.slot(tab-active-indicator-height, $fallbacks);
+    border-radius: token-utils.slot(tab-active-indicator-shape, $fallbacks);
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    &:hover .mdc-tab__text-label {
-      color: token-utils.slot(inactive-hover-label-text-color);
+  &:hover .mdc-tab__text-label {
+    color: token-utils.slot(tab-inactive-hover-label-text-color, $fallbacks);
+  }
+
+  &:focus .mdc-tab__text-label {
+    color: token-utils.slot(tab-inactive-focus-label-text-color, $fallbacks);
+  }
+
+  &.mdc-tab--active {
+    .mdc-tab__text-label {
+      color: token-utils.slot(tab-active-label-text-color, $fallbacks);
     }
 
-    &:focus .mdc-tab__text-label {
-      color: token-utils.slot(inactive-focus-label-text-color);
+    .mdc-tab__ripple::before,
+    .mat-ripple-element {
+      background-color: token-utils.slot(tab-active-ripple-color, $fallbacks);
     }
 
-    &.mdc-tab--active {
+    &:hover {
       .mdc-tab__text-label {
-        color: token-utils.slot(active-label-text-color);
+        color: token-utils.slot(tab-active-hover-label-text-color, $fallbacks);
       }
 
-      .mdc-tab__ripple::before,
-      .mat-ripple-element {
-        background-color: token-utils.slot(active-ripple-color);
+      .mdc-tab-indicator__content--underline {
+        border-color: token-utils.slot(tab-active-hover-indicator-color, $fallbacks);
+      }
+    }
+
+    &:focus {
+      .mdc-tab__text-label {
+        color: token-utils.slot(tab-active-focus-label-text-color, $fallbacks);
       }
 
-      &:hover {
-        .mdc-tab__text-label {
-          color: token-utils.slot(active-hover-label-text-color);
-        }
-
-        .mdc-tab-indicator__content--underline {
-          border-color: token-utils.slot(active-hover-indicator-color);
-        }
-      }
-
-      &:focus {
-        .mdc-tab__text-label {
-          color: token-utils.slot(active-focus-label-text-color);
-        }
-
-        .mdc-tab-indicator__content--underline {
-          border-color: token-utils.slot(active-focus-indicator-color);
-        }
+      .mdc-tab-indicator__content--underline {
+        border-color: token-utils.slot(tab-active-focus-indicator-color, $fallbacks);
       }
     }
   }
@@ -189,11 +176,9 @@ $mat-tab-animation-duration: 500ms !default;
       pointer-events: none;
     }
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      .mdc-tab__ripple::before,
-      .mat-ripple-element {
-        background-color: token-utils.slot(disabled-ripple-color);
-      }
+    .mdc-tab__ripple::before,
+    .mat-ripple-element {
+      background-color: token-utils.slot(tab-disabled-ripple-color, $fallbacks);
     }
   }
 
@@ -209,16 +194,11 @@ $mat-tab-animation-duration: 500ms !default;
     bottom: 0;
     opacity: 0;
     pointer-events: none;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background-color: token-utils.slot(inactive-ripple-color);
-    }
+    background-color: token-utils.slot(tab-inactive-ripple-color, $fallbacks);
   }
 
   .mdc-tab__text-label {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(inactive-label-text-color);
-    }
+    color: token-utils.slot(tab-inactive-label-text-color, $fallbacks);
 
     // We support projecting icons into the tab. These styles ensure that they're centered.
     display: inline-flex;
@@ -251,9 +231,7 @@ $mat-tab-animation-duration: 500ms !default;
   .mat-ripple-element {
     opacity: 0.12;
 
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      background-color: token-utils.slot(inactive-ripple-color);
-    }
+    background-color: token-utils.slot(tab-inactive-ripple-color, $fallbacks);
   }
 }
 
@@ -291,10 +269,7 @@ $mat-tab-animation-duration: 500ms !default;
 
     .mat-ripple-element {
       opacity: 0.12;
-
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        background-color: token-utils.slot(inactive-ripple-color);
-      }
+      background-color: token-utils.slot(tab-inactive-ripple-color, $fallbacks);
     }
 
     .mat-mdc-tab-header-pagination-controls-enabled & {
@@ -325,10 +300,7 @@ $mat-tab-animation-duration: 500ms !default;
     border-width: 2px 2px 0 0;
     height: 8px;
     width: 8px;
-
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-color: token-utils.slot(pagination-icon-color);
-    }
+    border-color: token-utils.slot(tab-pagination-icon-color, $fallbacks);
   }
 
   .mat-mdc-tab-header-pagination-disabled {
@@ -374,9 +346,7 @@ $mat-tab-animation-duration: 500ms !default;
   // list, but it ended up being hugely breaking internally.
   .cdk-drop-list &,
   &.cdk-drop-list {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      min-height: token-utils.slot(container-height);
-    }
+    min-height: token-utils.slot(tab-container-height, $fallbacks);
   }
 }
 
@@ -388,72 +358,68 @@ $mat-tab-animation-duration: 500ms !default;
   flex-grow: 1;
   overflow: hidden;
   z-index: 1;
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-bottom-style: solid;
-    border-bottom-width: token-utils.slot(divider-height);
-    border-bottom-color: token-utils.slot(divider-color);
+  border-bottom-style: solid;
+  border-bottom-width: token-utils.slot(tab-divider-height, $fallbacks);
+  border-bottom-color: token-utils.slot(tab-divider-color, $fallbacks);
 
-    @if ($inverted-header-selector) {
-      #{$inverted-header-selector} & {
-        border-bottom: none;
-        border-top-style: solid;
-        border-top-width: token-utils.slot(divider-height);
-        border-top-color: token-utils.slot(divider-color);
-      }
+  @if ($inverted-header-selector) {
+    #{$inverted-header-selector} & {
+      border-bottom: none;
+      border-top-style: solid;
+      border-top-width: token-utils.slot(tab-divider-height, $fallbacks);
+      border-top-color: token-utils.slot(tab-divider-color, $fallbacks);
     }
   }
 }
 
 @mixin paginated-tab-header-with-background($header-selector, $tab-selector) {
   &.mat-tabs-with-background {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      // Note that these selectors target direct descendants so
-      // that the styles don't apply to any nested tab groups.
-      > #{$header-selector}, > .mat-mdc-tab-header-pagination {
-        // Set background color for the tab group
-        background-color: token-utils.slot(background-color);
+    // Note that these selectors target direct descendants so
+    // that the styles don't apply to any nested tab groups.
+    > #{$header-selector}, > .mat-mdc-tab-header-pagination {
+      // Set background color for the tab group
+      background-color: token-utils.slot(tab-background-color, $fallbacks);
+    }
+
+    // Note: this is only scoped to primary, because the legacy tabs had the incorrect behavior
+    // where setting both a background and `mat-accent` would add the background, but keep
+    // accent on the selected tab. There are some internal apps whose design depends on this now
+    // so we have to replicate it here.
+    &.mat-primary > #{$header-selector} {
+      // Set labels to contrast against background
+      #{$tab-selector} .mdc-tab__text-label {
+        color: token-utils.slot(tab-foreground-color, $fallbacks);
       }
 
-      // Note: this is only scoped to primary, because the legacy tabs had the incorrect behavior
-      // where setting both a background and `mat-accent` would add the background, but keep
-      // accent on the selected tab. There are some internal apps whose design depends on this now
-      // so we have to replicate it here.
-      &.mat-primary > #{$header-selector} {
-        // Set labels to contrast against background
-        #{$tab-selector} .mdc-tab__text-label {
-          color: token-utils.slot(foreground-color);
+      .mdc-tab-indicator__content--underline {
+        border-color: token-utils.slot(tab-foreground-color, $fallbacks);
+      }
+    }
+
+    &:not(.mat-primary) > #{$header-selector} {
+      #{$tab-selector}:not(.mdc-tab--active) {
+        .mdc-tab__text-label {
+          color: token-utils.slot(tab-foreground-color, $fallbacks);
         }
 
         .mdc-tab-indicator__content--underline {
-          border-color: token-utils.slot(foreground-color);
+          border-color: token-utils.slot(tab-foreground-color, $fallbacks);
         }
       }
+    }
 
-      &:not(.mat-primary) > #{$header-selector} {
-        #{$tab-selector}:not(.mdc-tab--active) {
-          .mdc-tab__text-label {
-            color: token-utils.slot(foreground-color);
-          }
-
-          .mdc-tab-indicator__content--underline {
-            border-color: token-utils.slot(foreground-color);
-          }
-        }
+    > #{$header-selector}, > .mat-mdc-tab-header-pagination {
+      .mat-mdc-tab-header-pagination-chevron,
+      .mat-focus-indicator::before {
+        border-color: token-utils.slot(tab-foreground-color, $fallbacks);
       }
 
-      > #{$header-selector}, > .mat-mdc-tab-header-pagination {
-        .mat-mdc-tab-header-pagination-chevron,
-        .mat-focus-indicator::before {
-          border-color: token-utils.slot(foreground-color);
-        }
+      .mat-ripple-element, .mdc-tab__ripple::before {
+        background-color: token-utils.slot(tab-foreground-color, $fallbacks);
+      }
 
-        .mat-ripple-element, .mdc-tab__ripple::before {
-          background-color: token-utils.slot(foreground-color);
-        }
-
-        .mat-mdc-tab-header-pagination-chevron {
-          color: token-utils.slot(foreground-color);
-        }
+      .mat-mdc-tab-header-pagination-chevron {
+        color: token-utils.slot(tab-foreground-color, $fallbacks);
       }
     }
   }

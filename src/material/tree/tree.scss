@@ -1,28 +1,19 @@
 @use '../core/tokens/token-utils';
-@use './m2-tree';
 @use './m3-tree';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-tree.$prefix;
-$token-slots: m2-tree.get-token-slots();
-$fallbacks: m3-tree.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-tree.get-tokens();
 
 .mat-tree {
   display: block;
-
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(container-background-color);
-  }
+  background-color: token-utils.slot(tree-container-background-color, $fallbacks);
 }
 
 .mat-tree-node,
 .mat-nested-tree-node {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(node-text-color);
-    font-family: token-utils.slot(node-text-font);
-    font-size: token-utils.slot(node-text-size);
-    font-weight: token-utils.slot(node-text-weight);
-  }
+  color: token-utils.slot(tree-node-text-color, $fallbacks);
+  font-family: token-utils.slot(tree-node-text-font, $fallbacks);
+  font-size: token-utils.slot(tree-node-text-size, $fallbacks);
+  font-weight: token-utils.slot(tree-node-text-weight, $fallbacks);
 }
 
 .mat-tree-node {
@@ -31,11 +22,9 @@ $fallbacks: m3-tree.get-tokens(m3-system.$theme-with-system-vars);
   flex: 1;
   word-wrap: break-word;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    // TODO: before tokens were introduced, the `min-height` only applied to the
-    // non-nested tree node. Should it apply to the nested one as well?
-    min-height: token-utils.slot(node-min-height);
-  }
+  // TODO: before tokens were introduced, the `min-height` only applied to the
+  // non-nested tree node. Should it apply to the nested one as well?
+  min-height: token-utils.slot(tree-node-min-height, $fallbacks);
 }
 
 .mat-nested-tree-node {

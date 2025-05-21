@@ -11,25 +11,18 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-progress-bar.$prefix,
-        map.get(m3-progress-bar.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-progress-bar.get-tokens($theme), base));
   } @else {
     // Add default values for tokens not related to color, typography, or density.
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-progress-bar.$prefix,
-        m2-progress-bar.get-unthemable-tokens()
-      );
+      @include token-utils.create-token-values-mixed(m2-progress-bar.get-unthemable-tokens());
     }
   }
 }
 
 @mixin _palette-styles($theme, $palette-name) {
   @include token-utils.create-token-values-mixed(
-    m2-progress-bar.$prefix,
-    m2-progress-bar.get-color-tokens($theme, $palette-name)
-  );
+      m2-progress-bar.get-color-tokens($theme, $palette-name));
 }
 
 /// Outputs color theme styles for the mat-progress-bar.
@@ -40,7 +33,6 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-progress-bar.$prefix,
         map.get(m3-progress-bar.get-tokens($theme, $color-variant), color));
   } @else {
     .mat-mdc-progress-bar {
@@ -71,8 +63,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-progress-bar.$prefix,
-      tokens: m2-progress-bar.get-token-slots(),
+      namespace: progress-bar,
+      tokens: token-utils.get-overrides(m3-progress-bar.get-tokens(), progress-bar)
     ),
   );
 }
@@ -80,7 +72,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-progress-bar.

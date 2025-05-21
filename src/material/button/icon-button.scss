@@ -2,93 +2,91 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use './button-base';
-@use './m2-icon-button';
 @use './m3-icon-button';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-icon-button.$prefix;
-$token-slots: m2-icon-button.get-token-slots();
-$fallbacks: m3-icon-button.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-icon-button.get-tokens();
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-mdc-icon-button {
-    @include vendor-prefixes.user-select(none);
-    display: inline-block;
-    position: relative;
-    box-sizing: border-box;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    fill: currentColor;
-    text-decoration: none;
-    cursor: pointer;
-    z-index: 0;
-    overflow: visible;
+.mat-mdc-icon-button {
+  @include vendor-prefixes.user-select(none);
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  fill: currentColor;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 0;
+  overflow: visible;
 
-    // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
+  // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
+  border-radius: 50%;
+
+  // Prevent the button from shrinking since it's always supposed to be a circle.
+  flex-shrink: 0;
+
+  // Ensure the icons are centered.
+  text-align: center;
+
+  $button-size: token-utils.slot(icon-button-state-layer-size, $fallbacks, $fallback: 48px);
+  $icon-size: token-utils.slot(icon-button-icon-size, $fallbacks, $fallback: 24px);
+
+  // We emit these tokens ourselves here so we can provide a default value.
+  // This avoids a lot internal breakages in apps that didn't include the icon button theme.
+  width: $button-size;
+  height: $button-size;
+
+  // Note: this is wrapped in an interpolation, because of an internal lint rule that bans
+  // interpolations in `calc`, even though this is the only way to achieve what we're looking for.
+  padding: #{calc(#{calc(#{$button-size} - #{$icon-size})} / 2)};
+
+  // Icon size used to be placed on the host element. Now, in `theme-styles` it is placed on
+  // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
+  font-size: token-utils.slot(icon-button-icon-size, $fallbacks);
+  color: token-utils.slot(icon-button-icon-color, $fallbacks);
+
+  @include button-base.mat-private-button-interactive();
+  @include button-base.mat-private-button-ripple(
+      icon-button-ripple-color, icon-button-state-layer-color,
+      icon-button-disabled-state-layer-color,
+      icon-button-hover-state-layer-opacity, icon-button-focus-state-layer-opacity,
+      icon-button-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(true,
+    icon-button-touch-target-display, $fallbacks);
+  @include private.private-animation-noop();
+
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(icon-button-disabled-icon-color, $fallbacks);
+  }
+;
+
+  img,
+  svg {
+    width: token-utils.slot(icon-button-icon-size, $fallbacks);
+    height: token-utils.slot(icon-button-icon-size, $fallbacks);
+    vertical-align: baseline;
+  }
+
+  .mat-mdc-button-persistent-ripple {
     border-radius: 50%;
+  }
 
-    // Prevent the button from shrinking since it's always supposed to be a circle.
-    flex-shrink: 0;
+  // MDC used to include this and it seems like a lot of apps depend on it.
+  &[hidden] {
+    display: none;
+  }
 
-    // Ensure the icons are centered.
-    text-align: center;
-
-    $button-size: token-utils.slot(state-layer-size, $fallback: 48px);
-    $icon-size: token-utils.slot(icon-size, $fallback: 24px);
-
-    // We emit these tokens ourselves here so we can provide a default value.
-    // This avoids a lot internal breakages in apps that didn't include the icon button theme.
-    width: $button-size;
-    height: $button-size;
-
-    // Note: this is wrapped in an interpolation, because of an internal lint rule that bans
-    // interpolations in `calc`, even though this is the only way to achieve what we're looking for.
-    padding: #{calc(#{calc(#{$button-size} - #{$icon-size})} / 2)};
-
-    // Icon size used to be placed on the host element. Now, in `theme-styles` it is placed on
-    // the unused `.mdc-button__icon` class. Explicitly set the font-size here.
-    font-size: token-utils.slot(icon-size);
-    color: token-utils.slot(icon-color);
-
-    @include button-base.mat-private-button-interactive();
-    @include button-base.mat-private-button-ripple(
-        ripple-color, state-layer-color, disabled-state-layer-color,
-        hover-state-layer-opacity, focus-state-layer-opacity, pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(true, touch-target-display);
-    @include private.private-animation-noop();
-
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(disabled-icon-color);
-    }
-  ;
-
-    img,
-    svg {
-      width: token-utils.slot(icon-size);
-      height: token-utils.slot(icon-size);
-      vertical-align: baseline;
-    }
-
-    .mat-mdc-button-persistent-ripple {
-      border-radius: 50%;
-    }
-
-    // MDC used to include this and it seems like a lot of apps depend on it.
-    &[hidden] {
-      display: none;
-    }
-
-    // MDC adds some styles to icon buttons that conflict with some of our focus indicator styles
-    // and don't actually do anything. This undoes those conflicting styles.
-    &.mat-unthemed,
-    &.mat-primary,
-    &.mat-accent,
-    &.mat-warn {
-      &:not(.mdc-ripple-upgraded):focus::before {
-        background: transparent;
-        opacity: 1;
-      }
+  // MDC adds some styles to icon buttons that conflict with some of our focus indicator styles
+  // and don't actually do anything. This undoes those conflicting styles.
+  &.mat-unthemed,
+  &.mat-primary,
+  &.mat-accent,
+  &.mat-warn {
+    &:not(.mdc-ripple-upgraded):focus::before {
+      background: transparent;
+      opacity: 1;
     }
   }
 }
+

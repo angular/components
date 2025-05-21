@@ -3,13 +3,14 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, stepper);
 
 /// Generates custom tokens for the mat-stepper.
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -17,39 +18,39 @@ $prefix: (mat, stepper);
 
   @return (
     base: (
-      header-error-state-icon-background-color: transparent,
-      header-focus-state-layer-shape: map.get($system, corner-medium),
-      header-hover-state-layer-shape: map.get($system, corner-medium),
+      stepper-header-error-state-icon-background-color: transparent,
+      stepper-header-focus-state-layer-shape: map.get($system, corner-medium),
+      stepper-header-hover-state-layer-shape: map.get($system, corner-medium),
     ),
     color: (
-      container-color: map.get($system, surface),
-      header-done-state-icon-background-color: map.get($system, primary),
-      header-done-state-icon-foreground-color: map.get($system, on-primary),
-      header-edit-state-icon-background-color: map.get($system, primary),
-      header-edit-state-icon-foreground-color: map.get($system, on-primary),
-      header-error-state-icon-foreground-color: map.get($system, error),
-      header-error-state-label-text-color: map.get($system, error),
-      header-focus-state-layer-color: m3-utils.color-with-opacity(
+      stepper-container-color: map.get($system, surface),
+      stepper-header-done-state-icon-background-color: map.get($system, primary),
+      stepper-header-done-state-icon-foreground-color: map.get($system, on-primary),
+      stepper-header-edit-state-icon-background-color: map.get($system, primary),
+      stepper-header-edit-state-icon-foreground-color: map.get($system, on-primary),
+      stepper-header-error-state-icon-foreground-color: map.get($system, error),
+      stepper-header-error-state-label-text-color: map.get($system, error),
+      stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, inverse-surface), map.get($system, focus-state-layer-opacity)),
-      header-hover-state-layer-color: m3-utils.color-with-opacity(
+      stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, inverse-surface), map.get($system, hover-state-layer-opacity)),
-      header-icon-background-color: map.get($system, on-surface-variant),
-      header-icon-foreground-color: map.get($system, surface),
-      header-label-text-color: map.get($system, on-surface-variant),
-      header-optional-label-text-color: map.get($system, on-surface-variant),
-      header-selected-state-icon-background-color: map.get($system, primary),
-      header-selected-state-icon-foreground-color: map.get($system, on-primary),
-      header-selected-state-label-text-color: map.get($system, on-surface-variant),
-      line-color: map.get($system, outline),
+      stepper-header-icon-background-color: map.get($system, on-surface-variant),
+      stepper-header-icon-foreground-color: map.get($system, surface),
+      stepper-header-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-selected-state-icon-background-color: map.get($system, primary),
+      stepper-header-selected-state-icon-foreground-color: map.get($system, on-primary),
+      stepper-header-selected-state-label-text-color: map.get($system, on-surface-variant),
+      stepper-line-color: map.get($system, outline),
     ),
     typography: (
-      container-text-font: map.get($system, body-medium-font),
-      header-label-text-font: map.get($system, title-small-font),
-      header-label-text-size: map.get($system, title-small-size),
-      header-label-text-weight: map.get($system, title-small-weight),
-      header-error-state-label-text-size: map.get($system, title-small-size),
-      header-selected-state-label-text-size: map.get($system, title-small-size),
-      header-selected-state-label-text-weight: map.get($system, title-small-weight),
+      stepper-container-text-font: map.get($system, body-medium-font),
+      stepper-header-label-text-font: map.get($system, title-small-font),
+      stepper-header-label-text-size: map.get($system, title-small-size),
+      stepper-header-label-text-weight: map.get($system, title-small-weight),
+      stepper-header-error-state-label-text-size: map.get($system, title-small-size),
+      stepper-header-selected-state-label-text-size: map.get($system, title-small-size),
+      stepper-header-selected-state-label-text-weight: map.get($system, title-small-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -61,6 +62,6 @@ $prefix: (mat, stepper);
   $index: ($scale * -1) + 1;
 
   @return (
-    header-height: list.nth((72px, 68px, 64px, 60px, 42px), $index),
+    stepper-header-height: list.nth((72px, 68px, 64px, 60px, 42px), $index),
   );
 }
