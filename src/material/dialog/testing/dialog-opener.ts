@@ -17,8 +17,8 @@ import {
   inject,
 } from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '../../dialog';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subscription} from 'rxjs';
-import {AnimationsConfig, MATERIAL_ANIMATIONS} from '@angular/material/core';
 
 /** Test component that immediately opens a dialog when bootstrapped. */
 @Component({
@@ -63,12 +63,12 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
       throw new Error(`MatTestDialogOpener does not have a component provided.`);
     }
 
-    this.dialogRef = this._ngZone.run(() => {
-      const config = {...(MatTestDialogOpener.config || {})};
-      config.enterAnimationDuration = 0;
-      config.exitAnimationDuration = 0;
-      return this.dialog.open<T, R>(MatTestDialogOpener.component as ComponentType<T>, config);
-    });
+    this.dialogRef = this._ngZone.run(() =>
+      this.dialog.open<T, R>(
+        MatTestDialogOpener.component as ComponentType<T>,
+        MatTestDialogOpener.config || {},
+      ),
+    );
     this._afterClosedSubscription = this.dialogRef.afterClosed().subscribe(result => {
       this.closedResult = result;
     });
@@ -82,14 +82,6 @@ export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy 
 }
 
 @NgModule({
-  imports: [MatDialogModule, MatTestDialogOpener],
-  providers: [
-    {
-      provide: MATERIAL_ANIMATIONS,
-      useValue: {
-        animationsDisabled: true,
-      } as AnimationsConfig,
-    },
-  ],
+  imports: [MatDialogModule, NoopAnimationsModule, MatTestDialogOpener],
 })
 export class MatTestDialogOpenerModule {}
