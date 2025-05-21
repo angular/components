@@ -12,13 +12,10 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-checkbox.$prefix,
-        map.get(m3-checkbox.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-checkbox.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix, m2-checkbox.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-unthemable-tokens());
     }
   }
 }
@@ -29,28 +26,24 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-checkbox.$prefix,
         map.get(m3-checkbox.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix, m2-checkbox.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme));
     }
 
     .mat-mdc-checkbox {
       &.mat-primary {
         @include token-utils.create-token-values-mixed(
-          m2-checkbox.$prefix,
-          m2-checkbox.get-color-tokens($theme, primary,
-              $exclude: (disabled-label-color, label-text-color))
+            m2-checkbox.get-color-tokens($theme, primary,
+                $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
-          m2-checkbox.$prefix,
           m2-checkbox.get-color-tokens($theme, warn,
-              $exclude: (disabled-label-color, label-text-color))
+              $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
     }
@@ -62,14 +55,10 @@
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-checkbox.$prefix,
         map.get(m3-checkbox.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-typography-tokens($theme));
     }
   }
 }
@@ -78,15 +67,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-checkbox.$prefix,
-        map.get(m3-checkbox.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-checkbox.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-checkbox.$prefix,
-        m2-checkbox.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-density-tokens($theme));
     }
   }
 }
@@ -95,8 +79,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-checkbox.$prefix,
-      tokens: m2-checkbox.get-token-slots(),
+      namespace: checkbox,
+      tokens: token-utils.get-overrides(m3-checkbox.get-tokens(), checkbox),
     ),
   );
 }
@@ -104,7 +88,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+  @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-checkbox.

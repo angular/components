@@ -4,25 +4,22 @@
 @use '../core/tokens/m2-utils';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, table);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    row-item-outline-width: 1px,
+    table-row-item-outline-width: 1px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    background-color: inspection.get-theme-color($theme, background, 'card'),
+    table-background-color: inspection.get-theme-color($theme, background, 'card'),
 
-    header-headline-color: inspection.get-theme-color($theme, foreground, text),
-    row-item-label-text-color: inspection.get-theme-color($theme, foreground, text),
-    row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
+    table-header-headline-color: inspection.get-theme-color($theme, foreground, text),
+    table-row-item-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    table-row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }
 
@@ -35,24 +32,26 @@ $prefix: (mat, table);
   $cell-letter-spacing: inspection.get-theme-typography($theme, body-2, letter-spacing);
 
   @return (
-    header-headline-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    header-headline-line-height: inspection.get-theme-typography($theme, subtitle-2, line-height),
-    header-headline-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    header-headline-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
-    header-headline-tracking: inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
+    table-header-headline-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
+    table-header-headline-line-height:
+        inspection.get-theme-typography($theme, subtitle-2, line-height),
+    table-header-headline-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
+    table-header-headline-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    table-header-headline-tracking:
+        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
 
     // Plain cells and footer cells have the same typography.
-    row-item-label-text-font: $cell-font-family,
-    row-item-label-text-line-height: $cell-line-height,
-    row-item-label-text-size: $cell-font-size,
-    row-item-label-text-weight: $cell-font-weight,
-    row-item-label-text-tracking: $cell-letter-spacing,
+    table-row-item-label-text-font: $cell-font-family,
+    table-row-item-label-text-line-height: $cell-line-height,
+    table-row-item-label-text-size: $cell-font-size,
+    table-row-item-label-text-weight: $cell-font-weight,
+    table-row-item-label-text-tracking: $cell-letter-spacing,
 
-    footer-supporting-text-font: $cell-font-family,
-    footer-supporting-text-line-height: $cell-line-height,
-    footer-supporting-text-size: $cell-font-size,
-    footer-supporting-text-weight: $cell-font-weight,
-    footer-supporting-text-tracking: $cell-letter-spacing,
+    table-footer-supporting-text-font: $cell-font-family,
+    table-footer-supporting-text-line-height: $cell-line-height,
+    table-footer-supporting-text-size: $cell-font-size,
+    table-footer-supporting-text-weight: $cell-font-weight,
+    table-footer-supporting-text-tracking: $cell-letter-spacing,
   );
 }
 
@@ -75,9 +74,9 @@ $prefix: (mat, table);
   );
 
   @return (
-    header-container-height: map.get($header-scale, $scale),
-    footer-container-height: map.get($cell-scale, $scale),
-    row-item-container-height: map.get($cell-scale, $scale),
+    table-header-container-height: map.get($header-scale, $scale),
+    table-footer-container-height: map.get($cell-scale, $scale),
+    table-row-item-container-height: map.get($cell-scale, $scale),
   );
 }
 

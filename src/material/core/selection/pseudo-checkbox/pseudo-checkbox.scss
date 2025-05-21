@@ -3,14 +3,10 @@
 @use '../../style/private';
 @use '../../style/variables';
 @use '../../tokens/token-utils';
-@use './m2-pseudo-checkbox';
 @use './m3-pseudo-checkbox';
 @use './pseudo-checkbox-common';
-@use '../../tokens/m3-system';
 
-$token-prefix: m2-pseudo-checkbox.$prefix;
-$token-slots: m2-pseudo-checkbox.get-token-slots();
-$fallbacks: m3-pseudo-checkbox.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-pseudo-checkbox.get-tokens();
 
 .mat-pseudo-checkbox {
   border-radius: 2px;
@@ -59,42 +55,42 @@ $fallbacks: m3-pseudo-checkbox.get-tokens(m3-system.$theme-with-system-vars);
   box-sizing: content-box;
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-pseudo-checkbox-minimal {
-    &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
-      &::after {
-        color: token-utils.slot(minimal-selected-checkmark-color);
-      }
-
-      &.mat-pseudo-checkbox-disabled::after {
-        color: token-utils.slot(minimal-disabled-selected-checkmark-color);
-      }
-      }
-  }
-
-  .mat-pseudo-checkbox-full {
-    border-color: token-utils.slot(full-unselected-icon-color);
-    border-width: checkbox-common.$border-width;
-    border-style: solid;
-
-    &.mat-pseudo-checkbox-disabled {
-      border-color: token-utils.slot(full-disabled-unselected-icon-color);
+.mat-pseudo-checkbox-minimal {
+  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+    &::after {
+      color: token-utils.slot(pseudo-checkbox-minimal-selected-checkmark-color, $fallbacks);
     }
 
-    &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
-      background-color: token-utils.slot(full-selected-icon-color);
-      border-color: transparent;
+    &.mat-pseudo-checkbox-disabled::after {
+      color: token-utils.slot(
+          pseudo-checkbox-minimal-disabled-selected-checkmark-color, $fallbacks);
+    }
+    }
+}
+
+.mat-pseudo-checkbox-full {
+  border-color: token-utils.slot(pseudo-checkbox-full-unselected-icon-color, $fallbacks);
+  border-width: checkbox-common.$border-width;
+  border-style: solid;
+
+  &.mat-pseudo-checkbox-disabled {
+    border-color: token-utils.slot(pseudo-checkbox-full-disabled-unselected-icon-color, $fallbacks);
+  }
+
+  &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {
+    background-color: token-utils.slot(pseudo-checkbox-full-selected-icon-color, $fallbacks);
+    border-color: transparent;
+
+    &::after {
+      color: token-utils.slot(pseudo-checkbox-full-selected-checkmark-color, $fallbacks);
+    }
+
+    &.mat-pseudo-checkbox-disabled {
+      background-color: token-utils.slot(
+          pseudo-checkbox-full-disabled-selected-icon-color, $fallbacks);
 
       &::after {
-        color: token-utils.slot(full-selected-checkmark-color);
-      }
-
-      &.mat-pseudo-checkbox-disabled {
-        background-color: token-utils.slot(full-disabled-selected-icon-color);
-
-        &::after {
-          color: token-utils.slot(full-disabled-selected-checkmark-color);
-        }
+        color: token-utils.slot(pseudo-checkbox-full-disabled-selected-checkmark-color, $fallbacks);
       }
     }
   }

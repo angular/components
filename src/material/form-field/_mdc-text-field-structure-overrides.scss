@@ -1,12 +1,8 @@
-@use './m2-form-field';
 @use './m3-form-field';
 @use '../core/tokens/token-utils';
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-form-field.$prefix;
-$token-slots: m2-form-field.get-token-slots();
-$fallbacks: m3-form-field.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-form-field.get-tokens();
 
 // TODO(b/263527625): should be removed when this is addressed on the MDC side.
 // MDC sets a will-change on this element, because of the animation. This can cause
@@ -122,9 +118,7 @@ $_enable-form-field-will-change-reset: true;
   // is disabled, but now there's no token for it so we need to implement it ourselves.
   .mat-form-field-disabled .mdc-text-field__input {
     @include vendor-prefixes.input-placeholder {
-      @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        color: token-utils.slot(disabled-input-text-placeholder-color);
-      }
+      color: token-utils.slot(form-field-disabled-input-text-placeholder-color, $fallbacks);
     }
   }
 

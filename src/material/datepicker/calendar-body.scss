@@ -3,9 +3,7 @@
 
 @use '../core/style/button-common';
 @use '../core/tokens/token-utils';
-@use './m2-datepicker';
 @use './m3-datepicker';
-@use '../core/tokens/m3-system';
 
 $calendar-body-label-padding-start: 5% !default;
 // We don't want the label to jump around when we switch between month and year views, so we use
@@ -25,15 +23,13 @@ $calendar-body-cell-content-size: 100% - $calendar-body-cell-content-margin * 2 
 $calendar-range-end-body-cell-size:
     $calendar-body-cell-content-size + $calendar-body-cell-content-margin !default;
 
-$token-prefix: m2-datepicker.$prefix;
-$token-slots: m2-datepicker.get-token-slots();
-$fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-datepicker.get-tokens();
 
 // Styles for a highlighted calendar cell (e.g. hovered or focused).
 @mixin _highlighted-cell($token-name) {
   & > .mat-calendar-body-cell-content {
     @include _unselected-cell {
-      background-color: token-utils.slot($token-name);
+      background-color: token-utils.slot($token-name, $fallbacks);
     }
   }
 }
@@ -51,9 +47,7 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 
 .mat-calendar-body-today {
   @include _unselected-cell {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      border-color: token-utils.slot(calendar-date-today-outline-color);
-    }
+    border-color: token-utils.slot(datepicker-calendar-date-today-outline-color, $fallbacks);
   }
 }
 
@@ -64,11 +58,9 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   padding-left: $calendar-body-label-side-padding;
   padding-right: $calendar-body-label-side-padding;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-size: token-utils.slot(calendar-body-label-text-size);
-    font-weight: token-utils.slot(calendar-body-label-text-weight);
-    color: token-utils.slot(calendar-body-label-text-color);
-  }
+  font-size: token-utils.slot(datepicker-calendar-body-label-text-size, $fallbacks);
+  font-weight: token-utils.slot(datepicker-calendar-body-label-text-weight, $fallbacks);
+  color: token-utils.slot(datepicker-calendar-body-label-text-color, $fallbacks);
 }
 
 // Label that is not rendered and removed from the accessibility tree.
@@ -91,14 +83,11 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   background: none;
   text-align: center;
   outline: none;
-  font-family: inherit;
   margin: 0;
 
   // Needs to be repeated here in order to override the user agent styles.
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    font-family: token-utils.slot(calendar-text-font);
-    font-size: token-utils.slot(calendar-text-size);
-  }
+  font-family: token-utils.slot(datepicker-calendar-text-font, $fallbacks);
+  font-size: token-utils.slot(datepicker-calendar-text-size, $fallbacks);
 
   @include button-common.reset();
 }
@@ -191,9 +180,7 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 .mat-calendar-body-in-preview {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(calendar-date-preview-state-outline-color);
-  }
+  color: token-utils.slot(datepicker-calendar-date-preview-state-outline-color, $fallbacks);
 
   .mat-calendar-body-cell-preview {
     border-top: $calendar-body-preview-cell-border;
@@ -222,17 +209,16 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 .mat-calendar-body-disabled {
   cursor: default;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    & > .mat-calendar-body-cell-content {
-      @include _unselected-cell {
-        color: token-utils.slot(calendar-date-disabled-state-text-color);
-      }
+  & > .mat-calendar-body-cell-content {
+    @include _unselected-cell {
+      color: token-utils.slot(datepicker-calendar-date-disabled-state-text-color, $fallbacks);
     }
+  }
 
-    & > .mat-calendar-body-today {
-      @include _unselected-cell {
-        border-color: token-utils.slot(calendar-date-today-disabled-state-outline-color);
-      }
+  & > .mat-calendar-body-today {
+    @include _unselected-cell {
+      border-color: token-utils.slot(datepicker-calendar-date-today-disabled-state-outline-color,
+          $fallbacks);
     }
   }
 
@@ -266,10 +252,8 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
   border-radius: $calendar-body-cell-radius;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(calendar-date-text-color);
-    border-color: token-utils.slot(calendar-date-outline-color);
-  }
+  color: token-utils.slot(datepicker-calendar-date-text-color, $fallbacks);
+  border-color: token-utils.slot(datepicker-calendar-date-outline-color, $fallbacks);
 
   // Increase specificity because focus indicator styles are part of the `mat-core` mixin and can
   // potentially overwrite the absolute position of the container.
@@ -283,76 +267,76 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
 }
 
 .mat-calendar-body-active {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    .cdk-keyboard-focused &, .cdk-program-focused & {
-      @include _highlighted-cell(calendar-date-focus-state-background-color);
-    }
+  .cdk-keyboard-focused &, .cdk-program-focused & {
+    @include _highlighted-cell(datepicker-calendar-date-focus-state-background-color);
   }
 }
 
 @media (hover: hover) {
   .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-        @include _highlighted-cell(calendar-date-hover-state-background-color);
-    }
+    @include _highlighted-cell(datepicker-calendar-date-hover-state-background-color);
   }
 }
 
 .mat-calendar-body-selected {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    background-color: token-utils.slot(calendar-date-selected-state-background-color);
-    color: token-utils.slot(calendar-date-selected-state-text-color);
+  background-color: token-utils.slot(datepicker-calendar-date-selected-state-background-color,
+      $fallbacks);
+  color: token-utils.slot(datepicker-calendar-date-selected-state-text-color, $fallbacks);
 
-    .mat-calendar-body-disabled > & {
-      background-color: token-utils.slot(calendar-date-selected-disabled-state-background-color);
-    }
+  .mat-calendar-body-disabled > & {
+    background-color: token-utils.slot(
+        datepicker-calendar-date-selected-disabled-state-background-color, $fallbacks);
+  }
 
-    &.mat-calendar-body-today {
-      $shadow: token-utils.slot(calendar-date-today-selected-state-outline-color);
-      box-shadow: inset 0 0 0 1px #{$shadow};
-    }
+  &.mat-calendar-body-today {
+    $shadow: token-utils.slot(datepicker-calendar-date-today-selected-state-outline-color,
+      $fallbacks);
+    box-shadow: inset 0 0 0 1px #{$shadow};
   }
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  $range-color:
-    token-utils.slot(calendar-date-in-range-state-background-color);
-  $comparison-color:
-    token-utils.slot(calendar-date-in-comparison-range-state-background-color);
+$range-color:
+  token-utils.slot(datepicker-calendar-date-in-range-state-background-color, $fallbacks);
+$comparison-color:
+  token-utils.slot(datepicker-calendar-date-in-comparison-range-state-background-color, $fallbacks);
 
-  .mat-calendar-body-in-range::before {
-    background: token-utils.slot(calendar-date-in-range-state-background-color);
-  }
+.mat-calendar-body-in-range::before {
+  background: token-utils.slot(datepicker-calendar-date-in-range-state-background-color,
+      $fallbacks);
+}
 
-  .mat-calendar-body-comparison-identical,
-  .mat-calendar-body-in-comparison-range::before {
-    background: token-utils.slot(calendar-date-in-comparison-range-state-background-color);
-  }
+.mat-calendar-body-comparison-identical,
+.mat-calendar-body-in-comparison-range::before {
+  background: token-utils.slot(datepicker-calendar-date-in-comparison-range-state-background-color,
+      $fallbacks);
+}
 
-  .mat-calendar-body-comparison-identical,
-  .mat-calendar-body-in-comparison-range::before {
-   background: token-utils.slot(calendar-date-in-comparison-range-state-background-color);
-  }
+.mat-calendar-body-comparison-identical,
+.mat-calendar-body-in-comparison-range::before {
+ background: token-utils.slot(datepicker-calendar-date-in-comparison-range-state-background-color,
+      $fallbacks);
+}
 
-  .mat-calendar-body-comparison-bridge-start::before,
-  [dir='rtl'] .mat-calendar-body-comparison-bridge-end::before {
-    background: linear-gradient(to right, $range-color 50%, $comparison-color 50%);
-  }
+.mat-calendar-body-comparison-bridge-start::before,
+[dir='rtl'] .mat-calendar-body-comparison-bridge-end::before {
+  background: linear-gradient(to right, $range-color 50%, $comparison-color 50%);
+}
 
-  .mat-calendar-body-comparison-bridge-end::before,
-  [dir='rtl'] .mat-calendar-body-comparison-bridge-start::before {
-    background: linear-gradient(to left, $range-color 50%, $comparison-color 50%);
-  }
+.mat-calendar-body-comparison-bridge-end::before,
+[dir='rtl'] .mat-calendar-body-comparison-bridge-start::before {
+  background: linear-gradient(to left, $range-color 50%, $comparison-color 50%);
+}
 
-  .mat-calendar-body-in-range > .mat-calendar-body-comparison-identical,
-  .mat-calendar-body-in-comparison-range.mat-calendar-body-in-range::after {
-    background: token-utils.slot(calendar-date-in-overlap-range-state-background-color);
-  }
+.mat-calendar-body-in-range > .mat-calendar-body-comparison-identical,
+.mat-calendar-body-in-comparison-range.mat-calendar-body-in-range::after {
+  background: token-utils.slot(datepicker-calendar-date-in-overlap-range-state-background-color,
+      $fallbacks);
+}
 
-  .mat-calendar-body-comparison-identical.mat-calendar-body-selected,
-  .mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
-    background: token-utils.slot(calendar-date-in-overlap-range-selected-state-background-color);
-  }
+.mat-calendar-body-comparison-identical.mat-calendar-body-selected,
+.mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
+  background: token-utils.slot(
+      datepicker-calendar-date-in-overlap-range-selected-state-background-color, $fallbacks);
 }
 
 @include cdk.high-contrast {

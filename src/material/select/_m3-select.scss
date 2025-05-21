@@ -4,13 +4,14 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, select);
 
 /// Generates custom tokens for the mat-select.
 /// @param {String} $color-variant The color variant to use for the component
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -18,24 +19,26 @@ $prefix: (mat, select);
 
   @return (
     base: (
-      container-elevation-shadow: elevation.get-box-shadow(2),
+      select-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     color: (
-      panel-background-color: map.get($system, surface-container),
-      enabled-trigger-text-color: map.get($system, on-surface),
-      disabled-trigger-text-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      placeholder-text-color: map.get($system, on-surface-variant),
-      enabled-arrow-color: map.get($system, on-surface-variant),
-      disabled-arrow-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      focused-arrow-color: map.get($system, primary),
-      invalid-arrow-color: map.get($system, error),
+      select-panel-background-color: map.get($system, surface-container),
+      select-enabled-trigger-text-color: map.get($system, on-surface),
+      select-disabled-trigger-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      select-placeholder-text-color: map.get($system, on-surface-variant),
+      select-enabled-arrow-color: map.get($system, on-surface-variant),
+      select-disabled-arrow-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      select-focused-arrow-color: map.get($system, primary),
+      select-invalid-arrow-color: map.get($system, error),
     ),
     typography: (
-      trigger-text-font: map.get($system, body-large-font),
-      trigger-text-line-height: map.get($system, body-large-line-height),
-      trigger-text-size: map.get($system, body-large-size),
-      trigger-text-tracking: map.get($system, body-large-tracking),
-      trigger-text-weight: map.get($system, body-large-weight),
+      select-trigger-text-font: map.get($system, body-large-font),
+      select-trigger-text-line-height: map.get($system, body-large-line-height),
+      select-trigger-text-size: map.get($system, body-large-size),
+      select-trigger-text-tracking: map.get($system, body-large-tracking),
+      select-trigger-text-weight: map.get($system, body-large-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -47,6 +50,6 @@ $prefix: (mat, select);
   $index: ($scale * -1) + 1;
 
   @return (
-    arrow-transform: list.nth((translateY(-8px), translateY(-8px), none), $index),
+    select-arrow-transform: list.nth((translateY(-8px), translateY(-8px), none), $index),
   );
 }

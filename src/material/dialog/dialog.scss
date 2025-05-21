@@ -1,9 +1,7 @@
 @use '@angular/cdk';
-@use './m2-dialog';
 @use './m3-dialog';
 @use '../core/tokens/token-utils';
 @use '../core/style/variables';
-@use '../core/tokens/m3-system';
 
 // Dialog content max height. This has been copied from the standard dialog
 // and is needed to make the dialog content scrollable.
@@ -17,14 +15,7 @@ $mat-dialog-button-horizontal-margin: 8px !default;
 // Fixes b/323588333
 $mat-dialog-container-max-height: 95vh !default;
 
-// Whether to emit fallback values for the structural styles. Previously MDC was emitting
-// paddings in the static styles which meant that users would get them even if they didn't
-// include the `dialog-base`. Eventually we should clean up the usages of this flag.
-$_emit-fallbacks: true;
-
-$token-prefix: m2-dialog.$prefix;
-$token-slots: m2-dialog.get-token-slots();
-$fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-dialog.get-tokens();
 
 // Note that we disable fallback declarations, but we don't disable fallback
 // values, because there are a lot of internal apps that don't include a proper
@@ -45,13 +36,11 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
 
 // This needs extra specificity so it doesn't get overwritten by the CDK structural styles.
 .cdk-overlay-pane.mat-mdc-dialog-panel {
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    max-width: token-utils.slot(container-max-width, $_emit-fallbacks);
-    min-width: token-utils.slot(container-min-width, $_emit-fallbacks);
+  max-width: token-utils.slot(dialog-container-max-width, $fallbacks);
+  min-width: token-utils.slot(dialog-container-min-width, $fallbacks);
 
-    @media (variables.$xsmall) {
-      max-width: token-utils.slot(container-small-max-width, $_emit-fallbacks);
-    }
+  @media (variables.$xsmall) {
+    max-width: token-utils.slot(dialog-container-small-max-width, $fallbacks);
   }
 }
 
@@ -101,14 +90,10 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
   min-width: inherit;
   max-width: inherit;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    box-shadow: token-utils.slot(container-elevation-shadow, $_emit-fallbacks);
-  }
+  box-shadow: token-utils.slot(dialog-container-elevation-shadow, $fallbacks, none);
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    border-radius: token-utils.slot(container-shape, $_emit-fallbacks);
-    background-color: token-utils.slot(container-color, $_emit-fallbacks);
-  }
+  border-radius: token-utils.slot(dialog-container-shape, $fallbacks, 4px);
+  background-color: token-utils.slot(dialog-container-color, $fallbacks, white);
 
   [dir='rtl'] & {
     text-align: right;
@@ -145,9 +130,7 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
   box-sizing: border-box;
   margin: 0 0 1px;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    padding: token-utils.slot(headline-padding, $_emit-fallbacks);
-  }
+  padding: token-utils.slot(dialog-headline-padding, $fallbacks, 6px 24px 13px);
 
   // This was used by MDC to set the text baseline. We should figure out a way to
   // remove it, because it can introduce unnecessary whitespace at the beginning
@@ -166,14 +149,12 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
 
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(subhead-color, $_emit-fallbacks);
-      font-family: token-utils.slot(subhead-font, if($_emit-fallbacks, inherit, null));
-      line-height: token-utils.slot(subhead-line-height, $_emit-fallbacks);
-      font-size: token-utils.slot(subhead-size, $_emit-fallbacks);
-      font-weight: token-utils.slot(subhead-weight, $_emit-fallbacks);
-      letter-spacing: token-utils.slot(subhead-tracking, $_emit-fallbacks);
-    }
+    color: token-utils.slot(dialog-subhead-color, $fallbacks, rgba(0, 0, 0, 0.87));
+    font-family: token-utils.slot(dialog-subhead-font, $fallbacks, inherit);
+    line-height: token-utils.slot(dialog-subhead-line-height, $fallbacks, 1.5rem);
+    font-size: token-utils.slot(dialog-subhead-size, $fallbacks, 1rem);
+    font-weight: token-utils.slot(dialog-subhead-weight, $fallbacks, 400);
+    letter-spacing: token-utils.slot(dialog-subhead-tracking, $fallbacks, 0.03125em);
   }
 }
 
@@ -195,27 +176,23 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
 
   // Nested to maintain the old specificity.
   .mat-mdc-dialog-container & {
-    @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-      color: token-utils.slot(supporting-text-color, $_emit-fallbacks);
-      font-family: token-utils.slot(supporting-text-font, if($_emit-fallbacks, inherit, null));
-      line-height: token-utils.slot(supporting-text-line-height, $_emit-fallbacks);
-      font-size: token-utils.slot(supporting-text-size, $_emit-fallbacks);
-      font-weight: token-utils.slot(supporting-text-weight, $_emit-fallbacks);
-      letter-spacing: token-utils.slot(supporting-text-tracking, $_emit-fallbacks);
-    }
+      color: token-utils.slot(dialog-supporting-text-color, $fallbacks, rgba(0, 0, 0, 0.6));
+      font-family: token-utils.slot(dialog-supporting-text-font, $fallbacks, inherit);
+      line-height: token-utils.slot(dialog-supporting-text-line-height, $fallbacks, 1.5rem);
+      font-size: token-utils.slot(dialog-supporting-text-size, $fallbacks, 1rem);
+      font-weight: token-utils.slot(dialog-supporting-text-weight, $fallbacks, 400);
+      letter-spacing: token-utils.slot(dialog-supporting-text-tracking, $fallbacks, 0.03125em);
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    // These styles need a bit more specificity.
-    .mat-mdc-dialog-container & {
-      padding: token-utils.slot(content-padding, $_emit-fallbacks);
-    }
+  // These styles need a bit more specificity.
+  .mat-mdc-dialog-container & {
+    padding: token-utils.slot(dialog-content-padding, $fallbacks, 20px 24px 0);
+  }
 
-    // Note: we can achieve this with a `:has` selector, but it results in an
-    // increased specificity which breaks a lot of internal clients.
-    .mat-mdc-dialog-container-with-actions & {
-      padding: token-utils.slot(with-actions-content-padding, $_emit-fallbacks);
-    }
+  // Note: we can achieve this with a `:has` selector, but it results in an
+  // increased specificity which breaks a lot of internal clients.
+  .mat-mdc-dialog-container-with-actions & {
+    padding: token-utils.slot(dialog-with-actions-content-padding, $fallbacks, 20px 24px 0);
   }
 
   .mat-mdc-dialog-container .mat-mdc-dialog-title + & {
@@ -229,19 +206,15 @@ $fallbacks: m3-dialog.get-tokens(m3-system.$theme-with-system-vars);
   flex-shrink: 0;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
   box-sizing: border-box;
   min-height: 52px;
   margin: 0;
-  padding: 8px;
   border-top: 1px solid transparent;
 
   // For backwards compatibility, actions align at start by default. MDC usually
   // aligns actions at the end of the container.
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    padding: token-utils.slot(actions-padding, $_emit-fallbacks);
-    justify-content: token-utils.slot(actions-alignment, $_emit-fallbacks);
-  }
+  padding: token-utils.slot(dialog-actions-padding, $fallbacks, 16px 24px);
+  justify-content: token-utils.slot(dialog-actions-alignment, $fallbacks, flex-end);
 
   @include cdk.high-contrast {
     border-top-color: CanvasText;

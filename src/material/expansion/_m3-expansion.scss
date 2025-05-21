@@ -3,45 +3,46 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, expansion);
 
 /// Generates custom tokens for the mat-expansion.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      container-shape: 12px,
-      header-indicator-display: inline-block,
-      legacy-header-indicator-display: none,
+      expansion-container-shape: 12px,
+      expansion-header-indicator-display: inline-block,
+      expansion-legacy-header-indicator-display: none,
     ),
     color: (
-      actions-divider-color: map.get($system, outline),
-      container-background-color: map.get($system, surface),
-      container-text-color: map.get($system, on-surface),
-      header-description-color: map.get($system, on-surface-variant),
-      header-disabled-state-text-color:
+      expansion-actions-divider-color: map.get($system, outline),
+      expansion-container-background-color: map.get($system, surface),
+      expansion-container-text-color: map.get($system, on-surface),
+      expansion-header-description-color: map.get($system, on-surface-variant),
+      expansion-header-disabled-state-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      header-focus-state-layer-color: m3-utils.color-with-opacity(
+      expansion-header-focus-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
-      header-hover-state-layer-color: m3-utils.color-with-opacity(
+      expansion-header-hover-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
-      header-indicator-color: map.get($system, on-surface-variant),
-      header-text-color: map.get($system, on-surface),
+      expansion-header-indicator-color: map.get($system, on-surface-variant),
+      expansion-header-text-color: map.get($system, on-surface),
     ),
     typography: (
-      container-text-font: map.get($system, body-large-font),
-      container-text-line-height: map.get($system, body-large-line-height),
-      container-text-size: map.get($system, body-large-size),
-      container-text-tracking: map.get($system, body-large-tracking),
-      container-text-weight: map.get($system, body-large-weight),
-      header-text-font: map.get($system, title-medium-font),
-      header-text-line-height: map.get($system, title-medium-line-height),
-      header-text-size: map.get($system, title-medium-size),
-      header-text-tracking: map.get($system, title-medium-tracking),
-      header-text-weight: map.get($system, title-medium-weight),
+      expansion-container-text-font: map.get($system, body-large-font),
+      expansion-container-text-line-height: map.get($system, body-large-line-height),
+      expansion-container-text-size: map.get($system, body-large-size),
+      expansion-container-text-tracking: map.get($system, body-large-tracking),
+      expansion-container-text-weight: map.get($system, body-large-weight),
+      expansion-header-text-font: map.get($system, title-medium-font),
+      expansion-header-text-line-height: map.get($system, title-medium-line-height),
+      expansion-header-text-size: map.get($system, title-medium-size),
+      expansion-header-text-tracking: map.get($system, title-medium-tracking),
+      expansion-header-text-weight: map.get($system, title-medium-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -53,7 +54,7 @@ $prefix: (mat, expansion);
   $index: ($scale * -1) + 1;
 
   @return (
-    header-collapsed-state-height: list.nth((48px, 44px, 40px, 36px), $index),
-    header-expanded-state-height: list.nth((64px, 60px, 56px, 48px), $index),
+    expansion-header-collapsed-state-height: list.nth((48px, 44px, 40px, 36px), $index),
+    expansion-header-expanded-state-height: list.nth((64px, 60px, 56px, 48px), $index),
   );
 }

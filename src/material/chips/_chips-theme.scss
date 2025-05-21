@@ -12,13 +12,10 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-chip.$prefix,
-        map.get(m3-chip.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-chip.get-tokens($theme), base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-chip.get-unthemable-tokens());
     }
   }
 }
@@ -29,28 +26,23 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-chip.$prefix,
         map.get(m3-chip.get-tokens($theme, $color-variant), color));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme));
 
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, primary));
+          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, primary));
         }
 
         &.mat-accent {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, accent));
+          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, accent));
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values-mixed(
-            m2-chip.$prefix, m2-chip.get-color-tokens($theme, warn));
+          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, warn));
         }
       }
     }
@@ -61,14 +53,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-chip.$prefix,
-        map.get(m3-chip.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-chip.get-tokens($theme), typography));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-typography-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-chip.get-typography-tokens($theme));
     }
   }
 }
@@ -77,14 +65,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-chip.$prefix,
-        map.get(m3-chip.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-chip.get-tokens($theme), density));
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(
-        m2-chip.$prefix, m2-chip.get-density-tokens($theme)
-      );
+      @include token-utils.create-token-values-mixed(m2-chip.get-density-tokens($theme));
     }
   }
 }
@@ -93,8 +77,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-chip.$prefix,
-      tokens: m2-chip.get-token-slots(),
+      namespace: chip,
+      tokens: token-utils.get-overrides(m3-chip.get-tokens(), chip)
     ),
   );
 }
@@ -102,7 +86,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-chips.

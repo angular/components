@@ -1,43 +1,41 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, menu);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-menu.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      divider-bottom-spacing: 8px,
-      divider-top-spacing: 8px,
-      item-icon-size: 24px,
-      item-spacing: 12px,
-      item-leading-spacing: 12px,
-      item-trailing-spacing: 12px,
-      item-with-icon-leading-spacing: 12px,
-      item-with-icon-trailing-spacing: 12px,
+      menu-divider-bottom-spacing: 8px,
+      menu-divider-top-spacing: 8px,
+      menu-item-icon-size: 24px,
+      menu-item-spacing: 12px,
+      menu-item-leading-spacing: 12px,
+      menu-item-trailing-spacing: 12px,
+      menu-item-with-icon-leading-spacing: 12px,
+      menu-item-with-icon-trailing-spacing: 12px,
     ),
     color: (
-      container-shape: map.get($system, corner-extra-small),
-      divider-color: map.get($system, surface-variant),
-      item-label-text-color: map.get($system, on-surface),
-      item-icon-color: map.get($system, on-surface-variant),
-      item-hover-state-layer-color: m3-utils.color-with-opacity(
+      menu-container-shape: map.get($system, corner-extra-small),
+      menu-divider-color: map.get($system, surface-variant),
+      menu-item-label-text-color: map.get($system, on-surface),
+      menu-item-icon-color: map.get($system, on-surface-variant),
+      menu-item-hover-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
-      item-focus-state-layer-color: m3-utils.color-with-opacity(
+      menu-item-focus-state-layer-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
-      container-color: map.get($system, surface-container),
-      container-elevation-shadow: elevation.get-box-shadow(2),
+      menu-container-color: map.get($system, surface-container),
+      menu-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     typography: (
-      item-label-text-font: map.get($system, label-large-font),
-      item-label-text-line-height: map.get($system, label-large-line-height),
-      item-label-text-size: map.get($system, label-large-size),
-      item-label-text-tracking: map.get($system, label-large-tracking),
-      item-label-text-weight: map.get($system, label-large-weight),
+      menu-item-label-text-font: map.get($system, label-large-font),
+      menu-item-label-text-line-height: map.get($system, label-large-line-height),
+      menu-item-label-text-size: map.get($system, label-large-size),
+      menu-item-label-text-tracking: map.get($system, label-large-tracking),
+      menu-item-label-text-weight: map.get($system, label-large-weight),
     ),
     density: (),
   );

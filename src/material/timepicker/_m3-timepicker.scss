@@ -1,21 +1,19 @@
 @use 'sass:map';
 @use '../core/style/elevation';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, timepicker);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-timepicker.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (
-      container-shape: map.get($system, corner-extra-small),
+      timepicker-container-shape: map.get($system, corner-extra-small),
     ),
     color: (
-      container-background-color: map.get($system, surface-container),
-      container-elevation-shadow: elevation.get-box-shadow(2),
+      timepicker-container-background-color: map.get($system, surface-container),
+      timepicker-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     typography: (),
     density: (),

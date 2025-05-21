@@ -1,17 +1,15 @@
 @use 'sass:map';
 @use '../tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, ripple);
+@use '../tokens/m3';
 
 /// Generates custom tokens for the mat-ripple.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (),
     color: (
-      color: m3-utils.color-with-opacity(map.get($system, on-surface), 10%),
+      ripple-color: m3-utils.color-with-opacity(map.get($system, on-surface), 10%),
     ),
     typography: (),
     density: (),

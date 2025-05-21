@@ -2,9 +2,6 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/m2-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, progress-spinner);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 //
@@ -13,15 +10,15 @@ $prefix: (mat, progress-spinner);
 // our CSS.
 @function get-unthemable-tokens() {
   @return (
-    active-indicator-width: 4px,
-    size: 48px,
+    progress-spinner-active-indicator-width: 4px,
+    progress-spinner-size: 48px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary) {
   @return (
-    active-indicator-color: inspection.get-theme-color($theme, $palette-name)
+    progress-spinner-active-indicator-color: inspection.get-theme-color($theme, $palette-name)
   );
 }
 

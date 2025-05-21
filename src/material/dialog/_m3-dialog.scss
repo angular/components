@@ -1,11 +1,9 @@
 @use '../core/tokens/m3-utils';
 @use 'sass:map';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, dialog);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the dialog.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   // headline-padding:
@@ -16,33 +14,33 @@ $prefix: (mat, dialog);
   // of the text is 16px from the content under it.
   @return (
     base: (
-      actions-alignment: flex-end,
-      actions-padding: 16px 24px,
-      container-elevation-shadow: none,
-      container-max-width: 560px,
-      container-min-width: 280px,
-      container-shape: map.get($system, corner-extra-large),
-      container-small-max-width: calc(100vw - 32px),
-      content-padding: 20px 24px,
-      headline-padding: 6px 24px 13px,
-      with-actions-content-padding: 20px 24px 0,
+      dialog-actions-alignment: flex-end,
+      dialog-actions-padding: 16px 24px,
+      dialog-container-elevation-shadow: none,
+      dialog-container-max-width: 560px,
+      dialog-container-min-width: 280px,
+      dialog-container-shape: map.get($system, corner-extra-large),
+      dialog-container-small-max-width: calc(100vw - 32px),
+      dialog-content-padding: 20px 24px,
+      dialog-headline-padding: 6px 24px 13px,
+      dialog-with-actions-content-padding: 20px 24px 0,
     ),
     color: (
-      container-color: map.get($system, surface),
-      subhead-color: map.get($system, on-surface),
-      supporting-text-color: map.get($system, on-surface-variant),
+      dialog-container-color: map.get($system, surface),
+      dialog-subhead-color: map.get($system, on-surface),
+      dialog-supporting-text-color: map.get($system, on-surface-variant),
     ),
     typography: (
-      subhead-font: map.get($system, headline-small-font),
-      subhead-line-height: map.get($system, headline-small-line-height),
-      subhead-size: map.get($system, headline-small-size),
-      subhead-tracking: map.get($system, headline-small-tracking),
-      subhead-weight: map.get($system, headline-small-weight),
-      supporting-text-font: map.get($system, body-medium-font),
-      supporting-text-line-height: map.get($system, body-medium-line-height),
-      supporting-text-size: map.get($system, body-medium-size),
-      supporting-text-tracking: map.get($system, body-medium-tracking),
-      supporting-text-weight: map.get($system, body-medium-weight),
+      dialog-subhead-font: map.get($system, headline-small-font),
+      dialog-subhead-line-height: map.get($system, headline-small-line-height),
+      dialog-subhead-size: map.get($system, headline-small-size),
+      dialog-subhead-tracking: map.get($system, headline-small-tracking),
+      dialog-subhead-weight: map.get($system, headline-small-weight),
+      dialog-supporting-text-font: map.get($system, body-medium-font),
+      dialog-supporting-text-line-height: map.get($system, body-medium-line-height),
+      dialog-supporting-text-size: map.get($system, body-medium-size),
+      dialog-supporting-text-tracking: map.get($system, body-medium-tracking),
+      dialog-supporting-text-weight: map.get($system, body-medium-weight),
     ),
     density: (),
   );

@@ -4,9 +4,6 @@
 @use '../core/style/sass-utils';
 @use '../core/tokens/m2-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, tab);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 //
@@ -17,14 +14,14 @@ $prefix: (mat, tab);
   @return (
     // This is specified both here and in the density tokens, because it determines the size of the
     // tab itself and there are internal tests who don't configure the theme correctly.
-    container-height: 48px,
+    tab-container-height: 48px,
     // For some period of time, the MDC tabs removed the divider. This has been added back in
     // and will be present in M3.
-    divider-color: transparent,
-    divider-height: 0,
-    active-indicator-height: 2px,
+    tab-divider-color: transparent,
+    tab-divider-height: 0,
+    tab-active-indicator-height: 2px,
     // Currently set to zero, but used by the gmat styles to make the indicator rounded.
-    active-indicator-shape: 0,
+    tab-active-indicator-shape: 0,
   );
 }
 
@@ -36,25 +33,25 @@ $prefix: (mat, tab);
   $ripple-color: inspection.get-theme-color($theme, $palette-name, default);
 
   $tokens: (
-    disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
-    pagination-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
+    tab-disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
+    tab-pagination-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
-    inactive-label-text-color: $inactive-label-text-color,
-    active-label-text-color: $active-label-text-color,
+    tab-inactive-label-text-color: $inactive-label-text-color,
+    tab-active-label-text-color: $active-label-text-color,
 
     // Tokens needed to implement the gmat styles. Externally they don't change.
-    active-ripple-color: $ripple-color,
-    inactive-ripple-color: $ripple-color,
-    inactive-focus-label-text-color: $inactive-label-text-color,
-    inactive-hover-label-text-color: $inactive-label-text-color,
-    active-focus-label-text-color: $active-label-text-color,
-    active-hover-label-text-color: $active-label-text-color,
-    active-focus-indicator-color: $active-label-text-color,
-    active-hover-indicator-color: $active-label-text-color,
-    active-indicator-color: inspection.get-theme-color($theme, $palette-name, default),
-    background-color: inspection.get-theme-color($theme, $palette-name, default),
-    foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
+    tab-active-ripple-color: $ripple-color,
+    tab-inactive-ripple-color: $ripple-color,
+    tab-inactive-focus-label-text-color: $inactive-label-text-color,
+    tab-inactive-hover-label-text-color: $inactive-label-text-color,
+    tab-active-focus-label-text-color: $active-label-text-color,
+    tab-active-hover-label-text-color: $active-label-text-color,
+    tab-active-focus-indicator-color: $active-label-text-color,
+    tab-active-hover-indicator-color: $active-label-text-color,
+    tab-active-indicator-color: inspection.get-theme-color($theme, $palette-name, default),
+    tab-background-color: inspection.get-theme-color($theme, $palette-name, default),
+    tab-foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
 
   @each $token in $exclude {
@@ -68,11 +65,11 @@ $prefix: (mat, tab);
 @function get-typography-tokens($theme) {
   @return (
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
-    label-text-font: inspection.get-theme-typography($theme, button, font-family),
-    label-text-size: inspection.get-theme-typography($theme, button, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    label-text-line-height: inspection.get-theme-typography($theme, button, line-height),
-    label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
+    tab-label-text-font: inspection.get-theme-typography($theme, button, font-family),
+    tab-label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    tab-label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
+    tab-label-text-line-height: inspection.get-theme-typography($theme, button, line-height),
+    tab-label-text-weight: inspection.get-theme-typography($theme, button, font-weight),
   );
 }
 
@@ -81,7 +78,7 @@ $prefix: (mat, tab);
   $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
 
   @return (
-    container-height: map.get((
+    tab-container-height: map.get((
       0: 48px,
       -1: 44px,
       -2: 40px,

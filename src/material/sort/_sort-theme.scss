@@ -9,48 +9,37 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-sort.$prefix,
-        map.get(m3-sort.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-sort.get-tokens($theme), base));
   } @else {
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-sort.$prefix,
-        map.get(m3-sort.get-tokens($theme), color));
+    @include token-utils.create-token-values(map.get(m3-sort.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-sort.$prefix, m2-sort.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-sort.get-color-tokens($theme));
     }
   }
 }
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-sort.$prefix,
-        map.get(m3-sort.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-sort.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-sort.$prefix, m2-sort.get-typography-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-sort.get-typography-tokens($theme));
     }
   }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-sort.$prefix,
-        map.get(m3-sort.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-sort.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-sort.$prefix, m2-sort.get-density-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-sort.get-density-tokens($theme));
     }
   }
 }
@@ -59,14 +48,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-sort.$prefix,
-      tokens: m2-sort.get-token-slots(),
+      namespace: sort,
+      tokens: token-utils.get-overrides(m3-sort.get-tokens(), sort)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

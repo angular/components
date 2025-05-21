@@ -4,10 +4,6 @@
 @use './style/sass-utils';
 @use './style/elevation';
 
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, app);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -17,15 +13,15 @@ $prefix: (mat, app);
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $tokens: (
-    background-color: inspection.get-theme-color($theme, background, background),
-    text-color: inspection.get-theme-color($theme, foreground, text),
+    app-background-color: inspection.get-theme-color($theme, background, background),
+    app-text-color: inspection.get-theme-color($theme, foreground, text),
   );
 
   @for $zValue from 0 through 24 {
     $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
     $shadow: elevation.get-box-shadow($zValue,
       if($elevation-color == null, elevation.$color, $elevation-color));
-    $tokens: map.set($tokens, 'elevation-shadow-level-#{$zValue}', $shadow);
+    $tokens: map.set($tokens, 'app-elevation-shadow-level-#{$zValue}', $shadow);
   }
 
   @return $tokens;

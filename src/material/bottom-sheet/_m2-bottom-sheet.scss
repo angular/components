@@ -2,34 +2,34 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, bottom-sheet);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
     // TODO: will be necessary for M3.
-    container-shape: 4px,
+    bottom-sheet-container-shape: 4px,
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    container-text-color: inspection.get-theme-color($theme, foreground, text),
-    container-background-color: inspection.get-theme-color($theme, background, dialog),
+    bottom-sheet-container-text-color: inspection.get-theme-color($theme, foreground, text),
+    bottom-sheet-container-background-color: inspection.get-theme-color($theme, background, dialog),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    container-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    container-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    bottom-sheet-container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    bottom-sheet-container-text-line-height:
+        inspection.get-theme-typography($theme, body-2, line-height),
+    bottom-sheet-container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
+    bottom-sheet-container-text-tracking:
+        inspection.get-theme-typography($theme, body-2, letter-spacing),
+    bottom-sheet-container-text-weight:
+        inspection.get-theme-typography($theme, body-2, font-weight),
   );
 }
 

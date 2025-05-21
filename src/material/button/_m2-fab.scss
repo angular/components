@@ -5,29 +5,26 @@
 @use '../core/style/sass-utils';
 @use '../core/style/elevation';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, fab);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    container-elevation-shadow: elevation.get-box-shadow(6),
-    container-shape: 50%,
-    extended-container-elevation-shadow: elevation.get-box-shadow(6),
-    extended-container-height: 48px,
-    extended-container-shape: 24px,
-    extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    small-container-elevation-shadow: elevation.get-box-shadow(6),
-    small-container-shape: 50%,
-    small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    fab-container-elevation-shadow: elevation.get-box-shadow(6),
+    fab-container-shape: 50%,
+    fab-extended-container-elevation-shadow: elevation.get-box-shadow(6),
+    fab-extended-container-height: 48px,
+    fab-extended-container-shape: 24px,
+    fab-extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    fab-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    fab-small-container-elevation-shadow: elevation.get-box-shadow(6),
+    fab-small-container-shape: 50%,
+    fab-small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+    fab-small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
   );
 }
 
@@ -36,30 +33,30 @@ $prefix: (mat, fab);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    container-color: inspection.get-theme-color($theme, background, card),
-    disabled-state-container-color:
+    fab-container-color: inspection.get-theme-color($theme, background, card),
+    fab-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    disabled-state-foreground-color:
+    fab-disabled-state-foreground-color:
         inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    foreground-color: inspection.get-theme-color($theme, foreground, base),
-    hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    small-container-color: inspection.get-theme-color($theme, background, card),
-    small-disabled-state-container-color:
+    fab-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-foreground-color: inspection.get-theme-color($theme, foreground, base),
+    fab-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    fab-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    fab-small-container-color: inspection.get-theme-color($theme, background, card),
+    fab-small-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
-    small-disabled-state-foreground-color:
+    fab-small-disabled-state-foreground-color:
         inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
-    small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    small-foreground-color: inspection.get-theme-color($theme, foreground, base),
-    small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-small-foreground-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    fab-small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    fab-small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );
 }
 
@@ -89,24 +86,25 @@ $prefix: (mat, fab);
   }
 
   @return (
-    container-color: inspection.get-theme-color($theme, $palette-name, default),
-    foreground-color: $foreground-color,
-    ripple-color: $ripple-color,
-    small-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    small-foreground-color: $foreground-color,
-    small-ripple-color: $ripple-color,
-    small-state-layer-color: $state-layer-color,
-    state-layer-color: $state-layer-color,
+    fab-container-color: inspection.get-theme-color($theme, $palette-name, default),
+    fab-foreground-color: $foreground-color,
+    fab-ripple-color: $ripple-color,
+    fab-small-container-color: inspection.get-theme-color($theme, $palette-name, default),
+    fab-small-foreground-color: $foreground-color,
+    fab-small-ripple-color: $ripple-color,
+    fab-small-state-layer-color: $state-layer-color,
+    fab-state-layer-color: $state-layer-color,
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    extended-label-text-font: inspection.get-theme-typography($theme, button, font-family),
-    extended-label-text-size: inspection.get-theme-typography($theme, button, font-size),
-    extended-label-text-tracking: inspection.get-theme-typography($theme, button, letter-spacing),
-    extended-label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+    fab-extended-label-text-font: inspection.get-theme-typography($theme, button, font-family),
+    fab-extended-label-text-size: inspection.get-theme-typography($theme, button, font-size),
+    fab-extended-label-text-tracking:
+        inspection.get-theme-typography($theme, button, letter-spacing),
+    fab-extended-label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
   );
 }
 
@@ -115,8 +113,8 @@ $prefix: (mat, fab);
   $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
 
   @return (
-    small-touch-target-display: if($density-scale < -1, none, block),
-    touch-target-display: if($density-scale < -1, none, block),
+    fab-small-touch-target-display: if($density-scale < -1, none, block),
+    fab-touch-target-display: if($density-scale < -1, none, block),
   );
 }
 

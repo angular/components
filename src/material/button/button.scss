@@ -3,13 +3,9 @@
 @use '../core/style/vendor-prefixes';
 @use '../core/tokens/token-utils';
 @use '../core/focus-indicators/private' as focus-indicators-private;
-@use './m2-button';
 @use './m3-button';
-@use '../core/tokens/m3-system';
 
-$token-prefix: m2-button.$prefix;
-$token-slots: m2-button.get-token-slots();
-$fallbacks: m3-button.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-button.get-tokens();
 
 .mat-mdc-button-base {
   text-decoration: none;
@@ -59,194 +55,204 @@ $fallbacks: m3-button.get-tokens(m3-system.$theme-with-system-vars);
   }
 }
 
-@include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-  .mat-mdc-button {
-    padding: 0 #{token-utils.slot(text-horizontal-padding, true)};
-    height: token-utils.slot(text-container-height);
-    font-family: token-utils.slot(text-label-text-font);
-    font-size: token-utils.slot(text-label-text-size);
-    letter-spacing: token-utils.slot(text-label-text-tracking);
-    text-transform: token-utils.slot(text-label-text-transform);
-    font-weight: token-utils.slot(text-label-text-weight);
+.mat-mdc-button {
+  padding: 0 #{token-utils.slot(button-text-horizontal-padding, $fallbacks, true)};
+  height: token-utils.slot(button-text-container-height, $fallbacks);
+  font-family: token-utils.slot(button-text-label-text-font, $fallbacks);
+  font-size: token-utils.slot(button-text-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(button-text-label-text-tracking, $fallbacks);
+  text-transform: token-utils.slot(button-text-label-text-transform, $fallbacks);
+  font-weight: token-utils.slot(button-text-label-text-weight, $fallbacks);
 
-    &, .mdc-button__ripple {
-      border-radius: token-utils.slot(text-container-shape);
-    }
-
-    &:not(:disabled) {
-      color: token-utils.slot(text-label-text-color);
-    }
-
-    // We need to re-apply the disabled tokens since MDC uses
-    // `:disabled` which doesn't apply to anchors.
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(text-disabled-label-text-color);
-    }
-
-    @include button-base.mat-private-button-horizontal-layout(
-        text-icon-spacing, text-icon-offset, text-with-icon-horizontal-padding);
-    @include button-base.mat-private-button-ripple(
-        text-ripple-color, text-state-layer-color, text-disabled-state-layer-color,
-        text-hover-state-layer-opacity, text-focus-state-layer-opacity,
-        text-pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(false, text-touch-target-display);
+  &, .mdc-button__ripple {
+    border-radius: token-utils.slot(button-text-container-shape, $fallbacks);
   }
 
-  .mat-mdc-unelevated-button {
-    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    height: token-utils.slot(filled-container-height);
-    font-family: token-utils.slot(filled-label-text-font);
-    font-size: token-utils.slot(filled-label-text-size);
-    letter-spacing: token-utils.slot(filled-label-text-tracking);
-    text-transform: token-utils.slot(filled-label-text-transform);
-    font-weight: token-utils.slot(filled-label-text-weight);
-    padding: 0 #{token-utils.slot(filled-horizontal-padding, true)};
-
-    @include button-base.mat-private-button-horizontal-layout(
-        filled-icon-spacing, filled-icon-offset);
-    @include button-base.mat-private-button-ripple(
-        filled-ripple-color, filled-state-layer-color, filled-disabled-state-layer-color,
-        filled-hover-state-layer-opacity, filled-focus-state-layer-opacity,
-        filled-pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(false, filled-touch-target-display);
-
-    &:not(:disabled) {
-      color: token-utils.slot(filled-label-text-color);
-      background-color: token-utils.slot(filled-container-color);
-    }
-
-    &, .mdc-button__ripple {
-      border-radius: token-utils.slot(filled-container-shape);
-    }
-
-    // We need to re-apply the disabled tokens since MDC uses
-    // `:disabled` which doesn't apply to anchors.
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(filled-disabled-label-text-color);
-      background-color: token-utils.slot(filled-disabled-container-color);
-    }
+  &:not(:disabled) {
+    color: token-utils.slot(button-text-label-text-color, $fallbacks);
   }
 
-  .mat-mdc-raised-button {
-    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: token-utils.slot(protected-container-elevation-shadow);
-    height: token-utils.slot(protected-container-height);
-    font-family: token-utils.slot(protected-label-text-font);
-    font-size: token-utils.slot(protected-label-text-size);
-    letter-spacing: token-utils.slot(protected-label-text-tracking);
-    text-transform: token-utils.slot(protected-label-text-transform);
-    font-weight: token-utils.slot(protected-label-text-weight);
-    padding: 0 #{token-utils.slot(protected-horizontal-padding, true)};
-
-    @include button-base.mat-private-button-horizontal-layout(
-        protected-icon-spacing, protected-icon-offset);
-    @include button-base.mat-private-button-ripple(
-        protected-ripple-color, protected-state-layer-color, protected-disabled-state-layer-color,
-        protected-hover-state-layer-opacity, protected-focus-state-layer-opacity,
-        protected-pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(false, protected-touch-target-display);
-
-    &:not(:disabled) {
-      color: token-utils.slot(protected-label-text-color);
-      background-color: token-utils.slot(protected-container-color);
-    }
-
-    &, .mdc-button__ripple {
-      border-radius: token-utils.slot(protected-container-shape);
-    }
-
-    &:hover {
-      box-shadow: token-utils.slot(protected-hover-container-elevation-shadow);
-    }
-
-    &:focus {
-      box-shadow: token-utils.slot(protected-focus-container-elevation-shadow);
-    }
-
-    &:active, &:focus:active {
-      box-shadow: token-utils.slot(protected-pressed-container-elevation-shadow);
-    }
-
-    // We need to re-apply the disabled tokens since MDC uses
-    // `:disabled` which doesn't apply to anchors.
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(protected-disabled-label-text-color);
-      background-color: token-utils.slot(protected-disabled-container-color);
-
-      &.mat-mdc-button-disabled {
-        box-shadow: token-utils.slot(protected-disabled-container-elevation-shadow);
-      }
-    }
+  // We need to re-apply the disabled tokens since MDC uses
+  // `:disabled` which doesn't apply to anchors.
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(button-text-disabled-label-text-color, $fallbacks);
   }
 
-  .mat-mdc-outlined-button {
-    border-style: solid;
-    transition: border 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    height: token-utils.slot(outlined-container-height);
-    font-family: token-utils.slot(outlined-label-text-font);
-    font-size: token-utils.slot(outlined-label-text-size);
-    letter-spacing: token-utils.slot(outlined-label-text-tracking);
-    text-transform: token-utils.slot(outlined-label-text-transform);
-    font-weight: token-utils.slot(outlined-label-text-weight);
-    border-radius: token-utils.slot(outlined-container-shape);
-    border-width: token-utils.slot(outlined-outline-width);
-    padding: 0 #{token-utils.slot(outlined-horizontal-padding, true)};
+  @include button-base.mat-private-button-horizontal-layout(
+      button-text-icon-spacing, button-text-icon-offset,
+      button-text-with-icon-horizontal-padding, $fallbacks);
+  @include button-base.mat-private-button-ripple(
+      button-text-ripple-color, button-text-state-layer-color,
+      button-text-disabled-state-layer-color,
+      button-text-hover-state-layer-opacity, button-text-focus-state-layer-opacity,
+      button-text-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(false,
+    button-text-touch-target-display, $fallbacks);
+}
 
-    @include button-base.mat-private-button-horizontal-layout(
-        outlined-icon-spacing, outlined-icon-offset);
-    @include button-base.mat-private-button-ripple(
-        outlined-ripple-color, outlined-state-layer-color, outlined-disabled-state-layer-color,
-        outlined-hover-state-layer-opacity, outlined-focus-state-layer-opacity,
-        outlined-pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(false, outlined-touch-target-display);
+.mat-mdc-unelevated-button {
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: token-utils.slot(button-filled-container-height, $fallbacks);
+  font-family: token-utils.slot(button-filled-label-text-font, $fallbacks);
+  font-size: token-utils.slot(button-filled-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(button-filled-label-text-tracking, $fallbacks);
+  text-transform: token-utils.slot(button-filled-label-text-transform, $fallbacks);
+  font-weight: token-utils.slot(button-filled-label-text-weight, $fallbacks);
+  padding: 0 #{token-utils.slot(button-filled-horizontal-padding, $fallbacks, true)};
 
-    &:not(:disabled) {
-      color: token-utils.slot(outlined-label-text-color);
-      border-color: token-utils.slot(outlined-outline-color);
-    }
+  @include button-base.mat-private-button-horizontal-layout(
+      button-filled-icon-spacing, button-filled-icon-offset, null, $fallbacks);
+  @include button-base.mat-private-button-ripple(
+      button-filled-ripple-color, button-filled-state-layer-color,
+      button-filled-disabled-state-layer-color,
+      button-filled-hover-state-layer-opacity, button-filled-focus-state-layer-opacity,
+      button-filled-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(false,
+    button-filled-touch-target-display, $fallbacks);
 
-    // We need to re-apply the disabled tokens since MDC uses
-    // `:disabled` which doesn't apply to anchors.
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(outlined-disabled-label-text-color);
-      border-color: token-utils.slot(outlined-disabled-outline-color);
-    }
+  &:not(:disabled) {
+    color: token-utils.slot(button-filled-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-filled-container-color, $fallbacks);
   }
 
-  .mat-tonal-button {
-    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    height: token-utils.slot(tonal-container-height);
-    font-family: token-utils.slot(tonal-label-text-font);
-    font-size: token-utils.slot(tonal-label-text-size);
-    letter-spacing: token-utils.slot(tonal-label-text-tracking);
-    text-transform: token-utils.slot(tonal-label-text-transform);
-    font-weight: token-utils.slot(tonal-label-text-weight);
-    padding: 0 #{token-utils.slot(tonal-horizontal-padding, true)};
-
-    &:not(:disabled) {
-      color: token-utils.slot(tonal-label-text-color);
-      background-color: token-utils.slot(tonal-container-color);
-    }
-
-    &, .mdc-button__ripple {
-      border-radius: token-utils.slot(tonal-container-shape);
-    }
-
-    // We need to re-apply the disabled tokens since MDC uses
-    // `:disabled` which doesn't apply to anchors.
-    @include button-base.mat-private-button-disabled {
-      color: token-utils.slot(tonal-disabled-label-text-color);
-      background-color: token-utils.slot(tonal-disabled-container-color);
-    }
-
-    @include button-base.mat-private-button-horizontal-layout(
-        tonal-icon-spacing, tonal-icon-offset);
-    @include button-base.mat-private-button-ripple(
-        tonal-ripple-color, tonal-state-layer-color, tonal-disabled-state-layer-color,
-        tonal-hover-state-layer-opacity, tonal-focus-state-layer-opacity,
-        tonal-pressed-state-layer-opacity);
-    @include button-base.mat-private-button-touch-target(false, tonal-touch-target-display);
+  &, .mdc-button__ripple {
+    border-radius: token-utils.slot(button-filled-container-shape, $fallbacks);
   }
+
+  // We need to re-apply the disabled tokens since MDC uses
+  // `:disabled` which doesn't apply to anchors.
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(button-filled-disabled-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-filled-disabled-container-color, $fallbacks);
+  }
+}
+
+.mat-mdc-raised-button {
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: token-utils.slot(button-protected-container-elevation-shadow, $fallbacks);
+  height: token-utils.slot(button-protected-container-height, $fallbacks);
+  font-family: token-utils.slot(button-protected-label-text-font, $fallbacks);
+  font-size: token-utils.slot(button-protected-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(button-protected-label-text-tracking, $fallbacks);
+  text-transform: token-utils.slot(button-protected-label-text-transform, $fallbacks);
+  font-weight: token-utils.slot(button-protected-label-text-weight, $fallbacks);
+  padding: 0 #{token-utils.slot(button-protected-horizontal-padding, $fallbacks, true)};
+
+  @include button-base.mat-private-button-horizontal-layout(
+      button-protected-icon-spacing, button-protected-icon-offset, null, $fallbacks);
+  @include button-base.mat-private-button-ripple(
+      button-protected-ripple-color, button-protected-state-layer-color,
+      button-protected-disabled-state-layer-color,
+      button-protected-hover-state-layer-opacity, button-protected-focus-state-layer-opacity,
+      button-protected-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(false,
+      button-protected-touch-target-display, $fallbacks);
+
+  &:not(:disabled) {
+    color: token-utils.slot(button-protected-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-protected-container-color, $fallbacks);
+  }
+
+  &, .mdc-button__ripple {
+    border-radius: token-utils.slot(button-protected-container-shape, $fallbacks);
+  }
+
+  &:hover {
+    box-shadow: token-utils.slot(button-protected-hover-container-elevation-shadow, $fallbacks);
+  }
+
+  &:focus {
+    box-shadow: token-utils.slot(button-protected-focus-container-elevation-shadow, $fallbacks);
+  }
+
+  &:active, &:focus:active {
+    box-shadow: token-utils.slot(button-protected-pressed-container-elevation-shadow, $fallbacks);
+  }
+
+  // We need to re-apply the disabled tokens since MDC uses
+  // `:disabled` which doesn't apply to anchors.
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(button-protected-disabled-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-protected-disabled-container-color, $fallbacks);
+
+    &.mat-mdc-button-disabled {
+      box-shadow: token-utils.slot(
+          button-protected-disabled-container-elevation-shadow, $fallbacks);
+    }
+  }
+}
+
+.mat-mdc-outlined-button {
+  border-style: solid;
+  transition: border 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: token-utils.slot(button-outlined-container-height, $fallbacks);
+  font-family: token-utils.slot(button-outlined-label-text-font, $fallbacks);
+  font-size: token-utils.slot(button-outlined-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(button-outlined-label-text-tracking, $fallbacks);
+  text-transform: token-utils.slot(button-outlined-label-text-transform, $fallbacks);
+  font-weight: token-utils.slot(button-outlined-label-text-weight, $fallbacks);
+  border-radius: token-utils.slot(button-outlined-container-shape, $fallbacks);
+  border-width: token-utils.slot(button-outlined-outline-width, $fallbacks);
+  padding: 0 #{token-utils.slot(button-outlined-horizontal-padding, $fallbacks, true)};
+
+  @include button-base.mat-private-button-horizontal-layout(
+      button-outlined-icon-spacing, button-outlined-icon-offset, null, $fallbacks);
+  @include button-base.mat-private-button-ripple(
+      button-outlined-ripple-color, button-outlined-state-layer-color,
+      button-outlined-disabled-state-layer-color,
+      button-outlined-hover-state-layer-opacity, button-outlined-focus-state-layer-opacity,
+      button-outlined-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(false,
+    button-outlined-touch-target-display, $fallbacks);
+
+  &:not(:disabled) {
+    color: token-utils.slot(button-outlined-label-text-color, $fallbacks);
+    border-color: token-utils.slot(button-outlined-outline-color, $fallbacks);
+  }
+
+  // We need to re-apply the disabled tokens since MDC uses
+  // `:disabled` which doesn't apply to anchors.
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(button-outlined-disabled-label-text-color, $fallbacks);
+    border-color: token-utils.slot(button-outlined-disabled-outline-color, $fallbacks);
+  }
+}
+
+.mat-tonal-button {
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: token-utils.slot(button-tonal-container-height, $fallbacks);
+  font-family: token-utils.slot(button-tonal-label-text-font, $fallbacks);
+  font-size: token-utils.slot(button-tonal-label-text-size, $fallbacks);
+  letter-spacing: token-utils.slot(button-tonal-label-text-tracking, $fallbacks);
+  text-transform: token-utils.slot(button-tonal-label-text-transform, $fallbacks);
+  font-weight: token-utils.slot(button-tonal-label-text-weight, $fallbacks);
+  padding: 0 #{token-utils.slot(button-tonal-horizontal-padding, $fallbacks, true)};
+
+  &:not(:disabled) {
+    color: token-utils.slot(button-tonal-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-tonal-container-color, $fallbacks);
+  }
+
+  &, .mdc-button__ripple {
+    border-radius: token-utils.slot(button-tonal-container-shape, $fallbacks);
+  }
+
+  // We need to re-apply the disabled tokens since MDC uses
+  // `:disabled` which doesn't apply to anchors.
+  @include button-base.mat-private-button-disabled {
+    color: token-utils.slot(button-tonal-disabled-label-text-color, $fallbacks);
+    background-color: token-utils.slot(button-tonal-disabled-container-color, $fallbacks);
+  }
+
+  @include button-base.mat-private-button-horizontal-layout(
+      button-tonal-icon-spacing, button-tonal-icon-offset, null, $fallbacks);
+  @include button-base.mat-private-button-ripple(
+      button-tonal-ripple-color, button-tonal-state-layer-color,
+      button-tonal-disabled-state-layer-color,
+      button-tonal-hover-state-layer-opacity, button-tonal-focus-state-layer-opacity,
+      button-tonal-pressed-state-layer-opacity, $fallbacks);
+  @include button-base.mat-private-button-touch-target(false,
+    button-tonal-touch-target-display, $fallbacks);
 }
 
 .mat-mdc-button,

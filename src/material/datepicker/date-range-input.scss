@@ -3,17 +3,13 @@
 
 @use '../core/style/variables';
 @use '../core/style/vendor-prefixes';
-@use '../core/tokens/m3-system';
 @use '../core/tokens/token-utils';
-@use './m2-datepicker';
 @use './m3-datepicker';
 
 $date-range-input-separator-spacing: 4px;
 $date-range-input-part-max-width: calc(50% - #{$date-range-input-separator-spacing});
 
-$token-prefix: m2-datepicker.$prefix;
-$token-slots: m2-datepicker.get-token-slots();
-$fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
+$fallbacks: m3-datepicker.get-tokens();
 
 @mixin _placeholder-transition($property) {
   transition: #{$property} variables.$swift-ease-out-duration
@@ -38,12 +34,10 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
   @include _placeholder-transition(opacity);
   margin: 0 $date-range-input-separator-spacing;
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-    color: token-utils.slot(range-input-separator-color);
+  color: token-utils.slot(datepicker-range-input-separator-color, $fallbacks);
 
-    .mat-form-field-disabled & {
-      color: token-utils.slot(range-input-disabled-state-separator-color);
-    }
+  .mat-form-field-disabled & {
+    color: token-utils.slot(datepicker-range-input-disabled-state-separator-color, $fallbacks);
   }
 
   ._mat-animation-noopable & {
@@ -106,11 +100,8 @@ $fallbacks: m3-datepicker.get-tokens(m3-system.$theme-with-system-vars);
     @include _placeholder-transition(color);
   }
 
-  @include token-utils.use-tokens($token-prefix, $token-slots, $fallbacks) {
-
-    &[disabled] {
-      color: token-utils.slot(range-input-disabled-state-text-color);
-    }
+  &[disabled] {
+    color: token-utils.slot(datepicker-range-input-disabled-state-text-color, $fallbacks);
   }
 
   .mat-form-field-hide-placeholder &,

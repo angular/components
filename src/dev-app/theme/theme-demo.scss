@@ -93,11 +93,11 @@ mat-expansion-panel {
   margin-top: 24px;
   overflow: visible;
   @include mat.expansion-overrides((
-    'container-text-font': var(--mat-sys-body-medium-font),
-    'container-text-size': var(--mat-sys-body-medium-size),
-    'container-text-weight': var(--mat-sys-body-medium-weight),
-    'container-text-line-height': var(--mat-sys-body-medium-line-height),
-    'container-text-tracking': var(--mat-sys-body-medium-tracking),
+    container-text-font: var(--mat-sys-body-medium-font),
+    container-text-size: var(--mat-sys-body-medium-size),
+    container-text-weight: var(--mat-sys-body-medium-weight),
+    container-text-line-height: var(--mat-sys-body-medium-line-height),
+    container-text-tracking: var(--mat-sys-body-medium-tracking),
   ));
 }
 

@@ -5,19 +5,16 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, button-toggle);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
-    focus-state-layer-opacity: 0.12,
-    hover-state-layer-opacity: 0.04,
-    legacy-focus-state-layer-opacity: 1,
-    legacy-height: 36px,
-    legacy-shape: 2px,
-    shape: 4px,
+    button-toggle-focus-state-layer-opacity: 0.12,
+    button-toggle-hover-state-layer-opacity: 0.04,
+    button-toggle-legacy-focus-state-layer-opacity: 1,
+    button-toggle-legacy-height: 36px,
+    button-toggle-legacy-shape: 2px,
+    button-toggle-shape: 4px,
   );
 }
 
@@ -36,47 +33,58 @@ $prefix: (mat, button-toggle);
       $theme-divider-color);
 
   @return (
-    background-color: inspection.get-theme-color($theme, background, card),
-    disabled-selected-state-background-color:
+    button-toggle-background-color: inspection.get-theme-color($theme, background, card),
+    button-toggle-disabled-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-disabled-button),
-    disabled-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    disabled-state-background-color: inspection.get-theme-color($theme, background, card),
-    disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-button),
-    divider-color: $divider-color,
-    legacy-disabled-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-disabled-button),
-    legacy-disabled-state-background-color:
-        inspection.get-theme-color($theme, background, disabled-button-toggle),
-    legacy-disabled-state-text-color:
+    button-toggle-disabled-selected-state-text-color:
+        inspection.get-theme-color($theme, foreground, text),
+    button-toggle-disabled-state-background-color:
+        inspection.get-theme-color($theme, background, card),
+    button-toggle-disabled-state-text-color:
         inspection.get-theme-color($theme, foreground, disabled-button),
-    legacy-selected-state-background-color:
+    button-toggle-divider-color: $divider-color,
+    button-toggle-legacy-disabled-selected-state-background-color:
+        inspection.get-theme-color($theme, background, selected-disabled-button),
+    button-toggle-legacy-disabled-state-background-color:
+        inspection.get-theme-color($theme, background, disabled-button-toggle),
+    button-toggle-legacy-disabled-state-text-color:
+        inspection.get-theme-color($theme, foreground, disabled-button),
+    button-toggle-legacy-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
-    legacy-selected-state-text-color:
+    button-toggle-legacy-selected-state-text-color:
         inspection.get-theme-color($theme, foreground, secondary-text),
-    legacy-state-layer-color: inspection.get-theme-color($theme, background, focused-button),
-    legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
-    selected-state-background-color:
+    button-toggle-legacy-state-layer-color:
+        inspection.get-theme-color($theme, background, focused-button),
+    button-toggle-legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
+    button-toggle-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
-    selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
-    state-layer-color: sass-utils.safe-color-change(
+    button-toggle-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
+    button-toggle-state-layer-color: sass-utils.safe-color-change(
         inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
-    text-color: inspection.get-theme-color($theme, foreground, text),
+    button-toggle-text-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
   @return (
-    label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    legacy-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    legacy-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    legacy-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    legacy-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    legacy-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    button-toggle-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
+    button-toggle-label-text-line-height:
+        inspection.get-theme-typography($theme, body-1, line-height),
+    button-toggle-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
+    button-toggle-label-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    button-toggle-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    button-toggle-legacy-label-text-font:
+        inspection.get-theme-typography($theme, body-1, font-family),
+    button-toggle-legacy-label-text-line-height:
+        inspection.get-theme-typography($theme, body-1, line-height),
+    button-toggle-legacy-label-text-size:
+        inspection.get-theme-typography($theme, body-1, font-size),
+    button-toggle-legacy-label-text-tracking:
+        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    button-toggle-legacy-label-text-weight:
+        inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
 
@@ -92,7 +100,7 @@ $prefix: (mat, button-toggle);
   );
 
   @return (
-    height: map.get($size-scale, $density-scale)
+    button-toggle-height: map.get($size-scale, $density-scale)
   );
 }
 

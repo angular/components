@@ -9,48 +9,37 @@
 
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-paginator.$prefix,
-        map.get(m3-paginator.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-paginator.get-tokens($theme), base));
   } @else {
   }
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-paginator.$prefix,
-        map.get(m3-paginator.get-tokens($theme), color));
+    @include token-utils.create-token-values(map.get(m3-paginator.get-tokens($theme), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-paginator.$prefix, m2-paginator.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-paginator.get-color-tokens($theme));
     }
   }
 }
 
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-paginator.$prefix,
-        map.get(m3-paginator.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-paginator.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-paginator.$prefix, m2-paginator.get-typography-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-paginator.get-typography-tokens($theme));
     }
   }
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-paginator.$prefix,
-        map.get(m3-paginator.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-paginator.get-tokens($theme), density));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-paginator.$prefix, m2-paginator.get-density-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-paginator.get-density-tokens($theme));
     }
   }
 }
@@ -59,14 +48,14 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-paginator.$prefix,
-      tokens: m2-paginator.get-token-slots(),
+      namespace: paginator,
+      tokens: token-utils.get-overrides(m3-paginator.get-tokens(), paginator)
     ),
   );
 }
 
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 @mixin theme($theme) {

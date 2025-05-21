@@ -1,41 +1,42 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
+@use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, card);
 
 /// Generates custom tokens for the mat-card.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
   @return (
     base: (
-      elevated-container-shape: map.get($system, corner-medium),
-      filled-container-shape: map.get($system, corner-medium),
-      outlined-container-shape: map.get($system, corner-medium),
-      outlined-outline-width: 1px,
+      card-elevated-container-shape: map.get($system, corner-medium),
+      card-filled-container-shape: map.get($system, corner-medium),
+      card-outlined-container-shape: map.get($system, corner-medium),
+      card-outlined-outline-width: 1px,
     ),
     color: (
-      elevated-container-color: map.get($system, surface-container-low),
-      elevated-container-elevation: elevation.get-box-shadow(map.get($system, level1)),
-      filled-container-color: map.get($system, surface-container-highest),
-      filled-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
-      outlined-container-color: map.get($system, surface),
-      outlined-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
-      outlined-outline-color: map.get($system, outline-variant),
-      subtitle-text-color: map.get($system, on-surface),
+      card-elevated-container-color: map.get($system, surface-container-low),
+      card-elevated-container-elevation: elevation.get-box-shadow(map.get($system, level1)),
+      card-filled-container-color: map.get($system, surface-container-highest),
+      card-filled-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
+      card-outlined-container-color: map.get($system, surface),
+      card-outlined-container-elevation: elevation.get-box-shadow(map.get($system, level0)),
+      card-outlined-outline-color: map.get($system, outline-variant),
+      card-subtitle-text-color: map.get($system, on-surface),
     ),
     typography: (
-      subtitle-text-font: map.get($system, title-medium-font),
-      subtitle-text-line-height: map.get($system, title-medium-line-height),
-      subtitle-text-size: map.get($system, title-medium-size),
-      subtitle-text-tracking: map.get($system, title-medium-tracking),
-      subtitle-text-weight: map.get($system, title-medium-weight),
-      title-text-font: map.get($system, title-large-font),
-      title-text-line-height: map.get($system, title-large-line-height),
-      title-text-size: map.get($system, title-large-size),
-      title-text-tracking: map.get($system, title-large-tracking),
-      title-text-weight: map.get($system, title-large-weight),
+      card-subtitle-text-font: map.get($system, title-medium-font),
+      card-subtitle-text-line-height: map.get($system, title-medium-line-height),
+      card-subtitle-text-size: map.get($system, title-medium-size),
+      card-subtitle-text-tracking: map.get($system, title-medium-tracking),
+      card-subtitle-text-weight: map.get($system, title-medium-weight),
+      card-title-text-font: map.get($system, title-large-font),
+      card-title-text-line-height: map.get($system, title-large-line-height),
+      card-title-text-size: map.get($system, title-large-size),
+      card-title-text-tracking: map.get($system, title-large-tracking),
+      card-title-text-weight: map.get($system, title-large-weight),
     ),
     density: (),
   );

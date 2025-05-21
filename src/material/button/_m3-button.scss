@@ -1,15 +1,14 @@
 @use 'sass:map';
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
+@use '../core/tokens/m3';
 @use '../core/style/elevation';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, button);
 
 /// Generates custom tokens for the button.
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
@@ -18,123 +17,129 @@ $prefix: (mat, button);
 
   @return (
     base: (
-      filled-container-shape: map.get($system, corner-full),
-      filled-horizontal-padding: 24px,
-      filled-icon-offset: -8px,
-      filled-icon-spacing: 8px,
-      outlined-container-shape: map.get($system, corner-full),
-      outlined-horizontal-padding: 24px,
-      outlined-icon-offset: -8px,
-      outlined-icon-spacing: 8px,
-      outlined-outline-width: 1px,
-      protected-container-shape: map.get($system, corner-full),
-      protected-horizontal-padding: 24px,
-      protected-icon-offset: -8px,
-      protected-icon-spacing: 8px,
-      text-container-shape: map.get($system, corner-full),
-      text-horizontal-padding: 12px,
-      text-icon-offset: -4px,
-      text-icon-spacing: 8px,
-      text-with-icon-horizontal-padding: 16px,
-      tonal-container-shape: map.get($system, corner-full),
-      tonal-horizontal-padding: 24px,
-      tonal-icon-offset: -8px,
-      tonal-icon-spacing: 8px,
+      button-filled-container-shape: map.get($system, corner-full),
+      button-filled-horizontal-padding: 24px,
+      button-filled-icon-offset: -8px,
+      button-filled-icon-spacing: 8px,
+      button-filled-label-text-transform: null,
+      button-outlined-container-shape: map.get($system, corner-full),
+      button-outlined-horizontal-padding: 24px,
+      button-outlined-icon-offset: -8px,
+      button-outlined-icon-spacing: 8px,
+      button-outlined-outline-width: 1px,
+      button-outlined-label-text-transform: null,
+      button-protected-container-shape: map.get($system, corner-full),
+      button-protected-horizontal-padding: 24px,
+      button-protected-icon-offset: -8px,
+      button-protected-icon-spacing: 8px,
+      button-protected-label-text-transform: null,
+      button-text-container-shape: map.get($system, corner-full),
+      button-text-horizontal-padding: 12px,
+      button-text-icon-offset: -4px,
+      button-text-icon-spacing: 8px,
+      button-text-with-icon-horizontal-padding: 16px,
+      button-text-label-text-transform: null,
+      button-tonal-container-shape: map.get($system, corner-full),
+      button-tonal-horizontal-padding: 24px,
+      button-tonal-icon-offset: -8px,
+      button-tonal-icon-spacing: 8px,
+      button-tonal-label-text-transform: null,
     ),
     color: (
-      filled-container-color: map.get($system, primary),
-      filled-disabled-container-color:
+      button-filled-container-color: map.get($system, primary),
+      button-filled-disabled-container-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      filled-disabled-label-text-color:
+      button-filled-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      filled-disabled-state-layer-color: map.get($system, on-surface-variant),
-      filled-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      filled-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      filled-label-text-color: map.get($system, on-primary),
-      filled-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
-      filled-ripple-color: m3-utils.color-with-opacity(
+      button-filled-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-filled-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-filled-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-filled-label-text-color: map.get($system, on-primary),
+      button-filled-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
+      button-filled-ripple-color: m3-utils.color-with-opacity(
           map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
-      filled-state-layer-color: map.get($system, on-primary),
-      outlined-disabled-label-text-color:
+      button-filled-state-layer-color: map.get($system, on-primary),
+      button-outlined-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      outlined-disabled-outline-color:
+      button-outlined-disabled-outline-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      outlined-disabled-state-layer-color: map.get($system, on-surface-variant),
-      outlined-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      outlined-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      outlined-label-text-color: map.get($system, primary),
-      outlined-outline-color: map.get($system, outline),
-      outlined-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
-      outlined-ripple-color: m3-utils.color-with-opacity(
+      button-outlined-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-outlined-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-outlined-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-outlined-label-text-color: map.get($system, primary),
+      button-outlined-outline-color: map.get($system, outline),
+      button-outlined-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
+      button-outlined-ripple-color: m3-utils.color-with-opacity(
           map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
-      outlined-state-layer-color: map.get($system, primary),
-      protected-container-color: map.get($system, surface),
-      protected-container-elevation-shadow: elevation.get-box-shadow(map.get($system, level1)),
-      protected-disabled-container-color:
+      button-outlined-state-layer-color: map.get($system, primary),
+      button-protected-container-color: map.get($system, surface),
+      button-protected-container-elevation-shadow:
+          elevation.get-box-shadow(map.get($system, level1)),
+      button-protected-disabled-container-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      protected-disabled-container-elevation-shadow:
+      button-protected-disabled-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level0)),
-      protected-disabled-label-text-color:
+      button-protected-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      protected-disabled-state-layer-color: map.get($system, on-surface-variant),
-      protected-focus-container-elevation-shadow:
+      button-protected-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-protected-focus-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level1)),
-      protected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      protected-hover-container-elevation-shadow:
+      button-protected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-protected-hover-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level2)),
-      protected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      protected-label-text-color: map.get($system, primary),
-      protected-pressed-container-elevation-shadow:
+      button-protected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-protected-label-text-color: map.get($system, primary),
+      button-protected-pressed-container-elevation-shadow:
           elevation.get-box-shadow(map.get($system, level1)),
-      protected-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
-      protected-ripple-color: m3-utils.color-with-opacity(
+      button-protected-pressed-state-layer-opacity:map.get($system, pressed-state-layer-opacity),
+      button-protected-ripple-color: m3-utils.color-with-opacity(
           map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
-      protected-state-layer-color: map.get($system, primary),
-      text-disabled-label-text-color:
+      button-protected-state-layer-color: map.get($system, primary),
+      button-text-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      text-disabled-state-layer-color: map.get($system, on-surface-variant),
-      text-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      text-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      text-label-text-color: map.get($system, primary),
-      text-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-      text-ripple-color: m3-utils.color-with-opacity(
+      button-text-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-text-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-text-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-text-label-text-color: map.get($system, primary),
+      button-text-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-text-ripple-color: m3-utils.color-with-opacity(
           map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
-      text-state-layer-color: map.get($system, primary),
-      tonal-container-color: map.get($system, secondary-container),
-      tonal-disabled-container-color:
+      button-text-state-layer-color: map.get($system, primary),
+      button-tonal-container-color: map.get($system, secondary-container),
+      button-tonal-disabled-container-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-      tonal-disabled-label-text-color:
+      button-tonal-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      tonal-disabled-state-layer-color: map.get($system, on-surface-variant),
-      tonal-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-      tonal-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-      tonal-label-text-color: map.get($system, on-secondary-container),
-      tonal-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-      tonal-ripple-color: m3-utils.color-with-opacity(
+      button-tonal-disabled-state-layer-color: map.get($system, on-surface-variant),
+      button-tonal-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-tonal-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-tonal-label-text-color: map.get($system, on-secondary-container),
+      button-tonal-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      button-tonal-ripple-color: m3-utils.color-with-opacity(
           map.get($system, on-secondary-container), map.get($system, pressed-state-layer-opacity)),
-      tonal-state-layer-color: map.get($system, on-secondary-container),
+      button-tonal-state-layer-color: map.get($system, on-secondary-container),
     ),
     typography: (
-      filled-label-text-font: map.get($system, label-large-font),
-      filled-label-text-size: map.get($system, label-large-size),
-      filled-label-text-tracking: map.get($system, label-large-tracking),
-      filled-label-text-weight: map.get($system, label-large-weight),
-      outlined-label-text-font: map.get($system, label-large-font),
-      outlined-label-text-size: map.get($system, label-large-size),
-      outlined-label-text-tracking: map.get($system, label-large-tracking),
-      outlined-label-text-weight: map.get($system, label-large-weight),
-      protected-label-text-font: map.get($system, label-large-font),
-      protected-label-text-size: map.get($system, label-large-size),
-      protected-label-text-tracking: map.get($system, label-large-tracking),
-      protected-label-text-weight: map.get($system, label-large-weight),
-      text-label-text-font: map.get($system, label-large-font),
-      text-label-text-size: map.get($system, label-large-size),
-      text-label-text-tracking: map.get($system, label-large-tracking),
-      text-label-text-weight: map.get($system, label-large-weight),
-      tonal-label-text-font: map.get($system, label-large-font),
-      tonal-label-text-size: map.get($system, label-large-size),
-      tonal-label-text-tracking: map.get($system, label-large-tracking),
-      tonal-label-text-weight: map.get($system, label-large-weight),
+      button-filled-label-text-font: map.get($system, label-large-font),
+      button-filled-label-text-size: map.get($system, label-large-size),
+      button-filled-label-text-tracking: map.get($system, label-large-tracking),
+      button-filled-label-text-weight: map.get($system, label-large-weight),
+      button-outlined-label-text-font: map.get($system, label-large-font),
+      button-outlined-label-text-size: map.get($system, label-large-size),
+      button-outlined-label-text-tracking: map.get($system, label-large-tracking),
+      button-outlined-label-text-weight: map.get($system, label-large-weight),
+      button-protected-label-text-font: map.get($system, label-large-font),
+      button-protected-label-text-size: map.get($system, label-large-size),
+      button-protected-label-text-tracking: map.get($system, label-large-tracking),
+      button-protected-label-text-weight: map.get($system, label-large-weight),
+      button-text-label-text-font: map.get($system, label-large-font),
+      button-text-label-text-size: map.get($system, label-large-size),
+      button-text-label-text-tracking: map.get($system, label-large-tracking),
+      button-text-label-text-weight: map.get($system, label-large-weight),
+      button-tonal-label-text-font: map.get($system, label-large-font),
+      button-tonal-label-text-size: map.get($system, label-large-size),
+      button-tonal-label-text-tracking: map.get($system, label-large-tracking),
+      button-tonal-label-text-weight: map.get($system, label-large-weight),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -146,15 +151,15 @@ $prefix: (mat, button);
   $index: ($scale * -1) + 1;
 
   @return (
-    filled-touch-target-display: list.nth((block, block, none, none), $index),
-    filled-container-height: list.nth((40px, 36px, 32px, 28px), $index),
-    outlined-container-height: list.nth((40px, 36px, 32px, 28px), $index),
-    outlined-touch-target-display: list.nth((block, block, none, none), $index),
-    protected-touch-target-display: list.nth((block, block, none, none), $index),
-    protected-container-height: list.nth((40px, 36px, 32px, 28px), $index),
-    text-touch-target-display: list.nth((block, block, none, none), $index),
-    text-container-height: list.nth((40px, 36px, 32px, 28px), $index),
-    tonal-container-height: list.nth((40px, 36px, 32px, 28px), $index),
-    tonal-touch-target-display: list.nth((block, block, none, none), $index),
+    button-filled-touch-target-display: list.nth((block, block, none, none), $index),
+    button-filled-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    button-outlined-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    button-outlined-touch-target-display: list.nth((block, block, none, none), $index),
+    button-protected-touch-target-display: list.nth((block, block, none, none), $index),
+    button-protected-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    button-text-touch-target-display: list.nth((block, block, none, none), $index),
+    button-text-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    button-tonal-container-height: list.nth((40px, 36px, 32px, 28px), $index),
+    button-tonal-touch-target-display: list.nth((block, block, none, none), $index),
   );
 }

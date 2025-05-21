@@ -3,29 +3,27 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, paginator);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-paginator.
-@function get-tokens($theme) {
+@function get-tokens($theme: m3.$sys-theme) {
   $system: m3-utils.get-system($theme);
 
   @return (
     base: (),
     color: (
-      container-text-color: map.get($system, on-surface),
-      container-background-color: map.get($system, surface),
-      disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-      enabled-icon-color: map.get($system, on-surface-variant),
+      paginator-container-text-color: map.get($system, on-surface),
+      paginator-container-background-color: map.get($system, surface),
+      paginator-disabled-icon-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      paginator-enabled-icon-color: map.get($system, on-surface-variant),
     ),
     typography: (
-      container-text-font: map.get($system, body-small-font),
-      container-text-line-height: map.get($system, body-small-line-height),
-      container-text-size: map.get($system, body-small-size),
-      container-text-tracking: map.get($system, body-small-tracking),
-      container-text-weight: map.get($system, body-small-weight),
-      select-trigger-text-size: map.get($system, body-small-size),
+      paginator-container-text-font: map.get($system, body-small-font),
+      paginator-container-text-line-height: map.get($system, body-small-line-height),
+      paginator-container-text-size: map.get($system, body-small-size),
+      paginator-container-text-tracking: map.get($system, body-small-tracking),
+      paginator-container-text-weight: map.get($system, body-small-weight),
+      paginator-select-trigger-text-size: map.get($system, body-small-size),
     ),
     density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
   );
@@ -37,9 +35,10 @@ $prefix: (mat, paginator);
   $index: ($scale * -1) + 1;
 
   @return (
-    container-size: list.nth((56px, 52px, 48px, 40px, 40px, 40px), $index),
-    form-field-container-height: list.nth((40px, 40px, 40px, 40px, 40px, 36px), $index),
-    form-field-container-vertical-padding: list.nth((8px, 8px, 8px, 8px, 8px, 6px), $index),
-    touch-target-display: list.nth((block, block, none, none, none, none), $index),
+    paginator-container-size: list.nth((56px, 52px, 48px, 40px, 40px, 40px), $index),
+    paginator-form-field-container-height: list.nth((40px, 40px, 40px, 40px, 40px, 36px), $index),
+    paginator-form-field-container-vertical-padding:
+        list.nth((8px, 8px, 8px, 8px, 8px, 6px), $index),
+    paginator-touch-target-display: list.nth((block, block, none, none, none, none), $index),
   );
 }

@@ -12,9 +12,7 @@
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-option.$prefix,
-        map.get(m3-option.get-tokens($theme), base));
+    @include token-utils.create-token-values(map.get(m3-option.get-tokens($theme), base));
   } @else {
   }
 }
@@ -25,22 +23,18 @@
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(
-        m3-option.$prefix,
         map.get(m3-option.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-option.$prefix, m2-option.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme));
     }
 
     .mat-accent {
-      @include token-utils.create-token-values-mixed(
-        m2-option.$prefix, m2-option.get-color-tokens($theme, accent));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, accent));
     }
 
     .mat-warn {
-      @include token-utils.create-token-values-mixed(
-        m2-option.$prefix, m2-option.get-color-tokens($theme, warn));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, warn));
     }
   }
 }
@@ -49,13 +43,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-option.$prefix,
-        map.get(m3-option.get-tokens($theme), typography));
+    @include token-utils.create-token-values(map.get(m3-option.get-tokens($theme), typography));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-option.$prefix, m2-option.get-typography-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-option.get-typography-tokens($theme));
     }
   }
 }
@@ -64,9 +55,7 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        m3-option.$prefix,
-        map.get(m3-option.get-tokens($theme), density));
+    @include token-utils.create-token-values(map.get(m3-option.get-tokens($theme), density));
   } @else {
   }
 }
@@ -75,8 +64,8 @@
 @function _define-overrides() {
   @return (
     (
-      namespace: m2-option.$prefix,
-      tokens: m2-option.get-token-slots(),
+      namespace: option,
+      tokens: token-utils.get-overrides(m3-option.get-tokens(), option)
     ),
   );
 }
@@ -84,7 +73,7 @@
 /// Outputs the CSS variable values for the given tokens.
 /// @param {Map} $tokens The token values to emit.
 @mixin overrides($tokens: ()) {
-  @include token-utils.batch-create-token-values($tokens, _define-overrides()...);
+    @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-option.

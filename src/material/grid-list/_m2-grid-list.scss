@@ -2,9 +2,6 @@
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
 
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, grid-list);
-
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
@@ -22,10 +19,14 @@ $prefix: (mat, grid-list);
     // TODO(crisbeto): other components have tokens for all typography dimensions.
     // Here we only set the font size to maintain the same appearance as the pre-tokens
     // theming API. Consider adding more tokens for letter spacing, font weight etc.
-    tile-header-primary-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    tile-header-secondary-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    tile-footer-primary-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    tile-footer-secondary-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    grid-list-tile-header-primary-text-size:
+        inspection.get-theme-typography($theme, body-2, font-size),
+    grid-list-tile-header-secondary-text-size:
+        inspection.get-theme-typography($theme, caption, font-size),
+    grid-list-tile-footer-primary-text-size:
+        inspection.get-theme-typography($theme, body-2, font-size),
+    grid-list-tile-footer-secondary-text-size:
+        inspection.get-theme-typography($theme, caption, font-size),
   );
 }
 

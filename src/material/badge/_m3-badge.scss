@@ -1,11 +1,9 @@
 @use 'sass:map';
 @use '../core/tokens/m3-utils';
-
-// The prefix used to generate the fully qualified name for tokens in this file.
-$prefix: (mat, badge);
+@use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-badge.
-@function get-tokens($theme, $color-variant: null) {
+@function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, error, $color-variant);
@@ -13,38 +11,39 @@ $prefix: (mat, badge);
 
   $tokens: (
     base: (
-      container-offset: -12px 0,
-      container-overlap-offset: -12px,
-      container-padding: 0 4px,
-      container-shape: map.get($system, corner-full),
-      container-size: 16px,
-      large-size-container-offset: -12px 0,
-      large-size-container-overlap-offset: -12px,
-      large-size-container-padding: 0 4px,
-      large-size-container-size: 16px,
-      legacy-container-size: unset,
-      legacy-large-size-container-size: unset,
-      legacy-small-size-container-size: unset,
-      small-size-container-offset: -6px 0,
-      small-size-container-overlap-offset: -6px,
-      small-size-container-padding: 0,
-      small-size-container-size: 6px,
+      badge-container-offset: -12px 0,
+      badge-container-overlap-offset: -12px,
+      badge-container-padding: 0 4px,
+      badge-container-shape: map.get($system, corner-full),
+      badge-container-size: 16px,
+      badge-large-size-container-offset: -12px 0,
+      badge-large-size-container-overlap-offset: -12px,
+      badge-large-size-container-padding: 0 4px,
+      badge-large-size-container-size: 16px,
+      badge-legacy-container-size: unset,
+      badge-legacy-large-size-container-size: unset,
+      badge-legacy-small-size-container-size: unset,
+      badge-small-size-container-offset: -6px 0,
+      badge-small-size-container-overlap-offset: -6px,
+      badge-small-size-container-padding: 0,
+      badge-small-size-container-size: 6px,
     ),
     color: (
-      background-color: map.get($system, error),
-      disabled-state-background-color: m3-utils.color-with-opacity(map.get($system, error), 38%),
-      disabled-state-text-color: map.get($system, on-error),
-      text-color: map.get($system, on-error),
+      badge-background-color: map.get($system, error),
+      badge-disabled-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, error), 38%),
+      badge-disabled-state-text-color: map.get($system, on-error),
+      badge-text-color: map.get($system, on-error),
     ),
     typography: (
-      large-size-line-height: 16px,
-      large-size-text-size: map.get($system, label-small-size),
-      line-height: 16px,
-      small-size-line-height: 6px,
-      small-size-text-size: 0,
-      text-font: map.get($system, label-small-font),
-      text-size: map.get($system, label-small-size),
-      text-weight: map.get($system, label-small-weight),
+      badge-large-size-line-height: 16px,
+      badge-large-size-text-size: map.get($system, label-small-size),
+      badge-line-height: 16px,
+      badge-small-size-line-height: 6px,
+      badge-small-size-text-size: 0,
+      badge-text-font: map.get($system, label-small-font),
+      badge-text-size: map.get($system, label-small-size),
+      badge-text-weight: map.get($system, label-small-weight),
     ),
     density: (),
   );
