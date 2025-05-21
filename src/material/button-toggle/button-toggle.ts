@@ -31,8 +31,10 @@ import {
   OnInit,
   Output,
   QueryList,
+  signal,
   ViewChild,
   ViewEncapsulation,
+  WritableSignal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {_animationsDisabled, _StructuralStylesLoader, MatPseudoCheckbox, MatRipple} from '../core';
@@ -450,7 +452,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
         }
       }
     }
-    this._markButtonsForCheck();
   }
 
   /** Obtain the subsequent toggle to which the focus shifts. */
@@ -613,15 +614,12 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
   /** Tabindex of the toggle. */
   @Input()
   get tabIndex(): number | null {
-    return this._tabIndex;
+    return this._tabIndex();
   }
   set tabIndex(value: number | null) {
-    if (value !== this._tabIndex) {
-      this._tabIndex = value;
-      this._markForCheck();
-    }
+    this._tabIndex.set(value);
   }
-  private _tabIndex: number | null;
+  private _tabIndex: WritableSignal<number | null>;
 
   /** Whether ripples are disabled on the button toggle. */
   @Input({transform: booleanAttribute}) disableRipple: boolean;
@@ -691,7 +689,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
       {optional: true},
     );
 
-    this._tabIndex = parseInt(defaultTabIndex) || 0;
+    this._tabIndex = signal<number | null>(parseInt(defaultTabIndex) || 0);
     this.buttonToggleGroup = toggleGroup;
     this.appearance =
       defaultOptions && defaultOptions.appearance ? defaultOptions.appearance : 'standard';
