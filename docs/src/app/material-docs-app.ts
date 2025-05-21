@@ -11,10 +11,11 @@ import {Component, OnDestroy, ViewEncapsulation, inject} from '@angular/core';
 import {AnalyticsService} from './shared/analytics/analytics';
 import {NavigationFocusService} from './shared/navigation-focus/navigation-focus.service';
 import {Subscription} from 'rxjs';
-import {map, pairwise, startWith} from 'rxjs/operators';
-import {RouterOutlet} from '@angular/router';
+import {filter, map, pairwise, startWith} from 'rxjs/operators';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {NavBar} from './shared/navbar/navbar';
 import {CookiePopup} from './shared/cookie-popup/cookie-popup';
+import {HeaderTagManager} from './shared/header-tag-manager';
 
 @Component({
   selector: 'material-docs-app',
@@ -29,10 +30,12 @@ import {CookiePopup} from './shared/cookie-popup/cookie-popup';
 })
 export class MaterialDocsApp implements OnDestroy {
   private _subscriptions = new Subscription();
+  private _headerTagManager = inject(HeaderTagManager);
 
   constructor() {
     const analytics = inject(AnalyticsService);
     const navigationFocusService = inject(NavigationFocusService);
+    const router = inject(Router);
 
     this._subscriptions.add(
       navigationFocusService.navigationEndEvents
@@ -50,10 +53,23 @@ export class MaterialDocsApp implements OnDestroy {
           analytics.locationChanged(toUrl);
         }),
     );
+
+    router.events
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        map(event => event.urlAfterRedirects),
+      )
+      .subscribe(url => {
+        this._updateCanonicalLink(url);
+      });
   }
 
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
+  }
+
+  private _updateCanonicalLink(absoluteUrl: string) {
+    this._headerTagManager.setCanonical(absoluteUrl);
   }
 }
 
