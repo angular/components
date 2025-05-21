@@ -1,5 +1,5 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, provideCheckNoChangesConfig, ViewChild} from '@angular/core';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -14,7 +14,6 @@ import {
 describe('MatRadio', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideCheckNoChangesConfig({exhaustive: false})],
       imports: [
         MatRadioModule,
         FormsModule,
