@@ -26,6 +26,7 @@ import {
   numberAttribute,
   inject,
   HostAttributeToken,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -261,7 +262,7 @@ export class MatCheckbox
   }
 
   ngAfterViewInit() {
-    this._syncIndeterminate(this._indeterminate);
+    this._syncIndeterminate(this.indeterminate);
   }
 
   /** Whether the checkbox is checked. */
@@ -298,26 +299,26 @@ export class MatCheckbox
    */
   @Input({transform: booleanAttribute})
   get indeterminate(): boolean {
-    return this._indeterminate;
+    return this._indeterminate();
   }
   set indeterminate(value: boolean) {
-    const changed = value != this._indeterminate;
-    this._indeterminate = value;
+    const changed = value != this._indeterminate();
+    this._indeterminate.set(value);
 
     if (changed) {
-      if (this._indeterminate) {
+      if (value) {
         this._transitionCheckState(TransitionCheckState.Indeterminate);
       } else {
         this._transitionCheckState(
           this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked,
         );
       }
-      this.indeterminateChange.emit(this._indeterminate);
+      this.indeterminateChange.emit(value);
     }
 
-    this._syncIndeterminate(this._indeterminate);
+    this._syncIndeterminate(value);
   }
-  private _indeterminate: boolean = false;
+  private _indeterminate = signal(false);
 
   _isRippleDisabled() {
     return this.disableRipple || this.disabled;
@@ -419,8 +420,8 @@ export class MatCheckbox
       // When user manually click on the checkbox, `indeterminate` is set to false.
       if (this.indeterminate && clickAction !== 'check') {
         Promise.resolve().then(() => {
-          this._indeterminate = false;
-          this.indeterminateChange.emit(this._indeterminate);
+          this._indeterminate.set(false);
+          this.indeterminateChange.emit(false);
         });
       }
 
