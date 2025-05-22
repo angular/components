@@ -61,7 +61,7 @@
     "@types/jasmine": "5.1.8",
     "@types/node": "^22.14.1",
     "@types/shelljs": "0.8.16",
-    "firebase-tools": "^11.0.1",
+    "firebase-tools": "^14.0.0",
     "jasmine-core": "5.7.1",
     "jasmine-spec-reporter": "7.0.0",
     "karma": "~6.4.4",
