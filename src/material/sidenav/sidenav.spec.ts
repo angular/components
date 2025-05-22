@@ -1,21 +1,9 @@
-import {Component, provideCheckNoChangesConfig, ViewChild} from '@angular/core';
-import {TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from './index';
 
 describe('MatSidenav', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [provideCheckNoChangesConfig({exhaustive: false})],
-      imports: [
-        MatSidenavModule,
-        SidenavWithFixedPosition,
-        IndirectDescendantSidenav,
-        NestedSidenavContainers,
-      ],
-    });
-  }));
-
   it('should be fixed position when in fixed mode', () => {
     const fixture = TestBed.createComponent(SidenavWithFixedPosition);
     fixture.detectChanges();
