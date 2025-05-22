@@ -1,5 +1,3 @@
-@use 'sass:color';
-@use 'sass:meta';
 @use '../core/theming/inspection';
 
 // Tokens that can't be configured through Angular Material's current theming API,
@@ -10,26 +8,8 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $table-background: inspection.get-theme-color($theme, background, card);
-  $text-color: inspection.get-theme-color($theme, foreground, secondary-text);
-  $arrow-color: null;
-
-  // Because the arrow is made up of multiple elements that are stacked on top of each other,
-  // we can't use the semi-transparent color from the theme directly. If the value is a color
-  // *type*, we convert it into a solid color by taking the opacity from the rgba value and
-  // using the value to determine the percentage of the background to put into foreground
-  // when mixing the colors together. Otherwise, if it resolves to something different
-  // (e.g. it resolves to a CSS variable), we use the color directly.
-  @if (meta.type-of($table-background) == color and meta.type-of($text-color) == color) {
-    $text-opacity: color.opacity($text-color);
-    $arrow-color: color.mix($table-background, rgba($text-color, 1), (1 - $text-opacity) * 100%);
-  }
-  @else {
-    $arrow-color: $text-color;
-  }
-
   @return (
-    sort-arrow-color: $arrow-color,
+    sort-arrow-color: inspection.get-theme-color($theme, foreground, text),
   );
 }
 
