@@ -401,7 +401,8 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
     get active(): boolean;
     set active(value: boolean);
     disabled: boolean;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     // (undocumented)
     elementRef: ElementRef<any>;
     focus(): void;
@@ -452,7 +453,8 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     get fitInkBarToContent(): boolean;
     set fitInkBarToContent(value: boolean);
     // (undocumented)
