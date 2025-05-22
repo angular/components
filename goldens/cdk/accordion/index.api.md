@@ -44,7 +44,8 @@ export class CdkAccordionItem implements OnInit, OnDestroy {
     close(): void;
     readonly closed: EventEmitter<void>;
     readonly destroyed: EventEmitter<void>;
-    disabled: boolean;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     get expanded(): boolean;
     set expanded(expanded: boolean);
     readonly expandedChange: EventEmitter<boolean>;
