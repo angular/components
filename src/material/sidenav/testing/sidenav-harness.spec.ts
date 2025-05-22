@@ -1,4 +1,4 @@
-import {Component, provideCheckNoChangesConfig, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -16,9 +16,6 @@ describe('MatSidenavHarness', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [provideCheckNoChangesConfig({exhaustive: false})],
-      });
       fixture = TestBed.createComponent(DrawerHarnessTest);
       fixture.detectChanges();
       loader = TestbedHarnessEnvironment.loader(fixture);

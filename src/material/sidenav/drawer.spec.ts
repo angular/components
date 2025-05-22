@@ -7,13 +7,7 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  ElementRef,
-  ErrorHandler,
-  provideCheckNoChangesConfig,
-  ViewChild,
-} from '@angular/core';
+import {Component, ElementRef, ErrorHandler, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -30,24 +24,7 @@ import {MATERIAL_ANIMATIONS} from '../core';
 describe('MatDrawer', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [
-        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
-        provideCheckNoChangesConfig({exhaustive: false}),
-      ],
-      imports: [
-        MatSidenavModule,
-        A11yModule,
-        BasicTestApp,
-        DrawerContainerNoDrawerTestApp,
-        DrawerSetToOpenedFalse,
-        DrawerSetToOpenedTrue,
-        DrawerDynamicPosition,
-        DrawerWithFocusableElements,
-        DrawerOpenBinding,
-        DrawerWithoutFocusableElements,
-        IndirectDescendantDrawer,
-        NestedDrawerContainers,
-      ],
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
   }));
 
@@ -898,23 +875,6 @@ describe('MatDrawer', () => {
 });
 
 describe('MatDrawerContainer', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [provideCheckNoChangesConfig({exhaustive: false})],
-      imports: [
-        MatSidenavModule,
-        A11yModule,
-        DrawerContainerTwoDrawerTestApp,
-        DrawerDelayed,
-        DrawerSetToOpenedTrue,
-        DrawerContainerStateChangesTestApp,
-        AutosizeDrawer,
-        BasicTestApp,
-        DrawerContainerWithContent,
-      ],
-    });
-  }));
-
   it('should be able to open and close all drawers', fakeAsync(() => {
     const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
 
@@ -1210,13 +1170,6 @@ describe('MatDrawerContainer', () => {
       .toBeGreaterThan(contentIndex);
   });
 });
-
-/** Test component that contains an MatDrawerContainer but no MatDrawer. */
-@Component({
-  template: `<mat-drawer-container></mat-drawer-container>`,
-  imports: [MatSidenavModule, A11yModule],
-})
-class DrawerContainerNoDrawerTestApp {}
 
 /** Test component that contains an MatDrawerContainer and 2 MatDrawer in the same position. */
 @Component({
