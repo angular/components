@@ -109,7 +109,7 @@
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.30.0",
     "esbuild": "^0.25.0",
-    "firebase-tools": "^9.2.1",
+    "firebase-tools": "^14.0.0",
     "fs-extra": "^11.0.0",
     "glob": "^7.2.0",
     "highlight.js": "^10.7.0",
