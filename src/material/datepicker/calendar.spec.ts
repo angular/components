@@ -5,7 +5,7 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, provideCheckNoChangesConfig} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DateAdapter, MatNativeDateModule} from '../core';
@@ -21,11 +21,7 @@ describe('MatCalendar', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatNativeDateModule, MatDatepickerModule],
-      providers: [
-        MatDatepickerIntl,
-        provideFakeDirectionality('ltr'),
-        provideCheckNoChangesConfig({exhaustive: false}),
-      ],
+      providers: [MatDatepickerIntl, provideFakeDirectionality('ltr')],
       declarations: [
         // Test components.
         StandardCalendar,

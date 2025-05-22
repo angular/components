@@ -17,6 +17,7 @@ import {
   Input,
   OnInit,
   inject,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -47,6 +48,7 @@ abstract class MatDateRangeInputPartBase<D>
   override _elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   _defaultErrorStateMatcher = inject(ErrorStateMatcher);
   private _injector = inject(Injector);
+  private _rawValue = signal('');
   _parentForm = inject(NgForm, {optional: true});
   _parentFormGroup = inject(FormGroupDirective, {optional: true});
 
@@ -120,11 +122,13 @@ abstract class MatDateRangeInputPartBase<D>
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
       this.updateErrorState();
     }
+
+    this._rawValue.set(this._elementRef.nativeElement.value);
   }
 
   /** Gets whether the input is empty. */
   isEmpty(): boolean {
-    return this._elementRef.nativeElement.value.length === 0;
+    return this._rawValue().length === 0;
   }
 
   /** Gets the placeholder of the input. */
@@ -139,9 +143,8 @@ abstract class MatDateRangeInputPartBase<D>
 
   /** Gets the value that should be used when mirroring the input's size. */
   getMirrorValue(): string {
-    const element = this._elementRef.nativeElement;
-    const value = element.value;
-    return value.length > 0 ? value : element.placeholder;
+    const value = this._rawValue();
+    return value.length > 0 ? value : this._getPlaceholder();
   }
 
   /** Refreshes the error state of the input. */
@@ -191,6 +194,7 @@ abstract class MatDateRangeInputPartBase<D>
         : this._rangeInput._startInput
     ) as MatDateRangeInputPartBase<D> | undefined;
     opposite?._validatorOnChange();
+    this._rawValue.set(this._elementRef.nativeElement.value);
   }
 
   protected override _formatValue(value: D | null) {
