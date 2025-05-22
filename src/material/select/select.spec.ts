@@ -38,7 +38,6 @@ import {
   ViewChildren,
   WritableSignal,
   inject,
-  provideCheckNoChangesConfig,
   signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
@@ -84,7 +83,6 @@ describe('MatSelect', () => {
     dir = signal('ltr');
     TestBed.configureTestingModule({
       providers: [
-        provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
         provideFakeDirectionality(dir),
         {

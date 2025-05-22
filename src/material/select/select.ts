@@ -61,6 +61,7 @@ import {
   HostAttributeToken,
   Renderer2,
   Injector,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -414,7 +415,13 @@ export class MatSelect
 
   /** Whether ripples in the select are disabled. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   /** Tab index of the select. */
   @Input({
