@@ -15,14 +15,14 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    expansion-container-background-color: inspection.get-theme-color($theme, background, card),
-    expansion-container-text-color: inspection.get-theme-color($theme, foreground, text),
+    expansion-container-background-color: inspection.get-theme-color($theme, system, surface),
+    expansion-container-text-color: inspection.get-theme-color($theme, system, on-surface),
     expansion-actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
     expansion-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-disabled-state-text-color: inspection.get-theme-color(
         $theme, foreground, disabled-button),
-    expansion-header-text-color: inspection.get-theme-color($theme, foreground, text),
+    expansion-header-text-color: inspection.get-theme-color($theme, system, on-surface),
     expansion-header-description-color:
         inspection.get-theme-color($theme, foreground, secondary-text),
     expansion-header-indicator-color:

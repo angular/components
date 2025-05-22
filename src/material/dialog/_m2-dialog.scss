@@ -35,7 +35,7 @@
   );
 
   @return (
-    dialog-container-color: inspection.get-theme-color($theme, background, dialog),
+    dialog-container-color: inspection.get-theme-color($theme, system, surface),
     dialog-subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
     dialog-supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
   );

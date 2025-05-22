@@ -52,7 +52,7 @@
   );
 
   @return (
-    button-filled-container-color: inspection.get-theme-color($theme, background, card),
+    button-filled-container-color: inspection.get-theme-color($theme, system, surface),
     button-filled-disabled-container-color:
         inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
     button-filled-disabled-label-text-color:
@@ -76,7 +76,7 @@
     button-outlined-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     button-outlined-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-outlined-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    button-protected-container-color: inspection.get-theme-color($theme, background, card),
+    button-protected-container-color: inspection.get-theme-color($theme, system, surface),
     button-protected-disabled-container-color:
         inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
     button-protected-disabled-label-text-color:
@@ -98,7 +98,7 @@
     button-text-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     button-text-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-text-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    button-tonal-container-color: inspection.get-theme-color($theme, background, card),
+    button-tonal-container-color: inspection.get-theme-color($theme, system, surface),
     button-tonal-disabled-container-color:
         inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
     button-tonal-disabled-label-text-color:

@@ -6,7 +6,7 @@
 }
 
 @mixin color($theme) {
-  $background-color: mat.get-theme-color($theme, background, 'card');
+  $background-color: mat.get-theme-color($theme, system, surface);
 
   // TODO: these structural styles don't belong in the `color` part of a theme.
   // We should figure out a better place for them.

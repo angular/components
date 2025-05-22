@@ -9,7 +9,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    sort-arrow-color: inspection.get-theme-color($theme, foreground, text),
+    sort-arrow-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }
 

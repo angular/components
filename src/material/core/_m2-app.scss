@@ -12,7 +12,7 @@
 @function get-color-tokens($theme) {
   $tokens: (
     app-background-color: inspection.get-theme-color($theme, background, background),
-    app-text-color: inspection.get-theme-color($theme, foreground, text),
+    app-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 
   @for $zValue from 0 through 24 {

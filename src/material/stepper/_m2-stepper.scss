@@ -14,7 +14,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
-    stepper-container-color: inspection.get-theme-color($theme, background, card),
+    stepper-container-color: inspection.get-theme-color($theme, system, surface),
     stepper-line-color: inspection.get-theme-color($theme, foreground, divider),
     stepper-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     stepper-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
@@ -22,7 +22,7 @@
     stepper-header-optional-label-text-color: inspection.get-theme-color(
         $theme, foreground, secondary-text),
     stepper-header-selected-state-label-text-color:
-        inspection.get-theme-color($theme, foreground, text),
+        inspection.get-theme-color($theme, system, on-surface),
     stepper-header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
     stepper-header-icon-background-color:
         inspection.get-theme-color($theme, foreground, secondary-text),

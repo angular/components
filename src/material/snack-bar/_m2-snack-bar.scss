@@ -13,7 +13,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, background, card);
+  $surface: inspection.get-theme-color($theme, system, surface);
 
   @return (
     snack-bar-container-color: if(

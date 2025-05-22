@@ -39,7 +39,7 @@
   $background: null;
   $state-layer-color: inspection.get-theme-color($theme, foreground, base);
   $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
-  $surface: inspection.get-theme-color($theme, background, card);
+  $surface: inspection.get-theme-color($theme, system, surface);
 
   @if $palette-name == null {
     $is-dark: inspection.get-theme-type($theme) == dark;
@@ -47,7 +47,7 @@
     $grey-900: map.get(m2-palette.$grey-palette, 900);
     $foreground: if($is-dark, $grey-50, $grey-900);
 
-    $surface: inspection.get-theme-color($theme, background, card);
+    $surface: inspection.get-theme-color($theme, system, surface);
     $background: if(
         meta.type-of($state-layer-color) == color and meta.type-of($surface) == color,
         color.mix($state-layer-color, $surface, 12%),

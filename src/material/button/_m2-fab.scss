@@ -32,7 +32,7 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    fab-container-color: inspection.get-theme-color($theme, background, card),
+    fab-container-color: inspection.get-theme-color($theme, system, surface),
     fab-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
     fab-disabled-state-foreground-color:
@@ -43,7 +43,7 @@
     fab-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
     fab-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
     fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    fab-small-container-color: inspection.get-theme-color($theme, background, card),
+    fab-small-container-color: inspection.get-theme-color($theme, system, surface),
     fab-small-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
     fab-small-disabled-state-foreground-color:

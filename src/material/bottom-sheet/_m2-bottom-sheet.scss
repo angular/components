@@ -12,8 +12,8 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    bottom-sheet-container-text-color: inspection.get-theme-color($theme, foreground, text),
-    bottom-sheet-container-background-color: inspection.get-theme-color($theme, background, dialog),
+    bottom-sheet-container-text-color: inspection.get-theme-color($theme, system, on-surface),
+    bottom-sheet-container-background-color: inspection.get-theme-color($theme, system, surface),
   );
 }
 

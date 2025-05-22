@@ -28,7 +28,7 @@
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $foreground-text: inspection.get-theme-color($theme, foreground, text);
+  $foreground-text: inspection.get-theme-color($theme, system, on-surface);
   $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
   $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
   $text-icon-on-background: sass-utils.safe-color-change(

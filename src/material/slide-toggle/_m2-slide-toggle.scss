@@ -84,7 +84,7 @@
         slide-toggle-disabled-unselected-track-color: $on-surface,
         slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
         slide-toggle-handle-surface-color: #fff,
-        slide-toggle-label-text-color: inspection.get-theme-color($theme, foreground, text),
+        slide-toggle-label-text-color: inspection.get-theme-color($theme, system, on-surface),
         slide-toggle-selected-icon-color: $icon-color,
         slide-toggle-unselected-hover-handle-color: $on-surface-state-content,
         slide-toggle-unselected-focus-handle-color: $on-surface-state-content,

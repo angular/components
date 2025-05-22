@@ -120,7 +120,11 @@
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: false,
     foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette
+    background: palette.$light-theme-background-palette,
+    system: (
+      surface: white,
+      on-surface: rgba(black, 0.87),
+    ),
   );
 }
 
@@ -133,7 +137,11 @@
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: true,
     foreground: palette.$dark-theme-foreground-palette,
-    background: palette.$dark-theme-background-palette
+    background: palette.$dark-theme-background-palette,
+    system: (
+      surface: map.get(palette.$grey-palette, 800),
+      on-surface: white,
+    ),
   );
 }
 

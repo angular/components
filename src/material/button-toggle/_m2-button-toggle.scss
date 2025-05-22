@@ -28,17 +28,17 @@
   $divider-color: if(
       meta.type-of($theme-divider-color) == color,
       theming.private-rgba-to-hex(
-          $theme-divider-color, inspection.get-theme-color($theme, background, card)),
+          $theme-divider-color, inspection.get-theme-color($theme, system, surface)),
       $theme-divider-color);
 
   @return (
-    button-toggle-background-color: inspection.get-theme-color($theme, background, card),
+    button-toggle-background-color: inspection.get-theme-color($theme, system, surface),
     button-toggle-disabled-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-disabled-button),
     button-toggle-disabled-selected-state-text-color:
-        inspection.get-theme-color($theme, foreground, text),
+        inspection.get-theme-color($theme, system, on-surface),
     button-toggle-disabled-state-background-color:
-        inspection.get-theme-color($theme, background, card),
+        inspection.get-theme-color($theme, system, surface),
     button-toggle-disabled-state-text-color:
         inspection.get-theme-color($theme, foreground, disabled-button),
     button-toggle-divider-color: $divider-color,
@@ -57,10 +57,10 @@
     button-toggle-legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
     button-toggle-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
-    button-toggle-selected-state-text-color: inspection.get-theme-color($theme, foreground, text),
+    button-toggle-selected-state-text-color: inspection.get-theme-color($theme, system, on-surface),
     button-toggle-state-layer-color: sass-utils.safe-color-change(
         inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
-    button-toggle-text-color: inspection.get-theme-color($theme, foreground, text),
+    button-toggle-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }
 
