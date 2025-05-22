@@ -6,15 +6,7 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  Directive,
-  ElementRef,
-  provideCheckNoChangesConfig,
-  Provider,
-  Type,
-  ViewChild,
-} from '@angular/core';
+import {Component, Directive, ElementRef, Provider, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 import {
   FormControl,
@@ -48,7 +40,6 @@ describe('MatDateRangeInput', () => {
         component,
       ],
       providers: [
-        provideCheckNoChangesConfig({exhaustive: false}),
         ...providers,
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
