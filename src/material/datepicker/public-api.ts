@@ -20,6 +20,7 @@ export {
   MAT_DATEPICKER_SCROLL_STRATEGY,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+  MatDatepickerBase,
   MatDatepickerContent,
   DatepickerDropdownPositionX,
   DatepickerDropdownPositionY,
