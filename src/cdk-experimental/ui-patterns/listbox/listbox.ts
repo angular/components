@@ -237,6 +237,28 @@ export class ListboxPattern<V> {
     });
   }
 
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multi() && this.inputs.value().length > 1) {
+      violations.push(
+        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
+      );
+    }
+
+    if (
+      this.inputs.items.length &&
+      (this.inputs.activeIndex() < 0 || this.inputs.activeIndex() >= this.inputs.items().length)
+    ) {
+      violations.push(
+        `The active index is out of bounds. Number of options: ${this.inputs.items().length} Active index: ${this.inputs.activeIndex()}.`,
+      );
+    }
+
+    return violations;
+  }
+
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
