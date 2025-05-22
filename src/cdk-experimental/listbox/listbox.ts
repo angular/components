@@ -7,12 +7,11 @@
  */
 
 import {
-  AfterViewInit,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   contentChildren,
   Directive,
-  effect,
   ElementRef,
   inject,
   input,
@@ -55,7 +54,7 @@ import {_IdGenerator} from '@angular/cdk/a11y';
     '(focusin)': 'onFocus()',
   },
 })
-export class CdkListbox<V> implements AfterViewInit {
+export class CdkListbox<V> {
   /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
   private readonly _directionality = inject(Directionality);
 
@@ -100,32 +99,32 @@ export class CdkListbox<V> implements AfterViewInit {
   /** The values of the current selected items. */
   value = model<V[]>([]);
 
-  /** The current index that has been navigated to. */
-  activeIndex = model<number>(0);
-
   /** The Listbox UIPattern. */
   pattern: ListboxPattern<V> = new ListboxPattern<V>({
     ...this,
     items: this.items,
+    activeIndex: signal(0), // TODO: Use linkedSignal to ensure this doesn't get fked up.
     textDirection: this.textDirection,
   });
 
   /** Whether the listbox has received focus yet. */
   private _hasFocused = signal(false);
 
-  /** Whether the options in the listbox have been initialized. */
-  private _isViewInitialized = signal(false);
-
   constructor() {
-    effect(() => {
-      if (this._isViewInitialized() && !this._hasFocused()) {
+    afterRenderEffect(() => {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        const violations = this.pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
+        }
+      }
+    });
+
+    afterRenderEffect(() => {
+      if (!this._hasFocused()) {
         this.pattern.setDefaultState();
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this._isViewInitialized.set(true);
   }
 
   onFocus() {
@@ -141,6 +140,7 @@ export class CdkListbox<V> implements AfterViewInit {
     'role': 'option',
     'class': 'cdk-option',
     '[class.cdk-active]': 'pattern.active()',
+    '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.aria-selected]': 'pattern.selected()',
     '[attr.aria-disabled]': 'pattern.disabled()',
