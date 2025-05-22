@@ -270,7 +270,8 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     readonly disableAutomaticLabeling = true;
     disabled: boolean;
     disableOptionCentering: boolean;
-    disableRipple: boolean;
+    get disableRipple(): boolean;
+    set disableRipple(value: boolean);
     // (undocumented)
     readonly _elementRef: ElementRef<any>;
     get empty(): boolean;
