@@ -19,7 +19,7 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $theme-divider-color: inspection.get-theme-color($theme, foreground, divider);
+  $theme-divider-color: inspection.get-theme-color($theme, system, outline);
 
   // By default the theme usually has an rgba color for the dividers, which can
   // stack up with the background of a button toggle. This can cause the border

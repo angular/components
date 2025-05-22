@@ -25,7 +25,7 @@
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
-    sidenav-container-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    sidenav-container-divider-color: inspection.get-theme-color($theme, system, outline),
     sidenav-container-background-color: inspection.get-theme-color($theme, system, surface),
     sidenav-container-text-color: inspection.get-theme-color($theme, system, on-surface),
     sidenav-content-background-color: inspection.get-theme-color($theme, background, background),

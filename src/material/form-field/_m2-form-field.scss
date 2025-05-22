@@ -37,7 +37,7 @@
   $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
     inspection.get-theme-color($theme, foreground, disabled-text, 1));
   $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, divider, 1));
+    inspection.get-theme-color($theme, foreground, base));
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.

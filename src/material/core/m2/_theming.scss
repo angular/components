@@ -124,6 +124,7 @@
     system: (
       surface: white,
       on-surface: rgba(black, 0.87),
+      outline: rgba(black, 0.12),
     ),
   );
 }
@@ -141,6 +142,7 @@
     system: (
       surface: map.get(palette.$grey-palette, 800),
       on-surface: white,
+      outline: rgba(white, 0.12),
     ),
   );
 }

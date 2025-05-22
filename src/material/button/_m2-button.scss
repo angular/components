@@ -48,7 +48,7 @@
   // internally. For now we fall back to the old hardcoded behavior only for internal apps.
   $outline: if(m2-utils.$private-is-internal-build,
     rgba(if($is-dark, #fff, #000), 0.12),
-    inspection.get-theme-color($theme, foreground, divider)
+    inspection.get-theme-color($theme, system, outline)
   );
 
   @return (
