@@ -131,7 +131,13 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
 
   /** Whether the ripple effect is disabled or not. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   /**
    * Theme color of the nav bar. This API is supported in M2 themes only, it has
@@ -297,7 +303,13 @@ export class MatTabLink
 
   /** Whether ripples are disabled on the tab link. */
   @Input({transform: booleanAttribute})
-  disableRipple: boolean = false;
+  get disableRipple() {
+    return this._disableRipple();
+  }
+  set disableRipple(value: boolean) {
+    this._disableRipple.set(value);
+  }
+  private _disableRipple = signal(false);
 
   @Input({
     transform: (value: unknown) => (value == null ? 0 : numberAttribute(value)),

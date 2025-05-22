@@ -7,15 +7,7 @@ import {
   dispatchMouseEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  provideCheckNoChangesConfig,
-  QueryList,
-  signal,
-  ViewChild,
-  ViewChildren,
-  WritableSignal,
-} from '@angular/core';
+import {Component, QueryList, signal, ViewChild, ViewChildren, WritableSignal} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -41,7 +33,6 @@ describe('MatTabNavBar', () => {
         TabBarWithInactiveTabsOnInit,
       ],
       providers: [
-        provideCheckNoChangesConfig({exhaustive: false}),
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         provideFakeDirectionality(dir),
       ],
