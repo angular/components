@@ -11,7 +11,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {Observable} from 'rxjs';
+import {Observable, Subscriber} from 'rxjs';
 import {
   MAT_TABS_CONFIG,
   MatTab,
@@ -19,6 +19,7 @@ import {
   MatTabHeader,
   MatTabHeaderPosition,
   MatTabsModule,
+  MatTabChangeEvent,
 } from './index';
 import {MATERIAL_ANIMATIONS} from '../core';
 
@@ -1028,7 +1029,7 @@ describe('MatTabGroup', () => {
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
    * respective `active` classes
    */
-  function checkSelectedIndex(expectedIndex: number, fixture: ComponentFixture<any>) {
+  function checkSelectedIndex(expectedIndex: number, fixture: ComponentFixture<unknown>) {
     fixture.detectChanges();
 
     let tabComponent: MatTabGroup = fixture.debugElement.query(
@@ -1047,11 +1048,11 @@ describe('MatTabGroup', () => {
     expect(tabContentElement.classList.contains('mat-mdc-tab-body-active')).toBe(true);
   }
 
-  function getSelectedLabel(fixture: ComponentFixture<any>): HTMLElement {
+  function getSelectedLabel(fixture: ComponentFixture<unknown>): HTMLElement {
     return fixture.nativeElement.querySelector('.mdc-tab--active');
   }
 
-  function getSelectedContent(fixture: ComponentFixture<any>): HTMLElement {
+  function getSelectedContent(fixture: ComponentFixture<unknown>): HTMLElement {
     return fixture.nativeElement.querySelector('.mat-mdc-tab-body-active');
   }
 });
@@ -1285,18 +1286,18 @@ class SimpleTabsTestApp {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChildren(MatTab) tabs: QueryList<MatTab>;
   selectedIndex: number = 1;
-  focusEvent: any;
-  selectEvent: any;
+  focusEvent: MatTabChangeEvent;
+  selectEvent: MatTabChangeEvent;
   disableRipple: boolean = false;
   contentTabIndex: number | null = null;
   headerPosition: MatTabHeaderPosition = 'above';
   ariaLabel: string;
   ariaLabelledby: string;
   secondTabId: string | null = null;
-  handleFocus(event: any) {
+  handleFocus(event: MatTabChangeEvent) {
     this.focusEvent = event;
   }
-  handleSelection(event: any) {
+  handleSelection(event: MatTabChangeEvent) {
     this.selectEvent = event;
   }
   animationDone() {}
@@ -1326,13 +1327,13 @@ class SimpleDynamicTabsTestApp {
     {label: 'Label 3', content: 'Content 3'},
   ];
   selectedIndex: number = 1;
-  focusEvent: any;
-  selectEvent: any;
+  focusEvent: MatTabChangeEvent;
+  selectEvent: MatTabChangeEvent;
   disablePagination = false;
-  handleFocus(event: any) {
+  handleFocus(event: MatTabChangeEvent) {
     this.focusEvent = event;
   }
-  handleSelection(event: any) {
+  handleSelection(event: MatTabChangeEvent) {
     this.selectEvent = event;
   }
 }
@@ -1406,11 +1407,11 @@ class AsyncTabsTestApp implements OnInit {
     {label: 'two', content: 'two'},
   ];
 
-  tabs: Observable<any>;
+  tabs: Observable<typeof this._tabs>;
 
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
-    this.tabs = new Observable((observer: any) => {
+    this.tabs = new Observable((observer: Subscriber<typeof this._tabs>) => {
       setTimeout(() => observer.next(this._tabs));
     });
   }
@@ -1431,7 +1432,7 @@ class TabGroupWithSimpleApi {
   preserveContent = false;
   otherLabel = 'Fruit';
   otherContent = 'Apples, grapes';
-  @ViewChild('legumes') legumes: any;
+  @ViewChild('legumes') legumes: HTMLParagraphElement;
 }
 
 @Component({
