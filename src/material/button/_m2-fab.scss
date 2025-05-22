@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use '../core/tokens/m2-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
@@ -27,30 +29,31 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
-    fab-container-color: inspection.get-theme-color($theme, system, surface),
+    fab-container-color: map.get($system, surface),
     fab-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
     fab-disabled-state-foreground-color:
         inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
     fab-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    fab-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-foreground-color: inspection.get-theme-color($theme, foreground, base),
-    fab-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    fab-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+    fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    fab-small-container-color: inspection.get-theme-color($theme, system, surface),
+    fab-small-container-color: map.get($system, surface),
     fab-small-disabled-state-container-color:
         inspection.get-theme-color($theme, background, disabled-button, 0.12),
     fab-small-disabled-state-foreground-color:
         inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
     fab-small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    fab-small-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-small-foreground-color: inspection.get-theme-color($theme, foreground, base),
-    fab-small-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    fab-small-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+    fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     fab-small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     fab-small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     fab-state-layer-color: inspection.get-theme-color($theme, foreground, base),

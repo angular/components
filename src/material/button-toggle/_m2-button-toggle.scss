@@ -3,13 +3,15 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
+@function get-unthemable-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    button-toggle-focus-state-layer-opacity: 0.12,
-    button-toggle-hover-state-layer-opacity: 0.04,
+    button-toggle-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    button-toggle-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     button-toggle-legacy-focus-state-layer-opacity: 1,
     button-toggle-legacy-height: 36px,
     button-toggle-legacy-shape: 2px,

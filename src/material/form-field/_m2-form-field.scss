@@ -23,8 +23,10 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $surface: inspection.get-theme-color($theme, system, surface);
+  $surface: map.get($system, surface);
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
@@ -74,8 +76,8 @@
         inspection.get-theme-color($theme, foreground, icon, 0.54),
     form-field-disabled-select-arrow-color:
         inspection.get-theme-color($theme, foreground, icon, 0.38),
-    form-field-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
-    form-field-focus-state-layer-opacity: if($is-dark, 0.24, 0.08),
+    form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+    form-field-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     form-field-filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
     form-field-filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
     form-field-filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),

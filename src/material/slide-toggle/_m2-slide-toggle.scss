@@ -2,10 +2,13 @@
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use 'sass:map';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
+@function get-unthemable-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   // visible-track-opacity and hidden-track-opacity:
   // The hidden and visible track represent whichever track is visible or
   // hidden in the ui. This could be the .mdc-switch__track :before or
@@ -28,13 +31,14 @@
     slide-toggle-hidden-track-opacity: 1,
     slide-toggle-hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
     slide-toggle-pressed-handle-size: 20px,
-    slide-toggle-selected-focus-state-layer-opacity: 0.12,
+    slide-toggle-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     slide-toggle-selected-handle-horizontal-margin: 0,
     slide-toggle-selected-handle-size: 20px,
-    slide-toggle-selected-hover-state-layer-opacity: 0.04,
+    slide-toggle-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     slide-toggle-selected-icon-size: 18px,
     slide-toggle-selected-pressed-handle-horizontal-margin: 0,
-    slide-toggle-selected-pressed-state-layer-opacity: 0.1,
+    slide-toggle-selected-pressed-state-layer-opacity:
+        map.get($system, pressed-state-layer-opacity),
     slide-toggle-selected-track-outline-color: transparent,
     slide-toggle-selected-track-outline-width: 1px,
     slide-toggle-selected-with-icon-handle-horizontal-margin: 0,
@@ -43,10 +47,10 @@
     slide-toggle-track-outline-width: 1px,
     slide-toggle-track-shape: 7px,
     slide-toggle-track-width: 36px,
-    slide-toggle-unselected-focus-state-layer-opacity: 0.12,
+    slide-toggle-unselected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     slide-toggle-unselected-handle-horizontal-margin: 0,
     slide-toggle-unselected-handle-size: 20px,
-    slide-toggle-unselected-hover-state-layer-opacity: 0.04,
+    slide-toggle-unselected-hover-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     slide-toggle-unselected-icon-size: 18px,
     slide-toggle-unselected-pressed-handle-horizontal-margin: 0,
     slide-toggle-unselected-pressed-state-layer-opacity: 0.1,
@@ -59,6 +63,8 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   $is-dark: inspection.get-theme-type($theme) == dark;
   $on-surface: if($is-dark, #f5f5f5, #424242);
   $hairline: if($is-dark, #616161, #e0e0e0);
@@ -84,7 +90,7 @@
         slide-toggle-disabled-unselected-track-color: $on-surface,
         slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
         slide-toggle-handle-surface-color: #fff,
-        slide-toggle-label-text-color: inspection.get-theme-color($theme, system, on-surface),
+        slide-toggle-label-text-color: map.get($system, on-surface),
         slide-toggle-selected-icon-color: $icon-color,
         slide-toggle-unselected-hover-handle-color: $on-surface-state-content,
         slide-toggle-unselected-focus-handle-color: $on-surface-state-content,

@@ -1,6 +1,7 @@
 @use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use 'sass:map';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -26,9 +27,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $foreground-text: inspection.get-theme-color($theme, system, on-surface);
+  $foreground-text: map.get($system, on-surface);
   $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
   $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
   $text-icon-on-background: sass-utils.safe-color-change(
@@ -47,11 +50,11 @@
     list-list-item-hover-label-text-color: $foreground-text,
     list-list-item-hover-leading-icon-color: $text-icon-on-background,
     list-list-item-hover-state-layer-color: $foreground-base,
-    list-list-item-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     list-list-item-hover-trailing-icon-color: $text-icon-on-background,
     list-list-item-focus-label-text-color: $foreground-text,
     list-list-item-focus-state-layer-color: $foreground-base,
-    list-list-item-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
   );
 }
 

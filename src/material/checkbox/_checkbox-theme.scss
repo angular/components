@@ -15,7 +15,7 @@
     @include token-utils.create-token-values(map.get(m3-checkbox.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-checkbox.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-checkbox.get-unthemable-tokens($theme));
     }
   }
 }
