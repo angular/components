@@ -189,8 +189,8 @@ importers:
         specifier: ^3.0.0
         version: 3.6.2
       '@types/marked':
-        specifier: ^2.0.0
-        version: 2.0.5
+        specifier: ^6.0.0
+        version: 6.0.0
       '@types/minimatch':
         specifier: ^5.1.2
         version: 5.1.2
@@ -2757,8 +2757,9 @@ packages:
   '@types/luxon@3.6.2':
     resolution: {integrity: sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==}
 
-  '@types/marked@2.0.5':
-    resolution: {integrity: sha512-shRZ7XnYFD/8n8zSjKvFdto1QNSf4tONZIlNEZGrJe8GsOE8DL/hG1Hbl8gZlfLnjS7+f5tZGIaTgfpyW38h4w==}
+  '@types/marked@6.0.0':
+    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
+    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -10916,7 +10917,9 @@ snapshots:
 
   '@types/luxon@3.6.2': {}
 
-  '@types/marked@2.0.5': {}
+  '@types/marked@6.0.0':
+    dependencies:
+      marked: 2.1.3
 
   '@types/mime@1.3.5': {}
 

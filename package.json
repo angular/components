@@ -96,7 +96,7 @@
     "@types/glob": "^8.0.0",
     "@types/jasmine": "^5.0.0",
     "@types/luxon": "^3.0.0",
-    "@types/marked": "^2.0.0",
+    "@types/marked": "^6.0.0",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
