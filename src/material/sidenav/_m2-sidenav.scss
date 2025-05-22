@@ -21,15 +21,15 @@
   $is-dark: inspection.get-theme-type($theme) ==  dark;
   $scrim-opacity: 0.6;
   $scrim-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, background, card), $alpha: $scrim-opacity);
+      inspection.get-theme-color($theme, system, surface), $alpha: $scrim-opacity);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
     sidenav-container-divider-color: inspection.get-theme-color($theme, foreground, divider),
-    sidenav-container-background-color: inspection.get-theme-color($theme, background, dialog),
-    sidenav-container-text-color: inspection.get-theme-color($theme, foreground, text),
+    sidenav-container-background-color: inspection.get-theme-color($theme, system, surface),
+    sidenav-container-text-color: inspection.get-theme-color($theme, system, on-surface),
     sidenav-content-background-color: inspection.get-theme-color($theme, background, background),
-    sidenav-content-text-color: inspection.get-theme-color($theme, foreground, text),
+    sidenav-content-text-color: inspection.get-theme-color($theme, system, on-surface),
 
     // We use invert() here to have the darken the background color expected to be used.
     // If the background is light, we use a dark backdrop. If the background is dark, we

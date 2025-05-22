@@ -47,7 +47,7 @@
 
   $tokens: (
     checkbox-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
-    checkbox-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    checkbox-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     checkbox-disabled-selected-icon-color: $disabled-color,
     checkbox-disabled-unselected-icon-color: $disabled-color,
     checkbox-selected-checkmark-color: $selected-checkmark-color,

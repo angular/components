@@ -28,7 +28,7 @@
     inspection.get-theme-color($theme, foreground, divider, 1));
 
   @return (
-    select-panel-background-color: inspection.get-theme-color($theme, background, card),
+    select-panel-background-color: inspection.get-theme-color($theme, system, surface),
     select-enabled-trigger-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
     select-disabled-trigger-text-color:
       sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),

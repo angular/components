@@ -28,7 +28,7 @@
     radio-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
     radio-disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
     radio-disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
-    radio-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    radio-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     radio-ripple-color: inspection.get-theme-color($theme, foreground, base),
     radio-selected-focus-icon-color: $palette-color,
     radio-selected-hover-icon-color: $palette-color,

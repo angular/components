@@ -9,7 +9,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    optgroup-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    optgroup-label-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }
 

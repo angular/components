@@ -38,7 +38,7 @@ $private-default-overlap-color: #a8dab5;
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
-  $text-color: inspection.get-theme-color($theme, foreground, text);
+  $text-color: inspection.get-theme-color($theme, system, on-surface);
   $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
   $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
   $divider-color: inspection.get-theme-color($theme, foreground, divider);
@@ -91,7 +91,7 @@ $private-default-overlap-color: #a8dab5;
     datepicker-range-input-disabled-state-text-color: $disabled-text-color,
 
     datepicker-calendar-container-background-color:
-        inspection.get-theme-color($theme, background, card),
+        inspection.get-theme-color($theme, system, surface),
     datepicker-calendar-container-text-color: $text-color,
   ));
 }

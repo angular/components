@@ -13,10 +13,10 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    table-background-color: inspection.get-theme-color($theme, background, 'card'),
+    table-background-color: inspection.get-theme-color($theme, system, surface),
 
-    table-header-headline-color: inspection.get-theme-color($theme, foreground, text),
-    table-row-item-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    table-header-headline-color: inspection.get-theme-color($theme, system, on-surface),
+    table-row-item-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     table-row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }

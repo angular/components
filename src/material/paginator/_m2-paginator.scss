@@ -16,7 +16,7 @@
 
   @return (
     paginator-container-text-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.87),
-    paginator-container-background-color: inspection.get-theme-color($theme, background, card),
+    paginator-container-background-color: inspection.get-theme-color($theme, system, surface),
     paginator-enabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.54),
     paginator-disabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.12),
   );

@@ -13,8 +13,8 @@
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
 
   @return (
-    tree-container-background-color: inspection.get-theme-color($theme, background, card),
-    tree-node-text-color: inspection.get-theme-color($theme, foreground, text),
+    tree-container-background-color: inspection.get-theme-color($theme, system, surface),
+    tree-node-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }
 

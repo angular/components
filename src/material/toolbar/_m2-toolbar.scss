@@ -12,7 +12,7 @@
 @function get-color-tokens($theme) {
   @return private-get-color-palette-color-tokens(
     $background-color: inspection.get-theme-color($theme, background, app-bar),
-    $text-color: inspection.get-theme-color($theme, foreground, text),
+    $text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }
 

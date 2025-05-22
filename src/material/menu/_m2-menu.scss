@@ -26,14 +26,14 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
     if($is-dark, 0.08, 0.04));
-  $text-color: inspection.get-theme-color($theme, foreground, text);
+  $text-color: inspection.get-theme-color($theme, system, on-surface);
 
   @return (
     menu-item-label-text-color: $text-color,
     menu-item-icon-color: $text-color,
     menu-item-hover-state-layer-color: $active-state-layer-color,
     menu-item-focus-state-layer-color: $active-state-layer-color,
-    menu-container-color: inspection.get-theme-color($theme, background, card),
+    menu-container-color: inspection.get-theme-color($theme, system, surface),
     menu-divider-color: inspection.get-theme-color($theme, foreground, divider),
   );
 }

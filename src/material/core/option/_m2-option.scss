@@ -14,7 +14,7 @@
 
   @return (
     option-selected-state-label-text-color: inspection.get-theme-color($theme, $palette-name),
-    option-label-text-color: inspection.get-theme-color($theme, foreground, text),
+    option-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     option-hover-state-layer-color: $active-state-layer-color,
     option-focus-state-layer-color: $active-state-layer-color,
     option-selected-state-layer-color: $active-state-layer-color,
