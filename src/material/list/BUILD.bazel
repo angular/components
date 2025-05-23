@@ -42,12 +42,14 @@ sass_library(
     ],
     deps = [
         ":m2",
+        "//src/material/checkbox:m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
         "//src/material/core/theming:_validation",
         "//src/material/core/tokens:token_utils",
         "//src/material/core/typography",
+        "//src/material/radio:m2",
     ],
 )
 
