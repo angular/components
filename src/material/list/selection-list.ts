@@ -30,6 +30,7 @@ import {
   ViewEncapsulation,
   forwardRef,
   inject,
+  signal,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '../core';
@@ -265,18 +266,18 @@ export class MatSelectionList
    */
   @Input()
   override get disabled(): boolean {
-    return this._selectionListDisabled;
+    return this._selectionListDisabled();
   }
   override set disabled(value: BooleanInput) {
     // Update the disabled state of this list. Write to `this._selectionListDisabled` instead of
     // `super.disabled`. That is to avoid closure compiler compatibility issues with assigning to
     // a super property.
-    this._selectionListDisabled = coerceBooleanProperty(value);
-    if (this._selectionListDisabled) {
+    this._selectionListDisabled.set(coerceBooleanProperty(value));
+    if (this._selectionListDisabled()) {
       this._keyManager?.setActiveItem(-1);
     }
   }
-  private _selectionListDisabled = false;
+  private _selectionListDisabled = signal(false);
 
   /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: (value: any) => void): void {
