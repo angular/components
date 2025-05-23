@@ -130,28 +130,31 @@ describe('MatStepper', () => {
       expect(stepperComponent.selected instanceof MatStep).toBe(true);
     });
 
-    it('should set the "tablist" role on stepper', () => {
-      const stepperEl = fixture.debugElement.query(By.css('mat-stepper'))!.nativeElement;
-      expect(stepperEl.getAttribute('role')).toBe('tablist');
+    it('should set the "group" role on the stepper', () => {
+      const stepperWrapper = fixture.debugElement.query(By.css('.mat-stepper-wrapper'));
+      expect(stepperWrapper).toBeTruthy();
+
+      const stepperEl = stepperWrapper!.nativeElement;
+      expect(stepperEl.getAttribute('role')).toBe('group');
     });
 
     it('should display the correct label', () => {
       const stepperComponent = fixture.debugElement.query(
         By.directive(MatStepper),
       )!.componentInstance;
-      let selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      let selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('Step 1');
 
       stepperComponent.selectedIndex = 2;
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('Step 3');
 
       fixture.componentInstance.inputLabel.set('New Label');
       fixture.detectChanges();
 
-      selectedLabel = fixture.nativeElement.querySelector('[aria-selected="true"]');
+      selectedLabel = fixture.nativeElement.querySelector('[aria-expanded="true"]');
       expect(selectedLabel.textContent).toMatch('New Label');
     });
 
@@ -377,15 +380,6 @@ describe('MatStepper', () => {
 
       selectionChangeSubscription.unsubscribe();
       animationDoneSubscription.unsubscribe();
-    });
-
-    it('should set the correct aria-posinset and aria-setsize', () => {
-      const headers = Array.from<HTMLElement>(
-        fixture.nativeElement.querySelectorAll('.mat-step-header'),
-      );
-
-      expect(headers.map(header => header.getAttribute('aria-posinset'))).toEqual(['1', '2', '3']);
-      expect(headers.every(header => header.getAttribute('aria-setsize') === '3')).toBe(true);
     });
 
     it('should adjust the index when removing a step before the current one', () => {

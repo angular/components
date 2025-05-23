@@ -61,10 +61,10 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Whether the step is selected. */
+  /** Whether the step of Stepper is pressed/expanded. */
   async isSelected(): Promise<boolean> {
     const host = await this.host();
-    return (await host.getAttribute('aria-selected')) === 'true';
+    return (await host.getAttribute('aria-pressed')) === 'true';
   }
 
   /** Whether the step has been filled out. */
@@ -92,7 +92,7 @@ export class MatStepHarness extends ContentContainerComponentHarness<string> {
   }
 
   /**
-   * Selects the given step by clicking on the label. The step may not be selected
+   * Selects the given step by clicking on the label. The step may not be selected/expanded
    * if the stepper doesn't allow it (e.g. if there are validation errors).
    */
   async select(): Promise<void> {
