@@ -39,7 +39,7 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  * of items, it will set the active item correctly when arrow events occur.
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
-  private _activeItemIndex = -1;
+  private _activeItemIndex = signal(-1);
   private _activeItem = signal<T | null>(null);
   private _wrap = false;
   private _typeaheadSubscription = Subscription.EMPTY;
@@ -209,7 +209,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     this.updateActiveItem(item);
 
     if (this._activeItem() !== previousActiveItem) {
-      this.change.next(this._activeItemIndex);
+      this.change.next(this._activeItemIndex());
     }
   }
 
@@ -279,7 +279,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
       case PAGE_UP:
         if (this._pageUpAndDown.enabled && isModifierAllowed) {
-          const targetIndex = this._activeItemIndex - this._pageUpAndDown.delta;
+          const targetIndex = this._activeItemIndex() - this._pageUpAndDown.delta;
           this._setActiveItemByIndex(targetIndex > 0 ? targetIndex : 0, 1);
           break;
         } else {
@@ -288,7 +288,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
       case PAGE_DOWN:
         if (this._pageUpAndDown.enabled && isModifierAllowed) {
-          const targetIndex = this._activeItemIndex + this._pageUpAndDown.delta;
+          const targetIndex = this._activeItemIndex() + this._pageUpAndDown.delta;
           const itemsLength = this._getItemsArray().length;
           this._setActiveItemByIndex(targetIndex < itemsLength ? targetIndex : itemsLength - 1, -1);
           break;
@@ -312,7 +312,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Index of the currently active item. */
   get activeItemIndex(): number | null {
-    return this._activeItemIndex;
+    return this._activeItemIndex();
   }
 
   /** The active item. */
@@ -337,12 +337,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
   /** Sets the active item to the next enabled item in the list. */
   setNextItemActive(): void {
-    this._activeItemIndex < 0 ? this.setFirstItemActive() : this._setActiveItemByDelta(1);
+    this._activeItemIndex() < 0 ? this.setFirstItemActive() : this._setActiveItemByDelta(1);
   }
 
   /** Sets the active item to a previous enabled item in the list. */
   setPreviousItemActive(): void {
-    this._activeItemIndex < 0 && this._wrap
+    this._activeItemIndex() < 0 && this._wrap
       ? this.setLastItemActive()
       : this._setActiveItemByDelta(-1);
   }
@@ -366,7 +366,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     // Explicitly check for `null` and `undefined` because other falsy values are valid.
     this._activeItem.set(activeItem == null ? null : activeItem);
-    this._activeItemIndex = index;
+    this._activeItemIndex.set(index);
     this._typeahead?.setCurrentSelectedItemIndex(index);
   }
 
@@ -398,7 +398,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     const items = this._getItemsArray();
 
     for (let i = 1; i <= items.length; i++) {
-      const index = (this._activeItemIndex + delta * i + items.length) % items.length;
+      const index = (this._activeItemIndex() + delta * i + items.length) % items.length;
       const item = items[index];
 
       if (!this._skipPredicateFn(item)) {
@@ -414,7 +414,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * it encounters either end of the list, it will stop and not wrap.
    */
   private _setActiveInDefaultMode(delta: -1 | 1): void {
-    this._setActiveItemByIndex(this._activeItemIndex + delta, delta);
+    this._setActiveItemByIndex(this._activeItemIndex() + delta, delta);
   }
 
   /**
@@ -456,8 +456,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     if (activeItem) {
       const newIndex = newItems.indexOf(activeItem);
 
-      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
-        this._activeItemIndex = newIndex;
+      if (newIndex > -1 && newIndex !== this._activeItemIndex()) {
+        this._activeItemIndex.set(newIndex);
         this._typeahead?.setCurrentSelectedItemIndex(newIndex);
       }
     }
