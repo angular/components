@@ -22,7 +22,6 @@ import {
   Input,
   OnDestroy,
   Output,
-  provideCheckNoChangesConfig,
   QueryList,
   signal,
   TemplateRef,
@@ -1744,7 +1743,6 @@ describe('MatMenu', () => {
       direction = 'ltr';
       TestBed.resetTestingModule().configureTestingModule({
         providers: [
-          provideCheckNoChangesConfig({exhaustive: false}),
           {
             provide: Directionality,
             useValue: {
@@ -1907,7 +1905,7 @@ describe('MatMenu', () => {
         .withContext('Expected two open menus')
         .toBe(2);
 
-      items[1].componentInstance.disabled = true;
+      fixture.componentInstance.secondItemDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1932,7 +1930,7 @@ describe('MatMenu', () => {
 
       const item = fixture.debugElement.query(By.directive(MatMenuItem))!;
 
-      item.componentInstance.disabled = true;
+      fixture.componentInstance.firstItemDisabled = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -2728,8 +2726,9 @@ class CustomMenu {
       <button mat-menu-item
         id="level-one-trigger"
         [matMenuTriggerFor]="levelOne"
+        [disabled]="firstItemDisabled"
         #levelOneTrigger="matMenuTrigger">One</button>
-      <button mat-menu-item>Two</button>
+      <button mat-menu-item [disabled]="secondItemDisabled">Two</button>
       @if (showLazy) {
         <button mat-menu-item
           id="lazy-trigger"
@@ -2779,6 +2778,9 @@ class NestedMenu {
   @ViewChild('lazy') lazyMenu: MatMenu;
   @ViewChild('lazyTrigger') lazyTrigger: MatMenuTrigger;
   showLazy = false;
+
+  firstItemDisabled = false;
+  secondItemDisabled = false;
 }
 
 @Component({
