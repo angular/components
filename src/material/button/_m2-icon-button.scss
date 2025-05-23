@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,15 +14,16 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
 
   @return (
     icon-button-disabled-icon-color: if($is-dark, rgba(#fff, 0.5), rgba(#000, 0.38)),
     icon-button-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    icon-button-focus-state-layer-opacity: if($is-dark, 0.24, 0.12),
-    icon-button-hover-state-layer-opacity: if($is-dark, 0.08, 0.04),
+    icon-button-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    icon-button-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     icon-button-icon-color: inherit,
-    icon-button-pressed-state-layer-opacity: if($is-dark, 0.24, 0.12),
+    icon-button-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     icon-button-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     icon-button-state-layer-color: inspection.get-theme-color($theme, foreground, base),
   );

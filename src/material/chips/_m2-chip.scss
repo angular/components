@@ -4,20 +4,23 @@
 @use '../core/theming/inspection';
 @use '../core/m2/palette' as m2-palette;
 @use '../core/theming/theming';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
+@function get-unthemable-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
     chip-container-shape-radius: 16px,
     chip-disabled-container-opacity: 0.4,
     chip-disabled-outline-color: transparent,
     chip-flat-selected-outline-width: 0,
     chip-focus-outline-color: transparent,
-    chip-hover-state-layer-opacity: 0.04,
+    chip-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     chip-outline-color: transparent,
     chip-outline-width: 0,
-    chip-selected-hover-state-layer-opacity: 0.04,
+    chip-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     chip-selected-trailing-action-state-layer-color: transparent,
     chip-trailing-action-focus-opacity: 1,
     chip-trailing-action-focus-state-layer-opacity: 0,
@@ -35,11 +38,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: null) {
+  $system: m2-utils.get-system($theme);
   $foreground: null;
   $background: null;
   $state-layer-color: inspection.get-theme-color($theme, foreground, base);
-  $state-layer-opacity: 0.12; // 0.12 is a common value in Material Design for opacity.
-  $surface: inspection.get-theme-color($theme, system, surface);
+  $surface: map.get($system, surface);
 
   @if $palette-name == null {
     $is-dark: inspection.get-theme-type($theme) == dark;
@@ -47,7 +50,7 @@
     $grey-900: map.get(m2-palette.$grey-palette, 900);
     $foreground: if($is-dark, $grey-50, $grey-900);
 
-    $surface: inspection.get-theme-color($theme, system, surface);
+    $surface: map.get($system, surface);
     $background: if(
         meta.type-of($state-layer-color) == color and meta.type-of($surface) == color,
         color.mix($state-layer-color, $surface, 12%),
@@ -65,13 +68,13 @@
     chip-elevated-selected-container-color: $background,
     chip-flat-disabled-selected-container-color: $background,
     chip-focus-state-layer-color: $state-layer-color,
-    chip-focus-state-layer-opacity: $state-layer-opacity,
+    chip-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     chip-hover-state-layer-color: $state-layer-color,
     chip-label-text-color: $foreground,
     chip-selected-disabled-trailing-icon-color: $foreground,
-    chip-selected-focus-state-layer-color: $state-layer-color,
-    chip-selected-focus-state-layer-opacity: $state-layer-opacity,
-    chip-selected-hover-state-layer-color: $state-layer-color,
+    chip-selected-focus-state-layer-color: map.get($system, focus-state-layer-opacity),
+    chip-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    chip-selected-hover-state-layer-color: map.get($system, hover-state-layer-opacity),
     chip-selected-label-text-color: $foreground,
     chip-selected-trailing-icon-color: $foreground,
     chip-with-icon-disabled-icon-color: $foreground,

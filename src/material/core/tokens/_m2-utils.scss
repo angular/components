@@ -1,9 +1,25 @@
 @use 'sass:color';
 @use 'sass:math';
 @use 'sass:meta';
+@use 'sass:map';
 
 // Indicates whether we're building internally. Used for backwards compatibility.
 $private-is-internal-build: false;
+
+// Gets the theme's system values as a flat map.
+@function get-system($theme) {
+  $system: map.get($theme, _mat-theming-internals-do-not-access, m2-config, color, system);
+  @if $system {
+    @return $system;
+  }
+
+  $system: map.get($theme, system);
+  @if $system {
+    @return $system;
+  }
+
+  @return ();
+}
 
 /// Inherited function from MDC that computes which contrast tone to use on top of a color.
 /// This is used only in a narrow set of use cases when generating M2 button tokens to maintain

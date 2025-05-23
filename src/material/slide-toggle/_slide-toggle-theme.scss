@@ -16,10 +16,11 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens($theme));
 
       .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens());
+        @include token-utils.create-token-values-mixed(
+            m2-slide-toggle.get-unthemable-tokens($theme));
       }
     }
   }

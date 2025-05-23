@@ -15,7 +15,8 @@
     @include token-utils.create-token-values(map.get(m3-button-toggle.get-tokens($theme), base));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-button-toggle.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(
+          m2-button-toggle.get-unthemable-tokens($theme));
     }
   }
 }

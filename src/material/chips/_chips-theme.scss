@@ -15,7 +15,7 @@
     @include token-utils.create-token-values(map.get(m3-chip.get-tokens($theme), base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.create-token-values-mixed(m2-chip.get-unthemable-tokens());
+      @include token-utils.create-token-values-mixed(m2-chip.get-unthemable-tokens($theme));
     }
   }
 }
