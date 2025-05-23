@@ -48,7 +48,6 @@ sass_library(
     srcs = ["_m3-tokens.scss"],
     deps = [
         ":format_tokens",
-        ":m2_tokens",
         "//src/material/autocomplete:m3",
         "//src/material/badge:m3",
         "//src/material/bottom-sheet:m3",
