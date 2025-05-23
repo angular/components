@@ -423,6 +423,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     editable: boolean;
     readonly edited: EventEmitter<MatChipEditedEvent>;
     // (undocumented)
+    _handleClick(event: MouseEvent): void;
+    // (undocumented)
     _handleDoubleclick(event: MouseEvent): void;
     _handleFocus(): void;
     // (undocumented)
@@ -433,6 +435,8 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     _isEditing: boolean;
     // (undocumented)
     _isRippleDisabled(): boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatChipRow, "mat-chip-row, [mat-chip-row], mat-basic-chip-row, [mat-basic-chip-row]", never, { "editable": { "alias": "editable"; "required": false; }; }, { "edited": "edited"; }, ["contentEditInput"], ["mat-chip-avatar, [matChipAvatar]", "[matChipEditInput]", "*", "mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"], true, never>;
     // (undocumented)
