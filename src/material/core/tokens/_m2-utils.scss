@@ -9,10 +9,16 @@ $private-is-internal-build: false;
 // Gets the theme's system values as a flat map.
 @function get-system($theme) {
   $system: map.get($theme, _mat-theming-internals-do-not-access, m2-config, color, system);
-  @if not $system {
-    @error 'No system found in theme:' + $theme;
+  @if $system {
+    @return $system;
   }
-  @return $system;
+
+  $system: map.get($theme, system);
+  @if $system {
+    @return $system;
+  }
+
+  @return ();
 }
 
 /// Inherited function from MDC that computes which contrast tone to use on top of a color.
