@@ -17,7 +17,7 @@
   @return (
     expansion-container-background-color: inspection.get-theme-color($theme, system, surface),
     expansion-container-text-color: inspection.get-theme-color($theme, system, on-surface),
-    expansion-actions-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    expansion-actions-divider-color: inspection.get-theme-color($theme, system, outline),
     expansion-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-disabled-state-text-color: inspection.get-theme-color(

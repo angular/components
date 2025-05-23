@@ -11,7 +11,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    divider-color: inspection.get-theme-color($theme, foreground, divider)
+    divider-color: inspection.get-theme-color($theme, system, outline)
   );
 }
 

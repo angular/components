@@ -41,9 +41,8 @@ $private-default-overlap-color: #a8dab5;
   $text-color: inspection.get-theme-color($theme, system, on-surface);
   $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
   $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
-  $divider-color: inspection.get-theme-color($theme, foreground, divider);
   $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
-  $preview-outline-color: $divider-color;
+  $preview-outline-color: inspection.get-theme-color($theme, system, outline);
   $today-disabled-outline-color: null;
   $is-dark: inspection.get-theme-type($theme) == dark;
 
@@ -74,7 +73,7 @@ $private-default-overlap-color: #a8dab5;
         inspection.get-theme-color($theme, foreground, text, 1),
     datepicker-calendar-period-button-icon-color: $inactive-icon-color,
     datepicker-calendar-navigation-button-icon-color: $inactive-icon-color,
-    datepicker-calendar-header-divider-color: $divider-color,
+    datepicker-calendar-header-divider-color: inspection.get-theme-color($theme, system, outline),
     datepicker-calendar-header-text-color: $secondary-text-color,
 
     // Note: though it's not text, the border is a hint about the fact

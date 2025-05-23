@@ -17,7 +17,7 @@
 
     table-header-headline-color: inspection.get-theme-color($theme, system, on-surface),
     table-row-item-label-text-color: inspection.get-theme-color($theme, system, on-surface),
-    table-row-item-outline-color: inspection.get-theme-color($theme, foreground, divider),
+    table-row-item-outline-color: inspection.get-theme-color($theme, system, outline),
   );
 }
 

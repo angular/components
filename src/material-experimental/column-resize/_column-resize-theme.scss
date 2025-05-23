@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin color($theme) {
-  $non-resizable-hover-divider: mat.get-theme-color($theme, foreground, divider);
   $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
   $resizable-active-divider: mat.get-theme-color($theme, primary, 600);
 
@@ -65,7 +64,7 @@
 
     .mat-header-cell:not(.mat-resizable)::after,
     .mat-mdc-header-cell:not(.mat-resizable)::after {
-      background: $non-resizable-hover-divider;
+      background: mat.get-theme-color($theme, system, outline);
     }
 
     .mat-resizable-handle {
@@ -73,7 +72,7 @@
     }
 
     .cdk-resizable-resize-disabled > .mat-resizable-handle {
-      background: $non-resizable-hover-divider;
+      background: mat.get-theme-color($theme, system, outline);
     }
   }
 

@@ -34,7 +34,7 @@
     menu-item-hover-state-layer-color: $active-state-layer-color,
     menu-item-focus-state-layer-color: $active-state-layer-color,
     menu-container-color: inspection.get-theme-color($theme, system, surface),
-    menu-divider-color: inspection.get-theme-color($theme, foreground, divider),
+    menu-divider-color: inspection.get-theme-color($theme, system, outline),
   );
 }
 
