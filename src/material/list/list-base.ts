@@ -19,6 +19,7 @@ import {
   OnDestroy,
   QueryList,
   Injector,
+  signal,
 } from '@angular/core';
 import {
   _animationsDisabled,
@@ -64,12 +65,12 @@ export abstract class MatListBase {
    */
   @Input()
   get disabled(): boolean {
-    return this._disabled;
+    return this._disabled();
   }
   set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+    this._disabled.set(coerceBooleanProperty(value));
   }
-  private _disabled = false;
+  private _disabled = signal(false);
 
   protected _defaultOptions = inject(MAT_LIST_CONFIG, {optional: true});
 }
@@ -149,12 +150,12 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
   /** Whether the list-item is disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled || !!this._listBase?.disabled;
+    return this._disabled() || !!this._listBase?.disabled;
   }
   set disabled(value: BooleanInput) {
-    this._disabled = coerceBooleanProperty(value);
+    this._disabled.set(coerceBooleanProperty(value));
   }
-  private _disabled = false;
+  private _disabled = signal(false);
 
   private _subscriptions = new Subscription();
   private _rippleRenderer: RippleRenderer | null = null;
