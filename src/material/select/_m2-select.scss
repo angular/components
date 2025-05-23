@@ -25,7 +25,7 @@
   $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
     inspection.get-theme-color($theme, foreground, disabled-text, 1));
   $icon-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, divider, 1));
+    inspection.get-theme-color($theme, foreground, base));
 
   @return (
     select-panel-background-color: inspection.get-theme-color($theme, system, surface),

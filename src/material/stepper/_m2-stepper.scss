@@ -15,7 +15,7 @@
 @function get-color-tokens($theme) {
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
     stepper-container-color: inspection.get-theme-color($theme, system, surface),
-    stepper-line-color: inspection.get-theme-color($theme, foreground, divider),
+    stepper-line-color: inspection.get-theme-color($theme, system, outline),
     stepper-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     stepper-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
     stepper-header-label-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
