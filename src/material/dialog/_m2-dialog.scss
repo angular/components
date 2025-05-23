@@ -1,4 +1,3 @@
-@use '../core/tokens/m2-utils';
 @use '../core/style/elevation';
 @use '../core/style/sass-utils';
 @use '../core/theming/inspection';
@@ -26,13 +25,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $text-base: if(m2-utils.$private-is-internal-build,
-    if($is-dark, #fff, #000),
-    inspection.get-theme-color($theme, foreground, text, 1)
-  );
+  $text-base: inspection.get-theme-color($theme, foreground, text, 1);
 
   @return (
     dialog-container-color: inspection.get-theme-color($theme, system, surface),
