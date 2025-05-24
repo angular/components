@@ -20,8 +20,6 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $theme-divider-color: inspection.get-theme-color($theme, system, outline);
-
   @return (
     button-toggle-background-color: inspection.get-theme-color($theme, system, surface),
     button-toggle-disabled-selected-state-background-color:
