@@ -36,18 +36,8 @@
       inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
   $active-border-color:
     m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
-  $selected-checkmark-color: null;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  @if (m2-utils.$private-is-internal-build) {
-    $contrast-tone: m2-utils.contrast-tone($palette-selected, $is-dark);
-    $selected-checkmark-color: if($contrast-tone == 'dark', #000, #fff);
-  }
-  @else {
-    $selected-checkmark-color:
-      inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-  }
+  $selected-checkmark-color:
+    inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
 
   $tokens: (
     checkbox-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
