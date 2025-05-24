@@ -28,17 +28,19 @@ export class CdkStep implements OnChanges {
     get completed(): boolean;
     set completed(value: boolean);
     // (undocumented)
-    _completedOverride: boolean | null;
+    _completedOverride: i0.WritableSignal<boolean | null>;
     content: TemplateRef<any>;
     // (undocumented)
     _displayDefaultIndicatorType: boolean;
-    editable: boolean;
+    get editable(): boolean;
+    set editable(value: boolean);
     errorMessage: string;
     get hasError(): boolean;
     set hasError(value: boolean);
     readonly index: i0.WritableSignal<number>;
     readonly indicatorType: i0.Signal<string>;
-    interacted: boolean;
+    get interacted(): boolean;
+    set interacted(value: boolean);
     readonly interactedStream: EventEmitter<CdkStep>;
     readonly isNavigable: i0.Signal<boolean>;
     readonly isSelected: i0.Signal<boolean>;
@@ -59,7 +61,8 @@ export class CdkStep implements OnChanges {
     reset(): void;
     select(): void;
     _showError(): boolean;
-    state: StepState;
+    get state(): StepState;
+    set state(value: StepState);
     stepControl: AbstractControl;
     stepLabel: CdkStepLabel;
     // (undocumented)

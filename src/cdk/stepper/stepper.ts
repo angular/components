@@ -137,7 +137,13 @@ export class CdkStep implements OnChanges {
   @Input() stepControl: AbstractControl;
 
   /** Whether user has attempted to move away from the step. */
-  interacted = false;
+  get interacted(): boolean {
+    return this._interacted();
+  }
+  set interacted(value: boolean) {
+    this._interacted.set(value);
+  }
+  private _interacted = signal(false);
 
   /** Emits when the user has attempted to move away from the step. */
   @Output('interacted')
@@ -159,10 +165,24 @@ export class CdkStep implements OnChanges {
   @Input('aria-labelledby') ariaLabelledby: string;
 
   /** State of the step. */
-  @Input() state: StepState;
+  @Input()
+  get state(): StepState {
+    return this._state()!;
+  }
+  set state(value: StepState) {
+    this._state.set(value);
+  }
+  private _state = signal<StepState | undefined>(undefined);
 
   /** Whether the user can return to this step once it has been marked as completed. */
-  @Input({transform: booleanAttribute}) editable: boolean = true;
+  @Input({transform: booleanAttribute})
+  get editable(): boolean {
+    return this._editable()!;
+  }
+  set editable(value: boolean) {
+    this._editable.set(value);
+  }
+  private _editable = signal(true);
 
   /** Whether the completion of step is optional. */
   @Input({transform: booleanAttribute}) optional: boolean = false;
@@ -170,35 +190,57 @@ export class CdkStep implements OnChanges {
   /** Whether step is marked as completed. */
   @Input({transform: booleanAttribute})
   get completed(): boolean {
-    if (this._completedOverride != null) {
-      return this._completedOverride;
+    const override = this._completedOverride();
+    const interacted = this._interacted();
+
+    if (override != null) {
+      return override;
     }
 
-    return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
+    return interacted && (!this.stepControl || this.stepControl.valid);
   }
   set completed(value: boolean) {
-    this._completedOverride = value;
+    this._completedOverride.set(value);
   }
-  _completedOverride: boolean | null = null;
+  _completedOverride = signal<boolean | null>(null);
 
   /** Current index of the step within the stepper. */
   readonly index = signal(-1);
 
   /** Whether the step is selected. */
-  readonly isSelected = computed(() => this._stepper.selectedIndex === this.index());
+  readonly isSelected = computed<boolean>(() => this._stepper.selectedIndex === this.index());
 
   /** Type of indicator that should be shown for the step. */
-  readonly indicatorType = computed(() => {
-    const isCurrentStep = this.isSelected();
-    return this._displayDefaultIndicatorType
-      ? this._getDefaultIndicatorLogic(isCurrentStep)
-      : this._getGuidelineLogic(isCurrentStep);
+  readonly indicatorType = computed<StepState>(() => {
+    const selected = this.isSelected();
+    const completed = this.completed;
+    const defaultState = this._state() ?? STEP_STATE.NUMBER;
+    const editable = this._editable();
+
+    if (this._showError() && this.hasError && !selected) {
+      return STEP_STATE.ERROR;
+    }
+
+    if (this._displayDefaultIndicatorType) {
+      if (!completed || selected) {
+        return STEP_STATE.NUMBER;
+      }
+      return editable ? STEP_STATE.EDIT : STEP_STATE.DONE;
+    } else {
+      if (completed && !selected) {
+        return STEP_STATE.DONE;
+      } else if (completed && selected) {
+        return defaultState;
+      }
+      return editable && selected ? STEP_STATE.EDIT : defaultState;
+    }
   });
 
   /** Whether the user can navigate to the step. */
-  readonly isNavigable = computed(() => {
+  readonly isNavigable = computed<boolean>(() => {
     const isSelected = this.isSelected();
-    return this.completed || isSelected || !this._stepper.linear;
+    const isCompleted = this.completed;
+    return isCompleted || isSelected || !this._stepper.linear;
   });
 
   /** Whether step has an error. */
@@ -213,7 +255,7 @@ export class CdkStep implements OnChanges {
   private _customError = signal<boolean | null>(null);
 
   private _getDefaultError() {
-    return this.stepControl && this.stepControl.invalid && this.interacted;
+    return this.interacted && !!this.stepControl?.invalid;
   }
 
   constructor(...args: unknown[]);
@@ -231,10 +273,10 @@ export class CdkStep implements OnChanges {
 
   /** Resets the step to its initial state. Note that this includes resetting form data. */
   reset(): void {
-    this.interacted = false;
+    this._interacted.set(false);
 
-    if (this._completedOverride != null) {
-      this._completedOverride = false;
+    if (this._completedOverride() != null) {
+      this._completedOverride.set(false);
     }
 
     if (this._customError() != null) {
@@ -257,8 +299,8 @@ export class CdkStep implements OnChanges {
   }
 
   _markAsInteracted() {
-    if (!this.interacted) {
-      this.interacted = true;
+    if (!this._interacted()) {
+      this._interacted.set(true);
       this.interactedStream.emit(this);
     }
   }
@@ -268,30 +310,6 @@ export class CdkStep implements OnChanges {
     // We want to show the error state either if the user opted into/out of it using the
     // global options, or if they've explicitly set it through the `hasError` input.
     return this._stepperOptions.showError ?? this._customError() != null;
-  }
-
-  private _getDefaultIndicatorLogic(isCurrentStep: boolean): StepState {
-    if (this._showError() && this.hasError && !isCurrentStep) {
-      return STEP_STATE.ERROR;
-    } else if (!this.completed || isCurrentStep) {
-      return STEP_STATE.NUMBER;
-    }
-    return this.editable ? STEP_STATE.EDIT : STEP_STATE.DONE;
-  }
-
-  private _getGuidelineLogic(isCurrentStep: boolean): StepState {
-    const defaultState = this.state || STEP_STATE.NUMBER;
-
-    if (this._showError() && this.hasError && !isCurrentStep) {
-      return STEP_STATE.ERROR;
-    } else if (this.completed && !isCurrentStep) {
-      return STEP_STATE.DONE;
-    } else if (this.completed && isCurrentStep) {
-      return defaultState;
-    } else if (this.editable && isCurrentStep) {
-      return STEP_STATE.EDIT;
-    }
-    return defaultState;
   }
 }
 
@@ -577,7 +595,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
           const isIncomplete = control
             ? control.invalid || control.pending || !step.interacted
             : !step.completed;
-          return isIncomplete && !step.optional && !step._completedOverride;
+          return isIncomplete && !step.optional && !step._completedOverride();
         });
     }
 
