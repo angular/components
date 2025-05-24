@@ -82,7 +82,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     // (undocumented)
     _getDefaultTextForState(state: StepState): string;
     _getHostElement(): HTMLElement;
-    _getIconContext(): MatStepperIconContext;
     iconOverrides: {
         [key: string]: TemplateRef<MatStepperIconContext>;
     };
@@ -138,8 +137,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     // (undocumented)
     ngOnDestroy(): void;
     _stepHeader: QueryList<MatStepHeader>;
-    // (undocumented)
-    _stepIsNavigable(index: number, step: MatStep): boolean;
     readonly steps: QueryList<MatStep>;
     _steps: QueryList<MatStep>;
     // (undocumented)

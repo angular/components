@@ -128,15 +128,6 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     return this._elementRef.nativeElement;
   }
 
-  /** Template context variables that are exposed to the `matStepperIcon` instances. */
-  _getIconContext(): MatStepperIconContext {
-    return {
-      index: this.index,
-      active: this.active,
-      optional: this.optional,
-    };
-  }
-
   _getDefaultTextForState(state: StepState): string {
     if (state == 'number') {
       return `${this.index + 1}`;
