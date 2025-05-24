@@ -7,7 +7,7 @@
     @if (iconOverrides && iconOverrides[state]) {
       <ng-container
         [ngTemplateOutlet]="iconOverrides[state]"
-        [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+        [ngTemplateOutletContext]="{index, active, optional}"></ng-container>
     } @else {
       @switch (state) {
         @case ('number') {

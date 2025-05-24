@@ -283,10 +283,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     this._cleanupTransition?.();
   }
 
-  _stepIsNavigable(index: number, step: MatStep): boolean {
-    return step.completed || this.selectedIndex === index || !this.linear;
-  }
-
   _getAnimationDuration() {
     if (this._animationsDisabled) {
       return '0ms';
