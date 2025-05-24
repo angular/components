@@ -124,7 +124,7 @@
     system: (
       surface: white,
       on-surface: rgba(black, 0.87),
-      outline: rgba(black, 0.12),
+      outline: map.get(palette.$grey-palette, 300),
       hover-state-layer-opacity: 0.04,
       focus-state-layer-opacity: 0.12,
       pressed-state-layer-opacity: 0.12,
@@ -145,7 +145,7 @@
     system: (
       surface: map.get(palette.$grey-palette, 800),
       on-surface: white,
-      outline: rgba(white, 0.12),
+      outline: map.get(palette.$grey-palette, 700),
       hover-state-layer-opacity: 0.04,
       focus-state-layer-opacity: 0.12,
       pressed-state-layer-opacity: 0.12,
