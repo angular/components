@@ -82,11 +82,11 @@ importers:
         specifier: ~2.2.0
         version: 2.2.1
       karma-jasmine:
-        specifier: ~4.0.0
-        version: 4.0.2(karma@6.4.4)
+        specifier: ~5.1.0
+        version: 5.1.0(karma@6.4.4)
       karma-jasmine-html-reporter:
         specifier: ~1.7.0
-        version: 1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
+        version: 1.7.0(jasmine-core@5.7.1)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       selenium-webdriver:
         specifier: 3.6.0
         version: 3.6.0
@@ -2859,8 +2859,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jasmine-core@3.99.1:
-    resolution: {integrity: sha512-Hu1dmuoGcZ7AfyynN3LsfruwMbxMALMka+YtZeGoLuDEySVmVAPaonkNoBRIw/ectu8b9tVQCJNgp4a4knp+tg==}
+  jasmine-core@4.6.1:
+    resolution: {integrity: sha512-VYz/BjjmC3klLJlLwA4Kw8ytk0zDSmbbDLNs794VnWmkcCB7I9aAL/D48VNQtmITyPvea2C3jdUMfc3kAoy0PQ==}
 
   jasmine-core@5.7.1:
     resolution: {integrity: sha512-QnurrtpKsPoixxG2R3d1xP0St/2kcX5oTZyDyQJMY+Vzi/HUlu1kGm+2V8Tz+9lV991leB1l0xcsyz40s9xOOw==}
@@ -2942,11 +2942,11 @@ packages:
       karma: '>=0.9'
       karma-jasmine: '>=1.1'
 
-  karma-jasmine@4.0.2:
-    resolution: {integrity: sha512-ggi84RMNQffSDmWSyyt4zxzh2CQGwsxvYYsprgyR1j8ikzIduEdOlcLvXjZGwXG/0j41KUXOWsUCBfbEHPWP9g==}
-    engines: {node: '>= 10'}
+  karma-jasmine@5.1.0:
+    resolution: {integrity: sha512-i/zQLFrfEpRyQoJF9fsCdTMOF5c2dK7C7OmsuKg2D0YSsuZSfQDiLuaiktbuio6F2wiCsZSnSnieIQ0ant/uzQ==}
+    engines: {node: '>=12'}
     peerDependencies:
-      karma: '*'
+      karma: ^6.0.0
 
   karma-source-map-support@1.4.0:
     resolution: {integrity: sha512-RsBECncGO17KAoJCYXjv+ckIz+Ii9NCi+9enk+rq6XC81ezYkb4/RHE6CTXdA7IOJqoF3wcaLfVG0CPmE5ca6A==}
@@ -7268,7 +7268,7 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jasmine-core@3.99.1: {}
+  jasmine-core@4.6.1: {}
 
   jasmine-core@5.7.1: {}
 
@@ -7343,15 +7343,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  karma-jasmine-html-reporter@1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
+  karma-jasmine-html-reporter@1.7.0(jasmine-core@5.7.1)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4):
     dependencies:
       jasmine-core: 5.7.1
       karma: 6.4.4
-      karma-jasmine: 4.0.2(karma@6.4.4)
+      karma-jasmine: 5.1.0(karma@6.4.4)
 
-  karma-jasmine@4.0.2(karma@6.4.4):
+  karma-jasmine@5.1.0(karma@6.4.4):
     dependencies:
-      jasmine-core: 3.99.1
+      jasmine-core: 4.6.1
       karma: 6.4.4
 
   karma-source-map-support@1.4.0:
