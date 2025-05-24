@@ -36,8 +36,12 @@ export class CdkStep implements OnChanges {
     errorMessage: string;
     get hasError(): boolean;
     set hasError(value: boolean);
+    readonly index: i0.WritableSignal<number>;
+    readonly indicatorType: i0.Signal<string>;
     interacted: boolean;
     readonly interactedStream: EventEmitter<CdkStep>;
+    readonly isNavigable: i0.Signal<boolean>;
+    readonly isSelected: i0.Signal<boolean>;
     label: string;
     // (undocumented)
     _markAsInteracted(): void;
@@ -97,7 +101,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     protected _elementRef: ElementRef<HTMLElement>;
     _getAnimationDirection(index: number): StepContentPositionState;
     _getFocusIndex(): number | null;
-    _getIndicatorType(index: number, state?: StepState): StepState;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;
     linear: boolean;
