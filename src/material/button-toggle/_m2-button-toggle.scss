@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:meta';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/style/sass-utils';
@@ -21,18 +20,6 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $theme-divider-color: inspection.get-theme-color($theme, system, outline);
-
-  // By default the theme usually has an rgba color for the dividers, which can
-  // stack up with the background of a button toggle. This can cause the border
-  // of a selected toggle to look different from an unselected one. We use a solid
-  // color to ensure that the border always stays the same.
-  $divider-color: if(
-      meta.type-of($theme-divider-color) == color,
-      theming.private-rgba-to-hex(
-          $theme-divider-color, inspection.get-theme-color($theme, system, surface)),
-      $theme-divider-color);
-
   @return (
     button-toggle-background-color: inspection.get-theme-color($theme, system, surface),
     button-toggle-disabled-selected-state-background-color:
@@ -43,7 +30,7 @@
         inspection.get-theme-color($theme, system, surface),
     button-toggle-disabled-state-text-color:
         inspection.get-theme-color($theme, foreground, disabled-button),
-    button-toggle-divider-color: $divider-color,
+    button-toggle-divider-color: inspection.get-theme-color($theme, system, outline),
     button-toggle-legacy-disabled-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-disabled-button),
     button-toggle-legacy-disabled-state-background-color:
