@@ -44,14 +44,7 @@
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $outline: if(m2-utils.$private-is-internal-build,
-    rgba(if($is-dark, #fff, #000), 0.12),
-    inspection.get-theme-color($theme, system, outline)
-  );
-
+  $outline: inspection.get-theme-color($theme, system, outline);
   @return (
     button-filled-container-color: map.get($system, surface),
     button-filled-disabled-container-color:
@@ -125,19 +118,6 @@
   $container-color: inspection.get-theme-color($theme, $palette-name, default);
   $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
   $ripple-opacity: 0.1;
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  @if (m2-utils.$private-is-internal-build or
-      meta.type-of($contrast-color) != 'color') {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $container-color: inspection.get-theme-color($theme, $palette-name);
-    $contrast-tone: m2-utils.contrast-tone($container-color, $is-dark);
-    $color: if($contrast-tone == 'dark', #000, #fff);
-    $state-layer-color: $color;
-    $ripple-color: rgba($color, 0.1);
-    $label-text-color: if($contrast-tone == 'dark', #000, #fff);
-  }
 
   // outlined-outline-color:
   // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
