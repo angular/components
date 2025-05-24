@@ -43,7 +43,8 @@ $_large-size: $_default-size + 6px;
 @function get-color-tokens($theme) {
   $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
   @return map.merge($primary-color-tokens, (
-    badge-disabled-state-background-color: inspection.get-theme-color($theme, foreground, disabled-button),
+    badge-disabled-state-background-color:
+        inspection.get-theme-color($theme, foreground, disabled-button),
     badge-disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
   ));
 }
