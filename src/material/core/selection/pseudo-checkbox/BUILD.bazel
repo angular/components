@@ -48,6 +48,7 @@ sass_library(
         "_pseudo-checkbox-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",

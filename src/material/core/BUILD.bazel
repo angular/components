@@ -86,6 +86,7 @@ sass_library(
         "_core-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core:ripple_sass_theme",
         "//src/material/core/option:theme",
         "//src/material/core/selection/pseudo-checkbox:sass_theme",
