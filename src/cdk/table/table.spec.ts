@@ -2892,9 +2892,9 @@ class RowContextCdkTableApp {
   imports: [CdkTableModule],
 })
 class WrapperCdkTableApp<T> implements AfterContentInit {
-  @ContentChildren(CdkColumnDef) columnDefs: QueryList<CdkColumnDef>;
+  @ContentChildren(CdkColumnDef, {descendants: false}) columnDefs: QueryList<CdkColumnDef>;
   @ContentChild(CdkHeaderRowDef) headerRowDef: CdkHeaderRowDef;
-  @ContentChildren(CdkRowDef) rowDefs: QueryList<CdkRowDef<T>>;
+  @ContentChildren(CdkRowDef, {descendants: false}) rowDefs: QueryList<CdkRowDef<T>>;
   @ContentChild(CdkNoDataRow) noDataRow: CdkNoDataRow;
 
   @ViewChild(CdkTable, {static: true}) table: CdkTable<T>;

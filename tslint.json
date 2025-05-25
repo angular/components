@@ -95,20 +95,26 @@
             "argument": 0,
             "properties": {
               "!preserveWhitespaces": ".*",
-              "!styles": ".*",
               "!moduleId": ".*",
+              "!standalone": ".*"
+            }
+          },
+          // Don't require `ViewEncapsulation.None` and allow inline styles in non-production code.
+          {
+            "argument": 0,
+            "properties": {
+              "!styles": ".*",
               "encapsulation": "\\.None$"
             },
-            "excludeFiles": ["**/dev-app/**", "**/docs/**"]
+            "excludeFiles": ["**/dev-app/**", "**/docs/**", "**/*.spec.ts"]
           },
           // Enforce OnPush & standalone even in the dev-app.
           {
             "argument": 0,
             "properties": {
-              "changeDetection": "\\.OnPush$",
-              "!standalone": ".*"
+              "changeDetection": "\\.OnPush$"
             },
-            "excludeFiles": ["**/docs/**"]
+            "excludeFiles": ["**/docs/**", "**/*.spec.ts"]
           }
         ],
         "Directive": [
@@ -142,8 +148,7 @@
       },
       [
         // Internal code that doesn't need to follow the same standards.
-        "**/+(e2e-app|components-examples|universal-app|integration)/**",
-        "**/*.spec.ts"
+        "**/+(e2e-app|components-examples|universal-app|integration)/**"
       ]
     ],
     "require-license-banner": [
