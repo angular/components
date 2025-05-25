@@ -160,7 +160,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 * All features or bug fixes **must be tested** by one or more specs (unit-tests).
 * All public API methods **must be documented**. (Details TBD).
-* We follow [Google's JavaScript Style Guide][js-style-guide], but wrap all code at
+* We follow [Google's TypeScript Style Guide][ts-style-guide], but wrap all code at
   **100 characters**.
 
 ## <a name="commit"></a> Commit Message Guidelines
@@ -271,7 +271,7 @@ changes to be accepted, the CLA must be signed. It's a quick process, we promise
 [github]: https://github.com/angular/components
 [gitter]: https://gitter.im/angular/material2
 [individual-cla]: https://code.google.com/legal/individual-cla-v1.0.html
-[js-style-guide]: https://google.github.io/styleguide/jsguide.html
+[ts-style-guide]: https://google.github.io/styleguide/tsguide.html
 [codepen]: https://codepen.io/
 [jsbin]: https://jsbin.com/
 [jsfiddle]: https://jsfiddle.net/
