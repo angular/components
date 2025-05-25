@@ -1,8 +1,8 @@
 @use '../core/m2/palette' as m2-palette;
 @use '../core/style/sass-utils';
+@use '../core/tokens/m2-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
-@use '../core/tokens/m2-utils';
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
@@ -30,16 +30,9 @@
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
-
-  // Ideally we would derive all values directly from the theme, but it causes a lot of regressions
-  // internally. For now we fall back to the old hardcoded behavior only for internal apps.
-  $on-surface: if($is-dark, #fff, #000);
-  $text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, text, 1));
-  $disabled-text-color-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, disabled-text, 1));
-  $divider-base: if(m2-utils.$private-is-internal-build, $on-surface,
-    inspection.get-theme-color($theme, foreground, base));
+  $text-color-base: inspection.get-theme-color($theme, system, on-surface);
+  $disabled-text-color-base: inspection.get-theme-color($theme, foreground, disabled-text, 1);
+  $divider-base: inspection.get-theme-color($theme, foreground, base);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
