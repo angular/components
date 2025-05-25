@@ -70,7 +70,7 @@ $private-default-overlap-color: #a8dab5;
     datepicker-toggle-icon-color: $inactive-icon-color,
     datepicker-calendar-body-label-text-color: $secondary-text-color,
     datepicker-calendar-period-button-text-color:
-        inspection.get-theme-color($theme, foreground, text, 1),
+        inspection.get-theme-color($theme, foreground, base),
     datepicker-calendar-period-button-icon-color: $inactive-icon-color,
     datepicker-calendar-navigation-button-icon-color: $inactive-icon-color,
     datepicker-calendar-header-divider-color: inspection.get-theme-color($theme, system, outline),
@@ -140,7 +140,7 @@ $private-default-overlap-color: #a8dab5;
 @function private-get-calendar-color-palette-color-tokens($theme, $palette-name) {
   $palette-color: inspection.get-theme-color($theme, $palette-name);
   $default-contrast: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $active-background-color: sass-utils.safe-color-change($palette-color, $alpha: 0.3);
+  $active-background-color: inspection.get-theme-color($theme, $palette-name, 0.3);
   $active-disabled-color: null;
 
   @if (meta.type-of($palette-color) == color) {

@@ -85,14 +85,16 @@
   // might be inferred as numbers by Sass. Casting them to string fixes the map lookup.
   $color: if(map.has-key($palette, $hue), map.get($palette, $hue), map.get($palette, $hue + ''));
 
-  @if (meta.type-of($color) != color) {
-    // If the $color resolved to something different from a color (e.g. a CSS variable),
-    // we can't apply the opacity anyway so we return the value as is, otherwise Sass can
-    // throw an error or output something invalid.
+  @if ($opacity == null) {
     @return $color;
   }
 
-  @return rgba($color, if($opacity == null, color.opacity($color), $opacity));
+  @if (meta.type-of($color) != color) {
+    $opacity: ($opacity * 100) + '%';
+    @return #{color-mix(in srgb, #{$color} #{$opacity}, transparent)};
+  }
+
+  @return rgba($color, $opacity);
 }
 
 // Validates the specified theme by ensuring that the optional color config defines

@@ -1,4 +1,3 @@
-@use 'sass:color';
 @use 'sass:string';
 @use 'sass:map';
 @use 'sass:meta';
@@ -49,34 +48,6 @@ $use-system-typography-variables: false;
     $result: map.deep-merge($result, $map);
   }
   @return $result;
-}
-
-/// A version of the Sass `color.change` function that is safe ot use with CSS variables.
-@function safe-color-change($color, $args...) {
-  $args: meta.keywords($args);
-  $use-color-mix: $use-system-color-variables or
-      (is-css-var-name($color) and string.index($color, '--mat') == 1);
-  @if (meta.type-of($color) == 'color') {
-    @return color.change($color, $args...);
-  }
-  @else if ($color != null and
-      map.get($args, alpha) != null and $use-color-mix) {
-    $opacity: map.get($args, alpha);
-    @if meta.type-of($opacity) == number {
-      $opacity: ($opacity * 100) + '%';
-    }
-
-    @if (is-css-var-name($opacity)) {
-      $opacity: calc(var($opacity) * 100%);
-    }
-
-    @if (is-css-var-name($color)) {
-      $color: var($color);
-    }
-
-    @return #{color-mix(in srgb, #{$color} #{$opacity}, transparent)};
-  }
-  @return $color;
 }
 
 // Returns whether the $value is a CSS variable name based on whether it's a string prefixed

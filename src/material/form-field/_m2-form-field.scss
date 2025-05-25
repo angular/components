@@ -1,5 +1,4 @@
 @use '../core/m2/palette' as m2-palette;
-@use '../core/style/sass-utils';
 @use '../core/tokens/m2-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
@@ -30,14 +29,12 @@
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
-  $text-color-base: inspection.get-theme-color($theme, system, on-surface);
-  $disabled-text-color-base: inspection.get-theme-color($theme, foreground, disabled-text, 1);
-  $divider-base: inspection.get-theme-color($theme, foreground, base);
+  $disabled: inspection.get-theme-color($theme, foreground, base, 0.38);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     form-field-disabled-input-text-placeholder-color:
-      inspection.get-theme-color($theme, foreground, icon, 0.38),
+      inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
     form-field-error-text-color: inspection.get-theme-color($theme, warn),
 
@@ -66,58 +63,58 @@
     form-field-error-hover-trailing-icon-color: unset,
     form-field-error-trailing-icon-color: unset,
     form-field-enabled-select-arrow-color:
-        inspection.get-theme-color($theme, foreground, icon, 0.54),
+        inspection.get-theme-color($theme, foreground, base, 0.54),
     form-field-disabled-select-arrow-color:
-        inspection.get-theme-color($theme, foreground, icon, 0.38),
+        inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     form-field-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     form-field-filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
     form-field-filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
-    form-field-filled-label-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+    form-field-filled-label-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-hover-label-text-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+        inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+        inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-filled-input-text-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+        inspection.get-theme-color($theme, foreground, base, 0.87),
     form-field-filled-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+        inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-filled-input-text-placeholder-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+        inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-error-hover-label-text-color: $warn-color,
     form-field-filled-error-focus-label-text-color: $warn-color,
     form-field-filled-error-label-text-color: $warn-color,
     form-field-filled-error-caret-color: $warn-color,
     form-field-filled-active-indicator-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.42),
+        inspection.get-theme-color($theme, foreground, base, 0.42),
     form-field-filled-disabled-active-indicator-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+        inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-filled-hover-active-indicator-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+        inspection.get-theme-color($theme, foreground, base, 0.87),
     form-field-filled-error-active-indicator-color: $warn-color,
     form-field-filled-error-focus-active-indicator-color: $warn-color,
     form-field-filled-error-hover-active-indicator-color: $warn-color,
     form-field-outlined-label-text-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+        inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-hover-label-text-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+        inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-disabled-label-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+        inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-outlined-input-text-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
+        inspection.get-theme-color($theme, foreground, base, 0.87),
     form-field-outlined-disabled-input-text-color:
-        sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
+        inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-outlined-input-text-placeholder-color:
-        sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
+        inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-error-caret-color: $warn-color,
     form-field-outlined-error-focus-label-text-color: $warn-color,
     form-field-outlined-error-label-text-color: $warn-color,
     form-field-outlined-error-hover-label-text-color: $warn-color,
-    form-field-outlined-outline-color: sass-utils.safe-color-change($divider-base, $alpha: 0.38),
+    form-field-outlined-outline-color: inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-outlined-disabled-outline-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.06),
+        inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-outlined-hover-outline-color:
-        sass-utils.safe-color-change($divider-base, $alpha: 0.87),
+        inspection.get-theme-color($theme, foreground, base, 0.87),
     form-field-outlined-error-focus-outline-color: $warn-color,
     form-field-outlined-error-hover-outline-color: $warn-color,
     form-field-outlined-error-outline-color: $warn-color,
@@ -134,17 +131,16 @@
 // Generates the mapping for the properties that change based on the form field color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
   $palette-color: inspection.get-theme-color($theme, $palette-name);
+  $text-color: inspection.get-theme-color($theme, $palette-name, 0.87);
 
   @return (
-    form-field-focus-select-arrow-color: sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-focus-select-arrow-color: $text-color,
     form-field-filled-caret-color: $palette-color,
     form-field-filled-focus-active-indicator-color: $palette-color,
-    form-field-filled-focus-label-text-color:
-        sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-filled-focus-label-text-color: $text-color,
     form-field-outlined-caret-color: $palette-color,
     form-field-outlined-focus-outline-color: $palette-color,
-    form-field-outlined-focus-label-text-color:
-        sass-utils.safe-color-change($palette-color, $alpha: 0.87),
+    form-field-outlined-focus-label-text-color: $text-color,
   );
 }
 

@@ -2,7 +2,6 @@
 @use '../core/tokens/m2-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 @use '../core/m2/theming' as m2-theming;
 @use '../core/m2/palette' as m2-palette;
 
@@ -29,15 +28,13 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $palette-default: inspection.get-theme-color($theme, $palette-name, default);
-  $disabled-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.38);
+  $disabled-color: inspection.get-theme-color($theme, foreground, base, 0.38);
   $palette-selected: inspection.get-theme-color($theme, $palette-name);
-  $border-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, foreground, base), $alpha: 0.54);
+  $border-color: inspection.get-theme-color($theme, foreground, base, 0.54);
   $active-border-color:
     m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
   $selected-checkmark-color:
-    inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+    inspection.get-theme-color($theme, $palette-name, default-contrast);
 
   $tokens: (
     checkbox-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),

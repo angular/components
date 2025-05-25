@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
@@ -47,8 +46,7 @@
     button-toggle-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
     button-toggle-selected-state-text-color: inspection.get-theme-color($theme, system, on-surface),
-    button-toggle-state-layer-color: sass-utils.safe-color-change(
-        inspection.get-theme-color($theme, background, focused-button), $alpha: 1),
+    button-toggle-state-layer-color: inspection.get-theme-color($theme, background, base),
     button-toggle-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }

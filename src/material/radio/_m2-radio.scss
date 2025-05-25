@@ -26,8 +26,8 @@
   @return (
     radio-checked-ripple-color: inspection.get-theme-color($theme, $palette-name, default),
     radio-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
-    radio-disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
-    radio-disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 1),
+    radio-disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, base),
+    radio-disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, base),
     radio-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     radio-ripple-color: inspection.get-theme-color($theme, foreground, base),
     radio-selected-focus-icon-color: $palette-color,
@@ -36,8 +36,8 @@
     radio-selected-pressed-icon-color: $palette-color,
     radio-unselected-focus-icon-color: $icon-color,
     radio-unselected-hover-icon-color: $icon-color,
-    radio-unselected-icon-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
-    radio-unselected-pressed-icon-color: inspection.get-theme-color($theme, foreground, icon, 0.54),
+    radio-unselected-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    radio-unselected-pressed-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
   );
 }
 

@@ -2,7 +2,6 @@
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/style/elevation';
-@use '../core/style/sass-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,23 +13,15 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $text-color-base: inspection.get-theme-color($theme, foreground, text, 1);
-  $disabled-text-color-base: inspection.get-theme-color($theme, foreground, disabled-text, 1);
-  $icon-color-base: inspection.get-theme-color($theme, foreground, base);
-
   @return (
     select-panel-background-color: inspection.get-theme-color($theme, system, surface),
-    select-enabled-trigger-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.87),
-    select-disabled-trigger-text-color:
-      sass-utils.safe-color-change($disabled-text-color-base, $alpha: 0.38),
-    select-placeholder-text-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.6),
-    select-enabled-arrow-color: sass-utils.safe-color-change($icon-color-base, $alpha: 0.54),
-    select-disabled-arrow-color: sass-utils.safe-color-change($text-color-base, $alpha: 0.38),
-    select-focused-arrow-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, $palette-name, default), $alpha: 0.87),
-    select-invalid-arrow-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, warn, default), $alpha: 0.87),
+    select-enabled-trigger-text-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    select-disabled-trigger-text-color: inspection.get-theme-color($theme, foreground, base, 0.38),
+    select-placeholder-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
+    select-enabled-arrow-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    select-disabled-arrow-color: inspection.get-theme-color($theme, foreground, base, 0.38),
+    select-focused-arrow-color: inspection.get-theme-color($theme, $palette-name, default, 0.87),
+    select-invalid-arrow-color: inspection.get-theme-color($theme, warn, default, 0.87),
   );
 }
 

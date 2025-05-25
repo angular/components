@@ -2,7 +2,6 @@
 @use 'sass:meta';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
-@use '../core/style/sass-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -20,8 +19,7 @@
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) ==  dark;
   $scrim-opacity: 0.6;
-  $scrim-color: sass-utils.safe-color-change(
-      inspection.get-theme-color($theme, system, surface), $alpha: $scrim-opacity);
+  $scrim-color: inspection.get-theme-color($theme, system, surface, $scrim-opacity);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
