@@ -23,7 +23,7 @@
     card-elevated-container-elevation: elevation.get-box-shadow(1),
     card-outlined-container-color: map.get($system, surface),
     card-outlined-container-elevation: elevation.get-box-shadow(0),
-    card-outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
+    card-outlined-outline-color: inspection.get-theme-color($theme, system, outline),
     card-subtitle-text-color: map.get($system, surface-variant),
     card-filled-container-color: map.get($system, surface),
     card-filled-container-elevation: elevation.get-box-shadow(0)
