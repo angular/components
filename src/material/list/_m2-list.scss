@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
@@ -34,8 +33,8 @@
   $foreground-text: map.get($system, on-surface);
   $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
   $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
-  $text-icon-on-background: sass-utils.safe-color-change(
-      $foreground-base, $alpha: if($is-dark, 0.5, 0.38));
+  $text-icon-on-background:
+      inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38));
 
   @return (
     list-list-item-label-text-color: $foreground-text,

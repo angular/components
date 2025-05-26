@@ -1,5 +1,4 @@
 @use '../core/style/elevation';
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 
 // Tokens that can't be configured through Angular Material's current theming API,
@@ -25,12 +24,10 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $text-base: inspection.get-theme-color($theme, foreground, text, 1);
-
   @return (
     dialog-container-color: inspection.get-theme-color($theme, system, surface),
-    dialog-subhead-color: sass-utils.safe-color-change($text-base, $alpha: 0.87),
-    dialog-supporting-text-color: sass-utils.safe-color-change($text-base, $alpha: 0.6),
+    dialog-subhead-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    dialog-supporting-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
   );
 }
 

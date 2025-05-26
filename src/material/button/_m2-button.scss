@@ -48,24 +48,24 @@
   @return (
     button-filled-container-color: map.get($system, surface),
     button-filled-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base, 0.12),
     button-filled-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     button-filled-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-filled-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-filled-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-filled-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    button-filled-label-text-color: inspection.get-theme-color($theme, foreground, base),
     button-filled-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     button-filled-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-filled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-outlined-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     button-outlined-disabled-outline-color: $outline,
     button-outlined-disabled-state-layer-color:
         inspection.get-theme-color($theme, foreground, base),
     button-outlined-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-outlined-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-outlined-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    button-outlined-label-text-color: inspection.get-theme-color($theme, foreground, base),
     button-outlined-outline-color: $outline,
     button-outlined-pressed-state-layer-opacity:
         map.get($system, pressed-state-layer-opacity),
@@ -73,36 +73,36 @@
     button-outlined-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-protected-container-color: map.get($system, surface),
     button-protected-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base, 0.12),
     button-protected-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     button-protected-disabled-state-layer-color:
         inspection.get-theme-color($theme, foreground, base),
     button-protected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-protected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-protected-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    button-protected-label-text-color: inspection.get-theme-color($theme, foreground, base),
     button-protected-pressed-state-layer-opacity:
         map.get($system, pressed-state-layer-opacity),
     button-protected-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-protected-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-text-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     button-text-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-text-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-text-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-text-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    button-text-label-text-color: inspection.get-theme-color($theme, foreground, base),
     button-text-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     button-text-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-text-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-tonal-container-color: map.get($system, surface),
     button-tonal-disabled-container-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base, 0.12),
     button-tonal-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     button-tonal-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     button-tonal-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-tonal-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-tonal-label-text-color: inspection.get-theme-color($theme, foreground, text, 1),
+    button-tonal-label-text-color: inspection.get-theme-color($theme, foreground, base),
     button-tonal-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     button-tonal-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     button-tonal-state-layer-color: inspection.get-theme-color($theme, foreground, base),
@@ -112,11 +112,11 @@
 // Generates the mapping for the properties that change based on the button palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
   $color: inspection.get-theme-color($theme, $palette-name);
-  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
   $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
   $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
   $container-color: inspection.get-theme-color($theme, $palette-name, default);
-  $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
   $ripple-opacity: 0.1;
 
   // outlined-outline-color:
@@ -148,11 +148,11 @@
     button-text-state-layer-color: inspection.get-theme-color($theme, $palette-name),
     button-tonal-container-color: inspection.get-theme-color($theme, $palette-name, default),
     button-tonal-label-text-color:
-        inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
+        inspection.get-theme-color($theme, $palette-name, default-contrast),
     button-tonal-ripple-color:
         inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1),
     button-tonal-state-layer-color:
-        inspection.get-theme-color($theme, $palette-name, default-contrast, 1),
+        inspection.get-theme-color($theme, $palette-name, default-contrast),
   );
 }
 

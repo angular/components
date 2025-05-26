@@ -2,7 +2,6 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -12,13 +11,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $foreground-base: inspection.get-theme-color($theme, foreground, base);
-
   @return (
-    paginator-container-text-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.87),
+    paginator-container-text-color: inspection.get-theme-color($theme, foreground, base, 0.87),
     paginator-container-background-color: inspection.get-theme-color($theme, system, surface),
-    paginator-enabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.54),
-    paginator-disabled-icon-color: sass-utils.safe-color-change($foreground-base, $alpha: 0.12),
+    paginator-enabled-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    paginator-disabled-icon-color: inspection.get-theme-color($theme, foreground, base, 0.12),
   );
 }
 

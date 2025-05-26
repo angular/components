@@ -35,9 +35,9 @@
   @return (
     fab-container-color: map.get($system, surface),
     fab-disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base, 0.12),
     fab-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     fab-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-foreground-color: inspection.get-theme-color($theme, foreground, base),
@@ -46,9 +46,9 @@
     fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     fab-small-container-color: map.get($system, surface),
     fab-small-disabled-state-container-color:
-        inspection.get-theme-color($theme, background, disabled-button, 0.12),
+        inspection.get-theme-color($theme, foreground, base, 0.12),
     fab-small-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, disabled-button, if($is-dark, 0.5, 0.38)),
+        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
     fab-small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-small-foreground-color: inspection.get-theme-color($theme, foreground, base),
@@ -63,8 +63,8 @@
 // Generates the mapping for the properties that change based on the FAB palette color.
 @function private-get-color-palette-color-tokens($theme, $palette-name) {
   $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
-  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 1);
+  $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
   $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
 
   @return (
