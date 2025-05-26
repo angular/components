@@ -47,7 +47,7 @@ export async function deployToSite(
   await fs.promises.writeFile(gcpServiceKeyTmpFile, firebaseServiceKey);
   process.env['GOOGLE_APPLICATION_CREDENTIALS'] = gcpServiceKeyTmpFile;
 
-  await firebase('use', info.projectId);
+  await firebase('use', info.projectId, '--debug');
   await firebase('target:clear', 'hosting', 'mat-aio');
   await firebase('target:apply', 'hosting', 'mat-aio', info.site.firebaseSiteId);
 
