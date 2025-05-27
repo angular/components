@@ -17,21 +17,18 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return (
-    expansion-container-background-color: inspection.get-theme-color($theme, system, surface),
-    expansion-container-text-color: inspection.get-theme-color($theme, system, on-surface),
-    expansion-actions-divider-color: inspection.get-theme-color($theme, system, outline),
+    expansion-container-background-color: map.get($system, surface),
+    expansion-container-text-color: map.get($system, on-surface),
+    expansion-actions-divider-color: map.get($system, outline),
     expansion-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-disabled-state-text-color:
         m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-    expansion-header-text-color: inspection.get-theme-color($theme, system, on-surface),
-    expansion-header-description-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
-    expansion-header-indicator-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
+    expansion-header-text-color: map.get($system, on-surface),
+    expansion-header-description-color: map.get($system, on-surface-variant),
+    expansion-header-indicator-color: map.get($system, on-surface-variant),
   );
 }
 

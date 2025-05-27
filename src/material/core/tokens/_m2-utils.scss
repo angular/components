@@ -18,6 +18,11 @@ $private-is-internal-build: false;
     @return $system;
   }
 
+  $system: map.get($theme, color, system);
+  @if $system {
+    @return $system;
+  }
+
   @return ();
 }
 

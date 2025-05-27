@@ -1,5 +1,7 @@
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,14 +16,16 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
-    card-elevated-container-color: inspection.get-theme-color($theme, system, surface),
+    card-elevated-container-color: map.get($system, surface),
     card-elevated-container-elevation: elevation.get-box-shadow(1),
-    card-outlined-container-color: inspection.get-theme-color($theme, system, surface),
+    card-outlined-container-color: map.get($system, surface),
     card-outlined-container-elevation: elevation.get-box-shadow(0),
     card-outlined-outline-color: rgba(inspection.get-theme-color($theme, foreground, base), 0.12),
-    card-subtitle-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    card-filled-container-color: inspection.get-theme-color($theme, system, surface),
+    card-subtitle-text-color: map.get($system, surface-variant),
+    card-filled-container-color: map.get($system, surface),
     card-filled-container-elevation: elevation.get-box-shadow(0)
   );
 }

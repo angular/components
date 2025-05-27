@@ -29,16 +29,15 @@
   $system: m2-utils.get-system($theme);
 
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
-  $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
   $text-icon-on-background:
       inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38));
 
   @return (
     list-list-item-label-text-color: map.get($system, on-surface),
-    list-list-item-supporting-text-color: $foreground-secondary-text,
+    list-list-item-supporting-text-color: map.get($system, on-surface-variant),
     list-list-item-leading-icon-color: $text-icon-on-background,
-    list-list-item-trailing-supporting-text-color: $foreground-hint-text,
+    list-list-item-trailing-supporting-text-color:
+        inspection.get-theme-color($theme, foreground, hint-text),
     list-list-item-trailing-icon-color: $text-icon-on-background,
     list-list-item-selected-trailing-icon-color: $text-icon-on-background,
     list-list-item-disabled-label-text-color: map.get($system, on-surface),
