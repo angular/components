@@ -31,9 +31,9 @@ $prefix: (mat, stepper);
       stepper-header-error-state-icon-foreground-color: map.get($system, error),
       stepper-header-error-state-label-text-color: map.get($system, error),
       stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
-          map.get($system, inverse-surface), map.get($system, focus-state-layer-opacity)),
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
       stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
-          map.get($system, inverse-surface), map.get($system, hover-state-layer-opacity)),
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
       stepper-header-icon-background-color: map.get($system, on-surface-variant),
       stepper-header-icon-foreground-color: map.get($system, surface),
       stepper-header-label-text-color: map.get($system, on-surface-variant),
