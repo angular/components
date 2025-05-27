@@ -2,6 +2,7 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -24,28 +25,28 @@
   @return (
     button-toggle-background-color: map.get($system, surface),
     button-toggle-disabled-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-disabled-button),
-    button-toggle-disabled-selected-state-text-color: map.get($system, on-surface),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    button-toggle-disabled-selected-state-text-color:
+        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
     button-toggle-disabled-state-background-color: map.get($system, surface),
     button-toggle-disabled-state-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
     button-toggle-divider-color: map.get($system, outline),
     button-toggle-legacy-disabled-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-disabled-button),
-    button-toggle-legacy-disabled-state-background-color:
-        inspection.get-theme-color($theme, background, disabled-button-toggle),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    button-toggle-legacy-disabled-state-background-color: map.get($system, surface),
     button-toggle-legacy-disabled-state-text-color:
-        inspection.get-theme-color($theme, foreground, disabled-button),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
     button-toggle-legacy-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-button),
-    button-toggle-legacy-selected-state-text-color: map.get($system, surface-variant),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    button-toggle-legacy-selected-state-text-color: map.get($system, on-surface),
     button-toggle-legacy-state-layer-color:
-        inspection.get-theme-color($theme, background, focused-button),
-    button-toggle-legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    button-toggle-legacy-text-color: map.get($system, on-surface),
     button-toggle-selected-state-background-color:
-        inspection.get-theme-color($theme, background, selected-button),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
     button-toggle-selected-state-text-color: map.get($system, on-surface),
-    button-toggle-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
+    button-toggle-state-layer-color: map.get($system, on-surface),
     button-toggle-text-color: map.get($system, on-surface),
   );
 }
