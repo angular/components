@@ -1,7 +1,10 @@
 @use 'sass:color';
+@use 'sass:map';
 @use 'sass:meta';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -17,17 +20,18 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) ==  dark;
   $scrim-opacity: 0.6;
-  $scrim-color: inspection.get-theme-color($theme, system, surface, $scrim-opacity);
+  $scrim-color: m3-utils.color-with-opacity(map.get($system, surface), 60%);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
-    sidenav-container-divider-color: inspection.get-theme-color($theme, system, outline),
-    sidenav-container-background-color: inspection.get-theme-color($theme, system, surface),
-    sidenav-container-text-color: inspection.get-theme-color($theme, system, on-surface),
-    sidenav-content-background-color: inspection.get-theme-color($theme, background, background),
-    sidenav-content-text-color: inspection.get-theme-color($theme, system, on-surface),
+    sidenav-container-divider-color: map.get($system, outline),
+    sidenav-container-background-color: map.get($system, surface),
+    sidenav-container-text-color: map.get($system, on-surface),
+    sidenav-content-background-color: map.get($system, background),
+    sidenav-content-text-color: map.get($system, on-surface),
 
     // We use invert() here to have the darken the background color expected to be used.
     // If the background is light, we use a dark backdrop. If the background is dark, we

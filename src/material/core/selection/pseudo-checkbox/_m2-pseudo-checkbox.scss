@@ -10,7 +10,7 @@
 @function get-color-tokens($theme, $palette-name: accent) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $disabled-color: if($is-dark, #686868, #b0b0b0);
-  $checkmark-color: inspection.get-theme-color($theme, background, background);
+  $checkmark-color: inspection.get-theme-color($theme, system, background);
 
   @return (
     pseudo-checkbox-full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
