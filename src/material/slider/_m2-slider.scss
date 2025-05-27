@@ -33,20 +33,20 @@
 @function get-color-tokens($theme) {
   $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $elevation: inspection.get-theme-color($theme, foreground, elevation);
   $on-surface: if($is-dark, #fff, #000);
 
   @return map.merge(
     $theme-color-tokens,
     (
-      slider-disabled-active-track-color: $on-surface,
-      slider-disabled-handle-color: $on-surface,
-      slider-disabled-inactive-track-color: $on-surface,
+      slider-disabled-active-track-color: inspection.get-theme-color($theme, system, on-surface),
+      slider-disabled-handle-color: inspection.get-theme-color($theme, system, on-surface),
+      slider-disabled-inactive-track-color: inspection.get-theme-color($theme, system, on-surface),
       slider-label-container-color: $on-surface,
       slider-label-label-text-color: if($is-dark, #000, #fff),
       slider-value-indicator-opacity: if($is-dark, 0.9, 0.6),
       slider-with-overlap-handle-outline-color: #fff,
-      slider-with-tick-marks-disabled-container-color: $on-surface,
+      slider-with-tick-marks-disabled-container-color:
+          inspection.get-theme-color($theme, system, on-surface),
     ),
   );
 }

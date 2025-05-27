@@ -29,30 +29,28 @@
   $system: m2-utils.get-system($theme);
 
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $foreground-text: map.get($system, on-surface);
   $foreground-secondary-text: inspection.get-theme-color($theme, foreground, secondary-text);
   $foreground-hint-text: inspection.get-theme-color($theme, foreground, hint-text);
   $text-icon-on-background:
       inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38));
 
   @return (
-    list-list-item-label-text-color: $foreground-text,
+    list-list-item-label-text-color: map.get($system, on-surface),
     list-list-item-supporting-text-color: $foreground-secondary-text,
     list-list-item-leading-icon-color: $text-icon-on-background,
     list-list-item-trailing-supporting-text-color: $foreground-hint-text,
     list-list-item-trailing-icon-color: $text-icon-on-background,
     list-list-item-selected-trailing-icon-color: $text-icon-on-background,
-    list-list-item-disabled-label-text-color: $foreground-base,
-    list-list-item-disabled-leading-icon-color: $foreground-base,
-    list-list-item-disabled-trailing-icon-color: $foreground-base,
-    list-list-item-hover-label-text-color: $foreground-text,
+    list-list-item-disabled-label-text-color: map.get($system, on-surface),
+    list-list-item-disabled-leading-icon-color: map.get($system, on-surface),
+    list-list-item-disabled-trailing-icon-color: map.get($system, on-surface),
+    list-list-item-hover-label-text-color: map.get($system, on-surface),
     list-list-item-hover-leading-icon-color: $text-icon-on-background,
-    list-list-item-hover-state-layer-color: $foreground-base,
+    list-list-item-hover-state-layer-color: map.get($system, on-surface),
     list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     list-list-item-hover-trailing-icon-color: $text-icon-on-background,
-    list-list-item-focus-label-text-color: $foreground-text,
-    list-list-item-focus-state-layer-color: $foreground-base,
+    list-list-item-focus-label-text-color: map.get($system, on-surface),
+    list-list-item-focus-state-layer-color: map.get($system, on-surface),
     list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
   );
 }

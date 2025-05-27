@@ -26,11 +26,10 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
     if($is-dark, 0.08, 0.04));
-  $text-color: inspection.get-theme-color($theme, system, on-surface);
 
   @return (
-    menu-item-label-text-color: $text-color,
-    menu-item-icon-color: $text-color,
+    menu-item-label-text-color: inspection.get-theme-color($theme, system, on-surface),
+    menu-item-icon-color: inspection.get-theme-color($theme, system, on-surface),
     menu-item-hover-state-layer-color: $active-state-layer-color,
     menu-item-focus-state-layer-color: $active-state-layer-color,
     menu-container-color: inspection.get-theme-color($theme, system, surface),

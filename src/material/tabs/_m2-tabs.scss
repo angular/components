@@ -32,7 +32,7 @@
 
   $tokens: (
     tab-disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
-    tab-pagination-icon-color: inspection.get-theme-color($theme, foreground, base),
+    tab-pagination-icon-color: inspection.get-theme-color($theme, system, on-surface),
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
     tab-inactive-label-text-color: $inactive-label-text-color,

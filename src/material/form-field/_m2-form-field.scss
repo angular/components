@@ -36,7 +36,7 @@
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     form-field-disabled-input-text-placeholder-color:
       inspection.get-theme-color($theme, foreground, base, 0.38),
-    form-field-state-layer-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    form-field-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
     form-field-error-text-color: inspection.get-theme-color($theme, warn),
 
     // On dark themes we set the native `select` color to some shade of white,
@@ -75,7 +75,7 @@
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-disabled-label-text-color: $disabled,
     form-field-filled-input-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.87),
+        inspection.get-theme-color($theme, system, on-surface),
     form-field-filled-disabled-input-text-color: $disabled,
     form-field-filled-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
@@ -88,7 +88,7 @@
     form-field-filled-disabled-active-indicator-color:
         inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-filled-hover-active-indicator-color:
-        inspection.get-theme-color($theme, foreground, base, 0.87),
+        inspection.get-theme-color($theme, system, on-surface),
     form-field-filled-error-active-indicator-color: $warn-color,
     form-field-filled-error-focus-active-indicator-color: $warn-color,
     form-field-filled-error-hover-active-indicator-color: $warn-color,
@@ -98,7 +98,7 @@
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-disabled-label-text-color: $disabled,
     form-field-outlined-input-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.87),
+        inspection.get-theme-color($theme, system, on-surface),
     form-field-outlined-disabled-input-text-color: $disabled,
     form-field-outlined-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
@@ -110,7 +110,7 @@
     form-field-outlined-disabled-outline-color:
         inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-outlined-hover-outline-color:
-        inspection.get-theme-color($theme, foreground, base, 0.87),
+        inspection.get-theme-color($theme, system, on-surface),
     form-field-outlined-error-focus-outline-color: $warn-color,
     form-field-outlined-error-hover-outline-color: $warn-color,
     form-field-outlined-error-outline-color: $warn-color,
