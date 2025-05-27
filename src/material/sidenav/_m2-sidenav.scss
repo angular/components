@@ -26,7 +26,7 @@
     sidenav-container-divider-color: inspection.get-theme-color($theme, system, outline),
     sidenav-container-background-color: inspection.get-theme-color($theme, system, surface),
     sidenav-container-text-color: inspection.get-theme-color($theme, system, on-surface),
-    sidenav-content-background-color: inspection.get-theme-color($theme, background, background),
+    sidenav-content-background-color: inspection.get-theme-color($theme, system, background),
     sidenav-content-text-color: inspection.get-theme-color($theme, system, on-surface),
 
     // We use invert() here to have the darken the background color expected to be used.

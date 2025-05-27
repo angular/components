@@ -42,7 +42,7 @@ $_large-size: $_default-size + 6px;
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $app-background: inspection.get-theme-color($theme, background, background);
+  $app-background: inspection.get-theme-color($theme, system, background);
   $disabled-background: inspection.get-theme-color($theme, foreground, disabled-button);
 
   // The disabled color usually has some kind of opacity, but because the badge is overlayed

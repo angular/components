@@ -11,7 +11,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $tokens: (
-    app-background-color: inspection.get-theme-color($theme, background, background),
+    app-background-color: inspection.get-theme-color($theme, system, background),
     app-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 
