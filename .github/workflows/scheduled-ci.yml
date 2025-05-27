@@ -36,11 +36,6 @@ jobs:
         run: pnpm install
       - name: Run Browser tests
         run: pnpm bazel test --build_tag_filters=-e2e --test_tag_filters=-e2e --build_tests_only -- src/...
-      - uses: ./.github/actions/slack
-        if: ${{ failure() && github.event_name == 'push' }}
-        with:
-          JOB_NAME: 'Browser snapshot test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   linker_snapshot_tests:
     runs-on: ubuntu-latest-4core
@@ -65,11 +60,6 @@ jobs:
         run: pnpm test-linker-aot
       - name: Run linker tests using JIT
         run: pnpm test-linker-jit
-      - uses: ./.github/actions/slack
-        if: ${{ failure() && github.event_name == 'push' }}
-        with:
-          JOB_NAME: 'Linker snapshot test'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
 
   monitor-docs-site:
     runs-on: ubuntu-latest
@@ -85,9 +75,4 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Check Docs Site
-        run: ppnpm ci-docs-monitor-test
-      - uses: ./.github/actions/slack
-        if: ${{ failure() && github.event_name == 'push' }}
-        with:
-          JOB_NAME: 'Docs site monitoring'
-          SLACK_BOT_TOKEN: ${{ secrets.ANGULAR_ROBOT_SLACK_TOKEN }}
+        run: pnpm ci-docs-monitor-test
