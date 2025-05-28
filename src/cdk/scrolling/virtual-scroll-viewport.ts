@@ -10,6 +10,7 @@ import {ListRange} from '../collections';
 import {Platform} from '../platform';
 import {
   afterNextRender,
+  ApplicationRef,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -180,6 +181,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   private _viewportChanges = Subscription.EMPTY;
 
   private _injector = inject(Injector);
+
+  private readonly _applicationRef = inject(ApplicationRef);
 
   private _isDestroyed = false;
 
@@ -506,29 +509,45 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       return;
     }
 
+    // Apply the content transform. The transform can't be set via an Angular binding because
+    // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+    // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+    // the `Number` function first to coerce it to a numeric value.
+    this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
+    let rendered = false;
+    afterNextRender(
+      () => {
+        this._isChangeDetectionPending = false;
+        const runAfterChangeDetection = this._runAfterChangeDetection;
+        this._runAfterChangeDetection = [];
+        for (const fn of runAfterChangeDetection) {
+          fn();
+        }
+        rendered = true;
+      },
+      {injector: this._injector},
+    );
+
     this.ngZone.run(() => {
       // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
       // from the root, since the repeated items are content projected in. Calling `detectChanges`
       // instead does not properly check the projected content.
       this._changeDetectorRef.markForCheck();
+    });
 
-      // Apply the content transform. The transform can't be set via an Angular binding because
-      // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-      // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-      // the `Number` function first to coerce it to a numeric value.
-      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
-
-      afterNextRender(
-        () => {
-          this._isChangeDetectionPending = false;
-          const runAfterChangeDetection = this._runAfterChangeDetection;
-          this._runAfterChangeDetection = [];
-          for (const fn of runAfterChangeDetection) {
-            fn();
-          }
-        },
-        {injector: this._injector},
-      );
+    // In applications with NgZone, the above NgZone.run is likely to cause synchronous ApplicationRef.tick
+    // because we execute this function outside the zone and run coalescing is usually off.
+    // App synchronization needs to happen within the same microtask loop after applying the transform.
+    // Otherwise, the transform can become visible and look like a "flicker" when scrolling due to
+    // potential delays between the browser paint and the next tick.
+    this.ngZone.runOutsideAngular(async () => {
+      await Promise.resolve();
+      if (!rendered && this._runAfterChangeDetection.length > 0) {
+        this.ngZone.run(() => {
+          this._applicationRef.tick();
+        });
+      }
     });
   }
 
