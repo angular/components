@@ -1,3 +1,8 @@
+<a name="19.2.18"></a>
+# 19.2.18 "calcium-coconut" (2025-05-28)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0-rc.2"></a>
 # 20.0.0-rc.2 "orichalcum-ostrich" (2025-05-21)
 ### material
