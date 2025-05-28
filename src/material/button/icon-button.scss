@@ -21,7 +21,7 @@ $fallbacks: m3-icon-button.get-tokens();
   overflow: visible;
 
   // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
-  border-radius: 50%;
+  border-radius: token-utils.slot(icon-button-container-shape, $fallbacks, $fallback: 50%);
 
   // Prevent the button from shrinking since it's always supposed to be a circle.
   flex-shrink: 0;
@@ -69,7 +69,7 @@ $fallbacks: m3-icon-button.get-tokens();
   }
 
   .mat-mdc-button-persistent-ripple {
-    border-radius: 50%;
+    border-radius: token-utils.slot(icon-button-container-shape, $fallbacks, $fallback: 50%);
   }
 
   // MDC used to include this and it seems like a lot of apps depend on it.
