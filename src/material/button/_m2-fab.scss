@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
@@ -31,13 +32,13 @@
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+  $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
 
   @return (
     fab-container-color: map.get($system, surface),
-    fab-disabled-state-container-color:
-        inspection.get-theme-color($theme, foreground, base, 0.12),
-    fab-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
+    fab-disabled-state-container-color: $disabled-container,
+    fab-disabled-state-foreground-color: $disabled,
     fab-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-foreground-color: inspection.get-theme-color($theme, foreground, base),
@@ -45,10 +46,8 @@
     fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
     fab-small-container-color: map.get($system, surface),
-    fab-small-disabled-state-container-color:
-        inspection.get-theme-color($theme, foreground, base, 0.12),
-    fab-small-disabled-state-foreground-color:
-        inspection.get-theme-color($theme, foreground, base, if($is-dark, 0.5, 0.38)),
+    fab-small-disabled-state-container-color: $disabled-container,
+    fab-small-disabled-state-foreground-color: $disabled,
     fab-small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
     fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     fab-small-foreground-color: inspection.get-theme-color($theme, foreground, base),

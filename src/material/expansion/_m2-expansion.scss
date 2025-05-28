@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,14 +16,17 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+
   @return (
     expansion-container-background-color: inspection.get-theme-color($theme, system, surface),
     expansion-container-text-color: inspection.get-theme-color($theme, system, on-surface),
     expansion-actions-divider-color: inspection.get-theme-color($theme, system, outline),
     expansion-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     expansion-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    expansion-header-disabled-state-text-color: inspection.get-theme-color(
-        $theme, foreground, disabled-button),
+    expansion-header-disabled-state-text-color:
+        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
     expansion-header-text-color: inspection.get-theme-color($theme, system, on-surface),
     expansion-header-description-color:
         inspection.get-theme-color($theme, foreground, secondary-text),
