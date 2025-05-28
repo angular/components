@@ -9,6 +9,7 @@
 @function get-unthemable-tokens() {
   @return (
     icon-button-icon-size: 24px,
+    icon-button-container-shape: 50%,
   );
 }
 
