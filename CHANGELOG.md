@@ -1,3 +1,8 @@
+<a name="19.2.18"></a>
+# 19.2.18 "calcium-coconut" (2025-05-28)
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.17"></a>
 # 19.2.17 "fulgurite-fiesta" (2025-05-21)
 ### material
