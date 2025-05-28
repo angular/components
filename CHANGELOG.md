@@ -1,3 +1,13 @@
+<a name="20.0.1"></a>
+# 20.0.1 "sulfur-sandpaper" (2025-05-28)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ecd17ad75](https://github.com/angular/components/commit/ecd17ad758dd831f0be2d106ad4b4cd63f116069) | fix | **button:** add token for icon button shape ([#31223](https://github.com/angular/components/pull/31223)) |
+| [20fa71807](https://github.com/angular/components/commit/20fa71807bcbb8ef4dee75b86f0000aee31591f5) | fix | **schematics:** filter paths when renaming tokens ([#31249](https://github.com/angular/components/pull/31249)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.0"></a>
 # 20.0.0 "calcium-carrot" (2025-05-28)
 ## Breaking Changes
