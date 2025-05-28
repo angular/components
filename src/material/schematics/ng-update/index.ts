@@ -36,15 +36,31 @@ export function updateToV20(): Rule {
   ]);
 }
 
+// Whether the given path should be included when renaming theme token names.
+function shouldRenameTokens(path: string) {
+  if (path.includes('node_modules') || path.includes('.angular') || path.includes('.git')) {
+    return false;
+  }
+
+  return (
+    path.endsWith('.html') ||
+    path.endsWith('.css') ||
+    path.endsWith('.scss') ||
+    path.endsWith('.ts')
+  );
+}
+
 // Renames any CSS variables beginning with "--mdc-" to be "--mat-". These CSS variables
 // refer to tokens that used to be derived from a mix of MDC and Angular. Now all the tokens
 // are converged on being prefixed "--mat-".
 function renameMdcTokens(): Rule {
   return tree => {
     tree.visit(path => {
-      const content = tree.readText(path);
-      const updatedContent = content.replace('--mdc-', '--mat-');
-      tree.overwrite(path, updatedContent);
+      if (shouldRenameTokens(path)) {
+        const content = tree.readText(path);
+        const updatedContent = content.replace('--mdc-', '--mat-');
+        tree.overwrite(path, updatedContent);
+      }
     });
   };
 }
@@ -78,13 +94,15 @@ function renameComponentTokens(): Rule {
   ];
   return tree => {
     tree.visit(path => {
-      const content = tree.readText(path);
-      let updatedContent = content;
-      for (const tokenPrefix of tokenPrefixes) {
-        updatedContent = updatedContent.replace(tokenPrefix.old, tokenPrefix.replacement);
-      }
-      if (content !== updatedContent) {
-        tree.overwrite(path, updatedContent);
+      if (shouldRenameTokens(path)) {
+        const content = tree.readText(path);
+        let updatedContent = content;
+        for (const tokenPrefix of tokenPrefixes) {
+          updatedContent = updatedContent.replace(tokenPrefix.old, tokenPrefix.replacement);
+        }
+        if (content !== updatedContent) {
+          tree.overwrite(path, updatedContent);
+        }
       }
     });
   };
