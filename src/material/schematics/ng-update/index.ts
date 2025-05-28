@@ -38,7 +38,7 @@ export function updateToV20(): Rule {
 
 // Whether the given path should be included when renaming theme token names.
 function shouldRenameTokens(path: string) {
-  if (path.includes('node_modules') || path.includes('.angular')) {
+  if (path.includes('node_modules') || path.includes('.angular') || path.includes('.git')) {
     return false;
   }
 
