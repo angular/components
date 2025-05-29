@@ -91,6 +91,7 @@ $fallbacks: m3-card.get-tokens();
 
 // Add slots for custom Angular Material card tokens.
 .mat-mdc-card-title {
+  color: token-utils.slot(card-title-text-color, $fallbacks);
   font-family: token-utils.slot(card-title-text-font, $fallbacks);
   line-height: token-utils.slot(card-title-text-line-height, $fallbacks);
   font-size: token-utils.slot(card-title-text-size, $fallbacks);
