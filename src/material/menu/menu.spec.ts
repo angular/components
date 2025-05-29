@@ -2510,7 +2510,7 @@ describe('MatMenu', () => {
       }),
     );
 
-    it('should not re-focus a child menu trigger when hovering another trigger', fakeAsync(() => {
+    it('should preserve focus on a child menu trigger when hovering another trigger', fakeAsync(() => {
       dispatchFakeEvent(instance.rootTriggerEl.nativeElement, 'mousedown');
       instance.rootTriggerEl.nativeElement.click();
       fixture.detectChanges();
@@ -2529,7 +2529,7 @@ describe('MatMenu', () => {
       fixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement).not.toBe(
+      expect(document.activeElement).toBe(
         levelOneTrigger,
         'Expected focus not to be returned to the initial trigger.',
       );
