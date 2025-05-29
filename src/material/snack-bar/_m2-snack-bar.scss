@@ -1,6 +1,6 @@
 @use '../core/theming/inspection';
-@use 'sass:meta';
-@use 'sass:color';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,15 +13,12 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
+  $system: m2-utils.get-system($theme);
   $surface: inspection.get-theme-color($theme, system, surface);
 
   @return (
-    snack-bar-container-color: if(
-        meta.type-of($surface) == color,
-        color.mix(if($is-dark, #fff, #000), $surface, 80%),
-        $surface),
-    snack-bar-supporting-text-color:
-        if(meta.type-of($surface) == color, rgba($surface, 0.87), $surface),
+    snack-bar-container-color: map.get($system, inverse-surface),
+    snack-bar-supporting-text-color: map.get($system, inverse-on-surface),
     snack-bar-button-color:
       if(
         $is-dark,
