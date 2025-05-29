@@ -26,7 +26,7 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   @return (
     dialog-container-color: inspection.get-theme-color($theme, system, surface),
-    dialog-subhead-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    dialog-subhead-color: inspection.get-theme-color($theme, system, on-surface),
     dialog-supporting-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
   );
 }

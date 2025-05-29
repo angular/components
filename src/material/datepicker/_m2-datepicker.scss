@@ -42,7 +42,6 @@ $private-default-overlap-color: #a8dab5;
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
-  $text-color: inspection.get-theme-color($theme, system, on-surface);
   $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
@@ -84,18 +83,20 @@ $private-default-overlap-color: #a8dab5;
     // that this is today's date, so we use the hint color.
     datepicker-calendar-date-today-outline-color: $hint-text-color,
     datepicker-calendar-date-today-disabled-state-outline-color: $today-disabled-outline-color,
-    datepicker-calendar-date-text-color: $text-color,
+    datepicker-calendar-date-text-color: inspection.get-theme-color($theme, system, on-surface),
     datepicker-calendar-date-outline-color: transparent,
     datepicker-calendar-date-disabled-state-text-color: $disabled,
     datepicker-calendar-date-preview-state-outline-color: $preview-outline-color,
 
-    datepicker-range-input-separator-color: $text-color,
+    datepicker-range-input-separator-color:
+        inspection.get-theme-color($theme, system, on-surface),
     datepicker-range-input-disabled-state-separator-color: $disabled,
     datepicker-range-input-disabled-state-text-color: $disabled,
 
     datepicker-calendar-container-background-color:
         inspection.get-theme-color($theme, system, surface),
-    datepicker-calendar-container-text-color: $text-color,
+    datepicker-calendar-container-text-color:
+        inspection.get-theme-color($theme, system, on-surface),
   ));
 }
 

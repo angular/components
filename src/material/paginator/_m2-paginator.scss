@@ -12,7 +12,7 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   @return (
-    paginator-container-text-color: inspection.get-theme-color($theme, foreground, base, 0.87),
+    paginator-container-text-color: inspection.get-theme-color($theme, system, on-surface),
     paginator-container-background-color: inspection.get-theme-color($theme, system, surface),
     paginator-enabled-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
     paginator-disabled-icon-color: inspection.get-theme-color($theme, foreground, base, 0.12),

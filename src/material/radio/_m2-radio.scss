@@ -1,8 +1,6 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/m2/palette' as m2-palette;
-@use '../core/m2/theming' as m2-theming;
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
@@ -24,24 +22,23 @@
   $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $palette-color: inspection.get-theme-color($theme, $palette-name, default);
-  $icon-color: m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return (
     radio-checked-ripple-color: inspection.get-theme-color($theme, $palette-name, default),
     radio-disabled-label-color: $disabled,
-    radio-disabled-selected-icon-color: inspection.get-theme-color($theme, foreground, base),
-    radio-disabled-unselected-icon-color: inspection.get-theme-color($theme, foreground, base),
-    radio-label-text-color: inspection.get-theme-color($theme, system, on-surface),
-    radio-ripple-color: inspection.get-theme-color($theme, foreground, base),
+    radio-disabled-selected-icon-color: map.get($system, on-surface),
+    radio-disabled-unselected-icon-color: map.get($system, on-surface),
+    radio-label-text-color: map.get($system, on-surface),
+    radio-ripple-color: map.get($system, on-surface),
     radio-selected-focus-icon-color: $palette-color,
     radio-selected-hover-icon-color: $palette-color,
     radio-selected-icon-color: $palette-color,
     radio-selected-pressed-icon-color: $palette-color,
-    radio-unselected-focus-icon-color: $icon-color,
-    radio-unselected-hover-icon-color: $icon-color,
+    radio-unselected-focus-icon-color: map.get($system, on-surface),
+    radio-unselected-hover-icon-color: map.get($system, on-surface),
     radio-unselected-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
-    radio-unselected-pressed-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    radio-unselected-pressed-icon-color: map.get($system, on-surface),
   );
 }
 

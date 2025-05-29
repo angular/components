@@ -46,7 +46,7 @@
     button-toggle-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
     button-toggle-selected-state-text-color: inspection.get-theme-color($theme, system, on-surface),
-    button-toggle-state-layer-color: inspection.get-theme-color($theme, background, base),
+    button-toggle-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
     button-toggle-text-color: inspection.get-theme-color($theme, system, on-surface),
   );
 }

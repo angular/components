@@ -3,8 +3,6 @@
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/m2/theming' as m2-theming;
-@use '../core/m2/palette' as m2-palette;
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -32,8 +30,6 @@
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $palette-selected: inspection.get-theme-color($theme, $palette-name);
   $border-color: inspection.get-theme-color($theme, foreground, base, 0.54);
-  $active-border-color:
-    m2-theming.get-color-from-palette(m2-palette.$gray-palette, if($is-dark, 200, 900));
   $selected-checkmark-color:
     inspection.get-theme-color($theme, $palette-name, default-contrast);
 
@@ -47,14 +43,14 @@
     checkbox-selected-hover-icon-color: $palette-selected,
     checkbox-selected-icon-color: $palette-selected,
     checkbox-selected-pressed-icon-color: $palette-selected,
-    checkbox-unselected-focus-icon-color: $active-border-color,
-    checkbox-unselected-hover-icon-color: $active-border-color,
+    checkbox-unselected-focus-icon-color: map.get($system, on-surface),
+    checkbox-unselected-hover-icon-color: map.get($system, on-surface),
     checkbox-unselected-icon-color: $border-color,
     checkbox-selected-focus-state-layer-color: $palette-default,
     checkbox-selected-hover-state-layer-color: $palette-default,
     checkbox-selected-pressed-state-layer-color: $palette-default,
-    checkbox-unselected-focus-state-layer-color: $foreground-base,
-    checkbox-unselected-hover-state-layer-color: $foreground-base,
+    checkbox-unselected-focus-state-layer-color: map.get($system, on-surface),
+    checkbox-unselected-hover-state-layer-color: map.get($system, on-surface),
     checkbox-unselected-pressed-state-layer-color: $foreground-base,
   );
 
