@@ -1,9 +1,12 @@
 @use 'sass:color';
 @use 'sass:meta';
 @use 'sass:math';
+@use 'sass:map';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
 @use '../core/style/sass-utils';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 $_selected-fade-amount: 0.6;
 $_today-fade-amount: 0.2;
@@ -37,10 +40,11 @@ $private-default-overlap-color: #a8dab5;
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
   $text-color: inspection.get-theme-color($theme, system, on-surface);
   $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
-  $disabled-text-color: inspection.get-theme-color($theme, foreground, disabled-text);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
   $preview-outline-color: inspection.get-theme-color($theme, system, outline);
   $today-disabled-outline-color: null;
@@ -63,7 +67,7 @@ $private-default-overlap-color: #a8dab5;
     $today-disabled-outline-color: color.adjust($hint-text-color, $alpha: -$_today-fade-amount);
   }
   @else {
-    $today-disabled-outline-color: $disabled-text-color;
+    $today-disabled-outline-color: $disabled;
   }
 
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
@@ -82,12 +86,12 @@ $private-default-overlap-color: #a8dab5;
     datepicker-calendar-date-today-disabled-state-outline-color: $today-disabled-outline-color,
     datepicker-calendar-date-text-color: $text-color,
     datepicker-calendar-date-outline-color: transparent,
-    datepicker-calendar-date-disabled-state-text-color: $disabled-text-color,
+    datepicker-calendar-date-disabled-state-text-color: $disabled,
     datepicker-calendar-date-preview-state-outline-color: $preview-outline-color,
 
     datepicker-range-input-separator-color: $text-color,
-    datepicker-range-input-disabled-state-separator-color: $disabled-text-color,
-    datepicker-range-input-disabled-state-text-color: $disabled-text-color,
+    datepicker-range-input-disabled-state-separator-color: $disabled,
+    datepicker-range-input-disabled-state-text-color: $disabled,
 
     datepicker-calendar-container-background-color:
         inspection.get-theme-color($theme, system, surface),
@@ -138,6 +142,7 @@ $private-default-overlap-color: #a8dab5;
 }
 
 @function private-get-calendar-color-palette-color-tokens($theme, $palette-name) {
+  $system: m2-utils.get-system($theme);
   $palette-color: inspection.get-theme-color($theme, $palette-name);
   $default-contrast: inspection.get-theme-color($theme, $palette-name, default-contrast);
   $active-background-color: inspection.get-theme-color($theme, $palette-name, 0.3);
@@ -147,7 +152,7 @@ $private-default-overlap-color: #a8dab5;
     $active-disabled-color: color.adjust($palette-color, $alpha: -$_selected-fade-amount);
   }
   @else {
-    $active-disabled-color: inspection.get-theme-color($theme, foreground, disabled-button);
+    $active-disabled-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   }
 
   @return (

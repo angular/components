@@ -2,6 +2,8 @@
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,13 +15,16 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $palette-name: primary) {
+  $system: m2-utils.get-system($theme);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+
   @return (
     select-panel-background-color: inspection.get-theme-color($theme, system, surface),
     select-enabled-trigger-text-color: inspection.get-theme-color($theme, foreground, base, 0.87),
-    select-disabled-trigger-text-color: inspection.get-theme-color($theme, foreground, base, 0.38),
+    select-disabled-trigger-text-color: $disabled,
     select-placeholder-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
     select-enabled-arrow-color: inspection.get-theme-color($theme, foreground, base, 0.54),
-    select-disabled-arrow-color: inspection.get-theme-color($theme, foreground, base, 0.38),
+    select-disabled-arrow-color: $disabled,
     select-focused-arrow-color: inspection.get-theme-color($theme, $palette-name, default, 0.87),
     select-invalid-arrow-color: inspection.get-theme-color($theme, warn, default, 0.87),
   );

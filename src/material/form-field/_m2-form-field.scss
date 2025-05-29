@@ -1,5 +1,6 @@
 @use '../core/m2/palette' as m2-palette;
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use 'sass:color';
@@ -29,7 +30,7 @@
   $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
-  $disabled: inspection.get-theme-color($theme, foreground, base, 0.38);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
@@ -64,8 +65,7 @@
     form-field-error-trailing-icon-color: unset,
     form-field-enabled-select-arrow-color:
         inspection.get-theme-color($theme, foreground, base, 0.54),
-    form-field-disabled-select-arrow-color:
-        inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-disabled-select-arrow-color: $disabled,
     form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     form-field-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     form-field-filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
@@ -73,12 +73,10 @@
     form-field-filled-label-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-hover-label-text-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-filled-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-filled-disabled-label-text-color: $disabled,
     form-field-filled-input-text-color:
         inspection.get-theme-color($theme, foreground, base, 0.87),
-    form-field-filled-disabled-input-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-filled-disabled-input-text-color: $disabled,
     form-field-filled-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-filled-error-hover-label-text-color: $warn-color,
@@ -98,12 +96,10 @@
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-hover-label-text-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-outlined-disabled-label-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-outlined-disabled-label-text-color: $disabled,
     form-field-outlined-input-text-color:
         inspection.get-theme-color($theme, foreground, base, 0.87),
-    form-field-outlined-disabled-input-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-outlined-disabled-input-text-color: $disabled,
     form-field-outlined-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-error-caret-color: $warn-color,

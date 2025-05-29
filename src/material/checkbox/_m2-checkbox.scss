@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/m2/theming' as m2-theming;
@@ -28,7 +29,7 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $palette-default: inspection.get-theme-color($theme, $palette-name, default);
-  $disabled-color: inspection.get-theme-color($theme, foreground, base, 0.38);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $palette-selected: inspection.get-theme-color($theme, $palette-name);
   $border-color: inspection.get-theme-color($theme, foreground, base, 0.54);
   $active-border-color:
@@ -37,10 +38,10 @@
     inspection.get-theme-color($theme, $palette-name, default-contrast);
 
   $tokens: (
-    checkbox-disabled-label-color: inspection.get-theme-color($theme, foreground, disabled-text),
+    checkbox-disabled-label-color: $disabled,
     checkbox-label-text-color: map.get($system, on-surface),
-    checkbox-disabled-selected-icon-color: $disabled-color,
-    checkbox-disabled-unselected-icon-color: $disabled-color,
+    checkbox-disabled-selected-icon-color: $disabled,
+    checkbox-disabled-unselected-icon-color: $disabled,
     checkbox-selected-checkmark-color: $selected-checkmark-color,
     checkbox-selected-focus-icon-color: $palette-selected,
     checkbox-selected-hover-icon-color: $palette-selected,
