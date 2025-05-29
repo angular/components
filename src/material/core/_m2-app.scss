@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use './theming/inspection';
 @use './style/elevation';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -10,9 +11,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   $tokens: (
-    app-background-color: inspection.get-theme-color($theme, background, background),
-    app-text-color: inspection.get-theme-color($theme, system, on-surface),
+    app-background-color: map.get($system, background),
+    app-text-color: map.get($system, on-surface),
   );
 
   @for $zValue from 0 through 24 {
