@@ -18,6 +18,7 @@ sass_library(
     ],
     deps = [
         "//src/material/core/style:sass_utils",
+        "//src/material/core/theming:_inspection",
         "//src/material/core/tokens:m3_utils",
     ],
 )
@@ -41,6 +42,7 @@ sass_library(
         "_tabs-theme.scss",
     ],
     deps = [
+        ":m2",
         "//src/material/core/style:sass_utils",
         "//src/material/core/theming",
         "//src/material/core/theming:_inspection",
