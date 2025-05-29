@@ -19,17 +19,17 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
-    button-toggle-background-color: inspection.get-theme-color($theme, system, surface),
+    button-toggle-background-color: map.get($system, surface),
     button-toggle-disabled-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-disabled-button),
-    button-toggle-disabled-selected-state-text-color:
-        inspection.get-theme-color($theme, system, on-surface),
-    button-toggle-disabled-state-background-color:
-        inspection.get-theme-color($theme, system, surface),
+    button-toggle-disabled-selected-state-text-color: map.get($system, on-surface),
+    button-toggle-disabled-state-background-color: map.get($system, surface),
     button-toggle-disabled-state-text-color:
         inspection.get-theme-color($theme, foreground, disabled-button),
-    button-toggle-divider-color: inspection.get-theme-color($theme, system, outline),
+    button-toggle-divider-color: map.get($system, outline),
     button-toggle-legacy-disabled-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-disabled-button),
     button-toggle-legacy-disabled-state-background-color:
@@ -38,16 +38,15 @@
         inspection.get-theme-color($theme, foreground, disabled-button),
     button-toggle-legacy-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
-    button-toggle-legacy-selected-state-text-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
+    button-toggle-legacy-selected-state-text-color: map.get($system, surface-variant),
     button-toggle-legacy-state-layer-color:
         inspection.get-theme-color($theme, background, focused-button),
     button-toggle-legacy-text-color: inspection.get-theme-color($theme, foreground, hint-text),
     button-toggle-selected-state-background-color:
         inspection.get-theme-color($theme, background, selected-button),
-    button-toggle-selected-state-text-color: inspection.get-theme-color($theme, system, on-surface),
+    button-toggle-selected-state-text-color: map.get($system, on-surface),
     button-toggle-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
-    button-toggle-text-color: inspection.get-theme-color($theme, system, on-surface),
+    button-toggle-text-color: map.get($system, on-surface),
   );
 }
 

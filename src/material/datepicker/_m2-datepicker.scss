@@ -1,12 +1,12 @@
 @use 'sass:color';
 @use 'sass:meta';
 @use 'sass:math';
-@use 'sass:map';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
 @use '../core/style/sass-utils';
-@use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 $_selected-fade-amount: 0.6;
 $_today-fade-amount: 0.2;
@@ -41,11 +41,11 @@ $private-default-overlap-color: #a8dab5;
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
+
   $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
-  $secondary-text-color: inspection.get-theme-color($theme, foreground, secondary-text);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
-  $preview-outline-color: inspection.get-theme-color($theme, system, outline);
+  $preview-outline-color: map.get($system, outline);
   $today-disabled-outline-color: null;
   $is-dark: inspection.get-theme-type($theme) == dark;
 
@@ -71,32 +71,27 @@ $private-default-overlap-color: #a8dab5;
 
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
     datepicker-toggle-icon-color: $inactive-icon-color,
-    datepicker-calendar-body-label-text-color: $secondary-text-color,
+    datepicker-calendar-body-label-text-color: map.get($system, on-surface-variant),
     datepicker-calendar-period-button-text-color:
         inspection.get-theme-color($theme, foreground, base),
     datepicker-calendar-period-button-icon-color: $inactive-icon-color,
     datepicker-calendar-navigation-button-icon-color: $inactive-icon-color,
-    datepicker-calendar-header-divider-color: inspection.get-theme-color($theme, system, outline),
-    datepicker-calendar-header-text-color: $secondary-text-color,
+    datepicker-calendar-header-divider-color: map.get($system, outline),
+    datepicker-calendar-header-text-color: map.get($system, on-surface-variant),
 
     // Note: though it's not text, the border is a hint about the fact
     // that this is today's date, so we use the hint color.
     datepicker-calendar-date-today-outline-color: $hint-text-color,
     datepicker-calendar-date-today-disabled-state-outline-color: $today-disabled-outline-color,
-    datepicker-calendar-date-text-color: inspection.get-theme-color($theme, system, on-surface),
+    datepicker-calendar-date-text-color: map.get($system, on-surface),
     datepicker-calendar-date-outline-color: transparent,
     datepicker-calendar-date-disabled-state-text-color: $disabled,
     datepicker-calendar-date-preview-state-outline-color: $preview-outline-color,
-
-    datepicker-range-input-separator-color:
-        inspection.get-theme-color($theme, system, on-surface),
+    datepicker-range-input-separator-color: map.get($system, on-surface),
     datepicker-range-input-disabled-state-separator-color: $disabled,
     datepicker-range-input-disabled-state-text-color: $disabled,
-
-    datepicker-calendar-container-background-color:
-        inspection.get-theme-color($theme, system, surface),
-    datepicker-calendar-container-text-color:
-        inspection.get-theme-color($theme, system, on-surface),
+    datepicker-calendar-container-background-color: map.get($system, surface),
+    datepicker-calendar-container-text-color: map.get($system, on-surface),
   ));
 }
 

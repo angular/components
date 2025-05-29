@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,19 +14,17 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
-    stepper-container-color: inspection.get-theme-color($theme, system, surface),
-    stepper-line-color: inspection.get-theme-color($theme, system, outline),
+    stepper-container-color: map.get($system, surface),
+    stepper-line-color: map.get($system, outline),
     stepper-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
     stepper-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    stepper-header-label-text-color: inspection.get-theme-color($theme, foreground, secondary-text),
-    stepper-header-optional-label-text-color: inspection.get-theme-color(
-        $theme, foreground, secondary-text),
-    stepper-header-selected-state-label-text-color:
-        inspection.get-theme-color($theme, system, on-surface),
+    stepper-header-label-text-color: map.get($system, on-surface-variant),
+    stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
+    stepper-header-selected-state-label-text-color: map.get($system, on-surface),
     stepper-header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
-    stepper-header-icon-background-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
+    stepper-header-icon-background-color: map.get($system, on-surface-variant),
     stepper-header-error-state-icon-foreground-color:
         inspection.get-theme-color($theme, warn, text),
     stepper-header-error-state-icon-background-color: transparent,

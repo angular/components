@@ -1,4 +1,6 @@
 @use '../../theming/inspection';
+@use '../../tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -11,12 +13,12 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $disabled-color: if($is-dark, #686868, #b0b0b0);
   $checkmark-color: inspection.get-theme-color($theme, system, background);
+  $system: m2-utils.get-system($theme);
 
   @return (
     pseudo-checkbox-full-selected-icon-color: inspection.get-theme-color($theme, $palette-name),
     pseudo-checkbox-full-selected-checkmark-color: $checkmark-color,
-    pseudo-checkbox-full-unselected-icon-color:
-        inspection.get-theme-color($theme, foreground, secondary-text),
+    pseudo-checkbox-full-unselected-icon-color: map.get($system, on-surface-variant),
     pseudo-checkbox-full-disabled-selected-checkmark-color: $checkmark-color,
     pseudo-checkbox-full-disabled-unselected-icon-color: $disabled-color,
     pseudo-checkbox-full-disabled-selected-icon-color: $disabled-color,

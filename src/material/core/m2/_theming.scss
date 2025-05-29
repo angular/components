@@ -126,6 +126,7 @@
     system: (
       surface: white,
       on-surface: rgba(black, 0.87),
+      on-surface-variant: rgba(black, 0.54),
       background: map.get(palette.$grey-palette, 50),
       inverse-surface: map.get(palette.$grey-palette, 800),
       inverse-on-surface: white,
@@ -150,6 +151,7 @@
     system: (
       surface: map.get(palette.$grey-palette, 800),
       on-surface: white,
+      on-surface-variant: rgba(white, 0.7),
       background: #303030,
       inverse-surface: white,
       inverse-on-surface: rgba(black, 0.87),
