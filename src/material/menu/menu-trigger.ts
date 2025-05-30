@@ -283,6 +283,12 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Opens the menu. */
   openMenu(): void {
+    // Auto focus by default
+    this._openMenu(true);
+  }
+
+  /** Internal method to open menu providing option to auto focus on first item. */
+  private _openMenu(autoFocus: boolean): void {
     const menu = this.menu;
 
     if (this._menuOpen || !menu) {
@@ -317,7 +323,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
     menu.parentMenu = this.triggersSubmenu() ? this._parentMaterialMenu : undefined;
     menu.direction = this.dir;
-    menu.focusFirstItem(this._openedBy || 'program');
+    if (autoFocus) menu.focusFirstItem(this._openedBy || 'program');
     this._setIsMenuOpen(true);
 
     if (menu instanceof MatMenu) {
@@ -590,7 +596,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       this._hoverSubscription = this._parentMaterialMenu._hovered().subscribe(active => {
         if (active === this._menuItemInstance && !active.disabled) {
           this._openedBy = 'mouse';
-          this.openMenu();
+          // Open the menu, but do NOT auto-focus on first item when just hovering.
+          // When VoiceOver is enabled, this is particularly confusing as the focus will
+          // cause another hover event, and continue opening sub-menus without interaction.
+          this._openMenu(false);
         }
       });
     }
