@@ -37,25 +37,30 @@
     .mat-accent {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, accent));
+        @include token-utils.create-token-values-mixed(
+            m2-radio.get-color-tokens($theme, secondary));
       }
     }
 
     .mat-warn {
       .mdc-list-item__start,
       .mdc-list-item__end {
-        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values-mixed(
+            m2-radio.get-color-tokens($theme, error));
       }
     }
 
     .mat-mdc-list-option {
-      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, primary));
+      @include token-utils.create-token-values-mixed(
+          m2-checkbox.get-color-tokens($theme, primary));
     }
     .mat-mdc-list-option.mat-accent {
-      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, accent));
+      @include token-utils.create-token-values-mixed(
+          m2-checkbox.get-color-tokens($theme, secondary));
     }
     .mat-mdc-list-option.mat-warn {
-      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme, warn));
+      @include token-utils.create-token-values-mixed(
+          m2-checkbox.get-color-tokens($theme, error));
     }
 
     // There is no token for activated color on nav list.

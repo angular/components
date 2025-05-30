@@ -60,21 +60,19 @@
 }
 
 // Generates the mapping for the properties that change based on the FAB palette color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    fab-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    fab-foreground-color: $foreground-color,
-    fab-ripple-color: $ripple-color,
-    fab-small-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    fab-small-foreground-color: $foreground-color,
-    fab-small-ripple-color: $ripple-color,
-    fab-small-state-layer-color: $state-layer-color,
-    fab-state-layer-color: $state-layer-color,
+    fab-container-color: map.get($system, primary),
+    fab-foreground-color: map.get($system, on-primary),
+    fab-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    fab-small-container-color: map.get($system, primary),
+    fab-small-foreground-color: map.get($system, on-primary),
+    fab-small-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    fab-small-state-layer-color: map.get($system, on-primary),
+    fab-state-layer-color: map.get($system, on-primary),
   );
 }
 

@@ -27,7 +27,6 @@
 
   $is-dark: inspection.get-theme-type($theme) == dark;
   $surface: map.get($system, surface);
-  $warn-color: inspection.get-theme-color($theme, warn);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
   $on-surface: if($is-dark, #fff, #000);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
@@ -79,19 +78,19 @@
     form-field-filled-disabled-input-text-color: $disabled,
     form-field-filled-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-filled-error-hover-label-text-color: $warn-color,
-    form-field-filled-error-focus-label-text-color: $warn-color,
-    form-field-filled-error-label-text-color: $warn-color,
-    form-field-filled-error-caret-color: $warn-color,
+    form-field-filled-error-hover-label-text-color: map.get($system, error),
+    form-field-filled-error-focus-label-text-color: map.get($system, error),
+    form-field-filled-error-label-text-color: map.get($system, error),
+    form-field-filled-error-caret-color: map.get($system, error),
     form-field-filled-active-indicator-color:
         inspection.get-theme-color($theme, foreground, base, 0.42),
     form-field-filled-disabled-active-indicator-color:
         inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-filled-hover-active-indicator-color:
         inspection.get-theme-color($theme, system, on-surface),
-    form-field-filled-error-active-indicator-color: $warn-color,
-    form-field-filled-error-focus-active-indicator-color: $warn-color,
-    form-field-filled-error-hover-active-indicator-color: $warn-color,
+    form-field-filled-error-active-indicator-color: map.get($system, error),
+    form-field-filled-error-focus-active-indicator-color: map.get($system, error),
+    form-field-filled-error-hover-active-indicator-color: map.get($system, error),
     form-field-outlined-label-text-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
     form-field-outlined-hover-label-text-color:
@@ -102,18 +101,18 @@
     form-field-outlined-disabled-input-text-color: $disabled,
     form-field-outlined-input-text-placeholder-color:
         inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-outlined-error-caret-color: $warn-color,
-    form-field-outlined-error-focus-label-text-color: $warn-color,
-    form-field-outlined-error-label-text-color: $warn-color,
-    form-field-outlined-error-hover-label-text-color: $warn-color,
+    form-field-outlined-error-caret-color: map.get($system, error),
+    form-field-outlined-error-focus-label-text-color: map.get($system, error),
+    form-field-outlined-error-label-text-color: map.get($system, error),
+    form-field-outlined-error-hover-label-text-color: map.get($system, error),
     form-field-outlined-outline-color: inspection.get-theme-color($theme, foreground, base, 0.38),
     form-field-outlined-disabled-outline-color:
         inspection.get-theme-color($theme, foreground, base, 0.06),
     form-field-outlined-hover-outline-color:
         inspection.get-theme-color($theme, system, on-surface),
-    form-field-outlined-error-focus-outline-color: $warn-color,
-    form-field-outlined-error-hover-outline-color: $warn-color,
-    form-field-outlined-error-outline-color: $warn-color,
+    form-field-outlined-error-focus-outline-color: map.get($system, error),
+    form-field-outlined-error-hover-outline-color: map.get($system, error),
+    form-field-outlined-error-outline-color: map.get($system, error),
   ));
 }
 
@@ -125,18 +124,21 @@
 }
 
 // Generates the mapping for the properties that change based on the form field color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
-  $text-color: inspection.get-theme-color($theme, $palette-name, 0.87);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    form-field-focus-select-arrow-color: $text-color,
-    form-field-filled-caret-color: $palette-color,
-    form-field-filled-focus-active-indicator-color: $palette-color,
-    form-field-filled-focus-label-text-color: $text-color,
-    form-field-outlined-caret-color: $palette-color,
-    form-field-outlined-focus-outline-color: $palette-color,
-    form-field-outlined-focus-label-text-color: $text-color,
+    form-field-focus-select-arrow-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
+    form-field-filled-caret-color: map.get($system, primary),
+    form-field-filled-focus-active-indicator-color: map.get($system, primary),
+    form-field-filled-focus-label-text-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
+    form-field-outlined-caret-color: map.get($system, primary),
+    form-field-outlined-focus-outline-color: map.get($system, primary),
+    form-field-outlined-focus-label-text-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 87%),
   );
 }
 

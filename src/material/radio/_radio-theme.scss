@@ -30,15 +30,18 @@
   } @else {
     .mat-mdc-radio-button {
       &.mat-primary {
-        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, primary));
+        @include token-utils.create-token-values-mixed(
+            m2-radio.get-color-tokens($theme, primary));
       }
 
       &.mat-accent {
-        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme));
+        @include token-utils.create-token-values-mixed(
+            m2-radio.get-color-tokens($theme, secondary));
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values-mixed(m2-radio.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values-mixed(
+            m2-radio.get-color-tokens($theme, error));
       }
     }
   }

@@ -1,6 +1,8 @@
-@use '../core/theming/inspection';
 @use 'sass:color';
 @use 'sass:meta';
+@use 'sass:map';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -21,14 +23,16 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
+@function get-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+
   @return (
-    progress-bar-active-indicator-color: $palette-color,
+    progress-bar-active-indicator-color: map.get($system, primary),
     progress-bar-track-color: if(
-        meta.type-of($palette-color) == color,
-        color.adjust($palette-color, $alpha: -0.75),
-        $palette-color
+        meta.type-of(map.get($system, primary)) == color,
+        color.adjust(map.get($system, primary), $alpha: -0.75),
+        map.get($system, primary)
     )
   );
 }

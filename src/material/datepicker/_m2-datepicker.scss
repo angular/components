@@ -48,8 +48,9 @@ $private-default-overlap-color: #a8dab5;
   $preview-outline-color: map.get($system, outline);
   $today-disabled-outline-color: null;
   $is-dark: inspection.get-theme-type($theme) == dark;
+  $system: m2-utils.get-system($theme);
 
-  $primary-color: inspection.get-theme-color($theme, primary);
+  $primary-color: map.get($system, primary);
   $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
   $calendar-tokens: private-get-calendar-color-palette-color-tokens($theme, primary);
   $toggle-tokens: private-get-toggle-color-palette-color-tokens($theme, primary);
@@ -137,11 +138,13 @@ $private-default-overlap-color: #a8dab5;
   );
 }
 
-@function private-get-calendar-color-palette-color-tokens($theme, $palette-name) {
+@function private-get-calendar-color-palette-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
-  $default-contrast: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $active-background-color: inspection.get-theme-color($theme, $palette-name, 0.3);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+
+  $palette-color: map.get($system, primary);
+  $default-contrast: map.get($system, on-primary);
+  $active-background-color: m3-utils.color-with-opacity(map.get($system, primary), 30%);
   $active-disabled-color: null;
 
   @if (meta.type-of($palette-color) == color) {

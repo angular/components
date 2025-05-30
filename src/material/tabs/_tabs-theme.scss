@@ -36,13 +36,13 @@
 
       &.mat-accent {
         @include token-utils.create-token-values-mixed(
-          m2-tabs.get-color-tokens($theme, accent,
+          m2-tabs.get-color-tokens($theme, secondary,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
-          m2-tabs.get-color-tokens($theme, warn,
+          m2-tabs.get-color-tokens($theme, error,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
@@ -55,7 +55,7 @@
       }
 
       &.mat-background-accent {
-        $tokens: m2-tabs.get-color-tokens($theme, accent);
+        $tokens: m2-tabs.get-color-tokens($theme, secondary);
         @include token-utils.create-token-values-mixed((
           tab-background-color: map.get($tokens, background-color),
           tab-foreground-color: map.get($tokens, foreground-color),
@@ -63,7 +63,7 @@
       }
 
       &.mat-background-warn {
-        $tokens: m2-tabs.get-color-tokens($theme, warn);
+        $tokens: m2-tabs.get-color-tokens($theme, error);
         @include token-utils.create-token-values-mixed((
           tab-background-color: map.get($tokens, background-color),
           tab-foreground-color: map.get($tokens, foreground-color),

@@ -1,8 +1,8 @@
-@use 'sass:meta';
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -31,17 +31,14 @@
 }
 
 // Generates the mapping for the properties that change based on the button palette color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-  $ripple-opacity: 0.1;
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    icon-button-icon-color: inspection.get-theme-color($theme, $palette-name),
-    icon-button-state-layer-color: $color,
-    icon-button-ripple-color: if(
-      meta.type-of($color) == color,
-      rgba($color, $ripple-opacity),
-      inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
+    icon-button-icon-color: map.get($system, primary),
+    icon-button-state-layer-color: map.get($system, primary),
+    icon-button-ripple-color: m3-utils.color-with-opacity(map.get($system, primary), 10%),
   );
 }
 
