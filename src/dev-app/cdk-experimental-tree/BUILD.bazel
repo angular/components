@@ -1,0 +1,10 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "cdk-experimental-tree",
+    srcs = glob(["**/*.ts"]),
+    assets = ["cdk-tree-demo.html"],
+    deps = ["//src/components-examples/cdk-experimental/tree"],
+)
