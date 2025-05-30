@@ -47,6 +47,13 @@ export const MAT_CHIP_AVATAR = new InjectionToken('MatChipAvatar');
 export const MAT_CHIP_TRAILING_ICON = new InjectionToken('MatChipTrailingIcon');
 
 /**
+ * Injection token that can be used to reference instances of `MatChipEdit`. It serves as
+ * alternative token to the actual `MatChipEdit` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const MAT_CHIP_EDIT = new InjectionToken('MatChipEdit');
+
+/**
  * Injection token that can be used to reference instances of `MatChipRemove`. It serves as
  * alternative token to the actual `MatChipRemove` class which could cause unnecessary
  * retention of the class and its directive metadata.

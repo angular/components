@@ -2,6 +2,11 @@
   <span class="mat-mdc-chip-focus-overlay"></span>
 }
 
+@if (_hasLeadingActionIcon()) {
+  <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--leading" role="gridcell">
+    <ng-content select="[matChipEdit]"></ng-content>
+  </span>
+}
 <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"
     matChipAction
     [disabled]="disabled"

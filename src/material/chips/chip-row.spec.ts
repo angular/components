@@ -436,6 +436,21 @@ describe('Row Chips', () => {
       }));
     });
 
+    describe('with edit icon', () => {
+      beforeEach(async () => {
+        testComponent.showEditIcon = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      });
+
+      it('should begin editing on edit click', () => {
+        expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeFalsy();
+        dispatchFakeEvent(chipNativeElement.querySelector('.mat-mdc-chip-edit')!, 'click');
+        fixture.detectChanges();
+        expect(chipNativeElement.querySelector('.mat-chip-edit-input')).toBeTruthy();
+      });
+    });
+
     describe('a11y', () => {
       it('should apply `ariaLabel` and `ariaDesciption` to the primary gridcell', () => {
         fixture.componentInstance.ariaLabel = 'chip name';
@@ -488,6 +503,9 @@ describe('Row Chips', () => {
                   (destroyed)="chipDestroy($event)"
                   (removed)="chipRemove($event)" (edited)="chipEdit($event)"
                   [aria-label]="ariaLabel" [aria-description]="ariaDescription">
+            @if (showEditIcon) {
+              <button matChipEdit>edit</button>
+            }
             {{name}}
             <button matChipRemove>x</button>
             @if (useCustomEditInput) {
@@ -509,6 +527,7 @@ class SingleChip {
   removable: boolean = true;
   shouldShow: boolean = true;
   editable: boolean = false;
+  showEditIcon: boolean = false;
   useCustomEditInput: boolean = true;
   ariaLabel: string | null = null;
   ariaDescription: string | null = null;

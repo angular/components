@@ -46,6 +46,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[class.mat-mdc-chip-editing]': '_isEditing',
     '[class.mat-mdc-chip-editable]': 'editable',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
+    '[class.mdc-evolution-chip--with-leading-action]': '_hasLeadingActionIcon()',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
     '[class.mdc-evolution-chip--with-primary-graphic]': 'leadingIcon',
     '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
@@ -130,6 +131,11 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     });
   }
 
+  protected _hasLeadingActionIcon() {
+    // The leading action (edit) icon is hidden while editing.
+    return !this._isEditing && !!this.editIcon;
+  }
+
   override _hasTrailingIcon() {
     // The trailing icon is hidden while editing.
     return !this._isEditing && super._hasTrailingIcon();
@@ -174,10 +180,18 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     }
   }
 
-  private _startEditing(event: Event) {
+  override _edit(): void {
+    // markForCheck necessary for edit input to be rendered
+    this._changeDetectorRef.markForCheck();
+    this._startEditing();
+  }
+
+  private _startEditing(event?: Event) {
     if (
       !this.primaryAction ||
-      (this.removeIcon && this._getSourceAction(event.target as Node) === this.removeIcon)
+      (this.removeIcon &&
+        !!event &&
+        this._getSourceAction(event.target as Node) === this.removeIcon)
     ) {
       return;
     }
@@ -191,7 +205,9 @@ export class MatChipRow extends MatChip implements AfterViewInit {
     afterNextRender(
       () => {
         this._getEditInput().initialize(value);
-        this._editStartPending = false;
+
+        // Necessary when using edit icon to prevent edit from aborting
+        setTimeout(() => this._ngZone.run(() => (this._editStartPending = false)));
       },
       {injector: this._injector},
     );
