@@ -2,6 +2,7 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -18,8 +19,10 @@
   @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
     stepper-container-color: map.get($system, surface),
     stepper-line-color: map.get($system, outline),
-    stepper-header-hover-state-layer-color: inspection.get-theme-color($theme, background, hover),
-    stepper-header-focus-state-layer-color: inspection.get-theme-color($theme, background, hover),
+    stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+    stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
     stepper-header-label-text-color: map.get($system, on-surface-variant),
     stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
     stepper-header-selected-state-label-text-color: map.get($system, on-surface),
