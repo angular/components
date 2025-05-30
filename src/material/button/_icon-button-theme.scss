@@ -46,11 +46,11 @@
         }
 
         &.mat-accent {
-          @include _m2-icon-button-variant($theme, accent);
+          @include _m2-icon-button-variant($theme, secondary);
         }
 
         &.mat-warn {
-          @include _m2-icon-button-variant($theme, warn);
+          @include _m2-icon-button-variant($theme, error);
         }
       }
     }

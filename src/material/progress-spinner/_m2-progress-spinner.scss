@@ -1,4 +1,6 @@
-@use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -14,9 +16,12 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
+@function get-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+
   @return (
-    progress-spinner-active-indicator-color: inspection.get-theme-color($theme, $palette-name)
+    progress-spinner-active-indicator-color: map.get($system, primary)
   );
 }
 

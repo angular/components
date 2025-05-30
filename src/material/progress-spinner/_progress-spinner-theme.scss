@@ -33,12 +33,12 @@
 
       .mat-accent {
         @include token-utils.create-token-values-mixed(
-            m2-progress-spinner.get-color-tokens($theme, accent));
+            m2-progress-spinner.get-color-tokens($theme, secondary));
       }
 
       .mat-warn {
         @include token-utils.create-token-values-mixed(
-            m2-progress-spinner.get-color-tokens($theme, warn));
+            m2-progress-spinner.get-color-tokens($theme, error));
       }
     }
   }

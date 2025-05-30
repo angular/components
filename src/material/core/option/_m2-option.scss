@@ -1,4 +1,7 @@
 @use '../theming/inspection';
+@use 'sass:map';
+@use '../tokens/m2-utils';
+@use '../tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -7,13 +10,15 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
+@function get-color-tokens($theme, $color-variant) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
     if($is-dark, 0.08, 0.04));
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    option-selected-state-label-text-color: inspection.get-theme-color($theme, $palette-name),
+    option-selected-state-label-text-color: map.get($system, primary),
     option-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     option-hover-state-layer-color: $active-state-layer-color,
     option-focus-state-layer-color: $active-state-layer-color,

@@ -26,15 +26,15 @@
         map.get(m3-option.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, primary));
     }
 
     .mat-accent {
-      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, accent));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, secondary));
     }
 
     .mat-warn {
-      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, warn));
+      @include token-utils.create-token-values-mixed(m2-option.get-color-tokens($theme, error));
     }
   }
 }

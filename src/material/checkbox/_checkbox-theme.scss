@@ -29,7 +29,8 @@
         map.get(m3-checkbox.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-checkbox.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(
+          m2-checkbox.get-color-tokens($theme, secondary));
     }
 
     .mat-mdc-checkbox {
@@ -42,7 +43,7 @@
 
       &.mat-warn {
         @include token-utils.create-token-values-mixed(
-          m2-checkbox.get-color-tokens($theme, warn,
+          m2-checkbox.get-color-tokens($theme, error,
               $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
