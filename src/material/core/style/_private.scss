@@ -1,7 +1,6 @@
 @use './elevation';
 @use '../theming/inspection';
 @use '../tokens/m2-utils';
-@use '../tokens/m3-utils';
 @use 'sass:map';
 
 @mixin private-theme-elevation($zValue, $theme) {
