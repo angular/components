@@ -34,15 +34,18 @@
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
-          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, primary));
+          @include token-utils.create-token-values-mixed(
+              m2-chip.get-color-tokens($theme, primary));
         }
 
         &.mat-accent {
-          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, accent));
+          @include token-utils.create-token-values-mixed(
+              m2-chip.get-color-tokens($theme, secondary));
         }
 
         &.mat-warn {
-          @include token-utils.create-token-values-mixed(m2-chip.get-color-tokens($theme, warn));
+          @include token-utils.create-token-values-mixed(
+              m2-chip.get-color-tokens($theme, error));
         }
       }
     }

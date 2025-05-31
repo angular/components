@@ -8,6 +8,8 @@
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../button/icon-button-theme';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // TODO(crisbeto): these variables aren't used anymore and should be removed.
 $selected-today-box-shadow-width: 1px;
@@ -17,13 +19,15 @@ $today-fade-amount: 0.2;
 $calendar-body-font-size: 13px !default;
 $calendar-weekday-table-font-size: 11px !default;
 
-@mixin _calendar-color($theme, $palette-name) {
-  $palette-color: inspection.get-theme-color($theme, $palette-name);
-  $range-color: m2-datepicker.private-get-range-background-color($palette-color);
+@mixin _calendar-color($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+
+  $range-color: m2-datepicker.private-get-range-background-color(map.get($system, primary));
   $range-tokens: m2-datepicker.get-range-color-tokens($range-color);
   $calendar-tokens: m2-datepicker.private-get-calendar-color-palette-color-tokens(
     $theme,
-    $palette-name
+    $color-variant
   );
 
   @include token-utils.create-token-values-mixed(map.merge($calendar-tokens, $range-tokens));
@@ -56,11 +60,11 @@ $calendar-weekday-table-font-size: 11px !default;
 
     .mat-datepicker-content {
       &.mat-accent {
-        @include _calendar-color($theme, accent);
+        @include _calendar-color($theme, secondary);
       }
 
       &.mat-warn {
-        @include _calendar-color($theme, warn);
+        @include _calendar-color($theme, error);
       }
     }
 

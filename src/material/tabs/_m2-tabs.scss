@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -24,11 +26,11 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary, $exclude: ()) {
+@function get-color-tokens($theme, $color-variant, $exclude: ()) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $inactive-label-text-color: inspection.get-theme-color($theme, foreground, base, 0.6);
-  $active-label-text-color: inspection.get-theme-color($theme, $palette-name, default);
-  $ripple-color: inspection.get-theme-color($theme, $palette-name, default);
 
   $tokens: (
     tab-disabled-ripple-color: inspection.get-theme-color($theme, foreground, disabled),
@@ -36,20 +38,20 @@
 
     // Note: MDC has equivalents of these tokens, but they lead to much higher selector specificity.
     tab-inactive-label-text-color: $inactive-label-text-color,
-    tab-active-label-text-color: $active-label-text-color,
+    tab-active-label-text-color: map.get($system, primary),
 
     // Tokens needed to implement the gmat styles. Externally they don't change.
-    tab-active-ripple-color: $ripple-color,
-    tab-inactive-ripple-color: $ripple-color,
+    tab-active-ripple-color: map.get($system, primary),
+    tab-inactive-ripple-color: map.get($system, primary),
     tab-inactive-focus-label-text-color: $inactive-label-text-color,
     tab-inactive-hover-label-text-color: $inactive-label-text-color,
-    tab-active-focus-label-text-color: $active-label-text-color,
-    tab-active-hover-label-text-color: $active-label-text-color,
-    tab-active-focus-indicator-color: $active-label-text-color,
-    tab-active-hover-indicator-color: $active-label-text-color,
-    tab-active-indicator-color: inspection.get-theme-color($theme, $palette-name, default),
-    tab-background-color: inspection.get-theme-color($theme, $palette-name, default),
-    tab-foreground-color: inspection.get-theme-color($theme, $palette-name, default-contrast),
+    tab-active-focus-label-text-color: map.get($system, primary),
+    tab-active-hover-label-text-color: map.get($system, primary),
+    tab-active-focus-indicator-color: map.get($system, primary),
+    tab-active-hover-indicator-color: map.get($system, primary),
+    tab-active-indicator-color: map.get($system, primary),
+    tab-background-color: map.get($system, primary),
+    tab-foreground-color: map.get($system, on-primary),
   );
 
   @each $token in $exclude {

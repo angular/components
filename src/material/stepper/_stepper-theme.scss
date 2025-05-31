@@ -30,12 +30,12 @@
 
       .mat-step-header.mat-accent {
         @include token-utils.create-token-values-mixed(
-          m2-stepper.private-get-color-palette-color-tokens($theme, accent));
+          m2-stepper.private-get-color-palette-color-tokens($theme, secondary));
       }
 
       .mat-step-header.mat-warn {
         @include token-utils.create-token-values-mixed(
-          m2-stepper.private-get-color-palette-color-tokens($theme, warn));
+          m2-stepper.private-get-color-palette-color-tokens($theme, error));
       }
     }
   }

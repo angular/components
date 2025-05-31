@@ -34,13 +34,13 @@
 
     .mat-mdc-form-field.mat-accent {
       @include token-utils.create-token-values-mixed(
-          m2-form-field.private-get-color-palette-color-tokens($theme, accent)
+          m2-form-field.private-get-color-palette-color-tokens($theme, secondary)
       );
     }
 
     .mat-mdc-form-field.mat-warn {
       @include token-utils.create-token-values-mixed(
-          m2-form-field.private-get-color-palette-color-tokens($theme, warn)
+          m2-form-field.private-get-color-palette-color-tokens($theme, error)
       );
     }
   }

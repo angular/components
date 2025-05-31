@@ -48,11 +48,11 @@
         }
 
         &.mat-accent {
-          @include _fab-variant($theme, accent);
+          @include _fab-variant($theme, secondary);
         }
 
         &.mat-warn {
-          @include _fab-variant($theme, warn);
+          @include _fab-variant($theme, error);
         }
       }
     }

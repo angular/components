@@ -38,13 +38,13 @@
 
     .mat-badge-accent {
       @include token-utils.create-token-values-mixed(
-        m2-badge.private-get-color-palette-color-tokens($theme, accent)
+        m2-badge.private-get-color-palette-color-tokens($theme, secondary)
       );
     }
 
     .mat-badge-warn {
       @include token-utils.create-token-values-mixed(
-        m2-badge.private-get-color-palette-color-tokens($theme, warn)
+        m2-badge.private-get-color-palette-color-tokens($theme, error)
       );
     }
   }

@@ -39,11 +39,11 @@
       @include _palette-styles($theme, primary);
 
       &.mat-accent {
-        @include _palette-styles($theme, accent);
+        @include _palette-styles($theme, secondary);
       }
 
       &.mat-warn {
-        @include _palette-styles($theme, warn);
+        @include _palette-styles($theme, error);
       }
     }
   }

@@ -54,11 +54,11 @@
       }
 
       &.mat-accent {
-        @include _m2-button-variant($theme, accent);
+        @include _m2-button-variant($theme, secondary);
       }
 
       &.mat-warn {
-        @include _m2-button-variant($theme, warn);
+        @include _m2-button-variant($theme, error);
       }
     }
   }

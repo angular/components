@@ -67,17 +67,17 @@
 }
 
 // Generates the tokens used to theme the stepper based on a palette.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $active-state-foreground: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $active-state-background: inspection.get-theme-color($theme, $palette-name);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    stepper-header-icon-foreground-color: $active-state-foreground,
-    stepper-header-selected-state-icon-background-color: $active-state-background,
-    stepper-header-selected-state-icon-foreground-color: $active-state-foreground,
-    stepper-header-done-state-icon-background-color: $active-state-background,
-    stepper-header-done-state-icon-foreground-color: $active-state-foreground,
-    stepper-header-edit-state-icon-background-color: $active-state-background,
-    stepper-header-edit-state-icon-foreground-color: $active-state-foreground,
+    stepper-header-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-selected-state-icon-background-color: map.get($system, primary),
+    stepper-header-selected-state-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-done-state-icon-background-color: map.get($system, primary),
+    stepper-header-done-state-icon-foreground-color: map.get($system, on-primary),
+    stepper-header-edit-state-icon-background-color: map.get($system, primary),
+    stepper-header-edit-state-icon-foreground-color: map.get($system, on-primary),
   );
 }
