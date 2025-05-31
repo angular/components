@@ -115,6 +115,7 @@
       $regular: map.get($typography, regular-weight) or $regular;
     } @else {
       $plain: $typography;
+      $brand: $typography;
     }
     $typography-config: (
       definition.$internals: (
