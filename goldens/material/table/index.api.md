@@ -187,10 +187,10 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     _orderData(data: T[]): T[];
     _pageData(data: T[]): T[];
     get paginator(): P | null;
-    set paginator(paginator: P | null);
+    set paginator(paginator: P | null | undefined);
     _renderChangesSubscription: Subscription | null;
     get sort(): MatSort | null;
-    set sort(sort: MatSort | null);
+    set sort(sort: MatSort | null | undefined);
     sortData: (data: T[], sort: MatSort) => T[];
     sortingDataAccessor: (data: T, sortHeaderId: string) => string | number;
     _updateChangeSubscription(): void;
