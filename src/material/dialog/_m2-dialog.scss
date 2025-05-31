@@ -27,7 +27,7 @@
   @return (
     dialog-container-color: inspection.get-theme-color($theme, system, surface),
     dialog-subhead-color: inspection.get-theme-color($theme, system, on-surface),
-    dialog-supporting-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
+    dialog-supporting-text-color: inspection.get-theme-color($theme, system, on-surface-variant),
   );
 }
 
