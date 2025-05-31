@@ -19,9 +19,7 @@
   );
 
   @for $zValue from 0 through 24 {
-    $elevation-color: inspection.get-theme-color($theme, foreground, elevation);
-    $shadow: elevation.get-box-shadow($zValue,
-      if($elevation-color == null, elevation.$color, $elevation-color));
+    $shadow: elevation.get-box-shadow($zValue, map.get($system, shadow));
     $tokens: map.set($tokens, 'app-elevation-shadow-level-#{$zValue}', $shadow);
   }
 
