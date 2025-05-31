@@ -68,6 +68,11 @@ export const DEV_APP_ROUTES: Routes = [
       ),
   },
   {
+    path: 'cdk-experimental-tree',
+    loadComponent: () =>
+      import('./cdk-experimental-tree/cdk-tree-demo').then(m => m.CdkExperimentalTreeDemo),
+  },
+  {
     path: 'cdk-dialog',
     loadComponent: () => import('./cdk-dialog/dialog-demo').then(m => m.DialogDemo),
   },
