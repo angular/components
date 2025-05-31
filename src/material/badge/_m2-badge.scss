@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use 'sass:math';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 $_default-size: 22px;
 $_small-size: $_default-size - 6px;
@@ -39,11 +41,13 @@ $_large-size: $_default-size + 6px;
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
+  $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
   $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
   @return map.merge($primary-color-tokens, (
-    badge-disabled-state-background-color:
-        inspection.get-theme-color($theme, foreground, disabled-button),
-    badge-disabled-state-text-color: inspection.get-theme-color($theme, foreground, disabled-text),
+    badge-disabled-state-background-color: $disabled-container,
+    badge-disabled-state-text-color: $disabled,
   ));
 }
 
