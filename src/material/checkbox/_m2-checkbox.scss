@@ -21,33 +21,29 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: accent, $exclude: ()) {
+@function get-color-tokens($theme, $color-variant, $exclude: ()) {
   $system: m2-utils.get-system($theme);
-
+  $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
   $is-dark: inspection.get-theme-type($theme) == dark;
   $foreground-base: inspection.get-theme-color($theme, foreground, base);
-  $palette-default: inspection.get-theme-color($theme, $palette-name, default);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
-  $palette-selected: inspection.get-theme-color($theme, $palette-name);
-  $selected-checkmark-color:
-    inspection.get-theme-color($theme, $palette-name, default-contrast);
 
   $tokens: (
     checkbox-disabled-label-color: $disabled,
     checkbox-label-text-color: map.get($system, on-surface),
     checkbox-disabled-selected-icon-color: $disabled,
     checkbox-disabled-unselected-icon-color: $disabled,
-    checkbox-selected-checkmark-color: $selected-checkmark-color,
-    checkbox-selected-focus-icon-color: $palette-selected,
-    checkbox-selected-hover-icon-color: $palette-selected,
-    checkbox-selected-icon-color: $palette-selected,
-    checkbox-selected-pressed-icon-color: $palette-selected,
+    checkbox-selected-checkmark-color: map.get($system, on-secondary),
+    checkbox-selected-focus-icon-color: map.get($system, secondary),
+    checkbox-selected-hover-icon-color: map.get($system, secondary),
+    checkbox-selected-icon-color: map.get($system, secondary),
+    checkbox-selected-pressed-icon-color: map.get($system, secondary),
     checkbox-unselected-focus-icon-color: map.get($system, on-surface),
     checkbox-unselected-hover-icon-color: map.get($system, on-surface),
     checkbox-unselected-icon-color: map.get($system, on-surface-variant),
-    checkbox-selected-focus-state-layer-color: $palette-default,
-    checkbox-selected-hover-state-layer-color: $palette-default,
-    checkbox-selected-pressed-state-layer-color: $palette-default,
+    checkbox-selected-focus-state-layer-color: map.get($system, secondary),
+    checkbox-selected-hover-state-layer-color: map.get($system, secondary),
+    checkbox-selected-pressed-state-layer-color: map.get($system, secondary),
     checkbox-unselected-focus-state-layer-color: map.get($system, on-surface),
     checkbox-unselected-hover-state-layer-color: map.get($system, on-surface),
     checkbox-unselected-pressed-state-layer-color: $foreground-base,

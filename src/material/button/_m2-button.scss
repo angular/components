@@ -1,4 +1,3 @@
-@use 'sass:meta';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
@@ -106,49 +105,34 @@
 }
 
 // Generates the mapping for the properties that change based on the button palette color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-  $state-layer-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $ripple-color: inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1);
-  $contrast-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $container-color: inspection.get-theme-color($theme, $palette-name, default);
-  $label-text-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
-  $ripple-opacity: 0.1;
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   // outlined-outline-color:
   // TODO: we shouldn't have to set this since it's the same as the non-palette version, however
   // there are a bunch of tests internally that depend on it. We should remove this and clean
   // up the screenshots separately.
   @return (
-    button-filled-container-color: $container-color,
-    button-filled-label-text-color: $label-text-color,
-    button-filled-ripple-color: $ripple-color,
-    button-filled-state-layer-color: $state-layer-color,
-    button-outlined-label-text-color: inspection.get-theme-color($theme, $palette-name, default),
+    button-filled-container-color: map.get($system, primary),
+    button-filled-label-text-color: map.get($system, on-primary),
+    button-filled-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    button-filled-state-layer-color: map.get($system, on-primary),
+    button-outlined-label-text-color: map.get($system, primary),
     button-outlined-outline-color: map.get(get-color-tokens($theme), button-outlined-outline-color),
-    button-outlined-ripple-color:
-        if(
-          meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
-          rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
-    button-outlined-state-layer-color: inspection.get-theme-color($theme, $palette-name),
-    button-protected-container-color: $container-color,
-    button-protected-label-text-color: $label-text-color,
-    button-protected-ripple-color: $ripple-color,
-    button-protected-state-layer-color: $state-layer-color,
-    button-text-label-text-color: inspection.get-theme-color($theme, $palette-name),
-    button-text-ripple-color:
-        if(meta.type-of(inspection.get-theme-color($theme, $palette-name)) == color,
-          rgba(inspection.get-theme-color($theme, $palette-name), $ripple-opacity),
-          inspection.get-theme-color($theme, foreground, base, $ripple-opacity)),
-    button-text-state-layer-color: inspection.get-theme-color($theme, $palette-name),
-    button-tonal-container-color: inspection.get-theme-color($theme, $palette-name, default),
-    button-tonal-label-text-color:
-        inspection.get-theme-color($theme, $palette-name, default-contrast),
-    button-tonal-ripple-color:
-        inspection.get-theme-color($theme, $palette-name, default-contrast, 0.1),
-    button-tonal-state-layer-color:
-        inspection.get-theme-color($theme, $palette-name, default-contrast),
+    button-outlined-ripple-color: m3-utils.color-with-opacity(map.get($system, primary), 10%),
+    button-outlined-state-layer-color: map.get($system, primary),
+    button-protected-container-color: map.get($system, primary),
+    button-protected-label-text-color: map.get($system, on-primary),
+    button-protected-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    button-protected-state-layer-color: map.get($system, on-primary),
+    button-text-label-text-color: map.get($system, primary),
+    button-text-ripple-color: m3-utils.color-with-opacity(map.get($system, primary), 10%),
+    button-text-state-layer-color: map.get($system, primary),
+    button-tonal-container-color: map.get($system, primary),
+    button-tonal-label-text-color: map.get($system, on-primary),
+    button-tonal-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    button-tonal-state-layer-color: map.get($system, on-primary),
   );
 }
 

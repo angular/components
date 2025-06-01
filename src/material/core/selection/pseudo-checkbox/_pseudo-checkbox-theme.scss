@@ -48,18 +48,18 @@
     // don't attach to the `mat-*` classes. Also note that this needs to be below `.mat-primary`
     // in order to allow for the color to be overwritten if the checkbox is inside a parent that
     // has `mat-accent` and is placed inside another parent that has `mat-primary`.
-    @include _palette-styles($theme, accent);
+    @include _palette-styles($theme, secondary);
 
     .mat-primary {
       @include _palette-styles($theme, primary);
     }
 
     .mat-accent {
-      @include _palette-styles($theme, accent);
+      @include _palette-styles($theme, secondary);
     }
 
     .mat-warn {
-      @include _palette-styles($theme, warn);
+      @include _palette-styles($theme, error);
     }
   }
 }

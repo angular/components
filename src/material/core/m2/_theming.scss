@@ -116,10 +116,11 @@
 // Creates a light-themed color configuration from the specified
 // primary, accent and warn palettes.
 @function _mat-create-light-color-config($primary, $accent, $warn: null) {
+  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
   @return (
     primary: $primary,
     accent: $accent,
-    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+    warn: $warn,
     is-dark: false,
     foreground: palette.$light-theme-foreground-palette,
     background: palette.$light-theme-background-palette,
@@ -134,6 +135,12 @@
       hover-state-layer-opacity: 0.04,
       focus-state-layer-opacity: 0.12,
       pressed-state-layer-opacity: 0.12,
+      primary: map.get($primary, default),
+      on-primary: map.get($primary, default-contrast),
+      secondary: map.get($accent, default),
+      on-secondary: map.get($accent, default-contrast),
+      error: map.get($warn, default),
+      on-error: map.get($warn, default-contrast),
     ),
   );
 }
@@ -141,10 +148,11 @@
 // Creates a dark-themed color configuration from the specified
 // primary, accent and warn palettes.
 @function _mat-create-dark-color-config($primary, $accent, $warn: null) {
+  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
   @return (
     primary: $primary,
     accent: $accent,
-    warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
+    warn: $warn,
     is-dark: true,
     foreground: palette.$dark-theme-foreground-palette,
     background: palette.$dark-theme-background-palette,
@@ -159,6 +167,12 @@
       hover-state-layer-opacity: 0.04,
       focus-state-layer-opacity: 0.12,
       pressed-state-layer-opacity: 0.12,
+      primary: map.get($primary, default),
+      on-primary: map.get($primary, default-contrast),
+      secondary: map.get($accent, default),
+      on-secondary: map.get($accent, default-contrast),
+      error: map.get($warn, default),
+      on-error: map.get($warn, default-contrast),
     ),
   );
 }
