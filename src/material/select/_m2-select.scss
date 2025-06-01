@@ -19,11 +19,11 @@
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return (
-    select-panel-background-color: inspection.get-theme-color($theme, system, surface),
-    select-enabled-trigger-text-color: inspection.get-theme-color($theme, system, on-surface),
+    select-panel-background-color: map.get($system, surface),
+    select-enabled-trigger-text-color: map.get($system, on-surface),
     select-disabled-trigger-text-color: $disabled,
-    select-placeholder-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
-    select-enabled-arrow-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    select-placeholder-text-color: map.get($system, on-surface-variant),
+    select-enabled-arrow-color: map.get($system, on-surface-variant),
     select-disabled-arrow-color: $disabled,
     select-focused-arrow-color: inspection.get-theme-color($theme, $palette-name, default, 0.87),
     select-invalid-arrow-color: inspection.get-theme-color($theme, warn, default, 0.87),

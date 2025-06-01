@@ -70,12 +70,12 @@ $private-default-overlap-color: #a8dab5;
   }
 
   @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
-    datepicker-toggle-icon-color: $inactive-icon-color,
+    datepicker-toggle-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-body-label-text-color: map.get($system, on-surface-variant),
     datepicker-calendar-period-button-text-color:
         inspection.get-theme-color($theme, foreground, base),
-    datepicker-calendar-period-button-icon-color: $inactive-icon-color,
-    datepicker-calendar-navigation-button-icon-color: $inactive-icon-color,
+    datepicker-calendar-period-button-icon-color: map.get($system, on-surface-variant),
+    datepicker-calendar-navigation-button-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-header-divider-color: map.get($system, outline),
     datepicker-calendar-header-text-color: map.get($system, on-surface-variant),
 
