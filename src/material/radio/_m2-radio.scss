@@ -37,7 +37,7 @@
     radio-selected-pressed-icon-color: $palette-color,
     radio-unselected-focus-icon-color: map.get($system, on-surface),
     radio-unselected-hover-icon-color: map.get($system, on-surface),
-    radio-unselected-icon-color: inspection.get-theme-color($theme, foreground, base, 0.54),
+    radio-unselected-icon-color: map.get($system, on-surface-variant),
     radio-unselected-pressed-icon-color: map.get($system, on-surface),
   );
 }

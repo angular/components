@@ -79,26 +79,6 @@ describe('theming api', () => {
     expectNoWarning(/The same color styles are generated multiple times/);
   });
 
-  it('should be possible to modify color configuration directly', () => {
-    const result = transpile(`
-      $theme: mat.m2-define-light-theme((
-        color: (
-          primary: mat.m2-define-palette(mat.$m2-red-palette),
-          accent: mat.m2-define-palette(mat.$m2-blue-palette),
-        )
-      ));
-
-      // Updates the "icon" foreground color to hotpink.
-      $color: map-get($theme, color);
-      $theme: map-merge($color,
-        (foreground: map-merge(map-get($color, foreground), (icon: hotpink))));
-
-      @include mat.all-component-themes($theme);
-    `);
-
-    expect(result).toContain(': hotpink');
-  });
-
   it('should warn if default density styles are duplicated', () => {
     spyOn(process.stderr, 'write');
 
