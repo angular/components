@@ -57,6 +57,7 @@ sass_library(
     deps = [
         ":elevation",
         "//src/material/core/theming:_inspection",
+        "//src/material/core/tokens:m2_utils",
     ],
 )
 
