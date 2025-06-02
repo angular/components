@@ -9,6 +9,7 @@ is performed. An `<a>` element should be used whenever the user will _navigate_ 
 
 
 There are several button variants, each applied as an attribute:
+
 | Attribute            | Description                                                              |
 |----------------------|--------------------------------------------------------------------------|
 | `matButton`          | Rectangular button that can contain text and icons                       |
