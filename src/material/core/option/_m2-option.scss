@@ -12,17 +12,18 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $color-variant) {
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
-    if($is-dark, 0.08, 0.04));
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
     option-selected-state-label-text-color: map.get($system, primary),
     option-label-text-color: inspection.get-theme-color($theme, system, on-surface),
-    option-hover-state-layer-color: $active-state-layer-color,
-    option-focus-state-layer-color: $active-state-layer-color,
-    option-selected-state-layer-color: $active-state-layer-color,
+    option-hover-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+    option-focus-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+    option-selected-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
   );
 }
 
