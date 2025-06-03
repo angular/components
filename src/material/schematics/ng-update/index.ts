@@ -58,7 +58,7 @@ function renameMdcTokens(): Rule {
     tree.visit(path => {
       if (shouldRenameTokens(path)) {
         const content = tree.readText(path);
-        const updatedContent = content.replace('--mdc-', '--mat-');
+        const updatedContent = content.replaceAll('--mdc-', '--mat-');
         if (content !== updatedContent) {
           tree.overwrite(path, updatedContent);
         }
@@ -100,7 +100,7 @@ function renameComponentTokens(): Rule {
         const content = tree.readText(path);
         let updatedContent = content;
         for (const tokenPrefix of tokenPrefixes) {
-          updatedContent = updatedContent.replace(tokenPrefix.old, tokenPrefix.replacement);
+          updatedContent = updatedContent.replaceAll(tokenPrefix.old, tokenPrefix.replacement);
         }
         if (content !== updatedContent) {
           tree.overwrite(path, updatedContent);

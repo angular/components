@@ -48,4 +48,58 @@ describe('v20 rename tokens migration', () => {
     `),
     );
   });
+
+  it('should rename multiple instances of the --mdc prefix', async () => {
+    writeFile(
+      THEME_FILE_PATH,
+      `
+        html {
+          --mdc-foo: 1px;
+          --mdc-bar: 2px;
+          --mdc-baz: 3px;
+        }
+      `,
+    );
+
+    await runMigration();
+
+    expect(stripWhitespace(tree.readText(THEME_FILE_PATH))).toBe(
+      stripWhitespace(`
+        html {
+          --mat-foo: 1px;
+          --mat-bar: 2px;
+          --mat-baz: 3px;
+        }
+    `),
+    );
+  });
+
+  it('should rename multiple instances of a specific component token', async () => {
+    writeFile(
+      THEME_FILE_PATH,
+      `
+        .one {
+          --mat-circular-progress-foo: 1px;
+        }
+
+        .two {
+          --mat-circular-progress-bar: 2px;
+        }
+      `,
+    );
+
+    await runMigration();
+
+    expect(stripWhitespace(tree.readText(THEME_FILE_PATH))).toBe(
+      stripWhitespace(`
+        .one {
+          --mat-progress-spinner-foo: 1px;
+        }
+
+        .two {
+          --mat-progress-spinner-bar: 2px;
+        }
+    `),
+    );
+  });
 });
