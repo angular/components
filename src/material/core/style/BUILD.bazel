@@ -23,15 +23,6 @@ sass_library(
 )
 
 sass_library(
-    name = "form_common",
-    srcs = ["_form-common.scss"],
-    deps = [
-        ":sass_utils",
-        "//src/material/core/theming:_inspection",
-    ],
-)
-
-sass_library(
     name = "layout_common",
     srcs = ["_layout-common.scss"],
 )
