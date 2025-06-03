@@ -28,13 +28,11 @@
   $is-dark: inspection.get-theme-type($theme) == dark;
   $surface: map.get($system, surface);
   $color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $on-surface: if($is-dark, #fff, #000);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
-    form-field-disabled-input-text-placeholder-color:
-      inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-disabled-input-text-placeholder-color: $disabled,
     form-field-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
     form-field-error-text-color: inspection.get-theme-color($theme, warn),
 
@@ -62,54 +60,44 @@
     form-field-error-focus-trailing-icon-color: unset,
     form-field-error-hover-trailing-icon-color: unset,
     form-field-error-trailing-icon-color: unset,
-    form-field-enabled-select-arrow-color:
-        inspection.get-theme-color($theme, foreground, base, 0.54),
+    form-field-enabled-select-arrow-color: map.get($system, on-surface-variant),
     form-field-disabled-select-arrow-color: $disabled,
     form-field-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     form-field-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    form-field-filled-container-color: _variable-safe-mix($on-surface, $surface, 4%),
-    form-field-filled-disabled-container-color: _variable-safe-mix($on-surface, $surface, 2%),
-    form-field-filled-label-text-color: inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-filled-hover-label-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.6),
+    form-field-filled-container-color: map.get($system, surface-variant),
+    form-field-filled-disabled-container-color:
+        m3-utils.color-with-opacity(map.get($system, on-surface), 4%),
+    form-field-filled-label-text-color: map.get($system, on-surface-variant),
+    form-field-filled-hover-label-text-color: map.get($system, on-surface-variant),
     form-field-filled-disabled-label-text-color: $disabled,
-    form-field-filled-input-text-color:
-        inspection.get-theme-color($theme, system, on-surface),
+    form-field-filled-input-text-color: map.get($system, on-surface),
     form-field-filled-disabled-input-text-color: $disabled,
-    form-field-filled-input-text-placeholder-color:
-        inspection.get-theme-color($theme, foreground, base, 0.6),
+    form-field-filled-input-text-placeholder-color: map.get($system, on-surface-variant),
     form-field-filled-error-hover-label-text-color: map.get($system, error),
     form-field-filled-error-focus-label-text-color: map.get($system, error),
     form-field-filled-error-label-text-color: map.get($system, error),
     form-field-filled-error-caret-color: map.get($system, error),
-    form-field-filled-active-indicator-color:
-        inspection.get-theme-color($theme, foreground, base, 0.42),
+    form-field-filled-active-indicator-color: map.get($system, on-surface-variant),
     form-field-filled-disabled-active-indicator-color:
-        inspection.get-theme-color($theme, foreground, base, 0.06),
-    form-field-filled-hover-active-indicator-color:
-        inspection.get-theme-color($theme, system, on-surface),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    form-field-filled-hover-active-indicator-color: map.get($system, on-surface),
     form-field-filled-error-active-indicator-color: map.get($system, error),
     form-field-filled-error-focus-active-indicator-color: map.get($system, error),
     form-field-filled-error-hover-active-indicator-color: map.get($system, error),
-    form-field-outlined-label-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.6),
-    form-field-outlined-hover-label-text-color:
-        inspection.get-theme-color($theme, foreground, base, 0.6),
+    form-field-outlined-label-text-color: map.get($system, on-surface-variant),
+    form-field-outlined-hover-label-text-color: map.get($system, on-surface),
     form-field-outlined-disabled-label-text-color: $disabled,
-    form-field-outlined-input-text-color:
-        inspection.get-theme-color($theme, system, on-surface),
+    form-field-outlined-input-text-color: map.get($system, on-surface),
     form-field-outlined-disabled-input-text-color: $disabled,
-    form-field-outlined-input-text-placeholder-color:
-        inspection.get-theme-color($theme, foreground, base, 0.6),
+    form-field-outlined-input-text-placeholder-color: map.get($system, on-surface-variant),
     form-field-outlined-error-caret-color: map.get($system, error),
     form-field-outlined-error-focus-label-text-color: map.get($system, error),
     form-field-outlined-error-label-text-color: map.get($system, error),
     form-field-outlined-error-hover-label-text-color: map.get($system, error),
-    form-field-outlined-outline-color: inspection.get-theme-color($theme, foreground, base, 0.38),
+    form-field-outlined-outline-color: map.get($system, outline-variant),
     form-field-outlined-disabled-outline-color:
-        inspection.get-theme-color($theme, foreground, base, 0.06),
-    form-field-outlined-hover-outline-color:
-        inspection.get-theme-color($theme, system, on-surface),
+        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+    form-field-outlined-hover-outline-color: map.get($system, on-surface),
     form-field-outlined-error-focus-outline-color: map.get($system, error),
     form-field-outlined-error-hover-outline-color: map.get($system, error),
     form-field-outlined-error-outline-color: map.get($system, error),
