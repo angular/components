@@ -543,11 +543,18 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     // potential delays between the browser paint and the next tick.
     this.ngZone.runOutsideAngular(async () => {
       await Promise.resolve();
-      if (!rendered && this._runAfterChangeDetection.length > 0) {
-        this.ngZone.run(() => {
-          this._applicationRef.tick();
-        });
+      if (
+        rendered ||
+        this._runAfterChangeDetection.length === 0 ||
+        // shouldn't be possible since we run this asynchronously and tick is synchronous, but ZoneJS/fakeAsync
+        // can flush microtasks synchronously
+        (this._applicationRef as unknown as {_runningTick: boolean})._runningTick
+      ) {
+        return;
       }
+      this.ngZone.run(() => {
+        this._applicationRef.tick();
+      });
     });
   }
 
