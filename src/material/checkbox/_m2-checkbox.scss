@@ -10,7 +10,7 @@
   $system: m2-utils.get-system($theme);
 
   @return (
-    checkbox-disabled-selected-checkmark-color: #fff,
+    checkbox-disabled-selected-checkmark-color: map.get($system, surface),
     checkbox-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     checkbox-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     checkbox-selected-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
@@ -25,7 +25,6 @@
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $foreground-base: inspection.get-theme-color($theme, foreground, base);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   $tokens: (
@@ -46,7 +45,7 @@
     checkbox-selected-pressed-state-layer-color: map.get($system, secondary),
     checkbox-unselected-focus-state-layer-color: map.get($system, on-surface),
     checkbox-unselected-hover-state-layer-color: map.get($system, on-surface),
-    checkbox-unselected-pressed-state-layer-color: $foreground-base,
+    checkbox-unselected-pressed-state-layer-color: map.get($system, on-surface),
   );
 
   @each $token in $exclude {
