@@ -1,5 +1,6 @@
-@use 'sass:meta';
-@use '../theming/inspection';
+@use 'sass:map';
+@use '../tokens/m2-utils';
+@use '../tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -9,16 +10,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $base: inspection.get-theme-color($theme, foreground, base);
-
-  // If the base is a color *type* we can use it directly in the `rgba` call below.
-  // If it's anything else (e.g. a CSS variable) we fall back to using static colors
-  // since we don't have a way of adjusting the opacity.
-  $color: if(meta.type-of($base) == color, $base, if($is-dark, #fff, #000));
+  $system: m2-utils.get-system($theme);
 
   @return (
-    ripple-color: rgba($color, 0.1),
+    ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
   );
 }
 
