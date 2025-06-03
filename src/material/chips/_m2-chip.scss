@@ -1,8 +1,5 @@
 @use 'sass:map';
-@use 'sass:meta';
-@use 'sass:color';
 @use '../core/theming/inspection';
-@use '../core/m2/palette' as m2-palette;
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
