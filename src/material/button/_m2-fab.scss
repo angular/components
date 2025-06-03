@@ -39,23 +39,25 @@
     fab-container-color: map.get($system, surface),
     fab-disabled-state-container-color: $disabled-container,
     fab-disabled-state-foreground-color: $disabled,
-    fab-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-disabled-state-layer-color: map.get($system, on-surface-variant),
     fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    fab-foreground-color: inspection.get-theme-color($theme, foreground, base),
+    fab-foreground-color: map.get($system, on-surface),
     fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-    fab-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
+    fab-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
     fab-small-container-color: map.get($system, surface),
     fab-small-disabled-state-container-color: $disabled-container,
     fab-small-disabled-state-foreground-color: $disabled,
-    fab-small-disabled-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-disabled-state-layer-color: map.get($system, on-surface-variant),
     fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    fab-small-foreground-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-foreground-color: map.get($system, on-surface),
     fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-    fab-small-ripple-color: inspection.get-theme-color($theme, foreground, base, 0.1),
-    fab-small-state-layer-color: inspection.get-theme-color($theme, foreground, base),
-    fab-state-layer-color: inspection.get-theme-color($theme, foreground, base),
+    fab-small-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+    fab-small-state-layer-color: map.get($system, on-surface),
+    fab-state-layer-color: map.get($system, on-surface),
   );
 }
 
@@ -67,10 +69,12 @@
   @return (
     fab-container-color: map.get($system, primary),
     fab-foreground-color: map.get($system, on-primary),
-    fab-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    fab-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, pressed-state-layer-opacity)),
     fab-small-container-color: map.get($system, primary),
     fab-small-foreground-color: map.get($system, on-primary),
-    fab-small-ripple-color: m3-utils.color-with-opacity(map.get($system, on-primary), 10%),
+    fab-small-ripple-color: m3-utils.color-with-opacity(
+        map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
     fab-small-state-layer-color: map.get($system, on-primary),
     fab-state-layer-color: map.get($system, on-primary),
   );
