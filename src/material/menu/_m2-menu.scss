@@ -1,5 +1,8 @@
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
+@use 'sass:map';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -23,15 +26,15 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $active-state-layer-color: inspection.get-theme-color($theme, foreground, base,
-    if($is-dark, 0.08, 0.04));
+  $system: m2-utils.get-system($theme);
 
   @return (
     menu-item-label-text-color: inspection.get-theme-color($theme, system, on-surface),
     menu-item-icon-color: inspection.get-theme-color($theme, system, on-surface),
-    menu-item-hover-state-layer-color: $active-state-layer-color,
-    menu-item-focus-state-layer-color: $active-state-layer-color,
+    menu-item-hover-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+    menu-item-focus-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
     menu-container-color: inspection.get-theme-color($theme, system, surface),
     menu-divider-color: inspection.get-theme-color($theme, system, outline),
   );
