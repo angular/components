@@ -1,3 +1,52 @@
+<a name="20.1.0-next.0"></a>
+# 20.1.0-next.0 "amicite-amp" (2025-06-04)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f446d7c41](https://github.com/angular/components/commit/f446d7c4126fc253fa9e51664360bcd02245f005) | feat | **drag-drop:** add opt-in indicator of pick-up position ([#31288](https://github.com/angular/components/pull/31288)) |
+| [cfa97bb78](https://github.com/angular/components/commit/cfa97bb785f8faab1e209899695c1e187020b391) | fix | **dialog:** avoid setting aria-hidden before focus has moved ([#31030](https://github.com/angular/components/pull/31030)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [243845460](https://github.com/angular/components/commit/243845460d3842beee3f58b1bdb0679bd16e81f3) | feat | **chips:** add (optional) edit icon to input chips ([#31041](https://github.com/angular/components/pull/31041)) |
+| [4de7c0fb2](https://github.com/angular/components/commit/4de7c0fb2d033bd81074764a52cc46edd02e6774) | feat | **testing:** Extend Angular harness testing functionality  ([#30960](https://github.com/angular/components/pull/30960)) |
+| [512433b6d](https://github.com/angular/components/commit/512433b6d1c51d567e120b539da0053bc189fbaf) | fix | **badge:** remove badge opacity color mix ([#31213](https://github.com/angular/components/pull/31213)) |
+| [92a8253e2](https://github.com/angular/components/commit/92a8253e28a676c41c5ca87382aad6006a48d212) | fix | **badge:** use system disabled states ([#31266](https://github.com/angular/components/pull/31266)) |
+| [a7150d42c](https://github.com/angular/components/commit/a7150d42cf0d423fe89679e2366a32830bf4aaf3) | fix | **button-toggle:** simplify divider color ([#31214](https://github.com/angular/components/pull/31214)) |
+| [1f8b1302f](https://github.com/angular/components/commit/1f8b1302f26d66e46896f433697822ebc410a98f) | fix | **button-toggle:** use system colors ([#31231](https://github.com/angular/components/pull/31231)) |
+| [5ee7d79e4](https://github.com/angular/components/commit/5ee7d79e4cfc1a466a3b1630f0f95c1f545966d3) | fix | **button:** FAB emitting invalid elevation tokens ([#31028](https://github.com/angular/components/pull/31028)) |
+| [afe36e4d4](https://github.com/angular/components/commit/afe36e4d425ff365fc2aaf1f57368ffdefe51ef8) | fix | **button:** remove internal-only M2 styles ([#31017](https://github.com/angular/components/pull/31017)) |
+| [589ea5905](https://github.com/angular/components/commit/589ea5905eef43a671f519a13d566a151e5578fa) | fix | **button:** remove internal-only M2 styles ([#31018](https://github.com/angular/components/pull/31018)) |
+| [203c1737e](https://github.com/angular/components/commit/203c1737eb6853c2e1b92afc8ed5f2756d5484de) | fix | **card:** subtitle text token should be on-surface-variant ([#31261](https://github.com/angular/components/pull/31261)) |
+| [55b7ba081](https://github.com/angular/components/commit/55b7ba0814863765f42e079dd72ba0313087fc3e) | fix | **card:** use system outline ([#31218](https://github.com/angular/components/pull/31218)) |
+| [eb9abc366](https://github.com/angular/components/commit/eb9abc366fcda8057d5b958231f518435f965e1e) | fix | **checkbox:** remove internal-only M2 styles ([#31019](https://github.com/angular/components/pull/31019)) |
+| [68d7ea035](https://github.com/angular/components/commit/68d7ea0351b489bfb9419e1fe28e560ed7280d3f) | fix | **chips:** provide ability to edit for all screen readers with a click on already focused chip ([#30983](https://github.com/angular/components/pull/30983)) |
+| [a24081f2b](https://github.com/angular/components/commit/a24081f2bd66fd686c2751f9a429131ae0ff0acc) | fix | **dialog:** remove internal-only M2 styles ([#31020](https://github.com/angular/components/pull/31020)) |
+| [ecc6a09ca](https://github.com/angular/components/commit/ecc6a09ca5fcbb4bc5e92056cc6102e956a544a8) | fix | **expansion:** align state layer colors ([#31236](https://github.com/angular/components/pull/31236)) |
+| [82ab91e58](https://github.com/angular/components/commit/82ab91e58ad03207c6dfa25f5995dde1bd5760cf) | fix | **form-field:** remove internal-only M2 styles ([#31021](https://github.com/angular/components/pull/31021)) |
+| [6d27e0405](https://github.com/angular/components/commit/6d27e0405150855dc5027ebccf356951af2f7c6f) | fix | **form-field:** use system for neutral colors ([#31272](https://github.com/angular/components/pull/31272)) |
+| [a62164db5](https://github.com/angular/components/commit/a62164db5b60b4e77132b3d5d18de84d3e7e74c1) | fix | **menu:** do not auto-focus when hover opens menu ([#31257](https://github.com/angular/components/pull/31257)) |
+| [9a96db323](https://github.com/angular/components/commit/9a96db32338dc13407b58ebb29de0a67db34cc52) | fix | **select:** remove internal-only M2 styles ([#31022](https://github.com/angular/components/pull/31022)) |
+| [d22191a61](https://github.com/angular/components/commit/d22191a61907bff5d01c1278a38382af5236f7c2) | fix | **sort:** simplify m2 sort color ([#31165](https://github.com/angular/components/pull/31165)) |
+| [680dd6fa8](https://github.com/angular/components/commit/680dd6fa8094657e62755cc3b46123b6e539e547) | fix | **stepper:** align state colors ([#31227](https://github.com/angular/components/pull/31227)) |
+| [4b85f9f62](https://github.com/angular/components/commit/4b85f9f62bb944a2dcf2ad5ab80a47151161c5dc) | fix | **toolbar:** use system surface for neutral background ([#31234](https://github.com/angular/components/pull/31234)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4f9ab216c](https://github.com/angular/components/commit/4f9ab216c17107044a8f9a1b2f72d4b364e599e5) | feat | **accordion:** add accordion directives, example, and tests ([#31134](https://github.com/angular/components/pull/31134)) |
+| [3704b7e32](https://github.com/angular/components/commit/3704b7e32f1ae8c26307024004ffa93e9b90b82d) | feat | **radio:** add radio demo to dev-app ([#31180](https://github.com/angular/components/pull/31180)) |
+| [50c3e0e12](https://github.com/angular/components/commit/50c3e0e12d33f76e02531ee6300aca086800cedf) | feat | **radio:** create radio group and button directives ([#31050](https://github.com/angular/components/pull/31050)) |
+| [ff0f6c61b](https://github.com/angular/components/commit/ff0f6c61b54c9d5e3ac378b4b9ce338bc638818f) | feat | **ui-patterns:** accordion ([#31034](https://github.com/angular/components/pull/31034)) |
+| [ce145fa9a](https://github.com/angular/components/commit/ce145fa9a30b1f75f8c20ac7eb837cb007ce2695) | feat | **ui-patterns:** create the grid focus behavior ([#31055](https://github.com/angular/components/pull/31055)) |
+| [9f249d0a2](https://github.com/angular/components/commit/9f249d0a25a665b705f5e1e2d9de363b9c2492dc) | feat | **ui-patterns:** radio button and group ([#31016](https://github.com/angular/components/pull/31016)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dc3ae8d94](https://github.com/angular/components/commit/dc3ae8d945450fe603de514c31b5cca5e4d4d9c9) | fix | update goldens ([#31123](https://github.com/angular/components/pull/31123)) |
+| [5546d1099](https://github.com/angular/components/commit/5546d10992cd0a822854ae29a3d80029217d3680) | fix | use system on-surface ([#31225](https://github.com/angular/components/pull/31225)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.2"></a>
 # 20.0.2 "amesite-armoire" (2025-06-04)
 ### material
