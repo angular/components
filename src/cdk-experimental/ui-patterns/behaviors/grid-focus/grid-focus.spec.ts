@@ -7,7 +7,7 @@
  */
 
 import {computed, Signal, signal, WritableSignal} from '@angular/core';
-import {GridFocus, GridFocusInputs, GridFocusCell} from './grid-focus';
+import {GridFocus, GridFocusInputs, GridFocusCell, RowCol} from './grid-focus';
 
 // Helper type for test cells, extending GridFocusCell
 interface TestGridCell extends GridFocusCell {
@@ -23,13 +23,13 @@ type TestSetupInputs = Partial<GridFocusInputs<TestGridCell>> & {
   gridFocus?: WritableSignal<GridFocus<TestGridCell> | undefined>;
 };
 
-function createTestCell(
+export function createTestCell(
   gridFocus: Signal<GridFocus<TestGridCell> | undefined>,
   opts: {id: string; rowspan?: number; colspan?: number},
 ): TestGridCell {
   const el = document.createElement('div');
   spyOn(el, 'focus').and.callThrough();
-  let coordinates: Signal<{row: number; column: number}> = signal({row: -1, column: -1});
+  let coordinates: Signal<RowCol> = signal({row: -1, col: -1});
   const cell: TestGridCell = {
     id: signal(opts.id),
     element: signal(el as HTMLElement),
@@ -39,13 +39,13 @@ function createTestCell(
     rowindex: signal(-1),
     colindex: signal(-1),
   };
-  coordinates = computed(() => gridFocus()?.getCoordinates(cell) ?? {row: -1, column: -1});
+  coordinates = computed(() => gridFocus()?.getCoordinates(cell) ?? {row: -1, col: -1});
   cell.rowindex = computed(() => coordinates().row);
-  cell.colindex = computed(() => coordinates().column);
+  cell.colindex = computed(() => coordinates().col);
   return cell;
 }
 
-function createTestCells(
+export function createTestCells(
   gridFocus: Signal<GridFocus<TestGridCell> | undefined>,
   numRows: number,
   numCols: number,
@@ -60,7 +60,7 @@ function createTestCells(
 }
 
 // Main helper function to instantiate GridFocus and its dependencies for testing
-function setupGridFocus(inputs: TestSetupInputs = {}): {
+export function setupGridFocus(inputs: TestSetupInputs = {}): {
   cells: TestGridCell[][];
   gridFocus: GridFocus<TestGridCell>;
 } {
@@ -70,7 +70,7 @@ function setupGridFocus(inputs: TestSetupInputs = {}): {
   const gridFocus = inputs.gridFocus ?? signal<GridFocus<TestGridCell> | undefined>(undefined);
   const cells = inputs.cells ?? createTestCells(gridFocus, numRows, numCols);
 
-  const activeCoords = inputs.activeCoords ?? signal({row: 0, column: 0});
+  const activeCoords = inputs.activeCoords ?? signal({row: 0, col: 0});
   const focusMode = signal<'roving' | 'activedescendant'>(
     inputs.focusMode ? inputs.focusMode() : 'roving',
   );
@@ -95,20 +95,20 @@ function setupGridFocus(inputs: TestSetupInputs = {}): {
 
 describe('GridFocus', () => {
   describe('Initialization', () => {
-    it('should initialize with activeCell at {row: 0, column: 0} by default', () => {
+    it('should initialize with activeCell at {row: 0, col: 0} by default', () => {
       const {gridFocus} = setupGridFocus();
-      expect(gridFocus.inputs.activeCoords()).toEqual({row: 0, column: 0});
+      expect(gridFocus.inputs.activeCoords()).toEqual({row: 0, col: 0});
     });
 
     it('should compute activeCell based on activeCell', () => {
       const {gridFocus, cells} = setupGridFocus({
-        activeCoords: signal({row: 1, column: 1}),
+        activeCoords: signal({row: 1, col: 1}),
       });
       expect(gridFocus.activeCell()).toBe(cells[1][1]);
     });
 
     it('should compute activeCell correctly when rowspan and colspan are set', () => {
-      const activeCoords = signal({row: 0, column: 0});
+      const activeCoords = signal({row: 0, col: 0});
       const gridFocusSignal = signal<GridFocus<TestGridCell> | undefined>(undefined);
 
       // Visualization of this irregular grid.
@@ -130,24 +130,58 @@ describe('GridFocus', () => {
         gridFocus: gridFocusSignal,
       });
 
-      activeCoords.set({row: 0, column: 0});
+      activeCoords.set({row: 0, col: 0});
       expect(gridFocus.activeCell()).toBe(cell_0_0);
-      activeCoords.set({row: 0, column: 1});
+      activeCoords.set({row: 0, col: 1});
       expect(gridFocus.activeCell()).toBe(cell_0_0);
-      activeCoords.set({row: 1, column: 0});
+      activeCoords.set({row: 1, col: 0});
       expect(gridFocus.activeCell()).toBe(cell_0_0);
-      activeCoords.set({row: 1, column: 1});
+      activeCoords.set({row: 1, col: 1});
       expect(gridFocus.activeCell()).toBe(cell_0_0);
 
-      activeCoords.set({row: 0, column: 2});
+      activeCoords.set({row: 0, col: 2});
       expect(gridFocus.activeCell()).toBe(cell_0_2);
 
-      activeCoords.set({row: 1, column: 2});
+      activeCoords.set({row: 1, col: 2});
       expect(gridFocus.activeCell()).toBe(cell_1_2);
+    });
+
+    it('should compute rowCount and colCount correctly', () => {
+      const {gridFocus} = setupGridFocus({
+        numRows: 2,
+        numCols: 3,
+      });
+      expect(gridFocus.rowCount()).toBe(2);
+      expect(gridFocus.colCount()).toBe(3);
+    });
+
+    it('should compute rowCount and colCount correctly when rowspan and colspan are set', () => {
+      const gridFocusSignal = signal<GridFocus<TestGridCell> | undefined>(undefined);
+
+      // Visualization of this irregular grid.
+      //
+      //   +---+---+---+
+      //   |       |0,2|
+      //   +  0,0  +---+
+      //   |       |1,2|
+      //   +---+---+---+
+      //
+      const cell_0_0 = createTestCell(gridFocusSignal, {id: `cell-0-0`, rowspan: 2, colspan: 2});
+      const cell_0_2 = createTestCell(gridFocusSignal, {id: `cell-0-2`});
+      const cell_1_2 = createTestCell(gridFocusSignal, {id: `cell-1-2`});
+      const cells = signal<TestGridCell[][]>([[cell_0_0, cell_0_2], [cell_1_2]]);
+
+      const {gridFocus} = setupGridFocus({
+        cells,
+        gridFocus: gridFocusSignal,
+      });
+
+      expect(gridFocus.rowCount()).toBe(2);
+      expect(gridFocus.colCount()).toBe(3);
     });
   });
 
-  describe('isGridDisabled()', () => {
+  describe('isGridDisabled', () => {
     it('should return true if inputs.disabled is true', () => {
       const {gridFocus} = setupGridFocus({disabled: signal(true)});
       expect(gridFocus.isGridDisabled()).toBeTrue();
@@ -171,7 +205,7 @@ describe('GridFocus', () => {
     });
   });
 
-  describe('getActiveDescendant()', () => {
+  describe('getActiveDescendant', () => {
     it('should return undefined if focusMode is "roving"', () => {
       const {gridFocus} = setupGridFocus({focusMode: signal('roving')});
       expect(gridFocus.getActiveDescendant()).toBeUndefined();
@@ -188,13 +222,13 @@ describe('GridFocus', () => {
     it('should return the activeCell id if focusMode is "activedescendant"', () => {
       const {gridFocus, cells} = setupGridFocus({
         focusMode: signal('activedescendant'),
-        activeCoords: signal({row: 2, column: 2}),
+        activeCoords: signal({row: 2, col: 2}),
       });
       expect(gridFocus.getActiveDescendant()).toBe(cells[2][2].id());
     });
   });
 
-  describe('getGridTabindex()', () => {
+  describe('getGridTabindex', () => {
     it('should return 0 if grid is disabled', () => {
       const {gridFocus} = setupGridFocus({disabled: signal(true)});
       expect(gridFocus.getGridTabindex()).toBe(0);
@@ -211,7 +245,7 @@ describe('GridFocus', () => {
     });
   });
 
-  describe('getCellTabindex(cell)', () => {
+  describe('getCellTabindex', () => {
     it('should return -1 if grid is disabled', () => {
       const {gridFocus, cells} = setupGridFocus({
         numRows: 1,
@@ -247,7 +281,7 @@ describe('GridFocus', () => {
     });
   });
 
-  describe('isFocusable(cell)', () => {
+  describe('isFocusable', () => {
     it('should return true if cell is not disabled', () => {
       const {gridFocus, cells} = setupGridFocus({
         numRows: 1,
@@ -283,65 +317,127 @@ describe('GridFocus', () => {
     });
   });
 
-  describe('focus(cell)', () => {
+  describe('focusCoordinates', () => {
     it('should return false and not change state if grid is disabled', () => {
-      const activeCoords = signal({row: 0, column: 0});
+      const activeCoords = signal({row: 0, col: 0});
       const {gridFocus, cells} = setupGridFocus({
         activeCoords,
         disabled: signal(true),
       });
 
-      const success = gridFocus.focus({row: 1, column: 0});
+      const success = gridFocus.focusCoordinates({row: 1, col: 0});
 
       expect(success).toBeFalse();
-      expect(activeCoords()).toEqual({row: 0, column: 0});
+      expect(activeCoords()).toEqual({row: 0, col: 0});
       expect(cells[1][0].element().focus).not.toHaveBeenCalled();
     });
 
     it('should return false and not change state if cell is not focusable', () => {
-      const activeCoords = signal({row: 0, column: 0});
+      const activeCoords = signal({row: 0, col: 0});
       const {gridFocus, cells} = setupGridFocus({activeCoords});
       cells[1][0].disabled.set(true);
 
-      const success = gridFocus.focus({row: 1, column: 0});
+      const success = gridFocus.focusCoordinates({row: 1, col: 0});
 
       expect(success).toBeFalse();
-      expect(activeCoords()).toEqual({row: 0, column: 0});
+      expect(activeCoords()).toEqual({row: 0, col: 0});
       expect(cells[1][0].element().focus).not.toHaveBeenCalled();
     });
 
     it('should focus cell, update activeCell and prevActiveCell in "roving" mode', () => {
-      const activeCoords = signal({row: 0, column: 0});
+      const activeCoords = signal({row: 0, col: 0});
       const {gridFocus, cells} = setupGridFocus({
         activeCoords,
         focusMode: signal('roving'),
       });
 
-      const success = gridFocus.focus({row: 1, column: 0});
+      const success = gridFocus.focusCoordinates({row: 1, col: 0});
 
       expect(success).toBeTrue();
-      expect(activeCoords()).toEqual({row: 1, column: 0});
+      expect(activeCoords()).toEqual({row: 1, col: 0});
       expect(cells[1][0].element().focus).toHaveBeenCalled();
 
       expect(gridFocus.activeCell()).toBe(cells[1][0]);
-      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, column: 0});
+      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, col: 0});
     });
 
     it('should update activeCell and prevActiveCell but not call element.focus in "activedescendant" mode', () => {
-      const activeCoords = signal({row: 0, column: 0});
+      const activeCoords = signal({row: 0, col: 0});
       const {gridFocus, cells} = setupGridFocus({
         activeCoords,
         focusMode: signal('activedescendant'),
       });
 
-      const success = gridFocus.focus({row: 1, column: 0});
+      const success = gridFocus.focusCoordinates({row: 1, col: 0});
 
       expect(success).toBeTrue();
-      expect(activeCoords()).toEqual({row: 1, column: 0});
+      expect(activeCoords()).toEqual({row: 1, col: 0});
       expect(cells[1][0].element().focus).not.toHaveBeenCalled();
 
       expect(gridFocus.activeCell()).toBe(cells[1][0]);
-      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, column: 0});
+      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, col: 0});
+    });
+  });
+
+  describe('focusCell', () => {
+    it('should return false and not change state if grid is disabled', () => {
+      const activeCoords = signal({row: 0, col: 0});
+      const {gridFocus, cells} = setupGridFocus({
+        activeCoords,
+        disabled: signal(true),
+      });
+
+      const success = gridFocus.focusCell(cells[1][0]);
+
+      expect(success).toBeFalse();
+      expect(activeCoords()).toEqual({row: 0, col: 0});
+      expect(cells[1][0].element().focus).not.toHaveBeenCalled();
+    });
+
+    it('should return false and not change state if cell is not focusable', () => {
+      const activeCoords = signal({row: 0, col: 0});
+      const {gridFocus, cells} = setupGridFocus({activeCoords});
+      cells[1][0].disabled.set(true);
+
+      const success = gridFocus.focusCell(cells[1][0]);
+
+      expect(success).toBeFalse();
+      expect(activeCoords()).toEqual({row: 0, col: 0});
+      expect(cells[1][0].element().focus).not.toHaveBeenCalled();
+    });
+
+    it('should focus cell, update activeCell and prevActiveCell in "roving" mode', () => {
+      const activeCoords = signal({row: 0, col: 0});
+      const {gridFocus, cells} = setupGridFocus({
+        activeCoords,
+        focusMode: signal('roving'),
+      });
+
+      const success = gridFocus.focusCell(cells[1][0]);
+
+      expect(success).toBeTrue();
+      expect(activeCoords()).toEqual({row: 1, col: 0});
+      expect(cells[1][0].element().focus).toHaveBeenCalled();
+
+      expect(gridFocus.activeCell()).toBe(cells[1][0]);
+      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, col: 0});
+    });
+
+    it('should update activeCell and prevActiveCell but not call element.focus in "activedescendant" mode', () => {
+      const activeCoords = signal({row: 0, col: 0});
+      const {gridFocus, cells} = setupGridFocus({
+        activeCoords,
+        focusMode: signal('activedescendant'),
+      });
+
+      const success = gridFocus.focusCell(cells[1][0]);
+
+      expect(success).toBeTrue();
+      expect(activeCoords()).toEqual({row: 1, col: 0});
+      expect(cells[1][0].element().focus).not.toHaveBeenCalled();
+
+      expect(gridFocus.activeCell()).toBe(cells[1][0]);
+      expect(gridFocus.prevActiveCoords()).toEqual({row: 0, col: 0});
     });
   });
 });
