@@ -121,7 +121,7 @@ export class AccordionTriggerPattern {
       ...inputs,
       expansionId: inputs.value,
       expandable: () => true,
-      expansionManager: () => inputs.accordionGroup().expansionManager,
+      expansionManager: inputs.accordionGroup().expansionManager,
     });
     this.expandable = this.expansionControl.isExpandable;
     this.expansionId = this.expansionControl.expansionId;

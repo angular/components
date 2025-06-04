@@ -27,18 +27,12 @@ export interface ExpansionControl extends ExpansionItem {}
  */
 export class ExpansionControl {
   /** Whether this specific item is currently expanded. Derived from the Expansion manager. */
-  readonly isExpanded: SignalLike<boolean> = computed(
-    () => this.inputs.expansionManager()?.isExpanded(this) ?? false,
-  );
+  readonly isExpanded = computed(() => this.inputs.expansionManager.isExpanded(this));
 
   /** Whether this item can be expanded. */
-  readonly isExpandable: SignalLike<boolean> = computed(
-    () => this.inputs.expansionManager()?.isExpandable(this) ?? false,
-  );
+  readonly isExpandable = computed(() => this.inputs.expansionManager.isExpandable(this));
 
-  constructor(
-    readonly inputs: ExpansionItem & {expansionManager: SignalLike<ListExpansion | undefined>},
-  ) {
+  constructor(readonly inputs: ExpansionItem & {expansionManager: ListExpansion}) {
     this.expansionId = inputs.expansionId;
     this.expandable = inputs.expandable;
     this.disabled = inputs.disabled;
@@ -46,17 +40,17 @@ export class ExpansionControl {
 
   /** Requests the Expansopn manager to open this item. */
   open() {
-    this.inputs.expansionManager()?.open(this);
+    this.inputs.expansionManager.open(this);
   }
 
   /** Requests the Expansion manager to close this item. */
   close() {
-    this.inputs.expansionManager()?.close(this);
+    this.inputs.expansionManager.close(this);
   }
 
   /** Requests the Expansion manager to toggle this item. */
   toggle() {
-    this.inputs.expansionManager()?.toggle(this);
+    this.inputs.expansionManager.toggle(this);
   }
 }
 

@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {CdkGroup, CdkGroupContent, CdkTree, CdkTreeItem} from './tree';
+export {CdkTreeGroup, CdkTreeGroupContent, CdkTree, CdkTreeItem} from './tree';

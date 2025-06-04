@@ -36,7 +36,7 @@ export interface TreeItemInputs<V>
     ListSelectionItem<V>,
     ListTypeaheadItem {
   /** The parent node. */
-  parent: SignalLike<TreeItemPattern<V> | TreePattern<V> | undefined>;
+  parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 
   /** Whether this node has children. Children can be lazily loaded. */
   hasChilren: SignalLike<boolean>;
@@ -45,7 +45,7 @@ export interface TreeItemInputs<V>
   children: SignalLike<TreeItemPattern<V>[]>;
 
   /** The tree pattern this item belongs to. */
-  tree: SignalLike<TreePattern<V> | undefined>;
+  tree: SignalLike<TreePattern<V>>;
 }
 
 export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
@@ -66,9 +66,7 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly expansion: ExpansionControl;
 
   /** The level of the current node in a tree. */
-  readonly level: SignalLike<number | undefined> = computed(() =>
-    this.parent() ? this.parent()!.level()! + 1 : undefined,
-  );
+  readonly level: SignalLike<number> = computed(() => this.parent().level() + 1);
 
   /** Whether the item is expandable. It's expandable if children nodes exist. */
   readonly expandable: SignalLike<boolean>;
@@ -77,24 +75,22 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly expanded = computed(() => this.expansion.isExpanded());
 
   /** Whether this item is visible. */
-  readonly visible = computed(() => this.parent()?.expanded() ?? false);
+  readonly visible = computed(() => this.parent().expanded());
 
   /** The number of items under the same parent at the same level. */
-  readonly setsize = computed(() => this.parent()?.children().length);
+  readonly setsize = computed(() => this.parent().children().length);
 
   /** The position of this item among its siblings (1-based). */
-  readonly posinset = computed(() =>
-    this.parent() ? this.parent()!.children().indexOf(this) + 1 : undefined,
-  );
+  readonly posinset = computed(() => this.parent().children().indexOf(this) + 1);
 
   /** Whether the item is active. */
-  readonly active = computed(() => this.tree()?.focusManager.activeItem() === this);
+  readonly active = computed(() => this.tree().focusManager.activeItem() === this);
 
   /** The tabindex of the item. */
-  readonly tabindex = computed(() => (this.tree()?.focusManager.isFocusable(this) ? 0 : -1));
+  readonly tabindex = computed(() => this.tree().focusManager.getItemTabindex(this));
 
   /** Whether the item is selected. */
-  readonly selected = computed(() => this.tree()?.value().includes(this.value()));
+  readonly selected = computed(() => this.tree().value().includes(this.value()));
 
   constructor(readonly inputs: TreeItemInputs<V>) {
     this.id = inputs.id;
@@ -111,7 +107,7 @@ export class TreeItemPattern<V> implements ExpansionItem {
       ...inputs,
       expandable: this.expandable,
       expansionId: this.expansionId,
-      expansionManager: computed(() => this.parent()?.expansionManager),
+      expansionManager: this.parent().expansionManager,
     });
     this.expansionManager = new ListExpansion({
       ...inputs,

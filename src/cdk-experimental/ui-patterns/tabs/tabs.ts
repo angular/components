@@ -87,7 +87,7 @@ export class TabPattern {
       ...inputs,
       expansionId: inputs.value,
       expandable: () => true,
-      expansionManager: () => inputs.tablist().expansionManager,
+      expansionManager: inputs.tablist().expansionManager,
     });
     this.expansionId = expansionControl.expansionId;
     this.expandable = expansionControl.isExpandable;

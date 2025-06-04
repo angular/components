@@ -1,11 +1,25 @@
-import {Component, model} from '@angular/core';
+import {Component, Directive, model, inject, Injector} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
-import {CdkTree, CdkTreeItem, CdkGroup, CdkGroupContent} from '@angular/cdk-experimental/tree';
+import {
+  CdkTree,
+  CdkTreeItem,
+  CdkTreeGroup,
+  CdkTreeGroupContent,
+} from '@angular/cdk-experimental/tree';
+
+/** Helper directive to obtain a parent injector for NgTemplateOutlet.  */
+@Directive({
+  selector: '[hierarchicalInjector]',
+  exportAs: 'hierarchicalInjector',
+})
+export class HierarchicalInjector {
+  readonly injector = inject(Injector);
+}
 
 interface ExampleNode {
   value: string;
@@ -30,8 +44,9 @@ interface ExampleNode {
     NgTemplateOutlet,
     CdkTree,
     CdkTreeItem,
-    CdkGroup,
-    CdkGroupContent,
+    CdkTreeGroup,
+    CdkTreeGroupContent,
+    HierarchicalInjector,
   ],
 })
 export class CdkTreeExample {
@@ -86,7 +101,7 @@ export class CdkTreeExample {
     },
   ];
 
-  // CdkTree inputs
+  // TODO(ok7sai): add styling to horizontal tree view.
   orientation: 'vertical' | 'horizontal' = 'vertical';
   selectionMode: 'explicit' | 'follow' = 'explicit';
   focusMode: 'roving' | 'activedescendant' = 'roving';
@@ -96,6 +111,5 @@ export class CdkTreeExample {
   wrap = new FormControl(true, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});
 
-  // Model for selected values
-  selectedValues = model<string[]>(['headphones']); // Pre-select 'headphones'
+  selectedValues = model<string[]>(['headphones']);
 }

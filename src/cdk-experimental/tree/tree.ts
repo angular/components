@@ -12,99 +12,31 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChildren,
-  forwardRef,
   inject,
   input,
   model,
   signal,
   Signal,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {DeferredContent, DeferredContentAware} from '@angular/cdk-experimental/deferred-content';
 import {TreeItemPattern, TreePattern} from '../ui-patterns/tree/tree';
 
-/**
- * Base class to make a Cdk item groupable.
- *
- * Also need to add the following to the `@Directive` configuration:
- * ```
- * providers: [
- *  { provide: BaseGroupable, useExisting: forwardRef(() => CdkSomeItem) },
- * ],
- * ```
- *
- * TODO(ok7sai): Move it to a shared place.
- */
-export class BaseGroupable {
-  /** The parent CdkGroup, if any. */
-  groupParent = inject(CdkGroup, {optional: true});
+interface HasElement {
+  element: Signal<HTMLElement>;
 }
 
 /**
- * Generic container that designates content as a group.
- *
- * TODO(ok7sai): Move it to a shared place.
+ * Sort directives by their document order.
  */
-@Directive({
-  selector: '[cdkGroup]',
-  exportAs: 'cdkGroup',
-  hostDirectives: [
-    {
-      directive: DeferredContentAware,
-      inputs: ['preserveContent'],
-    },
-  ],
-  host: {
-    'class': 'cdk-group',
-    'role': 'group',
-    '[id]': 'id',
-    '[attr.inert]': 'visible() ? null : true',
-  },
-})
-export class CdkGroup<V> {
-  /** The DeferredContentAware host directive. */
-  private readonly _deferredContentAware = inject(DeferredContentAware);
-
-  /** All groupable items that are descendants of the group. */
-  private readonly _items = contentChildren(BaseGroupable, {descendants: true});
-
-  /** Identifier for matching the group owner. */
-  readonly value = input.required<V>();
-
-  /** Whether the group is visible. */
-  readonly visible = signal(true);
-
-  /** Unique ID for the group. */
-  readonly id = inject(_IdGenerator).getId('cdk-group-');
-
-  /** Child items within this group. */
-  readonly children = signal<BaseGroupable[]>([]);
-
-  constructor() {
-    afterRenderEffect(() => {
-      this.children.set(this._items().filter(item => item.groupParent === this));
-    });
-
-    // Connect the group's hidden state to the DeferredContentAware's visibility.
-    afterRenderEffect(() => {
-      this._deferredContentAware.contentVisible.set(this.visible());
-    });
-  }
+function sortDirectives(a: HasElement, b: HasElement) {
+  return (a.element().compareDocumentPosition(b.element()) & Node.DOCUMENT_POSITION_PRECEDING) > 0
+    ? 1
+    : -1;
 }
-
-/**
- * A structural directive that marks the `ng-template` to be used as the content
- * for a `CdkGroup`. This content can be lazily loaded.
- *
- * TODO(ok7sai): Move it to a shared place.
- */
-@Directive({
-  selector: 'ng-template[cdkGroupContent]',
-  hostDirectives: [DeferredContent],
-})
-export class CdkGroupContent {}
 
 /**
  * Makes an element a tree and manages state (focus, selection, keyboard navigation).
@@ -126,15 +58,10 @@ export class CdkGroupContent {}
 })
 export class CdkTree<V> {
   /** All CdkTreeItem instances within this tree. */
-  private readonly _cdkTreeItems = contentChildren<CdkTreeItem<V>>(CdkTreeItem, {
-    descendants: true,
-  });
-
-  /** All TreeItemPattern instances within this tree. */
-  private readonly _itemPatterns = computed(() => this._cdkTreeItems().map(item => item.pattern));
+  private readonly _unorderedItems = signal(new Set<CdkTreeItem<V>>());
 
   /** All CdkGroup instances within this tree. */
-  private readonly _cdkGroups = contentChildren(CdkGroup, {descendants: true});
+  readonly unorderedGroups = signal(new Set<CdkTreeGroup<V>>());
 
   /** Orientation of the tree. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
@@ -169,20 +96,34 @@ export class CdkTree<V> {
   /** The UI pattern for the tree. */
   pattern: TreePattern<V> = new TreePattern<V>({
     ...this,
-    allItems: this._itemPatterns,
+    allItems: computed(() =>
+      [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
+    ),
     activeIndex: signal(0),
   });
 
-  constructor() {
-    // Binds groups to tree items.
-    afterRenderEffect(() => {
-      const groups = this._cdkGroups();
-      const treeItems = this._cdkTreeItems();
-      for (const group of groups) {
-        const treeItem = treeItems.find(item => item.value() === group.value());
-        treeItem?.group.set(group);
-      }
-    });
+  register(child: CdkTreeGroup<V> | CdkTreeItem<V>) {
+    if (child instanceof CdkTreeGroup) {
+      this.unorderedGroups().add(child);
+      this.unorderedGroups.set(new Set(this.unorderedGroups()));
+    }
+
+    if (child instanceof CdkTreeItem) {
+      this._unorderedItems().add(child);
+      this._unorderedItems.set(new Set(this._unorderedItems()));
+    }
+  }
+
+  deregister(child: CdkTreeGroup<V> | CdkTreeItem<V>) {
+    if (child instanceof CdkTreeGroup) {
+      this.unorderedGroups().delete(child);
+      this.unorderedGroups.set(new Set(this.unorderedGroups()));
+    }
+
+    if (child instanceof CdkTreeItem) {
+      this._unorderedItems().delete(child);
+      this._unorderedItems.set(new Set(this._unorderedItems()));
+    }
   }
 }
 
@@ -204,30 +145,33 @@ export class CdkTree<V> {
     '[attr.aria-posinset]': 'pattern.posinset()',
     '[attr.tabindex]': 'pattern.tabindex()',
   },
-  providers: [{provide: BaseGroupable, useExisting: forwardRef(() => CdkTreeItem)}],
 })
-export class CdkTreeItem<V> extends BaseGroupable {
+export class CdkTreeItem<V> implements OnInit, OnDestroy, HasElement {
   /** A reference to the tree item element. */
   private readonly _elementRef = inject(ElementRef);
-
-  /** The host native element. */
-  private readonly _element = computed(() => this._elementRef.nativeElement);
 
   /** A unique identifier for the tree item. */
   private readonly _id = inject(_IdGenerator).getId('cdk-tree-item-');
 
   /** The top level CdkTree. */
-  private readonly _cdkTree = inject(CdkTree<V>, {optional: true});
+  private readonly _tree = inject(CdkTree<V>);
 
   /** The parent CdkTreeItem. */
-  private readonly _cdkTreeItem = inject(CdkTreeItem<V>, {optional: true, skipSelf: true});
+  private readonly _treeItem = inject(CdkTreeItem<V>, {optional: true, skipSelf: true});
+
+  /** The parent CdkGroup, if any. */
+  private readonly _parentGroup = inject(CdkTreeGroup<V>, {optional: true});
 
   /** The top lavel TreePattern. */
-  private readonly _treePattern = computed(() => this._cdkTree?.pattern);
+  private readonly _treePattern = computed(() => this._tree.pattern);
 
   /** The parent TreeItemPattern. */
-  private readonly _parentPattern: Signal<TreeItemPattern<V> | TreePattern<V> | undefined> =
-    computed(() => this._cdkTreeItem?.pattern ?? this._treePattern());
+  private readonly _parentPattern: Signal<TreeItemPattern<V> | TreePattern<V>> = computed(
+    () => this._treeItem?.pattern ?? this._treePattern(),
+  );
+
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The value of the tree item. */
   readonly value = input.required<V>();
@@ -239,16 +183,15 @@ export class CdkTreeItem<V> extends BaseGroupable {
   readonly label = input<string>();
 
   /** Search term for typeahead. */
-  readonly searchTerm = computed(() => this.label() ?? this._element().textContent);
+  readonly searchTerm = computed(() => this.label() ?? this.element().textContent);
 
   /** Manual group assignment. */
-  readonly group = signal<CdkGroup<V> | undefined>(undefined);
+  readonly group = signal<CdkTreeGroup<V> | undefined>(undefined);
 
   /** The UI pattern for this item. */
   pattern: TreeItemPattern<V> = new TreeItemPattern<V>({
     ...this,
     id: () => this._id,
-    element: this._element,
     tree: this._treePattern,
     parent: this._parentPattern,
     children: computed(
@@ -261,11 +204,109 @@ export class CdkTreeItem<V> extends BaseGroupable {
   });
 
   constructor() {
-    super();
+    afterRenderEffect(() => {
+      const group = [...this._tree.unorderedGroups()].find(group => group.value() === this.value());
+      if (group) {
+        this.group.set(group);
+      }
+    });
 
     // Updates the visibility of the owned group.
     afterRenderEffect(() => {
       this.group()?.visible.set(this.pattern.expanded());
     });
   }
+
+  ngOnInit() {
+    this._tree.register(this);
+    this._parentGroup?.register(this);
+  }
+
+  ngOnDestroy() {
+    this._tree.deregister(this);
+    this._parentGroup?.deregister(this);
+  }
 }
+
+/**
+ * Container that designates content as a group.
+ */
+@Directive({
+  selector: '[cdkTreeGroup]',
+  exportAs: 'cdkTreeGroup',
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
+  host: {
+    'class': 'cdk-tree-group',
+    'role': 'group',
+    '[id]': 'id',
+    '[attr.inert]': 'visible() ? null : true',
+  },
+})
+export class CdkTreeGroup<V> implements OnInit, OnDestroy, HasElement {
+  /** A reference to the group element. */
+  private readonly _elementRef = inject(ElementRef);
+
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware);
+
+  /** The top level CdkTree. */
+  private readonly _tree = inject(CdkTree<V>);
+
+  /** All groupable items that are descendants of the group. */
+  private readonly _unorderedItems = signal(new Set<CdkTreeItem<V>>());
+
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
+
+  /** Unique ID for the group. */
+  readonly id = inject(_IdGenerator).getId('cdk-tree-group-');
+
+  /** Whether the group is visible. */
+  readonly visible = signal(true);
+
+  /** Child items within this group. */
+  readonly children = computed(() => [...this._unorderedItems()].sort(sortDirectives));
+
+  /** Identifier for matching the group owner. */
+  readonly value = input.required<V>();
+
+  constructor() {
+    // Connect the group's hidden state to the DeferredContentAware's visibility.
+    afterRenderEffect(() => {
+      this._deferredContentAware.contentVisible.set(this.visible());
+    });
+  }
+
+  ngOnInit() {
+    this._tree.register(this);
+  }
+
+  ngOnDestroy() {
+    this._tree.deregister(this);
+  }
+
+  register(child: CdkTreeItem<V>) {
+    this._unorderedItems().add(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
+  }
+
+  deregister(child: CdkTreeItem<V>) {
+    this._unorderedItems().delete(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
+  }
+}
+
+/**
+ * A structural directive that marks the `ng-template` to be used as the content
+ * for a `CdkTreeGroup`. This content can be lazily loaded.
+ */
+@Directive({
+  selector: 'ng-template[cdkTreeGroupContent]',
+  hostDirectives: [DeferredContent],
+})
+export class CdkTreeGroupContent {}

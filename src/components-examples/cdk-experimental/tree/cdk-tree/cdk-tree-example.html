@@ -35,6 +35,7 @@
 
 <ul
   cdkTree
+  hierarchicalInjector
   class="example-tree"
   [orientation]="orientation"
   [multi]="multi.value"
@@ -45,109 +46,49 @@
   [skipDisabled]="skipDisabled.value"
   [(value)]="selectedValues"
   #tree="cdkTree"
+  #injector="hierarchicalInjector"
 >
   @for (node of treeData; track node) {
-    <li
-      cdkTreeItem
-      class="example-tree-item"
-      [value]="node.value"
-      [label]="node.label || node.value"
-      [disabled]="node.disabled"
-      #treeItem="cdkTreeItem"
-    >
-      <ng-template
-        [ngTemplateOutlet]="header"
-        [ngTemplateOutletContext]="{treeItem: treeItem, label: node.label}"
-      ></ng-template>
-
-      @if (node.children && node.children.length > 0) {
-        <div cdkGroup [value]="node.value">
-          <ng-template cdkGroupContent>
-            @for (node of node.children; track node) {
-              <div
-                cdkTreeItem
-                class="example-tree-item"
-                [value]="node.value"
-                [label]="node.label || node.value"
-                [disabled]="node.disabled"
-                #treeItem="cdkTreeItem"
-              >
-                <ng-template
-                  [ngTemplateOutlet]="header"
-                  [ngTemplateOutletContext]="{treeItem: treeItem, label: node.label}"
-                ></ng-template>
-
-                @if (node.children && node.children.length > 0) {
-                  <div cdkGroup [value]="node.value">
-                    <ng-template cdkGroupContent>
-                      @for (node of node.children; track node) {
-                        <div
-                          cdkTreeItem
-                          class="example-tree-item"
-                          [value]="node.value"
-                          [label]="node.label || node.value"
-                          [disabled]="node.disabled"
-                          #treeItem="cdkTreeItem"
-                        >
-                          <ng-template
-                            [ngTemplateOutlet]="header"
-                            [ngTemplateOutletContext]="{treeItem: treeItem, label: node.label}"
-                          ></ng-template>
-                        </div>
-                      }
-                    </ng-template>
-                  </div>
-                }
-              </div>
-            }
-          </ng-template>
-        </div>
-      }
-    </li>
+    <ng-template
+      [ngTemplateOutlet]="nodeTmpl"
+      [ngTemplateOutletContext]="{node: node}"
+      [ngTemplateOutletInjector]="injector.injector"
+    ></ng-template>
   }
-  <!-- Ideal way of tree item creation -->
-  <!-- @for (node of treeData; track node) {
-      <ng-template [ngTemplateOutlet]="nodeTmpl"
-                   [ngTemplateOutletContext]="{node: node, parent: tree, tree: tree}"></ng-template>
-    } -->
 </ul>
 
-<ng-template #header let-item="treeItem" let-label="label">
-  <div
-    class="example-tree-item-content"
-    [style.paddingLeft.px]="((item.pattern.level() ?? 1) - 1) * 24"
-  >
-    <mat-icon class="example-tree-item-icon" aria-hidden="true">
-      @if (item.pattern.expandable()) {
-        {{ item.pattern.expanded() ? 'expand_less' : 'expand_more' }}
-      }
-    </mat-icon>
-    {{ label }}
-  </div>
-</ng-template>
-
-<!-- Need to solve content query and DI issue with ng-template -->
 <ng-template #nodeTmpl let-node="node">
   <li
     cdkTreeItem
+    class="example-tree-item"
     [value]="node.value"
     [label]="node.label || node.value"
     [disabled]="node.disabled"
     #treeItem="cdkTreeItem"
   >
-    <ng-template
-      [ngTemplateOutlet]="header"
-      [ngTemplateOutletContext]="{treeItem: treeItem, label: node.label}"
-    ></ng-template>
+    <span
+      class="example-tree-item-content"
+      [style.paddingLeft.px]="(treeItem.pattern.level() - 1) * 24"
+    >
+      <mat-icon class="example-tree-item-icon" aria-hidden="true">
+        @if (treeItem.pattern.expandable()) {
+          {{ treeItem.pattern.expanded() ? 'expand_less' : 'expand_more' }}
+        }
+      </mat-icon>
+      {{ node.label }}
+    </span>
 
     @if (node.children && node.children.length > 0) {
-      <div cdkGroup [value]="node.value">
-        @for (child of node.children; track child) {
-          <ng-template
-            [ngTemplateOutlet]="nodeTmpl"
-            [ngTemplateOutletContext]="{node: child}"
-          ></ng-template>
-        }
+      <div cdkTreeGroup hierarchicalInjector [value]="node.value" #injector="hierarchicalInjector">
+        <ng-template cdkTreeGroupContent>
+          @for (child of node.children; track child) {
+            <ng-template
+              [ngTemplateOutlet]="nodeTmpl"
+              [ngTemplateOutletContext]="{node: child}"
+              [ngTemplateOutletInjector]="injector.injector"
+            ></ng-template>
+          }
+        </ng-template>
       </div>
     }
   </li>
