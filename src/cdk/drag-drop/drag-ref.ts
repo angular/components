@@ -85,6 +85,9 @@ const activeCapturingEventOptions = {
  */
 const MOUSE_EVENT_IGNORE_TIME = 800;
 
+/** Class applied to the drag placeholder. */
+const PLACEHOLDER_CLASS = 'cdk-drag-placeholder';
+
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
 
@@ -147,10 +150,15 @@ export class DragRef<T = any> {
   private _pickupPositionOnPage: Point;
 
   /**
-   * Anchor node used to save the place in the DOM where the element was
+   * Marker node used to save the place in the DOM where the element was
    * picked up so that it can be restored at the end of the drag sequence.
    */
-  private _anchor: Comment;
+  private _marker: Comment;
+
+  /**
+   * Element indicating the position from which the item was picked up initially.
+   */
+  private _anchor: HTMLElement | null = null;
 
   /**
    * CSS `transform` applied to the element when it isn't being dragged. We need a
@@ -506,7 +514,7 @@ export class DragRef<T = any> {
       this._rootElement?.remove();
     }
 
-    this._anchor?.remove();
+    this._marker?.remove();
     this._destroyPreview();
     this._destroyPlaceholder();
     this._dragDropRegistry.removeDragItem(this);
@@ -529,7 +537,7 @@ export class DragRef<T = any> {
       this._ownerSVGElement =
       this._placeholderTemplate =
       this._previewTemplate =
-      this._anchor =
+      this._marker =
       this._parentDragRef =
         null!;
   }
@@ -682,9 +690,10 @@ export class DragRef<T = any> {
 
   /** Destroys the placeholder element and its ViewRef. */
   private _destroyPlaceholder() {
+    this._anchor?.remove();
     this._placeholder?.remove();
     this._placeholderRef?.destroy();
-    this._placeholder = this._placeholderRef = null!;
+    this._placeholder = this._anchor = this._placeholderRef = null!;
   }
 
   /** Handler for the `mousedown`/`touchstart` events. */
@@ -872,14 +881,14 @@ export class DragRef<T = any> {
       const element = this._rootElement;
       const parent = element.parentNode as HTMLElement;
       const placeholder = (this._placeholder = this._createPlaceholderElement());
-      const anchor = (this._anchor =
-        this._anchor ||
+      const marker = (this._marker =
+        this._marker ||
         this._document.createComment(
-          typeof ngDevMode === 'undefined' || ngDevMode ? 'cdk-drag-anchor' : '',
+          typeof ngDevMode === 'undefined' || ngDevMode ? 'cdk-drag-marker' : '',
         ));
 
-      // Insert an anchor node so that we can restore the element's position in the DOM.
-      parent.insertBefore(anchor, element);
+      // Insert a marker node so that we can restore the element's position in the DOM.
+      parent.insertBefore(marker, element);
 
       // There's no risk of transforms stacking when inside a drop container so
       // we can keep the initial transform up to date any time dragging starts.
@@ -1012,7 +1021,7 @@ export class DragRef<T = any> {
     // can throw off `NgFor` which does smart diffing and re-creates elements only when necessary,
     // while moving the existing elements in all other cases.
     toggleVisibility(this._rootElement, true, dragImportantProperties);
-    this._anchor.parentNode!.replaceChild(this._rootElement, this._anchor);
+    this._marker.parentNode!.replaceChild(this._rootElement, this._marker);
 
     this._destroyPreview();
     this._destroyPlaceholder();
@@ -1081,19 +1090,23 @@ export class DragRef<T = any> {
 
     if (newContainer && newContainer !== this._dropContainer) {
       this._ngZone.run(() => {
+        const exitIndex = this._dropContainer!.getItemIndex(this);
+        const nextItemElement =
+          this._dropContainer!.getItemAtIndex(exitIndex + 1)?.getVisibleElement() || null;
+
         // Notify the old container that the item has left.
         this.exited.next({item: this, container: this._dropContainer!});
         this._dropContainer!.exit(this);
+        this._conditionallyInsertAnchor(newContainer, this._dropContainer!, nextItemElement);
         // Notify the new container that the item has entered.
         this._dropContainer = newContainer!;
         this._dropContainer.enter(
           this,
           x,
           y,
-          newContainer === this._initialContainer &&
-            // If we're re-entering the initial container and sorting is disabled,
-            // put item the into its starting index to begin with.
-            newContainer.sortingDisabled
+          // If we're re-entering the initial container and sorting is disabled,
+          // put item the into its starting index to begin with.
+          newContainer === this._initialContainer && newContainer.sortingDisabled
             ? this._initialIndex
             : undefined,
         );
@@ -1193,7 +1206,7 @@ export class DragRef<T = any> {
     // Stop pointer events on the preview so the user can't
     // interact with it while the preview is animating.
     placeholder.style.pointerEvents = 'none';
-    placeholder.classList.add('cdk-drag-placeholder');
+    placeholder.classList.add(PLACEHOLDER_CLASS);
     return placeholder;
   }
 
@@ -1584,6 +1597,36 @@ export class DragRef<T = any> {
     return this._handles.find(handle => {
       return event.target && (event.target === handle || handle.contains(event.target as Node));
     });
+  }
+
+  /** Inserts the anchor element, if it's valid. */
+  private _conditionallyInsertAnchor(
+    newContainer: DropListRef,
+    exitContainer: DropListRef,
+    nextItemElement: HTMLElement | null,
+  ) {
+    // Remove the anchor when returning to the initial container.
+    if (newContainer === this._initialContainer) {
+      this._anchor?.remove();
+      this._anchor = null;
+    } else if (exitContainer === this._initialContainer && exitContainer.hasAnchor) {
+      // Insert the anchor when leaving the initial container.
+      const anchor = (this._anchor ??= deepCloneNode(this._placeholder));
+      anchor.classList.remove(PLACEHOLDER_CLASS);
+      anchor.classList.add('cdk-drag-anchor');
+
+      // Clear the transform since the single-axis strategy uses transforms to sort the items.
+      anchor.style.transform = '';
+
+      // When the item leaves the initial container, the container's DOM will be restored to
+      // its original state, except for the dragged item which is removed. Insert the anchor in
+      // the position from which the item left so that the list looks consistent.
+      if (nextItemElement) {
+        nextItemElement.before(anchor);
+      } else {
+        coerceElement(exitContainer.element).appendChild(anchor);
+      }
+    }
   }
 }
 

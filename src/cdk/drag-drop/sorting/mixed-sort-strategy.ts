@@ -222,6 +222,11 @@ export class MixedSortStrategy implements DropListSortStrategy {
     return this._activeItems.indexOf(item);
   }
 
+  /** Gets the item at a specific index. */
+  getItemAtIndex(index: number): DragRef | null {
+    return this._activeItems[index] || null;
+  }
+
   /** Used to notify the strategy that the scroll position has changed. */
   updateOnScroll(): void {
     this._activeItems.forEach(item => {
