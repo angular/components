@@ -1,3 +1,14 @@
+<a name="20.0.2"></a>
+# 20.0.2 "amesite-armoire" (2025-06-04)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [45fcf24b6](https://github.com/angular/components/commit/45fcf24b6cb5088e3c6e08c0eff068c7a7a7b548) | fix | **core:** brand family not set for plain value ([#31260](https://github.com/angular/components/pull/31260)) |
+| [3a3a9b1c2](https://github.com/angular/components/commit/3a3a9b1c25dcca3953191f37d4f8be9b3eab5ebe) | fix | **schematics:** avoid overwriting files that didn't change ([#31270](https://github.com/angular/components/pull/31270)) |
+| [1af07e3b2](https://github.com/angular/components/commit/1af07e3b220ccdc64592bee17e3b353798836699) | fix | **schematics:** token migration not replacing all instances ([#31277](https://github.com/angular/components/pull/31277)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.1"></a>
 # 20.0.1 "sulfur-sandpaper" (2025-05-28)
 ### material
