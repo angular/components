@@ -257,12 +257,15 @@ export class CdkDropList<T = any> implements OnDestroy {
     enterPredicate: (drag: CdkDrag, drop: CdkDropList) => boolean;
     readonly exited: EventEmitter<CdkDragExit<T>>;
     getSortedItems(): CdkDrag[];
+    hasAnchor: boolean;
     id: string;
     lockAxis: DragAxis;
     // (undocumented)
     static ngAcceptInputType_autoScrollDisabled: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hasAnchor: unknown;
     // (undocumented)
     static ngAcceptInputType_sortingDisabled: unknown;
     // (undocumented)
@@ -273,7 +276,7 @@ export class CdkDropList<T = any> implements OnDestroy {
     sortingDisabled: boolean;
     sortPredicate: (index: number, drag: CdkDrag, drop: CdkDropList) => boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDropList<any>, "[cdkDropList], cdk-drop-list", ["cdkDropList"], { "connectedTo": { "alias": "cdkDropListConnectedTo"; "required": false; }; "data": { "alias": "cdkDropListData"; "required": false; }; "orientation": { "alias": "cdkDropListOrientation"; "required": false; }; "id": { "alias": "id"; "required": false; }; "lockAxis": { "alias": "cdkDropListLockAxis"; "required": false; }; "disabled": { "alias": "cdkDropListDisabled"; "required": false; }; "sortingDisabled": { "alias": "cdkDropListSortingDisabled"; "required": false; }; "enterPredicate": { "alias": "cdkDropListEnterPredicate"; "required": false; }; "sortPredicate": { "alias": "cdkDropListSortPredicate"; "required": false; }; "autoScrollDisabled": { "alias": "cdkDropListAutoScrollDisabled"; "required": false; }; "autoScrollStep": { "alias": "cdkDropListAutoScrollStep"; "required": false; }; "elementContainerSelector": { "alias": "cdkDropListElementContainer"; "required": false; }; }, { "dropped": "cdkDropListDropped"; "entered": "cdkDropListEntered"; "exited": "cdkDropListExited"; "sorted": "cdkDropListSorted"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkDropList<any>, "[cdkDropList], cdk-drop-list", ["cdkDropList"], { "connectedTo": { "alias": "cdkDropListConnectedTo"; "required": false; }; "data": { "alias": "cdkDropListData"; "required": false; }; "orientation": { "alias": "cdkDropListOrientation"; "required": false; }; "id": { "alias": "id"; "required": false; }; "lockAxis": { "alias": "cdkDropListLockAxis"; "required": false; }; "disabled": { "alias": "cdkDropListDisabled"; "required": false; }; "sortingDisabled": { "alias": "cdkDropListSortingDisabled"; "required": false; }; "enterPredicate": { "alias": "cdkDropListEnterPredicate"; "required": false; }; "sortPredicate": { "alias": "cdkDropListSortPredicate"; "required": false; }; "autoScrollDisabled": { "alias": "cdkDropListAutoScrollDisabled"; "required": false; }; "autoScrollStep": { "alias": "cdkDropListAutoScrollStep"; "required": false; }; "elementContainerSelector": { "alias": "cdkDropListElementContainer"; "required": false; }; "hasAnchor": { "alias": "cdkDropListHasAnchor"; "required": false; }; }, { "dropped": "cdkDropListDropped"; "entered": "cdkDropListEntered"; "exited": "cdkDropListExited"; "sorted": "cdkDropListSorted"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDropList<any>, never>;
 }
@@ -512,9 +515,11 @@ export class DropListRef<T = any> {
         item: DragRef;
         container: DropListRef;
     }>;
+    getItemAtIndex(index: number): DragRef | null;
     getItemIndex(item: DragRef): number;
     getScrollableParents(): readonly HTMLElement[];
     _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | undefined;
+    hasAnchor: boolean;
     isDragging(): boolean;
     _isOverContainer(x: number, y: number): boolean;
     isReceiving(): boolean;

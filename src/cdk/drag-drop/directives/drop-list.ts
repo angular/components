@@ -150,6 +150,20 @@ export class CdkDropList<T = any> implements OnDestroy {
    */
   @Input('cdkDropListElementContainer') elementContainerSelector: string | null;
 
+  /**
+   * By default when an item leaves its initial container, its placeholder will be transferred
+   * to the new container. If that's not desirable for your use case, you can enable this option
+   * which will clone the placeholder and leave it inside the original container. If the item is
+   * returned to the initial container, the anchor element will be removed automatically.
+   *
+   * The cloned placeholder can be styled by targeting the `cdk-drag-anchor` class.
+   *
+   * This option is useful in combination with `cdkDropListSortingDisabled` to implement copying
+   * behavior in a drop list.
+   */
+  @Input({alias: 'cdkDropListHasAnchor', transform: booleanAttribute})
+  hasAnchor: boolean;
+
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')
   readonly dropped: EventEmitter<CdkDragDrop<T, any>> = new EventEmitter<CdkDragDrop<T, any>>();
@@ -339,6 +353,7 @@ export class CdkDropList<T = any> implements OnDestroy {
       ref.sortingDisabled = this.sortingDisabled;
       ref.autoScrollDisabled = this.autoScrollDisabled;
       ref.autoScrollStep = coerceNumberProperty(this.autoScrollStep, 2);
+      ref.hasAnchor = this.hasAnchor;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);

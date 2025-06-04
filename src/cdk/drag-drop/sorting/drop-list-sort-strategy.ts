@@ -33,5 +33,6 @@ export interface DropListSortStrategy {
   reset(): void;
   getActiveItemsSnapshot(): readonly DragRef[];
   getItemIndex(item: DragRef): number;
+  getItemAtIndex(index: number): DragRef | null;
   updateOnScroll(topDifference: number, leftDifference: number): void;
 }

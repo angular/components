@@ -75,6 +75,11 @@ export class DropListRef<T = any> {
   autoScrollStep: number = 2;
 
   /**
+   * Whether the items in the list should leave an anchor node when leaving the initial container.
+   */
+  hasAnchor: boolean = false;
+
+  /**
    * Function that is used to determine whether an item
    * is allowed to be moved into a drop container.
    */
@@ -438,6 +443,16 @@ export class DropListRef<T = any> {
     return this._isDragging
       ? this._sortStrategy.getItemIndex(item)
       : this._draggables.indexOf(item);
+  }
+
+  /**
+   * Gets the item at a specific index.
+   * @param index Index at which to retrieve the item.
+   */
+  getItemAtIndex(index: number): DragRef | null {
+    return this._isDragging
+      ? this._sortStrategy.getItemAtIndex(index)
+      : this._draggables[index] || null;
   }
 
   /**
