@@ -9,6 +9,7 @@ describe('Material address-form schematic', () => {
   const baseOptions: Schema = {
     name: 'foo',
     project: 'material',
+    module: 'app-module.ts',
   };
 
   beforeEach(() => {
@@ -25,7 +26,7 @@ describe('Material address-form schematic', () => {
     expect(files).toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     expect(files).toContain('/projects/material/src/app/foo/foo.component.ts');
 
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
   });
@@ -33,7 +34,7 @@ describe('Material address-form schematic', () => {
   it('should add address-form imports to module', async () => {
     const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('address-form', baseOptions, app);
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
 
     expect(moduleContent).toContain('MatInputModule');
     expect(moduleContent).toContain('MatButtonModule');
@@ -58,7 +59,7 @@ describe('Material address-form schematic', () => {
         {...baseOptions, standalone: true},
         app,
       );
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const content = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatInputModule',
@@ -84,7 +85,7 @@ describe('Material address-form schematic', () => {
         {...baseOptions, standalone: false},
         app,
       );
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const content = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatInputModule',
@@ -108,7 +109,7 @@ describe('Material address-form schematic', () => {
       const tree = await runner.runSchematic('address-form', baseOptions, app);
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
 
-      expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
+      expect(tree.exists('/projects/material/src/app/app-module.ts')).toBe(false);
       expect(component).toContain('imports: [');
     });
   });

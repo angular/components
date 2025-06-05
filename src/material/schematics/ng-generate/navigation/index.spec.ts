@@ -10,6 +10,7 @@ describe('material-navigation-schematic', () => {
   const baseOptions: Schema = {
     name: 'foo',
     project: 'material',
+    module: './app-module.ts',
   };
 
   beforeEach(() => {
@@ -17,7 +18,7 @@ describe('material-navigation-schematic', () => {
   });
 
   function expectNavigationSchematicModuleImports(tree: UnitTestTree) {
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
     expect(moduleContent).toMatch(/MatToolbarModule,\s+/);
     expect(moduleContent).toMatch(/MatButtonModule,\s+/);
     expect(moduleContent).toMatch(/MatSidenavModule,\s+/);
@@ -44,7 +45,7 @@ describe('material-navigation-schematic', () => {
     expect(files).toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     expect(files).toContain('/projects/material/src/app/foo/foo.component.ts');
 
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
   });
@@ -73,7 +74,7 @@ describe('material-navigation-schematic', () => {
     it('should generate a standalone component', async () => {
       const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('navigation', {...baseOptions, standalone: true}, app);
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatToolbarModule',
@@ -99,7 +100,7 @@ describe('material-navigation-schematic', () => {
         {...baseOptions, standalone: false},
         app,
       );
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatToolbarModule',
@@ -128,7 +129,7 @@ describe('material-navigation-schematic', () => {
         '/projects/material/src/app/foo/foo.component.ts',
       );
 
-      expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
+      expect(tree.exists('/projects/material/src/app/app-module.ts')).toBe(false);
       expect(componentContent).toContain('imports: [');
     });
   });

@@ -12,6 +12,7 @@ describe('CDK drag-drop schematic', () => {
     // updating the other tests as well because `createTestApp` is responsible for creating
     // the project.
     project: 'material',
+    module: 'app-module.ts',
   };
 
   beforeEach(() => {
@@ -21,7 +22,7 @@ describe('CDK drag-drop schematic', () => {
   it('should create drag-drop files and add them to module', async () => {
     const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('drag-drop', baseOptions, app);
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
     const files = tree.files;
 
     expect(files).toContain('/projects/material/src/app/foo/foo.component.css');
@@ -36,7 +37,7 @@ describe('CDK drag-drop schematic', () => {
   it('should add drag-drop module', async () => {
     const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('drag-drop', baseOptions, app);
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
 
     expect(moduleContent).toContain('DragDropModule');
   });
@@ -45,7 +46,7 @@ describe('CDK drag-drop schematic', () => {
     it('should generate a standalone component', async () => {
       const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('drag-drop', {...baseOptions, standalone: true}, app);
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
 
       expect(module).not.toContain('DragDropModule');
@@ -58,7 +59,7 @@ describe('CDK drag-drop schematic', () => {
     it('should generate a component with no imports and standalone false', async () => {
       const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('drag-drop', {...baseOptions, standalone: false}, app);
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
 
       expect(module).toContain('DragDropModule');
@@ -74,7 +75,7 @@ describe('CDK drag-drop schematic', () => {
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const test = getFileContent(tree, '/projects/material/src/app/foo/foo.component.spec.ts');
 
-      expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
+      expect(tree.exists('/projects/material/src/app/app-module.ts')).toBe(false);
 
       expect(component).toContain('imports: [');
 

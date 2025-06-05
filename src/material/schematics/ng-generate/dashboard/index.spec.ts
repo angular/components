@@ -9,6 +9,7 @@ describe('material-dashboard-schematic', () => {
   const baseOptions: Schema = {
     name: 'foo',
     project: 'material',
+    module: './app-module.ts',
   };
 
   beforeEach(() => {
@@ -25,7 +26,7 @@ describe('material-dashboard-schematic', () => {
     expect(files).toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     expect(files).toContain('/projects/material/src/app/foo/foo.component.ts');
 
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
     expect(moduleContent).toMatch(/import.*Foo.*from '.\/foo\/foo.component'/);
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
   });
@@ -33,7 +34,7 @@ describe('material-dashboard-schematic', () => {
   it('should add dashboard imports to module', async () => {
     const app = await createTestApp(runner, {standalone: false});
     const tree = await runner.runSchematic('dashboard', baseOptions, app);
-    const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+    const moduleContent = getFileContent(tree, '/projects/material/src/app/app-module.ts');
 
     expect(moduleContent).toContain('MatGridListModule');
     expect(moduleContent).toContain('MatCardModule');
@@ -62,7 +63,7 @@ describe('material-dashboard-schematic', () => {
     it('should generate a standalone component', async () => {
       const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('dashboard', {...baseOptions, standalone: true}, app);
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatButtonModule',
@@ -84,7 +85,7 @@ describe('material-dashboard-schematic', () => {
     it('should generate a component with no imports and standalone false', async () => {
       const app = await createTestApp(runner, {standalone: false});
       const tree = await runner.runSchematic('dashboard', {...baseOptions, standalone: false}, app);
-      const module = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+      const module = getFileContent(tree, '/projects/material/src/app/app-module.ts');
       const component = getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
       const requiredModules = [
         'MatButtonModule',
@@ -113,7 +114,7 @@ describe('material-dashboard-schematic', () => {
         '/projects/material/src/app/foo/foo.component.ts',
       );
 
-      expect(tree.exists('/projects/material/src/app/app.module.ts')).toBe(false);
+      expect(tree.exists('/projects/material/src/app/app-module.ts')).toBe(false);
       expect(componentContent).toContain('imports: [');
     });
   });
