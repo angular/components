@@ -194,7 +194,8 @@ export function buildComponent(
     options.standalone = await isStandaloneSchematic(host, options);
 
     if (!options.standalone) {
-      options.module = findModuleFromOptions(host, options);
+      // TODO: Remove ext option when the Angular CLI looks for both candidate locations.
+      options.module = findModuleFromOptions(host, {...options, moduleExt: 'module.ts'});
     }
 
     const parsedPath = parseName(options.path!, options.name);
