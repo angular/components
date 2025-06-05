@@ -167,7 +167,7 @@ export class GridFocus<T extends GridFocusCell> {
   }
 
   /** Finds the top-left anchor coordinates of a given cell instance in the grid. */
-  getCoordinates(cellToFind: T): RowCol | void {
+  getCoordinates(cellToFind: T): RowCol | undefined {
     const grid = this.inputs.cells();
     const occupiedCells = new Set<string>();
 
@@ -203,10 +203,12 @@ export class GridFocus<T extends GridFocusCell> {
         colindex += colspan;
       }
     }
+
+    return undefined;
   }
 
   /** Gets the cell that covers the given coordinates, considering rowspan and colspan. */
-  getCell(coords: RowCol): T | void {
+  getCell(coords: RowCol): T | undefined {
     for (const row of this.inputs.cells()) {
       for (const cell of row) {
         if (
@@ -219,5 +221,6 @@ export class GridFocus<T extends GridFocusCell> {
         }
       }
     }
+    return undefined;
   }
 }
