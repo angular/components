@@ -1,23 +1,23 @@
 # Re-export of Bazel rules with repository-wide defaults
 
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
-load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
-load("@rules_angular//src/ng_package:index.bzl", _ng_package = "ng_package")
-load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
-load("//:pkg-externals.bzl", "PKG_EXTERNALS")
-load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
-load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
-load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
+load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
+load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@devinfra//bazel/http-server:index.bzl", _http_server = "http_server")
 load("@devinfra//bazel/spec-bundling:index_rjs.bzl", _spec_bundle = "spec_bundle")
-load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
-load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
+load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
+load("@rules_angular//src/ng_package:index.bzl", _ng_package = "ng_package")
 load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
 load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
-load("@devinfra//bazel/ts_project:index.bzl", "strict_deps_test")
-load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 load("@rules_browsers//src/protractor_test:index.bzl", "protractor_test")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("@rules_sass//src:index.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
+load("//:packages.bzl", "NO_STAMP_NPM_PACKAGE_SUBSTITUTIONS", "NPM_PACKAGE_SUBSTITUTIONS")
+load("//:pkg-externals.bzl", "PKG_EXTERNALS")
+load("//tools/bazel:ng_package_interop.bzl", "ng_package_interop")
+load("//tools/bazel:web_test_suite.bzl", _ng_web_test_suite = "ng_web_test_suite")
+load("//tools/extract-tokens:index.bzl", _extract_tokens = "extract_tokens")
+load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
@@ -208,9 +208,10 @@ def jasmine_test(name, data = [], args = [], **kwargs):
         chdir = native.package_name(),
         fixed_args = [
             "--require=%s/node_modules/source-map-support/register.js" % relative_to_root,
-            "**/*spec.js",
-            "**/*spec.mjs",
-            "**/*spec.cjs",
+            # Escape so that the `js_binary` launcher triggers Bash expansion.
+            "'**/*+(.|_)spec.js'",
+            "'**/*+(.|_)spec.mjs'",
+            "'**/*+(.|_)spec.cjs'",
         ] + args,
         data = data + [
             "//:node_modules/source-map-support",
