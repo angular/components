@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed, signal, WritableSignal, Signal} from '@angular/core';
+import {computed, signal, WritableSignal} from '@angular/core';
 import {GridFocus} from '../grid-focus/grid-focus';
 import {GridNavigation, GridNavigationCell, GridNavigationInputs} from './grid-navigation';
 

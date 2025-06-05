@@ -22,8 +22,8 @@ export interface GridNavigationInputs<T extends GridNavigationCell> extends Grid
 
 /** Controls navigation for a grid of items. */
 export class GridNavigation<T extends GridNavigationCell> {
-  private rowcount = computed(() => this.inputs.gridFocus.rowCount());
-  private colcount = computed(() => this.inputs.gridFocus.colCount());
+  rowcount = computed(() => this.inputs.gridFocus.rowCount());
+  colcount = computed(() => this.inputs.gridFocus.colCount());
 
   constructor(readonly inputs: GridNavigationInputs<T>) {}
 
