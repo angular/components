@@ -45,19 +45,36 @@ export interface GridFocusInputs<T extends GridFocusCell> {
   cells: SignalLike<T[][]>;
 
   /** The coordinates (row and column) of the current active cell. */
-  activeCoords: WritableSignalLike<{row: number; column: number}>;
+  activeCoords: WritableSignalLike<RowCol>;
 
   /** Whether disabled cells in the grid should be skipped when navigating. */
   skipDisabled: SignalLike<boolean>;
 }
 
+/** Represents coordinates in a grid. */
+export interface RowCol {
+  /** The row index. */
+  row: number;
+
+  /** The column index. */
+  col: number;
+}
+
 /** Controls focus for a 2D grid of cells. */
 export class GridFocus<T extends GridFocusCell> {
   /** The last active cell coordinates. */
-  prevActiveCoords = signal<{row: number; column: number}>({row: 0, column: 0});
+  prevActiveCoords = signal<RowCol>({row: 0, col: 0});
 
   /** The current active cell based on `activeCoords` coordinates. */
   activeCell = computed(() => this.getCell(this.inputs.activeCoords()));
+
+  /** The number of rows in the grid. */
+  rowCount = computed(() => this.inputs.cells().length);
+
+  /** The number of columns in the grid. */
+  colCount = computed(() => {
+    return this.inputs.cells()[0].reduce((count, curr) => count + curr.colspan(), 0);
+  });
 
   constructor(readonly inputs: GridFocusInputs<T>) {}
 
@@ -98,8 +115,25 @@ export class GridFocus<T extends GridFocusCell> {
     return this.activeCell() === cell ? 0 : -1;
   }
 
+  /** Focuses the given cell. */
+  focusCell(cell: T): boolean {
+    if (this.isGridDisabled()) {
+      return false;
+    }
+
+    if (!this.isFocusable(cell)) {
+      return false;
+    }
+
+    this.prevActiveCoords.set(this.inputs.activeCoords());
+    this.inputs.activeCoords.set({row: cell.rowindex(), col: cell.colindex()});
+    this._focus(cell);
+
+    return true;
+  }
+
   /** Moves focus to the cell at the given coordinates if it's part of a focusable cell. */
-  focus(coordinates: {row: number; column: number}): boolean {
+  focusCoordinates(coordinates: RowCol): boolean {
     if (this.isGridDisabled()) {
       return false;
     }
@@ -107,19 +141,24 @@ export class GridFocus<T extends GridFocusCell> {
     const cell = this.getCell(coordinates);
 
     if (!cell || !this.isFocusable(cell)) {
-      return false; // No cell at coordinates, or cell is not focusable.
+      return false;
     }
 
     this.prevActiveCoords.set(this.inputs.activeCoords());
-    this.inputs.activeCoords.set(coordinates); // Set activeCoords to the exact coordinates
+    this.inputs.activeCoords.set(coordinates);
+    this._focus(cell);
 
+    return true;
+  }
+
+  /** Handles conditionally calling `focus` on the HTML element of the cell. */
+  private _focus(cell: T) {
     if (this.inputs.focusMode() === 'roving') {
-      const element = cell.element(); // Element of the cell that *covers* these coordinates
+      const element = cell.element();
       if (element && typeof element.focus === 'function') {
         element.focus();
       }
     }
-    return true;
   }
 
   /** Returns true if the given cell can be navigated to. */
@@ -128,9 +167,9 @@ export class GridFocus<T extends GridFocusCell> {
   }
 
   /** Finds the top-left anchor coordinates of a given cell instance in the grid. */
-  getCoordinates(cellToFind: T): {row: number; column: number} | void {
+  getCoordinates(cellToFind: T): RowCol | void {
     const grid = this.inputs.cells();
-    const occupiedCells = new Set<string>(); // Stores "row,column" string keys for occupied cells.
+    const occupiedCells = new Set<string>();
 
     for (let rowindex = 0; rowindex < grid.length; rowindex++) {
       let colindex = 0;
@@ -144,7 +183,7 @@ export class GridFocus<T extends GridFocusCell> {
 
         // Check if this is the cell we're looking for.
         if (gridCell === cellToFind) {
-          return {row: rowindex, column: colindex};
+          return {row: rowindex, col: colindex};
         }
 
         const rowspan = gridCell.rowspan();
@@ -167,14 +206,14 @@ export class GridFocus<T extends GridFocusCell> {
   }
 
   /** Gets the cell that covers the given coordinates, considering rowspan and colspan. */
-  getCell(coords: {row: number; column: number}): T | void {
+  getCell(coords: RowCol): T | void {
     for (const row of this.inputs.cells()) {
       for (const cell of row) {
         if (
           coords.row >= cell.rowindex() &&
           coords.row <= cell.rowindex() + cell.rowspan() - 1 &&
-          coords.column >= cell.colindex() &&
-          coords.column <= cell.colindex() + cell.colspan() - 1
+          coords.col >= cell.colindex() &&
+          coords.col <= cell.colindex() + cell.colspan() - 1
         ) {
           return cell;
         }
