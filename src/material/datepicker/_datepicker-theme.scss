@@ -35,7 +35,7 @@
           m2-datepicker.get-color-tokens($theme, primary));
     }
 
-    .mat-datepicker-content {
+    .mat-datepicker-content, .mat-datepicker-toggle-active {
       &.mat-accent {
         @include token-utils.create-token-values-mixed(
             m2-datepicker.get-color-tokens($theme, secondary));

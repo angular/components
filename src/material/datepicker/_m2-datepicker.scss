@@ -40,7 +40,7 @@
     datepicker-calendar-date-hover-state-background-color: m3-utils.color-with-opacity(
         map.get($system, primary), map.get($system, hover-state-layer-opacity)),
 
-    datepicker-toggle-active-state-icon-color: map.get($theme, on-primary),
+    datepicker-toggle-active-state-icon-color: map.get($system, primary),
     datepicker-toggle-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-body-label-text-color: map.get($system, on-surface-variant),
     datepicker-calendar-period-button-text-color: map.get($system, on-surface),
