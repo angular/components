@@ -132,7 +132,6 @@
     "postcss-scss": "^4.0.4",
     "prettier": "^3.5.3",
     "protractor": "^7.0.0",
-    "reflect-metadata": "^0.2.0",
     "requirejs": "^2.3.6",
     "rollup": "^4.0.0",
     "rollup-plugin-dts": "6.2.1",
