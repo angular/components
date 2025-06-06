@@ -6,27 +6,21 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Signal, WritableSignal, signal} from '@angular/core';
+import {WritableSignal, signal} from '@angular/core';
 import {ListExpansion, ListExpansionInputs, ExpansionItem} from './expansion';
-import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
-import {getListFocus as getListFocusManager} from '../list-focus/list-focus.spec';
 
-type TestItem = ListFocusItem &
-  ExpansionItem & {
-    id: WritableSignal<string>;
-    disabled: WritableSignal<boolean>;
-    element: WritableSignal<HTMLElement>;
-    expandable: WritableSignal<boolean>;
-    expansionId: WritableSignal<string>;
-  };
+type TestItem = ExpansionItem & {
+  id: WritableSignal<string>;
+  disabled: WritableSignal<boolean>;
+  expandable: WritableSignal<boolean>;
+  expansionId: WritableSignal<string>;
+};
 
-type TestInputs = Partial<Omit<ListExpansionInputs<TestItem>, 'items' | 'focusManager'>> &
-  Partial<
-    Pick<ListFocusInputs<TestItem>, 'focusMode' | 'disabled' | 'activeIndex' | 'skipDisabled'>
-  > & {
-    numItems?: number;
-    initialExpandedIds?: string[];
-  };
+type TestInputs = Partial<Omit<ListExpansionInputs, 'items'>> & {
+  numItems?: number;
+  initialExpandedIds?: string[];
+  expansionDisabled?: boolean;
+};
 
 function createItems(length: number): WritableSignal<TestItem[]> {
   return signal(
@@ -34,7 +28,6 @@ function createItems(length: number): WritableSignal<TestItem[]> {
       const itemId = `item-${i}`;
       return {
         id: signal(itemId),
-        element: signal(document.createElement('div') as HTMLElement),
         disabled: signal(false),
         expandable: signal(true),
         expansionId: signal(itemId),
@@ -44,39 +37,24 @@ function createItems(length: number): WritableSignal<TestItem[]> {
 }
 
 function getExpansion(inputs: TestInputs = {}): {
-  expansion: ListExpansion<TestItem>;
+  expansion: ListExpansion;
   items: TestItem[];
-  focusManager: ListFocus<TestItem>;
 } {
   const numItems = inputs.numItems ?? 3;
   const items = createItems(numItems);
 
-  const listFocusManagerInputs: Partial<ListFocusInputs<TestItem>> & {items: Signal<TestItem[]>} = {
+  const expansion = new ListExpansion({
     items: items,
-    activeIndex: inputs.activeIndex ?? signal(0),
-    disabled: inputs.disabled ?? signal(false),
-    skipDisabled: inputs.skipDisabled ?? signal(true),
-    focusMode: inputs.focusMode ?? signal('roving'),
-  };
-
-  const focusManager = getListFocusManager(listFocusManagerInputs as any) as ListFocus<TestItem>;
-
-  const expansion = new ListExpansion<TestItem>({
-    items: items,
-    activeIndex: focusManager.inputs.activeIndex,
-    disabled: focusManager.inputs.disabled,
-    skipDisabled: focusManager.inputs.skipDisabled,
-    focusMode: focusManager.inputs.focusMode,
-    multiExpandable: inputs.multiExpandable ?? signal(false),
-    expandedIds: signal([]),
-    focusManager,
+    disabled: signal(inputs.expansionDisabled ?? false),
+    multiExpandable: signal(inputs.multiExpandable?.() ?? false),
+    expandedIds: signal<string[]>([]),
   });
 
   if (inputs.initialExpandedIds) {
     expansion.expandedIds.set(inputs.initialExpandedIds);
   }
 
-  return {expansion, items: items(), focusManager};
+  return {expansion, items: items()};
 }
 
 describe('Expansion', () => {
@@ -112,8 +90,8 @@ describe('Expansion', () => {
       expect(expansion.expandedIds()).toEqual([]);
     });
 
-    it('should not open an item if it is not focusable (disabled and skipDisabled is true)', () => {
-      const {expansion, items} = getExpansion({skipDisabled: signal(true)});
+    it('should not open an item if it is disabled', () => {
+      const {expansion, items} = getExpansion();
       items[1].disabled.set(true);
       expansion.open(items[1]);
       expect(expansion.expandedIds()).toEqual([]);
@@ -134,11 +112,8 @@ describe('Expansion', () => {
       expect(expansion.expandedIds()).toEqual(['item-0']);
     });
 
-    it('should not close an item if it is not focusable (disabled and skipDisabled is true)', () => {
-      const {expansion, items} = getExpansion({
-        initialExpandedIds: ['item-0'],
-        skipDisabled: signal(true),
-      });
+    it('should not close an item if it is disabled', () => {
+      const {expansion, items} = getExpansion({initialExpandedIds: ['item-0']});
       items[0].disabled.set(true);
       expansion.close(items[0]);
       expect(expansion.expandedIds()).toEqual(['item-0']);
@@ -181,7 +156,7 @@ describe('Expansion', () => {
       expect(expansion.expandedIds()).toEqual(['item-0', 'item-2']);
     });
 
-    it('should not expand items that are not focusable (disabled and skipDisabled is true)', () => {
+    it('should not expand items that are disabled', () => {
       const {expansion, items} = getExpansion({
         numItems: 3,
         multiExpandable: signal(true),
@@ -222,9 +197,8 @@ describe('Expansion', () => {
       expect(expansion.expandedIds()).toEqual(['item-1']);
     });
 
-    it('should not close items that are not focusable (disabled and skipDisabled is true)', () => {
+    it('should not close items that are disabled', () => {
       const {expansion, items} = getExpansion({
-        skipDisabled: signal(true),
         multiExpandable: signal(true),
         initialExpandedIds: ['item-0', 'item-1', 'item-2'],
       });
@@ -235,22 +209,21 @@ describe('Expansion', () => {
   });
 
   describe('#isExpandable', () => {
-    it('should return true if an item is focusable and expandable is true', () => {
+    it('should return true if an item is not disabled and expandable is true', () => {
       const {expansion, items} = getExpansion();
       items[0].expandable.set(true);
       items[0].disabled.set(false);
       expect(expansion.isExpandable(items[0])).toBeTrue();
     });
 
-    it('should return false if an item is disabled and skipDisabled is false', () => {
-      const {expansion, items} = getExpansion({skipDisabled: signal(false)});
+    it('should return false if an item is disabled', () => {
+      const {expansion, items} = getExpansion();
       items[0].disabled.set(true);
       expect(expansion.isExpandable(items[0])).toBeFalse();
     });
 
-    it('should return false if an item is disabled and skipDisabled is true', () => {
-      const {expansion, items} = getExpansion({skipDisabled: signal(true)});
-      items[0].disabled.set(true);
+    it('should return false if the expansion behavior is disabled', () => {
+      const {expansion, items} = getExpansion({expansionDisabled: true});
       expect(expansion.isExpandable(items[0])).toBeFalse();
     });
 
