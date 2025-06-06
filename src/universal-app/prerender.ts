@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import 'zone.js';
 
 import {ErrorHandler} from '@angular/core';

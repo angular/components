@@ -8,7 +8,6 @@
 
 import 'zone.js';
 import 'zone.js/testing';
-import 'reflect-metadata';
 
 import {NgModule, provideCheckNoChangesConfig, provideZonelessChangeDetection} from '@angular/core';
 import {TestBed} from '@angular/core/testing';

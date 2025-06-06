@@ -299,9 +299,6 @@ importers:
       protractor:
         specifier: ^7.0.0
         version: 7.0.0
-      reflect-metadata:
-        specifier: ^0.2.0
-        version: 0.2.2
       requirejs:
         specifier: ^2.3.6
         version: 2.3.7
