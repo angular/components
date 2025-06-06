@@ -67,12 +67,12 @@
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, accent));
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, secondary));
         }
 
         &.mat-warn {
           @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, warn));
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, error));
         }
       }
     }
