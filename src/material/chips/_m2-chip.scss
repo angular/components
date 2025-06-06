@@ -1,8 +1,5 @@
 @use 'sass:map';
-@use 'sass:meta';
-@use 'sass:color';
 @use '../core/theming/inspection';
-@use '../core/m2/palette' as m2-palette;
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
@@ -40,38 +37,24 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme, $color-variant: null) {
   $system: m2-utils.get-system($theme);
-  $foreground: null;
-  $background: null;
-  $state-layer-color: inspection.get-theme-color($theme, foreground, base);
+  $background: m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
+  $foreground: map.get($system, on-surface);
 
-  @if $color-variant == null {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $grey-50: map.get(m2-palette.$grey-palette, 50);
-    $grey-900: map.get(m2-palette.$grey-palette, 900);
-    $foreground: if($is-dark, $grey-50, $grey-900);
-
-    $surface: map.get($system, surface);
-    $background: if(
-        meta.type-of($state-layer-color) == color and meta.type-of($surface) == color,
-        color.mix($state-layer-color, $surface, 12%),
-        $state-layer-color
-    );
-  }
-  @else {
+  @if $color-variant {
     $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
-
     $background: map.get($system, primary);
     $foreground: map.get($system, on-primary);
   }
+
   @return (
     chip-disabled-label-text-color: $foreground,
     chip-elevated-container-color: $background,
     chip-elevated-disabled-container-color: $background,
     chip-elevated-selected-container-color: $background,
     chip-flat-disabled-selected-container-color: $background,
-    chip-focus-state-layer-color: $state-layer-color,
+    chip-focus-state-layer-color: map.get($system, on-surface),
     chip-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    chip-hover-state-layer-color: $state-layer-color,
+    chip-hover-state-layer-color: map.get($system, on-surface),
     chip-label-text-color: $foreground,
     chip-selected-disabled-trailing-icon-color: $foreground,
     chip-selected-focus-state-layer-color: map.get($system, focus-state-layer-opacity),
