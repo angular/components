@@ -14,8 +14,9 @@
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $palette-name: primary) {
+@function get-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
 
   @return (
@@ -25,8 +26,8 @@
     select-placeholder-text-color: map.get($system, on-surface-variant),
     select-enabled-arrow-color: map.get($system, on-surface-variant),
     select-disabled-arrow-color: $disabled,
-    select-focused-arrow-color: inspection.get-theme-color($theme, $palette-name, default, 0.87),
-    select-invalid-arrow-color: inspection.get-theme-color($theme, warn, default, 0.87),
+    select-focused-arrow-color: map.get($system, primary),
+    select-invalid-arrow-color: map.get($system, error),
   );
 }
 
