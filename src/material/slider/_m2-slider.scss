@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -31,20 +33,19 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #fff, #000);
 
   @return map.merge(
     $theme-color-tokens,
     (
-      slider-disabled-active-track-color: inspection.get-theme-color($theme, system, on-surface),
-      slider-disabled-handle-color: inspection.get-theme-color($theme, system, on-surface),
-      slider-disabled-inactive-track-color: inspection.get-theme-color($theme, system, on-surface),
-      slider-label-container-color: $on-surface,
-      slider-label-label-text-color: if($is-dark, #000, #fff),
-      slider-value-indicator-opacity: if($is-dark, 0.9, 0.6),
-      slider-with-overlap-handle-outline-color: #fff,
+      slider-disabled-active-track-color: map.get($system, on-surface),
+      slider-disabled-handle-color: map.get($system, on-surface),
+      slider-disabled-inactive-track-color: map.get($system, on-surface),
+      slider-label-container-color: map.get($system, inverse-surface),
+      slider-label-label-text-color: map.get($system, inverse-on-surface),
+      slider-value-indicator-opacity: 1,
+      slider-with-overlap-handle-outline-color: map.get($system, on-surface),
       slider-with-tick-marks-disabled-container-color:
           inspection.get-theme-color($theme, system, on-surface),
     ),
@@ -52,23 +53,24 @@
 }
 
 // Generates tokens for the slider properties that change based on the theme.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name);
-  $hover-ripple-color: if($color == null, null, #{rgba($color, 0.05)});
-  $focus-ripple-color: if($color == null, null, #{rgba($color, 0.2)});
-  $on-color: inspection.get-theme-color($theme, $palette-name, default-contrast);
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
+  $color: map.get($system, primary);
 
   @return (
-    slider-active-track-color: $color,
-    slider-focus-handle-color: $color,
-    slider-focus-state-layer-color: $focus-ripple-color,
-    slider-handle-color: $color,
-    slider-hover-handle-color: $color,
-    slider-hover-state-layer-color: $hover-ripple-color,
-    slider-inactive-track-color: $color,
-    slider-ripple-color: $color,
-    slider-with-tick-marks-active-container-color: $on-color,
-    slider-with-tick-marks-inactive-container-color: $color,
+    slider-active-track-color: map.get($system, primary),
+    slider-focus-handle-color: map.get($system, primary),
+    slider-handle-color: map.get($system, primary),
+    slider-hover-handle-color: map.get($system, primary),
+    slider-focus-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, focus-state-layer-opacity)),
+    slider-hover-state-layer-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, hover-state-layer-opacity)),
+    slider-inactive-track-color: map.get($system, primary),
+    slider-ripple-color: map.get($system, primary),
+    slider-with-tick-marks-active-container-color: map.get($system, on-primary),
+    slider-with-tick-marks-inactive-container-color: map.get($system, primary),
   );
 }
 
