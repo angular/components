@@ -27,7 +27,7 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
 export type AccordionGroupInputs = Omit<
   ListNavigationInputs<AccordionTriggerPattern> &
     ListFocusInputs<AccordionTriggerPattern> &
-    ListExpansionInputs<AccordionTriggerPattern>,
+    Omit<ListExpansionInputs, 'items'>,
   'focusMode'
 >;
 
@@ -43,7 +43,7 @@ export class AccordionGroupPattern {
   focusManager: ListFocus<AccordionTriggerPattern>;
 
   /** Controls expansion for the group. */
-  expansionManager: ListExpansion<AccordionTriggerPattern>;
+  expansionManager: ListExpansion;
 
   constructor(readonly inputs: AccordionGroupInputs) {
     this.wrap = inputs.wrap;
@@ -66,8 +66,6 @@ export class AccordionGroupPattern {
     });
     this.expansionManager = new ListExpansion({
       ...inputs,
-      focusMode,
-      focusManager: this.focusManager,
     });
   }
 }

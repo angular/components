@@ -128,9 +128,7 @@ interface SelectOptions {
 export type TabListInputs = ListNavigationInputs<TabPattern> &
   Omit<ListSelectionInputs<TabPattern, string>, 'multi'> &
   ListFocusInputs<TabPattern> &
-  Omit<ListExpansionInputs<TabPattern>, 'multiExpandable' | 'expandedIds'> & {
-    disabled: SignalLike<boolean>;
-  };
+  Omit<ListExpansionInputs, 'multiExpandable' | 'expandedIds' | 'items'>;
 
 /** Controls the state of a tablist. */
 export class TabListPattern {
@@ -144,7 +142,7 @@ export class TabListPattern {
   focusManager: ListFocus<TabPattern>;
 
   /** Controls expansion for the tablist. */
-  expansionManager: ListExpansion<TabPattern>;
+  expansionManager: ListExpansion;
 
   /** Whether the tablist is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -210,7 +208,6 @@ export class TabListPattern {
       ...inputs,
       multiExpandable: () => false,
       expandedIds: this.inputs.value,
-      focusManager: this.focusManager,
     });
   }
 
@@ -266,7 +263,7 @@ export class TabListPattern {
   private _select(opts?: SelectOptions) {
     if (opts?.select) {
       this.selection.selectOne();
-      this.expansionManager.open();
+      this.expansionManager.open(this.focusManager.activeItem());
     }
   }
 
