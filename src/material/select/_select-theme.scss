@@ -30,14 +30,17 @@
         map.get(m3-select.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-select.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(
+          m2-select.get-color-tokens($theme, primary));
 
       .mat-mdc-form-field.mat-accent {
-        @include token-utils.create-token-values-mixed(m2-select.get-color-tokens($theme, accent));
+        @include token-utils.create-token-values-mixed(
+            m2-select.get-color-tokens($theme, secondary));
       }
 
       .mat-mdc-form-field.mat-warn {
-        @include token-utils.create-token-values-mixed(m2-select.get-color-tokens($theme, warn));
+        @include token-utils.create-token-values-mixed(
+            m2-select.get-color-tokens($theme, error));
       }
     }
   }
