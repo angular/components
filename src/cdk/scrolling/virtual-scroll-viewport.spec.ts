@@ -7,7 +7,6 @@ import {
   ScrollingModule,
 } from '../scrolling';
 import {
-  ApplicationRef,
   Component,
   Directive,
   TrackByFunction,
@@ -814,25 +813,17 @@ describe('CdkVirtualScrollViewport', () => {
     }));
 
     describe('viewChange change detection behavior', () => {
-      let appRef: ApplicationRef;
-
-      beforeEach(() => {
-        appRef = TestBed.inject(ApplicationRef);
-      });
-
-      it('should not run change detection if there are no viewChange listeners', fakeAsync(() => {
+      it('should not emit viewChange if there are no listeners', fakeAsync(() => {
+        const viewChangeSpy = spyOn(testComponent.virtualForOf.viewChange, 'next');
         finishInit(fixture);
         testComponent.items = Array(10).fill(0);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
         flush();
 
-        spyOn(appRef, 'tick');
-
         viewport.scrollToIndex(5);
         triggerScroll(viewport);
-
-        expect(appRef.tick).not.toHaveBeenCalled();
+        expect(viewChangeSpy).not.toHaveBeenCalled();
       }));
     });
   });
