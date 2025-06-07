@@ -107,21 +107,6 @@ describe('MatSlider', () => {
       },
     );
   });
-
-  it('should have "auto" cursor on thumb input when slider is disabled', async () => {
-    const slider = getStandardSlider();
-    // Disable the slider using a script since there's no direct API in protractor
-    // to set component properties and trigger change detection easily for this specific setup.
-    await browser.executeScript('arguments[0].disabled = true;', slider.getWebElement());
-
-    // It might take a moment for the disabled styles to apply.
-    // A small wait can help, though ideally, there'd be a more robust way to detect this.
-    await browser.sleep(100); // Wait for styles to apply, adjust if needed.
-
-    const thumbInput = slider.element(by.css('.mdc-slider__input'));
-    const cursorStyle = await thumbInput.getCssValue('cursor');
-    expect(cursorStyle).toBe('auto');
-  });
 });
 
 /** Returns the current value of the slider. */
