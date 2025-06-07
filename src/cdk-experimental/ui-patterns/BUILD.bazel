@@ -15,5 +15,6 @@ ts_project(
         "//src/cdk-experimental/ui-patterns/listbox",
         "//src/cdk-experimental/ui-patterns/radio",
         "//src/cdk-experimental/ui-patterns/tabs",
+        "//src/cdk-experimental/ui-patterns/tree",
     ],
 )
