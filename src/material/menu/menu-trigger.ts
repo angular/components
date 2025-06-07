@@ -199,6 +199,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    */
   @Input('matMenuTriggerRestoreFocus') restoreFocus: boolean = true;
 
+  /**
+   * Whether menu will reposition to fit in the viewport.
+  */
+  @Input('matMenuRepositionOverlay') reposition: boolean = true;
+
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
 
@@ -447,6 +452,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       positionStrategy: createFlexibleConnectedPositionStrategy(this._injector, this._element)
         .withLockedPosition()
         .withGrowAfterOpen()
+        .withPush(this.reposition)
         .withTransformOriginOn('.mat-menu-panel, .mat-mdc-menu-panel'),
       backdropClass: menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       panelClass: menu.overlayPanelClass,
