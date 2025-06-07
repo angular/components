@@ -8,30 +8,6 @@
 @use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../button/icon-button-theme';
-@use '../core/tokens/m2-utils';
-@use '../core/tokens/m3-utils';
-
-// TODO(crisbeto): these variables aren't used anymore and should be removed.
-$selected-today-box-shadow-width: 1px;
-$selected-fade-amount: 0.6;
-$range-fade-amount: 0.2;
-$today-fade-amount: 0.2;
-$calendar-body-font-size: 13px !default;
-$calendar-weekday-table-font-size: 11px !default;
-
-@mixin _calendar-color($theme, $color-variant) {
-  $system: m2-utils.get-system($theme);
-  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
-
-  $range-color: m2-datepicker.private-get-range-background-color(map.get($system, primary));
-  $range-tokens: m2-datepicker.get-range-color-tokens($range-color);
-  $calendar-tokens: m2-datepicker.private-get-calendar-color-palette-color-tokens(
-    $theme,
-    $color-variant
-  );
-
-  @include token-utils.create-token-values-mixed(map.merge($calendar-tokens, $range-tokens));
-}
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-datepicker.
@@ -55,28 +31,19 @@ $calendar-weekday-table-font-size: 11px !default;
         map.get(m3-datepicker.get-tokens($theme, $color-variant), color));
   } @else {
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-datepicker.get-color-tokens($theme));
+      @include token-utils.create-token-values-mixed(
+          m2-datepicker.get-color-tokens($theme, primary));
     }
 
-    .mat-datepicker-content {
+    .mat-datepicker-content, .mat-datepicker-toggle-active {
       &.mat-accent {
-        @include _calendar-color($theme, secondary);
+        @include token-utils.create-token-values-mixed(
+            m2-datepicker.get-color-tokens($theme, secondary));
       }
 
       &.mat-warn {
-        @include _calendar-color($theme, error);
-      }
-    }
-
-    .mat-datepicker-toggle-active {
-      &.mat-accent {
-        $accent-tokens: m2-datepicker.private-get-toggle-color-palette-color-tokens($theme, accent);
-        @include token-utils.create-token-values-mixed($accent-tokens);
-      }
-
-      &.mat-warn {
-        $warn-tokens: m2-datepicker.private-get-toggle-color-palette-color-tokens($theme, warn);
-        @include token-utils.create-token-values-mixed($warn-tokens);
+        @include token-utils.create-token-values-mixed(
+            m2-datepicker.get-color-tokens($theme, error));
       }
     }
   }
@@ -96,21 +63,16 @@ $calendar-weekday-table-font-size: 11px !default;
 
 @mixin date-range-colors(
   $range-color,
-  $comparison-color: m2-datepicker.$private-default-comparison-color,
-  $overlap-color: m2-datepicker.$private-default-overlap-color,
-  $overlap-selected-color:
-    m2-datepicker.private-get-default-overlap-selected-color($overlap-color)
+  $comparison-color: rgba(#f9ab00, 0.2),
+  $overlap-color: #a8dab5,
+  $overlap-selected-color: color.adjust($overlap-color, $lightness: -30%)
 ) {
-  $tokens: m2-datepicker.get-range-color-tokens(
-    $range-color: $range-color,
-    $comparison-color: $comparison-color,
-    $overlap-color: $overlap-color,
-    $overlap-selected-color: $overlap-selected-color,
-  );
-
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values-mixed($tokens);
-  }
+  @include overrides((
+    calendar-date-in-range-state-background-color: $range-color,
+    calendar-date-in-comparison-range-state-background-color: $comparison-color,
+    calendar-date-in-overlap-range-state-background-color: $overlap-color,
+    calendar-date-in-overlap-range-selected-state-background-color: $overlap-selected-color,
+  ));
 }
 
 /// Outputs density theme styles for the mat-datepicker.
