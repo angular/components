@@ -563,6 +563,22 @@ describe('MatSlider', () => {
     it('should set the disabled attribute on the input element', () => {
       expect(input._hostElement.disabled).toBeTrue();
     });
+
+    it('should have "auto" cursor on thumb input when slider is disabled', () => {
+      // The beforeEach already creates a DisabledSlider component fixture and detects changes.
+      // We can directly access `input` (MatSliderThumb) and its `_hostElement`.
+      // The slider is disabled by default in this setup.
+      // fixture.detectChanges() might be needed if there were any dynamic changes
+      // but here we are checking the initial state of a disabled slider.
+      // However, calling it ensures the component is stable and styles are applied.
+      const fixture = TestBed.createComponent(DisabledSlider);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const slider = sliderDebugElement.componentInstance;
+      const inputThumb = slider._getInput(_MatThumb.END) as MatSliderThumb;
+      const thumbInputElement = inputThumb._hostElement;
+      expect(getComputedStyle(thumbInputElement).cursor).toBe('auto');
+    });
   });
 
   describe('disabled range slider', () => {

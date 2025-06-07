@@ -313,6 +313,10 @@ $fallbacks: m3-slider.get-tokens();
   &.mdc-slider--disabled {
     cursor: auto;
     opacity: 0.38;
+
+    .mdc-slider__input {
+      cursor: auto;
+    }
   }
 
   .mdc-slider__thumb,
