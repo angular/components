@@ -280,6 +280,11 @@ export class MatChipGrid
       this.stateChanges.next();
     });
 
+    this.chipRemovedChanges.pipe(takeUntil(this._destroyed)).subscribe(() => {
+      this._change();
+      this.stateChanges.next();
+    });
+
     merge(this.chipFocusChanges, this._chips.changes)
       .pipe(takeUntil(this._destroyed))
       .subscribe(() => this.stateChanges.next());
@@ -423,6 +428,16 @@ export class MatChipGrid
     }
   }
 
+  /** When called, propagates the changes and update the immediately */
+  _change() {
+    if (!this.disabled) {
+      // Timeout is needed to wait for the focus() event trigger on chip input.
+      setTimeout(() => {
+        this._propagateChanges();
+      });
+    }
+  }
+
   /**
    * Removes the `tabindex` from the chip grid and resets it back afterwards, allowing the
    * user to tab out of it. This prevents the grid from capturing focus and redirecting
@@ -493,11 +508,18 @@ export class MatChipGrid
   /** Emits change event to set the model value. */
   private _propagateChanges(): void {
     const valueToEmit = this._chips.length ? this._chips.toArray().map(chip => chip.value) : [];
-    this._value = valueToEmit;
-    this.change.emit(new MatChipGridChange(this, valueToEmit));
-    this.valueChange.emit(valueToEmit);
-    this._onChange(valueToEmit);
-    this._changeDetectorRef.markForCheck();
+
+    if (
+      !this._value ||
+      this._value.length !== valueToEmit.length ||
+      !valueToEmit.every(item => this._value.includes(item))
+    ) {
+      this._value = valueToEmit;
+      this.change.emit(new MatChipGridChange(this, valueToEmit));
+      this.valueChange.emit(valueToEmit);
+      this._onChange(valueToEmit);
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /** Mark the field as touched */
