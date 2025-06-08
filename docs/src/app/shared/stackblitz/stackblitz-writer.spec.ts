@@ -1,21 +1,21 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {EXAMPLE_COMPONENTS, ExampleData, LiveExample} from '@angular/components-examples';
-import {StackBlitzWriter, TEMPLATE_FILES} from './stack-blitz-writer';
+import {StackBlitzWriter, TEMPLATE_FILES} from './stackblitz-writer';
 import stackblitz from '@stackblitz/sdk';
 
 const testExampleId = 'my-test-example-id';
 const testExampleBasePath = `/docs-content/examples-source/cdk/my-comp/${testExampleId}`;
 
 const FAKE_DOCS: {[key: string]: string} = {
-  '/assets/stack-blitz/src/index.html': '<material-docs-example></material-docs-example>',
-  '/assets/stack-blitz/src/main.ts': `import {MaterialDocsExample} from './material-docs-example';`,
+  '/assets/stackblitz/src/index.html': '<material-docs-example></material-docs-example>',
+  '/assets/stackblitz/src/main.ts': `import {MaterialDocsExample} from './material-docs-example';`,
   [`${testExampleBasePath}/test.ts`]: 'ExampleComponent',
   [`${testExampleBasePath}/test.html`]: `<example></example>`,
   [`${testExampleBasePath}/src/detail.ts`]: 'DetailComponent',
 };
 
-const TEST_URLS = TEMPLATE_FILES.map(filePath => `/assets/stack-blitz/${filePath}`).concat([
+const TEST_URLS = TEMPLATE_FILES.map(filePath => `/assets/stackblitz/${filePath}`).concat([
   `${testExampleBasePath}/test.ts`,
   `${testExampleBasePath}/test.html`,
   `${testExampleBasePath}/src/detail.ts`,

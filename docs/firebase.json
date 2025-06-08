@@ -76,7 +76,7 @@
         ]
       },
       {
-        "source": "/assets/stack-blitz/**",
+        "source": "/assets/stackblitz/**",
         "headers": [
           {
             "key": "Cache-Control",

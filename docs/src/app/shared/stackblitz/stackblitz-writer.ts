@@ -28,7 +28,7 @@ const COPYRIGHT = `Copyright ${new Date().getFullYear()} Google LLC. All Rights 
  */
 const DOCS_CONTENT_PATH = '/docs-content/examples-source';
 
-const TEMPLATE_PATH = '/assets/stack-blitz/';
+const TEMPLATE_PATH = '/assets/stackblitz/';
 
 /**
  * List of boilerplate files for an example StackBlitz.
