@@ -14,7 +14,7 @@ import {type LiveExample, loadExample} from '@angular/components-examples';
 import {CodeSnippet} from './code-snippet';
 import {normalizePath} from '../normalize-path';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
-import {StackBlitzButton} from '../stack-blitz/stack-blitz-button';
+import {StackblitzButton} from '../stackblitz/stackblitz-button';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatIconButton} from '@angular/material/button';
@@ -37,7 +37,7 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
     MatIconButton,
     MatTooltip,
     MatIcon,
-    StackBlitzButton,
+    StackblitzButton,
     MatTabGroup,
     MatTab,
     CodeSnippet,

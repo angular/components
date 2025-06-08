@@ -6,4 +6,4 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './stack-blitz-button';
+export * from './stackblitz-button';

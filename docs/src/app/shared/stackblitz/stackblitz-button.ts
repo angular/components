@@ -11,15 +11,15 @@ import {ExampleData} from '@angular/components-examples';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatTooltip} from '@angular/material/tooltip';
-import {StackBlitzWriter} from './stack-blitz-writer';
+import {StackBlitzWriter} from './stackblitz-writer';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'stack-blitz-button',
-  templateUrl: './stack-blitz-button.html',
+  selector: 'stackblitz-button',
+  templateUrl: './stackblitz-button.html',
   imports: [MatIconButton, MatTooltip, MatIcon],
 })
-export class StackBlitzButton {
+export class StackblitzButton {
   private _stackBlitzWriter = inject(StackBlitzWriter);
   private _ngZone = inject(NgZone);
   private _snackBar = inject(MatSnackBar);
