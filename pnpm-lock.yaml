@@ -264,8 +264,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0(karma@6.4.4)
       karma-jasmine:
-        specifier: ^4.0.1
-        version: 4.0.2(karma@6.4.4)
+        specifier: ^5.0.0
+        version: 5.1.0(karma@6.4.4)
       karma-parallel:
         specifier: ^0.3.1
         version: 0.3.1(karma@6.4.4)
@@ -484,11 +484,11 @@ importers:
         specifier: ^2.1.0
         version: 2.1.3
       karma-jasmine:
-        specifier: ^4.0.1
-        version: 4.0.2(karma@6.4.4)
+        specifier: ^5.0.0
+        version: 5.1.0(karma@6.4.4)
       karma-jasmine-html-reporter:
         specifier: ^1.5.4
-        version: 1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
+        version: 1.7.0(jasmine-core@5.7.1)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       light-server:
         specifier: ^2.9.1
         version: 2.9.1
@@ -5601,8 +5601,8 @@ packages:
   jasmine-core@2.8.0:
     resolution: {integrity: sha512-SNkOkS+/jMZvLhuSx1fjhcNWUC/KG6oVyFUGkSBEr9n1axSNduWU8GlI7suaHXr4yxjet6KjrUZxUTE5WzzWwQ==}
 
-  jasmine-core@3.99.1:
-    resolution: {integrity: sha512-Hu1dmuoGcZ7AfyynN3LsfruwMbxMALMka+YtZeGoLuDEySVmVAPaonkNoBRIw/ectu8b9tVQCJNgp4a4knp+tg==}
+  jasmine-core@4.6.1:
+    resolution: {integrity: sha512-VYz/BjjmC3klLJlLwA4Kw8ytk0zDSmbbDLNs794VnWmkcCB7I9aAL/D48VNQtmITyPvea2C3jdUMfc3kAoy0PQ==}
 
   jasmine-core@5.6.0:
     resolution: {integrity: sha512-niVlkeYVRwKFpmfWg6suo6H9CrNnydfBLEqefM5UjibYS+UoTjZdmvPJSiuyrRLGnFj1eYRhFd/ch+5hSlsFVA==}
@@ -5776,11 +5776,11 @@ packages:
       karma: '>=0.9'
       karma-jasmine: '>=1.1'
 
-  karma-jasmine@4.0.2:
-    resolution: {integrity: sha512-ggi84RMNQffSDmWSyyt4zxzh2CQGwsxvYYsprgyR1j8ikzIduEdOlcLvXjZGwXG/0j41KUXOWsUCBfbEHPWP9g==}
-    engines: {node: '>= 10'}
+  karma-jasmine@5.1.0:
+    resolution: {integrity: sha512-i/zQLFrfEpRyQoJF9fsCdTMOF5c2dK7C7OmsuKg2D0YSsuZSfQDiLuaiktbuio6F2wiCsZSnSnieIQ0ant/uzQ==}
+    engines: {node: '>=12'}
     peerDependencies:
-      karma: '*'
+      karma: ^6.0.0
 
   karma-parallel@0.3.1:
     resolution: {integrity: sha512-64jxNYamYi/9Y67h4+FfViSYhwDgod3rLuq+ZdZ0c3XeZFp/3q3v3HVkd8b5Czp3hCB+LLF8DIv4zlR4xFqbRw==}
@@ -14309,7 +14309,7 @@ snapshots:
 
   jasmine-core@2.8.0: {}
 
-  jasmine-core@3.99.1: {}
+  jasmine-core@4.6.1: {}
 
   jasmine-core@5.6.0: {}
 
@@ -14498,15 +14498,15 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
+  karma-jasmine-html-reporter@1.7.0(jasmine-core@5.7.1)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4):
     dependencies:
       jasmine-core: 5.7.1
       karma: 6.4.4
-      karma-jasmine: 4.0.2(karma@6.4.4)
+      karma-jasmine: 5.1.0(karma@6.4.4)
 
-  karma-jasmine@4.0.2(karma@6.4.4):
+  karma-jasmine@5.1.0(karma@6.4.4):
     dependencies:
-      jasmine-core: 3.99.1
+      jasmine-core: 4.6.1
       karma: 6.4.4
 
   karma-parallel@0.3.1(karma@6.4.4):
