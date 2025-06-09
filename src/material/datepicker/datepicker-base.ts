@@ -352,7 +352,7 @@ export interface MatDatepickerControl<D> {
   stateChanges: Observable<void>;
 }
 
-/** A datepicker that can be attached to a {@link MatDatepickerControl}. */
+/** A datepicker that can be attached to a `MatDatepickerControl`. */
 export interface MatDatepickerPanel<
   C extends MatDatepickerControl<D>,
   S,

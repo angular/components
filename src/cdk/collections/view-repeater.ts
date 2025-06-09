@@ -50,14 +50,14 @@ export type _ViewRepeaterItemContextFactory<T, R, C extends _ViewRepeaterItemCon
 ) => _ViewRepeaterItemInsertArgs<C>;
 
 /**
- * Extracts the value of an item from an {@link IterableChangeRecord}.
+ * Extracts the value of an item from an `IterableChangeRecord`.
  *
  * @template T The type for the embedded view's $implicit property.
  * @template R The type for the item in each IterableDiffer change record.
  */
 export type _ViewRepeaterItemValueResolver<T, R> = (record: IterableChangeRecord<R>) => T;
 
-/** Indicates how a view was changed by a {@link _ViewRepeater}. */
+/** Indicates how a view was changed by a `_ViewRepeater`. */
 export enum _ViewRepeaterOperation {
   /** The content of an existing view was replaced with another item. */
   REPLACED,
@@ -70,8 +70,7 @@ export enum _ViewRepeaterOperation {
 }
 
 /**
- * Meta data describing the state of a view after it was updated by a
- * {@link _ViewRepeater}.
+ * Meta data describing the state of a view after it was updated by a `_ViewRepeater`.
  *
  * @template R The type for the item in each IterableDiffer change record.
  * @template C The type for the context passed to each embedded view.
@@ -94,7 +93,7 @@ export interface _ViewRepeaterItemChange<R, C> {
 export type _ViewRepeaterItemChanged<R, C> = (change: _ViewRepeaterItemChange<R, C>) => void;
 
 /**
- * Describes a strategy for rendering items in a {@link ViewContainerRef}.
+ * Describes a strategy for rendering items in a `ViewContainerRef`.
  *
  * @template T The type for the embedded view's $implicit property.
  * @template R The type for the item in each IterableDiffer change record.
@@ -113,7 +112,7 @@ export interface _ViewRepeater<T, R, C extends _ViewRepeaterItemContext<T>> {
 }
 
 /**
- * Injection token for {@link _ViewRepeater}. This token is for use by Angular Material only.
+ * Injection token for `_ViewRepeater`. This token is for use by Angular Material only.
  * @docs-private
  */
 export const _VIEW_REPEATER_STRATEGY = new InjectionToken<

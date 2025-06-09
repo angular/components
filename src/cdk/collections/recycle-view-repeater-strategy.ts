@@ -24,7 +24,7 @@ import {
 
 /**
  * A repeater that caches views when they are removed from a
- * {@link ViewContainerRef}. When new items are inserted into the container,
+ * `ViewContainerRef`. When new items are inserted into the container,
  * the repeater will reuse one of the cached views instead of creating a new
  * embedded view. Recycling cached views reduces the quantity of expensive DOM
  * inserts.
