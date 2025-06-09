@@ -10,10 +10,13 @@ import {ListRange} from '../collections';
 import {Platform} from '../platform';
 import {
   afterNextRender,
+  ApplicationRef,
   booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
+  effect,
   ElementRef,
   inject,
   Inject,
@@ -170,8 +173,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    */
   private _renderedContentOffsetNeedsRewrite = false;
 
-  /** Whether there is a pending change detection cycle. */
-  private _isChangeDetectionPending = false;
+  private _changeDetectionNeeded = signal(false);
 
   /** A list of functions to run after the next change detection cycle. */
   private _runAfterChangeDetection: Function[] = [];
@@ -202,6 +204,17 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this.elementRef.nativeElement.classList.add('cdk-virtual-scrollable');
       this.scrollable = this;
     }
+
+    const ref = effect(
+      () => {
+        if (!this._changeDetectionNeeded()) {
+          return;
+        }
+        this._doChangeDetection();
+      },
+      {injector: inject(ApplicationRef).injector},
+    );
+    inject(DestroyRef).onDestroy(() => void ref.destroy());
   }
 
   override ngOnInit() {
@@ -488,16 +501,13 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this._runAfterChangeDetection.push(runAfter);
     }
 
-    // Use a Promise to batch together calls to `_doChangeDetection`. This way if we set a bunch of
-    // properties sequentially we only have to run `_doChangeDetection` once at the end.
-    if (!this._isChangeDetectionPending) {
-      this._isChangeDetectionPending = true;
-      this.ngZone.runOutsideAngular(() =>
-        Promise.resolve().then(() => {
-          this._doChangeDetection();
-        }),
-      );
-    }
+    this.ngZone.runOutsideAngular(() => {
+      Promise.resolve().then(() => {
+        this.ngZone.run(() => {
+          this._changeDetectionNeeded.set(true);
+        });
+      });
+    });
   }
 
   /** Run change detection. */
@@ -520,7 +530,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
       afterNextRender(
         () => {
-          this._isChangeDetectionPending = false;
+          this._changeDetectionNeeded.set(false);
           const runAfterChangeDetection = this._runAfterChangeDetection;
           this._runAfterChangeDetection = [];
           for (const fn of runAfterChangeDetection) {
