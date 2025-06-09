@@ -1,12 +1,13 @@
 @use '@angular/cdk';
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @function _hover-content-background($direction, $background-color) {
   @return linear-gradient($direction, rgba($background-color, 0), $background-color 8px);
 }
 
 @mixin color($theme) {
-  $background-color: mat.get-theme-color($theme, system, surface);
+  $background-color: map.get($theme, _mat-system, surface);
 
   // TODO: these structural styles don't belong in the `color` part of a theme.
   // We should figure out a better place for them.

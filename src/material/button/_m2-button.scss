@@ -44,7 +44,6 @@
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $is-dark: inspection.get-theme-type($theme) == dark;
-  $outline: inspection.get-theme-color($theme, system, outline);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
 
@@ -61,12 +60,12 @@
         map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
     button-filled-state-layer-color: map.get($system, on-surface),
     button-outlined-disabled-label-text-color: $disabled,
-    button-outlined-disabled-outline-color: $outline,
+    button-outlined-disabled-outline-color: map.get($system, outline),
     button-outlined-disabled-state-layer-color: map.get($system, on-surface-variant),
     button-outlined-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
     button-outlined-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
     button-outlined-label-text-color: map.get($system, on-surface),
-    button-outlined-outline-color: $outline,
+    button-outlined-outline-color: map.get($system, outline),
     button-outlined-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
     button-outlined-ripple-color: m3-utils.color-with-opacity(
         map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),

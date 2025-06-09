@@ -1,5 +1,7 @@
 @use '../core/style/elevation';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -23,11 +25,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
+  $system: m2-utils.get-system($theme);
   @return (
-    dialog-container-color: inspection.get-theme-color($theme, system, surface),
-    dialog-subhead-color: inspection.get-theme-color($theme, system, on-surface),
-    dialog-supporting-text-color: inspection.get-theme-color($theme, system, on-surface-variant),
+    dialog-container-color: map.get($system, surface),
+    dialog-subhead-color: map.get($system, on-surface),
+    dialog-supporting-text-color: map.get($system, on-surface-variant),
   );
 }
 

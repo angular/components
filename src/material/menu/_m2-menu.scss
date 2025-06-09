@@ -29,14 +29,14 @@
   $system: m2-utils.get-system($theme);
 
   @return (
-    menu-item-label-text-color: inspection.get-theme-color($theme, system, on-surface),
-    menu-item-icon-color: inspection.get-theme-color($theme, system, on-surface),
+    menu-item-label-text-color: map.get($system, on-surface),
+    menu-item-icon-color: map.get($system, on-surface),
     menu-item-hover-state-layer-color: m3-utils.color-with-opacity(
         map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
     menu-item-focus-state-layer-color: m3-utils.color-with-opacity(
         map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
-    menu-container-color: inspection.get-theme-color($theme, system, surface),
-    menu-divider-color: inspection.get-theme-color($theme, system, outline),
+    menu-container-color: map.get($system, surface),
+    menu-divider-color: map.get($system, outline),
   );
 }
 

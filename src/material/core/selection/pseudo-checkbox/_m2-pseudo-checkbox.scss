@@ -13,15 +13,14 @@
 @function get-color-tokens($theme, $color-variant) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $disabled-color: if($is-dark, #686868, #b0b0b0);
-  $checkmark-color: inspection.get-theme-color($theme, system, background);
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
 
   @return (
     pseudo-checkbox-full-selected-icon-color: map.get($system, secondary),
-    pseudo-checkbox-full-selected-checkmark-color: $checkmark-color,
+    pseudo-checkbox-full-selected-checkmark-color: map.get($system, background),
     pseudo-checkbox-full-unselected-icon-color: map.get($system, on-surface-variant),
-    pseudo-checkbox-full-disabled-selected-checkmark-color: $checkmark-color,
+    pseudo-checkbox-full-disabled-selected-checkmark-color: map.get($system, background),
     pseudo-checkbox-full-disabled-unselected-icon-color: $disabled-color,
     pseudo-checkbox-full-disabled-selected-icon-color: $disabled-color,
     pseudo-checkbox-minimal-selected-checkmark-color: map.get($system, secondary),

@@ -32,7 +32,7 @@
 
   $tokens: (
     tab-disabled-ripple-color: map.get($system, on-surface-variant),
-    tab-pagination-icon-color: inspection.get-theme-color($theme, system, on-surface),
+    tab-pagination-icon-color: map.get($system, on-surface),
     tab-inactive-label-text-color: map.get($system, on-surface-variant),
     tab-active-label-text-color: map.get($system, primary),
     tab-active-ripple-color: map.get($system, primary),
