@@ -5,17 +5,19 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {computed, signal} from '@angular/core';
+import {computed} from '@angular/core';
 import {SignalLike, WritableSignalLike} from '../signal-like/signal-like';
-import {ListFocus, ListFocusInputs, ListFocusItem} from '../list-focus/list-focus';
 
 /** Represents an item that can be expanded or collapsed. */
-export interface ExpansionItem extends ListFocusItem {
+export interface ExpansionItem {
   /** Whether the item is expandable. */
   expandable: SignalLike<boolean>;
 
   /** Used to uniquely identify an expansion item. */
   expansionId: SignalLike<string>;
+
+  /** Whether the expansion is disabled. */
+  disabled: SignalLike<boolean>;
 }
 
 export interface ExpansionControl extends ExpansionItem {}
@@ -30,10 +32,9 @@ export class ExpansionControl {
   /** Whether this item can be expanded. */
   readonly isExpandable = computed(() => this.inputs.expansionManager.isExpandable(this));
 
-  constructor(readonly inputs: ExpansionItem & {expansionManager: ListExpansion<ExpansionItem>}) {
+  constructor(readonly inputs: ExpansionItem & {expansionManager: ListExpansion}) {
     this.expansionId = inputs.expansionId;
     this.expandable = inputs.expandable;
-    this.element = inputs.element;
     this.disabled = inputs.disabled;
   }
 
@@ -54,28 +55,31 @@ export class ExpansionControl {
 }
 
 /** Represents the required inputs for an expansion behavior. */
-export interface ListExpansionInputs<T extends ExpansionItem> extends ListFocusInputs<T> {
+export interface ListExpansionInputs {
   /** Whether multiple items can be expanded at once. */
   multiExpandable: SignalLike<boolean>;
 
   /** An array of ids of the currently expanded items. */
   expandedIds: WritableSignalLike<string[]>;
+
+  /** An array of expansion items. */
+  items: SignalLike<ExpansionItem[]>;
+
+  /** Whether all expansions are disabled. */
+  disabled: SignalLike<boolean>;
 }
 
 /** Manages the expansion state of a list of items. */
-export class ListExpansion<T extends ExpansionItem> {
+export class ListExpansion {
   /** A signal holding an array of ids of the currently expanded items. */
   expandedIds: WritableSignalLike<string[]>;
 
-  /** The currently active (focused) item in the list. */
-  activeItem = computed(() => this.inputs.focusManager.activeItem());
-
-  constructor(readonly inputs: ListExpansionInputs<T> & {focusManager: ListFocus<T>}) {
-    this.expandedIds = inputs.expandedIds ?? signal([]);
+  constructor(readonly inputs: ListExpansionInputs) {
+    this.expandedIds = inputs.expandedIds;
   }
 
-  /** Opens the specified item, or the currently active item if none is specified. */
-  open(item: T = this.activeItem()) {
+  /** Opens the specified item. */
+  open(item: ExpansionItem) {
     if (!this.isExpandable(item)) return;
     if (this.isExpanded(item)) return;
     if (!this.inputs.multiExpandable()) {
@@ -84,18 +88,15 @@ export class ListExpansion<T extends ExpansionItem> {
     this.expandedIds.update(ids => ids.concat(item.expansionId()));
   }
 
-  /** Closes the specified item, or the currently active item if none is specified. */
-  close(item: T = this.activeItem()) {
+  /** Closes the specified item. */
+  close(item: ExpansionItem) {
     if (this.isExpandable(item)) {
       this.expandedIds.update(ids => ids.filter(id => id !== item.expansionId()));
     }
   }
 
-  /**
-   * Toggles the expansion state of the specified item,
-   * or the currently active item if none is specified.
-   */
-  toggle(item: T = this.activeItem()) {
+  /** Toggles the expansion state of the specified item. */
+  toggle(item: ExpansionItem) {
     this.expandedIds().includes(item.expansionId()) ? this.close(item) : this.open(item);
   }
 
@@ -116,12 +117,12 @@ export class ListExpansion<T extends ExpansionItem> {
   }
 
   /** Checks whether the specified item is expandable / collapsible. */
-  isExpandable(item: T) {
+  isExpandable(item: ExpansionItem) {
     return !this.inputs.disabled() && !item.disabled() && item.expandable();
   }
 
   /** Checks whether the specified item is currently expanded. */
-  isExpanded(item: T): boolean {
+  isExpanded(item: ExpansionItem): boolean {
     return this.expandedIds().includes(item.expansionId());
   }
 }
