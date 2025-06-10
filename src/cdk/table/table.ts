@@ -389,7 +389,7 @@ export class CdkTable<T>
   /**
    * Whether the sticky styler should recalculate cell widths when applying sticky styles. If
    * `false`, cached values will be used instead. This is only applicable to tables with
-   * {@link fixedLayout} enabled. For other tables, cell widths will always be recalculated.
+   * `_fixedLayout` enabled. For other tables, cell widths will always be recalculated.
    */
   private _forceRecalculateCellWidths = true;
 

@@ -23,7 +23,7 @@ import {
 
 /**
  * A repeater that destroys views when they are removed from a
- * {@link ViewContainerRef}. When new items are inserted into the container,
+ * `ViewContainerRef`. When new items are inserted into the container,
  * the repeater will always construct a new embedded view for each item.
  *
  * @template T The type for the embedded view's $implicit property.

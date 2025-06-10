@@ -12,7 +12,7 @@ import {CdkScrollable} from './scrollable';
 export const VIRTUAL_SCROLLABLE = new InjectionToken<CdkVirtualScrollable>('VIRTUAL_SCROLLABLE');
 
 /**
- * Extending the {@link CdkScrollable} to be used as scrolling container for virtual scrolling.
+ * Extending the `CdkScrollable` to be used as scrolling container for virtual scrolling.
  */
 @Directive()
 export abstract class CdkVirtualScrollable extends CdkScrollable {
