@@ -1,31 +1,9 @@
 @use 'sass:color';
-@use 'sass:meta';
-@use 'sass:math';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
-@use '../core/style/sass-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
-
-$_selected-fade-amount: 0.6;
-$_today-fade-amount: 0.2;
-
-// Utility that produces a range background color from a specific color.
-@function private-get-range-background-color($color) {
-  @return rgba($color, 0.2);
-}
-
-// Utility that produces the overlap selected color from an overlap color.
-@function private-get-default-overlap-selected-color($overlap-color) {
-  @return color.adjust($overlap-color, $lightness: -30%);
-}
-
-// Default range comparison color.
-$private-default-comparison-color: private-get-range-background-color(#f9ab00);
-
-// Default range overlap color.
-$private-default-overlap-color: #a8dab5;
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -39,61 +17,50 @@ $private-default-overlap-color: #a8dab5;
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
-
-  $inactive-icon-color: inspection.get-theme-color($theme, foreground, icon);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
-  $hint-text-color: inspection.get-theme-color($theme, foreground, hint-text);
-  $preview-outline-color: map.get($system, outline);
-  $today-disabled-outline-color: null;
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $system: m2-utils.get-system($theme);
 
-  $primary-color: map.get($system, primary);
-  $range-tokens: get-range-color-tokens(private-get-range-background-color($primary-color));
-  $calendar-tokens: private-get-calendar-color-palette-color-tokens($theme, primary);
-  $toggle-tokens: private-get-toggle-color-palette-color-tokens($theme, primary);
+  @return (
+    datepicker-calendar-date-in-range-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 20%),
+    datepicker-calendar-date-in-comparison-range-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, secondary), 20%),
+    datepicker-calendar-date-in-overlap-range-state-background-color: #a8dab5,
+    datepicker-calendar-date-in-overlap-range-selected-state-background-color:
+        color.adjust(#a8dab5, $lightness: -30%),
+    datepicker-calendar-date-selected-state-text-color: map.get($system, on-primary),
+    datepicker-calendar-date-selected-state-background-color: map.get($system, primary),
+    datepicker-calendar-date-selected-disabled-state-background-color:
+        m3-utils.color-with-opacity(map.get($system, primary), 38%),
+    datepicker-calendar-date-today-selected-state-outline-color: map.get($system, on-primary),
+    datepicker-calendar-date-focus-state-background-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, focus-state-layer-opacity)),
+    datepicker-calendar-date-hover-state-background-color: m3-utils.color-with-opacity(
+        map.get($system, primary), map.get($system, hover-state-layer-opacity)),
 
-  // The divider color is set under the assumption that it'll be used
-  // for a solid border, but because we're using a dashed border for the
-  // preview range, we need to bump its opacity to ensure that it's visible.
-  @if meta.type-of($preview-outline-color) == color {
-    $preview-outline-opacity: math.min(color.opacity($preview-outline-color) * 2, 1);
-    $preview-outline-color: rgba($preview-outline-color, $preview-outline-opacity);
-  }
-
-  @if (meta.type-of($hint-text-color) == color) {
-    $today-disabled-outline-color: color.adjust($hint-text-color, $alpha: -$_today-fade-amount);
-  }
-  @else {
-    $today-disabled-outline-color: $disabled;
-  }
-
-  @return sass-utils.merge-all($calendar-tokens, $toggle-tokens, $range-tokens, (
+    datepicker-toggle-active-state-icon-color: map.get($system, primary),
     datepicker-toggle-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-body-label-text-color: map.get($system, on-surface-variant),
-    datepicker-calendar-period-button-text-color:
-        inspection.get-theme-color($theme, foreground, base),
+    datepicker-calendar-period-button-text-color: map.get($system, on-surface),
     datepicker-calendar-period-button-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-navigation-button-icon-color: map.get($system, on-surface-variant),
     datepicker-calendar-header-divider-color: map.get($system, outline),
     datepicker-calendar-header-text-color: map.get($system, on-surface-variant),
 
-    // Note: though it's not text, the border is a hint about the fact
-    // that this is today's date, so we use the hint color.
-    datepicker-calendar-date-today-outline-color: $hint-text-color,
-    datepicker-calendar-date-today-disabled-state-outline-color: $today-disabled-outline-color,
+    datepicker-calendar-date-today-outline-color: map.get($system, on-surface-variant),
+    datepicker-calendar-date-today-disabled-state-outline-color: $disabled,
     datepicker-calendar-date-text-color: map.get($system, on-surface),
     datepicker-calendar-date-outline-color: transparent,
     datepicker-calendar-date-disabled-state-text-color: $disabled,
-    datepicker-calendar-date-preview-state-outline-color: $preview-outline-color,
+    datepicker-calendar-date-preview-state-outline-color: map.get($system, on-surface-variant),
     datepicker-range-input-separator-color: map.get($system, on-surface),
     datepicker-range-input-disabled-state-separator-color: $disabled,
     datepicker-range-input-disabled-state-text-color: $disabled,
     datepicker-calendar-container-background-color: map.get($system, surface),
     datepicker-calendar-container-text-color: map.get($system, on-surface),
-  ));
+  );
 }
 
 // Tokens that can be configured through Angular Material's typography theming API.
@@ -121,56 +88,6 @@ $private-default-overlap-color: #a8dab5;
         inspection.get-theme-typography($theme, body-1, font-weight),
   );
 }
-
-// Gets the tokens map that can be used to override the range colors.
-@function get-range-color-tokens(
-  $range-color,
-  $comparison-color: $private-default-comparison-color,
-  $overlap-color: $private-default-overlap-color,
-  $overlap-selected-color: private-get-default-overlap-selected-color($overlap-color)) {
-
-  @return (
-    datepicker-calendar-date-in-range-state-background-color: $range-color,
-    datepicker-calendar-date-in-comparison-range-state-background-color: $comparison-color,
-    datepicker-calendar-date-in-overlap-range-state-background-color: $overlap-color,
-    datepicker-calendar-date-in-overlap-range-selected-state-background-color:
-        $overlap-selected-color,
-  );
-}
-
-@function private-get-calendar-color-palette-color-tokens($theme, $color-variant) {
-  $system: m2-utils.get-system($theme);
-  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
-
-  $palette-color: map.get($system, primary);
-  $default-contrast: map.get($system, on-primary);
-  $active-background-color: m3-utils.color-with-opacity(map.get($system, primary), 30%);
-  $active-disabled-color: null;
-
-  @if (meta.type-of($palette-color) == color) {
-    $active-disabled-color: color.adjust($palette-color, $alpha: -$_selected-fade-amount);
-  }
-  @else {
-    $active-disabled-color: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
-  }
-
-  @return (
-    datepicker-calendar-date-selected-state-text-color: $default-contrast,
-    datepicker-calendar-date-selected-state-background-color: $palette-color,
-    datepicker-calendar-date-selected-disabled-state-background-color: $active-disabled-color,
-    datepicker-calendar-date-today-selected-state-outline-color: $default-contrast,
-    datepicker-calendar-date-focus-state-background-color: $active-background-color,
-    datepicker-calendar-date-hover-state-background-color: $active-background-color,
-  );
-}
-
-@function private-get-toggle-color-palette-color-tokens($theme, $palette-name) {
-  @return (
-    datepicker-toggle-active-state-icon-color:
-        inspection.get-theme-color($theme, $palette-name, text),
-  );
-}
-
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
