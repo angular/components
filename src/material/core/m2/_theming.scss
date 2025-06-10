@@ -223,9 +223,9 @@
   $theme: _internalize-theme(
       theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
   );
-  $primary: map.get($result, primary) or map.get($result, color, primary);
-  $accent: map.get($result, accent) or map.get($result, color, accent);
-  $warn: map.get($result, warn) or map.get($result, color, warn);
+  $primary: map.get($result, primary) or map.get($result, color, primary) or ();
+  $accent: map.get($result, accent) or map.get($result, color, accent) or ();
+  $warn: map.get($result, warn) or map.get($result, color, warn) or ();
   $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
   @return $theme;
 }

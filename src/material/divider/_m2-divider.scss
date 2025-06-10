@@ -12,7 +12,6 @@
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
-
   @return (
     divider-color: map.get($system, outline)
   );
