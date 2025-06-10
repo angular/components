@@ -202,6 +202,7 @@
   $primary: map.get($result, primary) or map.get($result, color, primary) or ();
   $accent: map.get($result, accent) or map.get($result, color, accent) or ();
   $warn: map.get($result, warn) or map.get($result, color, warn) or ();
+  $typography: map.get($result, typography) or ();
   $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
   @return $theme;
 }
