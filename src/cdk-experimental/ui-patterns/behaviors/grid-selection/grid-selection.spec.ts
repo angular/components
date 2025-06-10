@@ -681,6 +681,15 @@ describe('GridSelection', () => {
       gridSelection.deselectAll();
       expect(gridSelection.inputs.value()).toEqual(['(0,0)']);
     });
+
+    it('should deselect values that are not in the grid', () => {
+      const {gridSelection} = createGridSelection({
+        cells: gridA,
+        value: signal(['(4,4)', '(5,5)']),
+      });
+      gridSelection.deselectAll();
+      expect(gridSelection.inputs.value()).toEqual([]);
+    });
   });
 
   describe('toggleAll()', () => {

@@ -85,9 +85,12 @@ export class GridSelection<T extends GridSelectionCell<V>, V> {
 
   /** Deselects all items in the grid. */
   deselectAll() {
-    for (const row of this.inputs.cells()) {
-      for (const cell of row) {
-        this.deselect(cell);
+    const cells = this.inputs.cells().flat();
+    cells.forEach(cell => this.deselect(cell));
+
+    for (const value of this.inputs.value()) {
+      if (!cells.some(cell => cell.value() === value)) {
+        this.inputs.value.update(values => values.filter(v => v !== value));
       }
     }
   }
