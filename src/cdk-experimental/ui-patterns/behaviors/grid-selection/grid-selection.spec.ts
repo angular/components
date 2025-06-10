@@ -248,7 +248,7 @@ describe('GridSelection', () => {
     });
 
     it('should deselect one cell when multiple are selected', () => {
-      const {gridFocus, gridSelection} = createGridSelection({
+      const {gridSelection} = createGridSelection({
         cells: gridA,
         activeCoords: signal({row: 0, col: 0}),
         value: signal(['(0,0)', '(1,1)']),
