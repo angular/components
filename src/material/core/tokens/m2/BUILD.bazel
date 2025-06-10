@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sass_library(
+    name = "m2",
+    srcs = [
+        "_index.scss",
+        "_md-sys-color.scss",
+        "_md-sys-elevation.scss",
+        "_md-sys-motion.scss",
+        "_md-sys-shape.scss",
+        "_md-sys-state.scss",
+        "_md-sys-typescale.scss",
+    ],
+    deps = [
+        "//src/material/core/m2:palette",
+    ],
+)
