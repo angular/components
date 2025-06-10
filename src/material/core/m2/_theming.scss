@@ -113,53 +113,22 @@
   @return $theme;
 }
 
-// Creates a light-themed color configuration from the specified
-// primary, accent and warn palettes.
-@function _mat-create-light-color-config($primary, $accent, $warn: null) {
-  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
-  @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: false,
-    foreground: palette.$light-theme-foreground-palette,
-    background: palette.$light-theme-background-palette,
-    system: (
-      surface: white,
-      surface-variant: #f6f6f6,
-      on-surface: rgba(black, 0.87),
-      on-surface-variant: rgba(black, 0.54),
-      background: map.get(palette.$grey-palette, 50),
-      inverse-surface: map.get(palette.$grey-palette, 800),
-      inverse-on-surface: white,
-      outline: rgba(black, 0.12),
-      outline-variant: rgba(black, 0.38),
-      hover-state-layer-opacity: 0.04,
-      focus-state-layer-opacity: 0.12,
-      pressed-state-layer-opacity: 0.12,
-      shadow: black,
-      primary: map.get($primary, default),
-      on-primary: map.get($primary, default-contrast),
-      secondary: map.get($accent, default),
-      on-secondary: map.get($accent, default-contrast),
-      error: map.get($warn, default),
-      on-error: map.get($warn, default-contrast),
-    ),
+@function _define-system($primary, $accent, $warn, $is-dark) {
+  $system: (
+    primary: map.get($primary, default),
+    on-primary: map.get($primary, default-contrast),
+    secondary: map.get($accent, default),
+    on-secondary: map.get($accent, default-contrast),
+    error: map.get($warn, default),
+    on-error: map.get($warn, default-contrast),
+    shadow: black,
+    hover-state-layer-opacity: 0.04,
+    focus-state-layer-opacity: 0.12,
+    pressed-state-layer-opacity: 0.12,
   );
-}
 
-// Creates a dark-themed color configuration from the specified
-// primary, accent and warn palettes.
-@function _mat-create-dark-color-config($primary, $accent, $warn: null) {
-  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
-  @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: true,
-    foreground: palette.$dark-theme-foreground-palette,
-    background: palette.$dark-theme-background-palette,
-    system: (
+  @if $is-dark {
+    @return map.merge($system, (
       surface: map.get(palette.$grey-palette, 800),
       surface-variant: #4a4a4a,
       on-surface: white,
@@ -169,27 +138,46 @@
       inverse-on-surface: rgba(black, 0.87),
       outline: rgba(white, 0.12),
       outline-variant: rgba(white, 0.38),
-      hover-state-layer-opacity: 0.04,
-      focus-state-layer-opacity: 0.12,
-      pressed-state-layer-opacity: 0.12,
-      shadow: black,
-      primary: map.get($primary, default),
-      on-primary: map.get($primary, default-contrast),
-      secondary: map.get($accent, default),
-      on-secondary: map.get($accent, default-contrast),
-      error: map.get($warn, default),
-      on-error: map.get($warn, default-contrast),
-    ),
+    ));
+  } @else {
+    @return map.merge($system, (
+      surface: white,
+      surface-variant: #f6f6f6,
+      on-surface: rgba(black, 0.87),
+      on-surface-variant: rgba(black, 0.54),
+      background: map.get(palette.$grey-palette, 50),
+      inverse-surface: map.get(palette.$grey-palette, 800),
+      inverse-on-surface: white,
+      outline: rgba(black, 0.12),
+      outline-variant: rgba(black, 0.38),
+    ));
+  }
+}
+
+// Creates a color configuration from the specified
+// primary, accent and warn palettes.
+@function _mat-create-color-config($primary, $accent, $warn: null, $is-dark) {
+  $warn: if($warn != null, $warn, define-palette(palette.$red-palette));
+  $foreground:
+      if($is-dark, palette.$dark-theme-foreground-palette, palette.$light-theme-foreground-palette);
+  $background:
+      if($is-dark, palette.$dark-theme-background-palette, palette.$light-theme-background-palette);
+
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: $is-dark,
+    foreground: $foreground,
+    background: $background,
   );
 }
 
-// TODO: Remove legacy API and rename `$primary` below to `$config`. Currently it cannot be renamed
-// as it would break existing apps that set the parameter by name.
-
-/// Creates a container object for a light theme to be given to individual component theme mixins.
+/// Creates a container object for a theme to be given to individual component theme mixins.
 /// @param {Map} $primary The theme configuration object.
 /// @returns {Map} A complete Angular Material theme map.
-@function define-light-theme($primary, $accent: null, $warn: define-palette(palette.$red-palette)) {
+@function _define-theme(
+    $primary, $accent: null, $warn: define-palette(palette.$red-palette), $is-dark) {
   // This function creates a container object for the individual component theme mixins. Consumers
   // can construct such an object by calling this function, or by building the object manually.
   // There are two possible ways to invoke this function in order to create such an object:
@@ -206,13 +194,15 @@
   @if $accent != null {
     @warn theming.$private-legacy-theme-warning;
     $theme: _mat-validate-theme(
-      (
-        _is-legacy-theme: true,
-        color: _mat-create-light-color-config($primary, $accent, $warn),
-      )
+        (
+          _is-legacy-theme: true,
+          color: _mat-create-color-config($primary, $accent, $warn, $is-dark),
+        )
     );
 
-    @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
+    $theme: _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
+    $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
+    @return $theme;
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
   // parts of the theming system, but update the `color` configuration if set. As explained
@@ -224,15 +214,30 @@
     $accent: map.get($color-settings, accent);
     $warn: map.get($color-settings, warn);
     $result: map.merge(
-      $result,
-      (
-        color: _mat-create-light-color-config($primary, $accent, $warn),
-      )
+        $result,
+        (
+          color: _mat-create-color-config($primary, $accent, $warn, $is-dark),
+        )
     );
   }
-  @return _internalize-theme(
-    theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
+  $theme: _internalize-theme(
+      theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
   );
+  $primary: map.get($result, primary) or map.get($result, color, primary) or ();
+  $accent: map.get($result, accent) or map.get($result, color, accent) or ();
+  $warn: map.get($result, warn) or map.get($result, color, warn) or ();
+  $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
+  @return $theme;
+}
+
+// TODO: Remove legacy API and rename `$primary` below to `$config`. Currently it cannot be renamed
+// as it would break existing apps that set the parameter by name.
+
+/// Creates a container object for a light theme to be given to individual component theme mixins.
+/// @param {Map} $primary The theme configuration object.
+/// @returns {Map} A complete Angular Material theme map.
+@function define-light-theme($primary, $accent: null, $warn: define-palette(palette.$red-palette)) {
+  @return _define-theme($primary, $accent, $warn, false);
 }
 
 // TODO: Remove legacy API and rename below `$primary` to `$config`. Currently it cannot be renamed
@@ -242,48 +247,7 @@
 /// @param {Map} $primary The theme configuration object.
 /// @returns {Map} A complete Angular Material theme map.
 @function define-dark-theme($primary, $accent: null, $warn: define-palette(palette.$red-palette)) {
-  // This function creates a container object for the individual component theme mixins. Consumers
-  // can construct such an object by calling this function, or by building the object manually.
-  // There are two possible ways to invoke this function in order to create such an object:
-  //
-  //    (1) Passing in a map that holds optional configurations for individual parts of the
-  //        theming system. For `color` configurations, the function only expects the palettes
-  //        for `primary` and `accent` (and optionally `warn`). The function will expand the
-  //        shorthand into an actual configuration that can be consumed in `-color` mixins.
-  //    (2) Legacy pattern: Passing in the palettes as parameters. This is not as flexible
-  //        as passing in a configuration map because only the `color` system can be configured.
-  //
-  // If the legacy pattern is used, we generate a container object only with a dark-themed
-  // configuration for the `color` theming part.
-  @if $accent != null {
-    @warn theming.$private-legacy-theme-warning;
-    $theme: _mat-validate-theme(
-      (
-        _is-legacy-theme: true,
-        color: _mat-create-dark-color-config($primary, $accent, $warn),
-      )
-    );
-    @return _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
-  }
-  // If the map pattern is used (1), we just pass-through the configurations for individual
-  // parts of the theming system, but update the `color` configuration if set. As explained
-  // above, the color shorthand will be expanded to an actual dark-themed color configuration.
-  $result: $primary;
-  @if map.get($primary, color) {
-    $color-settings: map.get($primary, color);
-    $primary: map.get($color-settings, primary);
-    $accent: map.get($color-settings, accent);
-    $warn: map.get($color-settings, warn);
-    $result: map.merge(
-      $result,
-      (
-        color: _mat-create-dark-color-config($primary, $accent, $warn),
-      )
-    );
-  }
-  @return _internalize-theme(
-    theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
-  );
+  @return _define-theme($primary, $accent, $warn, true);
 }
 
 /// Gets the color configuration from the given theme or configuration.

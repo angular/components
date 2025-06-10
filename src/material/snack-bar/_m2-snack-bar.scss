@@ -14,7 +14,6 @@
 @function get-color-tokens($theme) {
   $is-dark: inspection.get-theme-type($theme) == dark;
   $system: m2-utils.get-system($theme);
-  $surface: inspection.get-theme-color($theme, system, surface);
 
   @return (
     snack-bar-container-color: map.get($system, inverse-surface),

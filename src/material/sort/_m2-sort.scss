@@ -1,4 +1,5 @@
-@use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -8,8 +9,10 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
-    sort-arrow-color: inspection.get-theme-color($theme, system, on-surface),
+    sort-arrow-color: map.get($system, on-surface),
   );
 }
 

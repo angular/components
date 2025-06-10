@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -10,9 +11,11 @@
 
 // Tokens that can be configured through Angular Material's color theming API.
 @function get-color-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
-    tree-container-background-color: inspection.get-theme-color($theme, system, surface),
-    tree-node-text-color: inspection.get-theme-color($theme, system, on-surface),
+    tree-container-background-color: map.get($system, surface),
+    tree-node-text-color: map.get($system, on-surface),
   );
 }
 

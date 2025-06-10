@@ -33,8 +33,8 @@
   @return map.merge($color-tokens, (
     // MDC has a token for the enabled placeholder, but not for the disabled one.
     form-field-disabled-input-text-placeholder-color: $disabled,
-    form-field-state-layer-color: inspection.get-theme-color($theme, system, on-surface),
-    form-field-error-text-color: inspection.get-theme-color($theme, warn),
+    form-field-state-layer-color: map.get($system, on-surface),
+    form-field-error-text-color: map.get($system, error),
 
     // On dark themes we set the native `select` color to some shade of white,
     // however the color propagates to all of the `option` elements, which are

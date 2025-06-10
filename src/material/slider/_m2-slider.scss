@@ -46,8 +46,7 @@
       slider-label-label-text-color: map.get($system, inverse-on-surface),
       slider-value-indicator-opacity: 1,
       slider-with-overlap-handle-outline-color: map.get($system, on-surface),
-      slider-with-tick-marks-disabled-container-color:
-          inspection.get-theme-color($theme, system, on-surface),
+      slider-with-tick-marks-disabled-container-color: map.get($system, on-surface),
     ),
   );
 }

@@ -17,7 +17,7 @@
 
   @return (
     option-selected-state-label-text-color: map.get($system, primary),
-    option-label-text-color: inspection.get-theme-color($theme, system, on-surface),
+    option-label-text-color: map.get($system, on-surface),
     option-hover-state-layer-color: m3-utils.color-with-opacity(
         map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
     option-focus-state-layer-color: m3-utils.color-with-opacity(

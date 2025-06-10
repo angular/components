@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @mixin color($theme) {
   $resizable-hover-divider: mat.get-theme-color($theme, primary, 600);
@@ -64,7 +65,7 @@
 
     .mat-header-cell:not(.mat-resizable)::after,
     .mat-mdc-header-cell:not(.mat-resizable)::after {
-      background: mat.get-theme-color($theme, system, outline);
+      background: map.get($theme, _mat-system, outline);
     }
 
     .mat-resizable-handle {
@@ -72,7 +73,7 @@
     }
 
     .cdk-resizable-resize-disabled > .mat-resizable-handle {
-      background: mat.get-theme-color($theme, system, outline);
+      background: map.get($theme, _mat-system, outline);
     }
   }
 
