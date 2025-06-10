@@ -115,8 +115,7 @@ export class GridSelection<T extends GridSelectionCell<V>, V> {
 
   /** Selects all non-disabled items in the grid. */
   selectAll() {
-    const allItems: T[] = [];
-    this.inputs.cells().forEach(row => row.forEach(cell => allItems.push(cell)));
+    const allItems: T[] = this.inputs.cells().flat();
 
     for (const item of allItems) {
       if (!item.disabled() && !this.inputs.value().includes(item.value())) {
