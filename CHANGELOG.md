@@ -1,3 +1,14 @@
+<a name="20.0.3"></a>
+# 20.0.3 "plastic-tube" (2025-06-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [13e661e5c6](https://github.com/angular/components/commit/13e661e5c65f7b42b234f63bc9cdf2f4389ce4ba) | fix | **core:** output tokens from theme under same selector ([#31295](https://github.com/angular/components/pull/31295)) |
+| [567ddbe84c](https://github.com/angular/components/commit/567ddbe84c3821c41bc3334a7317c70d885bc114) | fix | **radio:** color tokens excluded when passing in variant ([#31321](https://github.com/angular/components/pull/31321)) |
+| [af811091cd](https://github.com/angular/components/commit/af811091cdf23fd713a0ace6c02143cce746edfa) | fix | **slider:** ensure disabled slider thumb input has 'auto' c… ([#31311](https://github.com/angular/components/pull/31311)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.0-next.0"></a>
 # 20.1.0-next.0 "amicite-amp" (2025-06-04)
 ### cdk
