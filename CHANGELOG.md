@@ -1,3 +1,33 @@
+<a name="20.1.0-next.1"></a>
+# 20.1.0-next.1 "plastic-straw" (2025-06-11)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8523397fd2](https://github.com/angular/components/commit/8523397fd29a1cb5c08c88420367d0def020bf12) | fix | **button:** prevents mat-icon being cut off by text-spacing ([#30891](https://github.com/angular/components/pull/30891)) |
+| [0d47628d2e](https://github.com/angular/components/commit/0d47628d2eb1a5d72198769fbc7cfb978c8074d6) | fix | **button:** use system colors for state layers and text ([#31278](https://github.com/angular/components/pull/31278)) |
+| [458a17ba46](https://github.com/angular/components/commit/458a17ba4680cc4ed90965f2a71f655699f2bc11) | fix | **checkbox:** update tokens to system colors ([#31279](https://github.com/angular/components/pull/31279)) |
+| [be48108bc2](https://github.com/angular/components/commit/be48108bc2b0939af496c8e82482b4b7326ef85d) | fix | **chips:** update tokens to system colors ([#31280](https://github.com/angular/components/pull/31280)) |
+| [21df04e787](https://github.com/angular/components/commit/21df04e78743ac961bdb8d8e309417a80842238b) | fix | **core:** output tokens from theme under same selector ([#31295](https://github.com/angular/components/pull/31295)) |
+| [576a008b09](https://github.com/angular/components/commit/576a008b09ce377da892fbd54720947269deb6c6) | fix | **core:** remove unused form field mixins ([#31283](https://github.com/angular/components/pull/31283)) |
+| [4d67427cef](https://github.com/angular/components/commit/4d67427cef1442f2c66feb821a2f2cf20a01001b) | fix | **core:** update ripple tokens to system colors ([#31282](https://github.com/angular/components/pull/31282)) |
+| [28f2763f96](https://github.com/angular/components/commit/28f2763f96427239514b03a87ad6543c7bf1ce98) | fix | **core:** update tokens to system colors ([#31281](https://github.com/angular/components/pull/31281)) |
+| [009424c73e](https://github.com/angular/components/commit/009424c73ec97769edbed440336d0e7386c49d13) | fix | **datepicker:** use system colors ([#31300](https://github.com/angular/components/pull/31300)) |
+| [918b625438](https://github.com/angular/components/commit/918b6254385ef35c6d95621f6c0c04f294974710) | fix | **list:** update tokens to system colors ([#31284](https://github.com/angular/components/pull/31284)) |
+| [623030b50d](https://github.com/angular/components/commit/623030b50df52162e4a5c931b6d12226c44a4897) | fix | **menu:** update tokens to system colors ([#31285](https://github.com/angular/components/pull/31285)) |
+| [0f26b91425](https://github.com/angular/components/commit/0f26b91425b5b7f34fdabf877e0f84929a6c8032) | fix | **paginator:** update tokens to system colors ([#31286](https://github.com/angular/components/pull/31286)) |
+| [3f7d2778fb](https://github.com/angular/components/commit/3f7d2778fb0cae09a49802102ad6c994984ddb93) | fix | **radio:** color tokens excluded when passing in variant ([#31321](https://github.com/angular/components/pull/31321)) |
+| [010122ff2a](https://github.com/angular/components/commit/010122ff2adebb7f7b6aff330044591ff771a966) | fix | **select:** use system color for arrow ([#31302](https://github.com/angular/components/pull/31302)) |
+| [9ce023d977](https://github.com/angular/components/commit/9ce023d9771b07229df59c6aa360ae0462980b60) | fix | **slider:** ensure disabled slider thumb input has 'auto' c… ([#31311](https://github.com/angular/components/pull/31311)) |
+| [029e39cced](https://github.com/angular/components/commit/029e39ccedc01e931f4a2dc762b26bc8c87ec857) | fix | **slider:** use system color ([#31305](https://github.com/angular/components/pull/31305)) |
+| [951f37e656](https://github.com/angular/components/commit/951f37e6564c5d0701acdad992b0e0ca23b99882) | fix | **tabs:** update tokens to system colors ([#31287](https://github.com/angular/components/pull/31287)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c5b2f0ac6d](https://github.com/angular/components/commit/c5b2f0ac6d40cc3dde466a925328c66cd7ff77ed) | feat | **ui-patterns:** create grid navigation behavior ([#31290](https://github.com/angular/components/pull/31290)) |
+| [70841dbb5b](https://github.com/angular/components/commit/70841dbb5bc4d356d017f8dd944a89f52a8bbcc9) | feat | **ui-patterns:** tree ([#31308](https://github.com/angular/components/pull/31308)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.3"></a>
 # 20.0.3 "plastic-tube" (2025-06-11)
 ### material
