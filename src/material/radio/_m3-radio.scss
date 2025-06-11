@@ -47,7 +47,7 @@
   // Temporary removal where color variants previously did not include the
   // unselected icon color. Remove this and approve internal screenshot changes.
   @if $color-variant {
-    $tokens: map.remove($tokens, color, radio-unselected-icon-color);
+    $tokens: map.deep-remove($tokens, color, radio-unselected-icon-color);
   }
 
   @return $tokens;
