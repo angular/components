@@ -26,10 +26,9 @@
     stepper-header-label-text-color: map.get($system, on-surface-variant),
     stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
     stepper-header-selected-state-label-text-color: map.get($system, on-surface),
-    stepper-header-error-state-label-text-color: inspection.get-theme-color($theme, warn, text),
+    stepper-header-error-state-label-text-color: map.get($system, error),
     stepper-header-icon-background-color: map.get($system, on-surface-variant),
-    stepper-header-error-state-icon-foreground-color:
-        inspection.get-theme-color($theme, warn, text),
+    stepper-header-error-state-icon-foreground-color: map.get($system, error),
     stepper-header-error-state-icon-background-color: transparent,
   ));
 }
