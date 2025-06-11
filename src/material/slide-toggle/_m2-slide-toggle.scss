@@ -3,6 +3,7 @@
 @use '../core/theming/theming';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -17,7 +18,7 @@
   // The m2 slide-toggle uses transforms to hide & show the tracks while
   // the m3 slide-toggle uses opacity.
   @return (
-    slide-toggle-disabled-handle-opacity: null,
+    slide-toggle-disabled-handle-opacity: 0.38,
     slide-toggle-disabled-selected-handle-opacity: 0.38,
     slide-toggle-disabled-selected-icon-opacity: 0.38,
     slide-toggle-disabled-track-opacity: 0.12,
@@ -65,68 +66,53 @@
 @function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
 
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $on-surface: if($is-dark, #f5f5f5, #424242);
-  $hairline: if($is-dark, #616161, #e0e0e0);
-  $on-surface-variant: if($is-dark, #9e9e9e, #616161);
-  $on-surface-state-content: if($is-dark, #fafafa, #212121);
-  $disabled-handle-color: if($is-dark, #000, #424242);
-  $icon-color: if($is-dark, #212121, #fff);
-
-  // The default for tokens that rely on the theme will use the primary palette
-  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-
-  // TODO(crisbeto): `handle-surface-color` was hardcoded to `var(--mat-surface-color, #fff)`
-  // which made it basically hardcoded to #fff. Should it be based on the theme?
   @return map.merge(
-      $theme-color-tokens,
+      private-get-color-palette-color-tokens($theme, primary),
       (
         slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
-        slide-toggle-disabled-selected-handle-color: $disabled-handle-color,
-        slide-toggle-disabled-selected-icon-color: $icon-color,
-        slide-toggle-disabled-selected-track-color: $on-surface,
-        slide-toggle-disabled-unselected-handle-color: $disabled-handle-color,
-        slide-toggle-disabled-unselected-icon-color: $icon-color,
-        slide-toggle-disabled-unselected-track-color: $on-surface,
+        slide-toggle-disabled-selected-handle-color: map.get($system, on-surface),
+        slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
+        slide-toggle-disabled-unselected-handle-color: map.get($system, on-surface),
+        slide-toggle-disabled-unselected-icon-color: map.get($system, surface-variant),
+        slide-toggle-disabled-unselected-track-color: map.get($system, on-surface),
         slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
-        slide-toggle-handle-surface-color: #fff,
+        slide-toggle-handle-surface-color: map.get($system, surface),
         slide-toggle-label-text-color: map.get($system, on-surface),
-        slide-toggle-selected-icon-color: $icon-color,
-        slide-toggle-unselected-hover-handle-color: $on-surface-state-content,
-        slide-toggle-unselected-focus-handle-color: $on-surface-state-content,
-        slide-toggle-unselected-focus-state-layer-color: $on-surface,
-        slide-toggle-unselected-focus-track-color: $hairline,
-        slide-toggle-unselected-icon-color: $icon-color,
-        slide-toggle-unselected-handle-color: $on-surface-variant,
-        slide-toggle-unselected-hover-state-layer-color: $on-surface,
-        slide-toggle-unselected-hover-track-color: $hairline,
-        slide-toggle-unselected-pressed-handle-color: $on-surface-state-content,
-        slide-toggle-unselected-pressed-track-color: $hairline,
-        slide-toggle-unselected-pressed-state-layer-color: $on-surface,
-        slide-toggle-unselected-track-color: $hairline,
+        slide-toggle-unselected-hover-handle-color: map.get($system, inverse-surface),
+        slide-toggle-unselected-focus-handle-color: map.get($system, inverse-surface),
+        slide-toggle-unselected-focus-state-layer-color: map.get($system, on-surface),
+        slide-toggle-unselected-focus-track-color: map.get($system, outline),
+        slide-toggle-unselected-icon-color: map.get($system, surface-variant),
+        slide-toggle-unselected-handle-color: map.get($system, on-surface-variant),
+        slide-toggle-unselected-hover-state-layer-color: map.get($system, on-surface),
+        slide-toggle-unselected-hover-track-color: map.get($system, outline),
+        slide-toggle-unselected-pressed-handle-color: map.get($system, inverse-surface),
+        slide-toggle-unselected-pressed-track-color: map.get($system, outline),
+        slide-toggle-unselected-pressed-state-layer-color: map.get($system, on-surface),
+        slide-toggle-unselected-track-color: map.get($system, outline),
       )
   );
 }
 
 // Generates the mapping for the properties that change based on the slide toggle color.
-@function private-get-color-palette-color-tokens($theme, $palette-name) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
-  $palette-color: inspection.get-theme-color($theme, $palette-name, if($is-dark, 300, 600));
-  $state-content: inspection.get-theme-color($theme, $palette-name, if($is-dark, 200, 900));
-  $inverse: inspection.get-theme-color($theme, $palette-name, if($is-dark, 600, 300));
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  $system: m2-utils.get-system($theme);
+  $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    slide-toggle-selected-focus-state-layer-color: $palette-color,
-    slide-toggle-selected-handle-color: $palette-color,
-    slide-toggle-selected-hover-state-layer-color: $palette-color,
-    slide-toggle-selected-pressed-state-layer-color: $palette-color,
-    slide-toggle-selected-focus-handle-color: $state-content,
-    slide-toggle-selected-hover-handle-color: $state-content,
-    slide-toggle-selected-pressed-handle-color: $state-content,
-    slide-toggle-selected-focus-track-color: $inverse,
-    slide-toggle-selected-hover-track-color: $inverse,
-    slide-toggle-selected-pressed-track-color: $inverse,
-    slide-toggle-selected-track-color: $inverse,
+    slide-toggle-selected-icon-color: map.get($system, on-primary),
+    slide-toggle-disabled-selected-icon-color: map.get($system, on-primary),
+    slide-toggle-selected-focus-state-layer-color: map.get($system, primary),
+    slide-toggle-selected-handle-color: map.get($system, primary),
+    slide-toggle-selected-hover-state-layer-color: map.get($system, primary),
+    slide-toggle-selected-pressed-state-layer-color: map.get($system, primary),
+    slide-toggle-selected-focus-handle-color: map.get($system, primary),
+    slide-toggle-selected-hover-handle-color: map.get($system, primary),
+    slide-toggle-selected-pressed-handle-color: map.get($system, primary),
+    slide-toggle-selected-focus-track-color: map.get($system, inverse-primary),
+    slide-toggle-selected-hover-track-color: map.get($system, inverse-primary),
+    slide-toggle-selected-pressed-track-color: map.get($system, inverse-primary),
+    slide-toggle-selected-track-color: map.get($system, inverse-primary),
   );
 }
 

@@ -8,6 +8,7 @@
   $system: map.set($system, on-#{$color}-container, map.get($system, on-#{$variant}-container));
   $system: map.set($system, #{$color}, map.get($system, #{$variant}));
   $system: map.set($system, #{$color}-container, map.get($system, #{$variant}-container));
+  $system: map.set($system, inverse-#{$color}, map.get($system, inverse-#{$variant}));
   @return $system;
 }
 
