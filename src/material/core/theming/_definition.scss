@@ -76,7 +76,27 @@ $theme-version: 1;
   // density
   $density-scale: map.get($density-config, scale) or 0;
 
+  $system-maps: (
+    m3-tokens.get-sys-color($type, $palettes, $color-system-variables-prefix),
+    m3.md-sys-elevation-values(),
+    m3.md-sys-motion-values(),
+    m3.md-sys-shape-values(),
+    m3.md-sys-state-values(),
+    (
+      // Form field native select option text color
+      neutral10: map.get($palettes, neutral, 10),
+      // Sidenav scrim (container background shadow when opened),
+      neutral-variant20: map.get($palettes, neutral-variant, 20),
+    ),
+    m3-tokens.get-sys-typeface($typography, $typography-system-variables-prefix),
+  );
+  $system: ();
+  @each $sys-map in $system-maps {
+    $system: map.merge($system, $sys-map);
+  }
+
   @return (
+    _mat-system: $system,
     $internals: (
       base-tokens: m3-tokens.generate-base-tokens(),
       color-system-variables-prefix: $color-system-variables-prefix,
@@ -84,19 +104,6 @@ $theme-version: 1;
         m3-tokens.generate-color-tokens($type, $palettes, $color-system-variables-prefix),
       density-scale: $density-scale,
       font-definition: $typography,
-      md-sys-color: m3-tokens.get-sys-color($type, $palettes, $color-system-variables-prefix),
-      md-sys-elevation: m3.md-sys-elevation-values(),
-      md-sys-motion: m3.md-sys-motion-values(),
-      md-sys-shape: m3.md-sys-shape-values(),
-      md-sys-state: m3.md-sys-state-values(),
-      md-ref-palette: (
-        // Form field native select option text color
-        neutral10: map.get($palettes, neutral, 10),
-        // Sidenav scrim (container background shadow when opened),
-        neutral-variant20: map.get($palettes, neutral-variant, 20),
-      ),
-      md-sys-typescale:
-        m3-tokens.get-sys-typeface($typography, $typography-system-variables-prefix),
       palettes: $palettes,
       theme-type: $type,
       theme-version: $theme-version,

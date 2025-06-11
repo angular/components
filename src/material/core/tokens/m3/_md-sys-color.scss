@@ -8,7 +8,7 @@
 // Indicates whether alternative tokens should be used
 $_alternate-tokens: false;
 
-@function md-sys-color-values-dark($palettes) {
+@function md-sys-color-values-dark($palettes: ()) {
   $values: (
     background: map.get($palettes, neutral, 6),
     error: map.get($palettes, error, 80),
@@ -80,7 +80,7 @@ $_alternate-tokens: false;
   @return $values;
 }
 
-@function md-sys-color-values-light($palettes) {
+@function md-sys-color-values-light($palettes: ()) {
   $values: (
     background: map.get($palettes, neutral, 98),
     error: map.get($palettes, error, 40),

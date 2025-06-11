@@ -8,7 +8,7 @@
 // Indicates whether alternative tokens should be used
 $_alternate-tokens: false;
 
-@function md-sys-typescale-values($typography) {
+@function md-sys-typescale-values($typography: ()) {
   $plain: map.get($typography, plain);
   $brand: map.get($typography, brand);
   $bold: map.get($typography, bold);
