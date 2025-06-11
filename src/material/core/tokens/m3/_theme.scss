@@ -30,7 +30,6 @@ $_sys-maps: (
 
 $_system: ();
 @each $sys-map in $_sys-maps {
-  $system: map.merge($_system, _create-system-app-vars-map($sys-map));
+  $_system: map.merge($_system, _create-system-app-vars-map($sys-map));
 }
-
 $sys-theme: (_mat-system: $_system);
