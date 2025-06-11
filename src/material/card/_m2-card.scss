@@ -1,4 +1,3 @@
-@use '../core/theming/inspection';
 @use '../core/style/elevation';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
@@ -32,19 +31,18 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    card-title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    card-title-text-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    card-title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    card-title-text-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    card-title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    card-subtitle-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    card-subtitle-text-line-height:
-        inspection.get-theme-typography($theme, subtitle-2, line-height),
-    card-subtitle-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    card-subtitle-text-tracking:
-        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
-    card-subtitle-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    card-title-text-font: map.get($system, title-small-font),
+    card-title-text-line-height: map.get($system, title-small-line-height),
+    card-title-text-size: map.get($system, title-small-size),
+    card-title-text-tracking: map.get($system, title-small-tracking),
+    card-title-text-weight: map.get($system, title-small-weight),
+    card-subtitle-text-font: map.get($system, label-medium-font),
+    card-subtitle-text-line-height: map.get($system, label-medium-line-height),
+    card-subtitle-text-size: map.get($system, label-medium-size),
+    card-subtitle-text-tracking: map.get($system, label-medium-tracking),
+    card-subtitle-text-weight: map.get($system, label-medium-weight),
   );
 }
 

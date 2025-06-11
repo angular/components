@@ -57,12 +57,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    checkbox-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    checkbox-label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    checkbox-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    checkbox-label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    checkbox-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+    checkbox-label-text-font: map.get($system, body-medium-font),
+    checkbox-label-text-line-height: map.get($system, body-medium-line-height),
+    checkbox-label-text-size: map.get($system, body-medium-size),
+    checkbox-label-text-tracking: map.get($system, body-medium-tracking),
+    checkbox-label-text-weight: map.get($system, body-medium-weight)
   );
 }
 

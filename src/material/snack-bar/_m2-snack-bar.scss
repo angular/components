@@ -29,12 +29,12 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    snack-bar-supporting-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    snack-bar-supporting-text-line-height:
-        inspection.get-theme-typography($theme, body-2, line-height),
-    snack-bar-supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    snack-bar-supporting-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    snack-bar-supporting-text-font: map.get($system, body-medium-font),
+    snack-bar-supporting-text-line-height: map.get($system, body-medium-line-height),
+    snack-bar-supporting-text-size: map.get($system, body-medium-size),
+    snack-bar-supporting-text-weight: map.get($system, body-medium-weight),
   );
 }
 

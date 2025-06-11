@@ -51,33 +51,23 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    list-list-item-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    list-list-item-label-text-line-height:
-        inspection.get-theme-typography($theme, body-1, line-height),
-    list-list-item-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    list-list-item-label-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    list-list-item-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    list-list-item-supporting-text-font:
-        inspection.get-theme-typography($theme, body-2, font-family),
-    list-list-item-supporting-text-line-height:inspection.get-theme-typography(
-        $theme, body-2, line-height),
-    list-list-item-supporting-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    list-list-item-supporting-text-tracking: inspection.get-theme-typography(
-        $theme, body-2, letter-spacing),
-    list-list-item-supporting-text-weight:
-        inspection.get-theme-typography($theme, body-2, font-weight),
-    list-list-item-trailing-supporting-text-font: inspection.get-theme-typography(
-        $theme, caption, font-family),
-    list-list-item-trailing-supporting-text-line-height: inspection.get-theme-typography(
-        $theme, caption, line-height),
-    list-list-item-trailing-supporting-text-size: inspection.get-theme-typography(
-        $theme, caption, font-size),
-    list-list-item-trailing-supporting-text-tracking: inspection.get-theme-typography(
-        $theme, caption, letter-spacing),
-    list-list-item-trailing-supporting-text-weight: inspection.get-theme-typography(
-        $theme, caption, font-weight),
+    list-list-item-label-text-font: map.get($system, body-large-font),
+    list-list-item-label-text-line-height: map.get($system, body-large-line-height),
+    list-list-item-label-text-size: map.get($system, body-large-size),
+    list-list-item-label-text-tracking: map.get($system, body-large-tracking),
+    list-list-item-label-text-weight: map.get($system, body-large-weight),
+    list-list-item-supporting-text-font: map.get($system, body-medium-font),
+    list-list-item-supporting-text-line-height: map.get($system, body-medium-line-height),
+    list-list-item-supporting-text-size: map.get($system, body-medium-size),
+    list-list-item-supporting-text-tracking: map.get($system, body-medium-tracking),
+    list-list-item-supporting-text-weight: map.get($system, body-medium-weight),
+    list-list-item-trailing-supporting-text-font: map.get($system, body-small-font),
+    list-list-item-trailing-supporting-text-line-height: map.get($system, body-small-line-height),
+    list-list-item-trailing-supporting-text-size: map.get($system, body-small-size),
+    list-list-item-trailing-supporting-text-tracking: map.get($system, body-small-tracking),
+    list-list-item-trailing-supporting-text-weight: map.get($system, body-small-weight),
   );
 }
 

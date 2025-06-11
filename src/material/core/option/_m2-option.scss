@@ -29,12 +29,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    option-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    option-label-text-line-height: inspection.get-theme-typography($theme, body-1, line-height),
-    option-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    option-label-text-tracking: inspection.get-theme-typography($theme, body-1, letter-spacing),
-    option-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight)
+    option-label-text-font: map.get($system, body-large-font),
+    option-label-text-line-height: map.get($system, body-large-line-height),
+    option-label-text-size: map.get($system, body-large-size),
+    option-label-text-tracking: map.get($system, body-large-tracking),
+    option-label-text-weight: map.get($system, body-large-weight)
   );
 }
 

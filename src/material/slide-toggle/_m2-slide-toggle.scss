@@ -132,14 +132,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    slide-toggle-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    slide-toggle-label-text-line-height:
-        inspection.get-theme-typography($theme, body-2, line-height),
-    slide-toggle-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    slide-toggle-label-text-tracking:
-        inspection.get-theme-typography($theme, body-2, letter-spacing),
-    slide-toggle-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+    slide-toggle-label-text-font: map.get($system, body-medium-font),
+    slide-toggle-label-text-line-height: map.get($system, body-medium-line-height),
+    slide-toggle-label-text-size: map.get($system, body-medium-size),
+    slide-toggle-label-text-tracking: map.get($system, body-medium-tracking),
+    slide-toggle-label-text-weight: map.get($system, body-medium-weight)
   );
 }
 

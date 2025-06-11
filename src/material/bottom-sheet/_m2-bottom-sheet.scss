@@ -1,4 +1,3 @@
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
@@ -23,15 +22,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    bottom-sheet-container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    bottom-sheet-container-text-line-height:
-        inspection.get-theme-typography($theme, body-2, line-height),
-    bottom-sheet-container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    bottom-sheet-container-text-tracking:
-        inspection.get-theme-typography($theme, body-2, letter-spacing),
-    bottom-sheet-container-text-weight:
-        inspection.get-theme-typography($theme, body-2, font-weight),
+    bottom-sheet-container-text-font: map.get($system, body-medium-font),
+    bottom-sheet-container-text-line-height: map.get($system, body-medium-line-height),
+    bottom-sheet-container-text-size: map.get($system, body-medium-size),
+    bottom-sheet-container-text-tracking: map.get($system, body-medium-tracking),
+    bottom-sheet-container-text-weight: map.get($system, body-medium-weight),
   );
 }
 

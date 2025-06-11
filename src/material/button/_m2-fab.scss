@@ -82,12 +82,12 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    fab-extended-label-text-font: inspection.get-theme-typography($theme, button, font-family),
-    fab-extended-label-text-size: inspection.get-theme-typography($theme, button, font-size),
-    fab-extended-label-text-tracking:
-        inspection.get-theme-typography($theme, button, letter-spacing),
-    fab-extended-label-text-weight: inspection.get-theme-typography($theme, button, font-weight)
+    fab-extended-label-text-font: map.get($system, label-small-font),
+    fab-extended-label-text-size: map.get($system, label-small-size),
+    fab-extended-label-text-tracking: map.get($system, label-small-tracking),
+    fab-extended-label-text-weight: map.get($system, label-small-weight)
   );
 }
 

@@ -143,38 +143,34 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  $font-family: inspection.get-theme-typography($theme, button, font-family);
-  $font-size: inspection.get-theme-typography($theme, button, font-size);
-  $font-weight: inspection.get-theme-typography($theme, button, font-weight);
-  $letter-spacing: inspection.get-theme-typography($theme, button, letter-spacing);
-  $text-transform: none;
+  $system: m2-utils.get-system($theme);
 
   @return (
-    button-filled-label-text-font: $font-family,
-    button-filled-label-text-size: $font-size,
-    button-filled-label-text-tracking: $letter-spacing,
+    button-filled-label-text-font: map.get($system, label-small-font),
+    button-filled-label-text-size: map.get($system, label-small-size),
+    button-filled-label-text-tracking: map.get($system, label-small-tracking),
     button-filled-label-text-transform: none,
-    button-filled-label-text-weight: $font-weight,
-    button-outlined-label-text-font: $font-family,
-    button-outlined-label-text-size: $font-size,
-    button-outlined-label-text-tracking: $letter-spacing,
+    button-filled-label-text-weight: map.get($system, label-small-weight),
+    button-outlined-label-text-font: map.get($system, label-small-font),
+    button-outlined-label-text-size: map.get($system, label-small-size),
+    button-outlined-label-text-tracking: map.get($system, label-small-tracking),
     button-outlined-label-text-transform: none,
-    button-outlined-label-text-weight: $font-weight,
-    button-protected-label-text-font: $font-family,
-    button-protected-label-text-size: $font-size,
-    button-protected-label-text-tracking: $letter-spacing,
+    button-outlined-label-text-weight: map.get($system, label-small-weight),
+    button-protected-label-text-font: map.get($system, label-small-font),
+    button-protected-label-text-size: map.get($system, label-small-size),
+    button-protected-label-text-tracking: map.get($system, label-small-tracking),
     button-protected-label-text-transform: none,
-    button-protected-label-text-weight: $font-weight,
-    button-text-label-text-font: $font-family,
-    button-text-label-text-size: $font-size,
-    button-text-label-text-tracking: $letter-spacing,
+    button-protected-label-text-weight: map.get($system, label-small-weight),
+    button-text-label-text-font: map.get($system, label-small-font),
+    button-text-label-text-size: map.get($system, label-small-size),
+    button-text-label-text-tracking: map.get($system, label-small-tracking),
     button-text-label-text-transform: none,
-    button-text-label-text-weight: $font-weight,
-    button-tonal-label-text-font: $font-family,
-    button-tonal-label-text-size: $font-size,
-    button-tonal-label-text-tracking: $letter-spacing,
+    button-text-label-text-weight: map.get($system, label-small-weight),
+    button-tonal-label-text-font: map.get($system, label-small-font),
+    button-tonal-label-text-size: map.get($system, label-small-size),
+    button-tonal-label-text-tracking: map.get($system, label-small-tracking),
     button-tonal-label-text-transform: none,
-    button-tonal-label-text-weight: $font-weight,
+    button-tonal-label-text-weight: map.get($system, label-small-weight),
   );
 }
 

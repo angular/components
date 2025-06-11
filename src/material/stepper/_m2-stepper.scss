@@ -35,17 +35,15 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    stepper-container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    stepper-header-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    stepper-header-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    stepper-header-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
-    stepper-header-error-state-label-text-size:
-        inspection.get-theme-typography($theme, body-1, font-size),
-    stepper-header-selected-state-label-text-size: inspection.get-theme-typography(
-        $theme, body-1, font-size),
-    stepper-header-selected-state-label-text-weight: inspection.get-theme-typography(
-        $theme, body-1, font-weight),
+    stepper-container-text-font: map.get($system, body-medium-font),
+    stepper-header-label-text-font: map.get($system, body-medium-font),
+    stepper-header-label-text-size: map.get($system, body-medium-size),
+    stepper-header-label-text-weight: map.get($system, body-medium-weight),
+    stepper-header-error-state-label-text-size: map.get($system, body-large-size),
+    stepper-header-selected-state-label-text-size: map.get($system, body-large-size),
+    stepper-header-selected-state-label-text-weight: map.get($system, body-large-weight),
   );
 }
 

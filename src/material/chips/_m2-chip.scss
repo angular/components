@@ -72,12 +72,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    chip-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    chip-label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    chip-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    chip-label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    chip-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+    chip-label-text-font: map.get($system, body-medium-font),
+    chip-label-text-line-height: map.get($system, body-medium-line-height),
+    chip-label-text-size: map.get($system, body-medium-size),
+    chip-label-text-tracking: map.get($system, body-medium-tracking),
+    chip-label-text-weight: map.get($system, body-medium-weight)
   );
 }
 

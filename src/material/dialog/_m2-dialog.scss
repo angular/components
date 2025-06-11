@@ -1,5 +1,4 @@
 @use '../core/style/elevation';
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
@@ -35,19 +34,18 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    dialog-subhead-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    dialog-subhead-line-height: inspection.get-theme-typography($theme, headline-6, line-height),
-    dialog-subhead-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    dialog-subhead-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
-    dialog-subhead-tracking: inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    dialog-supporting-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    dialog-supporting-text-line-height:
-        inspection.get-theme-typography($theme, body-1, line-height),
-    dialog-supporting-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    dialog-supporting-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    dialog-supporting-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
+    dialog-subhead-font: map.get($system, title-small-font),
+    dialog-subhead-line-height: map.get($system, title-small-line-height),
+    dialog-subhead-size: map.get($system, title-small-size),
+    dialog-subhead-weight: map.get($system, title-small-weight),
+    dialog-subhead-tracking: map.get($system, title-small-tracking),
+    dialog-supporting-text-font: map.get($system, body-large-font),
+    dialog-supporting-text-line-height: map.get($system, body-large-line-height),
+    dialog-supporting-text-size: map.get($system, body-large-size),
+    dialog-supporting-text-weight: map.get($system, body-large-weight),
+    dialog-supporting-text-tracking: map.get($system, body-large-tracking),
   );
 }
 
