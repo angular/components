@@ -183,7 +183,13 @@
     );
 
     $theme: _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
-    $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
+    $system: _define-system(
+        $primary: $primary,
+        $accent: $accent,
+        $warn: $warn,
+        $is-dark: $is-dark,
+        $typography: ());
+    $theme: map.set($theme, _mat-system, $system);
     @return $theme;
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
