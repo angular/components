@@ -1150,4 +1150,112 @@ describe('Tree Pattern', () => {
       expect(item0.expanded()).toBe(false);
     });
   });
+
+  describe('#setDefaultState', () => {
+    let treeInputs: TestTreeInputs<string>;
+
+    beforeEach(() => {
+      treeInputs = {
+        activeIndex: signal(0),
+        disabled: signal(false),
+        focusMode: signal('roving'),
+        multi: signal(false),
+        orientation: signal('vertical'),
+        selectionMode: signal('explicit'),
+        skipDisabled: signal(true),
+        textDirection: signal('ltr'),
+        typeaheadDelay: signal(0),
+        value: signal([]),
+        wrap: signal(false),
+      };
+    });
+
+    it('should set activeIndex to the first visible focusable item if no selection', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: false},
+        {value: 'B', disabled: false},
+      ];
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(0);
+    });
+
+    it('should set activeIndex to the first visible focusable disabled item if skipDisabled is false and no selection', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: true},
+        {value: 'B', disabled: false},
+      ];
+      treeInputs.skipDisabled.set(false);
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(0);
+    });
+
+    it('should set activeIndex to the first selected visible focusable item', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: false},
+        {value: 'B', disabled: false},
+        {value: 'C', disabled: false},
+      ];
+      treeInputs.value.set(['B']);
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(1);
+    });
+
+    it('should prioritize the first selected item in visible order', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: false},
+        {value: 'B', disabled: false},
+        {value: 'C', disabled: false},
+      ];
+      treeInputs.value.set(['C', 'A']);
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(0);
+    });
+
+    it('should skip a selected disabled item if skipDisabled is true', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: false},
+        {value: 'B', disabled: true},
+        {value: 'C', disabled: false},
+      ];
+      treeInputs.value.set(['B']);
+      treeInputs.skipDisabled.set(true);
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(0);
+    });
+
+    it('should select a selected disabled item if skipDisabled is false', () => {
+      const localTreeData: TestTreeItem<string>[] = [
+        {value: 'A', disabled: false},
+        {value: 'B', disabled: true},
+        {value: 'C', disabled: false},
+      ];
+      treeInputs.value.set(['B']);
+      treeInputs.skipDisabled.set(false);
+      const {tree} = createTree(localTreeData, treeInputs);
+
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(1);
+    });
+
+    it('should set activeIndex to first visible focusable item if selected item is not visible', () => {
+      const {tree, allItems} = createTree(treeExample, treeInputs);
+      const item0 = getItemByValue(allItems(), 'Item 0');
+      treeInputs.value.set(['Item 0-0']);
+
+      expect(item0.expanded()).toBe(false);
+      expect(getItemByValue(allItems(), 'Item 0-0').visible()).toBe(false);
+      tree.setDefaultState();
+      expect(treeInputs.activeIndex()).toBe(0);
+    });
+  });
 });
