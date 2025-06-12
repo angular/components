@@ -1,4 +1,6 @@
 @use 'sass:map';
+@use 'sass:string';
+@use 'sass:meta';
 
 @function md-sys-typescale-values($config) {
   $sys-to-config: (
@@ -19,9 +21,34 @@
     title-small: headline-6,
   );
 
+  // If the config is based on an old 2014 version of the typography spec, then
+  // use the old config keys to map to the new system tokens.
+  @if (map.get($config, headline) != null) {
+    $sys-to-config: (
+      body-large: subheading-1,
+      body-medium: body-1,
+      body-small: caption,
+      display-large: display-4,
+      display-medium: display-4,
+      display-small: display-4,
+      headline-large: display-3,
+      headline-medium: display-2,
+      headline-small: display-1,
+      label-large: subheading-2,
+      label-medium: body-2,
+      label-small: button,
+      title-large: headline,
+      title-medium: headline,
+      title-small: title,
+    );
+  }
+
   $typography: ();
   @each $sys-key, $config-key in $sys-to-config {
     $font: map.get($config, $config-key, font-family);
+    @if (meta.type-of($font) == 'string') {
+      $font: string.unquote($font);
+    }
     $line-height: map.get($config, $config-key, line-height);
     $size: map.get($config, $config-key, font-size);
     $tracking: map.get($config, $config-key, letter-spacing);
