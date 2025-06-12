@@ -49,24 +49,24 @@
       &.mat-background-primary {
         $tokens: m2-tabs.get-color-tokens($theme, primary);
         @include token-utils.create-token-values-mixed((
-          tab-background-color: map.get($tokens, background-color),
-          tab-foreground-color: map.get($tokens, foreground-color)
+          tab-background-color: map.get($tokens, tab-background-color),
+          tab-foreground-color: map.get($tokens, tab-foreground-color)
         ));
       }
 
       &.mat-background-accent {
         $tokens: m2-tabs.get-color-tokens($theme, secondary);
         @include token-utils.create-token-values-mixed((
-          tab-background-color: map.get($tokens, background-color),
-          tab-foreground-color: map.get($tokens, foreground-color),
+          tab-background-color: map.get($tokens, tab-background-color),
+          tab-foreground-color: map.get($tokens, tab-foreground-color),
         ));
       }
 
       &.mat-background-warn {
         $tokens: m2-tabs.get-color-tokens($theme, error);
         @include token-utils.create-token-values-mixed((
-          tab-background-color: map.get($tokens, background-color),
-          tab-foreground-color: map.get($tokens, foreground-color),
+          tab-background-color: map.get($tokens, tab-background-color),
+          tab-foreground-color: map.get($tokens, tab-foreground-color),
         ));
       }
     }
