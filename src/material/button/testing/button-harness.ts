@@ -16,10 +16,14 @@ import {ButtonAppearance, ButtonHarnessFilters, ButtonVariant} from './button-ha
 
 /** Harness for interacting with a mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
-  // TODO(jelbourn) use a single class, like `.mat-button-base`
-  static hostSelector = `[matButton], [mat-button], [matIconButton], [matFab], [matMiniFab],
-    [mat-raised-button], [mat-flat-button], [mat-icon-button], [mat-stroked-button], [mat-fab],
-    [mat-mini-fab]`;
+  // Note: `.mat-mdc-button-base` should be enough for all buttons, however some apps are using
+  // the harness without actually having an applied button. Keep the attributes for backwards
+  // compatibility.
+
+  /** Selector for the harness. */
+  static hostSelector = `.mat-mdc-button-base, [matButton], [mat-button], [matIconButton],
+    [matFab], [matMiniFab], [mat-raised-button], [mat-flat-button], [mat-icon-button],
+    [mat-stroked-button], [mat-fab], [mat-mini-fab]`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a button with specific attributes.
