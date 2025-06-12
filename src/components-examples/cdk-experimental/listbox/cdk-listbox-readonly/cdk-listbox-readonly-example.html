@@ -1,0 +1,24 @@
+<!-- Readonly -->
+<div class="example-container">
+  <ul
+    cdkListbox
+    [readonly]="true"
+    class="example-listbox"
+    aria-labelledby="readonly-label"
+  >
+    <label class="example-label" id="readonly-label">Readonly Fruits</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-option"
+        [value]="fruit"
+        cdkOption
+        #option="cdkOption"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

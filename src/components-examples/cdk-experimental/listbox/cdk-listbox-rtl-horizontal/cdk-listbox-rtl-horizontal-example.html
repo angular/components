@@ -1,0 +1,24 @@
+<!-- RTL & Horizontal Orientation -->
+<div class="example-container" dir="rtl">
+  <ul
+    cdkListbox
+    orientation="horizontal"
+    class="example-listbox"
+    aria-labelledby="rtl-horizontal-label"
+  >
+    <label class="example-label" id="rtl-horizontal-label">RTL Horizontal Fruits</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-option"
+        [value]="fruit"
+        cdkOption
+        #option="cdkOption"
+      >
+        <mat-pseudo-checkbox
+          [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
+        ></mat-pseudo-checkbox>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

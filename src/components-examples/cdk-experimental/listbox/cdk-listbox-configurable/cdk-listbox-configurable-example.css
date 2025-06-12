@@ -9,7 +9,7 @@
   gap: 4px;
   margin: 0;
   padding: 8px;
-  max-height: 50vh;
+  max-height: 300px;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
   display: flex;
@@ -29,6 +29,14 @@
 
 .example-listbox[aria-orientation='horizontal'] .example-option[aria-selected='true']::before {
   display: block;
+}
+
+.example-listbox[aria-disabled='true'] {
+  opacity: 0.5;
+}
+
+.example-listbox[aria-disabled='true'] .example-option {
+  pointer-events: none;
 }
 
 .example-label {
