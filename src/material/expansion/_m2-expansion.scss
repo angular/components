@@ -3,12 +3,14 @@
 @use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
+@use '../core/style/elevation';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
 @function get-unthemable-tokens() {
   @return (
     expansion-container-shape: 4px,
+    expansion-container-elevation-shadow: elevation.get-box-shadow(2),
     expansion-legacy-header-indicator-display: inline-block,
     expansion-header-indicator-display: none,
   );
