@@ -1,10 +1,16 @@
 @use 'sass:map';
+@use './m2';
 
 // Gets the theme's system values as a flat map.
 @function get-system($theme) {
   $system: map.get($theme, _mat-system);
   @if $system {
     @return $system;
+  }
+
+  // If the $theme is a typography-config, convert it to a system map.
+  @if map.has-key($theme, body-1) {
+    @return m2.md-sys-typescale-values($theme);
   }
 
   @return ();

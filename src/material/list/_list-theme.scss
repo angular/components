@@ -156,7 +156,7 @@
     // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
     .mdc-list-group__subheader {
       $system: m2-utils.get-system($theme);
-      font: map.get($system, label-large, font);
+      font: map.get($system, label-large);
       letter-spacing: map.get($system, label-large-tracking);
     }
   }
