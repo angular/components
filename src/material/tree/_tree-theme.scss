@@ -28,9 +28,6 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.create-token-values(map.get(m3-tree.get-tokens($theme), typography));
   } @else {
-    // TODO(mmalerba): Stop calling this and resolve resulting screen diffs.
-    $theme: inspection.private-get-typography-back-compat-theme($theme);
-
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(m2-tree.get-typography-tokens($theme));
     }
