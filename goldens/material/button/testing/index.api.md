@@ -33,7 +33,6 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
     getAppearance(): Promise<ButtonAppearance | null>;
     getText(): Promise<string>;
     getVariant(): Promise<ButtonVariant>;
-    // (undocumented)
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
