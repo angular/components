@@ -1,0 +1,15 @@
+//
+// Design system display name: Material 3
+// Design system version: v0.161
+//
+
+@function md-sys-state-values($exclude-hardcoded-values: false) {
+  @return (
+    focus-state-layer-opacity: 0.12,
+    hover-state-layer-opacity: 0.04,
+    pressed-state-layer-opacity: 0.12,
+
+    // TBD
+    dragged-state-layer-opacity: 0.16,
+  );
+}

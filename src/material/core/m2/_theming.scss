@@ -3,6 +3,7 @@
 @use 'sass:meta';
 @use 'sass:color';
 @use '../theming/theming';
+@use '../tokens/m2';
 @use './palette';
 
 /// Extracts a color from a palette or throws an error if it doesn't exist.
@@ -114,44 +115,19 @@
 }
 
 @function _define-system($primary, $accent, $warn, $is-dark) {
-  $system: (
-    primary: map.get($primary, default),
-    on-primary: map.get($primary, default-contrast),
-    secondary: map.get($accent, default),
-    on-secondary: map.get($accent, default-contrast),
-    error: map.get($warn, default),
-    on-error: map.get($warn, default-contrast),
-    shadow: black,
-    hover-state-layer-opacity: 0.04,
-    focus-state-layer-opacity: 0.12,
-    pressed-state-layer-opacity: 0.12,
+  $palettes: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
   );
 
-  @if $is-dark {
-    @return map.merge($system, (
-      surface: map.get(palette.$grey-palette, 800),
-      surface-variant: #4a4a4a,
-      on-surface: white,
-      on-surface-variant: rgba(white, 0.7),
-      background: #303030,
-      inverse-surface: white,
-      inverse-on-surface: rgba(black, 0.87),
-      outline: rgba(white, 0.12),
-      outline-variant: rgba(white, 0.38),
-    ));
-  } @else {
-    @return map.merge($system, (
-      surface: white,
-      surface-variant: #f6f6f6,
-      on-surface: rgba(black, 0.87),
-      on-surface-variant: rgba(black, 0.54),
-      background: map.get(palette.$grey-palette, 50),
-      inverse-surface: map.get(palette.$grey-palette, 800),
-      inverse-on-surface: white,
-      outline: rgba(black, 0.12),
-      outline-variant: rgba(black, 0.38),
-    ));
-  }
+  $color: if(
+      $is-dark,
+      m2.md-sys-color-values-dark($palettes),
+      m2.md-sys-color-values-light($palettes));
+  $state: m2.md-sys-state-values();
+
+  @return map.merge($color, $state);
 }
 
 // Creates a color configuration from the specified
