@@ -279,15 +279,3 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
     @return $theme;
   }
 }
-
-/// Gets a version of the theme with a modified typography config that preserves old behavior in
-/// some components that previously used `private-typography-to-2014-config`.
-/// Do not introduce new usages of this, it should be cleaned up and removed.
-/// @deprecated
-@function private-get-typography-back-compat-theme($theme) {
-  @return if(
-      get-theme-version($theme) == 0,
-      m2-inspection.private-get-typography-back-compat-theme($theme),
-      $theme
-  );
-}
