@@ -44,6 +44,10 @@
       $system: m2-utils.get-system($theme);
 
       & {
+        // TODO(andrewjs): Remove this once all tokens are migrated to
+        // mat internally.
+        --mdc-slide-toggle-disabled-label-text-color: #{
+            m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
         // TODO(wagnermaciel): Use our token system to define this css variable.
         --mat-slide-toggle-disabled-label-text-color: #{
             m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
