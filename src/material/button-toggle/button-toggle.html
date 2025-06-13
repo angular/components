@@ -1,4 +1,4 @@
-<button #button class="mat-button-toggle-button mat-focus-indicator"
+<button #button class="matButton-toggle-button mat-focus-indicator"
         type="button"
         [id]="buttonId"
         [attr.role]="isSingleSelector() ? 'radio' : 'button'"
@@ -15,7 +15,7 @@
     !buttonToggleGroup.multiple && !buttonToggleGroup.hideSingleSelectionIndicator ||
     buttonToggleGroup.multiple && !buttonToggleGroup.hideMultipleSelectionIndicator)
   ) {
-    <div class="mat-button-toggle-checkbox-wrapper">
+    <div class="matButton-toggle-checkbox-wrapper">
       <mat-pseudo-checkbox
         [disabled]="disabled"
         state="checked"
@@ -24,13 +24,13 @@
     </div>
   }
 
-  <span class="mat-button-toggle-label-content">
+  <span class="matButton-toggle-label-content">
     <ng-content></ng-content>
   </span>
 </button>
 
-<span class="mat-button-toggle-focus-overlay"></span>
-<span class="mat-button-toggle-ripple" matRipple
+<span class="matButton-toggle-focus-overlay"></span>
+<span class="matButton-toggle-ripple" matRipple
      [matRippleTrigger]="button"
      [matRippleDisabled]="this.disableRipple || this.disabled">
 </span>

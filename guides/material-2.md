@@ -1107,7 +1107,7 @@ the APIs for both are largely the same. However, there are a few differences to 
   for more).
 - The `backgroundColor` property of `<mat-tab-group>` is not supported, and should not be used with
   M3 themes.
-- The `appearance="legacy"` variant of `<mat-button-toggle>` is not supported, and should not be
+- The `appearance="legacy"` variant of `<matButton-toggle>` is not supported, and should not be
   used with M3 themes.
 - For M3 themes, calling `all-component-typographies` does _not_ emit the `typography-hierarchy`
   styles, as this would violate M3's guarantee to not add selectors. Instead, the

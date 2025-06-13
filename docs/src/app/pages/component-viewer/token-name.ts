@@ -18,7 +18,7 @@ import {MatTooltip} from '@angular/material/tooltip';
   template: `
     <code>{{name()}}</code>
     <button
-      mat-icon-button
+      matIconButton
       matTooltip="Copy name to the clipboard"
       (click)="copy(name())">
       <mat-icon>content_copy</mat-icon>

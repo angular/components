@@ -36,7 +36,7 @@ export class MatButton extends MatButtonBase {
     set appearance(value: MatButtonAppearance | '');
     setAppearance(appearance: MatButtonAppearance): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatButton, "    button[matButton], a[matButton], button[mat-button], button[mat-raised-button],    button[mat-flat-button], button[mat-stroked-button], a[mat-button], a[mat-raised-button],    a[mat-flat-button], a[mat-stroked-button]  ", ["matButton", "matAnchor"], { "appearance": { "alias": "matButton"; "required": false; }; }, {}, never, [".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])", "*", ".material-icons[iconPositionEnd], mat-icon[iconPositionEnd], [matButtonIcon][iconPositionEnd]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatButton, "    button[matButton], a[matButton], button[matButton], button[matRaisedButton],    button[matFlatButton], button[matStrokedButton], a[matButton], a[matRaisedButton],    a[matFlatButton], a[matStrokedButton]  ", ["matButton", "matAnchor"], { "appearance": { "alias": "matButton"; "required": false; }; }, {}, never, [".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd]), [matButtonIcon]:not([iconPositionEnd])", "*", ".material-icons[iconPositionEnd], mat-icon[iconPositionEnd], [matButtonIcon][iconPositionEnd]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatButton, never>;
 }
@@ -97,7 +97,7 @@ export type MatIconAnchor = MatIconButton;
 export class MatIconButton extends MatButtonBase {
     constructor(...args: unknown[]);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatIconButton, "button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]", ["matButton", "matAnchor"], {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatIconButton, "button[matIconButton], a[matIconButton], button[matIconButton], a[matIconButton]", ["matButton", "matAnchor"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatIconButton, never>;
 }

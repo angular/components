@@ -18,7 +18,7 @@
   .mat-datepicker-actions {
     $spacing: 8px;
 
-    .mat-button-base + .mat-button-base {
+    .matButton-base + .matButton-base {
       margin-left: $spacing;
 
       [dir='rtl'] & {

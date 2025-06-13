@@ -5,7 +5,7 @@
 @use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
-/// Generates custom tokens for the mat-button-toggle.
+/// Generates custom tokens for the matButton-toggle.
 @function get-tokens($theme: m3.$sys-theme, $color-variant: null) {
   $system: m3-utils.get-system($theme);
   @if $color-variant {

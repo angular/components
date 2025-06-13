@@ -2,12 +2,12 @@
   @if (view === 'snippet') {
     <div class="docs-example-viewer-source-compact">
       <div class="docs-button-bar">
-        <button mat-icon-button type="button" (click)="copySource(snippet())"
+        <button matIconButton type="button" (click)="copySource(snippet())"
                 class="docs-example-source-copy docs-example-button" matTooltip="Copy snippet"
                 title="Copy example source" aria-label="Copy example source to clipboard">
           <mat-icon>content_copy</mat-icon>
         </button>
-        <button mat-icon-button type="button" (click)="toggleCompactView()"
+        <button matIconButton type="button" (click)="toggleCompactView()"
                 class="docs-example-compact-toggle docs-example-button" matTooltip="View full example"
                 aria-label="View less">
           <mat-icon>
@@ -29,7 +29,7 @@
       <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
 
       <button
-        mat-icon-button
+        matIconButton
         type="button"
         [attr.aria-label]="'Copy link to ' + exampleData?.title + ' example to the clipboard'"
         matTooltip="Copy link to example"
@@ -38,7 +38,7 @@
       </button>
 
       @if (showCompactToggle) {
-        <button mat-icon-button
+        <button matIconButton
                 (click)="toggleCompactView()"
                 matTooltip="View snippet only"
                 aria-label="View less">
@@ -51,7 +51,7 @@
         </button>
       }
 
-      <button mat-icon-button type="button" (click)="toggleSourceView()"
+      <button matIconButton type="button" (click)="toggleSourceView()"
               [matTooltip]="view === 'demo' ? 'View code' : 'Hide code'" aria-label="View source">
         <mat-icon>code</mat-icon>
       </button>
@@ -65,7 +65,7 @@
           @for (tabName of _getExampleTabNames(); track tabName) {
             <mat-tab [label]="tabName">
               <div class="docs-button-bar">
-                <button mat-icon-button type="button" (click)="copySource(snippet(), selectedTab)"
+                <button matIconButton type="button" (click)="copySource(snippet(), selectedTab)"
                         class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
                         title="Copy example source" aria-label="Copy example source to clipboard">
                   <mat-icon>content_copy</mat-icon>

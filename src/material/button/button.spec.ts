@@ -164,7 +164,7 @@ describe('MatButton', () => {
   });
 
   // Regular button tests
-  describe('button[mat-button]', () => {
+  describe('button[matButton]', () => {
     it('should handle a click on the button', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
@@ -205,7 +205,7 @@ describe('MatButton', () => {
   });
 
   // Anchor button tests
-  describe('a[mat-button]', () => {
+  describe('a[matButton]', () => {
     it('should not redirect if disabled', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
@@ -326,7 +326,7 @@ describe('MatButton', () => {
 
   it('should be able to configure the default color of buttons', () => {
     @Component({
-      template: `<button mat-button>Click me</button>`,
+      template: `<button matButton>Click me</button>`,
       imports: [MatButtonModule],
     })
     class ConfigTestApp {}
@@ -445,12 +445,12 @@ describe('MatFabDefaultOptions', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
+    <button [tabIndex]="tabIndex" matButton type="button" (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled"
       [disabledInteractive]="disabledInteractive">
       Go
     </button>
-    <a [tabIndex]="tabIndex" href="https://www.google.com" mat-button [disabled]="isDisabled"
+    <a [tabIndex]="tabIndex" href="https://www.google.com" matButton [disabled]="isDisabled"
       [color]="buttonColor" [disabledInteractive]="disabledInteractive">
       Link
     </a>

@@ -32,8 +32,8 @@ export class DialogScene {
   template: `
     <div mat-dialog-content>Discard draft?</div>
     <div mat-dialog-actions>
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-button mat-dialog-close>Discard</button>
+      <button matButton mat-dialog-close>Cancel</button>
+      <button matButton mat-dialog-close>Discard</button>
     </div>`,
   imports: [MatDialogModule, MatButtonModule],
 })

@@ -15,7 +15,7 @@ import {MatButtonBase} from './button-base';
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  selector: `button[mat-icon-button], a[mat-icon-button], button[matIconButton], a[matIconButton]`,
+  selector: `button[matIconButton], a[matIconButton], button[matIconButton], a[matIconButton]`,
   templateUrl: 'icon-button.html',
   styleUrls: ['icon-button.css', 'button-high-contrast.css'],
   host: {

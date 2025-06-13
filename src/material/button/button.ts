@@ -27,9 +27,9 @@ const APPEARANCE_CLASSES: Map<MatButtonAppearance, readonly string[]> = new Map(
  */
 @Component({
   selector: `
-    button[matButton], a[matButton], button[mat-button], button[mat-raised-button],
-    button[mat-flat-button], button[mat-stroked-button], a[mat-button], a[mat-raised-button],
-    a[mat-flat-button], a[mat-stroked-button]
+    button[matButton], a[matButton], button[matButton], button[matRaisedButton],
+    button[matFlatButton], button[matStrokedButton], a[matButton], a[matRaisedButton],
+    a[matFlatButton], a[matStrokedButton]
   `,
   templateUrl: 'button.html',
   styleUrls: ['button.css', 'button-high-contrast.css'],
@@ -93,19 +93,19 @@ export class MatButton extends MatButtonBase {
 
 /** Infers the button's appearance from its static attributes. */
 function _inferAppearance(button: HTMLElement): MatButtonAppearance | null {
-  if (button.hasAttribute('mat-raised-button')) {
+  if (button.hasAttribute('matRaisedButton')) {
     return 'elevated';
   }
 
-  if (button.hasAttribute('mat-stroked-button')) {
+  if (button.hasAttribute('matStrokedButton')) {
     return 'outlined';
   }
 
-  if (button.hasAttribute('mat-flat-button')) {
+  if (button.hasAttribute('matFlatButton')) {
     return 'filled';
   }
 
-  if (button.hasAttribute('mat-button')) {
+  if (button.hasAttribute('matButton')) {
     return 'text';
   }
 

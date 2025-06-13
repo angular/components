@@ -142,16 +142,16 @@ describe('MatButtonToggleHarness', () => {
 
 @Component({
   template: `
-      <mat-button-toggle
+      <matButton-toggle
         name="first-name"
         value="first-value"
         aria-label="First toggle"
-        checked>First</mat-button-toggle>
-      <mat-button-toggle
+        checked>First</matButton-toggle>
+      <matButton-toggle
         [disabled]="disabled"
         [disabledInteractive]="disabledInteractive"
         aria-labelledby="second-label"
-        appearance="legacy">Second</mat-button-toggle>
+        appearance="legacy">Second</matButton-toggle>
       <span id="second-label">Second toggle</span>
   `,
   imports: [MatButtonToggleModule],

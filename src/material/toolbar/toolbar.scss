@@ -49,8 +49,8 @@ $height-mobile-portrait: 56px !default;
 
   .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed {
     $color-token: token-utils.slot(toolbar-container-text-color, $fallbacks);
-    --mat-button-text-label-text-color: #{$color-token};
-    --mat-button-outlined-label-text-color: #{$color-token};
+    --matButton-text-label-text-color: #{$color-token};
+    --matButton-outlined-label-text-color: #{$color-token};
   }
 }
 

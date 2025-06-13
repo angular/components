@@ -101,7 +101,7 @@ export const MAT_BUTTON_TOGGLE_GROUP = new InjectionToken<MatButtonToggleGroup>(
 );
 
 /**
- * Provider Expression that allows mat-button-toggle-group to register as a ControlValueAccessor.
+ * Provider Expression that allows matButton-toggle-group to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
  * @docs-private
  */
@@ -124,18 +124,18 @@ export class MatButtonToggleChange {
 
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
-  selector: 'mat-button-toggle-group',
+  selector: 'matButton-toggle-group',
   providers: [
     MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR,
     {provide: MAT_BUTTON_TOGGLE_GROUP, useExisting: MatButtonToggleGroup},
   ],
   host: {
-    'class': 'mat-button-toggle-group',
+    'class': 'matButton-toggle-group',
     '(keydown)': '_keydown($event)',
     '[attr.role]': "multiple ? 'group' : 'radiogroup'",
     '[attr.aria-disabled]': 'disabled',
-    '[class.mat-button-toggle-vertical]': 'vertical',
-    '[class.mat-button-toggle-group-appearance-standard]': 'appearance === "standard"',
+    '[class.matButton-toggle-vertical]': 'vertical',
+    '[class.matButton-toggle-group-appearance-standard]': 'appearance === "standard"',
   },
   exportAs: 'matButtonToggleGroup',
 })
@@ -185,7 +185,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._name = value;
     this._markButtonsForCheck();
   }
-  private _name = inject(_IdGenerator).getId('mat-button-toggle-group-');
+  private _name = inject(_IdGenerator).getId('matButton-toggle-group-');
 
   /** Whether the toggle group is vertical. */
   @Input({transform: booleanAttribute}) vertical: boolean;
@@ -550,19 +550,19 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
 /** Single button inside of a toggle group. */
 @Component({
-  selector: 'mat-button-toggle',
+  selector: 'matButton-toggle',
   templateUrl: 'button-toggle.html',
   styleUrl: 'button-toggle.css',
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matButtonToggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.mat-button-toggle-standalone]': '!buttonToggleGroup',
-    '[class.mat-button-toggle-checked]': 'checked',
-    '[class.mat-button-toggle-disabled]': 'disabled',
-    '[class.mat-button-toggle-disabled-interactive]': 'disabledInteractive',
-    '[class.mat-button-toggle-appearance-standard]': 'appearance === "standard"',
-    'class': 'mat-button-toggle',
+    '[class.matButton-toggle-standalone]': '!buttonToggleGroup',
+    '[class.matButton-toggle-checked]': 'checked',
+    '[class.matButton-toggle-disabled]': 'disabled',
+    '[class.matButton-toggle-disabled-interactive]': 'disabledInteractive',
+    '[class.matButton-toggle-appearance-standard]': 'appearance === "standard"',
+    'class': 'matButton-toggle',
     '[attr.aria-label]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[attr.id]': 'id',
@@ -698,7 +698,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const group = this.buttonToggleGroup;
-    this.id = this.id || this._idGenerator.getId('mat-button-toggle-');
+    this.id = this.id || this._idGenerator.getId('matButton-toggle-');
 
     if (group) {
       if (group._isPrechecked(this)) {
@@ -719,7 +719,7 @@ export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
     //    delay adding the class until the view is rendered.
     // 2. We don't want animation if the `NoopAnimationsModule` is provided.
     if (!this._animationDisabled) {
-      this._elementRef.nativeElement.classList.add('mat-button-toggle-animations-enabled');
+      this._elementRef.nativeElement.classList.add('matButton-toggle-animations-enabled');
     }
 
     this._focusMonitor.monitor(this._elementRef, true);

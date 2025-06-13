@@ -8,7 +8,7 @@
 @use 'sass:map';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-button-toggle.
+/// for the matButton-toggle.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -21,7 +21,7 @@
   }
 }
 
-/// Outputs color theme styles for the mat-button-toggle.
+/// Outputs color theme styles for the matButton-toggle.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant: The color variant to use for the button toggle: primary,
 ///        secondary, tertiary, or error (If not specified, default secondary color will be used).
@@ -38,7 +38,7 @@
   }
 }
 
-/// Outputs typography theme styles for the mat-button-toggle.
+/// Outputs typography theme styles for the matButton-toggle.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -52,7 +52,7 @@
   }
 }
 
-/// Outputs density theme styles for the mat-button-toggle.
+/// Outputs density theme styles for the matButton-toggle.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -81,12 +81,12 @@
     @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
-/// Outputs all (base, color, typography, and density) theme styles for the mat-button-toggle.
+/// Outputs all (base, color, typography, and density) theme styles for the matButton-toggle.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {String} $color-variant: The color variant to use for the button toggle: primary,
 ///   secondary, tertiary, or error (If not specified, default secondary color will be used).
 @mixin theme($theme, $color-variant: null) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-button-toggle') {
+  @include theming.private-check-duplicate-theme-styles($theme, 'matButton-toggle') {
     @if inspection.get-theme-version($theme) == 1 {
       @include base($theme);
       @include color($theme, $color-variant);

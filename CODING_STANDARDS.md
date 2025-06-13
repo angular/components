@@ -49,16 +49,16 @@ In HTML code, use `<!-- ... -->` comments, which will be stripped when packaging
 
 For example, rather than doing this:
 ```html
-<mat-button>Basic button</mat-button>
-<mat-button class="mat-fab">FAB</mat-button>
-<mat-button class="mat-icon-button">pony</mat-button>
+<matButton>Basic button</matButton>
+<matButton class="mat-fab">FAB</matButton>
+<matButton class="matIconButton">pony</matButton>
 ```
 
 do this:
 ```html
-<mat-button>Basic button</mat-button>
+<matButton>Basic button</matButton>
 <mat-fab>FAB</mat-fab>
-<mat-icon-button>pony</mat-icon-button>
+<matIconButton>pony</matIconButton>
 ```
 
 #### Prefer small, focused modules

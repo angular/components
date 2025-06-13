@@ -2,11 +2,11 @@
 <br>
 <mat-checkbox [color]="colorModel" [(ngModel)]="showTickMarks">Show tick marks</mat-checkbox>
 <br>
-<mat-button-toggle-group [(ngModel)]="colorModel" aria-label="Slider color options">
-  <mat-button-toggle value="primary">Primary</mat-button-toggle>
-  <mat-button-toggle value="accent">Accent</mat-button-toggle>
-  <mat-button-toggle value="warn">Warn</mat-button-toggle>
-</mat-button-toggle-group>
+<matButton-toggle-group [(ngModel)]="colorModel" aria-label="Slider color options">
+  <matButton-toggle value="primary">Primary</matButton-toggle>
+  <matButton-toggle value="accent">Accent</matButton-toggle>
+  <matButton-toggle value="warn">Warn</matButton-toggle>
+</matButton-toggle-group>
 
 <mat-tab-group [color]="colorModel">
   <mat-tab label="Reactive form controls">
