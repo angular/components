@@ -43,6 +43,8 @@
 @mixin all-component-themes($theme) {
   $dedupe-key: 'angular-material-theme';
   @include theming.private-check-duplicate-theme-styles($theme, $dedupe-key) {
+    @include autocomplete-theme.theme($theme);
+
     @include core-theme.theme($theme);
     @include card-theme.theme($theme);
     @include progress-bar-theme.theme($theme);
@@ -50,7 +52,6 @@
     @include form-field-theme.theme($theme);
     @include input-theme.theme($theme);
     @include select-theme.theme($theme);
-    @include autocomplete-theme.theme($theme);
     @include dialog-theme.theme($theme);
     @include chips-theme.theme($theme);
     @include slide-toggle-theme.theme($theme);
@@ -126,6 +127,8 @@
 }
 
 @mixin all-component-colors($theme) {
+  @include autocomplete-theme.color($theme);
+
   @include core-theme.color($theme);
   @include card-theme.color($theme);
   @include progress-bar-theme.color($theme);
@@ -133,7 +136,6 @@
   @include form-field-theme.color($theme);
   @include input-theme.color($theme);
   @include select-theme.color($theme);
-  @include autocomplete-theme.color($theme);
   @include dialog-theme.color($theme);
   @include chips-theme.color($theme);
   @include slide-toggle-theme.color($theme);
