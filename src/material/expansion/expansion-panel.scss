@@ -26,7 +26,9 @@ $fallbacks: m3-expansion.get-tokens();
   color: token-utils.slot(expansion-container-text-color, $fallbacks);
   border-radius: token-utils.slot(expansion-container-shape, $fallbacks);
 
-  @include elevation.overridable-elevation(2);
+  &:not([class*='#{elevation.$prefix}']) {
+    box-shadow: token-utils.slot(expansion-container-elevation-shadow, $fallbacks);
+  }
 
   .mat-accordion & {
     &:not(.mat-expanded), &:not(.mat-expansion-panel-spacing) {

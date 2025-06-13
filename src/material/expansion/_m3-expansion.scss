@@ -4,6 +4,7 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/m3';
+@use '../core/style/elevation';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
 $prefix: (mat, expansion);
@@ -17,6 +18,7 @@ $prefix: (mat, expansion);
       expansion-container-shape: 12px,
       expansion-header-indicator-display: inline-block,
       expansion-legacy-header-indicator-display: none,
+      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     color: (
       expansion-actions-divider-color: map.get($system, outline),
