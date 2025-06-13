@@ -19,7 +19,7 @@ import {Clipboard} from '@angular/cdk/clipboard';
 @Component({
   selector: 'module-import-copy-button',
   template: `
-    <button mat-icon-button matTooltip="Copy import to the clipboard" (click)="copy()">
+    <button matIconButton matTooltip="Copy import to the clipboard" (click)="copy()">
       <mat-icon>content_copy</mat-icon>
     </button>
   `,

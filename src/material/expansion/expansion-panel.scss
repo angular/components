@@ -135,7 +135,7 @@ $fallbacks: m3-expansion.get-tokens();
 
   border-top-color: token-utils.slot(expansion-actions-divider-color, $fallbacks);
 
-  .mat-button-base, .mat-mdc-button-base {
+  .matButton-base, .mat-mdc-button-base {
     margin-left: 8px;
 
     [dir='rtl'] & {

@@ -240,7 +240,7 @@ describe('MatButtonToggle with forms', () => {
     const fixture = TestBed.createComponent(ButtonToggleGroupWithIndirectDescendantToggles);
     fixture.detectChanges();
 
-    const button = fixture.nativeElement.querySelector('.mat-button-toggle button');
+    const button = fixture.nativeElement.querySelector('.matButton-toggle button');
     const groupDebugElement = fixture.debugElement.query(By.directive(MatButtonToggleGroup))!;
     const groupInstance =
       groupDebugElement.injector.get<MatButtonToggleGroup>(MatButtonToggleGroup);
@@ -259,7 +259,7 @@ describe('MatButtonToggle with forms', () => {
     const instance = fixture.componentInstance;
     instance.control.setValue('a');
     fixture.detectChanges();
-    const buttons = fixture.nativeElement.querySelectorAll('.mat-button-toggle-button');
+    const buttons = fixture.nativeElement.querySelectorAll('.matButton-toggle-button');
 
     expect(instance.toggles.map(t => t.checked)).toEqual([true, false, false]);
 
@@ -470,13 +470,13 @@ describe('MatButtonToggle without forms', () => {
     });
 
     it('should change the vertical state', () => {
-      expect(groupNativeElement.classList).not.toContain('mat-button-toggle-vertical');
+      expect(groupNativeElement.classList).not.toContain('matButton-toggle-vertical');
 
       groupInstance.vertical = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(groupNativeElement.classList).toContain('mat-button-toggle-vertical');
+      expect(groupNativeElement.classList).toContain('matButton-toggle-vertical');
     });
 
     it('should emit a change event from button toggles', fakeAsync(() => {
@@ -570,7 +570,7 @@ describe('MatButtonToggle without forms', () => {
 
       expect(
         fixture.nativeElement.querySelectorAll(
-          '.mat-button-toggle-checked .mat-button-toggle-checkbox-wrapper',
+          '.matButton-toggle-checked .matButton-toggle-checkbox-wrapper',
         ).length,
       ).toBe(1);
     });
@@ -678,13 +678,13 @@ describe('MatButtonToggle without forms', () => {
     });
 
     it('should change the vertical state', () => {
-      expect(groupNativeElement.classList).not.toContain('mat-button-toggle-vertical');
+      expect(groupNativeElement.classList).not.toContain('matButton-toggle-vertical');
 
       groupInstance.vertical = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
-      expect(groupNativeElement.classList).toContain('mat-button-toggle-vertical');
+      expect(groupNativeElement.classList).toContain('matButton-toggle-vertical');
     });
 
     it('should deselect a button toggle when selected twice', fakeAsync(() => {
@@ -739,7 +739,7 @@ describe('MatButtonToggle without forms', () => {
 
       expect(
         fixture.nativeElement.querySelectorAll(
-          '.mat-button-toggle-checked .mat-button-toggle-checkbox-wrapper',
+          '.matButton-toggle-checked .matButton-toggle-checkbox-wrapper',
         ).length,
       ).toBe(2);
     });
@@ -760,7 +760,7 @@ describe('MatButtonToggle without forms', () => {
       buttonToggleDebugElement = fixture.debugElement.query(By.directive(MatButtonToggle))!;
       buttonToggleNativeElement = buttonToggleDebugElement.nativeElement;
       buttonToggleLabelElement = fixture.debugElement.query(
-        By.css('.mat-button-toggle-label-content'),
+        By.css('.matButton-toggle-label-content'),
       )!.nativeElement;
       buttonToggleInstance = buttonToggleDebugElement.componentInstance;
       buttonToggleButtonElement = buttonToggleNativeElement.querySelector(
@@ -851,7 +851,7 @@ describe('MatButtonToggle without forms', () => {
     it('should clear the static aria from the host node', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithStaticAriaAttributes);
       fixture.detectChanges();
-      const hostNode: HTMLElement = fixture.nativeElement.querySelector('mat-button-toggle');
+      const hostNode: HTMLElement = fixture.nativeElement.querySelector('matButton-toggle');
 
       expect(hostNode.hasAttribute('aria-label')).toBe(false);
       expect(hostNode.hasAttribute('aria-labelledby')).toBe(false);
@@ -889,7 +889,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
 
-      const button = fixture.nativeElement.querySelector('.mat-button-toggle button');
+      const button = fixture.nativeElement.querySelector('.matButton-toggle button');
 
       expect(button.getAttribute('tabindex')).toBe('3');
     });
@@ -898,7 +898,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
 
-      const host = fixture.nativeElement.querySelector('.mat-button-toggle');
+      const host = fixture.nativeElement.querySelector('.matButton-toggle');
 
       expect(host.getAttribute('role')).toBe('presentation');
     });
@@ -907,7 +907,7 @@ describe('MatButtonToggle without forms', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
 
-      const host = fixture.nativeElement.querySelector('.mat-button-toggle');
+      const host = fixture.nativeElement.querySelector('.matButton-toggle');
       const button = host.querySelector('button');
 
       expect(document.activeElement).not.toBe(button);
@@ -990,7 +990,7 @@ describe('MatButtonToggle without forms', () => {
     const fixture = TestBed.createComponent(ButtonToggleWithStaticName);
     fixture.detectChanges();
 
-    const hostNode: HTMLElement = fixture.nativeElement.querySelector('.mat-button-toggle');
+    const hostNode: HTMLElement = fixture.nativeElement.querySelector('.matButton-toggle');
 
     expect(hostNode.hasAttribute('name')).toBe(false);
     expect(hostNode.querySelector('button')!.getAttribute('name')).toBe('custom-name');
@@ -1040,7 +1040,7 @@ describe('MatButtonToggle without forms', () => {
     // `fixture.detectChanges` immediately, but getting a hold of the instance via the
     // DebugElement and setting the value ourselves.
     expect(() => {
-      const toggle = fixture.debugElement.query(By.css('mat-button-toggle'))!.componentInstance;
+      const toggle = fixture.debugElement.query(By.css('matButton-toggle'))!.componentInstance;
       toggle.checked = true;
       fixture.detectChanges();
     }).not.toThrow();
@@ -1066,17 +1066,17 @@ describe('MatButtonToggle without forms', () => {
 
 @Component({
   template: `
-  <mat-button-toggle-group
+  <matButton-toggle-group
     [disabled]="isGroupDisabled"
     [disabledInteractive]="disabledIntearctive"
     [vertical]="isVertical"
     [(value)]="groupValue">
     @if (renderFirstToggle) {
-      <mat-button-toggle value="test1">Test1</mat-button-toggle>
+      <matButton-toggle value="test1">Test1</matButton-toggle>
     }
-    <mat-button-toggle value="test2">Test2</mat-button-toggle>
-    <mat-button-toggle value="test3">Test3</mat-button-toggle>
-  </mat-button-toggle-group>
+    <matButton-toggle value="test2">Test2</matButton-toggle>
+    <matButton-toggle value="test3">Test3</matButton-toggle>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1090,17 +1090,17 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
   template: `
-  <mat-button-toggle-group
+  <matButton-toggle-group
     [name]="groupName"
     [(ngModel)]="modelValue"
     (change)="lastEvent = $event">
     @for (option of options; track option) {
-      <mat-button-toggle
+      <matButton-toggle
         [value]="option.value"
         [disableRipple]="disableRipple"
-        [name]="option.name">{{option.label}}</mat-button-toggle>
+        [name]="option.name">{{option.label}}</matButton-toggle>
     }
-  </mat-button-toggle-group>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
@@ -1118,11 +1118,11 @@ class ButtonToggleGroupWithNgModel {
 
 @Component({
   template: `
-  <mat-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" multiple>
-    <mat-button-toggle value="eggs">Eggs</mat-button-toggle>
-    <mat-button-toggle value="flour">Flour</mat-button-toggle>
-    <mat-button-toggle value="sugar">Sugar</mat-button-toggle>
-  </mat-button-toggle-group>
+  <matButton-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" multiple>
+    <matButton-toggle value="eggs">Eggs</matButton-toggle>
+    <matButton-toggle value="flour">Flour</matButton-toggle>
+    <matButton-toggle value="sugar">Sugar</matButton-toggle>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1133,12 +1133,12 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
   template: `
-  <mat-button-toggle-group multiple [value]="value">
-    <mat-button-toggle [value]="0">Eggs</mat-button-toggle>
-    <mat-button-toggle [value]="null">Flour</mat-button-toggle>
-    <mat-button-toggle [value]="false">Sugar</mat-button-toggle>
-    <mat-button-toggle>Sugar</mat-button-toggle>
-  </mat-button-toggle-group>
+  <matButton-toggle-group multiple [value]="value">
+    <matButton-toggle [value]="0">Eggs</matButton-toggle>
+    <matButton-toggle [value]="null">Flour</matButton-toggle>
+    <matButton-toggle [value]="false">Sugar</matButton-toggle>
+    <matButton-toggle>Sugar</matButton-toggle>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1149,7 +1149,7 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
   template: `
-  <mat-button-toggle>Yes</mat-button-toggle>
+  <matButton-toggle>Yes</matButton-toggle>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1157,10 +1157,10 @@ class StandaloneButtonToggle {}
 
 @Component({
   template: `
-  <mat-button-toggle-group (change)="lastEvent = $event" value="red">
-    <mat-button-toggle value="red">Value Red</mat-button-toggle>
-    <mat-button-toggle value="green">Value Green</mat-button-toggle>
-  </mat-button-toggle-group>
+  <matButton-toggle-group (change)="lastEvent = $event" value="red">
+    <matButton-toggle value="red">Value Red</matButton-toggle>
+    <matButton-toggle value="green">Value Green</matButton-toggle>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1170,11 +1170,11 @@ class ButtonToggleGroupWithInitialValue {
 
 @Component({
   template: `
-  <mat-button-toggle-group [formControl]="control">
-    <mat-button-toggle value="red">Value Red</mat-button-toggle>
-    <mat-button-toggle value="green">Value Green</mat-button-toggle>
-    <mat-button-toggle value="blue">Value Blue</mat-button-toggle>
-  </mat-button-toggle-group>
+  <matButton-toggle-group [formControl]="control">
+    <matButton-toggle value="red">Value Red</matButton-toggle>
+    <matButton-toggle value="green">Value Green</matButton-toggle>
+    <matButton-toggle value="blue">Value Blue</matButton-toggle>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
@@ -1185,13 +1185,13 @@ class ButtonToggleGroupWithFormControl {
 @Component({
   // We need the `@if` so that there's a container between the group and the toggles.
   template: `
-    <mat-button-toggle-group [formControl]="control">
+    <matButton-toggle-group [formControl]="control">
       @if (true) {
-        <mat-button-toggle value="red">Value Red</mat-button-toggle>
-        <mat-button-toggle value="green">Value Green</mat-button-toggle>
-        <mat-button-toggle value="blue">Value Blue</mat-button-toggle>
+        <matButton-toggle value="red">Value Red</matButton-toggle>
+        <matButton-toggle value="green">Value Green</matButton-toggle>
+        <matButton-toggle value="blue">Value Blue</matButton-toggle>
       }
-    </mat-button-toggle-group>
+    </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
@@ -1201,25 +1201,25 @@ class ButtonToggleGroupWithIndirectDescendantToggles {
 
 /** Simple test component with an aria-label set. */
 @Component({
-  template: `<mat-button-toggle aria-label="Super effective"></mat-button-toggle>`,
+  template: `<matButton-toggle aria-label="Super effective"></matButton-toggle>`,
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithAriaLabel {}
 
 /** Simple test component with an aria-label set. */
 @Component({
-  template: `<mat-button-toggle aria-labelledby="some-id"></mat-button-toggle>`,
+  template: `<matButton-toggle aria-labelledby="some-id"></matButton-toggle>`,
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithAriaLabelledby {}
 
 @Component({
   template: `
-    <mat-button-toggle-group [(value)]="value">
+    <matButton-toggle-group [(value)]="value">
       @for (toggle of possibleValues; track toggle) {
-        <mat-button-toggle [value]="toggle">{{toggle}}</mat-button-toggle>
+        <matButton-toggle [value]="toggle">{{toggle}}</matButton-toggle>
       }
-    </mat-button-toggle-group>
+    </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1232,23 +1232,23 @@ class RepeatedButtonTogglesWithPreselectedValue {
 }
 
 @Component({
-  template: `<mat-button-toggle tabindex="3"></mat-button-toggle>`,
+  template: `<matButton-toggle tabindex="3"></matButton-toggle>`,
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithTabindex {}
 
 @Component({
-  template: `<mat-button-toggle name="custom-name"></mat-button-toggle>`,
+  template: `<matButton-toggle name="custom-name"></matButton-toggle>`,
   imports: [MatButtonToggleModule],
 })
 class ButtonToggleWithStaticName {}
 
 @Component({
   template: `
-    <mat-button-toggle-group>
-      <mat-button-toggle value="1">One</mat-button-toggle>
-      <mat-button-toggle value="2" checked>Two</mat-button-toggle>
-    </mat-button-toggle-group>
+    <matButton-toggle-group>
+      <matButton-toggle value="1">One</matButton-toggle>
+      <matButton-toggle value="2" checked>Two</matButton-toggle>
+    </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1259,7 +1259,7 @@ class ButtonToggleWithStaticChecked {
 
 @Component({
   template: `
-    <mat-button-toggle aria-label="Toggle me" aria-labelledby="something"></mat-button-toggle>
+    <matButton-toggle aria-label="Toggle me" aria-labelledby="something"></matButton-toggle>
   `,
   imports: [MatButtonToggleModule],
 })
@@ -1267,11 +1267,11 @@ class ButtonToggleWithStaticAriaAttributes {}
 
 @Component({
   template: `
-  <mat-button-toggle-group [formControl]="control">
+  <matButton-toggle-group [formControl]="control">
     @for (value of values; track value) {
-      <mat-button-toggle [value]="value">{{value}}</mat-button-toggle>
+      <matButton-toggle [value]="value">{{value}}</matButton-toggle>
     }
-  </mat-button-toggle-group>
+  </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
 })
@@ -1283,11 +1283,11 @@ class ButtonToggleGroupWithFormControlAndDynamicButtons {
 
 @Component({
   template: `
-    <mat-button-toggle-group [(ngModel)]="value">
-      <mat-button-toggle value="1">One</mat-button-toggle>
-      <mat-button-toggle value="2">Two</mat-button-toggle>
-      <mat-button-toggle value="3">Three</mat-button-toggle>
-    </mat-button-toggle-group>
+    <matButton-toggle-group [(ngModel)]="value">
+      <matButton-toggle value="1">One</matButton-toggle>
+      <matButton-toggle value="2">Two</matButton-toggle>
+      <matButton-toggle value="3">Three</matButton-toggle>
+    </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule, FormsModule],
 })

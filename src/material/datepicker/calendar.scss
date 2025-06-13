@@ -52,7 +52,7 @@ $fallbacks: m3-datepicker.get-tokens();
 
   font-size: token-utils.slot(datepicker-calendar-period-button-text-size, $fallbacks);
   font-weight: token-utils.slot(datepicker-calendar-period-button-text-weight, $fallbacks);
-  --mat-button-text-label-text-color: #{
+  --matButton-text-label-text-color: #{
       token-utils.slot(datepicker-calendar-period-button-text-color, $fallbacks)};
 }
 
@@ -81,7 +81,7 @@ $fallbacks: m3-datepicker.get-tokens();
 
 .mat-calendar-previous-button,
 .mat-calendar-next-button {
-  // Needs need a bit more specificity to avoid being overwritten by the .mat-icon-button.
+  // Needs need a bit more specificity to avoid being overwritten by the .matIconButton.
   .mat-datepicker-content &:not(.mat-mdc-button-disabled) {
     color: token-utils.slot(datepicker-calendar-navigation-button-icon-color, $fallbacks);
   }

@@ -113,7 +113,7 @@ provided constraints. The particular constraint options vary depending on the ha
 harnesses support at least:
  
 - `selector` - CSS selector that the component must match (in addition to its host selector, such
-  as `[mat-button]`)
+  as `[matButton]`)
 - `ancestor` - CSS selector for a some ancestor element above the component in the DOM
  
 In addition to these standard options, `MatButtonHarness` also supports
@@ -124,11 +124,11 @@ Using this method we could locate buttons as follows in our test:
  
 ```ts
 it('should work', async () => {
-  // Harness for mat-button whose id is 'more-info'.
+  // Harness for matButton whose id is 'more-info'.
   const info = await loader.getHarness(MatButtonHarness.with({selector: '#more-info'}));
-  // Harness for mat-button whose text is 'Cancel'.
+  // Harness for matButton whose text is 'Cancel'.
   const cancel = await loader.getHarness(MatButtonHarness.with({text: 'Cancel'}));
-  // Harness for mat-button with class 'confirm' and whose text is either 'Ok' or 'Okay'.
+  // Harness for matButton with class 'confirm' and whose text is either 'Ok' or 'Okay'.
   const okButton = await loader.getHarness(
       MatButtonHarness.with({selector: '.confirm', text: /^(Ok|Okay)$/}));
 });
@@ -138,13 +138,13 @@ it('should work', async () => {
 
 The Angular Material component harnesses generally expose methods to either perform actions that a
 real user could perform or to inspect component state that a real user might perceive. For
-example, `MatButtonHarness` has methods to click, focus, and blur the `mat-button`, as well as
+example, `MatButtonHarness` has methods to click, focus, and blur the `matButton`, as well as
 methods to get the text of the button and its disabled state. Because `MatButton` is a very simple
 component, these harness methods might not seem very different from working directly with the DOM.
 However, more complex harnesses like `MatSelectHarness` have methods like `open` and `isOpen` which
 capture more knowledge about the component's internals.
 
-A test using the `MatButtonHarness` to interact with a `mat-button` might look like the following:
+A test using the `MatButtonHarness` to interact with a `matButton` might look like the following:
 
 ```ts
 it('should mark confirmed when ok button clicked', async () => {

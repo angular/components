@@ -80,10 +80,10 @@ describe('MatButtonToggleGroupHarness', () => {
 
 @Component({
   template: `
-    <mat-button-toggle-group [disabled]="disabled" [vertical]="vertical" [appearance]="appearance">
-      <mat-button-toggle value="1">One</mat-button-toggle>
-      <mat-button-toggle value="2">Two</mat-button-toggle>
-    </mat-button-toggle-group>
+    <matButton-toggle-group [disabled]="disabled" [vertical]="vertical" [appearance]="appearance">
+      <matButton-toggle value="1">One</matButton-toggle>
+      <matButton-toggle value="2">Two</matButton-toggle>
+    </matButton-toggle-group>
   `,
   imports: [MatButtonToggleModule],
 })

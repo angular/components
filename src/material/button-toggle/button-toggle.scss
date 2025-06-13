@@ -19,8 +19,8 @@ $legacy-border-radius: 2px !default;
 
 $fallbacks: m3-button-toggle.get-tokens();
 
-.mat-button-toggle-standalone,
-.mat-button-toggle-group {
+.matButton-toggle-standalone,
+.matButton-toggle-group {
   position: relative;
   display: inline-flex;
   flex-direction: row;
@@ -39,8 +39,8 @@ $fallbacks: m3-button-toggle.get-tokens();
   }
 }
 
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-.mat-button-toggle-group-appearance-standard {
+.matButton-toggle-standalone.matButton-toggle-appearance-standard,
+.matButton-toggle-group-appearance-standard {
   border-radius: token-utils.slot(button-toggle-shape, $fallbacks);
   border: solid 1px token-utils.slot(button-toggle-divider-color, $fallbacks);
 
@@ -58,17 +58,17 @@ $fallbacks: m3-button-toggle.get-tokens();
   }
 }
 
-.mat-button-toggle-vertical {
+.matButton-toggle-vertical {
   flex-direction: column;
 
-  .mat-button-toggle-label-content {
+  .matButton-toggle-label-content {
     // Vertical button toggles shouldn't be an inline-block, because the toggles should
     // fill the available width in the group.
     display: block;
   }
 }
 
-.mat-button-toggle {
+.matButton-toggle {
   white-space: nowrap;
   position: relative;
   color: token-utils.slot(button-toggle-legacy-text-color, $fallbacks);
@@ -81,7 +81,7 @@ $fallbacks: m3-button-toggle.get-tokens();
   --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
     token-utils.slot(button-toggle-legacy-selected-state-text-color, $fallbacks)};
 
-  &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
+  &.cdk-keyboard-focused .matButton-toggle-focus-overlay {
     opacity: token-utils.slot(button-toggle-legacy-focus-state-layer-opacity, $fallbacks);
   }
 
@@ -91,7 +91,7 @@ $fallbacks: m3-button-toggle.get-tokens();
   }
 }
 
-.mat-button-toggle-checkbox-wrapper {
+.matButton-toggle-checkbox-wrapper {
   display: inline-block;
   justify-content: flex-start;
   align-items: center;
@@ -113,37 +113,37 @@ $fallbacks: m3-button-toggle.get-tokens();
     right: $legacy-padding;
   }
 
-  .mat-button-toggle-appearance-standard & {
+  .matButton-toggle-appearance-standard & {
     left: $standard-padding;
   }
 
-  [dir='rtl'] .mat-button-toggle-appearance-standard & {
+  [dir='rtl'] .matButton-toggle-appearance-standard & {
     left: auto;
     right: $standard-padding;
   }
 
-  .mat-button-toggle-checked & {
+  .matButton-toggle-checked & {
     width: $_checkmark-size;
   }
 
-  .mat-button-toggle-animations-enabled & {
+  .matButton-toggle-animations-enabled & {
     transition: width $_checkmark-transition;
   }
 
   // Disable the transition in vertical mode since it looks weird.
   // There should be a limited amount of usages anyway.
-  .mat-button-toggle-vertical & {
+  .matButton-toggle-vertical & {
     transition: none;
   }
 }
 
-.mat-button-toggle-checked {
+.matButton-toggle-checked {
   color: token-utils.slot(button-toggle-legacy-selected-state-text-color, $fallbacks);
   background-color: token-utils.slot(
       button-toggle-legacy-selected-state-background-color, $fallbacks);
 }
 
-.mat-button-toggle-disabled {
+.matButton-toggle-disabled {
   pointer-events: none;
   color: token-utils.slot(button-toggle-legacy-disabled-state-text-color, $fallbacks);
   background-color: token-utils.slot(
@@ -151,17 +151,17 @@ $fallbacks: m3-button-toggle.get-tokens();
   --mat-pseudo-checkbox-minimal-disabled-selected-checkmark-color: #{
     token-utils.slot(button-toggle-legacy-disabled-state-text-color, $fallbacks)};
 
-  &.mat-button-toggle-checked {
+  &.matButton-toggle-checked {
     background-color: token-utils.slot(
         button-toggle-legacy-disabled-selected-state-background-color, $fallbacks);
   }
 }
 
-.mat-button-toggle-disabled-interactive {
+.matButton-toggle-disabled-interactive {
   pointer-events: auto;
 }
 
-.mat-button-toggle-appearance-standard {
+.matButton-toggle-appearance-standard {
   $divider-color: token-utils.slot(button-toggle-divider-color, $fallbacks);
   color: token-utils.slot(button-toggle-text-color, $fallbacks);
   background-color: token-utils.slot(button-toggle-background-color, $fallbacks);
@@ -171,27 +171,27 @@ $fallbacks: m3-button-toggle.get-tokens();
   font-weight: token-utils.slot(button-toggle-label-text-weight, $fallbacks);
   letter-spacing: token-utils.slot(button-toggle-label-text-tracking, $fallbacks);
 
-  .mat-button-toggle-group-appearance-standard & + & {
+  .matButton-toggle-group-appearance-standard & + & {
     border-left: solid 1px $divider-color;
   }
 
-  [dir='rtl'] .mat-button-toggle-group-appearance-standard & + & {
+  [dir='rtl'] .matButton-toggle-group-appearance-standard & + & {
     border-left: none;
     border-right: solid 1px $divider-color;
   }
 
-  .mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical & + & {
+  .matButton-toggle-group-appearance-standard.matButton-toggle-vertical & + & {
     border-left: none;
     border-right: none;
     border-top: solid 1px $divider-color;
   }
 
-  &.mat-button-toggle-checked {
+  &.matButton-toggle-checked {
     color: token-utils.slot(button-toggle-selected-state-text-color, $fallbacks);
     background-color: token-utils.slot(button-toggle-selected-state-background-color, $fallbacks);
   }
 
-  &.mat-button-toggle-disabled {
+  &.matButton-toggle-disabled {
     color: token-utils.slot(button-toggle-disabled-state-text-color, $fallbacks);
     background-color: token-utils.slot(button-toggle-disabled-state-background-color, $fallbacks);
 
@@ -200,18 +200,18 @@ $fallbacks: m3-button-toggle.get-tokens();
         token-utils.slot(button-toggle-disabled-selected-state-text-color, $fallbacks)};
     }
 
-    &.mat-button-toggle-checked {
+    &.matButton-toggle-checked {
       color: token-utils.slot(button-toggle-disabled-selected-state-text-color, $fallbacks);
       background-color: token-utils.slot(
           button-toggle-disabled-selected-state-background-color, $fallbacks);
     }
   }
 
-  .mat-button-toggle-focus-overlay {
+  .matButton-toggle-focus-overlay {
     background-color: token-utils.slot(button-toggle-state-layer-color, $fallbacks);
   }
 
-  &:hover .mat-button-toggle-focus-overlay {
+  &:hover .matButton-toggle-focus-overlay {
     opacity: token-utils.slot(button-toggle-hover-state-layer-opacity, $fallbacks);
   }
 
@@ -219,7 +219,7 @@ $fallbacks: m3-button-toggle.get-tokens();
   // overlay for `.cdk-program-focused` because mouse clicks on the <label> element would be
   // always treated as programmatic focus.
   // TODO(paul): support `program` as well. See https://github.com/angular/components/issues/9889
-  &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
+  &.cdk-keyboard-focused .matButton-toggle-focus-overlay {
     opacity: token-utils.slot(button-toggle-focus-state-layer-opacity, $fallbacks);
   }
 
@@ -228,13 +228,13 @@ $fallbacks: m3-button-toggle.get-tokens();
   // because we still want to preserve the keyboard focus state for hybrid devices that have
   // a keyboard and a touchscreen.
   @media (hover: none) {
-    &:hover .mat-button-toggle-focus-overlay {
+    &:hover .matButton-toggle-focus-overlay {
       display: none;
     }
   }
 }
 
-.mat-button-toggle-label-content {
+.matButton-toggle-label-content {
   @include vendor-prefixes.user-select(none);
   display: inline-block;
   padding: 0 $legacy-padding;
@@ -243,18 +243,18 @@ $fallbacks: m3-button-toggle.get-tokens();
   // Prevents IE from shifting the content on click.
   position: relative;
 
-  .mat-button-toggle-appearance-standard & {
+  .matButton-toggle-appearance-standard & {
     padding: 0 $standard-padding;
     line-height: token-utils.slot(button-toggle-height, $fallbacks);
   }
 }
 
-.mat-button-toggle-label-content > * {
+.matButton-toggle-label-content > * {
   vertical-align: middle;
 }
 
 // Overlay to be used as a tint.
-.mat-button-toggle-focus-overlay {
+.matButton-toggle-focus-overlay {
   @include layout-common.fill;
   border-radius: inherit;
 
@@ -268,18 +268,18 @@ $fallbacks: m3-button-toggle.get-tokens();
   // Changing the background color for the selected item won't be visible in high contrast mode.
   // We fall back to using the overlay to draw a brighter, semi-transparent tint on top instead.
   // It uses a border, because the browser will render it using a brighter color.
-  .mat-button-toggle-checked {
-    .mat-button-toggle-focus-overlay {
+  .matButton-toggle-checked {
+    .matButton-toggle-focus-overlay {
       border-bottom: solid 500px;
       opacity: 0.5;
       height: 0;
     }
 
-    &:hover .mat-button-toggle-focus-overlay {
+    &:hover .matButton-toggle-focus-overlay {
       opacity: 0.6;
     }
 
-    &.mat-button-toggle-appearance-standard .mat-button-toggle-focus-overlay {
+    &.matButton-toggle-appearance-standard .matButton-toggle-focus-overlay {
       // In high contrast mode, we use a border for the checked state because backgrounds
       // can either be opaque or transparent. We set the border height to a value that is larger
       // than usual button toggles are. This allows us to keep this high contrast style in the
@@ -292,7 +292,7 @@ $fallbacks: m3-button-toggle.get-tokens();
 
 // Increase specificity because ripple styles are part of the `mat-core` mixin and can
 // potentially overwrite the absolute position of the container.
-.mat-button-toggle .mat-button-toggle-ripple {
+.matButton-toggle .matButton-toggle-ripple {
   @include layout-common.fill;
 
   // Disable pointer events for the ripple container, because the container will overlay the user
@@ -302,7 +302,7 @@ $fallbacks: m3-button-toggle.get-tokens();
   pointer-events: none;
 }
 
-.mat-button-toggle-button {
+.matButton-toggle-button {
   $checkmark-spacing: $_checkmark-size + $_checkmark-margin;
   border: 0;
   background: none;
@@ -314,17 +314,17 @@ $fallbacks: m3-button-toggle.get-tokens();
   width: 100%; // Stretch the button in case the consumer set a custom width.
   cursor: pointer;
 
-  .mat-button-toggle-animations-enabled & {
+  .matButton-toggle-animations-enabled & {
     transition: padding $_checkmark-transition;
   }
 
   // Disable the transition in vertical mode since it looks weird.
   // There should be a limited amount of usages anyway.
-  .mat-button-toggle-vertical & {
+  .matButton-toggle-vertical & {
     transition: none;
   }
 
-  .mat-button-toggle-disabled & {
+  .matButton-toggle-disabled & {
     cursor: default;
   }
 
@@ -337,12 +337,12 @@ $fallbacks: m3-button-toggle.get-tokens();
   // just transitioning it between `width: 18px` and `width: 0`, because it was being shown/hidden
   // with `@if` before the transition was added and leaving it in the DOM while hidden can break
   // some pre-existing layouts.
-  &:has(.mat-button-toggle-checkbox-wrapper) {
-    .mat-button-toggle-checked & {
+  &:has(.matButton-toggle-checkbox-wrapper) {
+    .matButton-toggle-checked & {
       padding-left: $checkmark-spacing;
     }
 
-    [dir='rtl'] .mat-button-toggle-checked & {
+    [dir='rtl'] .matButton-toggle-checked & {
       padding-left: 0;
       padding-right: $checkmark-spacing;
     }
@@ -352,29 +352,29 @@ $fallbacks: m3-button-toggle.get-tokens();
 
 // Change the border-radius of the focus indicator to match the
 // radius of the button-toggle-group or standalone button-toggle.
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
+.matButton-toggle-standalone.matButton-toggle-appearance-standard {
   --mat-focus-indicator-border-radius: #{token-utils.slot(button-toggle-shape, $fallbacks)};
 }
 
-.mat-button-toggle-group-appearance-standard:not(.mat-button-toggle-vertical) .mat-button-toggle {
-  &:last-of-type .mat-button-toggle-button::before {
+.matButton-toggle-group-appearance-standard:not(.matButton-toggle-vertical) .matButton-toggle {
+  &:last-of-type .matButton-toggle-button::before {
     border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
     border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
   }
 
-  &:first-of-type .mat-button-toggle-button::before {
+  &:first-of-type .matButton-toggle-button::before {
     border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
     border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
   }
 }
 
-.mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle {
-  &:last-of-type .mat-button-toggle-button::before {
+.matButton-toggle-group-appearance-standard.matButton-toggle-vertical .matButton-toggle {
+  &:last-of-type .matButton-toggle-button::before {
     border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
     border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
   }
 
-  &:first-of-type .mat-button-toggle-button::before {
+  &:first-of-type .matButton-toggle-button::before {
     border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
     border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
   }

@@ -21,111 +21,111 @@
 <h1>Exclusive Selection</h1>
 
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     name="alignment"
     [vertical]="isVertical"
     [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
-    <mat-button-toggle value="left" [disabled]="isDisabled">
+    <matButton-toggle value="left" [disabled]="isDisabled">
       <mat-icon>format_align_left</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="center" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="center" [disabled]="isDisabled">
       <mat-icon>format_align_center</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="right" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="right" [disabled]="isDisabled">
       <mat-icon>format_align_right</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="justify" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="justify" [disabled]="isDisabled">
       <mat-icon>format_align_justify</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
+    </matButton-toggle>
+  </matButton-toggle-group>
 </section>
 
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     appearance="legacy"
     name="alignment"
     [vertical]="isVertical"
     [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
-    <mat-button-toggle value="left" [disabled]="isDisabled">
+    <matButton-toggle value="left" [disabled]="isDisabled">
       <mat-icon>format_align_left</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="center" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="center" [disabled]="isDisabled">
       <mat-icon>format_align_center</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="right" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="right" [disabled]="isDisabled">
       <mat-icon>format_align_right</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="justify" [disabled]="isDisabled">
+    </matButton-toggle>
+    <matButton-toggle value="justify" [disabled]="isDisabled">
       <mat-icon>format_align_justify</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
+    </matButton-toggle>
+  </matButton-toggle-group>
 </section>
 
 <h1>Disabled Group</h1>
 
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     name="checkbox"
     [vertical]="isVertical"
     [disabled]="isDisabled"
     [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
-    <mat-button-toggle value="bold">
+    <matButton-toggle value="bold">
       <mat-icon>format_bold</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="italic">
+    </matButton-toggle>
+    <matButton-toggle value="italic">
       <mat-icon>format_italic</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle value="underline">
+    </matButton-toggle>
+    <matButton-toggle value="underline">
       <mat-icon>format_underlined</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
+    </matButton-toggle>
+  </matButton-toggle-group>
 </section>
 
 <h1>Multiple Selection</h1>
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     multiple
     [vertical]="isVertical"
     [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
-    <mat-button-toggle>Flour</mat-button-toggle>
-    <mat-button-toggle>Eggs</mat-button-toggle>
-    <mat-button-toggle>Sugar</mat-button-toggle>
-    <mat-button-toggle [disabled]="isDisabled">Milk</mat-button-toggle>
-  </mat-button-toggle-group>
+    <matButton-toggle>Flour</matButton-toggle>
+    <matButton-toggle>Eggs</matButton-toggle>
+    <matButton-toggle>Sugar</matButton-toggle>
+    <matButton-toggle [disabled]="isDisabled">Milk</matButton-toggle>
+  </matButton-toggle-group>
 </section>
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     appearance="legacy"
     multiple
     [vertical]="isVertical"
     [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
-    <mat-button-toggle>Flour</mat-button-toggle>
-    <mat-button-toggle>Eggs</mat-button-toggle>
-    <mat-button-toggle>Sugar</mat-button-toggle>
-    <mat-button-toggle [disabled]="isDisabled">Milk</mat-button-toggle>
-  </mat-button-toggle-group>
+    <matButton-toggle>Flour</matButton-toggle>
+    <matButton-toggle>Eggs</matButton-toggle>
+    <matButton-toggle>Sugar</matButton-toggle>
+    <matButton-toggle [disabled]="isDisabled">Milk</matButton-toggle>
+  </matButton-toggle-group>
 </section>
 
 <h1>Single Toggle</h1>
-<mat-button-toggle>Yes</mat-button-toggle>
-<mat-button-toggle appearance="legacy">Yes</mat-button-toggle>
+<matButton-toggle>Yes</matButton-toggle>
+<matButton-toggle appearance="legacy">Yes</matButton-toggle>
 
 <h1>Dynamic Exclusive Selection</h1>
 <section>
-  <mat-button-toggle-group
+  <matButton-toggle-group
     name="pies"
     [(ngModel)]="favoritePie"
     [vertical]="isVertical"
     [hideSingleSelectionIndicator]="hideSingleSelectionIndicator"
     [disabledInteractive]="disabledInteractive">
     @for (pie of pieOptions; track pie) {
-      <mat-button-toggle [value]="pie">{{pie}}</mat-button-toggle>
+      <matButton-toggle [value]="pie">{{pie}}</matButton-toggle>
     }
-  </mat-button-toggle-group>
+  </matButton-toggle-group>
   <p>Your favorite type of pie is: {{favoritePie}}</p>
 </section>

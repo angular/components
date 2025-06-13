@@ -14,16 +14,16 @@ import {
 } from '@angular/cdk/testing';
 import {ButtonAppearance, ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
 
-/** Harness for interacting with a mat-button in tests. */
+/** Harness for interacting with a matButton in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
   // Note: `.mat-mdc-button-base` should be enough for all buttons, however some apps are using
   // the harness without actually having an applied button. Keep the attributes for backwards
   // compatibility.
 
   /** Selector for the harness. */
-  static hostSelector = `.mat-mdc-button-base, [matButton], [mat-button], [matIconButton],
-    [matFab], [matMiniFab], [mat-raised-button], [mat-flat-button], [mat-icon-button],
-    [mat-stroked-button], [mat-fab], [mat-mini-fab]`;
+  static hostSelector = `.mat-mdc-button-base, [matButton], [matButton], [matIconButton],
+    [matFab], [matMiniFab], [matRaisedButton], [matFlatButton], [matIconButton],
+    [matStrokedButton], [mat-fab], [mat-mini-fab]`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a button with specific attributes.
@@ -105,7 +105,7 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
     // Really we should be only targeting the classes.
     if (
       (await host.hasClass('mat-mdc-icon-button')) ||
-      (await host.getAttribute('mat-icon-button')) != null
+      (await host.getAttribute('matIconButton')) != null
     ) {
       return 'icon';
     }

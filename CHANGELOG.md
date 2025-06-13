@@ -840,7 +840,7 @@
 ### button
 | Commit | Type | Description |
 | -- | -- | -- |
-| [421dd12859](https://github.com/angular/components/commit/421dd1285980633d79e3dcea249cad7344be14fb) | fix | fix color of mat-button links ([#876](https://github.com/angular/components/pull/876)) |
+| [421dd12859](https://github.com/angular/components/commit/421dd1285980633d79e3dcea249cad7344be14fb) | fix | fix color of matButton links ([#876](https://github.com/angular/components/pull/876)) |
 ### categories
 | Commit | Type | Description |
 | -- | -- | -- |
@@ -1142,7 +1142,7 @@
   * The `MapMarkerClusterer` class has been renamed to `DeprecatedMapMarkerClusterer`.
   * The `map-marker-clusterer` selector has been changed to `deprecated-map-marker-clusterer`.
 ### multiple
-- * In order for Material to be compatible with [recent changes in Sass](https://sass-lang.com/documentation/breaking-changes/mixed-decls/) and upcoming changes in the CSS standard, tokens are now emitted in-place, rather the being hoisted to the top of the selector. As a result, some token overrides might not apply anymore. This is relevant primarily for the cases like `@include mat.button-theme($theme); --mat-button-color: red;`. It can be resolved by wrapping the overrides with `& {}`, for example `@include mat.button-theme($theme); & { --mat-button-color: red; }`.
+- * In order for Material to be compatible with [recent changes in Sass](https://sass-lang.com/documentation/breaking-changes/mixed-decls/) and upcoming changes in the CSS standard, tokens are now emitted in-place, rather the being hoisted to the top of the selector. As a result, some token overrides might not apply anymore. This is relevant primarily for the cases like `@include mat.button-theme($theme); --matButton-color: red;`. It can be resolved by wrapping the overrides with `& {}`, for example `@include mat.button-theme($theme); & { --matButton-color: red; }`.
 - * `MatButton.ripple` is no longer available.
   * `MatCheckbox.ripple` is no longer available.
   * `MatChip.ripple` is no longer available.
@@ -3285,9 +3285,9 @@ Andy Chrzaszcz, Bobby Galli, Joey Perrott, Kristiyan Kostadinov, Miles Malerba, 
 
 - The following components have been re-implemented based on MDC:
   - `mat-autocomplete`
-  - `mat-button`
+  - `matButton`
   - `mat-fab`
-  - `mat-icon-button`
+  - `matIconButton`
   - `mat-card`
   - `mat-chip-list` (now split into the following three components: `mat-chip-set`, `mat-chip-listbox`, and `mat-chip-grid` to better represent the different interaction patterns)
   - `mat-option`

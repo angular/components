@@ -18,7 +18,7 @@
 }
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-button.
+/// for the matButton.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -30,7 +30,7 @@
   }
 }
 
-/// Outputs color theme styles for the mat-button.
+/// Outputs color theme styles for the matButton.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for
 ///     the badge: primary, secondary, tertiary, or error (If not specified,
@@ -64,7 +64,7 @@
   }
 }
 
-/// Outputs typography theme styles for the mat-button.
+/// Outputs typography theme styles for the matButton.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -76,7 +76,7 @@
   }
 }
 
-/// Outputs density theme styles for the mat-button.
+/// Outputs density theme styles for the matButton.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
@@ -104,12 +104,12 @@
     @include token-utils.batch-create-token-values($tokens, _define-overrides());
 }
 
-/// Outputs all (base, color, typography, and density) theme styles for the mat-button.
+/// Outputs all (base, color, typography, and density) theme styles for the matButton.
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {String} $color-variant: The color variant to use for the button: primary, secondary,
 //         tertiary, or error (If not specified, default primary color will be used).
 @mixin theme($theme, $color-variant: null) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-button') {
+  @include theming.private-check-duplicate-theme-styles($theme, 'matButton') {
     @if inspection.get-theme-version($theme) == 1 {
       @include base($theme);
       @include color($theme, $color-variant);

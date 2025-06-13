@@ -11,13 +11,13 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MatButtonToggleAppearance} from '../button-toggle';
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 
-/** Harness for interacting with a standard mat-button-toggle in tests. */
+/** Harness for interacting with a standard matButton-toggle in tests. */
 export class MatButtonToggleHarness extends ComponentHarness {
   /** The selector for the host element of a `MatButton` instance. */
-  static hostSelector = '.mat-button-toggle';
+  static hostSelector = '.matButton-toggle';
 
-  private _label = this.locatorFor('.mat-button-toggle-label-content');
-  private _button = this.locatorFor('.mat-button-toggle-button');
+  private _label = this.locatorFor('.matButton-toggle-label-content');
+  private _button = this.locatorFor('.matButton-toggle-button');
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatButtonToggleHarness` that meets
@@ -56,7 +56,7 @@ export class MatButtonToggleHarness extends ComponentHarness {
   /** Gets a boolean promise indicating if the button toggle is disabled. */
   async isDisabled(): Promise<boolean> {
     const host = await this.host();
-    return host.hasClass('mat-button-toggle-disabled');
+    return host.hasClass('matButton-toggle-disabled');
   }
 
   /** Gets a promise for the button toggle's name. */
@@ -82,7 +82,7 @@ export class MatButtonToggleHarness extends ComponentHarness {
   /** Gets the appearance that the button toggle is using. */
   async getAppearance(): Promise<MatButtonToggleAppearance> {
     const host = await this.host();
-    const className = 'mat-button-toggle-appearance-standard';
+    const className = 'matButton-toggle-appearance-standard';
     return (await host.hasClass(className)) ? 'standard' : 'legacy';
   }
 

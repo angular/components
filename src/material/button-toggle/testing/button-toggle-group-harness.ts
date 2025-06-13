@@ -12,10 +12,10 @@ import {ButtonToggleGroupHarnessFilters} from './button-toggle-group-harness-fil
 import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 import {MatButtonToggleHarness} from './button-toggle-harness';
 
-/** Harness for interacting with a standard mat-button-toggle in tests. */
+/** Harness for interacting with a standard matButton-toggle in tests. */
 export class MatButtonToggleGroupHarness extends ComponentHarness {
   /** The selector for the host element of a `MatButton` instance. */
-  static hostSelector = '.mat-button-toggle-group';
+  static hostSelector = '.matButton-toggle-group';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatButtonToggleGroupHarness`
@@ -50,13 +50,13 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
 
   /** Gets whether the button toggle group is laid out vertically. */
   async isVertical(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-button-toggle-vertical');
+    return (await this.host()).hasClass('matButton-toggle-vertical');
   }
 
   /** Gets the appearance that the group is using. */
   async getAppearance(): Promise<MatButtonToggleAppearance> {
     const host = await this.host();
-    const className = 'mat-button-toggle-group-appearance-standard';
+    const className = 'matButton-toggle-group-appearance-standard';
     return (await host.hasClass(className)) ? 'standard' : 'legacy';
   }
 }

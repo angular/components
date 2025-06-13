@@ -39,11 +39,11 @@ describe('v20 rename tokens migration', () => {
     expect(stripWhitespace(tree.readText(THEME_FILE_PATH))).toBe(
       stripWhitespace(`
         html {
-          --mat-icon-button-icon-size: 24px;
-          --mat-button-filled-color: red;
+          --matIconButton-icon-size: 24px;
+          --matButton-filled-color: red;
           --mat-form-field-filled-color: red;
           --mat-pseudo-checkbox-full-color: red;
-          --mat-button-toggle-legacy-color: red;
+          --matButton-toggle-legacy-color: red;
         }
     `),
     );

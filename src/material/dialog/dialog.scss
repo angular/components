@@ -238,7 +238,7 @@ $fallbacks: m3-dialog.get-tokens();
   // class applied. We can't set this class for projected buttons that consumers of the
   // dialog create. To workaround this, we select all Material Design buttons we know and
   // add the necessary spacing similar to how MDC applies spacing.
-  .mat-button-base + .mat-button-base,
+  .matButton-base + .matButton-base,
   .mat-mdc-button-base + .mat-mdc-button-base {
     margin-left: $mat-dialog-button-horizontal-margin;
 
