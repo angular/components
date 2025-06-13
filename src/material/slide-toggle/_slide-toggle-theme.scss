@@ -6,6 +6,8 @@
 @use '../core/typography/typography';
 @use './m2-slide-toggle';
 @use './m3-slide-toggle';
+@use '../core/tokens/m2-utils';
+@use '../core/tokens/m3-utils';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-slide-toggle.
@@ -39,40 +41,27 @@
     // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
       @include token-utils.create-token-values-mixed(m2-slide-toggle.get-color-tokens($theme));
+      $system: m2-utils.get-system($theme);
 
       & {
-        // TODO(andrewjs): Remove this once all tokens are migrated to
-        // mat internally.
-        --mdc-slide-toggle-disabled-label-text-color: #{inspection.get-theme-color(
-            $theme,
-            foreground,
-            disabled-text
-          )};
         // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-slide-toggle-disabled-label-text-color: #{inspection.get-theme-color(
-            $theme,
-            foreground,
-            disabled-text
-          )};
+        --mat-slide-toggle-disabled-label-text-color: #{
+            m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
       }
 
       .mat-mdc-slide-toggle {
         // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-slide-toggle-label-text-color: #{inspection.get-theme-color(
-          $theme,
-          foreground,
-          text
-        )};
+        --mat-slide-toggle-label-text-color: #{map.get($system, on-surface)};
 
         // Change the color palette related tokens to accent or warn if applicable
         &.mat-accent {
           @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, accent));
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, secondary));
         }
 
         &.mat-warn {
           @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, warn));
+              m2-slide-toggle.private-get-color-palette-color-tokens($theme, error));
         }
       }
     }

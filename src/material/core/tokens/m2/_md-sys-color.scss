@@ -10,10 +10,13 @@
   @return (
     primary: map.get($palettes, primary, default),
     on-primary: map.get($palettes, primary, default-contrast),
+    inverse-primary: map.get($palettes, primary, 600),
     secondary: map.get($palettes, accent, default),
     on-secondary: map.get($palettes, accent, default-contrast),
+    inverse-secondary: map.get($palettes, accent, 600),
     error: map.get($palettes, warn, default),
     on-error: map.get($palettes, warn, default-contrast),
+    inverse-error: map.get($palettes, warn, 600),
     shadow: black,
     surface: map.get(palette.$grey-palette, 800),
     on-surface: white,
@@ -27,7 +30,6 @@
 
     // TBD
     error-container: null,
-    inverse-primary: null,
     on-background: null,
     on-error-container: null,
     on-primary-container: null,
@@ -66,10 +68,13 @@
   @return (
     primary: map.get($palettes, primary, default),
     on-primary: map.get($palettes, primary, default-contrast),
+    inverse-primary: map.get($palettes, primary, 300),
     secondary: map.get($palettes, accent, default),
     on-secondary: map.get($palettes, accent, default-contrast),
+    inverse-secondary: map.get($palettes, accent, 300),
     error: map.get($palettes, warn, default),
     on-error: map.get($palettes, warn, default-contrast),
+    inverse-error: map.get($palettes, warn, 300),
     shadow: black,
     surface: white,
     on-surface: rgba(black, 0.87),
@@ -83,7 +88,6 @@
 
     // TBD
     error-container: null,
-    inverse-primary: null,
     on-background: null,
     on-error-container: null,
     on-primary-container: null,
