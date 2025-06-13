@@ -25,33 +25,26 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
-  $cell-font-family: inspection.get-theme-typography($theme, body-2, font-family);
-  $cell-line-height: inspection.get-theme-typography($theme, body-2, line-height);
-  $cell-font-size: inspection.get-theme-typography($theme, body-2, font-size);
-  $cell-font-weight: inspection.get-theme-typography($theme, body-2, font-weight);
-  $cell-letter-spacing: inspection.get-theme-typography($theme, body-2, letter-spacing);
-
+  $system: m2-utils.get-system($theme);
   @return (
-    table-header-headline-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    table-header-headline-line-height:
-        inspection.get-theme-typography($theme, subtitle-2, line-height),
-    table-header-headline-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    table-header-headline-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
-    table-header-headline-tracking:
-        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
+    table-header-headline-font: map.get($system, label-medium-font),
+    table-header-headline-line-height: map.get($system, label-medium-line-height),
+    table-header-headline-size: map.get($system, label-medium-size),
+    table-header-headline-weight: map.get($system, label-medium-weight),
+    table-header-headline-tracking: map.get($system, label-medium-tracking),
 
     // Plain cells and footer cells have the same typography.
-    table-row-item-label-text-font: $cell-font-family,
-    table-row-item-label-text-line-height: $cell-line-height,
-    table-row-item-label-text-size: $cell-font-size,
-    table-row-item-label-text-weight: $cell-font-weight,
-    table-row-item-label-text-tracking: $cell-letter-spacing,
+    table-row-item-label-text-font: map.get($system, body-medium-font),
+    table-row-item-label-text-line-height: map.get($system, body-medium-line-height),
+    table-row-item-label-text-size: map.get($system, body-medium-size),
+    table-row-item-label-text-weight: map.get($system, body-medium-weight),
+    table-row-item-label-text-tracking: map.get($system, body-medium-tracking),
 
-    table-footer-supporting-text-font: $cell-font-family,
-    table-footer-supporting-text-line-height: $cell-line-height,
-    table-footer-supporting-text-size: $cell-font-size,
-    table-footer-supporting-text-weight: $cell-font-weight,
-    table-footer-supporting-text-tracking: $cell-letter-spacing,
+    table-footer-supporting-text-font: map.get($system, body-medium-font),
+    table-footer-supporting-text-line-height: map.get($system, body-medium-line-height),
+    table-footer-supporting-text-size: map.get($system, body-medium-size),
+    table-footer-supporting-text-weight: map.get($system, body-medium-weight),
+    table-footer-supporting-text-tracking: map.get($system, body-medium-tracking),
   );
 }
 

@@ -20,14 +20,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    toolbar-title-text-font: inspection.get-theme-typography($theme, headline-6, font-family),
-    toolbar-title-text-line-height:
-        inspection.get-theme-typography($theme, headline-6, line-height),
-    toolbar-title-text-size: inspection.get-theme-typography($theme, headline-6, font-size),
-    toolbar-title-text-tracking:
-        inspection.get-theme-typography($theme, headline-6, letter-spacing),
-    toolbar-title-text-weight: inspection.get-theme-typography($theme, headline-6, font-weight),
+    toolbar-title-text-font: map.get($system, title-small-font),
+    toolbar-title-text-line-height: map.get($system, title-small-line-height),
+    toolbar-title-text-size: map.get($system, title-small-size),
+    toolbar-title-text-tracking: map.get($system, title-small-tracking),
+    toolbar-title-text-weight: map.get($system, title-small-weight),
   );
 }
 

@@ -132,17 +132,16 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
     // MDC uses `subtitle1` for the input value, placeholder and floating label. The spec
     // shows `body1` for text fields though, so we manually override the typography.
     // Note: Form controls inherit the typography from the parent form field.
-    form-field-container-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    form-field-container-text-line-height:
-        inspection.get-theme-typography($theme, body-1, line-height),
-    form-field-container-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    form-field-container-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    form-field-container-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-container-text-font: map.get($system, body-large-font),
+    form-field-container-text-line-height: map.get($system, body-large-line-height),
+    form-field-container-text-size: map.get($system, body-large-size),
+    form-field-container-text-tracking: map.get($system, body-large-tracking),
+    form-field-container-text-weight: map.get($system, body-large-weight),
 
     // In the container styles, we updated the floating label to use the `body-1` typography level.
     // The MDC notched outline overrides this accidentally (only when the label floats) to a
@@ -153,28 +152,21 @@
     // This is why we can't use their `label-text-populated-size` token and we have to declare
     // our own version of it.
     form-field-outlined-label-text-populated-size:
-        inspection.get-theme-typography($theme, body-1, font-size),
+        map.get($system, body-large-size),
 
-    form-field-subscript-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    form-field-subscript-text-line-height:
-        inspection.get-theme-typography($theme, caption, line-height),
-    form-field-subscript-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    form-field-subscript-text-tracking:
-        inspection.get-theme-typography($theme, caption, letter-spacing),
-    form-field-subscript-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    form-field-filled-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    form-field-filled-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    form-field-filled-label-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    form-field-filled-label-text-weight:
-        inspection.get-theme-typography($theme, body-1, font-weight),
-    form-field-outlined-label-text-font:
-        inspection.get-theme-typography($theme, body-1, font-family),
-    form-field-outlined-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    form-field-outlined-label-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    form-field-outlined-label-text-weight:
-        inspection.get-theme-typography($theme, body-1, font-weight),
+    form-field-subscript-text-font: map.get($system, body-small-font),
+    form-field-subscript-text-line-height: map.get($system, body-small-line-height),
+    form-field-subscript-text-size: map.get($system, body-small-size),
+    form-field-subscript-text-tracking: map.get($system, body-small-tracking),
+    form-field-subscript-text-weight: map.get($system, body-small-weight),
+    form-field-filled-label-text-font: map.get($system, body-large-font),
+    form-field-filled-label-text-size: map.get($system, body-large-size),
+    form-field-filled-label-text-tracking: map.get($system, body-large-tracking),
+    form-field-filled-label-text-weight: map.get($system, body-large-weight),
+    form-field-outlined-label-text-font: map.get($system, body-large-font),
+    form-field-outlined-label-text-size: map.get($system, body-large-size),
+    form-field-outlined-label-text-tracking: map.get($system, body-large-tracking),
+    form-field-outlined-label-text-weight: map.get($system, body-large-weight),
   );
 }
 

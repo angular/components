@@ -35,10 +35,11 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    expansion-header-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    expansion-header-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    expansion-header-text-weight: inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    expansion-header-text-font: map.get($system, label-medium-font),
+    expansion-header-text-size: map.get($system, label-medium-size),
+    expansion-header-text-weight: map.get($system, label-medium-weight),
 
     // TODO(crisbeto): these two properties weren't set at all before the introduction of tokens,
     // but it's inconsistent not to provide them since the container sets all of them. Eventually
@@ -46,13 +47,11 @@
     expansion-header-text-line-height: inherit,
     expansion-header-text-tracking: inherit,
 
-    expansion-container-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    expansion-container-text-line-height:
-        inspection.get-theme-typography($theme, body-2, line-height),
-    expansion-container-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    expansion-container-text-tracking:
-        inspection.get-theme-typography($theme, body-2, letter-spacing),
-    expansion-container-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    expansion-container-text-font: map.get($system, body-medium-font),
+    expansion-container-text-line-height: map.get($system, body-medium-line-height),
+    expansion-container-text-size: map.get($system, body-medium-size),
+    expansion-container-text-tracking: map.get($system, body-medium-tracking),
+    expansion-container-text-weight: map.get($system, body-medium-weight),
   );
 }
 

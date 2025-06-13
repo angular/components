@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:math';
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
@@ -64,10 +63,12 @@ $_large-size: $_default-size + 6px;
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   $base-size: 12px;
 
   @return (
-    badge-text-font: inspection.get-theme-typography($theme, body-2, font-family),
+    badge-text-font: map.get($system, body-medium-font),
     badge-line-height: $_default-size,
     badge-text-size: $base-size,
     badge-text-weight: 600,

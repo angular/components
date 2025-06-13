@@ -9,6 +9,7 @@
 @use '../radio/m2-radio';
 @use './m2-list';
 @use './m3-list';
+@use '../core/tokens/m2-utils';
 
 @mixin base($theme) {
   // Add default values for tokens not related to color, typography, or density.
@@ -154,8 +155,9 @@
     // MDC does not have tokens for the subheader.
     // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
     .mdc-list-group__subheader {
-      font: inspection.get-theme-typography($theme, subtitle-1, font);
-      letter-spacing: inspection.get-theme-typography($theme, subtitle-1, letter-spacing);
+      $system: m2-utils.get-system($theme);
+      font: map.get($system, label-large);
+      letter-spacing: map.get($system, label-large-tracking);
     }
   }
 }

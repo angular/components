@@ -1,4 +1,3 @@
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
@@ -27,12 +26,12 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    tooltip-supporting-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    tooltip-supporting-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    tooltip-supporting-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    tooltip-supporting-text-tracking:
-        inspection.get-theme-typography($theme, caption, letter-spacing),
+    tooltip-supporting-text-font: map.get($system, body-small-font),
+    tooltip-supporting-text-size: map.get($system, body-small-size),
+    tooltip-supporting-text-weight: map.get($system, body-small-weight),
+    tooltip-supporting-text-tracking: map.get($system, body-small-tracking),
   );
 }
 

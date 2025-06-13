@@ -1,4 +1,5 @@
-@use '../core/theming/inspection';
+@use '../core/tokens/m2-utils';
+@use 'sass:map';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -13,18 +14,15 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
     // TODO(crisbeto): other components have tokens for all typography dimensions.
     // Here we only set the font size to maintain the same appearance as the pre-tokens
     // theming API. Consider adding more tokens for letter spacing, font weight etc.
-    grid-list-tile-header-primary-text-size:
-        inspection.get-theme-typography($theme, body-2, font-size),
-    grid-list-tile-header-secondary-text-size:
-        inspection.get-theme-typography($theme, caption, font-size),
-    grid-list-tile-footer-primary-text-size:
-        inspection.get-theme-typography($theme, body-2, font-size),
-    grid-list-tile-footer-secondary-text-size:
-        inspection.get-theme-typography($theme, caption, font-size),
+    grid-list-tile-header-primary-text-size: map.get($system, body-medium-size),
+    grid-list-tile-header-secondary-text-size: map.get($system, body-small-size),
+    grid-list-tile-footer-primary-text-size: map.get($system, body-medium-size),
+    grid-list-tile-footer-secondary-text-size: map.get($system, body-small-size),
   );
 }
 

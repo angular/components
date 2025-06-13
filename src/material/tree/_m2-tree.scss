@@ -21,10 +21,11 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    tree-node-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    tree-node-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    tree-node-text-weight: inspection.get-theme-typography($theme, body-2, font-weight),
+    tree-node-text-font: map.get($system, body-medium-font),
+    tree-node-text-size: map.get($system, body-medium-size),
+    tree-node-text-weight: map.get($system, body-medium-weight),
 
     // TODO(crisbeto): provide tokens for line height and letter spacing to match other components.
   );

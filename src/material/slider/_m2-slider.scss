@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/theming/inspection';
 @use '../core/style/elevation';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
@@ -75,15 +74,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    slider-label-label-text-font: inspection.get-theme-typography($theme, subtitle-2, font-family),
-    slider-label-label-text-size: inspection.get-theme-typography($theme, subtitle-2, font-size),
-    slider-label-label-text-line-height:
-        inspection.get-theme-typography($theme, subtitle-2, line-height),
-    slider-label-label-text-tracking:
-        inspection.get-theme-typography($theme, subtitle-2, letter-spacing),
-    slider-label-label-text-weight:
-        inspection.get-theme-typography($theme, subtitle-2, font-weight),
+    slider-label-label-text-font: map.get($system, label-medium-font),
+    slider-label-label-text-size: map.get($system, label-medium-size),
+    slider-label-label-text-line-height: map.get($system, label-medium-line-height),
+    slider-label-label-text-tracking: map.get($system, label-medium-tracking),
+    slider-label-label-text-weight: map.get($system, label-medium-weight),
   );
 }
 

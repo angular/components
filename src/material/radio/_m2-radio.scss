@@ -45,12 +45,13 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    radio-label-text-font: inspection.get-theme-typography($theme, body-2, font-family),
-    radio-label-text-line-height: inspection.get-theme-typography($theme, body-2, line-height),
-    radio-label-text-size: inspection.get-theme-typography($theme, body-2, font-size),
-    radio-label-text-tracking: inspection.get-theme-typography($theme, body-2, letter-spacing),
-    radio-label-text-weight: inspection.get-theme-typography($theme, body-2, font-weight)
+    radio-label-text-font: map.get($system, body-medium-font),
+    radio-label-text-line-height: map.get($system, body-medium-line-height),
+    radio-label-text-size: map.get($system, body-medium-size),
+    radio-label-text-tracking: map.get($system, body-medium-tracking),
+    radio-label-text-weight: map.get($system, body-medium-weight)
   );
 }
 

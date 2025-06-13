@@ -114,20 +114,26 @@
   @return $theme;
 }
 
-@function _define-system($primary, $accent, $warn, $is-dark) {
+@function _define-system($primary, $accent, $warn, $is-dark, $typography) {
   $palettes: (
     primary: $primary,
     accent: $accent,
     warn: $warn,
   );
 
-  $color: if(
+  $sys-color: if(
       $is-dark,
       m2.md-sys-color-values-dark($palettes),
       m2.md-sys-color-values-light($palettes));
-  $state: m2.md-sys-state-values();
+  $sys-state: m2.md-sys-state-values();
+  $sys-typography: m2.md-sys-typescale-values($typography);
 
-  @return map.merge($color, $state);
+  $system: ();
+  @each $map in ($sys-color, $sys-state, $sys-typography) {
+    $system: map.merge($system, $map);
+  }
+
+  @return $system;
 }
 
 // Creates a color configuration from the specified
@@ -177,7 +183,13 @@
     );
 
     $theme: _internalize-theme(theming.private-create-backwards-compatibility-theme($theme));
-    $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
+    $system: _define-system(
+        $primary: $primary,
+        $accent: $accent,
+        $warn: $warn,
+        $is-dark: $is-dark,
+        $typography: ());
+    $theme: map.set($theme, _mat-system, $system);
     @return $theme;
   }
   // If the map pattern is used (1), we just pass-through the configurations for individual
@@ -199,10 +211,13 @@
   $theme: _internalize-theme(
       theming.private-create-backwards-compatibility-theme(_mat-validate-theme($result))
   );
-  $primary: map.get($result, primary) or map.get($result, color, primary) or ();
-  $accent: map.get($result, accent) or map.get($result, color, accent) or ();
-  $warn: map.get($result, warn) or map.get($result, color, warn) or ();
-  $theme: map.set($theme, _mat-system, _define-system($primary, $accent, $warn, $is-dark));
+  $system: _define-system(
+      $primary: map.get($result, primary) or map.get($result, color, primary) or (),
+      $accent: map.get($result, accent) or map.get($result, color, accent) or (),
+      $warn: map.get($result, warn) or map.get($result, color, warn) or (),
+      $is-dark: $is-dark,
+      $typography: map.get($result, typography) or ());
+  $theme: map.set($theme, _mat-system, $system);
   @return $theme;
 }
 

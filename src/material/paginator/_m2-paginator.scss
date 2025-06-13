@@ -25,15 +25,14 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    paginator-container-text-font: inspection.get-theme-typography($theme, caption, font-family),
-    paginator-container-text-line-height:
-        inspection.get-theme-typography($theme, caption, line-height),
-    paginator-container-text-size: inspection.get-theme-typography($theme, caption, font-size),
-    paginator-container-text-tracking:
-        inspection.get-theme-typography($theme, caption, letter-spacing),
-    paginator-container-text-weight: inspection.get-theme-typography($theme, caption, font-weight),
-    paginator-select-trigger-text-size: inspection.get-theme-typography($theme, caption, font-size),
+    paginator-container-text-font: map.get($system, body-small-font),
+    paginator-container-text-line-height: map.get($system, body-small-line-height),
+    paginator-container-text-size: map.get($system, body-small-size),
+    paginator-container-text-tracking: map.get($system, body-small-tracking),
+    paginator-container-text-weight: map.get($system, body-small-weight),
+    paginator-select-trigger-text-size: map.get($system, body-small-size),
   );
 }
 

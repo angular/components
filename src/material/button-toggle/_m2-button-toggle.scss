@@ -53,24 +53,18 @@
 
 // Tokens that can be configured through Angular Material's typography theming API.
 @function get-typography-tokens($theme) {
+  $system: m2-utils.get-system($theme);
   @return (
-    button-toggle-label-text-font: inspection.get-theme-typography($theme, body-1, font-family),
-    button-toggle-label-text-line-height:
-        inspection.get-theme-typography($theme, body-1, line-height),
-    button-toggle-label-text-size: inspection.get-theme-typography($theme, body-1, font-size),
-    button-toggle-label-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    button-toggle-label-text-weight: inspection.get-theme-typography($theme, body-1, font-weight),
-    button-toggle-legacy-label-text-font:
-        inspection.get-theme-typography($theme, body-1, font-family),
-    button-toggle-legacy-label-text-line-height:
-        inspection.get-theme-typography($theme, body-1, line-height),
-    button-toggle-legacy-label-text-size:
-        inspection.get-theme-typography($theme, body-1, font-size),
-    button-toggle-legacy-label-text-tracking:
-        inspection.get-theme-typography($theme, body-1, letter-spacing),
-    button-toggle-legacy-label-text-weight:
-        inspection.get-theme-typography($theme, body-1, font-weight),
+    button-toggle-label-text-font: map.get($system, body-large-font),
+    button-toggle-label-text-line-height: map.get($system, body-large-line-height),
+    button-toggle-label-text-size: map.get($system, body-large-size),
+    button-toggle-label-text-tracking: map.get($system, body-large-tracking),
+    button-toggle-label-text-weight: map.get($system, body-large-weight),
+    button-toggle-legacy-label-text-font: map.get($system, body-large-font),
+    button-toggle-legacy-label-text-line-height: map.get($system, body-large-line-height),
+    button-toggle-legacy-label-text-size: map.get($system, body-large-size),
+    button-toggle-legacy-label-text-tracking: map.get($system, body-large-tracking),
+    button-toggle-legacy-label-text-weight: map.get($system, body-large-weight),
   );
 }
 
