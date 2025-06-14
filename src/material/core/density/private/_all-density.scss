@@ -45,11 +45,12 @@
   @include button-toggle-theme.density($theme);
   @include card-theme.density($theme);
   @include checkbox-theme.density($theme);
+  @include fab-theme.density($theme);
+
   @include chips-theme.density($theme);
   @include core-theme.density($theme);
   @include dialog-theme.density($theme);
   @include expansion-theme.density($theme);
-  @include fab-theme.density($theme);
   @include form-field-theme.density($theme);
   @include icon-button-theme.density($theme);
   @include input-theme.density($theme);

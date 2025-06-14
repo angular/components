@@ -44,9 +44,16 @@
   $dedupe-key: 'angular-material-theme';
   @include theming.private-check-duplicate-theme-styles($theme, $dedupe-key) {
     @include autocomplete-theme.theme($theme);
+    @include badge-theme.theme($theme);
+    @include bottom-sheet-theme.theme($theme);
+    @include button-theme.theme($theme);
+    @include button-toggle-theme.theme($theme);
+    @include card-theme.theme($theme);
+    @include checkbox-theme.theme($theme);
+    @include fab-theme.theme($theme);
+    @include icon-button-theme.theme($theme);
 
     @include core-theme.theme($theme);
-    @include card-theme.theme($theme);
     @include progress-bar-theme.theme($theme);
     @include tooltip-theme.theme($theme);
     @include form-field-theme.theme($theme);
@@ -61,16 +68,9 @@
     @include list-theme.theme($theme);
     @include paginator-theme.theme($theme);
     @include tabs-theme.theme($theme);
-    @include checkbox-theme.theme($theme);
-    @include button-theme.theme($theme);
-    @include icon-button-theme.theme($theme);
-    @include fab-theme.theme($theme);
     @include snack-bar-theme.theme($theme);
     @include table-theme.theme($theme);
     @include progress-spinner-theme.theme($theme);
-    @include badge-theme.theme($theme);
-    @include bottom-sheet-theme.theme($theme);
-    @include button-toggle-theme.theme($theme);
     @include datepicker-theme.theme($theme);
     @include divider-theme.theme($theme);
     @include expansion-theme.theme($theme);
@@ -86,14 +86,22 @@
 }
 
 @mixin all-component-bases($theme) {
-  @include core-theme.base($theme);
+  @include autocomplete-theme.base($theme);
+  @include badge-theme.base($theme);
+  @include bottom-sheet-theme.base($theme);
+  @include button-theme.base($theme);
+  @include button-toggle-theme.base($theme);
   @include card-theme.base($theme);
+  @include checkbox-theme.base($theme);
+  @include fab-theme.base($theme);
+  @include icon-button-theme.base($theme);
+
+  @include core-theme.base($theme);
   @include progress-bar-theme.base($theme);
   @include tooltip-theme.base($theme);
   @include form-field-theme.base($theme);
   @include input-theme.base($theme);
   @include select-theme.base($theme);
-  @include autocomplete-theme.base($theme);
   @include dialog-theme.base($theme);
   @include chips-theme.base($theme);
   @include slide-toggle-theme.base($theme);
@@ -103,16 +111,9 @@
   @include list-theme.base($theme);
   @include paginator-theme.base($theme);
   @include tabs-theme.base($theme);
-  @include checkbox-theme.base($theme);
-  @include button-theme.base($theme);
-  @include icon-button-theme.base($theme);
-  @include fab-theme.base($theme);
   @include snack-bar-theme.base($theme);
   @include table-theme.base($theme);
   @include progress-spinner-theme.base($theme);
-  @include badge-theme.base($theme);
-  @include bottom-sheet-theme.base($theme);
-  @include button-toggle-theme.base($theme);
   @include datepicker-theme.base($theme);
   @include divider-theme.base($theme);
   @include expansion-theme.base($theme);
@@ -128,9 +129,16 @@
 
 @mixin all-component-colors($theme) {
   @include autocomplete-theme.color($theme);
+  @include badge-theme.color($theme);
+  @include bottom-sheet-theme.color($theme);
+  @include button-theme.color($theme);
+  @include button-toggle-theme.color($theme);
+  @include card-theme.color($theme);
+  @include checkbox-theme.color($theme);
+  @include fab-theme.color($theme);
+  @include icon-button-theme.color($theme);
 
   @include core-theme.color($theme);
-  @include card-theme.color($theme);
   @include progress-bar-theme.color($theme);
   @include tooltip-theme.color($theme);
   @include form-field-theme.color($theme);
@@ -145,16 +153,9 @@
   @include list-theme.color($theme);
   @include paginator-theme.color($theme);
   @include tabs-theme.color($theme);
-  @include checkbox-theme.color($theme);
-  @include button-theme.color($theme);
-  @include icon-button-theme.color($theme);
-  @include fab-theme.color($theme);
   @include snack-bar-theme.color($theme);
   @include table-theme.color($theme);
   @include progress-spinner-theme.color($theme);
-  @include badge-theme.color($theme);
-  @include bottom-sheet-theme.color($theme);
-  @include button-toggle-theme.color($theme);
   @include datepicker-theme.color($theme);
   @include divider-theme.color($theme);
   @include expansion-theme.color($theme);
