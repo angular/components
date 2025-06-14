@@ -4,6 +4,12 @@ import {basename, extname} from 'path';
 /** Regular expression that matches example comments. */
 const exampleCommentRegex = /<!--\s*example\(\s*([^)]+)\)\s*-->/g;
 
+/** Marker inserted before the start of an example. */
+const exampleStartMarker = '<!-- ___exampleStart___ -->';
+
+/** Marker inserted after the end of an example. */
+const exampleEndMarker = '<!-- ___exampleEnd___ -->';
+
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
  * files that can be used in the Angular Material docs.
@@ -78,6 +84,8 @@ export class DocsMarkdownRenderer extends Renderer {
    */
   html(html: string) {
     html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
+      let replacement: string;
+
       // using [\s\S]* because .* does not match line breaks
       if (content.match(/\{[\s\S]*\}/g)) {
         const {example, file, region} = JSON.parse(content.trim()) as {
@@ -85,12 +93,14 @@ export class DocsMarkdownRenderer extends Renderer {
           file: string;
           region: string;
         };
-        return `<div material-docs-example="${example}"
+        replacement = `<div material-docs-example="${example}"
                              ${file ? `file="${file}"` : ''}
                              ${region ? `region="${region}"` : ''}></div>`;
       } else {
-        return `<div material-docs-example="${content}"></div>`;
+        replacement = `<div material-docs-example="${content}"></div>`;
       }
+
+      return `${exampleStartMarker}${replacement}${exampleEndMarker}`;
     });
 
     return super.html(html);
@@ -120,6 +130,16 @@ export class DocsMarkdownRenderer extends Renderer {
     this._slugger.seen = {};
     this._referencedFragments.clear();
 
-    return `<div class="docs-markdown">${output}</div>`;
+    const markdownOpen = '<div class="docs-markdown">';
+
+    // The markdown styling can interfere with the example's styles, because we don't use
+    // encapsulation. We work around it by replacing the opening marker, left by the previous
+    // step, with a closing tag, and replacing the closing marker with an opening tag.
+    // The result is that we exclude the example code from the markdown styling.
+    output = output
+      .replace(new RegExp(exampleStartMarker, 'g'), '</div>')
+      .replace(new RegExp(exampleEndMarker, 'g'), markdownOpen);
+
+    return `${markdownOpen}${output}</div>`;
   }
 }
