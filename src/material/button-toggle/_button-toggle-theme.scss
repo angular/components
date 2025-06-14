@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/tokens/token-utils';
@@ -11,14 +10,12 @@
 /// for the mat-button-toggle.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-button-toggle.get-unthemable-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-button-toggle.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-          m2-button-toggle.get-unthemable-tokens($theme));
-    }
+    $tokens: map.get(m3-button-toggle.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-button-toggle.
@@ -26,43 +23,34 @@
 /// @param {String} $color-variant: The color variant to use for the button toggle: primary,
 ///        secondary, tertiary, or error (If not specified, default secondary color will be used).
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-button-toggle.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-button-toggle.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-        m2-button-toggle.get-color-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-button-toggle.get-tokens($theme, $color-variant), color);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs typography theme styles for the mat-button-toggle.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-button-toggle.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-button-toggle.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-          m2-button-toggle.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-button-toggle.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs density theme styles for the mat-button-toggle.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-button-toggle.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-button-toggle.get-tokens($theme), density));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-button-toggle.get-density-tokens($theme));
-    }
+    $tokens: map.get(m3-button-toggle.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
