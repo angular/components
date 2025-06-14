@@ -378,7 +378,33 @@ export class TreePattern<V> {
     });
   }
 
-  // TODO(ok7sai): add `setDefaultState` method.
+  /**
+   * Sets the tree to it's default initial state.
+   *
+   * Sets the active index of the tree to the first focusable selected tree item if one exists.
+   * Otherwise, sets focus to the first focusable tree item.
+   */
+  setDefaultState() {
+    let firstItemIndex: number | undefined;
+
+    for (const [index, item] of this.allItems().entries()) {
+      if (!item.visible()) continue;
+      if (!this.focusManager.isFocusable(item)) continue;
+
+      if (firstItemIndex === undefined) {
+        firstItemIndex = index;
+      }
+
+      if (item.selected()) {
+        this.activeIndex.set(index);
+        return;
+      }
+    }
+
+    if (firstItemIndex !== undefined) {
+      this.activeIndex.set(firstItemIndex);
+    }
+  }
 
   /** Handles keydown events on the tree. */
   onKeydown(event: KeyboardEvent) {
