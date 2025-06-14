@@ -69,6 +69,17 @@
   @return _create-var(--mat-#{$token}, $sys-fallback);
 }
 
+// Outputs a map of token values as CSS variable definitions.
+@mixin values($tokens) {
+  @include sass-utils.current-selector-or-root() {
+    @each $key, $value in $tokens {
+      @if $value != null {
+        --mat-#{$key}: #{$value};
+      }
+    }
+  }
+}
+
 // Outputs a map of tokens.
 @mixin create-token-values($tokens) {
   @include _create-token-values-internal($tokens, false);
