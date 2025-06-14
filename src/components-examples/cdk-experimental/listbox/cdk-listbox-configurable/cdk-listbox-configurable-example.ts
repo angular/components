@@ -6,12 +6,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatPseudoCheckbox} from '@angular/material/core';
 
-/** @title Listbox using UI Patterns. */
+/** @title Configurable Listbox. */
 @Component({
-  selector: 'cdk-listbox-example',
-  exportAs: 'cdkListboxExample',
-  templateUrl: 'cdk-listbox-example.html',
-  styleUrl: 'cdk-listbox-example.css',
+  selector: 'cdk-listbox-configurable-example',
+  exportAs: 'cdkListboxConfigurableExample',
+  templateUrl: 'cdk-listbox-configurable-example.html',
+  styleUrl: 'cdk-listbox-configurable-example.css',
+  standalone: true,
   imports: [
     CdkListbox,
     CdkOption,
@@ -22,7 +23,7 @@ import {MatPseudoCheckbox} from '@angular/material/core';
     MatPseudoCheckbox,
   ],
 })
-export class CdkListboxExample {
+export class CdkListboxConfigurableExample {
   orientation: 'vertical' | 'horizontal' = 'vertical';
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'explicit';

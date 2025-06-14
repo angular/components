@@ -6,12 +6,40 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CdkListboxExample} from '@angular/components-examples/cdk-experimental/listbox';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  CdkListboxConfigurableExample,
+  CdkListboxSingleSelectExample,
+  CdkListboxMultiSelectExample,
+  CdkListboxSingleSelectFollowFocusExample,
+  CdkListboxMultiSelectFollowFocusExample,
+  CdkListboxHorizontalExample,
+  CdkListboxRtlHorizontalExample,
+  CdkListboxActiveDescendantExample,
+  CdkListboxDisabledFocusableExample,
+  CdkListboxDisabledSkippedExample,
+  CdkListboxReadonlyExample,
+  CdkListboxDisabledExample,
+} from '@angular/components-examples/cdk-experimental/listbox';
 
 @Component({
   templateUrl: 'cdk-listbox-demo.html',
-  imports: [CdkListboxExample],
+  imports: [
+    CdkListboxConfigurableExample,
+    CdkListboxSingleSelectExample,
+    CdkListboxMultiSelectExample,
+    CdkListboxSingleSelectFollowFocusExample,
+    CdkListboxMultiSelectFollowFocusExample,
+    CdkListboxHorizontalExample,
+    CdkListboxRtlHorizontalExample,
+    CdkListboxActiveDescendantExample,
+    CdkListboxDisabledFocusableExample,
+    CdkListboxDisabledSkippedExample,
+    CdkListboxReadonlyExample,
+    CdkListboxDisabledExample,
+  ],
+  styleUrl: 'cdk-listbox-demo.css',
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkExperimentalListboxDemo {}
