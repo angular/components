@@ -66,7 +66,7 @@ describe('CdkListbox', () => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
       imports: [BidiModule, ListboxExample],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ListboxExample);
     const testComponent = fixture.componentInstance as ListboxExample;
@@ -99,7 +99,7 @@ describe('CdkListbox', () => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
       imports: [BidiModule, DefaultListboxExample],
-    }).compileComponents();
+    });
 
     const defaultFixture = TestBed.createComponent(DefaultListboxExample);
     defaultFixture.detectChanges();

@@ -19,7 +19,7 @@ This guide discusses the advantages of using component test harnesses and shows 
 ## Benefits of component test harnesses
 
 There are two primary benefits to using the Angular Material component harnesses in your tests:
- 
+
 1. Harnesses make tests easier to read and understand with straightforward APIs.
 2. Harnesses make tests more robust and less likely to break when updating Angular Material.
 
@@ -48,8 +48,7 @@ let loader: HarnessLoader;
 
 describe('my-component', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({imports: [MyModule], declarations: [UserProfile]})
-        .compileComponents();
+    TestBed.configureTestingModule({imports: [MyModule], declarations: [UserProfile]});
     fixture = TestBed.createComponent(UserProfile);
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
@@ -59,10 +58,10 @@ describe('my-component', () => {
 This code creates a fixture for `UserProfile` and then creates a `HarnessLoader` for that fixture.
 The `HarnessLoader` can then locate Angular Material components inside `UserProfile` and create
 harnesses for them. Note that `HarnessLoader` and `TestbedHarnessEnvironment` are loaded from
-different paths. 
+different paths.
 
 - `@angular/cdk/testing` contains symbols that are shared regardless of the environment your tests
-  are in. 
+  are in.
 - `@angular/cdk/testing/testbed` contains symbols that are used only in Karma tests.
 - `@angular/cdk/testing/selenium-webdriver` (not shown above) contains symbols that are used only in
   Selenium WebDriver tests.
@@ -93,7 +92,7 @@ with your tests.
 
 The example above retrieves all button harnesses and uses an array index to get the harness for a
 specific button. However, if the number or order of buttons changes, this test will break. You can
-write a less brittle test by instead asking for only a subset of harnesses inside `UserProfile`.  
+write a less brittle test by instead asking for only a subset of harnesses inside `UserProfile`.
 
 You can load harnesses for a sub-section of the DOM within `UserProfile` with the `getChildLoader`
 method on `HarnessLoader`. For example, say that we know `UserProfile` has a div,
@@ -111,17 +110,17 @@ You can also use the static `with` method implemented on all Angular Material co
 This method creates a `HarnessPredicate`, an object that filters loaded harnesses based on the
 provided constraints. The particular constraint options vary depending on the harness class, but all
 harnesses support at least:
- 
+
 - `selector` - CSS selector that the component must match (in addition to its host selector, such
   as `[mat-button]`)
 - `ancestor` - CSS selector for a some ancestor element above the component in the DOM
- 
+
 In addition to these standard options, `MatButtonHarness` also supports
- 
-- `text` - String text or regular expressions that matches the text content of the button 
- 
+
+- `text` - String text or regular expressions that matches the text content of the button
+
 Using this method we could locate buttons as follows in our test:
- 
+
 ```ts
 it('should work', async () => {
   // Harness for mat-button whose id is 'more-info'.
@@ -164,7 +163,7 @@ which will cause the test to wait for `setTimeout`, `Promise`, etc.
 ## Comparison with and without component harnesses
 
 Consider an `<issue-report-selector>` component that you want to test. It allows a user to
-choose an issue type and display the necessary form create report for that issue type. You need a 
+choose an issue type and display the necessary form create report for that issue type. You need a
 test to verify that when the user chooses an issue type the proper report displays. First consider
 what the test might look like without using component harnesses:
 
@@ -173,10 +172,10 @@ describe('issue-report-selector', () => {
   let fixture: ComponentFixture<IssueReportSelector>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [IssueReportSelectorModule],
       declarations: [IssueReportSelector],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(IssueReportSelector);
     fixture.detectChanges();
@@ -205,10 +204,10 @@ describe('issue-report-selector', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [IssueReportSelectorModule],
       declarations: [IssueReportSelector],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(IssueReportSelector);
     fixture.detectChanges();
@@ -247,13 +246,13 @@ Notice that the test without harnesses directly uses CSS selectors to query elem
 `<mat-select>`, such as `.mat-select-trigger`. If the internal DOM of `<mat-select>` changes, these
 queries may stop working. While the Angular team tries to minimize this type of change, some
 features and bug fixes ultimately require restructuring the DOM. By using the Angular Material
-harnesses, you avoid depending on internal DOM structure directly. 
+harnesses, you avoid depending on internal DOM structure directly.
 
 In addition to DOM structure, component asynchronicity often offers a challenge when updating
 components. If a component changes between synchronous and asynchronous, downstream unit tests may
 break due to expectations around timing. Tests then require the addition or removal of some
 arcane combination of `whenStable`, `flushMicroTasks`, `tick`, or `detectChanges`. Component
-harnesses, however, avoid this problem by normalizing the asynchronicity of all component behaviors 
+harnesses, however, avoid this problem by normalizing the asynchronicity of all component behaviors
 with all asynchronous APIs. When a test uses these harnesses, changes to asynchronicity become
 far more manageable.
 
