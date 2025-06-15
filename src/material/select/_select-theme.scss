@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/tokens/token-utils';
@@ -11,63 +10,54 @@
 /// for the mat-select.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-select.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-select.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      $mat-tokens: m2-select.get-unthemable-tokens();
-      @include token-utils.create-token-values-mixed($mat-tokens);
-    }
+    $tokens: map.get(m3-select.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-select.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-select.get-color-tokens($theme, primary);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-select.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-          m2-select.get-color-tokens($theme, primary));
+    $tokens: map.get(m3-select.get-tokens($theme, $color-variant), color);
+  }
 
-      .mat-mdc-form-field.mat-accent {
-        @include token-utils.create-token-values-mixed(
-            m2-select.get-color-tokens($theme, secondary));
-      }
+  @include token-utils.values($tokens);
 
-      .mat-mdc-form-field.mat-warn {
-        @include token-utils.create-token-values-mixed(
-            m2-select.get-color-tokens($theme, error));
-      }
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-form-field.mat-accent {
+      $tokens: m2-select.get-color-tokens($theme, secondary);
+      @include token-utils.values($tokens);
+    }
+
+    .mat-mdc-form-field.mat-warn {
+      $tokens: m2-select.get-color-tokens($theme, error);
+      @include token-utils.values($tokens);
     }
   }
 }
 
-/// Outputs typography theme styles for the mat-select.
-/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-select.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-select.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-select.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-select.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs typography theme styles for the mat-select.
-/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-select.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-select.get-tokens($theme), density));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-select.get-density-tokens($theme));
-    }
+    $tokens: map.get(m3-select.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

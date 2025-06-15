@@ -5,7 +5,6 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
-@use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../button/icon-button-theme';
 
@@ -13,37 +12,35 @@
 /// for the mat-datepicker.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-datepicker.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-datepicker.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-datepicker.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-datepicker.get-color-tokens($theme, primary);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-datepicker.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
-          m2-datepicker.get-color-tokens($theme, primary));
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme, $color-variant), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mat-datepicker-content, .mat-datepicker-toggle-active {
       &.mat-accent {
-        @include token-utils.create-token-values-mixed(
-            m2-datepicker.get-color-tokens($theme, secondary));
+        $tokens: m2-datepicker.get-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values-mixed(
-            m2-datepicker.get-color-tokens($theme, error));
+        $tokens: m2-datepicker.get-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
   }
@@ -52,13 +49,12 @@
 /// Outputs typography theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-datepicker.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-datepicker.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-datepicker.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-datepicker.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin date-range-colors(
@@ -78,9 +74,14 @@
 /// Outputs density theme styles for the mat-datepicker.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-datepicker.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-datepicker.get-tokens($theme), density));
-  } @else {
+    $tokens: map.get(m3-datepicker.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     // TODO(crisbeto): move this into the structural styles
     // once the icon button density is switched to tokens.
 

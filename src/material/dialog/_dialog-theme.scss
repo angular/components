@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use './m2-dialog';
 @use './m3-dialog';
 @use '../core/tokens/token-utils';
@@ -8,41 +7,39 @@
 @use '../core/typography/typography';
 
 @mixin base($theme) {
+  $tokens: m2-dialog.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-dialog.get-tokens($theme), base));
-  } @else {
-    // Add default values for tokens not related to color, typography, or density.
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-dialog.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-dialog.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: m2-dialog.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-dialog.get-tokens($theme), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-dialog.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-dialog.get-tokens($theme), color);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin typography($theme) {
+  $tokens: m2-dialog.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-dialog.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-dialog.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-dialog.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin density($theme) {
+  $tokens: m2-dialog.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-dialog.get-tokens($theme), density));
-  } @else {
+    $tokens: map.get(m3-dialog.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

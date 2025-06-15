@@ -1,44 +1,44 @@
 @use 'sass:map';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
-@use '../core/style/sass-utils';
 @use '../core/typography/typography';
 @use '../core/tokens/token-utils';
 @use './m2-snack-bar';
 @use './m3-snack-bar';
 
 @mixin base($theme) {
+  $tokens: m2-snack-bar.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-snack-bar.get-tokens($theme), base));
-  } @else {
-    // Add default values for tokens not related to color, typography, or density.
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-snack-bar.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-snack-bar.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-snack-bar.get-tokens($theme), color));
+    @include token-utils.values(map.get(m3-snack-bar.get-tokens($theme), color));
   } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-snack-bar.get-color-tokens($theme));
-    }
+    @include token-utils.values(m2-snack-bar.get-color-tokens($theme));
   }
 }
 
 @mixin typography($theme) {
+  $tokens: m2-snack-bar.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-snack-bar.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-snack-bar.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-snack-bar.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin density($theme) {
+  $tokens: m2-snack-bar.get-density-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-snack-bar.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
