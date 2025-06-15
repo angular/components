@@ -46,7 +46,7 @@ describe('CdkRadioGroup', () => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
       imports: [BidiModule, RadioGroupExample],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(RadioGroupExample);
     const testComponent = fixture.componentInstance;
@@ -86,7 +86,7 @@ describe('CdkRadioGroup', () => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
       imports: [BidiModule, DefaultRadioGroupExample],
-    }).compileComponents();
+    });
 
     const fixture = TestBed.createComponent(DefaultRadioGroupExample);
     fixture.detectChanges();
