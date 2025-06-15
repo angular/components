@@ -94,11 +94,11 @@ describe('CdkAccordionGroup', () => {
     await runAccessibilityChecks(fixture.nativeElement);
   });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr'), _IdGenerator],
       imports: [BidiModule, AccordionGroupExample],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AccordionGroupExample);
   });

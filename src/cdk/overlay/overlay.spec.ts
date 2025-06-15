@@ -361,12 +361,12 @@ describe('Overlay', () => {
 
     overlayContainer.ngOnDestroy();
 
-    TestBed.resetTestingModule().configureTestingModule({
-      imports: [OverlayModule],
-      providers: [CustomErrorHandler, {provide: ErrorHandler, useExisting: CustomErrorHandler}],
-    });
-
-    expect(() => TestBed.compileComponents()).not.toThrow();
+    expect(() => {
+      TestBed.resetTestingModule().configureTestingModule({
+        imports: [OverlayModule],
+        providers: [CustomErrorHandler, {provide: ErrorHandler, useExisting: CustomErrorHandler}],
+      });
+    }).not.toThrow();
   });
 
   it('should keep the direction in sync with the passed in Directionality', () => {
