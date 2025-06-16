@@ -8,7 +8,6 @@
 @use '../radio/m2-radio';
 @use './m2-list';
 @use './m3-list';
-@use '../core/tokens/m2-utils';
 
 @mixin base($theme) {
   $tokens: m2-list.get-unthemable-tokens();
@@ -28,63 +27,18 @@
   @include token-utils.values($tokens);
 
   @if inspection.get-theme-version($theme) != 1 {
-    .mdc-list-item__start,
-    .mdc-list-item__end {
-      $tokens: m2-radio.get-color-tokens($theme, primary);
-      @include token-utils.values($tokens);
-    }
+    .mat-mdc-selection-list {
+      @include token-utils.values(m2-radio.get-color-tokens($theme, primary));
+      @include token-utils.values(m2-checkbox.get-color-tokens($theme, primary));
 
-    .mat-accent {
-      .mdc-list-item__start,
-      .mdc-list-item__end {
-        $tokens: m2-radio.get-color-tokens($theme, secondary);
-        @include token-utils.values($tokens);
+      .mat-accent {
+        @include token-utils.values(m2-radio.get-color-tokens($theme, secondary));
+        @include token-utils.values(m2-checkbox.get-color-tokens($theme, secondary));
       }
-    }
 
-    .mat-warn {
-      .mdc-list-item__start,
-      .mdc-list-item__end {
-        $tokens: m2-radio.get-color-tokens($theme, error);
-        @include token-utils.values($tokens);
-      }
-    }
-
-    .mat-mdc-list-option {
-      $tokens: m2-checkbox.get-color-tokens($theme, primary);
-      @include token-utils.values($tokens);
-    }
-
-    .mat-mdc-list-option.mat-accent {
-      $tokens: m2-checkbox.get-color-tokens($theme, secondary);
-      @include token-utils.values($tokens);
-    }
-
-    .mat-mdc-list-option.mat-warn {
-      $tokens: m2-checkbox.get-color-tokens($theme, error);
-      @include token-utils.values($tokens);
-    }
-
-    // There is no token for activated color on nav list.
-    // TODO(mmalerba): Add a token to MDC or make a custom one.
-    .mat-mdc-list-base.mat-mdc-list-base {
-      .mdc-list-item--selected,
-      .mdc-list-item--activated {
-        .mdc-list-item__primary-text,
-        .mdc-list-item__start {
-          color: inspection.get-theme-color($theme, primary);
-        }
-      }
-    }
-
-    // TODO(mmalerba): Leaking styles from the old MDC list mixins used in other components can
-    //  cause opacity issues, so we need this override for now. We can remove it when all
-    //  Angular Material components stop using the old MDC mixins.
-    .mat-mdc-list-base .mdc-list-item--disabled {
-      .mdc-list-item__start,
-      .mdc-list-item__content,
-      .mdc-list-item__end {
-        opacity: 1;
+      .mat-warn {
+        @include token-utils.values(m2-radio.get-color-tokens($theme, error));
+        @include token-utils.values(m2-checkbox.get-color-tokens($theme, error));
       }
     }
   }
@@ -106,43 +60,6 @@
       $tokens: m2-radio.get-density-tokens($theme);
       @include token-utils.values($tokens);
     }
-
-    // TODO(mmalerba): This is added to maintain the same style MDC used prior to the token-based
-    //  API, to avoid screenshot diffs. We should remove it in favor of following MDC's current
-    //  style, or add custom tokens for it.
-    .mat-mdc-list-item {
-      &.mdc-list-item--with-leading-avatar,
-      &.mdc-list-item--with-leading-checkbox,
-      &.mdc-list-item--with-leading-icon {
-        &.mdc-list-item--with-one-line {
-          height: map.get(
-            (
-              0: 56px,
-              -1: 52px,
-              -2: 48px,
-              -3: 44px,
-              -4: 40px,
-              -5: 40px,
-            ),
-            $density-scale
-          );
-        }
-
-        &.mdc-list-item--with-two-lines {
-          height: map.get(
-            (
-              0: 72px,
-              -1: 68px,
-              -2: 64px,
-              -3: 60px,
-              -4: 56px,
-              -5: 56px,
-            ),
-            $density-scale
-          );
-        }
-      }
-    }
   }
 }
 
@@ -153,16 +70,6 @@
   }
 
   @include token-utils.values($tokens);
-
-  @if inspection.get-theme-version($theme) != 1 {
-    // MDC does not have tokens for the subheader.
-    // TODO(mmalerba): Discuss with MDC about adding them, or create custom tokens.
-    .mdc-list-group__subheader {
-      $system: m2-utils.get-system($theme);
-      font: map.get($system, label-large);
-      letter-spacing: map.get($system, label-large-tracking);
-    }
-  }
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
