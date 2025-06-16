@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
@@ -6,57 +5,54 @@
 @use './m3-progress-bar';
 @use 'sass:map';
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-progress-bar.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-progress-bar.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-progress-bar.get-tokens($theme), base));
-  } @else {
-    // Add default values for tokens not related to color, typography, or density.
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-progress-bar.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-progress-bar.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
-@mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
-      m2-progress-bar.get-color-tokens($theme, $palette-name));
-}
-
-/// Outputs color theme styles for the mat-progress-bar.
-/// @param {Map} $theme The theme to generate color styles for.
-/// @param {ArgList} Additional optional arguments (only supported for M3 themes):
-///   $color-variant: The color variant to use for the progress bar: primary, secondary, tertiary,
-///      or error (If not specified, default primary color will be used).
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-progress-bar.get-color-tokens($theme, primary);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-progress-bar.get-tokens($theme, $color-variant), color));
-  } @else {
-    .mat-mdc-progress-bar {
-      @include _palette-styles($theme, primary);
+    $tokens: map.get(m3-progress-bar.get-tokens($theme, $color-variant), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-progress-bar {
       &.mat-accent {
-        @include _palette-styles($theme, secondary);
+        $tokens: m2-progress-bar.get-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include _palette-styles($theme, error);
+        $tokens: m2-progress-bar.get-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
   }
 }
 
-/// Outputs typography theme styles for the mat-progress-bar.
-/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-progress-bar.get-typography-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-progress-bar.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs density theme styles for the mat-progress-bar.
-/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-progress-bar.get-density-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-progress-bar.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

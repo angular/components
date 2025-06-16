@@ -8,14 +8,12 @@
 @use '../core/theming/inspection';
 
 @mixin base($theme) {
+  $tokens: m2-icon-button.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-icon-button.get-tokens($theme), base));
-  } @else {
-    // Add default values for tokens not related to color, typography, or density.
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-icon-button.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-icon-button.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin _m2-icon-button-variant($theme, $palette) {
@@ -33,45 +31,45 @@
 /// @param {String} $color-variant: The color variant to use for the
 //         button: primary, secondary, tertiary, or error.
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-icon-button.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-icon-button.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include _m2-icon-button-variant($theme, null);
+    $tokens: map.get(m3-icon-button.get-tokens($theme, $color-variant), color);
+  }
 
-      .mat-mdc-icon-button {
-        &.mat-primary {
-          @include _m2-icon-button-variant($theme, primary);
-        }
+  @include token-utils.values($tokens);
 
-        &.mat-accent {
-          @include _m2-icon-button-variant($theme, secondary);
-        }
+  @if inspection.get-theme-version($theme) != 1 {
+    .mat-mdc-icon-button {
+      &.mat-primary {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, primary);
+        @include token-utils.values($tokens);
+      }
 
-        &.mat-warn {
-          @include _m2-icon-button-variant($theme, error);
-        }
+      &.mat-accent {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
+      }
+
+      &.mat-warn {
+        $tokens: m2-icon-button.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
   }
 }
 
 @mixin typography($theme) {
+  $tokens: m2-icon-button.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-icon-button.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-icon-button.get-typography-tokens($theme)
-      );
-    }
+    $tokens: map.get(m3-icon-button.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-icon-button.get-tokens($theme), density));
+    @include token-utils.values(map.get(m3-icon-button.get-tokens($theme), density));
   } @else {
     $icon-size: 24px;
     $density-scale: inspection.get-theme-density($theme);
@@ -86,7 +84,7 @@
     $calculated-size: map.get($size-map, $density-scale);
 
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.values(
           m2-icon-button.get-density-tokens(
               $theme, $exclude: (icon-button-state-layer-size))
       );

@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/tokens/token-utils';
@@ -12,39 +11,44 @@
   @include token-utils.create-token-values-mixed($tokens);
 }
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-icon.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-icon.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), base));
-  } @else {
+    $tokens: map.get(m3-icon.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-icon.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-icon.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-icon.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-icon.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-icon.get-tokens($theme, $color-variant), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mat-icon {
       &.mat-primary {
-        @include _palette-colors($theme, primary);
+        $color: inspection.get-theme-color($theme, primary, text);
+        $tokens: m2-icon.private-get-icon-color-tokens($color);
+        @include token-utils.values($tokens);
       }
 
       &.mat-accent {
-        @include _palette-colors($theme, accent);
+        $color: inspection.get-theme-color($theme, accent, text);
+        $tokens: m2-icon.private-get-icon-color-tokens($color);
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include _palette-colors($theme, warn);
+        $color: inspection.get-theme-color($theme, warn, text);
+        $tokens: m2-icon.private-get-icon-color-tokens($color);
+        @include token-utils.values($tokens);
       }
     }
   }
