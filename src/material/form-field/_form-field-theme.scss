@@ -3,71 +3,58 @@
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
-@use '../core/style/sass-utils';
 @use '../core/tokens/token-utils';
 @use 'sass:map';
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-form-field.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-form-field.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-form-field.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-form-field.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-form-field.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-form-field.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-form-field.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-form-field.get-tokens($theme, $color-variant), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-form-field.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-form-field.get-tokens($theme, $color-variant), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mat-mdc-form-field.mat-accent {
-      @include token-utils.create-token-values-mixed(
-          m2-form-field.private-get-color-palette-color-tokens($theme, secondary)
-      );
+      $tokens: m2-form-field.private-get-color-palette-color-tokens($theme, secondary);
+      @include token-utils.values($tokens);
     }
 
     .mat-mdc-form-field.mat-warn {
-      @include token-utils.create-token-values-mixed(
-          m2-form-field.private-get-color-palette-color-tokens($theme, error)
-      );
+      $tokens: m2-form-field.private-get-color-palette-color-tokens($theme, error);
+      @include token-utils.values($tokens);
     }
   }
 }
 
-/// Outputs typography theme styles for the mat-form-field.
-/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-form-field.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-form-field.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-form-field.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-form-field.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs density theme styles for the mat-form-field.
-/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-form-field.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-form-field.get-tokens($theme), density));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-form-field.get-density-tokens($theme));
-    }
+    $tokens: map.get(m3-form-field.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

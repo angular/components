@@ -1,4 +1,3 @@
-@use '../core/style/sass-utils';
 @use './m2-tabs';
 @use './m3-tabs';
 @use '../core/theming/theming';
@@ -7,17 +6,13 @@
 @use '../core/tokens/token-utils';
 @use 'sass:map';
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-tab.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-tabs.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-tabs.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-tabs.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-tabs.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-tab.
@@ -25,30 +20,30 @@
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-tabs.get-tokens($theme, $color-variant), color));
+    $tokens: map.get(m3-tabs.get-tokens($theme, $color-variant), color);
+    @include token-utils.values($tokens);
   } @else {
     .mat-mdc-tab-group,
     .mat-mdc-tab-nav-bar {
-      @include token-utils.create-token-values-mixed(
+      @include token-utils.values(
           m2-tabs.get-color-tokens($theme, primary,
             $exclude: (tab-background-color, tab-foreground-color)));
 
       &.mat-accent {
-        @include token-utils.create-token-values-mixed(
+        @include token-utils.values(
           m2-tabs.get-color-tokens($theme, secondary,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values-mixed(
+        @include token-utils.values(
           m2-tabs.get-color-tokens($theme, error,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-background-primary {
         $tokens: m2-tabs.get-color-tokens($theme, primary);
-        @include token-utils.create-token-values-mixed((
+        @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color)
         ));
@@ -56,7 +51,7 @@
 
       &.mat-background-accent {
         $tokens: m2-tabs.get-color-tokens($theme, secondary);
-        @include token-utils.create-token-values-mixed((
+        @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color),
         ));
@@ -64,7 +59,7 @@
 
       &.mat-background-warn {
         $tokens: m2-tabs.get-color-tokens($theme, error);
-        @include token-utils.create-token-values-mixed((
+        @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color),
         ));
@@ -77,10 +72,10 @@
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-tabs.get-tokens($theme), typography));
+    @include token-utils.values(map.get(m3-tabs.get-tokens($theme), typography));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.create-token-values-mixed(m2-tabs.get-typography-tokens($theme));
+      @include token-utils.values(m2-tabs.get-typography-tokens($theme));
     }
   }
 }
@@ -89,10 +84,10 @@
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-tabs.get-tokens($theme), density));
+    @include token-utils.values(map.get(m3-tabs.get-tokens($theme), density));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.create-token-values-mixed(m2-tabs.get-density-tokens($theme));
+      @include token-utils.values(m2-tabs.get-density-tokens($theme));
     }
   }
 }

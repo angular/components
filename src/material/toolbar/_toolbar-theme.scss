@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/tokens/token-utils';
@@ -8,60 +7,76 @@
 @use './m3-toolbar';
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include token-utils.create-token-values-mixed(
-    m2-toolbar.private-get-color-palette-color-tokens(
-      $background-color: inspection.get-theme-color($theme, $palette-name),
-      $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
-    )
+  $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+    $background-color: inspection.get-theme-color($theme, $palette-name),
+    $text-color: inspection.get-theme-color($theme, $palette-name, default-contrast)
   );
+  @include token-utils.values($tokens);
 }
 
 @mixin base($theme) {
+  $tokens: m2-toolbar.get-unthemable-tokens();
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-toolbar.get-tokens($theme), base);
+  }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: m2-toolbar.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-toolbar.get-tokens($theme), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-toolbar.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-toolbar.get-tokens($theme), color);
+  }
 
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     .mat-toolbar {
       &.mat-primary {
-        @include _palette-styles($theme, primary);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, primary),
+          $text-color: inspection.get-theme-color($theme, primary, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
 
       &.mat-accent {
-        @include _palette-styles($theme, accent);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, accent),
+          $text-color: inspection.get-theme-color($theme, accent, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        @include _palette-styles($theme, warn);
+        $tokens: m2-toolbar.private-get-color-palette-color-tokens(
+          $background-color: inspection.get-theme-color($theme, warn),
+          $text-color: inspection.get-theme-color($theme, warn, default-contrast)
+        );
+        @include token-utils.values($tokens);
       }
     }
   }
 }
 
-@mixin typography($theme) {
-  @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-toolbar.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-toolbar.get-typography-tokens($theme));
+  @mixin typography($theme) {
+    $tokens: m2-toolbar.get-typography-tokens($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      $tokens: map.get(m3-toolbar.get-tokens($theme), typography);
     }
-  }
-}
 
-@mixin density($theme) {
-  @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-toolbar.get-tokens($theme), density));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-toolbar.get-density-tokens($theme));
-    }
+    @include token-utils.values($tokens);
   }
-}
+
+  @mixin density($theme) {
+    $tokens: m2-toolbar.get-density-tokens($theme);
+    @if inspection.get-theme-version($theme) == 1 {
+      $tokens: map.get(m3-toolbar.get-tokens($theme), density);
+    }
+
+    @include token-utils.values($tokens);
+  }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
 @function _define-overrides() {

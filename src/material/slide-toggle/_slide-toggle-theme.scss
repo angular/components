@@ -13,60 +13,52 @@
 /// for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
+  $tokens: m2-slide-toggle.get-unthemable-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-slide-toggle.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-unthemable-tokens($theme));
-
-      .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(
-            m2-slide-toggle.get-unthemable-tokens($theme));
-      }
-    }
+    $tokens: map.get(m3-slide-toggle.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-slide-toggle.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-slide-toggle.get-tokens($theme, $color-variant), color));
-  } @else {
+    $tokens: map.get(m3-slide-toggle.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     $mat-tokens: m2-slide-toggle.get-color-tokens($theme);
+    $system: m2-utils.get-system($theme);
 
-    // Add values for MDC slide toggles tokens
     @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-color-tokens($theme));
-      $system: m2-utils.get-system($theme);
+      // TODO(andrewjs): Remove this once all tokens are migrated to
+      // mat internally.
+      --mdc-slide-toggle-disabled-label-text-color: #{
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
+      // TODO(wagnermaciel): Use our token system to define this css variable.
+      --mat-slide-toggle-disabled-label-text-color: #{
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
+    }
 
-      & {
-        // TODO(andrewjs): Remove this once all tokens are migrated to
-        // mat internally.
-        --mdc-slide-toggle-disabled-label-text-color: #{
-            m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
-        // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-slide-toggle-disabled-label-text-color: #{
-            m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
+    .mat-mdc-slide-toggle {
+      // TODO(wagnermaciel): Use our token system to define this css variable.
+      --mat-slide-toggle-label-text-color: #{map.get($system, on-surface)};
+
+      // Change the color palette related tokens to accent or warn if applicable
+      &.mat-accent {
+        $tokens: m2-slide-toggle.private-get-color-palette-color-tokens($theme, secondary);
+        @include token-utils.values($tokens);
       }
 
-      .mat-mdc-slide-toggle {
-        // TODO(wagnermaciel): Use our token system to define this css variable.
-        --mat-slide-toggle-label-text-color: #{map.get($system, on-surface)};
-
-        // Change the color palette related tokens to accent or warn if applicable
-        &.mat-accent {
-          @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, secondary));
-        }
-
-        &.mat-warn {
-          @include token-utils.create-token-values-mixed(
-              m2-slide-toggle.private-get-color-palette-color-tokens($theme, error));
-        }
+      &.mat-warn {
+        $tokens: m2-slide-toggle.private-get-color-palette-color-tokens($theme, error);
+        @include token-utils.values($tokens);
       }
     }
   }
@@ -75,37 +67,23 @@
 /// Outputs typography theme styles for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-slide-toggle.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-slide-toggle.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-typography-tokens($theme));
-
-      .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(
-            m2-slide-toggle.get-typography-tokens($theme));
-      }
-    }
+    $tokens: map.get(m3-slide-toggle.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs density theme styles for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-slide-toggle.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    // There are no M3 density tokens for this component
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      // TODO: See if this can be removed
-      @include token-utils.create-token-values-mixed(m2-slide-toggle.get-density-tokens($theme));
-
-      .mat-mdc-slide-toggle {
-        @include token-utils.create-token-values-mixed(m2-slide-toggle.get-density-tokens($theme));
-      }
-    }
+    $tokens: map.get(m3-slide-toggle.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

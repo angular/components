@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/style/sass-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/typography/typography';
@@ -8,43 +7,39 @@
 @use './m3-card';
 
 @mixin base($theme) {
+  $tokens: m2-card.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-card.get-tokens($theme), base));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-card.get-unthemable-tokens());
-    }
+    $tokens: map.get(m3-card.get-tokens($theme), base);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin color($theme) {
+  $tokens: m2-card.get-color-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-card.get-tokens($theme), color));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-card.get-color-tokens($theme));
-    }
+    $tokens: map.get(m3-card.get-tokens($theme), color);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin typography($theme) {
+  $tokens: m2-card.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-card.get-tokens($theme), typography));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-card.get-typography-tokens($theme));
-    }
+    $tokens: map.get(m3-card.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 @mixin density($theme) {
+  $tokens: m2-card.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-card.get-tokens($theme), density));
-  } @else {
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.create-token-values-mixed(m2-card.get-density-tokens($theme));
-    }
+    $tokens: map.get(m3-card.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

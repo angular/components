@@ -1,32 +1,22 @@
 @use '../../theming/theming';
 @use '../../theming/inspection';
-@use '../../style/sass-utils';
 @use '../../tokens/token-utils';
 @use './m2-pseudo-checkbox';
 @use './m3-pseudo-checkbox';
 @use 'sass:map';
 
 @mixin _palette-styles($theme, $palette-name) {
-  @include sass-utils.current-selector-or-root() {
-    @include token-utils.create-token-values-mixed(
-        m2-pseudo-checkbox.get-color-tokens($theme, $palette-name));
-  }
+  $tokens: m2-pseudo-checkbox.get-color-tokens($theme, $palette-name);
+  @include token-utils.values($tokens);
 }
 
-/// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
-/// for the mat-pseudo-checkbox.
-/// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
-}
+  $tokens: m2-pseudo-checkbox.get-unthemable-tokens();
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), base);
+  }
 
-/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
-@function _define-overrides() {
-  @return (
-    (
-      namespace: pseudo-checkbox,
-      tokens: token-utils.get-overrides(m3-pseudo-checkbox.get-tokens(), pseudo-checkbox)
-    ),
-  );
+  @include token-utils.values($tokens);
 }
 
 /// Outputs the CSS variable values for the given tokens.
@@ -39,39 +29,62 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
+  $tokens: m2-pseudo-checkbox.get-color-tokens($theme, secondary);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(
-        map.get(m3-pseudo-checkbox.get-tokens($theme, $color-variant), color));
-  } @else {
+    $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme, $color-variant), color);
+  }
+
+  @include token-utils.values($tokens);
+
+  @if inspection.get-theme-version($theme) != 1 {
     // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
     // theme from their parent, rather than implementing their own theming, which is why we
     // don't attach to the `mat-*` classes. Also note that this needs to be below `.mat-primary`
     // in order to allow for the color to be overwritten if the checkbox is inside a parent that
     // has `mat-accent` and is placed inside another parent that has `mat-primary`.
-    @include _palette-styles($theme, secondary);
-
     .mat-primary {
-      @include _palette-styles($theme, primary);
+      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, primary);
+      @include token-utils.values($tokens);
     }
 
     .mat-accent {
-      @include _palette-styles($theme, secondary);
+      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, secondary);
+      @include token-utils.values($tokens);
     }
 
     .mat-warn {
-      @include _palette-styles($theme, error);
+      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, error);
+      @include token-utils.values($tokens);
     }
   }
 }
 
-/// Outputs typography theme styles for the mat-pseudo-checkbox.
-/// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-pseudo-checkbox.get-typography-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), typography);
+  }
+
+  @include token-utils.values($tokens);
 }
 
-/// Outputs density theme styles for the mat-pseudo-checkbox.
-/// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-pseudo-checkbox.get-density-tokens($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), density);
+  }
+
+  @include token-utils.values($tokens);
+}
+
+/// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
+@function _define-overrides() {
+  @return (
+    (
+      namespace: pseudo-checkbox,
+      tokens: token-utils.get-overrides(m3-pseudo-checkbox.get-tokens(), pseudo-checkbox)
+    ),
+  );
 }
 
 /// Outputs all (base, color, typography, and density) theme styles for the mat-pseudo-checkbox.
