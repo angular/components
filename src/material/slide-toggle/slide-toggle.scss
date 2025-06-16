@@ -538,8 +538,7 @@ $fallbacks: m3-slide-toggle.get-tokens();
     cursor: pointer;
   }
 
-  // TODO(wagnermaciel): Use our custom token system to emit this css rule.
   .mdc-switch--disabled + label {
-    color: var(--mat-slide-toggle-disabled-label-text-color);
+    color: token-utils.slot(slide-toggle-disabled-label-text-color, $fallbacks);
   }
 }

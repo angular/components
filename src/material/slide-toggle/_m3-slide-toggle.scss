@@ -60,6 +60,7 @@
       slide-toggle-handle-height: null,
     ),
     color: (
+      slide-toggle-disabled-label-text-color: map.get($system, on-surface),
       slide-toggle-disabled-selected-handle-color: map.get($system, surface),
       slide-toggle-disabled-selected-icon-color: map.get($system, on-surface),
       slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
