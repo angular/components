@@ -4,6 +4,10 @@
 @use 'sass:meta';
 @use 'sass:color';
 
+// Deprecated flag that is no longer used to control duplication warnings.
+// Remove in v22
+$theme-ignore-duplication-warnings: false;
+
 // Whether to enable compatibility with legacy methods for accessing theme information.
 $theme-legacy-inspection-api-compatibility: true !default;
 
