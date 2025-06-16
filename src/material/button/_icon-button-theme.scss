@@ -3,7 +3,6 @@
 @use './m2-icon-button';
 @use './m3-icon-button';
 @use '../core/tokens/token-utils';
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
 
 @mixin base($theme) {

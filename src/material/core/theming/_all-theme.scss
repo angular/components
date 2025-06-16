@@ -37,7 +37,6 @@
 @use '../../snack-bar/snack-bar-theme';
 @use '../../form-field/form-field-theme';
 @use '../../timepicker/timepicker-theme';
-@use './theming';
 
 // Create a theme.
 @mixin all-component-themes($theme) {

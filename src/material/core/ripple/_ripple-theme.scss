@@ -2,7 +2,6 @@
 @use './m2-ripple';
 @use './m3-ripple';
 @use '../tokens/token-utils';
-@use '../theming/theming';
 @use '../theming/inspection';
 
 @mixin base($theme) {
