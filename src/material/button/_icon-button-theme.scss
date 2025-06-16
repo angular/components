@@ -83,12 +83,10 @@
     );
     $calculated-size: map.get($size-map, $density-scale);
 
-    @include sass-utils.current-selector-or-root() {
-      @include token-utils.values(
-          m2-icon-button.get-density-tokens(
-              $theme, $exclude: (icon-button-state-layer-size))
-      );
-    }
+    @include token-utils.values(
+        m2-icon-button.get-density-tokens(
+            $theme, $exclude: (icon-button-state-layer-size))
+    );
 
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     .mat-mdc-icon-button.mat-mdc-button-base {

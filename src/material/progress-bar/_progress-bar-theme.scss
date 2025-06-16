@@ -15,15 +15,14 @@
 }
 
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-progress-bar.get-color-tokens($theme, primary);
   @if inspection.get-theme-version($theme) == 1 {
-    $tokens: map.get(m3-progress-bar.get-tokens($theme, $color-variant), color);
-  }
-
-  @include token-utils.values($tokens);
-
-  @if inspection.get-theme-version($theme) != 1 {
+    @include token-utils.values(
+        map.get(m3-progress-bar.get-tokens($theme, $color-variant), color));
+  } @else {
     .mat-mdc-progress-bar {
+      $tokens: m2-progress-bar.get-color-tokens($theme, primary);
+      @include token-utils.values($tokens);
+
       &.mat-accent {
         $tokens: m2-progress-bar.get-color-tokens($theme, secondary);
         @include token-utils.values($tokens);

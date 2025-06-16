@@ -67,12 +67,20 @@
 /// Outputs typography theme styles for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
-  $tokens: m2-slide-toggle.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    $tokens: map.get(m3-slide-toggle.get-tokens($theme), typography);
-  }
+    @include token-utils.values(
+        map.get(m3-slide-toggle.get-tokens($theme), typography));
+  } @else {
+    @include sass-utils.current-selector-or-root() {
+      // TODO: See if this can be removed
+      @include token-utils.values(m2-slide-toggle.get-typography-tokens($theme));
 
-  @include token-utils.values($tokens);
+      .mat-mdc-slide-toggle {
+        @include token-utils.values(
+            m2-slide-toggle.get-typography-tokens($theme));
+      }
+    }
+  }
 }
 
 /// Outputs density theme styles for the mat-slide-toggle.
