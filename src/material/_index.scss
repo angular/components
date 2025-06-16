@@ -23,8 +23,7 @@
 
 // Private/Internal
 @forward './core/density/private/all-density' show all-component-densities;
-@forward './core/theming/theming' show private-check-duplicate-theme-styles,
-  private-legacy-get-theme, private-is-theme-object;
+@forward './core/theming/theming' show private-legacy-get-theme, private-is-theme-object;
 @forward './core/style/private' show private-theme-elevation;
 @forward './core/style/vendor-prefixes' as private-* show private-user-select;
 @forward './core/style/variables' as private-* show $private-swift-ease-in-duration,

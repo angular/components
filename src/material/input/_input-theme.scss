@@ -33,7 +33,5 @@
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-input') {
-    // No-op
-  }
+  // No-op
 }
