@@ -165,6 +165,44 @@ describe('Tabs Pattern', () => {
     expect(tabPatterns[2].controls()).toBe('tabpanel-3-id');
   });
 
+  describe('#setDefaultState', () => {
+    it('should not set activeIndex if there are no tabs', () => {
+      tabListInputs.items.set([]);
+      tabListInputs.activeIndex.set(10);
+      tabListPattern.setDefaultState();
+      expect(tabListInputs.activeIndex()).toBe(10);
+    });
+
+    it('should not set activeIndex if no tabs are focusable', () => {
+      tabInputs.forEach(input => input.disabled.set(true));
+      tabListInputs.activeIndex.set(10);
+      tabListPattern.setDefaultState();
+      expect(tabListInputs.activeIndex()).toBe(10);
+    });
+
+    it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
+      tabListInputs.activeIndex.set(2);
+      tabListInputs.value.set([]);
+      tabInputs[0].disabled.set(true);
+      tabListPattern.setDefaultState();
+      expect(tabListInputs.activeIndex()).toBe(1);
+    });
+
+    it('should set activeIndex to the first focusable and selected tab', () => {
+      tabListInputs.activeIndex.set(0);
+      tabListInputs.value.set([tabPatterns[2].value()]);
+      tabListPattern.setDefaultState();
+      expect(tabListInputs.activeIndex()).toBe(2);
+    });
+
+    it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
+      tabListInputs.value.set([tabPatterns[1].value()]);
+      tabInputs[1].disabled.set(true);
+      tabListPattern.setDefaultState();
+      expect(tabListInputs.activeIndex()).toBe(0);
+    });
+  });
+
   describe('Keyboard Navigation', () => {
     it('does not handle keyboard event if a tablist is disabled.', () => {
       expect(tabPatterns[1].active()).toBeFalse();

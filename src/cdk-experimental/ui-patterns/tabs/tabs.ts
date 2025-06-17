@@ -43,55 +43,55 @@ export interface TabInputs
 
 /** A tab in a tablist. */
 export class TabPattern {
+  /** Controls expansion for this tab. */
+  readonly expansion: ExpansionControl;
+
   /** A global unique identifier for the tab. */
-  id: SignalLike<string>;
+  readonly id: SignalLike<string>;
 
   /** A local unique identifier for the tab. */
-  value: SignalLike<string>;
+  readonly value: SignalLike<string>;
 
   /** Whether the tab is disabled. */
-  disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean>;
 
   /** The html element that should receive focus. */
-  element: SignalLike<HTMLElement>;
+  readonly element: SignalLike<HTMLElement>;
 
   /** Whether this tab has expandable content. */
-  expandable: SignalLike<boolean>;
+  readonly expandable = computed(() => this.expansion.expandable());
 
   /** The unique identifier used by the expansion behavior. */
-  expansionId: SignalLike<string>;
+  readonly expansionId = computed(() => this.expansion.expansionId());
 
   /** Whether the tab is expanded. */
-  expanded: SignalLike<boolean>;
+  readonly expanded = computed(() => this.expansion.isExpanded());
 
   /** Whether the tab is active. */
-  active = computed(() => this.inputs.tablist().focusManager.activeItem() === this);
+  readonly active = computed(() => this.inputs.tablist().focusManager.activeItem() === this);
 
   /** Whether the tab is selected. */
-  selected = computed(
+  readonly selected = computed(
     () => !!this.inputs.tablist().selection.inputs.value().includes(this.value()),
   );
 
   /** The tabindex of the tab. */
-  tabindex = computed(() => this.inputs.tablist().focusManager.getItemTabindex(this));
+  readonly tabindex = computed(() => this.inputs.tablist().focusManager.getItemTabindex(this));
 
   /** The id of the tabpanel associated with the tab. */
-  controls = computed(() => this.inputs.tabpanel()?.id());
+  readonly controls = computed(() => this.inputs.tabpanel()?.id());
 
   constructor(readonly inputs: TabInputs) {
     this.id = inputs.id;
     this.value = inputs.value;
     this.disabled = inputs.disabled;
     this.element = inputs.element;
-    const expansionControl = new ExpansionControl({
+    this.expansion = new ExpansionControl({
       ...inputs,
       expansionId: inputs.value,
       expandable: () => true,
       expansionManager: inputs.tablist().expansionManager,
     });
-    this.expansionId = expansionControl.expansionId;
-    this.expandable = expansionControl.isExpandable;
-    this.expanded = expansionControl.isExpanded;
   }
 }
 
@@ -105,13 +105,13 @@ export interface TabPanelInputs {
 /** A tabpanel associated with a tab. */
 export class TabPanelPattern {
   /** A global unique identifier for the tabpanel. */
-  id: SignalLike<string>;
+  readonly id: SignalLike<string>;
 
   /** A local unique identifier for the tabpanel. */
-  value: SignalLike<string>;
+  readonly value: SignalLike<string>;
 
   /** Whether the tabpanel is hidden. */
-  hidden = computed(() => this.inputs.tab()?.expanded() === false);
+  readonly hidden = computed(() => this.inputs.tab()?.expanded() === false);
 
   constructor(readonly inputs: TabPanelInputs) {
     this.id = inputs.id;
@@ -133,34 +133,34 @@ export type TabListInputs = ListNavigationInputs<TabPattern> &
 /** Controls the state of a tablist. */
 export class TabListPattern {
   /** Controls navigation for the tablist. */
-  navigation: ListNavigation<TabPattern>;
+  readonly navigation: ListNavigation<TabPattern>;
 
   /** Controls selection for the tablist. */
-  selection: ListSelection<TabPattern, string>;
+  readonly selection: ListSelection<TabPattern, string>;
 
   /** Controls focus for the tablist. */
-  focusManager: ListFocus<TabPattern>;
+  readonly focusManager: ListFocus<TabPattern>;
 
   /** Controls expansion for the tablist. */
-  expansionManager: ListExpansion;
+  readonly expansionManager: ListExpansion;
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  orientation: SignalLike<'vertical' | 'horizontal'>;
+  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the tablist is disabled. */
-  disabled: SignalLike<boolean>;
+  readonly disabled: SignalLike<boolean>;
 
   /** The tabindex of the tablist. */
-  tabindex = computed(() => this.focusManager.getListTabindex());
+  readonly tabindex = computed(() => this.focusManager.getListTabindex());
 
   /** The id of the current active tab. */
-  activedescendant = computed(() => this.focusManager.getActiveDescendant());
+  readonly activedescendant = computed(() => this.focusManager.getActiveDescendant());
 
   /** Whether selection should follow focus. */
-  followFocus = computed(() => this.inputs.selectionMode() === 'follow');
+  readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** The key used to navigate to the previous tab in the tablist. */
-  prevKey = computed(() => {
+  readonly prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -168,7 +168,7 @@ export class TabListPattern {
   });
 
   /** The key used to navigate to the next item in the list. */
-  nextKey = computed(() => {
+  readonly nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -176,7 +176,7 @@ export class TabListPattern {
   });
 
   /** The keydown event manager for the tablist. */
-  keydown = computed(() => {
+  readonly keydown = computed(() => {
     return new KeyboardEventManager()
       .on(this.prevKey, () => this.prev({select: this.followFocus()}))
       .on(this.nextKey, () => this.next({select: this.followFocus()}))
@@ -187,7 +187,7 @@ export class TabListPattern {
   });
 
   /** The pointerdown event manager for the tablist. */
-  pointerdown = computed(() => {
+  readonly pointerdown = computed(() => {
     return new PointerEventManager().on(e => this.goto(e, {select: true}));
   });
 
@@ -209,6 +209,34 @@ export class TabListPattern {
       multiExpandable: () => false,
       expandedIds: this.inputs.value,
     });
+  }
+
+  /**
+   * Sets the tablist to its default initial state.
+   *
+   * Sets the active index of the tablist to the first focusable selected
+   * tab if one exists. Otherwise, sets focus to the first focusable tab.
+   *
+   * This method should be called once the tablist and its tabs are properly initialized.
+   */
+  setDefaultState() {
+    let firstItemIndex: number | undefined;
+
+    for (const [index, item] of this.inputs.items().entries()) {
+      if (!this.focusManager.isFocusable(item)) continue;
+
+      if (firstItemIndex === undefined) {
+        firstItemIndex = index;
+      }
+
+      if (item.selected()) {
+        this.inputs.activeIndex.set(index);
+        return;
+      }
+    }
+    if (firstItemIndex !== undefined) {
+      this.inputs.activeIndex.set(firstItemIndex);
+    }
   }
 
   /** Handles keydown events for the tablist. */
@@ -261,7 +289,7 @@ export class TabListPattern {
 
   /** Handles updating selection for the tablist. */
   private _select(opts?: SelectOptions) {
-    if (opts?.select) {
+    if (opts?.select && !this.focusManager.activeItem().disabled()) {
       this.selection.selectOne();
       this.expansionManager.open(this.focusManager.activeItem());
     }

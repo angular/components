@@ -12,18 +12,32 @@ import {Directionality} from '@angular/cdk/bidi';
 import {
   booleanAttribute,
   computed,
-  contentChild,
-  contentChildren,
   Directive,
-  effect,
   ElementRef,
   inject,
   input,
   model,
   linkedSignal,
+  signal,
+  Signal,
+  afterRenderEffect,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
 import {TabListPattern, TabPanelPattern, TabPattern} from '../ui-patterns';
+
+interface HasElement {
+  element: Signal<HTMLElement>;
+}
+
+/**
+ * Sort directives by their document order.
+ */
+function sortDirectives(a: HasElement, b: HasElement) {
+  return (a.element().compareDocumentPosition(b.element()) & Node.DOCUMENT_POSITION_PRECEDING) > 0
+    ? 1
+    : -1;
+}
 
 /**
  * A Tabs container.
@@ -59,16 +73,40 @@ import {TabListPattern, TabPanelPattern, TabPattern} from '../ui-patterns';
 })
 export class CdkTabs {
   /** The CdkTabList nested inside of the container. */
-  private readonly _cdkTabList = contentChild(CdkTabList);
+  private readonly _tablist = signal<CdkTabList | undefined>(undefined);
 
   /** The CdkTabPanels nested inside of the container. */
-  private readonly _cdkTabPanels = contentChildren(CdkTabPanel);
+  private readonly _unorderedPanels = signal(new Set<CdkTabPanel>());
 
   /** The Tab UIPattern of the child Tabs. */
-  tabs = computed(() => this._cdkTabList()?.tabs());
+  tabs = computed(() => this._tablist()?.tabs());
 
   /** The TabPanel UIPattern of the child TabPanels. */
-  tabpanels = computed(() => this._cdkTabPanels().map(tabpanel => tabpanel.pattern));
+  unorderedTabpanels = computed(() =>
+    [...this._unorderedPanels()].map(tabpanel => tabpanel.pattern),
+  );
+
+  register(child: CdkTabList | CdkTabPanel) {
+    if (child instanceof CdkTabList) {
+      this._tablist.set(child);
+    }
+
+    if (child instanceof CdkTabPanel) {
+      this._unorderedPanels().add(child);
+      this._unorderedPanels.set(new Set(this._unorderedPanels()));
+    }
+  }
+
+  deregister(child: CdkTabList | CdkTabPanel) {
+    if (child instanceof CdkTabList) {
+      this._tablist.set(undefined);
+    }
+
+    if (child instanceof CdkTabPanel) {
+      this._unorderedPanels().delete(child);
+      this._unorderedPanels.set(new Set(this._unorderedPanels()));
+    }
+  }
 }
 
 /**
@@ -88,61 +126,89 @@ export class CdkTabs {
     '[attr.aria-activedescendant]': 'pattern.activedescendant()',
     '(keydown)': 'pattern.onKeydown($event)',
     '(pointerdown)': 'pattern.onPointerdown($event)',
+    '(focusin)': 'onFocus()',
   },
 })
-export class CdkTabList {
-  /** The directionality (LTR / RTL) context for the application (or a subtree of it). */
-  private readonly _directionality = inject(Directionality);
+export class CdkTabList implements OnInit, OnDestroy {
+  /** The parent CdkTabs. */
+  private readonly _cdkTabs = inject(CdkTabs);
 
   /** The CdkTabs nested inside of the CdkTabList. */
-  private readonly _cdkTabs = contentChildren(CdkTab);
+  private readonly _unorderedTabs = signal(new Set<CdkTab>());
 
   /** The internal tab selection state. */
   private readonly _selection = linkedSignal(() => (this.tab() ? [this.tab()!] : []));
 
-  /** A signal wrapper for directionality. */
-  protected textDirection = toSignal(this._directionality.change, {
-    initialValue: this._directionality.value,
-  });
+  /** Text direction. */
+  readonly textDirection = inject(Directionality).valueSignal;
 
   /** The Tab UIPatterns of the child Tabs. */
-  tabs = computed(() => this._cdkTabs().map(tab => tab.pattern));
+  readonly tabs = computed(() =>
+    [...this._unorderedTabs()].sort(sortDirectives).map(tab => tab.pattern),
+  );
 
   /** Whether the tablist is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('horizontal');
+  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
 
   /** Whether focus should wrap when navigating. */
-  wrap = input(true, {transform: booleanAttribute});
+  readonly wrap = input(true, {transform: booleanAttribute});
 
   /** Whether disabled items in the list should be skipped when navigating. */
-  skipDisabled = input(true, {transform: booleanAttribute});
+  readonly skipDisabled = input(true, {transform: booleanAttribute});
 
   /** The focus strategy used by the tablist. */
-  focusMode = input<'roving' | 'activedescendant'>('roving');
+  readonly focusMode = input<'roving' | 'activedescendant'>('roving');
 
   /** The selection strategy used by the tablist. */
-  selectionMode = input<'follow' | 'explicit'>('follow');
+  readonly selectionMode = input<'follow' | 'explicit'>('follow');
 
   /** Whether the tablist is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** The current index that has been navigated to. */
-  activeIndex = model<number>(0);
-
-  // TODO(ok7sai): Provides a default state when there is no pre-select tab.
   /** The current selected tab. */
-  tab = model<string | undefined>();
+  readonly tab = model<string | undefined>();
 
   /** The TabList UIPattern. */
-  pattern: TabListPattern = new TabListPattern({
+  readonly pattern: TabListPattern = new TabListPattern({
     ...this,
     items: this.tabs,
-    textDirection: this.textDirection,
     value: this._selection,
+    activeIndex: signal(0),
   });
 
+  /** Whether the tree has received focus yet. */
+  private _hasFocused = signal(false);
+
   constructor() {
-    effect(() => this.tab.set(this._selection()[0]));
+    afterRenderEffect(() => this.tab.set(this._selection()[0]));
+
+    afterRenderEffect(() => {
+      if (!this._hasFocused()) {
+        this.pattern.setDefaultState();
+      }
+    });
+  }
+
+  onFocus() {
+    this._hasFocused.set(true);
+  }
+
+  ngOnInit() {
+    this._cdkTabs.register(this);
+  }
+
+  ngOnDestroy() {
+    this._cdkTabs.deregister(this);
+  }
+
+  register(child: CdkTab) {
+    this._unorderedTabs().add(child);
+    this._unorderedTabs.set(new Set(this._unorderedTabs()));
+  }
+
+  deregister(child: CdkTab) {
+    this._unorderedTabs().delete(child);
+    this._unorderedTabs.set(new Set(this._unorderedTabs()));
   }
 }
 
@@ -161,7 +227,7 @@ export class CdkTabList {
     '[attr.aria-controls]': 'pattern.controls()',
   },
 })
-export class CdkTab {
+export class CdkTab implements HasElement, OnInit, OnDestroy {
   /** A reference to the tab element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -174,29 +240,39 @@ export class CdkTab {
   /** A global unique identifier for the tab. */
   private readonly _id = inject(_IdGenerator).getId('cdk-tab-');
 
+  /** The host native element. */
+  readonly element = computed(() => this._elementRef.nativeElement);
+
   /** The parent TabList UIPattern. */
-  protected tablist = computed(() => this._cdkTabList.pattern);
+  readonly tablist = computed(() => this._cdkTabList.pattern);
 
   /** The TabPanel UIPattern associated with the tab */
-  protected tabpanel = computed(() =>
-    this._cdkTabs.tabpanels().find(tabpanel => tabpanel.value() === this.value()),
+  readonly tabpanel = computed(() =>
+    this._cdkTabs.unorderedTabpanels().find(tabpanel => tabpanel.value() === this.value()),
   );
 
   /** Whether a tab is disabled. */
-  disabled = input(false, {transform: booleanAttribute});
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** A local unique identifier for the tab. */
-  value = input.required<string>();
+  readonly value = input.required<string>();
 
   /** The Tab UIPattern. */
-  pattern: TabPattern = new TabPattern({
+  readonly pattern: TabPattern = new TabPattern({
     ...this,
     id: () => this._id,
-    element: () => this._elementRef.nativeElement,
     tablist: this.tablist,
     tabpanel: this.tabpanel,
     value: this.value,
   });
+
+  ngOnInit() {
+    this._cdkTabList.register(this);
+  }
+
+  ngOnDestroy() {
+    this._cdkTabList.deregister(this);
+  }
 }
 
 /**
@@ -224,7 +300,7 @@ export class CdkTab {
     },
   ],
 })
-export class CdkTabPanel {
+export class CdkTabPanel implements OnInit, OnDestroy {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
@@ -235,20 +311,28 @@ export class CdkTabPanel {
   private readonly _id = inject(_IdGenerator).getId('cdk-tabpanel-');
 
   /** The Tab UIPattern associated with the tabpanel */
-  protected tab = computed(() => this._cdkTabs.tabs()?.find(tab => tab.value() === this.value()));
+  readonly tab = computed(() => this._cdkTabs.tabs()?.find(tab => tab.value() === this.value()));
 
   /** A local unique identifier for the tabpanel. */
-  value = input.required<string>();
+  readonly value = input.required<string>();
 
   /** The TabPanel UIPattern. */
-  pattern: TabPanelPattern = new TabPanelPattern({
+  readonly pattern: TabPanelPattern = new TabPanelPattern({
     ...this,
     id: () => this._id,
     tab: this.tab,
   });
 
   constructor() {
-    effect(() => this._deferredContentAware.contentVisible.set(!this.pattern.hidden()));
+    afterRenderEffect(() => this._deferredContentAware.contentVisible.set(!this.pattern.hidden()));
+  }
+
+  ngOnInit() {
+    this._cdkTabs.register(this);
+  }
+
+  ngOnDestroy() {
+    this._cdkTabs.deregister(this);
   }
 }
 
