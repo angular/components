@@ -235,36 +235,3 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
   }
   @return $theme;
 }
-
-/// Gets a version of the theme with a modified typography config that preserves old behavior in
-/// some components that previously used `private-typography-to-2014-config`.
-/// Do not introduce new usages of this, it should be cleaned up and removed.
-/// @deprecated
-@function private-get-typography-back-compat-theme($theme) {
-  // It is possible for a user to pass a "density theme" that is just a number.
-  @if meta.type-of($theme) != 'map' {
-    @return $theme;
-  }
-  $internal: map.get($theme, $_internals, m2-config);
-  $theme: map.remove($theme, $_internals);
-  @if theme-has($theme, typography) {
-    $typography-config: m2-theming.get-typography-config($theme);
-    // gmat configs have both 2018 and 2014 keys.
-    @if (not typography-versioning.private-typography-is-2014-config($typography-config)) or
-        (not typography-versioning.private-typography-is-2018-config($typography-config)) {
-      @return $theme;
-    }
-    $new-typography-config: typography-versioning.private-typography-to-2018-config(
-        $typography-config, true);
-    // subtitle-2 is mapped differently by `private-typography-to-2014-config`.
-    $new-typography-config: map.set(
-        $new-typography-config, subtitle-2, map.get($new-typography-config, body-1));
-    $theme: if($theme == $typography-config, $new-typography-config,
-      map.set($theme, typography, $new-typography-config));
-  }
-  @if $internal {
-    $internal: private-get-typography-back-compat-theme($internal);
-    $theme: map.set($theme, $_internals, m2-config, $internal);
-  }
-  @return $theme;
-}
