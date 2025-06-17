@@ -141,6 +141,20 @@ export abstract class CdkMenuBase
     this.keyManager.setLastItemActive();
   }
 
+  /**
+   * Sets the active item to the item at the specified index and focuses the newly active item.
+   * @param item The index of the item to be set as active, or the CdkMenuItem instance.
+   */
+  setActiveMenuItem(item: number | CdkMenuItem) {
+    if (this.keyManager) {
+      if (typeof item === 'number') {
+        this.keyManager.setActiveItem(item);
+      } else {
+        this.keyManager.setActiveItem(item);
+      }
+    }
+  }
+
   /** Gets the tabindex for this menu. */
   _getTabIndex() {
     return this._tabIndexSignal();
