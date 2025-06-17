@@ -6,7 +6,6 @@
 @use './m2-slide-toggle';
 @use './m3-slide-toggle';
 @use '../core/tokens/m2-utils';
-@use '../core/tokens/m3-utils';
 
 /// Outputs base theme styles (styles not dependent on the color, typography, or density settings)
 /// for the mat-slide-toggle.
@@ -35,20 +34,7 @@
     $mat-tokens: m2-slide-toggle.get-color-tokens($theme);
     $system: m2-utils.get-system($theme);
 
-    @include sass-utils.current-selector-or-root() {
-      // TODO(andrewjs): Remove this once all tokens are migrated to
-      // mat internally.
-      --mdc-slide-toggle-disabled-label-text-color: #{
-          m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
-      // TODO(wagnermaciel): Use our token system to define this css variable.
-      --mat-slide-toggle-disabled-label-text-color: #{
-          m3-utils.color-with-opacity(map.get($system, on-surface), 38%)};
-    }
-
     .mat-mdc-slide-toggle {
-      // TODO(wagnermaciel): Use our token system to define this css variable.
-      --mat-slide-toggle-label-text-color: #{map.get($system, on-surface)};
-
       // Change the color palette related tokens to accent or warn if applicable
       &.mat-accent {
         $tokens: m2-slide-toggle.private-get-color-palette-color-tokens($theme, secondary);

@@ -69,6 +69,8 @@
   @return map.merge(
       private-get-color-palette-color-tokens($theme, primary),
       (
+        slide-toggle-disabled-label-text-color:
+            m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
         slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
         slide-toggle-disabled-selected-handle-color: map.get($system, on-surface),
         slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
