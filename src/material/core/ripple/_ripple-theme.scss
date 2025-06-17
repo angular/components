@@ -2,7 +2,6 @@
 @use './m2-ripple';
 @use './m3-ripple';
 @use '../tokens/token-utils';
-@use '../theming/theming';
 @use '../theming/inspection';
 
 @mixin base($theme) {
@@ -56,23 +55,21 @@
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-ripple') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include base($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
       @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
       @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
       @include typography($theme);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
     }
   }
 }

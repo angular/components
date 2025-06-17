@@ -3,7 +3,6 @@
 @use './m2-icon-button';
 @use './m3-icon-button';
 @use '../core/tokens/token-utils';
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
 
 @mixin base($theme) {
@@ -125,7 +124,6 @@
 /// @param {String} $color-variant: The color variant to use for the button: primary,
 //         secondary, tertiary, or error.
 @mixin theme($theme, $color-variant: null) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-icon-button') {
     @if inspection.get-theme-version($theme) == 1 {
       @include base($theme);
       @include color($theme, $color-variant);
@@ -141,7 +139,6 @@
       }
       @if inspection.theme-has($theme, typography) {
         @include typography($theme);
-      }
     }
   }
 }

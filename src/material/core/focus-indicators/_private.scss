@@ -2,7 +2,6 @@
 @use 'sass:meta';
 @use '@angular/cdk';
 @use '../style/layout-common';
-@use '../theming/theming';
 @use '../theming/inspection';
 
 // Private sass variables that will be used as reference throughout component stylesheets.
@@ -104,10 +103,8 @@ $default-border-radius: 4px;
     @include _customize-focus-indicators((border-color: $theme-or-color));
   }
   @else {
-    @include theming.private-check-duplicate-theme-styles($theme-or-color, 'mat-focus-indicators') {
-      @if inspection.theme-has($theme-or-color, color) {
-        @include strong-focus-indicators-color($theme-or-color);
-      }
+    @if inspection.theme-has($theme-or-color, color) {
+      @include strong-focus-indicators-color($theme-or-color);
     }
   }
 }

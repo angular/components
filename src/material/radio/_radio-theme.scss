@@ -1,4 +1,3 @@
-@use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
@@ -83,23 +82,21 @@
 /// @param {Map} $theme The theme to generate styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin theme($theme, $color-variant: null) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-radio') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include base($theme);
-      @include color($theme, $color-variant);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme, $color-variant);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
+      @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
       @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
       @include typography($theme);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
     }
   }
 }

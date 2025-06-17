@@ -154,15 +154,13 @@
 @mixin density($theme) {}
 
 @mixin theme($theme) {
-  @include mat.private-check-duplicate-theme-styles($theme, 'mat-popover-edit') {
-    @if mat.theme-has($theme, color) {
-      @include color($theme);
-    }
-    @if mat.theme-has($theme, density) {
-      @include density($theme);
-    }
-    @if mat.theme-has($theme, typography) {
-      @include typography($theme);
-    }
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+  @if mat.theme-has($theme, density) {
+    @include density($theme);
+  }
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
   }
 }

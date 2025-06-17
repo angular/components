@@ -1,4 +1,3 @@
-@use './theming/theming';
 @use './theming/inspection';
 @use './ripple/ripple-theme';
 @use './option/option-theme';
@@ -106,26 +105,21 @@
 
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin theme($theme) {
-  // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
-  // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
-  // the imported themes (such as `mat-ripple-theme`) should not report again.
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-core') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include base($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
       @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
       @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
       @include typography($theme);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
     }
   }
 }

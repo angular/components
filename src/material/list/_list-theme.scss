@@ -2,7 +2,6 @@
 
 @use '../checkbox/m2-checkbox';
 @use '../core/theming/inspection';
-@use '../core/theming/theming';
 @use '../core/tokens/token-utils';
 @use '../core/typography/typography';
 @use '../radio/m2-radio';
@@ -180,23 +179,21 @@
 }
 
 @mixin theme($theme) {
-  @include theming.private-check-duplicate-theme-styles($theme, 'mat-list') {
-    @if inspection.get-theme-version($theme) == 1 {
-      @include base($theme);
+  @if inspection.get-theme-version($theme) == 1 {
+    @include base($theme);
+    @include color($theme);
+    @include density($theme);
+    @include typography($theme);
+  } @else {
+    @include base($theme);
+    @if inspection.theme-has($theme, color) {
       @include color($theme);
+    }
+    @if inspection.theme-has($theme, density) {
       @include density($theme);
+    }
+    @if inspection.theme-has($theme, typography) {
       @include typography($theme);
-    } @else {
-      @include base($theme);
-      @if inspection.theme-has($theme, color) {
-        @include color($theme);
-      }
-      @if inspection.theme-has($theme, density) {
-        @include density($theme);
-      }
-      @if inspection.theme-has($theme, typography) {
-        @include typography($theme);
-      }
     }
   }
 }
