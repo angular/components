@@ -5,12 +5,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-/** @title Basic CDK Radio Group */
+/** @title Configurable CDK Radio Group */
 @Component({
-  selector: 'cdk-radio-example',
-  exportAs: 'cdkRadioExample',
-  templateUrl: 'cdk-radio-example.html',
-  styleUrl: 'cdk-radio-example.css',
+  selector: 'cdk-radio-configurable-example',
+  exportAs: 'cdkRadioConfigurableExample',
+  templateUrl: 'cdk-radio-configurable-example.html',
+  styleUrl: '../radio-common.css',
   standalone: true,
   imports: [
     CdkRadioGroup,
@@ -22,18 +22,51 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
   ],
 })
-export class CdkRadioExample {
+export class CdkRadioConfigurableExample {
   orientation: 'vertical' | 'horizontal' = 'vertical';
   disabled = new FormControl(false, {nonNullable: true});
 
-  flavors = ['Vanilla', 'Chocolate', 'Strawberry', 'Mint Chip', 'Cookies & Cream', 'Rocky Road'];
+  fruits = [
+    'Apple',
+    'Apricot',
+    'Banana',
+    'Blackberry',
+    'Blueberry',
+    'Cantaloupe',
+    'Cherry',
+    'Clementine',
+    'Cranberry',
+    'Dates',
+    'Figs',
+    'Grapes',
+    'Grapefruit',
+    'Guava',
+    'Kiwi',
+    'Kumquat',
+    'Lemon',
+    'Lime',
+    'Mandarin',
+    'Mango',
+    'Nectarine',
+    'Orange',
+    'Papaya',
+    'Passion',
+    'Peach',
+    'Pear',
+    'Pineapple',
+    'Plum',
+    'Pomegranate',
+    'Raspberries',
+    'Strawberry',
+    'Tangerine',
+    'Watermelon',
+  ];
 
   // New controls
   readonly = new FormControl(false, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});
   focusMode: 'roving' | 'activedescendant' = 'roving';
-  selectedValue: string | null = 'Vanilla'; // To control/reflect the radio group's value
 
   // Control for which radio options are individually disabled
-  disabledOptions: string[] = ['Chocolate'];
+  disabledOptions: string[] = ['Banana'];
 }

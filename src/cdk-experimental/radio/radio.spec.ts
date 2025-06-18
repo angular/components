@@ -119,9 +119,9 @@ describe('CdkRadioGroup', () => {
         });
       });
 
-      it('should set aria-orientation to "horizontal"', () => {
+      it('should set aria-orientation to "vertical"', () => {
         setupDefaultRadioGroup();
-        expect(radioGroupElement.getAttribute('aria-orientation')).toBe('horizontal');
+        expect(radioGroupElement.getAttribute('aria-orientation')).toBe('vertical');
       });
 
       it('should set aria-disabled to false', () => {

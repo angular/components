@@ -1,0 +1,22 @@
+<div class="example-container">
+  <ul
+    cdkRadioGroup
+    [skipDisabled]="false"
+    class="example-radio-group"
+    aria-labelledby="disabled-focusable-radio-label"
+  >
+    <label class="example-label" id="disabled-focusable-radio-label">Favorite Fruit (Disabled are Focusable)</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-radio-button"
+        [value]="fruit"
+        [disabled]="disabledFruits.includes(fruit)"
+        cdkRadioButton
+        #radioButton="cdkRadioButton"
+      >
+        <span class="example-radio-indicator" [class.example-radio-checked]="radioButton.pattern.selected()"></span>
+        <span>{{ fruit }} {{ disabledFruits.includes(fruit) ? '(Disabled)' : '' }}</span>
+      </li>
+    }
+  </ul>
+</div>
