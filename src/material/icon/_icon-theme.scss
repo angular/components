@@ -4,12 +4,6 @@
 @use './m3-icon';
 @use 'sass:map';
 
-@mixin _palette-colors($theme, $palette-name) {
-  $color: inspection.get-theme-color($theme, $palette-name, text);
-  $tokens: m2-icon.private-get-icon-color-tokens($color);
-  @include token-utils.create-token-values-mixed($tokens);
-}
-
 @mixin base($theme) {
   $tokens: m2-icon.get-unthemable-tokens();
   @if inspection.get-theme-version($theme) == 1 {
@@ -56,19 +50,23 @@
 /// Outputs typography theme styles for the mat-icon.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
+  $tokens: m2-icon.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), typography));
-  } @else {
+    $tokens: map.get(m3-icon.get-tokens($theme), typography);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Outputs density theme styles for the mat-icon.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
+  $tokens: m2-icon.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    @include token-utils.create-token-values(map.get(m3-icon.get-tokens($theme), density));
-  } @else {
+    $tokens: map.get(m3-icon.get-tokens($theme), density);
   }
+
+  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.

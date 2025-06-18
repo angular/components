@@ -31,16 +31,14 @@
   @if inspection.get-theme-version($theme) != 1 {
     .mat-mdc-checkbox {
       &.mat-primary {
-        @include token-utils.create-token-values-mixed(
-            m2-checkbox.get-color-tokens($theme, primary,
-                $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
+        @include token-utils.values(m2-checkbox.get-color-tokens($theme, primary,
+          $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
 
       &.mat-warn {
-        @include token-utils.create-token-values-mixed(
-          m2-checkbox.get-color-tokens($theme, error,
-              $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
+        @include token-utils.values(m2-checkbox.get-color-tokens($theme, error,
+          $exclude: (checkbox-disabled-label-color, checkbox-label-text-color))
         );
       }
     }

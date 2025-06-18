@@ -80,37 +80,6 @@
   }
 }
 
-// Outputs a map of tokens.
-@mixin create-token-values($tokens) {
-  @include _create-token-values-internal($tokens, false);
-}
-
-// Outputs a map of tokens under a specific prefix in scenarios where tokens may be mixed with
-// other declarations (e.g. M2 themes). Used to avoid https://sass-lang.com/documentation/breaking-changes/mixed-decls/
-@mixin create-token-values-mixed($tokens) {
-  @include _create-token-values-internal($tokens, true);
-}
-
-@mixin _create-token-values-internal($tokens, $in-place) {
-  @if ($tokens != null) {
-    @if ($in-place) {
-      & {
-        @each $key, $value in $tokens {
-          @if $value != null {
-            --mat-#{$key}: #{$value};
-          }
-        }
-      }
-    } @else {
-      @each $key, $value in $tokens {
-        @if $value != null {
-          --mat-#{$key}: #{$value};
-        }
-      }
-    }
-  }
-}
-
 /// Emits new token values for the given token overrides.
 /// Verifies that the overrides passed in are valid tokens.
 /// New token values are emitted under the current selector or root.
@@ -136,7 +105,7 @@
         $namespace: list.nth($data, 1);
         $name: list.nth($data, 2);
         $prefixed-name: $namespace + '-' + $name;
-        @include create-token-values(($prefixed-name: $value));
+        @include values(($prefixed-name: $value));
       } @else {
         @error #{'Invalid token name `'}#{$name}#{'`. '}#{'Valid tokens are: '}#{$all-names};
       }

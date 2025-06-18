@@ -14,16 +14,6 @@
   @include token-utils.values($tokens);
 }
 
-@mixin _m2-icon-button-variant($theme, $palette) {
-  $mat-tokens: if(
-    $palette,
-    m2-icon-button.private-get-color-palette-color-tokens($theme, $palette),
-    m2-icon-button.get-color-tokens($theme)
-  );
-
-  @include token-utils.create-token-values-mixed($mat-tokens);
-}
-
 /// Outputs color theme styles for the mat-icon-button.
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant: The color variant to use for the

@@ -142,7 +142,7 @@ $fallbacks: m3-snack-bar.get-tokens();
   }
 
   // Darken the ripples in the button so they're visible against the dark background.
-  @include token-utils.create-token-values-mixed((
+  @include token-utils.values((
     button-text-state-layer-color: currentColor,
     button-text-ripple-color: currentColor,
   ));
