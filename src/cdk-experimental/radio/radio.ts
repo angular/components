@@ -101,7 +101,7 @@ export class CdkRadioGroup<V> {
   protected items = computed(() => this._cdkRadioButtons().map(radio => radio.pattern));
 
   /** Whether the radio group is vertically or horizontally oriented. */
-  orientation = input<'vertical' | 'horizontal'>('horizontal');
+  orientation = input<'vertical' | 'horizontal'>('vertical');
 
   /** Whether disabled items in the group should be skipped when navigating. */
   skipDisabled = input(true, {transform: booleanAttribute});

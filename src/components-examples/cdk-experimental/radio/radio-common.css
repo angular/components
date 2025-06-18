@@ -9,14 +9,13 @@
   gap: 4px;
   margin: 0;
   padding: 8px;
-  max-height: 50vh;
+  max-height: 300px;
   border: 1px solid var(--mat-sys-outline);
   border-radius: var(--mat-sys-corner-extra-small);
   display: flex;
   list-style: none;
   flex-direction: column;
   overflow: scroll;
-  user-select: none;
 }
 
 .example-radio-group[aria-orientation='horizontal'] {
@@ -26,6 +25,11 @@
 .example-radio-group[aria-disabled='true'] {
   background-color: var(--mat-sys-surface-dim);
   pointer-events: none;
+}
+
+.example-radio-group label {
+  padding: 16px;
+  flex-shrink: 0;
 }
 
 .example-radio-button {

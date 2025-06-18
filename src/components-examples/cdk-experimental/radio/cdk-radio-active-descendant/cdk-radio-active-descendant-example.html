@@ -1,0 +1,21 @@
+<div class="example-container">
+  <ul
+    cdkRadioGroup
+    navigationMode="activedescendant"
+    class="example-radio-group"
+    aria-labelledby="active-descendant-radio-label"
+  >
+    <label class="example-label" id="active-descendant-radio-label">Favorite Fruit (Active Descendant)</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-radio-button"
+        [value]="fruit"
+        cdkRadioButton
+        #radioButton="cdkRadioButton"
+      >
+        <span class="example-radio-indicator" [class.example-radio-checked]="radioButton.pattern.selected()"></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

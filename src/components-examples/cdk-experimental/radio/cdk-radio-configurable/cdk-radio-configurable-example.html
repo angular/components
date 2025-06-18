@@ -4,20 +4,10 @@
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
-    <mat-label>Selected Flavor</mat-label>
-    <mat-select [(value)]="selectedValue">
-      <mat-option [value]="null"><em>None</em></mat-option>
-      @for (flavor of flavors; track flavor) {
-        <mat-option [value]="flavor">{{flavor}}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Disabled Radio Options</mat-label>
     <mat-select [(value)]="disabledOptions" multiple>
-      @for (flavor of flavors; track flavor) {
-        <mat-option [value]="flavor">{{flavor}}</mat-option>
+      @for (fruit of fruits; track fruit) {
+        <mat-option [value]="fruit">{{fruit}}</mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -42,20 +32,19 @@
 <!-- #docregion radio-group -->
 <ul
   cdkRadioGroup
-  [(value)]="selectedValue"
   [disabled]="disabled.value"
   [readonly]="readonly.value"
   [skipDisabled]="skipDisabled.value"
   [orientation]="orientation"
   [focusMode]="focusMode"
   class="example-radio-group"
-  aria-label="Select your favorite ice cream flavor"
+  aria-label="Select your favorite fruit"
 >
-  @for (flavor of flavors; track flavor) {
-    @let optionDisabled = disabledOptions.includes(flavor);
-    <li cdkRadioButton [value]="flavor" [disabled]="optionDisabled" class="example-radio-button">
+  @for (fruit of fruits; track fruit) {
+    @let optionDisabled = disabledOptions.includes(fruit);
+    <li cdkRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
       <span class="example-radio-indicator"></span>
-      <span>{{ flavor }}</span>
+      <span>{{ fruit }}</span>
     </li>
   }
 </ul>

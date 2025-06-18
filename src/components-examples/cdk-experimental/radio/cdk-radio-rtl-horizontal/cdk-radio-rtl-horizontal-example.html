@@ -1,0 +1,21 @@
+<div class="example-container" dir="rtl">
+  <ul
+    cdkRadioGroup
+    orientation="horizontal"
+    class="example-radio-group example-radio-group-horizontal"
+    aria-labelledby="rtl-horizontal-radio-label"
+  >
+    <label class="example-label" id="rtl-horizontal-radio-label">Favorite Fruit (RTL Horizontal)</label>
+    @for (fruit of fruits; track fruit) {
+      <li
+        class="example-radio-button"
+        [value]="fruit"
+        cdkRadioButton
+        #radioButton="cdkRadioButton"
+      >
+        <span class="example-radio-indicator" [class.example-radio-checked]="radioButton.pattern.selected()"></span>
+        <span>{{ fruit }}</span>
+      </li>
+    }
+  </ul>
+</div>

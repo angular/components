@@ -1,0 +1,20 @@
+.example-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+}
+
+.example-radio-container {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.example-configurable-radio-container {
+  padding-top: 40px;
+}
+
+h4 {
+  height: 36px;
+}
