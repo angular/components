@@ -9,12 +9,12 @@
 export {MatMenu, MAT_MENU_DEFAULT_OPTIONS, MatMenuDefaultOptions, MenuCloseReason} from './menu';
 export * from './menu-item';
 export * from './menu-content';
+export {MatMenuTrigger} from './menu-trigger';
 export {
-  MatMenuTrigger,
   MAT_MENU_SCROLL_STRATEGY,
   MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER,
   MENU_PANEL_TOP_PADDING,
-} from './menu-trigger';
+} from './menu-trigger-base';
 export * from './module';
 export * from './menu-animations';
 export * from './menu-positions';

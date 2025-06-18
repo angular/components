@@ -7,7 +7,9 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
+import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
@@ -18,7 +20,9 @@ import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { QueryList } from '@angular/core';
+import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -190,7 +194,7 @@ export class MatMenuModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatMenuModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof MatCommonModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger], [typeof i5.CdkScrollableModule, typeof MatMenu, typeof MatCommonModule, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatMenuModule, never, [typeof MatRippleModule, typeof MatCommonModule, typeof i2.OverlayModule, typeof MatMenu, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger], [typeof i5.CdkScrollableModule, typeof MatMenu, typeof MatCommonModule, typeof MatMenuItem, typeof MatMenuContent, typeof MatMenuTrigger, typeof MatContextMenuTrigger]>;
 }
 
 // @public
@@ -234,14 +238,16 @@ export interface MatMenuPanel<T = any> {
 }
 
 // @public
-export class MatMenuTrigger implements AfterContentInit, OnDestroy {
+export class MatMenuTrigger extends MatMenuTriggerBase implements AfterContentInit, OnDestroy {
     constructor(...args: unknown[]);
     closeMenu(): void;
     // @deprecated (undocumented)
     get _deprecatedMatMenuTriggerFor(): MatMenuPanel | null;
     set _deprecatedMatMenuTriggerFor(v: MatMenuPanel | null);
-    get dir(): Direction;
-    focus(origin?: FocusOrigin, options?: FocusOptions): void;
+    // (undocumented)
+    protected _getOutsideClickStream(overlayRef: OverlayRef): rxjs.Observable<MouseEvent>;
+    // (undocumented)
+    protected _getOverlayOrigin(): i0.ElementRef<HTMLElement>;
     _handleClick(event: MouseEvent): void;
     _handleKeydown(event: KeyboardEvent): void;
     _handleMousedown(event: MouseEvent): void;
@@ -249,7 +255,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     set menu(menu: MatMenuPanel | null);
     readonly menuClosed: EventEmitter<void>;
     menuData: any;
-    get menuOpen(): boolean;
     readonly menuOpened: EventEmitter<void>;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -259,8 +264,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     readonly onMenuClose: EventEmitter<void>;
     // @deprecated
     readonly onMenuOpen: EventEmitter<void>;
-    // (undocumented)
-    _openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     openMenu(): void;
     restoreFocus: boolean;
     toggleMenu(): void;
