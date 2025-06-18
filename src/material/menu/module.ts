@@ -13,7 +13,8 @@ import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
 import {MatMenuContent} from './menu-content';
-import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-trigger';
+import {MatMenuTrigger} from './menu-trigger';
+import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER} from './menu-trigger-base';
 
 @NgModule({
   imports: [
