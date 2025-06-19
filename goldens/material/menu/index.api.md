@@ -49,6 +49,40 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     useFactory: typeof MAT_MENU_SCROLL_STRATEGY_FACTORY;
 };
 
+// @public
+export class MatContextMenuTrigger extends MatMenuTriggerBase implements OnDestroy {
+    constructor();
+    // (undocumented)
+    protected _destroyMenu(reason: MenuCloseReason): void;
+    disabled: boolean;
+    // (undocumented)
+    protected _getOutsideClickStream(overlayRef: OverlayRef): rxjs.Observable<MouseEvent>;
+    // (undocumented)
+    protected _getOverlayOrigin(): {
+        x: number;
+        y: number;
+        initialX: number;
+        initialY: number;
+        initialScrollX: number;
+        initialScrollY: number;
+    };
+    protected _handleContextMenuEvent(event: MouseEvent): void;
+    get menu(): MatMenuPanel | null;
+    set menu(menu: MatMenuPanel | null);
+    readonly menuClosed: EventEmitter<void>;
+    menuData: any;
+    readonly menuOpened: EventEmitter<void>;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngOnDestroy(): void;
+    restoreFocus: boolean;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatContextMenuTrigger, "[matContextMenuTriggerFor]", ["matContextMenuTrigger"], { "menu": { "alias": "matContextMenuTriggerFor"; "required": true; }; "menuData": { "alias": "matContextMenuTriggerData"; "required": false; }; "restoreFocus": { "alias": "matContextMenuTriggerRestoreFocus"; "required": false; }; "disabled": { "alias": "matContextMenuTriggerDisabled"; "required": false; }; }, { "menuOpened": "menuOpened"; "menuClosed": "menuClosed"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatContextMenuTrigger, never>;
+}
+
 // @public (undocumented)
 export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
     constructor(...args: unknown[]);

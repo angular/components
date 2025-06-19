@@ -19,3 +19,4 @@ export * from './module';
 export * from './menu-animations';
 export * from './menu-positions';
 export * from './menu-panel';
+export {MatContextMenuTrigger} from './context-menu-trigger';

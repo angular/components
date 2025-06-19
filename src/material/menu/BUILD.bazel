@@ -67,6 +67,7 @@ sass_binary(
 ng_project(
     name = "menu",
     srcs = [
+        "context-menu-trigger.ts",
         "index.ts",
         "menu.ts",
         "menu-animations.ts",
