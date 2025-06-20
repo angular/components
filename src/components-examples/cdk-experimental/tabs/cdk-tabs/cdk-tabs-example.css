@@ -44,7 +44,6 @@
 
 .example-tablist[aria-disabled='true'] {
   background-color: var(--mat-sys-surface-dim);
-  pointer-events: none;
 }
 
 .example-tab {
@@ -67,20 +66,14 @@
   background: var(--mat-sys-surface-container);
 }
 
-.example-tab[aria-selected='true'],
-.example-tablist:focus-within .example-tab.cdk-active[aria-selected='true'] {
+.example-tablist:focus-within .example-tab.cdk-active {
   background-color: var(--mat-sys-secondary-container);
 }
 
 .example-tab[aria-disabled='true'] {
   background-color: var(--mat-sys-surface-dim);
-  pointer-events: none;
 }
 
 .example-tabpanel {
   margin: 8px;
-}
-
-.example-tabpanel[inert] {
-  display: none;
 }
