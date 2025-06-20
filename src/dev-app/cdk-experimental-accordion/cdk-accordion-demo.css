@@ -1,0 +1,27 @@
+.example-accordion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+}
+
+.example-accordion-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.example-accordion-container,
+.example-configurable-accordion-container {
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.example-configurable-accordion-container {
+  margin-top: 40px;
+}
+
+h4 {
+  height: 36px;
+  margin-top: 0;
+}

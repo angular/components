@@ -12,12 +12,13 @@ import {
   CdkAccordionContent,
 } from '@angular/cdk-experimental/accordion';
 
-/** @title Accordion using UI Patterns. */
+/** @title Configurable Accordion using UI Patterns. */
 @Component({
-  selector: 'cdk-accordion-example',
-  exportAs: 'cdkAccordionExample',
-  templateUrl: 'cdk-accordion-example.html',
-  styleUrl: 'cdk-accordion-example.css',
+  selector: 'cdk-accordion-configurable-example',
+  exportAs: 'cdkAccordionConfigurableExample',
+  templateUrl: 'cdk-accordion-configurable-example.html',
+  styleUrl: '../cdk-accordion-examples.css', // Point to shared CSS
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatIconModule,
@@ -31,7 +32,7 @@ import {
     CdkAccordionContent,
   ],
 })
-export class CdkAccordionExample {
+export class CdkAccordionConfigurableExample {
   // Accordion Group Properties
   wrap = new FormControl(true, {nonNullable: true});
   multi = new FormControl(true, {nonNullable: true});
@@ -40,7 +41,7 @@ export class CdkAccordionExample {
   expandedIds = model<string[]>(['item1']);
 
   // Example items
-  items = ['item1', 'item2', 'item3'];
+  items = ['item1', 'item2', 'item3', 'item4', 'item5'];
 
   expansionIcon(item: string): Signal<string> {
     return computed(() => (this.expandedIds().includes(item) ? 'expand_less' : 'expand_more'));
