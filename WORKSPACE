@@ -15,10 +15,10 @@ http_archive(
 # Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
-    sha256 = "4f7e2b6bafa9a88ac1b0ee0c3ad69850282419aa51f6bd5b45cde8d0c945d18c",
-    strip_prefix = "bazel-skylib-454b25912a8ddf3d90eb47f25260befd5ee274a8",
+    sha256 = "b359bfaae1838c5098aa880a0797e1ce9f6b19cd95e8d94568b3818ddc2b3463",
+    strip_prefix = "bazel-skylib-223e4e945801dfbc0bfa31d0900196f5bb54b0fc",
     urls = [
-        "https://github.com/bazelbuild/bazel-skylib/archive/454b25912a8ddf3d90eb47f25260befd5ee274a8.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/archive/223e4e945801dfbc0bfa31d0900196f5bb54b0fc.tar.gz",
     ],
 )
 
@@ -45,9 +45,9 @@ build_bazel_rules_nodejs_dependencies()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "83e5af4d17385d1c3268c31ae217dbfc8525aa7bcf52508dc6864baffc8b9501",
-    strip_prefix = "rules_js-2.3.7",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.7/rules_js-v2.3.7.tar.gz",
+    sha256 = "304c51726b727d53277dd28fcda1b8e43b7e46818530b8d6265e7be98d5e2b25",
+    strip_prefix = "rules_js-2.3.8",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.8/rules_js-v2.3.8.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -199,7 +199,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "652e5b0ef9be65ca738e11d5d01424b64344b466",
+    commit = "845ffcd8231832abdcfd6a47211b2feb4d178d7b",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
