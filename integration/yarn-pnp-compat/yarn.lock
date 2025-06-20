@@ -6447,14 +6447,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine-html-reporter@npm:~1.7.0":
-  version: 1.7.0
-  resolution: "karma-jasmine-html-reporter@npm:1.7.0"
+"karma-jasmine-html-reporter@npm:~2.1.0":
+  version: 2.1.0
+  resolution: "karma-jasmine-html-reporter@npm:2.1.0"
   peerDependencies:
-    jasmine-core: ">=3.8"
-    karma: ">=0.9"
-    karma-jasmine: ">=1.1"
-  checksum: 10/b4dc9525c7a0e0729537d3d2b4099573271a5ba19157a2e6a1226fbae66d118b17d85b31a6acf711a066f6283a906b86388f51739be45b2384d73035a61ab699
+    jasmine-core: ^4.0.0 || ^5.0.0
+    karma: ^6.0.0
+    karma-jasmine: ^5.0.0
+  checksum: 10/1c3906c8ed4299342702ad6d5a8c735b5adfb1ed5c955bb381a39b9679da8705b21347f712da0eb5e8e2b0d4690927ae67b6a3c23d901e9a7d09f9f05aeb7e98
   languageName: node
   linkType: hard
 
@@ -9801,7 +9801,7 @@ __metadata:
     karma-chrome-launcher: "npm:~3.2.0"
     karma-coverage: "npm:~2.2.0"
     karma-jasmine: "npm:~4.0.0"
-    karma-jasmine-html-reporter: "npm:~1.7.0"
+    karma-jasmine-html-reporter: "npm:~2.1.0"
     rxjs: "npm:^7.5.5"
     tslib: "npm:^2.3.0"
     typescript: "npm:5.8.3"

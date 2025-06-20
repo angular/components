@@ -487,8 +487,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.2(karma@6.4.4)
       karma-jasmine-html-reporter:
-        specifier: ^1.5.4
-        version: 1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
+        specifier: ^2.0.0
+        version: 2.1.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
       light-server:
         specifier: ^2.9.1
         version: 2.9.1
@@ -5769,12 +5769,12 @@ packages:
   karma-firefox-launcher@2.1.3:
     resolution: {integrity: sha512-LMM2bseebLbYjODBOVt7TCPP9OI2vZIXCavIXhkO9m+10Uj5l7u/SKoeRmYx8FYHTVGZSpk6peX+3BMHC1WwNw==}
 
-  karma-jasmine-html-reporter@1.7.0:
-    resolution: {integrity: sha512-pzum1TL7j90DTE86eFt48/s12hqwQuiD+e5aXx2Dc9wDEn2LfGq6RoAxEZZjFiN0RDSCOnosEKRZWxbQ+iMpQQ==}
+  karma-jasmine-html-reporter@2.1.0:
+    resolution: {integrity: sha512-sPQE1+nlsn6Hwb5t+HHwyy0A1FNCVKuL1192b+XNauMYWThz2kweiBVW1DqloRpVvZIJkIoHVB7XRpK78n1xbQ==}
     peerDependencies:
-      jasmine-core: '>=3.8'
-      karma: '>=0.9'
-      karma-jasmine: '>=1.1'
+      jasmine-core: ^4.0.0 || ^5.0.0
+      karma: ^6.0.0
+      karma-jasmine: ^5.0.0
 
   karma-jasmine@4.0.2:
     resolution: {integrity: sha512-ggi84RMNQffSDmWSyyt4zxzh2CQGwsxvYYsprgyR1j8ikzIduEdOlcLvXjZGwXG/0j41KUXOWsUCBfbEHPWP9g==}
@@ -14498,7 +14498,7 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@1.7.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
     dependencies:
       jasmine-core: 5.7.1
       karma: 6.4.4
