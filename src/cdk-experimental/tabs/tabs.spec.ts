@@ -229,6 +229,12 @@ describe('CdkTabs', () => {
         });
       });
 
+      it('should have aria-labelledby pointing to its tab id', () => {
+        expect(tabPanelElements[0].getAttribute('aria-labelledby')).toBe(tabElements[0].id);
+        expect(tabPanelElements[1].getAttribute('aria-labelledby')).toBe(tabElements[1].id);
+        expect(tabPanelElements[2].getAttribute('aria-labelledby')).toBe(tabElements[2].id);
+      });
+
       it('should have inert attribute when hidden and not when visible', () => {
         updateTabs({selectedTab: 'tab1'});
         expect(tabPanelElements[0].hasAttribute('inert')).toBe(false);
