@@ -21,3 +21,6 @@ export interface MenuItemHarnessFilters extends BaseHarnessFilters {
   /** Only find instances that have a sub-menu. */
   hasSubmenu?: boolean;
 }
+
+/** A set of criteria that can be used to filter a list of `MatContextMenuHarness` instances. */
+export interface ContextMenuHarnessFilters extends BaseHarnessFilters {}

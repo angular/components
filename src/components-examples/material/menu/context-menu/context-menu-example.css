@@ -1,0 +1,12 @@
+.example-context-menu-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  max-width: 300px;
+  border: dashed 1px;
+  text-align: center;
+  padding: 30px;
+  box-sizing: border-box;
+}

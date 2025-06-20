@@ -13,7 +13,9 @@ import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
 import {MatMenuContent} from './menu-content';
-import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-trigger';
+import {MatMenuTrigger} from './menu-trigger';
+import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER} from './menu-trigger-base';
+import {MatContextMenuTrigger} from './context-menu-trigger';
 
 @NgModule({
   imports: [
@@ -24,6 +26,7 @@ import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-
     MatMenuItem,
     MatMenuContent,
     MatMenuTrigger,
+    MatContextMenuTrigger,
   ],
   exports: [
     CdkScrollableModule,
@@ -32,6 +35,7 @@ import {MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER, MatMenuTrigger} from './menu-
     MatMenuItem,
     MatMenuContent,
     MatMenuTrigger,
+    MatContextMenuTrigger,
   ],
   providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
