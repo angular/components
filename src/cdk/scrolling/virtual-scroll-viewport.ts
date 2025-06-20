@@ -26,6 +26,9 @@ import {
   signal,
   ViewChild,
   ViewEncapsulation,
+  ApplicationRef,
+  effect,
+  linkedSignal,
 } from '@angular/core';
 import {
   animationFrameScheduler,
@@ -170,18 +173,15 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
    */
   private _renderedContentOffsetNeedsRewrite = false;
 
-  /** Whether there is a pending change detection cycle. */
-  private _isChangeDetectionPending = false;
-
   /** A list of functions to run after the next change detection cycle. */
-  private _runAfterChangeDetection: Function[] = [];
+  private _runAfterChangeDetection = signal<Function[]>([]);
 
   /** Subscription to changes in the viewport size. */
   private _viewportChanges = Subscription.EMPTY;
 
-  private _injector = inject(Injector);
-
   private _isDestroyed = false;
+
+  private _changeDetectionNeeded = linkedSignal(() => this._runAfterChangeDetection().length > 0);
 
   constructor(...args: unknown[]);
 
@@ -202,6 +202,41 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this.elementRef.nativeElement.classList.add('cdk-virtual-scrollable');
       this.scrollable = this;
     }
+
+    const injector = inject(ApplicationRef).injector;
+    effect(
+      () => {
+        if (!this._changeDetectionNeeded() || this._isDestroyed) {
+          return;
+        }
+
+        // Apply the content transform. The transform can't be set via an Angular binding because
+        // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
+        // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
+        // the `Number` function first to coerce it to a numeric value.
+        this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
+        // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+        // from the root, since the repeated items are content projected in. Calling `detectChanges`
+        // instead does not properly check the projected content.
+        this._changeDetectorRef.markForCheck();
+
+        afterNextRender(
+          {
+            mixedReadWrite: () => {
+              // TODO: should this be done at the top?
+              const runAfterChangeDetection = this._runAfterChangeDetection();
+              this._runAfterChangeDetection.set([]);
+              for (const fn of runAfterChangeDetection) {
+                fn();
+              }
+            },
+          },
+          {injector},
+        );
+      },
+      {injector},
+    );
   }
 
   override ngOnInit() {
@@ -238,7 +273,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
           )
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
-        this._markChangeDetectionNeeded();
+        this._changeDetectionNeeded.set(true);
       }),
     );
   }
@@ -274,7 +309,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
           this._dataLength = newLength;
           this._scrollStrategy.onDataLengthChanged();
         }
-        this._doChangeDetection();
+        this._changeDetectionNeeded.set(true);
       });
     });
   }
@@ -317,7 +352,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     if (this._totalContentSize !== size) {
       this._totalContentSize = size;
       this._calculateSpacerSize();
-      this._markChangeDetectionNeeded();
+      this._changeDetectionNeeded.set(true);
     }
   }
 
@@ -328,7 +363,11 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
         range = {start: 0, end: Math.max(this._renderedRange.end, range.end)};
       }
       this._renderedRangeSubject.next((this._renderedRange = range));
-      this._markChangeDetectionNeeded(() => this._scrollStrategy.onContentRendered());
+      this._runAfterChangeDetection.update(v => [
+        ...v,
+        () => this._scrollStrategy.onContentRendered(),
+      ]);
+      this._changeDetectionNeeded.set(true);
     }
   }
 
@@ -366,15 +405,19 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       // We know this value is safe because we parse `offset` with `Number()` before passing it
       // into the string.
       this._renderedContentTransform = transform;
-      this._markChangeDetectionNeeded(() => {
-        if (this._renderedContentOffsetNeedsRewrite) {
-          this._renderedContentOffset -= this.measureRenderedContentSize();
-          this._renderedContentOffsetNeedsRewrite = false;
-          this.setRenderedContentOffset(this._renderedContentOffset);
-        } else {
-          this._scrollStrategy.onRenderedOffsetChanged();
-        }
-      });
+      this._runAfterChangeDetection.update(v => [
+        ...v,
+        () => {
+          if (this._renderedContentOffsetNeedsRewrite) {
+            this._renderedContentOffset -= this.measureRenderedContentSize();
+            this._renderedContentOffsetNeedsRewrite = false;
+            this.setRenderedContentOffset(this._renderedContentOffset);
+          } else {
+            this._scrollStrategy.onRenderedOffsetChanged();
+          }
+        },
+      ]);
+      this._changeDetectionNeeded.set(true);
     }
   }
 
@@ -480,56 +523,6 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   /** Measure the viewport size. */
   private _measureViewportSize() {
     this._viewportSize = this.scrollable.measureViewportSize(this.orientation);
-  }
-
-  /** Queue up change detection to run. */
-  private _markChangeDetectionNeeded(runAfter?: Function) {
-    if (runAfter) {
-      this._runAfterChangeDetection.push(runAfter);
-    }
-
-    // Use a Promise to batch together calls to `_doChangeDetection`. This way if we set a bunch of
-    // properties sequentially we only have to run `_doChangeDetection` once at the end.
-    if (!this._isChangeDetectionPending) {
-      this._isChangeDetectionPending = true;
-      this.ngZone.runOutsideAngular(() =>
-        Promise.resolve().then(() => {
-          this._doChangeDetection();
-        }),
-      );
-    }
-  }
-
-  /** Run change detection. */
-  private _doChangeDetection() {
-    if (this._isDestroyed) {
-      return;
-    }
-
-    this.ngZone.run(() => {
-      // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
-      // from the root, since the repeated items are content projected in. Calling `detectChanges`
-      // instead does not properly check the projected content.
-      this._changeDetectorRef.markForCheck();
-
-      // Apply the content transform. The transform can't be set via an Angular binding because
-      // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
-      // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
-      // the `Number` function first to coerce it to a numeric value.
-      this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
-
-      afterNextRender(
-        () => {
-          this._isChangeDetectionPending = false;
-          const runAfterChangeDetection = this._runAfterChangeDetection;
-          this._runAfterChangeDetection = [];
-          for (const fn of runAfterChangeDetection) {
-            fn();
-          }
-        },
-        {injector: this._injector},
-      );
-    });
   }
 
   /** Calculates the `style.width` and `style.height` for the spacer element. */
