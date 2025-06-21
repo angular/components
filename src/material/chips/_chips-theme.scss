@@ -10,12 +10,13 @@
 /// for the mat-chips.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
-  $tokens: m2-chip.get-unthemable-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    $tokens: map.get(m3-chip.get-tokens($theme), base);
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), base));
+  } @else {
+    .mat-mdc-standard-chip {
+      @include token-utils.values(m2-chip.get-unthemable-tokens($theme));
+    }
   }
-
-  @include token-utils.values($tokens);
 }
 
 /// Outputs color theme styles for the mat-chips.
@@ -50,23 +51,25 @@
 /// Outputs typography theme styles for the mat-chips.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
-  $tokens: m2-chip.get-typography-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    $tokens: map.get(m3-chip.get-tokens($theme), typography);
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), typography));
+  } @else {
+    .mat-mdc-standard-chip {
+      @include token-utils.values(m2-chip.get-typography-tokens($theme));
+    }
   }
-
-  @include token-utils.values($tokens);
 }
 
 /// Outputs density theme styles for the mat-chips.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
-  $tokens: m2-chip.get-density-tokens($theme);
   @if inspection.get-theme-version($theme) == 1 {
-    $tokens: map.get(m3-chip.get-tokens($theme), density);
+    @include token-utils.values(map.get(m3-chip.get-tokens($theme), density));
+  } @else {
+    .mat-mdc-chip.mat-mdc-standard-chip {
+      @include token-utils.values(m2-chip.get-density-tokens($theme));
+    }
   }
-
-  @include token-utils.values($tokens);
 }
 
 /// Defines the tokens that will be available in the `overrides` mixin and for docs extraction.
