@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -117,7 +116,7 @@ $prefix: (mat, form-field);
       form-field-filled-label-text-weight: map.get($system, body-large-weight),
       form-field-outlined-label-text-populated-size: null,
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

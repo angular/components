@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -52,7 +51,7 @@ $prefix: (mat, stepper);
       stepper-header-selected-state-label-text-size: map.get($system, title-small-size),
       stepper-header-selected-state-label-text-weight: map.get($system, title-small-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

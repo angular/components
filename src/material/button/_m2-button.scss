@@ -176,8 +176,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $system: m2-utils.get-system($theme);
+  $scale: theming.clamp-density(map.get($system, density-scale), -3);
   $sizes: (
     0: 36px,
     -1: 32px,

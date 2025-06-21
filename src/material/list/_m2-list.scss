@@ -1,6 +1,6 @@
-@use '../core/theming/inspection';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
+@use '../core/theming/theming';
 
 // Tokens that can't be configured through Angular Material's current theming API,
 // but may be in a future version of the theming API.
@@ -73,7 +73,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: inspection.get-theme-density($theme);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
 
   @return (
     list-list-item-leading-icon-start-space: 16px,
@@ -85,7 +86,7 @@
       -3: 36px,
       -4: 32px,
       -5: 24px,
-    ), $scale),
+    ), $density-scale),
     list-list-item-two-line-container-height: map.get((
       0: 64px,
       -1: 60px,
@@ -93,7 +94,7 @@
       -3: 52px,
       -4: 48px,
       -5: 48px,
-    ), $scale),
+    ), $density-scale),
     list-list-item-three-line-container-height: map.get((
       0: 88px,
       -1: 84px,
@@ -101,6 +102,6 @@
       -3: 76px,
       -4: 72px,
       -5: 56px,
-    ), $scale),
+    ), $density-scale),
   );
 }

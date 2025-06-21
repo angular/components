@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/style/elevation';
 @use '../core/tokens/m2-utils';
@@ -45,7 +44,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $density-scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
 
   @return (
     select-arrow-transform: map.get((

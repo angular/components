@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-icon-button.
@@ -35,7 +34,7 @@
       icon-button-state-layer-color: map.get($system, on-surface-variant),
     ),
     typography: (),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 
   @return $tokens;
