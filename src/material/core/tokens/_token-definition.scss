@@ -228,9 +228,9 @@ $_system-fallbacks: null;
 // Calculate the luminance for a color.
 // See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
 @function _luminance($color) {
-  $red: _linear-channel-value(color.red($color));
-  $green: _linear-channel-value(color.green($color));
-  $blue: _linear-channel-value(color.blue($color));
+  $red: _linear-channel-value(color.channel($color, 'red', $space: rgb));
+  $green: _linear-channel-value(color.channel($color, 'green', $space: rgb));
+  $blue: _linear-channel-value(color.channel($color, 'blue', $space: rgb));
 
   @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
 }
