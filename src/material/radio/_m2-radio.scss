@@ -57,7 +57,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
 
   @return (
     // The diameter of the radio's ripple.
@@ -66,7 +67,7 @@
       -1: 36px,
       -2: 32px,
       -3: 28px,
-    ), $scale),
-    radio-touch-target-display: if($scale < -1, none, block)
+    ), $density-scale),
+    radio-touch-target-display: if($density-scale < -1, none, block)
   );
 }

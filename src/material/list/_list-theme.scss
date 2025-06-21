@@ -8,6 +8,7 @@
 @use './m2-list';
 @use './m3-list';
 @use '../core/tokens/m2-utils';
+@use '../core/theming/theming';
 
 @mixin base($theme) {
   $tokens: m2-list.get-unthemable-tokens();
@@ -98,7 +99,8 @@
   @include token-utils.values($tokens);
 
   @if inspection.get-theme-version($theme) != 1 {
-    $density-scale: inspection.get-theme-density($theme);
+    $system: m2-utils.get-system($theme);
+    $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
 
     .mdc-list-item__start,
     .mdc-list-item__end {

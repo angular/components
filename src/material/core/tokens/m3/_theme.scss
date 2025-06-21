@@ -28,7 +28,7 @@ $_sys-maps: (
   ),
 );
 
-$_system: ();
+$_system: (density-scale: 0);
 @each $sys-map in $_sys-maps {
   $_system: map.merge($_system, _create-system-app-vars-map($sys-map));
 }

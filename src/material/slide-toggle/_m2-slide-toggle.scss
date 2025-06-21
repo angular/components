@@ -1,5 +1,4 @@
 @use '../core/style/elevation';
-@use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use 'sass:map';
 @use '../core/tokens/m2-utils';
@@ -132,7 +131,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -3);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
 
   @return (
     // The diameter of the handle ripple.
@@ -141,6 +141,6 @@
       -1: 36px,
       -2: 32px,
       -3: 28px,
-    ), $scale)
+    ), $density-scale)
   );
 }

@@ -2,7 +2,6 @@
 @use 'sass:map';
 @use 'sass:list';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 /// Generates the tokens for MDC tab
@@ -44,7 +43,7 @@
       tab-label-text-tracking: map.get($system, title-small-tracking),
       tab-label-text-weight: map.get($system, title-small-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

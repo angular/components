@@ -114,7 +114,7 @@
   @return $theme;
 }
 
-@function _define-system($primary, $accent, $warn, $is-dark, $typography) {
+@function _define-system($primary, $accent, $warn, $is-dark, $typography, $density-scale) {
   $palettes: (
     primary: $primary,
     accent: $accent,
@@ -128,7 +128,7 @@
   $sys-state: m2.md-sys-state-values();
   $sys-typography: m2.md-sys-typescale-values($typography);
 
-  $system: ();
+  $system: (density-scale: $density-scale);
   @each $map in ($sys-color, $sys-state, $sys-typography) {
     $system: map.merge($system, $map);
   }
@@ -188,7 +188,9 @@
         $accent: $accent,
         $warn: $warn,
         $is-dark: $is-dark,
-        $typography: ());
+        $typography: (),
+        $density-scale: 0
+    );
     $theme: map.set($theme, _mat-system, $system);
     @return $theme;
   }
@@ -216,7 +218,9 @@
       $accent: map.get($result, accent) or map.get($result, color, accent) or (),
       $warn: map.get($result, warn) or map.get($result, color, warn) or (),
       $is-dark: $is-dark,
-      $typography: map.get($result, typography) or ());
+      $typography: map.get($result, typography) or (),
+      $density-scale: map.get($result, density),
+  );
   $theme: map.set($theme, _mat-system, $system);
   @return $theme;
 }

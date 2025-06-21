@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use '../core/theming/inspection';
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
@@ -84,7 +83,9 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -2);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
+
   @return (
     // The height of the chip.
     chip-container-height: map.get(
@@ -93,7 +94,7 @@
           -1: 28px,
           -2: 24px,
         ),
-        $scale
+        $density-scale
     )
   );
 }

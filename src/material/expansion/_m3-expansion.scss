@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 @use '../core/style/elevation';
 
@@ -46,7 +45,7 @@ $prefix: (mat, expansion);
       expansion-header-text-tracking: map.get($system, title-medium-tracking),
       expansion-header-text-weight: map.get($system, title-medium-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

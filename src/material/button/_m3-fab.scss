@@ -3,7 +3,6 @@
 @use '../core/tokens/m3-utils';
 @use '../core/style/elevation';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-fab.
@@ -72,7 +71,7 @@
       fab-extended-label-text-tracking: map.get($system, label-large-tracking),
       fab-extended-label-text-weight: map.get($system, label-large-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 
   @return $tokens;

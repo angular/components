@@ -3,7 +3,9 @@
 @use './m2-icon-button';
 @use './m3-icon-button';
 @use '../core/tokens/token-utils';
+@use '../core/tokens/m2-utils';
 @use '../core/theming/inspection';
+@use '../core/theming/theming';
 
 @mixin base($theme) {
   $tokens: m2-icon-button.get-unthemable-tokens();
@@ -60,7 +62,8 @@
     @include token-utils.values(map.get(m3-icon-button.get-tokens($theme), density));
   } @else {
     $icon-size: 24px;
-    $density-scale: inspection.get-theme-density($theme);
+    $system: m2-utils.get-system($theme);
+    $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
     $size-map: (
       0: 48px,
       -1: 44px,
