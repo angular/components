@@ -44,7 +44,8 @@ $fallbacks: m3-form-field.get-tokens();
 
     // Note that while this style and the `-ms-clear` are identical, we can't combine
     // them because if one of them isn't supported, it'll invalidate the whole rule.
-    &::-webkit-calendar-picker-indicator {
+    &::-webkit-calendar-picker-indicator,
+    &::-webkit-search-cancel-button {
       display: none;
     }
 
