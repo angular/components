@@ -194,7 +194,11 @@ markdown_to_html(
 
 extract_tokens(
     name = "tokens",
-    srcs = [":theme"],
+    srcs = [
+        ":fab_theme",
+        ":icon_button_theme",
+        ":theme",
+    ],
 )
 
 filegroup(
