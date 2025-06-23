@@ -11,12 +11,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 
-/** @title Tabs using UI Patterns. */
+/** @title Configurable Tabs. */
 @Component({
-  selector: 'cdk-tabs-example',
-  exportAs: 'cdkTabsExample',
-  templateUrl: 'cdk-tabs-example.html',
-  styleUrl: 'cdk-tabs-example.css',
+  selector: 'cdk-tabs-configurable-example',
+  exportAs: 'cdkTabsConfigurableExample',
+  templateUrl: 'cdk-tabs-configurable-example.html',
+  styleUrls: ['../cdk-tabs-common.css'],
+  standalone: true,
   imports: [
     CdkTabs,
     CdkTabList,
@@ -29,7 +30,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
     ReactiveFormsModule,
   ],
 })
-export class CdkTabsExample {
+export class CdkTabsConfigurableExample {
   orientation: 'vertical' | 'horizontal' = 'horizontal';
   focusMode: 'roving' | 'activedescendant' = 'roving';
   selectionMode: 'explicit' | 'follow' = 'follow';
