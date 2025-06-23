@@ -156,6 +156,17 @@ describe('Tabs Pattern', () => {
     expect(tabPanelPatterns[1].hidden()).toBeTrue();
   });
 
+  it('should set a tabpanel tabindex to 0 if the tab is selected.', () => {
+    tabListInputs.value.set(['tab-1']);
+    expect(tabPatterns[0].tabindex()).toBe(0);
+  });
+
+  it('should set a tabpanel tabindex to -1 if the tab is not selected.', () => {
+    tabListInputs.value.set(['tab-1']);
+    expect(tabPatterns[1].tabindex()).toBe(-1);
+    expect(tabPatterns[2].tabindex()).toBe(-1);
+  });
+
   it('gets a controlled tabpanel id from a tab.', () => {
     expect(tabPanelPatterns[0].id()).toBe('tabpanel-1-id');
     expect(tabPatterns[0].controls()).toBe('tabpanel-1-id');
