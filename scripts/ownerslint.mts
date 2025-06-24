@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import {readdirSync, readFileSync, statSync} from 'fs';
-import {IMinimatch, Minimatch} from 'minimatch';
+import minimatch from 'minimatch';
 import {join} from 'path';
 
 /**
@@ -23,7 +23,7 @@ const ownedPaths = readFileSync(ownersFilePath, 'utf8')
   // Split off just the path glob.
   .map(line => line.split(/\s+/)[0])
   // Turn paths into Minimatch objects.
-  .map(path => new Minimatch(path, {dot: true, matchBase: true}));
+  .map(path => new minimatch.Minimatch(path, {dot: true, matchBase: true}));
 
 const ignoredPaths = readFileSync(gitIgnorePath, 'utf8')
   .split('\n')
@@ -32,7 +32,7 @@ const ignoredPaths = readFileSync(gitIgnorePath, 'utf8')
   // Remove empty lines and comments.
   .filter(line => line && !line.startsWith('#'))
   // Turn paths into Minimatch objects.
-  .map(path => new Minimatch(path, {dot: true, matchBase: true}));
+  .map(path => new minimatch.Minimatch(path, {dot: true, matchBase: true}));
 
 for (let paths = getChildPaths('.'); paths.length; ) {
   paths = Array.prototype.concat(
@@ -72,7 +72,7 @@ if (errors) {
 }
 
 /** Check if the given path is owned by the given owned path matcher. */
-function isOwnedBy(path: string, ownedPath: IMinimatch) {
+function isOwnedBy(path: string, ownedPath: minimatch.IMinimatch) {
   // If the owned path ends with `**` its safe to eliminate whole directories.
   if (ownedPath.pattern.endsWith('**') || statSync(path).isFile()) {
     return ownedPath.match('/' + path);

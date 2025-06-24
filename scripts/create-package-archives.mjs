@@ -9,12 +9,11 @@
  * the primary `cdk` and `material` packages, and also don't run for pull requests.
  */
 
-const {join} = require('path');
-const {rm, mkdir, test, ls, set, exec, cd} = require('shelljs');
-const {red, green} = require('chalk');
-const yargs = require('yargs');
+import {join} from 'path';
+import sh from 'shelljs';
+import chalk from 'chalk';
+import yargs from 'yargs';
 
-const projectDir = join(__dirname, '../');
 const archivesDir = 'dist/release-archives';
 const releasesDir = 'dist/releases';
 const {suffix} = yargs(process.argv.slice(2))
@@ -23,34 +22,35 @@ const {suffix} = yargs(process.argv.slice(2))
   .parseSync();
 
 // Fail if any ShellJS command fails.
-set('-e');
+sh.set('-e');
 
-cd(projectDir);
-
-if (!test('-e', releasesDir)) {
-  console.error(red('The release output has not been built.'));
+if (!sh.test('-e', releasesDir)) {
+  console.error(chalk.red('The release output has not been built.'));
   process.exit(1);
 }
 
-rm('-Rf', archivesDir);
-mkdir('-p', archivesDir);
+sh.rm('-Rf', archivesDir);
+sh.mkdir('-p', archivesDir);
 
-const builtPackages = ls(releasesDir)
+const builtPackages = sh
+  .ls(releasesDir)
   .map(name => ({name, path: join(releasesDir, name)}))
-  .filter(pkg => test('-d', pkg.path));
+  .filter(pkg => sh.test('-d', pkg.path));
 
 // If multiple packages should be archived, we also generate a single archive that
 // contains all packages. This makes it easier to transfer the release packages.
 if (builtPackages.length > 1) {
   console.info('Creating archive with all packages..');
-  exec(`tar --create --gzip --directory ${releasesDir} --file ${archivesDir}/all-${suffix}.tgz .`);
+  sh.exec(
+    `tar --create --gzip --directory ${releasesDir} --file ${archivesDir}/all-${suffix}.tgz .`,
+  );
 }
 
 for (const pkg of builtPackages) {
   console.info(`Creating archive for package: ${pkg.name}`);
-  exec(
+  sh.exec(
     `tar --create --gzip --directory ${pkg.path} --file ${archivesDir}/${pkg.name}-${suffix}.tgz .`,
   );
 }
 
-console.info(green(`Created package archives in: ${archivesDir}`));
+console.info(chalk.green(`Created package archives in: ${archivesDir}`));
