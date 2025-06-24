@@ -289,7 +289,7 @@ export class TabListPattern {
 
   /** Handles updating selection for the tablist. */
   private _select(opts?: SelectOptions) {
-    if (opts?.select && !this.focusManager.activeItem().disabled()) {
+    if (opts?.select) {
       this.selection.selectOne();
       this.expansionManager.open(this.focusManager.activeItem());
     }

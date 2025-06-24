@@ -120,7 +120,16 @@ export class ListSelection<T extends ListSelectionItem<V>, V> {
 
   /** Sets the selection to only the current active item. */
   selectOne() {
+    if (this.inputs.focusManager.activeItem().disabled()) {
+      return;
+    }
+
     this.deselectAll();
+
+    if (this.inputs.value().length > 0 && !this.inputs.multi()) {
+      return;
+    }
+
     this.select();
   }
 

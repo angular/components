@@ -219,6 +219,34 @@ describe('List Selection', () => {
       selection.selectOne(); // [0]
       expect(selection.inputs.value()).toEqual([0]);
     });
+
+    it('should do nothing if the current active item is disabled', () => {
+      const selection = getSelection({multi: signal(true)});
+      const items = selection.inputs.items() as TestItem[];
+
+      selection.inputs.focusManager.focus(items[1]);
+      selection.select();
+      expect(selection.inputs.value()).toEqual([1]);
+
+      selection.inputs.focusManager.focus(items[0]);
+      items[0].disabled.set(true);
+      selection.selectOne();
+      expect(selection.inputs.value()).toEqual([1]);
+    });
+
+    it('should not select an item if the list is not multiselectable and not all items are deselected', () => {
+      const selection = getSelection({multi: signal(false)});
+      const items = selection.inputs.items() as TestItem[];
+
+      selection.inputs.focusManager.focus(items[1]);
+      selection.select();
+      expect(selection.inputs.value()).toEqual([1]);
+
+      items[1].disabled.set(true);
+      selection.inputs.focusManager.focus(items[2]);
+      selection.selectOne();
+      expect(selection.inputs.value()).toEqual([1]);
+    });
   });
 
   describe('#selectRange', () => {

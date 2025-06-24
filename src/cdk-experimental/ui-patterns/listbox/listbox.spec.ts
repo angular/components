@@ -549,7 +549,7 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(down());
         expect(listbox.inputs.value()).toEqual(['Apricot']);
         listbox.onKeydown(down());
-        expect(listbox.inputs.value()).toEqual([]);
+        expect(listbox.inputs.value()).toEqual(['Apricot']);
         listbox.onKeydown(down());
         expect(listbox.inputs.value()).toEqual(['Blackberry']);
       });
