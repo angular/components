@@ -8,7 +8,7 @@ import {NodeJSFileSystem, ConsoleLogger, LogLevel} from '@angular/compiler-cli';
 import fs from 'fs';
 import path from 'path';
 import babel from '@babel/core';
-import glob from 'glob';
+import {sync as globSync} from 'glob';
 import chalk from 'chalk';
 
 /** File system used by the Angular linker plugin. */
@@ -62,7 +62,7 @@ if (failedPackages) {
  * @returns An object containing linker failures and passed files.
  */
 function testPackage(pkg) {
-  const entryPointFesmFiles = glob.sync(`fesm2022/**/*.mjs`, {cwd: pkg.pkgPath});
+  const entryPointFesmFiles = globSync(`fesm2022/**/*.mjs`, {cwd: pkg.pkgPath});
   const passedFiles = [];
   const failures = [];
 
