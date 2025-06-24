@@ -125,7 +125,7 @@
     "magic-string": "0.30.17",
     "marked": "^15.0.12",
     "minimatch": "^3.0.4",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.0.0",
     "parse5": "^7.1.2",
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.4",
