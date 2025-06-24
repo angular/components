@@ -5,8 +5,10 @@ import ts from 'typescript';
 
 const projectRoot = process.cwd();
 
+const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
+
 // Current version from the package.json. Splits it on the dash to ignore pre-release labels.
-const packageVersion = require(join(projectRoot, 'package.json')).version.split('-')[0];
+const packageVersion = packageJson.version.split('-')[0];
 
 // Regex used to extract versions from a string.
 const versionRegex = /\d+\.\d+\.\d+/;

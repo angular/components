@@ -9,7 +9,7 @@ import {sync as glob} from 'glob';
 
 const errors: string[] = [];
 const seenMetadata = new Map<string, ts.ClassDeclaration>();
-const fileToCheck = join(__dirname, '../src/**/!(*.spec).ts');
+const fileToCheck = join(process.cwd(), 'src/**/!(*.spec).ts');
 const ignoredPatterns = [
   '**/components-examples/**',
   '**/dev-app/**',
@@ -141,13 +141,16 @@ function serializeValue(node: ts.Node): string {
       .slice()
       // Sort the fields since JS engines preserve the order properties in object literals.
       .sort((a, b) => (a.name?.getText() || '').localeCompare(b.name?.getText() || ''))
-      .reduce((accumulator, prop) => {
-        if (ts.isPropertyAssignment(prop)) {
-          accumulator[prop.name.getText()] = serializeValue(prop.initializer);
-        }
+      .reduce(
+        (accumulator, prop) => {
+          if (ts.isPropertyAssignment(prop)) {
+            accumulator[prop.name.getText()] = serializeValue(prop.initializer);
+          }
 
-        return accumulator;
-      }, {} as Record<string, string>);
+          return accumulator;
+        },
+        {} as Record<string, string>,
+      );
 
     return JSON.stringify(serialized);
   }

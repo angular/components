@@ -14,7 +14,7 @@ import minimatch from 'minimatch';
 import {join, relative} from 'path';
 import ts from 'typescript';
 
-const projectRoot = join(__dirname, '../');
+const projectRoot = process.cwd();
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {

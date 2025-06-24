@@ -149,7 +149,7 @@ jobs:
       - name: Verify tooling setup
         run: pnpm check-tooling-setup
       - name: Build and create package artifacts
-        run: ./scripts/create-package-archives.js --suffix "pr${{github.event.number}}-$(git rev-parse --short HEAD)"
+        run: ./scripts/create-package-archives.mjs --suffix "pr${{github.event.number}}-$(git rev-parse --short HEAD)"
       - name: Upload artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
