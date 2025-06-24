@@ -496,8 +496,8 @@ importers:
         specifier: ~11.7.0
         version: 11.7.1
       lighthouse-logger:
-        specifier: ~1.4.0
-        version: 1.4.2
+        specifier: ~2.0.0
+        version: 2.0.1
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -5945,9 +5945,6 @@ packages:
   light-server@2.9.1:
     resolution: {integrity: sha512-8uerqP4ffFbTJZ2QGR1225TqZUWEFkl/kGnJ+vRGiaqnLr6pFj8XLFGyO1XgO8ib9NQKxd7gsq3pEYN3AB+Q2g==}
     hasBin: true
-
-  lighthouse-logger@1.4.2:
-    resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
 
   lighthouse-logger@2.0.1:
     resolution: {integrity: sha512-ioBrW3s2i97noEmnXxmUq7cjIcVRjT5HBpAYy8zE11CxU9HqlWHHeRxfeN1tn8F7OEMVPIC9x1f8t3Z7US9ehQ==}
@@ -14932,13 +14929,6 @@ snapshots:
       - debug
       - supports-color
       - utf-8-validate
-
-  lighthouse-logger@1.4.2:
-    dependencies:
-      debug: 2.6.9
-      marky: 1.3.0
-    transitivePeerDependencies:
-      - supports-color
 
   lighthouse-logger@2.0.1:
     dependencies:
