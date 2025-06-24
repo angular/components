@@ -10,7 +10,7 @@
 
 import chalk from 'chalk';
 import {readFileSync} from 'fs';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import {join, relative} from 'path';
 import ts from 'typescript';
 

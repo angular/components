@@ -10,7 +10,7 @@
 import {join, dirname} from 'path';
 import {sync as globSync} from 'glob';
 import {readFileSync} from 'fs';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import chalk from 'chalk';
 
 const [entryPointManifest] = process.argv.slice(2);

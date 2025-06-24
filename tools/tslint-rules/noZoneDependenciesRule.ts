@@ -1,4 +1,4 @@
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import * as Lint from 'tslint';
 import ts from 'typescript';
 

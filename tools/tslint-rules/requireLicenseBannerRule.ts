@@ -1,5 +1,5 @@
 import * as Lint from 'tslint';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import ts from 'typescript';
 
 /** License banner that is placed at the top of every public TypeScript file. */
