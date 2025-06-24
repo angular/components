@@ -1,5 +1,8 @@
+@let exampleData = this.exampleData();
+@let fileUrl = this.fileUrl();
+
 <div class="docs-example-viewer-wrapper">
-  @if (view === 'snippet') {
+  @if (view() === 'snippet') {
     <div class="docs-example-viewer-source-compact">
       <div class="docs-button-bar">
         <button mat-icon-button type="button" (click)="copySource(snippet())"
@@ -37,7 +40,7 @@
         <mat-icon>link</mat-icon>
       </button>
 
-      @if (showCompactToggle) {
+      @if (showCompactToggle()) {
         <button mat-icon-button
                 (click)="toggleCompactView()"
                 matTooltip="View snippet only"
@@ -52,26 +55,26 @@
       }
 
       <button mat-icon-button type="button" (click)="toggleSourceView()"
-              [matTooltip]="view === 'demo' ? 'View code' : 'Hide code'" aria-label="View source">
+              [matTooltip]="view() === 'demo' ? 'View code' : 'Hide code'" aria-label="View source">
         <mat-icon>code</mat-icon>
       </button>
 
       <stackblitz-button [example]="example"></stackblitz-button>
     </div>
 
-    @if (view === 'full') {
+    @if (view() === 'full') {
       <div class="docs-example-viewer-source">
         <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab" mat-stretch-tabs="false">
-          @for (tabName of _getExampleTabNames(); track tabName) {
+          @for (tabName of _exampleTabNames(); track tabName) {
             <mat-tab [label]="tabName">
               <div class="docs-button-bar">
-                <button mat-icon-button type="button" (click)="copySource(snippet(), selectedTab)"
+                <button mat-icon-button type="button" (click)="copySource(snippet(), selectedTab())"
                         class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
                         title="Copy example source" aria-label="Copy example source to clipboard">
                   <mat-icon>content_copy</mat-icon>
                 </button>
               </div>
-              <code-snippet [source]="exampleTabs[tabName]"></code-snippet>
+              <code-snippet [source]="exampleTabs()[tabName]"></code-snippet>
             </mat-tab>
           }
         </mat-tab-group>
@@ -79,10 +82,12 @@
     }
   }
 
-  @if (view !== 'snippet') {
+  @if (view() !== 'snippet') {
     <div class="docs-example-viewer-body">
-      @if (_exampleComponentType && !example?.includes('harness')) {
-        <ng-template [ngComponentOutlet]="_exampleComponentType"/>
+      @let componentType = _exampleComponentType();
+
+      @if (componentType && !example?.includes('harness')) {
+        <ng-template [ngComponentOutlet]="componentType"/>
       } @else {
         <div>This example contains tests. Open in Stackblitz to run the tests.</div>
       }

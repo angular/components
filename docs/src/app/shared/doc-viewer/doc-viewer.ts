@@ -30,6 +30,7 @@ import {
   ViewContainerRef,
   input,
   inject,
+  Type,
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -113,17 +114,17 @@ export class DocViewer implements OnDestroy {
     if (file) {
       // if the html div has field `file` then it should be in compact view to show the code
       // snippet
-      exampleViewerComponent.view = 'snippet';
-      exampleViewerComponent.showCompactToggle = true;
-      exampleViewerComponent.file = file;
+      exampleViewerComponent.view.set('snippet');
+      exampleViewerComponent.showCompactToggle.set(true);
+      exampleViewerComponent.file.set(file);
       if (region) {
         // `region` should only exist when `file` exists but not vice versa
         // It is valid for embedded example snippets to show the whole file (esp short files)
-        exampleViewerComponent.region = region;
+        exampleViewerComponent.region.set(region);
       }
     } else {
       // otherwise it is an embedded demo
-      exampleViewerComponent.view = 'demo';
+      exampleViewerComponent.view.set('demo');
     }
   }
 
@@ -175,7 +176,7 @@ export class DocViewer implements OnDestroy {
   }
 
   /** Instantiate a ExampleViewer for each example. */
-  private _loadComponents(componentName: string, componentClass: any) {
+  private _loadComponents(componentName: string, componentClass: Type<ExampleViewer | HeaderLink>) {
     const exampleElements = this._elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
     [...exampleElements].forEach((element: Element) => {
@@ -185,9 +186,14 @@ export class DocViewer implements OnDestroy {
       const portalHost = new DomPortalOutlet(element, this._appRef, this._injector);
       const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const exampleViewer = portalHost.attach(examplePortal);
-      const exampleViewerComponent = exampleViewer.instance as ExampleViewer;
-      if (example !== null) {
-        DocViewer._initExampleViewer(exampleViewerComponent, example, file, region);
+      const exampleViewerComponent = exampleViewer.instance;
+      if (example !== null && componentClass === ExampleViewer) {
+        DocViewer._initExampleViewer(
+          exampleViewerComponent as ExampleViewer,
+          example,
+          file,
+          region,
+        );
       }
       this._portalHosts.push(portalHost);
     });
