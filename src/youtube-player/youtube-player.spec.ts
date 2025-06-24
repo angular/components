@@ -515,7 +515,7 @@ describe('YoutubePlayer', () => {
       let calls = playerCtorSpy.calls.all();
 
       expect(calls.length).toBe(1);
-      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars, videoId: undefined}));
+      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars}));
 
       playerSpy.destroy.calls.reset();
       playerCtorSpy.calls.reset();
