@@ -3437,12 +3437,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.21":
-  version: 22.15.21
-  resolution: "@types/node@npm:22.15.21"
+"@types/node@npm:22.15.32":
+  version: 22.15.32
+  resolution: "@types/node@npm:22.15.32"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/cb4189587cca445bfb8166c0ed39f9344d743f37f3da892f2999a99bbabda45dc773237e61ecb7d1dc83dd95718cb1b5715b0be5dd7953565b19019e36a7cf39
+  checksum: 10/10b4c106d0c512a1d35ec08142bd7fb5cf2e1df93fc5627b3c69dd843dec4be07a47f1fa7ede232ad84762d75a372ea35028b79ee1e753b6f2adecd0b2cb2f71
   languageName: node
   linkType: hard
 
@@ -6298,10 +6298,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~5.7.0":
-  version: 5.7.1
-  resolution: "jasmine-core@npm:5.7.1"
-  checksum: 10/ce61bd518354fd775e99d43243db1eaeeab3089705bcadeef31ee3c675fdac77f7eafbc68911d9900f1d4d7d85bf16fd9d4d917776454085b8f55410657dbe8f
+"jasmine-core@npm:~5.8.0":
+  version: 5.8.0
+  resolution: "jasmine-core@npm:5.8.0"
+  checksum: 10/1b2faba2c1af668fc8223159e7ce59877ce1e967f0b77510b6c3162c092ac6cd41bf62d338a02bda9e7a840ab98b5c8a9a887dbd4d7e14c00443966b0f01ab9e
   languageName: node
   linkType: hard
 
@@ -9794,9 +9794,9 @@ __metadata:
     "@angular/platform-browser": "npm:20.0.0-rc.2"
     "@angular/router": "npm:20.0.0-rc.2"
     "@types/jasmine": "npm:~5.1.7"
-    "@types/node": "npm:22.15.21"
+    "@types/node": "npm:22.15.32"
     glob: "npm:^7.2.0"
-    jasmine-core: "npm:~5.7.0"
+    jasmine-core: "npm:~5.8.0"
     karma: "npm:~6.4.4"
     karma-chrome-launcher: "npm:~3.2.0"
     karma-coverage: "npm:~2.2.0"
