@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import * as Lint from 'tslint';
 
 /** Arguments this rule supports. */
