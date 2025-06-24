@@ -6,7 +6,7 @@ CDK_EXPERIMENTAL_ENTRYPOINTS = [
     "deferred-content",
     "listbox",
     "popover-edit",
-    "radio",
+    "radio-group",
     "scrolling",
     "selection",
     "tabs",
