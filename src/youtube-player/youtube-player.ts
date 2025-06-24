@@ -587,7 +587,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
     // Important! We need to create the Player object outside of the `NgZone`, because it kicks
     // off a 250ms setInterval which will continually trigger change detection if we don't.
-    const params: any = {
+    const params: YT.PlayerOptions = {
       host: this.disableCookies ? 'https://www.youtube-nocookie.com' : undefined,
       width: this.width,
       height: this.height,
