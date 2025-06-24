@@ -4,16 +4,15 @@
  */
 
 import {readFileSync, writeFileSync} from 'fs';
-import marked from 'marked';
+import {marked} from 'marked';
 import {join} from 'path';
-import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
 import {DocsMarkdownRenderer} from './docs-marked-renderer';
 
 // Custom markdown renderer for transforming markdown files for the docs.
 const markdownRenderer = new DocsMarkdownRenderer();
 
 // Setup our custom docs renderer by default.
-marked.setOptions({renderer: markdownRenderer, highlight: highlightCodeBlock});
+marked.setOptions({renderer: markdownRenderer});
 
 if (require.main === module) {
   // The script expects the bazel-bin path as first argument. All remaining arguments will be
@@ -25,7 +24,7 @@ if (require.main === module) {
   inputFiles.forEach(inputPath => {
     const outputPath = join(bazelBinPath, `${inputPath}.html`);
     const htmlOutput = markdownRenderer.finalizeOutput(
-      marked(readFileSync(inputPath, 'utf8')),
+      marked.parse(readFileSync(inputPath, 'utf8'), {async: false}),
       inputPath,
     );
 

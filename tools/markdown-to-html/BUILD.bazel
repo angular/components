@@ -13,8 +13,8 @@ ts_project(
     ),
     tsconfig = "//tools:tsconfig",
     deps = [
-        "//:node_modules/@types/marked",
         "//:node_modules/marked",
+        "//:node_modules/slugify",
         "//tools/highlight-files:sources",
     ],
 )

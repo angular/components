@@ -1,5 +1,7 @@
-import {Renderer, Slugger} from 'marked';
+import {Renderer, Tokens} from 'marked';
 import {basename, extname} from 'path';
+import slugify from 'slugify';
+import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
 
 /** Regular expression that matches example comments. */
 const exampleCommentRegex = /<!--\s*example\(\s*([^)]+)\)\s*-->/g;
@@ -18,38 +20,45 @@ export class DocsMarkdownRenderer extends Renderer {
   /** Set of fragment links discovered in the currently rendered file. */
   private _referencedFragments = new Set<string>();
 
-  /**
-   * Slugger provided by the `marked` package. Can be used to create unique
-   * ids  for headings.
-   */
-  private _slugger = new Slugger();
+  /** IDs that have been generated during Markdown parsing. */
+  private _seenIds = new Set<string>();
 
   /**
    * Transforms a markdown heading into the corresponding HTML output. In our case, we
    * want to create a header-link for each H2, H3, and H4 heading. This allows users to jump to
    * specific parts of the docs.
    */
-  heading(label: string, level: number, raw: string) {
-    if (level === 2 || level === 3 || level === 4 || level === 5 || level === 6) {
-      const headingId = this._slugger.slug(raw);
+  heading(tag: Tokens.Heading) {
+    const depth = tag.depth;
+    const content = this.parser.parseInline(tag.tokens);
+
+    if (depth === 2 || depth === 3 || depth === 4 || depth === 5 || depth === 6) {
+      const headingId = slugify(tag.text, {lower: true, strict: true});
+
+      this._seenIds.add(headingId);
       return `
-        <h${level} id="${headingId}" class="docs-header-link">
+        <h${depth} id="${headingId}" class="docs-header-link">
           <span header-link="${headingId}"></span>
-          ${label}
-        </h${level}>
+          ${content}
+        </h${depth}>
       `;
     }
 
-    return `<h${level}>${label}</h${level}>`;
+    return `<h${depth}>${content}</h${depth}>`;
   }
 
   /** Transforms markdown links into the corresponding HTML output. */
-  link(href: string, title: string, text: string) {
+  link(link: Tokens.Link) {
+    const {href} = link;
+
     // We only want to fix up markdown links that are relative and do not refer to guides already.
     // Otherwise we always map the link to the "guide/" path.
     // TODO(devversion): remove this logic and just disallow relative paths.
     if (!href.startsWith('http') && !href.startsWith('#') && !href.includes('guide/')) {
-      return super.link(`guide/${basename(href, extname(href))}`, title, text);
+      return super.link({
+        ...link,
+        href: `guide/${basename(href, extname(href))}`,
+      });
     }
 
     // Keep track of all fragments discovered in a file.
@@ -57,7 +66,7 @@ export class DocsMarkdownRenderer extends Renderer {
       this._referencedFragments.add(href.slice(1));
     }
 
-    return super.link(href, title, text);
+    return super.link(link);
   }
 
   /**
@@ -82,8 +91,8 @@ export class DocsMarkdownRenderer extends Renderer {
    *  turns into
    *  `<div material-docs-example="name"></div>`
    */
-  html(html: string) {
-    html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
+  html(content: Tokens.HTML | Tokens.Tag) {
+    return content.raw.replace(exampleCommentRegex, (_match: string, content: string) => {
       let replacement: string;
 
       // using [\s\S]* because .* does not match line breaks
@@ -102,8 +111,11 @@ export class DocsMarkdownRenderer extends Renderer {
 
       return `${exampleStartMarker}${replacement}${exampleEndMarker}`;
     });
+  }
 
-    return super.html(html);
+  code(block: Tokens.Code): string {
+    const langClass = block.lang ? ` class="language-${block.lang}"` : '';
+    return `<pre><code${langClass}>${highlightCodeBlock(block.text, block.lang)}</code></pre>`;
   }
 
   /**
@@ -116,7 +128,7 @@ export class DocsMarkdownRenderer extends Renderer {
     // Collect any fragment links that do not resolve to existing fragments in the
     // rendered file. We want to error for broken fragment links.
     this._referencedFragments.forEach(id => {
-      if (this._slugger.seen[id] === undefined) {
+      if (!this._seenIds.has(id)) {
         failures.push(`Found link to "${id}". This heading does not exist.`);
       }
     });
@@ -127,7 +139,7 @@ export class DocsMarkdownRenderer extends Renderer {
       process.exit(1);
     }
 
-    this._slugger.seen = {};
+    this._seenIds.clear();
     this._referencedFragments.clear();
 
     const markdownOpen = '<div class="docs-markdown">';
