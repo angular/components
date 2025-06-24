@@ -276,8 +276,8 @@ importers:
         specifier: ^15.0.12
         version: 15.0.12
       minimatch:
-        specifier: ^3.0.4
-        version: 3.1.2
+        specifier: ^10.0.0
+        version: 10.0.3
       node-fetch:
         specifier: ^2.6.0
         version: 2.7.0(encoding@0.1.13)
