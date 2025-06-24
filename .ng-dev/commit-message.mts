@@ -14,7 +14,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk-experimental/combobox',
     'cdk-experimental/listbox',
     'cdk-experimental/popover-edit',
-    'cdk-experimental/radio',
+    'cdk-experimental/radio-group',
     'cdk-experimental/scrolling',
     'cdk-experimental/selection',
     'cdk-experimental/table-scroll-container',
