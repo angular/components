@@ -7,11 +7,33 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CdkTabsExample} from '@angular/components-examples/cdk-experimental/tabs';
+import {
+  CdkTabsConfigurableExample,
+  CdkTabsExplicitSelectionExample,
+  CdkTabsSelectionFollowsFocusExample,
+  CdkTabsVerticalExample,
+  CdkTabsRtlVerticalExample,
+  CdkTabsActiveDescendantExample,
+  CdkTabsDisabledFocusableExample,
+  CdkTabsDisabledSkippedExample,
+  CdkTabsDisabledExample,
+} from '@angular/components-examples/cdk-experimental/tabs';
 
 @Component({
+  selector: 'cdk-experimental-tabs-demo',
   templateUrl: 'cdk-tabs-demo.html',
-  imports: [CdkTabsExample],
+  styleUrls: ['cdk-tabs-demo.css'],
+  imports: [
+    CdkTabsConfigurableExample,
+    CdkTabsExplicitSelectionExample,
+    CdkTabsSelectionFollowsFocusExample,
+    CdkTabsVerticalExample,
+    CdkTabsRtlVerticalExample,
+    CdkTabsActiveDescendantExample,
+    CdkTabsDisabledFocusableExample,
+    CdkTabsDisabledSkippedExample,
+    CdkTabsDisabledExample,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkExperimentalTabsDemo {}
