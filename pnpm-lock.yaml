@@ -276,8 +276,8 @@ importers:
         specifier: 0.30.17
         version: 0.30.17
       marked:
-        specifier: ^2.0.0
-        version: 2.1.3
+        specifier: ^15.0.0
+        version: 15.0.12
       minimatch:
         specifier: ^3.0.4
         version: 3.1.2
@@ -6193,9 +6193,9 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  marked@2.1.3:
-    resolution: {integrity: sha512-/Q+7MGzaETqifOMWYEA7HVMaZb4XbcRfaOzcSsHZEith83KGlvaSG33u0SKu89Mj5h+T8V2hM+8O45Qc5XTgwA==}
-    engines: {node: '>= 10'}
+  marked@15.0.12:
+    resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
+    engines: {node: '>= 18'}
     hasBin: true
 
   marky@1.3.0:
@@ -15201,7 +15201,7 @@ snapshots:
 
   marked@13.0.3: {}
 
-  marked@2.1.3: {}
+  marked@15.0.12: {}
 
   marky@1.3.0: {}
 
