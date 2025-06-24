@@ -84,6 +84,14 @@ $fallbacks: m3-list.get-tokens();
       }
     }
 
+    &.mdc-list-item--selected.mdc-list-item--selected,
+    &.mdc-list-item--activated.mdc-list-item--activated {
+      .mdc-list-item__primary-text,
+      .mdc-list-item__start {
+        color: token-utils.slot(list-list-item-selected-label-text-color, $fallbacks);
+      }
+    }
+
     // Not used in Material, but some internal tests seem to depend on it.
     &.mdc-list-item--selected::before,
     &.mdc-list-item--selected:focus::before,
@@ -443,6 +451,11 @@ $fallbacks: m3-list.get-tokens();
 
   .mdc-list-group__subheader {
     margin: 0.75rem 16px;
+    font-family: token-utils.slot(list-list-item-subheader-text-font, $fallbacks);
+    line-height: token-utils.slot(list-list-item-subheader-text-line-height, $fallbacks);
+    font-size: token-utils.slot(list-list-item-subheader-text-size, $fallbacks);
+    font-weight: token-utils.slot(list-list-item-subheader-text-weight, $fallbacks);
+    letter-spacing: token-utils.slot(list-list-item-subheader-text-tracking, $fallbacks);
   }
 
   .mdc-list-item--disabled {

@@ -46,6 +46,7 @@
     list-list-item-focus-label-text-color: map.get($system, on-surface),
     list-list-item-focus-state-layer-color: map.get($system, on-surface),
     list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    list-list-item-selected-label-text-color: map.get($system, primary),
   );
 }
 
@@ -68,6 +69,11 @@
     list-list-item-trailing-supporting-text-size: map.get($system, body-small-size),
     list-list-item-trailing-supporting-text-tracking: map.get($system, body-small-tracking),
     list-list-item-trailing-supporting-text-weight: map.get($system, body-small-weight),
+    list-list-item-subheader-text-font: map.get($system, label-large-font),
+    list-list-item-subheader-text-line-height: map.get($system, label-large-line-height),
+    list-list-item-subheader-text-size: map.get($system, label-large-size),
+    list-list-item-subheader-text-tracking: map.get($system, label-large-tracking),
+    list-list-item-subheader-text-weight: map.get($system, label-large-weight),
   );
 }
 
