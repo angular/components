@@ -214,7 +214,6 @@ export class MatInput
     return this._type;
   }
   set type(value: string) {
-    const prevType = this._type;
     this._type = value || 'text';
     this._validateType();
 
@@ -223,10 +222,6 @@ export class MatInput
     // with the native property. Textarea elements don't support the type property or attribute.
     if (!this._isTextarea && getSupportedInputTypes().has(this._type)) {
       (this._elementRef.nativeElement as HTMLInputElement).type = this._type;
-    }
-
-    if (this._type !== prevType) {
-      this._ensureWheelDefaultBehavior();
     }
   }
   protected _type = 'text';
@@ -609,33 +604,6 @@ export class MatInput
       el.setSelectionRange(0, 0);
     }
   };
-
-  private _webkitBlinkWheelListener = (): void => {
-    // This is a noop function and is used to enable mouse wheel input
-    // on number inputs
-    // on blink and webkit browsers.
-  };
-
-  /**
-   * In blink and webkit browsers a focused number input does not increment or decrement its value
-   * on mouse wheel interaction unless a wheel event listener is attached to it or one of its
-   * ancestors or a passive wheel listener is attached somewhere in the DOM. For example: Hitting
-   * a tooltip once enables the mouse wheel input for all number inputs as long as it exists. In
-   * order to get reliable and intuitive behavior we apply a wheel event on our own thus making
-   * sure increment and decrement by mouse wheel works every time.
-   * @docs-private
-   */
-  private _ensureWheelDefaultBehavior(): void {
-    this._cleanupWebkitWheel?.();
-
-    if (this._type === 'number' && (this._platform.BLINK || this._platform.WEBKIT)) {
-      this._cleanupWebkitWheel = this._renderer.listen(
-        this._elementRef.nativeElement,
-        'wheel',
-        this._webkitBlinkWheelListener,
-      );
-    }
-  }
 
   /** Gets the value to set on the `readonly` attribute. */
   protected _getReadonlyAttribute(): string | null {
