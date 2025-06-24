@@ -147,8 +147,8 @@ importers:
         specifier: 1.26.0
         version: 1.26.0
       '@bazel/buildifier':
-        specifier: 8.2.0
-        version: 8.2.0
+        specifier: 8.2.1
+        version: 8.2.1
       '@bazel/ibazel':
         specifier: ^0.25.0
         version: 0.25.0
@@ -228,8 +228,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.4
       firebase-tools:
-        specifier: 14.4.0
-        version: 14.4.0(@types/node@22.14.1)(encoding@0.1.13)
+        specifier: 14.8.0
+        version: 14.8.0(@types/node@22.14.1)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.0
@@ -246,8 +246,8 @@ importers:
         specifier: ^5.6.0
         version: 5.6.0
       jasmine-core:
-        specifier: 5.7.1
-        version: 5.7.1
+        specifier: 5.8.0
+        version: 5.8.0
       jasmine-reporters:
         specifier: ^2.5.2
         version: 2.5.2
@@ -443,7 +443,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 20.0.0(odctl5kqmwuo4crhqwrfxalr2a)
+        version: 20.0.0(pjrma2glqvm6wlcnqikh3pr2ou)
       '@angular/cli':
         specifier: 'catalog:'
         version: 20.0.0(@types/node@22.14.1)(chokidar@4.0.3)
@@ -466,8 +466,8 @@ importers:
         specifier: ^14.0.0
         version: 14.4.0(@types/node@22.14.1)(encoding@0.1.13)
       jasmine-core:
-        specifier: 5.7.1
-        version: 5.7.1
+        specifier: 5.8.0
+        version: 5.8.0
       jasmine-spec-reporter:
         specifier: 7.0.0
         version: 7.0.0
@@ -488,7 +488,7 @@ importers:
         version: 4.0.2(karma@6.4.4)
       karma-jasmine-html-reporter:
         specifier: ^2.0.0
-        version: 2.1.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
+        version: 2.1.0(jasmine-core@5.8.0)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
       light-server:
         specifier: ^2.9.1
         version: 2.9.1
@@ -508,8 +508,8 @@ importers:
         specifier: ^24.6.1
         version: 24.6.1
       sass:
-        specifier: 1.89.0
-        version: 1.89.0
+        specifier: 1.89.2
+        version: 1.89.2
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0
@@ -1536,8 +1536,8 @@ packages:
     resolution: {integrity: sha512-bTNcHdGyEQ9r7SczEYUa0gkEQhJo1ld2BjXI8fWBvsUeoHi03QpUs2HZgDbjjrpQFQqG2ZbO7ihZvH8MjhUTHw==}
     hasBin: true
 
-  '@bazel/buildifier@8.2.0':
-    resolution: {integrity: sha512-GKiCBXi8RcOH8Gc2zkeHJl30GGayplWVW/eMx9v1M2g53Iz2+CmacVW+LB5rIrZsLWiolaK9BFVWXRQol4Wt0Q==}
+  '@bazel/buildifier@8.2.1':
+    resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
     hasBin: true
 
   '@bazel/ibazel@0.25.0':
@@ -1572,8 +1572,16 @@ packages:
     resolution: {integrity: sha512-4B4OijXeVNOPZlYA2oEwWOTkzyltLao+xbotHQeqN++Rv27Y6s818+n2Qkp8q+Fxhn0t/5lA5X1Mxktud8eayQ==}
     engines: {node: '>=14.17.0'}
 
+  '@electric-sql/pglite-tools@0.2.8':
+    resolution: {integrity: sha512-MBWelYjUZThOBrktPU4beuuX4hrUdIPRgfLbTgltLMT6Chh2R7ATxHsT9Nr7L9fXUSYlZCyoIf+n8pis3uoiiw==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.3.3
+
   '@electric-sql/pglite@0.2.17':
     resolution: {integrity: sha512-qEpKRT2oUaWDH6tjRxLHjdzMqRUGYDnGZlKrnL4dJ77JVMcP2Hpo3NYnOSPKdZdeec57B6QPprCUFg0picx5Pw==}
+
+  '@electric-sql/pglite@0.3.3':
+    resolution: {integrity: sha512-JrvHOx9q0yvKEby0bK8qzGTVw6K+yEg8enxDWb2IwNKr5XZxRrBb+GNIqoAIP7yXyhRg5jcENWmdHmtnAT87vA==}
 
   '@esbuild/aix-ppc64@0.25.4':
     resolution: {integrity: sha512-1VCICWypeQKhVbE9oW/sJaAmjLxhVqacdkvPLEjwlttjfwENRSClS8EjBz0KzRyFSCPDIkuXW34Je/vk7zdB7Q==}
@@ -4736,6 +4744,11 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
+  firebase-tools@14.8.0:
+    resolution: {integrity: sha512-fz1m5LXs5e4WjS9bqe8yFUxz+grUtfnCEXCtRYRdgoofeY4av0DxW1PSxwLq5soPEBXj5ZR9CeSE6SrBui0WzQ==}
+    engines: {node: '>=20.0.0 || >=22.0.0'}
+    hasBin: true
+
   flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -5710,8 +5723,8 @@ packages:
   jasmine-core@5.6.0:
     resolution: {integrity: sha512-niVlkeYVRwKFpmfWg6suo6H9CrNnydfBLEqefM5UjibYS+UoTjZdmvPJSiuyrRLGnFj1eYRhFd/ch+5hSlsFVA==}
 
-  jasmine-core@5.7.1:
-    resolution: {integrity: sha512-QnurrtpKsPoixxG2R3d1xP0St/2kcX5oTZyDyQJMY+Vzi/HUlu1kGm+2V8Tz+9lV991leB1l0xcsyz40s9xOOw==}
+  jasmine-core@5.8.0:
+    resolution: {integrity: sha512-Q9dqmpUAfptwyueW3+HqBOkSuYd9I/clZSSfN97wXE/Nr2ROFNCwIBEC1F6kb3QXS9Fcz0LjFYSDQT+BiwjuhA==}
 
   jasmine-reporters@2.5.2:
     resolution: {integrity: sha512-qdewRUuFOSiWhiyWZX8Yx3YNQ9JG51ntBEO4ekLQRpktxFTwUHy24a86zD/Oi2BRTKksEdfWQZcQFqzjqIkPig==}
@@ -6883,6 +6896,9 @@ packages:
   pg-connection-string@2.9.0:
     resolution: {integrity: sha512-P2DEBKuvh5RClafLngkAuGe9OUlFV7ebu8w1kmaaOgPcpJd1RIFh7otETfI6hAR8YupOLFTY7nuvvIn7PLciUQ==}
 
+  pg-gateway@0.3.0-beta.4:
+    resolution: {integrity: sha512-CTjsM7Z+0Nx2/dyZ6r8zRsc3f9FScoD5UAOlfUx1Fdv/JOIWvRbF7gou6l6vP+uypXQVoYPgw8xZDXgMGvBa4Q==}
+
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
@@ -7536,8 +7552,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.89.0:
-    resolution: {integrity: sha512-ld+kQU8YTdGNjOLfRWBzewJpU5cwEv/h5yyqlSeJcj6Yh8U4TDA9UA5FPicqDz/xgRPWRSYIQNiFks21TbA9KQ==}
+  sass@1.89.2:
+    resolution: {integrity: sha512-xCmtksBKd/jdJ9Bt9p7nPKiuqrlBMBuuGkQlkhZjjQk3Ty48lv93k5Dq6OPkKt4XwxDJ7tvlfrTa1MPA9bf+QA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -8890,9 +8906,6 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@3.24.2:
-    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
-
   zod@3.25.20:
     resolution: {integrity: sha512-z03fqpTMDF1G02VLKUMt6vyACE7rNWkh3gpXVHgPTw28NPtDFRGvcpTtPwn2kMKtQ0idtYJUTxchytmnqYswcw==}
 
@@ -8918,7 +8931,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@20.0.0(odctl5kqmwuo4crhqwrfxalr2a)':
+  '@angular-devkit/build-angular@20.0.0(pjrma2glqvm6wlcnqikh3pr2ou)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2000.0(chokidar@4.0.3)
@@ -8937,7 +8950,7 @@ snapshots:
       '@babel/runtime': 7.27.1
       '@discoveryjs/json-ext': 0.6.3
       '@ngtools/webpack': 20.0.0(@angular/compiler-cli@20.0.0(@angular/compiler@20.0.0)(typescript@5.8.3))(typescript@5.8.3)(webpack@5.99.8(esbuild@0.25.5))
-      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.0)(terser@5.39.1)(yaml@2.8.0))
+      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.2)(terser@5.39.1)(yaml@2.8.0))
       ansi-colors: 4.1.3
       autoprefixer: 10.4.21(postcss@8.5.3)
       babel-loader: 10.0.0(@babel/core@7.27.1)(webpack@5.99.8(esbuild@0.25.5))
@@ -9060,7 +9073,7 @@ snapshots:
       '@babel/helper-annotate-as-pure': 7.27.1
       '@babel/helper-split-export-declaration': 7.24.7
       '@inquirer/confirm': 5.1.10(@types/node@22.14.1)
-      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.0)(terser@5.39.1)(yaml@2.8.0))
+      '@vitejs/plugin-basic-ssl': 2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.2)(terser@5.39.1)(yaml@2.8.0))
       beasties: 0.3.4
       browserslist: 4.24.4
       esbuild: 0.25.5
@@ -10028,7 +10041,7 @@ snapshots:
 
   '@bazel/bazelisk@1.26.0': {}
 
-  '@bazel/buildifier@8.2.0': {}
+  '@bazel/buildifier@8.2.1': {}
 
   '@bazel/ibazel@0.25.0': {}
 
@@ -10054,7 +10067,13 @@ snapshots:
 
   '@discoveryjs/json-ext@0.6.3': {}
 
+  '@electric-sql/pglite-tools@0.2.8(@electric-sql/pglite@0.3.3)':
+    dependencies:
+      '@electric-sql/pglite': 0.3.3
+
   '@electric-sql/pglite@0.2.17': {}
+
+  '@electric-sql/pglite@0.3.3': {}
 
   '@esbuild/aix-ppc64@0.25.4':
     optional: true
@@ -11503,9 +11522,9 @@ snapshots:
 
   '@types/youtube@0.1.0': {}
 
-  '@vitejs/plugin-basic-ssl@2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.0)(terser@5.39.1)(yaml@2.8.0))':
+  '@vitejs/plugin-basic-ssl@2.0.0(vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.2)(terser@5.39.1)(yaml@2.8.0))':
     dependencies:
-      vite: 6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.0)(terser@5.39.1)(yaml@2.8.0)
+      vite: 6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.2)(terser@5.39.1)(yaml@2.8.0)
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -12253,7 +12272,7 @@ snapshots:
     dependencies:
       devtools-protocol: 0.0.1425554
       mitt: 3.0.1
-      zod: 3.24.2
+      zod: 3.25.20
 
   ci-info@2.0.0: {}
 
@@ -13495,6 +13514,90 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  firebase-tools@14.8.0(@types/node@22.14.1)(encoding@0.1.13):
+    dependencies:
+      '@electric-sql/pglite': 0.3.3
+      '@electric-sql/pglite-tools': 0.2.8(@electric-sql/pglite@0.3.3)
+      '@google-cloud/cloud-sql-connector': 1.8.0(encoding@0.1.13)
+      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
+      '@inquirer/prompts': 7.5.1(@types/node@22.14.1)
+      '@modelcontextprotocol/sdk': 1.12.0
+      abort-controller: 3.0.0
+      ajv: 8.17.1
+      ajv-formats: 3.0.1
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      body-parser: 1.20.3
+      chokidar: 3.6.0
+      cjson: 0.3.3
+      cli-table3: 0.6.5
+      colorette: 2.0.20
+      commander: 5.1.0
+      configstore: 5.0.1
+      cors: 2.8.5
+      cross-env: 7.0.3
+      cross-spawn: 7.0.6
+      csv-parse: 5.6.0
+      deep-equal-in-any-order: 2.0.6
+      exegesis: 4.3.0
+      exegesis-express: 4.0.0
+      express: 4.21.2
+      filesize: 6.4.0
+      form-data: 4.0.2
+      fs-extra: 10.1.0
+      fuzzy: 0.1.3
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.0.0)
+      glob: 10.4.5
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.0.0)
+      ignore: 7.0.4
+      js-yaml: 3.14.1
+      jsonwebtoken: 9.0.2
+      leven: 3.1.0
+      libsodium-wrappers: 0.7.15
+      lodash: 4.17.21
+      lsofi: 1.0.0
+      marked: 13.0.3
+      marked-terminal: 7.3.0(marked@13.0.3)
+      mime: 2.6.0
+      minimatch: 3.1.2
+      morgan: 1.10.0
+      node-fetch: 2.7.0(encoding@0.1.13)
+      open: 6.4.0
+      ora: 5.4.1
+      p-limit: 3.1.0
+      pg: 8.16.0
+      pg-gateway: 0.3.0-beta.4
+      pglite-2: '@electric-sql/pglite@0.2.17'
+      portfinder: 1.0.35
+      progress: 2.0.3
+      proxy-agent: 6.5.0
+      retry: 0.13.1
+      semver: 7.7.2
+      sql-formatter: 15.6.2
+      stream-chain: 2.2.5
+      stream-json: 1.9.1
+      superstatic: 9.2.0(encoding@0.1.13)
+      tar: 6.2.1
+      tcp-port-used: 1.0.2
+      tmp: 0.2.3
+      triple-beam: 1.4.1
+      universal-analytics: 0.5.3
+      update-notifier-cjs: 5.1.7(encoding@0.1.13)
+      uuid: 8.3.2
+      winston: 3.17.0
+      winston-transport: 4.9.0
+      ws: 7.5.10
+      yaml: 2.8.0
+      zod: 3.25.20
+      zod-to-json-schema: 3.24.5(zod@3.25.20)
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
   flat-cache@3.2.0:
     dependencies:
       flatted: 3.3.3
@@ -13834,7 +13937,7 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
       object-hash: 3.0.0
       proto3-json-serializer: 2.0.2
-      protobufjs: 7.4.0
+      protobufjs: 7.5.3
       retry-request: 7.0.2(encoding@0.1.13)
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -14575,7 +14678,7 @@ snapshots:
 
   jasmine-core@5.6.0: {}
 
-  jasmine-core@5.7.1: {}
+  jasmine-core@5.8.0: {}
 
   jasmine-reporters@2.5.2:
     dependencies:
@@ -14760,9 +14863,9 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.7.1)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
+  karma-jasmine-html-reporter@2.1.0(jasmine-core@5.8.0)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4):
     dependencies:
-      jasmine-core: 5.7.1
+      jasmine-core: 5.8.0
       karma: 6.4.4
       karma-jasmine: 4.0.2(karma@6.4.4)
 
@@ -15934,6 +16037,8 @@ snapshots:
 
   pg-connection-string@2.9.0: {}
 
+  pg-gateway@0.3.0-beta.4: {}
+
   pg-int8@1.0.1: {}
 
   pg-pool@3.10.0(pg@8.16.0):
@@ -16107,7 +16212,7 @@ snapshots:
 
   proto3-json-serializer@2.0.2:
     dependencies:
-      protobufjs: 7.4.0
+      protobufjs: 7.5.3
 
   proto3-json-serializer@3.0.0:
     dependencies:
@@ -16688,7 +16793,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.89.0:
+  sass@1.89.2:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.1
@@ -17930,7 +18035,7 @@ snapshots:
       terser: 5.39.1
       yaml: 2.8.0
 
-  vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.0)(terser@5.39.1)(yaml@2.8.0):
+  vite@6.3.5(@types/node@22.14.1)(jiti@1.21.7)(less@4.3.0)(sass@1.89.2)(terser@5.39.1)(yaml@2.8.0):
     dependencies:
       esbuild: 0.25.5
       fdir: 6.4.4(picomatch@4.0.2)
@@ -17943,7 +18048,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 1.21.7
       less: 4.3.0
-      sass: 1.89.0
+      sass: 1.89.2
       terser: 5.39.1
       yaml: 2.8.0
 
@@ -18346,8 +18451,6 @@ snapshots:
       zod: 3.25.20
 
   zod@3.23.8: {}
-
-  zod@3.24.2: {}
 
   zod@3.25.20: {}
 
