@@ -107,6 +107,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     protected ngZone: NgZone;
     orientation: 'horizontal' | 'vertical';
     protected pointerTracker?: PointerFocusTracker<CdkMenuItem>;
+    setActiveMenuItem(item: number | CdkMenuItem): void;
     protected triggerItem?: CdkMenuItem;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["items"], never, true, never>;

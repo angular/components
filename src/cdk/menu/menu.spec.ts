@@ -502,6 +502,31 @@ describe('Menu', () => {
       }));
     });
   });
+
+  describe('menu with active item', () => {
+    let fixture: ComponentFixture<MenuWithActiveItem>;
+    let nativeMenuItems: HTMLElement[];
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkMenuModule, MenuWithActiveItem],
+      });
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MenuWithActiveItem);
+      fixture.detectChanges();
+
+      nativeMenuItems = fixture.debugElement
+        .queryAll(By.directive(CdkMenuItem))
+        .map(e => e.nativeElement);
+    });
+
+    it('should set the active item with setActiveMenuItem', () => {
+      fixture.componentInstance.menu.setActiveMenuItem(2);
+      expect(document.activeElement).toEqual(nativeMenuItems[2]);
+    });
+  });
 });
 
 @Component({
@@ -654,4 +679,19 @@ class WithComplexNestedMenusOnBottom {
   @ViewChild('share_trigger', {read: ElementRef}) nativeShareTrigger?: ElementRef<HTMLElement>;
 
   @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+}
+
+@Component({
+  template: `
+    <div cdkMenu>
+      <button cdkMenuItem>Inbox</button>
+      <button cdkMenuItem>Starred</button>
+      <button cdkMenuItem>Foo</button>
+      <button cdkMenuItem>Bar</button>
+    </div>
+  `,
+  imports: [CdkMenuModule],
+})
+class MenuWithActiveItem {
+  @ViewChild(CdkMenu) menu: CdkMenu;
 }
