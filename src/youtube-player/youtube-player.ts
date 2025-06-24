@@ -600,8 +600,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       params.videoId = this.videoId;
     }
     const player = this._ngZone.runOutsideAngular(
-      () =>
-        new YT.Player(this.youtubeContainer.nativeElement, params),
+      () => new YT.Player(this.youtubeContainer.nativeElement, params)
     );
 
     const whenReady = (event: YT.PlayerEvent) => {
