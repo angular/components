@@ -95,11 +95,12 @@ describe('DocViewer', () => {
 
     http.expectOne(testUrl).flush(FAKE_DOCS[testUrl]);
 
-    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer));
-    expect(exampleViewer.componentInstance.file).toBe('some-example.html');
-    expect(exampleViewer.componentInstance.showCompactToggle).toBeTrue();
-    expect(exampleViewer.componentInstance.region).toBe('some-region');
-    expect(exampleViewer.componentInstance.view).toBe('snippet');
+    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer))
+      .componentInstance as ExampleViewer;
+    expect(exampleViewer.file()).toBe('some-example.html');
+    expect(exampleViewer.showCompactToggle()).toBeTrue();
+    expect(exampleViewer.region()).toBe('some-region');
+    expect(exampleViewer.view()).toBe('snippet');
   });
 
   it('should instantiate example viewer in demo view', () => {
@@ -111,10 +112,11 @@ describe('DocViewer', () => {
 
     http.expectOne(testUrl).flush(FAKE_DOCS[testUrl]);
 
-    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer));
-    expect(exampleViewer.componentInstance.file).toBeUndefined();
-    expect(exampleViewer.componentInstance.showCompactToggle).toBeFalse();
-    expect(exampleViewer.componentInstance.view).toBe('demo');
+    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer))
+      .componentInstance as ExampleViewer;
+    expect(exampleViewer.file()).toBeUndefined();
+    expect(exampleViewer.showCompactToggle()).toBeFalse();
+    expect(exampleViewer.view()).toBe('demo');
   });
 
   it('should instantiate example viewer in snippet view with whole snippet', () => {
@@ -126,10 +128,11 @@ describe('DocViewer', () => {
 
     http.expectOne(testUrl).flush(FAKE_DOCS[testUrl]);
 
-    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer));
-    expect(exampleViewer.componentInstance.file).toBe('whole-snippet-example.ts');
-    expect(exampleViewer.componentInstance.showCompactToggle).toBeTrue();
-    expect(exampleViewer.componentInstance.view).toBe('snippet');
+    const exampleViewer = fixture.debugElement.query(By.directive(ExampleViewer))
+      .componentInstance as ExampleViewer;
+    expect(exampleViewer.file()).toBe('whole-snippet-example.ts');
+    expect(exampleViewer.showCompactToggle()).toBeTrue();
+    expect(exampleViewer.view()).toBe('snippet');
   });
 
   it('should show error message when doc not found', () => {
