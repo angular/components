@@ -4,9 +4,8 @@ import babel from '@babel/core';
 import child_process from 'child_process';
 import esbuild from 'esbuild';
 import fs from 'fs';
-import glob from 'glob';
+import {sync as globSync} from 'glob';
 import module from 'module';
-import path from 'path';
 import {dirname, join, relative} from 'path';
 import * as sass from 'sass';
 import url from 'url';
@@ -51,8 +50,8 @@ async function main() {
   const specEntryPointFile = await createEntryPointSpecFile();
 
   // Copy tsconfig so that ESBuild can leverage its path mappings.
-  const esbuildTsconfig = path.join(legacyOutputDir, 'tsconfig-esbuild.json');
-  await fs.promises.cp(path.join(packagesDir, 'bazel-tsconfig-build.json'), esbuildTsconfig);
+  const esbuildTsconfig = join(legacyOutputDir, 'tsconfig-esbuild.json');
+  await fs.promises.cp(join(packagesDir, 'bazel-tsconfig-build.json'), esbuildTsconfig);
 
   const result = await esbuild.build({
     bundle: true,
@@ -83,7 +82,7 @@ async function main() {
  * explicitly added.
  */
 async function compileSassFiles() {
-  const sassFiles = glob.sync('src/**/!(_*|theme).scss', {cwd: projectDir, absolute: true});
+  const sassFiles = globSync('src/**/!(_*|theme).scss', {cwd: projectDir, absolute: true});
   const writeTasks = [];
 
   let count = 0;
@@ -132,7 +131,7 @@ async function compileProjectWithNgtsc() {
  * to bundle all specs in an IIFE file.
  */
 async function createEntryPointSpecFile() {
-  const testFiles = glob.sync('**/*.spec.js', {absolute: true, cwd: legacyOutputDir});
+  const testFiles = globSync('**/*.spec.js', {absolute: true, cwd: legacyOutputDir});
 
   let specEntryPointFile = `import './test/angular-test.init.ts';`;
   let i = 0;
