@@ -49,6 +49,16 @@ that should trigger the sub-menu:
               "file": "menu-nested-example.html",
               "region": "sub-menu"}) -->
 
+### Context menu
+A context menu is a menu that is triggered by right-clicking in a specific area, rather than
+clicking on a trigger element. It is re-positioned if the user right-clicks somewhere else in the
+area and will be closed if the user clicks away.
+
+You can set up a `mat-menu` as a context menu by adding the `matContextMenuTriggerFor` directive
+to your container and binding it to a menu instance.
+
+<!-- example(context-menu) -->
+
 ### Lazy rendering
 By default, the menu content will be initialized even when the panel is closed. To defer
 initialization until the menu is open, the content can be provided as an `ng-template`

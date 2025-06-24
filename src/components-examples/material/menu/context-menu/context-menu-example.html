@@ -1,0 +1,22 @@
+<div class="example-context-menu-area" [matContextMenuTriggerFor]="contextMenu">
+  Right click here to trigger a context menu
+</div>
+
+<mat-menu #contextMenu>
+  <button mat-menu-item>
+    <mat-icon>content_cut</mat-icon>
+    Cut
+  </button>
+  <button mat-menu-item>
+    <mat-icon>content_copy</mat-icon>
+    Copy
+  </button>
+  <button mat-menu-item>
+    <mat-icon>content_paste</mat-icon>
+    Paste
+  </button>
+  <button mat-menu-item>
+    <mat-icon>print</mat-icon>
+    Print
+  </button>
+</mat-menu>
