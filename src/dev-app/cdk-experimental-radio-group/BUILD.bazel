@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "cdk-experimental-radio-group",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "cdk-radio-group-demo.html",
+        ":cdk-radio-group-demo.css",
+    ],
+    deps = [
+        "//:node_modules/@angular/core",
+        "//src/components-examples/cdk-experimental/radio-group",
+    ],
+)

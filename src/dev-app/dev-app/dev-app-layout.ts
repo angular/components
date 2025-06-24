@@ -60,7 +60,7 @@ export class DevAppLayout {
     {name: 'Examples', route: '/examples'},
     {name: 'CDK Dialog', route: '/cdk-dialog'},
     {name: 'CDK Experimental Combobox', route: '/cdk-experimental-combobox'},
-    {name: 'CDK Experimental Radio', route: '/cdk-experimental-radio'},
+    {name: 'CDK Experimental Radio Group', route: '/cdk-experimental-radio-group'},
     {name: 'CDK Experimental Listbox', route: '/cdk-experimental-listbox'},
     {name: 'CDK Experimental Tabs', route: '/cdk-experimental-tabs'},
     {name: 'CDK Experimental Accordion', route: '/cdk-experimental-accordion'},
