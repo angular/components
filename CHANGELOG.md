@@ -1,3 +1,23 @@
+<a name="20.0.4"></a>
+# 20.0.4 "strontium-shack" (2025-06-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [59be54616](https://github.com/angular/components/commit/59be54616446b596fa36182cad9ac29f243e564c) | fix | **menu:** close sibling triggers when opening a menu ([#30894](https://github.com/angular/components/pull/30894)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [88bc13d88](https://github.com/angular/components/commit/88bc13d88639aff36eacd33cd3d958c1993e6f57) | fix | **button:** harness not picking up buttons with dynamic appearance ([#31327](https://github.com/angular/components/pull/31327)) |
+| [c1b9682e4](https://github.com/angular/components/commit/c1b9682e49699fe02693a68def16e5c26302d547) | fix | **button:** update button golden ([#31346](https://github.com/angular/components/pull/31346)) |
+| [c3bb067bf](https://github.com/angular/components/commit/c3bb067bf2e135d4086837a55aad476825c21b24) | fix | **input:** remove native clear button ([#31394](https://github.com/angular/components/pull/31394)) |
+| [747218ba2](https://github.com/angular/components/commit/747218ba2fce8bac943915bb06e09c6fb4bbef2d) | fix | **input:** revert wheel workaround ([#31391](https://github.com/angular/components/pull/31391)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3b31dacc0](https://github.com/angular/components/commit/3b31dacc09f5040e5b4dc3e33bec39bad3b339f7) | fix | invalid URL when playlist is passed in without videoId ([#31403](https://github.com/angular/components/pull/31403)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.3"></a>
 # 20.0.3 "plastic-tube" (2025-06-11)
 ### material
