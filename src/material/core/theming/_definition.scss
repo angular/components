@@ -90,7 +90,9 @@ $theme-version: 1;
     ),
     m3-tokens.get-sys-typeface($typography, $typography-system-variables-prefix),
   );
-  $system: ();
+  $system: (
+    density-scale: $density-scale,
+  );
   @each $sys-map in $system-maps {
     $system: map.merge($system, $sys-map);
   }

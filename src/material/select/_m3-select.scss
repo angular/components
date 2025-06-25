@@ -3,7 +3,6 @@
 @use '../core/style/elevation';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 // The prefix used to generate the fully qualified name for tokens in this file.
@@ -40,7 +39,7 @@ $prefix: (mat, select);
       select-trigger-text-tracking: map.get($system, body-large-tracking),
       select-trigger-text-weight: map.get($system, body-large-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

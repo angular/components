@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-list.
@@ -72,7 +71,7 @@
       list-list-item-trailing-supporting-text-tracking: map.get($system, label-small-tracking),
       list-list-item-trailing-supporting-text-weight: map.get($system, label-small-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

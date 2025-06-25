@@ -4,7 +4,6 @@
 @use '../core/tokens/m3';
 @use '../core/style/elevation';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 
 
 /// Generates custom tokens for the button.
@@ -141,7 +140,7 @@
       button-tonal-label-text-tracking: map.get($system, label-large-tracking),
       button-tonal-label-text-weight: map.get($system, label-large-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 

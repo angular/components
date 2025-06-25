@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
@@ -49,7 +48,8 @@
 
 // Tokens that can be configured through Angular Material's density theming API.
 @function get-density-tokens($theme) {
-  $scale: theming.clamp-density(inspection.get-theme-density($theme), -4);
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
   $height-config: (
     0: 72px,
     -1: 68px,
@@ -59,7 +59,7 @@
   );
 
   @return (
-    stepper-header-height: map.get($height-config, $scale),
+    stepper-header-height: map.get($height-config, $density-scale),
   );
 }
 

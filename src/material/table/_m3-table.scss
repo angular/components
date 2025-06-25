@@ -2,7 +2,6 @@
 @use 'sass:list';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-table.
@@ -36,7 +35,7 @@
       table-footer-supporting-text-tracking: map.get($system, body-medium-tracking),
       table-footer-supporting-text-weight: map.get($system, body-medium-weight),
     ),
-    density: get-density-tokens(map.get($theme, inspection.$internals, density-scale)),
+    density: get-density-tokens(map.get($system, density-scale)),
   );
 }
 
