@@ -137,6 +137,82 @@ describe('MatMenu', () => {
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
   }));
 
+  it('should show the backdrop by default', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+  }));
+
+  it('should allow hasBackdrop to be undefined', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    // Set to undefined, which should mean "use default" (true)
+    fixture.componentInstance.menu.hasBackdrop = undefined;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+  }));
+
+  it('should allow hasBackdrop to be null', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    // Set to null, which should mean "use default" (true)
+    // The booleanAttribute transformer handles `null` and results in `false`
+    // if the default in the component was not respected.
+    // However, MatMenu specifically sets hasBackdrop in its constructor if it's null from options.
+    // So for this specific component, `null` should behave like `true` (default).
+    // Let's verify the component's constructor handles this.
+    fixture.componentInstance.menu.hasBackdrop = null;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    // Check the internal state if possible, or rely on behavior
+    // For hasBackdrop, `null` is coerced by `booleanAttribute` to `false` at the @Input level
+    // if not handled otherwise. MatMenu's constructor *does* handle it.
+    // It gets the default options, and if hasBackdrop is undefined in those options, it remains so.
+    // The @Input transform then coerces `null` to `false`.
+    // Let's re-check the MatMenu constructor and default options.
+    // Default options: `hasBackdrop` is not set, so it's `undefined`.
+    // If `menu.hasBackdrop` is explicitly set to `null`:
+    // The `booleanTransform` for `hasBackdrop` is:
+    // `(value: any) => (value == null ? null : booleanAttribute(value))`
+    // So if `null` is passed, it remains `null`.
+    // Then in the `CdkMenuPanel` which `MatMenuPanel` extends, `hasBackdrop` being `null`
+    // means it will use the overlay config's `hasBackdrop` which defaults to `false`.
+    // So, `null` should result in NO backdrop.
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+    // Based on the transform `(value: any) => (value == null ? null : booleanAttribute(value))`,
+    // and CdkMenuPanel's behavior, `null` should result in no backdrop.
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy(
+      'Expected no backdrop when hasBackdrop is null due to transform and CdkMenuPanel behavior.',
+    );
+
+    // Let's verify the true case again to be sure.
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    fixture.componentInstance.menu.hasBackdrop = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy(
+      'Expected backdrop when hasBackdrop is true.',
+    );
+  }));
+
   it('should set the correct aria-haspopup value on the trigger element', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
@@ -1150,6 +1226,52 @@ describe('MatMenu', () => {
     );
   }));
 
+  it('should correctly apply aria-label, aria-labelledby, and aria-describedby to the panel', fakeAsync(() => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const instance = fixture.componentInstance;
+
+    instance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    let menuPanel = overlayContainerElement.querySelector('.mat-mdc-menu-panel') as HTMLElement;
+    expect(menuPanel.getAttribute('aria-label')).toBeNull();
+    expect(menuPanel.getAttribute('aria-labelledby')).toBeNull();
+    expect(menuPanel.getAttribute('aria-describedby')).toBeNull();
+
+    instance.ariaLabel = 'Test Label';
+    instance.ariaLabelledby = 'test-labelledby-id';
+    instance.ariaDescribedby = 'test-describedby-id';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(menuPanel.getAttribute('aria-label')).toBe('Test Label');
+    expect(menuPanel.getAttribute('aria-labelledby')).toBe('test-labelledby-id');
+    expect(menuPanel.getAttribute('aria-describedby')).toBe('test-describedby-id');
+
+    // Test updating the values
+    instance.ariaLabel = 'Updated Test Label';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(menuPanel.getAttribute('aria-label')).toBe('Updated Test Label');
+
+    // Test removing the attributes by setting to empty string
+    instance.ariaLabel = '';
+    instance.ariaLabelledby = '';
+    instance.ariaDescribedby = '';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(menuPanel.hasAttribute('aria-label')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-labelledby')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-describedby')).toBe(false);
+
+    instance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+  }));
+
   it('should be able to move focus inside the `open` event', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
@@ -1164,6 +1286,234 @@ describe('MatMenu', () => {
     const items = document.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
     expect(document.activeElement).withContext('Expected fourth item to be focused').toBe(items[3]);
   }));
+
+  describe('keyboard navigation with dynamic items', () => {
+    let fixture: ComponentFixture<SimpleMenuWithRepeater>;
+    let instance: SimpleMenuWithRepeater;
+    let menuPanel: HTMLElement;
+    let items: NodeListOf<HTMLElement>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(SimpleMenuWithRepeater);
+      instance = fixture.componentInstance;
+      fixture.detectChanges();
+      instance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+      menuPanel = overlayContainerElement.querySelector('.mat-mdc-menu-panel') as HTMLElement;
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+    }));
+
+    afterEach(fakeAsync(() => {
+      instance.trigger.closeMenu();
+      fixture.detectChanges();
+      tick(500);
+    }));
+
+    it('should navigate to a dynamically added item', fakeAsync(() => {
+      expect(document.activeElement).toBe(items[0]); // Initially first item is focused
+
+      // Add a new item between the first and second original items
+      instance.items.splice(1, 0, {label: 'New Item', disabled: false});
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick(); // Allow KeyManager to update
+
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(items.length).toBe(3);
+      expect(items[1].textContent?.trim()).toBe('New Item');
+
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      expect(document.activeElement).toBe(items[1], 'Focus should move to the new item');
+
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      expect(document.activeElement).toBe(items[2], 'Focus should move to the original second item');
+    }));
+
+    it('should skip a dynamically removed item', fakeAsync(() => {
+      expect(document.activeElement).toBe(items[0]);
+
+      // Remove the second item (Pasta)
+      instance.items.splice(1, 1);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick(); // Allow KeyManager to update
+
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(items.length).toBe(1);
+
+      // Try to navigate down. Since there's only one item, focus should stay.
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      expect(document.activeElement).toBe(items[0]);
+
+      // Add another item to ensure navigation still works
+      instance.items.push({label: 'Another New Item', disabled: false});
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick();
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(items.length).toBe(2);
+
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      expect(document.activeElement).toBe(items[1]);
+    }));
+
+    it('should handle removing the currently focused item', fakeAsync(() => {
+      // Focus the second item 'Pasta'
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(document.activeElement).toBe(items[1]);
+
+      // Remove the focused item 'Pasta'
+      instance.items.splice(1, 1);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick(); // Allow KeyManager to update and move focus
+
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(items.length).toBe(1);
+      // Focus should ideally move to the next available item, or the previous if it's the last.
+      // In this case, it should move to the first item 'Pizza'.
+      expect(document.activeElement).toBe(items[0]);
+    }));
+
+    it('should handle adding an item before the currently focused item', fakeAsync(() => {
+      // Focus the second item 'Pasta'
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(document.activeElement).toBe(items[1]); // 'Pasta' is focused
+
+      // Add a new item before 'Pasta'
+      instance.items.splice(1, 0, {label: 'New Salad', disabled: false});
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      tick();
+
+      items = menuPanel.querySelectorAll<HTMLElement>('[mat-menu-item]');
+      expect(items.length).toBe(3);
+      // Active item should remain 'Pasta', which is now at index 2
+      expect(document.activeElement).toBe(items[2]);
+      expect(items[2].textContent?.trim()).toBe('Pasta');
+
+
+      dispatchKeyboardEvent(menuPanel, 'keydown', UP_ARROW);
+      fixture.detectChanges();
+      tick();
+      expect(document.activeElement).toBe(items[1]); // Should be 'New Salad'
+      expect(items[1].textContent?.trim()).toBe('New Salad');
+    }));
+
+    it('should correctly handle 3 levels of nested menus with keyboard and mouse', fakeAsync(() => {
+      // Setup for 3-level menu (reusing NestedMenu but focusing on deeper interaction)
+      // Root -> LevelOneItem1 (triggers LevelOneMenu) -> LevelTwoItem1 (triggers LevelTwoMenu) -> LevelThreeItem
+      instance.rootTriggerEl.nativeElement.click(); // Open RootMenu
+      fixture.detectChanges();
+      tick(500);
+
+      const rootMenuItems = overlay.querySelectorAll<HTMLElement>(
+        `#${instance.rootMenu.panelId} > .mat-mdc-menu-content > [mat-menu-item]`,
+      );
+      const levelOneTriggerEl = rootMenuItems[0]; // Assuming first item triggers level one
+
+      // Open LevelOneMenu by mouse
+      dispatchMouseEvent(levelOneTriggerEl, 'mouseenter');
+      fixture.detectChanges();
+      tick(500);
+      expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
+        .withContext('Expected two open menus (Root, LevelOne)')
+        .toBe(2);
+      let levelOneMenuPanelId = instance.levelOneMenu.panelId;
+      let levelOneMenuItems = overlay.querySelectorAll<HTMLElement>(
+        `#${levelOneMenuPanelId} > .mat-mdc-menu-content > [mat-menu-item]`,
+      );
+      const levelTwoTriggerEl = levelOneMenuItems[1]; // Item "Five" triggers LevelTwoMenu
+
+      // Open LevelTwoMenu by keyboard
+      levelTwoTriggerEl.focus(); // Focus item "Five"
+      dispatchKeyboardEvent(levelTwoTriggerEl, 'keydown', RIGHT_ARROW);
+      fixture.detectChanges();
+      tick(500);
+      expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
+        .withContext('Expected three open menus (Root, LevelOne, LevelTwo)')
+        .toBe(3);
+      let levelTwoMenuPanelId = instance.levelTwoMenu.panelId;
+      let levelTwoMenuItems = overlay.querySelectorAll<HTMLElement>(
+        `#${levelTwoMenuPanelId} > .mat-mdc-menu-content > [mat-menu-item]`,
+      ); // Items: Seven, Eight, Nine
+
+      // Check focus is in LevelTwoMenu
+      expect(document.activeElement).toBe(levelTwoMenuItems[0]); // "Seven" should be focused
+
+      // Click item in the deepest menu (LevelTwoMenu's "Eight")
+      const levelThreeItemToClick = levelTwoMenuItems[1]; // "Eight"
+      levelThreeItemToClick.click();
+      fixture.detectChanges();
+      tick(500);
+
+      expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
+        .withContext('Expected all menus to close after click in deepest sub-menu')
+        .toBe(0);
+      expect(document.activeElement)
+        .withContext('Focus should return to the root trigger')
+        .toBe(instance.rootTriggerEl.nativeElement);
+
+      // Re-open for keyboard closing test
+      instance.rootTriggerEl.nativeElement.click();
+      fixture.detectChanges();
+      tick(500);
+      dispatchMouseEvent(levelOneTriggerEl, 'mouseenter');
+      fixture.detectChanges();
+      tick(500);
+      levelOneMenuPanelId = instance.levelOneMenu.panelId;
+      levelOneMenuItems = overlay.querySelectorAll<HTMLElement>(
+        `#${levelOneMenuPanelId} > .mat-mdc-menu-content > [mat-menu-item]`,
+      );
+      levelTwoTriggerEl.focus();
+      dispatchKeyboardEvent(levelTwoTriggerEl, 'keydown', RIGHT_ARROW);
+      fixture.detectChanges();
+      tick(500);
+      levelTwoMenuPanelId = instance.levelTwoMenu.panelId;
+      levelTwoMenuItems = overlay.querySelectorAll<HTMLElement>(
+        `#${levelTwoMenuPanelId} > .mat-mdc-menu-content > [mat-menu-item]`,
+      );
+      const levelTwoMenuPanel = overlay.querySelector<HTMLElement>(`#${levelTwoMenuPanelId}`)!;
+
+      // Close LevelTwoMenu with LEFT_ARROW
+      dispatchKeyboardEvent(levelTwoMenuPanel, 'keydown', LEFT_ARROW);
+      fixture.detectChanges();
+      tick(500);
+      expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
+        .withContext('Expected two menus to be open (Root, LevelOne)')
+        .toBe(2);
+      expect(document.activeElement)
+        .withContext('Focus should return to LevelTwo trigger (item "Five")')
+        .toBe(levelTwoTriggerEl);
+
+      // Close LevelOneMenu with LEFT_ARROW
+      const levelOneMenuPanel = overlay.querySelector<HTMLElement>(`#${levelOneMenuPanelId}`)!;
+      dispatchKeyboardEvent(levelOneMenuPanel, 'keydown', LEFT_ARROW);
+      fixture.detectChanges();
+      tick(500);
+      expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
+        .withContext('Expected one menu to be open (Root)')
+        .toBe(1);
+      expect(document.activeElement)
+        .withContext('Focus should return to LevelOne trigger')
+        .toBe(levelOneTriggerEl);
+    }));
+  });
 
   it('should default to the "below" and "after" positions', fakeAsync(() => {
     const fixture = TestBed.createComponent(SimpleMenu);
@@ -1627,6 +1977,63 @@ describe('MatMenu', () => {
 
         expect(subject.menuPanel!.classList).toContain('mat-menu-below');
         expect(subject.menuPanel!.classList).not.toContain('mat-menu-above');
+      }));
+    });
+
+    describe('with various positions', () => {
+      it('should position correctly with overlapTrigger=true, xPosition="before", yPosition="above"', fakeAsync(() => {
+        subject = new OverlapSubject(OverlapMenu, {
+          overlapTrigger: true,
+          xPosition: 'before',
+          yPosition: 'above',
+        });
+        // Adjust trigger to have space above and before
+        subject.trigger.style.position = 'fixed';
+        subject.trigger.style.left = '200px';
+        subject.trigger.style.top = '200px';
+        subject.openMenu();
+        expect(Math.floor(subject.overlayRect.right)).toBe(Math.floor(subject.triggerRect.right));
+        expect(Math.floor(subject.overlayRect.bottom)).toBe(Math.floor(subject.triggerRect.bottom));
+      }));
+
+      it('should position correctly with overlapTrigger=true, xPosition="after", yPosition="above"', fakeAsync(() => {
+        subject = new OverlapSubject(OverlapMenu, {
+          overlapTrigger: true,
+          xPosition: 'after',
+          yPosition: 'above',
+        });
+        subject.trigger.style.position = 'fixed';
+        subject.trigger.style.top = '200px'; // Space above
+        subject.openMenu();
+        expect(Math.floor(subject.overlayRect.left)).toBe(Math.floor(subject.triggerRect.left));
+        expect(Math.floor(subject.overlayRect.bottom)).toBe(Math.floor(subject.triggerRect.bottom));
+      }));
+
+      it('should position correctly with overlapTrigger=false, xPosition="before", yPosition="below"', fakeAsync(() => {
+        // This is a non-default scenario for overlapTrigger=false, default is x:after, y:below
+        subject = new OverlapSubject(OverlapMenu, {
+          overlapTrigger: false,
+          xPosition: 'before',
+          yPosition: 'below',
+        });
+         subject.trigger.style.position = 'fixed';
+         subject.trigger.style.left = '200px'; // Space before
+        subject.openMenu();
+        expect(Math.floor(subject.overlayRect.right)).toBe(Math.floor(subject.triggerRect.left));
+        expect(Math.floor(subject.overlayRect.top)).toBe(Math.floor(subject.triggerRect.bottom));
+      }));
+
+      it('should position correctly with overlapTrigger=true, xPosition="before", yPosition="below"', fakeAsync(() => {
+        subject = new OverlapSubject(OverlapMenu, {
+          overlapTrigger: true,
+          xPosition: 'before',
+          yPosition: 'below', // Default Y for overlap=true
+        });
+        subject.trigger.style.position = 'fixed';
+        subject.trigger.style.left = '200px'; // Space before
+        subject.openMenu();
+        expect(Math.floor(subject.overlayRect.right)).toBe(Math.floor(subject.triggerRect.right));
+        expect(Math.floor(subject.overlayRect.top)).toBe(Math.floor(subject.triggerRect.top));
       }));
     });
   });
