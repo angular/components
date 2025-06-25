@@ -187,13 +187,17 @@ export class DocViewer implements OnDestroy {
       const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const exampleViewer = portalHost.attach(examplePortal);
       const exampleViewerComponent = exampleViewer.instance;
-      if (example !== null && componentClass === ExampleViewer) {
-        DocViewer._initExampleViewer(
-          exampleViewerComponent as ExampleViewer,
-          example,
-          file,
-          region,
-        );
+      if (example !== null) {
+        if (componentClass === ExampleViewer) {
+          DocViewer._initExampleViewer(
+            exampleViewerComponent as ExampleViewer,
+            example,
+            file,
+            region,
+          );
+        } else {
+          (exampleViewerComponent as HeaderLink).example.set(example);
+        }
       }
       this._portalHosts.push(portalHost);
     });
