@@ -238,7 +238,7 @@ esbuild_register_toolchains(
 
 git_repository(
     name = "rules_browsers",
-    commit = "fd3b3d37662206a19eaa34f157c757b3291978dc",
+    commit = "0952071cdc67acf1124c20c32a9b7e2e85da0aa3",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
