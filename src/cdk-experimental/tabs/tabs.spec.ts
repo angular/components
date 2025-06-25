@@ -223,10 +223,15 @@ describe('CdkTabs', () => {
         });
       });
 
-      it('should have tabindex="0"', () => {
-        tabPanelElements.forEach(panelElement => {
-          expect(panelElement.getAttribute('tabindex')).toBe('0');
-        });
+      it('should have tabindex="0" when visible.', () => {
+        updateTabs({selectedTab: 'tab1'});
+        expect(tabPanelElements[0].getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should have tabindex="-1" when hidden.', () => {
+        updateTabs({selectedTab: 'tab1'});
+        expect(tabPanelElements[1].getAttribute('tabindex')).toBe('-1');
+        expect(tabPanelElements[2].getAttribute('tabindex')).toBe('-1');
       });
 
       it('should have inert attribute when hidden and not when visible', () => {

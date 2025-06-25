@@ -113,6 +113,9 @@ export class TabPanelPattern {
   /** Whether the tabpanel is hidden. */
   readonly hidden = computed(() => this.inputs.tab()?.expanded() === false);
 
+  /** The tabindex of this tabpanel. */
+  readonly tabindex = computed(() => (this.hidden() ? -1 : 0));
+
   constructor(readonly inputs: TabPanelInputs) {
     this.id = inputs.id;
     this.value = inputs.value;

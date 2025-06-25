@@ -288,9 +288,9 @@ export class CdkTab implements HasElement, OnInit, OnDestroy {
   exportAs: 'cdkTabPanel',
   host: {
     'role': 'tabpanel',
-    'tabindex': '0',
     'class': 'cdk-tabpanel',
     '[attr.id]': 'pattern.id()',
+    '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.inert]': 'pattern.hidden() ? true : null',
   },
   hostDirectives: [
