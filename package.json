@@ -149,7 +149,7 @@
     "typescript": "5.8.3",
     "vrsource-tslint-rules": "6.0.0",
     "yargs": "^17.3.1",
-    "zx": "^6.2.4"
+    "zx": "^8.0.0"
   },
   "pnpm": {
     "overrides": {
