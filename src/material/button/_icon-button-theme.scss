@@ -8,7 +8,7 @@
 @use '../core/theming/theming';
 
 @mixin base($theme) {
-  $tokens: m2-icon-button.get-unthemable-tokens();
+  $tokens: map.get(m2-icon-button.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon-button.get-tokens($theme), base);
   }
@@ -21,7 +21,7 @@
 /// @param {String} $color-variant: The color variant to use for the
 //         button: primary, secondary, tertiary, or error.
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-icon-button.get-color-tokens($theme);
+  $tokens: map.get(m2-icon-button.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon-button.get-tokens($theme, $color-variant), color);
   }
@@ -49,7 +49,7 @@
 }
 
 @mixin typography($theme) {
-  $tokens: m2-icon-button.get-typography-tokens($theme);
+  $tokens: map.get(m2-icon-button.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon-button.get-tokens($theme), typography);
   }
@@ -74,10 +74,9 @@
     );
     $calculated-size: map.get($size-map, $density-scale);
 
-    @include token-utils.values(
-        m2-icon-button.get-density-tokens(
-            $theme, $exclude: (icon-button-state-layer-size))
-    );
+    $density-tokens: map.get(m2-icon-button.get-tokens($theme), density);
+    $density-tokens: map.remove($density-tokens, icon-button-state-layer-size);
+    @include token-utils.values($density-tokens);
 
     // Use `mat-mdc-button-base` to increase the specificity over the button's structural styles.
     .mat-mdc-icon-button.mat-mdc-button-base {

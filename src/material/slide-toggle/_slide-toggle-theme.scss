@@ -11,7 +11,7 @@
 /// for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
-  $tokens: m2-slide-toggle.get-unthemable-tokens($theme);
+  $tokens: map.get(m2-slide-toggle.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slide-toggle.get-tokens($theme), base);
   }
@@ -23,7 +23,7 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-slide-toggle.get-color-tokens($theme);
+  $tokens: map.get(m2-slide-toggle.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slide-toggle.get-tokens($theme, $color-variant), color);
   }
@@ -31,7 +31,7 @@
   @include token-utils.values($tokens);
 
   @if inspection.get-theme-version($theme) != 1 {
-    $mat-tokens: m2-slide-toggle.get-color-tokens($theme);
+    $mat-tokens: map.get(m2-slide-toggle.get-tokens($theme), color);
     $system: m2-utils.get-system($theme);
 
     .mat-mdc-slide-toggle {
@@ -58,11 +58,11 @@
   } @else {
     @include sass-utils.current-selector-or-root() {
       // TODO: See if this can be removed
-      @include token-utils.values(m2-slide-toggle.get-typography-tokens($theme));
+      @include token-utils.values(map.get(m2-slide-toggle.get-tokens($theme), typography));
 
       .mat-mdc-slide-toggle {
         @include token-utils.values(
-            m2-slide-toggle.get-typography-tokens($theme));
+            map.get(m2-slide-toggle.get-tokens($theme), typography));
       }
     }
   }
@@ -71,7 +71,7 @@
 /// Outputs density theme styles for the mat-slide-toggle.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
-  $tokens: m2-slide-toggle.get-density-tokens($theme);
+  $tokens: map.get(m2-slide-toggle.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slide-toggle.get-tokens($theme), density);
   }

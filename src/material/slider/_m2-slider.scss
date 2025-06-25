@@ -3,41 +3,33 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    slider-active-track-height: 6px,
-    slider-active-track-shape: 9999px,
-    slider-handle-elevation: elevation.get-box-shadow(1),
-    slider-handle-height: 20px,
-    slider-handle-shape: 50%,
-    slider-handle-width: 20px,
-    slider-inactive-track-height: 4px,
-    slider-inactive-track-shape: 9999px,
-    slider-value-indicator-border-radius: 4px,
-    slider-value-indicator-caret-display: block,
-    slider-value-indicator-container-transform: translateX(-50%),
-    slider-value-indicator-height: 32px,
-    slider-value-indicator-padding: 0 12px,
-    slider-value-indicator-text-transform: none,
-    slider-value-indicator-width: auto,
-    slider-with-overlap-handle-outline-width: 1px,
-    slider-with-tick-marks-active-container-opacity: 0.6,
-    slider-with-tick-marks-container-shape: 50%,
-    slider-with-tick-marks-container-size: 2px,
-    slider-with-tick-marks-inactive-container-opacity: 0.6,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  $theme-color-tokens: private-get-color-palette-color-tokens($theme, primary);
 
-  @return map.merge(
-    $theme-color-tokens,
-    (
+  @return (
+    base: (
+      slider-active-track-height: 6px,
+      slider-active-track-shape: 9999px,
+      slider-handle-elevation: elevation.get-box-shadow(1),
+      slider-handle-height: 20px,
+      slider-handle-shape: 50%,
+      slider-handle-width: 20px,
+      slider-inactive-track-height: 4px,
+      slider-inactive-track-shape: 9999px,
+      slider-value-indicator-border-radius: 4px,
+      slider-value-indicator-caret-display: block,
+      slider-value-indicator-container-transform: translateX(-50%),
+      slider-value-indicator-height: 32px,
+      slider-value-indicator-padding: 0 12px,
+      slider-value-indicator-text-transform: none,
+      slider-value-indicator-width: auto,
+      slider-with-overlap-handle-outline-width: 1px,
+      slider-with-tick-marks-active-container-opacity: 0.6,
+      slider-with-tick-marks-container-shape: 50%,
+      slider-with-tick-marks-container-size: 2px,
+      slider-with-tick-marks-inactive-container-opacity: 0.6,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       slider-disabled-active-track-color: map.get($system, on-surface),
       slider-disabled-handle-color: map.get($system, on-surface),
       slider-disabled-inactive-track-color: map.get($system, on-surface),
@@ -45,8 +37,16 @@
       slider-label-label-text-color: map.get($system, inverse-on-surface),
       slider-value-indicator-opacity: 1,
       slider-with-overlap-handle-outline-color: map.get($system, on-surface),
-      slider-with-tick-marks-disabled-container-color: map.get($system, on-surface),
+      slider-with-tick-marks-disabled-container-color: map.get($system, on-surface)),
     ),
+    typography: (
+      slider-label-label-text-font: map.get($system, label-medium-font),
+      slider-label-label-text-size: map.get($system, label-medium-size),
+      slider-label-label-text-line-height: map.get($system, label-medium-line-height),
+      slider-label-label-text-tracking: map.get($system, label-medium-tracking),
+      slider-label-label-text-weight: map.get($system, label-medium-weight),
+    ),
+    density: (),
   );
 }
 
@@ -54,7 +54,6 @@
 @function private-get-color-palette-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
-  $color: map.get($system, primary);
 
   @return (
     slider-active-track-color: map.get($system, primary),
@@ -70,21 +69,4 @@
     slider-with-tick-marks-active-container-color: map.get($system, on-primary),
     slider-with-tick-marks-inactive-container-color: map.get($system, primary),
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    slider-label-label-text-font: map.get($system, label-medium-font),
-    slider-label-label-text-size: map.get($system, label-medium-size),
-    slider-label-label-text-line-height: map.get($system, label-medium-line-height),
-    slider-label-label-text-tracking: map.get($system, label-medium-tracking),
-    slider-label-label-text-weight: map.get($system, label-medium-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

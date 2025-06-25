@@ -2,73 +2,62 @@
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    table-row-item-outline-width: 1px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  @return (
-    table-background-color: map.get($system, surface),
-    table-header-headline-color: map.get($system, on-surface),
-    table-row-item-label-text-color: map.get($system, on-surface),
-    table-row-item-outline-color: map.get($system, outline),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    table-header-headline-font: map.get($system, label-medium-font),
-    table-header-headline-line-height: map.get($system, label-medium-line-height),
-    table-header-headline-size: map.get($system, label-medium-size),
-    table-header-headline-weight: map.get($system, label-medium-weight),
-    table-header-headline-tracking: map.get($system, label-medium-tracking),
-
-    // Plain cells and footer cells have the same typography.
-    table-row-item-label-text-font: map.get($system, body-medium-font),
-    table-row-item-label-text-line-height: map.get($system, body-medium-line-height),
-    table-row-item-label-text-size: map.get($system, body-medium-size),
-    table-row-item-label-text-weight: map.get($system, body-medium-weight),
-    table-row-item-label-text-tracking: map.get($system, body-medium-tracking),
-
-    table-footer-supporting-text-font: map.get($system, body-medium-font),
-    table-footer-supporting-text-line-height: map.get($system, body-medium-line-height),
-    table-footer-supporting-text-size: map.get($system, body-medium-size),
-    table-footer-supporting-text-weight: map.get($system, body-medium-weight),
-    table-footer-supporting-text-tracking: map.get($system, body-medium-tracking),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
-  $header-scale: (
-    0: 56px,
-    -1: 52px,
-    -2: 48px,
-    -3: 44px,
-    -4: 40px
-  );
-  $cell-scale: (
-    0: 52px,
-    -1: 48px,
-    -2: 44px,
-    -3: 40px,
-    -4: 36px
-  );
 
   @return (
-    table-header-container-height: map.get($header-scale, $density-scale),
-    table-footer-container-height: map.get($cell-scale, $density-scale),
-    table-row-item-container-height: map.get($cell-scale, $density-scale),
+    base: (
+      table-row-item-outline-width: 1px,
+    ),
+    color: (
+      table-background-color: map.get($system, surface),
+      table-header-headline-color: map.get($system, on-surface),
+      table-row-item-label-text-color: map.get($system, on-surface),
+      table-row-item-outline-color: map.get($system, outline),
+    ),
+    typography: (
+      table-header-headline-font: map.get($system, label-medium-font),
+      table-header-headline-line-height: map.get($system, label-medium-line-height),
+      table-header-headline-size: map.get($system, label-medium-size),
+      table-header-headline-weight: map.get($system, label-medium-weight),
+      table-header-headline-tracking: map.get($system, label-medium-tracking),
+
+      // Plain cells and footer cells have the same typography.
+      table-row-item-label-text-font: map.get($system, body-medium-font),
+      table-row-item-label-text-line-height: map.get($system, body-medium-line-height),
+      table-row-item-label-text-size: map.get($system, body-medium-size),
+      table-row-item-label-text-weight: map.get($system, body-medium-weight),
+      table-row-item-label-text-tracking: map.get($system, body-medium-tracking),
+
+      table-footer-supporting-text-font: map.get($system, body-medium-font),
+      table-footer-supporting-text-line-height: map.get($system, body-medium-line-height),
+      table-footer-supporting-text-size: map.get($system, body-medium-size),
+      table-footer-supporting-text-weight: map.get($system, body-medium-weight),
+      table-footer-supporting-text-tracking: map.get($system, body-medium-tracking),
+    ),
+    density: (
+      table-header-container-height: map.get((
+        0: 56px,
+        -1: 52px,
+        -2: 48px,
+        -3: 44px,
+        -4: 40px
+      ), $density-scale),
+      table-footer-container-height: map.get((
+        0: 52px,
+        -1: 48px,
+        -2: 44px,
+        -3: 40px,
+        -4: 36px
+      ), $density-scale),
+      table-row-item-container-height: map.get((
+        0: 52px,
+        -1: 48px,
+        -2: 44px,
+        -3: 40px,
+        -4: 36px
+      ), $density-scale),
+    ),
   );
 }

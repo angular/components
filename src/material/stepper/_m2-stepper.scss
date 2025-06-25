@@ -3,63 +3,48 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    stepper-header-focus-state-layer-shape: 0,
-    stepper-header-hover-state-layer-shape: 0,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return map.merge(private-get-color-palette-color-tokens($theme, primary), (
-    stepper-container-color: map.get($system, surface),
-    stepper-line-color: map.get($system, outline),
-    stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
-        map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
-    stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
-        map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
-    stepper-header-label-text-color: map.get($system, on-surface-variant),
-    stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
-    stepper-header-selected-state-label-text-color: map.get($system, on-surface),
-    stepper-header-error-state-label-text-color: map.get($system, error),
-    stepper-header-icon-background-color: map.get($system, on-surface-variant),
-    stepper-header-error-state-icon-foreground-color: map.get($system, error),
-    stepper-header-error-state-icon-background-color: transparent,
-  ));
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    stepper-container-text-font: map.get($system, body-medium-font),
-    stepper-header-label-text-font: map.get($system, body-medium-font),
-    stepper-header-label-text-size: map.get($system, body-medium-size),
-    stepper-header-label-text-weight: map.get($system, body-medium-weight),
-    stepper-header-error-state-label-text-size: map.get($system, body-large-size),
-    stepper-header-selected-state-label-text-size: map.get($system, body-large-size),
-    stepper-header-selected-state-label-text-weight: map.get($system, body-large-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
-  $height-config: (
-    0: 72px,
-    -1: 68px,
-    -2: 64px,
-    -3: 60px,
-    -4: 42px,
-  );
 
   @return (
-    stepper-header-height: map.get($height-config, $density-scale),
+    base: (
+      stepper-header-focus-state-layer-shape: 0,
+      stepper-header-hover-state-layer-shape: 0,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      stepper-container-color: map.get($system, surface),
+      stepper-line-color: map.get($system, outline),
+      stepper-header-hover-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
+      stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, focus-state-layer-opacity)),
+      stepper-header-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
+      stepper-header-selected-state-label-text-color: map.get($system, on-surface),
+      stepper-header-error-state-label-text-color: map.get($system, error),
+      stepper-header-icon-background-color: map.get($system, on-surface-variant),
+      stepper-header-error-state-icon-foreground-color: map.get($system, error),
+      stepper-header-error-state-icon-background-color: transparent)
+    ),
+    typography: (
+      stepper-container-text-font: map.get($system, body-medium-font),
+      stepper-header-label-text-font: map.get($system, body-medium-font),
+      stepper-header-label-text-size: map.get($system, body-medium-size),
+      stepper-header-label-text-weight: map.get($system, body-medium-weight),
+      stepper-header-error-state-label-text-size: map.get($system, body-large-size),
+      stepper-header-selected-state-label-text-size: map.get($system, body-large-size),
+      stepper-header-selected-state-label-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (
+      stepper-header-height: map.get((
+        0: 72px,
+        -1: 68px,
+        -2: 64px,
+        -3: 60px,
+        -4: 42px,
+      ), $density-scale),
+    ),
   );
 }
 

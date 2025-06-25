@@ -6,7 +6,7 @@
 @use 'sass:map';
 
 @mixin base($theme) {
-  $tokens: m2-tabs.get-unthemable-tokens();
+  $tokens: map.get(m2-tabs.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-tabs.get-tokens($theme), base);
   }
@@ -25,23 +25,23 @@
     .mat-mdc-tab-group,
     .mat-mdc-tab-nav-bar {
       @include token-utils.values(
-          m2-tabs.get-color-tokens($theme, primary,
+          m2-tabs.private-get-color-palette-color-tokens($theme, primary,
             $exclude: (tab-background-color, tab-foreground-color)));
 
       &.mat-accent {
         @include token-utils.values(
-          m2-tabs.get-color-tokens($theme, secondary,
+          m2-tabs.private-get-color-palette-color-tokens($theme, secondary,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-warn {
         @include token-utils.values(
-          m2-tabs.get-color-tokens($theme, error,
+          m2-tabs.private-get-color-palette-color-tokens($theme, error,
             $exclude: (tab-background-color, tab-foreground-color)));
       }
 
       &.mat-background-primary {
-        $tokens: m2-tabs.get-color-tokens($theme, primary);
+        $tokens: m2-tabs.private-get-color-palette-color-tokens($theme, primary);
         @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color)
@@ -49,7 +49,7 @@
       }
 
       &.mat-background-accent {
-        $tokens: m2-tabs.get-color-tokens($theme, secondary);
+        $tokens: m2-tabs.private-get-color-palette-color-tokens($theme, secondary);
         @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color),
@@ -57,7 +57,7 @@
       }
 
       &.mat-background-warn {
-        $tokens: m2-tabs.get-color-tokens($theme, error);
+        $tokens: m2-tabs.private-get-color-palette-color-tokens($theme, error);
         @include token-utils.values((
           tab-background-color: map.get($tokens, tab-background-color),
           tab-foreground-color: map.get($tokens, tab-foreground-color),
@@ -74,7 +74,7 @@
     @include token-utils.values(map.get(m3-tabs.get-tokens($theme), typography));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.values(m2-tabs.get-typography-tokens($theme));
+      @include token-utils.values(map.get(m2-tabs.get-tokens($theme), typography));
     }
   }
 }
@@ -86,7 +86,7 @@
     @include token-utils.values(map.get(m3-tabs.get-tokens($theme), density));
   } @else {
     .mat-mdc-tab-header {
-      @include token-utils.values(m2-tabs.get-density-tokens($theme));
+      @include token-utils.values(map.get(m2-tabs.get-tokens($theme), density));
     }
   }
 }

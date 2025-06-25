@@ -1,26 +1,43 @@
 @use 'sass:map';
 @use '../core/theming/theming';
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
+
   @return (
-    radio-disabled-selected-icon-opacity: 0.38,
-    radio-disabled-unselected-icon-opacity: 0.38,
-    // This is specified both here and in the density tokens, because it
-    // determines the size of the radio button itself and there are internal
-    // tests who don't configure the theme correctly.
-    radio-state-layer-size: 40px,
+    base: (
+      radio-disabled-selected-icon-opacity: 0.38,
+      radio-disabled-unselected-icon-opacity: 0.38,
+      // This is specified both here and in the density tokens, because it
+      // determines the size of the radio button itself and there are internal
+      // tests who don't configure the theme correctly.
+      radio-state-layer-size: 40px,
+    ),
+    color: private-get-color-palette-color-tokens($theme, secondary),
+    typography: (
+      radio-label-text-font: map.get($system, body-medium-font),
+      radio-label-text-line-height: map.get($system, body-medium-line-height),
+      radio-label-text-size: map.get($system, body-medium-size),
+      radio-label-text-tracking: map.get($system, body-medium-tracking),
+      radio-label-text-weight: map.get($system, body-medium-weight)
+    ),
+    density: (
+      radio-state-layer-size: map.get((
+        0: 40px,
+        -1: 36px,
+        -2: 32px,
+        -3: 28px,
+      ), $density-scale),
+      radio-touch-target-display: if($density-scale < -1, none, block)
+    ),
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color-variant) {
-  $system: m2-utils.get-system($theme);
-  $is-dark: inspection.get-theme-type($theme) == dark;
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
@@ -40,34 +57,5 @@
     radio-unselected-hover-icon-color: map.get($system, on-surface),
     radio-unselected-icon-color: map.get($system, on-surface-variant),
     radio-unselected-pressed-icon-color: map.get($system, on-surface),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    radio-label-text-font: map.get($system, body-medium-font),
-    radio-label-text-line-height: map.get($system, body-medium-line-height),
-    radio-label-text-size: map.get($system, body-medium-size),
-    radio-label-text-tracking: map.get($system, body-medium-tracking),
-    radio-label-text-weight: map.get($system, body-medium-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
-
-  @return (
-    // The diameter of the radio's ripple.
-    radio-state-layer-size: map.get((
-      0: 40px,
-      -1: 36px,
-      -2: 32px,
-      -3: 28px,
-    ), $density-scale),
-    radio-touch-target-display: if($density-scale < -1, none, block)
   );
 }

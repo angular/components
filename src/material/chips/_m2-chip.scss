@@ -3,38 +3,53 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
 
   @return (
-    chip-container-shape-radius: 16px,
-    chip-disabled-container-opacity: 0.4,
-    chip-disabled-outline-color: transparent,
-    chip-flat-selected-outline-width: 0,
-    chip-focus-outline-color: transparent,
-    chip-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    chip-outline-color: transparent,
-    chip-outline-width: 0,
-    chip-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    chip-selected-trailing-action-state-layer-color: transparent,
-    chip-trailing-action-focus-opacity: 1,
-    chip-trailing-action-focus-state-layer-opacity: 0,
-    chip-trailing-action-hover-state-layer-opacity: 0,
-    chip-trailing-action-opacity: 0.54,
-    chip-trailing-action-state-layer-color: transparent,
-    chip-with-avatar-avatar-shape-radius: 14px,
-    chip-with-avatar-avatar-size: 28px,
-    chip-with-avatar-disabled-avatar-opacity: 1,
-    chip-with-icon-disabled-icon-opacity: 1,
-    chip-with-icon-icon-size: 18px,
-    chip-with-trailing-icon-disabled-trailing-icon-opacity: 1,
+    base: (
+      chip-container-shape-radius: 16px,
+      chip-disabled-container-opacity: 0.4,
+      chip-disabled-outline-color: transparent,
+      chip-flat-selected-outline-width: 0,
+      chip-focus-outline-color: transparent,
+      chip-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-outline-color: transparent,
+      chip-outline-width: 0,
+      chip-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      chip-selected-trailing-action-state-layer-color: transparent,
+      chip-trailing-action-focus-opacity: 1,
+      chip-trailing-action-focus-state-layer-opacity: 0,
+      chip-trailing-action-hover-state-layer-opacity: 0,
+      chip-trailing-action-opacity: 0.54,
+      chip-trailing-action-state-layer-color: transparent,
+      chip-with-avatar-avatar-shape-radius: 14px,
+      chip-with-avatar-avatar-size: 28px,
+      chip-with-avatar-disabled-avatar-opacity: 1,
+      chip-with-icon-disabled-icon-opacity: 1,
+      chip-with-icon-icon-size: 18px,
+      chip-with-trailing-icon-disabled-trailing-icon-opacity: 1,
+    ),
+    color: private-get-color-palette-color-tokens($theme, null),
+    typography: (
+      chip-label-text-font: map.get($system, body-medium-font),
+      chip-label-text-line-height: map.get($system, body-medium-line-height),
+      chip-label-text-size: map.get($system, body-medium-size),
+      chip-label-text-tracking: map.get($system, body-medium-tracking),
+      chip-label-text-weight: map.get($system, body-medium-weight)
+    ),
+    density: (
+      chip-container-height: map.get((
+        0: 32px,
+        -1: 28px,
+        -2: 24px), $density-scale)
+    ),
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color-variant: null) {
+@function private-get-color-palette-color-tokens($theme, $color-variant: null) {
   $system: m2-utils.get-system($theme);
   $background: m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
   $foreground: map.get($system, on-surface);
@@ -66,35 +81,5 @@
     chip-with-icon-selected-icon-color: $foreground,
     chip-with-trailing-icon-disabled-trailing-icon-color: $foreground,
     chip-with-trailing-icon-trailing-icon-color: $foreground,
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    chip-label-text-font: map.get($system, body-medium-font),
-    chip-label-text-line-height: map.get($system, body-medium-line-height),
-    chip-label-text-size: map.get($system, body-medium-size),
-    chip-label-text-tracking: map.get($system, body-medium-tracking),
-    chip-label-text-weight: map.get($system, body-medium-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
-
-  @return (
-    // The height of the chip.
-    chip-container-height: map.get(
-        (
-          0: 32px,
-          -1: 28px,
-          -2: 24px,
-        ),
-        $density-scale
-    )
   );
 }

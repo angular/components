@@ -14,7 +14,7 @@
     @include token-utils.values(map.get(m3-chip.get-tokens($theme), base));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.values(m2-chip.get-unthemable-tokens($theme));
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), base));
     }
   }
 }
@@ -28,20 +28,23 @@
         map.get(m3-chip.get-tokens($theme, $color-variant), color));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.values(m2-chip.get-color-tokens($theme));
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), color));
 
       &.mat-mdc-chip-selected,
       &.mat-mdc-chip-highlighted {
         &.mat-primary {
-          @include token-utils.values(m2-chip.get-color-tokens($theme, primary));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, primary));
         }
 
         &.mat-accent {
-          @include token-utils.values(m2-chip.get-color-tokens($theme, secondary));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, secondary));
         }
 
         &.mat-warn {
-          @include token-utils.values(m2-chip.get-color-tokens($theme, error));
+          @include token-utils.values(
+              m2-chip.private-get-color-palette-color-tokens($theme, error));
         }
       }
     }
@@ -55,7 +58,7 @@
     @include token-utils.values(map.get(m3-chip.get-tokens($theme), typography));
   } @else {
     .mat-mdc-standard-chip {
-      @include token-utils.values(m2-chip.get-typography-tokens($theme));
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), typography));
     }
   }
 }
@@ -67,7 +70,7 @@
     @include token-utils.values(map.get(m3-chip.get-tokens($theme), density));
   } @else {
     .mat-mdc-chip.mat-mdc-standard-chip {
-      @include token-utils.values(m2-chip.get-density-tokens($theme));
+      @include token-utils.values(map.get(m2-chip.get-tokens($theme), density));
     }
   }
 }

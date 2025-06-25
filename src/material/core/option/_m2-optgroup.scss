@@ -1,33 +1,21 @@
 @use '../tokens/m2-utils';
 @use 'sass:map';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  @return (
-    optgroup-label-text-color: map.get($system, on-surface),
-  );
-}
 
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
   @return (
-    optgroup-label-text-font: map.get($system, body-large-font),
-    optgroup-label-text-line-height: map.get($system, body-large-line-height),
-    optgroup-label-text-size: map.get($system, body-large-size),
-    optgroup-label-text-tracking: map.get($system, body-large-tracking),
-    optgroup-label-text-weight: map.get($system, body-large-weight)
+    base: (),
+    color: (
+      optgroup-label-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      optgroup-label-text-font: map.get($system, body-large-font),
+      optgroup-label-text-line-height: map.get($system, body-large-line-height),
+      optgroup-label-text-size: map.get($system, body-large-size),
+      optgroup-label-text-tracking: map.get($system, body-large-tracking),
+      optgroup-label-text-weight: map.get($system, body-large-weight)
+    ),
+    density: (),
   );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

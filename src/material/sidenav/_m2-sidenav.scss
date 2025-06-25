@@ -6,48 +6,38 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    // Currently zero, but it appears to be relevant for M3.
-    // See: https://m3.material.io/components/navigation-drawer/overview
-    sidenav-container-shape: 0,
-    sidenav-container-elevation-shadow: elevation.get-box-shadow(16),
-    sidenav-container-width: auto,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  $is-dark: inspection.get-theme-type($theme) ==  dark;
+  // TODO: Use system colors instead of checking theme type
+  $is-dark: false;
+  @if (meta.type-of($theme) == map and map.get($theme, color)) {
+    $is-dark: inspection.get-theme-type($theme) ==  dark;
+  }
   $scrim-opacity: 0.6;
   $scrim-color: m3-utils.color-with-opacity(map.get($system, surface), 60%);
   $fallback-scrim-color: if($is-dark, rgba(#fff, $scrim-opacity), rgba(#000, $scrim-opacity));
 
   @return (
-    sidenav-container-divider-color: map.get($system, outline),
-    sidenav-container-background-color: map.get($system, surface),
-    sidenav-container-text-color: map.get($system, on-surface),
-    sidenav-content-background-color: map.get($system, background),
-    sidenav-content-text-color: map.get($system, on-surface),
+    base: (
+      sidenav-container-shape: 0,
+      sidenav-container-elevation-shadow: elevation.get-box-shadow(16),
+      sidenav-container-width: auto,
+    ),
+    color: (
+      sidenav-container-divider-color: map.get($system, outline),
+      sidenav-container-background-color: map.get($system, surface),
+      sidenav-container-text-color: map.get($system, on-surface),
+      sidenav-content-background-color: map.get($system, background),
+      sidenav-content-text-color: map.get($system, on-surface),
 
-    // We use invert() here to have the darken the background color expected to be used.
-    // If the background is light, we use a dark backdrop. If the background is dark, we
-    // use a light backdrop. If the value isn't a color, Sass will throw an error so we
-    // fall back to something generic.
-    sidenav-scrim-color: if(meta.type-of($scrim-color) == color,
-      color.invert($scrim-color), $fallback-scrim-color),
+      // We use invert() here to have the darken the background color expected to be used.
+      // If the background is light, we use a dark backdrop. If the background is dark, we
+      // use a light backdrop. If the value isn't a color, Sass will throw an error so we
+      // fall back to something generic.
+      sidenav-scrim-color: if(meta.type-of($scrim-color) == color,
+        color.invert($scrim-color), $fallback-scrim-color),
+    ),
+    typography: (),
+    density: (),
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

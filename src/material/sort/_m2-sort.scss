@@ -1,27 +1,16 @@
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
 
   @return (
-    sort-arrow-color: map.get($system, on-surface),
+    base: (),
+    color: (
+      sort-arrow-color: map.get($system, on-surface),
+    ),
+    typography: (),
+    density: (),
   );
 }
 
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
-}
