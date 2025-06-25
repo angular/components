@@ -3437,12 +3437,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.15.32":
-  version: 22.15.32
-  resolution: "@types/node@npm:22.15.32"
+"@types/node@npm:22.15.33":
+  version: 22.15.33
+  resolution: "@types/node@npm:22.15.33"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/10b4c106d0c512a1d35ec08142bd7fb5cf2e1df93fc5627b3c69dd843dec4be07a47f1fa7ede232ad84762d75a372ea35028b79ee1e753b6f2adecd0b2cb2f71
+  checksum: 10/5734cbca7fc363f3d6ad191e1be645cc9885d642e9f90688892459f10629cf663d2206e7ed7b255dd476baaa86fb011aa09647e77520958b5993b391f793856f
   languageName: node
   linkType: hard
 
@@ -9794,7 +9794,7 @@ __metadata:
     "@angular/platform-browser": "npm:20.0.0-rc.2"
     "@angular/router": "npm:20.0.0-rc.2"
     "@types/jasmine": "npm:~5.1.7"
-    "@types/node": "npm:22.15.32"
+    "@types/node": "npm:22.15.33"
     glob: "npm:^7.2.0"
     jasmine-core: "npm:~5.8.0"
     karma: "npm:~6.4.4"
