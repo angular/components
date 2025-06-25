@@ -61,8 +61,8 @@ importers:
         specifier: 22.15.33
         version: 22.15.33
       '@types/selenium-webdriver':
-        specifier: 3.0.26
-        version: 3.0.26
+        specifier: 4.1.28
+        version: 4.1.28
       concurrently:
         specifier: ^9.0.0
         version: 9.1.2
@@ -88,8 +88,8 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.8.0)(karma-jasmine@4.0.2(karma@6.4.4))(karma@6.4.4)
       selenium-webdriver:
-        specifier: 3.6.0
-        version: 3.6.0
+        specifier: 4.33.0
+        version: 4.33.0
       ts-node:
         specifier: ~10.9.1
         version: 10.9.2(@types/node@22.15.33)(typescript@5.8.3)
@@ -815,6 +815,9 @@ packages:
   '@babel/types@7.27.1':
     resolution: {integrity: sha512-+EzkxvLNfiUeKMgy/3luqfsCWFRXLb7U6wNQTk60tovuckwB15B191tJWvpp4HjiQWdJkCxO3Wbvc6jlk3Xb2Q==}
     engines: {node: '>=6.9.0'}
+
+  '@bazel/runfiles@6.3.1':
+    resolution: {integrity: sha512-1uLNT5NZsUVIGS4syuHwTzZ8HycMPyr6POA3FCE4GbMtc4rhoJk8aZKtNIRthJYfL+iioppi+rTfH3olMPr9nA==}
 
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -1700,8 +1703,8 @@ packages:
   '@types/retry@0.12.2':
     resolution: {integrity: sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==}
 
-  '@types/selenium-webdriver@3.0.26':
-    resolution: {integrity: sha512-dyIGFKXfUFiwkMfNGn1+F6b80ZjR3uSYv1j6xVJSDlft5waZ2cwkHW4e7zNzvq7hiEackcgvBpmnXZrI1GltPg==}
+  '@types/selenium-webdriver@4.1.28':
+    resolution: {integrity: sha512-Au7CXegiS7oapbB16zxPToY4Cjzi9UQQMf3W2ZZM8PigMLTGR3iUAHjPUTddyE5g1SBjT/qpmvlsAQLBfNAdKg==}
 
   '@types/send@0.17.4':
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
@@ -3617,11 +3620,6 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rimraf@2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
-    hasBin: true
-
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     deprecated: Rimraf versions prior to v4 are no longer supported
@@ -3691,9 +3689,9 @@ packages:
   select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
 
-  selenium-webdriver@3.6.0:
-    resolution: {integrity: sha512-WH7Aldse+2P5bbFBO4Gle/nuQOdVwpHMTL6raL3uuBj/vPG07k6uzt3aiahu352ONBr5xXh0hDlM3LhtXPOC4Q==}
-    engines: {node: '>= 6.9.0'}
+  selenium-webdriver@4.33.0:
+    resolution: {integrity: sha512-5vRhk4iI0B9nYbEitfnCjPDXBfG6o9DNhj5DG2355eQo8idETknhj1tigqqlkHsGephSZwLZqEm/d+3e1stGUA==}
+    engines: {node: '>= 18.20.5'}
 
   selfsigned@2.4.1:
     resolution: {integrity: sha512-th5B4L2U+eGLq1TVh7zNRGBapioSORUeymIydxgFpwww9d2qyKvtuPU2jJuHvYAwwqi2Y596QBL3eEqcPEYL8Q==}
@@ -3956,10 +3954,6 @@ packages:
   tinyglobby@0.2.13:
     resolution: {integrity: sha512-mEwzpUgrLySlveBwEVDMKk5B57bhLPYovRfPAXD5gA/98Opn0rCDj3GtLwFvCvH5RK9uPCExUROW5NjDwvqkxw==}
     engines: {node: '>=12.0.0'}
-
-  tmp@0.0.30:
-    resolution: {integrity: sha512-HXdTB7lvMwcb55XFfrTM8CPr/IYREk4hVBFaQ4b/6nInrluSL86hfHm7vu0luYKCfyBZp2trCjpc8caC3vVM3w==}
-    engines: {node: '>=0.4.0'}
 
   tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
@@ -4270,14 +4264,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-
-  xml2js@0.4.23:
-    resolution: {integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==}
-    engines: {node: '>=4.0.0'}
-
-  xmlbuilder@11.0.1:
-    resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
-    engines: {node: '>=4.0'}
 
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -5266,6 +5252,8 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
+  '@bazel/runfiles@6.3.1': {}
+
   '@colors/colors@1.5.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
@@ -5987,7 +5975,10 @@ snapshots:
 
   '@types/retry@0.12.2': {}
 
-  '@types/selenium-webdriver@3.0.26': {}
+  '@types/selenium-webdriver@4.1.28':
+    dependencies:
+      '@types/node': 22.15.33
+      '@types/ws': 8.18.1
 
   '@types/send@0.17.4':
     dependencies:
@@ -8044,10 +8035,6 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rimraf@2.7.1:
-    dependencies:
-      glob: 7.2.3
-
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
@@ -8115,7 +8102,8 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sax@1.4.1: {}
+  sax@1.4.1:
+    optional: true
 
   schema-utils@4.3.2:
     dependencies:
@@ -8126,12 +8114,15 @@ snapshots:
 
   select-hose@2.0.0: {}
 
-  selenium-webdriver@3.6.0:
+  selenium-webdriver@4.33.0:
     dependencies:
+      '@bazel/runfiles': 6.3.1
       jszip: 3.10.1
-      rimraf: 2.7.1
-      tmp: 0.0.30
-      xml2js: 0.4.23
+      tmp: 0.2.3
+      ws: 8.18.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   selfsigned@2.4.1:
     dependencies:
@@ -8473,10 +8464,6 @@ snapshots:
       fdir: 6.4.4(picomatch@4.0.2)
       picomatch: 4.0.2
 
-  tmp@0.0.30:
-    dependencies:
-      os-tmpdir: 1.0.2
-
   tmp@0.0.33:
     dependencies:
       os-tmpdir: 1.0.2
@@ -8768,13 +8755,6 @@ snapshots:
   ws@8.17.1: {}
 
   ws@8.18.1: {}
-
-  xml2js@0.4.23:
-    dependencies:
-      sax: 1.4.1
-      xmlbuilder: 11.0.1
-
-  xmlbuilder@11.0.1: {}
 
   y18n@5.0.8: {}
 
