@@ -1,3 +1,12 @@
+<a name="19.2.19"></a>
+# 19.2.19 "strontium-shovel" (2025-06-25)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1b9061ad2](https://github.com/angular/components/commit/1b9061ad26b949b58e82077b0fa07aacac76b307) | fix | **core:** fix sass deprecation warning ([#31390](https://github.com/angular/components/pull/31390)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="19.2.18"></a>
 # 19.2.18 "calcium-coconut" (2025-05-28)
 
