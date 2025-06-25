@@ -1,3 +1,45 @@
+<a name="20.1.0-next.2"></a>
+# 20.1.0-next.2 "strontium-snack" (2025-06-25)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5564d7d01](https://github.com/angular/components/commit/5564d7d0163d3ab56429b3059c4c572f74214ab2) | feat | **menu:** add setActiveMenuItem to cdkMenu ([#31371](https://github.com/angular/components/pull/31371)) |
+| [423029287](https://github.com/angular/components/commit/423029287ca82d9ac834f309258056dd5815b6bb) | fix | **menu:** close sibling triggers when opening a menu ([#30894](https://github.com/angular/components/pull/30894)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9e942b4ba](https://github.com/angular/components/commit/9e942b4ba2d31e7af70b3468b2c9b42364f47998) | feat | **menu:** add support for context menu |
+| [5f4fa6218](https://github.com/angular/components/commit/5f4fa621894c7eff6a4d78b6ed9ea2c9ce0f7920) | fix | **button:** harness not picking up buttons with dynamic appearance ([#31327](https://github.com/angular/components/pull/31327)) |
+| [3bde4f78f](https://github.com/angular/components/commit/3bde4f78f49048b3231a89bacdeda232ce1fec76) | fix | **button:** update button golden ([#31346](https://github.com/angular/components/pull/31346)) |
+| [8c9cae0a8](https://github.com/angular/components/commit/8c9cae0a8c61939dcab325be597ee2ee0eec72d4) | fix | **chips:** sync with g3 ([#31393](https://github.com/angular/components/pull/31393)) |
+| [d52ede562](https://github.com/angular/components/commit/d52ede5627ceeed33122838c89afd38a1bfff4a4) | fix | **expansion:** add token for box shadow ([#31340](https://github.com/angular/components/pull/31340)) |
+| [e57aef291](https://github.com/angular/components/commit/e57aef291240c952aa854ea1fb731b05a8792094) | fix | **expansion:** use correct typography ([#31347](https://github.com/angular/components/pull/31347)) |
+| [0bdf51275](https://github.com/angular/components/commit/0bdf5127542572e41160a8d8e3e1784000ea5e9a) | fix | **input:** remove native clear button ([#31394](https://github.com/angular/components/pull/31394)) |
+| [663d8160e](https://github.com/angular/components/commit/663d8160eea50cf7c90207cc2611bbc2bac5813e) | fix | **input:** revert wheel workaround ([#31391](https://github.com/angular/components/pull/31391)) |
+| [89d9cd07b](https://github.com/angular/components/commit/89d9cd07bcf4e4c47d3f0966b22fb634b17c0d77) | fix | **slide-toggle:** use system colors ([#31303](https://github.com/angular/components/pull/31303)) |
+| [c10f376a5](https://github.com/angular/components/commit/c10f376a5fce0e88f41364e1507da13441eff754) | fix | **slide-toggle:** use token system for label text ([#31366](https://github.com/angular/components/pull/31366)) |
+| [0a47244b6](https://github.com/angular/components/commit/0a47244b6c7a7fa4c37a5acdbab35c7366094be5) | fix | **stepper:** use system color for error text ([#31333](https://github.com/angular/components/pull/31333)) |
+| [ea76df604](https://github.com/angular/components/commit/ea76df6040bf648679d2e2d91608b29ad10deb55) | fix | **tabs:** fix missing token values ([#31345](https://github.com/angular/components/pull/31345)) |
+| [f26ff4ece](https://github.com/angular/components/commit/f26ff4ece4a5092578f1e268a22583d904af725a) | fix | **toolbar:** use correct typography ([#31348](https://github.com/angular/components/pull/31348)) |
+| [ae3b0bfcf](https://github.com/angular/components/commit/ae3b0bfcf3d84b353c08fb9ca9731ea1562a83c5) | fix | **tree:** use correct typography ([#31349](https://github.com/angular/components/pull/31349)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c87ec31b](https://github.com/angular/components/commit/2c87ec31b5a3c6ca6fdfc19d99166aa20865f6e0) | fix | invalid URL when playlist is passed in without videoId ([#31403](https://github.com/angular/components/pull/31403)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cdc0dab26](https://github.com/angular/components/commit/cdc0dab26179c9e0b48b1e519dd3ed9b924dab3c) | feat | **tabs:** add setDefaultState and unit tests, refactor the content children strategy ([#31374](https://github.com/angular/components/pull/31374)) |
+| [97d60c537](https://github.com/angular/components/commit/97d60c5378c54d2e68bd18e794b40bf0dab08da5) | feat | **tree:** add tree directives, example, and tests ([#31350](https://github.com/angular/components/pull/31350)) |
+| [9a856ad55](https://github.com/angular/components/commit/9a856ad5592d2447d82b4f774acc75216488f94c) | fix | **tabs:** fix tabs example styles ([#31382](https://github.com/angular/components/pull/31382)) |
+| [ea700e6d8](https://github.com/angular/components/commit/ea700e6d817699b99af15276affac3a4013e61fb) | fix | **ui-patterns:** add guardrails to selectOne for edge cases ([#31402](https://github.com/angular/components/pull/31402)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e462301f8](https://github.com/angular/components/commit/e462301f8f6c53f9b54deff0f4684e21ef4ec183) | fix | use inline m2 token definitions ([#31359](https://github.com/angular/components/pull/31359)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.4"></a>
 # 20.0.4 "strontium-shack" (2025-06-25)
 ### cdk
