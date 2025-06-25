@@ -139,7 +139,7 @@
     "shelljs": "^0.10.0",
     "slugify": "^1.6.6",
     "source-map-support": "^0.5.21",
-    "stylelint": "^14.14.0",
+    "stylelint": "^16.0.0",
     "terser": "^5.10.0",
     "ts-node": "^10.9.1",
     "tsec": "0.2.8",
