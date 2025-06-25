@@ -594,13 +594,15 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       // Calling `playVideo` on load doesn't appear to actually play
       // the video so we need to trigger it through `playerVars` instead.
       playerVars: playVideo ? {...(this.playerVars || {}), autoplay: 1} : this.playerVars,
-    }
-    // We only want to injecct a videoId if one is provided, otherwise loading a playlist via playerVars.list, the missing videoId will create a null value in the youtube iframe url and that can trigger a JS error `Invalid video id` in widget api.
+    };
+    // We only want to injecct a videoId if one is provided, otherwise loading a playlist via
+    // playerVars.list, the missing videoId will create a null value in the youtube iframe url
+    // and that can trigger a JS error `Invalid video id` in widget api.
     if (this.videoId) {
       params.videoId = this.videoId;
     }
     const player = this._ngZone.runOutsideAngular(
-      () => new YT.Player(this.youtubeContainer.nativeElement, params)
+      () => new YT.Player(this.youtubeContainer.nativeElement, params),
     );
 
     const whenReady = (event: YT.PlayerEvent) => {
@@ -713,9 +715,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
                 player.addEventListener(name, listener);
               },
               listener => {
-                // The API seems to throw when we try to unbind from a destroyed player and it doesn't
-                // expose whether the player has been destroyed so we have to wrap it in a try/catch to
-                // prevent the entire stream from erroring out.
+                // The API seems to throw when we try to unbind from a destroyed player and it
+                // doesn'texpose whether the player has been destroyed so we have to wrap it in a
+                // try/catch to prevent the entire stream from erroring out.
                 try {
                   player?.removeEventListener?.(name, listener);
                 } catch {}
