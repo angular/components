@@ -2,47 +2,29 @@
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  @return (
-    tree-container-background-color: map.get($system, surface),
-    tree-node-text-color: map.get($system, on-surface),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    tree-node-text-font: map.get($system, body-medium-font),
-    tree-node-text-size: map.get($system, body-medium-size),
-    tree-node-text-weight: map.get($system, body-medium-weight),
-
-    // TODO(crisbeto): provide tokens for line height and letter spacing to match other components.
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
-  $min-height-scale: (
-    0: 48px,
-    -1: 44px,
-    -2: 40px,
-    -3: 36px,
-    -4: 28px,
-  );
 
   @return (
-    tree-node-min-height: map.get($min-height-scale, $density-scale)
+    base: (),
+    color: (
+      tree-container-background-color: map.get($system, surface),
+      tree-node-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      // TODO(crisbeto): provide tokens for line height and letter spacing
+      tree-node-text-font: map.get($system, body-medium-font),
+      tree-node-text-size: map.get($system, body-medium-size),
+      tree-node-text-weight: map.get($system, body-medium-weight),),
+    density: (
+      tree-node-min-height: map.get((
+        0: 48px,
+        -1: 44px,
+        -2: 40px,
+        -3: 36px,
+        -4: 28px,
+      ), $density-scale)
+    ),
   );
 }

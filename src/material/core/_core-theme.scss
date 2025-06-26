@@ -14,7 +14,7 @@
 @use 'sass:map';
 
 @mixin base($theme) {
-  $tokens: m2-app.get-unthemable-tokens();
+  $tokens: map.get(m2-app.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-app.get-tokens($theme), base);
   }
@@ -28,7 +28,7 @@
 }
 
 @mixin color($theme) {
-  $tokens: m2-app.get-color-tokens($theme);
+  $tokens: map.get(m2-app.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-app.get-tokens($theme), color);
   }
@@ -42,7 +42,7 @@
 }
 
 @mixin typography($theme) {
-  $tokens: m2-app.get-typography-tokens($theme);
+  $tokens: map.get(m2-app.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-app.get-tokens($theme), typography);
   }
@@ -56,7 +56,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-app.get-density-tokens($theme);
+  $tokens: map.get(m2-app.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-app.get-tokens($theme), density);
   }

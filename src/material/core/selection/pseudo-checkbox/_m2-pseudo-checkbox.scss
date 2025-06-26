@@ -1,17 +1,25 @@
 @use '../../theming/inspection';
 @use 'sass:map';
+@use 'sass:meta';
 @use '../../tokens/m2-utils';
 @use '../../tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return ();
+@function get-tokens($theme) {
+  @return (
+    base: (),
+    color: private-get-color-palette-color-tokens($theme, secondary),
+    typography: (),
+    density: (),
+  );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color-variant) {
-  $is-dark: inspection.get-theme-type($theme) == dark;
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
+  // TODO: Use system colors instead of checking theme type
+  $is-dark: false;
+  @if (meta.type-of($theme) == map and map.get($theme, color)) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+  }
   $disabled-color: if($is-dark, #686868, #b0b0b0);
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, secondary, $color-variant);
@@ -24,16 +32,6 @@
     pseudo-checkbox-full-disabled-unselected-icon-color: $disabled-color,
     pseudo-checkbox-full-disabled-selected-icon-color: $disabled-color,
     pseudo-checkbox-minimal-selected-checkmark-color: map.get($system, secondary),
-    pseudo-checkbox-minimal-disabled-selected-checkmark-color: if($is-dark, #686868, #b0b0b0),
+    pseudo-checkbox-minimal-disabled-selected-checkmark-color: $disabled-color,
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

@@ -4,94 +4,103 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
 
-  // visible-track-opacity and hidden-track-opacity:
-  // The hidden and visible track represent whichever track is visible or
-  // hidden in the ui. This could be the .mdc-switch__track :before or
-  // :after depending on whether the switch is selected or unselected.
-  //
-  // The m2 slide-toggle uses transforms to hide & show the tracks while
-  // the m3 slide-toggle uses opacity.
   @return (
-    slide-toggle-disabled-handle-opacity: 0.38,
-    slide-toggle-disabled-selected-handle-opacity: 0.38,
-    slide-toggle-disabled-selected-icon-opacity: 0.38,
-    slide-toggle-disabled-track-opacity: 0.12,
-    slide-toggle-disabled-unselected-handle-opacity: 0.38,
-    slide-toggle-disabled-unselected-icon-opacity: 0.38,
-    slide-toggle-disabled-unselected-track-outline-color: transparent,
-    slide-toggle-disabled-unselected-track-outline-width: 1px,
-    slide-toggle-handle-height: 20px,
-    slide-toggle-handle-shape: 10px,
-    slide-toggle-handle-width: 20px,
-    slide-toggle-hidden-track-opacity: 1,
-    slide-toggle-hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
-    slide-toggle-pressed-handle-size: 20px,
-    slide-toggle-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    slide-toggle-selected-handle-horizontal-margin: 0,
-    slide-toggle-selected-handle-size: 20px,
-    slide-toggle-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    slide-toggle-selected-icon-size: 18px,
-    slide-toggle-selected-pressed-handle-horizontal-margin: 0,
-    slide-toggle-selected-pressed-state-layer-opacity:
-        map.get($system, pressed-state-layer-opacity),
-    slide-toggle-selected-track-outline-color: transparent,
-    slide-toggle-selected-track-outline-width: 1px,
-    slide-toggle-selected-with-icon-handle-horizontal-margin: 0,
-    slide-toggle-track-height: 14px,
-    slide-toggle-track-outline-color: transparent,
-    slide-toggle-track-outline-width: 1px,
-    slide-toggle-track-shape: 7px,
-    slide-toggle-track-width: 36px,
-    slide-toggle-unselected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    slide-toggle-unselected-handle-horizontal-margin: 0,
-    slide-toggle-unselected-handle-size: 20px,
-    slide-toggle-unselected-hover-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    slide-toggle-unselected-icon-size: 18px,
-    slide-toggle-unselected-pressed-handle-horizontal-margin: 0,
-    slide-toggle-unselected-pressed-state-layer-opacity: 0.1,
-    slide-toggle-unselected-with-icon-handle-horizontal-margin: 0,
-    slide-toggle-visible-track-opacity: 1,
-    slide-toggle-visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
-    slide-toggle-with-icon-handle-size: 20px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  @return map.merge(
-      private-get-color-palette-color-tokens($theme, primary),
-      (
-        slide-toggle-disabled-label-text-color:
-            m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-        slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
-        slide-toggle-disabled-selected-handle-color: map.get($system, on-surface),
-        slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
-        slide-toggle-disabled-unselected-handle-color: map.get($system, on-surface),
-        slide-toggle-disabled-unselected-icon-color: map.get($system, surface-variant),
-        slide-toggle-disabled-unselected-track-color: map.get($system, on-surface),
-        slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
-        slide-toggle-handle-surface-color: map.get($system, surface),
-        slide-toggle-label-text-color: map.get($system, on-surface),
-        slide-toggle-unselected-hover-handle-color: map.get($system, inverse-surface),
-        slide-toggle-unselected-focus-handle-color: map.get($system, inverse-surface),
-        slide-toggle-unselected-focus-state-layer-color: map.get($system, on-surface),
-        slide-toggle-unselected-focus-track-color: map.get($system, outline),
-        slide-toggle-unselected-icon-color: map.get($system, surface-variant),
-        slide-toggle-unselected-handle-color: map.get($system, on-surface-variant),
-        slide-toggle-unselected-hover-state-layer-color: map.get($system, on-surface),
-        slide-toggle-unselected-hover-track-color: map.get($system, outline),
-        slide-toggle-unselected-pressed-handle-color: map.get($system, inverse-surface),
-        slide-toggle-unselected-pressed-track-color: map.get($system, outline),
-        slide-toggle-unselected-pressed-state-layer-color: map.get($system, on-surface),
-        slide-toggle-unselected-track-color: map.get($system, outline),
-      )
+    base: (
+      // visible-track-opacity and hidden-track-opacity:
+      // The hidden and visible track represent whichever track is visible or
+      // hidden in the ui. This could be the .mdc-switch__track :before or
+      // :after depending on whether the switch is selected or unselected.
+      //
+      // The m2 slide-toggle uses transforms to hide & show the tracks while
+      // the m3 slide-toggle uses opacity.
+      slide-toggle-disabled-handle-opacity: 0.38,
+      slide-toggle-disabled-selected-handle-opacity: 0.38,
+      slide-toggle-disabled-selected-icon-opacity: 0.38,
+      slide-toggle-disabled-track-opacity: 0.12,
+      slide-toggle-disabled-unselected-handle-opacity: 0.38,
+      slide-toggle-disabled-unselected-icon-opacity: 0.38,
+      slide-toggle-disabled-unselected-track-outline-color: transparent,
+      slide-toggle-disabled-unselected-track-outline-width: 1px,
+      slide-toggle-handle-height: 20px,
+      slide-toggle-handle-shape: 10px,
+      slide-toggle-handle-width: 20px,
+      slide-toggle-hidden-track-opacity: 1,
+      slide-toggle-hidden-track-transition: transform 75ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
+      slide-toggle-pressed-handle-size: 20px,
+      slide-toggle-selected-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      slide-toggle-selected-handle-horizontal-margin: 0,
+      slide-toggle-selected-handle-size: 20px,
+      slide-toggle-selected-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      slide-toggle-selected-icon-size: 18px,
+      slide-toggle-selected-pressed-handle-horizontal-margin: 0,
+      slide-toggle-selected-pressed-state-layer-opacity:
+          map.get($system, pressed-state-layer-opacity),
+      slide-toggle-selected-track-outline-color: transparent,
+      slide-toggle-selected-track-outline-width: 1px,
+      slide-toggle-selected-with-icon-handle-horizontal-margin: 0,
+      slide-toggle-track-height: 14px,
+      slide-toggle-track-outline-color: transparent,
+      slide-toggle-track-outline-width: 1px,
+      slide-toggle-track-shape: 7px,
+      slide-toggle-track-width: 36px,
+      slide-toggle-unselected-focus-state-layer-opacity:
+          map.get($system, focus-state-layer-opacity),
+      slide-toggle-unselected-handle-horizontal-margin: 0,
+      slide-toggle-unselected-handle-size: 20px,
+      slide-toggle-unselected-hover-state-layer-opacity:
+          map.get($system, focus-state-layer-opacity),
+      slide-toggle-unselected-icon-size: 18px,
+      slide-toggle-unselected-pressed-handle-horizontal-margin: 0,
+      slide-toggle-unselected-pressed-state-layer-opacity: 0.1,
+      slide-toggle-unselected-with-icon-handle-horizontal-margin: 0,
+      slide-toggle-visible-track-opacity: 1,
+      slide-toggle-visible-track-transition: transform 75ms 0ms cubic-bezier(0, 0, 0.2, 1),
+      slide-toggle-with-icon-handle-size: 20px,
+    ),
+    color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      slide-toggle-disabled-label-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),
+      slide-toggle-disabled-selected-handle-color: map.get($system, on-surface),
+      slide-toggle-disabled-selected-track-color: map.get($system, on-surface),
+      slide-toggle-disabled-unselected-handle-color: map.get($system, on-surface),
+      slide-toggle-disabled-unselected-icon-color: map.get($system, surface-variant),
+      slide-toggle-disabled-unselected-track-color: map.get($system, on-surface),
+      slide-toggle-handle-elevation-shadow: elevation.get-box-shadow(1),
+      slide-toggle-handle-surface-color: map.get($system, surface),
+      slide-toggle-label-text-color: map.get($system, on-surface),
+      slide-toggle-unselected-hover-handle-color: map.get($system, inverse-surface),
+      slide-toggle-unselected-focus-handle-color: map.get($system, inverse-surface),
+      slide-toggle-unselected-focus-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-focus-track-color: map.get($system, outline),
+      slide-toggle-unselected-icon-color: map.get($system, surface-variant),
+      slide-toggle-unselected-handle-color: map.get($system, on-surface-variant),
+      slide-toggle-unselected-hover-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-hover-track-color: map.get($system, outline),
+      slide-toggle-unselected-pressed-handle-color: map.get($system, inverse-surface),
+      slide-toggle-unselected-pressed-track-color: map.get($system, outline),
+      slide-toggle-unselected-pressed-state-layer-color: map.get($system, on-surface),
+      slide-toggle-unselected-track-color: map.get($system, outline))
+    ),
+    typography: (
+      slide-toggle-label-text-font: map.get($system, body-medium-font),
+      slide-toggle-label-text-line-height: map.get($system, body-medium-line-height),
+      slide-toggle-label-text-size: map.get($system, body-medium-size),
+      slide-toggle-label-text-tracking: map.get($system, body-medium-tracking),
+      slide-toggle-label-text-weight: map.get($system, body-medium-weight)
+    ),
+    density: (
+      slide-toggle-state-layer-size: map.get((
+        0: 40px,
+        -1: 36px,
+        -2: 32px,
+        -3: 28px,
+      ), $density-scale)
+    ),
   );
 }
 
@@ -114,33 +123,5 @@
     slide-toggle-selected-hover-track-color: map.get($system, inverse-primary),
     slide-toggle-selected-pressed-track-color: map.get($system, inverse-primary),
     slide-toggle-selected-track-color: map.get($system, inverse-primary),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    slide-toggle-label-text-font: map.get($system, body-medium-font),
-    slide-toggle-label-text-line-height: map.get($system, body-medium-line-height),
-    slide-toggle-label-text-size: map.get($system, body-medium-size),
-    slide-toggle-label-text-tracking: map.get($system, body-medium-tracking),
-    slide-toggle-label-text-weight: map.get($system, body-medium-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
-
-  @return (
-    // The diameter of the handle ripple.
-    slide-toggle-state-layer-size: map.get((
-      0: 40px,
-      -1: 36px,
-      -2: 32px,
-      -3: 28px,
-    ), $density-scale)
   );
 }

@@ -7,48 +7,59 @@ $_default-size: 22px;
 $_small-size: $_default-size - 6px;
 $_large-size: $_default-size + 6px;
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  $default-size: $_default-size;
-  $small-size: $_small-size;
-  $large-size: $_large-size;
+@function get-tokens($theme) {
+  $default-size: 22px;
+  $small-size: $default-size - 6px;
+  $large-size: $default-size + 6px;
+  $base-size: 12px;
 
-  @return (
-    badge-container-shape: 50%,
-    badge-container-size: unset,
-    badge-small-size-container-size: unset,
-    badge-large-size-container-size: unset,
-
-    badge-legacy-container-size: $default-size,
-    badge-legacy-small-size-container-size: $small-size,
-    badge-legacy-large-size-container-size: $large-size,
-
-    badge-container-offset: math.div($default-size, -2) 0,
-    badge-small-size-container-offset: math.div($small-size, -2) 0,
-    badge-large-size-container-offset: math.div($large-size, -2) 0,
-
-    badge-container-overlap-offset: math.div($default-size, -2),
-    badge-small-size-container-overlap-offset: math.div($small-size, -2),
-    badge-large-size-container-overlap-offset: math.div($large-size, -2),
-
-    badge-container-padding: 0,
-    badge-small-size-container-padding: 0,
-    badge-large-size-container-padding: 0,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
-  $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
+  $disabled-container: m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
   $primary-color-tokens: private-get-color-palette-color-tokens($theme, primary);
-  @return map.merge($primary-color-tokens, (
-    badge-disabled-state-background-color: $disabled-container,
-    badge-disabled-state-text-color: $disabled,
-  ));
-}
+
+  @return (
+    base: (
+      badge-container-shape: 50%,
+      badge-container-size: unset,
+      badge-small-size-container-size: unset,
+      badge-large-size-container-size: unset,
+
+      badge-legacy-container-size: $default-size,
+      badge-legacy-small-size-container-size: $small-size,
+      badge-legacy-large-size-container-size: $large-size,
+
+      badge-container-offset: math.div($default-size, -2) 0,
+      badge-small-size-container-offset: math.div($small-size, -2) 0,
+      badge-large-size-container-offset: math.div($large-size, -2) 0,
+
+      badge-container-overlap-offset: math.div($default-size, -2),
+      badge-small-size-container-overlap-offset: math.div($small-size, -2),
+      badge-large-size-container-overlap-offset: math.div($large-size, -2),
+
+      badge-container-padding: 0,
+      badge-small-size-container-padding: 0,
+      badge-large-size-container-padding: 0,
+    ),
+    color: map.merge($primary-color-tokens, (
+      badge-disabled-state-background-color: $disabled-container,
+      badge-disabled-state-text-color: $disabled,
+    )),
+    typography: (
+      badge-text-font: map.get($system, body-medium-font),
+      badge-line-height: $_default-size,
+      badge-text-size: $base-size,
+      badge-text-weight: 600,
+
+      badge-small-size-text-size: $base-size * 0.75,
+      badge-small-size-line-height: $_small-size,
+
+      badge-large-size-text-size: $base-size * 2,
+      badge-large-size-line-height: $_large-size,
+    ),
+    density: (),
+  );
+};
 
 // Generates the tokens used to theme the badge based on a palette.
 @function private-get-color-palette-color-tokens($theme, $color-variant) {
@@ -59,29 +70,4 @@ $_large-size: $_default-size + 6px;
     badge-background-color: map.get($system, primary),
     badge-text-color: map.get($system, on-primary),
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  $base-size: 12px;
-
-  @return (
-    badge-text-font: map.get($system, body-medium-font),
-    badge-line-height: $_default-size,
-    badge-text-size: $base-size,
-    badge-text-weight: 600,
-
-    badge-small-size-text-size: $base-size * 0.75,
-    badge-small-size-line-height: $_small-size,
-
-    badge-large-size-text-size: $base-size * 2,
-    badge-large-size-line-height: $_large-size,
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

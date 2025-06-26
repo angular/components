@@ -2,54 +2,35 @@
 @use '../core/theming/theming';
 @use '../core/tokens/m2-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return private-get-color-palette-color-tokens(
-    $background-color: map.get($system, surface),
-    $text-color: map.get($system, on-surface),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    toolbar-title-text-font: map.get($system, title-small-font),
-    toolbar-title-text-line-height: map.get($system, title-small-line-height),
-    toolbar-title-text-size: map.get($system, title-small-size),
-    toolbar-title-text-tracking: map.get($system, title-small-tracking),
-    toolbar-title-text-weight: map.get($system, title-small-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
-  $standard-scale: (
-    0: 64px,
-    -1: 60px,
-    -2: 56px,
-    -3: 52px,
-  );
-
-  $mobile-scale: (
-    0: 56px,
-    -1: 52px,
-    -2: 48px,
-    -3: 44px,
-  );
 
   @return (
-    toolbar-standard-height: map.get($standard-scale, $density-scale),
-    toolbar-mobile-height: map.get($mobile-scale, $density-scale),
+    base: (),
+    color: private-get-color-palette-color-tokens(
+        map.get($system, surface), map.get($system, on-surface)),
+    typography: (
+      toolbar-title-text-font: map.get($system, title-small-font),
+      toolbar-title-text-line-height: map.get($system, title-small-line-height),
+      toolbar-title-text-size: map.get($system, title-small-size),
+      toolbar-title-text-tracking: map.get($system, title-small-tracking),
+      toolbar-title-text-weight: map.get($system, title-small-weight),
+    ),
+    density: (
+      toolbar-standard-height: map.get((
+        0: 64px,
+        -1: 60px,
+        -2: 56px,
+        -3: 52px,
+      ), $density-scale),
+      toolbar-mobile-height: map.get((
+        0: 56px,
+        -1: 52px,
+        -2: 48px,
+        -3: 44px,
+      ), $density-scale),
+    ),
   );
 }
 

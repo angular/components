@@ -5,7 +5,7 @@
 @use 'sass:map';
 
 @mixin base($theme) {
-  $tokens: m2-icon.get-unthemable-tokens();
+  $tokens: map.get(m2-icon.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon.get-tokens($theme), base);
   }
@@ -17,7 +17,7 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-icon.get-color-tokens($theme);
+  $tokens: map.get(m2-icon.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon.get-tokens($theme, $color-variant), color);
   }
@@ -50,7 +50,7 @@
 /// Outputs typography theme styles for the mat-icon.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
-  $tokens: m2-icon.get-typography-tokens($theme);
+  $tokens: map.get(m2-icon.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon.get-tokens($theme), typography);
   }
@@ -61,7 +61,7 @@
 /// Outputs density theme styles for the mat-icon.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
-  $tokens: m2-icon.get-density-tokens($theme);
+  $tokens: map.get(m2-icon.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-icon.get-tokens($theme), density);
   }

@@ -5,7 +5,7 @@
 @use 'sass:map';
 
 @mixin base($theme) {
-  $tokens: m2-progress-bar.get-unthemable-tokens();
+  $tokens: map.get(m2-progress-bar.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-progress-bar.get-tokens($theme), base);
   }
@@ -19,16 +19,16 @@
         map.get(m3-progress-bar.get-tokens($theme, $color-variant), color));
   } @else {
     .mat-mdc-progress-bar {
-      $tokens: m2-progress-bar.get-color-tokens($theme, primary);
+      $tokens: m2-progress-bar.private-get-color-palette-color-tokens($theme, primary);
       @include token-utils.values($tokens);
 
       &.mat-accent {
-        $tokens: m2-progress-bar.get-color-tokens($theme, secondary);
+        $tokens: m2-progress-bar.private-get-color-palette-color-tokens($theme, secondary);
         @include token-utils.values($tokens);
       }
 
       &.mat-warn {
-        $tokens: m2-progress-bar.get-color-tokens($theme, error);
+        $tokens: m2-progress-bar.private-get-color-palette-color-tokens($theme, error);
         @include token-utils.values($tokens);
       }
     }
@@ -36,7 +36,7 @@
 }
 
 @mixin typography($theme) {
-  $tokens: m2-progress-bar.get-typography-tokens($theme);
+  $tokens: map.get(m2-progress-bar.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-progress-bar.get-tokens($theme), typography);
   }
@@ -45,7 +45,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-progress-bar.get-density-tokens($theme);
+  $tokens: map.get(m2-progress-bar.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-progress-bar.get-tokens($theme), density);
   }

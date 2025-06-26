@@ -6,7 +6,7 @@
 @use 'sass:map';
 
 @mixin base($theme) {
-  $tokens: m2-form-field.get-unthemable-tokens();
+  $tokens: map.get(m2-form-field.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-form-field.get-tokens($theme), base);
   }
@@ -18,7 +18,7 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-form-field.get-color-tokens($theme);
+  $tokens: map.get(m2-form-field.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-form-field.get-tokens($theme, $color-variant), color);
   }
@@ -39,7 +39,7 @@
 }
 
 @mixin typography($theme) {
-  $tokens: m2-form-field.get-typography-tokens($theme);
+  $tokens: map.get(m2-form-field.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-form-field.get-tokens($theme), typography);
   }
@@ -48,7 +48,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-form-field.get-density-tokens($theme);
+  $tokens: map.get(m2-form-field.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-form-field.get-tokens($theme), density);
   }

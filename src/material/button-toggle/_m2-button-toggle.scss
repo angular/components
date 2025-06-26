@@ -3,83 +3,66 @@
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    button-toggle-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    button-toggle-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    button-toggle-legacy-focus-state-layer-opacity: 1,
-    button-toggle-legacy-height: 36px,
-    button-toggle-legacy-shape: 2px,
-    button-toggle-shape: 4px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  @return (
-    button-toggle-background-color: map.get($system, surface),
-    button-toggle-disabled-selected-state-background-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-    button-toggle-disabled-selected-state-text-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-    button-toggle-disabled-state-background-color: map.get($system, surface),
-    button-toggle-disabled-state-text-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-    button-toggle-divider-color: map.get($system, outline),
-    button-toggle-legacy-disabled-selected-state-background-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-    button-toggle-legacy-disabled-state-background-color: map.get($system, surface),
-    button-toggle-legacy-disabled-state-text-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
-    button-toggle-legacy-selected-state-background-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-    button-toggle-legacy-selected-state-text-color: map.get($system, on-surface),
-    button-toggle-legacy-state-layer-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-    button-toggle-legacy-text-color: map.get($system, on-surface),
-    button-toggle-selected-state-background-color:
-        m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
-    button-toggle-selected-state-text-color: map.get($system, on-surface),
-    button-toggle-state-layer-color: map.get($system, on-surface),
-    button-toggle-text-color: map.get($system, on-surface),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    button-toggle-label-text-font: map.get($system, body-large-font),
-    button-toggle-label-text-line-height: map.get($system, body-large-line-height),
-    button-toggle-label-text-size: map.get($system, body-large-size),
-    button-toggle-label-text-tracking: map.get($system, body-large-tracking),
-    button-toggle-label-text-weight: map.get($system, body-large-weight),
-    button-toggle-legacy-label-text-font: map.get($system, body-large-font),
-    button-toggle-legacy-label-text-line-height: map.get($system, body-large-line-height),
-    button-toggle-legacy-label-text-size: map.get($system, body-large-size),
-    button-toggle-legacy-label-text-tracking: map.get($system, body-large-tracking),
-    button-toggle-legacy-label-text-weight: map.get($system, body-large-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -4);
-  $size-scale: (
-    0: 48px,
-    -1: 44px,
-    -2: 40px,
-    -3: 36px,
-    -4: 24px,
-  );
 
   @return (
-    button-toggle-height: map.get($size-scale, $density-scale)
+    base: (
+      button-toggle-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      button-toggle-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      button-toggle-legacy-focus-state-layer-opacity: 1,
+      button-toggle-legacy-height: 36px,
+      button-toggle-legacy-shape: 2px,
+      button-toggle-shape: 4px,
+    ),
+    color: (
+      button-toggle-background-color: map.get($system, surface),
+      button-toggle-disabled-selected-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      button-toggle-disabled-selected-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      button-toggle-disabled-state-background-color: map.get($system, surface),
+      button-toggle-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      button-toggle-divider-color: map.get($system, outline),
+      button-toggle-legacy-disabled-selected-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      button-toggle-legacy-disabled-state-background-color: map.get($system, surface),
+      button-toggle-legacy-disabled-state-text-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
+      button-toggle-legacy-selected-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      button-toggle-legacy-selected-state-text-color: map.get($system, on-surface),
+      button-toggle-legacy-state-layer-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      button-toggle-legacy-text-color: map.get($system, on-surface),
+      button-toggle-selected-state-background-color:
+          m3-utils.color-with-opacity(map.get($system, on-surface), 12%),
+      button-toggle-selected-state-text-color: map.get($system, on-surface),
+      button-toggle-state-layer-color: map.get($system, on-surface),
+      button-toggle-text-color: map.get($system, on-surface),
+    ),
+    typography: (
+      button-toggle-label-text-font: map.get($system, body-large-font),
+      button-toggle-label-text-line-height: map.get($system, body-large-line-height),
+      button-toggle-label-text-size: map.get($system, body-large-size),
+      button-toggle-label-text-tracking: map.get($system, body-large-tracking),
+      button-toggle-label-text-weight: map.get($system, body-large-weight),
+      button-toggle-legacy-label-text-font: map.get($system, body-large-font),
+      button-toggle-legacy-label-text-line-height: map.get($system, body-large-line-height),
+      button-toggle-legacy-label-text-size: map.get($system, body-large-size),
+      button-toggle-legacy-label-text-tracking: map.get($system, body-large-tracking),
+      button-toggle-legacy-label-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (
+      button-toggle-height: map.get((
+        0: 48px,
+        -1: 44px,
+        -2: 40px,
+        -3: 36px,
+        -4: 24px,
+      ), $density-scale)
+    ),
   );
 }

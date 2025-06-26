@@ -2,54 +2,42 @@
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    dialog-container-shape: 4px,
-    dialog-container-elevation-shadow: elevation.get-box-shadow(24),
-    dialog-container-max-width: 80vw,
-    dialog-container-small-max-width: 80vw,
-    dialog-container-min-width: 0,
-    dialog-actions-alignment: start,
-    dialog-actions-padding: 8px,
-    dialog-content-padding: 20px 24px,
-    dialog-with-actions-content-padding: 20px 24px,
-
-    // Note: the CSS class is `title` while the M2 tokens call it `subhead`.
-    // M3 calls it `headline` which is what we're aligning with.
-    dialog-headline-padding: 0 24px 9px,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  @return (
-    dialog-container-color: map.get($system, surface),
-    dialog-subhead-color: map.get($system, on-surface),
-    dialog-supporting-text-color: map.get($system, on-surface-variant),
-  );
-}
 
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
   @return (
-    dialog-subhead-font: map.get($system, title-small-font),
-    dialog-subhead-line-height: map.get($system, title-small-line-height),
-    dialog-subhead-size: map.get($system, title-small-size),
-    dialog-subhead-weight: map.get($system, title-small-weight),
-    dialog-subhead-tracking: map.get($system, title-small-tracking),
-    dialog-supporting-text-font: map.get($system, body-large-font),
-    dialog-supporting-text-line-height: map.get($system, body-large-line-height),
-    dialog-supporting-text-size: map.get($system, body-large-size),
-    dialog-supporting-text-weight: map.get($system, body-large-weight),
-    dialog-supporting-text-tracking: map.get($system, body-large-tracking),
-  );
-}
+    base: (
+      dialog-container-shape: 4px,
+      dialog-container-elevation-shadow: elevation.get-box-shadow(24),
+      dialog-container-max-width: 80vw,
+      dialog-container-small-max-width: 80vw,
+      dialog-container-min-width: 0,
+      dialog-actions-alignment: start,
+      dialog-actions-padding: 8px,
+      dialog-content-padding: 20px 24px,
+      dialog-with-actions-content-padding: 20px 24px,
 
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
+      // Note: the CSS class is `title` while the M2 tokens call it `subhead`.
+      // M3 calls it `headline` which is what we're aligning with.
+      dialog-headline-padding: 0 24px 9px,
+    ),
+    color: (
+      dialog-container-color: map.get($system, surface),
+      dialog-subhead-color: map.get($system, on-surface),
+      dialog-supporting-text-color: map.get($system, on-surface-variant),
+    ),
+    typography: (
+      dialog-subhead-font: map.get($system, title-small-font),
+      dialog-subhead-line-height: map.get($system, title-small-line-height),
+      dialog-subhead-size: map.get($system, title-small-size),
+      dialog-subhead-weight: map.get($system, title-small-weight),
+      dialog-subhead-tracking: map.get($system, title-small-tracking),
+      dialog-supporting-text-font: map.get($system, body-large-font),
+      dialog-supporting-text-line-height: map.get($system, body-large-line-height),
+      dialog-supporting-text-size: map.get($system, body-large-size),
+      dialog-supporting-text-weight: map.get($system, body-large-weight),
+      dialog-supporting-text-tracking: map.get($system, body-large-tracking),
+    ),
+    density: (),
+  );
 }

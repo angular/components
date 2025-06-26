@@ -2,35 +2,24 @@
 @use '../core/tokens/m3-utils';
 @use 'sass:map';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-//
-// Tokens that are available in MDC, but not used in Angular Material should be mapped to `null`.
-// `null` indicates that we are intentionally choosing not to emit a slot or value for the token in
-// our CSS.
-@function get-unthemable-tokens() {
+@function get-tokens($theme) {
   @return (
-    progress-spinner-active-indicator-width: 4px,
-    progress-spinner-size: 48px,
+    base: (
+      progress-spinner-active-indicator-width: 4px,
+      progress-spinner-size: 48px,
+    ),
+    color: private-get-color-palette-color-tokens($theme, primary),
+    typography: (),
+    density: (),
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color-variant) {
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
     progress-spinner-active-indicator-color: map.get($system, primary)
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  @return ();
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

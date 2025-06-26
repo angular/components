@@ -4,19 +4,37 @@
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
+@function get-tokens($theme) {
+  $system: m2-utils.get-system($theme);
+
   @return (
-    datepicker-calendar-container-shape: 4px,
-    datepicker-calendar-container-touch-shape: 4px,
-    datepicker-calendar-container-elevation-shadow: elevation.get-box-shadow(4),
-    datepicker-calendar-container-touch-elevation-shadow: elevation.get-box-shadow(24),
+    base: (
+      datepicker-calendar-container-shape: 4px,
+      datepicker-calendar-container-touch-shape: 4px,
+      datepicker-calendar-container-elevation-shadow: elevation.get-box-shadow(4),
+      datepicker-calendar-container-touch-elevation-shadow: elevation.get-box-shadow(24),
+    ),
+    color: private-get-color-palette-color-tokens($theme, primary),
+    typography: (
+      // TODO(crisbeto): the typography tokens for other components set every typography dimension
+      // of an element (e.g. size, weight, line height, letter spacing). These tokens only set the
+      // values that were set in the previous theming API to reduce the amount of subtle screenshot
+      // differences. We should look into introducing the other tokens in a follow-up.
+      datepicker-calendar-text-font: map.get($system, body-large-font),
+      datepicker-calendar-text-size: 13px,
+      datepicker-calendar-body-label-text-size: map.get($system, label-small-size),
+      datepicker-calendar-body-label-text-weight: map.get($system, label-small-weight),
+      datepicker-calendar-period-button-text-size: map.get($system, label-small-size),
+      datepicker-calendar-period-button-text-weight: map.get($system, label-small-weight),
+      datepicker-calendar-header-text-size: 11px,
+      datepicker-calendar-header-text-weight: map.get($system, body-large-weight),
+    ),
+    density: (),
   );
 }
 
 // Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme, $color-variant) {
+@function private-get-color-palette-color-tokens($theme, $color-variant) {
   $system: m2-utils.get-system($theme);
   $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
@@ -60,29 +78,4 @@
     datepicker-calendar-container-background-color: map.get($system, surface),
     datepicker-calendar-container-text-color: map.get($system, on-surface),
   );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    // TODO(crisbeto): the typography tokens for other components set every typography dimension of
-    // an element (e.g. size, weight, line height, letter spacing). These tokens only set the values
-    // that were set in the previous theming API to reduce the amount of subtle screenshot
-    // differences. We should look into introducing the other tokens in a follow-up.
-    datepicker-calendar-text-font: map.get($system, body-large-font),
-    datepicker-calendar-text-size: 13px,
-    datepicker-calendar-body-label-text-size: map.get($system, label-small-size),
-    datepicker-calendar-body-label-text-weight: map.get($system, label-small-weight),
-    datepicker-calendar-period-button-text-size: map.get($system, label-small-size),
-    datepicker-calendar-period-button-text-weight: map.get($system, label-small-weight),
-    datepicker-calendar-header-text-size: 11px,
-    datepicker-calendar-header-text-weight:
-        map.get($system, body-large-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  @return ();
 }

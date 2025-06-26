@@ -2,106 +2,91 @@
 @use '../core/tokens/m2-utils';
 @use '../core/theming/theming';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    list-active-indicator-color: transparent,
-    list-active-indicator-shape: 4px,
-    list-list-item-container-shape: 0,
-    list-list-item-leading-avatar-shape: 50%,
-    list-list-item-container-color: transparent,
-    list-list-item-selected-container-color: transparent,
-    list-list-item-leading-avatar-color: transparent,
-    list-list-item-leading-icon-size: 24px,
-    list-list-item-leading-avatar-size: 40px,
-    list-list-item-trailing-icon-size: 24px,
-    list-list-item-disabled-state-layer-color: transparent,
-    list-list-item-disabled-state-layer-opacity: 0,
-    list-list-item-disabled-label-text-opacity: 0.38,
-    list-list-item-disabled-leading-icon-opacity: 0.38,
-    list-list-item-disabled-trailing-icon-opacity: 0.38,
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-
-  @return (
-    list-list-item-label-text-color: map.get($system, on-surface),
-    list-list-item-supporting-text-color: map.get($system, on-surface-variant),
-    list-list-item-leading-icon-color: map.get($system, on-surface-variant),
-    list-list-item-trailing-supporting-text-color: map.get($system, on-surface-variant),
-    list-list-item-trailing-icon-color: map.get($system, on-surface-variant),
-    list-list-item-selected-trailing-icon-color: map.get($system, on-surface-variant),
-    list-list-item-disabled-label-text-color: map.get($system, on-surface),
-    list-list-item-disabled-leading-icon-color: map.get($system, on-surface),
-    list-list-item-disabled-trailing-icon-color: map.get($system, on-surface),
-    list-list-item-hover-label-text-color: map.get($system, on-surface),
-    list-list-item-hover-leading-icon-color: map.get($system, on-surface-variant),
-    list-list-item-hover-state-layer-color: map.get($system, on-surface),
-    list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    list-list-item-hover-trailing-icon-color: map.get($system, on-surface-variant),
-    list-list-item-focus-label-text-color: map.get($system, on-surface),
-    list-list-item-focus-state-layer-color: map.get($system, on-surface),
-    list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    list-list-item-label-text-font: map.get($system, body-large-font),
-    list-list-item-label-text-line-height: map.get($system, body-large-line-height),
-    list-list-item-label-text-size: map.get($system, body-large-size),
-    list-list-item-label-text-tracking: map.get($system, body-large-tracking),
-    list-list-item-label-text-weight: map.get($system, body-large-weight),
-    list-list-item-supporting-text-font: map.get($system, body-medium-font),
-    list-list-item-supporting-text-line-height: map.get($system, body-medium-line-height),
-    list-list-item-supporting-text-size: map.get($system, body-medium-size),
-    list-list-item-supporting-text-tracking: map.get($system, body-medium-tracking),
-    list-list-item-supporting-text-weight: map.get($system, body-medium-weight),
-    list-list-item-trailing-supporting-text-font: map.get($system, body-small-font),
-    list-list-item-trailing-supporting-text-line-height: map.get($system, body-small-line-height),
-    list-list-item-trailing-supporting-text-size: map.get($system, body-small-size),
-    list-list-item-trailing-supporting-text-tracking: map.get($system, body-small-tracking),
-    list-list-item-trailing-supporting-text-weight: map.get($system, body-small-weight),
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -5);
 
   @return (
-    list-list-item-leading-icon-start-space: 16px,
-    list-list-item-leading-icon-end-space: 32px,
-    list-list-item-one-line-container-height: map.get((
-      0: 48px,
-      -1: 44px,
-      -2: 40px,
-      -3: 36px,
-      -4: 32px,
-      -5: 24px,
-    ), $density-scale),
-    list-list-item-two-line-container-height: map.get((
-      0: 64px,
-      -1: 60px,
-      -2: 56px,
-      -3: 52px,
-      -4: 48px,
-      -5: 48px,
-    ), $density-scale),
-    list-list-item-three-line-container-height: map.get((
-      0: 88px,
-      -1: 84px,
-      -2: 80px,
-      -3: 76px,
-      -4: 72px,
-      -5: 56px,
-    ), $density-scale),
+    base: (
+      list-active-indicator-color: transparent,
+      list-active-indicator-shape: 4px,
+      list-list-item-container-shape: 0,
+      list-list-item-leading-avatar-shape: 50%,
+      list-list-item-container-color: transparent,
+      list-list-item-selected-container-color: transparent,
+      list-list-item-leading-avatar-color: transparent,
+      list-list-item-leading-icon-size: 24px,
+      list-list-item-leading-avatar-size: 40px,
+      list-list-item-trailing-icon-size: 24px,
+      list-list-item-disabled-state-layer-color: transparent,
+      list-list-item-disabled-state-layer-opacity: 0,
+      list-list-item-disabled-label-text-opacity: 0.38,
+      list-list-item-disabled-leading-icon-opacity: 0.38,
+      list-list-item-disabled-trailing-icon-opacity: 0.38,
+    ),
+    color: (
+      list-list-item-label-text-color: map.get($system, on-surface),
+      list-list-item-supporting-text-color: map.get($system, on-surface-variant),
+      list-list-item-leading-icon-color: map.get($system, on-surface-variant),
+      list-list-item-trailing-supporting-text-color: map.get($system, on-surface-variant),
+      list-list-item-trailing-icon-color: map.get($system, on-surface-variant),
+      list-list-item-selected-trailing-icon-color: map.get($system, on-surface-variant),
+      list-list-item-disabled-label-text-color: map.get($system, on-surface),
+      list-list-item-disabled-leading-icon-color: map.get($system, on-surface),
+      list-list-item-disabled-trailing-icon-color: map.get($system, on-surface),
+      list-list-item-hover-label-text-color: map.get($system, on-surface),
+      list-list-item-hover-leading-icon-color: map.get($system, on-surface-variant),
+      list-list-item-hover-state-layer-color: map.get($system, on-surface),
+      list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      list-list-item-hover-trailing-icon-color: map.get($system, on-surface-variant),
+      list-list-item-focus-label-text-color: map.get($system, on-surface),
+      list-list-item-focus-state-layer-color: map.get($system, on-surface),
+      list-list-item-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+    ),
+    typography: (
+      list-list-item-label-text-font: map.get($system, body-large-font),
+      list-list-item-label-text-line-height: map.get($system, body-large-line-height),
+      list-list-item-label-text-size: map.get($system, body-large-size),
+      list-list-item-label-text-tracking: map.get($system, body-large-tracking),
+      list-list-item-label-text-weight: map.get($system, body-large-weight),
+      list-list-item-supporting-text-font: map.get($system, body-medium-font),
+      list-list-item-supporting-text-line-height: map.get($system, body-medium-line-height),
+      list-list-item-supporting-text-size: map.get($system, body-medium-size),
+      list-list-item-supporting-text-tracking: map.get($system, body-medium-tracking),
+      list-list-item-supporting-text-weight: map.get($system, body-medium-weight),
+      list-list-item-trailing-supporting-text-font: map.get($system, body-small-font),
+      list-list-item-trailing-supporting-text-line-height: map.get($system, body-small-line-height),
+      list-list-item-trailing-supporting-text-size: map.get($system, body-small-size),
+      list-list-item-trailing-supporting-text-tracking: map.get($system, body-small-tracking),
+      list-list-item-trailing-supporting-text-weight: map.get($system, body-small-weight),
+    ),
+    density: (
+      list-list-item-leading-icon-start-space: 16px,
+      list-list-item-leading-icon-end-space: 32px,
+      list-list-item-one-line-container-height: map.get((
+        0: 48px,
+        -1: 44px,
+        -2: 40px,
+        -3: 36px,
+        -4: 32px,
+        -5: 24px,
+      ), $density-scale),
+      list-list-item-two-line-container-height: map.get((
+        0: 64px,
+        -1: 60px,
+        -2: 56px,
+        -3: 52px,
+        -4: 48px,
+        -5: 48px,
+      ), $density-scale),
+      list-list-item-three-line-container-height: map.get((
+        0: 88px,
+        -1: 84px,
+        -2: 80px,
+        -3: 76px,
+        -4: 72px,
+        -5: 56px,
+      ), $density-scale),
+    ),
   );
 }

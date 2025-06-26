@@ -5,12 +5,12 @@
 @use 'sass:map';
 
 @mixin _palette-styles($theme, $palette-name) {
-  $tokens: m2-pseudo-checkbox.get-color-tokens($theme, $palette-name);
+  $tokens: map.get(m2-pseudo-checkbox.get-tokens($theme), color);
   @include token-utils.values($tokens);
 }
 
 @mixin base($theme) {
-  $tokens: m2-pseudo-checkbox.get-unthemable-tokens();
+  $tokens: map.get(m2-pseudo-checkbox.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), base);
   }
@@ -28,7 +28,7 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-pseudo-checkbox.get-color-tokens($theme, secondary);
+  $tokens: map.get(m2-pseudo-checkbox.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme, $color-variant), color);
   }
@@ -42,24 +42,24 @@
     // in order to allow for the color to be overwritten if the checkbox is inside a parent that
     // has `mat-accent` and is placed inside another parent that has `mat-primary`.
     .mat-primary {
-      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, primary);
+      $tokens: m2-pseudo-checkbox.private-get-color-palette-color-tokens($theme, primary);
       @include token-utils.values($tokens);
     }
 
     .mat-accent {
-      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, secondary);
+      $tokens: m2-pseudo-checkbox.private-get-color-palette-color-tokens($theme, secondary);
       @include token-utils.values($tokens);
     }
 
     .mat-warn {
-      $tokens: m2-pseudo-checkbox.get-color-tokens($theme, error);
+      $tokens: m2-pseudo-checkbox.private-get-color-palette-color-tokens($theme, error);
       @include token-utils.values($tokens);
     }
   }
 }
 
 @mixin typography($theme) {
-  $tokens: m2-pseudo-checkbox.get-typography-tokens($theme);
+  $tokens: map.get(m2-pseudo-checkbox.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), typography);
   }
@@ -68,7 +68,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-pseudo-checkbox.get-density-tokens($theme);
+  $tokens: map.get(m2-pseudo-checkbox.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-pseudo-checkbox.get-tokens($theme), density);
   }

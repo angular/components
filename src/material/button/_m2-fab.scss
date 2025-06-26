@@ -1,63 +1,75 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use '../core/tokens/m2-utils';
 @use '../core/tokens/m3-utils';
 @use '../core/theming/theming';
 @use '../core/theming/inspection';
 @use '../core/style/elevation';
 
-// Tokens that can't be configured through Angular Material's current theming API,
-// but may be in a future version of the theming API.
-@function get-unthemable-tokens() {
-  @return (
-    fab-container-elevation-shadow: elevation.get-box-shadow(6),
-    fab-container-shape: 50%,
-    fab-extended-container-elevation-shadow: elevation.get-box-shadow(6),
-    fab-extended-container-height: 48px,
-    fab-extended-container-shape: 24px,
-    fab-extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    fab-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-    fab-small-container-elevation-shadow: elevation.get-box-shadow(6),
-    fab-small-container-shape: 50%,
-    fab-small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
-    fab-small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
-  );
-}
-
-// Tokens that can be configured through Angular Material's color theming API.
-@function get-color-tokens($theme) {
+@function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-  $is-dark: inspection.get-theme-type($theme) == dark;
+  // TODO: Use system colors instead of checking theme type
+  $is-dark: false;
+  @if (meta.type-of($theme) == map and map.get($theme, color)) {
+    $is-dark: inspection.get-theme-type($theme) == dark;
+  }
   $disabled: m3-utils.color-with-opacity(map.get($system, on-surface), 38%);
   $disabled-container : m3-utils.color-with-opacity(map.get($system, on-surface), 12%);
+  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
 
   @return (
-    fab-container-color: map.get($system, surface),
-    fab-disabled-state-container-color: $disabled-container,
-    fab-disabled-state-foreground-color: $disabled,
-    fab-disabled-state-layer-color: map.get($system, on-surface-variant),
-    fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    fab-foreground-color: map.get($system, on-surface),
-    fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-    fab-ripple-color: m3-utils.color-with-opacity(
-        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
-    fab-small-container-color: map.get($system, surface),
-    fab-small-disabled-state-container-color: $disabled-container,
-    fab-small-disabled-state-foreground-color: $disabled,
-    fab-small-disabled-state-layer-color: map.get($system, on-surface-variant),
-    fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
-    fab-small-foreground-color: map.get($system, on-surface),
-    fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
-    fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
-    fab-small-ripple-color: m3-utils.color-with-opacity(
-        map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
-    fab-small-state-layer-color: map.get($system, on-surface),
-    fab-state-layer-color: map.get($system, on-surface),
+    base: (
+      fab-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-container-shape: 50%,
+      fab-extended-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-extended-container-height: 48px,
+      fab-extended-container-shape: 24px,
+      fab-extended-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-extended-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-extended-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+      fab-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+      fab-small-container-elevation-shadow: elevation.get-box-shadow(6),
+      fab-small-container-shape: 50%,
+      fab-small-focus-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-small-hover-container-elevation-shadow: elevation.get-box-shadow(8),
+      fab-small-pressed-container-elevation-shadow: elevation.get-box-shadow(12),
+    ),
+    color: (
+      fab-container-color: map.get($system, surface),
+      fab-disabled-state-container-color: $disabled-container,
+      fab-disabled-state-foreground-color: $disabled,
+      fab-disabled-state-layer-color: map.get($system, on-surface-variant),
+      fab-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-foreground-color: map.get($system, on-surface),
+      fab-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      fab-small-container-color: map.get($system, surface),
+      fab-small-disabled-state-container-color: $disabled-container,
+      fab-small-disabled-state-foreground-color: $disabled,
+      fab-small-disabled-state-layer-color: map.get($system, on-surface-variant),
+      fab-small-focus-state-layer-opacity: map.get($system, focus-state-layer-opacity),
+      fab-small-foreground-color: map.get($system, on-surface),
+      fab-small-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
+      fab-small-pressed-state-layer-opacity: map.get($system, pressed-state-layer-opacity),
+      fab-small-ripple-color: m3-utils.color-with-opacity(
+          map.get($system, on-surface), map.get($system, pressed-state-layer-opacity)),
+      fab-small-state-layer-color: map.get($system, on-surface),
+      fab-state-layer-color: map.get($system, on-surface),
+    ),
+    typography: (
+      fab-extended-label-text-font: map.get($system, label-small-font),
+      fab-extended-label-text-size: map.get($system, label-small-size),
+      fab-extended-label-text-tracking: map.get($system, label-small-tracking),
+      fab-extended-label-text-weight: map.get($system, label-small-weight)
+    ),
+    density: (
+      fab-small-touch-target-display: if($density-scale < -1, none, block),
+      fab-touch-target-display: if($density-scale < -1, none, block),
+    ),
   );
 }
 
@@ -77,27 +89,5 @@
         map.get($system, on-primary), map.get($system, pressed-state-layer-opacity)),
     fab-small-state-layer-color: map.get($system, on-primary),
     fab-state-layer-color: map.get($system, on-primary),
-  );
-}
-
-// Tokens that can be configured through Angular Material's typography theming API.
-@function get-typography-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  @return (
-    fab-extended-label-text-font: map.get($system, label-small-font),
-    fab-extended-label-text-size: map.get($system, label-small-size),
-    fab-extended-label-text-tracking: map.get($system, label-small-tracking),
-    fab-extended-label-text-weight: map.get($system, label-small-weight)
-  );
-}
-
-// Tokens that can be configured through Angular Material's density theming API.
-@function get-density-tokens($theme) {
-  $system: m2-utils.get-system($theme);
-  $density-scale: theming.clamp-density(map.get($system, density-scale), -3);
-
-  @return (
-    fab-small-touch-target-display: if($density-scale < -1, none, block),
-    fab-touch-target-display: if($density-scale < -1, none, block),
   );
 }

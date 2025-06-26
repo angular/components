@@ -9,7 +9,7 @@
 /// for the mat-slider.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
-  $tokens: m2-slider.get-unthemable-tokens();
+  $tokens: map.get(m2-slider.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slider.get-tokens($theme), base);
   }
@@ -21,7 +21,7 @@
 /// @param {Map} $theme The theme to generate color styles for.
 /// @param {String} $color-variant The color variant to use for the component (M3 only)
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-slider.get-color-tokens($theme);
+  $tokens: map.get(m2-slider.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slider.get-tokens($theme, $color-variant), color);
   }
@@ -44,7 +44,7 @@
 /// Outputs typography theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate typography styles for.
 @mixin typography($theme) {
-  $tokens: m2-slider.get-typography-tokens($theme);
+  $tokens: map.get(m2-slider.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slider.get-tokens($theme), typography);
   }
@@ -55,7 +55,7 @@
 /// Outputs density theme styles for the mat-slider.
 /// @param {Map} $theme The theme to generate density styles for.
 @mixin density($theme) {
-  $tokens: m2-slider.get-density-tokens($theme);
+  $tokens: map.get(m2-slider.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-slider.get-tokens($theme), density);
   }

@@ -9,7 +9,7 @@
 /// for the mat-button.
 /// @param {Map} $theme The theme to generate base styles for.
 @mixin base($theme) {
-  $tokens: m2-button.get-unthemable-tokens();
+  $tokens: map.get(m2-button.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-button.get-tokens($theme), base);
   }
@@ -23,7 +23,7 @@
 ///     the badge: primary, secondary, tertiary, or error (If not specified,
 ///     default primary color will be used).
 @mixin color($theme, $color-variant: null) {
-  $tokens: m2-button.get-color-tokens($theme);
+  $tokens: map.get(m2-button.get-tokens($theme), color);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-button.get-tokens($theme, $color-variant), color);
   }
@@ -55,7 +55,7 @@
 }
 
 @mixin typography($theme) {
-  $tokens: m2-button.get-typography-tokens($theme);
+  $tokens: map.get(m2-button.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-button.get-tokens($theme), typography);
   }
@@ -64,7 +64,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-button.get-density-tokens($theme);
+  $tokens: map.get(m2-button.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-button.get-tokens($theme), density);
   }

@@ -6,7 +6,7 @@
 @use './m3-snack-bar';
 
 @mixin base($theme) {
-  $tokens: m2-snack-bar.get-unthemable-tokens();
+  $tokens: map.get(m2-snack-bar.get-tokens($theme), base);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-snack-bar.get-tokens($theme), base);
   }
@@ -18,12 +18,12 @@
   @if inspection.get-theme-version($theme) == 1 {
     @include token-utils.values(map.get(m3-snack-bar.get-tokens($theme), color));
   } @else {
-    @include token-utils.values(m2-snack-bar.get-color-tokens($theme));
+    @include token-utils.values(map.get(m2-snack-bar.get-tokens($theme), color));
   }
 }
 
 @mixin typography($theme) {
-  $tokens: m2-snack-bar.get-typography-tokens($theme);
+  $tokens: map.get(m2-snack-bar.get-tokens($theme), typography);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-snack-bar.get-tokens($theme), typography);
   }
@@ -32,7 +32,7 @@
 }
 
 @mixin density($theme) {
-  $tokens: m2-snack-bar.get-density-tokens($theme);
+  $tokens: map.get(m2-snack-bar.get-tokens($theme), density);
   @if inspection.get-theme-version($theme) == 1 {
     $tokens: map.get(m3-snack-bar.get-tokens($theme), density);
   }
