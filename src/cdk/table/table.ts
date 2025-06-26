@@ -682,6 +682,7 @@ export class CdkTable<T>
     if (!changes) {
       this._updateNoDataRow();
       this.contentChanged.next();
+      this._changeDetectorRef.markForCheck();
       return;
     }
     const viewContainer = this._rowOutlet.viewContainer;
@@ -716,6 +717,7 @@ export class CdkTable<T>
 
     this.contentChanged.next();
     this.updateStickyColumnStyles();
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Adds a column definition that was not included as part of the content children. */
