@@ -55,11 +55,11 @@ In order to use the tree, you must define a tree node template. There are two ty
 template defines the look of the tree node, expansion/collapsing control and the structure for
 nested children nodes.
 
-A node definition is specified via any element with `cdkNodeDef`. This directive exports the node
+A node definition is specified via any element with `cdkTreeNodeDef`. This directive exports the node
 data to be used in any bindings in the node template.
 
 ```html
-<cdk-tree-node *cdkNodeDef="let node">
+<cdk-tree-node *cdkTreeNodeDef="let node">
   {{node.key}}: {{node.value}}
 </cdk-tree-node>
 ```
@@ -80,7 +80,7 @@ When using nested tree nodes, the node template must contain a `cdkTreeNodeOutle
 where the children of the node will be rendered.
 
 ```html
-<cdk-nested-tree-node *cdkNodeDef="let node">
+<cdk-nested-tree-node *cdkTreeNodeDef="let node">
   {{node.value}}
   <ng-container cdkTreeNodeOutlet></ng-container>
 </cdk-nested-tree-node>
@@ -96,7 +96,7 @@ a tree node recursively by setting `[cdkTreeNodeToggleRecursive]` to true.
 activation. For icon buttons, ensure that `aria-label` is provided.
 
 ```html
-<cdk-tree-node *cdkNodeDef="let node">
+<cdk-tree-node *cdkTreeNodeDef="let node">
   <button cdkTreeNodeToggle aria-label="toggle tree node" [cdkTreeNodeToggleRecursive]="true">
     <mat-icon>expand</mat-icon>
   </button>
@@ -110,7 +110,7 @@ The `cdkTreeNodePadding` directive can be placed in a flat tree's node template 
 information of a flat tree node.
 
 ```html
-<cdk-tree-node *cdkNodeDef="let node" cdkNodePadding>
+<cdk-tree-node *cdkTreeNodeDef="let node" cdkNodePadding>
   {{node.value}}
 </cdk-tree-node>
 ```
@@ -125,10 +125,10 @@ The tree may include multiple node templates, where a template is chosen
 for a particular data node via the `when` predicate of the template.
 
 ```html
-<cdk-tree-node *cdkNodeDef="let node" cdkTreeNodePadding>
+<cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding>
   {{node.value}}
 </cdk-tree-node>
-<cdk-tree-node *cdkNodeDef="let node; when: isSpecial" cdkTreeNodePadding>
+<cdk-tree-node *cdkTreeNodeDef="let node; when: isSpecial" cdkTreeNodePadding>
   [ A special node {{node.value}} ]
 </cdk-tree-node>
 ```
@@ -200,11 +200,11 @@ interaction.
 
 ```html
 <cdk-tree-node
-    *cdkNodeDef="let node"
+    *cdkTreeNodeDef="let node"
     (click)="performAction(node)"
     (activation)="performAction($event)">
 </cdk-tree-node>
 ```
 
 In this example, `$event` contains the node's data and is equivalent to the implicit data passed in
-the `cdkNodeDef` context.
+the `cdkTreeNodeDef` context.

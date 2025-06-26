@@ -55,11 +55,11 @@ In order to use the tree, you must define a tree node template. There are two ty
 template defines the look of the tree node, expansion/collapsing control and the structure for
 nested children nodes.
 
-A node definition is specified via any element with `matNodeDef`. This directive exports the node
+A node definition is specified via any element with `matTreeNodeDef`. This directive exports the node
 data to be used in any bindings in the node template.
 
 ```html
-<mat-tree-node *matNodeDef="let node">
+<mat-tree-node *matTreeNodeDef="let node">
   {{node.key}}: {{node.value}}
 </mat-tree-node>
 ```
@@ -80,7 +80,7 @@ When using nested tree nodes, the node template must contain a `matTreeNodeOutle
 where the children of the node will be rendered.
 
 ```html
-<mat-nested-tree-node *matNodeDef="let node">
+<mat-nested-tree-node *matTreeNodeDef="let node">
   {{node.value}}
   <ng-container matTreeNodeOutlet></ng-container>
 </mat-nested-tree-node>
@@ -96,7 +96,7 @@ a tree node recursively by setting `[matTreeNodeToggleRecursive]` to true.
 activation. For icon buttons, ensure that `aria-label` is provided.
 
 ```html
-<mat-tree-node *matNodeDef="let node">
+<mat-tree-node *matTreeNodeDef="let node">
   <button matTreeNodeToggle aria-label="toggle tree node" [matTreeNodeToggleRecursive]="true">
     <mat-icon>expand</mat-icon>
   </button>
@@ -119,7 +119,7 @@ The `matTreeNodePadding` can be placed in a flat tree's node template to display
 information of a flat tree node.
 
 ```html
-<mat-tree-node *matNodeDef="let node" matNodePadding>
+<mat-tree-node *matTreeNodeDef="let node" matNodePadding>
   {{node.value}}
 </mat-tree-node>
 ```
@@ -134,10 +134,10 @@ The tree may include multiple node templates, where a template is chosen
 for a particular data node via the `when` predicate of the template.
 
 ```html
-<mat-tree-node *matNodeDef="let node" matTreeNodePadding>
+<mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
   {{node.value}}
 </mat-tree-node>
-<mat-tree-node *matNodeDef="let node; when: isSpecial" matTreeNodePadding>
+<mat-tree-node *matTreeNodeDef="let node; when: isSpecial" matTreeNodePadding>
   [ A special node {{node.value}} ]
 </mat-tree-node>
 ```
@@ -209,11 +209,11 @@ interaction.
 
 ```html
 <mat-tree-node
-    *matNodeDef="let node"
+    *matTreeNodeDef="let node"
     (click)="performAction(node)"
     (activation)="performAction($event)">
 </mat-tree-node>
 ```
 
 In this example, `$event` contains the node's data and is equivalent to the implicit data passed in
-the `matNodeDef` context.
+the `matTreeNodeDef` context.
