@@ -6,5 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {Rule} from '@angular-devkit/schematics';
+
 /** Entry point for the migration schematics with target of Angular Material v20 */
-export function updateToV20(): void {}
+export function updateToV20(): Rule {
+  return () => {};
+}
