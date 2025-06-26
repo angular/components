@@ -2,5 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
   "packageRules": [],
-  "ignoreDeps": ["stylelint", "selenium-webdriver"]
+  "ignoreDeps": ["stylelint", "selenium-webdriver", "@types/selenium-webdriver", "typescript"],
+  "ignorePaths": ["docs/src/assets/stackblitz/**", "integration/**"]
 }
