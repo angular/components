@@ -131,7 +131,7 @@ describe('MapAdvancedMarker', () => {
     expect(addSpy).toHaveBeenCalledWith('mouseout', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('mouseup', jasmine.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('rightclick', jasmine.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('contextmenu', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('drag', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dragend', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('dragstart', jasmine.any(Function));
