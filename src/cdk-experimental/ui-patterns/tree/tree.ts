@@ -87,7 +87,20 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly tabindex = computed(() => this.tree().focusManager.getItemTabindex(this));
 
   /** Whether the item is selected. */
-  readonly selected = computed(() => this.tree().value().includes(this.value()));
+  readonly selected = computed(() => {
+    if (this.tree().nav()) {
+      return undefined;
+    }
+    return this.tree().value().includes(this.value());
+  });
+
+  /** The current type of this item. */
+  readonly current = computed(() => {
+    if (!this.tree().nav()) {
+      return undefined;
+    }
+    return this.tree().value().includes(this.value()) ? this.tree().currentType() : undefined;
+  });
 
   constructor(readonly inputs: TreeItemInputs<V>) {
     this.id = inputs.id;
@@ -136,6 +149,12 @@ export interface TreeInputs<V>
   > {
   /** All items in the tree, in document order (DFS-like, a flattened list). */
   allItems: SignalLike<TreeItemPattern<V>[]>;
+
+  /** Whether the tree is in navigation mode. */
+  nav: SignalLike<boolean>;
+
+  /** The aria-current type. */
+  currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
 }
 
 export interface TreePattern<V> extends TreeInputs<V> {}
@@ -337,6 +356,8 @@ export class TreePattern<V> {
   });
 
   constructor(readonly inputs: TreeInputs<V>) {
+    this.nav = inputs.nav;
+    this.currentType = inputs.currentType;
     this.allItems = inputs.allItems;
     this.focusMode = inputs.focusMode;
     this.disabled = inputs.disabled;
@@ -345,7 +366,7 @@ export class TreePattern<V> {
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
     this.textDirection = inputs.textDirection;
-    this.multi = inputs.multi;
+    this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
     this.value = inputs.value;
     this.selectionMode = inputs.selectionMode;
     this.typeaheadDelay = inputs.typeaheadDelay;

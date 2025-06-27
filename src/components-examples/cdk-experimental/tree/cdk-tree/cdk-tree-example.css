@@ -37,6 +37,16 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
+.example-tree-item-content[aria-current] {
+  background-color: var(--mat-sys-inverse-primary);
+}
+
+.example-tree-item-content[aria-disabled='true'] {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+
 .example-tree-item-content {
   display: flex;
   align-items: center;
