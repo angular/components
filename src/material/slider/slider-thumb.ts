@@ -117,7 +117,8 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
       return;
     }
 
-    this._ripple.radius = 24;
+    const thumbDiameter = this._hostElement.offsetHeight || 48;
+    this._ripple.radius = thumbDiameter / 2;
     this._sliderInput = sliderInput;
     this._sliderInputEl = this._sliderInput._hostElement;
 
