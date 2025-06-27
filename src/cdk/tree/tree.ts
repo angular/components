@@ -1400,6 +1400,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
       .changed.pipe(
         map(() => this.isExpanded),
         distinctUntilChanged(),
+        takeUntil(this._destroyed),
       )
       .subscribe(() => this._changeDetectorRef.markForCheck());
     this._tree._setNodeTypeIfUnset(this._type);
