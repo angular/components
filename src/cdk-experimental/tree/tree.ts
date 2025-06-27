@@ -112,6 +112,14 @@ export class CdkTree<V> {
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
 
+  /** Whether the tree is in navigation mode. */
+  readonly nav = input(false);
+
+  /** The aria-current type. */
+  readonly currentType = input<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>(
+    'page',
+  );
+
   /** The UI pattern for the tree. */
   readonly pattern: TreePattern<V> = new TreePattern<V>({
     ...this,
@@ -174,6 +182,7 @@ export class CdkTree<V> {
     '[id]': 'pattern.id()',
     '[attr.aria-expanded]': 'pattern.expandable() ? pattern.expanded() : null',
     '[attr.aria-selected]': 'pattern.selected()',
+    '[attr.aria-current]': 'pattern.current()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-level]': 'pattern.level()',
     '[attr.aria-owns]': 'group()?.id',
