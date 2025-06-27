@@ -60,6 +60,47 @@ export class ExampleNodeComponent {
   node = input.required<ExampleNode>();
 }
 
+@Component({
+  selector: 'example-nav-node',
+  styleUrl: 'cdk-tree-example.css',
+  template: `
+    <li class="example-tree-item">
+      <a
+        cdkTreeItem
+        class="example-tree-item-content example-selectable example-stateful"
+        [value]="node().value"
+        [label]="node().label || node().value"
+        [disabled]="node().disabled"
+        #treeItem="cdkTreeItem"
+        [style.paddingLeft.px]="(treeItem.pattern.level() - 1) * 24"
+        href="#{{node().value}}"
+        (click)="$event.preventDefault()"
+      >
+        <mat-icon class="example-tree-item-icon" aria-hidden="true">
+          @if (treeItem.pattern.expandable()) {
+            {{ treeItem.pattern.expanded() ? 'expand_less' : 'expand_more' }}
+          }
+        </mat-icon>
+        {{ node().label }}
+      </a>
+
+      @if (node().children !== undefined && node().children!.length > 0) {
+        <ul cdkTreeItemGroup [value]="node().value">
+          <ng-template cdkTreeItemGroupContent>
+            @for (child of node().children; track child) {
+              <example-nav-node [node]="child" />
+            }
+          </ng-template>
+        </ul>
+      }
+    </li>
+  `,
+  imports: [MatIconModule, CdkTreeItem, CdkTreeItemGroup, CdkTreeItemGroupContent],
+})
+export class ExampleNavNodeComponent {
+  node = input.required<ExampleNode>();
+}
+
 /** @title Tree using CdkTree and CdkTreeItem. */
 @Component({
   selector: 'cdk-tree-example',
@@ -75,6 +116,7 @@ export class ExampleNodeComponent {
     MatIconModule,
     CdkTree,
     ExampleNodeComponent,
+    ExampleNavNodeComponent,
   ],
 })
 export class CdkTreeExample {
@@ -138,6 +180,7 @@ export class CdkTreeExample {
   disabled = new FormControl(false, {nonNullable: true});
   wrap = new FormControl(true, {nonNullable: true});
   skipDisabled = new FormControl(true, {nonNullable: true});
+  nav = new FormControl(false, {nonNullable: true});
 
   selectedValues = model<string[]>(['books']);
 }

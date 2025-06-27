@@ -146,6 +146,8 @@ describe('Tree Pattern', () => {
         typeaheadDelay: signal(0),
         value: signal([]),
         wrap: signal(false),
+        nav: signal(false),
+        currentType: signal('page'),
       };
     });
 
@@ -179,6 +181,50 @@ describe('Tree Pattern', () => {
       expect(item0_0.posinset()).toBe(1);
       expect(item0_1.posinset()).toBe(2);
     });
+
+    describe('nav mode', () => {
+      let treeInputs: TestTreeInputs<string>;
+
+      beforeEach(() => {
+        treeInputs = {
+          activeIndex: signal(0),
+          disabled: signal(false),
+          focusMode: signal('roving'),
+          multi: signal(false),
+          orientation: signal('vertical'),
+          selectionMode: signal('follow'),
+          skipDisabled: signal(true),
+          textDirection: signal('ltr'),
+          typeaheadDelay: signal(0),
+          value: signal([]),
+          wrap: signal(false),
+          nav: signal(true),
+          currentType: signal('page'),
+        };
+      });
+
+      it('should have undefined selected state', () => {
+        const {allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        treeInputs.value.set(['Item 0']);
+        expect(item0.selected()).toBeUndefined();
+      });
+
+      it('should correctly compute current state', () => {
+        const {allItems} = createTree(treeExample, treeInputs);
+        const item0 = getItemByValue(allItems(), 'Item 0');
+        const item1 = getItemByValue(allItems(), 'Item 1');
+
+        treeInputs.value.set(['Item 0']);
+        expect(item0.current()).toBe('page');
+        expect(item1.current()).toBeUndefined();
+
+        treeInputs.value.set(['Item 1']);
+        treeInputs.currentType.set('step');
+        expect(item0.current()).toBeUndefined();
+        expect(item1.current()).toBe('step');
+      });
+    });
   });
 
   describe('Keyboard Navigation', () => {
@@ -197,6 +243,8 @@ describe('Tree Pattern', () => {
         typeaheadDelay: signal(0),
         value: signal([]),
         wrap: signal(false),
+        nav: signal(false),
+        currentType: signal('page'),
       };
     });
 
@@ -379,6 +427,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -435,6 +485,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -497,6 +549,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -653,6 +707,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -801,6 +857,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -839,6 +897,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -881,6 +941,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -927,6 +989,8 @@ describe('Tree Pattern', () => {
           typeaheadDelay: signal(0),
           value: signal([]),
           wrap: signal(false),
+          nav: signal(false),
+          currentType: signal('page'),
         };
       });
 
@@ -1007,6 +1071,8 @@ describe('Tree Pattern', () => {
         typeaheadDelay: signal(0),
         value: signal([]),
         wrap: signal(false),
+        nav: signal(false),
+        currentType: signal('page'),
       };
     });
 
@@ -1167,6 +1233,8 @@ describe('Tree Pattern', () => {
         typeaheadDelay: signal(0),
         value: signal([]),
         wrap: signal(false),
+        nav: signal(false),
+        currentType: signal('page'),
       };
     });
 
