@@ -27,6 +27,7 @@ import {
   ListExpansion,
 } from '../behaviors/expansion/expansion';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {LabelControl, LabelControlOptionalInputs} from '../behaviors/label/label';
 
 /** The required inputs to tabs. */
 export interface TabInputs
@@ -96,7 +97,7 @@ export class TabPattern {
 }
 
 /** The required inputs for the tabpanel. */
-export interface TabPanelInputs {
+export interface TabPanelInputs extends LabelControlOptionalInputs {
   id: SignalLike<string>;
   tab: SignalLike<TabPattern | undefined>;
   value: SignalLike<string>;
@@ -110,15 +111,29 @@ export class TabPanelPattern {
   /** A local unique identifier for the tabpanel. */
   readonly value: SignalLike<string>;
 
+  /** Controls label for this tabpanel. */
+  readonly labelManager: LabelControl;
+
   /** Whether the tabpanel is hidden. */
   readonly hidden = computed(() => this.inputs.tab()?.expanded() === false);
 
   /** The tabindex of this tabpanel. */
   readonly tabindex = computed(() => (this.hidden() ? -1 : 0));
 
+  /** The aria-labelledby value for this tabpanel. */
+  readonly labelledBy = computed(() =>
+    this.labelManager.labelledBy().length > 0
+      ? this.labelManager.labelledBy().join(' ')
+      : undefined,
+  );
+
   constructor(readonly inputs: TabPanelInputs) {
     this.id = inputs.id;
     this.value = inputs.value;
+    this.labelManager = new LabelControl({
+      ...inputs,
+      defaultLabelledBy: computed(() => (this.inputs.tab() ? [this.inputs.tab()!.id()] : [])),
+    });
   }
 }
 

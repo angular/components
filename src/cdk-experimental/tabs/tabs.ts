@@ -292,6 +292,7 @@ export class CdkTab implements HasElement, OnInit, OnDestroy {
     '[attr.id]': 'pattern.id()',
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.inert]': 'pattern.hidden() ? true : null',
+    '[attr.aria-labelledby]': 'pattern.labelledBy()',
   },
   hostDirectives: [
     {
