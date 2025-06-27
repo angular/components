@@ -222,8 +222,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.4
       firebase-tools:
-        specifier: 14.8.0
-        version: 14.8.0(@types/node@22.14.1)(encoding@0.1.13)
+        specifier: 14.9.0
+        version: 14.9.0(@types/node@22.14.1)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.0
@@ -4671,8 +4671,8 @@ packages:
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.8.0:
-    resolution: {integrity: sha512-fz1m5LXs5e4WjS9bqe8yFUxz+grUtfnCEXCtRYRdgoofeY4av0DxW1PSxwLq5soPEBXj5ZR9CeSE6SrBui0WzQ==}
+  firebase-tools@14.9.0:
+    resolution: {integrity: sha512-8si+bTK9WJ82zr/wiwbfqlMeuqIQgRfwFOzGE+9OA+m9pRnN7fuFvMiE1UEfQmsbmLrVsD9Tv22AFsU6vaBUVA==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -13392,7 +13392,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@14.8.0(@types/node@22.14.1)(encoding@0.1.13):
+  firebase-tools@14.9.0(@types/node@22.14.1)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.3
       '@electric-sql/pglite-tools': 0.2.8(@electric-sql/pglite@0.3.3)
