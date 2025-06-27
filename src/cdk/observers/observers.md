@@ -12,3 +12,10 @@ mutation to the content is observed.
   <ng-content></ng-content>
 </div>
 ```
+
+Directive also can be used for observing any type of content
+```html
+<div class="content-wrapper" (click)="changeText()" (cdkObserveContent)="textChanged()">
+  {{ text }}
+</div>
+```
