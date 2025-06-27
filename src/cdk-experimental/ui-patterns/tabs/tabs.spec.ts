@@ -167,6 +167,12 @@ describe('Tabs Pattern', () => {
     expect(tabPatterns[2].tabindex()).toBe(-1);
   });
 
+  it('should set a tabpanel aria-labelledby pointing to its tab id.', () => {
+    expect(tabPanelPatterns[0].labelledBy()).toBe('tab-1-id');
+    expect(tabPanelPatterns[1].labelledBy()).toBe('tab-2-id');
+    expect(tabPanelPatterns[2].labelledBy()).toBe('tab-3-id');
+  });
+
   it('gets a controlled tabpanel id from a tab.', () => {
     expect(tabPanelPatterns[0].id()).toBe('tabpanel-1-id');
     expect(tabPatterns[0].controls()).toBe('tabpanel-1-id');
