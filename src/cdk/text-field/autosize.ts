@@ -122,7 +122,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _cachedScrollTop: number;
 
   /** Used to reference correct document/window */
-  protected _document? = inject(DOCUMENT, {optional: true});
+  protected _document = inject(DOCUMENT);
 
   private _hasFocus: boolean;
 

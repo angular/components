@@ -175,7 +175,7 @@ export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
 // @public
 export class FocusMonitor implements OnDestroy {
     constructor(...args: unknown[]);
-    protected _document?: Document | null | undefined;
+    protected _document: Document;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions_2): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions_2): void;
     monitor(element: HTMLElement, checkChildren?: boolean): Observable<FocusOrigin>;
