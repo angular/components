@@ -36,7 +36,7 @@ export class ViewportRuler implements OnDestroy {
   private readonly _change = new Subject<Event>();
 
   /** Used to reference correct document/window */
-  protected _document = inject(DOCUMENT, {optional: true})!;
+  protected _document = inject(DOCUMENT);
 
   constructor(...args: unknown[]);
 
