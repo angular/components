@@ -49,7 +49,7 @@
       "type": "boolean",
       "default": true,
       "description": "Whether to generate output file in scss or CSS",
-      "x-prompt": "Do you want to generated file to be a scss file? This is the recommended way of setting up theming in your application. If not, a CSS file will be generated with all the system variables defined. (Leave blank to generate a scss file)"
+      "x-prompt": "Do you want the generated file to be a scss file? This is the recommended way of setting up theming in your application. If not, a CSS file will be generated with all the system variables defined. (Leave blank to generate a scss file)"
     }
   }
 }
