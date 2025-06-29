@@ -37,6 +37,13 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
    * @param item Item to be set as active.
    */
   override setActiveItem(item: T): void;
+  /**
+   * Sets the active item to the item to the specified one and adds the
+   * active styles to the it. Also removes active styles from the
+   * previously active item.
+   * @param item Item to be set as active.
+   */
+  override setActiveItem(item: T | number): void;
 
   override setActiveItem(index: any): void {
     if (this.activeItem) {
