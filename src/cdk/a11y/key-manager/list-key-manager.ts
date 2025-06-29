@@ -203,6 +203,12 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   setActiveItem(item: T): void;
 
+  /**
+   * Sets the active item to the specified item.
+   * @param item The item to be set as active.
+   */
+  setActiveItem(item: T | number): void;
+
   setActiveItem(item: any): void {
     const previousActiveItem = this._activeItem();
 

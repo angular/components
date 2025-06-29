@@ -37,6 +37,7 @@ export class A11yModule {
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
 }
 
 // @public
@@ -169,6 +170,7 @@ export interface FocusableOption extends ListKeyManagerOption {
 export class FocusKeyManager<T> extends ListKeyManager<FocusableOption & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
     setFocusOrigin(origin: FocusOrigin): this;
 }
 
@@ -366,6 +368,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     onKeydown(event: KeyboardEvent): void;
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
+    setActiveItem(item: T | number): void;
     setFirstItemActive(): void;
     setLastItemActive(): void;
     setNextItemActive(): void;
