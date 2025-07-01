@@ -1,21 +1,8 @@
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
-@use 'sass:meta';
 
 @function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
-
-  // TODO: Use system colors instead of checking theme type and using primary hues
-  $snack-bar-button-color: map.get($system, inverse-primary);
-  @if (meta.type-of($theme) == map and map.get($theme, color)) {
-    $is-dark: inspection.get-theme-type($theme) == dark;
-    $snack-bar-button-color: if(
-        $is-dark,
-        inspection.get-theme-color($theme, primary, 500),
-        inspection.get-theme-color($theme, primary, 100)
-    );
-  }
 
   @return (
     base: (
@@ -24,7 +11,7 @@
     color: (
       snack-bar-container-color: map.get($system, inverse-surface),
       snack-bar-supporting-text-color: map.get($system, inverse-on-surface),
-      snack-bar-button-color: $snack-bar-button-color
+      snack-bar-button-color: map.get($system, inverse-primary)
     ),
     typography: (
       snack-bar-supporting-text-font: map.get($system, body-medium-font),
