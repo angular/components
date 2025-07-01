@@ -182,7 +182,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _ngZone = inject(NgZone);
   private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
-  private _doc = inject(DOCUMENT, {optional: true})!;
+  private _doc = inject(DOCUMENT);
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
 
   private _focusTrap: FocusTrap | null = null;
@@ -347,9 +347,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   constructor() {
     this.openedChange.pipe(takeUntil(this._destroyed)).subscribe((opened: boolean) => {
       if (opened) {
-        if (this._doc) {
-          this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
-        }
+        this._elementFocusedBeforeDrawerWasOpened = this._doc.activeElement as HTMLElement;
         this._takeFocus();
       } else if (this._isFocusWithinDrawer()) {
         this._restoreFocus(this._openedVia || 'program');

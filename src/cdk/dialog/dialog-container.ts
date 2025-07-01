@@ -82,7 +82,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   private _renderer = inject(Renderer2);
 
   private _platform = inject(Platform);
-  protected _document = inject(DOCUMENT, {optional: true})!;
+  protected _document = inject(DOCUMENT);
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
