@@ -2,7 +2,6 @@ import {Package} from 'dgeni';
 import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTypeScriptModules';
 import {Host} from 'dgeni-packages/typescript/services/ts-host/host';
 import {TypeFormatFlags} from 'typescript';
-import {HighlightNunjucksExtension} from './nunjucks-tags/highlight';
 import {patchLogService} from './patch-log-service';
 import {AsyncFunctionsProcessor} from './processors/async-functions';
 import {categorizer} from './processors/categorizer';
@@ -165,6 +164,4 @@ apiDocsPackage.config(function (templateFinder: any, templateEngine: any) {
     variableStart: '{$',
     variableEnd: '$}',
   };
-
-  templateEngine.tags.push(new HighlightNunjucksExtension());
 });

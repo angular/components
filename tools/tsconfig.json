@@ -1,5 +1,5 @@
 {
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.mts", "./**/*.ts"],
   "compilerOptions": {
     "target": "es2020",
     "module": "Node16",
@@ -12,5 +12,5 @@
     "downlevelIteration": true,
     "types": ["node"]
   },
-  "exclude": ["**/*.spec.ts", "adev-api-extraction/**"]
+  "exclude": ["**/*.spec.ts", "**/*.spec.mts", "adev-api-extraction/**"]
 }

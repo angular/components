@@ -6,9 +6,9 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "transform-markdown",
     srcs = glob(
-        ["**/*.ts"],
+        ["**/*.mts"],
         exclude = [
-            "*.spec.ts",
+            "*.spec.mts",
         ],
     ),
     tsconfig = "//tools:tsconfig",
@@ -24,14 +24,14 @@ js_binary(
     data = [
         ":transform-markdown",
     ],
-    entry_point = ":transform-markdown.js",
+    entry_point = ":transform-markdown.mjs",
 )
 
 ts_project(
     name = "unit_test_lib",
     testonly = True,
     srcs = glob(
-        ["*.spec.ts"],
+        ["*.spec.mts"],
     ),
     tsconfig = "//tools:tsconfig-test",
     visibility = ["//visibility:private"],

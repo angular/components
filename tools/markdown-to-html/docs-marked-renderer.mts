@@ -1,7 +1,7 @@
 import {Renderer, Tokens} from 'marked';
 import {basename, extname} from 'path';
 import slugify from 'slugify';
-import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
+import {highlightCodeBlock} from '../highlight-files/highlight-code-block.mjs';
 
 /** Regular expression that matches example comments. */
 const exampleCommentRegex = /<!--\s*example\(\s*([^)]+)\)\s*-->/g;
@@ -33,7 +33,7 @@ export class DocsMarkdownRenderer extends Renderer {
     const content = this.parser.parseInline(tag.tokens);
 
     if (depth === 2 || depth === 3 || depth === 4 || depth === 5 || depth === 6) {
-      const headingId = slugify(tag.text, {lower: true, strict: true});
+      const headingId = slugify.default(tag.text, {lower: true, strict: true});
 
       this._seenIds.add(headingId);
       return `
