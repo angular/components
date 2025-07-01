@@ -51,7 +51,7 @@ export class CdkAutofill implements OnDestroy, OnInit {
 // @public
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     constructor(...args: unknown[]);
-    protected _document?: Document | null | undefined;
+    protected _document: Document;
     get enabled(): boolean;
     set enabled(value: boolean);
     get maxRows(): number;
