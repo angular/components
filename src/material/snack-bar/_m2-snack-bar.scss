@@ -1,7 +1,5 @@
-@use '../core/theming/inspection';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
-@use 'sass:meta';
 
 @function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
