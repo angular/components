@@ -4,6 +4,6 @@ package(default_visibility = ["//visibility:public"])
 
 ts_project(
     name = "region-parser",
-    srcs = glob(["**/*.ts"]),
+    srcs = glob(["**/*.mts"]),
     tsconfig = "//tools:tsconfig",
 )

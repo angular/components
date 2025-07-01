@@ -2,7 +2,7 @@ import {readFileSync, writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
 import {relative, join, dirname} from 'path';
 import {compileString} from 'sass';
-import {highlightCodeBlock} from '../highlight-files/highlight-code-block';
+import {highlightCodeBlock} from '../highlight-files/highlight-code-block.mjs';
 
 /** Information extracted for a single token from the theme. */
 interface ExtractedToken {
@@ -43,40 +43,39 @@ interface ThemeData {
 }
 
 // Script that extracts the tokens from a specific Bazel target.
-if (require.main === module) {
-  const [packagePath, outputPath, ...inputFiles] = process.argv.slice(2);
-  const themeFiles = inputFiles
-    // Filter out only the files within the package
-    // since the path also includes dependencies.
-    .filter(file => file.startsWith(packagePath))
-    .map(file => {
-      // Assumption: all theme files start with an underscore since they're
-      // partials and they end with `-theme`.
-      // Assumption: the name under which the theme mixin will be available is the
-      // same as the file name without the underscore and `-theme.scss`.
-      const match = file.match(/_(.*)-theme\.scss$/);
-      return match ? {mixinPrefix: match[1], filePath: file} : null;
-    })
-    .filter(file => !!file);
 
-  if (themeFiles.length === 0) {
-    throw new Error(`Could not find theme files in ${packagePath}`);
-  }
+const [packagePath, outputPath, ...inputFiles] = process.argv.slice(2);
+const themeFiles = inputFiles
+  // Filter out only the files within the package
+  // since the path also includes dependencies.
+  .filter(file => file.startsWith(packagePath))
+  .map(file => {
+    // Assumption: all theme files start with an underscore since they're
+    // partials and they end with `-theme`.
+    // Assumption: the name under which the theme mixin will be available is the
+    // same as the file name without the underscore and `-theme.scss`.
+    const match = file.match(/_(.*)-theme\.scss$/);
+    return match ? {mixinPrefix: match[1], filePath: file} : null;
+  })
+  .filter(file => !!file);
 
-  const themes: ThemeData[] = [];
-
-  themeFiles.forEach(theme => {
-    themes.push({
-      name: theme.mixinPrefix,
-      // This can be derived from the `name` already, but we want the source
-      // of truth to be in this repo, instead of whatever page consumes the data.
-      overridesMixin: `${theme.mixinPrefix}-overrides`,
-      tokens: extractTokens(theme.filePath),
-    });
-  });
-
-  writeFileSync(outputPath, JSON.stringify({example: getUsageExample(themes), themes}));
+if (themeFiles.length === 0) {
+  throw new Error(`Could not find theme files in ${packagePath}`);
 }
+
+const themes: ThemeData[] = [];
+
+themeFiles.forEach(theme => {
+  themes.push({
+    name: theme.mixinPrefix,
+    // This can be derived from the `name` already, but we want the source
+    // of truth to be in this repo, instead of whatever page consumes the data.
+    overridesMixin: `${theme.mixinPrefix}-overrides`,
+    tokens: extractTokens(theme.filePath),
+  });
+});
+
+writeFileSync(outputPath, JSON.stringify({example: getUsageExample(themes), themes}));
 
 /**
  * Extracts the tokens from a theme file.
