@@ -1,3 +1,28 @@
+<a name="20.1.0-rc.0"></a>
+# 20.1.0-rc.0 "aguilarite-axe" (2025-07-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6dc2f3ba5](https://github.com/angular/components/commit/6dc2f3ba50ba4a42708b32c8ae67461bdf982eaa) | fix | **a11y:** allow mixed types to be passed into setActiveItem ([#31462](https://github.com/angular/components/pull/31462)) |
+| [69e660064](https://github.com/angular/components/commit/69e6600647b5c98236d87843a29a69acc990065b) | fix | **tree:** remove leaking subscription ([#31457](https://github.com/angular/components/pull/31457)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [20ac2b2bd](https://github.com/angular/components/commit/20ac2b2bd8bf551c6efccd149c21280df18cc31b) | fix | **core:** improve disabled psuedo checkbox contrast ([#31464](https://github.com/angular/components/pull/31464)) |
+| [1bba60785](https://github.com/angular/components/commit/1bba607856641542993cc4068dd353796b763332) | fix | **schematics:** typo in prompt question ([#31449](https://github.com/angular/components/pull/31449)) |
+| [7bb0a82a4](https://github.com/angular/components/commit/7bb0a82a434c40d01a0d1aa35bcddaa3f725eccb) | fix | **snack-bar:** use inverse primary for button color ([#31465](https://github.com/angular/components/pull/31465)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4052130ee](https://github.com/angular/components/commit/4052130ee0dc627242a7f863f84eced4a0af048f) | fix | fix update schematic ([#31448](https://github.com/angular/components/pull/31448)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [06d7384a2](https://github.com/angular/components/commit/06d7384a23d0ded675f3df92be0487279de097ff) | fix | **accordion:** fix disabled trigger button can't be focused when skipDisabled=false ([#31379](https://github.com/angular/components/pull/31379)) |
+| [8a091a7ea](https://github.com/angular/components/commit/8a091a7ea8bf9b0c51d1e25d8ac2df49b0feb942) | fix | **tabs:** set tabpanel tabindex to -1 if hidden ([#31401](https://github.com/angular/components/pull/31401)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.0.5"></a>
 # 20.0.5 "agardite-ant" (2025-07-02)
 ### cdk
