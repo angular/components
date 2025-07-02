@@ -1,0 +1,53 @@
+.example-surface {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+[aria-disabled='true'] .example-stateful,
+.example-stateful[aria-disabled='true'] {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+}
+
+.example-stateful:focus {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-focus-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-stateful:hover {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-stateful:focus[aria-disabled='true'],
+.example-stateful:hover[aria-disabled='true'],
+[aria-disabled='true'] .example-stateful:focus,
+[aria-disabled='true'] .example-stateful:hover {
+  background: var(--mat-sys-surface);
+}
+
+.example-selectable[aria-selected='true'],
+.example-selectable[aria-checked='true'] {
+  background: color-mix(
+    in srgb,
+    var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
+    transparent
+  );
+}
+
+.example-selectable[aria-selected='true']:focus-within,
+.example-selectable[aria-checked='true']:focus-within {
+  outline: var(--mat-sys-primary) solid 2px;
+}
+
+[aria-disabled='true'] .example-selectable[aria-selected='true'],
+.example-selectable[aria-disabled='true'][aria-selected='true'],
+[aria-disabled='true'] .example-selectable[aria-checked='true'],
+.example-selectable[aria-disabled='true'][aria-checked='true'] {
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}

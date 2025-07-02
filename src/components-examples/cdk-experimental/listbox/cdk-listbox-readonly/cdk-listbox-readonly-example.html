@@ -3,13 +3,13 @@
   <ul
     cdkListbox
     [readonly]="true"
-    class="example-listbox"
+    class="example-listbox example-parent"
     aria-labelledby="readonly-label"
   >
     <label class="example-label" id="readonly-label">Readonly Fruits</label>
     @for (fruit of fruits; track fruit) {
       <li
-        class="example-option"
+        class="example-option example-stateful example-selectable"
         [value]="fruit"
         cdkOption
         #option="cdkOption"
