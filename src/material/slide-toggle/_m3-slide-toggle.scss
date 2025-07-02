@@ -1,5 +1,7 @@
 @use 'sass:map';
+@use 'sass:list';
 @use '../core/tokens/m3-utils';
+@use '../core/theming/theming';
 @use '../core/tokens/m3';
 
 /// Generates custom tokens for the mat-slide-toggle.
@@ -115,6 +117,16 @@
       slide-toggle-label-text-tracking: map.get($system, body-medium-tracking),
       slide-toggle-label-text-weight: map.get($system, body-medium-weight),
     ),
-    density: (),
+     density: get-density-tokens(map.get($system, density-scale)),
+  );
+}
+
+// Tokens that can be configured through Angular Material's density theming API.
+@function get-density-tokens($scale) {
+  $scale: theming.clamp-density($scale, -3);
+  $index: ($scale * -1) + 1;
+
+  @return (
+    slide-toggle-touch-target-display: list.nth((block, block, none, none), $index),
   );
 }

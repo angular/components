@@ -99,7 +99,8 @@
         -1: 36px,
         -2: 32px,
         -3: 28px,
-      ), $density-scale)
+      ), $density-scale),
+      slide-toggle-touch-target-display: if($density-scale < -1, none, block)
     ),
   );
 }
