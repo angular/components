@@ -1,3 +1,20 @@
+<a name="20.0.5"></a>
+# 20.0.5 "agardite-ant" (2025-07-02)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [45cc05641](https://github.com/angular/components/commit/45cc05641f89afb760077cb806af9814a01909e8) | fix | **tree:** remove leaking subscription ([#31457](https://github.com/angular/components/pull/31457)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7556beaa7](https://github.com/angular/components/commit/7556beaa7b20247d7c01f9e76d7097a0758f5ce7) | fix | **schematics:** typo in prompt question ([#31449](https://github.com/angular/components/pull/31449)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bdfeb04c3](https://github.com/angular/components/commit/bdfeb04c3a220121d7b98b9ac8147e0cfdcdfeb6) | fix | fix update schematic ([#31448](https://github.com/angular/components/pull/31448)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.0-next.2"></a>
 # 20.1.0-next.2 "strontium-snack" (2025-06-25)
 ### cdk
