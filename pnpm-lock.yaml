@@ -448,8 +448,8 @@ importers:
         specifier: ^22.14.1
         version: 22.14.1
       '@types/shelljs':
-        specifier: 0.8.16
-        version: 0.8.16
+        specifier: 0.8.17
+        version: 0.8.17
       firebase-tools:
         specifier: ^14.0.0
         version: 14.4.0(@types/node@22.14.1)(encoding@0.1.13)
@@ -2991,8 +2991,8 @@ packages:
   '@types/shelljs@0.8.15':
     resolution: {integrity: sha512-vzmnCHl6hViPu9GNLQJ+DZFd6BQI2DBTUeOvYHqkWQLMfKAAQYMb/xAmZkTogZI/vqXHCWkqDRymDI5p0QTi5Q==}
 
-  '@types/shelljs@0.8.16':
-    resolution: {integrity: sha512-40SUXiH0tZfAg/oKkkGF1kdHPAmE4slv2xAmbfa8VtE6ztHYwdpW2phlzHTVdJh5JOGqA3Cx1Hzp7kxFalKHYA==}
+  '@types/shelljs@0.8.17':
+    resolution: {integrity: sha512-IDksKYmQA2W9MkQjiyptbMmcQx+8+Ol6b7h6dPU5S05JyiQDSb/nZKnrMrZqGwgV6VkVdl6/SPCKPDlMRvqECg==}
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
@@ -11348,10 +11348,10 @@ snapshots:
       '@types/glob': 7.2.0
       '@types/node': 22.14.1
 
-  '@types/shelljs@0.8.16':
+  '@types/shelljs@0.8.17':
     dependencies:
-      '@types/glob': 7.2.0
       '@types/node': 22.14.1
+      glob: 11.0.3
 
   '@types/sockjs@0.3.36':
     dependencies:
