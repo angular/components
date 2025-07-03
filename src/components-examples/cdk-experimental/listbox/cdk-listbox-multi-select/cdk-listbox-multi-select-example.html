@@ -4,13 +4,13 @@
     cdkListbox
     [multi]="true"
     selectionMode="explicit"
-    class="example-listbox"
+    class="example-listbox example-parent"
     aria-labelledby="multi-select-label"
   >
     <label class="example-label" id="multi-select-label">Multi Select Fruits</label>
     @for (fruit of fruits; track fruit) {
       <li
-        class="example-option"
+        class="example-option example-stateful example-selectable"
         [value]="fruit"
         cdkOption
         #option="cdkOption"

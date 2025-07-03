@@ -51,6 +51,7 @@
 <!-- #docregion listbox -->
 <ul
   cdkListbox
+  #listbox="cdkListbox"
   [value]="selection"
   [wrap]="wrap.value"
   [multi]="multi.value"
@@ -60,7 +61,7 @@
   [orientation]="orientation"
   [focusMode]="focusMode"
   [selectionMode]="selectionMode"
-  class="example-listbox"
+  class="example-listbox example-parent"
 >
   <label class="example-label" id="fruit-example-label">List of Fruits</label>
 
@@ -68,14 +69,14 @@
     @let optionDisabled = disabledOptions.includes(fruit);
 
     <li
-      class="example-option"
+      class="example-option example-stateful example-selectable"
       [disabled]="optionDisabled"
       [value]="fruit"
       cdkOption
       #option="cdkOption"
     >
       <mat-pseudo-checkbox
-        [disabled]="optionDisabled"
+        [disabled]="optionDisabled || listbox.disabled()"
         [state]="option.pattern.selected() ? 'checked' : 'unchecked'"
       ></mat-pseudo-checkbox>
       <span>{{ fruit }}</span>

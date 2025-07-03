@@ -3,13 +3,13 @@
   <ul
     cdkListbox
     [skipDisabled]="true"
-    class="example-listbox"
+    class="example-listbox example-parent"
     aria-labelledby="disabled-skipped-label"
   >
     <label class="example-label" id="disabled-skipped-label">Disabled Skipped Fruits</label>
     @for (fruit of fruits; track fruit; let i = $index) {
       <li
-        class="example-option"
+        class="example-option example-stateful example-selectable"
         [value]="fruit"
         [disabled]="i % 2 === 0"
         cdkOption
