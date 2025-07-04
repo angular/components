@@ -21,6 +21,7 @@ $mat-tab-animation-duration: 500ms !default;
     white-space: nowrap;
     cursor: pointer;
     z-index: 1;
+    touch-action: manipulation;
   }
 
   .mdc-tab__content {
