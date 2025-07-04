@@ -15,10 +15,10 @@ http_archive(
 # Add skylib which contains common Bazel utilities.
 http_archive(
     name = "bazel_skylib",
-    sha256 = "4f7e2b6bafa9a88ac1b0ee0c3ad69850282419aa51f6bd5b45cde8d0c945d18c",
-    strip_prefix = "bazel-skylib-454b25912a8ddf3d90eb47f25260befd5ee274a8",
+    sha256 = "1c5b3cba9ec2ece2dabf478cf1ad8cd304992acbbafcf89e819a43e52b13f9f7",
+    strip_prefix = "bazel-skylib-8dcb1c9b93ee18eb319bb78d83bfc955b4d7a958",
     urls = [
-        "https://github.com/bazelbuild/bazel-skylib/archive/454b25912a8ddf3d90eb47f25260befd5ee274a8.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/archive/8dcb1c9b93ee18eb319bb78d83bfc955b4d7a958.tar.gz",
     ],
 )
 
@@ -45,9 +45,9 @@ build_bazel_rules_nodejs_dependencies()
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "83e5af4d17385d1c3268c31ae217dbfc8525aa7bcf52508dc6864baffc8b9501",
-    strip_prefix = "rules_js-2.3.7",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.7/rules_js-v2.3.7.tar.gz",
+    sha256 = "304c51726b727d53277dd28fcda1b8e43b7e46818530b8d6265e7be98d5e2b25",
+    strip_prefix = "rules_js-2.3.8",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.8/rules_js-v2.3.8.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
@@ -150,9 +150,9 @@ npm_repositories()
 
 http_archive(
     name = "aspect_rules_ts",
-    sha256 = "6b15ac1c69f2c0f1282e41ab469fd63cd40eb2e2d83075e19b68a6a76669773f",
-    strip_prefix = "rules_ts-3.6.0",
-    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.6.0/rules_ts-v3.6.0.tar.gz",
+    sha256 = "f60d5d25d17760e258d194f1fcab7a29e73629b86f070609c6ce2b2459dd49e3",
+    strip_prefix = "rules_ts-3.6.2",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.6.2/rules_ts-v3.6.2.tar.gz",
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
@@ -199,7 +199,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "652e5b0ef9be65ca738e11d5d01424b64344b466",
+    commit = "88ddcf8cccbfef57f8cc3dda4881f18ec739428e",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
@@ -238,7 +238,7 @@ esbuild_register_toolchains(
 
 git_repository(
     name = "rules_browsers",
-    commit = "0952071cdc67acf1124c20c32a9b7e2e85da0aa3",
+    commit = "800d91c06d3ac174b789ad6a9b6772f358230c40",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
@@ -252,7 +252,7 @@ rules_browsers_setup_2()
 
 git_repository(
     name = "rules_sass",
-    commit = "3cd198e291caf21ba8f7105d53963dd3df62ef6d",
+    commit = "cc1e845339fc45d3c8390445014d5824b85a0948",
     remote = "https://github.com/devversion/rules_sass.git",
 )
 
