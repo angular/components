@@ -1044,11 +1044,15 @@ export class TooltipComponent implements OnDestroy {
     if (this._hideTimeoutId != null) {
       clearTimeout(this._hideTimeoutId);
     }
-
-    this._showTimeoutId = setTimeout(() => {
+    if( delay > 0 ){
+      this._showTimeoutId = setTimeout(() => {
+        this._toggleVisibility(true);
+        this._showTimeoutId = undefined;
+      }, delay);
+    } else {
       this._toggleVisibility(true);
       this._showTimeoutId = undefined;
-    }, delay);
+    }
   }
 
   /**
