@@ -5,12 +5,12 @@ defining a custom theme. Angular Material’s theming system is inspired by
 Google’s [Material Design](https://m3.material.io/styles).
 
 This guide describes how to set up theming for your application using
-Sass APIs introduced in Angular Material v19. 
+Sass APIs introduced in Angular Material v19.
 
 If your application depends on a version before v19, or if your application's
-theme is applied using a theme config created with `mat.define-theme`, 
+theme is applied using a theme config created with `mat.define-theme`,
 `mat.define-light-theme`, or `mat.define-dark-theme`,
-then you can refer to the theming guides at 
+then you can refer to the theming guides at
 [v18.material.angular.dev/guides](https://v18.material.angular.dev/guides).
 
 ## Getting Started
@@ -62,7 +62,7 @@ The `mat.theme` mixin will only declare CSS variables for the categories
 included in the input. For example, if `typography` is not defined, then
 typography CSS variables will not be included in the output.
 
-### **Color**
+### Color
 
 The `theme`‘s color determines the component color styles, such as the fill
 color of checkboxes or ripple color of buttons. It depends on color palettes of
@@ -74,14 +74,14 @@ palettes.
 You can set the color in one of two ways: as a single color palette, or as a
 color map.
 
-#### *Single Color Palette*
+#### Single Color Palette
 
 If you provide a single color palette, Angular Material uses its values for the
 theme’s primary, secondary, and tertiary colors. The CSS color values will be
 defined using `light-dark` CSS color function. Your application styles should
 define an explicit value declaration for the `color-scheme` CSS property.
 
-#### *Color Map*
+#### Color Map
 
 If you provide a color map, then the tertiary color palette can be configured
 separately from the primary palette. The tertiary palette can be used to add a
@@ -121,7 +121,7 @@ html {
 }
 ```
 
-### **Typography**
+### Typography
 
 The `mat.theme` ‘s typography determines the text styles used in components,
 such as the font for dialog titles or menu list items.
@@ -129,13 +129,13 @@ such as the font for dialog titles or menu list items.
 You can set the typography in one of two ways: as a single font family value, or
 as a typography map.
 
-#### *Single Font Family Value*
+#### Single Font Family Value
 
 If you provide a font family, Angular Material uses it for all the text in its
 components. The font weights used in components are set to 700 for bold text,
 500 for medium text, and 400 for regular text.
 
-#### *Typography Map*
+#### Typography Map
 
 If you provide a typography map, then distinct font families are set for plain
 and brand text. The plain font family is typically used for most of the
@@ -168,7 +168,7 @@ html {
 }
 ```
 
-### **Density**
+### Density
 
 The `mat.theme` ‘s density value determines the spacing within components, such
 as how much padding is used around a button’s text or the height of form fields.
@@ -202,31 +202,31 @@ pop-up contexts, such as the date picker. The Material Design density guidance
 explicitly discourages changes to density for such interactions because they
 don't compete for space in the application's layout.
 
-## **Color Palettes**
+## Color Palettes
 
 A color palette is a set of similar colors with different hues ranging from
 light to dark. The Angular Material theme uses color palettes to create a color
 scheme to communicate an application’s hierarchy, state, and brand.
 
-### **Prebuilt Color Palettes**
+### Prebuilt Color Palettes
 
 Angular Material provides twelve prebuilt color palettes that can be used for
 your application’s theme:
 
-*   `$red-palette`
-*   `$green-palette`
-*   `$blue-palette`
-*   `$yellow-palette`
-*   `$cyan-palette`
-*   `$magenta-palette`
-*   `$orange-palette`
-*   `$chartreuse-palette`
-*   `$spring-green-palette`
-*   `$azure-palette`
-*   `$violet-palette`
-*   `$rose-palette`
+* `$red-palette`
+* `$green-palette`
+* `$blue-palette`
+* `$yellow-palette`
+* `$cyan-palette`
+* `$magenta-palette`
+* `$orange-palette`
+* `$chartreuse-palette`
+* `$spring-green-palette`
+* `$azure-palette`
+* `$violet-palette`
+* `$rose-palette`
 
-### **Custom Color Palettes**
+### Custom Color Palettes
 
 The Angular Material
 [palette generation schematic](https://github.com/angular/components/blob/main/src/material/schematics/ng-generate/theme-color/README.md)
@@ -238,7 +238,7 @@ neutral palettes:
 ng generate @angular/material:theme-color
 ```
 
-## **Loading Fonts**
+## Loading Fonts
 
 You can use Google Fonts as one option to load fonts in your application. For
 example, the following code in an application’s `<head>` loads the font family
@@ -256,7 +256,7 @@ default, projects created with the Angular CLI are
 [configured](https://angular.dev/reference/configs/workspace-config#fonts-optimization-options)
 to inline assets from Google Fonts to reduce render-blocking requests.
 
-## **Supporting Light and Dark Mode**
+## Supporting Light and Dark Mode
 
 By default, the `mat.theme` mixin defines colors using the CSS color function
 `light-dark` to make it easy for your application to switch between light and
@@ -310,12 +310,12 @@ define your own queries to apply the styles that make sense for your users. This
 may mean relying on `color-scheme: light dark`, defining custom media queries,
 or reading a saved user preference to apply styles.
 
-## **Multiple Themes**
+## Multiple Themes
 
 You can call the `mat.theme` mixin more than once to apply multiple different
 color schemes in your application.
 
-### **Context-specific Themes**
+### Context-specific Themes
 
 The following example theme file customizes the theme for components in
 different contexts. In this case, a cyan-based palette is applied to a container
@@ -340,7 +340,7 @@ html {
 }
 ```
 
-## **Using Theme Styles**
+## Using Theme Styles
 
 An application’s custom components can use the CSS variables defined by
 `mat.theme` to apply the theme’s colors and typography.
@@ -369,7 +369,7 @@ See the [Theme Variables](https://material.angular.dev/guide/system-variables) g
 comprehensive list of these variables, examples of where they are used, and how
 components can depend on them.
 
-## **Customizing Tokens**
+## Customizing Tokens
 
 Angular Material components also allow for narrowly targeted customization of
 specific tokens through the `overrides` mixins. This enables fine-grained
@@ -380,7 +380,7 @@ The `overrides` API validates that the customized tokens are correctly spelled
 and can be used to ensure backwards compatibility if tokens are added, moved, or
 renamed in future versions.
 
-### **System Tokens**
+### System Tokens
 
 System-level tokens can be changed to different values through the
 `mat.theme-overrides` mixin, which will redefine CSS variables that are used in
@@ -426,7 +426,7 @@ html {
 }
 ```
 
-### **Component Tokens**
+### Component Tokens
 
 Each Angular Material component defines an `overrides` mixin that can be used to
 customize tokenized styles for their color, typography, and density.
@@ -449,7 +449,7 @@ html {
 }
 ```
 
-### **Direct Style Overrides**
+### Direct Style Overrides
 
 Angular Material supports customizing color, typography, and density as outlined
 in this document. Angular strongly discourages, and does not directly support,
@@ -458,7 +458,7 @@ structure and CSS classes are considered private implementation details that may
 change at any time. CSS variables used by the Angular Material components should
 be defined through the `overrides` API instead of defined explicitly.
 
-## **Shadow DOM**
+## Shadow DOM
 
 Angular Material assumes that, by default, all theme styles are loaded as global
 CSS. If you want to use
