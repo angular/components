@@ -480,6 +480,15 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(getPanel()).toBeTruthy();
     }));
+
+    it('should be able to opt out of opening on click', () => {
+      const fixture = TestBed.createComponent(StandaloneTimepicker);
+      fixture.componentInstance.openOnClick.set(false);
+      fixture.detectChanges();
+      getInput(fixture).click();
+      fixture.detectChanges();
+      expect(getPanel()).toBeFalsy();
+    });
   });
 
   // Note: these tests intentionally don't cover the full option generation logic
@@ -1313,6 +1322,7 @@ describe('MatTimepicker', () => {
       [disabled]="disabled()"
       [matTimepickerMin]="min()"
       [matTimepickerMax]="max()"
+      [matTimepickerOpenOnClick]="openOnClick()"
       [value]="value()"/>
     <mat-timepicker
       #picker
@@ -1345,6 +1355,7 @@ class StandaloneTimepicker {
   readonly toggleDisabled = signal<boolean>(false);
   readonly toggleTabIndex = signal<number>(0);
   readonly customOptions = signal<MatTimepickerOption<Date>[] | null>(null);
+  readonly openOnClick = signal(true);
   readonly openedSpy = jasmine.createSpy('opened');
   readonly closedSpy = jasmine.createSpy('closed');
   readonly selectedSpy = jasmine.createSpy('selected');
