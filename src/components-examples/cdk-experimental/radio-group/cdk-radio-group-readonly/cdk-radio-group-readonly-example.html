@@ -2,13 +2,13 @@
   <ul
     cdkRadioGroup
     [readonly]="true"
-    class="example-radio-group"
+    class="example-radio-group example-parent"
     aria-labelledby="readonly-radio-label"
   >
     <label class="example-label" id="readonly-radio-label">Favorite Fruit (Readonly)</label>
     @for (fruit of fruits; track fruit) {
       <li
-        class="example-radio-button"
+        class="example-radio-button example-stateful example-selectable"
         [value]="fruit"
         cdkRadioButton
         #radioButton="cdkRadioButton"

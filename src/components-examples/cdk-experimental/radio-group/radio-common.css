@@ -23,7 +23,6 @@
 }
 
 .example-radio-group[aria-disabled='true'] {
-  background-color: var(--mat-sys-surface-dim);
   pointer-events: none;
 }
 
@@ -73,28 +72,8 @@
   background-color: var(--mat-sys-outline);
 }
 
-.example-radio-button.cdk-active,
-.example-radio-button[aria-disabled='false']:hover {
-  outline: 1px solid var(--mat-sys-outline);
-  background: var(--mat-sys-surface-container);
-}
-
-.example-radio-button[aria-disabled='false']:focus-within {
-  outline: 2px solid var(--mat-sys-primary);
-  background: var(--mat-sys-surface-container);
-}
-
-.example-radio-button.cdk-active[aria-disabled='true'],
-.example-radio-button[aria-disabled='true']:focus-within {
-  outline: 2px solid var(--mat-sys-outline);
-}
-
 .example-radio-button[aria-disabled='true'] {
   cursor: default;
-}
-
-.example-radio-button[aria-disabled='true'] span:not(.example-radio-indicator) {
-  opacity: 0.3;
 }
 
 .example-radio-button[aria-disabled='true']::before {
