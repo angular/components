@@ -24,19 +24,6 @@
   list-style: none;
 }
 
-.example-tree-item[aria-selected='true'] {
-  background-color: var(--mat-sys-inverse-primary);
-}
-
-.example-tree-item[aria-selected='false'] {
-  background-color: var(--mat-sys-background);
-}
-
-.example-tree-item[aria-disabled='true'] {
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface-variant);
-}
-
 .example-tree-item-content {
   display: flex;
   align-items: center;

@@ -3,6 +3,10 @@
   color: var(--mat-sys-on-surface);
 }
 
+.example-stateful {
+  background-color: color-mix(in srgb, var(--mat-sys-surface) 10%, transparent);
+}
+
 [aria-disabled='true'] .example-stateful,
 .example-stateful[aria-disabled='true'] {
   color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);

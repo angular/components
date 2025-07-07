@@ -25,14 +25,14 @@ interface ExampleNode {
   template: `
     <li
       cdkTreeItem
-      class="example-tree-item"
+      class="example-tree-item example-selectable"
       [value]="node().value"
       [label]="node().label || node().value"
       [disabled]="node().disabled"
       #treeItem="cdkTreeItem"
     >
       <span
-        class="example-tree-item-content"
+        class="example-tree-item-content example-stateful"
         [style.paddingLeft.px]="(treeItem.pattern.level() - 1) * 24"
       >
         <mat-icon class="example-tree-item-icon" aria-hidden="true">
