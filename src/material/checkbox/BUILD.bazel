@@ -87,7 +87,6 @@ ng_project(
         ":css",
     ],
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//src/material/core",
