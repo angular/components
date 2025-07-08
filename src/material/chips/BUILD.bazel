@@ -96,7 +96,6 @@ ng_project(
         ":chip_set_css",
     ],
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
@@ -116,7 +115,6 @@ ts_project(
     ),
     deps = [
         ":chips",
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",

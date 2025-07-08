@@ -17,7 +17,6 @@ ng_project(
     ),
     assets = [":dialog-container.css"] + glob(["**/*.html"]),
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
