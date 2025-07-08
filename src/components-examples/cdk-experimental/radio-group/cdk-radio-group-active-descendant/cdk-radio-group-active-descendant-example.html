@@ -8,7 +8,7 @@
     <label class="example-label" id="active-descendant-radio-label">Favorite Fruit (Active Descendant)</label>
     @for (fruit of fruits; track fruit) {
       <li
-        class="example-radio-button"
+        class="example-radio-button example-stateful example-selectable"
         [value]="fruit"
         cdkRadioButton
         #radioButton="cdkRadioButton"

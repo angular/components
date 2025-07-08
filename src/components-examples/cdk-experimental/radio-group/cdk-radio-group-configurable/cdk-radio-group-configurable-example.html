@@ -37,12 +37,17 @@
   [skipDisabled]="skipDisabled.value"
   [orientation]="orientation"
   [focusMode]="focusMode"
-  class="example-radio-group"
+  class="example-radio-group example-parent"
   aria-label="Select your favorite fruit"
 >
   @for (fruit of fruits; track fruit) {
     @let optionDisabled = disabledOptions.includes(fruit);
-    <li cdkRadioButton [value]="fruit" [disabled]="optionDisabled" class="example-radio-button">
+    <li
+      cdkRadioButton
+      [value]="fruit"
+      [disabled]="optionDisabled"
+      class="example-radio-button example-stateful example-selectable"
+    >
       <span class="example-radio-indicator"></span>
       <span>{{ fruit }}</span>
     </li>

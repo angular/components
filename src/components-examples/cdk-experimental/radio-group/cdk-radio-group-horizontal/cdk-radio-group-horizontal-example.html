@@ -2,13 +2,13 @@
   <ul
     cdkRadioGroup
     orientation="horizontal"
-    class="example-radio-group example-radio-group-horizontal"
+    class="example-radio-group example-radio-group-horizontal example-parent"
     aria-labelledby="horizontal-radio-label"
   >
     <label class="example-label" id="horizontal-radio-label">Favorite Fruit (Horizontal)</label>
     @for (fruit of fruits; track fruit) {
       <li
-        class="example-radio-button"
+        class="example-radio-button example-stateful example-selectable"
         [value]="fruit"
         cdkRadioButton
         #radioButton="cdkRadioButton"
