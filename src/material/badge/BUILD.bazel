@@ -71,7 +71,6 @@ ng_project(
     ],
     assets = [":badge_css"],
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
