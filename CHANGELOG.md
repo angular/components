@@ -1,3 +1,12 @@
+<a name="20.0.6"></a>
+# 20.0.6 "plastic-moon" (2025-07-09)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1f15ad392c](https://github.com/angular/components/commit/1f15ad392ccb2e18f2fd6cccfcf41a77d78ea701) | fix | **tabs:** remove delay on touch devices ([#31489](https://github.com/angular/components/pull/31489)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.0-rc.0"></a>
 # 20.1.0-rc.0 "aguilarite-axe" (2025-07-02)
 ### cdk
