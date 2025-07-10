@@ -94,6 +94,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     readonly min: InputSignalWithTransform<D | null, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
+    readonly openOnClick: InputSignalWithTransform<boolean, unknown>;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
     registerOnValidatorChange(fn: () => void): void;
@@ -103,7 +104,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     readonly value: ModelSignal<D | null>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatTimepickerInput<any>, "input[matTimepicker]", ["matTimepickerInput"], { "value": { "alias": "value"; "required": false; "isSignal": true; }; "timepicker": { "alias": "matTimepicker"; "required": true; "isSignal": true; }; "min": { "alias": "matTimepickerMin"; "required": false; "isSignal": true; }; "max": { "alias": "matTimepickerMax"; "required": false; "isSignal": true; }; "openOnClick": { "alias": "matTimepickerOpenOnClick"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTimepickerInput<any>, never>;
 }
