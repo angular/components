@@ -124,7 +124,7 @@
     "magic-string": "0.30.17",
     "marked": "^16.0.0",
     "minimatch": "^10.0.3",
-    "parse5": "^7.1.2",
+    "parse5": "^8.0.0",
     "postcss": "^8.4.17",
     "postcss-scss": "^4.0.4",
     "prettier": "^3.5.3",
