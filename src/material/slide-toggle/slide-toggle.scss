@@ -542,3 +542,20 @@ $fallbacks: m3-slide-toggle.get-tokens();
     color: token-utils.slot(slide-toggle-disabled-label-text-color, $fallbacks);
   }
 }
+
+// Element used to provide a larger tap target for users on touch devices.
+.mat-mdc-slide-toggle-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 48px;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  display: token-utils.slot(slide-toggle-touch-target-display, $fallbacks);
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+}
