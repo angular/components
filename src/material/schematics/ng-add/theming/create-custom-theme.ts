@@ -38,7 +38,8 @@ html {
   color-scheme: light;
 
   // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables.
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
