@@ -140,6 +140,16 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
     transform: (value: unknown) => this._transformDateInput<D>(value),
   });
 
+  /**
+   * Whether to open the timepicker overlay when clicking on the input. Enabled by default.
+   * Note that when disabling this option, you'll have to provide your own logic for opening
+   * the overlay.
+   */
+  readonly openOnClick: InputSignalWithTransform<boolean, unknown> = input(true, {
+    alias: 'matTimepickerOpenOnClick',
+    transform: booleanAttribute,
+  });
+
   /** Whether the input is disabled. */
   readonly disabled: Signal<boolean> = computed(
     () => this.disabledInput() || this._accessorDisabled(),
@@ -254,7 +264,7 @@ export class MatTimepickerInput<D> implements ControlValueAccessor, Validator, O
 
   /** Handles clicks on the input or the containing form field. */
   private _handleClick = (): void => {
-    if (!this.disabled()) {
+    if (!this.disabled() && this.openOnClick()) {
       this.timepicker().open();
     }
   };
