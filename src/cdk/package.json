@@ -50,7 +50,7 @@
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
-    "parse5": "^7.1.2",
+    "parse5": "^8.0.0",
     "tslib": "^2.3.0"
   },
   "schematics": "./schematics/collection.json",
