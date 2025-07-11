@@ -248,7 +248,6 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     // is too late since the two modes save different kinds of information. We work around it by
     // assigning the drop container both from here and the list.
     if (dropContainer) {
-      this._dragRef._withDropContainer(dropContainer._dropListRef);
       dropContainer.addItem(this);
 
       // The drop container reads this so we need to sync it here.
