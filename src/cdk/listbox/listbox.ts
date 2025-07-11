@@ -9,6 +9,7 @@
 import {
   _IdGenerator,
   ActiveDescendantKeyManager,
+  FocusMonitor,
   Highlightable,
   ListKeyManagerOption,
 } from '../a11y';
@@ -243,7 +244,6 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
     '[attr.aria-orientation]': 'orientation',
-    '(focus)': '_handleFocus()',
     '(keydown)': '_handleKeydown($event)',
     '(focusout)': '_handleFocusOut($event)',
     '(focusin)': '_handleFocusIn()',
@@ -269,6 +269,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
   private _id: string;
   private _generatedId = inject(_IdGenerator).getId('cdk-listbox-');
+  private _focusMonitor = inject(FocusMonitor);
 
   /** The tabindex to use when the listbox is enabled. */
   @Input('tabindex')
@@ -462,6 +463,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
     }
 
     this._initKeyManager();
+    this._handleFocus();
 
     // Update the internal value whenever the options or the model value changes.
     merge(this.selectionModel.changed, this.options.changes)
@@ -477,6 +479,7 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
   }
 
   ngOnDestroy() {
+    this._focusMonitor.stopMonitoring(this.element);
     this._cleanupWindowBlur?.();
     this.listKeyManager?.destroy();
     this.destroyed.next();
@@ -698,15 +701,26 @@ export class CdkListbox<T = unknown> implements AfterContentInit, OnDestroy, Con
 
   /** Called when the listbox receives focus. */
   protected _handleFocus() {
-    if (!this.useActiveDescendant) {
-      if (this.selectionModel.selected.length > 0) {
-        this._setNextFocusToSelectedOption();
-      } else {
-        this.listKeyManager.setNextItemActive();
-      }
+    this._focusMonitor
+      .monitor(this.element, false)
+      .pipe(takeUntil(this.destroyed))
+      .subscribe(focusOrigin => {
+        // Don't forward focus on mouse interactions, because it can
+        // mess with the user's scroll position. See #30900.
+        if (focusOrigin === 'mouse' || focusOrigin === null) {
+          return;
+        }
 
-      this._focusActiveOption();
-    }
+        if (!this.useActiveDescendant) {
+          if (this.selectionModel.selected.length > 0) {
+            this._setNextFocusToSelectedOption();
+          } else {
+            this.listKeyManager.setNextItemActive();
+          }
+
+          this._focusActiveOption();
+        }
+      });
   }
 
   /** Called when the user presses keydown on the listbox. */
