@@ -35,7 +35,7 @@ entire application. The `color-scheme` is explicitly set to `light dark` so that
 the end user's system preferences are used to determine whether the application
 appears in light or dark mode.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -51,7 +51,7 @@ html {
 You can use the following styles to apply the theme’s surface background and
 on-surface text colors as a default across your application:
 
-```
+```scss
 body {
   background: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
@@ -105,7 +105,7 @@ tertiary color. The theme-type is set to `light` which means that only the light
 color values will be set for the application. The typography is set to Roboto
 with a standard density setting.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -150,7 +150,7 @@ and the Open Sans font family to brand text. It specifies that bold weight is
 900, medium weight is 500, and regular weight is 300\. The color scheme uses the
 violet color palette with a standard density.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -182,7 +182,7 @@ The following example theme file has a density setting of \-2 which causes most
 components to include less whitespace in their layout. The color scheme uses the
 violet color palette and applies Roboto as the font-family.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -234,7 +234,7 @@ builds custom color palettes based on a single color input for the primary
 color, and optionally color inputs to further customize secondary, tertiary, and
 neutral palettes:
 
-```
+```bash
 ng generate @angular/material:theme-color
 ```
 
@@ -244,7 +244,7 @@ You can use Google Fonts as one option to load fonts in your application. For
 example, the following code in an application’s `<head>` loads the font family
 Roboto with the font weights 700, 500, and 400:
 
-```
+```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -268,7 +268,7 @@ You can define `color-scheme: light` or `color-scheme: dark` to explicitly
 define your application’s mode. To set the mode depending on the user’s system
 preferences, use `color-scheme: light-dark` as shown in the following example:
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -286,7 +286,7 @@ that the mode depends on whether that class has been applied. In the following
 example, the application always displays the light mode theme unless the class
 “dark-mode” is added to the HTML body.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -322,7 +322,7 @@ different contexts. In this case, a cyan-based palette is applied to a container
 of information about deleting data, causing buttons and other components to have
 a unique and attention-grabbing style applied:
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -356,7 +356,7 @@ The following example styles demonstrate a component using the color and
 typography variables to create an application-wide banner presenting important
 information to the user:
 
-```
+```scss
 :host {
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
@@ -389,7 +389,7 @@ the application.
 The following example applies a violet color palette for the application, but
 alters the `primary-container` token to a specific shade of blue.
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -411,7 +411,7 @@ html {
 Alternatively, an optional override map can be provided in the `mat.theme` mixin
 to replace values applied by the mixin:
 
-```
+```scss
 @use '@angular/material' as mat;
 
 html {
@@ -439,7 +439,7 @@ The following example demonstrates the Card’s `overrides` API to change the
 background color to red, increase the corner border radius, and specify a larger
 title font size.
 
-```
+```scss
 html {
   @include mat.card-overrides((
     elevated-container-color: red,
