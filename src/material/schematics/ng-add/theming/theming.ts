@@ -7,20 +7,11 @@
  */
 
 import {normalize, logging} from '@angular-devkit/core';
+import {noop, Rule, SchematicContext, SchematicsException, Tree} from '@angular-devkit/schematics';
 import {
-  chain,
-  noop,
-  Rule,
-  SchematicContext,
-  SchematicsException,
-  Tree,
-} from '@angular-devkit/schematics';
-import {
-  addBodyClass,
   getProjectFromWorkspace,
   getProjectStyleFile,
   getProjectTargetOptions,
-  getProjectIndexFiles,
   getProjectTestTargets,
   getProjectBuildTargets,
 } from '@angular/cdk/schematics';
@@ -39,33 +30,17 @@ const defaultCustomThemeFilename = 'custom-theme.scss';
 /** Add pre-built styles to the main project style file. */
 export function addThemeToAppStyles(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-    const themeName = options.theme || 'azure-blue';
-    return themeName === 'custom'
-      ? insertCustomTheme(options.project, host, context.logger)
-      : insertPrebuiltTheme(options.project, themeName, context.logger);
-  };
-}
-
-/** Adds the global typography class to the body element. */
-export function addTypographyClass(options: Schema): Rule {
-  return async (host: Tree) => {
-    const workspace = await readWorkspace(host);
-    const project = getProjectFromWorkspace(workspace, options.project);
-    const projectIndexFiles = getProjectIndexFiles(project);
-
-    if (!projectIndexFiles.length) {
-      throw new SchematicsException('No project index HTML file could be found.');
-    }
-
-    projectIndexFiles.forEach(path => addBodyClass(host, path, 'mat-typography'));
+    const palettes = options.theme || 'azure-blue';
+    return insertCustomTheme(palettes, options.project, host, context.logger);
   };
 }
 
 /**
- * Insert a custom theme to project style file. If no valid style file could be found, a new
+ * Insert an Angular Material theme to project style file. If no valid style file could be found, a new
  * Scss file for the custom theme will be created.
  */
 async function insertCustomTheme(
+  palettes: string,
   projectName: string,
   host: Tree,
   logger: logging.LoggerApi,
@@ -73,7 +48,7 @@ async function insertCustomTheme(
   const workspace = await readWorkspace(host);
   const project = getProjectFromWorkspace(workspace, projectName);
   const stylesPath = getProjectStyleFile(project, 'scss');
-  const themeContent = createCustomTheme(projectName);
+  const themeContent = createCustomTheme(palettes);
 
   if (!stylesPath) {
     if (!project.sourceRoot) {
@@ -89,7 +64,7 @@ async function insertCustomTheme(
 
     if (host.exists(customThemePath)) {
       logger.warn(`Cannot create a custom Angular Material theme because
-          ${customThemePath} already exists. Skipping custom theme generation.`);
+          ${customThemePath} already exists. Skipping theme generation.`);
       return noop();
     }
 
@@ -103,16 +78,6 @@ async function insertCustomTheme(
   recorder.insertLeft(insertion.pos, insertion.toAdd);
   host.commitUpdate(recorder);
   return noop();
-}
-
-/** Insert a pre-built theme into the angular.json file. */
-function insertPrebuiltTheme(project: string, theme: string, logger: logging.LoggerApi): Rule {
-  const themePath = `@angular/material/prebuilt-themes/${theme}.css`;
-
-  return chain([
-    addThemeStyleToTarget(project, 'build', themePath, logger),
-    addThemeStyleToTarget(project, 'test', themePath, logger),
-  ]);
 }
 
 /** Adds a theming style entry to the given project target options. */

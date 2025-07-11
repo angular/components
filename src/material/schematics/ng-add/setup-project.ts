@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {chain, noop, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {chain, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {getProjectFromWorkspace, getProjectStyleFile} from '@angular/cdk/schematics';
 import {readWorkspace} from '@schematics/angular/utility';
 import {ProjectType} from '@schematics/angular/utility/workspace-models';
 import {addFontsToIndex} from './fonts/material-fonts';
 import {Schema} from './schema';
-import {addThemeToAppStyles, addTypographyClass} from './theming/theming';
+import {addThemeToAppStyles} from './theming/theming';
 
 /**
  * Scaffolds the basics of a Angular Material application, this includes:
@@ -29,7 +29,6 @@ export default function (options: Schema): Rule {
         addThemeToAppStyles(options),
         addFontsToIndex(options),
         addMaterialAppStyles(options),
-        options.typography ? addTypographyClass(options) : noop(),
       ]);
     }
     context.logger.warn(
