@@ -235,6 +235,7 @@ export class CdkDropList<T = any> implements OnDestroy {
   /** Registers an items with the drop list. */
   addItem(item: CdkDrag): void {
     this._unsortedItems.add(item);
+    item._dragRef._withDropContainer(this._dropListRef);
 
     // Only sync the items while dragging since this method is
     // called when items are being initialized one-by-one.
