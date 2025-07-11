@@ -1,6 +1,6 @@
 export {CdkRadioGroupStandardExample} from './cdk-radio-group-standard/cdk-radio-group-standard-example';
 export {CdkRadioGroupHorizontalExample} from './cdk-radio-group-horizontal/cdk-radio-group-horizontal-example';
-export {CdkRadioGroupRtlHorizontalExample} from './cdk-radio-rtl-group-horizontal/cdk-radio-group-rtl-horizontal-example';
+export {CdkRadioGroupRtlHorizontalExample} from './cdk-radio-group-rtl-horizontal/cdk-radio-group-rtl-horizontal-example';
 export {CdkRadioGroupActiveDescendantExample} from './cdk-radio-group-active-descendant/cdk-radio-group-active-descendant-example';
 export {CdkRadioGroupDisabledFocusableExample} from './cdk-radio-group-disabled-focusable/cdk-radio-group-disabled-focusable-example';
 export {CdkRadioGroupDisabledSkippedExample} from './cdk-radio-group-disabled-skipped/cdk-radio-group-disabled-skipped-example';

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Dir} from '@angular/cdk/bidi';
 import {CdkListbox, CdkOption} from '@angular/cdk-experimental/listbox';
 import {MatPseudoCheckbox} from '@angular/material/core';
 
@@ -11,7 +12,7 @@ import {MatPseudoCheckbox} from '@angular/material/core';
   templateUrl: 'cdk-listbox-rtl-horizontal-example.html',
   styleUrl: '../cdk-listbox-configurable/cdk-listbox-configurable-example.css',
   standalone: true,
-  imports: [CdkListbox, CdkOption, MatPseudoCheckbox],
+  imports: [CdkListbox, CdkOption, Dir, MatPseudoCheckbox],
 })
 export class CdkListboxRtlHorizontalExample {
   fruits = [
