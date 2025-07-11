@@ -3,6 +3,7 @@
   <mat-checkbox [formControl]="multi">Multi</mat-checkbox>
   <mat-checkbox [formControl]="disabled">Disabled</mat-checkbox>
   <mat-checkbox [formControl]="skipDisabled">Skip Disabled</mat-checkbox>
+  <mat-checkbox [formControl]="nav">Nav Mode</mat-checkbox>
 
   <mat-form-field subscriptSizing="dynamic" appearance="outline">
     <mat-label>Orientation</mat-label>
@@ -43,10 +44,17 @@
   [focusMode]="focusMode"
   [wrap]="wrap.value"
   [skipDisabled]="skipDisabled.value"
+  [nav]="nav.value"
   [(value)]="selectedValues"
   #tree="cdkTree"
 >
-  @for (node of treeData; track node) {
-    <example-node [node]="node" />
+  @if (nav.value) {
+    @for (node of treeData; track node) {
+      <example-nav-node [node]="node" />
+    }
+  } @else {
+    @for (node of treeData; track node) {
+      <example-node [node]="node" />
+    }
   }
 </ul>

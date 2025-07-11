@@ -88,6 +88,8 @@ describe('CdkTree', () => {
       skipDisabled?: boolean;
       focusMode?: 'roving' | 'activedescendant';
       selectionMode?: 'follow' | 'explicit';
+      nav?: boolean;
+      currentType?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
     } = {},
   ) {
     if (config.nodes !== undefined) testComponent.nodes.set(config.nodes);
@@ -99,6 +101,8 @@ describe('CdkTree', () => {
     if (config.skipDisabled !== undefined) testComponent.skipDisabled.set(config.skipDisabled);
     if (config.focusMode !== undefined) testComponent.focusMode.set(config.focusMode);
     if (config.selectionMode !== undefined) testComponent.selectionMode.set(config.selectionMode);
+    if (config.nav !== undefined) testComponent.nav.set(config.nav);
+    if (config.currentType !== undefined) testComponent.currentType.set(config.currentType);
 
     fixture.detectChanges();
     defineTestVariables();
@@ -304,6 +308,27 @@ describe('CdkTree', () => {
         right();
         const fruitsItem = getTreeItemElementByValue('fruits')!;
         expect(fruitsItem.getAttribute('aria-expanded')).toBe('true');
+      });
+
+      it('should set aria-current to specific current type when nav="true"', () => {
+        updateTree({nav: true, value: ['apple']});
+
+        const appleItem = getTreeItemElementByValue('apple')!;
+        const bananaItem = getTreeItemElementByValue('banana')!;
+        expect(appleItem.getAttribute('aria-current')).toBe('page');
+        expect(bananaItem.hasAttribute('aria-current')).toBe(false);
+
+        updateTree({currentType: 'location'});
+        expect(appleItem.getAttribute('aria-current')).toBe('location');
+      });
+
+      it('should not set aria-selected when nav="true"', () => {
+        updateTree({value: ['apple'], nav: true});
+        const appleItem = getTreeItemElementByValue('apple')!;
+        expect(appleItem.hasAttribute('aria-selected')).toBe(false);
+
+        updateTree({nav: false});
+        expect(appleItem.getAttribute('aria-selected')).toBe('true');
       });
     });
 
@@ -1310,6 +1335,8 @@ interface TestTreeNode<V = string> {
       [orientation]="orientation()"
       [disabled]="disabled()"
       [(value)]="value"
+      [nav]="nav()"
+      [currentType]="currentType()"
     >
       @for (node of nodes(); track node.value) {
         <li
@@ -1405,4 +1432,6 @@ class TestTreeComponent {
   skipDisabled = signal(true);
   focusMode = signal<'roving' | 'activedescendant'>('roving');
   selectionMode = signal<'explicit' | 'follow'>('explicit');
+  nav = signal(false);
+  currentType = signal('page');
 }

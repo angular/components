@@ -36,7 +36,8 @@
 }
 
 .example-selectable[aria-selected='true'],
-.example-selectable[aria-checked='true'] {
+.example-selectable[aria-checked='true'],
+.example-selectable[aria-current] {
   background: color-mix(
     in srgb,
     var(--mat-sys-primary) calc(var(--mat-sys-pressed-state-layer-opacity) * 100%),
@@ -45,13 +46,16 @@
 }
 
 .example-selectable[aria-selected='true']:focus-within,
-.example-selectable[aria-checked='true']:focus-within {
+.example-selectable[aria-checked='true']:focus-within,
+.example-selectable[aria-current]:focus-within {
   outline: var(--mat-sys-primary) solid 2px;
 }
 
 [aria-disabled='true'] .example-selectable[aria-selected='true'],
 .example-selectable[aria-disabled='true'][aria-selected='true'],
 [aria-disabled='true'] .example-selectable[aria-checked='true'],
-.example-selectable[aria-disabled='true'][aria-checked='true'] {
+.example-selectable[aria-disabled='true'][aria-checked='true'],
+[aria-disabled='true'] .example-selectable[aria-current],
+.example-selectable[aria-disabled='true'][aria-current] {
   background: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
 }
