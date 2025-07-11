@@ -2,7 +2,7 @@ export {CdkTabsConfigurableExample} from './cdk-tabs-configurable/cdk-tabs-confi
 export {CdkTabsExplicitSelectionExample} from './cdk-explicit-selection/cdk-tabs-explicit-selection-example';
 export {CdkTabsSelectionFollowsFocusExample} from './cdk-selection-follows-focus/cdk-tabs-selection-follows-focus-example';
 export {CdkTabsVerticalExample} from './cdk-vertical-orientation/cdk-tabs-vertical-example';
-export {CdkTabsRtlVerticalExample} from './cdk-rtl-vertical/cdk-tabs-rtl-vertical-example';
+export {CdkTabsRtlExample} from './cdk-rtl/cdk-tabs-rtl-example';
 export {CdkTabsActiveDescendantExample} from './cdk-active-descendant/cdk-tabs-active-descendant-example';
 export {CdkTabsDisabledFocusableExample} from './cdk-disabled-focusable/cdk-tabs-disabled-focusable-example';
 export {CdkTabsDisabledSkippedExample} from './cdk-disabled-skipped/cdk-tabs-disabled-skipped-example';

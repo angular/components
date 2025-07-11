@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Dir} from '@angular/cdk/bidi';
 import {FormsModule} from '@angular/forms';
 import {CdkRadioGroup, CdkRadioButton} from '@angular/cdk-experimental/radio-group';
 
@@ -9,7 +10,7 @@ import {CdkRadioGroup, CdkRadioButton} from '@angular/cdk-experimental/radio-gro
   templateUrl: 'cdk-radio-group-rtl-horizontal-example.html',
   styleUrl: '../radio-common.css',
   standalone: true,
-  imports: [CdkRadioGroup, CdkRadioButton, FormsModule],
+  imports: [CdkRadioGroup, CdkRadioButton, Dir, FormsModule],
 })
 export class CdkRadioGroupRtlHorizontalExample {
   fruits = [
