@@ -280,3 +280,10 @@ This example shows how you can set up a table which supports re-ordering of tabs
 #### Sortable tabs
 Example of how to add sorting support to a `mat-tab-group`.
 <!-- example(cdk-drag-drop-tabs) -->
+
+#### Scrollable container
+If your draggable items are inside a scrollable container (e.g., a div with overflow: auto)
+automatic scrolling will not work unless the scrollable container has the `cdkScrollable` directive. 
+Without it, the CDK cannot detect or control the scroll behavior of the container during drag 
+operations.
+<!-- example(cdk-drag-drop-scrollable) -->
