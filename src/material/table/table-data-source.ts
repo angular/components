@@ -107,8 +107,10 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     return this._sort;
   }
 
-  set sort(sort: MatSort | null) {
-    this._sort = sort;
+  set sort(sort: MatSort | null | undefined) {
+    // Treat undefined like the initial this._sort value.
+    // Note that the API can be changed in a breaking change to fix the cast.
+    this._sort = sort as MatSort | null;
     this._updateChangeSubscription();
   }
 
@@ -128,8 +130,10 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     return this._paginator;
   }
 
-  set paginator(paginator: P | null) {
-    this._paginator = paginator;
+  set paginator(paginator: P | null | undefined) {
+    // Treat undefined like the initial this._paginator value.
+    // Note that the API can be changed in a breaking change to fix the cast.
+    this._paginator = paginator as P | null;
     this._updateChangeSubscription();
   }
 
