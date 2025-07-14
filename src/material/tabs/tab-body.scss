@@ -35,6 +35,14 @@
     visibility: visible;
   }
 
+  // Chrome appears to have a bug where the animation glitches in RTL if the element
+  // has a height of 0px which can happen with lazy-loaded content or when it's off-screen.
+  // See: https://github.com/angular/components/issues/31503. We can work around it by setting
+  // a minimum height on it.
+  .mat-tab-body-animating > & {
+    min-height: 1px;
+  }
+
   .mat-mdc-tab-group-dynamic-height & {
     overflow: hidden;
   }
