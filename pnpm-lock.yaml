@@ -222,8 +222,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.4
       firebase-tools:
-        specifier: 14.9.0
-        version: 14.9.0(@types/node@22.14.1)(encoding@0.1.13)
+        specifier: 14.10.1
+        version: 14.10.1(@types/node@22.14.1)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.0
@@ -300,8 +300,8 @@ importers:
         specifier: 6.2.1
         version: 6.2.1(rollup@4.40.2)(typescript@5.8.3)
       rollup-plugin-sourcemaps2:
-        specifier: 0.5.2
-        version: 0.5.2(@types/node@22.14.1)(rollup@4.40.2)
+        specifier: 0.5.3
+        version: 0.5.3(@types/node@22.14.1)(rollup@4.40.2)
       sass:
         specifier: ^1.80.6
         version: 1.86.3
@@ -448,8 +448,8 @@ importers:
         specifier: ^22.14.1
         version: 22.14.1
       '@types/shelljs':
-        specifier: 0.8.16
-        version: 0.8.16
+        specifier: 0.8.17
+        version: 0.8.17
       firebase-tools:
         specifier: ^14.0.0
         version: 14.4.0(@types/node@22.14.1)(encoding@0.1.13)
@@ -2648,6 +2648,15 @@ packages:
       rollup:
         optional: true
 
+  '@rollup/pluginutils@5.2.0':
+    resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
   '@rollup/rollup-android-arm-eabi@4.40.2':
     resolution: {integrity: sha512-JkdNEq+DFxZfUwxvB58tHMHBHVgX23ew41g1OQinthJ+ryhdRk67O31S7sYw8u2lTjHUPFxwar07BBt1KHp/hg==}
     cpu: [arm]
@@ -2991,8 +3000,8 @@ packages:
   '@types/shelljs@0.8.15':
     resolution: {integrity: sha512-vzmnCHl6hViPu9GNLQJ+DZFd6BQI2DBTUeOvYHqkWQLMfKAAQYMb/xAmZkTogZI/vqXHCWkqDRymDI5p0QTi5Q==}
 
-  '@types/shelljs@0.8.16':
-    resolution: {integrity: sha512-40SUXiH0tZfAg/oKkkGF1kdHPAmE4slv2xAmbfa8VtE6ztHYwdpW2phlzHTVdJh5JOGqA3Cx1Hzp7kxFalKHYA==}
+  '@types/shelljs@0.8.17':
+    resolution: {integrity: sha512-IDksKYmQA2W9MkQjiyptbMmcQx+8+Ol6b7h6dPU5S05JyiQDSb/nZKnrMrZqGwgV6VkVdl6/SPCKPDlMRvqECg==}
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
@@ -4666,13 +4675,13 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@14.4.0:
-    resolution: {integrity: sha512-avJJrEoWdlntCc1OWo55pt53CDWPmTMMkh4vKsQEgMxVPLIesUg2OqP3XdlUZuOe4o2yP/58r+73BTyJjQKoVA==}
+  firebase-tools@14.10.1:
+    resolution: {integrity: sha512-KUwA/HyJhiOLgsHwsanQmXI5j7J12IkA+JnA+oMpmyOv/gBzJxp3LRuxHTdfv/MY17w29ppUMDqS2+jR3ViSzw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
-  firebase-tools@14.9.0:
-    resolution: {integrity: sha512-8si+bTK9WJ82zr/wiwbfqlMeuqIQgRfwFOzGE+9OA+m9pRnN7fuFvMiE1UEfQmsbmLrVsD9Tv22AFsU6vaBUVA==}
+  firebase-tools@14.4.0:
+    resolution: {integrity: sha512-avJJrEoWdlntCc1OWo55pt53CDWPmTMMkh4vKsQEgMxVPLIesUg2OqP3XdlUZuOe4o2yP/58r+73BTyJjQKoVA==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -7394,8 +7403,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: 5.8.3
 
-  rollup-plugin-sourcemaps2@0.5.2:
-    resolution: {integrity: sha512-NTz5Y5ySYH9cZZF+qteTHN2x3dnFggTKzCtiN3NhtMvIEXdkOsZVBh6r6xrwsyDnZAhmKRsttwTfXfJVoanM6w==}
+  rollup-plugin-sourcemaps2@0.5.3:
+    resolution: {integrity: sha512-KmD8A50Lvi/FVkmu8Xo1LXFfhE5tCK/CIAWcnN44cJlgjyGR1l8WqYrSpJ+SQ3e6KNSj7GBvwqUg/4nQt3Agow==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -10993,6 +11002,14 @@ snapshots:
     optionalDependencies:
       rollup: 4.40.2
 
+  '@rollup/pluginutils@5.2.0(rollup@4.40.2)':
+    dependencies:
+      '@types/estree': 1.0.7
+      estree-walker: 2.0.2
+      picomatch: 4.0.2
+    optionalDependencies:
+      rollup: 4.40.2
+
   '@rollup/rollup-android-arm-eabi@4.40.2':
     optional: true
 
@@ -11351,10 +11368,10 @@ snapshots:
       '@types/glob': 7.2.0
       '@types/node': 22.14.1
 
-  '@types/shelljs@0.8.16':
+  '@types/shelljs@0.8.17':
     dependencies:
-      '@types/glob': 7.2.0
       '@types/node': 22.14.1
+      glob: 11.0.3
 
   '@types/sockjs@0.3.36':
     dependencies:
@@ -13314,88 +13331,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@14.4.0(@types/node@22.14.1)(encoding@0.1.13):
-    dependencies:
-      '@electric-sql/pglite': 0.2.17
-      '@google-cloud/cloud-sql-connector': 1.8.0(encoding@0.1.13)
-      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.5.1(@types/node@22.14.1)
-      '@modelcontextprotocol/sdk': 1.12.0
-      abort-controller: 3.0.0
-      ajv: 8.17.1
-      ajv-formats: 3.0.1
-      archiver: 7.0.1
-      async-lock: 1.4.1
-      body-parser: 1.20.3
-      chokidar: 3.6.0
-      cjson: 0.3.3
-      cli-table3: 0.6.5
-      colorette: 2.0.20
-      commander: 5.1.0
-      configstore: 5.0.1
-      cors: 2.8.5
-      cross-env: 7.0.3
-      cross-spawn: 7.0.6
-      csv-parse: 5.6.0
-      deep-equal-in-any-order: 2.0.6
-      exegesis: 4.3.0
-      exegesis-express: 4.0.0
-      express: 4.21.2
-      filesize: 6.4.0
-      form-data: 4.0.2
-      fs-extra: 10.1.0
-      fuzzy: 0.1.3
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.0.0)
-      glob: 10.4.5
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.0.0)
-      ignore: 7.0.4
-      js-yaml: 3.14.1
-      jsonwebtoken: 9.0.2
-      leven: 3.1.0
-      libsodium-wrappers: 0.7.15
-      lodash: 4.17.21
-      lsofi: 1.0.0
-      marked: 13.0.3
-      marked-terminal: 7.3.0(marked@13.0.3)
-      mime: 2.6.0
-      minimatch: 3.1.2
-      morgan: 1.10.0
-      node-fetch: 2.7.0(encoding@0.1.13)
-      open: 6.4.0
-      ora: 5.4.1
-      p-limit: 3.1.0
-      pg: 8.16.0
-      portfinder: 1.0.35
-      progress: 2.0.3
-      proxy-agent: 6.5.0
-      retry: 0.13.1
-      semver: 7.7.2
-      sql-formatter: 15.6.2
-      stream-chain: 2.2.5
-      stream-json: 1.9.1
-      superstatic: 9.2.0(encoding@0.1.13)
-      tar: 6.2.1
-      tcp-port-used: 1.0.2
-      tmp: 0.2.3
-      triple-beam: 1.4.1
-      universal-analytics: 0.5.3
-      update-notifier-cjs: 5.1.7(encoding@0.1.13)
-      uuid: 8.3.2
-      winston: 3.17.0
-      winston-transport: 4.9.0
-      ws: 7.5.10
-      yaml: 2.8.0
-      zod: 3.25.20
-      zod-to-json-schema: 3.24.5(zod@3.25.20)
-    transitivePeerDependencies:
-      - '@types/node'
-      - bufferutil
-      - encoding
-      - pg-native
-      - supports-color
-      - utf-8-validate
-
-  firebase-tools@14.9.0(@types/node@22.14.1)(encoding@0.1.13):
+  firebase-tools@14.10.1(@types/node@22.14.1)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.3
       '@electric-sql/pglite-tools': 0.2.8(@electric-sql/pglite@0.3.3)
@@ -13449,6 +13385,87 @@ snapshots:
       pg: 8.16.0
       pg-gateway: 0.3.0-beta.4
       pglite-2: '@electric-sql/pglite@0.2.17'
+      portfinder: 1.0.35
+      progress: 2.0.3
+      proxy-agent: 6.5.0
+      retry: 0.13.1
+      semver: 7.7.2
+      sql-formatter: 15.6.2
+      stream-chain: 2.2.5
+      stream-json: 1.9.1
+      superstatic: 9.2.0(encoding@0.1.13)
+      tar: 6.2.1
+      tcp-port-used: 1.0.2
+      tmp: 0.2.3
+      triple-beam: 1.4.1
+      universal-analytics: 0.5.3
+      update-notifier-cjs: 5.1.7(encoding@0.1.13)
+      uuid: 8.3.2
+      winston: 3.17.0
+      winston-transport: 4.9.0
+      ws: 7.5.10
+      yaml: 2.8.0
+      zod: 3.25.20
+      zod-to-json-schema: 3.24.5(zod@3.25.20)
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  firebase-tools@14.4.0(@types/node@22.14.1)(encoding@0.1.13):
+    dependencies:
+      '@electric-sql/pglite': 0.2.17
+      '@google-cloud/cloud-sql-connector': 1.8.0(encoding@0.1.13)
+      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
+      '@inquirer/prompts': 7.5.1(@types/node@22.14.1)
+      '@modelcontextprotocol/sdk': 1.12.0
+      abort-controller: 3.0.0
+      ajv: 8.17.1
+      ajv-formats: 3.0.1
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      body-parser: 1.20.3
+      chokidar: 3.6.0
+      cjson: 0.3.3
+      cli-table3: 0.6.5
+      colorette: 2.0.20
+      commander: 5.1.0
+      configstore: 5.0.1
+      cors: 2.8.5
+      cross-env: 7.0.3
+      cross-spawn: 7.0.6
+      csv-parse: 5.6.0
+      deep-equal-in-any-order: 2.0.6
+      exegesis: 4.3.0
+      exegesis-express: 4.0.0
+      express: 4.21.2
+      filesize: 6.4.0
+      form-data: 4.0.2
+      fs-extra: 10.1.0
+      fuzzy: 0.1.3
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.0.0)
+      glob: 10.4.5
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.0.0)
+      ignore: 7.0.4
+      js-yaml: 3.14.1
+      jsonwebtoken: 9.0.2
+      leven: 3.1.0
+      libsodium-wrappers: 0.7.15
+      lodash: 4.17.21
+      lsofi: 1.0.0
+      marked: 13.0.3
+      marked-terminal: 7.3.0(marked@13.0.3)
+      mime: 2.6.0
+      minimatch: 3.1.2
+      morgan: 1.10.0
+      node-fetch: 2.7.0(encoding@0.1.13)
+      open: 6.4.0
+      ora: 5.4.1
+      p-limit: 3.1.0
+      pg: 8.16.0
       portfinder: 1.0.35
       progress: 2.0.3
       proxy-agent: 6.5.0
@@ -16551,9 +16568,9 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.26.2
 
-  rollup-plugin-sourcemaps2@0.5.2(@types/node@22.14.1)(rollup@4.40.2):
+  rollup-plugin-sourcemaps2@0.5.3(@types/node@22.14.1)(rollup@4.40.2):
     dependencies:
-      '@rollup/pluginutils': 5.1.4(rollup@4.40.2)
+      '@rollup/pluginutils': 5.2.0(rollup@4.40.2)
       rollup: 4.40.2
     optionalDependencies:
       '@types/node': 22.14.1
