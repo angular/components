@@ -18,7 +18,6 @@ ts_project(
         "//:node_modules/@bazel/runfiles",
         "//:node_modules/@schematics/angular",
         "//:node_modules/@types/fs-extra",
-        "//:node_modules/@types/glob",
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",

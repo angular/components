@@ -92,7 +92,6 @@
     "@schematics/angular": "catalog:",
     "@types/babel__core": "^7.1.18",
     "@types/fs-extra": "^11.0.0",
-    "@types/glob": "^8.0.0",
     "@types/jasmine": "^5.0.0",
     "@types/luxon": "^3.0.0",
     "@types/node": "^22.14.1",
