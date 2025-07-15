@@ -60,7 +60,7 @@
     "@bazel/bazelisk": "^1.12.1",
     "@types/jasmine": "5.1.8",
     "@types/node": "^22.14.1",
-    "@types/shelljs": "0.8.16",
+    "@types/shelljs": "0.8.17",
     "firebase-tools": "^14.0.0",
     "jasmine-core": "5.8.0",
     "jasmine-spec-reporter": "7.0.0",
