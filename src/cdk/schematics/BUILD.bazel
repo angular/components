@@ -1,6 +1,6 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 
 package(default_visibility = [":__subpackages__"])
 
@@ -44,7 +44,6 @@ ts_project(
         "//:node_modules/@angular-devkit/core",
         "//:node_modules/@angular-devkit/schematics",
         "//:node_modules/@schematics/angular",
-        "//:node_modules/@types/glob",
         "//:node_modules/@types/node",
         "//:node_modules/glob",
         "//:node_modules/parse5",
