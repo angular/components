@@ -207,11 +207,12 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
 
     const ref = effect(
       () => {
-        if (!this._changeDetectionNeeded()) {
-          return;
+        if (this._changeDetectionNeeded()) {
+          this._doChangeDetection();
         }
-        this._doChangeDetection();
       },
+      // Using ApplicationRef injector is important here because we want this to be a root
+      // effect that runs before change detection of any application views (since we're depending on markForCheck marking parents dirty)
       {injector: inject(ApplicationRef).injector},
     );
     inject(DestroyRef).onDestroy(() => void ref.destroy());
