@@ -108,6 +108,7 @@ export function createFakeYtNamespace(): FakeYtNamespace {
     onPlaybackRateChange: eventHandlerFactory('onPlaybackRateChange'),
     onError: eventHandlerFactory('onError'),
     onApiChange: eventHandlerFactory('onApiChange'),
+    onAutoplayBlocked: eventHandlerFactory('onAutoplayBlocked'),
   };
 
   return {
