@@ -1,3 +1,16 @@
+<a name="20.1.2"></a>
+# 20.1.2 "coral-dragon" (2025-07-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4f5273222a](https://github.com/angular/components/commit/4f5273222aa8c9e32d6262801a8e178e5c908969) | fix | **schematics:** access custom as a theme palette ([#31555](https://github.com/angular/components/pull/31555)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [af6cb6d041](https://github.com/angular/components/commit/af6cb6d041babf4c3accca50b8177ec3d9029a44) | fix | update to latest types and fix error ([#31546](https://github.com/angular/components/pull/31546)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0-next.0"></a>
 # 20.2.0-next.0 "neoprene-narwhal" (2025-07-16)
 ### material
