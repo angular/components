@@ -1,3 +1,23 @@
+<a name="20.2.0-next.0"></a>
+# 20.2.0-next.0 "neoprene-narwhal" (2025-07-16)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4f96ef3e64](https://github.com/angular/components/commit/4f96ef3e64fd4d420bcfc2c5e4841b53fa299a76) | fix | **slide-toggle:** add larger touch target ([#31486](https://github.com/angular/components/pull/31486)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2dbb045bc2](https://github.com/angular/components/commit/2dbb045bc203358172be0b324a05d74e8526ce38) | feat | **tree:** add nav mode ([#31460](https://github.com/angular/components/pull/31460)) |
+| [6716f50249](https://github.com/angular/components/commit/6716f50249a638f62ea01358a91e0869d818c070) | feat | **tree:** use shared example classes ([#31494](https://github.com/angular/components/pull/31494)) |
+| [50a6d6c4c9](https://github.com/angular/components/commit/50a6d6c4c9f73c68b50faf3bffc76692d9b579b3) | feat | **ui-patterns:** add label control ([#31459](https://github.com/angular/components/pull/31459)) |
+| [e525a412a1](https://github.com/angular/components/commit/e525a412a1bcdbf38c51faf6a786d980437aad1c) | fix | **radio-group:** fix activedescendant example ([#31499](https://github.com/angular/components/pull/31499)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ad4d5b471e](https://github.com/angular/components/commit/ad4d5b471e7dd673bb6a5f85b840d02632614be0) | fix | fix broken rtl examples ([#31527](https://github.com/angular/components/pull/31527)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.1"></a>
 # 20.1.1 "wicker-whirligig" (2025-07-16)
 ### cdk
