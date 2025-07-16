@@ -7,18 +7,17 @@
  */
 
 import {signal} from '@angular/core';
-import {ComboboxPopupTypes, PopupControl, PopupControlInputs} from './popup';
+import {PopupTypes, PopupControl, PopupControlInputs} from './popup';
 
-type TestInputs = Partial<Pick<PopupControlInputs, 'popup' | 'expanded'>>;
+type TestInputs = Partial<Pick<PopupControlInputs, 'expanded'>>;
 
 function getPopupControl(inputs: TestInputs = {}): PopupControl {
   const expanded = inputs.expanded || signal(false);
   const popup = signal({inert: signal(!expanded())});
   const controls = signal('popup-element-id');
-  const hasPopup = signal(ComboboxPopupTypes.LISTBOX);
+  const hasPopup = signal(PopupTypes.LISTBOX);
 
   return new PopupControl({
-    popup,
     controls,
     expanded,
     hasPopup,
@@ -31,12 +30,8 @@ describe('Popup Control', () => {
       const control = getPopupControl();
 
       expect(control.inputs.expanded()).toBeFalse();
-      expect(control.inputs.popup().inert()).toBeTrue();
-
       control.open();
-
       expect(control.inputs.expanded()).toBeTrue();
-      expect(control.inputs.popup().inert()).toBeFalse();
     });
   });
 
@@ -46,12 +41,8 @@ describe('Popup Control', () => {
       const control = getPopupControl({expanded});
 
       expect(control.inputs.expanded()).toBeTrue();
-      expect(control.inputs.popup().inert()).toBeFalse();
-
       control.close();
-
       expect(control.inputs.expanded()).toBeFalse();
-      expect(control.inputs.popup().inert()).toBeTrue();
     });
   });
 
@@ -60,17 +51,12 @@ describe('Popup Control', () => {
       const control = getPopupControl();
 
       expect(control.inputs.expanded()).toBeFalse();
-      expect(control.inputs.popup().inert()).toBeTrue();
-
       control.toggle();
 
       expect(control.inputs.expanded()).toBeTrue();
-      expect(control.inputs.popup().inert()).toBeFalse();
-
       control.toggle();
 
       expect(control.inputs.expanded()).toBeFalse();
-      expect(control.inputs.popup().inert()).toBeTrue();
     });
   });
 });
