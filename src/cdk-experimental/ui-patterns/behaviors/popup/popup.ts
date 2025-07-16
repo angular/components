@@ -46,7 +46,6 @@ export class PopupControl {
 
   /** Toggles the popup's expanded state. */
   toggle(): void {
-    const expanded = !this.inputs.expanded();
-    this.inputs.expanded.set(expanded);
+    this.inputs.expanded.set(!this.inputs.expanded());
   }
 }
