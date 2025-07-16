@@ -27,6 +27,7 @@ import {
   Optional,
   Output,
   signal,
+  untracked,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -502,6 +503,9 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
       this._runAfterChangeDetection.push(runAfter);
     }
 
+    if (untracked(this._changeDetectionNeeded)) {
+      return;
+    }
     this.ngZone.runOutsideAngular(() => {
       Promise.resolve().then(() => {
         this.ngZone.run(() => {
