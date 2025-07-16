@@ -63,7 +63,7 @@
     "@angular/forms": "catalog:",
     "@angular/platform-browser": "catalog:",
     "@types/google.maps": "^3.54.10",
-    "@types/youtube": "^0.1.0",
+    "@types/youtube": "0.1.2",
     "date-fns": "^4.1.0",
     "luxon": "^3.0.0",
     "moment": "^2.29.1",
