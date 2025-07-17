@@ -219,8 +219,8 @@ importers:
         specifier: ^0.25.0
         version: 0.25.4
       firebase-tools:
-        specifier: 14.10.1
-        version: 14.10.1(@types/node@22.14.1)(encoding@0.1.13)
+        specifier: 14.11.0
+        version: 14.11.0(@types/node@22.14.1)(encoding@0.1.13)
       fs-extra:
         specifier: ^11.0.0
         version: 11.3.0
@@ -4669,8 +4669,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@14.10.1:
-    resolution: {integrity: sha512-KUwA/HyJhiOLgsHwsanQmXI5j7J12IkA+JnA+oMpmyOv/gBzJxp3LRuxHTdfv/MY17w29ppUMDqS2+jR3ViSzw==}
+  firebase-tools@14.11.0:
+    resolution: {integrity: sha512-wfedQpQAltiyubU+xXv0H6zSVmfmyKbH0N72zfqu0JBFd5PMgfdP9us8gSY9b73TAzJ0j9szO21eN723scnDhw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -10354,7 +10354,7 @@ snapshots:
   '@inquirer/core@10.1.11(@types/node@22.14.1)':
     dependencies:
       '@inquirer/figures': 1.0.11
-      '@inquirer/type': 3.0.6(@types/node@22.14.1)
+      '@inquirer/type': 3.0.7(@types/node@22.14.1)
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
       mute-stream: 2.0.0
@@ -10563,8 +10563,8 @@ snapshots:
       express-rate-limit: 7.5.0(express@5.1.0)
       pkce-challenge: 5.0.0
       raw-body: 3.0.0
-      zod: 3.25.20
-      zod-to-json-schema: 3.24.5(zod@3.25.20)
+      zod: 3.25.75
+      zod-to-json-schema: 3.24.5(zod@3.25.75)
     transitivePeerDependencies:
       - supports-color
 
@@ -12155,7 +12155,7 @@ snapshots:
     dependencies:
       devtools-protocol: 0.0.1425554
       mitt: 3.0.1
-      zod: 3.25.20
+      zod: 3.25.75
 
   ci-info@2.0.0: {}
 
@@ -13320,14 +13320,14 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@14.10.1(@types/node@22.14.1)(encoding@0.1.13):
+  firebase-tools@14.11.0(@types/node@22.14.1)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.3
       '@electric-sql/pglite-tools': 0.2.8(@electric-sql/pglite@0.3.3)
       '@google-cloud/cloud-sql-connector': 1.8.0(encoding@0.1.13)
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.5.1(@types/node@22.14.1)
-      '@modelcontextprotocol/sdk': 1.12.0
+      '@inquirer/prompts': 7.6.0(@types/node@22.14.1)
+      '@modelcontextprotocol/sdk': 1.13.3
       abort-controller: 3.0.0
       ajv: 8.17.1
       ajv-formats: 3.0.1
@@ -13394,8 +13394,8 @@ snapshots:
       winston-transport: 4.9.0
       ws: 7.5.10
       yaml: 2.8.0
-      zod: 3.25.20
-      zod-to-json-schema: 3.24.5(zod@3.25.20)
+      zod: 3.25.75
+      zod-to-json-schema: 3.24.5(zod@3.25.75)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
