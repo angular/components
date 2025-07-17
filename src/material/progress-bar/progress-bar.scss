@@ -6,6 +6,8 @@
 $fallbacks: m3-progress-bar.get-tokens();
 
 .mat-mdc-progress-bar {
+  --mat-progress-bar-animation-multiplier: 1;
+
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
   display: block;
 
@@ -33,6 +35,12 @@ $fallbacks: m3-progress-bar.get-tokens();
       transition: transform 1ms;
     }
   }
+}
+
+// Slow down the animation by 100% when the user configured their OS to reduce
+// motion since some animations like the indeterminate one can be quite dynamic.
+.mat-progress-bar-reduced-motion {
+  --mat-progress-bar-animation-multiplier: 2;
 }
 
 .mdc-linear-progress {
@@ -105,7 +113,8 @@ $fallbacks: m3-progress-bar.get-tokens();
   background-repeat: repeat-x;
   flex: auto;
   transform: rotate(180deg);
-  animation: mdc-linear-progress-buffering 250ms infinite linear;
+  animation: mdc-linear-progress-buffering
+    calc(250ms * var(--mat-progress-bar-animation-multiplier)) infinite linear;
   background-color: token-utils.slot(progress-bar-track-color, $fallbacks);
 
   @include cdk.high-contrast {
@@ -113,7 +122,8 @@ $fallbacks: m3-progress-bar.get-tokens();
   }
 
   [dir='rtl'] & {
-    animation: mdc-linear-progress-buffering-reverse 250ms infinite linear;
+    animation: mdc-linear-progress-buffering-reverse
+      calc(250ms * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     transform: rotate(0);
   }
 }
@@ -132,12 +142,14 @@ $fallbacks: m3-progress-bar.get-tokens();
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
-    animation: mdc-linear-progress-primary-indeterminate-translate 2s infinite linear;
+    animation: mdc-linear-progress-primary-indeterminate-translate
+      calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
     > .mdc-linear-progress__bar-inner {
-      animation: mdc-linear-progress-primary-indeterminate-scale 2s infinite linear;
+      animation: mdc-linear-progress-primary-indeterminate-scale
+        calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     }
   }
 
@@ -160,12 +172,14 @@ $fallbacks: m3-progress-bar.get-tokens();
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
-    animation: mdc-linear-progress-secondary-indeterminate-translate 2s infinite linear;
+    animation: mdc-linear-progress-secondary-indeterminate-translate
+      calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
   }
 
   .mdc-linear-progress--indeterminate.mdc-linear-progress--animation-ready & {
     > .mdc-linear-progress__bar-inner {
-      animation: mdc-linear-progress-secondary-indeterminate-scale 2s infinite linear;
+      animation: mdc-linear-progress-secondary-indeterminate-scale
+        calc(2s * var(--mat-progress-bar-animation-multiplier)) infinite linear;
     }
   }
 
