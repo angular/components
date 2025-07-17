@@ -17,7 +17,7 @@ import {
   numberAttribute,
   inject,
 } from '@angular/core';
-import {_animationsDisabled, ThemePalette} from '../core';
+import {_getAnimationsState, ThemePalette} from '../core';
 import {NgTemplateOutlet} from '@angular/common';
 
 /** Possible mode for a progress spinner. */
@@ -128,12 +128,16 @@ export class MatProgressSpinner {
 
   constructor() {
     const defaults = inject<MatProgressSpinnerDefaultOptions>(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS);
+    const animationsState = _getAnimationsState();
+    const element = this._elementRef.nativeElement;
 
-    this._noopAnimations = _animationsDisabled() && !!defaults && !defaults._forceAnimations;
-    this.mode =
-      this._elementRef.nativeElement.nodeName.toLowerCase() === 'mat-spinner'
-        ? 'indeterminate'
-        : 'determinate';
+    this._noopAnimations =
+      animationsState === 'di-disabled' && !!defaults && !defaults._forceAnimations;
+    this.mode = element.nodeName.toLowerCase() === 'mat-spinner' ? 'indeterminate' : 'determinate';
+
+    if (!this._noopAnimations && animationsState === 'reduced-motion') {
+      element.classList.add('mat-progress-spinner-reduced-motion');
+    }
 
     if (defaults) {
       if (defaults.color) {

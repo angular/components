@@ -5,6 +5,8 @@
 $fallbacks: m3-progress-spinner.get-tokens();
 
 .mat-mdc-progress-spinner {
+  --mat-progress-spinner-animation-multiplier: 1;
+
   // Explicitly set to `block` since the browser defaults custom elements to `inline`.
   display: block;
 
@@ -54,6 +56,11 @@ $fallbacks: m3-progress-spinner.get-tokens();
   }
 }
 
+// Slow down the animation by 25% when the user configured their OS to reduce motion.
+.mat-progress-spinner-reduced-motion {
+  --mat-progress-spinner-animation-multiplier: 1.25;
+}
+
 .mdc-circular-progress__determinate-container,
 .mdc-circular-progress__indeterminate-circle-graphic,
 .mdc-circular-progress__indeterminate-container,
@@ -79,7 +86,8 @@ $fallbacks: m3-progress-spinner.get-tokens();
 
   .mdc-circular-progress--indeterminate & {
     opacity: 1;
-    animation: mdc-circular-progress-container-rotate 1568.2352941176ms linear infinite;
+    animation: mdc-circular-progress-container-rotate
+      calc(1568.2352941176ms * var(--mat-progress-spinner-animation-multiplier)) linear infinite;
   }
 }
 
@@ -127,11 +135,15 @@ $fallbacks: m3-progress-spinner.get-tokens();
   }
 
   .mdc-circular-progress--indeterminate .mdc-circular-progress__circle-left & {
-    animation: mdc-circular-progress-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+    animation: mdc-circular-progress-left-spin
+      calc(1333ms * var(--mat-progress-spinner-animation-multiplier))
+      cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   }
 
   .mdc-circular-progress--indeterminate .mdc-circular-progress__circle-right & {
-    animation: mdc-circular-progress-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
+    animation: mdc-circular-progress-right-spin
+      calc(1333ms * var(--mat-progress-spinner-animation-multiplier))
+      cubic-bezier(0.4, 0, 0.2, 1) infinite both;
   }
 }
 
@@ -145,7 +157,8 @@ $fallbacks: m3-progress-spinner.get-tokens();
 
 .mdc-circular-progress__spinner-layer {
   .mdc-circular-progress--indeterminate & {
-    animation: mdc-circular-progress-spinner-layer-rotate 5332ms cubic-bezier(0.4, 0, 0.2, 1)
+    animation: mdc-circular-progress-spinner-layer-rotate
+      calc(5332ms * var(--mat-progress-spinner-animation-multiplier)) cubic-bezier(0.4, 0, 0.2, 1)
       infinite both;
   }
 }
