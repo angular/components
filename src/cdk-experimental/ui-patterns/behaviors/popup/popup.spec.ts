@@ -13,7 +13,6 @@ type TestInputs = Partial<Pick<PopupControlInputs, 'expanded'>>;
 
 function getPopupControl(inputs: TestInputs = {}): PopupControl {
   const expanded = inputs.expanded || signal(false);
-  const popup = signal({inert: signal(!expanded())});
   const controls = signal('popup-element-id');
   const hasPopup = signal(PopupTypes.LISTBOX);
 
