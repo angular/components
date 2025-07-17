@@ -133,6 +133,9 @@ export class _ErrorStateTracker {
 }
 
 // @public
+export function _getAnimationsState(): 'enabled' | 'di-disabled' | 'reduced-motion';
+
+// @public
 export function _getOptionScrollPosition(optionOffset: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public @deprecated

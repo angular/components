@@ -41,18 +41,28 @@ export class AnimationDurations {
   static EXITING = '195ms';
 }
 
+let reducedMotion: boolean | null = null;
+
+/**
+ * Gets the the configured animations state.
+ * @docs-private
+ */
+export function _getAnimationsState(): 'enabled' | 'di-disabled' | 'reduced-motion' {
+  if (
+    inject(MATERIAL_ANIMATIONS, {optional: true})?.animationsDisabled ||
+    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations'
+  ) {
+    return 'di-disabled';
+  }
+
+  reducedMotion ??= inject(MediaMatcher).matchMedia('(prefers-reduced-motion)').matches;
+  return reducedMotion ? 'reduced-motion' : 'enabled';
+}
+
 /**
  * Returns whether animations have been disabled by DI. Must be called in a DI context.
  * @docs-private
  */
 export function _animationsDisabled(): boolean {
-  if (
-    inject(MATERIAL_ANIMATIONS, {optional: true})?.animationsDisabled ||
-    inject(ANIMATION_MODULE_TYPE, {optional: true}) === 'NoopAnimations'
-  ) {
-    return true;
-  }
-
-  const mediaMatcher = inject(MediaMatcher);
-  return mediaMatcher.matchMedia('(prefers-reduced-motion)').matches;
+  return _getAnimationsState() !== 'enabled';
 }
