@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ModifierKey as Modifier} from '../behaviors/event-manager/event-manager';
-import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
-import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
 import {OptionPattern} from './option';
+import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
 import {ListTypeahead, ListTypeaheadInputs} from '../behaviors/list-typeahead/list-typeahead';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';

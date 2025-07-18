@@ -12,7 +12,7 @@ import {
   EventManager,
   hasModifiers,
   ModifierInputs,
-  ModifierKey,
+  Modifier,
 } from './event-manager';
 
 /**
@@ -80,7 +80,7 @@ export class PointerEventManager<T extends PointerEvent> extends EventManager<T>
 
     return {
       button: MouseButton.Main,
-      modifiers: ModifierKey.None,
+      modifiers: Modifier.None,
       handler: args[0] as EventHandler<T>,
     };
   }

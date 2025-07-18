@@ -7,8 +7,7 @@
  */
 
 import {computed} from '@angular/core';
-import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
-import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
+import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
 import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
 import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
