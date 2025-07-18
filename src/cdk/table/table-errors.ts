@@ -28,7 +28,10 @@ export function getTableDuplicateColumnNameError(name: string) {
  * @docs-private
  */
 export function getTableMultipleDefaultRowDefsError() {
-  return Error(`There can only be one default row without a when predicate function.`);
+  return Error(
+    `There can only be one default row without a when predicate function. ` +
+      'Or set `multiTemplateDataRows`.'
+  );
 }
 
 /**
@@ -37,7 +40,7 @@ export function getTableMultipleDefaultRowDefsError() {
  */
 export function getTableMissingMatchingRowDefError(data: any) {
   return Error(
-    `Could not find a matching row definition for the` +
+    `Could not find a matching row definition for the ` +
       `provided row data: ${JSON.stringify(data)}`,
   );
 }
