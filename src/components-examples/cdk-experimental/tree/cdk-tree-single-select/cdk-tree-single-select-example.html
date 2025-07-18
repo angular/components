@@ -1,0 +1,22 @@
+<ul cdkTree>
+  @for (node of treeData; track node) {
+    <ng-template [ngTemplateOutlet]="treeNode" [ngTemplateOutletContext]="{node}"></ng-template>
+  }
+</ul>
+
+<ng-template #treeNode let-node>
+  <li cdkTreeItem [value]="node.value">
+    @if (node.children) {
+      <ul cdkTreeItemGroup [value]="node.value">
+        <ng-template cdkTreeItemGroupContent>
+          @for (child of node.children; track child) {
+            <ng-template
+              [ngTemplateOutlet]="treeNode"
+              [ngTemplateOutletContext]="{node: child}"
+            ></ng-template>
+          }
+        </ng-template>
+      </ul>
+    }
+  </li>
+</ng-template>
