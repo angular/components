@@ -13,7 +13,7 @@ import {
   EventManager,
   hasModifiers,
   ModifierInputs,
-  ModifierKey,
+  Modifier,
 } from './event-manager';
 
 /**
@@ -55,7 +55,7 @@ export class KeyboardEventManager<T extends KeyboardEvent> extends EventManager<
   private _normalizeInputs(...args: any[]) {
     const key = args.length === 3 ? args[1] : args[0];
     const handler = args.length === 3 ? args[2] : args[1];
-    const modifiers = args.length === 3 ? args[0] : ModifierKey.None;
+    const modifiers = args.length === 3 ? args[0] : Modifier.None;
 
     return {
       key: key as KeyCode,

@@ -6,6 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export {ModifierKey} from './event-manager';
+export {Modifier} from './event-manager';
 export {KeyboardEventManager} from './keyboard-event-manager';
 export {PointerEventManager} from './pointer-event-manager';
