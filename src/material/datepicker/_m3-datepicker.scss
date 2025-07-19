@@ -56,7 +56,7 @@
       datepicker-range-input-disabled-state-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
       datepicker-range-input-separator-color: map.get($system, on-surface),
-      datepicker-toggle-active-state-icon-color: map.get($system, on-surface-variant),
+      datepicker-toggle-active-state-icon-color: map.get($system, primary),
       datepicker-toggle-icon-color: map.get($system, on-surface-variant),
     ),
     typography: (
@@ -70,8 +70,5 @@
       datepicker-calendar-text-size: map.get($system, body-medium-size),
     ),
     density: (),
-  );
-
-  $tokens: (
   );
 }

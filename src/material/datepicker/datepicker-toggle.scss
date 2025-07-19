@@ -9,6 +9,10 @@ $fallbacks: m3-datepicker.get-tokens();
 .mat-datepicker-toggle {
   pointer-events: auto;
   color: token-utils.slot(datepicker-toggle-icon-color, $fallbacks);
+
+  button {
+    color: inherit;
+  }
 }
 
 .mat-datepicker-toggle-active {
