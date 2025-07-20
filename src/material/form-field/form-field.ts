@@ -160,7 +160,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
     '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-hide-placeholder]': '_hasFloatingLabel() && !_shouldLabelFloat()',
-    '[class.mat-focused]': '_control.focused',
     '[class.mat-primary]': 'color !== "accent" && color !== "warn"',
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
@@ -340,6 +339,7 @@ export class MatFormField
   private _stateChanges: Subscription | undefined;
   private _valueChanges: Subscription | undefined;
   private _describedByChanges: Subscription | undefined;
+  private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
   protected readonly _animationsDisabled = _animationsDisabled();
 
   constructor(...args: unknown[]);
@@ -544,26 +544,24 @@ export class MatFormField
   }
 
   private _updateFocusState() {
+    const controlFocused = this._control.focused;
+
     // Usually the MDC foundation would call "activateFocus" and "deactivateFocus" whenever
     // certain DOM events are emitted. This is not possible in our implementation of the
     // form field because we support abstract form field controls which are not necessarily
     // of type input, nor do we have a reference to a native form field control element. Instead
     // we handle the focus by checking if the abstract form field control focused state changes.
-    if (this._control.focused && !this._isFocused) {
+    if (controlFocused && !this._isFocused) {
       this._isFocused = true;
       this._lineRipple?.activate();
-    } else if (!this._control.focused && (this._isFocused || this._isFocused === null)) {
+    } else if (!controlFocused && (this._isFocused || this._isFocused === null)) {
       this._isFocused = false;
       this._lineRipple?.deactivate();
     }
 
-    this._textField?.nativeElement.classList.toggle(
-      'mdc-text-field--focused',
-      this._control.focused,
-    );
+    this._elementRef.nativeElement.classList.toggle('mat-focused', controlFocused);
+    this._textField?.nativeElement.classList.toggle('mdc-text-field--focused', controlFocused);
   }
-
-  private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
 
   /**
    * The floating label in the docked state needs to account for prefixes. The horizontal offset
