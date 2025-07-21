@@ -25,9 +25,7 @@ import {
   ListTypeaheadItem,
 } from '../behaviors/list-typeahead/list-typeahead';
 import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expansion/expansion';
-import {KeyboardEventManager} from '../behaviors/event-manager/keyboard-event-manager';
-import {PointerEventManager} from '../behaviors/event-manager/pointer-event-manager';
-import {ModifierKey as Modifier} from '../behaviors/event-manager/event-manager';
+import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
 export interface TreeItemInputs<V>

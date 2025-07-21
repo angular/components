@@ -41,7 +41,7 @@ export interface EventHandlerConfig<T extends Event> extends EventHandlerOptions
 }
 
 /** Bit flag representation of the possible modifier keys that can be present on an event. */
-export enum ModifierKey {
+export enum Modifier {
   None = 0,
   Ctrl = 0b1,
   Shift = 0b10,
@@ -50,7 +50,7 @@ export enum ModifierKey {
   Any = 'Any',
 }
 
-export type ModifierInputs = ModifierKey | ModifierKey[];
+export type ModifierInputs = Modifier | Modifier[];
 
 /**
  * Abstract base class for all event managers.
@@ -86,10 +86,10 @@ export abstract class EventManager<T extends Event> {
 /** Gets bit flag representation of the modifier keys present on the given event. */
 export function getModifiers(event: EventWithModifiers): number {
   return (
-    (+event.ctrlKey && ModifierKey.Ctrl) |
-    (+event.shiftKey && ModifierKey.Shift) |
-    (+event.altKey && ModifierKey.Alt) |
-    (+event.metaKey && ModifierKey.Meta)
+    (+event.ctrlKey && Modifier.Ctrl) |
+    (+event.shiftKey && Modifier.Shift) |
+    (+event.altKey && Modifier.Alt) |
+    (+event.metaKey && Modifier.Meta)
   );
 }
 
@@ -101,7 +101,7 @@ export function hasModifiers(event: EventWithModifiers, modifiers: ModifierInput
   const eventModifiers = getModifiers(event);
   const modifiersList = Array.isArray(modifiers) ? modifiers : [modifiers];
 
-  if (modifiersList.includes(ModifierKey.Any)) {
+  if (modifiersList.includes(Modifier.Any)) {
     return true;
   }
 
