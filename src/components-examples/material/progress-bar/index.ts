@@ -4,3 +4,4 @@ export {ProgressBarDeterminateExample} from './progress-bar-determinate/progress
 export {ProgressBarIndeterminateExample} from './progress-bar-indeterminate/progress-bar-indeterminate-example';
 export {ProgressBarQueryExample} from './progress-bar-query/progress-bar-query-example';
 export {ProgressBarHarnessExample} from './progress-bar-harness/progress-bar-harness-example';
+export {ProgressBarExpressionFixExample} from './progress-bar-expression-fix/progress-bar-expression-fix-example'
