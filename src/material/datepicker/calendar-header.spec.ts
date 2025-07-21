@@ -246,7 +246,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(prevButton.disabled).toBe(true);
+      expect(prevButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should enable the page after the one showing minDate', () => {
@@ -255,7 +255,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(false);
+      expect(nextButton.hasAttribute('aria-disabled')).toBe(false);
     });
   });
 
@@ -300,7 +300,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(true);
+      expect(nextButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should enable the page before the one showing maxDate', () => {
@@ -309,7 +309,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(prevButton.disabled).toBe(false);
+      expect(prevButton.hasAttribute('aria-disabled')).toBe(false);
     });
   });
 
@@ -356,7 +356,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.currentView).toBe('multi-year');
-      expect(nextButton.disabled).toBe(true);
+      expect(nextButton.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should disable the page before the one showing minDate', () => {
@@ -371,7 +371,7 @@ describe('MatCalendarHeader', () => {
       fixture.detectChanges();
 
       expect(calendarInstance.activeDate).toEqual(new Date(2018 - yearsPerPage, JAN, 1));
-      expect(prevButton.disabled).toBe(true);
+      expect(prevButton.getAttribute('aria-disabled')).toBe('true');
     });
   });
 });

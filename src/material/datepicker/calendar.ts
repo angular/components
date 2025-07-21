@@ -114,24 +114,28 @@ export class MatCalendarHeader<D> {
 
   /** Handles user clicks on the previous button. */
   previousClicked(): void {
-    this.calendar.activeDate =
-      this.calendar.currentView == 'month'
-        ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1)
-        : this._dateAdapter.addCalendarYears(
-            this.calendar.activeDate,
-            this.calendar.currentView == 'year' ? -1 : -yearsPerPage,
-          );
+    if (this.previousEnabled()) {
+      this.calendar.activeDate =
+        this.calendar.currentView == 'month'
+          ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1)
+          : this._dateAdapter.addCalendarYears(
+              this.calendar.activeDate,
+              this.calendar.currentView == 'year' ? -1 : -yearsPerPage,
+            );
+    }
   }
 
   /** Handles user clicks on the next button. */
   nextClicked(): void {
-    this.calendar.activeDate =
-      this.calendar.currentView == 'month'
-        ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1)
-        : this._dateAdapter.addCalendarYears(
-            this.calendar.activeDate,
-            this.calendar.currentView == 'year' ? 1 : yearsPerPage,
-          );
+    if (this.nextEnabled()) {
+      this.calendar.activeDate =
+        this.calendar.currentView == 'month'
+          ? this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1)
+          : this._dateAdapter.addCalendarYears(
+              this.calendar.activeDate,
+              this.calendar.currentView == 'year' ? 1 : yearsPerPage,
+            );
+    }
   }
 
   /** Whether the previous period button is enabled. */
