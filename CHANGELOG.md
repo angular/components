@@ -1,3 +1,22 @@
+<a name="20.1.3"></a>
+# 20.1.3 "tantalum-potato" (2025-07-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4cdf5f33b](https://github.com/angular/components/commit/4cdf5f33b399056350d7e713c487a441bc8a910f) | fix | **scrolling:** Prevent virtual scroll 'flickering' with zoneless ([#31316](https://github.com/angular/components/pull/31316)) |
+| [ce3994c71](https://github.com/angular/components/commit/ce3994c717a8e8b71780bb12fe25eaabda8390b4) | fix | **table:** improve error message ([#31545](https://github.com/angular/components/pull/31545)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7b26aaa75](https://github.com/angular/components/commit/7b26aaa75731d90555484e8cc2bec89a15824a24) | fix | **datepicker:** focus lost when hitting the end of calendar ([#31572](https://github.com/angular/components/pull/31572)) |
+| [734a7bcc2](https://github.com/angular/components/commit/734a7bcc2f54f09718d4f59b145b010729d4aa3a) | fix | **datepicker:** toggle button active color not showing up in M3 ([#31565](https://github.com/angular/components/pull/31565)) |
+| [7aa5e0bc7](https://github.com/angular/components/commit/7aa5e0bc7cc6f6479e7739684414f2bed7e624af) | fix | **form-field:** ensure that focused classes are in sync ([#31568](https://github.com/angular/components/pull/31568)) |
+| [9cd6f10b9](https://github.com/angular/components/commit/9cd6f10b9442dbe94269bc092da72a163a11a36d) | fix | **progress-bar:** slow down animations instead of fully stopping them |
+| [de59f35ce](https://github.com/angular/components/commit/de59f35cefead84b037a29d8f4edd89051cc7d2c) | fix | **progress-spinner:** slow down animations instead of fully stopping them |
+| [f1ccf6b10](https://github.com/angular/components/commit/f1ccf6b10ad24d8c6caba2cca286c88bbc3686be) | fix | **table:** add missing sort tests ([#30876](https://github.com/angular/components/pull/30876)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.2"></a>
 # 20.1.2 "coral-dragon" (2025-07-16)
 ### material
