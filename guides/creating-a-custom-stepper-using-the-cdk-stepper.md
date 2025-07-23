@@ -45,8 +45,8 @@ This is the HTML template of our custom stepper component:
 
   <footer class="step-navigation-bar">
     <button class="nav-button" cdkStepperPrevious>&larr;</button>
-    @for (step of steps; track step) {
-      <button class="step" [class.active]="selectedIndex === $index" (click)="onClick(i)">
+    @for (step of steps; track step; let i = $index) {
+      <button class="step" [class.active]="selectedIndex === i" (click)="onClick(i)">
         Step {{i + 1}}
       </button>
     }
