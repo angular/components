@@ -1,3 +1,32 @@
+<a name="20.2.0-next.1"></a>
+# 20.2.0-next.1 "tantalum-tomato" (2025-07-23)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cea7989a9](https://github.com/angular/components/commit/cea7989a96ad6031ab383e2e33a69b9400556e1c) | fix | **scrolling:** Prevent virtual scroll 'flickering' with zoneless ([#31316](https://github.com/angular/components/pull/31316)) |
+| [27dae25a4](https://github.com/angular/components/commit/27dae25a420e76817a1209f373326084ae6dd11c) | fix | **table:** improve error message ([#31545](https://github.com/angular/components/pull/31545)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9627c2933](https://github.com/angular/components/commit/9627c293346738fdf0e3c7284ac055a86e64d99d) | feat | **table:** accept undefined sort and paginator ([#31269](https://github.com/angular/components/pull/31269)) |
+| [e8b28fa6b](https://github.com/angular/components/commit/e8b28fa6ba15f536e72d13c0b22765924efaf1f6) | fix | **datepicker:** focus lost when hitting the end of calendar ([#31572](https://github.com/angular/components/pull/31572)) |
+| [5bd42eaed](https://github.com/angular/components/commit/5bd42eaed46444b372f8db2f3a7d2da036cd5abf) | fix | **datepicker:** toggle button active color not showing up in M3 ([#31565](https://github.com/angular/components/pull/31565)) |
+| [8eae1621b](https://github.com/angular/components/commit/8eae1621b8eb389bac4d702c85a8620d4e3d12ff) | fix | **form-field:** ensure that focused classes are in sync ([#31568](https://github.com/angular/components/pull/31568)) |
+| [950790057](https://github.com/angular/components/commit/9507900574159279e15e4c00cbec20826f42fadd) | fix | **progress-bar:** slow down animations instead of fully stopping them |
+| [062c5eb9d](https://github.com/angular/components/commit/062c5eb9d3521b25f3e519e7fe160c3a949b73c2) | fix | **progress-spinner:** slow down animations instead of fully stopping them |
+| [f0accd1ff](https://github.com/angular/components/commit/f0accd1ff0e9121ac6f9dd756399b4dfa8116814) | fix | **schematics:** access custom as a theme palette ([#31555](https://github.com/angular/components/pull/31555)) |
+| [307ad0c8a](https://github.com/angular/components/commit/307ad0c8abf346232796e17ca7b05e4673ef9ac5) | fix | **table:** add missing sort tests ([#30876](https://github.com/angular/components/pull/30876)) |
+### youtube-player
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cab171045](https://github.com/angular/components/commit/cab17104523884421ff81dcead93e97d01390452) | fix | update to latest types and fix error ([#31546](https://github.com/angular/components/pull/31546)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4ce794ca7](https://github.com/angular/components/commit/4ce794ca70a84bc0ade5758bd81292c46a8e93db) | feat | **ui-patterns:** add popup behavior ([#31550](https://github.com/angular/components/pull/31550)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.3"></a>
 # 20.1.3 "tantalum-potato" (2025-07-23)
 ### cdk
