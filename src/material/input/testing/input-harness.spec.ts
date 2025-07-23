@@ -38,8 +38,18 @@ describe('MatInputHarness', () => {
     expect(inputs.length).toBe(1);
   });
 
-  it('should load input with a specific label', async () => {
+  it('should load input with a specific floating label', async () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Favorite food'}));
+    expect(inputs.length).toBe(1);
+  });
+
+  it('should load input with a specific external label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Favorite drink'}));
+    expect(inputs.length).toBe(1);
+  });
+
+  it('should load input with a specific aria label', async () => {
+    const inputs = await loader.getAllHarnesses(MatInputHarness.with({label: 'Comment box'}));
     expect(inputs.length).toBe(1);
   });
 
@@ -66,7 +76,7 @@ describe('MatInputHarness', () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness);
     expect(inputs.length).toBe(7);
     expect(await inputs[0].getId()).toMatch(/mat-input-\w+\d+/);
-    expect(await inputs[1].getId()).toMatch(/mat-input-\w+\d+/);
+    expect(await inputs[1].getId()).toMatch('favorite-drink-input');
     expect(await inputs[2].getId()).toBe('myTextarea');
     expect(await inputs[3].getId()).toBe('nativeControl');
     expect(await inputs[4].getId()).toMatch(/mat-input-\w+\d+/);
@@ -239,9 +249,11 @@ describe('MatInputHarness', () => {
       <input matInput placeholder="Favorite food" value="Sushi" name="favorite-food">
     </mat-form-field>
 
+    <label for="favorite-drink-input">Favorite drink</label>
     <mat-form-field>
       <input
         matInput
+        id="favorite-drink-input"
         [type]="inputType()"
         [readonly]="readonly()"
         [disabled]="disabled()"
@@ -250,7 +262,12 @@ describe('MatInputHarness', () => {
     </mat-form-field>
 
     <mat-form-field>
-      <textarea id="myTextarea" matInput placeholder="Leave a comment"></textarea>
+      <textarea
+        id="myTextarea"
+        matInput
+        placeholder="Leave a comment"
+        aria-label="Comment box"
+      ></textarea>
     </mat-form-field>
 
     <mat-form-field>
