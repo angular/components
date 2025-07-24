@@ -160,9 +160,6 @@ export class CdkOption<V> {
   /** A unique identifier for the option. */
   protected id = computed(() => this._generatedId);
 
-  /** The value of the option. */
-  protected value = input.required<V>();
-
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
   /** The text used by the typeahead search. */
@@ -173,6 +170,9 @@ export class CdkOption<V> {
 
   /** A reference to the option element to be focused on navigation. */
   protected element = computed(() => this._elementRef.nativeElement);
+
+  /** The value of the option. */
+  value = input.required<V>();
 
   /** Whether an item is disabled. */
   disabled = input(false, {transform: booleanAttribute});
