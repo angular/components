@@ -186,10 +186,10 @@ export class MatTableDataSource<T, P extends MatPaginator = MatPaginator> extend
     filterPredicate: (data: T, filter: string) => boolean;
     _orderData(data: T[]): T[];
     _pageData(data: T[]): T[];
-    get paginator(): P | null;
+    get paginator(): P | null | undefined;
     set paginator(paginator: P | null | undefined);
     _renderChangesSubscription: Subscription | null;
-    get sort(): MatSort | null;
+    get sort(): MatSort | null | undefined;
     set sort(sort: MatSort | null | undefined);
     sortData: (data: T[], sort: MatSort) => T[];
     sortingDataAccessor: (data: T, sortHeaderId: string) => string | number;
