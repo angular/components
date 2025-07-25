@@ -48,8 +48,6 @@ export class MatEndDateHarness extends MatDatepickerInputHarnessBase {
 export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
   static hostSelector = '.mat-date-range-input';
 
-  private readonly _floatingLabelSelector = '.mdc-floating-label';
-
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatDateRangeInputHarness`
    * that meets certain criteria.
@@ -91,26 +89,28 @@ export class MatDateRangeInputHarness extends DatepickerTriggerHarnessBase {
     return this.locatorFor(MatEndDateHarness)();
   }
 
-  /** Gets the floating label text for the range input, if it exists. */
+  /**
+   * Gets the label for the range input, if it exists. This might be provided by a label element or
+   * by the `aria-label` attribute.
+   */
   async getLabel(): Promise<string | null> {
-    // Copied from MatFormFieldControlHarnessBase since this class cannot extend two classes
+    // Directly copied from MatFormFieldControlHarnessBase. This class already has a parent so it
+    // cannot extend MatFormFieldControlHarnessBase for the functionality.
     const documentRootLocator = this.documentRootLocatorFactory();
     const labelId = await (await this.host()).getAttribute('aria-labelledby');
+    const labelText = await (await this.host()).getAttribute('aria-label');
     const hostId = await (await this.host()).getAttribute('id');
 
     if (labelId) {
-      // First option, try to fetch the label using the `aria-labelledby`
-      // attribute.
-      const labelEl = await documentRootLocator.locatorForOptional(
-        `${this._floatingLabelSelector}[id="${labelId}"]`,
-      )();
+      // First, try to find the label by following [aria-labelledby]
+      const labelEl = await documentRootLocator.locatorForOptional(`[id="${labelId}"]`)();
       return labelEl ? labelEl.text() : null;
+    } else if (labelText) {
+      // If that doesn't work, return [aria-label] if it exists
+      return labelText;
     } else if (hostId) {
-      // Fallback option, try to match the id of the input with the `for`
-      // attribute of the label.
-      const labelEl = await documentRootLocator.locatorForOptional(
-        `${this._floatingLabelSelector}[for="${hostId}"]`,
-      )();
+      // Finally, search the DOM for a label that points to the host element
+      const labelEl = await documentRootLocator.locatorForOptional(`[for="${hostId}"]`)();
       return labelEl ? labelEl.text() : null;
     }
     return null;
