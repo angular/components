@@ -122,6 +122,8 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    static ngAcceptInputType_enabledTabIndex: unknown;
+    // (undocumented)
     ngOnDestroy(): void;
     select(): void;
     setActiveStyles(): void;

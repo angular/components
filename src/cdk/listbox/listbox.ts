@@ -39,6 +39,7 @@ import {
   inject,
   Input,
   NgZone,
+  numberAttribute,
   OnDestroy,
   Output,
   QueryList,
@@ -130,7 +131,10 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   private _disabled = signal(false);
 
   /** The tabindex of the option when it is enabled. */
-  @Input('tabindex')
+  @Input({
+    alias: 'tabindex',
+    transform: (value: unknown) => (value == null ? undefined : numberAttribute(value)),
+  })
   get enabledTabIndex() {
     return this._enabledTabIndex() === undefined
       ? this.listbox.enabledTabIndex
