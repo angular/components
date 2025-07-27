@@ -10,13 +10,6 @@ describe('Directionality', () => {
     fakeDocument = {body: {}, documentElement: {}};
 
     TestBed.configureTestingModule({
-      imports: [
-        BidiModule,
-        ElementWithDir,
-        ElementWithPredefinedAutoDir,
-        InjectsDirectionality,
-        ElementWithPredefinedUppercaseDir,
-      ],
       providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDocument}],
     });
   }));

@@ -14,10 +14,6 @@ describe('GlobalPositonStrategy', () => {
   let injector: Injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, BlankPortal],
-    });
-
     injector = TestBed.inject(Injector);
   });
 

@@ -10,7 +10,6 @@ describe('MenuItemRadio', () => {
   let radioElement: HTMLButtonElement;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [CdkMenuModule, SimpleRadioButton]});
     fixture = TestBed.createComponent(SimpleRadioButton);
     fixture.detectChanges();
 

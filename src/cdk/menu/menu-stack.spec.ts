@@ -1,7 +1,7 @@
 import {QueryList, ViewChild, ViewChildren, Component} from '@angular/core';
 import {CdkMenu} from './menu';
 import {CdkMenuBar} from './menu-bar';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkMenuTrigger} from './menu-trigger';
 import {MenuStack} from './menu-stack';
 import {CdkMenuModule} from './menu-module';
@@ -19,12 +19,6 @@ describe('MenuStack', () => {
     menus = fixture.componentInstance.menus.toArray();
     menuStack = fixture.componentInstance.menuBar.menuStack;
   }
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkMenuModule, MultiMenuWithSubmenu],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MultiMenuWithSubmenu);

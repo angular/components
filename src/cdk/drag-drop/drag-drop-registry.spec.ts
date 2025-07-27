@@ -16,10 +16,6 @@ describe('DragDropRegistry', () => {
   let registry: DragDropRegistry;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule, BlankComponent],
-    });
-
     fixture = TestBed.createComponent(BlankComponent);
     fixture.detectChanges();
     registry = TestBed.inject(DragDropRegistry);

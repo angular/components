@@ -2,7 +2,7 @@ import {Component, DebugElement, signal} from '@angular/core';
 import {CdkRadioButton, CdkRadioGroup} from './radio-group';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 
 describe('CdkRadioGroup', () => {
@@ -45,7 +45,6 @@ describe('CdkRadioGroup', () => {
   }) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
-      imports: [BidiModule, RadioGroupExample],
     });
 
     fixture = TestBed.createComponent(RadioGroupExample);
@@ -85,7 +84,6 @@ describe('CdkRadioGroup', () => {
   function setupDefaultRadioGroup() {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
-      imports: [BidiModule, DefaultRadioGroupExample],
     });
 
     const fixture = TestBed.createComponent(DefaultRadioGroupExample);

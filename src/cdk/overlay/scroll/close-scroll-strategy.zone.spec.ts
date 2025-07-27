@@ -25,7 +25,6 @@ describe('CloseScrollStrategy Zone.js integration', () => {
     scrollPosition = 0;
 
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, MozarellaMsg],
       providers: [
         provideZoneChangeDetection(),
         {

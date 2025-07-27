@@ -26,10 +26,6 @@ describe('Menu', () => {
     let menuItems: CdkMenuItemCheckbox[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MenuCheckboxGroup],
-      });
-
       fixture = TestBed.createComponent(MenuCheckboxGroup);
       fixture.detectChanges();
 
@@ -59,12 +55,6 @@ describe('Menu', () => {
     let fixture: ComponentFixture<InlineMenu>;
     let nativeMenu: HTMLElement;
     let nativeMenuItems: HTMLElement[];
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, InlineMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(InlineMenu);
@@ -134,12 +124,6 @@ describe('Menu', () => {
       let nativeShareTrigger: HTMLElement | undefined;
 
       let nativeMenus: HTMLElement[];
-
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, WithComplexNestedMenus],
-        });
-      }));
 
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenus);
@@ -326,12 +310,6 @@ describe('Menu', () => {
 
       let nativeMenus: HTMLElement[];
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, WithComplexNestedMenusOnBottom],
-        });
-      }));
-
       beforeEach(() => {
         fixture = TestBed.createComponent(WithComplexNestedMenusOnBottom);
         detectChanges();
@@ -506,12 +484,6 @@ describe('Menu', () => {
   describe('menu with active item', () => {
     let fixture: ComponentFixture<MenuWithActiveItem>;
     let nativeMenuItems: HTMLElement[];
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MenuWithActiveItem],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MenuWithActiveItem);

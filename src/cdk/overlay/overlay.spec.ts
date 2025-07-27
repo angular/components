@@ -50,7 +50,7 @@ describe('Overlay', () => {
   function setup(imports: Type<unknown>[] = []) {
     dir = signal<Direction>('ltr');
     TestBed.configureTestingModule({
-      imports: [OverlayModule, ...imports],
+      imports,
       providers: [
         provideFakeDirectionality(dir),
         {
