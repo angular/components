@@ -7,28 +7,20 @@
  */
 
 import {computed} from '@angular/core';
-import {ListSelection, ListSelectionItem} from '../behaviors/list-selection/list-selection';
-import {ListTypeaheadItem} from '../behaviors/list-typeahead/list-typeahead';
-import {ListNavigation, ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
-import {ListFocus, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /**
  * Represents the properties exposed by a listbox that need to be accessed by an option.
  * This exists to avoid circular dependency errors between the listbox and option.
  */
 interface ListboxPattern<V> {
-  focusManager: ListFocus<OptionPattern<V>>;
-  selection: ListSelection<OptionPattern<V>, V>;
-  navigation: ListNavigation<OptionPattern<V>>;
+  inputs: ListInputs<OptionPattern<V>, V>;
+  listBehavior: List<OptionPattern<V>, V>;
 }
 
 /** Represents the required inputs for an option in a listbox. */
-export interface OptionInputs<V>
-  extends ListNavigationItem,
-    ListSelectionItem<V>,
-    ListTypeaheadItem,
-    ListFocusItem {
+export interface OptionInputs<V> extends ListItem<V> {
   listbox: SignalLike<ListboxPattern<V> | undefined>;
 }
 
@@ -44,15 +36,15 @@ export class OptionPattern<V> {
   index = computed(
     () =>
       this.listbox()
-        ?.navigation.inputs.items()
+        ?.inputs.items()
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
   /** Whether the option is active. */
-  active = computed(() => this.listbox()?.focusManager.activeItem() === this);
+  active = computed(() => this.listbox()?.listBehavior.activeItem() === this);
 
   /** Whether the option is selected. */
-  selected = computed(() => this.listbox()?.selection.inputs.value().includes(this.value()));
+  selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));
 
   /** Whether the option is disabled. */
   disabled: SignalLike<boolean>;
@@ -64,7 +56,7 @@ export class OptionPattern<V> {
   listbox: SignalLike<ListboxPattern<V> | undefined>;
 
   /** The tabindex of the option. */
-  tabindex = computed(() => this.listbox()?.focusManager.getItemTabindex(this));
+  tabindex = computed(() => this.listbox()?.listBehavior.getItemTabindex(this));
 
   /** The html element that should receive focus. */
   element: SignalLike<HTMLElement>;
