@@ -1026,6 +1026,59 @@ describe('MatChipGrid', () => {
     }));
   });
 
+  describe('chip grid with a form control', () => {
+    it('should emit the change event on blur if the set of chips changed', fakeAsync(() => {
+      const fixture = TestBed.createComponent(ChipGridWithFormControl);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+
+      const control = fixture.componentInstance.control;
+      const spy = jasmine.createSpy('change');
+      const subscription = control.valueChanges.subscribe(spy);
+      fixture.componentInstance.chips.push('one');
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(control.dirty).toBe(false);
+      expect(control.touched).toBe(false);
+      expect(spy).not.toHaveBeenCalled();
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('mat-chip-grid'), 'blur');
+      fixture.detectChanges();
+      flush();
+
+      expect(control.dirty).toBe(true);
+      expect(control.touched).toBe(true);
+      expect(spy).toHaveBeenCalledTimes(1);
+      subscription.unsubscribe();
+    }));
+
+    it('should not emit the change event on blur if the chips have not changed', fakeAsync(() => {
+      const fixture = TestBed.createComponent(ChipGridWithFormControl);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      flush();
+
+      const control = fixture.componentInstance.control;
+      const spy = jasmine.createSpy('change');
+      const subscription = control.valueChanges.subscribe(spy);
+
+      expect(control.dirty).toBe(false);
+      expect(control.touched).toBe(false);
+      expect(spy).not.toHaveBeenCalled();
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('mat-chip-grid'), 'blur');
+      fixture.detectChanges();
+      flush();
+
+      expect(control.dirty).toBe(false);
+      expect(control.touched).toBe(true);
+      expect(spy).not.toHaveBeenCalled();
+      subscription.unsubscribe();
+    }));
+  });
+
   function createComponent<T>(
     component: Type<T>,
     direction: Direction = 'ltr',
@@ -1233,4 +1286,23 @@ class ChipGridWithRemove {
   removeChip(event: MatChipEvent) {
     this.chips.splice(event.chip.value, 1);
   }
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>Enter a value</mat-label>
+      <mat-chip-grid #chipGrid [formControl]="control">
+        @for (value of chips; track value) {
+          <mat-chip-row [value]="value">{{ value }}</mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input [matChipInputFor]="chipGrid"/>
+    </mat-form-field>
+  `,
+  imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel, ReactiveFormsModule],
+})
+class ChipGridWithFormControl {
+  control = new FormControl<string[]>([]);
+  chips: string[] = [];
 }

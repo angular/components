@@ -493,11 +493,14 @@ export class MatChipGrid
   /** Emits change event to set the model value. */
   private _propagateChanges(): void {
     const valueToEmit = this._chips.length ? this._chips.toArray().map(chip => chip.value) : [];
-    this._value = valueToEmit;
-    this.change.emit(new MatChipGridChange(this, valueToEmit));
-    this.valueChange.emit(valueToEmit);
-    this._onChange(valueToEmit);
-    this._changeDetectorRef.markForCheck();
+
+    if (!this._value || !arraysIdentical(this._value, valueToEmit)) {
+      this._value = valueToEmit;
+      this.change.emit(new MatChipGridChange(this, valueToEmit));
+      this.valueChange.emit(valueToEmit);
+      this._onChange(valueToEmit);
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /** Mark the field as touched */
@@ -506,4 +509,23 @@ export class MatChipGrid
     this._changeDetectorRef.markForCheck();
     this.stateChanges.next();
   }
+}
+
+/** Determines if two arrays are identical. */
+function arraysIdentical(one: unknown[], two: unknown[]): boolean {
+  if (one === two) {
+    return true;
+  }
+
+  if (one.length !== two.length) {
+    return false;
+  }
+
+  for (let i = 0; i < one.length; i++) {
+    if (one[i] !== two[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
