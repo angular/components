@@ -132,7 +132,18 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /** Whether the slider displays tick marks along the slider track. */
   @Input({transform: booleanAttribute})
-  showTickMarks: boolean = false;
+  get showTickMarks(): boolean {
+    return this._showTickMarks;
+  }
+  set showTickMarks(value: boolean) {
+    this._showTickMarks = value;
+
+    if (this._hasViewInitialized) {
+      this._updateTickMarkUI();
+      this._updateTickMarkTrackUI();
+    }
+  }
+  private _showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
   @Input({transform: numberAttribute})
