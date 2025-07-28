@@ -23,22 +23,17 @@ import {MatIconModule} from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsReactiveFormExample {
-  readonly reactiveKeywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
-  readonly formControl = new FormControl(['angular']);
-
-  announcer = inject(LiveAnnouncer);
+  readonly formControl = new FormControl(['angular', 'how-to', 'tutorial', 'accessibility']);
+  private _announcer = inject(LiveAnnouncer);
 
   removeReactiveKeyword(keyword: string) {
-    this.reactiveKeywords.update(keywords => {
-      const index = keywords.indexOf(keyword);
-      if (index < 0) {
-        return keywords;
-      }
-
+    const keywords = this.formControl.value!;
+    const index = keywords.indexOf(keyword);
+    if (index > -1) {
       keywords.splice(index, 1);
-      this.announcer.announce(`removed ${keyword} from reactive form`);
-      return [...keywords];
-    });
+      this._announcer.announce(`removed ${keyword}`);
+      this.formControl.setValue([...keywords]);
+    }
   }
 
   addReactiveKeyword(event: MatChipInputEvent): void {
@@ -46,8 +41,7 @@ export class ChipsReactiveFormExample {
 
     // Add our keyword
     if (value) {
-      this.reactiveKeywords.update(keywords => [...keywords, value]);
-      this.announcer.announce(`added ${value} to reactive form`);
+      this.formControl.setValue([...this.formControl.value!, value]);
     }
 
     // Clear the input value

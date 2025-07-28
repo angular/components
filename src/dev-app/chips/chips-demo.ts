@@ -75,8 +75,6 @@ export class ChipsDemo {
   // Enter, comma, semi-colon
   separatorKeysCodes = [ENTER, COMMA, 186];
 
-  selectedPeople = null;
-
   people: Person[] = [
     {name: 'Kara', avatar: 'K'},
     {name: 'Jeremy', avatar: 'J'},
@@ -106,6 +104,8 @@ export class ChipsDemo {
     if (value) {
       this.people.push({name: value});
     }
+
+    console.log(this.people);
 
     // Clear the input value
     event.chipInput!.clear();

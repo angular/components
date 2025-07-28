@@ -168,10 +168,11 @@
 
       <mat-form-field class="demo-has-chip-list">
         <mat-label>New Contributor...</mat-label>
-        <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
+        <mat-chip-grid #chipGrid1 [(ngModel)]="people" required [disabled]="disableInputs">
           @for (person of people; track person) {
             <mat-chip-row
               [editable]="editable"
+              [value]="person"
               (removed)="remove(person)"
               (edited)="edit(person, $event)">
               @if (showEditIcon) {
@@ -202,9 +203,9 @@
 
       <mat-form-field class="demo-has-chip-list">
         <mat-label>New Contributor...</mat-label>
-        <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
+        <mat-chip-grid #chipGrid2 [(ngModel)]="people" required [disabled]="disableInputs">
           @for (person of people; track person) {
-            <mat-chip-row (removed)="remove(person)">
+            <mat-chip-row (removed)="remove(person)" [value]="person">
               {{person.name}}
               <button matChipRemove aria-label="Remove contributor">
                 <mat-icon>close</mat-icon>

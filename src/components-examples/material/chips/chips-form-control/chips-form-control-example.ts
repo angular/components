@@ -24,22 +24,17 @@ import {MatIconModule} from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsFormControlExample {
-  readonly keywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
-  readonly formControl = new FormControl(['angular']);
-
-  announcer = inject(LiveAnnouncer);
+  readonly formControl = new FormControl(['angular', 'how-to', 'tutorial', 'accessibility']);
+  private _announcer = inject(LiveAnnouncer);
 
   removeKeyword(keyword: string) {
-    this.keywords.update(keywords => {
-      const index = keywords.indexOf(keyword);
-      if (index < 0) {
-        return keywords;
-      }
-
+    const keywords = this.formControl.value!;
+    const index = keywords.indexOf(keyword);
+    if (index > -1) {
       keywords.splice(index, 1);
-      this.announcer.announce(`removed ${keyword}`);
-      return [...keywords];
-    });
+      this._announcer.announce(`removed ${keyword}`);
+      this.formControl.setValue([...keywords]);
+    }
   }
 
   add(event: MatChipInputEvent): void {
@@ -47,7 +42,7 @@ export class ChipsFormControlExample {
 
     // Add our keyword
     if (value) {
-      this.keywords.update(keywords => [...keywords, value]);
+      this.formControl.setValue([...this.formControl.value!, value]);
     }
 
     // Clear the input value

@@ -4,7 +4,7 @@
     <mat-label>Video keywords</mat-label>
     <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords">
     @for (keyword of templateKeywords(); track keyword) {
-      <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
+      <mat-chip-row (removed)="removeTemplateKeyword(keyword)" [value]="keyword">
         {{keyword}}
       <button matChipRemove [attr.aria-label]="'remove template form' + keyword">
         <mat-icon>cancel</mat-icon>
