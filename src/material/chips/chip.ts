@@ -327,6 +327,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
       this.disableRipple ||
       this._animationsDisabled ||
       this._isBasicChip ||
+      !this._hasInteractiveActions() ||
       !!this._globalRippleOptions?.disabled
     );
   }
@@ -394,6 +395,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** Handles interactions with the primary action of the chip. */
   _handlePrimaryActionInteraction() {
     // Empty here, but is overwritten in child classes.
+  }
+
+  /** Returns whether the chip has any interactive actions. */
+  _hasInteractiveActions(): boolean {
+    return this._getActions().some(a => a.isInteractive);
   }
 
   /** Handles interactions with the edit action of the chip. */

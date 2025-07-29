@@ -436,6 +436,43 @@ describe('Row Chips', () => {
       }));
     });
 
+    describe('_hasInteractiveActions', () => {
+      it('should return true if the chip has a remove icon', () => {
+        testComponent.removable = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+        expect(chipInstance._hasInteractiveActions()).toBe(true);
+      });
+
+      it('should return true if the chip has an edit icon', () => {
+        testComponent.editable = true;
+        testComponent.showEditIcon = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+        expect(chipInstance._hasInteractiveActions()).toBe(true);
+      });
+
+      it('should return true even with a non-interactive trailing icon', () => {
+        testComponent.showTrailingIcon = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+        expect(chipInstance._hasInteractiveActions()).toBe(true);
+      });
+
+      it('should return false if all actions are non-interactive', () => {
+        // Make primary action non-interactive for testing purposes.
+        chipInstance.primaryAction.isInteractive = false;
+        testComponent.showTrailingIcon = true;
+        testComponent.removable = false; // remove icon is interactive
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+
+        // The trailing icon is not interactive.
+        expect(chipInstance.trailingIcon.isInteractive).toBe(false);
+        expect(chipInstance._hasInteractiveActions()).toBe(false);
+      });
+    });
+
     describe('with edit icon', () => {
       beforeEach(async () => {
         testComponent.showEditIcon = true;
@@ -507,9 +544,14 @@ describe('Row Chips', () => {
               <button matChipEdit>edit</button>
             }
             {{name}}
-            <button matChipRemove>x</button>
+            @if (removable) {
+              <button matChipRemove>x</button>
+            }
             @if (useCustomEditInput) {
               <span class="projected-edit-input" matChipEditInput></span>
+            }
+            @if (showTrailingIcon) {
+              <span matChipTrailingIcon>trailing</span>
             }
           </mat-chip-row>
           <input matInput [matChipInputFor]="chipGrid" #chipInput>
@@ -529,6 +571,7 @@ class SingleChip {
   editable: boolean = false;
   showEditIcon: boolean = false;
   useCustomEditInput: boolean = true;
+  showTrailingIcon = false;
   ariaLabel: string | null = null;
   ariaDescription: string | null = null;
 

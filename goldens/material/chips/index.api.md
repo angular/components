@@ -83,6 +83,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     _handlePrimaryActionInteraction(): void;
     // (undocumented)
     _hasFocus(): boolean;
+    _hasInteractiveActions(): boolean;
     _hasTrailingIcon(): boolean;
     highlighted: boolean;
     id: string;
