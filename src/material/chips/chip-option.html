@@ -4,9 +4,9 @@
   <button
     matChipAction
     [_allowFocusWhenDisabled]="true"
-    [attr.aria-selected]="ariaSelected"
+    [attr.aria-description]="ariaDescription"
     [attr.aria-label]="ariaLabel"
-    [attr.aria-describedby]="_ariaDescriptionId"
+    [attr.aria-selected]="ariaSelected"
     role="option">
     @if (_hasLeadingGraphic()) {
       <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
@@ -35,5 +35,3 @@
     <ng-content select="mat-chip-trailing-icon,[matChipRemove],[matChipTrailingIcon]"></ng-content>
   </span>
 }
-
-<span class="cdk-visually-hidden" [id]="_ariaDescriptionId">{{ariaDescription}}</span>
