@@ -79,7 +79,7 @@ export class ToolbarPattern<V> {
         .on('End', () => this.navigation.last());
     }
 
-    /** When in Active Descendany mode, Toolbar controls which group receives selection */
+    /** When in Active Descendant mode, Toolbar controls which group receives selection */
     if (this.inputs.focusMode() === 'activedescendant') {
       manager
         .on(' ', () => this.toolbarSelectOverride())
