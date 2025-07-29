@@ -1,7 +1,6 @@
 import {Component, ElementRef, inject} from '@angular/core';
 import {TestBed, fakeAsync} from '@angular/core/testing';
 import {DragDrop} from './drag-drop';
-import {DragDropModule} from './drag-drop-module';
 import {DragRef} from './drag-ref';
 import {DropListRef} from './drop-list-ref';
 
@@ -9,10 +8,6 @@ describe('DragDrop', () => {
   let service: DragDrop;
 
   beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule, TestComponent],
-    });
-
     service = TestBed.inject(DragDrop);
   }));
 

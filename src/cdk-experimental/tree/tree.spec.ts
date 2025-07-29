@@ -1,7 +1,7 @@
 import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {CdkTree, CdkTreeItem, CdkTreeItemGroup, CdkTreeItemGroupContent} from './tree';
 
@@ -53,7 +53,6 @@ describe('CdkTree', () => {
 
   function setupTestTree(textDirection: Direction = 'ltr') {
     TestBed.configureTestingModule({
-      imports: [TestTreeComponent, BidiModule],
       providers: [provideFakeDirectionality(textDirection)],
     });
 

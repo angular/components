@@ -22,8 +22,6 @@ describe('BlockScrollStrategy', () => {
   let overlayContainer: OverlayContainer;
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({imports: [OverlayModule, PortalModule, FocacciaMsg]});
-
     const injector = TestBed.inject(Injector);
     const overlayConfig = new OverlayConfig({scrollStrategy: createBlockScrollStrategy(injector)});
 

@@ -50,9 +50,6 @@ describe('SharedResizeObserver', () => {
   beforeEach(() => {
     originalResizeObserver = ResizeObserver;
     window.ResizeObserver = MockResizeObserver;
-    TestBed.configureTestingModule({
-      imports: [TestComponent],
-    });
     fixture = TestBed.createComponent(TestComponent);
     fixture.detectChanges();
     instance = fixture.componentInstance;

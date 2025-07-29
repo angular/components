@@ -10,7 +10,6 @@ describe('AriaDescriber', () => {
 
   function createFixture(providers: Provider[] = []) {
     TestBed.configureTestingModule({
-      imports: [A11yModule, TestApp],
       providers: [AriaDescriber, ...providers],
     });
 

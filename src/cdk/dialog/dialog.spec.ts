@@ -1306,7 +1306,6 @@ describe('Dialog with a parent Dialog', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [DialogModule, ComponentThatProvidesMatDialog],
       providers: [
         {
           provide: OverlayContainer,

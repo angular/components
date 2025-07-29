@@ -1,17 +1,11 @@
 import {Component, DebugElement, Directive, effect, inject, signal} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DeferredContent, DeferredContentAware} from './deferred-content';
 import {By} from '@angular/platform-browser';
 
 describe('DeferredContent', () => {
   let fixture: ComponentFixture<TestComponent>;
   let collapsible: DebugElement;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [TestComponent],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);

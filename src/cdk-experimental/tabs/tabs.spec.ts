@@ -1,7 +1,7 @@
 import {Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {CdkTabs, CdkTabList, CdkTab, CdkTabPanel, CdkTabContent} from './tabs';
 
@@ -63,7 +63,6 @@ describe('CdkTabs', () => {
   function setupTestTabs(options: {textDirection?: Direction} = {}) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(options.textDirection ?? 'ltr')],
-      imports: [BidiModule, TestTabsComponent],
     });
 
     fixture = TestBed.createComponent(TestTabsComponent);

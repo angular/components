@@ -10,7 +10,6 @@ describe('MenuItemCheckbox', () => {
   let checkboxElement: HTMLButtonElement;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({imports: [CdkMenuModule, SingleCheckboxButton]});
     fixture = TestBed.createComponent(SingleCheckboxButton);
     fixture.detectChanges();
 

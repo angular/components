@@ -1,7 +1,6 @@
 import {Component, DebugElement, signal, model} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {
@@ -97,7 +96,6 @@ describe('CdkAccordionGroup', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr'), _IdGenerator],
-      imports: [BidiModule, AccordionGroupExample],
     });
 
     fixture = TestBed.createComponent(AccordionGroupExample);

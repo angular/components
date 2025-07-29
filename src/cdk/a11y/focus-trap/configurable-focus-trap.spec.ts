@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
-  A11yModule,
   ConfigurableFocusTrap,
   ConfigurableFocusTrapFactory,
   FOCUS_TRAP_INERT_STRATEGY,
@@ -101,7 +100,6 @@ function createComponent<T>(
   providers: Provider[] = [],
 ): ComponentFixture<T> {
   TestBed.configureTestingModule({
-    imports: [A11yModule, componentType],
     providers: providers,
   });
 

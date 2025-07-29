@@ -45,9 +45,7 @@ describe('MenuBar', () => {
     let menuItems: CdkMenuItemRadio[];
 
     beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MenuBarRadioGroup],
-      });
+      TestBed.configureTestingModule({});
 
       fixture = TestBed.createComponent(MenuBarRadioGroup);
       fixture.detectChanges();
@@ -105,9 +103,7 @@ describe('MenuBar', () => {
       }
 
       beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, MultiMenuWithSubmenu],
-        });
+        TestBed.configureTestingModule({});
       }));
 
       beforeEach(() => {
@@ -528,12 +524,6 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, MultiMenuWithSubmenu],
-        });
-      }));
-
       beforeEach(() => {
         fixture = TestBed.createComponent(MultiMenuWithSubmenu);
         detectChanges();
@@ -655,12 +645,6 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, MenuWithCheckboxes],
-        });
-      }));
-
       beforeEach(() => {
         fixture = TestBed.createComponent(MenuWithCheckboxes);
         detectChanges();
@@ -721,12 +705,6 @@ describe('MenuBar', () => {
         detectChanges();
       }
 
-      beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [CdkMenuModule, MenuWithRadioButtons],
-        });
-      }));
-
       beforeEach(() => {
         fixture = TestBed.createComponent(MenuWithRadioButtons);
         detectChanges();
@@ -775,12 +753,6 @@ describe('MenuBar', () => {
       fixture.detectChanges();
       grabElementsForTesting();
     }
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MenuBarWithMenusAndInlineMenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MenuBarWithMenusAndInlineMenu);
@@ -894,12 +866,6 @@ describe('MenuBar', () => {
       dispatchMouseEvent(fileMenuNativeItems[1], 'mouseenter');
       detectChanges();
     }
-
-    beforeEach(waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule, MultiMenuWithSubmenu],
-      });
-    }));
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MultiMenuWithSubmenu);

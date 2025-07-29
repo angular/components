@@ -1,15 +1,9 @@
-import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {Component} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {CdkAccordionModule, CdkAccordionItem} from './public-api';
 
 describe('CdkAccordionItem', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkAccordionModule, SingleItem, ItemGroupWithoutAccordion, ItemGroupWithAccordion],
-    });
-  }));
-
   describe('single item', () => {
     let fixture: ComponentFixture<SingleItem>;
     let item: CdkAccordionItem;

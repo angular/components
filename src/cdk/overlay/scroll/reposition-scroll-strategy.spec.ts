@@ -21,7 +21,6 @@ describe('RepositionScrollStrategy', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, PastaMsg],
       providers: [
         {
           provide: ScrollDispatcher,

@@ -2,7 +2,7 @@ import {Component, DebugElement, signal} from '@angular/core';
 import {CdkListbox, CdkOption} from './listbox';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
+import {Direction} from '@angular/cdk/bidi';
 import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/testing/private';
 
 interface ModifierKeys {
@@ -65,7 +65,6 @@ describe('CdkListbox', () => {
   }) {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(opts?.textDirection ?? 'ltr')],
-      imports: [BidiModule, ListboxExample],
     });
 
     fixture = TestBed.createComponent(ListboxExample);
@@ -98,7 +97,6 @@ describe('CdkListbox', () => {
   function setupDefaultListbox() {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
-      imports: [BidiModule, DefaultListboxExample],
     });
 
     const defaultFixture = TestBed.createComponent(DefaultListboxExample);

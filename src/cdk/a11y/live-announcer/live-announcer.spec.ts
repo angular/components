@@ -18,12 +18,6 @@ describe('LiveAnnouncer', () => {
   let fixture: ComponentFixture<TestApp>;
 
   describe('with default element', () => {
-    beforeEach(() =>
-      TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp, TestModal],
-      }),
-    );
-
     beforeEach(fakeAsync(() => {
       announcer = TestBed.inject(LiveAnnouncer);
       ariaLiveElement = getLiveElement();
@@ -123,10 +117,7 @@ describe('LiveAnnouncer', () => {
 
     it('should ensure that there is only one live element at a time', fakeAsync(() => {
       fixture.destroy();
-
-      TestBed.resetTestingModule().configureTestingModule({
-        imports: [A11yModule],
-      });
+      TestBed.resetTestingModule().configureTestingModule({});
 
       const extraElement = document.createElement('div');
       extraElement.classList.add('cdk-live-announcer-element');
@@ -219,7 +210,6 @@ describe('LiveAnnouncer', () => {
       customLiveElement = document.createElement('div');
 
       return TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp],
         providers: [{provide: LIVE_ANNOUNCER_ELEMENT_TOKEN, useValue: customLiveElement}],
       });
     });
@@ -242,7 +232,6 @@ describe('LiveAnnouncer', () => {
   describe('with a default options', () => {
     beforeEach(() => {
       return TestBed.configureTestingModule({
-        imports: [A11yModule, TestApp],
         providers: [
           {
             provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
@@ -290,7 +279,6 @@ describe('CdkAriaLive', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule, DivWithCdkAriaLive],
       providers: [
         {
           provide: MutationObserverFactory,
