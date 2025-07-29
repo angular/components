@@ -64,6 +64,7 @@ export class DevAppLayout {
     {name: 'CDK Experimental Listbox', route: '/cdk-experimental-listbox'},
     {name: 'CDK Experimental Tabs', route: '/cdk-experimental-tabs'},
     {name: 'CDK Experimental Accordion', route: '/cdk-experimental-accordion'},
+    {name: 'CDK Experimental Toolbar', route: '/cdk-experimental-toolbar'},
     {name: 'CDK Experimental Tree', route: '/cdk-experimental-tree'},
     {name: 'CDK Listbox', route: '/cdk-listbox'},
     {name: 'CDK Menu', route: '/cdk-menu'},

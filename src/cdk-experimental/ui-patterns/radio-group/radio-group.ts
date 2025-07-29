@@ -22,8 +22,14 @@ export type RadioGroupInputs<V> = Omit<
 
   /** Whether the radio group is readonly. */
   readonly: SignalLike<boolean>;
+  /** Parent toolbar of radio group */
+  toolbar: SignalLike<ToolbarLike<V> | null>;
 };
-
+interface ToolbarLike<V> {
+  focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget>;
+  navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
+}
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
   /** The list behavior for the radio group. */
@@ -41,8 +47,8 @@ export class RadioGroupPattern<V> {
   /** Whether the radio group is readonly. */
   readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
-  /** The tabindex of the radio group (if using activedescendant). */
-  tabindex = computed(() => this.listBehavior.tabindex());
+  /** The tabindex of the radio group (if using activedescendant or if in toolbar). */
+  tabindex = computed(() => (this.inputs.toolbar() ? -1 : this.listBehavior.tabindex()));
 
   /** The id of the current active radio button (if using activedescendant). */
   activedescendant = computed(() => this.listBehavior.activedescendant());
@@ -66,6 +72,11 @@ export class RadioGroupPattern<V> {
   /** The keydown event manager for the radio group. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
+
+    // If within a toolbar relinquish keyboard control
+    if (this.inputs.toolbar()) {
+      return manager;
+    }
 
     // Readonly mode allows navigation but not selection changes.
     if (this.readonly()) {
