@@ -8,31 +8,12 @@
 
 import {computed, signal} from '@angular/core';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
-import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
-import {
-  ListNavigation,
-  ListNavigationInputs,
-  ListNavigationItem,
-} from '../behaviors/list-navigation/list-navigation';
-import {
-  ListSelection,
-  ListSelectionInputs,
-  ListSelectionItem,
-} from '../behaviors/list-selection/list-selection';
-import {
-  ListTypeahead,
-  ListTypeaheadInputs,
-  ListTypeaheadItem,
-} from '../behaviors/list-typeahead/list-typeahead';
+import {List, ListInputs, ListItem} from '../behaviors/list/list';
 import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expansion/expansion';
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
-export interface TreeItemInputs<V>
-  extends ListFocusItem,
-    ListNavigationItem,
-    ListSelectionItem<V>,
-    ListTypeaheadItem {
+export interface TreeItemInputs<V> extends ListItem<V> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 
@@ -79,10 +60,10 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly posinset = computed(() => this.parent().children().indexOf(this) + 1);
 
   /** Whether the item is active. */
-  readonly active = computed(() => this.tree().focusManager.activeItem() === this);
+  readonly active = computed(() => this.tree().listBehavior.activeItem() === this);
 
   /** The tabindex of the item. */
-  readonly tabindex = computed(() => this.tree().focusManager.getItemTabindex(this));
+  readonly tabindex = computed(() => this.tree().listBehavior.getItemTabindex(this));
 
   /** Whether the item is selected. */
   readonly selected = computed(() => {
@@ -137,14 +118,7 @@ interface SelectOptions {
 }
 
 /** Represents the required inputs for a tree. */
-export interface TreeInputs<V>
-  extends Omit<
-    ListFocusInputs<TreeItemPattern<V>> &
-      ListNavigationInputs<TreeItemPattern<V>> &
-      ListSelectionInputs<TreeItemPattern<V>, V> &
-      ListTypeaheadInputs<TreeItemPattern<V>>,
-    'items'
-  > {
+export interface TreeInputs<V> extends Omit<ListInputs<TreeItemPattern<V>, V>, 'items'> {
   /** All items in the tree, in document order (DFS-like, a flattened list). */
   allItems: SignalLike<TreeItemPattern<V>[]>;
 
@@ -158,17 +132,8 @@ export interface TreeInputs<V>
 export interface TreePattern<V> extends TreeInputs<V> {}
 /** Controls the state and interactions of a tree view. */
 export class TreePattern<V> {
-  /** Controls focus for the all visible tree items. */
-  readonly focusManager: ListFocus<TreeItemPattern<V>>;
-
-  /** Controls navigation for all visible tree items. */
-  readonly navigationManager: ListNavigation<TreeItemPattern<V>>;
-
-  /** Controls selection for all visible tree items. */
-  readonly selectionManager: ListSelection<TreeItemPattern<V>, V>;
-
-  /** Controls typeahead for all visible tree items. */
-  readonly typeaheadManager: ListTypeahead<TreeItemPattern<V>>;
+  /** The list behavior for the tree. */
+  readonly listBehavior: List<TreeItemPattern<V>, V>;
 
   /** Controls expansion for direct children of the tree root (top-level items). */
   readonly expansionManager: ListExpansion;
@@ -180,13 +145,10 @@ export class TreePattern<V> {
   readonly expanded = () => true;
 
   /** The tabindex of the tree. */
-  readonly tabindex = computed(() => this.focusManager.getListTabindex());
+  readonly tabindex = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active item. */
-  readonly activedescendant = computed(() => this.focusManager.getActiveDescendant());
-
-  /** Whether the tree is performing a range selection. */
-  readonly inSelection = signal(false);
+  readonly activedescendant = computed(() => this.listBehavior.activedescendant());
 
   /** The direct children of the root (top-level tree items). */
   readonly children = computed(() =>
@@ -232,87 +194,76 @@ export class TreePattern<V> {
   });
 
   /** Represents the space key. Does nothing when the user is actively using typeahead. */
-  readonly dynamicSpaceKey = computed(() => (this.typeaheadManager.isTyping() ? '' : ' '));
+  readonly dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
 
   /** Regular expression to match characters for typeahead. */
   readonly typeaheadRegexp = /^.$/;
 
-  /** Uncommitted tree item for selecting a range of tree items. */
-  readonly anchorItem = signal<TreeItemPattern<V> | undefined>(undefined);
-
-  /**
-   * Uncommitted tree item index for selecting a range of tree items.
-   *
-   * The index is computed in case the tree item position is changed caused by tree expansions.
-   */
-  readonly anchorIndex = computed(() =>
-    this.anchorItem() ? this.visibleItems().indexOf(this.anchorItem()!) : -1,
-  );
-
   /** The keydown event manager for the tree. */
   readonly keydown = computed(() => {
     const manager = new KeyboardEventManager();
+    const list = this.listBehavior;
 
     if (!this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.prev())
-        .on(this.nextKey, () => this.next())
-        .on('Home', () => this.first())
-        .on('End', () => this.last())
-        .on(this.typeaheadRegexp, e => this.search(e.key));
+        .on(this.prevKey, () => list.prev())
+        .on(this.nextKey, () => list.next())
+        .on('Home', () => list.first())
+        .on('End', () => list.last())
+        .on(this.typeaheadRegexp, e => list.search(e.key));
     }
 
     if (this.followFocus()) {
       manager
-        .on(this.prevKey, () => this.prev({selectOne: true}))
-        .on(this.nextKey, () => this.next({selectOne: true}))
-        .on('Home', () => this.first({selectOne: true}))
-        .on('End', () => this.last({selectOne: true}))
-        .on(this.typeaheadRegexp, e => this.search(e.key, {selectOne: true}));
+        .on(this.prevKey, () => list.prev({selectOne: true}))
+        .on(this.nextKey, () => list.next({selectOne: true}))
+        .on('Home', () => list.first({selectOne: true}))
+        .on('End', () => list.last({selectOne: true}))
+        .on(this.typeaheadRegexp, e => list.search(e.key, {selectOne: true}));
     }
 
     if (this.inputs.multi()) {
       manager
-        .on(Modifier.Any, 'Shift', () => this.anchorItem.set(this.focusManager.activeItem()))
-        .on(Modifier.Shift, this.prevKey, () => this.prev({selectRange: true}))
-        .on(Modifier.Shift, this.nextKey, () => this.next({selectRange: true}))
+        // TODO: Tracking the anchor by index can break if the
+        // tree is expanded or collapsed causing the index to change.
+        .on(Modifier.Any, 'Shift', () => list.anchor(this.inputs.activeIndex()))
+        .on(Modifier.Shift, this.prevKey, () => list.prev({selectRange: true}))
+        .on(Modifier.Shift, this.nextKey, () => list.next({selectRange: true}))
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
-          this.first({selectRange: true, anchor: false}),
+          list.first({selectRange: true, anchor: false}),
         )
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'End', () =>
-          this.last({selectRange: true, anchor: false}),
+          list.last({selectRange: true, anchor: false}),
         )
-        .on(Modifier.Shift, 'Enter', () =>
-          this._updateSelection({selectRange: true, anchor: false}),
-        )
+        .on(Modifier.Shift, 'Enter', () => list.updateSelection({selectRange: true, anchor: false}))
         .on(Modifier.Shift, this.dynamicSpaceKey, () =>
-          this._updateSelection({selectRange: true, anchor: false}),
+          list.updateSelection({selectRange: true, anchor: false}),
         );
     }
 
     if (!this.followFocus() && this.inputs.multi()) {
       manager
-        .on(this.dynamicSpaceKey, () => this.selectionManager.toggle())
-        .on('Enter', () => this.selectionManager.toggle())
-        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => this.selectionManager.toggleAll());
+        .on(this.dynamicSpaceKey, () => list.toggle())
+        .on('Enter', () => list.toggle())
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', () => list.toggleAll());
     }
 
     if (!this.followFocus() && !this.inputs.multi()) {
-      manager.on(this.dynamicSpaceKey, () => this.selectionManager.toggleOne());
-      manager.on('Enter', () => this.selectionManager.toggleOne());
+      manager.on(this.dynamicSpaceKey, () => list.toggleOne());
+      manager.on('Enter', () => list.toggleOne());
     }
 
     if (this.inputs.multi() && this.followFocus()) {
       manager
-        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => this.prev())
-        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => this.next())
-        .on([Modifier.Ctrl, Modifier.Meta], ' ', () => this.selectionManager.toggle())
-        .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => this.selectionManager.toggle())
-        .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => this.first())
-        .on([Modifier.Ctrl, Modifier.Meta], 'End', () => this.last())
+        .on([Modifier.Ctrl, Modifier.Meta], this.prevKey, () => list.prev())
+        .on([Modifier.Ctrl, Modifier.Meta], this.nextKey, () => list.next())
+        .on([Modifier.Ctrl, Modifier.Meta], ' ', () => list.toggle())
+        .on([Modifier.Ctrl, Modifier.Meta], 'Enter', () => list.toggle())
+        .on([Modifier.Ctrl, Modifier.Meta], 'Home', () => list.first())
+        .on([Modifier.Ctrl, Modifier.Meta], 'End', () => list.last())
         .on([Modifier.Ctrl, Modifier.Meta], 'A', () => {
-          this.selectionManager.toggleAll();
-          this.selectionManager.select(); // Ensure the currect item remains selected.
+          list.toggleAll();
+          list.select(); // Ensure the currect item remains selected.
         });
     }
 
@@ -365,29 +316,16 @@ export class TreePattern<V> {
     this.orientation = inputs.orientation;
     this.textDirection = inputs.textDirection;
     this.multi = computed(() => (this.nav() ? false : this.inputs.multi()));
-    this.value = inputs.value;
     this.selectionMode = inputs.selectionMode;
     this.typeaheadDelay = inputs.typeaheadDelay;
-    this.focusManager = new ListFocus({
+    this.value = inputs.value;
+
+    this.listBehavior = new List({
       ...inputs,
       items: this.visibleItems,
+      multi: this.multi,
     });
-    this.navigationManager = new ListNavigation({
-      ...inputs,
-      wrap: computed(() => this.inputs.wrap() && !this.inSelection()),
-      items: this.visibleItems,
-      focusManager: this.focusManager,
-    });
-    this.selectionManager = new ListSelection({
-      ...inputs,
-      items: this.visibleItems,
-      focusManager: this.focusManager,
-    });
-    this.typeaheadManager = new ListTypeahead({
-      ...inputs,
-      items: this.visibleItems,
-      focusManager: this.focusManager,
-    });
+
     this.expansionManager = new ListExpansion({
       multiExpandable: () => true,
       // TODO(ok7sai): allow pre-expanded tree items.
@@ -408,20 +346,20 @@ export class TreePattern<V> {
 
     for (const [index, item] of this.allItems().entries()) {
       if (!item.visible()) continue;
-      if (!this.focusManager.isFocusable(item)) continue;
+      if (!this.listBehavior.isFocusable(item)) continue;
 
       if (firstItemIndex === undefined) {
         firstItemIndex = index;
       }
 
       if (item.selected()) {
-        this.activeIndex.set(index);
+        this.inputs.activeIndex.set(index);
         return;
       }
     }
 
     if (firstItemIndex !== undefined) {
-      this.activeIndex.set(firstItemIndex);
+      this.inputs.activeIndex.set(firstItemIndex);
     }
   }
 
@@ -439,42 +377,19 @@ export class TreePattern<V> {
     }
   }
 
-  /** Navigates to the first visible tree item in the tree. */
-  first(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationManager.first());
-  }
-
-  /** Navigates to the last visible tree item in the tree. */
-  last(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationManager.last());
-  }
-
-  /** Navigates to the next visible tree item in the tree. */
-  next(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationManager.next());
-  }
-
-  /** Navigates to the previous visible tree item in the tree. */
-  prev(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigationManager.prev());
-  }
-
   /** Navigates to the given tree item in the tree. */
-  goto(event: PointerEvent, opts?: SelectOptions) {
-    const item = this._getItem(event);
-    this._navigate(opts, () => this.navigationManager.goto(item));
-    this.toggleExpansion(item);
-  }
+  goto(e: PointerEvent, opts?: SelectOptions) {
+    const item = this._getItem(e);
+    if (!item) return;
 
-  /** Handles typeahead search navigation for the tree. */
-  search(char: string, opts?: SelectOptions) {
-    this._navigate(opts, () => this.typeaheadManager.search(char));
+    this.listBehavior.goto(item, opts);
+    this.toggleExpansion(item);
   }
 
   /** Toggles to expand or collapse a tree item. */
   toggleExpansion(item?: TreeItemPattern<V>) {
-    item ??= this.focusManager.activeItem();
-    if (!item || !this.focusManager.isFocusable(item)) return;
+    item ??= this.listBehavior.activeItem();
+    if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (!item.expandable()) return;
     if (item.expanded()) {
@@ -486,70 +401,38 @@ export class TreePattern<V> {
 
   /** Expands a tree item. */
   expand(item?: TreeItemPattern<V>) {
-    item ??= this.focusManager.activeItem();
-    if (!item || !this.focusManager.isFocusable(item)) return;
+    item ??= this.listBehavior.activeItem();
+    if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && !item.expanded()) {
       item.expansion.open();
     } else if (item.expanded() && item.children().length > 0) {
       const firstChild = item.children()[0];
-      if (this.focusManager.isFocusable(firstChild)) {
-        this.navigationManager.goto(firstChild);
+      if (this.listBehavior.isFocusable(firstChild)) {
+        this.listBehavior.goto(firstChild);
       }
     }
   }
 
   /** Expands all sibling tree items including itself. */
   expandSiblings(item?: TreeItemPattern<V>) {
-    item ??= this.focusManager.activeItem();
+    item ??= this.listBehavior.activeItem();
     const siblings = item.parent()?.children();
     siblings?.forEach(item => this.expand(item));
   }
 
   /** Collapses a tree item. */
   collapse(item?: TreeItemPattern<V>) {
-    item ??= this.focusManager.activeItem();
-    if (!item || !this.focusManager.isFocusable(item)) return;
+    item ??= this.listBehavior.activeItem();
+    if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && item.expanded()) {
       item.expansion.close();
     } else if (item.parent() && item.parent() !== this) {
       const parentItem = item.parent();
-      if (parentItem instanceof TreeItemPattern && this.focusManager.isFocusable(parentItem)) {
-        this.navigationManager.goto(parentItem);
+      if (parentItem instanceof TreeItemPattern && this.listBehavior.isFocusable(parentItem)) {
+        this.listBehavior.goto(parentItem);
       }
-    }
-  }
-
-  /** Safely performs a navigation operation. */
-  private _navigate(opts: SelectOptions = {}, operation: () => boolean) {
-    if (opts?.selectRange) {
-      this.inSelection.set(true);
-      this.selectionManager.rangeStartIndex.set(this.anchorIndex());
-    }
-
-    const moved = operation();
-
-    if (moved) {
-      this._updateSelection(opts);
-    }
-
-    this.inSelection.set(false);
-  }
-
-  /** Handles updating selection for the tree. */
-  private _updateSelection(opts: SelectOptions = {anchor: true}) {
-    if (opts.toggle) {
-      this.selectionManager.toggle();
-    }
-    if (opts.selectOne) {
-      this.selectionManager.selectOne();
-    }
-    if (opts.selectRange) {
-      this.selectionManager.selectRange();
-    }
-    if (!opts.anchor) {
-      this.anchorItem.set(this.visibleItems()[this.selectionManager.rangeStartIndex()]);
     }
   }
 
