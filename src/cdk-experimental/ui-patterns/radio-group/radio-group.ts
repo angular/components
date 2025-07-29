@@ -8,56 +8,44 @@
 
 import {computed} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {ListFocus, ListFocusInputs} from '../behaviors/list-focus/list-focus';
-import {ListNavigation, ListNavigationInputs} from '../behaviors/list-navigation/list-navigation';
-import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/list-selection';
+import {List, ListInputs} from '../behaviors/list/list';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {RadioButtonPattern} from './radio-button';
 
-/** The selection operations that the radio group can perform. */
-interface SelectOptions {
-  selectOne?: boolean;
-}
-
 /** Represents the required inputs for a radio group. */
-export type RadioGroupInputs<V> = Omit<ListNavigationInputs<RadioButtonPattern<V>>, 'wrap'> &
-  // Radio groups are always single-select.
-  Omit<ListSelectionInputs<RadioButtonPattern<V>, V>, 'multi' | 'selectionMode'> &
-  ListFocusInputs<RadioButtonPattern<V>> & {
-    /** Whether the radio group is disabled. */
-    disabled: SignalLike<boolean>;
-    /** Whether the radio group is readonly. */
-    readonly: SignalLike<boolean>;
-  };
+export type RadioGroupInputs<V> = Omit<
+  ListInputs<RadioButtonPattern<V>, V>,
+  'multi' | 'selectionMode' | 'wrap' | 'typeaheadDelay'
+> & {
+  /** Whether the radio group is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** Whether the radio group is readonly. */
+  readonly: SignalLike<boolean>;
+};
 
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
-  /** Controls navigation for the radio group. */
-  navigation: ListNavigation<RadioButtonPattern<V>>;
-
-  /** Controls selection for the radio group. */
-  selection: ListSelection<RadioButtonPattern<V>, V>;
-
-  /** Controls focus for the radio group. */
-  focusManager: ListFocus<RadioButtonPattern<V>>;
+  /** The list behavior for the radio group. */
+  readonly listBehavior: List<RadioButtonPattern<V>, V>;
 
   /** Whether the radio group is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the radio group is disabled. */
-  disabled = computed(() => this.inputs.disabled() || this.focusManager.isListDisabled());
+  disabled = computed(() => this.inputs.disabled() || this.listBehavior.disabled());
 
   /** The currently selected radio button. */
-  selectedItem = computed(() => this.selection.selectedItems()[0]);
+  selectedItem = computed(() => this.listBehavior.selectionBehavior.selectedItems()[0]);
 
   /** Whether the radio group is readonly. */
   readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
   /** The tabindex of the radio group (if using activedescendant). */
-  tabindex = computed(() => this.focusManager.getListTabindex());
+  tabindex = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active radio button (if using activedescendant). */
-  activedescendant = computed(() => this.focusManager.getActiveDescendant());
+  activedescendant = computed(() => this.listBehavior.activedescendant());
 
   /** The key used to navigate to the previous radio button. */
   prevKey = computed(() => {
@@ -82,21 +70,21 @@ export class RadioGroupPattern<V> {
     // Readonly mode allows navigation but not selection changes.
     if (this.readonly()) {
       return manager
-        .on(this.prevKey, () => this.prev())
-        .on(this.nextKey, () => this.next())
-        .on('Home', () => this.first())
-        .on('End', () => this.last());
+        .on(this.prevKey, () => this.listBehavior.prev())
+        .on(this.nextKey, () => this.listBehavior.next())
+        .on('Home', () => this.listBehavior.first())
+        .on('End', () => this.listBehavior.last());
     }
 
     // Default behavior: navigate and select on arrow keys, home, end.
     // Space/Enter also select the focused item.
     return manager
-      .on(this.prevKey, () => this.prev({selectOne: true}))
-      .on(this.nextKey, () => this.next({selectOne: true}))
-      .on('Home', () => this.first({selectOne: true}))
-      .on('End', () => this.last({selectOne: true}))
-      .on(' ', () => this.selection.selectOne())
-      .on('Enter', () => this.selection.selectOne());
+      .on(this.prevKey, () => this.listBehavior.prev({selectOne: true}))
+      .on(this.nextKey, () => this.listBehavior.next({selectOne: true}))
+      .on('Home', () => this.listBehavior.first({selectOne: true}))
+      .on('End', () => this.listBehavior.last({selectOne: true}))
+      .on(' ', () => this.listBehavior.selectOne())
+      .on('Enter', () => this.listBehavior.selectOne());
   });
 
   /** The pointerdown event manager for the radio group. */
@@ -105,27 +93,22 @@ export class RadioGroupPattern<V> {
 
     if (this.readonly()) {
       // Navigate focus only in readonly mode.
-      return manager.on(e => this.goto(e));
+      return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
     }
 
     // Default behavior: navigate and select on click.
-    return manager.on(e => this.goto(e, {selectOne: true}));
+    return manager.on(e => this.listBehavior.goto(this._getItem(e)!, {selectOne: true}));
   });
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
     this.orientation = inputs.orientation;
 
-    this.focusManager = new ListFocus(inputs);
-    this.navigation = new ListNavigation({
+    this.listBehavior = new List({
       ...inputs,
       wrap: () => false,
-      focusManager: this.focusManager,
-    });
-    this.selection = new ListSelection({
-      ...inputs,
       multi: () => false,
       selectionMode: () => 'follow',
-      focusManager: this.focusManager,
+      typeaheadDelay: () => 0, // Radio groups do not support typeahead.
     });
   }
 
@@ -143,32 +126,6 @@ export class RadioGroupPattern<V> {
     }
   }
 
-  /** Navigates to the first enabled radio button in the group. */
-  first(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigation.first());
-  }
-
-  /** Navigates to the last enabled radio button in the group. */
-  last(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigation.last());
-  }
-
-  /** Navigates to the next enabled radio button in the group. */
-  next(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigation.next());
-  }
-
-  /** Navigates to the previous enabled radio button in the group. */
-  prev(opts?: SelectOptions) {
-    this._navigate(opts, () => this.navigation.prev());
-  }
-
-  /** Navigates to the radio button associated with the given pointer event. */
-  goto(event: PointerEvent, opts?: SelectOptions) {
-    const item = this._getItem(event);
-    this._navigate(opts, () => this.navigation.goto(item));
-  }
-
   /**
    * Sets the radio group to its default initial state.
    *
@@ -179,7 +136,7 @@ export class RadioGroupPattern<V> {
     let firstItem: RadioButtonPattern<V> | null = null;
 
     for (const item of this.inputs.items()) {
-      if (this.focusManager.isFocusable(item)) {
+      if (this.listBehavior.isFocusable(item)) {
         if (!firstItem) {
           firstItem = item;
         }
@@ -206,14 +163,6 @@ export class RadioGroupPattern<V> {
     }
 
     return violations;
-  }
-
-  /** Safely performs a navigation operation and updates selection if needed. */
-  private _navigate(opts: SelectOptions = {}, operation: () => boolean) {
-    const moved = operation();
-    if (moved && opts.selectOne) {
-      this.selection.selectOne();
-    }
   }
 
   /** Finds the RadioButtonPattern associated with a pointer event target. */
