@@ -59,7 +59,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     protected _allTrailingIcons: QueryList<MatChipTrailingIcon>;
     _animationsDisabled: boolean;
     ariaDescription: string | null;
-    _ariaDescriptionId: string;
     ariaLabel: string | null;
     protected basicChipAttrName: string;
     // (undocumented)
