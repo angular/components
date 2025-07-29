@@ -103,7 +103,8 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     }): void;
     // (undocumented)
     _setTransition(withAnimation: boolean): void;
-    showTickMarks: boolean;
+    get showTickMarks(): boolean;
+    set showTickMarks(value: boolean);
     // (undocumented)
     _startThumbTransform: string;
     protected startValueIndicatorText: string;
