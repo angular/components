@@ -13,15 +13,15 @@ sass_library(
         "_token-utils.scss",
     ],
     deps = [
-        ":m3_system",
+        ":system",
         "//src/material/core/style:elevation",
         "//src/material/core/style:sass_utils",
     ],
 )
 
 sass_library(
-    name = "m3_system",
-    srcs = ["_m3-system.scss"],
+    name = "system",
+    srcs = ["_system.scss"],
     deps = [
         ":m3_tokens",
         "//src/material/core/style:elevation",

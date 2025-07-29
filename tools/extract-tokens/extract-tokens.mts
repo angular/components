@@ -215,7 +215,7 @@ function getTokenExtractionCode(
     @use 'sass:math' as ${math};
     @use 'sass:string' as ${str};
     @use '${join(corePath, 'tokens/m3-tokens')}' as ${m3Tokens};
-    @use '${join(corePath, 'tokens/m3-system')}' as ${m3System};
+    @use '${join(corePath, 'tokens/system')}' as ${m3System};
     @use '${join(corePath, 'theming/palettes')}' as ${palettes};
     @use '${join(corePath, 'style/sass-utils')}' as ${sassUtils};
 
