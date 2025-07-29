@@ -26,6 +26,7 @@ interface RadioGroupLike<V> {
   focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget>;
   selection: ListSelection<RadioButtonPattern<V>, V>;
   navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
+  readonly: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a radio button in a radio group. */

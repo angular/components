@@ -99,11 +99,7 @@ export class RadioGroupPattern<V> {
 
     // If within a toolbar relinquish keyboard control
     if (this.inputs.toolbar()) {
-      // when in activedescendant focus mode, allow toolbar to indicate the radio group to do selection
-      if (this.readonly() || this.inputs.focusMode() === 'activedescendant') return manager;
-      return manager
-        .on(' ', () => this.selection.selectOne())
-        .on('Enter', () => this.selection.selectOne());
+      return manager;
     }
 
     // Readonly mode allows navigation but not selection changes.

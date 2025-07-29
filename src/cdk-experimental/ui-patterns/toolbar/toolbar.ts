@@ -65,28 +65,9 @@ export class ToolbarPattern<V> {
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
-    /** When a toolbar widget is active and disabled, prevent selection */
-    if (
-      this.focusManager.activeItem().disabled() &&
-      this.focusManager.activeItem() instanceof ToolbarWidgetPattern
-    ) {
-      return manager
-        .on(' ', () => {})
-        .on('Enter', () => {})
-        .on(this.prevKey, () => this.navigation.prev())
-        .on(this.nextKey, () => this.navigation.next())
-        .on('Home', () => this.navigation.first())
-        .on('End', () => this.navigation.last());
-    }
-
-    /** When in Active Descendant mode, Toolbar controls which group receives selection */
-    if (this.inputs.focusMode() === 'activedescendant') {
-      manager
-        .on(' ', () => this.toolbarSelectOverride())
-        .on('Enter', () => this.toolbarSelectOverride());
-    }
-
     return manager
+      .on(' ', () => this.toolbarSelectOverride())
+      .on('Enter', () => this.toolbarSelectOverride())
       .on(this.prevKey, () => this.navigation.prev())
       .on(this.nextKey, () => this.navigation.next())
       .on('Home', () => this.navigation.first())
@@ -98,12 +79,13 @@ export class ToolbarPattern<V> {
 
     /** If the active item is a Radio Button, indicate to the group the selection */
     if (activeItem instanceof RadioButtonPattern) {
-      if (activeItem.group()) {
-        activeItem.group()!!.selection.selectOne();
+      const group = activeItem.group();
+      if (group && !group.readonly()) {
+        group.selection.selectOne();
       }
     } else {
       /** Item is a Toolbar Widget, manually select it */
-      activeItem.element().click();
+      if (activeItem.element()) activeItem.element().click();
     }
   }
 
@@ -115,7 +97,7 @@ export class ToolbarPattern<V> {
     return manager.on(e => this.goto(e));
   });
 
-  /** Navigates to the radio button associated with the given pointer event. */
+  /** Navigates to the widget associated with the given pointer event. */
   goto(event: PointerEvent) {
     const item = this._getItem(event);
 
@@ -142,7 +124,7 @@ export class ToolbarPattern<V> {
       return undefined;
     }
 
-    // Assumes the target or its ancestor has role="radio" or button
+    // Assumes the target or its ancestor has role="radio" or role="button"
     const element = e.target.closest('[role="button"], [role="radio"]');
     return this.inputs.items().find(i => i.element() === element);
   }
@@ -182,6 +164,21 @@ export class ToolbarPattern<V> {
       this.inputs.activeIndex.set(firstItem.index());
     }
   }
+  /** Validates the state of the toolbar and returns a list of accessibility violations. */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (this.inputs.skipDisabled()) {
+      for (const item of this.inputs.items()) {
+        if (item instanceof RadioButtonPattern && item.selected() && item.disabled()) {
+          violations.push(
+            "Accessibility Violation: A selected radio button inside the toolbar is disabled while 'skipDisabled' is true, making the selection unreachable via keyboard.",
+          );
+        }
+      }
+    }
+    return violations;
+  }
 }
 
 export type ToolbarWidget = {
@@ -190,14 +187,14 @@ export type ToolbarWidget = {
   disabled: SignalLike<boolean>;
 };
 
-/** Represents the required inputs for a radio button in a radio group. */
+/** Represents the required inputs for a toolbar widget in a toolbar. */
 export interface ToolbarWidgetInputs extends ListNavigationItem, ListFocusItem {
-  /** A reference to the parent radio group. */
-  parentToolbar: SignalLike<ToolbarPattern<null> | undefined>;
+  /** A reference to the parent toolbar. */
+  parentToolbar: SignalLike<ToolbarPattern<null>>;
 }
 
 export class ToolbarWidgetPattern {
-  /** A unique identifier for the radio button. */
+  /** A unique identifier for the widget. */
   id: SignalLike<string>;
   /** The html element that should receive focus. */ // might not be needed
   readonly element: SignalLike<HTMLElement>;
@@ -207,9 +204,8 @@ export class ToolbarWidgetPattern {
   /** A reference to the parent toolbar. */
   parentToolbar: SignalLike<ToolbarPattern<null> | undefined>;
 
-  // expose tab index have tabindex -1 if roving manage 1/0
-  /** The tabindex of the radio button. */
-  tabindex = computed(() => this.parentToolbar()?.focusManager.getItemTabindex(this));
+  /** The tabindex of the widgdet. */
+  tabindex = computed(() => this.inputs.parentToolbar().focusManager.getItemTabindex(this));
 
   /** The position of the widget within the group. */
   index = computed(
@@ -219,8 +215,8 @@ export class ToolbarWidgetPattern {
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
-  /** Whether the radio button is currently the active one (focused). */
-  active = computed(() => this.parentToolbar()?.focusManager.activeItem() === this);
+  /** Whether the widhet is currently the active one (focused). */
+  active = computed(() => this.inputs.parentToolbar().focusManager.activeItem() === this);
 
   constructor(readonly inputs: ToolbarWidgetInputs) {
     this.id = inputs.id;

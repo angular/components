@@ -19,7 +19,6 @@ import {
   model,
   signal,
   WritableSignal,
-  OnInit,
   OnDestroy,
 } from '@angular/core';
 import {RadioButtonPattern, RadioGroupPattern} from '../ui-patterns';
@@ -162,21 +161,27 @@ export class CdkRadioGroup<V> {
         this.pattern.setDefaultState();
       }
     });
+
+    afterRenderEffect(() => {
+      if (this.toolbar) {
+        const radioButtons = this._cdkRadioButtons();
+        // If the group is disabled and the toolbar is set to skip disabled items,
+        // the radio buttons should not be part of the toolbar's navigation.
+        if (this.disabled() && this.toolbar.skipDisabled()) {
+          radioButtons.forEach(radio => this.toolbar!.deregister(radio));
+        } else {
+          radioButtons.forEach(radio => this.toolbar!.register(radio));
+        }
+      }
+    });
   }
 
   onFocus() {
     this._hasFocused.set(true);
   }
 
-  toolbarButtonRegister(radio: CdkRadioButton<V>) {
-    // only register if the group is not disabled or the toolbar does not skip disabled
-    if (this.toolbar && (!this.disabled() || !this.toolbar.skipDisabled())) {
-      this.toolbar.register(radio);
-    }
-  }
-
   toolbarButtonDeregister(radio: CdkRadioButton<V>) {
-    if (this.toolbar && (!this.disabled() || !this.toolbar.skipDisabled())) {
+    if (this.toolbar) {
       this.toolbar.deregister(radio);
     }
   }
@@ -196,7 +201,7 @@ export class CdkRadioGroup<V> {
     '[id]': 'pattern.id()',
   },
 })
-export class CdkRadioButton<V> implements OnInit, OnDestroy {
+export class CdkRadioButton<V> implements OnDestroy {
   /** A reference to the radio button element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -229,12 +234,6 @@ export class CdkRadioButton<V> implements OnInit, OnDestroy {
     group: this.group,
     element: this.element,
   });
-
-  ngOnInit() {
-    if (this._cdkRadioGroup.toolbar) {
-      this._cdkRadioGroup.toolbarButtonRegister(this);
-    }
-  }
 
   ngOnDestroy() {
     if (this._cdkRadioGroup.toolbar) {

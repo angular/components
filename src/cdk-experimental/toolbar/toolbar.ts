@@ -88,7 +88,7 @@ export class CdkToolbar<V> {
 
   /** Sorted UIPatterns of the child widgets */
   items = computed(() =>
-    [...this._cdkWidgets()].sort(sortDirectives).map(button => button.pattern),
+    [...this._cdkWidgets()].sort(sortDirectives).map(widget => widget.pattern),
   );
 
   /** Whether the toolbar is vertically or horizontally oriented. */
@@ -110,7 +110,6 @@ export class CdkToolbar<V> {
   pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
     activeIndex: signal(0),
-    // items: this.items1, // might not need?
     textDirection: this.textDirection,
     focusMode: this.focusMode,
   });
@@ -128,18 +127,30 @@ export class CdkToolbar<V> {
         this.pattern.setDefaultState();
       }
     });
+
+    afterRenderEffect(() => {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        const violations = this.pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
+        }
+      }
+    });
   }
 
   register(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
-    this._cdkWidgets().add(widget);
-
-    this._cdkWidgets.set(new Set(this._cdkWidgets()));
+    const widgets = this._cdkWidgets();
+    if (!widgets.has(widget)) {
+      widgets.add(widget);
+      this._cdkWidgets.set(new Set(widgets));
+    }
   }
 
   deregister(widget: CdkRadioButtonInterface<V> | CdkToolbarWidget) {
-    this._cdkWidgets().delete(widget);
-
-    this._cdkWidgets.set(new Set(this._cdkWidgets()));
+    const widgets = this._cdkWidgets();
+    if (widgets.delete(widget)) {
+      this._cdkWidgets.set(new Set(widgets));
+    }
   }
 }
 
@@ -157,37 +168,40 @@ export class CdkToolbar<V> {
     'class': 'cdk-toolbar-widget',
     '[class.cdk-active]': 'pattern.active()',
     '[attr.tabindex]': 'pattern.tabindex()',
-    '[attr.aria-disabled]': 'pattern.disabled()',
+    '[attr.inert]': 'hardDisabled() ? true : null',
+    '[attr.disabled]': 'hardDisabled() ? true : null',
     '[id]': 'pattern.id()',
   },
 })
 export class CdkToolbarWidget implements OnInit, OnDestroy {
-  /** A reference to the radio button element. */
+  /** A reference to the widget element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** The parent CdkToolbar. */
   private readonly _cdkToolbar = inject(CdkToolbar);
 
-  /** A unique identifier for the radio button. */
+  /** A unique identifier for the widget. */
   private readonly _generatedId = inject(_IdGenerator).getId('cdk-toolbar-widget-');
 
-  /** A unique identifier for the radio button. */
+  /** A unique identifier for the widget. */
   protected id = computed(() => this._generatedId);
 
   /** The parent Toolbar UIPattern. */
   protected parentToolbar = computed(() => this._cdkToolbar.pattern);
 
-  /** A reference to the radio button element to be focused on navigation. */
+  /** A reference to the widget element to be focused on navigation. */
   element = computed(() => this._elementRef.nativeElement);
 
-  /** Whether the radio button is disabled. */
+  /** Whether the widget is disabled. */
   disabled = input(false, {transform: booleanAttribute});
+
+  readonly hardDisabled = computed(() => this.pattern.disabled() && this.pattern.tabindex() < 0);
 
   pattern = new ToolbarWidgetPattern({
     ...this,
     id: this.id,
     element: this.element,
-    disabled: computed(() => this._cdkToolbar.disabled() || this.disabled()),
+    disabled: computed(() => this._cdkToolbar.disabled() || this.disabled() || false),
     parentToolbar: this.parentToolbar,
   });
 
