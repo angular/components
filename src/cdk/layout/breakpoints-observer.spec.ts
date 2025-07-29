@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {LayoutModule} from './layout-module';
 import {BreakpointObserver, BreakpointState} from './breakpoints-observer';
 import {MediaMatcher} from './media-matcher';
 import {fakeAsync, TestBed, flush, tick} from '@angular/core/testing';
@@ -20,7 +19,6 @@ describe('BreakpointObserver', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [LayoutModule],
       providers: [{provide: MediaMatcher, useClass: FakeMediaMatcher}],
     });
     breakpointObserver = TestBed.inject(BreakpointObserver);

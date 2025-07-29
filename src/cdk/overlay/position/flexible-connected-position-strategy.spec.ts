@@ -35,10 +35,6 @@ describe('FlexibleConnectedPositionStrategy', () => {
   let injector: Injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule, OverlayModule, PortalModule, TestOverlay],
-    });
-
     injector = TestBed.inject(Injector);
     overlayContainer = TestBed.inject(OverlayContainer);
     viewport = TestBed.inject(ViewportRuler);

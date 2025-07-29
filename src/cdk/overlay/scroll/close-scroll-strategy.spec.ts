@@ -24,7 +24,6 @@ describe('CloseScrollStrategy', () => {
     scrollPosition = 0;
 
     TestBed.configureTestingModule({
-      imports: [OverlayModule, PortalModule, MozarellaMsg],
       providers: [
         {
           provide: ScrollDispatcher,

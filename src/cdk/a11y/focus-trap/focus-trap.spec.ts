@@ -13,24 +13,6 @@ import {By} from '@angular/platform-browser';
 import {A11yModule, CdkTrapFocus, FocusTrap} from '../index';
 
 describe('FocusTrap', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        A11yModule,
-        PortalModule,
-        FocusTrapWithBindings,
-        SimpleFocusTrap,
-        FocusTrapTargets,
-        FocusTrapWithSvg,
-        FocusTrapWithoutFocusableElements,
-        FocusTrapWithAutoCapture,
-        FocusTrapUnfocusableTarget,
-        FocusTrapInsidePortal,
-        FocusTrapWithAutoCaptureInShadowDom,
-      ],
-    });
-  }));
-
   describe('with default element', () => {
     let fixture: ComponentFixture<SimpleFocusTrap>;
     let focusTrapInstance: FocusTrap;

@@ -10,7 +10,6 @@ import {
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {patchElementFocus} from '../../testing/private';
 import {
-  A11yModule,
   ConfigurableFocusTrap,
   ConfigurableFocusTrapFactory,
   EventListenerFocusTrapInertStrategy,
@@ -69,10 +68,7 @@ function createComponent<T>(
   componentType: Type<T>,
   providers: Provider[] = [],
 ): ComponentFixture<T> {
-  TestBed.configureTestingModule({
-    imports: [A11yModule, componentType],
-    providers: providers,
-  });
+  TestBed.configureTestingModule({providers});
 
   return TestBed.createComponent<T>(componentType);
 }

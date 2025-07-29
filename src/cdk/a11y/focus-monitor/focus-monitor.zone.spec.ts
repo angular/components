@@ -14,7 +14,6 @@ describe('FocusMonitor observable stream Zone.js integration', () => {
   beforeEach(() => {
     fakePlatform = {isBrowser: true} as Platform;
     TestBed.configureTestingModule({
-      imports: [A11yModule, PlainButton],
       providers: [{provide: Platform, useValue: fakePlatform}, provideZoneChangeDetection()],
     });
     fixture = TestBed.createComponent(PlainButton);

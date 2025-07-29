@@ -35,7 +35,6 @@ describe('Overlay directives', () => {
     dir = signal<Direction>('ltr');
 
     TestBed.configureTestingModule({
-      imports: [OverlayModule, ConnectedOverlayDirectiveTest, ConnectedOverlayPropertyInitOrder],
       providers: [
         provideFakeDirectionality(dir),
         {
