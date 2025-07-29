@@ -16,10 +16,16 @@ import {SignalLike} from '../behaviors/signal-like/signal-like';
  * Represents the properties exposed by a radio group that need to be accessed by a radio button.
  * This exists to avoid circular dependency errors between the radio group and radio button.
  */
+type GeneralWidget = {
+  id: SignalLike<string>;
+  element: SignalLike<HTMLElement>;
+  disabled: SignalLike<boolean>;
+};
+
 interface RadioGroupLike<V> {
-  focusManager: ListFocus<RadioButtonPattern<V>>;
+  focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget>;
   selection: ListSelection<RadioButtonPattern<V>, V>;
-  navigation: ListNavigation<RadioButtonPattern<V>>;
+  navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
 }
 
 /** Represents the required inputs for a radio button in a radio group. */
@@ -75,3 +81,5 @@ export class RadioButtonPattern<V> {
     this.disabled = inputs.disabled;
   }
 }
+
+export type RadioButtonPatternType<V> = InstanceType<typeof RadioButtonPattern<V>>;

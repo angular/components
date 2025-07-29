@@ -14,6 +14,22 @@ import {ListSelection, ListSelectionInputs} from '../behaviors/list-selection/li
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 import {RadioButtonPattern} from './radio-button';
 
+/**
+ * Represents the properties exposed by a toolbar that need to be accessed by a radio group.
+ * This exists to avoid circular dependency errors between the radio group and toolbar.
+ */
+type GeneralWidget = {
+  id: SignalLike<string>;
+  element: SignalLike<HTMLElement>;
+  disabled: SignalLike<boolean>;
+};
+
+interface ToolbarLike<V> {
+  focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget>;
+  navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
+}
+
 /** The selection operations that the radio group can perform. */
 interface SelectOptions {
   selectOne?: boolean;
@@ -28,18 +44,20 @@ export type RadioGroupInputs<V> = Omit<ListNavigationInputs<RadioButtonPattern<V
     disabled: SignalLike<boolean>;
     /** Whether the radio group is readonly. */
     readonly: SignalLike<boolean>;
+    /** Parent toolbar of radio group */
+    toolbar: SignalLike<ToolbarLike<V> | null>;
   };
 
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
   /** Controls navigation for the radio group. */
-  navigation: ListNavigation<RadioButtonPattern<V>>;
+  navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
 
   /** Controls selection for the radio group. */
   selection: ListSelection<RadioButtonPattern<V>, V>;
 
   /** Controls focus for the radio group. */
-  focusManager: ListFocus<RadioButtonPattern<V>>;
+  focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget> | ListFocus<RadioButtonPattern<V>>;
 
   /** Whether the radio group is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -53,8 +71,8 @@ export class RadioGroupPattern<V> {
   /** Whether the radio group is readonly. */
   readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
-  /** The tabindex of the radio group (if using activedescendant). */
-  tabindex = computed(() => this.focusManager.getListTabindex());
+  /** The tabindex of the radio group (if using activedescendant or if in toolbar). */
+  tabindex = computed(() => (this.inputs.toolbar() ? -1 : this.focusManager.getListTabindex()));
 
   /** The id of the current active radio button (if using activedescendant). */
   activedescendant = computed(() => this.focusManager.getActiveDescendant());
@@ -78,6 +96,15 @@ export class RadioGroupPattern<V> {
   /** The keydown event manager for the radio group. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
+
+    // If within a toolbar relinquish keyboard control
+    if (this.inputs.toolbar()) {
+      // when in activedescendant focus mode, allow toolbar to indicate the radio group to do selection
+      if (this.readonly() || this.inputs.focusMode() === 'activedescendant') return manager;
+      return manager
+        .on(' ', () => this.selection.selectOne())
+        .on('Enter', () => this.selection.selectOne());
+    }
 
     // Readonly mode allows navigation but not selection changes.
     if (this.readonly()) {
@@ -113,19 +140,27 @@ export class RadioGroupPattern<V> {
   });
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
-    this.orientation = inputs.orientation;
+    if (inputs.toolbar() !== null) {
+      // When in a toolbar, delegate navigation and focus management to the toolbar
+      this.focusManager = inputs.toolbar()!.focusManager;
+      this.orientation = inputs.toolbar()!.orientation;
+      this.navigation = inputs.toolbar()!.navigation;
+    } else {
+      this.focusManager = new ListFocus(inputs);
+      this.orientation = inputs.orientation;
+      this.navigation = new ListNavigation({
+        ...inputs,
+        wrap: () => false,
+        focusManager: this.focusManager,
+      });
+    }
 
-    this.focusManager = new ListFocus(inputs);
-    this.navigation = new ListNavigation({
-      ...inputs,
-      wrap: () => false,
-      focusManager: this.focusManager,
-    });
     this.selection = new ListSelection({
       ...inputs,
       multi: () => false,
-      selectionMode: () => 'follow',
-      focusManager: this.focusManager,
+      selectionMode: () => 'explicit',
+      // A toolbar selection will never use a non Radio Button Pattern element
+      focusManager: this.focusManager as ListFocus<RadioButtonPattern<V>>,
     });
   }
 
