@@ -17,9 +17,9 @@
 @forward './core/theming/theming' as private-* show private-clamp-density;
 @forward './core/typography/typography' show typography-hierarchy;
 @forward './core/typography/typography-utils' show font-shorthand;
-@forward './core/tokens/m3-system' show system-level-colors,
+@forward 'core/tokens/system' show system-level-colors,
     system-level-typography, system-level-elevation, system-level-shape,
-    system-level-motion, system-level-state, theme, theme-overrides;
+    system-level-motion, system-level-state, theme, theme-overrides, m2-theme;
 
 // Private/Internal
 @forward './core/density/private/all-density' show all-component-densities;

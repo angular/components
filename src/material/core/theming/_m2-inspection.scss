@@ -42,7 +42,7 @@ $_typography-keys: (
 $_typography-properties: (font, font-family, line-height, font-size, letter-spacing, font-weight);
 
 /// Gets the m2-config from the theme.
-@function _get-m2-config($theme) {
+@function get-m2-config($theme) {
   // It is possible for a user to pass a "density theme" that is just a number.
   @if meta.type-of($theme) != 'map' {
     @return $theme;
@@ -89,7 +89,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @param {Map} $theme The theme
 /// @return {String} The type of theme (either `light` or `dark`).
 @function get-theme-type($theme) {
-  $theme: _get-m2-config($theme);
+  $theme: get-m2-config($theme);
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
@@ -112,7 +112,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @param {Number} $opacity The alpha channel value for the color.
 /// @return {Color} The requested theme color.
 @function get-theme-color($theme, $palette-name, $args...) {
-  $theme: _get-m2-config($theme);
+  $theme: get-m2-config($theme);
   @if not theme-has($theme, color) {
     @error 'Color information is not available on this theme.';
   }
@@ -137,7 +137,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 ///   (font, font-family, font-size, font-weight, line-height, or letter-spacing).
 /// @return {*} The value of the requested font property.
 @function get-theme-typography($theme, $typescale, $property) {
-  $theme: _get-m2-config($theme);
+  $theme: get-m2-config($theme);
   @if not theme-has($theme, typography) {
     @error 'Typography information is not available on this theme.';
   }
@@ -175,7 +175,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @param {Map} $theme The theme
 /// @return {Number} The density scale.
 @function get-theme-density($theme) {
-  $theme: _get-m2-config($theme);
+  $theme: get-m2-config($theme);
   @if not theme-has($theme, density) {
     @error 'Density information is not available on this theme.';
   }
@@ -188,7 +188,7 @@ $_typography-properties: (font, font-family, line-height, font-size, letter-spac
 /// @param {String} $system The system to check
 /// @param {Boolean} Whether the theme has information about the system.
 @function theme-has($theme, $system) {
-  $theme: _get-m2-config($theme);
+  $theme: get-m2-config($theme);
   @if $system == base {
     @return true;
   }

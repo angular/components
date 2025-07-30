@@ -1,8 +1,8 @@
 @use '../../theming/palettes';
-@use '../../../core/tokens/m3-system';
+@use '../../tokens/system';
 
 html {
-  @include m3-system.theme((
+  @include system.theme((
     color: (
       theme-type: light,
       primary: palettes.$rose-palette,

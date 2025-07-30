@@ -51,7 +51,7 @@ sass_binary(
     src = "rose-red.scss",
     deps = [
         "//src/material/core/theming:_palettes",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:system",
     ],
 )
 
@@ -60,7 +60,7 @@ sass_binary(
     src = "azure-blue.scss",
     deps = [
         "//src/material/core/theming:_palettes",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:system",
     ],
 )
 
@@ -69,7 +69,7 @@ sass_binary(
     src = "cyan-orange.scss",
     deps = [
         "//src/material/core/theming:_palettes",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:system",
     ],
 )
 
@@ -78,6 +78,6 @@ sass_binary(
     src = "magenta-violet.scss",
     deps = [
         "//src/material/core/theming:_palettes",
-        "//src/material/core/tokens:m3_system",
+        "//src/material/core/tokens:system",
     ],
 )
