@@ -1,3 +1,22 @@
+<a name="20.1.4"></a>
+# 20.1.4 "alabandite-animal" (2025-07-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [512066a90](https://github.com/angular/components/commit/512066a907555f0e31ab2315c90b0f07f860a023) | fix | **drag-drop:** incorrect index when returning item in mixed list ([#31592](https://github.com/angular/components/pull/31592)) |
+| [b5fb4cb47](https://github.com/angular/components/commit/b5fb4cb479d73e01c51eac05af634cbbe1d7ce98) | fix | **listbox:** coerce tabindex value ([#31597](https://github.com/angular/components/pull/31597)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3e4625d1c](https://github.com/angular/components/commit/3e4625d1cf8c87313465633c0843892d34da0130) | fix | **core:** align gm3 colors ([#31485](https://github.com/angular/components/pull/31485)) |
+| [3de927f9d](https://github.com/angular/components/commit/3de927f9d003312604a833e80df8eff77c4a96d7) | fix | **core:** fill in m2 system token values ([#31615](https://github.com/angular/components/pull/31615)) |
+| [d18da5664](https://github.com/angular/components/commit/d18da5664c9a85f48d3d44aad98264cc2d031e1b) | fix | **radio:** rendering artifacts at some zoom levels ([#31612](https://github.com/angular/components/pull/31612)) |
+| [25d12df5b](https://github.com/angular/components/commit/25d12df5b6af747c560dbd678a999ae96e3c7b13) | fix | **schematics:** set generated font family on body ([#31618](https://github.com/angular/components/pull/31618)) |
+| [4ae4fe22d](https://github.com/angular/components/commit/4ae4fe22d54f139dcd606b71d489f9678acf5ce0) | fix | **slider:** tick marks not showing dynamically ([#31608](https://github.com/angular/components/pull/31608)) |
+| [6e252739b](https://github.com/angular/components/commit/6e252739b0dd0d6990bdf6c08545e2df6c9949e2) | fix | **testing:** Modify input filtering to more broadly search for ([#31596](https://github.com/angular/components/pull/31596)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.2.0-next.1"></a>
 # 20.2.0-next.1 "tantalum-tomato" (2025-07-23)
 ### cdk
