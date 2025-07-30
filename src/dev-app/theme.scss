@@ -23,6 +23,7 @@ $candy-app-theme: mat.m2-define-light-theme((
 
 @include mat.app-background();
 @include mat.elevation-classes();
+@include mat.m2-theme($candy-app-theme);
 
 // Include the default theme styles.
 @include mat.all-component-themes($candy-app-theme);
@@ -63,6 +64,7 @@ $candy-app-theme: mat.m2-define-light-theme((
   @include mat.all-component-colors($dark-colors);
   @include experimental.column-resize-color($dark-colors);
   @include experimental.popover-edit-color($dark-colors);
+  @include mat.m2-theme($dark-colors);
 
   // Include the dark theme colors for focus indicators.
   &.demo-strong-focus {

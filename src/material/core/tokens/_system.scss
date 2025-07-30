@@ -350,6 +350,21 @@
 
   @include _define-m2-system-vars(m2.md-sys-shape-values(), $overrides);
   @include _define-m2-system-vars(m2.md-sys-state-values(), $overrides);
+
+  // The icon button's color token is set to `inherit` for M2 and intended to display
+  // the color inherited from its parent element. This is crucial because it's unknown
+  // whether the icon button sits on a container with background like "surface" or "primary",
+  // where both may have different contrast colors like white or black.
+  // However, variables set to inherit AND define a fallback will always use the fallback,
+  // which is "on-surface-variant". This mixin now defines this value.
+  // To avoid this, and continue using `inherit` for the icon button color, set the color explicitly
+  // to the token without a fallback.
+  .mat-mdc-button-base.mat-mdc-icon-button {
+    &:not([disabled]),
+    &:not(.mat-mdc-button-disabled) {
+     color: var(--mat-icon-button-icon-color);
+   }
+  }
 }
 
 @mixin _define-m2-system-vars($vars, $overrides) {
