@@ -355,7 +355,7 @@
 @mixin _define-m2-system-vars($vars, $overrides) {
   @include sass-utils.current-selector-or-root {
     @each $name, $value in $vars {
-      --#{definition.$system-level-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
+      --#{definition.$system-fallback-prefix}-#{$name}: #{map.get($overrides, $name) or $value};
     }
   }
 }
