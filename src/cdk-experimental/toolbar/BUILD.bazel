@@ -3,14 +3,13 @@ load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 ng_project(
-    name = "radio-group",
+    name = "toolbar",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
     deps = [
         "//:node_modules/@angular/core",
-        "//src/cdk-experimental/toolbar",
         "//src/cdk-experimental/ui-patterns",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
@@ -22,12 +21,9 @@ ts_project(
     testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":radio-group",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/platform-browser",
+        ":toolbar",
         "//src/cdk/testing/private",
     ],
 )
