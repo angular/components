@@ -1,3 +1,29 @@
+<a name="20.2.0-next.2"></a>
+# 20.2.0-next.2 "archerite-asparagus" (2025-07-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [88d4ffda6](https://github.com/angular/components/commit/88d4ffda6904661a49b9de973ba640a1cde24ee8) | fix | **drag-drop:** incorrect index when returning item in mixed list ([#31592](https://github.com/angular/components/pull/31592)) |
+| [c386d0ee1](https://github.com/angular/components/commit/c386d0ee146a6b29479f2d4761d8a06df942524d) | fix | **listbox:** coerce tabindex value ([#31597](https://github.com/angular/components/pull/31597)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [20e6e92c0](https://github.com/angular/components/commit/20e6e92c06c74487793713d0323c2aa997a70035) | feat | **core:** add an m2-theme API to define system vars ([#31616](https://github.com/angular/components/pull/31616)) |
+| [3dfe50aef](https://github.com/angular/components/commit/3dfe50aefeb3561b1992d186302db9af380aab07) | fix | **core:** align gm3 colors ([#31485](https://github.com/angular/components/pull/31485)) |
+| [993a9a393](https://github.com/angular/components/commit/993a9a39301f757b78a97641f5863b8fa1f83f8c) | fix | **core:** fill in m2 system token values ([#31615](https://github.com/angular/components/pull/31615)) |
+| [5d681219f](https://github.com/angular/components/commit/5d681219f29c350378ebaec32c64b3fbce10fcd4) | fix | **core:** use different prefix for m2-theme ([#31621](https://github.com/angular/components/pull/31621)) |
+| [471d3237e](https://github.com/angular/components/commit/471d3237e247a2cac939624adf4ef757bcaf214d) | fix | **radio:** rendering artifacts at some zoom levels ([#31612](https://github.com/angular/components/pull/31612)) |
+| [8576ccf1d](https://github.com/angular/components/commit/8576ccf1df6f1c898044d8587e51469c7c27ba31) | fix | **schematics:** set generated font family on body ([#31618](https://github.com/angular/components/pull/31618)) |
+| [9e14c5566](https://github.com/angular/components/commit/9e14c5566535601620c9bfa29786c828ddf3dc2d) | fix | **slider:** tick marks not showing dynamically ([#31608](https://github.com/angular/components/pull/31608)) |
+| [9e25efb6f](https://github.com/angular/components/commit/9e25efb6f0d1e02e79e537b2252c38ce7f5e34ed) | fix | **table:** return undefined sort and paginator ([#31593](https://github.com/angular/components/pull/31593)) |
+| [092c0f73d](https://github.com/angular/components/commit/092c0f73d8838ac23daeb1772b4a40fa68bebb98) | fix | **testing:** Modify input filtering to more broadly search for ([#31596](https://github.com/angular/components/pull/31596)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [647616e2e](https://github.com/angular/components/commit/647616e2eb5b60050c827f5ba3cb1560b6867547) | fix | **listbox:** make CdkOption  public ([#31588](https://github.com/angular/components/pull/31588)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.4"></a>
 # 20.1.4 "alabandite-animal" (2025-07-30)
 ### cdk
