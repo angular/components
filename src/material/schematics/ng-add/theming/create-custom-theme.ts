@@ -36,10 +36,12 @@ html {
   // \`dark\` to enable the dark color theme, or to \`light dark\` to defer to the
   // user's system settings.
   color-scheme: light;
+}
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
+// Set a default background, font and text colors for the application using
+// Angular Material's system-level CSS variables. Learn more about these
+// variables at https://material.angular.dev/guide/system-variables
+body {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
