@@ -474,7 +474,7 @@ describe('Listbox Pattern', () => {
       });
 
       it('should not allow wrapping while Shift is held down', () => {
-        listbox.selection.deselectAll();
+        listbox.listBehavior.deselectAll();
         listbox.onKeydown(shift());
         listbox.onKeydown(up({shift: true}));
         expect(listbox.inputs.value()).toEqual([]);

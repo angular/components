@@ -7,26 +7,20 @@
  */
 
 import {computed} from '@angular/core';
-import {ListSelection, ListSelectionItem} from '../behaviors/list-selection/list-selection';
-import {ListNavigation, ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
-import {ListFocus, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
+import {List, ListItem} from '../behaviors/list/list';
 
 /**
  * Represents the properties exposed by a radio group that need to be accessed by a radio button.
  * This exists to avoid circular dependency errors between the radio group and radio button.
  */
 interface RadioGroupLike<V> {
-  focusManager: ListFocus<RadioButtonPattern<V>>;
-  selection: ListSelection<RadioButtonPattern<V>, V>;
-  navigation: ListNavigation<RadioButtonPattern<V>>;
+  /** The list behavior for the radio group. */
+  listBehavior: List<RadioButtonPattern<V>, V>;
 }
 
 /** Represents the required inputs for a radio button in a radio group. */
-export interface RadioButtonInputs<V>
-  extends ListNavigationItem,
-    ListSelectionItem<V>,
-    ListFocusItem {
+export interface RadioButtonInputs<V> extends Omit<ListItem<V>, 'searchTerm'> {
   /** A reference to the parent radio group. */
   group: SignalLike<RadioGroupLike<V> | undefined>;
 }
@@ -43,16 +37,16 @@ export class RadioButtonPattern<V> {
   index = computed(
     () =>
       this.group()
-        ?.navigation.inputs.items()
+        ?.listBehavior.inputs.items()
         .findIndex(i => i.id() === this.id()) ?? -1,
   );
 
   /** Whether the radio button is currently the active one (focused). */
-  active = computed(() => this.group()?.focusManager.activeItem() === this);
+  active = computed(() => this.group()?.listBehavior.activeItem() === this);
 
   /** Whether the radio button is selected. */
   selected: SignalLike<boolean> = computed(
-    () => !!this.group()?.selection.inputs.value().includes(this.value()),
+    () => !!this.group()?.listBehavior.inputs.value().includes(this.value()),
   );
 
   /** Whether the radio button is disabled. */
@@ -62,10 +56,13 @@ export class RadioButtonPattern<V> {
   group: SignalLike<RadioGroupLike<V> | undefined>;
 
   /** The tabindex of the radio button. */
-  tabindex = computed(() => this.group()?.focusManager.getItemTabindex(this));
+  tabindex = computed(() => this.group()?.listBehavior.getItemTabindex(this));
 
   /** The HTML element associated with the radio button. */
   element: SignalLike<HTMLElement>;
+
+  /** The search term for typeahead. */
+  readonly searchTerm = () => ''; // Radio groups do not support typeahead.
 
   constructor(readonly inputs: RadioButtonInputs<V>) {
     this.id = inputs.id;

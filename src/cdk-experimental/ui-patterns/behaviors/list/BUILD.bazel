@@ -3,15 +3,18 @@ load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
 package(default_visibility = ["//visibility:public"])
 
 ts_project(
-    name = "tree",
-    srcs = [
-        "tree.ts",
-    ],
+    name = "list",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
-        "//src/cdk-experimental/ui-patterns/behaviors/expansion",
-        "//src/cdk-experimental/ui-patterns/behaviors/list",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
+        "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
@@ -19,11 +22,9 @@ ts_project(
 ts_project(
     name = "unit_test_sources",
     testonly = True,
-    srcs = [
-        "tree.spec.ts",
-    ],
+    srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":tree",
+        ":list",
         "//:node_modules/@angular/core",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",

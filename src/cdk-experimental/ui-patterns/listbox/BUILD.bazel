@@ -11,10 +11,7 @@ ts_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/cdk-experimental/ui-patterns/behaviors/event-manager",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-focus",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-navigation",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-selection",
-        "//src/cdk-experimental/ui-patterns/behaviors/list-typeahead",
+        "//src/cdk-experimental/ui-patterns/behaviors/list",
         "//src/cdk-experimental/ui-patterns/behaviors/signal-like",
     ],
 )
