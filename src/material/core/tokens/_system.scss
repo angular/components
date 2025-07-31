@@ -18,6 +18,7 @@
 @use '../style/elevation';
 @use '../theming/config-validation';
 @use '../theming/definition';
+@use '../theming/inspection';
 @use '../theming/m2-inspection';
 @use '../theming/palettes';
 @use '../style/sass-utils';
@@ -322,6 +323,11 @@
 // Unlike M3's `mat.theme()`, this mixin does not replace the need to call
 // individual component theme mixins for Angular Material components.
 @mixin m2-theme($theme-config, $overrides: ()) {
+  @if inspection.get-theme-version($theme-config) == 1 {
+    @error '`m2-theme` mixin should only be called for M2 theme ' +
+        'configs created with define-light-theme or define-dark-theme';
+  }
+
   $config: m2-inspection.get-m2-config($theme-config);
 
   $color: map.get($config, color);
