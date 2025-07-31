@@ -359,11 +359,8 @@
   // which is "on-surface-variant". This mixin now defines this value.
   // To avoid this, and continue using `inherit` for the icon button color, set the color explicitly
   // to the token without a fallback.
-  .mat-mdc-button-base.mat-mdc-icon-button {
-    &:not([disabled]),
-    &:not(.mat-mdc-button-disabled) {
-     color: var(--mat-icon-button-icon-color);
-   }
+  .mat-mdc-button-base.mat-mdc-icon-button:not(.mat-mdc-button-disabled) {
+    color: var(--mat-icon-button-icon-color);
   }
 }
 
