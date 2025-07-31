@@ -339,7 +339,8 @@
     }
   }
   @if (list.length($invalid-keys) > 0) {
-    @error 'The following overrides are not valid system variables: #{$invalid-keys}. Valid keys are: #{map.keys($config-system)}';
+    @error 'The following overrides are not valid system variables: #{$invalid-keys}. ' +
+        'Valid keys are: #{map.keys($config-system)}';
   }
 
   $config: m2-inspection.get-m2-config($theme-config);
