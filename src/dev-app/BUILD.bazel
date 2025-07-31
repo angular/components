@@ -83,6 +83,7 @@ ng_project(
         "//src/dev-app/slider",
         "//src/dev-app/snack-bar",
         "//src/dev-app/stepper",
+        "//src/dev-app/system",
         "//src/dev-app/table",
         "//src/dev-app/table-scroll-container",
         "//src/dev-app/tabs",
