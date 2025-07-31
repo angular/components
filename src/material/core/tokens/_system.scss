@@ -18,6 +18,7 @@
 @use '../style/elevation';
 @use '../theming/config-validation';
 @use '../theming/definition';
+@use '../theming/inspection';
 @use '../theming/m2-inspection';
 @use '../theming/palettes';
 @use '../style/sass-utils';
@@ -322,6 +323,11 @@
 // Unlike M3's `mat.theme()`, this mixin does not replace the need to call
 // individual component theme mixins for Angular Material components.
 @mixin m2-theme($theme-config, $overrides: ()) {
+  @if inspection.get-theme-version($theme-config) == 1 {
+    @error '`m2-theme` mixin should only be called for M2 theme ' +
+        'configs created with define-light-theme or define-dark-theme';
+  }
+
   $config: m2-inspection.get-m2-config($theme-config);
 
   $color: map.get($config, color);
@@ -350,6 +356,18 @@
 
   @include _define-m2-system-vars(m2.md-sys-shape-values(), $overrides);
   @include _define-m2-system-vars(m2.md-sys-state-values(), $overrides);
+
+  // The icon button's color token is set to `inherit` for M2 and intended to display
+  // the color inherited from its parent element. This is crucial because it's unknown
+  // whether the icon button sits on a container with background like "surface" or "primary",
+  // where both may have different contrast colors like white or black.
+  // However, variables set to inherit AND define a fallback will always use the fallback,
+  // which is "on-surface-variant". This mixin now defines this value.
+  // To avoid this, and continue using `inherit` for the icon button color, set the color explicitly
+  // to the token without a fallback.
+  .mat-mdc-button-base.mat-mdc-icon-button:not(.mat-mdc-button-disabled) {
+    color: var(--mat-icon-button-icon-color);
+  }
 }
 
 @mixin _define-m2-system-vars($vars, $overrides) {
