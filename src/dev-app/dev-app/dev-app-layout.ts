@@ -111,6 +111,7 @@ export class DevAppLayout {
     {name: 'Slider', route: '/slider'},
     {name: 'Snack Bar', route: '/snack-bar'},
     {name: 'Stepper', route: '/stepper'},
+    {name: 'System', route: '/system'},
     {name: 'Table Scroll Container', route: '/table-scroll-container'},
     {name: 'Table', route: '/table'},
     {name: 'Tabs', route: '/tabs'},

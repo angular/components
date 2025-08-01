@@ -1,0 +1,21 @@
+@for (group of colorGroups; track $index) {
+  <h2>{{group.name}}</h2>
+
+  @for (role of group.roles; track $index) {
+    @let titleColorRole = role.titleColorRole || role.foregroundColors[0];
+    <mat-card>
+      @for (backgroundColor of role.backgroundColors; track $index) {
+        <div class="example-background" style.backgroundColor="var(--mat-sys-{{backgroundColor}})">
+          <div class="example-foreground example-role-title" style.color="var(--mat-sys-{{titleColorRole}})">
+            {{backgroundColor}}
+          </div>
+          @for (foregroundColor of role.foregroundColors; track $index) {
+            <div class="example-foreground" style.color="var(--mat-sys-{{foregroundColor}})">
+              {{foregroundColor}}
+            </div>
+          }
+        </div>
+      }
+    </mat-card>
+  }
+}

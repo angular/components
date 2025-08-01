@@ -1,0 +1,22 @@
+load("//tools:defaults.bzl", "ng_project", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_project(
+    name = "system",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "system-demo.html",
+        "system_demo_scss",
+    ],
+    deps = [
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//src/material/card",
+    ],
+)
+
+sass_binary(
+    name = "system_demo_scss",
+    src = "system-demo.scss",
+)

@@ -236,6 +236,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadComponent: () => import('./stepper/stepper-demo').then(m => m.StepperDemo),
   },
   {
+    path: 'system',
+    loadComponent: () => import('./system/system-demo').then(m => m.SystemDemo),
+  },
+  {
     path: 'table',
     loadComponent: () => import('./table/table-demo').then(m => m.TableDemo),
   },
