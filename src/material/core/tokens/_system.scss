@@ -24,6 +24,7 @@
 @use '../style/sass-utils';
 @use './m2';
 @use './m3';
+@use 'sass:list';
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -326,6 +327,20 @@
   @if inspection.get-theme-version($theme-config) == 1 {
     @error '`m2-theme` mixin should only be called for M2 theme ' +
         'configs created with define-light-theme or define-dark-theme';
+  }
+
+  // Check whether any override keys do not match keys in the theme
+  // config system map.
+  $invalid-keys: ();
+  $config-system: map.get($theme-config, _mat-system);
+  @each $key, $value in $overrides {
+    @if (not map.has-key($config-system, $key)) {
+      $invalid-keys: list.append($invalid-keys, $key);
+    }
+  }
+  @if (list.length($invalid-keys) > 0) {
+    @error 'The following overrides are not valid system variables: #{$invalid-keys}. ' +
+        'Valid keys are: #{map.keys($config-system)}';
   }
 
   $config: m2-inspection.get-m2-config($theme-config);
