@@ -1,3 +1,4 @@
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load(
     "//tools:defaults.bzl",
     "ng_package",
@@ -6,7 +7,6 @@ load(
     "sass_binary",
     "ts_project",
 )
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 
 package(default_visibility = ["//visibility:public"])
 

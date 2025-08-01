@@ -9,7 +9,7 @@ import {
   inject,
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
-import {MatSnackBarModule} from './module';
+import {MatSnackBarModule} from './snack-bar-module';
 import {MatSnackBar} from './snack-bar';
 import {MatSnackBarConfig} from './snack-bar-config';
 import {MATERIAL_ANIMATIONS} from '../core';

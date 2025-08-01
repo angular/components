@@ -111,7 +111,6 @@ ng_project(
     srcs = [
         "index.ts",
         "ink-bar.ts",
-        "module.ts",
         "paginated-tab-header.ts",
         "public-api.ts",
         "tab.ts",
@@ -124,6 +123,7 @@ ng_project(
         "tab-label-wrapper.ts",
         "tab-nav-bar/tab-nav-bar.ts",
         "tabs-animations.ts",
+        "tabs-module.ts",
     ],
     assets = [
         "tab-body.html",

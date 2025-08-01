@@ -51,6 +51,7 @@ ng_project(
         "index.ts",
         "optgroup.ts",
         "option.ts",
+        "option-module.ts",
         "option-parent.ts",
     ],
     assets = [

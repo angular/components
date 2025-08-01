@@ -76,9 +76,9 @@ ng_project(
     name = "radio",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "radio.ts",
+        "radio-module.ts",
     ],
     assets = [
         "radio.html",

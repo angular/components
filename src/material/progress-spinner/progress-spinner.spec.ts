@@ -1,7 +1,7 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Component, ElementRef, ViewChild, ViewEncapsulation, signal} from '@angular/core';
-import {MatProgressSpinnerModule} from './module';
+import {MatProgressSpinnerModule} from './progress-spinner-module';
 import {MatProgressSpinner, MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS} from './progress-spinner';
 
 describe('MatProgressSpinner', () => {

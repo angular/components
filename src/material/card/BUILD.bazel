@@ -64,8 +64,8 @@ ng_project(
     name = "card",
     srcs = [
         "card.ts",
+        "card-module.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

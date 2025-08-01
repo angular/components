@@ -66,10 +66,10 @@ ng_project(
     name = "autocomplete",
     srcs = [
         "autocomplete.ts",
+        "autocomplete-module.ts",
         "autocomplete-origin.ts",
         "autocomplete-trigger.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

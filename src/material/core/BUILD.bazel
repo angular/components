@@ -212,6 +212,7 @@ ng_project(
         "ripple/index.ts",
         "ripple/ripple.ts",
         "ripple/ripple-event-manager.ts",
+        "ripple/ripple-module.ts",
         "ripple/ripple-ref.ts",
         "ripple/ripple-renderer.ts",
     ],

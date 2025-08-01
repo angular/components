@@ -102,8 +102,8 @@ ng_project(
         "form-field-animations.ts",
         "form-field-control.ts",
         "form-field-errors.ts",
+        "form-field-module.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

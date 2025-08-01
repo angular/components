@@ -158,8 +158,8 @@ http_archive(
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
 rules_ts_dependencies(
-    # Obtained by: curl --silent https://registry.npmjs.org/typescript/5.8.3 | jq -r '.dist.integrity'
-    ts_integrity = "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==",
+    # Obtained by: curl --silent https://registry.npmjs.org/typescript/5.9.2 | jq -r '.dist.integrity'
+    ts_integrity = "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
     ts_version_from = "//:package.json",
 )
 
@@ -175,6 +175,13 @@ http_archive(
     sha256 = "0d2f9c977842685895020cac721d8cc4f1b37aae15af46128cf619741dc61529",
     strip_prefix = "rules_jasmine-2.0.0",
     url = "https://github.com/aspect-build/rules_jasmine/releases/download/v2.0.0/rules_jasmine-v2.0.0.tar.gz",
+)
+
+http_archive(
+    name = "jq.bzl",
+    sha256 = "7b63435aa19cc6a0cfd1a82fbdf2c7a2f0a94db1a79ff7a4469ffa94286261ab",
+    strip_prefix = "jq.bzl-0.1.0",
+    url = "https://github.com/bazel-contrib/jq.bzl/releases/download/v0.1.0/jq.bzl-v0.1.0.tar.gz",
 )
 
 load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependencies")
@@ -199,7 +206,7 @@ setup_dependencies_2()
 
 git_repository(
     name = "rules_angular",
-    commit = "652e5b0ef9be65ca738e11d5d01424b64344b466",
+    commit = "8bf9ae3fa3017ec12877908533001daed9c6ce83",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 

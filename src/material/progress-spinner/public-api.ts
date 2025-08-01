@@ -7,4 +7,4 @@
  */
 
 export * from './progress-spinner';
-export * from './module';
+export * from './progress-spinner-module';

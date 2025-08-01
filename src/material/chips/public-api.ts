@@ -12,7 +12,7 @@ export * from './chip-row';
 export * from './chip-set';
 export * from './chip-listbox';
 export * from './chip-grid';
-export * from './module';
+export * from './chips-module';
 export * from './chip-input';
 export * from './tokens';
 export * from './chip-icons';

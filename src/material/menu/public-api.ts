@@ -15,7 +15,7 @@ export {
   MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER,
   MENU_PANEL_TOP_PADDING,
 } from './menu-trigger-base';
-export * from './module';
+export * from './menu-module';
 export * from './menu-animations';
 export * from './menu-positions';
 export * from './menu-panel';

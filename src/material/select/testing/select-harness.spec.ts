@@ -6,7 +6,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MATERIAL_ANIMATIONS} from '../../core';
 import {MatFormFieldModule} from '../../form-field';
-import {MatSelectModule} from '../module';
+import {MatSelectModule} from '../select-module';
 import {MatSelectHarness} from './select-harness';
 
 describe('MatSelectHarness', () => {

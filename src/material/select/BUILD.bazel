@@ -67,11 +67,11 @@ ng_project(
     name = "select",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "select.ts",
         "select-animations.ts",
         "select-errors.ts",
+        "select-module.ts",
     ],
     assets = [
         "select.html",

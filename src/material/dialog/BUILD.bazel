@@ -77,9 +77,9 @@ ng_project(
         "dialog-config.ts",
         "dialog-container.ts",
         "dialog-content-directives.ts",
+        "dialog-module.ts",
         "dialog-ref.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

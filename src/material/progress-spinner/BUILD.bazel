@@ -64,8 +64,8 @@ ng_project(
     name = "progress-spinner",
     srcs = [
         "index.ts",
-        "module.ts",
         "progress-spinner.ts",
+        "progress-spinner-module.ts",
         "public-api.ts",
     ],
     assets = [

@@ -13,7 +13,7 @@ import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../../core';
 import {MAT_TABS_CONFIG} from '../index';
-import {MatTabsModule} from '../module';
+import {MatTabsModule} from '../tabs-module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
 
 describe('MatTabNavBar', () => {

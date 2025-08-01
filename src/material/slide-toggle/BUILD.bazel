@@ -67,10 +67,10 @@ ng_project(
     name = "slide-toggle",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "slide-toggle.ts",
         "slide-toggle-config.ts",
+        "slide-toggle-module.ts",
     ],
     assets = [
         "slide-toggle.html",
