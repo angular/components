@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatTableModule} from '../module';
+import {MatTableModule} from '../table-module';
 import {MatTableHarness} from './table-harness';
 
 describe('MatTableHarness', () => {

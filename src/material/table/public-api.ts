@@ -7,7 +7,7 @@
  */
 
 export * from './table';
-export * from './module';
+export * from './table-module';
 export * from './cell';
 export * from './row';
 export * from './table-data-source';

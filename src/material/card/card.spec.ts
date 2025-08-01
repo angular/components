@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, Provider, Type, signal} from '@angular/core';
-import {MatCardModule} from './module';
+import {MatCardModule} from './card-module';
 import {MatCard, MAT_CARD_CONFIG, MatCardAppearance} from './card';
 
 describe('MatCard', () => {

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatTooltipModule} from './module';
+import {MatTooltipModule} from './tooltip-module';
 import {MatTooltip} from './tooltip';
 
 const initialTooltipMessage = 'initial tooltip message';

@@ -18,7 +18,7 @@ import {MatFormField} from '../form-field';
 import {MatInputModule} from '../input';
 import {MatAutocomplete} from './autocomplete';
 import {MatAutocompleteTrigger} from './autocomplete-trigger';
-import {MatAutocompleteModule} from './module';
+import {MatAutocompleteModule} from './autocomplete-module';
 
 describe('MatAutocomplete Zone.js integration', () => {
   // Creates a test component fixture.

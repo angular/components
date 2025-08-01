@@ -65,8 +65,8 @@ ng_project(
     name = "progress-bar",
     srcs = [
         "index.ts",
-        "module.ts",
         "progress-bar.ts",
+        "progress-bar-module.ts",
         "public-api.ts",
     ],
     assets = [

@@ -144,10 +144,10 @@ ng_project(
     srcs = [
         "button.ts",
         "button-base.ts",
+        "button-module.ts",
         "fab.ts",
         "icon-button.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

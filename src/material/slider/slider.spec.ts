@@ -24,7 +24,7 @@ import {
 } from '@angular/core/testing';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MatSliderModule} from './module';
+import {MatSliderModule} from './slider-module';
 import {MatSlider} from './slider';
 import {MatSliderRangeThumb, MatSliderThumb} from './slider-input';
 import {_MatThumb} from './slider-interface';

@@ -8,4 +8,4 @@
 
 export * from './tooltip';
 export * from './tooltip-animations';
-export * from './module';
+export * from './tooltip-module';

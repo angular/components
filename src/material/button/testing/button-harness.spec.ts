@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {MatButtonModule} from '../module';
+import {MatButtonModule} from '../button-module';
 import {MatIconModule} from '../../icon';
 import {MatIconHarness} from '../../icon/testing';
 import {MatButtonHarness} from './button-harness';

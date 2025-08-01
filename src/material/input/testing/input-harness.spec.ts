@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '../module';
+import {MatInputModule} from '../input-module';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {MatInputHarness} from './input-harness';
 

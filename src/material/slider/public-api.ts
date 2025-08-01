@@ -10,4 +10,4 @@ export {MatSlider} from './slider';
 export {MatSliderVisualThumb} from './slider-thumb';
 export {MatSliderThumb, MatSliderRangeThumb} from './slider-input';
 export {MatSliderDragEvent, MatSliderChange} from './slider-interface';
-export {MatSliderModule} from './module';
+export {MatSliderModule} from './slider-module';

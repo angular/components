@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './module';
+export * from './select-module';
 export * from './select';
 export * from './select-animations';
 

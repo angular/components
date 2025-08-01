@@ -30,8 +30,8 @@ ng_project(
         "index.ts",
         "input.ts",
         "input-errors.ts",
+        "input-module.ts",
         "input-value-accessor.ts",
-        "module.ts",
         "public-api.ts",
     ],
     deps = [

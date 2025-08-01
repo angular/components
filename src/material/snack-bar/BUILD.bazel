@@ -71,7 +71,6 @@ ng_project(
     name = "snack-bar",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "simple-snack-bar.ts",
         "snack-bar.ts",
@@ -79,6 +78,7 @@ ng_project(
         "snack-bar-config.ts",
         "snack-bar-container.ts",
         "snack-bar-content.ts",
+        "snack-bar-module.ts",
         "snack-bar-ref.ts",
     ],
     assets = [

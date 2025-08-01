@@ -66,9 +66,9 @@ ng_project(
     name = "paginator",
     srcs = [
         "index.ts",
-        "module.ts",
         "paginator.ts",
         "paginator-intl.ts",
+        "paginator-module.ts",
         "public-api.ts",
     ],
     assets = [

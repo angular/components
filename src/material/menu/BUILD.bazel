@@ -74,11 +74,11 @@ ng_project(
         "menu-content.ts",
         "menu-errors.ts",
         "menu-item.ts",
+        "menu-module.ts",
         "menu-panel.ts",
         "menu-positions.ts",
         "menu-trigger.ts",
         "menu-trigger-base.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [

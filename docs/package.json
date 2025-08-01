@@ -79,6 +79,6 @@
     "sass": "1.89.2",
     "shelljs": "^0.10.0",
     "ts-node": "10.9.2",
-    "typescript": "~5.8.2"
+    "typescript": "~5.9.2"
   }
 }

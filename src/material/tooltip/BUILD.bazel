@@ -64,10 +64,10 @@ ng_project(
     name = "tooltip",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "tooltip.ts",
         "tooltip-animations.ts",
+        "tooltip-module.ts",
     ],
     assets = [
         "tooltip.html",

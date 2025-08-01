@@ -74,11 +74,11 @@ ng_project(
     srcs = [
         "cell.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "row.ts",
         "table.ts",
         "table-data-source.ts",
+        "table-module.ts",
         "text-column.ts",
     ],
     assets = [":css"],

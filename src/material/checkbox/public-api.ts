@@ -8,4 +8,4 @@
 
 export * from './checkbox';
 export * from './checkbox-config';
-export * from './module';
+export * from './checkbox-module';

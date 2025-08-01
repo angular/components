@@ -72,11 +72,11 @@ ng_project(
     name = "slider",
     srcs = [
         "index.ts",
-        "module.ts",
         "public-api.ts",
         "slider.ts",
         "slider-input.ts",
         "slider-interface.ts",
+        "slider-module.ts",
         "slider-thumb.ts",
     ],
     assets = [
