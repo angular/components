@@ -19,3 +19,4 @@ export {CdkDragDropTableExample} from './cdk-drag-drop-table/cdk-drag-drop-table
 export {CdkDragDropMixedSortingExample} from './cdk-drag-drop-mixed-sorting/cdk-drag-drop-mixed-sorting-example';
 export {CdkDragDropTabsExample} from './cdk-drag-drop-tabs/cdk-drag-drop-tabs-example';
 export {CdkDragDropCopyListExample} from './cdk-drag-drop-copy-list/cdk-drag-drop-copy-list-example';
+export {CdkDragDropScrollableExample} from './cdk-drag-drop-scrollable/cdk-drag-drop-scrollable-example';
