@@ -1,8 +1,8 @@
 # Creating a custom stepper using the CDK stepper
 
-The [CDK stepper](https://material.angular.dev/cdk/stepper/overview) allows to build a custom stepper which you can completely style yourself without any specific Material Design styling.
+The [CDK stepper](https://material.angular.dev/cdk/stepper/overview) allows you to build a custom stepper which you can completely style yourself without any specific Material Design styling.
 
-In this guide, we'll learn how we can build our own custom stepper using the CDK stepper. Here is what we'll build by the end of this guide:
+In this guide, we'll learn how to build our own custom stepper using the CDK stepper. Here is what we'll build by the end of this guide:
 
 <!-- example(cdk-custom-stepper-without-form) -->
 
@@ -126,7 +126,7 @@ If you want to iterate over your steps and use your own custom component you can
 
 The above example allows the user to freely navigate between all steps. The `CdkStepper` additionally provides the linear mode which requires the user to complete previous steps before proceeding.
 
-A simple example without using forms could look this way:
+A simple example without using forms could look like this:
 
 **app.component.html**
 
