@@ -52,7 +52,7 @@ const GUIDES: GuideItem[] = [
     id: 'creating-a-custom-stepper-using-the-cdk-stepper',
     name: 'Custom stepper using the CdkStepper',
     document: '/docs-content/guides/creating-a-custom-stepper-using-the-cdk-stepper.md.html',
-    overview: 'Create a custom stepper components using Angular CDK.',
+    overview: 'Create a custom stepper component using Angular CDK.',
   },
   {
     id: 'using-component-harnesses',
