@@ -44,6 +44,10 @@
   "angularCompilerOptions": {
     "strictTemplates": true,
     "typeCheckHostBindings": true,
+    "strictInputAccessModifiers": true,
+    "strictInputTypes": true,
+    "strictOutputEventTypes": true,
+    "strictDomEventTypes": true,
     "extendedDiagnostics": {
       "defaultCategory": "error"
     }
