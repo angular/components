@@ -30,6 +30,10 @@
     // not find an associated module for test components and error out.
     "compileNonExportedClasses": false,
     "typeCheckHostBindings": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictInputAccessModifiers": true,
+    "strictInputTypes": true,
+    "strictOutputEventTypes": true,
+    "strictDomEventTypes": true
   }
 }
