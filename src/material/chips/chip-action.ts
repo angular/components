@@ -77,7 +77,7 @@ export class MatChipAction {
    * Private API to allow focusing this chip when it is disabled.
    */
   @Input()
-  private _allowFocusWhenDisabled = false;
+  _allowFocusWhenDisabled = false;
 
   /**
    * Determine the value of the disabled attribute for this chip action.

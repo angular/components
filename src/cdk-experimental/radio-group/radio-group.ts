@@ -186,7 +186,7 @@ export class CdkRadioButton<V> {
   protected id = computed(() => this._generatedId);
 
   /** The value associated with the radio button. */
-  protected value = input.required<V>();
+  readonly value = input.required<V>();
 
   /** The parent RadioGroup UIPattern. */
   protected group = computed(() => this._cdkRadioGroup.pattern);
