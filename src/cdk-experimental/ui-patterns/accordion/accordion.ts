@@ -48,7 +48,7 @@ export class AccordionGroupPattern {
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
     this.textDirection = inputs.textDirection;
-    this.activeIndex = inputs.activeIndex;
+    this.activeItem = inputs.activeItem;
     this.disabled = inputs.disabled;
     this.multiExpandable = inputs.multiExpandable;
     this.items = inputs.items;
@@ -70,8 +70,7 @@ export class AccordionGroupPattern {
 }
 
 /** Inputs for the AccordionTriggerPattern. */
-export type AccordionTriggerInputs = ListNavigationItem &
-  ListFocusItem &
+export type AccordionTriggerInputs = Omit<ListNavigationItem & ListFocusItem, 'index'> &
   Omit<ExpansionItem, 'expansionId' | 'expandable'> & {
     /** A local unique identifier for the trigger. */
     value: SignalLike<string>;
@@ -99,7 +98,7 @@ export class AccordionTriggerPattern {
   expansionControl: ExpansionControl;
 
   /** Whether the trigger is active. */
-  active = computed(() => this.inputs.accordionGroup().focusManager.activeItem() === this);
+  active = computed(() => this.inputs.accordionGroup().activeItem() === this);
 
   /** Id of the accordion panel controlled by the trigger. */
   controls = computed(() => this.inputs.accordionPanel()?.id());
@@ -109,6 +108,9 @@ export class AccordionTriggerPattern {
 
   /** Whether the trigger is disabled. Disabling an accordion group disables all the triggers. */
   disabled = computed(() => this.inputs.disabled() || this.inputs.accordionGroup().disabled());
+
+  /** The index of the trigger within its accordion group. */
+  index = computed(() => this.inputs.accordionGroup().items().indexOf(this));
 
   constructor(readonly inputs: AccordionTriggerInputs) {
     this.id = inputs.id;

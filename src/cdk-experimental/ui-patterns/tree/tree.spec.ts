@@ -105,6 +105,7 @@ describe('Tree Pattern', () => {
 
     // Build tree items recursively.
     buildItems(treeData, tree as TreePattern<V>);
+    tree.activeItem.set(allItems()[0]);
 
     return {tree, allItems, itemPatternInputsMap};
   }
@@ -135,7 +136,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
-        activeIndex: signal(0),
+        activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
         multi: signal(false),
@@ -187,7 +188,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(false),
@@ -232,7 +233,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
-        activeIndex: signal(0),
+        activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
         multi: signal(false),
@@ -253,11 +254,11 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(allItems(), 'Item 0');
       const item1 = getItemByValue(allItems(), 'Item 1');
 
-      treeInputs.activeIndex.set(0);
+      treeInputs.activeItem.set(item0);
       expect(item0.active()).toBe(true);
       expect(item1.active()).toBe(false);
 
-      treeInputs.activeIndex.set(1);
+      treeInputs.activeItem.set(item1);
       expect(item0.active()).toBe(false);
       expect(item1.active()).toBe(true);
     });
@@ -275,9 +276,9 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
       tree.listBehavior.goto(item0);
 
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       tree.onKeydown(down());
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
     });
 
     it('should navigate prev on ArrowUp (vertical)', () => {
@@ -287,9 +288,9 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
       tree.listBehavior.goto(item1);
 
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
       tree.onKeydown(up());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
 
     it('should navigate next on ArrowRight (horizontal)', () => {
@@ -299,9 +300,9 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
       tree.listBehavior.goto(item0);
 
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       tree.onKeydown(right());
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
     });
 
     it('should navigate prev on ArrowLeft (horizontal)', () => {
@@ -311,22 +312,22 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
       tree.listBehavior.goto(item1);
 
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
       tree.onKeydown(left());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
 
     it('should navigate next on ArrowLeft (horizontal & rtl)', () => {
       treeInputs.orientation.set('horizontal');
       treeInputs.textDirection.set('rtl');
-      treeInputs.activeIndex.set(0);
       const {tree, allItems} = createTree(treeExample, treeInputs);
       const item0 = getItemByValue(allItems(), 'Item 0');
       const item1 = getItemByValue(allItems(), 'Item 1');
+      treeInputs.activeItem.set(item0);
 
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       tree.onKeydown(left());
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
     });
 
     it('should navigate prev on ArrowRight (horizontal & rtl)', () => {
@@ -337,9 +338,9 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(allItems(), 'Item 1');
       tree.listBehavior.goto(item1);
 
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
       tree.onKeydown(right());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
 
     it('should navigate to the first visible item on Home', () => {
@@ -348,9 +349,9 @@ describe('Tree Pattern', () => {
       const item2 = getItemByValue(allItems(), 'Item 2');
       tree.listBehavior.goto(item2);
 
-      expect(tree.listBehavior.activeItem()).toBe(item2);
+      expect(tree.activeItem()).toBe(item2);
       tree.onKeydown(home());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
 
     it('should navigate to the last visible item on End', () => {
@@ -359,9 +360,9 @@ describe('Tree Pattern', () => {
       const item2 = getItemByValue(allItems(), 'Item 2');
       tree.listBehavior.goto(item0);
 
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       tree.onKeydown(end());
-      expect(tree.listBehavior.activeItem()).toBe(item2);
+      expect(tree.activeItem()).toBe(item2);
     });
 
     it('should skip disabled items when skipDisabled is true', () => {
@@ -376,9 +377,9 @@ describe('Tree Pattern', () => {
       const itemC = getItemByValue(allItems(), 'Item C');
       tree.listBehavior.goto(itemA);
 
-      expect(tree.listBehavior.activeItem()).toBe(itemA);
+      expect(tree.activeItem()).toBe(itemA);
       tree.onKeydown(down());
-      expect(tree.listBehavior.activeItem()).toBe(itemC);
+      expect(tree.activeItem()).toBe(itemC);
     });
 
     it('should not skip disabled items when skipDisabled is false', () => {
@@ -393,9 +394,9 @@ describe('Tree Pattern', () => {
       const itemB = getItemByValue(allItems(), 'Item B');
       tree.listBehavior.goto(itemA);
 
-      expect(tree.listBehavior.activeItem()).toBe(itemA);
+      expect(tree.activeItem()).toBe(itemA);
       tree.onKeydown(down());
-      expect(tree.listBehavior.activeItem()).toBe(itemB);
+      expect(tree.activeItem()).toBe(itemB);
     });
 
     it('should not navigate when the tree is disabled', () => {
@@ -404,9 +405,9 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(allItems(), 'Item 0');
       tree.listBehavior.goto(item0);
 
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       tree.onKeydown(down());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
   });
 
@@ -416,7 +417,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(false),
@@ -452,11 +453,11 @@ describe('Tree Pattern', () => {
         const item1 = getItemByValue(allItems(), 'Item 1');
 
         tree.onKeydown(down());
-        expect(tree.listBehavior.activeItem()).toBe(item1);
+        expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
 
         tree.onKeydown(up());
-        expect(tree.listBehavior.activeItem()).toBe(item0);
+        expect(tree.activeItem()).toBe(item0);
         expect(tree.inputs.value()).toEqual(['Item 0']);
       });
 
@@ -474,7 +475,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(false),
@@ -538,7 +539,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(true),
@@ -599,7 +600,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(up({shift: true}));
-        expect(tree.listBehavior.activeItem()).toBe(item0);
+        expect(tree.activeItem()).toBe(item0);
         expect(tree.inputs.value()).toEqual([]);
       });
 
@@ -696,7 +697,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(true),
@@ -726,7 +727,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(down({control: true}));
         expect(tree.inputs.value()).toEqual(['Item 0']);
-        expect(tree.listBehavior.activeItem()).toBe(item1);
+        expect(tree.activeItem()).toBe(item1);
       });
 
       it('should toggle an item selection state on Ctrl + Space', () => {
@@ -761,7 +762,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(up({shift: true}));
-        expect(tree.listBehavior.activeItem()).toBe(item0);
+        expect(tree.activeItem()).toBe(item0);
         expect(tree.inputs.value()).toEqual([]);
       });
 
@@ -846,7 +847,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(false),
@@ -867,7 +868,7 @@ describe('Tree Pattern', () => {
         const item1 = getItemByValue(allItems(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()));
-        expect(tree.listBehavior.activeItem()).toBe(item1);
+        expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
       });
 
@@ -886,7 +887,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(false),
@@ -907,11 +908,11 @@ describe('Tree Pattern', () => {
         const item1 = getItemByValue(allItems(), 'Item 1');
 
         tree.onPointerdown(createClickEvent(item1.element()));
-        expect(tree.listBehavior.activeItem()).toBe(item1);
+        expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual(['Item 1']);
 
         tree.onPointerdown(createClickEvent(item1.element()));
-        expect(tree.listBehavior.activeItem()).toBe(item1);
+        expect(tree.activeItem()).toBe(item1);
         expect(tree.inputs.value()).toEqual([]);
       });
 
@@ -930,7 +931,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(true),
@@ -978,7 +979,7 @@ describe('Tree Pattern', () => {
 
       beforeEach(() => {
         treeInputs = {
-          activeIndex: signal(0),
+          activeItem: signal(undefined),
           disabled: signal(false),
           focusMode: signal('roving'),
           multi: signal(true),
@@ -1050,7 +1051,7 @@ describe('Tree Pattern', () => {
 
         tree.onPointerdown(createClickEvent(itemA.element()));
         expect(tree.inputs.value()).toEqual([]);
-        expect(tree.listBehavior.activeItem()).toBe(itemA);
+        expect(tree.activeItem()).toBe(itemA);
       });
     });
   });
@@ -1060,7 +1061,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
-        activeIndex: signal(0),
+        activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
         multi: signal(false),
@@ -1117,7 +1118,7 @@ describe('Tree Pattern', () => {
       item0.expansion.open();
 
       tree.onKeydown(right());
-      expect(tree.listBehavior.activeItem()).toBe(item0_0);
+      expect(tree.activeItem()).toBe(item0_0);
     });
 
     it('should do nothing on expandKey if expanded and has no children (vertical)', () => {
@@ -1127,7 +1128,7 @@ describe('Tree Pattern', () => {
       tree.listBehavior.goto(item1);
 
       tree.onKeydown(right());
-      expect(tree.listBehavior.activeItem()).toBe(item1);
+      expect(tree.activeItem()).toBe(item1);
     });
 
     it('should collapse an item on collapseKey if expanded (vertical)', () => {
@@ -1151,7 +1152,7 @@ describe('Tree Pattern', () => {
       tree.listBehavior.goto(item0_0);
 
       tree.onKeydown(left());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
     });
 
     it('should do nothing on collapseKey if collapsed and is a root item (vertical)', () => {
@@ -1161,7 +1162,7 @@ describe('Tree Pattern', () => {
       tree.listBehavior.goto(item0);
 
       tree.onKeydown(left());
-      expect(tree.listBehavior.activeItem()).toBe(item0);
+      expect(tree.activeItem()).toBe(item0);
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1222,7 +1223,7 @@ describe('Tree Pattern', () => {
 
     beforeEach(() => {
       treeInputs = {
-        activeIndex: signal(0),
+        activeItem: signal(undefined),
         disabled: signal(false),
         focusMode: signal('roving'),
         multi: signal(false),
@@ -1243,10 +1244,10 @@ describe('Tree Pattern', () => {
         {value: 'A', disabled: false},
         {value: 'B', disabled: false},
       ];
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(0);
+      expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
     it('should set activeIndex to the first visible focusable disabled item if skipDisabled is false and no selection', () => {
@@ -1255,10 +1256,10 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: false},
       ];
       treeInputs.skipDisabled.set(false);
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(0);
+      expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
     it('should set activeIndex to the first selected visible focusable item', () => {
@@ -1268,10 +1269,10 @@ describe('Tree Pattern', () => {
         {value: 'C', disabled: false},
       ];
       treeInputs.value.set(['B']);
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(1);
+      expect(treeInputs.activeItem()).toBe(allItems()[1]);
     });
 
     it('should prioritize the first selected item in visible order', () => {
@@ -1281,10 +1282,10 @@ describe('Tree Pattern', () => {
         {value: 'C', disabled: false},
       ];
       treeInputs.value.set(['C', 'A']);
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(0);
+      expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
     it('should skip a selected disabled item if skipDisabled is true', () => {
@@ -1295,10 +1296,10 @@ describe('Tree Pattern', () => {
       ];
       treeInputs.value.set(['B']);
       treeInputs.skipDisabled.set(true);
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(0);
+      expect(treeInputs.activeItem()).toBe(allItems()[0]);
     });
 
     it('should select a selected disabled item if skipDisabled is false', () => {
@@ -1309,10 +1310,10 @@ describe('Tree Pattern', () => {
       ];
       treeInputs.value.set(['B']);
       treeInputs.skipDisabled.set(false);
-      const {tree} = createTree(localTreeData, treeInputs);
+      const {tree, allItems} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(1);
+      expect(treeInputs.activeItem()).toBe(allItems()[1]);
     });
 
     it('should set activeIndex to first visible focusable item if selected item is not visible', () => {
@@ -1323,7 +1324,7 @@ describe('Tree Pattern', () => {
       expect(item0.expanded()).toBe(false);
       expect(getItemByValue(allItems(), 'Item 0-0').visible()).toBe(false);
       tree.setDefaultState();
-      expect(treeInputs.activeIndex()).toBe(0);
+      expect(treeInputs.activeItem()).toBe(item0);
     });
   });
 });

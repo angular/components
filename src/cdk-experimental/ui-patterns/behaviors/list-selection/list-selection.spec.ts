@@ -41,6 +41,7 @@ function getItems(length: number): Signal<TestItem[]> {
         id: signal(`${i}`),
         disabled: signal(false),
         element: signal({focus: () => {}} as HTMLElement),
+        index: signal(i),
       };
     }),
   );
@@ -260,11 +261,9 @@ describe('List Selection', () => {
     });
 
     it('should select all items from an anchor at a higher index', () => {
-      const selection = getSelection({
-        multi: signal(true),
-        activeIndex: signal(3),
-      });
+      const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
+      selection.inputs.activeItem.set(items[3]);
 
       selection.select(); // [3]
       selection.inputs.focusManager.focus(items[1]);
@@ -274,11 +273,9 @@ describe('List Selection', () => {
     });
 
     it('should deselect items within the range when the range is changed', () => {
-      const selection = getSelection({
-        multi: signal(true),
-        activeIndex: signal(2),
-      });
+      const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
+      selection.inputs.activeItem.set(items[2]);
 
       selection.select(); // [2]
       expect(selection.inputs.value()).toEqual([2]);
@@ -313,11 +310,10 @@ describe('List Selection', () => {
       const selection = getSelection({multi: signal(true)});
       const items = selection.inputs.items() as TestItem[];
 
-      selection.select(items[1]);
+      selection.select(items[1]); // [1]
       items[1].disabled.set(true);
 
-      selection.select(); // [0]
-      selection.inputs.focusManager.focus(items[0]);
+      selection.select(); // [0, 1]
       expect(selection.inputs.value()).toEqual([1, 0]);
 
       selection.inputs.focusManager.focus(items[2]);
@@ -325,7 +321,7 @@ describe('List Selection', () => {
       expect(selection.inputs.value()).toEqual([1, 0, 2]);
 
       selection.inputs.focusManager.focus(items[0]);
-      selection.selectRange(); // [0]
+      selection.selectRange(); // [0, 1]
       expect(selection.inputs.value()).toEqual([1, 0]);
     });
   });

@@ -103,7 +103,7 @@ export class ListboxPattern<V> {
 
     if (this.inputs.multi()) {
       manager
-        .on(Modifier.Any, 'Shift', () => this.listBehavior.anchor(this.inputs.activeIndex()))
+        .on(Modifier.Any, 'Shift', () => this.listBehavior.anchor(this.listBehavior.activeIndex()))
         .on(Modifier.Shift, this.prevKey, () => this.listBehavior.prev({selectRange: true}))
         .on(Modifier.Shift, this.nextKey, () => this.listBehavior.next({selectRange: true}))
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
@@ -202,12 +202,11 @@ export class ListboxPattern<V> {
       );
     }
 
-    if (
-      this.inputs.items.length &&
-      (this.inputs.activeIndex() < 0 || this.inputs.activeIndex() >= this.inputs.items().length)
-    ) {
+    const activeItem = this.inputs.activeItem();
+
+    if (activeItem && !this.inputs.items().includes(activeItem)) {
       violations.push(
-        `The active index is out of bounds. Number of options: ${this.inputs.items().length} Active index: ${this.inputs.activeIndex()}.`,
+        `The current active item does not exist in the list. Active item: ${activeItem.id()}.`,
       );
     }
 
@@ -246,14 +245,14 @@ export class ListboxPattern<V> {
           firstItem = item;
         }
         if (item.selected()) {
-          this.inputs.activeIndex.set(item.index());
+          this.inputs.activeItem.set(item);
           return;
         }
       }
     }
 
     if (firstItem) {
-      this.inputs.activeIndex.set(firstItem.index());
+      this.inputs.activeItem.set(firstItem);
     }
   }
 

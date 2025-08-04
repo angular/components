@@ -23,7 +23,7 @@ describe('List Behavior', () => {
   function getList<V>(inputs: Partial<TestInputs<V>> & Pick<TestInputs<V>, 'items'>): TestList<V> {
     return new List({
       value: inputs.value ?? signal([]),
-      activeIndex: inputs.activeIndex ?? signal(0),
+      activeItem: signal(undefined),
       typeaheadDelay: inputs.typeaheadDelay ?? signal(0.5),
       wrap: inputs.wrap ?? signal(true),
       disabled: inputs.disabled ?? signal(false),
@@ -44,6 +44,7 @@ describe('List Behavior', () => {
       element: signal(document.createElement('div')),
       disabled: signal(false),
       searchTerm: signal(String(value)),
+      index: signal(index),
     }));
   }
 
@@ -51,6 +52,7 @@ describe('List Behavior', () => {
     const items = signal<TestItem<V>[]>([]);
     const list = getList<V>({...inputs, items});
     items.set(getItems(values));
+    list.inputs.activeItem.set(list.inputs.items()[0]);
     return {list, items: items()};
   }
 
@@ -124,11 +126,11 @@ describe('List Behavior', () => {
     });
 
     it('should not change active index on navigation', () => {
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.last();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
     it('should not select items', () => {
@@ -144,70 +146,72 @@ describe('List Behavior', () => {
   describe('Navigation', () => {
     it('should navigate to the next item with next()', () => {
       const {list} = getDefaultPatterns();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(1);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]);
     });
 
     it('should navigate to the previous item with prev()', () => {
-      const {list} = getDefaultPatterns({activeIndex: signal(1)});
-      expect(list.inputs.activeIndex()).toBe(1);
+      const {list, items} = getDefaultPatterns();
+      list.inputs.activeItem.set(items[1]);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]);
       list.prev();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
     it('should navigate to the first item with first()', () => {
-      const {list} = getDefaultPatterns({activeIndex: signal(8)});
-      expect(list.inputs.activeIndex()).toBe(8);
+      const {list, items} = getDefaultPatterns();
+      list.inputs.activeItem.set(items[8]);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
       list.first();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
     it('should navigate to the last item with last()', () => {
       const {list} = getDefaultPatterns();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.last();
-      expect(list.inputs.activeIndex()).toBe(8);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
     });
 
     it('should skip disabled items when navigating', () => {
       const {list, items} = getDefaultPatterns();
       items[1].disabled.set(true); // Disable second item
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(2); // Should skip to 'Banana'
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[2]); // Should skip to 'Banana'
       list.prev();
-      expect(list.inputs.activeIndex()).toBe(0); // Should skip back to 'Apple'
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]); // Should skip back to 'Apple'
     });
 
     it('should not skip disabled items when skipDisabled is false', () => {
       const {list, items} = getDefaultPatterns({skipDisabled: signal(false)});
       items[1].disabled.set(true); // Disable second item
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(1); // Should land on second item even though it's disabled
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]); // Should land on second item even though it's disabled
     });
 
     it('should not wrap with wrap: false', () => {
       const {list} = getDefaultPatterns({wrap: signal(false)});
       list.last();
-      expect(list.inputs.activeIndex()).toBe(8);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(8); // Stays at the end
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[8]); // Stays at the end
       list.first();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.prev();
-      expect(list.inputs.activeIndex()).toBe(0); // Stays at the beginning
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]); // Stays at the beginning
     });
 
     // The navigation behavior itself doesn't change for horizontal, but we test it for completeness.
     it('should navigate with orientation: "horizontal"', () => {
       const {list} = getDefaultPatterns({orientation: signal('horizontal')});
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
-      expect(list.inputs.activeIndex()).toBe(1);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[1]);
       list.prev();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
   });
 
@@ -295,7 +299,7 @@ describe('List Behavior', () => {
       it('should not wrap when range selecting', () => {
         list.anchor(0);
         list.prev({selectRange: true});
-        expect(list.inputs.activeIndex()).toBe(0);
+        expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
         expect(list.inputs.value()).toEqual([]);
       });
 
@@ -311,30 +315,30 @@ describe('List Behavior', () => {
   describe('Typeahead', () => {
     it('should navigate to an item via typeahead', fakeAsync(() => {
       const {list} = getDefaultPatterns();
-      expect(list.inputs.activeIndex()).toBe(0);
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.search('b');
-      expect(list.inputs.activeIndex()).toBe(2); // Banana
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[2]); // Banana
       list.search('l');
-      expect(list.inputs.activeIndex()).toBe(3); // Blackberry
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[3]); // Blackberry
       list.search('u');
-      expect(list.inputs.activeIndex()).toBe(4); // Blueberry
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[4]); // Blueberry
 
       tick(500); // Default delay
 
       list.search('c');
-      expect(list.inputs.activeIndex()).toBe(5); // Cantaloupe
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[5]); // Cantaloupe
     }));
 
     it('should respect typeaheadDelay', fakeAsync(() => {
       const {list} = getDefaultPatterns({typeaheadDelay: signal(0.1)});
       list.search('b');
-      expect(list.inputs.activeIndex()).toBe(2); // Banana
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[2]); // Banana
       tick(50); // Less than delay
       list.search('l');
-      expect(list.inputs.activeIndex()).toBe(3); // Blackberry
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[3]); // Blackberry
       tick(101); // More than delay
       list.search('c');
-      expect(list.inputs.activeIndex()).toBe(5); // Cantaloupe
+      expect(list.inputs.activeItem()).toBe(list.inputs.items()[5]); // Cantaloupe
     }));
 
     it('should select an item via typeahead', () => {

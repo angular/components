@@ -32,7 +32,7 @@ describe('RadioGroup Pattern', () => {
     return new RadioGroupPattern({
       items: inputs.items,
       value: inputs.value ?? signal([]),
-      activeIndex: inputs.activeIndex ?? signal(0),
+      activeItem: signal(undefined),
       readonly: inputs.readonly ?? signal(false),
       disabled: inputs.disabled ?? signal(false),
       skipDisabled: inputs.skipDisabled ?? signal(true),
@@ -60,6 +60,7 @@ describe('RadioGroup Pattern', () => {
     const radioButtons = signal<TestRadio[]>([]);
     const radioGroup = getRadioGroup({...inputs, items: radioButtons});
     radioButtons.set(getRadios(radioGroup, values));
+    radioGroup.inputs.activeItem.set(radioButtons()[0]);
     return {radioGroup, radioButtons: radioButtons()};
   }
 
@@ -69,101 +70,100 @@ describe('RadioGroup Pattern', () => {
 
   describe('Keyboard Navigation', () => {
     it('should navigate next on ArrowDown', () => {
-      const {radioGroup} = getDefaultPatterns();
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      const {radioGroup, radioButtons} = getDefaultPatterns();
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
       radioGroup.onKeydown(down());
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
     });
 
     it('should navigate prev on ArrowUp', () => {
-      const {radioGroup} = getDefaultPatterns({activeIndex: signal(1)});
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      const {radioGroup, radioButtons} = getDefaultPatterns();
+      radioGroup.inputs.activeItem.set(radioButtons[1]);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       radioGroup.onKeydown(up());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should navigate next on ArrowRight (horizontal)', () => {
-      const {radioGroup} = getDefaultPatterns({orientation: signal('horizontal')});
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      const {radioGroup, radioButtons} = getDefaultPatterns({orientation: signal('horizontal')});
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
       radioGroup.onKeydown(right());
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
     });
 
     it('should navigate prev on ArrowLeft (horizontal)', () => {
-      const {radioGroup} = getDefaultPatterns({
-        activeIndex: signal(1),
-        orientation: signal('horizontal'),
-      });
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      const {radioGroup, radioButtons} = getDefaultPatterns({orientation: signal('horizontal')});
+      radioGroup.inputs.activeItem.set(radioButtons[1]);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       radioGroup.onKeydown(left());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should navigate next on ArrowLeft (horizontal & rtl)', () => {
-      const {radioGroup} = getDefaultPatterns({
+      const {radioGroup, radioButtons} = getDefaultPatterns({
         textDirection: signal('rtl'),
         orientation: signal('horizontal'),
       });
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
       radioGroup.onKeydown(left());
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
     });
 
     it('should navigate prev on ArrowRight (horizontal & rtl)', () => {
-      const {radioGroup} = getDefaultPatterns({
-        activeIndex: signal(1),
+      const {radioGroup, radioButtons} = getDefaultPatterns({
         textDirection: signal('rtl'),
         orientation: signal('horizontal'),
       });
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      radioGroup.inputs.activeItem.set(radioButtons[1]);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       radioGroup.onKeydown(right());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should navigate to the first radio on Home', () => {
-      const {radioGroup} = getDefaultPatterns({
-        activeIndex: signal(4),
-      });
-      expect(radioGroup.inputs.activeIndex()).toBe(4);
+      const {radioGroup, radioButtons} = getDefaultPatterns();
+      radioGroup.inputs.activeItem.set(radioButtons[4]);
+
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
       radioGroup.onKeydown(home());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should navigate to the last radio on End', () => {
-      const {radioGroup} = getDefaultPatterns();
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      const {radioGroup, radioButtons} = getDefaultPatterns();
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
       radioGroup.onKeydown(end());
-      expect(radioGroup.inputs.activeIndex()).toBe(4);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
     });
 
     it('should skip disabled radios when skipDisabled is true', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(true)});
       radioButtons[1].disabled.set(true);
       radioGroup.onKeydown(down());
-      expect(radioGroup.inputs.activeIndex()).toBe(2);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
       radioGroup.onKeydown(up());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should not skip disabled radios when skipDisabled is false', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(false)});
       radioButtons[1].disabled.set(true);
       radioGroup.onKeydown(down());
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       radioGroup.onKeydown(up());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should be able to navigate in readonly mode', () => {
-      const {radioGroup} = getDefaultPatterns({readonly: signal(true)});
+      const {radioGroup, radioButtons} = getDefaultPatterns({readonly: signal(true)});
       radioGroup.onKeydown(down());
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       radioGroup.onKeydown(up());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
       radioGroup.onKeydown(end());
-      expect(radioGroup.inputs.activeIndex()).toBe(4);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[4]);
       radioGroup.onKeydown(home());
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
   });
 
@@ -202,7 +202,7 @@ describe('RadioGroup Pattern', () => {
       expect(radioGroup.inputs.value()).toEqual([]);
 
       radioGroup.onKeydown(down()); // Navigation still works
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioGroup.inputs.items()[1]);
       expect(radioGroup.inputs.value()).toEqual([]); // Selection doesn't change
 
       radioGroup.onKeydown(enter());
@@ -216,7 +216,7 @@ describe('RadioGroup Pattern', () => {
       radioButtons[1].disabled.set(true);
 
       radioGroup.onKeydown(down()); // Focus B (disabled)
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
       expect(radioGroup.inputs.value()).toEqual([]); // Should not select B
 
       radioGroup.onKeydown(space()); // Try selecting B with space
@@ -226,7 +226,7 @@ describe('RadioGroup Pattern', () => {
       expect(radioGroup.inputs.value()).toEqual([]);
 
       radioGroup.onKeydown(down()); // Focus C
-      expect(radioGroup.inputs.activeIndex()).toBe(2);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
       expect(radioGroup.inputs.value()).toEqual(['C']); // Selects C on navigation
     });
   });
@@ -242,7 +242,7 @@ describe('RadioGroup Pattern', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns();
       radioGroup.onPointerdown(click(radioButtons, 1));
       expect(radioGroup.inputs.value()).toEqual(['Banana']);
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
     });
 
     it('should not select a disabled radio on click', () => {
@@ -250,52 +250,45 @@ describe('RadioGroup Pattern', () => {
       radioButtons[1].disabled.set(true);
       radioGroup.onPointerdown(click(radioButtons, 1));
       expect(radioGroup.inputs.value()).toEqual([]);
-      expect(radioGroup.inputs.activeIndex()).toBe(0); // Active index shouldn't change
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]); // Active index shouldn't change
     });
 
     it('should only update active index when readonly', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({readonly: signal(true)});
       radioGroup.onPointerdown(click(radioButtons, 1));
       expect(radioGroup.inputs.value()).toEqual([]);
-      expect(radioGroup.inputs.activeIndex()).toBe(1); // Active index should update
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]); // Active index should update
     });
   });
 
   describe('#setDefaultState', () => {
     it('should set the active index to the first radio', () => {
-      const {radioGroup} = getDefaultPatterns({activeIndex: signal(-1)});
+      const {radioGroup, radioButtons} = getDefaultPatterns();
       radioGroup.setDefaultState();
-      expect(radioGroup.inputs.activeIndex()).toBe(0);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]);
     });
 
     it('should set the active index to the first focusable radio', () => {
-      const {radioGroup, radioButtons} = getDefaultPatterns({
-        skipDisabled: signal(true),
-        activeIndex: signal(-1),
-      });
+      const {radioGroup, radioButtons} = getDefaultPatterns({skipDisabled: signal(true)});
       radioButtons[0].disabled.set(true);
       radioGroup.setDefaultState();
-      expect(radioGroup.inputs.activeIndex()).toBe(1);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[1]);
     });
 
     it('should set the active index to the selected radio', () => {
-      const {radioGroup} = getDefaultPatterns({
-        value: signal(['Cherry']),
-        activeIndex: signal(-1),
-      });
+      const {radioGroup, radioButtons} = getDefaultPatterns({value: signal(['Cherry'])});
       radioGroup.setDefaultState();
-      expect(radioGroup.inputs.activeIndex()).toBe(2);
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[2]);
     });
 
     it('should set the active index to the first focusable radio if selected is disabled', () => {
       const {radioGroup, radioButtons} = getDefaultPatterns({
         value: signal(['Cherry']),
         skipDisabled: signal(true),
-        activeIndex: signal(-1),
       });
       radioButtons[2].disabled.set(true); // Disable Cherry
       radioGroup.setDefaultState();
-      expect(radioGroup.inputs.activeIndex()).toBe(0); // Defaults to first focusable
+      expect(radioGroup.inputs.activeItem()).toBe(radioButtons[0]); // Defaults to first focusable
     });
   });
 

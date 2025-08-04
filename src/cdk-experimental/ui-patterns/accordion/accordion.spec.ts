@@ -61,7 +61,7 @@ describe('Accordion Pattern', () => {
     groupInputs = {
       orientation: signal('vertical'),
       textDirection: signal('ltr'),
-      activeIndex: signal(0),
+      activeItem: signal(undefined),
       disabled: signal(false),
       multiExpandable: signal(true),
       items: signal([]),
@@ -103,6 +103,8 @@ describe('Accordion Pattern', () => {
       new AccordionTriggerPattern(triggerInputs[1]),
       new AccordionTriggerPattern(triggerInputs[2]),
     ];
+
+    groupPattern.inputs.activeItem.set(triggerPatterns[0]);
 
     // Initiate a list of AccordionPanelPattern.
     panelInputs = [
@@ -167,7 +169,7 @@ describe('Accordion Pattern', () => {
     });
 
     it('navigates to first accordion trigger with home key.', () => {
-      groupInputs.activeIndex.set(2);
+      groupInputs.activeItem.set(groupInputs.items()[2]);
       expect(triggerPatterns[2].active()).toBeTrue();
       triggerPatterns[2].onKeydown(home());
       expect(triggerPatterns[2].active()).toBeFalse();
@@ -175,7 +177,7 @@ describe('Accordion Pattern', () => {
     });
 
     it('navigates to last accordion trigger with end key.', () => {
-      groupInputs.activeIndex.set(0);
+      groupInputs.activeItem.set(groupInputs.items()[0]);
       expect(triggerPatterns[0].active()).toBeTrue();
       triggerPatterns[0].onKeydown(end());
       expect(triggerPatterns[0].active()).toBeFalse();
@@ -184,7 +186,7 @@ describe('Accordion Pattern', () => {
 
     describe('Vertical Orientation (orientation=vertical)', () => {
       it('navigates to the next trigger with down key.', () => {
-        groupInputs.activeIndex.set(0);
+        groupInputs.activeItem.set(groupInputs.items()[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
         triggerPatterns[0].onKeydown(down());
@@ -193,7 +195,7 @@ describe('Accordion Pattern', () => {
       });
 
       it('navigates to the previous trigger with up key.', () => {
-        groupInputs.activeIndex.set(1);
+        groupInputs.activeItem.set(groupInputs.items()[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
         triggerPatterns[1].onKeydown(up());
@@ -207,7 +209,7 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the last trigger with up key from first trigger.', () => {
-          groupInputs.activeIndex.set(0);
+          groupInputs.activeItem.set(groupInputs.items()[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
           triggerPatterns[0].onKeydown(up());
@@ -216,7 +218,7 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the first trigger with down key from last trigger.', () => {
-          groupInputs.activeIndex.set(2);
+          groupInputs.activeItem.set(groupInputs.items()[2]);
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
           triggerPatterns[2].onKeydown(down());
@@ -231,14 +233,14 @@ describe('Accordion Pattern', () => {
         });
 
         it('stays on the first trigger with up key from first trigger.', () => {
-          groupInputs.activeIndex.set(0);
+          groupInputs.activeItem.set(groupInputs.items()[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           triggerPatterns[0].onKeydown(up());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with down key from last trigger.', () => {
-          groupInputs.activeIndex.set(2);
+          groupInputs.activeItem.set(groupInputs.items()[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
           triggerPatterns[2].onKeydown(down());
           expect(triggerPatterns[2].active()).toBeTrue();
@@ -252,7 +254,7 @@ describe('Accordion Pattern', () => {
       });
 
       it('navigates to the next trigger with right key.', () => {
-        groupInputs.activeIndex.set(0);
+        groupInputs.activeItem.set(groupInputs.items()[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
         triggerPatterns[0].onKeydown(right());
@@ -261,7 +263,7 @@ describe('Accordion Pattern', () => {
       });
 
       it('navigates to the previous trigger with left key.', () => {
-        groupInputs.activeIndex.set(1);
+        groupInputs.activeItem.set(groupInputs.items()[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
         triggerPatterns[1].onKeydown(left());
@@ -275,7 +277,7 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the last trigger with left key from first trigger.', () => {
-          groupInputs.activeIndex.set(0);
+          groupInputs.activeItem.set(groupInputs.items()[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
           triggerPatterns[0].onKeydown(left());
@@ -284,7 +286,7 @@ describe('Accordion Pattern', () => {
         });
 
         it('navigates to the first trigger with right key from last trigger.', () => {
-          groupInputs.activeIndex.set(2);
+          groupInputs.activeItem.set(groupInputs.items()[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
           expect(triggerPatterns[0].active()).toBeFalse();
           triggerPatterns[2].onKeydown(right());
@@ -299,14 +301,14 @@ describe('Accordion Pattern', () => {
         });
 
         it('stays on the first trigger with left key from first trigger.', () => {
-          groupInputs.activeIndex.set(0);
+          groupInputs.activeItem.set(groupInputs.items()[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           triggerPatterns[0].onKeydown(left());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with right key from last trigger.', () => {
-          groupInputs.activeIndex.set(2);
+          groupInputs.activeItem.set(groupInputs.items()[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
           triggerPatterns[2].onKeydown(right());
           expect(triggerPatterns[2].active()).toBeTrue();

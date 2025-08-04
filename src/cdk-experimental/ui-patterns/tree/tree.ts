@@ -13,7 +13,7 @@ import {ExpansionItem, ExpansionControl, ListExpansion} from '../behaviors/expan
 import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 
 /** Represents the required inputs for a tree item. */
-export interface TreeItemInputs<V> extends ListItem<V> {
+export interface TreeItemInputs<V> extends Omit<ListItem<V>, 'index'> {
   /** The parent item. */
   parent: SignalLike<TreeItemPattern<V> | TreePattern<V>>;
 
@@ -32,6 +32,9 @@ export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
  * Represents an item in a Tree.
  */
 export class TreeItemPattern<V> implements ExpansionItem {
+  /** The position of this item among its siblings. */
+  readonly index = computed(() => this.parent().children().indexOf(this));
+
   /** The unique identifier used by the expansion behavior. */
   readonly expansionId: SignalLike<string>;
 
@@ -60,7 +63,7 @@ export class TreeItemPattern<V> implements ExpansionItem {
   readonly posinset = computed(() => this.parent().children().indexOf(this) + 1);
 
   /** Whether the item is active. */
-  readonly active = computed(() => this.tree().listBehavior.activeItem() === this);
+  readonly active = computed(() => this.tree().activeItem() === this);
 
   /** The tabindex of the item. */
   readonly tabindex = computed(() => this.tree().listBehavior.getItemTabindex(this));
@@ -226,7 +229,7 @@ export class TreePattern<V> {
       manager
         // TODO: Tracking the anchor by index can break if the
         // tree is expanded or collapsed causing the index to change.
-        .on(Modifier.Any, 'Shift', () => list.anchor(this.inputs.activeIndex()))
+        .on(Modifier.Any, 'Shift', () => list.anchor(this.listBehavior.activeIndex()))
         .on(Modifier.Shift, this.prevKey, () => list.prev({selectRange: true}))
         .on(Modifier.Shift, this.nextKey, () => list.next({selectRange: true}))
         .on([Modifier.Ctrl | Modifier.Shift, Modifier.Meta | Modifier.Shift], 'Home', () =>
@@ -310,7 +313,7 @@ export class TreePattern<V> {
     this.allItems = inputs.allItems;
     this.focusMode = inputs.focusMode;
     this.disabled = inputs.disabled;
-    this.activeIndex = inputs.activeIndex;
+    this.activeItem = inputs.activeItem;
     this.skipDisabled = inputs.skipDisabled;
     this.wrap = inputs.wrap;
     this.orientation = inputs.orientation;
@@ -342,24 +345,24 @@ export class TreePattern<V> {
    * Otherwise, sets focus to the first focusable tree item.
    */
   setDefaultState() {
-    let firstItemIndex: number | undefined;
+    let firstItem: TreeItemPattern<V> | undefined;
 
-    for (const [index, item] of this.allItems().entries()) {
+    for (const item of this.allItems()) {
       if (!item.visible()) continue;
       if (!this.listBehavior.isFocusable(item)) continue;
 
-      if (firstItemIndex === undefined) {
-        firstItemIndex = index;
+      if (firstItem === undefined) {
+        firstItem = item;
       }
 
       if (item.selected()) {
-        this.inputs.activeIndex.set(index);
+        this.activeItem.set(item);
         return;
       }
     }
 
-    if (firstItemIndex !== undefined) {
-      this.inputs.activeIndex.set(firstItemIndex);
+    if (firstItem !== undefined) {
+      this.activeItem.set(firstItem);
     }
   }
 
@@ -388,7 +391,7 @@ export class TreePattern<V> {
 
   /** Toggles to expand or collapse a tree item. */
   toggleExpansion(item?: TreeItemPattern<V>) {
-    item ??= this.listBehavior.activeItem();
+    item ??= this.activeItem();
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (!item.expandable()) return;
@@ -401,7 +404,7 @@ export class TreePattern<V> {
 
   /** Expands a tree item. */
   expand(item?: TreeItemPattern<V>) {
-    item ??= this.listBehavior.activeItem();
+    item ??= this.activeItem();
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && !item.expanded()) {
@@ -416,14 +419,14 @@ export class TreePattern<V> {
 
   /** Expands all sibling tree items including itself. */
   expandSiblings(item?: TreeItemPattern<V>) {
-    item ??= this.listBehavior.activeItem();
-    const siblings = item.parent()?.children();
+    item ??= this.activeItem();
+    const siblings = item?.parent()?.children();
     siblings?.forEach(item => this.expand(item));
   }
 
   /** Collapses a tree item. */
   collapse(item?: TreeItemPattern<V>) {
-    item ??= this.listBehavior.activeItem();
+    item ??= this.activeItem();
     if (!item || !this.listBehavior.isFocusable(item)) return;
 
     if (item.expandable() && item.expanded()) {

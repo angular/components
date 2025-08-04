@@ -62,7 +62,7 @@ describe('Tabs Pattern', () => {
       selectionMode: signal('follow'),
       focusMode: signal('roving'),
       disabled: signal(false),
-      activeIndex: signal(0),
+      activeItem: signal(undefined),
       skipDisabled: signal(true),
       items: signal([]),
       value: signal(['tab-1']),
@@ -134,6 +134,7 @@ describe('Tabs Pattern', () => {
     tabPanelInputs[1].tab.set(tabPatterns[1]);
     tabPanelInputs[2].tab.set(tabPatterns[2]);
     tabListInputs.items.set(tabPatterns);
+    tabListInputs.activeItem.set(tabPatterns[0]);
   });
 
   it('sets the selected tab by setting `value`.', () => {
@@ -185,38 +186,38 @@ describe('Tabs Pattern', () => {
   describe('#setDefaultState', () => {
     it('should not set activeIndex if there are no tabs', () => {
       tabListInputs.items.set([]);
-      tabListInputs.activeIndex.set(10);
+      tabListInputs.activeItem.set(tabPatterns[10]);
       tabListPattern.setDefaultState();
-      expect(tabListInputs.activeIndex()).toBe(10);
+      expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
     });
 
     it('should not set activeIndex if no tabs are focusable', () => {
       tabInputs.forEach(input => input.disabled.set(true));
-      tabListInputs.activeIndex.set(10);
+      tabListInputs.activeItem.set(tabPatterns[10]);
       tabListPattern.setDefaultState();
-      expect(tabListInputs.activeIndex()).toBe(10);
+      expect(tabListInputs.activeItem()).toBe(tabPatterns[10]);
     });
 
     it('should set activeIndex to the first focusable tab if no tabs are selected', () => {
-      tabListInputs.activeIndex.set(2);
+      tabListInputs.activeItem.set(tabPatterns[2]);
       tabListInputs.value.set([]);
       tabInputs[0].disabled.set(true);
       tabListPattern.setDefaultState();
-      expect(tabListInputs.activeIndex()).toBe(1);
+      expect(tabListInputs.activeItem()).toBe(tabPatterns[1]);
     });
 
     it('should set activeIndex to the first focusable and selected tab', () => {
-      tabListInputs.activeIndex.set(0);
+      tabListInputs.activeItem.set(tabPatterns[0]);
       tabListInputs.value.set([tabPatterns[2].value()]);
       tabListPattern.setDefaultState();
-      expect(tabListInputs.activeIndex()).toBe(2);
+      expect(tabListInputs.activeItem()).toBe(tabPatterns[2]);
     });
 
     it('should set activeIndex to the first focusable tab when the selected tab is not focusable', () => {
       tabListInputs.value.set([tabPatterns[1].value()]);
       tabInputs[1].disabled.set(true);
       tabListPattern.setDefaultState();
-      expect(tabListInputs.activeIndex()).toBe(0);
+      expect(tabListInputs.activeItem()).toBe(tabPatterns[0]);
     });
   });
 
@@ -278,14 +279,14 @@ describe('Tabs Pattern', () => {
     });
 
     it('uses left key to navigate to the previous tab when `orientation` is set to "horizontal".', () => {
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(left());
       expect(tabPatterns[0].active()).toBeTrue();
     });
 
     it('uses right key to navigate to the next tab when `orientation` is set to "horizontal".', () => {
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(right());
       expect(tabPatterns[2].active()).toBeTrue();
@@ -293,7 +294,7 @@ describe('Tabs Pattern', () => {
 
     it('uses up key to navigate to the previous tab when `orientation` is set to "vertical".', () => {
       tabListInputs.orientation.set('vertical');
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(up());
       expect(tabPatterns[0].active()).toBeTrue();
@@ -301,21 +302,21 @@ describe('Tabs Pattern', () => {
 
     it('uses down key to navigate to the next tab when `orientation` is set to "vertical".', () => {
       tabListInputs.orientation.set('vertical');
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(down());
       expect(tabPatterns[2].active()).toBeTrue();
     });
 
     it('uses home key to navigate to the first tab.', () => {
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(home());
       expect(tabPatterns[0].active()).toBeTrue();
     });
 
     it('uses end key to navigate to the last tab.', () => {
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       expect(tabPatterns[1].active()).toBeTrue();
       tabListPattern.onKeydown(end());
       expect(tabPatterns[2].active()).toBeTrue();
@@ -351,7 +352,7 @@ describe('Tabs Pattern', () => {
 
     it('changes the navigation direction with `rtl` mode.', () => {
       tabListInputs.textDirection.set('rtl');
-      tabListInputs.activeIndex.set(1);
+      tabListInputs.activeItem.set(tabPatterns[1]);
       tabListPattern.onKeydown(left());
       expect(tabPatterns[2].active()).toBeTrue();
     });

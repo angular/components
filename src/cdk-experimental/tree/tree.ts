@@ -126,7 +126,7 @@ export class CdkTree<V> {
     allItems: computed(() =>
       [...this._unorderedItems()].sort(sortDirectives).map(item => item.pattern),
     ),
-    activeIndex: signal(0),
+    activeItem: signal(undefined),
   });
 
   /** Whether the tree has received focus yet. */

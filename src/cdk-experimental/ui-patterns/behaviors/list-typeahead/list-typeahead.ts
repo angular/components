@@ -60,7 +60,7 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
     }
 
     if (this._startIndex() === undefined) {
-      this._startIndex.set(this.focusManager.inputs.activeIndex());
+      this._startIndex.set(this.focusManager.activeIndex());
     }
 
     clearTimeout(this.timeout);

@@ -20,7 +20,7 @@ import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The required inputs to tabs. */
 export interface TabInputs
-  extends Omit<ListItem<string>, 'searchTerm'>,
+  extends Omit<ListItem<string>, 'searchTerm' | 'index'>,
     Omit<ExpansionItem, 'expansionId' | 'expandable'> {
   /** The parent tablist that controls the tab. */
   tablist: SignalLike<TabListPattern>;
@@ -36,6 +36,9 @@ export class TabPattern {
 
   /** A global unique identifier for the tab. */
   readonly id: SignalLike<string>;
+
+  /** The index of the tab. */
+  readonly index = computed(() => this.inputs.tablist().inputs.items().indexOf(this));
 
   /** A local unique identifier for the tab. */
   readonly value: SignalLike<string>;
@@ -59,7 +62,7 @@ export class TabPattern {
   readonly expanded = computed(() => this.expansion.isExpanded());
 
   /** Whether the tab is active. */
-  readonly active = computed(() => this.inputs.tablist().listBehavior.activeItem() === this);
+  readonly active = computed(() => this.inputs.tablist().inputs.activeItem() === this);
 
   /** Whether the tab is selected. */
   readonly selected = computed(() => !!this.inputs.tablist().inputs.value().includes(this.value()));
@@ -212,22 +215,22 @@ export class TabListPattern {
    * This method should be called once the tablist and its tabs are properly initialized.
    */
   setDefaultState() {
-    let firstItemIndex: number | undefined;
+    let firstItem: TabPattern | undefined;
 
-    for (const [index, item] of this.inputs.items().entries()) {
+    for (const item of this.inputs.items()) {
       if (!this.listBehavior.isFocusable(item)) continue;
 
-      if (firstItemIndex === undefined) {
-        firstItemIndex = index;
+      if (firstItem === undefined) {
+        firstItem = item;
       }
 
       if (item.selected()) {
-        this.inputs.activeIndex.set(index);
+        this.inputs.activeItem.set(item);
         return;
       }
     }
-    if (firstItemIndex !== undefined) {
-      this.inputs.activeIndex.set(firstItemIndex);
+    if (firstItem !== undefined) {
+      this.inputs.activeItem.set(firstItem);
     }
   }
 

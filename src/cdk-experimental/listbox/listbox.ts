@@ -103,7 +103,7 @@ export class CdkListbox<V> {
   pattern: ListboxPattern<V> = new ListboxPattern<V>({
     ...this,
     items: this.items,
-    activeIndex: signal(0), // TODO: Use linkedSignal to ensure this doesn't get fked up.
+    activeItem: signal(undefined),
     textDirection: this.textDirection,
   });
 
