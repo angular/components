@@ -1,6 +1,14 @@
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {createKeyboardEvent, dispatchEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
 import {Component, DebugElement, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
@@ -573,6 +581,90 @@ describe('MatButtonToggle without forms', () => {
           '.mat-button-toggle-checked .mat-button-toggle-checkbox-wrapper',
         ).length,
       ).toBe(1);
+    });
+
+    describe('keyboard events', () => {
+      let LEFT_ARROW_EVENT: KeyboardEvent;
+      let RIGHT_ARROW_EVENT: KeyboardEvent;
+      let UP_ARROW_EVENT: KeyboardEvent;
+      let DOWN_ARROW_EVENT: KeyboardEvent;
+
+      beforeEach(waitForAsync(async () => {
+        LEFT_ARROW_EVENT = createKeyboardEvent('keydown', LEFT_ARROW);
+        RIGHT_ARROW_EVENT = createKeyboardEvent('keydown', RIGHT_ARROW);
+        UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
+        DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      }));
+
+      it('should not change selection on arrow key press with a modifier key', () => {
+        expect(groupInstance.value).toBeFalsy();
+        expect(buttonToggleInstances[0].checked).toBe(false);
+
+        [LEFT_ARROW, RIGHT_ARROW, UP_ARROW, DOWN_ARROW].forEach(keyCode => {
+          const event = createKeyboardEvent('keydown', keyCode, undefined, {alt: true});
+          dispatchEvent(innerButtons[0], event);
+          fixture.detectChanges();
+
+          // Nothing should happen and the default should not be prevented.
+          expect(groupInstance.value)
+            .withContext(`Expected no value change for ${keyCode}`)
+            .toBeFalsy();
+          expect(buttonToggleInstances[0].checked)
+            .withContext(`Expected no checked change for ${keyCode}`)
+            .toBe(false);
+          expect(event.defaultPrevented)
+            .withContext(`Expected no default prevention for ${keyCode}`)
+            .toBe(false);
+        });
+      });
+
+      it('should change selection on RIGHT_ARROW press', () => {
+        expect(groupInstance.value).toBeFalsy();
+
+        dispatchEvent(innerButtons[0], RIGHT_ARROW_EVENT);
+        fixture.detectChanges();
+
+        expect(groupInstance.value).toBe('test2');
+        expect(buttonToggleInstances[1].checked).toBe(true);
+        expect(RIGHT_ARROW_EVENT.defaultPrevented).toBe(true);
+      });
+
+      it('should change selection on LEFT_ARROW press', () => {
+        innerButtons[1].click();
+        fixture.detectChanges();
+        expect(groupInstance.value).toBe('test2');
+
+        dispatchEvent(innerButtons[1], LEFT_ARROW_EVENT);
+        fixture.detectChanges();
+
+        expect(groupInstance.value).toBe('test1');
+        expect(buttonToggleInstances[0].checked).toBe(true);
+        expect(LEFT_ARROW_EVENT.defaultPrevented).toBe(true);
+      });
+
+      it('should change selection on DOWN_ARROW press', () => {
+        expect(groupInstance.value).toBeFalsy();
+
+        dispatchEvent(innerButtons[0], DOWN_ARROW_EVENT);
+        fixture.detectChanges();
+
+        expect(groupInstance.value).toBe('test2');
+        expect(buttonToggleInstances[1].checked).toBe(true);
+        expect(DOWN_ARROW_EVENT.defaultPrevented).toBe(true);
+      });
+
+      it('should change selection on UP_ARROW press', () => {
+        innerButtons[1].click();
+        fixture.detectChanges();
+        expect(groupInstance.value).toBe('test2');
+
+        dispatchEvent(innerButtons[1], UP_ARROW_EVENT);
+        fixture.detectChanges();
+
+        expect(groupInstance.value).toBe('test1');
+        expect(buttonToggleInstances[0].checked).toBe(true);
+        expect(UP_ARROW_EVENT.defaultPrevented).toBe(true);
+      });
     });
   });
 
