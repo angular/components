@@ -1,0 +1,35 @@
+.example-tree-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.example-tree-output {
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-tree {
+  padding: 10px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-extra-small);
+}
+
+.example-tree-item {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.example-tree-item-content {
+  display: flex;
+  align-items: center;
+  padding: 2px 0; /* Minimal padding for item itself */
+}
+
+.example-tree-item-icon {
+  margin-right: 8px;
+}

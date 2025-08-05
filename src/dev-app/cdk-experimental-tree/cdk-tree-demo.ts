@@ -7,11 +7,11 @@
  */
 
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CdkTreeExample} from '@angular/components-examples/cdk-experimental/tree';
+import {CdkTreeSingleSelectExample} from '@angular/components-examples/cdk-experimental/tree';
 
 @Component({
   templateUrl: 'cdk-tree-demo.html',
-  imports: [CdkTreeExample],
+  imports: [CdkTreeSingleSelectExample],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkExperimentalTreeDemo {}
