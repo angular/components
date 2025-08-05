@@ -11,7 +11,7 @@
       divider-width: 1px,
     ),
     color: (
-      divider-color: map.get($system, outline),
+      divider-color: map.get($system, outline-variant),
     ),
     typography: (),
     density: (),
