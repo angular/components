@@ -1,4 +1,4 @@
-load("@devinfra//bazel/api-golden:index_rjs.bzl", "api_golden_test_npm_package")
+load("@devinfra//bazel/api-golden:index.bzl", "api_golden_test_npm_package")
 
 exports_files([
     "tsec-exemption.json",
