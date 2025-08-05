@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "ng_package", "ng_project", "ng_web_test_suite", "ts_project")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("//tools:defaults.bzl", "ng_package", "ng_project", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
