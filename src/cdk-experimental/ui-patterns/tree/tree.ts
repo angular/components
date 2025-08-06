@@ -33,7 +33,7 @@ export interface TreeItemPattern<V> extends TreeItemInputs<V> {}
  */
 export class TreeItemPattern<V> implements ExpansionItem {
   /** The position of this item among its siblings. */
-  readonly index = computed(() => this.parent().children().indexOf(this));
+  readonly index = computed(() => this.tree().visibleItems().indexOf(this));
 
   /** The unique identifier used by the expansion behavior. */
   readonly expansionId: SignalLike<string>;
