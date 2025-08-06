@@ -79,6 +79,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     focus(): void;
     _getActions(): MatChipAction[];
     _getSourceAction(target: Node): MatChipAction | undefined;
+    _hadFocusOnRemove: boolean;
     _handleKeydown(event: KeyboardEvent): void;
     _handlePrimaryActionInteraction(): void;
     // (undocumented)
