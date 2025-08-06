@@ -161,7 +161,7 @@ export class CdkOption<V> {
   protected id = computed(() => this._generatedId);
 
   /** The value of the option. */
-  protected value = input.required<V>();
+  readonly value = input.required<V>();
 
   // TODO(wagnermaciel): See if we want to change how we handle this since textContent is not
   // reactive. See https://github.com/angular/components/pull/30495#discussion_r1961260216.
