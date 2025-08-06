@@ -1,3 +1,22 @@
+<a name="20.2.0-next.3"></a>
+# 20.2.0-next.3 "metal-monkey" (2025-08-06)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [845a6910a6](https://github.com/angular/components/commit/845a6910a60a652dd7d171ee026ee8a8887a2459) | fix | **autocomplete:** default to transparent backdrop ([#31647](https://github.com/angular/components/pull/31647)) |
+| [11ad09ff3e](https://github.com/angular/components/commit/11ad09ff3e67d1825e2c6ce3d211d5192cf8e354) | fix | **button-toggle:** skip keyboard navigation when modifier key is pressed ([#31651](https://github.com/angular/components/pull/31651)) |
+| [4bf8ebf5f3](https://github.com/angular/components/commit/4bf8ebf5f3b874ae2f512dc684506f017f022f69) | fix | **chips:** focus not moved on destroy ([#31653](https://github.com/angular/components/pull/31653)) |
+| [b2c7abfbad](https://github.com/angular/components/commit/b2c7abfbadb5d12900c4bf9705b871183d4b2af7) | fix | **core:** add key validation to m2-theme ([#31631](https://github.com/angular/components/pull/31631)) |
+| [839aa3e375](https://github.com/angular/components/commit/839aa3e37521e7b8739a47ea7a4b54845cf62731) | fix | **core:** fix m2 system color values ([#31632](https://github.com/angular/components/pull/31632)) |
+| [7674e5872c](https://github.com/angular/components/commit/7674e5872c627998bd093994e8ef3f94427417c8) | fix | **core:** special-case icon button color token ([#31625](https://github.com/angular/components/pull/31625)) |
+| [96117bceda](https://github.com/angular/components/commit/96117bcedad66f21257e043f83e90a77dc56deef) | fix | **form-field:** resolve memory leak ([#31643](https://github.com/angular/components/pull/31643)) |
+### cdk-experimental
+| Commit | Type | Description |
+| -- | -- | -- |
+| [228aaf1fa3](https://github.com/angular/components/commit/228aaf1fa395e805d7b581b9d02102d65f0a1562) | feat | **ui-patterns:** create List behavior ([#31601](https://github.com/angular/components/pull/31601)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.5"></a>
 # 20.1.5 "plastic-car" (2025-08-06)
 ### material
