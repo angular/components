@@ -56,8 +56,8 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
       })
-      .addOption('type', options.type, (harness, type) =>
-        HarnessPredicate.stringMatches(harness.getType(), type),
+      .addOption('buttonType', options.buttonType, (harness, buttonType) =>
+        HarnessPredicate.stringMatches(harness.getType(), buttonType),
       );
   }
 
@@ -164,9 +164,9 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
    */
   async getType(): Promise<ButtonType | null> {
     const host = await this.host();
-    const type = await host.getAttribute('type');
-    if (type === 'button' || type === 'submit' || type === 'reset') {
-      return type;
+    const buttonType = await host.getAttribute('type');
+    if (buttonType === 'button' || buttonType === 'submit' || buttonType === 'reset') {
+      return buttonType;
     }
     return null;
   }

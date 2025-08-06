@@ -32,5 +32,5 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
   disabled?: boolean;
 
   /** Only find instances with the specified type. */
-  type?: ButtonType;
+  buttonType?: ButtonType;
 }

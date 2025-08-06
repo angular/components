@@ -60,7 +60,7 @@ describe('MatButtonHarness', () => {
   });
 
   it('should load button with type attribute', async () => {
-    const buttons = await loader.getAllHarnesses(MatButtonHarness.with({type: 'submit'}));
+    const buttons = await loader.getAllHarnesses(MatButtonHarness.with({buttonType: 'submit'}));
     expect(buttons.length).toBe(1);
     expect(await buttons[0].getText()).toBe('Submit button');
     expect(await buttons[0].getType()).toBe('submit');
