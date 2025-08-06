@@ -26,18 +26,18 @@ import {CdkToolbar, CdkToolbarWidget} from '@angular/cdk-experimental/toolbar';
   ],
 })
 export class CdkToolbarConfigurableExample {
-  orientation: 'vertical' | 'horizontal' = 'vertical';
-  disabled = new FormControl(false, {nonNullable: true});
+  skipDisabled = new FormControl(true, {nonNullable: true});
+  wrap = new FormControl(true, {nonNullable: true});
   toolbarDisabled = new FormControl(false, {nonNullable: true});
+  orientation: 'vertical' | 'horizontal' = 'horizontal';
+  focusMode: 'roving' | 'activedescendant' = 'roving';
 
   fruits = ['Apple', 'Apricot', 'Banana'];
   buttonFruits = ['Pear', 'Blueberry', 'Cherry', 'Date'];
 
-  // New controls
+  // Radio group controls
+  disabled = new FormControl(false, {nonNullable: true});
   readonly = new FormControl(false, {nonNullable: true});
-  skipDisabled = new FormControl(true, {nonNullable: true});
-  focusMode: 'roving' | 'activedescendant' = 'roving';
-  wrap = new FormControl(true, {nonNullable: true});
 
   // Control for which radio options are individually disabled
   disabledOptions: string[] = ['Banana'];
