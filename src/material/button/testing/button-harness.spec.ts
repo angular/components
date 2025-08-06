@@ -21,7 +21,7 @@ describe('MatButtonHarness', () => {
 
   it('should load all button harnesses', async () => {
     const buttons = await loader.getAllHarnesses(MatButtonHarness);
-    expect(buttons.length).toBe(17);
+    expect(buttons.length).toBe(18);
   });
 
   it('should load button with exact text', async () => {
@@ -40,7 +40,7 @@ describe('MatButtonHarness', () => {
   it('should filter by whether a button is disabled', async () => {
     const enabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: false}));
     const disabledButtons = await loader.getAllHarnesses(MatButtonHarness.with({disabled: true}));
-    expect(enabledButtons.length).toBe(15);
+    expect(enabledButtons.length).toBe(16);
     expect(disabledButtons.length).toBe(2);
   });
 
@@ -57,6 +57,13 @@ describe('MatButtonHarness', () => {
     expect(await disabledFilledButton.isDisabled()).toBe(true);
     expect(await enabledElevatedButton.isDisabled()).toBe(false);
     expect(await disabledElevatedAnchor.isDisabled()).toBe(true);
+  });
+
+  it('should load button with type attribute', async () => {
+    const buttons = await loader.getAllHarnesses(MatButtonHarness.with({type: 'submit'}));
+    expect(buttons.length).toBe(1);
+    expect(await buttons[0].getText()).toBe('Submit button');
+    expect(await buttons[0].getType()).toBe('submit');
   });
 
   it('should get button text', async () => {
@@ -127,6 +134,7 @@ describe('MatButtonHarness', () => {
       'basic',
       'basic',
       'basic',
+      'basic',
       'icon',
       'fab',
       'mini-fab',
@@ -147,6 +155,7 @@ describe('MatButtonHarness', () => {
       null,
       null,
       null,
+      'text',
       'text',
       'filled',
       'elevated',
@@ -199,6 +208,7 @@ describe('MatButtonHarness', () => {
     </button>
     <button id="fab" type="button" matFab>Fab button</button>
     <button id="mini-fab" type="button" matMiniFab>Mini Fab button</button>
+    <button id="submit" type="submit" matButton>Submit button</button>
 
     <a id="anchor-basic" matButton>Basic anchor</a>
     <a id="anchor-flat" matButton="filled">Filled anchor</a>
