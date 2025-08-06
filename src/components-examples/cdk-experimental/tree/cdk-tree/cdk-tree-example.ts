@@ -1,4 +1,5 @@
 import {Component, model, input} from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,6 +30,7 @@ interface ExampleNode {
       [value]="node().value"
       [label]="node().label || node().value"
       [disabled]="node().disabled"
+      [parent]="parent()"
       #treeItem="cdkTreeItem"
     >
       <span
@@ -44,10 +46,10 @@ interface ExampleNode {
       </span>
 
       @if (node().children !== undefined && node().children!.length > 0) {
-        <div cdkTreeItemGroup [value]="node().value">
+        <div cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
           <ng-template cdkTreeItemGroupContent>
             @for (child of node().children; track child) {
-              <example-node [node]="child" />
+              <example-node [node]="child" [parent]="group" />
             }
           </ng-template>
         </div>
@@ -58,47 +60,8 @@ interface ExampleNode {
 })
 export class ExampleNodeComponent {
   node = input.required<ExampleNode>();
-}
 
-@Component({
-  selector: 'example-nav-node',
-  styleUrl: 'cdk-tree-example.css',
-  template: `
-    <li class="example-tree-item">
-      <a
-        cdkTreeItem
-        class="example-tree-item-content example-selectable example-stateful"
-        [value]="node().value"
-        [label]="node().label || node().value"
-        [disabled]="node().disabled"
-        #treeItem="cdkTreeItem"
-        [style.paddingLeft.px]="(treeItem.pattern.level() - 1) * 24"
-        href="#{{node().value}}"
-        (click)="$event.preventDefault()"
-      >
-        <mat-icon class="example-tree-item-icon" aria-hidden="true">
-          @if (treeItem.pattern.expandable()) {
-            {{ treeItem.pattern.expanded() ? 'expand_less' : 'expand_more' }}
-          }
-        </mat-icon>
-        {{ node().label }}
-      </a>
-
-      @if (node().children !== undefined && node().children!.length > 0) {
-        <ul cdkTreeItemGroup [value]="node().value">
-          <ng-template cdkTreeItemGroupContent>
-            @for (child of node().children; track child) {
-              <example-nav-node [node]="child" />
-            }
-          </ng-template>
-        </ul>
-      }
-    </li>
-  `,
-  imports: [MatIconModule, CdkTreeItem, CdkTreeItemGroup, CdkTreeItemGroupContent],
-})
-export class ExampleNavNodeComponent {
-  node = input.required<ExampleNode>();
+  parent = input.required<CdkTree<string> | CdkTreeItemGroup<string>>();
 }
 
 /** @title Tree using CdkTree and CdkTreeItem. */
@@ -114,9 +77,12 @@ export class ExampleNavNodeComponent {
     MatFormFieldModule,
     MatSelectModule,
     MatIconModule,
+    NgTemplateOutlet,
     CdkTree,
+    CdkTreeItem,
+    CdkTreeItemGroup,
+    CdkTreeItemGroupContent,
     ExampleNodeComponent,
-    ExampleNavNodeComponent,
   ],
 })
 export class CdkTreeExample {

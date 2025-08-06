@@ -1,4 +1,5 @@
 import {Component, signal} from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Direction} from '@angular/cdk/bidi';
@@ -1336,63 +1337,42 @@ interface TestTreeNode<V = string> {
       [(value)]="value"
       [nav]="nav()"
       [currentType]="currentType()"
+      #tree="cdkTree"
     >
       @for (node of nodes(); track node.value) {
-        <li
-          cdkTreeItem
-          [value]="node.value"
-          [label]="node.label"
-          [disabled]="!!node.disabled"
-          [attr.data-value]="node.value"
-        >
-          {{ node.label }}
-          @if (node.children !== undefined && node.children!.length > 0) {
-            <ul
-              cdkTreeItemGroup
-              [value]="node.value"
-              [preserveContent]="!!node.preserveContent"
-              [attr.data-group-for]="node.value">
-              <ng-template cdkTreeItemGroupContent>
-                @for (node of node.children; track node.value) {
-                  <li
-                    cdkTreeItem
-                    [value]="node.value"
-                    [label]="node.label"
-                    [disabled]="!!node.disabled"
-                    [attr.data-value]="node.value"
-                  >
-                    {{ node.label }}
-                    @if (node.children !== undefined && node.children!.length > 0) {
-                      <ul
-                        cdkTreeItemGroup
-                        [value]="node.value"
-                        [preserveContent]="!!node.preserveContent"
-                        [attr.data-group-for]="node.value">
-                        <ng-template cdkTreeItemGroupContent>
-                          @for (node of node.children; track node.value) {
-                            <li
-                              cdkTreeItem
-                              [value]="node.value"
-                              [label]="node.label"
-                              [disabled]="!!node.disabled"
-                              [attr.data-value]="node.value"
-                            >
-                              {{ node.label }}
-                            </li>
-                          }
-                        </ng-template>
-                      </ul>
-                    }
-                  </li>
-                }
-              </ng-template>
-            </ul>
-          }
-        </li>
+        <ng-template [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: tree }" />
       }
     </ul>
+
+    <ng-template #nodeTemplate let-node="node" let-parent="parent">
+      <li
+        cdkTreeItem
+        [value]="node.value"
+        [label]="node.label"
+        [disabled]="!!node.disabled"
+        [parent]="parent"
+        [attr.data-value]="node.value"
+        #treeItem="cdkTreeItem"
+      >
+        {{ node.label }}
+        @if (node.children !== undefined && node.children!.length > 0) {
+          <ul
+            cdkTreeItemGroup
+            [ownedBy]="treeItem"
+            [preserveContent]="!!node.preserveContent"
+            [attr.data-group-for]="node.value"
+            #group="cdkTreeItemGroup">
+            <ng-template cdkTreeItemGroupContent>
+              @for (node of node.children; track node.value) {
+                <ng-template [ngTemplateOutlet]="nodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: group }" />
+              }
+            </ng-template>
+          </ul>
+        }
+      </li>
+    </ng-template>
   `,
-  imports: [CdkTree, CdkTreeItem, CdkTreeItemGroup, CdkTreeItemGroupContent],
+  imports: [CdkTree, CdkTreeItem, CdkTreeItemGroup, CdkTreeItemGroupContent, NgTemplateOutlet],
 })
 class TestTreeComponent {
   nodes = signal<TestTreeNode[]>([
