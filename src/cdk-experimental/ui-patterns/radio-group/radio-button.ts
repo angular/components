@@ -14,7 +14,7 @@ import {List, ListItem} from '../behaviors/list/list';
  * Represents the properties exposed by a radio group that need to be accessed by a radio button.
  * This exists to avoid circular dependency errors between the radio group and radio button.
  */
-type ToolbarWidget = {
+type ToolbarWidgetLike = {
   id: SignalLike<string>;
   index: SignalLike<number>;
   element: SignalLike<HTMLElement>;
@@ -25,7 +25,7 @@ type ToolbarWidget = {
 
 interface RadioGroupLike<V> {
   /** The list behavior for the radio group. */
-  listBehavior: List<RadioButtonPattern<V> | ToolbarWidget, V>;
+  listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
   /** Whether the list is readonly */
   readonly: SignalLike<boolean>;
   /** Whether the radio group is disabled. */

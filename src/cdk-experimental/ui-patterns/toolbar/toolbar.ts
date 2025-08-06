@@ -8,24 +8,16 @@
 
 import {computed, signal} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-// import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
-// import {
-//   ListNavigation,
-//   ListNavigationInputs,
-//   ListNavigationItem,
-// } from '../behaviors/list-navigation/list-navigation';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 import {RadioButtonPattern} from '../radio-group/radio-button';
 
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
-// remove typeahead etc.
 export type ToolbarInputs<V> = Omit<
   ListInputs<ToolbarWidgetPattern | RadioButtonPattern<V>, V>,
   'multi' | 'typeaheadDelay' | 'value' | 'selectionMode'
 >;
-// ListInputs<ToolbarWidgetPattern | RadioButtonPattern<V>, V>;
 
 export class ToolbarPattern<V> {
   /** The list behavior for the toolbar. */
@@ -35,7 +27,7 @@ export class ToolbarPattern<V> {
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the toolbar is disabled. */
-  disabled = computed(() => this.inputs.disabled() || this.listBehavior.disabled());
+  disabled = computed(() => this.listBehavior.disabled());
 
   /** The tabindex of the toolbar (if using activedescendant). */
   tabindex = computed(() => this.listBehavior.tabindex());
@@ -86,7 +78,7 @@ export class ToolbarPattern<V> {
       .on(this.nextKey, () => this.listBehavior.next())
       .on(this.altNextKey, () => {
         const activeItem = this.inputs.activeItem();
-        if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
+        if (activeItem instanceof RadioButtonPattern && activeItem.group()) {
           activeItem.group()?.listBehavior.next();
         } else {
           this.listBehavior.next();
@@ -94,7 +86,7 @@ export class ToolbarPattern<V> {
       })
       .on(this.altPrevKey, () => {
         const activeItem = this.inputs.activeItem();
-        if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
+        if (activeItem instanceof RadioButtonPattern && activeItem.group()) {
           activeItem.group()?.listBehavior.prev();
         } else {
           this.listBehavior.prev();
@@ -222,13 +214,6 @@ export class ToolbarPattern<V> {
   }
 }
 
-export type ToolbarWidget = {
-  id: SignalLike<string>;
-  index: SignalLike<number>;
-  element: SignalLike<HTMLElement>;
-  disabled: SignalLike<boolean>;
-};
-
 /** Represents the required inputs for a toolbar widget in a toolbar. */
 export interface ToolbarWidgetInputs extends Omit<ListItem<any>, 'searchTerm' | 'value' | 'index'> {
   /** A reference to the parent toolbar. */
@@ -267,6 +252,3 @@ export class ToolbarWidgetPattern {
     this.parentToolbar = inputs.parentToolbar;
   }
 }
-
-// can remove later
-export type ToolbarPatternType<V> = InstanceType<typeof ToolbarPattern<V>>;

@@ -23,10 +23,10 @@ export type RadioGroupInputs<V> = Omit<
   /** Whether the radio group is readonly. */
   readonly: SignalLike<boolean>;
   /** Parent toolbar of radio group */
-  toolbar: SignalLike<ToolbarLike<V> | null>;
+  toolbar: SignalLike<ToolbarLike<V> | undefined>;
 };
 
-type ToolbarWidget = {
+type ToolbarWidgetLike = {
   id: SignalLike<string>;
   index: SignalLike<number>;
   element: SignalLike<HTMLElement>;
@@ -36,14 +36,14 @@ type ToolbarWidget = {
 };
 
 interface ToolbarLike<V> {
-  listBehavior: List<RadioButtonPattern<V> | ToolbarWidget, V>;
+  listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
   orientation: SignalLike<'vertical' | 'horizontal'>;
   disabled: SignalLike<boolean>;
 }
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
   /** The list behavior for the radio group. */
-  readonly listBehavior: List<RadioButtonPattern<V> | ToolbarWidget, V>;
+  readonly listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
 
   /** Whether the radio group is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -128,7 +128,7 @@ export class RadioGroupPattern<V> {
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
     this.orientation =
-      inputs.toolbar() !== null ? inputs.toolbar()!.orientation : inputs.orientation;
+      inputs.toolbar() !== undefined ? inputs.toolbar()!.orientation : inputs.orientation;
 
     this.listBehavior = new List({
       ...inputs,

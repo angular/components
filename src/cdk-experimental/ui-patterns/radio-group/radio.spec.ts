@@ -39,7 +39,7 @@ describe('RadioGroup Pattern', () => {
       focusMode: inputs.focusMode ?? signal('roving'),
       textDirection: inputs.textDirection ?? signal('ltr'),
       orientation: inputs.orientation ?? signal('vertical'),
-      toolbar: inputs.toolbar ?? signal(null),
+      toolbar: inputs.toolbar ?? signal(undefined),
     });
   }
 

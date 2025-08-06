@@ -103,7 +103,7 @@ export class CdkRadioGroup<V> {
   toolbar = inject(CdkToolbar, {optional: true});
 
   /** Toolbar pattern if applicable */
-  private readonly _toolbarPattern = computed(() => (this.toolbar ? this.toolbar.pattern : null));
+  private readonly _toolbarPattern = computed(() => this.toolbar?.pattern);
 
   /** The RadioButton UIPatterns of the child CdkRadioButtons. */
   protected items = computed(() => this._cdkRadioButtons().map(radio => radio.pattern));
@@ -140,7 +140,7 @@ export class CdkRadioGroup<V> {
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     toolbar: this._toolbarPattern,
-    focusMode: this._toolbarPattern() ? this._toolbarPattern()!!.inputs.focusMode : this.focusMode,
+    focusMode: this._toolbarPattern()?.inputs.focusMode ?? this.focusMode,
   });
 
   /** Whether the radio group has received focus yet. */

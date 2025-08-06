@@ -201,7 +201,7 @@ export class CdkToolbarWidget implements OnInit, OnDestroy {
     ...this,
     id: this.id,
     element: this.element,
-    disabled: computed(() => this._cdkToolbar.disabled() || this.disabled() || false),
+    disabled: computed(() => this._cdkToolbar.disabled() || this.disabled()),
     parentToolbar: this.parentToolbar,
   });
 
