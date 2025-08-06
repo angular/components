@@ -172,6 +172,9 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** Whether the chip list is disabled. */
   _chipListDisabled: boolean = false;
 
+  /** Whether the chip was focused when it was removed. */
+  _hadFocusOnRemove = false;
+
   private _textElement!: HTMLElement;
 
   /**
@@ -316,6 +319,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
    */
   remove(): void {
     if (this.removable) {
+      this._hadFocusOnRemove = this._hasFocus();
       this.removed.emit({chip: this});
     }
   }
