@@ -23,6 +23,8 @@ type GeneralWidget = {
 interface RadioGroupLike<V> {
   /** The list behavior for the radio group. */
   listBehavior: List<RadioButtonPattern<V>, V>;
+  /** Whether the list is readonly */
+  readonly: SignalLike<boolean>;
 }
 
 /** Represents the required inputs for a radio button in a radio group. */

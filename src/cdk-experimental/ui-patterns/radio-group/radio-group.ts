@@ -25,10 +25,20 @@ export type RadioGroupInputs<V> = Omit<
   /** Parent toolbar of radio group */
   toolbar: SignalLike<ToolbarLike<V> | null>;
 };
+
+type ToolbarWidget = {
+  id: SignalLike<string>;
+  index: SignalLike<number>;
+  element: SignalLike<HTMLElement>;
+  disabled: SignalLike<boolean>;
+  searchTerm: SignalLike<any>;
+  value: SignalLike<any>;
+};
+
 interface ToolbarLike<V> {
-  focusManager: ListFocus<RadioButtonPattern<V> | GeneralWidget>;
-  navigation: ListNavigation<RadioButtonPattern<V> | GeneralWidget>;
+  listBehavior: List<RadioButtonPattern<V> | ToolbarWidget, V>;
   orientation: SignalLike<'vertical' | 'horizontal'>;
+  disabled: SignalLike<boolean>;
 }
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
@@ -102,6 +112,11 @@ export class RadioGroupPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
+    // // If within a disabled toolbar relinquish pointer control
+    // if (this.inputs.toolbar() && this.inputs.toolbar()!.disabled()) {
+    //   return manager;
+    // }
+
     if (this.readonly()) {
       // Navigate focus only in readonly mode.
       return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
@@ -112,7 +127,8 @@ export class RadioGroupPattern<V> {
   });
 
   constructor(readonly inputs: RadioGroupInputs<V>) {
-    this.orientation = inputs.orientation;
+    this.orientation =
+      inputs.toolbar() !== null ? inputs.toolbar()!.orientation : inputs.orientation;
 
     this.listBehavior = new List({
       ...inputs,

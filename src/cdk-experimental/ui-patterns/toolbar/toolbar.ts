@@ -6,44 +6,42 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {computed} from '@angular/core';
+import {computed, signal} from '@angular/core';
 import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
-import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
-import {
-  ListNavigation,
-  ListNavigationInputs,
-  ListNavigationItem,
-} from '../behaviors/list-navigation/list-navigation';
+// import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
+// import {
+//   ListNavigation,
+//   ListNavigationInputs,
+//   ListNavigationItem,
+// } from '../behaviors/list-navigation/list-navigation';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 
 import {RadioButtonPatternType, RadioButtonPattern} from '../radio-group/radio-button';
 
-export type ToolbarInputs<V> = ListNavigationInputs<
-  RadioButtonPatternType<V> | ToolbarWidgetPattern
-> &
-  ListFocusInputs<RadioButtonPatternType<V> | ToolbarWidgetPattern> & {
-    /** Whether the toolbar is disabled. */
-    disabled: SignalLike<boolean>;
-  };
+import {List, ListInputs, ListItem} from '../behaviors/list/list';
+
+// remove typeahead etc.
+export type ToolbarInputs<V> = Omit<
+  ListInputs<ToolbarWidgetPattern | RadioButtonPattern<V>, V>,
+  'multi' | 'typeaheadDelay' | 'value' | 'selectionMode'
+>;
+// ListInputs<ToolbarWidgetPattern | RadioButtonPattern<V>, V>;
 
 export class ToolbarPattern<V> {
-  /** Controls navigation for the toolbar. */
-  navigation: ListNavigation<RadioButtonPatternType<V> | ToolbarWidgetPattern>;
-
-  /** Controls focus for the toolbar. */
-  focusManager: ListFocus<RadioButtonPatternType<V> | ToolbarWidgetPattern>;
+  /** The list behavior for the toolbar. */
+  listBehavior: List<ToolbarWidgetPattern | RadioButtonPattern<V>, V>;
 
   /** Whether the tablist is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the toolbar is disabled. */
-  disabled = computed(() => this.inputs.disabled() || this.focusManager.isListDisabled());
+  disabled = computed(() => this.inputs.disabled() || this.listBehavior.disabled());
 
   /** The tabindex of the toolbar (if using activedescendant). */
-  tabindex = computed(() => this.focusManager.getListTabindex());
+  tabindex = computed(() => this.listBehavior.tabindex());
 
   /** The id of the current active widget (if using activedescendant). */
-  activedescendant = computed(() => this.focusManager.getActiveDescendant());
+  activedescendant = computed(() => this.listBehavior.activedescendant());
 
   /** The key used to navigate to the previous widget. */
   prevKey = computed(() => {
@@ -64,28 +62,44 @@ export class ToolbarPattern<V> {
   /** The keydown event manager for the toolbar. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
+    console.log(' all curent itmes', this.inputs.items());
 
     return manager
       .on(' ', () => this.toolbarSelectOverride())
       .on('Enter', () => this.toolbarSelectOverride())
-      .on(this.prevKey, () => this.navigation.prev())
-      .on(this.nextKey, () => this.navigation.next())
-      .on('Home', () => this.navigation.first())
-      .on('End', () => this.navigation.last());
+      .on(this.prevKey, () => this.listBehavior.prev())
+      .on(this.nextKey, () => {
+        console.log('next');
+        this.next();
+      })
+      .on('Home', () => this.listBehavior.first())
+      .on('End', () => this.listBehavior.last());
   });
+  next() {
+    const activeItem = this.inputs.activeItem();
+    // if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
+    //   console.log('let the group move itself');
+    //   activeItem.group()!!.listBehavior.next();
+    // } else
+    this.listBehavior.next();
+    // find what is the next item
+    // console.log('next item', this.listBehavior.nextItem());
+  }
 
   toolbarSelectOverride() {
-    const activeItem = this.focusManager.activeItem();
+    const activeItem = this.inputs.activeItem();
 
     /** If the active item is a Radio Button, indicate to the group the selection */
     if (activeItem instanceof RadioButtonPattern) {
       const group = activeItem.group();
       if (group && !group.readonly()) {
-        group.selection.selectOne();
+        group.listBehavior.selectOne();
       }
+      // todo fix
     } else {
       /** Item is a Toolbar Widget, manually select it */
-      if (activeItem.element()) activeItem.element().click();
+      if (activeItem && activeItem.element() && !activeItem.disabled())
+        activeItem.element().click();
     }
   }
 
@@ -100,8 +114,12 @@ export class ToolbarPattern<V> {
   /** Navigates to the widget associated with the given pointer event. */
   goto(event: PointerEvent) {
     const item = this._getItem(event);
+    if (!item) return;
 
-    this.navigation.goto(item);
+    if (item instanceof RadioButtonPattern) {
+      // have the radio group handle the selection
+    }
+    this.listBehavior.goto(item);
   }
 
   /** Handles keydown events for the toolbar. */
@@ -113,13 +131,14 @@ export class ToolbarPattern<V> {
 
   /** Handles pointerdown events for the toolbar. */
   onPointerdown(event: PointerEvent) {
+    console.log('this disabled', this.disabled());
     if (!this.disabled()) {
       this.pointerdown().handle(event);
     }
   }
 
   /** Finds the Toolbar Widget associated with a pointer event target. */
-  private _getItem(e: PointerEvent): RadioButtonPatternType<V> | ToolbarWidgetPattern | undefined {
+  private _getItem(e: PointerEvent): RadioButtonPattern<V> | ToolbarWidgetPattern | undefined {
     if (!(e.target instanceof HTMLElement)) {
       return undefined;
     }
@@ -132,10 +151,12 @@ export class ToolbarPattern<V> {
   constructor(readonly inputs: ToolbarInputs<V>) {
     this.orientation = inputs.orientation;
 
-    this.focusManager = new ListFocus(inputs);
-    this.navigation = new ListNavigation({
+    this.listBehavior = new List({
       ...inputs,
-      focusManager: this.focusManager,
+      multi: () => false,
+      selectionMode: () => 'explicit',
+      value: signal([] as any),
+      typeaheadDelay: () => 0, // Toolbar widgets do not support typeahead.
     });
   }
 
@@ -146,22 +167,23 @@ export class ToolbarPattern<V> {
    * Otherwise, sets the active index to the first focusable widget.
    */
   setDefaultState() {
-    let firstItem: RadioButtonPatternType<V> | ToolbarWidgetPattern | null = null;
+    let firstItem: RadioButtonPattern<V> | ToolbarWidgetPattern | null = null;
 
     for (const item of this.inputs.items()) {
-      if (this.focusManager.isFocusable(item)) {
+      if (this.listBehavior.isFocusable(item)) {
         if (!firstItem) {
           firstItem = item;
         }
         if (item instanceof RadioButtonPattern && item.selected()) {
-          this.inputs.activeIndex.set(item.index());
+          this.inputs.activeItem.set(item);
           return;
         }
       }
     }
 
     if (firstItem) {
-      this.inputs.activeIndex.set(firstItem.index());
+      console.log('setting active item to', firstItem);
+      this.inputs.activeItem.set(firstItem);
     }
   }
   /** Validates the state of the toolbar and returns a list of accessibility violations. */
@@ -183,12 +205,13 @@ export class ToolbarPattern<V> {
 
 export type ToolbarWidget = {
   id: SignalLike<string>;
+  index: SignalLike<number>;
   element: SignalLike<HTMLElement>;
   disabled: SignalLike<boolean>;
 };
 
 /** Represents the required inputs for a toolbar widget in a toolbar. */
-export interface ToolbarWidgetInputs extends ListNavigationItem, ListFocusItem {
+export interface ToolbarWidgetInputs extends Omit<ListItem<any>, 'searchTerm' | 'value' | 'index'> {
   /** A reference to the parent toolbar. */
   parentToolbar: SignalLike<ToolbarPattern<null>>;
 }
@@ -205,18 +228,18 @@ export class ToolbarWidgetPattern {
   parentToolbar: SignalLike<ToolbarPattern<null> | undefined>;
 
   /** The tabindex of the widgdet. */
-  tabindex = computed(() => this.inputs.parentToolbar().focusManager.getItemTabindex(this));
+  tabindex = computed(() => this.inputs.parentToolbar().listBehavior.getItemTabindex(this));
+
+  /** The text used by the typeahead search. */
+  readonly searchTerm = () => ''; // Unused because toolbar does not support typeahead.
+
+  readonly value = () => '' as any; // Unused because toolbar does not support selection.
 
   /** The position of the widget within the group. */
-  index = computed(
-    () =>
-      this.parentToolbar()
-        ?.navigation.inputs.items()
-        .findIndex(i => i.id() === this.id()) ?? -1,
-  );
+  index = computed(() => this.parentToolbar()?.inputs.items().indexOf(this) ?? -1);
 
-  /** Whether the widhet is currently the active one (focused). */
-  active = computed(() => this.inputs.parentToolbar().focusManager.activeItem() === this);
+  /** Whether the widget is currently the active one (focused). */
+  active = computed(() => this.parentToolbar()?.inputs.activeItem() === this);
 
   constructor(readonly inputs: ToolbarWidgetInputs) {
     this.id = inputs.id;
@@ -226,4 +249,5 @@ export class ToolbarWidgetPattern {
   }
 }
 
+// can remove later
 export type ToolbarPatternType<V> = InstanceType<typeof ToolbarPattern<V>>;

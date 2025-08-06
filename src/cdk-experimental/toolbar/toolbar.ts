@@ -109,7 +109,7 @@ export class CdkToolbar<V> {
   /** The toolbar UIPattern. */
   pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
     ...this,
-    activeIndex: signal(0),
+    activeItem: signal(undefined),
     textDirection: this.textDirection,
     focusMode: this.focusMode,
   });
