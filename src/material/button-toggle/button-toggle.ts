@@ -9,7 +9,15 @@
 import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {SelectionModel} from '@angular/cdk/collections';
-import {DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  ENTER,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW,
+  hasModifierKey,
+} from '@angular/cdk/keycodes';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {
   AfterContentInit,
@@ -331,7 +339,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
 
   /** Handle keydown event calling to single-select button toggle. */
   protected _keydown(event: KeyboardEvent) {
-    if (this.multiple || this.disabled) {
+    if (this.multiple || this.disabled || hasModifierKey(event)) {
       return;
     }
 
