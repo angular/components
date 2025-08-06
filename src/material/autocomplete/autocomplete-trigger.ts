@@ -912,7 +912,7 @@ export class MatAutocompleteTrigger
       width: this._getPanelWidth(),
       direction: this._dir ?? undefined,
       hasBackdrop: this._defaults?.hasBackdrop,
-      backdropClass: this._defaults?.backdropClass,
+      backdropClass: this._defaults?.backdropClass || 'cdk-overlay-transparent-backdrop',
       panelClass: this._overlayPanelClass,
       disableAnimations: this._animationsDisabled,
     });
