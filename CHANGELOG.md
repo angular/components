@@ -1,3 +1,14 @@
+<a name="20.1.5"></a>
+# 20.1.5 "plastic-car" (2025-08-06)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dbdcc7dcb7](https://github.com/angular/components/commit/dbdcc7dcb77a1f86446e8ced2359717d3af00e1f) | fix | **autocomplete:** default to transparent backdrop ([#31647](https://github.com/angular/components/pull/31647)) |
+| [ae9e8d2f84](https://github.com/angular/components/commit/ae9e8d2f846f605dc77154e7f3d7df75cc22ae06) | fix | **chips:** focus not moved on destroy ([#31653](https://github.com/angular/components/pull/31653)) |
+| [24ae377723](https://github.com/angular/components/commit/24ae3777233f63da35ba9106bf554d6dba20bb88) | fix | **form-field:** resolve memory leak ([#31643](https://github.com/angular/components/pull/31643)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="20.1.4"></a>
 # 20.1.4 "alabandite-animal" (2025-07-30)
 ### cdk
