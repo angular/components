@@ -16,7 +16,7 @@ import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-mana
 // } from '../behaviors/list-navigation/list-navigation';
 import {SignalLike} from '../behaviors/signal-like/signal-like';
 
-import {RadioButtonPatternType, RadioButtonPattern} from '../radio-group/radio-button';
+import {RadioButtonPattern} from '../radio-group/radio-button';
 
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
@@ -59,16 +59,32 @@ export class ToolbarPattern<V> {
     return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
   });
 
+  /** The alternate key used to navigate to the previous widget */
+  altPrevKey = computed(() => {
+    if (this.inputs.orientation() === 'vertical') {
+      return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    }
+    return 'ArrowUp';
+  });
+
+  /** The alternate key used to navigate to the next widget. */
+  altNextKey = computed(() => {
+    if (this.inputs.orientation() === 'vertical') {
+      return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+    }
+    return 'ArrowDown';
+  });
+
   /** The keydown event manager for the toolbar. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
-    console.log(' all curent itmes', this.inputs.items());
 
     return manager
       .on(' ', () => this.toolbarSelectOverride())
       .on('Enter', () => this.toolbarSelectOverride())
       .on(this.prevKey, () => this.listBehavior.prev())
-      .on('ArrowDown', () => {
+      .on(this.nextKey, () => this.listBehavior.next())
+      .on(this.altNextKey, () => {
         const activeItem = this.inputs.activeItem();
         if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
           activeItem.group()?.listBehavior.next();
@@ -76,7 +92,14 @@ export class ToolbarPattern<V> {
           this.listBehavior.next();
         }
       })
-      .on('ArrowRight', () => this.listBehavior.next())
+      .on(this.altPrevKey, () => {
+        const activeItem = this.inputs.activeItem();
+        if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
+          activeItem.group()?.listBehavior.prev();
+        } else {
+          this.listBehavior.prev();
+        }
+      })
       .on('Home', () => this.listBehavior.first())
       .on('End', () => this.listBehavior.last());
   });
@@ -87,10 +110,9 @@ export class ToolbarPattern<V> {
     /** If the active item is a Radio Button, indicate to the group the selection */
     if (activeItem instanceof RadioButtonPattern) {
       const group = activeItem.group();
-      if (group && !group.readonly()) {
+      if (group && !group.readonly() && !group.disabled()) {
         group.listBehavior.selectOne();
       }
-      // todo fix
     } else {
       /** Item is a Toolbar Widget, manually select it */
       if (activeItem && activeItem.element() && !activeItem.disabled())
@@ -112,9 +134,13 @@ export class ToolbarPattern<V> {
     if (!item) return;
 
     if (item instanceof RadioButtonPattern) {
-      // have the radio group handle the selection
+      const group = item.group();
+      if (group && !group.readonly() && !group.disabled()) {
+        group.listBehavior.goto(item, {selectOne: true});
+      }
+    } else {
+      this.listBehavior.goto(item);
     }
-    this.listBehavior.goto(item);
   }
 
   /** Handles keydown events for the toolbar. */
@@ -126,7 +152,6 @@ export class ToolbarPattern<V> {
 
   /** Handles pointerdown events for the toolbar. */
   onPointerdown(event: PointerEvent) {
-    console.log('this disabled', this.disabled());
     if (!this.disabled()) {
       this.pointerdown().handle(event);
     }
@@ -177,7 +202,6 @@ export class ToolbarPattern<V> {
     }
 
     if (firstItem) {
-      console.log('setting active item to', firstItem);
       this.inputs.activeItem.set(firstItem);
     }
   }

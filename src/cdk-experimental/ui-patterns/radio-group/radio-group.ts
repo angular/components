@@ -112,10 +112,10 @@ export class RadioGroupPattern<V> {
   pointerdown = computed(() => {
     const manager = new PointerEventManager();
 
-    // // If within a disabled toolbar relinquish pointer control
-    // if (this.inputs.toolbar() && this.inputs.toolbar()!.disabled()) {
-    //   return manager;
-    // }
+    // When within a toolbar relinquish pointer control
+    if (this.inputs.toolbar()) {
+      return manager;
+    }
 
     if (this.readonly()) {
       // Navigate focus only in readonly mode.
