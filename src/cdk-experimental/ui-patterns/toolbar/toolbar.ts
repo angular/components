@@ -68,23 +68,18 @@ export class ToolbarPattern<V> {
       .on(' ', () => this.toolbarSelectOverride())
       .on('Enter', () => this.toolbarSelectOverride())
       .on(this.prevKey, () => this.listBehavior.prev())
-      .on(this.nextKey, () => {
-        console.log('next');
-        this.next();
+      .on('ArrowDown', () => {
+        const activeItem = this.inputs.activeItem();
+        if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
+          activeItem.group()?.listBehavior.next();
+        } else {
+          this.listBehavior.next();
+        }
       })
+      .on('ArrowRight', () => this.listBehavior.next())
       .on('Home', () => this.listBehavior.first())
       .on('End', () => this.listBehavior.last());
   });
-  next() {
-    const activeItem = this.inputs.activeItem();
-    // if (activeItem instanceof RadioButtonPattern && activeItem.group()!!) {
-    //   console.log('let the group move itself');
-    //   activeItem.group()!!.listBehavior.next();
-    // } else
-    this.listBehavior.next();
-    // find what is the next item
-    // console.log('next item', this.listBehavior.nextItem());
-  }
 
   toolbarSelectOverride() {
     const activeItem = this.inputs.activeItem();

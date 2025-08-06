@@ -43,7 +43,7 @@ interface ToolbarLike<V> {
 /** Controls the state of a radio group. */
 export class RadioGroupPattern<V> {
   /** The list behavior for the radio group. */
-  readonly listBehavior: List<RadioButtonPattern<V>, V>;
+  readonly listBehavior: List<RadioButtonPattern<V> | ToolbarWidget, V>;
 
   /** Whether the radio group is vertically or horizontally oriented. */
   orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -132,9 +132,10 @@ export class RadioGroupPattern<V> {
 
     this.listBehavior = new List({
       ...inputs,
-      wrap: () => false,
+      activeItem: inputs.toolbar()?.listBehavior.inputs.activeItem ?? inputs.activeItem,
+      wrap: () => !!inputs.toolbar(),
       multi: () => false,
-      selectionMode: () => 'follow',
+      selectionMode: () => (inputs.toolbar() ? 'explicit' : 'follow'),
       typeaheadDelay: () => 0, // Radio groups do not support typeahead.
     });
   }
