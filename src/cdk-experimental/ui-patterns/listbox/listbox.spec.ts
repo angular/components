@@ -34,7 +34,7 @@ describe('Listbox Pattern', () => {
     return new ListboxPattern({
       items: inputs.items,
       value: inputs.value ?? signal([]),
-      activeIndex: inputs.activeIndex ?? signal(0),
+      activeItem: signal(undefined),
       typeaheadDelay: inputs.typeaheadDelay ?? signal(0.5),
       wrap: inputs.wrap ?? signal(true),
       readonly: inputs.readonly ?? signal(false),
@@ -67,6 +67,7 @@ describe('Listbox Pattern', () => {
     const options = signal<TestOption[]>([]);
     const listbox = getListbox({...inputs, items: options});
     options.set(getOptions(listbox, values));
+    listbox.inputs.activeItem.set(options()[0]);
     return {listbox, options: options()};
   }
 
@@ -90,33 +91,32 @@ describe('Listbox Pattern', () => {
   describe('Keyboard Navigation', () => {
     it('should navigate next on ArrowDown', () => {
       const {listbox} = getDefaultPatterns();
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
       listbox.onKeydown(down());
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
     });
 
     it('should navigate prev on ArrowUp', () => {
-      const {listbox} = getDefaultPatterns({activeIndex: signal(1)});
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      const {listbox, options} = getDefaultPatterns();
+      listbox.inputs.activeItem.set(options[1]);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
       listbox.onKeydown(up());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
 
     it('should navigate next on ArrowRight (horizontal)', () => {
       const {listbox} = getDefaultPatterns({orientation: signal('horizontal')});
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
       listbox.onKeydown(right());
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
     });
 
     it('should navigate prev on ArrowLeft (horizontal)', () => {
-      const {listbox} = getDefaultPatterns({
-        activeIndex: signal(1),
-        orientation: signal('horizontal'),
-      });
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      const {listbox, options} = getDefaultPatterns({orientation: signal('horizontal')});
+      listbox.inputs.activeItem.set(options[1]);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
       listbox.onKeydown(left());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
 
     it('should navigate next on ArrowLeft (horizontal & rtl)', () => {
@@ -124,48 +124,47 @@ describe('Listbox Pattern', () => {
         textDirection: signal('rtl'),
         orientation: signal('horizontal'),
       });
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
       listbox.onKeydown(left());
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
     });
 
     it('should navigate prev on ArrowRight (horizontal & rtl)', () => {
-      const {listbox} = getDefaultPatterns({
-        activeIndex: signal(1),
+      const {listbox, options} = getDefaultPatterns({
         textDirection: signal('rtl'),
         orientation: signal('horizontal'),
       });
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      listbox.inputs.activeItem.set(options[1]);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
       listbox.onKeydown(right());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
 
     it('should navigate to the first option on Home', () => {
-      const {listbox} = getDefaultPatterns({
-        activeIndex: signal(8),
-      });
-      expect(listbox.inputs.activeIndex()).toBe(8);
+      const {listbox, options} = getDefaultPatterns();
+      listbox.inputs.activeItem.set(options[8]);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
       listbox.onKeydown(home());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
 
     it('should navigate to the last option on End', () => {
       const {listbox} = getDefaultPatterns();
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
       listbox.onKeydown(end());
-      expect(listbox.inputs.activeIndex()).toBe(8);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
     });
 
     it('should be able to navigate in readonly mode', () => {
       const {listbox} = getDefaultPatterns();
       listbox.onKeydown(down());
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
       listbox.onKeydown(up());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
       listbox.onKeydown(end());
-      expect(listbox.inputs.activeIndex()).toBe(8);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
       listbox.onKeydown(home());
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
   });
 
@@ -178,23 +177,23 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('follow'),
         });
 
-        expect(listbox.inputs.activeIndex()).toBe(0);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
         listbox.onKeydown(down());
-        expect(listbox.inputs.activeIndex()).toBe(1);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
         expect(listbox.inputs.value()).toEqual(['Apricot']);
 
         listbox.onKeydown(up());
-        expect(listbox.inputs.activeIndex()).toBe(0);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
         listbox.onKeydown(end());
-        expect(listbox.inputs.activeIndex()).toBe(8);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[8]);
         expect(listbox.inputs.value()).toEqual(['Cranberry']);
 
         listbox.onKeydown(home());
-        expect(listbox.inputs.activeIndex()).toBe(0);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
 
@@ -206,11 +205,11 @@ describe('Listbox Pattern', () => {
           selectionMode: signal('follow'),
         });
 
-        expect(listbox.inputs.activeIndex()).toBe(0);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
         expect(listbox.inputs.value()).toEqual(['Apple']);
 
         listbox.onKeydown(down());
-        expect(listbox.inputs.activeIndex()).toBe(1);
+        expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
         expect(listbox.inputs.value()).toEqual(['Apple']);
       });
     });
@@ -723,7 +722,7 @@ describe('Listbox Pattern', () => {
         listbox.onKeydown(shift());
         listbox.onPointerdown(click(options, 2, {shift: true}));
         expect(listbox.inputs.value()).toEqual(['Apple', 'Apricot']);
-        expect(listbox.inputs.activeIndex()).toEqual(2);
+        expect(listbox.inputs.activeItem()).toEqual(options[2]);
       });
 
       it('should do nothing on click if the option is disabled', () => {
@@ -790,7 +789,7 @@ describe('Listbox Pattern', () => {
     it('should set the active index to the first option', () => {
       const {listbox} = getDefaultPatterns();
       listbox.setDefaultState();
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
 
     it('should set the active index to the first focusable option', () => {
@@ -799,7 +798,7 @@ describe('Listbox Pattern', () => {
       });
       options[0].disabled.set(true);
       listbox.setDefaultState();
-      expect(listbox.inputs.activeIndex()).toBe(1);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[1]);
     });
 
     it('should set the active index to the first selected option', () => {
@@ -808,7 +807,7 @@ describe('Listbox Pattern', () => {
         skipDisabled: signal(true),
       });
       listbox.setDefaultState();
-      expect(listbox.inputs.activeIndex()).toBe(2);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[2]);
     });
 
     it('should set the active index to the first focusable selected option', () => {
@@ -818,7 +817,7 @@ describe('Listbox Pattern', () => {
       });
       options[2].disabled.set(true);
       listbox.setDefaultState();
-      expect(listbox.inputs.activeIndex()).toBe(3);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[3]);
     });
 
     it('should set the active index to the first option if no selected option is focusable', () => {
@@ -828,7 +827,7 @@ describe('Listbox Pattern', () => {
       });
       options[2].disabled.set(true);
       listbox.setDefaultState();
-      expect(listbox.inputs.activeIndex()).toBe(0);
+      expect(listbox.inputs.activeItem()).toBe(listbox.inputs.items()[0]);
     });
   });
 });

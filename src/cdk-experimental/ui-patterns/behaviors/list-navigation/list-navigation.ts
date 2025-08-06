@@ -64,7 +64,7 @@ export class ListNavigation<T extends ListNavigationItem> {
   private _advance(delta: 1 | -1): boolean {
     const items = this.inputs.items();
     const itemCount = items.length;
-    const startIndex = this.inputs.activeIndex();
+    const startIndex = this.inputs.focusManager.activeIndex();
     const step = (i: number) =>
       this.inputs.wrap() ? (i + delta + itemCount) % itemCount : i + delta;
 

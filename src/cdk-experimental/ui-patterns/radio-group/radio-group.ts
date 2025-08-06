@@ -141,14 +141,14 @@ export class RadioGroupPattern<V> {
           firstItem = item;
         }
         if (item.selected()) {
-          this.inputs.activeIndex.set(item.index());
+          this.inputs.activeItem.set(item);
           return;
         }
       }
     }
 
     if (firstItem) {
-      this.inputs.activeIndex.set(firstItem.index());
+      this.inputs.activeItem.set(firstItem);
     }
   }
 

@@ -68,8 +68,8 @@ export class List<T extends ListItem<V>, V> {
   /** The tabindex of the list. */
   tabindex = computed(() => this.focusBehavior.getListTabindex());
 
-  /** The currently active item in the list. */
-  activeItem = computed(() => this.focusBehavior.activeItem());
+  /** The index of the currently active item in the list. */
+  activeIndex = computed(() => this.focusBehavior.activeIndex());
 
   /**
    * The uncommitted index for selecting a range of options.

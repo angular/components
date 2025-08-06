@@ -19,6 +19,9 @@ export interface ListFocusItem {
 
   /** Whether an item is disabled. */
   disabled: SignalLike<boolean>;
+
+  /** The index of the item in the list. */
+  index: SignalLike<number>;
 }
 
 /** Represents the required inputs for a collection that contains focusable items. */
@@ -32,8 +35,8 @@ export interface ListFocusInputs<T extends ListFocusItem> {
   /** The items in the list. */
   items: SignalLike<T[]>;
 
-  /** The index of the current active item. */
-  activeIndex: WritableSignalLike<number>;
+  /** The active item. */
+  activeItem: WritableSignalLike<T | undefined>;
 
   /** Whether disabled items in the list should be skipped when navigating. */
   skipDisabled: SignalLike<boolean>;
@@ -41,11 +44,14 @@ export interface ListFocusInputs<T extends ListFocusItem> {
 
 /** Controls focus for a list of items. */
 export class ListFocus<T extends ListFocusItem> {
-  /** The last index that was active. */
-  prevActiveIndex = signal(0);
+  /** The last item that was active. */
+  prevActiveItem = signal<T | undefined>(undefined);
 
-  /** The current active item. */
-  activeItem = computed(() => this.inputs.items()[this.inputs.activeIndex()]);
+  /** The index of the last item that was active. */
+  prevActiveIndex = computed(() => this.prevActiveItem()?.index() ?? -1);
+
+  /** The current active index in the list. */
+  activeIndex = computed(() => this.inputs.activeItem()?.index() ?? -1);
 
   constructor(readonly inputs: ListFocusInputs<T>) {}
 
@@ -62,7 +68,7 @@ export class ListFocus<T extends ListFocusItem> {
     if (this.inputs.focusMode() === 'roving') {
       return undefined;
     }
-    return this.inputs.items()[this.inputs.activeIndex()].id();
+    return this.inputs.activeItem()?.id() ?? undefined;
   }
 
   /** The tabindex for the list. */
@@ -81,7 +87,7 @@ export class ListFocus<T extends ListFocusItem> {
     if (this.inputs.focusMode() === 'activedescendant') {
       return -1;
     }
-    return this.activeItem() === item ? 0 : -1;
+    return this.inputs.activeItem() === item ? 0 : -1;
   }
 
   /** Moves focus to the given item if it is focusable. */
@@ -90,9 +96,8 @@ export class ListFocus<T extends ListFocusItem> {
       return false;
     }
 
-    this.prevActiveIndex.set(this.inputs.activeIndex());
-    const index = this.inputs.items().indexOf(item);
-    this.inputs.activeIndex.set(index);
+    this.prevActiveItem.set(this.inputs.activeItem());
+    this.inputs.activeItem.set(item);
 
     if (this.inputs.focusMode() === 'roving') {
       item.element().focus();

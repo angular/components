@@ -36,6 +36,7 @@ function getItems(length: number): Signal<TestItem[]> {
   return signal(
     Array.from({length}).map((_, i) => {
       return {
+        index: signal(i),
         searchTerm: signal(`Item ${i}`),
         id: signal(`${i}`),
         disabled: signal(false),
@@ -57,38 +58,38 @@ describe('List Typeahead', () => {
   describe('#search', () => {
     it('should navigate to an item', () => {
       typeahead.search('i');
-      expect(typeahead.inputs.activeIndex()).toBe(1);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
 
       typeahead.search('t');
       typeahead.search('e');
       typeahead.search('m');
       typeahead.search(' ');
       typeahead.search('3');
-      expect(typeahead.inputs.activeIndex()).toBe(3);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(3);
     });
 
     it('should reset after a delay', fakeAsync(() => {
       typeahead.search('i');
-      expect(typeahead.inputs.activeIndex()).toBe(1);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
 
       tick(500);
 
       typeahead.search('i');
-      expect(typeahead.inputs.activeIndex()).toBe(2);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
     }));
 
     it('should skip disabled items', () => {
       items[1].disabled.set(true);
       (typeahead.inputs.skipDisabled as WritableSignal<boolean>).set(true);
       typeahead.search('i');
-      expect(typeahead.inputs.activeIndex()).toBe(2);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
     });
 
     it('should not skip disabled items', () => {
       items[1].disabled.set(true);
       (typeahead.inputs.skipDisabled as WritableSignal<boolean>).set(false);
       typeahead.search('i');
-      expect(typeahead.inputs.activeIndex()).toBe(1);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(1);
     });
 
     it('should ignore keys like shift', () => {
@@ -101,7 +102,7 @@ describe('List Typeahead', () => {
       typeahead.search('m');
       typeahead.search(' ');
       typeahead.search('2');
-      expect(typeahead.inputs.activeIndex()).toBe(2);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(2);
     });
 
     it('should not allow a query to begin with a space', () => {
@@ -112,7 +113,7 @@ describe('List Typeahead', () => {
       typeahead.search('m');
       typeahead.search(' ');
       typeahead.search('3');
-      expect(typeahead.inputs.activeIndex()).toBe(3);
+      expect(typeahead.inputs.focusManager.activeIndex()).toBe(3);
     });
   });
 });

@@ -18,12 +18,13 @@ type TestInputs = Partial<ListFocusInputs<ListFocusItem>> & {
 };
 
 export function getListFocus(inputs: TestInputs = {}): ListFocus<ListFocusItem> {
+  const items = inputs.items || getItems(inputs.numItems ?? 5);
   return new ListFocus({
-    activeIndex: signal(0),
+    activeItem: signal(items()[0]),
     disabled: signal(false),
     skipDisabled: signal(false),
     focusMode: signal('roving'),
-    items: getItems(inputs.numItems ?? 5),
+    items: items,
     ...inputs,
   });
 }
@@ -35,6 +36,7 @@ function getItems(length: number): Signal<ListFocusItem[]> {
         id: signal(`${i}`),
         disabled: signal(false),
         element: signal({focus: () => {}} as HTMLElement),
+        index: signal(i),
       };
     }),
   );
@@ -58,7 +60,7 @@ describe('List Focus', () => {
 
     it('should set the tabindex based on the active index', () => {
       const items = focusManager.inputs.items() as TestItem[];
-      focusManager.inputs.activeIndex.set(2);
+      focusManager.inputs.activeItem.set(focusManager.inputs.items()[2]);
       expect(focusManager.getItemTabindex(items[0])).toBe(-1);
       expect(focusManager.getItemTabindex(items[1])).toBe(-1);
       expect(focusManager.getItemTabindex(items[2])).toBe(0);
@@ -84,7 +86,7 @@ describe('List Focus', () => {
 
     it('should set the tabindex of all items to -1', () => {
       const items = focusManager.inputs.items() as TestItem[];
-      focusManager.inputs.activeIndex.set(0);
+      focusManager.inputs.activeItem.set(focusManager.inputs.items()[0]);
       expect(focusManager.getItemTabindex(items[0])).toBe(-1);
       expect(focusManager.getItemTabindex(items[1])).toBe(-1);
       expect(focusManager.getItemTabindex(items[2])).toBe(-1);
@@ -93,7 +95,7 @@ describe('List Focus', () => {
     });
 
     it('should update the activedescendant of the list when navigating', () => {
-      focusManager.inputs.activeIndex.set(1);
+      focusManager.inputs.activeItem.set(focusManager.inputs.items()[1]);
       expect(focusManager.getActiveDescendant()).toBe(focusManager.inputs.items()[1].id());
     });
   });

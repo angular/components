@@ -20,7 +20,7 @@ interface ListboxPattern<V> {
 }
 
 /** Represents the required inputs for an option in a listbox. */
-export interface OptionInputs<V> extends ListItem<V> {
+export interface OptionInputs<V> extends Omit<ListItem<V>, 'index'> {
   listbox: SignalLike<ListboxPattern<V> | undefined>;
 }
 
@@ -33,15 +33,10 @@ export class OptionPattern<V> {
   value: SignalLike<V>;
 
   /** The position of the option in the list. */
-  index = computed(
-    () =>
-      this.listbox()
-        ?.inputs.items()
-        .findIndex(i => i.id() === this.id()) ?? -1,
-  );
+  index = computed(() => this.listbox()?.inputs.items().indexOf(this) ?? -1);
 
   /** Whether the option is active. */
-  active = computed(() => this.listbox()?.listBehavior.activeItem() === this);
+  active = computed(() => this.listbox()?.inputs.activeItem() === this);
 
   /** Whether the option is selected. */
   selected = computed(() => this.listbox()?.inputs.value().includes(this.value()));

@@ -20,7 +20,7 @@ interface RadioGroupLike<V> {
 }
 
 /** Represents the required inputs for a radio button in a radio group. */
-export interface RadioButtonInputs<V> extends Omit<ListItem<V>, 'searchTerm'> {
+export interface RadioButtonInputs<V> extends Omit<ListItem<V>, 'searchTerm' | 'index'> {
   /** A reference to the parent radio group. */
   group: SignalLike<RadioGroupLike<V> | undefined>;
 }
@@ -34,15 +34,10 @@ export class RadioButtonPattern<V> {
   value: SignalLike<V>;
 
   /** The position of the radio button within the group. */
-  index = computed(
-    () =>
-      this.group()
-        ?.listBehavior.inputs.items()
-        .findIndex(i => i.id() === this.id()) ?? -1,
-  );
+  index = computed(() => this.group()?.listBehavior.inputs.items().indexOf(this) ?? -1);
 
   /** Whether the radio button is currently the active one (focused). */
-  active = computed(() => this.group()?.listBehavior.activeItem() === this);
+  active = computed(() => this.group()?.listBehavior.inputs.activeItem() === this);
 
   /** Whether the radio button is selected. */
   selected: SignalLike<boolean> = computed(
