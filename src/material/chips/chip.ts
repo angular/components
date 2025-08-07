@@ -43,7 +43,7 @@ import {
   _animationsDisabled,
 } from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
-import {MatChipAction} from './chip-action';
+import {MatChipAction, MatChipContent} from './chip-action';
 import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
 import {
   MAT_CHIP,
@@ -93,7 +93,7 @@ export interface MatChipEvent {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MAT_CHIP, useExisting: MatChip}],
-  imports: [MatChipAction],
+  imports: [MatChipContent],
 })
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
   _changeDetectorRef = inject(ChangeDetectorRef);
@@ -386,10 +386,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
       result.push(this.removeIcon);
     }
 
-    if (this.trailingIcon) {
-      result.push(this.trailingIcon);
-    }
-
     return result;
   }
 
@@ -400,7 +396,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** Returns whether the chip has any interactive actions. */
   _hasInteractiveActions(): boolean {
-    return this._getActions().some(a => a.isInteractive);
+    return this._getActions().length > 0;
   }
 
   /** Handles interactions with the edit action of the chip. */
