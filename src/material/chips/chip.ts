@@ -166,9 +166,6 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** ARIA description for the content of the chip. */
   @Input('aria-description') ariaDescription: string | null = null;
 
-  /** Id of a span that contains this chip's aria description. */
-  _ariaDescriptionId = `${this.id}-aria-description`;
-
   /** Whether the chip list is disabled. */
   _chipListDisabled: boolean = false;
 
