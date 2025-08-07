@@ -81,6 +81,10 @@ $fallbacks: m3-stepper.get-tokens();
     }
   }
 
+  &.mat-step-header-empty-label .mat-step-icon {
+    margin: 0;
+  }
+
   $vertical-padding: _get-vertical-padding-calc();
 
   &::before,
