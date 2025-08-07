@@ -82,6 +82,12 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
     // (undocumented)
     _getDefaultTextForState(state: StepState): string;
     _getHostElement(): HTMLElement;
+    // (undocumented)
+    protected _hasEmptyLabel(): boolean;
+    // (undocumented)
+    protected _hasErrorLabel(): boolean;
+    // (undocumented)
+    protected _hasOptionalLabel(): boolean;
     iconOverrides: {
         [key: string]: TemplateRef<MatStepperIconContext>;
     };

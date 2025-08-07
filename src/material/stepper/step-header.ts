@@ -34,6 +34,7 @@ import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/privat
   styleUrl: 'step-header.css',
   host: {
     'class': 'mat-step-header',
+    '[class.mat-step-header-empty-label]': '_hasEmptyLabel()',
     '[class]': '"mat-" + (color || "primary")',
     'role': 'tab',
   },
@@ -139,5 +140,22 @@ export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDes
       return 'warning';
     }
     return state;
+  }
+
+  protected _hasEmptyLabel() {
+    return (
+      !this._stringLabel() &&
+      !this._templateLabel() &&
+      !this._hasOptionalLabel() &&
+      !this._hasErrorLabel()
+    );
+  }
+
+  protected _hasOptionalLabel() {
+    return this.optional && this.state !== 'error';
+  }
+
+  protected _hasErrorLabel() {
+    return this.state === 'error';
   }
 }
