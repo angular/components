@@ -505,25 +505,10 @@ describe('Row Chips', () => {
 
         expect(primaryGridCell!.getAttribute('aria-label')).toMatch(/chip name/i);
 
-        const primaryGridCellDescribedBy = primaryGridCell!.getAttribute('aria-describedby');
-        expect(primaryGridCellDescribedBy)
-          .withContext('expected primary grid cell to have a non-empty aria-describedby attribute')
+        const primaryGridCellDescription = primaryGridCell!.getAttribute('aria-description');
+        expect(primaryGridCellDescription)
+          .withContext('expected primary grid cell to have a non-empty aria-description attribute')
           .toBeTruthy();
-
-        const primaryGridCellDescriptions = Array.from(
-          (fixture.nativeElement as HTMLElement).querySelectorAll(
-            primaryGridCellDescribedBy!
-              .split(/\s+/g)
-              .map(x => `#${x}`)
-              .join(','),
-          ),
-        );
-
-        const primaryGridCellDescription = primaryGridCellDescriptions
-          .map(x => x.textContent?.trim())
-          .join(' ')
-          .trim();
-
         expect(primaryGridCellDescription).toMatch(/chip description/i);
       });
     });
