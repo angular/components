@@ -70,6 +70,10 @@ export class ToolbarPattern<V> {
   /** The keydown event manager for the toolbar. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
+    manager.options = {
+      preventDefault: false,
+      stopPropagation: true,
+    };
 
     return manager
       .on(' ', () => this.toolbarSelectOverride())
@@ -105,10 +109,6 @@ export class ToolbarPattern<V> {
       if (group && !group.readonly() && !group.disabled()) {
         group.listBehavior.selectOne();
       }
-    } else {
-      /** Item is a Toolbar Widget, manually select it */
-      if (activeItem && activeItem.element() && !activeItem.disabled())
-        activeItem.element().click();
     }
   }
 

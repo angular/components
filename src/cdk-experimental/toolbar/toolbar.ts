@@ -170,6 +170,7 @@ export class CdkToolbar<V> {
     '[attr.tabindex]': 'pattern.tabindex()',
     '[attr.inert]': 'hardDisabled() ? true : null',
     '[attr.disabled]': 'hardDisabled() ? true : null',
+    '[attr.aria-disabled]': 'pattern.disabled()',
     '[id]': 'pattern.id()',
   },
 })
@@ -195,7 +196,9 @@ export class CdkToolbarWidget implements OnInit, OnDestroy {
   /** Whether the widget is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
-  readonly hardDisabled = computed(() => this.pattern.disabled() && this.pattern.tabindex() < 0);
+  readonly hardDisabled = computed(
+    () => this.pattern.disabled() && this._cdkToolbar.skipDisabled(),
+  );
 
   pattern = new ToolbarWidgetPattern({
     ...this,
