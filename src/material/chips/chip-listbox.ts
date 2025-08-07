@@ -398,6 +398,6 @@ export class MatChipListbox
     // https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/):
     //   "For the following composite widget elements, keep them focusable when disabled: Options in a
     //   Listbox..."
-    return !action.isInteractive;
+    return false;
   }
 }
