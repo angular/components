@@ -32,14 +32,22 @@ describe('DeferredContent', () => {
       component.preserveContent.set(true);
     });
 
-    it('creates the content when hidden.', async () => {
+    it('does not create the content until first visible.', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(false);
       await fixture.whenStable();
-      expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
+      expect(collapsible.nativeElement.innerText).toBe('');
     });
 
     it('creates the content when visible.', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(true);
+      await fixture.whenStable();
+      expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
+    });
+
+    it('does not remove the content when hidden.', async () => {
+      collapsible.injector.get(Collapsible).contentVisible.set(true);
+      await fixture.whenStable();
+      collapsible.injector.get(Collapsible).contentVisible.set(false);
       await fixture.whenStable();
       expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
     });
