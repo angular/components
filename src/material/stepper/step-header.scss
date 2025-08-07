@@ -143,6 +143,10 @@ $fallbacks: m3-stepper.get-tokens();
     font-size: token-utils.slot(stepper-header-selected-state-label-text-size, $fallbacks);
     font-weight: token-utils.slot(stepper-header-selected-state-label-text-weight, $fallbacks);
   }
+
+  .mat-step-header-empty-label & {
+    min-width: 0;
+  }
 }
 
 .mat-step-text-label {
