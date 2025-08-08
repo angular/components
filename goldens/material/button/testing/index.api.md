@@ -15,10 +15,14 @@ export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'to
 // @public
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
     appearance?: ButtonAppearance;
+    buttonType?: ButtonType;
     disabled?: boolean;
     text?: string | RegExp;
     variant?: ButtonVariant;
 }
+
+// @public
+export type ButtonType = 'button' | 'submit' | 'reset';
 
 // @public
 export type ButtonVariant = 'basic' | 'icon' | 'fab' | 'mini-fab';
@@ -32,6 +36,7 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
     focus(): Promise<void>;
     getAppearance(): Promise<ButtonAppearance | null>;
     getText(): Promise<string>;
+    getType(): Promise<ButtonType | null>;
     getVariant(): Promise<ButtonVariant>;
     static hostSelector: string;
     isDisabled(): Promise<boolean>;

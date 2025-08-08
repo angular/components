@@ -14,6 +14,9 @@ export type ButtonVariant = 'basic' | 'icon' | 'fab' | 'mini-fab';
 /** Possible button appearances. */
 export type ButtonAppearance = 'text' | 'filled' | 'elevated' | 'outlined' | 'tonal';
 
+/** Possible button types. */
+export type ButtonType = 'button' | 'submit' | 'reset';
+
 /** A set of criteria that can be used to filter a list of button harness instances. */
 export interface ButtonHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
@@ -27,4 +30,7 @@ export interface ButtonHarnessFilters extends BaseHarnessFilters {
 
   /** Only find instances which match the given disabled state. */
   disabled?: boolean;
+
+  /** Only find instances with the specified type. */
+  buttonType?: ButtonType;
 }
