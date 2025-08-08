@@ -131,7 +131,7 @@ export class CdkRadioGroup<V> {
     value: this._value,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
-    toolbar: signal(undefined),
+    toolbar: signal(undefined), // placeholder until Toolbar CDK is added
   });
 
   /** Whether the radio group has received focus yet. */

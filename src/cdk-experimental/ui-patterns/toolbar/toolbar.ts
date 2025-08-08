@@ -70,57 +70,40 @@ export class ToolbarPattern<V> {
   /** The keydown event manager for the toolbar. */
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
-    manager.options = {
-      preventDefault: false,
-      stopPropagation: true,
-    };
+
+    const activeItem = this.inputs.activeItem();
+    const isRadioButton = activeItem instanceof RadioButtonPattern;
+
+    if (isRadioButton) {
+      manager
+        .on(' ', () => this.selectRadioButton())
+        .on('Enter', () => this.selectRadioButton())
+        .on(this.altNextKey, () => activeItem?.group()?.listBehavior.next())
+        .on(this.altPrevKey, () => activeItem?.group()?.listBehavior.prev());
+    } else {
+      manager.on(this.altNextKey, () => this.listBehavior.next());
+      manager.on(this.altPrevKey, () => this.listBehavior.prev());
+    }
 
     return manager
-      .on(' ', () => this.toolbarSelectOverride())
-      .on('Enter', () => this.toolbarSelectOverride())
       .on(this.prevKey, () => this.listBehavior.prev())
       .on(this.nextKey, () => this.listBehavior.next())
-      .on(this.altNextKey, () => {
-        const activeItem = this.inputs.activeItem();
-        /** When within a Radio Group, use its navigation */
-        if (activeItem instanceof RadioButtonPattern && activeItem.group()) {
-          activeItem.group()?.listBehavior.next();
-        } else {
-          this.listBehavior.next();
-        }
-      })
-      .on(this.altPrevKey, () => {
-        const activeItem = this.inputs.activeItem();
-        /** When within a Radio Group, use its navigation */
-        if (activeItem instanceof RadioButtonPattern && activeItem.group()) {
-          activeItem.group()?.listBehavior.prev();
-        } else {
-          this.listBehavior.prev();
-        }
-      })
       .on('Home', () => this.listBehavior.first())
       .on('End', () => this.listBehavior.last());
   });
 
-  toolbarSelectOverride() {
-    const activeItem = this.inputs.activeItem();
+  selectRadioButton() {
+    const activeItem = this.inputs.activeItem() as RadioButtonPattern<V>;
 
-    /** If the active item is a Radio Button, indicate to the group the selection */
-    if (activeItem instanceof RadioButtonPattern) {
-      const group = activeItem.group();
-      if (group && !group.readonly() && !group.disabled()) {
-        group.listBehavior.selectOne();
-      }
+    // activeItem must be a radio button
+    const group = activeItem!.group();
+    if (group && !group.readonly() && !group.disabled()) {
+      group.listBehavior.selectOne();
     }
   }
 
   /** The pointerdown event manager for the toolbar. */
-  pointerdown = computed(() => {
-    const manager = new PointerEventManager();
-
-    // Default behavior: navigate and select on click.
-    return manager.on(e => this.goto(e));
-  });
+  pointerdown = computed(() => new PointerEventManager().on(e => this.goto(e)));
 
   /** Navigates to the widget associated with the given pointer event. */
   goto(event: PointerEvent) {
@@ -129,8 +112,8 @@ export class ToolbarPattern<V> {
 
     if (item instanceof RadioButtonPattern) {
       const group = item.group();
-      if (group && !group.readonly() && !group.disabled()) {
-        group.listBehavior.goto(item, {selectOne: true});
+      if (group && !group.disabled()) {
+        group.listBehavior.goto(item, {selectOne: !group.readonly()});
       }
     } else {
       this.listBehavior.goto(item);

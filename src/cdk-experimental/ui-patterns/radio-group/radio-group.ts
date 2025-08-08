@@ -43,7 +43,7 @@ type ToolbarWidgetLike = {
  * Represents the properties exposed by a toolbar that need to be accessed by a radio group.
  * This exists to avoid circular dependency errors between the toolbar and radio button.
  */
-interface ToolbarLike<V> {
+export interface ToolbarLike<V> {
   listBehavior: List<RadioButtonPattern<V> | ToolbarWidgetLike, V>;
   orientation: SignalLike<'vertical' | 'horizontal'>;
   disabled: SignalLike<boolean>;
@@ -66,7 +66,7 @@ export class RadioGroupPattern<V> {
   /** Whether the radio group is readonly. */
   readonly = computed(() => this.selectedItem()?.disabled() || this.inputs.readonly());
 
-  /** The tabindex of the radio group (if using activedescendant or if in toolbar). */
+  /** The tabindex of the radio group. */
   tabindex = computed(() => (this.inputs.toolbar() ? -1 : this.listBehavior.tabindex()));
 
   /** The id of the current active radio button (if using activedescendant). */
