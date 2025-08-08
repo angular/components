@@ -50,11 +50,44 @@
 >
   @if (nav.value) {
     @for (node of treeData; track node) {
-      <example-nav-node [node]="node" />
+      <ng-template [ngTemplateOutlet]="navNodeTemplate" [ngTemplateOutletContext]="{ node: node, parent: tree }" />
     }
   } @else {
     @for (node of treeData; track node) {
-      <example-node [node]="node" />
+      <example-node [node]="node" [parent]="tree" />
     }
   }
 </ul>
+
+<ng-template #navNodeTemplate let-node="node" let-parent="parent">
+  <li class="example-tree-item">
+    <a
+      cdkTreeItem
+      class="example-tree-item-content example-selectable example-stateful"
+      [value]="node.value"
+      [label]="node.label || node.value"
+      [disabled]="node.disabled"
+      [parent]="parent"
+      #treeItem="cdkTreeItem"
+      href="#{{node.value}}"
+      (click)="$event.preventDefault()"
+    >
+      <mat-icon class="example-tree-item-icon" aria-hidden="true">
+        @if (treeItem.pattern.expandable()) {
+          {{ treeItem.pattern.expanded() ? 'expand_less' : 'expand_more' }}
+        }
+      </mat-icon>
+      {{ node.label }}
+    </a>
+
+    @if (node.children !== undefined && node.children!.length > 0) {
+      <ul cdkTreeItemGroup [ownedBy]="treeItem" #group="cdkTreeItemGroup">
+        <ng-template cdkTreeItemGroupContent>
+          @for (child of node.children; track child) {
+            <ng-template [ngTemplateOutlet]="navNodeTemplate" [ngTemplateOutletContext]="{ node: child, parent: group }" />
+          }
+        </ng-template>
+      </ul>
+    }
+  </li>
+</ng-template>

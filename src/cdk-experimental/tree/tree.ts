@@ -79,9 +79,6 @@ export class CdkTree<V> {
   /** All CdkTreeItem instances within this tree. */
   private readonly _unorderedItems = signal(new Set<CdkTreeItem<V>>());
 
-  /** All CdkGroup instances within this tree. */
-  readonly unorderedGroups = signal(new Set<CdkTreeItemGroup<V>>());
-
   /** Orientation of the tree. */
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
 
@@ -144,28 +141,14 @@ export class CdkTree<V> {
     this._hasFocused.set(true);
   }
 
-  register(child: CdkTreeItemGroup<V> | CdkTreeItem<V>) {
-    if (child instanceof CdkTreeItemGroup) {
-      this.unorderedGroups().add(child);
-      this.unorderedGroups.set(new Set(this.unorderedGroups()));
-    }
-
-    if (child instanceof CdkTreeItem) {
-      this._unorderedItems().add(child);
-      this._unorderedItems.set(new Set(this._unorderedItems()));
-    }
+  register(child: CdkTreeItem<V>) {
+    this._unorderedItems().add(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 
-  deregister(child: CdkTreeItemGroup<V> | CdkTreeItem<V>) {
-    if (child instanceof CdkTreeItemGroup) {
-      this.unorderedGroups().delete(child);
-      this.unorderedGroups.set(new Set(this.unorderedGroups()));
-    }
-
-    if (child instanceof CdkTreeItem) {
-      this._unorderedItems().delete(child);
-      this._unorderedItems.set(new Set(this._unorderedItems()));
-    }
+  unregister(child: CdkTreeItem<V>) {
+    this._unorderedItems().delete(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 }
 
@@ -185,7 +168,7 @@ export class CdkTree<V> {
     '[attr.aria-current]': 'pattern.current()',
     '[attr.aria-disabled]': 'pattern.disabled()',
     '[attr.aria-level]': 'pattern.level()',
-    '[attr.aria-owns]': 'group()?.id',
+    '[attr.aria-owns]': 'ownsId()',
     '[attr.aria-setsize]': 'pattern.setsize()',
     '[attr.aria-posinset]': 'pattern.posinset()',
     '[attr.tabindex]': 'pattern.tabindex()',
@@ -199,28 +182,20 @@ export class CdkTreeItem<V> implements OnInit, OnDestroy, HasElement {
   /** A unique identifier for the tree item. */
   private readonly _id = inject(_IdGenerator).getId('cdk-tree-item-');
 
-  /** The top level CdkTree. */
-  private readonly _tree = inject(CdkTree<V>);
+  /** The owned tree item group. */
+  private readonly _group = signal<CdkTreeItemGroup<V> | undefined>(undefined);
 
-  /** The parent CdkTreeItem. */
-  private readonly _treeItem = inject(CdkTreeItem<V>, {optional: true, skipSelf: true});
-
-  /** The parent CdkGroup, if any. */
-  private readonly _parentGroup = inject(CdkTreeItemGroup<V>, {optional: true});
-
-  /** The top level TreePattern. */
-  private readonly _treePattern = computed(() => this._tree.pattern);
-
-  /** The parent TreeItemPattern. */
-  private readonly _parentPattern: Signal<TreeItemPattern<V> | TreePattern<V>> = computed(
-    () => this._treeItem?.pattern ?? this._treePattern(),
-  );
+  /** The id of the owned group. */
+  readonly ownsId = computed(() => this._group()?.id);
 
   /** The host native element. */
   readonly element = computed(() => this._elementRef.nativeElement);
 
   /** The value of the tree item. */
   readonly value = input.required<V>();
+
+  /** The parent tree root or tree item group. */
+  readonly parent = input.required<CdkTree<V> | CdkTreeItemGroup<V>>();
 
   /** Whether the tree item is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -231,46 +206,61 @@ export class CdkTreeItem<V> implements OnInit, OnDestroy, HasElement {
   /** Search term for typeahead. */
   readonly searchTerm = computed(() => this.label() ?? this.element().textContent);
 
-  /** Manual group assignment. */
-  readonly group = signal<CdkTreeItemGroup<V> | undefined>(undefined);
-
-  /** The UI pattern for this item. */
-  readonly pattern: TreeItemPattern<V> = new TreeItemPattern<V>({
-    ...this,
-    id: () => this._id,
-    tree: this._treePattern,
-    parent: this._parentPattern,
-    children: computed(
-      () =>
-        this.group()
-          ?.children()
-          .map(item => (item as CdkTreeItem<V>).pattern) ?? [],
-    ),
-    hasChildren: computed(() => !!this.group()),
+  /** The tree root. */
+  readonly tree: Signal<CdkTree<V>> = computed(() => {
+    if (this.parent() instanceof CdkTree) {
+      return this.parent() as CdkTree<V>;
+    }
+    return (this.parent() as CdkTreeItemGroup<V>).ownedBy().tree();
   });
 
-  constructor() {
-    afterRenderEffect(() => {
-      const group = [...this._tree.unorderedGroups()].find(group => group.value() === this.value());
-      if (group) {
-        this.group.set(group);
-      }
-    });
+  /** The UI pattern for this item. */
+  pattern: TreeItemPattern<V>;
 
+  constructor() {
     // Updates the visibility of the owned group.
     afterRenderEffect(() => {
-      this.group()?.visible.set(this.pattern.expanded());
+      this._group()?.visible.set(this.pattern.expanded());
     });
   }
 
   ngOnInit() {
-    this._tree.register(this);
-    this._parentGroup?.register(this);
+    this.parent().register(this);
+    this.tree().register(this);
+
+    const treePattern = computed(() => this.tree().pattern);
+    const parentPattern = computed(() => {
+      if (this.parent() instanceof CdkTree) {
+        return treePattern();
+      }
+      return (this.parent() as CdkTreeItemGroup<V>).ownedBy().pattern;
+    });
+    this.pattern = new TreeItemPattern<V>({
+      ...this,
+      id: () => this._id,
+      tree: treePattern,
+      parent: parentPattern,
+      children: computed(
+        () =>
+          this._group()
+            ?.children()
+            .map(item => (item as CdkTreeItem<V>).pattern) ?? [],
+      ),
+      hasChildren: computed(() => !!this._group()),
+    });
   }
 
   ngOnDestroy() {
-    this._tree.deregister(this);
-    this._parentGroup?.deregister(this);
+    this.parent().unregister(this);
+    this.tree().unregister(this);
+  }
+
+  register(group: CdkTreeItemGroup<V>) {
+    this._group.set(group);
+  }
+
+  unregister() {
+    this._group.set(undefined);
   }
 }
 
@@ -300,9 +290,6 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
-  /** The top level CdkTree. */
-  private readonly _tree = inject(CdkTree<V>);
-
   /** All groupable items that are descendants of the group. */
   private readonly _unorderedItems = signal(new Set<CdkTreeItem<V>>());
 
@@ -318,8 +305,8 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   /** Child items within this group. */
   readonly children = computed(() => [...this._unorderedItems()].sort(sortDirectives));
 
-  /** Identifier for matching the group owner. */
-  readonly value = input.required<V>();
+  /** Tree item that owns the group. */
+  readonly ownedBy = input.required<CdkTreeItem<V>>();
 
   constructor() {
     // Connect the group's hidden state to the DeferredContentAware's visibility.
@@ -329,11 +316,11 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
   }
 
   ngOnInit() {
-    this._tree.register(this);
+    this.ownedBy().register(this);
   }
 
   ngOnDestroy() {
-    this._tree.deregister(this);
+    this.ownedBy().unregister();
   }
 
   register(child: CdkTreeItem<V>) {
@@ -341,7 +328,7 @@ export class CdkTreeItemGroup<V> implements OnInit, OnDestroy, HasElement {
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 
-  deregister(child: CdkTreeItem<V>) {
+  unregister(child: CdkTreeItem<V>) {
     this._unorderedItems().delete(child);
     this._unorderedItems.set(new Set(this._unorderedItems()));
   }
