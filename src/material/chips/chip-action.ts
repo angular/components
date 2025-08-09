@@ -34,7 +34,6 @@ import {_StructuralStylesLoader} from '../core';
     '[attr.tabindex]': '_getTabindex()',
     '[attr.disabled]': '_getDisabledAttribute()',
     '[attr.aria-disabled]': 'disabled',
-    '(click)': 'isInteractive ? _handleClick($event) : null',
     '(keydown)': '_handleKeydown($event)',
   },
 })
