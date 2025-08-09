@@ -61,7 +61,6 @@ export interface MatChipEditedEvent extends MatChipEvent {
     '[attr.aria-description]': 'null',
     '[attr.role]': 'role',
     '(focus)': '_handleFocus()',
-    '(click)': '_handleClick($event)',
     '(dblclick)': '_handleDoubleclick($event)',
   },
   providers: [
