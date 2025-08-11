@@ -9,6 +9,7 @@
   min-height: 60px;
   border-radius: 4px;
   overflow: hidden;
+  font-family: sans-serif;
 }
 
 .example-box {
@@ -23,6 +24,7 @@
   text-align: center;
   font-size: 14px;
   min-width: 115px;
+  font-family: sans-serif;
 }
 
 .cdk-drag-preview {
