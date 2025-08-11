@@ -19,6 +19,7 @@ export const commitMessage: CommitMessageConfig = {
     'cdk-experimental/selection',
     'cdk-experimental/table-scroll-container',
     'cdk-experimental/tabs',
+    'cdk-experimental/toolbar',
     'cdk-experimental/tree',
     'cdk-experimental/ui-patterns',
     'cdk/a11y',
