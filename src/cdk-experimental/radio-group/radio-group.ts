@@ -163,6 +163,7 @@ export class CdkRadioGroup<V> {
       }
     });
 
+    // TODO: Refactor to be handled within list behavior
     afterRenderEffect(() => {
       if (this.toolbar) {
         const radioButtons = this._cdkRadioButtons();

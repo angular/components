@@ -11,14 +11,6 @@
         <mat-option value="horizontal">Horizontal</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <mat-form-field subscriptSizing="dynamic" appearance="outline">
-      <mat-label>Focus strategy</mat-label>
-      <mat-select [(value)]="focusMode">
-        <mat-option value="roving">Roving Tabindex</mat-option>
-        <mat-option value="activedescendant">Active Descendant</mat-option>
-      </mat-select>
-    </mat-form-field>
   </div>
   <h4 class="example-heading">Radio Group Controls</h4>
   <div class="example-toolbar-controls">
@@ -50,7 +42,6 @@
 <div
   cdkToolbar
   [orientation]="orientation"
-  [focusMode]="focusMode"
   [skipDisabled]="skipDisabled.value"
   [wrap]="wrap.value"
   [disabled]="toolbarDisabled.value"

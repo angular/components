@@ -97,9 +97,6 @@ export class CdkToolbar<V> {
   /** Whether disabled items in the group should be skipped when navigating. */
   skipDisabled = input(true, {transform: booleanAttribute});
 
-  /** The focus strategy used by the toolbar. */
-  focusMode = input<'roving' | 'activedescendant'>('roving');
-
   /** Whether the toolbar is disabled. */
   disabled = input(false, {transform: booleanAttribute});
 
@@ -111,7 +108,7 @@ export class CdkToolbar<V> {
     ...this,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
-    focusMode: this.focusMode,
+    focusMode: signal('roving'),
   });
 
   /** Whether the toolbar has received focus yet. */

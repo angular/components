@@ -30,7 +30,6 @@ export class CdkToolbarConfigurableExample {
   wrap = new FormControl(true, {nonNullable: true});
   toolbarDisabled = new FormControl(false, {nonNullable: true});
   orientation: 'vertical' | 'horizontal' = 'horizontal';
-  focusMode: 'roving' | 'activedescendant' = 'roving';
 
   fruits = ['Apple', 'Apricot', 'Banana'];
   buttonFruits = ['Pear', 'Blueberry', 'Cherry', 'Date'];
