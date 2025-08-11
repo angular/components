@@ -12,7 +12,12 @@ import {
   ContentContainerComponentHarness,
   HarnessPredicate,
 } from '@angular/cdk/testing';
-import {ButtonAppearance, ButtonHarnessFilters, ButtonVariant} from './button-harness-filters';
+import {
+  ButtonAppearance,
+  ButtonHarnessFilters,
+  ButtonType,
+  ButtonVariant,
+} from './button-harness-filters';
 
 /** Harness for interacting with a mat-button in tests. */
 export class MatButtonHarness extends ContentContainerComponentHarness {
@@ -50,7 +55,10 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       )
       .addOption('disabled', options.disabled, async (harness, disabled) => {
         return (await harness.isDisabled()) === disabled;
-      });
+      })
+      .addOption('buttonType', options.buttonType, (harness, buttonType) =>
+        HarnessPredicate.stringMatches(harness.getType(), buttonType),
+      );
   }
 
   /**
@@ -148,6 +156,18 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
       return 'tonal';
     }
 
+    return null;
+  }
+
+  /**
+   * Gets the type of the button. Supported values are 'button', 'submit', and 'reset'.
+   */
+  async getType(): Promise<ButtonType | null> {
+    const host = await this.host();
+    const buttonType = await host.getAttribute('type');
+    if (buttonType === 'button' || buttonType === 'submit' || buttonType === 'reset') {
+      return buttonType;
+    }
     return null;
   }
 }
