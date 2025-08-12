@@ -63,7 +63,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   private readonly _menuStack = inject(MENU_STACK);
 
   /** The parent menu in which this menuitem resides. */
-  private readonly _parentMenu = inject(CDK_MENU, {optional: true});
+  readonly _parentMenu = inject(CDK_MENU, {optional: true});
 
   /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
   private readonly _menuTrigger = inject(CdkMenuTrigger, {optional: true, self: true});
