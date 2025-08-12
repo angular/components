@@ -86,6 +86,10 @@ $default-border-radius: 4px;
   $config: map.merge($default-config, $config);
 
   @include _customize-focus-indicators($config);
+
+  // Strong focus indicators currently need chip labels to have overflow visible.
+  // TODO(b/446709063) revisit the structure to find a way to remove this dependency.
+  @include _chip-label-overflow-visible();
 }
 
 @mixin strong-focus-indicators-color($theme-or-color) {
@@ -105,6 +109,18 @@ $default-border-radius: 4px;
   @else {
     @if inspection.theme-has($theme-or-color, color) {
       @include strong-focus-indicators-color($theme-or-color);
+    }
+  }
+}
+
+@mixin _chip-label-overflow-visible {
+  .mat-mdc-standard-chip {
+    // MDC sets `overflow: hidden` on these elements in order to truncate the text. This conflicts
+    // with how we structure and style the strong focus indicators so we need to override it.
+    .mdc-evolution-chip__cell--primary,
+    .mdc-evolution-chip__action--primary,
+    .mat-mdc-chip-action-label {
+      overflow: visible;
     }
   }
 }
