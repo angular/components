@@ -168,7 +168,7 @@ http_server(
     name = "devserver",
     srcs = [":dev_app_static_files"],
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     enable_dev_ui = True,
     # List of environment variables that will be made available as `window.<NAME>` in the

@@ -145,7 +145,7 @@ http_server(
         "//:node_modules/zone.js",
     ],
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     tags = ["manual"],
     deps = [
