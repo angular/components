@@ -101,7 +101,7 @@ $_alternate-tokens: false;
     outline: map.get($palettes, neutral-variant, 50),
     outline-variant: map.get($palettes, neutral-variant, 80),
     primary: map.get($palettes, primary, 40),
-    primary-container: map.get($palettes, primary, 90),
+    primary-container: map.get($palettes, primary, 80),
     primary-fixed: map.get($palettes, primary, 90),
     primary-fixed-dim: map.get($palettes, primary, 80),
     scrim: map.get($palettes, neutral, 0),
@@ -121,7 +121,7 @@ $_alternate-tokens: false;
     surface-tint: map.get($palettes, primary, 40),
     surface-variant: map.get($palettes, neutral-variant, 90),
     tertiary: map.get($palettes, tertiary, 40),
-    tertiary-container: map.get($palettes, tertiary, 90),
+    tertiary-container: map.get($palettes, tertiary, 80),
     tertiary-fixed: map.get($palettes, tertiary, 90),
     tertiary-fixed-dim: map.get($palettes, tertiary, 80)
   );
